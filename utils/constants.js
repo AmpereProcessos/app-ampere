@@ -3,7 +3,7 @@ import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletyp
 //teste
 
 export const margemLucro = 0.12
-export const taxaImposto = 0.17
+export const taxaImposto = 0.175
 export const routes = [
   'Projetos',
   'Obras',

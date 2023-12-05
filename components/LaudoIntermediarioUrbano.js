@@ -134,73 +134,73 @@ function LaudoIntermediarioUrbano({ analysis }) {
   }
 
   return (
-    <div className="w-[21cm] h-[29.7cm]">
-      <div className="flex flex-col w-full h-full">
-        <div className="w-full flex justify-around items-center border border-t-0 border-black py-2 mt-2">
+    <div className="h-[29.7cm] w-[21cm]">
+      <div className="flex h-full w-full flex-col">
+        <div className="mt-2 flex w-full items-center justify-around border border-t-0 border-black py-2">
           <h1 className="font-bold uppercase text-[#15599a]">LAUDO TÉCNICO - URBANO</h1>
-          <div className="w-[47px] h-[47px]">
+          <div className="h-[47px] w-[47px]">
             <Image style={{ width: '47px', height: '47px' }} src={Logo} />
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">INFORMAÇÕES DO CLIENTE</h1>
+          <h1 className="border-x border-black bg-[#15599a] text-center text-sm font-bold text-white">INFORMAÇÕES DO CLIENTE</h1>
           <div className="flex">
-            <div className="grid grid-rows-5 w-[60%]">
+            <div className="grid w-[60%] grid-rows-5">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">CLIENTE</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.nome}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">CLIENTE</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.nome}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">REPRESENTANTE</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">REPRESENTANTE</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">ENDEREÇO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.endereco}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">ENDEREÇO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.localizacao.endereco}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">BAIRRO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.bairro}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">BAIRRO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.localizacao.bairro}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">DATA DA VISITA</p>
-                <p className="text-center text-xs border-r p-1 border-black">{dayjs().format('DD/MM/YYYY')}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">DATA DA VISITA</p>
+                <p className="border-r border-black p-1 text-center text-xs">{dayjs().format('DD/MM/YYYY')}</p>
               </div>
             </div>
-            <div className="grid grid-rows-5 w-[40%]">
+            <div className="grid w-[40%] grid-rows-5">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TELEFONE</p>
-                <p className="text-center text-xs border-r p-1 border-black">-</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">TELEFONE</p>
+                <p className="border-r border-black p-1 text-center text-xs">-</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">Nº DE PROJETO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.projeto.identificador || 'N/A'}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">Nº DE PROJETO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.projeto.identificador || 'N/A'}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">NÚMERO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.numeroOuIdentificador}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">NÚMERO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.localizacao.numeroOuIdentificador}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">MUNICÍPIO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.cidade}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">MUNICÍPIO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.localizacao.cidade}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TIPO DE SOLICITAÇÃO</p>
-                <p className="text-center text-xs border-r p-1 border-black">{analysis.tipoSolicitacao}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">TIPO DE SOLICITAÇÃO</p>
+                <p className="border-r border-black p-1 text-center text-xs">{analysis.tipoSolicitacao}</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">EQUIPAMENTOS</h1>
+        <div className="mt-6 flex flex-col">
+          <h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
           <div className="flex">
-            <div className="w-[20%] h-full flex justify-center items-center bg-[#15599a] text-center text-white font-bold">
+            <div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
               DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
             </div>
-            <div className="w-[80%] flex flex-col">
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">INVERSORES</h1>
-              <div className="flex border border-black border-b-0">
-                <div className="flex flex-col w-[50%]">
+            <div className="flex w-[80%] flex-col">
+              <h1 className="border border-b-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">INVERSORES</h1>
+              <div className="flex border border-b-0 border-black">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xxs font-bold">TOPOLOGIA</p>
                     <p className="text-center text-xxs font-bold">{analysis.detalhes.topologia}</p>
@@ -210,7 +210,7 @@ function LaudoIntermediarioUrbano({ analysis }) {
                     <p className="text-center text-xxs font-bold">{analysis.equipamentos.inversor.qtde}</p>
                   </div>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xxs font-bold">MARCA DO INVERSOR</p>
                     <p className="text-center text-xxs font-bold">{analysis.equipamentos.inversor.modelo}</p>
@@ -221,17 +221,17 @@ function LaudoIntermediarioUrbano({ analysis }) {
                   </div>
                 </div>
               </div>
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
+              <h1 className="border border-b-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
                 MÓDULOS FOTOVOLTÁICOS
               </h1>
-              <div className="flex  border border-black border-b-0">
-                <div className="flex flex-col w-[50%]">
+              <div className="flex  border border-b-0 border-black">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xxs font-bold">QUANTIDADE</p>
                     <p className="text-center text-xxs font-bold">{analysis.equipamentos.modulos.qtde}</p>
                   </div>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xxs font-bold">POTÊNCIA</p>
                     <p className="text-center text-xxs font-bold">{analysis.equipamentos.modulos.potencia}</p>
@@ -239,89 +239,89 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </div>
               </div>
               <div className="flex  border border-black">
-                <p className="bg-gray-200 text-center text-xxs font-bold w-[50%]">MARCA DOS MÓDULOS</p>
-                <p className="text-center text-xxs font-bold w-[50%]">{analysis.equipamentos.modulos.modelo}</p>
+                <p className="w-[50%] bg-gray-200 text-center text-xxs font-bold">MARCA DOS MÓDULOS</p>
+                <p className="w-[50%] text-center text-xxs font-bold">{analysis.equipamentos.modulos.modelo}</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">VISUALIZAÇÃO DO PROJETO</h1>
-          <div className="h-[600px] flex items-center border border-black">
+        <div className="mt-6 flex flex-col">
+          <h1 className="border border-b-0 border-black bg-[#15599a] text-center text-sm font-bold text-white">VISUALIZAÇÃO DO PROJETO</h1>
+          <div className="flex h-[600px] items-center border border-black">
             {analysis.desenho.url ? (
-              <div className="w-[793.7px] h-full">
+              <div className="h-full w-[793.7px]">
                 <Image width={'793px'} height={'560px'} src={analysis.desenho.url} objectFit="fill" alt="Picture of the author" />
               </div>
             ) : (
-              <div className="w-[793.7px] h-full flex items-center justify-center">
-                <p className="italic font-bold text-gray-500">Oops, parece que não há nenhum desenho vinculado para essa análise...</p>
+              <div className="flex h-full w-[793.7px] items-center justify-center">
+                <p className="font-bold italic text-gray-500">Oops, parece que não há nenhum desenho vinculado para essa análise...</p>
               </div>
             )}
           </div>
         </div>
         <div className="mt-2 flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">CUSTOS ADICIONAIS</h1>
+          <h1 className="border border-black bg-[#15599a] text-center text-sm font-bold text-white">CUSTOS ADICIONAIS</h1>
           <div className="flex flex-col">
             <div className="grid grid-cols-10 border-b border-black bg-[#fead61]">
-              <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1 text-white">DESCRIÇÃO</p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">QUANTIDADE</p>
-              <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1 text-white">GRANDEZA</p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">VALOR</p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">TOTAL</p>
+              <p className="col-span-3 border-r border-black p-1 text-center text-xs font-bold text-white">DESCRIÇÃO</p>
+              <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold text-white">QUANTIDADE</p>
+              <p className="col-span-1 border-r border-black p-1 text-center text-xs font-bold text-white">GRANDEZA</p>
+              <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold text-white">VALOR</p>
+              <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold text-white">TOTAL</p>
             </div>
             {analysis.custos?.length > 0 ? (
               analysis.custos.map((cost, index) => (
                 <div key={index} className="grid grid-cols-10 border-b border-black">
-                  <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1">{cost.descricao}</p>
-                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{cost.qtde}</p>
-                  <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1">{cost.grandeza}</p>
-                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
+                  <p className="col-span-3 border-r border-black p-1 text-center text-xs font-bold">{cost.descricao}</p>
+                  <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">{cost.qtde}</p>
+                  <p className="col-span-1 border-r border-black p-1 text-center text-xs font-bold">{cost.grandeza}</p>
+                  <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
                     {formatToMoney(cost.custoUnitario / (1 - margemLucro))}
                   </p>
-                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
+                  <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
                     {cost.total ? formatToMoney(cost.total / (1 - margemLucro)) : formatToMoney((cost.qtde * cost.custoUnitario) / (1 - margemLucro))}
                   </p>
                 </div>
               ))
             ) : (
-              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">SEM CUSTOS ADICIONAIS</div>
+              <div className="flex h-[50px] items-center justify-center border-b border-r border-black italic">SEM CUSTOS ADICIONAIS</div>
             )}
           </div>
           <div className="grid grid-cols-10">
-            <div className="bg-[#15599a] text-white font-bold flex justify-center items-center text-center col-span-3 border border-black border-t-0 border-l-0">
+            <div className="col-span-3 flex items-center justify-center border border-t-0 border-l-0 border-black bg-[#15599a] text-center font-bold text-white">
               VALOR PARA AJUSTE NA PROPOSTA COMERCIAL
             </div>
-            <div className="flex flex-col col-span-7 h-full">
+            <div className="col-span-7 flex h-full flex-col">
               <div className="grid grid-cols-7  border-b border-black">
-                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">VALOR À VISTA</div>
-                <div className="col-span-2 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
+                <div className="col-span-5 border-r border-black bg-[#fead61] p-1 text-center font-bold text-white">VALOR À VISTA</div>
+                <div className="col-span-2 border-r border-black bg-[#fead61] p-1 text-center font-bold text-white">
                   R$ {analysis.custos ? getAdditionalCostsSum(analysis.custos).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
               <div className="grid grid-cols-7  border-b border-black">
-                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">VALOR FINANCIAMENTO</div>
-                <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
+                <div className="col-span-5 border-r border-black bg-[#15599a] p-1 text-center font-bold text-white">VALOR FINANCIAMENTO</div>
+                <div className="col-span-2 border-r border-black bg-[#15599a] p-1 text-center font-bold text-white">
                   R$ {analysis.custos ? getAdditionalCostsSum(analysis.custos, true).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border  border-black">ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL</h1>
+        <div className="mt-6 flex flex-col">
+          <h1 className="border border-black bg-[#15599a] text-center text-sm font-bold  text-white">ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL</h1>
           <div className="grid grid-cols-2">
             <div className="grid-rows-5">
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">ORIENTAÇÃO</p>
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">QTDE PLACAS</p>
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">GERAÇÃO</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">ORIENTAÇÃO</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">QTDE PLACAS</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">GERAÇÃO</p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NORTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">NORTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.norte ? analysis.alocacaoModulos.norte : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.norte
                     ? `${(
                         (getGenFactorByOrientation({
@@ -337,11 +337,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NORDESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">NORDESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.nordeste ? analysis.alocacaoModulos.nordeste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.nordeste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -357,11 +357,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">LESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">LESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.leste ? analysis.alocacaoModulos.leste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.leste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -377,11 +377,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUDESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">SUDESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sudeste ? analysis.alocacaoModulos.sudeste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sudeste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -399,16 +399,16 @@ function LaudoIntermediarioUrbano({ analysis }) {
             </div>
             <div className="grid-rows-5">
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">ORIENTAÇÃO</p>
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">QTDE PLACAS</p>
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">GERAÇÃO</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">ORIENTAÇÃO</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">QTDE PLACAS</p>
+                <p className="border-r border-black bg-[#15599a] p-1 text-center text-xs font-bold text-white">GERAÇÃO</p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUL</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">SUL</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sul ? analysis.alocacaoModulos.sul : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sul
                     ? `${(
                         (getGenFactorByOrientation({
@@ -424,11 +424,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUDOESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">SUDOESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sudoeste ? analysis.alocacaoModulos.sudoeste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.sudoeste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -444,11 +444,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">OESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">OESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.oeste ? analysis.alocacaoModulos.oeste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.oeste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -464,11 +464,11 @@ function LaudoIntermediarioUrbano({ analysis }) {
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NOROESTE</p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black bg-[#fead61] text-center text-xs font-bold italic text-white">NOROESTE</p>
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.noroeste ? analysis.alocacaoModulos.noroeste : '-'}
                 </p>
-                <p className="font-bold text-center text-xs border-r border-black">
+                <p className="border-r border-black text-center text-xs font-bold">
                   {analysis.alocacaoModulos.noroeste
                     ? `${(
                         (getGenFactorByOrientation({
@@ -486,22 +486,22 @@ function LaudoIntermediarioUrbano({ analysis }) {
             </div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
-            <div className="bg-[#15599a] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
+            <div className="col-span-4 border-r border-black bg-[#15599a] py-1 text-center text-xs font-bold italic text-white">
               GERAÇÃO PROPOSTA COMERCIAL
             </div>
-            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">{getProposedGen()} kWh</div>
+            <div className="col-span-2 border-r border-black py-1 text-center text-xs font-bold">{getProposedGen()} kWh</div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
-            <div className="bg-[#fead61] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
+            <div className="col-span-4 border-r border-black bg-[#fead61] py-1 text-center text-xs font-bold italic text-white">
               GERAÇÃO PREVISTA TOTAL
             </div>
-            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">{getCorrectedGen()} kWh</div>
+            <div className="col-span-2 border-r border-black py-1 text-center text-xs font-bold">{getCorrectedGen()} kWh</div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
-            <div className="bg-[#15599a] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
+            <div className="col-span-4 border-r border-black bg-[#15599a] py-1 text-center text-xs font-bold italic text-white">
               PERCENTUAL DE GERAÇÃO DEVIDO AO DESVIO AZIMUTAL
             </div>
-            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
+            <div className="col-span-2 border-r border-black py-1 text-center text-xs font-bold">
               {getProposedGen() / getCorrectedGen() < 1
                 ? ((getCorrectedGen() / getProposedGen()) * 100).toFixed(2).replace('.', ',')
                 : ((getCorrectedGen() / getProposedGen()) * 100).toFixed(2).replace('.', ',')}
@@ -509,9 +509,9 @@ function LaudoIntermediarioUrbano({ analysis }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center my-2">
+        <div className="my-2 flex flex-col items-center">
           <h1 className="text-center font-bold text-[#15599a]">VISUALIZAÇÃO GRÁFICA</h1>
-          <div className="w-[600px] h-[300px]">
+          <div className="h-[300px] w-[600px]">
             <ResponsiveContainer width="100%">
               <BarChart
                 width={500}
@@ -540,49 +540,49 @@ function LaudoIntermediarioUrbano({ analysis }) {
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="flex flex-col mt-2">
-          <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0">DESCRITIVO DO PROJETO</h1>
-          <div className="flex flex-col text-xs justify-center items-center border border-black border-t-0 min-h-[60px] text-center">
+        <div className="mt-2 flex flex-col">
+          <h1 className="border border-t-0 border-black bg-[#fead61] text-center font-bold text-white">DESCRITIVO DO PROJETO</h1>
+          <div className="flex min-h-[60px] flex-col items-center justify-center border border-t-0 border-black text-center text-xs">
             {analysis.descritivo?.length > 0 ? (
               analysis.descritivo?.map((item, index) => (
-                <div key={index} className="flex w-full flex-col mb-1">
+                <div key={index} className="mb-1 flex w-full flex-col">
                   <div className="flex w-full items-center justify-between">
-                    <div className="w-full flex items-center justify-center gap-2 bg-black text-white">
+                    <div className="flex w-full items-center justify-center gap-2 bg-black text-white">
                       <MdTopic />
-                      <h1 className=" leading-none tracking-tight font-bold  text-sm">{item.topico}</h1>
+                      <h1 className=" text-sm font-bold leading-none  tracking-tight">{item.topico}</h1>
                     </div>
                   </div>
 
-                  <p className="w-full text-center text-xs text-gray-500 mt-1">{item.descricao}</p>
+                  <p className="mt-1 w-full text-center text-xs text-gray-500">{item.descricao}</p>
                 </div>
               ))
             ) : (
-              <div className="flex items-center justify-center text-center h-full italic text-gray-600">SEM DESCRITIVO</div>
+              <div className="flex h-full items-center justify-center text-center italic text-gray-600">SEM DESCRITIVO</div>
             )}
           </div>
         </div>
-        <div className="flex flex-col mt-2">
-          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black border-t-0">CONCLUSÃO</h1>
-          <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
+        <div className="mt-2 flex flex-col">
+          <h1 className="border border-t-0 border-black bg-[#15599a] text-center font-bold text-white">CONCLUSÃO</h1>
+          <div className="flex h-[60px] items-center justify-center border border-t-0 border-black p-2 text-center text-xs">
             {analysis.conclusao.observacoes ? analysis.conclusao.observacoes : '-'}
           </div>
         </div>
-        <div className="mt-2 grid gap-x-4 grid-cols-2">
+        <div className="mt-2 grid grid-cols-2 gap-x-4">
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Autorizado por:</p>
-            <div className="w-full flex justify-center items-center">
-              <div className="w-[97px] flex justify-center  items-center text-center">
+            <p className="ml-2 text-start text-xxs">Autorizado por:</p>
+            <div className="flex w-full items-center justify-center">
+              <div className="flex w-[97px] items-center  justify-center text-center">
                 <Image src={Assinatura} />
               </div>
             </div>
 
             <hr className="border-t-2 border-black" />
-            <p className="text-xxs text-center">ASSINATURA DIRETOR DE ENGENHARIA</p>
+            <p className="text-center text-xxs">ASSINATURA DIRETOR DE ENGENHARIA</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Realizado por:</p>
+            <p className="ml-2 text-start text-xxs">Realizado por:</p>
             <hr className="mt-8 border-t-2 border-black" />
-            <p className="text-xxs text-center">ASSINATURA TÉCNICO RESPONSÁVEL</p>
+            <p className="text-center text-xxs">ASSINATURA TÉCNICO RESPONSÁVEL</p>
           </div>
         </div>
       </div>

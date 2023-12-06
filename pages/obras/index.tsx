@@ -23,6 +23,7 @@ import { executionStatus, serviceTypes, structureTypes } from '../../utils/selec
 import { TProjectDTO } from '../../utils/schemas/projects'
 import { TbTextPlus, TbTruckDelivery } from 'react-icons/tb'
 import { GrStorage } from 'react-icons/gr'
+
 function Obras() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -109,31 +110,31 @@ function Obras() {
     if (session) {
       // @ts-ignore
       const userRoutes = session?.user?.accessibleRoutes
-      if (!userRoutes.includes('Obras') && !userRoutes.includes('Projetos')) {
+      if (!!userRoutes && !userRoutes.includes('Obras') && !userRoutes.includes('Projetos')) {
         router.push('/')
       }
     }
   }, [session])
-  console.log(isSuccess, projects)
+  console.log(filters)
   if (isSuccess && projects)
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio de execução</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de execução</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -183,8 +184,8 @@ function Obras() {
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
                     label={'NOME DO CONTRATO'}
                     value={filters.search}
@@ -219,7 +220,7 @@ function Obras() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
                       width={'100%'}
@@ -423,7 +424,7 @@ function Obras() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div
                     onClick={() =>
                       setFilters({
@@ -433,7 +434,7 @@ function Obras() {
                     }
                     className={`${
                       filters.personalizedStructureApplied ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     COM ESTRUTURA PERSONALIZADA
                   </div>
@@ -446,7 +447,7 @@ function Obras() {
                     }
                     className={`${
                       filters.paAlterationApplied ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     COM TROCA DE PADRÃO
                   </div>
@@ -459,7 +460,7 @@ function Obras() {
                     }
                     className={`${
                       filters.partialPaymentDone ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     KIT PAGO
                   </div>
@@ -472,16 +473,29 @@ function Obras() {
                     }
                     className={`${
                       filters.missingObservations ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     SEM OBSERVAÇÕES
+                  </div>
+                  <div
+                    onClick={() => {
+                      setFilters((prev) => ({
+                        ...prev,
+                        outsideMatrix: !prev.outsideMatrix,
+                      }))
+                    }}
+                    className={`${
+                      filters.outsideMatrix ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded bg-[#15599a] px-2 font-bold text-white`}
+                  >
+                    FORA DE ITUIUTABA
                   </div>
                 </div>
               </motion.div>
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+        <div className="mt-4  flex flex-wrap justify-around gap-3">
           {projects.map((project, index) => (
             <motion.div
               onClick={() => {
@@ -491,7 +505,7 @@ function Obras() {
               initial={{ opacity: 0, translateX: -50, translateY: -35 }}
               animate={{ opacity: 1, translateX: 0, translateY: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
-              className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
+              className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
                 project.parecer.dataParecerDeAcesso != undefined && project.vistoria.status != 'REALIZADA'
                   ? getBorderColorByParecer(project.parecer.dataParecerDeAcesso, new Date().toISOString(), project.obra.statusDaObra || '')
                   : 'border border-gray-200'
@@ -510,7 +524,7 @@ function Obras() {
                   </div>
                   <div>
                     <span className="text-xxs">LAUDO</span>
-                    <p className="text-xs text-center text-gray-600">{project.obra.laudo ? project.obra.laudo : '-'}</p>
+                    <p className="text-center text-xs text-gray-600">{project.obra.laudo ? project.obra.laudo : '-'}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
@@ -520,35 +534,35 @@ function Obras() {
                   </div>
                   <div className="hidden lg:block">
                     <span className="text-xxs">PREVISÃO DE ENTREGA</span>
-                    <p className="text-xs text-gray-600 text-center">
+                    <p className="text-center text-xs text-gray-600">
                       {project.compra.previsaoEntrega ? new Date(project.compra.previsaoEntrega).toLocaleDateString() : '-'}
                     </p>
                   </div>
                   <div>
                     <span className="text-xxs">TÉCNICO RESPONSÁVEL</span>
-                    <p className="text-xs text-gray-600 text-center">{project.visitaTecnica.tecnico ? project.visitaTecnica.tecnico : '-'}</p>
+                    <p className="text-center text-xs text-gray-600">{project.visitaTecnica.tecnico ? project.visitaTecnica.tecnico : '-'}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-1">
-                  <div className="flex flex-col gap-1 item-start">
+                  <div className="item-start flex flex-col gap-1">
                     <span className="text-xxs">CIDADE</span>
                     <p className="text-xs text-[#15599a]">{project.cidade ? project.cidade : '-'}</p>
                   </div>
-                  <div className="flex flex-col gap-1 item-center">
-                    <span className="text-xxs text-center">TELHA</span>
-                    <p className="text-xs text-center text-[#15599a] uppercase">
+                  <div className="item-center flex flex-col gap-1">
+                    <span className="text-center text-xxs">TELHA</span>
+                    <p className="text-center text-xs uppercase text-[#15599a]">
                       {project.visitaTecnica.tipoDaTelha ? project.visitaTecnica.tipoDaTelha : '-'}
                     </p>
                   </div>
-                  <div className="flex flex-col gap-1 item-end">
-                    <span className="text-xxs text-end">NºMÓDULOS</span>
-                    <p className="text-xs text-end text-[#15599a]">{project.sistema?.qtdeModulos ? project.sistema?.qtdeModulos : '-'}</p>
+                  <div className="item-end flex flex-col gap-1">
+                    <span className="text-end text-xxs">NºMÓDULOS</span>
+                    <p className="text-end text-xs text-[#15599a]">{project.sistema?.qtdeModulos ? project.sistema?.qtdeModulos : '-'}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-xxs">FIM DO PARECER EM</span>
-                    <p className="text-xs text-[#15599a] text-center uppercase">
+                    <p className="text-center text-xs uppercase text-[#15599a]">
                       {project.parecer.dataParecerDeAcesso
                         ? 120 - dayjs(new Date()).diff(project.parecer.dataParecerDeAcesso, 'days') > 0
                           ? `${120 - dayjs(new Date()).diff(project.parecer.dataParecerDeAcesso, 'days')} dias`
@@ -558,13 +572,13 @@ function Obras() {
                   </div>
                   <div>
                     <span className="text-xxs">DESDE DO CONTRATO</span>
-                    <p className="text-xs text-[#15599a] uppercase text-center">
+                    <p className="text-center text-xs uppercase text-[#15599a]">
                       {project.contrato.dataAssinatura ? `${dayjs(new Date()).diff(project.contrato.dataAssinatura, 'days')} dias` : '-'}
                     </p>
                   </div>
                   <div>
                     <span className="text-xxs">DESDE DE ENTREGA</span>
-                    <p className="text-xs text-center text-[#15599a] uppercase">
+                    <p className="text-center text-xs uppercase text-[#15599a]">
                       {project.compra.statusEntrega == 'ENTREGUE'
                         ? project.compra.dataEntrega
                           ? `${dayjs(new Date()).diff(project.compra.dataEntrega, 'days')} dias`
@@ -574,8 +588,8 @@ function Obras() {
                   </div>
                 </div>
                 {project.pagamento.credor == 'SOL FÁCIL' && (
-                  <div className="flex justify-center items-center">
-                    <h1 className="font-bold text-red-500 text-center">POSSUI DESLIGAMENTO REMOTO</h1>
+                  <div className="flex items-center justify-center">
+                    <h1 className="text-center font-bold text-red-500">POSSUI DESLIGAMENTO REMOTO</h1>
                   </div>
                 )}
               </div>

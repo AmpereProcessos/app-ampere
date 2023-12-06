@@ -28,6 +28,7 @@ export function useExecutionProjects() {
     paAlterationStatus: string[]
     partialPaymentDone: boolean
     missingObservations: boolean
+    outsideMatrix: boolean
   }
   const [filters, setFilters] = useState<Filters>({
     search: '',
@@ -44,6 +45,7 @@ export function useExecutionProjects() {
     paAlterationStatus: [],
     partialPaymentDone: false,
     missingObservations: false,
+    outsideMatrix: false,
   })
   function matchSearch(project: TProjectDTO) {
     if (filters.search.trim().length == 0) return true
@@ -101,6 +103,10 @@ export function useExecutionProjects() {
     if (!filters.missingObservations) return true
     return project.obra.observacoes?.trim().length <= 2
   }
+  function matchOutsideMatrix(project: TProjectDTO) {
+    if (!filters.outsideMatrix) return true
+    return project.cidade != 'ITUIUTABA'
+  }
   function handleModelData(data: TProjectDTO[]) {
     var modeledData = data
     return modeledData.filter(
@@ -118,7 +124,8 @@ export function useExecutionProjects() {
         matchPaAlterationApplied(project) &&
         matchPaAlterationStatus(project) &&
         matchPartialPaymentDone(project) &&
-        matchMissingObservations(project)
+        matchMissingObservations(project) &&
+        matchOutsideMatrix(project)
     )
   }
   return {

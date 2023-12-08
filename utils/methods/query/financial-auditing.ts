@@ -17,3 +17,19 @@ export function useFinancialAuditing({ after, before, field }: { after: string; 
     queryFn: async () => await fetchFinancialAuditingData({ after, before, field }),
   })
 }
+
+async function fetchFinancesByProjectId({ id }: { id: string }) {
+  try {
+    const { data } = await axios.get(`/api/stats/financial-auditing?id=${id}`)
+    return data as TProjectFinances
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useProjectFinances({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ['project-finances', id],
+    queryFn: async () => await fetchFinancesByProjectId({ id }),
+  })
+}

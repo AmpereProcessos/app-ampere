@@ -13,6 +13,7 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
 import SelectInput from '@/components/inputs/Select'
+import ProjectFinancesModal from '@/components/identificador/auditoriaFinanceira/ProjectFinancesModal'
 
 var currentDate = new Date()
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString()
@@ -22,6 +23,11 @@ function FinancesAuditing() {
   const { data: session, status: sessionStatus } = useSession()
   const isManager = !!session?.user?.manager
   const isADM = !!session?.user?.accessibleRoutes?.includes('ADM')
+
+  const [projectFinancesModal, setProjectFinancesModal] = useState<{ isOpen: boolean; projectId: string | null }>({
+    isOpen: false,
+    projectId: null,
+  })
   const [dateFilter, setDateFilter] = useState<{
     field: string
     after: string
@@ -182,8 +188,18 @@ function FinancesAuditing() {
       <div className="mt-4 flex flex-wrap justify-around gap-3">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar dados para auditoria financeira.'} /> : null}
-        {isSuccess ? auditing.map((info) => <AuditingCard key={info._id} info={info} />) : null}
+        {isSuccess
+          ? auditing.map((info) => (
+              <AuditingCard key={info._id} info={info} handleClick={(id: string) => setProjectFinancesModal({ isOpen: true, projectId: id })} />
+            ))
+          : null}
       </div>
+      {projectFinancesModal.isOpen && projectFinancesModal.projectId ? (
+        <ProjectFinancesModal
+          projectId={projectFinancesModal.projectId}
+          closeModal={() => setProjectFinancesModal({ isOpen: false, projectId: null })}
+        />
+      ) : null}
     </div>
   )
 }

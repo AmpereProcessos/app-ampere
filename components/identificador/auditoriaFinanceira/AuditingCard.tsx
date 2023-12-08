@@ -4,10 +4,6 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 import React from 'react'
 import { FaSignature, FaTools } from 'react-icons/fa'
 
-type AuditingCardProps = {
-  info: TProjectFinances
-}
-
 function getBarColor(margin: number) {
   if (margin >= 0.1) return 'bg-green-500'
   if (margin > 0.05 && margin < 1) return 'bg-orange-500'
@@ -23,14 +19,23 @@ function getResult({ revenues, expenses }: { revenues: TProjectFinances['receita
     liquido: totalRevenues - totalExpenses,
   }
 }
-function AuditingCard({ info }: AuditingCardProps) {
+type AuditingCardProps = {
+  info: TProjectFinances
+  handleClick: (id: string) => void
+}
+function AuditingCard({ info, handleClick }: AuditingCardProps) {
   const { liquido, margem } = getResult({ revenues: info.receitas, expenses: info.despesas })
   return (
     <div className="flex w-full gap-2 rounded-md border border-gray-300 shadow-sm lg:w-[550px]">
       <div className={`h-full w-[7px] ${getBarColor(margem)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex grow flex-col p-6">
         <div className="flex w-full items-center justify-between">
-          <h1 className="trackig-tight font-bold leading-none">{info.nome}</h1>
+          <h1
+            onClick={() => handleClick(info._id)}
+            className="trackig-tight cursor-pointer font-bold leading-none duration-300 ease-in-out hover:text-cyan-500"
+          >
+            {info.nome}
+          </h1>
           <div className="rounded-md border border-gray-500 px-2 py-1 text-xs font-medium">{formatToMoney(liquido)}</div>
         </div>
         <div className="flex w-full grow flex-col">

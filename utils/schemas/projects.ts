@@ -1,5 +1,6 @@
 import z from 'zod'
 import { TActivityDTO } from './activities'
+import { ObjectId } from 'mongodb'
 const GeneralProjectSchema = z.object({
   app: z.object({
     data: z.string().optional().nullable(),
@@ -414,5 +415,5 @@ const GeneralProjectSchema = z.object({
 })
 
 export type TProject = z.infer<typeof GeneralProjectSchema>
-
+export type TProjectEntity = TProject & { _id: ObjectId }
 export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }

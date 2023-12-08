@@ -32,7 +32,21 @@ export type TProjectFinances = {
   receitas: { [key: string]: number }
   receitasLista?: ExpenseRevenueList
 }
-
+type PartialTProject = Pick<
+  TProjectDTO,
+  | '_id'
+  | 'nomeDoContrato'
+  | 'tipoDeServico'
+  | 'contrato'
+  | 'comissoes'
+  | 'compra'
+  | 'cidade'
+  | 'vendedor'
+  | 'obra'
+  | 'sistema'
+  | 'padrao'
+  | 'estruturaPersonalizada'
+>
 const DatetimeStringSchema = z
   .string({ required_error: 'Parâmetro de data não fornecido.', invalid_type_error: 'Tipo inválido para o parâmetro de data.' })
   .datetime({ message: 'Formato inválido para parâmetro de data.' })
@@ -68,6 +82,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
         $project: {
           _id: 1,
           nomeDoContrato: 1,
+          tipoDeServico: 1,
           'contrato.dataAssinatura': 1,
           'obra.saida': 1,
           cidade: 1,
@@ -85,16 +100,14 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
         },
       },
     ])
-    .toArray()) as Pick<
-    TProjectDTO,
-    '_id' | 'nomeDoContrato' | 'contrato' | 'comissoes' | 'compra' | 'cidade' | 'vendedor' | 'obra' | 'sistema' | 'padrao' | 'estruturaPersonalizada'
-  >[]
+    .toArray()) as PartialTProject[]
 
   const expenses = await expensesCollection.find({}).toArray()
 
   const projectFinances = projects.map((project) => {
     // Defining project info
     const nome = project.nomeDoContrato
+    const tipoDeServico = project.tipoDeServico
     const dataAssinatura = project.contrato.dataAssinatura
     const dataConclusaoObra = project.obra.saida
     const cidade = project.cidade
@@ -117,7 +130,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     const energyPaRevenue = project.padrao.valor || 0
     const structureRevenue = project.estruturaPersonalizada.valor || 0
     const revenuesFormatted: { [key: string]: number } = {
-      'KIT GERADOR': systemRevenue,
+      [tipoDeServico]: systemRevenue,
       'PADRÃO DE ENERGIA': energyPaRevenue,
       ESTRUTURA: structureRevenue,
     }

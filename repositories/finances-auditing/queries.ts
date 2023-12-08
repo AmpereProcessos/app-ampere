@@ -12,6 +12,7 @@ type GetFinancesByProjectIdParams = {
 const projection = {
   _id: 1,
   nomeDoContrato: 1,
+  tipoDeServico: 1,
   cidade: 1,
   'vendedor.nome': 1,
   'contrato.dataAssinatura': 1,
@@ -30,6 +31,7 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
     // Defining project info]
     const _id = project._id.toString()
     const nome = project.nomeDoContrato
+    const tipoDeServico = project.tipoDeServico
     const cidade = project.cidade
     const vendedor = project.vendedor.nome
     const dataAssinatura = project.contrato.dataAssinatura
@@ -63,7 +65,7 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
 
     // Formatting project revenues
     var revenues = []
-    if (systemRevenue) revenues.push({ categoria: 'KIT GERADOR', itens: [], total: systemRevenue })
+    if (systemRevenue) revenues.push({ categoria: tipoDeServico, itens: [], total: systemRevenue })
     if (energyPaRevenue) revenues.push({ categoria: 'PADRÃO DE ENERGIA', itens: [], total: energyPaRevenue })
     if (structureRevenue) revenues.push({ categoria: 'ESTRUTURA', itens: [], total: structureRevenue })
 

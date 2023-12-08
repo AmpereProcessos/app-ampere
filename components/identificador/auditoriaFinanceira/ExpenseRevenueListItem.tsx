@@ -1,5 +1,5 @@
 import { ExpenseRevenueList, TProjectFinances } from '@/pages/api/stats/financial-auditing'
-import { formatToMoney } from '@/utils/constants'
+import { formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import React, { useState } from 'react'
 import { FaDiamond } from 'react-icons/fa6'
 
@@ -26,7 +26,7 @@ function ExpenseRevenueListItem({ finance }: ExpenseRevenueListItemProps) {
         ? finance.itens.map((item) => (
             <div className="flex w-full items-center justify-between gap-2">
               <h1 className="text-[0.7rem] leading-none tracking-tight text-gray-700">
-                <strong className="text-[#fead41]">{item.qtde}</strong> x {item.descricao}{' '}
+                <strong className="text-[#fead41]">{formatDecimalPlaces(item.qtde, 1)}</strong> x {item.descricao}{' '}
                 <strong>
                   ({formatToMoney(item.preco)}/ {item.unidade})
                 </strong>

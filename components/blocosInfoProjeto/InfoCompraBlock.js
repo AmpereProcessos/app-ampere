@@ -24,9 +24,9 @@ function InfoCompraBlock({
   showDeliveryInfoOnly = false,
 }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES DA COMPRA</span>
-      <div className="w-full flex flex-col items-center justify-center mb-4 gap-2">
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
+      <div className="mb-4 flex w-full flex-col items-center justify-center gap-2">
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA COMPRA'}
@@ -67,7 +67,7 @@ function InfoCompraBlock({
           />
         ) : null}
       </div>
-      <div className="w-full flex items-center justify-center mb-4">
+      <div className="mb-4 flex w-full items-center justify-center">
         <SelectInputPersonalized
           label="STATUS DA SUPLEMENTAÇÃO"
           labelClassName="uppercase font-bold font-raleway text-center text-sm"
@@ -84,7 +84,7 @@ function InfoCompraBlock({
           }}
         />
       </div>
-      <div className="w-full flex flex-col lg:flex-row gap-2 justify-around mb-4">
+      <div className="mb-4 flex w-full flex-col justify-around gap-2 lg:flex-row">
         <SelectInput
           label={'TIPO DO KIT'}
           value={infoHolder.compra?.tipoDoKit != undefined && infoHolder.compra.tipoDoKit != '-' ? infoHolder.compra.tipoDoKit : 'NÃO DEFINIDO'}
@@ -184,7 +184,7 @@ function InfoCompraBlock({
           }}
         />
       </div>
-      <div className="w-full flex flex-col lg:flex-row gap-2 justify-around mb-4">
+      <div className="mb-4 flex w-full flex-col justify-around gap-2 lg:flex-row">
         <DateInput
           label={'Data máx p/ pagamento'}
           editable={editor}
@@ -204,7 +204,7 @@ function InfoCompraBlock({
           }}
         />
         <DateInput
-          label={'Data do pagamento'}
+          label={'Data do pagamento (CLIENTE)'}
           editable={editor}
           value={
             infoHolder.compra?.dataPagamento != undefined && infoHolder.compra?.dataPagamento != '-'
@@ -221,6 +221,28 @@ function InfoCompraBlock({
               compra: {
                 ...infoHolder.compra,
                 dataPagamento: isNaN(value) ? new Date(value).toISOString() : null,
+              },
+            })
+          }}
+        />
+        <DateInput
+          label={'Data do pagamento (FORNECEDOR)'}
+          editable={editor}
+          value={
+            infoHolder.compra?.dataPagamentoEquipamentos != undefined && infoHolder.compra?.dataPagamentoEquipamentos != '-'
+              ? new Date(infoHolder.compra?.dataPagamentoEquipamentos).toISOString().slice(0, 10)
+              : 0
+          }
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.dataPagamentoEquipamentos': isNaN(value) ? new Date(value).toISOString() : null,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                dataPagamentoEquipamentos: isNaN(value) ? new Date(value).toISOString() : null,
               },
             })
           }}
@@ -263,7 +285,7 @@ function InfoCompraBlock({
         />
       </div>
       {!showDeliveryInfoOnly && (
-        <div className="flex gap-2 justify-center flex-wrap pb-2 ">
+        <div className="flex flex-wrap justify-center gap-2 pb-2 ">
           {/* <DateInput
             label={'Data de liberação p/ compra'}
             editable={comercialEditionOnly}
@@ -324,8 +346,8 @@ function InfoCompraBlock({
             }}
           />
 
-          <div className="flex flex-col w-[350px] items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">RELATÓRIO DE COMISS. SUPRIMENTOS</span>
+          <div className="flex w-[350px] flex-col items-center">
+            <span className="text-center font-raleway text-sm font-bold uppercase">RELATÓRIO DE COMISS. SUPRIMENTOS</span>
             <div className="flex">
               <input
                 disabled={!editor}
@@ -354,7 +376,7 @@ function InfoCompraBlock({
           </div>
         </div>
       )}
-      <div className="flex gap-2 justify-center flex-wrap py-2 ">
+      <div className="flex flex-wrap justify-center gap-2 py-2 ">
         <TextInput
           label={'LOCAL DE ENTREGA'}
           value={
@@ -461,7 +483,7 @@ function InfoCompraBlock({
         />
       </div>
       {!showDeliveryInfoOnly && (
-        <div className="w-full flex flex-wrap items-center justify-center gap-x-4 mt-2">
+        <div className="mt-2 flex w-full flex-wrap items-center justify-center gap-x-4">
           {/* <div className="flex flex-col w-[450px] self-center mt-2 items-center">
             <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÕES DO KIT</span>
             <textarea

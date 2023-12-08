@@ -8,12 +8,15 @@ import React, { useEffect, useState } from 'react'
 import { TProjectFinances } from '../api/stats/financial-auditing'
 import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { FaCashRegister, FaPercent } from 'react-icons/fa'
-import { formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
+import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
 import SelectInput from '@/components/inputs/Select'
 import ProjectFinancesModal from '@/components/identificador/auditoriaFinanceira/ProjectFinancesModal'
+import TextInput from '@/components/inputs/Text'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { allSellers } from '@/utils/select-options'
 
 var currentDate = new Date()
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString()
@@ -42,6 +45,8 @@ function FinancesAuditing() {
     isLoading,
     isError,
     isSuccess,
+    filters,
+    setFilters,
   } = useFinancialAuditing({ after: dateFilter.after, before: dateFilter.before, field: dateFilter.field })
 
   function getStats({ info }: { info?: TProjectFinances[] }) {
@@ -94,11 +99,11 @@ function FinancesAuditing() {
   return (
     <div className="flex grow flex-col p-6">
       <div className="flex flex-col items-center border-b border-gray-200 px-1 py-2">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full flex-col items-center justify-between lg:flex-row">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
             <p className="text-center text-2xl font-black uppercase text-[#15599a]">AUDITORIA FINANCEIRA</p>
           </div>
-          <div className="flex items-center justify-center gap-x-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-2">
             <SelectInput
               label="PARÂMETRO"
               showLabel={false}
@@ -111,7 +116,7 @@ function FinancesAuditing() {
               handleChange={(value) => setDateFilter((prev) => ({ ...prev, field: value }))}
               onReset={() => setDateFilter((prev) => ({ ...prev, field: 'contrato.dataAssinatura' }))}
             />
-            <div className="w-full lg:w-[250px]">
+            <div className="mt-2 w-full lg:mt-0 lg:w-[250px]">
               <DateInput
                 width={'100%'}
                 label={'DEPOIS DE'}
@@ -130,6 +135,36 @@ function FinancesAuditing() {
                 handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) }))}
               />
             </div>
+          </div>
+        </div>
+        <div className="mt-2 flex w-full flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+          <div className="w-full lg:w-[350px]">
+            <TextInput
+              label="NOME DO CONTRATO"
+              placeholder="Digite o nome do contrato..."
+              value={filters.search}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+            />
+          </div>
+          <div className="w-full lg:w-[350px]">
+            <MultipleSelectInput
+              label="CIDADE"
+              selected={filters.city}
+              options={cidadesAtendidas.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, city: value as string[] }))}
+              onReset={() => setFilters((prev) => ({ ...prev, city: [] }))}
+              selectedItemLabel="NÃO DEFINIDO"
+            />
+          </div>
+          <div className="w-full lg:w-[350px]">
+            <MultipleSelectInput
+              label="VENDEDOR"
+              selected={filters.sellerName}
+              options={allSellers.map((seller, index) => ({ id: index + 1, label: seller.value, value: seller.value }))}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, sellerName: value as string[] }))}
+              onReset={() => setFilters((prev) => ({ ...prev, sellerName: [] }))}
+              selectedItemLabel="NÃO DEFINIDO"
+            />
           </div>
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">

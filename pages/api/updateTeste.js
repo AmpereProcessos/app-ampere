@@ -135,120 +135,51 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const projectsCollection = db.collection('dados')
-
-  const pendingDeliveries = await projectsCollection
-    .find({
-      tipoDeServico: 'SISTEMA FOTOVOLTAICO',
-      'contrato.status': 'ASSINADO',
-      'compra.dataEntrega': null,
-      'obra.statusDaObra': { $ne: 'CONCLUIDA' },
-      'compra.dataPedido': { $ne: null },
-    })
+  const projectsDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const projectsCollection = projectsDb.collection('dados')
+  const projects = await projectsCollection
+    .aggregate([
+      {
+        $match: {
+          cidade: {
+            $in: ['ITUIUTABA', 'SANTA VITÓRIA', 'CAMPINA VERDE', 'CAPINÓPOLIS', 'GURINHATÃ', 'CANÁPOLIS', 'CACHOEIRA DOURADA', 'INACIOLÂNDIA'],
+          },
+          'contrato.status': 'ASSINADO',
+          'medidor.data': { $ne: null },
+          'manutencaoPreventiva.data': { $in: [null] },
+          'oem.plano': { $nin: [null, 'NÃO SE APLICA'] },
+        },
+      },
+      {
+        $project: {
+          qtde: 1,
+          nomeDoContrato: 1,
+          cidade: 1,
+          'contrato.dataAssinatura': 1,
+          'medidor.data': 1,
+          'sistema.qtdeModulos': 1,
+          'sistema.topologia': 1,
+          logradouro: 1,
+          numeroResidencia: 1,
+          bairro: 1,
+        },
+      },
+    ])
     .toArray()
-  const formatted = pendingDeliveries.map((p) => {
+  console.log(projects)
+  const formatted = projects.map((p) => {
     return {
-      NOME: p.nomeDoContrato,
-      'ASSINATURA DO CONTRATO': p.contrato.dataAssinatura ? formatDateAsLocale(p.contrato.dataAssinatura) : '',
+      QTDE: p.qtde,
+      'NOME DO CONTRATO': p.nomeDoContrato,
+      'DATA DE ASSINATURA': p.contrato.dataAssinatura ? formatDateAsLocale(p.contrato.dataAssinatura) : null,
       CIDADE: p.cidade,
-      'DATA DO PEDIDO': p.compra?.dataPedido ? formatDateAsLocale(p.compra.dataPedido) : '',
-      'PREVISÃO DE ENTREGA': p.compra?.previsaoEntrega ? formatDateAsLocale(p.compra.previsaoEntrega) : '',
-      'STATUS DA ENTREGA': p.compra.statusEntrega,
-      CREDOR: p.pagamento.credor || 'NÃO POSSUI',
+      'TROCA DO MEDIDOR': p.medidor.data ? formatDateAsLocale(p.medidor.data) : null,
+      'QTDE DE MÓDULOS': p.sistema.qtdeModulos,
       TOPOLOGIA: p.sistema.topologia,
-      MÓDULOS: `${p.sistema.qtdeModulos} x ${p.sistema.potModulos}W`,
-      INVERSOR: p.sistema.inversor,
+      ENDEREÇO: `${p.logradouro}, Nº ${p.numeroResidencia}, ${p.bairro} `,
     }
   })
-  // const paidComissions = await projectsCollection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         'contrato.comissaoPaga': { $ne: null },
-  //       },
-  //     },
-  //   ])
-  //   .toArray()
-  // const formatted = paidComissions.map((project) => {
-  //   return {
-  //     updateOne: {
-  //       filter: { _id: new ObjectId(project._id) },
-  //       update: {
-  //         $unset: { 'contrato.comissaoPaga': '', 'contrato.comissaoVendedor': '' },
-  //       },
-  //     },
-  //   }
-  // })
-  // const crmDb = await connectToCRMDatabase(process.CRM_KEY)
-  // const crmUsersCollection = crmDb.collection('users')
-
-  // const allAnalysis = await analysisCollection.find({}).toArray()
-  // const allUsers = await crmUsersCollection.find({}).toArray()
-
-  // const bulkwriteArr = allAnalysis.map(analysis => {
-  //   const crmUserReference =
-  // })
-  // const dbResponse = await collection.updateMany(
-  //   {
-  //     'contrato.status': 'RESCISÃO DE CONTRATO',
-  //   },
-  //   {
-  //     $set: {
-  //       'contrato.status': 'RESCISÃO DE CONTRATO',
-  //     },
-  //   }
-  // )
-  // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-  // const crmUsersCollection = crmDb.collection('users')
-
-  // const crmUsers = await crmUsersCollection.find({}).toArray()
-  // const calls = await collection.find({}).toArray()
-  // const newPPSCalls = calls.map((call) => {
-  //   return {
-  //     _id: {
-  //       $oid: call._id,
-  //     },
-  //     status: call.status,
-  //     tipoSolicitacao: call.tipoDeSolicitacao,
-  //     responsavel: findResponsible(call.responsavel),
-  //     requerente: findSeller(call.vendedor, crmUsers),
-  //     projeto: {
-  //       id: undefined,
-  //       nome: call.nomeProjeto,
-  //       codigo: call.codigoDoProjeto,
-  //     },
-  //     premissas: {
-  //       geracao: call.geracaoEstimada,
-  //       cargas: call.equipamentos ? formatCharges(call.equipamentos) : undefined,
-  //       topologia: call.topologia,
-  //       tipoEstrutura: call.tipoDaEstrutura ? formatStructure(call.tipoDaEstrutura) : undefined,
-  //       valorFinanciamento: call.valorFinanciamento,
-  //     },
-  //     cliente: {
-  //       nome: call.nomeDoCliente,
-  //       tipo: call.tipoDoCliente,
-  //       telefone: call.telefone,
-  //       cep: call.cep,
-  //       uf: call.uf,
-  //       cidade: call.cidade,
-  //       endereco: call.enderecoDoCliente,
-  //       numeroOuIdentificador: call.numeroResidencia,
-  //       cpfCnpj: call.cpf_cnpj,
-  //       dataNascimento: call.dataDeNascimento,
-  //       email: call.email,
-  //       renda: call.rendaDoCliente,
-  //       profissao: call.profissao,
-  //     },
-  //     links: call.links,
-  //     observacoes: call.observacoes,
-  //     anotacoes: call.anotacoes,
-  //     dataInsercao: call.carimboDataHora,
-  //     dataEfetivacao: call.dataDeConclusao,
-  //   }
-  // })
-  // console.log(newPPSCalls.length)
-  res.json(formatted)
+  return res.json(formatted)
 }
 
 // Update Many example:

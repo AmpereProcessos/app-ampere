@@ -141,8 +141,10 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
       return { _id: project._id, nome, cidade, vendedor, dataAssinatura, dataConclusaoObra, despesas: expensesFormatted, receitas: revenuesFormatted }
     // If it was, adding new expense and retuning info
     const saleTotal = systemRevenue + (energyPaRevenue || 0) + (structureRevenue || 0)
-    const comissionCost =
-      (saleTotal * (project.comissoes?.porcentagemVendedor || 0)) / 100 + (saleTotal * (project.comissoes?.porcentagemInsider || 0)) / 100
+    const sellerComission = (saleTotal * (project.comissoes?.porcentagemVendedor || 0)) / 100
+    const insiderComission = (saleTotal * (project.comissoes?.porcentagemInsider || 0)) / 100
+    const managersComission = (saleTotal * 0.75) / 100
+    const comissionCost = sellerComission + insiderComission + managersComission
     expensesFormatted['COMISSÕES'] = comissionCost
     return { _id: project._id, nome, cidade, vendedor, dataAssinatura, dataConclusaoObra, despesas: expensesFormatted, receitas: revenuesFormatted }
   })

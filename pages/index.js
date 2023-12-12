@@ -222,19 +222,6 @@ function Home() {
     if (statsData.graphData) {
       return (
         <div className="relative grow p-6">
-          <div className="grow">
-            <Fireworks
-              ref={ref}
-              options={{ opacity: 0.1 }}
-              style={{
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-              }}
-            />
-          </div>
           <div className="flex w-full flex-col">
             <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">PARABÉNS, TIME AMPÈRE !</h1>
             <div className="mb-2 flex w-full flex-col">

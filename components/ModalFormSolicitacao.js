@@ -432,8 +432,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       status: dados.estruturaAmpere == 'NÃO' ? 'PENDÊNCIA' : 'N/A',
     },
     contrato: {
-      status: 'AGUARDANDO SOLICITAÇÃO',
-      dataSolicitacao: null, // formatar como data
+      status: 'SOLICITADO',
+      dataSolicitacao: new Date().toISOString(), // formatar como data
       dataLiberacao: null, // formatar como data
       dataAssinatura: null, // formatar como data
       formaAssinatura: dados.formaAssinatura,

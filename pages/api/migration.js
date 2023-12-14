@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   const projectDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
   const projectsCollection = await projectDb.collection('dados')
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-  const crmProposesCollection = crmDb.collection('proposes')
+  const crmProjectsCollection = crmDb.collection('projects')
 
   const projectsWithProposeId = await projectsCollection
     .aggregate([

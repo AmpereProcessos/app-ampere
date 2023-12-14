@@ -227,12 +227,11 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 categories={[
                   { label: 'DOCUMENTOS', value: 'links.documentos' },
                   { label: 'CONTRATOS', value: 'links.contratos' },
-                  {
-                    label: 'EQUIPAMENTOS',
-                    value: 'links.equipamentos',
-                  },
+                  { label: 'EQUIPAMENTOS', value: 'links.equipamentos' },
                   { label: 'PROJETOS', value: 'links.projetos' },
                   { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
+                  { label: 'MANUTENÇÃO PREVENTIVA', value: 'links.manutencaoPreventiva' },
+                  { label: 'MANUTENÇÃO CORRETIVA', value: 'links.manutencaoCorretiva' },
                 ]}
               />
             </div>

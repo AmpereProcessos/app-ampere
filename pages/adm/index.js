@@ -37,7 +37,9 @@ function Administracao() {
     dataSaidaDeObra: null,
     pesquisaFilter: '',
     paraCobrar: false,
+    cobrancaFeita: false,
     paraFaturar: false,
+    faturamentoFeito: false,
   })
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -80,9 +82,17 @@ function Administracao() {
       if (!newArr) newArr = projects
       newArr = newArr.filter((call) => call.pagamento.cobrancaFeita != true)
     }
+    if (filters.cobrancaFeita) {
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => !!call.pagamento.cobrancaFeita)
+    }
     if (filters.paraFaturar) {
       if (!newArr) newArr = projects
       newArr = newArr.filter((call) => call.faturamento.concluido != true)
+    }
+    if (filters.faturamentoFeito) {
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => !!call.faturamento.concluido)
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects
@@ -132,40 +142,40 @@ function Administracao() {
   if (status == 'authenticated') {
     if (filteredProjects) {
       return (
-        <div className="p-6 grow">
-          <div className="flex flex-col gap-y-2 items-center border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full gap-2">
-              <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
-                <p className="font-bold uppercase text-2xl text-[#15599a] text-center">Controle de projetos - Administração</p>
+        <div className="grow p-6">
+          <div className="flex flex-col items-center gap-y-2 border-b border-gray-200 p-1">
+            <div className="flex w-full items-center justify-between gap-2">
+              <div className="flex flex-col items-center gap-2 font-['Roboto'] lg:flex-row">
+                <p className="text-center text-2xl font-bold uppercase text-[#15599a]">Controle de projetos - Administração</p>
                 <p className="font-bold text-[#fead61]">({filteredProjects.length})</p>
               </div>
               {dropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {dropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       type="text"
-                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                      className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CONTRATO"
                       value={filters.pesquisaFilter}
                       onChange={(e) => handleSearchFilter(e.target.value)}
                     />
-                    <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                      <div className="flex items-center gap-x-2 justify-center">
-                        <div className="flex flex-col w-fit items-center">
-                          <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
+                    <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                      <div className="flex items-center justify-center gap-x-2">
+                        <div className="flex w-fit flex-col items-center">
+                          <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                           <input
-                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                             type="date"
                             value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                             onChange={(e) =>
@@ -176,10 +186,10 @@ function Administracao() {
                             }
                           />
                         </div>
-                        <div className="flex flex-col w-fit items-center">
-                          <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
+                        <div className="flex w-fit flex-col items-center">
+                          <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                           <input
-                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                             type="date"
                             value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                             onChange={(e) =>
@@ -225,7 +235,7 @@ function Administracao() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <div className="w-full lg:w-[250px]">
                       <Select
                         isMulti
@@ -340,7 +350,7 @@ function Administracao() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <div
                       onClick={() =>
                         setFilters((prev) => ({
@@ -348,8 +358,8 @@ function Administracao() {
                           paraCobrar: !prev.paraCobrar,
                         }))
                       }
-                      className={`font-bold cursor-pointer rounded border border-[#15599a] p-1 ${
-                        filters.paraCobrar ? 'text-white bg-[#15599a]' : 'bg-transparent text-[#15599a]'
+                      className={`cursor-pointer rounded border border-[#15599a] p-1 font-bold ${
+                        filters.paraCobrar ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       }`}
                     >
                       COBRANÇA PENDENTE
@@ -358,14 +368,40 @@ function Administracao() {
                       onClick={() =>
                         setFilters((prev) => ({
                           ...prev,
+                          cobrancaFeita: !prev.cobrancaFeita,
+                        }))
+                      }
+                      className={`cursor-pointer rounded border border-[#fead41] p-1 font-bold ${
+                        filters.cobrancaFeita ? 'bg-[#fead41] text-white' : 'bg-transparent text-[#fead41]'
+                      }`}
+                    >
+                      COBRANÇA FEITA
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters((prev) => ({
+                          ...prev,
                           paraFaturar: !prev.paraFaturar,
                         }))
                       }
-                      className={`font-bold cursor-pointer rounded border border-[#15599a] p-1 ${
-                        filters.paraFaturar ? 'text-white bg-[#15599a]' : 'bg-transparent text-[#15599a]'
+                      className={`cursor-pointer rounded border border-[#15599a] p-1 font-bold ${
+                        filters.paraFaturar ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       }`}
                     >
                       FATURAMENTO PENDENTE
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          faturamentoFeito: !prev.faturamentoFeito,
+                        }))
+                      }
+                      className={`cursor-pointer rounded border border-[#fead41] p-1 font-bold ${
+                        filters.faturamentoFeito ? 'bg-[#fead41] text-white' : 'bg-transparent text-[#fead41]'
+                      }`}
+                    >
+                      FATURAMENTO FEITO
                     </div>
                   </div>
                   <div className="flex items-center justify-end gap-x-2">
@@ -375,7 +411,7 @@ function Administracao() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+          <div className="mt-4  flex flex-wrap justify-around gap-3">
             {filteredProjects.map((project, index) => (
               <motion.div
                 initial={{ opacity: 0, translateX: -50, translateY: -35 }}
@@ -385,7 +421,7 @@ function Administracao() {
                   handleOpenModal(project._id)
                 }}
                 key={project._id}
-                className="w-full md:w-[350px] lg:w-[450px] cursor-pointer border border-gray-200 hover:bg-blue-100"
+                className="w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2">
@@ -394,27 +430,27 @@ function Administracao() {
                     <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                   </div>
                   <div className="flex items-center justify-between pb-2">
-                    <div className="flex flex-col gap-1 items-start">
+                    <div className="flex flex-col items-start gap-1">
                       <span className="text-xxs">STATUS DE COBRANÇA</span>
                       <p
-                        className={`text-xs p-1 rounded border font-black ${
-                          project.pagamento?.cobrancaFeita ? 'text-green-500 border border-green-500' : 'text-red-500 border border-red-500'
+                        className={`rounded border p-1 text-xs font-black ${
+                          project.pagamento?.cobrancaFeita ? 'border border-green-500 text-green-500' : 'border border-red-500 text-red-500'
                         }`}
                       >
                         {project.pagamento?.cobrancaFeita ? 'REALIZADA' : 'PENDENTE'}
                       </p>
                     </div>
-                    <div className="flex flex-col gap-1 items-center">
+                    <div className="flex flex-col items-center gap-1">
                       <span className="text-xxs">EMPRESA À FATURAR</span>
-                      <p className={`text-sm font-bold p-1 rounded text-gray-500 `}>
+                      <p className={`rounded p-1 text-sm font-bold text-gray-500 `}>
                         {project.faturamento?.empresaFaturamento ? project.faturamento?.empresaFaturamento : 'NÃO DEFINIDO'}
                       </p>
                     </div>
-                    <div className="flex flex-col gap-1 items-end">
+                    <div className="flex flex-col items-end gap-1">
                       <span className="text-xxs">STATUS DE FATURAMENTO</span>
                       <p
-                        className={`text-xs p-1 rounded border font-black ${
-                          project.faturamento?.concluido ? 'text-green-500 border border-green-500' : 'text-red-500 border border-red-500'
+                        className={`rounded border p-1 text-xs font-black ${
+                          project.faturamento?.concluido ? 'border border-green-500 text-green-500' : 'border border-red-500 text-red-500'
                         }`}
                       >
                         {project.faturamento?.concluido ? 'REALIZADO' : 'PENDENTE'}
@@ -429,18 +465,18 @@ function Administracao() {
                       </p>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-xxs text-end">VENDEDOR</span>
+                      <span className="text-end text-xxs">VENDEDOR</span>
                       <p className="text-xs text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-1 items-start">
+                    <div className="flex flex-col items-start gap-1">
                       <p className="text-xxs">TIPO DE PAGAMENTO</p>
                       <p className="text-xs text-gray-600">{project.pagamento?.forma && project.pagamento.forma}</p>
                     </div>
-                    <div className="flex flex-col gap-1 items-end">
-                      <p className="text-xxs text-end">PAGAMENTO DO KIT</p>
-                      <p className="text-xs text-gray-600 text-end">{project.compra?.statusLiberacao ? project.compra.statusLiberacao : '-'}</p>
+                    <div className="flex flex-col items-end gap-1">
+                      <p className="text-end text-xxs">PAGAMENTO DO KIT</p>
+                      <p className="text-end text-xs text-gray-600">{project.compra?.statusLiberacao ? project.compra.statusLiberacao : '-'}</p>
                     </div>
                   </div>
                 </div>
@@ -449,14 +485,14 @@ function Administracao() {
           </div>
           {session?.user?.visualizacao == undefined && (
             <Link href={'/comercial/formulariosSolicitacao'}>
-              <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10">
-                <p className="uppercase font-bold text-sm">SOLICITAÇÕES DE CONTRATO</p>
+              <a className="fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+                <p className="text-sm font-bold uppercase">SOLICITAÇÕES DE CONTRATO</p>
               </a>
             </Link>
           )}
           <Link href={'/financeiro/despesas'}>
-            <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 ml-60">
-              <p className="uppercase font-bold text-sm">DESPESAS</p>
+            <a className="fixed bottom-10 ml-60 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+              <p className="text-sm font-bold uppercase">DESPESAS</p>
             </a>
           </Link>
           {modalIsOpen && (

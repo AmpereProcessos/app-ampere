@@ -31,7 +31,7 @@ import { useSession } from 'next-auth/react'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
-    const { data: session } = useSession()
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)

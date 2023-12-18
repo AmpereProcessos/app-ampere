@@ -603,6 +603,15 @@ export const allSellers = [
     comissionAsActive: 0,
     comissionWithInside: 0,
   },
+  {
+    id: 53,
+    active: true,
+    label: 'FELIPE NOBREGA',
+    value: 'FELIPE NOBREGA',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
 export const allActiveSellers = allSellers.filter((s) => s.active)

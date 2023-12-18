@@ -20,8 +20,6 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
   })
   const [images, setImages] = useState({})
 
-  const [msg, setMsg] = useState({ text: '', color: '' })
-
   function validateOSClosing() {
     if (!infoHolder.testesCCeCA) {
       toast.error('Por favor, preencha a execução dos testes CC e CA.')

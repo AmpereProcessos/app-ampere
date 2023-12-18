@@ -2162,6 +2162,10 @@ export const equipesTecnicas = [
     value: 'EQUIPE 20 - RAFAEL E RODRIGO',
   },
   {
+    label: 'EQUIPE O&M',
+    value: 'EQUIPE O&M',
+  },
+  {
     label: 'EQUIPE EXTERNA - VINICIUS',
     value: 'EQUIPE EXTERNA - VINICIUS',
   },

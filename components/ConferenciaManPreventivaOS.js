@@ -167,14 +167,14 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           })
         }
       }
-      if (images.testesCorrenteCAeCC) {
-        for (let i = 0; i < images.testesCorrenteCAeCC.length; i++) {
-          let file = images.testesCorrenteCAeCC.item(i)
-          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testesCorrenteCAeCC${i + 1}`)
+      if (images.testesTensaoCAeCC) {
+        for (let i = 0; i < images.testesTensaoCAeCC.length; i++) {
+          let file = images.testesTensaoCAeCC.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testesTensaoCAeCC${i + 1}`)
           let res = await uploadBytes(imageRef, file)
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
-            title: `TESTES DE CORRENTE CA E CC (${i + 1})`,
+            title: `TESTES DE TENSÃO CA E CC (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
           })
@@ -388,10 +388,10 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
 
   console.log(infoHolder)
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <h1 className="text-center font-bold text-[#15599a]">CONFERÊNCIA DE FECHAMENTO DA OS</h1>
-      <div className="flex flex-col w-full mt-3 gap-2">
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+      <div className="mt-3 flex w-full flex-col gap-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.testesCCeCA}
             onChange={(e) => setInfo({ ...infoHolder, testesCCeCA: e.target.checked })}
@@ -401,7 +401,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           />
           <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">TESTES E CONFERÊNCIAS CA E CC FEITOS ?</label>
         </div>
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.conferenciaConectores}
             onChange={(e) =>
@@ -416,7 +416,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           />
           <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">CONFERÊNCIA DOS CONECTORES FEITA ?</label>
         </div>
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.conferenciaGrampos}
             onChange={(e) => setInfo({ ...infoHolder, conferenciaGrampos: e.target.checked })}
@@ -428,7 +428,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
             CONFERÊNCIA DOS GRAMPOS (FINAL E/OU INTERMEDIÁRIOS) FEITA ?
           </label>
         </div>
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.revisaoMadeiramento}
             onChange={(e) => setInfo({ ...infoHolder, revisaoMadeiramento: e.target.checked })}
@@ -438,24 +438,24 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           />
           <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">REVISAO DO MADEIRAMENTO FEITA ?</label>
         </div>
-        <div className="flex gap-2 justify-around flex-wrap">
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="padraoMontado">
+        <div className="flex flex-wrap justify-around gap-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="padraoMontado">
               FOTO DOS PAINÉIS AINDA SUJOS
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.paineisPreLimpeza ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.paineisPreLimpeza.length == 1 ? images.paineisPreLimpeza[0].name : `${images.paineisPreLimpeza[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -473,23 +473,23 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="irregularidades">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="irregularidades">
               FOTO DE IRREGULARIDADES, SE HOUVER
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.irregularidades ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.irregularidades.length == 1 ? images.irregularidades[0].name : `${images.irregularidades[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -507,21 +507,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DOS PAINEIS LIMPOS</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DOS PAINEIS LIMPOS</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.paineisPosLimpeza ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.paineisPosLimpeza.length == 1 ? images.paineisPosLimpeza[0].name : `${images.paineisPosLimpeza[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -539,14 +539,14 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DAS IRREGULARIDADES CORRIGIDAS, SE HOUVER</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DAS IRREGULARIDADES CORRIGIDAS, SE HOUVER</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.irregularidadesCorrigidas ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.irregularidadesCorrigidas.length == 1
                         ? images.irregularidadesCorrigidas[0].name
                         : `${images.irregularidadesCorrigidas[0].name}...`}
@@ -555,7 +555,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -573,21 +573,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO(S) QUADRO(S), STRING BOX (QUANDO HOUVER) E INVERSOR(ES)</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DO(S) QUADRO(S), STRING BOX (QUANDO HOUVER) E INVERSOR(ES)</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.kitInversor ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.kitInversor.length == 1 ? images.kitInversor[0].name : `${images.kitInversor[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -605,21 +605,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DA INFRAESTRUTURA ELETROMECANICA LIMPA</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DA INFRAESTRUTURA ELETROMECANICA LIMPA</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.infraEletromecanica ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.infraEletromecanica.length == 1 ? images.infraEletromecanica[0].name : `${images.infraEletromecanica[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -637,21 +637,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DOS TESTES DE CORRENTE CC E CA</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DOS TESTES DE TENSÃO CC E CA</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
-                {images.testesCorrenteCAeCC ? (
+                {images.testesTensaoCAeCC ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.testesCorrenteCAeCC.length == 1 ? images.testesCorrenteCAeCC[0].name : `${images.testesCorrenteCAeCC[0].name}...`}
+                    <span className="block text-center font-normal text-gray-400">
+                      {images.testesTensaoCAeCC.length == 1 ? images.testesTensaoCAeCC[0].name : `${images.testesTensaoCAeCC[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -659,7 +659,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    testesCorrenteCAeCC: e.target.files,
+                    testesTensaoCAeCC: e.target.files,
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -669,21 +669,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO SISTEMA LIGADO</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DO SISTEMA LIGADO</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.sistemaLigado ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.sistemaLigado.length == 1 ? images.sistemaLigado[0].name : `${images.sistemaLigado[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -701,21 +701,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DA ORDEM ASSINADA</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DA ORDEM ASSINADA</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.ordemServicoAssinada ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.ordemServicoAssinada.length == 1 ? images.ordemServicoAssinada[0].name : `${images.ordemServicoAssinada[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -733,21 +733,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO TERMO ASSINADO PELO CLIENTE</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DO TERMO ASSINADO PELO CLIENTE</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.termoAssinado ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.termoAssinado.length == 1 ? images.termoAssinado[0].name : `${images.termoAssinado[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -765,119 +765,22 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA CABOS SOLARES</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.conferenciaCabosSolares ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.conferenciaCabosSolares.length == 1
-                        ? images.conferenciaCabosSolares[0].name
-                        : `${images.conferenciaCabosSolares[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    conferenciaCabosSolares: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DOS CABOS CA</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.conferenciaCabosCA ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.conferenciaCabosCA.length == 1 ? images.conferenciaCabosCA[0].name : `${images.conferenciaCabosCA[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    conferenciaCabosCA: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DOS MC4</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.conferenciaConectores ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.conferenciaConectores.length == 1 ? images.conferenciaConectores[0].name : `${images.conferenciaConectores[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    conferenciaConectores: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO REAPERTO DOS GRAMPOS</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO REAPERTO DOS GRAMPOS</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.reapertoGrampos ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.reapertoGrampos.length == 1 ? images.reapertoGrampos[0].name : `${images.reapertoGrampos[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -895,119 +798,22 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DO MADEIRAMENTO</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.conferenciaMadeiramento ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.conferenciaMadeiramento.length == 1
-                        ? images.conferenciaMadeiramento[0].name
-                        : `${images.conferenciaMadeiramento[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    conferenciaMadeiramento: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO MEDIDOR (03)</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.medidorConsumida ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.medidorConsumida.length == 1 ? images.medidorConsumida[0].name : `${images.medidorConsumida[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    medidorConsumida: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO MEDIDOR (103)</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.medidorInjetada ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.medidorInjetada.length == 1 ? images.medidorInjetada[0].name : `${images.medidorInjetada[0].name}...`}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
-                  </div>
-                )}
-              </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    medidorInjetada: e.target.files,
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                multiple={true}
-                accept=".png, .jpeg, .pdf"
-              />
-            </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">VÍDEO TESTE D ÁGUA</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">VÍDEO TESTE D ÁGUA</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.testeDAgua ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.testeDAgua.length == 1 ? images.testeDAgua[0].name : `${images.testeDAgua[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -1025,21 +831,21 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">PRINT DA CONFIGURAÇÃO CONCLUIDA (SE NECESSÁRIA)</label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">PRINT DA CONFIGURAÇÃO CONCLUIDA (SE NECESSÁRIA)</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.configuracaoConcluida ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
+                    <span className="block text-center font-normal text-gray-400">
                       {images.configuracaoConcluida.length == 1 ? images.configuracaoConcluida[0].name : `${images.configuracaoConcluida[0].name}...`}
                     </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -1059,7 +865,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h1 className="text-center text-[#15599a] font-bold">ANOTAÇÕES DA OS</h1>
+          <h1 className="text-center font-bold text-[#15599a]">ANOTAÇÕES DA OS</h1>
           <textarea
             value={infoHolder.anotacoes}
             onChange={(e) =>
@@ -1068,16 +874,16 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                 anotacoes: e.target.value.toUpperCase(),
               })
             }
-            className={'outline-none border text-xs border-gray-200 p-2 w-full lg:w-[600px] text-center resize-none min-h-[200px]'}
+            className={'min-h-[200px] w-full resize-none border border-gray-200 p-2 text-center text-xs outline-none lg:w-[600px]'}
           />
         </div>
       </div>
 
-      <div className="my-2 flex items-center justify-center mt-6">
+      <div className="my-2 mt-6 flex items-center justify-center">
         <button
           disabled={finishInProgress}
           onClick={finishOS}
-          className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+          className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
         >
           FINALIZAR OS
         </button>

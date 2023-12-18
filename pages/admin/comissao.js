@@ -155,9 +155,10 @@ function ComissaoPage() {
       }
     })
     try {
-      await updateAppProjectsComission({ projects: [bulkwriteAppUpdate[0]] })
+      await updateAppProjectsComission({ projects: bulkwriteAppUpdate })
+      return toast.success('Pagamentos registrados com sucesso !')
     } catch (error) {
-      throw error
+      return toast.error('Erro ao registrar pagamentos.')
     }
   }
   useEffect(() => {
@@ -171,23 +172,23 @@ function ComissaoPage() {
   if (status != 'authenticated') return <LoadingPage />
 
   return (
-    <div className="flex flex-col p-6 grow">
-      <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-2">
-            <p className="font-black uppercase text-center text-2xl text-[#15599a]">COMISSÃO DE PROJETOS</p>
+    <div className="flex grow flex-col p-6">
+      <div className="flex flex-col items-center border-b border-gray-200 px-1 py-2">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <p className="text-center text-2xl font-black uppercase text-[#15599a]">COMISSÃO DE PROJETOS</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
-        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+        <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
           <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">TOTAL VENDIDO</h1>
@@ -236,8 +237,8 @@ function ComissaoPage() {
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <TextInput
                   label={'NOME DO CONTRATO'}
                   value={filters.search}
@@ -286,7 +287,7 @@ function ComissaoPage() {
                     }
                   />
                 </div>
-                <div className="flex items-center gap-x-2 justify-center">
+                <div className="flex items-center justify-center gap-x-2">
                   <div className="w-full lg:w-[250px]">
                     <DateInput
                       width={'100%'}
@@ -308,7 +309,7 @@ function ComissaoPage() {
               <div className="flex w-full items-center justify-end">
                 <div
                   onClick={exportData}
-                  className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+                  className="flex cursor-pointer items-center rounded-lg  p-2 font-bold text-[#15599a] transition duration-300 ease-in-out hover:scale-105"
                 >
                   <p className="mr-2 text-sm">BAIXAR DADOS</p>
                   <BsDownload />
@@ -322,12 +323,12 @@ function ComissaoPage() {
       {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
       {isSuccess && projects ? (
         projects.length > 0 ? (
-          <div className="flex flex-col w-full gap-2 py-2">
-            <div className="w-full flex items-center justify-center">
+          <div className="flex w-full flex-col gap-2 py-2">
+            <div className="flex w-full items-center justify-center">
               <button
                 disabled={isLoading}
                 onClick={() => handleRegisterPayments(projects)}
-                className="px-2 py-1 rounded border border-green-500 text-green-500 font-medium enabled:hover:bg-green-500 enabled:hover:text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white"
+                className="rounded border border-green-500 px-2 py-1 font-medium text-green-500 duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white enabled:hover:bg-green-500 enabled:hover:text-white"
               >
                 REGISTRAR PAGAMENTOS
               </button>
@@ -338,8 +339,8 @@ function ComissaoPage() {
             ))}
           </div>
         ) : (
-          <div className="grow flex items-center justify-center">
-            <h1 className="text-gray-500 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
+          <div className="flex grow items-center justify-center">
+            <h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
           </div>
         )
       ) : null}

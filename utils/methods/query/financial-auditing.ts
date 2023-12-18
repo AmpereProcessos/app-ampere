@@ -16,12 +16,22 @@ type TFilters = {
   search: string
   sellerName: string[]
   city: string[]
+  topology: string[]
+  moduleQty: {
+    min: number | null
+    max: number | null
+  }
 }
 export function useFinancialAuditing({ after, before, field }: { after: string; before: string; field: string }) {
   const [filters, setFilters] = useState<TFilters>({
     search: '',
     sellerName: [],
     city: [],
+    topology: [],
+    moduleQty: {
+      min: null,
+      max: null,
+    },
   })
 
   function matchSearch(project: TProjectFinances) {
@@ -36,10 +46,20 @@ export function useFinancialAuditing({ after, before, field }: { after: string; 
     if (filters.sellerName.length == 0) return true
     return filters.sellerName.includes(project.vendedor)
   }
-
+  function matchTopology(project: TProjectFinances) {
+    if (filters.topology.length == 0) return true
+    return filters.topology.includes(project.topologia)
+  }
+  function matchModuleQty(project: TProjectFinances) {
+    if (!filters.moduleQty.max || !filters.moduleQty.min) return true
+    const projectModulesQty = project.qtdeModulos
+    return projectModulesQty >= filters.moduleQty.min && projectModulesQty <= filters.moduleQty.max
+  }
   function handleModelData(data: TProjectFinances[]) {
     var modeledData = data
-    return modeledData.filter((project) => matchSearch(project) && matchCity(project) && matchSeller(project))
+    return modeledData.filter(
+      (project) => matchSearch(project) && matchCity(project) && matchSeller(project) && matchTopology(project) && matchModuleQty(project)
+    )
   }
   return {
     ...useQuery({

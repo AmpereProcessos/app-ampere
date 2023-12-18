@@ -25,6 +25,8 @@ export type TProjectFinances = {
   nome: string
   cidade: string
   vendedor: string
+  topologia: string
+  qtdeModulos: number
   dataAssinatura: string | null | undefined
   dataConclusaoObra: string | null | undefined
   despesas: { [key: string]: number }
@@ -90,6 +92,8 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
           comissoes: 1,
           'compra.valorDoKit': 1,
           'sistema.valorProjeto': 1,
+          'sistema.topologia': 1,
+          'sistema.qtdeModulos': 1,
           'padrao.valor': 1,
           'estruturaPersonalizada.valor': 1,
         },
@@ -112,6 +116,8 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     const dataConclusaoObra = project.obra.saida
     const cidade = project.cidade
     const vendedor = project.vendedor.nome
+    const topologia = project.sistema.topologia
+    const qtdeModulos = project.sistema.qtdeModulos || 0
     // Formatting the project expenses
     const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id)
     const kitCost = project.compra.valorDoKit || 0
@@ -138,7 +144,18 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     const comissionWasPaid = !!project.comissoes?.pagamentoRealizado
     // If wasn't paid, returning info
     if (!comissionWasPaid)
-      return { _id: project._id, nome, cidade, vendedor, dataAssinatura, dataConclusaoObra, despesas: expensesFormatted, receitas: revenuesFormatted }
+      return {
+        _id: project._id,
+        nome,
+        cidade,
+        vendedor,
+        topologia,
+        qtdeModulos,
+        dataAssinatura,
+        dataConclusaoObra,
+        despesas: expensesFormatted,
+        receitas: revenuesFormatted,
+      }
     // If it was, adding new expense and retuning info
     const saleTotal = systemRevenue + (energyPaRevenue || 0) + (structureRevenue || 0)
     const sellerComission = (saleTotal * (project.comissoes?.porcentagemVendedor || 0)) / 100
@@ -146,7 +163,18 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     const managersComission = (saleTotal * 0.75) / 100
     const comissionCost = sellerComission + insiderComission + managersComission
     expensesFormatted['COMISSÕES'] = comissionCost
-    return { _id: project._id, nome, cidade, vendedor, dataAssinatura, dataConclusaoObra, despesas: expensesFormatted, receitas: revenuesFormatted }
+    return {
+      _id: project._id,
+      nome,
+      cidade,
+      vendedor,
+      topologia,
+      qtdeModulos,
+      dataAssinatura,
+      dataConclusaoObra,
+      despesas: expensesFormatted,
+      receitas: revenuesFormatted,
+    }
   })
   // @ts-ignore
   return res.json(projectFinances)

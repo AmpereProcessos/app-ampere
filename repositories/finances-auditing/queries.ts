@@ -20,6 +20,8 @@ const projection = {
   comissoes: 1,
   'compra.valorDoKit': 1,
   'sistema.valorProjeto': 1,
+  'sistema.topologia': 1,
+  'sistema.qtdeModulos': 1,
   'padrao.valor': 1,
   'estruturaPersonalizada.valor': 1,
 }
@@ -36,6 +38,9 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
     const vendedor = project.vendedor.nome
     const dataAssinatura = project.contrato.dataAssinatura
     const dataConclusaoObra = project.obra.saida
+    const topologia = project.sistema.topologia || ''
+    const qtdeModulos = project.sistema.qtdeModulos || 0
+
     const systemRevenue = project.sistema.valorProjeto
     const energyPaRevenue = project.padrao.valor || 0
     const structureRevenue = project.estruturaPersonalizada.valor || 0
@@ -74,6 +79,8 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
       nome,
       cidade,
       vendedor,
+      topologia,
+      qtdeModulos,
       dataAssinatura,
       dataConclusaoObra,
       despesas: {},

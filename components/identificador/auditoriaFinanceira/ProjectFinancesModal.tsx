@@ -5,11 +5,12 @@ import { formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { useProjectFinances } from '@/utils/methods/query/financial-auditing'
 import React from 'react'
-import { FaCashRegister, FaCity, FaSignature, FaTools, FaUser } from 'react-icons/fa'
+import { FaCashRegister, FaCity, FaSignature, FaSolarPanel, FaTools, FaUser } from 'react-icons/fa'
 import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { VscChromeClose } from 'react-icons/vsc'
 import ExpenseRevenueListItem from './ExpenseRevenueListItem'
 import { GoGoal } from 'react-icons/go'
+import { TbTopologyFull } from 'react-icons/tb'
 
 type ProjectFinancesModalProps = {
   projectId: string
@@ -45,10 +46,10 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
           <div className="flex h-full flex-col">
             <div className="flex flex-wrap items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
               <div className="flex flex-col">
-                <h3 className="text-xl font-bold text-[#353432] dark:text-white ">
+                <h3 className="text-sm font-bold text-[#353432] dark:text-white lg:text-xl ">
                   FINANÇAS DE <strong className="text-cyan-500">{finances.nome}</strong>
                 </h3>
-                <p className="text-xs text-gray-500">#{finances._id}</p>
+                <p className="text-xxs text-gray-500 lg:text-xs">#{finances._id}</p>
               </div>
 
               <button
@@ -60,7 +61,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
               </button>
             </div>
             <div className="flex grow flex-col gap-2 overflow-y-auto overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-              <div className="my-2 flex w-full items-center justify-center gap-2">
+              <div className="my-2 flex w-full flex-wrap items-center justify-center gap-2">
                 <div className="flex w-full items-center justify-center gap-2">
                   <FaUser />
                   <h1 className="text-sm font-bold leading-none tracking-tight">{finances.vendedor}</h1>
@@ -69,9 +70,17 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
                   <FaCity />
                   <h1 className="text-sm font-bold leading-none tracking-tight">{finances.cidade}</h1>
                 </div>
+                <div className="flex w-full items-center justify-center gap-2">
+                  <TbTopologyFull />
+                  <h1 className="text-sm font-bold leading-none tracking-tight">{finances.topologia}</h1>
+                </div>
+                <div className="flex w-full items-center justify-center gap-2">
+                  <FaSolarPanel />
+                  <h1 className="text-sm font-bold leading-none tracking-tight">{finances.qtdeModulos} MÓDULOS</h1>
+                </div>
               </div>
 
-              <div className="my-2 flex w-full items-center justify-center gap-2">
+              <div className="my-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
                 <div className="flex items-center gap-2">
                   <FaSignature />
                   <h1 className="text-xs text-gray-500">ASSINADO EM: {formatDateAsLocale(finances.dataAssinatura)}</h1>

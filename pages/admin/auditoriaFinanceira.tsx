@@ -1,22 +1,29 @@
+import React, { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+
 import AuditingCard from '@/components/identificador/auditoriaFinanceira/AuditingCard'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
-import { useFinancialAuditing } from '@/utils/methods/query/financial-auditing'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { TProjectFinances } from '../api/stats/financial-auditing'
-import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
-import { FaCashRegister, FaPercent } from 'react-icons/fa'
-import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
-import DateInput from '@/components/inputs/Date'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import { VscDiffAdded } from 'react-icons/vsc'
-import SelectInput from '@/components/inputs/Select'
 import ProjectFinancesModal from '@/components/identificador/auditoriaFinanceira/ProjectFinancesModal'
+
+import DateInput from '@/components/inputs/Date'
+import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+
+import { formatDateInputChange } from '@/utils/methods/shared'
+import { useFinancialAuditing } from '@/utils/methods/query/financial-auditing'
+import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
+
+import { TProjectFinances } from '../api/stats/financial-auditing'
+
+import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
+import { FaCashRegister, FaPercent } from 'react-icons/fa'
+import { VscDiffAdded } from 'react-icons/vsc'
+
 import { allSellers } from '@/utils/select-options'
+import NumberInput from '@/components/inputs/Number'
 
 var currentDate = new Date()
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString()
@@ -164,6 +171,58 @@ function FinancesAuditing() {
               handleChange={(value) => setFilters((prev) => ({ ...prev, sellerName: value as string[] }))}
               onReset={() => setFilters((prev) => ({ ...prev, sellerName: [] }))}
               selectedItemLabel="NÃO DEFINIDO"
+            />
+          </div>
+          <div className="flex flex-col">
+            <h1 className='"font-sans text-[#353432]"  font-bold'>FAIXA DE MÓDULOS</h1>
+            <div className="flex items-center gap-1">
+              <div className="w-[120px]">
+                <NumberInput
+                  showLabel={false}
+                  label="MIN"
+                  placeholder="MIN"
+                  value={filters.moduleQty.min}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, moduleQty: { ...prev.moduleQty, min: value } }))}
+                  width="100%"
+                />
+              </div>
+
+              <div className="w-[120px]">
+                <NumberInput
+                  showLabel={false}
+                  label="MÁX"
+                  placeholder="MÁX"
+                  value={filters.moduleQty.max}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, moduleQty: { ...prev.moduleQty, max: value } }))}
+                  width="100%"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="w-full lg:w-[250px]">
+            <MultipleSelectInput
+              width={'100%'}
+              label={'TOPOLOGIA'}
+              selected={filters.topology}
+              options={[
+                { id: 1, label: 'INVERSOR', value: 'INVERSOR' },
+                { id: 2, label: 'MICRO', value: 'MICRO' },
+                { id: 3, label: 'OUTROS SERV.', value: 'OUTROS SERV.' },
+                { id: 4, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+              ]}
+              selectedItemLabel={'SEM FILTRO'}
+              handleChange={(value) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  topology: value as string[],
+                }))
+              }
+              onReset={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  topology: [],
+                }))
+              }
             />
           </div>
         </div>

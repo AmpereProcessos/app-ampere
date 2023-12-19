@@ -185,7 +185,10 @@ async function updateAppProjectsComission({ collection, changes }) {
         },
       }
     })
-    const dbResponse = await collection.bulkWrite(bulkwriteAppUpdate)
+    if (bulkwriteAppUpdate.length > 0) {
+      await collection.bulkWrite(bulkwriteAppUpdate)
+      return
+    }
     return
   } catch (error) {
     throw error
@@ -209,7 +212,10 @@ async function updateCRMProjectsComission({ collection, changes }) {
           },
         }
       })
-    const dbResponse = await collection.bulkWrite(bulkwriteCRMUpdate)
+    if (bulkwriteCRMUpdate.length > 0) {
+      const dbResponse = await collection.bulkWrite(bulkwriteCRMUpdate)
+      return
+    }
     return
   } catch (error) {
     throw error

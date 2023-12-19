@@ -25,10 +25,12 @@ import { FaPercentage } from 'react-icons/fa'
 import { BiStats } from 'react-icons/bi'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
+import { useQueryClient } from 'react-query'
 
 const currentDate = new Date()
 
 function ComissaoPage() {
+  const queryClient = useQueryClient()
   const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
@@ -156,6 +158,7 @@ function ComissaoPage() {
     })
     try {
       await updateAppProjectsComission({ projects: bulkwriteAppUpdate })
+      await queryClient.invalidateQueries({ queryKey: ['comissions'] })
       return toast.success('Pagamentos registrados com sucesso !')
     } catch (error) {
       return toast.error('Erro ao registrar pagamentos.')

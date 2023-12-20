@@ -205,7 +205,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 <OSCreationBlock project={infoHolder} />
               </div>
               <InfoComissionamentoBlock
-                editor={userHasOverallAccess}
+                editor={userHasOeMAccess}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}

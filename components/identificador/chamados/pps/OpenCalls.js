@@ -12,24 +12,6 @@ import ModalCallPPS, { responsibles } from '../../../ModalCallPPS'
 
 import { useOpenPPSCalls, usePPSCall } from '../../../../utils/methods/query/ppsCalls'
 import { ppsCallStatus } from '../../../../utils/select-options'
-const statusStyles = {
-  'EM ANDAMENTO': {
-    textColor: 'text-[#15599a]',
-    borderColor: 'border-[#15599a]',
-  },
-  'AGUARDANDO VENDEDOR': {
-    textColor: 'text-orange-400',
-    borderColor: 'border-orange-400',
-  },
-  REALIZADO: {
-    textColor: 'text-green-400',
-    borderColor: 'border-green-400',
-  },
-  PENDENTE: {
-    textColor: 'text-red-400',
-    borderColor: 'border-red-400',
-  },
-}
 
 function OpenCalls() {
   const { data: calls, isLoading, isFetched, filters, setFilters } = useOpenPPSCalls(true)

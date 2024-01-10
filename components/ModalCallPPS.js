@@ -115,9 +115,17 @@ export const responsibles = [
     id: '65524e514ca81ebd783bbba1',
     nome: 'Gabriella Baltazar',
     apelido: 'GABRIELLA',
-    ativo: true,
+    ativo: false,
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-gabriella_baltazar?alt=media&token=28392bcb-1f54-4dc7-9f31-98f189362231',
+  },
+  {
+    id: '659e8961df037400d84571ac',
+    nome: 'Luis Eduardo',
+    apelido: 'LUIS EDUARDO',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-luis_eduardo?alt=media&token=57cbbdbe-709c-4778-b5e4-4d823bd41621',
   },
   {
     id: '6537c52474d5eecc1b67f1ee',

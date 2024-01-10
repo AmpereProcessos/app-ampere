@@ -3,57 +3,21 @@ import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
 import { ObjectId } from 'mongodb'
+import dayjs from 'dayjs'
+import { getContractValue } from '../../utils/methods/util/projects'
 export default async function handler(req, res) {
   const projectsDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const projectsCollection = projectsDb.collection('dados')
-  const requestsDb = await connectToRequestsDatabase(process.env.DB_KEY)
-  const analysisCollection = requestsDb.collection('analisesTecnicas')
-  const projects = await projectsCollection
-    .aggregate([
-      {
-        $match: { idVisitaTecnica: { $type: 7 } },
+  const projectsCollection = projectsDb.collection('notificacoes')
+
+  const updateResponse = await projectsCollection.updateMany(
+    { destinatario: '6353eb83ef4e1a367a877949' },
+    {
+      $set: {
+        lido: true,
       },
-      {
-        $project: {
-          qtde: 1,
-          nomeDoContrato: 1,
-          codigoSVB: 1,
-          'contrato.dataAssinatura': 1,
-          tipoDeServico: 1,
-        },
-      },
-    ])
-    .toArray()
-  const technicalAnalysis = await analysisCollection
-    .aggregate([
-      {
-        $project: {
-          projeto: 1,
-        },
-      },
-    ])
-    .toArray()
-  const formatted = projects.map((project) => {
-    const equivalentAnalysis = technicalAnalysis
-      .filter((t) => t.projeto.identificador != null)
-      .find((t) => {
-        return t.projeto.identificador == project.codigoSVB || t.projeto.identificador == `CRM-${project.codigoSVB}`
-      })
-    if (equivalentAnalysis)
-      return {
-        updateOne: {
-          filter: { _id: new ObjectId(project._id) },
-          update: {
-            $set: {
-              idVisitaTecnica: equivalentAnalysis._id.toString(),
-            },
-          },
-        },
-      }
-  })
-  const filtered = formatted.filter((p) => !!p)
-  const dbResponse = await projectsCollection.bulkWrite(filtered)
-  return res.json(dbResponse)
+    }
+  )
+  return res.json(updateResponse)
 }
 
 // Update Many example:

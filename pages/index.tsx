@@ -237,8 +237,9 @@ function Home() {
                 <div className="flex w-full flex-wrap items-center gap-2 py-2">
                   <h1 className="text-center text-xl uppercase text-gray-600">Potência pico vendida</h1>
                   <div className="flex grow flex-wrap items-center justify-end gap-x-2">
-                    {getArrOfYearsBetweenYears({ initialYear: 2020, endYear: currentYear }).map((yearValue) => (
+                    {getArrOfYearsBetweenYears({ initialYear: 2020, endYear: currentYear }).map((yearValue, index) => (
                       <p
+                        key={index}
                         onClick={() => {
                           setYear(yearValue)
                         }}

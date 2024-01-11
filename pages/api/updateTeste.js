@@ -1,4 +1,4 @@
-import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
+import connectToDatabase from '../../utils/services/mongodb/warehouse'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
@@ -6,18 +6,20 @@ import { ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
 export default async function handler(req, res) {
-  const projectsDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const projectsCollection = projectsDb.collection('notificacoes')
+  const db = await connectToDatabase(process.env.DB_KEY)
+  const collection = db.collection('material')
 
-  const updateResponse = await projectsCollection.updateMany(
-    { destinatario: '6353eb83ef4e1a367a877949' },
-    {
-      $set: {
-        lido: true,
-      },
+  const materials = await collection.find({}).toArray()
+  const exportation = materials.map((material) => {
+    return {
+      NOME: material.nome,
+      'NOME TÉCNICO': material.nomeTecnico || 'N/A',
+      QUANTIDADE: material.qtde,
+      GRANDEZA: material.grandeza,
+      'PREÇO UNITÁRIO': material.preco,
     }
-  )
-  return res.json(updateResponse)
+  })
+  return res.json(exportation)
 }
 
 // Update Many example:

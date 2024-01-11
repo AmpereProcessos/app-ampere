@@ -2,6 +2,8 @@ import { Method } from 'axios'
 import createHttpError from 'http-errors'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { ZodError } from 'zod'
+import { authOptions } from '../pages/api/auth/[...nextauth]'
+import { getServerSession } from 'next-auth'
 export interface ErrorResponse {
   error: {
     message: string
@@ -46,4 +48,11 @@ export function apiHandler(handler: ApiMethodHandlers) {
       errorHandler(error, res)
     }
   }
+}
+
+export async function validateAuthenticationWithSession(req: NextApiRequest, res: NextApiResponse) {
+  // @ts-ignore
+  const session = await getServerSession(req, res, authOptions)
+  if (!session) throw new createHttpError.Unauthorized(`Recurso não acessível a usuários não autenticados.`)
+  return session
 }

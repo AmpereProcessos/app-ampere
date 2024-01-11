@@ -1,14 +1,13 @@
-const dayjs = require('dayjs')
-const z = require('zod')
+import dayjs from 'dayjs'
 
-function getFirstDayOfYearString({ year, resetHour = true }) {
+export function getFirstDayOfYearString({ year, resetHour = true }: { year?: number; resetHour?: boolean }) {
   var currentDate = dayjs()
   if (year) currentDate = currentDate.set('year', year)
   var firstDay = currentDate.startOf('year')
   if (resetHour) firstDay = firstDay.subtract(3, 'hour')
   return firstDay.toISOString()
 }
-function getFirstDayOfMonth({ year, month, resetHour = true }) {
+export function getFirstDayOfMonth({ year, month, resetHour = true }: { year?: number; month?: number; resetHour?: boolean }) {
   var currentDate = dayjs()
   if (year) currentDate = currentDate.set('year', year)
   if (month) currentDate = currentDate.set('month', month - 1)
@@ -16,7 +15,7 @@ function getFirstDayOfMonth({ year, month, resetHour = true }) {
   if (resetHour) firstDay = firstDay.subtract(3, 'hour')
   return firstDay.toISOString()
 }
-function getLastDayOfMonth({ year, month, resetHour = true }) {
+export function getLastDayOfMonth({ year, month, resetHour = true }: { year?: number; month?: number; resetHour?: boolean }) {
   var currentDate = dayjs()
   if (year) currentDate = currentDate.set('year', year)
   if (month) currentDate = currentDate.set('month', month - 1)
@@ -25,8 +24,7 @@ function getLastDayOfMonth({ year, month, resetHour = true }) {
   return firstDay.toISOString()
 }
 
-const initialYear = 2020
-const currentYear = 2024
-const arr = Array.from({ length: currentYear - initialYear + 1 }, (_, index) => initialYear + index)
-const max = Math.max.apply(null, arr)
-console.log(max)
+export function getArrOfYearsBetweenYears({ initialYear, endYear }: { initialYear: number; endYear: number }) {
+  const arr = Array.from({ length: endYear - initialYear + 1 }, (_, index) => initialYear + index)
+  return arr
+}

@@ -69,7 +69,7 @@ const GeneralProjectSchema = z.object({
     qtdeDistCreditos: z.number().optional().nullable(),
     titularProjeto: z.string(),
   }),
-  dataNascimneto: z.string().optional().nullable(),
+  dataNascimento: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   estruturaPersonalizada: z.object({
     aplicavel: z

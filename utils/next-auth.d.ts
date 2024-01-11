@@ -14,6 +14,10 @@ declare module 'next-auth' {
       controller?: boolean
       manager?: boolean
       accessibleRoutes?: string[]
+      visualizacao?: null | 'INSIDE' | 'VENDEDOR' | 'OBRAS'
+      vendedor?: null | string
+      regional?: null | string
+      equipe?: null | string
     }
   }
 }

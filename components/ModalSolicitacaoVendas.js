@@ -1,153 +1,108 @@
-import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
-import DateInput from "./DateInput";
-import { AiOutlineSearch } from "react-icons/ai";
-import { VscChromeClose } from "react-icons/vsc";
-import { FaSave } from "react-icons/fa";
-import {
-  cidadesAtendidas,
-  tiposDePadrao,
-  tiposDeServico,
-  vendedores,
-} from "../utils/constants";
-import axios from "axios";
-import SaveButton from "./utils/Buttons/SaveButton";
+import React, { useState } from 'react'
+import TextInput from './TextInput'
+import SelectInput from './SelectInput'
+import NumberInput from './NumberInput'
+import DateInput from './DateInput'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { VscChromeClose } from 'react-icons/vsc'
+import { FaSave } from 'react-icons/fa'
+import { cidadesAtendidas, tiposDePadrao, tiposDeServico, vendedores } from '../utils/constants'
+import axios from 'axios'
+import SaveButton from './utils/Buttons/SaveButton'
 const phoneMask = (value) => {
-  if (!value) return "";
-  value = value.replace(/\D/g, "");
-  value = value.replace(/(\d{2})(\d)/, "($1) $2");
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-  return value;
-};
+  if (!value) return ''
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, '($1) $2')
+  value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+  return value
+}
 function formatCnpjCpf(value) {
-  const cnpjCpf = value.replace(/\D/g, "");
+  const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
   }
 
-  return cnpjCpf.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-    "$1.$2.$3/$4-$5"
-  );
+  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
 function formatCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
-  return cep;
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
+  return cep
 }
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  width: "93%",
-  height: "98%",
-  borderRadius: "10px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  width: '93%',
+  height: '98%',
+  borderRadius: '10px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
-function ModalSolicitacaoVendas({
-  info,
-  editable,
-  setModalIsOpen,
-  handleUpdates,
-}) {
-  const [dados, setDados] = useState(info);
-  const [msg, setMessage] = useState({ text: "", color: "" });
+}
+function ModalSolicitacaoVendas({ info, editable, setModalIsOpen, handleUpdates }) {
+  const [dados, setDados] = useState(info)
+  const [msg, setMessage] = useState({ text: '', color: '' })
   function saveChanges() {
-    axios
-      .put("/api/solicitacoes/contrato", { ...dados, aprovacao: null })
-      .then((res) => {
-        setMessage({ text: "Alterações feitas", color: "text-green-500" });
-        handleUpdates(info._id);
-      });
+    axios.put('/api/solicitacoes/contrato', { ...dados, aprovacao: null }).then((res) => {
+      setMessage({ text: 'Alterações feitas', color: 'text-green-500' })
+      handleUpdates(info._id)
+    })
   }
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
-        <div className="flex flex-col h-full">
-          <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-            <h1 className="text-[#15599a] pl-6  font-bold">
-              {dados.nomeDoContrato}
-            </h1>
+        <div className="flex h-full flex-col">
+          <div className="flex justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+            <h1 className="pl-6 font-bold  text-[#15599a]">{dados.nomeDoContrato}</h1>
             <div className="flex items-center gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              {editable && (
-                <SaveButton
-                  text={"Salvar alterações"}
-                  icon={<FaSave />}
-                  handleClick={saveChanges}
-                />
-              )}
+              {editable && <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={saveChanges} />}
               <button>
-                <VscChromeClose
-                  onClick={() => setModalIsOpen(false)}
-                  style={{ color: "red" }}
-                />
+                <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
               </button>
             </div>
           </div>
-          <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS PARA CONTRATO
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTRATO</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <TextInput
-                  label={"Nome/Razão Social"}
+                  label={'Nome/Razão Social'}
                   editable={editable}
                   value={dados.nomeDoContrato}
-                  handleChange={(value) =>
-                    setDados({ ...dados, nomeDoContrato: value.toUpperCase() })
-                  }
+                  handleChange={(value) => setDados({ ...dados, nomeDoContrato: value.toUpperCase() })}
                 />
                 <TextInput
-                  label={"Telefone"}
+                  label={'Telefone'}
                   editable={editable}
                   value={dados.telefone}
-                  handleChange={(value) =>
-                    setDados({ ...dados, telefone: phoneMask(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, telefone: phoneMask(value) })}
                 />
                 <TextInput
-                  label={"CPF/CNPJ"}
+                  label={'CPF/CNPJ'}
                   editable={editable}
                   value={dados.cpf_cnpj}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })}
                 />
-                <TextInput
-                  label={"RG"}
-                  editable={editable}
-                  value={dados.rg}
-                  handleChange={(value) => setDados({ ...dados, rg: value })}
-                />
+                <TextInput label={'RG'} editable={editable} value={dados.rg} handleChange={(value) => setDados({ ...dados, rg: value })} />
                 <DateInput
-                  label={"DATA DE NASCIMENTO"}
+                  label={'DATA DE NASCIMENTO'}
                   editable={editable}
-                  value={
-                    dados.dataDeNascimento
-                      ? new Date(dados.dataDeNascimento)
-                          .toISOString()
-                          .slice(0, 10)
-                      : null
-                  }
+                  value={dados.dataDeNascimento ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10) : null}
                   handleChange={(value) =>
                     setDados({
                       ...dados,
@@ -156,40 +111,28 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <TextInput
-                  label={"CEP"}
+                  label={'CEP'}
                   editable={editable}
                   value={dados.cep}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cep: formatCEP(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cep: formatCEP(value) })}
                 />
                 {editable && (
-                  <button
-                    onClick={() => findCPF("enderecoCobranca")}
-                    className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-                  >
+                  <button onClick={() => findCPF('enderecoCobranca')} className="flex h-[30px] items-center rounded bg-[#fead61] p-1">
                     <AiOutlineSearch />
                   </button>
                 )}
                 <SelectInput
-                  label={"CIDADE"}
+                  label={'CIDADE'}
                   editable={editable}
                   value={dados.cidade}
                   options={cidadesAtendidas.map((cidade) => {
-                    return { label: cidade, value: cidade };
+                    return { label: cidade, value: cidade }
                   })}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cidade: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cidade: value })}
                 />
+                <TextInput label={'UF'} editable={editable} value={dados.uf} handleChange={(value) => setDados({ ...dados, uf: value })} />
                 <TextInput
-                  label={"UF"}
-                  editable={editable}
-                  value={dados.uf}
-                  handleChange={(value) => setDados({ ...dados, uf: value })}
-                />
-                <TextInput
-                  label={"ENDEREÇO DE COBRANÇA"}
+                  label={'ENDEREÇO DE COBRANÇA'}
                   editable={editable}
                   value={dados.enderecoCobranca}
                   handleChange={(value) =>
@@ -200,278 +143,238 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <NumberInput
-                  label={"Nº"}
+                  label={'Nº'}
                   editable={editable}
                   value={dados.numeroResCobranca}
-                  handleChange={(value) =>
-                    setDados({ ...dados, numeroResCobranca: Number(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, numeroResCobranca: Number(value) })}
                 />
                 <TextInput
-                  label={"BAIRRO"}
+                  label={'BAIRRO'}
                   editable={editable}
                   value={dados.bairro}
-                  handleChange={(value) =>
-                    setDados({ ...dados, bairro: value.toUpperCase() })
-                  }
+                  handleChange={(value) => setDados({ ...dados, bairro: value.toUpperCase() })}
                 />
                 <TextInput
-                  label={"PONTO DE REFERÊNCIA"}
+                  label={'PONTO DE REFERÊNCIA'}
                   editable={editable}
                   value={dados.pontoDeReferencia}
-                  handleChange={(value) =>
-                    setDados({ ...dados, pontoDeReferencia: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, pontoDeReferencia: value })}
                 />
                 <SelectInput
-                  label={"SEGMENTO"}
+                  label={'SEGMENTO'}
                   value={dados.segmento}
                   editable={editable}
                   options={[
                     {
-                      value: "RESIDENCIAL",
-                      label: "RESIDENCIAL",
+                      value: 'RESIDENCIAL',
+                      label: 'RESIDENCIAL',
                     },
                     {
-                      value: "COMERCIAL",
-                      label: "COMERCIAL",
+                      value: 'COMERCIAL',
+                      label: 'COMERCIAL',
                     },
                     {
-                      value: "INDUSTRIAL",
-                      label: "INDUSTRIAL",
+                      value: 'INDUSTRIAL',
+                      label: 'INDUSTRIAL',
                     },
                     {
-                      value: "RURAL",
-                      label: "RURAL",
+                      value: 'RURAL',
+                      label: 'RURAL',
                     },
                   ]}
-                  handleChange={(value) =>
-                    setDados({ ...dados, segmento: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, segmento: value })}
                 />
                 <SelectInput
-                  label={"FORMA DE ASSINATURA"}
+                  label={'FORMA DE ASSINATURA'}
                   editable={editable}
                   value={dados.formaAssinatura}
                   options={[
                     {
-                      value: "DIGITAL",
-                      label: "DIGITAL",
+                      value: 'DIGITAL',
+                      label: 'DIGITAL',
                     },
                     {
-                      value: "FISICO",
-                      label: "FISICO",
+                      value: 'FISICO',
+                      label: 'FISICO',
                     },
                   ]}
-                  handleChange={(value) =>
-                    setDados({ ...dados, formaAssinatura: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, formaAssinatura: value })}
                 />
                 <NumberInput
-                  label={"CÓDIGO DO PROJETO CRM"}
+                  label={'CÓDIGO DO PROJETO CRM'}
                   editable={editable}
                   value={dados.codigoSVB}
-                  handleChange={(value) =>
-                    setDados({ ...dados, codigoSVB: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
                 />
                 <SelectInput
-                  label={"ESTADO CIVIL"}
+                  label={'ESTADO CIVIL'}
                   editable={editable}
                   options={[
                     {
-                      label: "CASADO(A)",
-                      value: "CASADO(A)",
+                      label: 'CASADO(A)',
+                      value: 'CASADO(A)',
                     },
                     {
-                      label: "SOLTEIRO(A)",
-                      value: "SOLTEIRO(A)",
+                      label: 'SOLTEIRO(A)',
+                      value: 'SOLTEIRO(A)',
                     },
                     {
-                      label: "UNIÃO ESTÁVEL",
-                      value: "UNIÃO ESTÁVEL",
+                      label: 'UNIÃO ESTÁVEL',
+                      value: 'UNIÃO ESTÁVEL',
                     },
                     {
-                      label: "DIVORCIADO(A)",
-                      value: "DIVORCIADO(A)",
+                      label: 'DIVORCIADO(A)',
+                      value: 'DIVORCIADO(A)',
                     },
                     {
-                      label: "VIUVO(A)",
-                      value: "VIUVO(A)",
+                      label: 'VIUVO(A)',
+                      value: 'VIUVO(A)',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.estadoCivil}
-                  handleChange={(value) =>
-                    setDados({ ...dados, estadoCivil: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, estadoCivil: value })}
                 />
                 <TextInput
-                  label={"EMAIL"}
+                  label={'EMAIL'}
                   normalCase={true}
                   editable={editable}
                   value={dados.email}
                   handleChange={(value) => setDados({ ...dados, email: value })}
                 />
                 <TextInput
-                  label={"PROFISSÃO"}
+                  label={'PROFISSÃO'}
                   editable={editable}
                   value={dados.profissao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, profissao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, profissao: value })}
                 />
                 <TextInput
-                  label={"ONDE TRABALHA"}
+                  label={'ONDE TRABALHA'}
                   editable={editable}
                   value={dados.ondeTrabalha}
-                  handleChange={(value) =>
-                    setDados({ ...dados, ondeTrabalha: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, ondeTrabalha: value })}
                 />
                 <SelectInput
-                  label={"POSSUI ALGUMA DEFICIÊNCIA"}
+                  label={'POSSUI ALGUMA DEFICIÊNCIA'}
                   editable={editable}
                   value={dados.possuiDeficiencia}
-                  handleChange={(value) =>
-                    setDados({ ...dados, possuiDeficiencia: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, possuiDeficiencia: value })}
                   options={[
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                   ]}
                 />
-                {dados.possuiDeficiencia == "SIM" && (
+                {dados.possuiDeficiencia == 'SIM' && (
                   <>
-                    {" "}
+                    {' '}
                     <TextInput
-                      label={"SE SIM, QUAL ?"}
+                      label={'SE SIM, QUAL ?'}
                       editable={editable}
                       value={dados.qualDeficiencia}
-                      handleChange={(value) =>
-                        setDados({ ...dados, qualDeficiencia: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, qualDeficiencia: value })}
                     />
                   </>
                 )}
                 <SelectInput
-                  label={"CANAL DE VENDA"}
+                  label={'CANAL DE VENDA'}
                   editable={editable}
                   value={dados.canalVenda}
-                  handleChange={(value) =>
-                    setDados({ ...dados, canalVenda: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, canalVenda: value })}
                   options={[
                     {
-                      label: "NETWORK",
-                      value: "NETWORK",
+                      label: 'NETWORK',
+                      value: 'NETWORK',
                     },
                     {
-                      label: "INSIDE SALES",
-                      value: "INSIDE SALES",
+                      label: 'INSIDE SALES',
+                      value: 'INSIDE SALES',
                     },
                     {
-                      label: "INDICAÇÃO DE AMIGO",
-                      value: "INDICAÇÃO DE AMIGO",
+                      label: 'INDICAÇÃO DE AMIGO',
+                      value: 'INDICAÇÃO DE AMIGO',
                     },
                     {
-                      label: "PORTA A PORTA",
-                      value: "PORTA A PORTA",
+                      label: 'PORTA A PORTA',
+                      value: 'PORTA A PORTA',
                     },
                     {
-                      label: "TELEVENDAS",
-                      value: "TELEVENDAS",
+                      label: 'TELEVENDAS',
+                      value: 'TELEVENDAS',
                     },
                     {
-                      label: "EVENTO",
-                      value: "EVENTO",
+                      label: 'EVENTO',
+                      value: 'EVENTO',
                     },
                     {
-                      label: "PASSIVO",
-                      value: "PASSIVO",
+                      label: 'PASSIVO',
+                      value: 'PASSIVO',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                 />
-                {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
+                {dados.canalVenda == 'INDICAÇÃO DE AMIGO' && (
                   <>
                     <TextInput
-                      label={"NOME INDICADOR"}
+                      label={'NOME INDICADOR'}
                       editable={editable}
                       value={dados.nomeIndicador}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomeIndicador: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomeIndicador: value })}
                     />
                     <TextInput
-                      label={"TELEFONE INDICADOR"}
+                      label={'TELEFONE INDICADOR'}
                       editable={editable}
                       value={dados.telefoneIndicador}
-                      handleChange={(value) =>
-                        setDados({ ...dados, telefoneIndicador: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, telefoneIndicador: value })}
                     />
                   </>
                 )}
               </div>
-              <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  COMO VOCÊ CHEGOU A ESSE CLIENTE?
-                </span>
+              <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+                <span className="text-center font-raleway text-sm font-bold uppercase">COMO VOCÊ CHEGOU A ESSE CLIENTE?</span>
                 <textarea
                   readOnly={!editable}
-                  placeholder={"Descrição aqui.."}
+                  placeholder={'Descrição aqui..'}
                   value={dados.comoChegouAoCliente}
-                  className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                  onChange={(e) =>
-                    setDados({ ...dados, comoChegouAoCliente: e.target.value })
-                  }
+                  className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+                  onChange={(e) => setDados({ ...dados, comoChegouAoCliente: e.target.value })}
                 />
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS PARA CONTATO
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTATO</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <TextInput
-                  label={"NOME DO CONTATO 1"}
+                  label={'NOME DO CONTATO 1'}
                   editable={editable}
                   value={dados.nomeContatoJornadaUm}
-                  handleChange={(value) =>
-                    setDados({ ...dados, nomeContatoJornadaUm: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, nomeContatoJornadaUm: value })}
                 />
                 <TextInput
-                  label={"TELEFONE DO CONTATO 1"}
+                  label={'TELEFONE DO CONTATO 1'}
                   editable={editable}
                   value={dados.telefoneContatoUm}
-                  handleChange={(value) =>
-                    setDados({ ...dados, telefoneContatoUm: phoneMask(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, telefoneContatoUm: phoneMask(value) })}
                 />
                 <TextInput
-                  label={"NOME DO CONTATO 2"}
+                  label={'NOME DO CONTATO 2'}
                   editable={editable}
                   value={dados.nomeContatoJornadaDois}
-                  handleChange={(value) =>
-                    setDados({ ...dados, nomeContatoJornadaDois: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, nomeContatoJornadaDois: value })}
                 />
                 <TextInput
-                  label={"TELEFONE DO CONTATO 2"}
+                  label={'TELEFONE DO CONTATO 2'}
                   editable={editable}
                   value={dados.telefoneContatoDois}
                   handleChange={(value) =>
@@ -481,17 +384,15 @@ function ModalSolicitacaoVendas({
                     })
                   }
                 />
-                <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    CUIDADOS PARA CONTATO COM O CLIENTE
-                  </span>
+                <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+                  <span className="text-center font-raleway text-sm font-bold uppercase">CUIDADOS PARA CONTATO COM O CLIENTE</span>
                   <textarea
                     readOnly={!editable}
                     placeholder={
-                      "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
+                      'Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc...'
                     }
                     value={dados.cuidadosContatoJornada}
-                    className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                    className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                     onChange={(e) =>
                       setDados({
                         ...dados,
@@ -502,13 +403,11 @@ function ModalSolicitacaoVendas({
                 </div>
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS PARA ENTRADA NA CEMIG
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA ENTRADA NA CEMIG</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <TextInput
-                  label={"NOME DO TITULAR DO PROJETO"}
+                  label={'NOME DO TITULAR DO PROJETO'}
                   editable={editable}
                   value={dados.nomeTitularProjeto}
                   handleChange={(value) =>
@@ -519,171 +418,138 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <SelectInput
-                  label={"TIPO DO TITULAR"}
+                  label={'TIPO DO TITULAR'}
                   editable={editable}
                   value={dados.tipoDoTitular}
-                  handleChange={(value) =>
-                    setDados({ ...dados, tipoDoTitular: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, tipoDoTitular: value })}
                   options={[
                     {
-                      label: "PESSOA FISICA",
-                      value: "PESSOA FISICA",
+                      label: 'PESSOA FISICA',
+                      value: 'PESSOA FISICA',
                     },
                     {
-                      label: "PESSOA JURIDICA",
-                      value: "PESSOA JURIDICA",
+                      label: 'PESSOA JURIDICA',
+                      value: 'PESSOA JURIDICA',
                     },
                   ]}
                 />
                 <SelectInput
-                  label={"TIPO DA LIGAÇÃO"}
+                  label={'TIPO DA LIGAÇÃO'}
                   editable={editable}
                   value={dados.tipoDaLigacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, tipoDaLigacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, tipoDaLigacao: value })}
                   options={[
                     {
-                      label: "NOVA",
-                      value: "NOVA",
+                      label: 'NOVA',
+                      value: 'NOVA',
                     },
                     {
-                      label: "EXISTENTE",
-                      value: "EXISTENTE",
+                      label: 'EXISTENTE',
+                      value: 'EXISTENTE',
                     },
                   ]}
                 />
                 <SelectInput
-                  label={"TIPO DA INSTALAÇÃO"}
+                  label={'TIPO DA INSTALAÇÃO'}
                   editable={editable}
                   value={dados.tipoDaInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, tipoDaInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, tipoDaInstalacao: value })}
                   options={[
                     {
-                      label: "RURAL",
-                      value: "RURAL",
+                      label: 'RURAL',
+                      value: 'RURAL',
                     },
                     {
-                      label: "URBANO",
-                      value: "URBANO",
+                      label: 'URBANO',
+                      value: 'URBANO',
                     },
                   ]}
                 />
                 <TextInput
-                  label={"CEP INSTALAÇÃO"}
+                  label={'CEP INSTALAÇÃO'}
                   editable={editable}
                   value={dados.cepInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cepInstalacao: formatCEP(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cepInstalacao: formatCEP(value) })}
                 />
                 {editable && (
-                  <button
-                    onClick={() => findCPF("enderecoInstalacao")}
-                    className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-                  >
+                  <button onClick={() => findCPF('enderecoInstalacao')} className="flex h-[30px] items-center rounded bg-[#fead61] p-1">
                     <AiOutlineSearch />
                   </button>
                 )}
 
                 <TextInput
-                  label={"ENDEREÇO DE INSTALAÇÃO"}
+                  label={'ENDEREÇO DE INSTALAÇÃO'}
                   editable={editable}
                   value={dados.enderecoInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, enderecoInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, enderecoInstalacao: value })}
                 />
                 <NumberInput
-                  label={"Nº"}
+                  label={'Nº'}
                   editable={editable}
                   value={dados.numeroResInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, numeroResInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, numeroResInstalacao: value })}
                 />
                 <NumberInput
-                  label={"Nº DA INSTALAÇÃO"}
+                  label={'Nº DA INSTALAÇÃO'}
                   editable={editable}
                   value={dados.numeroInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, numeroInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, numeroInstalacao: value })}
                 />
                 <TextInput
-                  label={"BAIRRO"}
+                  label={'BAIRRO'}
                   editable={editable}
                   value={dados.bairroInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, bairroInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, bairroInstalacao: value })}
                 />
                 <SelectInput
-                  label={"CIDADE"}
+                  label={'CIDADE'}
                   editable={editable}
                   value={dados.cidadeInstalacao}
                   options={cidadesAtendidas.map((cidade) => {
-                    return { label: cidade, value: cidade };
+                    return { label: cidade, value: cidade }
                   })}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cidadeInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cidadeInstalacao: value })}
                 />
                 <TextInput
-                  label={"UF"}
+                  label={'UF'}
                   editable={editable}
                   value={dados.ufInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, ufInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, ufInstalacao: value })}
                 />
                 <TextInput
-                  label={"PONTO DE REFERÊNCIA"}
+                  label={'PONTO DE REFERÊNCIA'}
                   editable={editable}
                   value={dados.pontoDeReferenciaInstalacao}
-                  handleChange={(value) =>
-                    setDados({ ...dados, pontoDeReferenciaInstalacao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, pontoDeReferenciaInstalacao: value })}
                 />
                 <TextInput
-                  label={"LOGIN(CEMIG ATENDE)"}
+                  label={'LOGIN(CEMIG ATENDE)'}
                   normalCase={true}
                   editable={editable}
                   value={dados.loginCemigAtende}
-                  handleChange={(value) =>
-                    setDados({ ...dados, loginCemigAtende: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, loginCemigAtende: value })}
                 />
                 <TextInput
-                  label={"SENHA(CEMIG ATENDE)"}
+                  label={'SENHA(CEMIG ATENDE)'}
                   normalCase={true}
                   editable={editable}
                   value={dados.senhaCemigAtende}
-                  handleChange={(value) =>
-                    setDados({ ...dados, senhaCemigAtende: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, senhaCemigAtende: value })}
                 />
                 <TextInput
-                  label={"LATITUDE"}
+                  label={'LATITUDE'}
                   editable={editable}
                   value={dados.latitude}
-                  handleChange={(value) =>
-                    setDados({ ...dados, latitude: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, latitude: value })}
                 />
                 <TextInput
-                  label={"LONGITUDE"}
+                  label={'LONGITUDE'}
                   editable={editable}
                   value={dados.longitude}
-                  handleChange={(value) =>
-                    setDados({ ...dados, longitude: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, longitude: value })}
                 />
                 <NumberInput
-                  label={"POTÊNIA PICO"}
+                  label={'POTÊNIA PICO'}
                   editable={editable}
                   value={dados.potPico}
                   handleChange={(value) =>
@@ -695,7 +561,7 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <NumberInput
-                  label={"GERAÇÃO PREVISTA"}
+                  label={'GERAÇÃO PREVISTA'}
                   editable={editable}
                   value={Number(dados.geracaoPrevista).toFixed(2)}
                   handleChange={(value) =>
@@ -707,782 +573,684 @@ function ModalSolicitacaoVendas({
                 />
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS DO SISTEMA
-              </span>
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DO SISTEMA</span>
               <div className="flex justify-center">
                 <SelectInput
-                  label={"TOPOLOGIA"}
+                  label={'TOPOLOGIA'}
                   editable={editable}
                   value={dados.topologia}
-                  handleChange={(value) =>
-                    setDados({ ...dados, topologia: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, topologia: value })}
                   options={[
                     {
-                      label: "MICRO-INVERSOR",
-                      value: "MICRO",
+                      label: 'MICRO-INVERSOR',
+                      value: 'MICRO-INVERSOR',
                     },
                     {
-                      label: "INVERSOR",
-                      value: "INVERSOR",
+                      label: 'INVERSOR',
+                      value: 'INVERSOR',
                     },
                     {
-                      label: "OTIMIZADOR",
-                      value: "OTIMIZADOR",
+                      label: 'OTIMIZADOR',
+                      value: 'OTIMIZADOR',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                 />
               </div>
-              <div className="flex gap-2 justify-around flex-wrap">
-                {dados.topologia != "NÃO DEFINIDO" && (
+              <div className="flex flex-wrap justify-around gap-2">
+                {dados.topologia != 'NÃO DEFINIDO' && (
                   <>
                     <TextInput
-                      label={"MARCA DO INVERSOR/MICRO"}
+                      label={'MARCA DO INVERSOR/MICRO'}
                       editable={editable}
                       value={dados.marcaInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, marcaInversor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, marcaInversor: value })}
                     />
                     <NumberInput
-                      label={"QTDE INVERSOR/MICRO"}
+                      label={'QTDE INVERSOR/MICRO'}
                       editable={editable}
                       value={dados.qtdeInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, qtdeInversor: Number(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, qtdeInversor: Number(value) })}
                     />
                     <NumberInput
-                      label={"POTÊNCIA INVERSOR/MICRO"}
+                      label={'POTÊNCIA INVERSOR/MICRO'}
                       editable={editable}
-                      unit={"W"}
+                      unit={'W'}
                       value={dados.potInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, potInversor: Number(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, potInversor: Number(value) })}
                     />
                   </>
                 )}
               </div>
-              {dados.topologia == "OTIMIZADOR" && (
-                <div className="flex gap-2 justify-around flex-wrap mt-2">
+              {dados.topologia == 'OTIMIZADOR' && (
+                <div className="mt-2 flex flex-wrap justify-around gap-2">
                   <TextInput
-                    label={"MARCA DO OTIMIZADOR"}
+                    label={'MARCA DO OTIMIZADOR'}
                     editable={editable}
-                    value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
-                    handleChange={(value) =>
-                      setDados({ ...dados, marcaOtimizador: value })
-                    }
+                    value={dados.marcaOtimizador ? dados.marcaOtimizador : ''}
+                    handleChange={(value) => setDados({ ...dados, marcaOtimizador: value })}
                   />
                   <NumberInput
-                    label={"QTDE DO OTIMIZADOR"}
+                    label={'QTDE DO OTIMIZADOR'}
                     editable={editable}
                     value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
-                    handleChange={(value) =>
-                      setDados({ ...dados, qtdeOtimizador: Number(value) })
-                    }
+                    handleChange={(value) => setDados({ ...dados, qtdeOtimizador: Number(value) })}
                   />
                   <NumberInput
-                    label={"POTÊNCIA DO OTIMIZADOR"}
+                    label={'POTÊNCIA DO OTIMIZADOR'}
                     editable={editable}
-                    unit={"W"}
+                    unit={'W'}
                     value={dados.potOtimizador ? dados.potOtimizador : null}
-                    handleChange={(value) =>
-                      setDados({ ...dados, potOtimizador: Number(value) })
-                    }
+                    handleChange={(value) => setDados({ ...dados, potOtimizador: Number(value) })}
                   />
                 </div>
               )}
-              <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+              <div className="mx-2 mt-2 flex flex-wrap justify-around gap-2 border-t border-gray-200 pt-2">
                 <TextInput
-                  label={"MARCA DOS MÓDULOS"}
+                  label={'MARCA DOS MÓDULOS'}
                   editable={editable}
                   value={dados.marcaModulos}
-                  handleChange={(value) =>
-                    setDados({ ...dados, marcaModulos: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, marcaModulos: value })}
                 />
                 <NumberInput
-                  label={"Nº DE MÓDULOS"}
+                  label={'Nº DE MÓDULOS'}
                   editable={editable}
                   value={dados.qtdeModulos}
-                  handleChange={(value) =>
-                    setDados({ ...dados, qtdeModulos: Number(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, qtdeModulos: Number(value) })}
                 />
                 <NumberInput
-                  label={"POTÊNCIA DOS MÓDULOS"}
+                  label={'POTÊNCIA DOS MÓDULOS'}
                   editable={editable}
-                  unit={"W"}
+                  unit={'W'}
                   value={dados.potModulos}
-                  handleChange={(value) =>
-                    setDados({ ...dados, potModulos: Number(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, potModulos: Number(value) })}
                 />
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                ESTRUTURA DE MONTAGEM
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ESTRUTURA DE MONTAGEM</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <SelectInput
-                  label={"TIPO DA ESTRUTURA"}
+                  label={'TIPO DA ESTRUTURA'}
                   editable={editable}
                   options={[
                     {
-                      label: "TELHADO",
-                      value: "TELHADO",
+                      label: 'TELHADO',
+                      value: 'TELHADO',
                     },
                     {
-                      label: "CARPORT",
-                      value: "CARPORT",
+                      label: 'CARPORT',
+                      value: 'CARPORT',
                     },
                     {
-                      label: "SOLO",
-                      value: "SOLO",
+                      label: 'SOLO',
+                      value: 'SOLO',
                     },
                     {
-                      label: "ESTRUTURA PERSONALIZADA",
-                      value: "ESTRUTURA PERSONALIZADA",
+                      label: 'ESTRUTURA PERSONALIZADA',
+                      value: 'ESTRUTURA PERSONALIZADA',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.tipoEstrutura}
-                  handleChange={(value) =>
-                    setDados({ ...dados, tipoEstrutura: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, tipoEstrutura: value })}
                 />
                 <SelectInput
-                  label={"ESTRUTURA AMPÈRE"}
+                  label={'ESTRUTURA AMPÈRE'}
                   editable={editable}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.estruturaAmpere}
-                  handleChange={(value) =>
-                    setDados({ ...dados, estruturaAmpere: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, estruturaAmpere: value })}
                 />
                 <SelectInput
-                  label={"RESPONSÁVEL PELA ESTRUTURA"}
+                  label={'RESPONSÁVEL PELA ESTRUTURA'}
                   editable={editable}
                   options={[
                     {
-                      label: "AMPERE",
-                      value: "AMPERE",
+                      label: 'AMPERE',
+                      value: 'AMPERE',
                     },
                     {
-                      label: "CLIENTE",
-                      value: "CLIENTE",
+                      label: 'CLIENTE',
+                      value: 'CLIENTE',
                     },
                     {
-                      label: "NÃO SE APLICA",
-                      value: "NÃO SE APLICA",
+                      label: 'NÃO SE APLICA',
+                      value: 'NÃO SE APLICA',
                     },
                   ]}
                   value={dados.responsavelEstrutura}
-                  handleChange={(value) =>
-                    setDados({ ...dados, responsavelEstrutura: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, responsavelEstrutura: value })}
                 />
-                {dados.responsavelEstrutura != "NÃO SE APLICA" && (
+                {dados.responsavelEstrutura != 'NÃO SE APLICA' && (
                   <>
                     <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
+                      label={'FORMA DE PAGAMENTO'}
                       editable={editable}
                       options={[
                         {
-                          label: "INCLUSO NO FINANCIAMENTO",
-                          value: "INCLUSO NO FINANCIAMENTO",
+                          label: 'INCLUSO NO FINANCIAMENTO',
+                          value: 'INCLUSO NO FINANCIAMENTO',
                         },
                         {
-                          label: "DIRETO PRO FORNECEDOR",
-                          value: "DIRETO PRO FORNECEDOR",
+                          label: 'DIRETO PRO FORNECEDOR',
+                          value: 'DIRETO PRO FORNECEDOR',
                         },
                         {
-                          label: "A VISTA PARA AMPÈRE",
-                          value: "A VISTA PARA AMPÈRE",
+                          label: 'A VISTA PARA AMPÈRE',
+                          value: 'A VISTA PARA AMPÈRE',
                         },
                         {
-                          label: "NÃO SE APLICA",
-                          value: "NÃO SE APLICA",
+                          label: 'NÃO SE APLICA',
+                          value: 'NÃO SE APLICA',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       value={dados.formaPagamentoEstrutura}
-                      handleChange={(value) =>
-                        setDados({ ...dados, formaPagamentoEstrutura: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, formaPagamentoEstrutura: value })}
                     />
                     <NumberInput
-                      label={"VALOR DA ESTRUTURA"}
+                      label={'VALOR DA ESTRUTURA'}
                       editable={editable}
                       value={dados.valorEstrutura}
-                      handleChange={(value) =>
-                        setDados({ ...dados, valorEstrutura: Number(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, valorEstrutura: Number(value) })}
                     />
                   </>
                 )}
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                O&M E SEGURO
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">O&M E SEGURO</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <SelectInput
-                  label={"KIT COM O&M ?"}
+                  label={'KIT COM O&M ?'}
                   editable={editable}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.possuiOeM}
-                  handleChange={(value) =>
-                    setDados({ ...dados, possuiOeM: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, possuiOeM: value })}
                 />
-                {dados.possuiOeM == "SIM" && (
+                {dados.possuiOeM == 'SIM' && (
                   <>
                     <SelectInput
-                      label={"QUAL PLANO DE O&M?"}
+                      label={'QUAL PLANO DE O&M?'}
                       editable={editable}
                       options={[
                         {
-                          label: "MANUTENÇÃO SIMPLES",
-                          value: "MANUTENÇÃO SIMPLES",
+                          label: 'MANUTENÇÃO SIMPLES',
+                          value: 'MANUTENÇÃO SIMPLES',
                         },
                         {
-                          label: "PLANO SOL",
-                          value: "PLANO SOL",
+                          label: 'PLANO SOL',
+                          value: 'PLANO SOL',
                         },
                         {
-                          label: "PLANO SOL +",
-                          value: "PLANO SOL +",
+                          label: 'PLANO SOL +',
+                          value: 'PLANO SOL +',
                         },
                         {
-                          label: "NÃO SE APLICA",
-                          value: "NÃO SE APLICA",
+                          label: 'NÃO SE APLICA',
+                          value: 'NÃO SE APLICA',
                         },
                       ]}
                       value={dados.planoOeM}
-                      handleChange={(value) =>
-                        setDados({ ...dados, planoOeM: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, planoOeM: value })}
                     />
                   </>
                 )}
               </div>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <SelectInput
-                  label={"CLIENTE SEGURADO?"}
+                  label={'CLIENTE SEGURADO?'}
                   editable={editable}
                   options={[
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.clienteSegurado}
-                  handleChange={(value) =>
-                    setDados({ ...dados, clienteSegurado: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, clienteSegurado: value })}
                 />
-                {dados.clienteSegurado == "SIM" && (
+                {dados.clienteSegurado == 'SIM' && (
                   <>
                     <SelectInput
-                      label={"TEMPO SEGURADO"}
+                      label={'TEMPO SEGURADO'}
                       editable={editable}
                       options={[
                         {
-                          label: "1 ANO",
-                          value: "1 ANO",
+                          label: '1 ANO',
+                          value: '1 ANO',
                         },
                         {
-                          label: "2 ANOS",
-                          value: "2 ANOS",
+                          label: '2 ANOS',
+                          value: '2 ANOS',
                         },
                         {
-                          label: "3 ANOS",
-                          value: "3 ANOS",
+                          label: '3 ANOS',
+                          value: '3 ANOS',
                         },
                         {
-                          label: "4 ANOS",
-                          value: "4 ANOS",
+                          label: '4 ANOS',
+                          value: '4 ANOS',
                         },
                         {
-                          label: "5 ANOS",
-                          value: "5 ANOS",
+                          label: '5 ANOS',
+                          value: '5 ANOS',
                         },
                         {
-                          label: "NÃO SE APLICA",
-                          value: "NÃO SE APLICA",
+                          label: 'NÃO SE APLICA',
+                          value: 'NÃO SE APLICA',
                         },
                       ]}
                       value={dados.tempoSegurado}
-                      handleChange={(value) =>
-                        setDados({ ...dados, tempoSegurado: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
                     />
                   </>
                 )}
               </div>
-              {(dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") && (
-                <div className="flex gap-2 justify-around flex-wrap mt-2">
+              {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && (
+                <div className="mt-2 flex flex-wrap justify-around gap-2">
                   <SelectInput
-                    label={"FORMA de PAGAMENTO"}
+                    label={'FORMA de PAGAMENTO'}
                     editable={editable}
                     options={[
                       {
-                        label: "INCLUSO NO FINANCIAMENTO",
-                        value: "INCLUSO NO FINANCIAMENTO",
+                        label: 'INCLUSO NO FINANCIAMENTO',
+                        value: 'INCLUSO NO FINANCIAMENTO',
                       },
                       {
-                        label: "DIRETO PRO FORNECEDOR",
-                        value: "DIRETO PRO FORNECEDOR",
+                        label: 'DIRETO PRO FORNECEDOR',
+                        value: 'DIRETO PRO FORNECEDOR',
                       },
                       {
-                        label: "A VISTA PARA AMPÈRE",
-                        value: "A VISTA PARA AMPÈRE",
+                        label: 'A VISTA PARA AMPÈRE',
+                        value: 'A VISTA PARA AMPÈRE',
                       },
                       {
-                        label: "NÃO SE APLICA",
-                        value: "NÃO SE APLICA",
+                        label: 'NÃO SE APLICA',
+                        value: 'NÃO SE APLICA',
                       },
                     ]}
                     value={dados.formaPagamentoOeMOuSeguro}
-                    handleChange={(value) =>
-                      setDados({ ...dados, formaPagamentoOeMOuSeguro: value })
-                    }
+                    handleChange={(value) => setDados({ ...dados, formaPagamentoOeMOuSeguro: value })}
                   />
                   <NumberInput
-                    label={"VALOR O&M+SEGURO (se não incluso)"}
+                    label={'VALOR O&M+SEGURO (se não incluso)'}
                     editable={editable}
                     value={dados.valorOeMOuSeguro}
-                    handleChange={(value) =>
-                      setDados({ ...dados, valorOeMOuSeguro: Number(value) })
-                    }
+                    handleChange={(value) => setDados({ ...dados, valorOeMOuSeguro: Number(value) })}
                   />
                 </div>
               )}
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                AUMENTO DE CARGA
-              </span>
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">AUMENTO DE CARGA</span>
               <div className="flex justify-center">
                 <SelectInput
-                  label={"HAVERÁ TROCA DE PADRÃO?"}
+                  label={'HAVERÁ TROCA DE PADRÃO?'}
                   editable={editable}
                   options={[
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                   ]}
                   value={dados.aumentoDeCarga}
-                  handleChange={(value) =>
-                    setDados({ ...dados, aumentoDeCarga: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, aumentoDeCarga: value })}
                 />
               </div>
-              {dados.aumentoDeCarga == "SIM" && (
-                <div className="flex gap-2 justify-around flex-wrap mt-2">
+              {dados.aumentoDeCarga == 'SIM' && (
+                <div className="mt-2 flex flex-wrap justify-around gap-2">
                   <SelectInput
-                    label={"TIPO DO PADRÃO"}
+                    label={'TIPO DO PADRÃO'}
                     editable={editable}
                     value={dados.tipoDePadrao}
-                    handleChange={(value) =>
-                      setDados({ ...dados, tipoDePadrao: value })
-                    }
+                    handleChange={(value) => setDados({ ...dados, tipoDePadrao: value })}
                     options={tiposDePadrao}
                   />
                   <SelectInput
-                    label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+                    label={'HAVERÁ AUMENTO DO DISJUNTOR?'}
                     editable={editable}
                     value={dados.aumentoDisjuntor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, aumentoDisjuntor: value })
-                    }
+                    handleChange={(value) => setDados({ ...dados, aumentoDisjuntor: value })}
                     options={[
                       {
-                        label: "SIM",
-                        value: "SIM",
+                        label: 'SIM',
+                        value: 'SIM',
                       },
                       {
-                        label: "NÃO",
-                        value: "NÃO",
+                        label: 'NÃO',
+                        value: 'NÃO',
                       },
                     ]}
                   />
                   <SelectInput
-                    label={"RESPONSÁVEL PELA TROCA"}
+                    label={'RESPONSÁVEL PELA TROCA'}
                     editable={editable}
                     value={dados.respTrocaPadrao}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respTrocaPadrao: value })
-                    }
+                    handleChange={(value) => setDados({ ...dados, respTrocaPadrao: value })}
                     options={[
                       {
-                        label: "AMPERE",
-                        value: "AMPERE",
+                        label: 'AMPERE',
+                        value: 'AMPERE',
                       },
                       {
-                        label: "CLIENTE",
-                        value: "CLIENTE",
+                        label: 'CLIENTE',
+                        value: 'CLIENTE',
                       },
                       {
-                        label: "NÃO SE APLICA",
-                        value: "NÃO SE APLICA",
+                        label: 'NÃO SE APLICA',
+                        value: 'NÃO SE APLICA',
                       },
                     ]}
                   />
                   <SelectInput
-                    label={"PAGAMENTO DO PADRÃO"}
+                    label={'PAGAMENTO DO PADRÃO'}
                     editable={editable}
-                    value={
-                      dados.formaPagamentoPadrao
-                        ? dados.formaPagamentoPadrao
-                        : "NÃO HAVERA TROCA PADRÃO"
-                    }
+                    value={dados.formaPagamentoPadrao ? dados.formaPagamentoPadrao : 'NÃO HAVERA TROCA PADRÃO'}
                     options={[
                       {
-                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                        label: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
+                        value: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
                       },
                       {
-                        label: "CLIENTE PAGAR POR FORA",
-                        value: "CLIENTE PAGAR POR FORA",
+                        label: 'CLIENTE PAGAR POR FORA',
+                        value: 'CLIENTE PAGAR POR FORA',
                       },
                       {
-                        label: "INCLUSO NO CONTRATO",
-                        value: "INCLUSO NO CONTRATO",
+                        label: 'INCLUSO NO CONTRATO',
+                        value: 'INCLUSO NO CONTRATO',
                       },
                       {
-                        label: "NÃO HAVERA TROCA PADRÃO",
-                        value: "NÃO HAVERA TROCA PADRÃO",
+                        label: 'NÃO HAVERA TROCA PADRÃO',
+                        value: 'NÃO HAVERA TROCA PADRÃO',
                       },
                     ]}
                     handleChange={(value) => {
-                      setDados({ ...dados, formaPagamentoPadrao: value });
+                      setDados({ ...dados, formaPagamentoPadrao: value })
                     }}
                   />
                   <NumberInput
-                    label={"VALOR DO PADRÃO"}
+                    label={'VALOR DO PADRÃO'}
                     editable={editable}
                     value={dados.valorPadrao}
-                    handleChange={(value) =>
-                      setDados({ ...dados, valorPadrao: Number(value) })
-                    }
+                    handleChange={(value) => setDados({ ...dados, valorPadrao: Number(value) })}
                   />
                 </div>
               )}
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS FINANCEIROS E NEGOCIAÇÃO
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <TextInput
-                  label={"NOME DO PAGADOR"}
+                  label={'NOME DO PAGADOR'}
                   editable={editable}
                   value={dados.nomePagador}
-                  handleChange={(value) =>
-                    setDados({ ...dados, nomePagador: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, nomePagador: value })}
                 />
                 <TextInput
-                  label={"CONTATO DO PAGADOR"}
+                  label={'CONTATO DO PAGADOR'}
                   editable={editable}
                   value={dados.contatoPagador}
-                  handleChange={(value) =>
-                    setDados({ ...dados, contatoPagador: phoneMask(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, contatoPagador: phoneMask(value) })}
                 />
                 <TextInput
-                  label={"CPF/CNPJ PARA NF"}
+                  label={'CPF/CNPJ PARA NF'}
                   editable={editable}
                   value={dados.cpf_cnpjNF}
-                  handleChange={(value) =>
-                    setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })}
                 />
               </div>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <SelectInput
-                  label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
+                  label={'NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?'}
                   editable={editable}
                   value={dados.necessidaInscricaoRural}
-                  handleChange={(value) =>
-                    setDados({ ...dados, necessidaInscricaoRural: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, necessidaInscricaoRural: value })}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                   ]}
                 />
-                {dados.necessidaInscricaoRural == "SIM" && (
+                {dados.necessidaInscricaoRural == 'SIM' && (
                   <TextInput
-                    label={"INSCRIÇÃO RURAL"}
+                    label={'INSCRIÇÃO RURAL'}
                     editable={editable}
                     value={dados.inscriçãoRural}
-                    handleChange={(value) =>
-                      setDados({ ...dados, inscriçãoRural: value })
-                    }
+                    handleChange={(value) => setDados({ ...dados, inscriçãoRural: value })}
                   />
                 )}
               </div>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <SelectInput
-                  label={"LOCAL DE ENTREGA"}
+                  label={'LOCAL DE ENTREGA'}
                   editable={editable}
                   options={[
                     {
-                      label: "MESMO DO PROJETO",
-                      value: "MESMO DO PROJETO",
+                      label: 'MESMO DO PROJETO',
+                      value: 'MESMO DO PROJETO',
                     },
                     {
-                      label:
-                        "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                      value:
-                        "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                      label: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
+                      value: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
                     },
                     {
-                      label:
-                        "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                      value:
-                        "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                      label: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
+                      value: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.localEntrega}
-                  handleChange={(value) =>
-                    setDados({ ...dados, localEntrega: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, localEntrega: value })}
                 />
                 <SelectInput
-                  label={"END. ENTREGA IGUAL COBRANÇA?"}
+                  label={'END. ENTREGA IGUAL COBRANÇA?'}
                   editable={editable}
                   value={dados.entregaIgualCobranca}
-                  handleChange={(value) =>
-                    setDados({ ...dados, entregaIgualCobranca: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, entregaIgualCobranca: value })}
                   options={[
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                 />
                 <SelectInput
-                  label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+                  label={'HÁ RESTRIÇÕES PARA ENTREGA?'}
                   editable={editable}
                   value={dados.restricoesEntrega}
-                  handleChange={(value) =>
-                    setDados({ ...dados, restricoesEntrega: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, restricoesEntrega: value })}
                   options={[
                     {
-                      label: "SOMENTE HORARIO COMERCIAL",
-                      value: "SOMENTE HORARIO COMERCIAL",
+                      label: 'SOMENTE HORARIO COMERCIAL',
+                      value: 'SOMENTE HORARIO COMERCIAL',
                     },
                     {
-                      label: "NÃO HÁ RESTRIÇÕES",
-                      value: "NÃO HÁ RESTRIÇÕES",
+                      label: 'NÃO HÁ RESTRIÇÕES',
+                      value: 'NÃO HÁ RESTRIÇÕES',
                     },
                     {
-                      label: "CASA EM CONSTRUÇÃO",
-                      value: "CASA EM CONSTRUÇÃO",
+                      label: 'CASA EM CONSTRUÇÃO',
+                      value: 'CASA EM CONSTRUÇÃO',
                     },
                     {
-                      label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                      value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                      label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
+                      value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                 />
               </div>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <NumberInput
-                  label={
-                    "VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"
-                  }
+                  label={'VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)'}
                   editable={editable}
-                  tag={"R$"}
+                  tag={'R$'}
                   value={dados.valorContrato}
-                  handleChange={(value) =>
-                    setDados({ ...dados, valorContrato: Number(value) })
-                  }
+                  handleChange={(value) => setDados({ ...dados, valorContrato: Number(value) })}
                 />
                 <SelectInput
-                  label={"ORIGEM DO RECURSO"}
+                  label={'ORIGEM DO RECURSO'}
                   editable={editable}
                   value={dados.origemRecurso}
-                  handleChange={(value) =>
-                    setDados({ ...dados, origemRecurso: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, origemRecurso: value })}
                   options={[
                     {
-                      label: "FINANCIAMENTO",
-                      value: "FINANCIAMENTO",
+                      label: 'FINANCIAMENTO',
+                      value: 'FINANCIAMENTO',
                     },
                     {
-                      label: "CAPITAL PRÓPRIO",
-                      value: "CAPITAL PRÓPRIO",
+                      label: 'CAPITAL PRÓPRIO',
+                      value: 'CAPITAL PRÓPRIO',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                 />
-                {dados.origemRecurso == "FINANCIAMENTO" && (
+                {dados.origemRecurso == 'FINANCIAMENTO' && (
                   <>
                     <SelectInput
-                      label={"CREDOR"}
+                      label={'CREDOR'}
                       editable={editable}
                       options={[
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                         {
-                          label: "BANCO DO BRASIL",
-                          value: "BANCO DO BRASIL",
+                          label: 'BANCO DO BRASIL',
+                          value: 'BANCO DO BRASIL',
                         },
                         {
-                          label: "BRADESCO",
-                          value: "BRADESCO",
+                          label: 'BRADESCO',
+                          value: 'BRADESCO',
                         },
                         {
-                          label: "BV FINANCEIRA",
-                          value: "BV FINANCEIRA",
+                          label: 'BV FINANCEIRA',
+                          value: 'BV FINANCEIRA',
                         },
                         {
-                          label: "CAIXA",
-                          value: "CAIXA",
+                          label: 'CAIXA',
+                          value: 'CAIXA',
                         },
                         {
-                          label: "COOPACREDI",
-                          value: "COOPACREDI",
+                          label: 'COOPACREDI',
+                          value: 'COOPACREDI',
                         },
                         {
-                          label: "CREDICAMPINA",
-                          value: "CREDICAMPINA",
+                          label: 'CREDICAMPINA',
+                          value: 'CREDICAMPINA',
                         },
                         {
-                          label: "CREDIPONTAL",
-                          value: "CREDIPONTAL",
+                          label: 'CREDIPONTAL',
+                          value: 'CREDIPONTAL',
                         },
                         {
-                          label: "SANTANDER",
-                          value: "SANTANDER",
+                          label: 'SANTANDER',
+                          value: 'SANTANDER',
                         },
                         {
-                          label: "SOL FACIL",
-                          value: "SOL FACIL",
+                          label: 'SOL FACIL',
+                          value: 'SOL FACIL',
                         },
                         {
-                          label: "SICOOB ARACOOP",
-                          value: "SICOOB ARACOOP",
+                          label: 'SICOOB ARACOOP',
+                          value: 'SICOOB ARACOOP',
                         },
                       ]}
                       value={dados.credor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, credor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, credor: value })}
                     />
                     <TextInput
-                      label={"NOME DO GERENTE"}
+                      label={'NOME DO GERENTE'}
                       editable={editable}
                       value={dados.nomeGerente}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomeGerente: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomeGerente: value })}
                     />
                     <TextInput
-                      label={"CONTATO DO GERENTE"}
+                      label={'CONTATO DO GERENTE'}
                       editable={editable}
                       value={dados.contatoGerente}
-                      handleChange={(value) =>
-                        setDados({ ...dados, contatoGerente: phoneMask(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, contatoGerente: phoneMask(value) })}
                     />
                   </>
                 )}
                 <NumberInput
-                  label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
+                  label={'SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?'}
                   editable={editable}
                   value={dados.numParcelas}
                   handleChange={(value) =>
@@ -1494,133 +1262,108 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <NumberInput
-                  label={"VALOR DA PARCELA"}
+                  label={'VALOR DA PARCELA'}
                   editable={editable}
                   value={dados.valorParcela}
-                  tag={"R$"}
-                  handleChange={(value) =>
-                    setDados({ ...dados, valorParcela: Number(value) })
-                  }
+                  tag={'R$'}
+                  handleChange={(value) => setDados({ ...dados, valorParcela: Number(value) })}
                 />
                 <SelectInput
-                  label={"NECESSIDADE N.F ADIANTADA"}
+                  label={'NECESSIDADE N.F ADIANTADA'}
                   editable={editable}
                   value={dados.necessidadeNFAdiantada}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                   ]}
-                  handleChange={(value) =>
-                    setDados({ ...dados, necessidadeNFAdiantada: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, necessidadeNFAdiantada: value })}
                 />
                 <SelectInput
-                  label={"NECESSIDADE CÓDIGO FINAME?"}
+                  label={'NECESSIDADE CÓDIGO FINAME?'}
                   editable={editable}
                   value={dados.necessidadeCodigoFiname}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                   ]}
-                  handleChange={(value) =>
-                    setDados({ ...dados, necessidadeCodigoFiname: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, necessidadeCodigoFiname: value })}
                 />
                 <SelectInput
-                  label={"FORMA DE PAGAMENTO"}
+                  label={'FORMA DE PAGAMENTO'}
                   editable={editable}
                   options={[
                     {
-                      label:
-                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                      value:
-                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                      label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+                      value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
                     },
                     {
-                      label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                      value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                      label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+                      value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                     },
                     {
-                      label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                      value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                      label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+                      value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]}
                   value={dados.formaDePagamento}
-                  handleChange={(value) =>
-                    setDados({ ...dados, formaDePagamento: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, formaDePagamento: value })}
                 />
               </div>
-              <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  DESCRIÇÃO DA NEGOCIAÇÃO
-                </span>
+              <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+                <span className="text-center font-raleway text-sm font-bold uppercase">DESCRIÇÃO DA NEGOCIAÇÃO</span>
                 <textarea
                   readOnly={!editable}
-                  placeholder={"Descreva aqui a negociação"}
+                  placeholder={'Descreva aqui a negociação'}
                   value={dados.descricaoNegociacao}
-                  className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                  onChange={(e) =>
-                    setDados({ ...dados, descricaoNegociacao: e.target.value })
-                  }
+                  className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+                  onChange={(e) => setDados({ ...dados, descricaoNegociacao: e.target.value })}
                 />
               </div>
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DISTRIBUIÇÃO DE CRÉDITOS
-              </span>
-              <div className="flex justify-center mt-2">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DISTRIBUIÇÃO DE CRÉDITOS</span>
+              <div className="mt-2 flex justify-center">
                 <SelectInput
-                  label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
+                  label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}
                   editable={editable}
                   value={dados.possuiDistribuicao}
                   options={[
                     {
-                      label: "NÃO",
-                      value: "NÃO",
+                      label: 'NÃO',
+                      value: 'NÃO',
                     },
                     {
-                      label: "SIM",
-                      value: "SIM",
+                      label: 'SIM',
+                      value: 'SIM',
                     },
                   ]}
-                  handleChange={(value) =>
-                    setDados({ ...dados, possuiDistribuicao: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, possuiDistribuicao: value })}
                 />
               </div>
-              {dados.possuiDistribuicao == "SIM" && (
+              {dados.possuiDistribuicao == 'SIM' && (
                 <>
                   {dados.distribuicoes.length > 0 && (
-                    <div className="flex flex-col gap-2 mt-4">
+                    <div className="mt-4 flex flex-col gap-2">
                       {dados.distribuicoes.map((distribuicao, index) => (
-                        <div
-                          key={index}
-                          className="flex justify-around flex-wrap"
-                        >
-                          <p className="text-sm font-bold text-gray-600 ">
-                            INSTALAÇÃO Nº{distribuicao.numInstalacao}
-                          </p>
-                          <p className="text-sm font-bold text-gray-600">
-                            {distribuicao.excedente}%
-                          </p>
+                        <div key={index} className="flex flex-wrap justify-around">
+                          <p className="text-sm font-bold text-gray-600 ">INSTALAÇÃO Nº{distribuicao.numInstalacao}</p>
+                          <p className="text-sm font-bold text-gray-600">{distribuicao.excedente}%</p>
                         </div>
                       ))}
                     </div>
@@ -1628,11 +1371,9 @@ function ModalSolicitacaoVendas({
                 </>
               )}
             </div>
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DOCUMENTOS NECESSÁRIOS
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DOCUMENTOS NECESSÁRIOS</span>
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <div className="w-fit">
                   <input
                     checked={dados.contaDeEnergia ? true : false}
@@ -1687,7 +1428,7 @@ function ModalSolicitacaoVendas({
                     VISITA TÉCNICA
                   </label>
                 </div>
-                {dados.tipoDaInstalacao == "RURAL" && (
+                {dados.tipoDaInstalacao == 'RURAL' && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1727,9 +1468,7 @@ function ModalSolicitacaoVendas({
                     </div>
                     <div className="w-fit">
                       <input
-                        checked={
-                          dados.comprovanteEnderecoCorrespondente ? true : false
-                        }
+                        checked={dados.comprovanteEnderecoCorrespondente ? true : false}
                         disabled={true}
                         onChange={(e) =>
                           setDados({
@@ -1741,10 +1480,7 @@ function ModalSolicitacaoVendas({
                         name="comprovanteEnderecoCorrespondente"
                         id="comprovanteEnderecoCorrespondente"
                       />
-                      <label
-                        className="ml-2"
-                        htmlFor="comprovanteEnderecoCorrespondente"
-                      >
+                      <label className="ml-2" htmlFor="comprovanteEnderecoCorrespondente">
                         COMPROVANTE ENDEREÇO CORRESPONDENTE
                       </label>
                     </div>
@@ -1768,7 +1504,7 @@ function ModalSolicitacaoVendas({
                     </div>
                   </>
                 )}
-                {dados.tipoDaInstalacao == "URBANO" && (
+                {dados.tipoDaInstalacao == 'URBANO' && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1790,7 +1526,7 @@ function ModalSolicitacaoVendas({
                     </div>
                   </>
                 )}
-                {dados.tipoDoTitular == "PESSOA FISICA" && (
+                {dados.tipoDoTitular == 'PESSOA FISICA' && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1812,7 +1548,7 @@ function ModalSolicitacaoVendas({
                     </div>
                   </>
                 )}
-                {dados.tipoDoTitular == "PESSOA JURIDICA" && (
+                {dados.tipoDoTitular == 'PESSOA JURIDICA' && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1852,9 +1588,7 @@ function ModalSolicitacaoVendas({
                     </div>
                     <div className="w-fit">
                       <input
-                        checked={
-                          dados.comprovanteEnderecoRepresentante ? true : false
-                        }
+                        checked={dados.comprovanteEnderecoRepresentante ? true : false}
                         disabled={true}
                         onChange={(e) =>
                           setDados({
@@ -1866,10 +1600,7 @@ function ModalSolicitacaoVendas({
                         name="comprovanteEnderecoRepresentante"
                         id="comprovanteEnderecoRepresentante"
                       />
-                      <label
-                        className="ml-2"
-                        htmlFor="comprovanteEnderecoRepresentante"
-                      >
+                      <label className="ml-2" htmlFor="comprovanteEnderecoRepresentante">
                         COMPROVANTE DE ENDEREÇO - REPRESENTANTE LEGAL
                       </label>
                     </div>
@@ -1893,8 +1624,7 @@ function ModalSolicitacaoVendas({
                     </div>
                   </>
                 )}
-                {(dados.aumentoDeCarga == "SIM" ||
-                  dados.tipoDaLigacao == "NOVA") && (
+                {(dados.aumentoDeCarga == 'SIM' || dados.tipoDaLigacao == 'NOVA') && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1916,7 +1646,7 @@ function ModalSolicitacaoVendas({
                     </div>
                   </>
                 )}
-                {dados.possuiDistribuicao == "SIM" && (
+                {dados.possuiDistribuicao == 'SIM' && (
                   <>
                     <div className="w-fit">
                       <input
@@ -1939,16 +1669,14 @@ function ModalSolicitacaoVendas({
                   </>
                 )}
               </div>
-              <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    COMENTÁRIOS AO VENDEDOR
-                  </span>
+              <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+                <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+                  <span className="text-center font-raleway text-sm font-bold uppercase">COMENTÁRIOS AO VENDEDOR</span>
                   <textarea
                     readOnly={true}
-                    placeholder={"Comentários aqui.."}
+                    placeholder={'Comentários aqui..'}
                     value={dados.comentariosAoVendedor}
-                    className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                    className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                     onChange={(e) =>
                       setDados({
                         ...dados,
@@ -1963,7 +1691,7 @@ function ModalSolicitacaoVendas({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ModalSolicitacaoVendas;
+export default ModalSolicitacaoVendas

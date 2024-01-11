@@ -1,23 +1,23 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import Select from "react-select";
-import SeparacaoCard from "../../components/SeparacaoCard";
-import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
-import { AiOutlineSearch } from "react-icons/ai";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import Select from 'react-select'
+import SeparacaoCard from '../../components/SeparacaoCard'
+import { cidadesAtendidas, equipesTecnicas } from '../../utils/constants'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 function ProjetosSeparacao() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState([])
+  const [filteredProjects, setFilteredProjects] = useState([])
   const [filters, setFilters] = useState({
     equipeFilter: [],
     cidadeFilter: [],
@@ -25,79 +25,60 @@ function ProjetosSeparacao() {
     statusDaObraFilter: [],
     entregaStatusFilter: [],
     qtdeModulosFilter: null,
-  });
+  })
   function getProjects() {
-    axios.get("/api/almoxarifado/projetos").then((res) => {
-      setFilteredProjects(res.data);
-      setProjects(res.data);
-    });
+    axios.get('/api/almoxarifado/projetos').then((res) => {
+      setFilteredProjects(res.data)
+      setProjects(res.data)
+    })
   }
   function filterProjects() {
-    var newArr;
+    var newArr
     if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.cidadeFilter.includes(project.cidade)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.cidadeFilter.includes(project.cidade))
     }
     if (filters.equipeFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.equipeFilter.includes(project.obra.equipeResp)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.equipeFilter.includes(project.obra.equipeResp))
     }
     if (filters.statusDaObraFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.statusDaObraFilter.includes(project.obra.statusDaObra)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.statusDaObraFilter.includes(project.obra.statusDaObra))
     }
     if (filters.entregaStatusFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.entregaStatusFilter.includes(project.compra.statusEntrega)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.entregaStatusFilter.includes(project.compra.statusEntrega))
     }
     if (filters.qtdeModulosFilter && filters.qtdeModulosFilter != 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) =>
-          Number(project.sistema.qtdeModulos) ==
-          Number(filters.qtdeModulosFilter)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => Number(project.sistema.qtdeModulos) == Number(filters.qtdeModulosFilter))
     }
     if (filters.topologiaFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.topologiaFilter.includes(project.sistema.topologia)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.topologiaFilter.includes(project.sistema.topologia))
     }
-    if (!newArr) setFilteredProjects(projects);
+    if (!newArr) setFilteredProjects(projects)
     else {
-      setFilteredProjects(newArr);
+      setFilteredProjects(newArr)
     }
   }
   useEffect(() => {
-    if (
-      session?.user.accessibleRoutes.includes("Obras") ||
-      session?.user.accessibleRoutes.includes("Almoxarifado")
-    ) {
-      getProjects();
+    if (session?.user.accessibleRoutes.includes('Obras') || session?.user.accessibleRoutes.includes('Almoxarifado')) {
+      getProjects()
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
+  }, [session])
 
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="p-6 grow flex flex-col">
+      <div className="flex grow flex-col p-6">
         <div className="flex flex-col items-center">
-          <h1 className="font-bold text-xl text-[#15599a]">
-            PROJETOS PARA SEPARAÇÃO ({filteredProjects?.length})
-          </h1>
+          <h1 className="text-xl font-bold text-[#15599a]">PROJETOS PARA SEPARAÇÃO ({filteredProjects?.length})</h1>
           <div className="flex flex-wrap justify-center gap-2">
             <Select
               placeholder="CIDADE"
@@ -106,7 +87,7 @@ function ProjetosSeparacao() {
                 return {
                   label: cidade,
                   value: cidade,
-                };
+                }
               })}
               onChange={(e) =>
                 setFilters({
@@ -125,10 +106,10 @@ function ProjetosSeparacao() {
                 })
               }
               options={[
-                { value: "EM ROTA", label: "EM ROTA" },
-                { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
-                { value: "ENTREGUE", label: "ENTREGUE" },
-                { value: undefined, label: "NÃO DEFINIDO" },
+                { value: 'EM ROTA', label: 'EM ROTA' },
+                { value: 'AGUARDANDO COMPRA', label: 'AGUARDANDO COMPRA' },
+                { value: 'ENTREGUE', label: 'ENTREGUE' },
+                { value: undefined, label: 'NÃO DEFINIDO' },
               ]}
             />
             <Select
@@ -147,32 +128,32 @@ function ProjetosSeparacao() {
               isMulti={true}
               options={[
                 {
-                  label: "AGENDADA",
-                  value: "AGENDADA",
+                  label: 'AGENDADA',
+                  value: 'AGENDADA',
                 },
                 {
-                  label: "AGUARDANDO AGENDAMENTO",
-                  value: "AGUARDANDO AGENDAMENTO",
+                  label: 'AGUARDANDO AGENDAMENTO',
+                  value: 'AGUARDANDO AGENDAMENTO',
                 },
                 {
-                  label: "CONCLUIDA",
-                  value: "CONCLUIDA",
+                  label: 'CONCLUIDA',
+                  value: 'CONCLUIDA',
                 },
                 {
-                  label: "EM ANDAMENTO",
-                  value: "EM ANDAMENTO",
+                  label: 'EM ANDAMENTO',
+                  value: 'EM ANDAMENTO',
                 },
                 {
-                  label: "OBRA CANCELADA",
-                  value: "OBRA CANCELADA",
+                  label: 'OBRA CANCELADA',
+                  value: 'OBRA CANCELADA',
                 },
                 {
-                  label: "CASA EM CONSTRUÇÃO",
-                  value: "CASA EM CONSTRUÇÃO",
+                  label: 'CASA EM CONSTRUÇÃO',
+                  value: 'CASA EM CONSTRUÇÃO',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
               onChange={(e) =>
@@ -186,10 +167,10 @@ function ProjetosSeparacao() {
               placeholder="TOPOLOGIA"
               isMulti={true}
               options={[
-                { label: "INVERSOR", value: "INVERSOR" },
-                { label: "MICRO", value: "MICRO" },
-                { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                { label: 'INVERSOR', value: 'INVERSOR' },
+                { label: 'MICRO-INVERSOR', value: 'MICRO-INVERSOR' },
+                { label: 'OUTROS SERV.', value: 'OUTROS SERV.' },
+                { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
               ]}
               onChange={(e) =>
                 setFilters({
@@ -200,7 +181,7 @@ function ProjetosSeparacao() {
             />
             <input
               type="number"
-              className="outline-none border border-gray-200 p-2 h-[36px] text-center w-[100px] text-xs"
+              className="h-[36px] w-[100px] border border-gray-200 p-2 text-center text-xs outline-none"
               placeholder="NºMódulos"
               onChange={(e) =>
                 setFilters({
@@ -211,30 +192,25 @@ function ProjetosSeparacao() {
             />
             <button
               onClick={filterProjects}
-              className="flex h-[36px] bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] py-2 px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />
             </button>
           </div>
         </div>
-        <div className="flex flex-col gap-3 mt-4 flex-wrap">
+        <div className="mt-4 flex flex-col flex-wrap gap-3">
           {filteredProjects.map((project) => (
             <SeparacaoCard
               key={project._id}
               info={project}
-              editor={
-                session?.user?.accessibleRoutes.includes("Almoxarifado") &&
-                session?.user?.visualizacao == undefined
-                  ? true
-                  : false
-              }
+              editor={session?.user?.accessibleRoutes.includes('Almoxarifado') && session?.user?.visualizacao == undefined ? true : false}
             />
           ))}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default ProjetosSeparacao;
+export default ProjetosSeparacao

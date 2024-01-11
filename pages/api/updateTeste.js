@@ -1,4 +1,5 @@
 import connectToDatabase from '../../utils/services/mongodb/warehouse'
+import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
@@ -6,20 +7,7 @@ import { ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY)
-  const collection = db.collection('material')
-
-  const materials = await collection.find({}).toArray()
-  const exportation = materials.map((material) => {
-    return {
-      NOME: material.nome,
-      'NOME TÉCNICO': material.nomeTecnico || 'N/A',
-      QUANTIDADE: material.qtde,
-      GRANDEZA: material.grandeza,
-      'PREÇO UNITÁRIO': material.preco,
-    }
-  })
-  return res.json(exportation)
+  return res.json('DESATIVADA')
 }
 
 // Update Many example:

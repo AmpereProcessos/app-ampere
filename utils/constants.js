@@ -1461,6 +1461,11 @@ export const sellerPhotos = [
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_ronivaldo.jpg?alt=media&token=97d1f1e1-4ff7-41a7-8358-4723afb9fedf',
   },
+  {
+    nome: 'FELIPE NOBREGA',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-felipe_nobrega?alt=media&token=3402f4da-c765-4e80-a5b2-6bf10cdf4acf',
+  },
 ]
 export const cities = [
   {

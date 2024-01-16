@@ -103,31 +103,31 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
 
   return (
     <>
-      <div className="flex items-center justify-center p-2 w-full bg-[#15599a] rounded-md gap-6">
+      <div className="flex w-full items-center justify-center gap-6 rounded-md bg-[#15599a] p-2">
         <div className="flex items-center gap-2">
           <MdNotifications color="#fff" />
           <h1 className="text-center font-medium text-white">PAINEL DE NOTIFICAÇÕES</h1>
         </div>
         {notifyMenuVisible ? (
-          <div className="text-white hover:text-blue-400 cursor-pointer">
+          <div className="cursor-pointer text-white hover:text-blue-400">
             <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setNotifyMenuVisible(false)} />
           </div>
         ) : (
-          <div className="text-white hover:text-blue-400 cursor-pointer">
+          <div className="cursor-pointer text-white hover:text-blue-400">
             <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setNotifyMenuVisible(true)} />
           </div>
         )}
       </div>
       <AnimatePresence>
         {notifyMenuVisible ? (
-          <motion.div variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col p-2">
-            <div className="w-full lg:w-[50%] flex flex-col self-center">
-              <div className="flex items-center justify-center gap-2 w-full">
-                <h1 className="font-bold text-gray-800 text-xs">REMETENTE</h1>
+          <motion.div variants={variants} initial="hidden" animate="visible" exit="exit" className="flex w-full flex-col p-2">
+            <div className="flex w-full flex-col self-center lg:w-[50%]">
+              <div className="flex w-full items-center justify-center gap-2">
+                <h1 className="text-xs font-bold text-gray-800">REMETENTE</h1>
                 <div className="h-full w-[1px] bg-gray-500"></div>
-                <div className="flex items-center gap-2  justify-center">
+                <div className="flex items-center justify-center  gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={session?.user?.image} />
-                  <p className="font-medium text-gray-500 text-xs">{session?.user?.name || 'Autor não identificado'}</p>
+                  <p className="text-xs font-medium text-gray-500">{session?.user?.name || 'Autor não identificado'}</p>
                 </div>
               </div>
               <SelectInputWithImages
@@ -151,18 +151,18 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
                 selectedItemLabel="NÃO DEFINIDO"
                 width="100%"
               />
-              <h1 className="font-bold text-gray-800 text-xs mt-4">MENSAGEM</h1>
+              <h1 className="mt-4 text-xs font-bold text-gray-800">MENSAGEM</h1>
               <textarea
-                className="mt-1 w-full outline-none rounded-md border border-gray-300 bg-gray-200 text-center text-sm p-3 resize-none"
+                className="mt-1 w-full resize-none rounded-md border border-gray-300 bg-gray-200 p-3 text-center text-sm outline-none"
                 value={notInfo.mensagem}
                 onChange={(e) => setNotInfo((prev) => ({ ...prev, mensagem: e.target.value }))}
               />
-              <div className="w-full flex items-center justify-end">
+              <div className="flex w-full items-center justify-end">
                 <button
                   onClick={notify}
-                  className="bg-blue-200 hover:text-white hover:bg-blue-600  rounded-lg mt-2 hover:scale-110 ease-in duration-300 text-[25px]"
+                  className="mt-2 rounded-lg bg-blue-200  text-[25px] duration-300 ease-in hover:scale-110 hover:bg-blue-600 hover:text-white"
                 >
-                  <div className="ease-in duration-300 -translate-x-1 p-2 rotate-45 hover:translate-x-0 hover:rotate-0 w-full h-hull">
+                  <div className="h-hull w-full -translate-x-1 rotate-45 p-2 duration-300 ease-in hover:translate-x-0 hover:rotate-0">
                     <IoIosSend />
                   </div>
                 </button>

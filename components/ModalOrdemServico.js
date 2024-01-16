@@ -29,6 +29,7 @@ import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
 
 import Select from './inputs/Select'
 import TextInput from './inputs/Text'
+import NotificationCreationBlock from './NotificationCreationBlock'
 
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   const queryClient = useQueryClient()
@@ -60,11 +61,11 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   }, [order])
   return (
     <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'90%'} height={'87%'}>
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-          <div className="flex items-center gap-2 flex-col lg:flex-row">
-            <h1 className="text-[#15599a] pl-6 text-xs lg:text-base font-bold">{order?.favorecido?.nome || '...'}</h1>
-            <p className="text-gray-500 text-center text-xs">#{order?._id || '...'}</p>
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <h1 className="pl-6 text-xs font-bold text-[#15599a] lg:text-base">{order?.favorecido?.nome || '...'}</h1>
+            <p className="text-center text-xs text-gray-500">#{order?._id || '...'}</p>
           </div>
           <button>
             <VscChromeClose
@@ -77,43 +78,44 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
         </div>
         {isSuccess && infoHolder ? (
           <>
-            <div className="flex flex-col px-2 py-2 lg:px-0 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-              <div className="items-center w-full flex justify-center">
-                <h1 className="p-1 rounded border border-[#15599a] text-[#15599a] text-sm font-black">{order.categoria}</h1>
+            <div className="overscroll-y flex flex-col overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:px-0">
+              <div className="flex w-full items-center justify-center">
+                <h1 className="rounded border border-[#15599a] p-1 text-sm font-black text-[#15599a]">{order.categoria}</h1>
               </div>
-              <h1 className="w-full text-center font-black mt-2">{order.descricao}</h1>
-              <div className="flex items-center justify-center gap-4 mt-2">
+              <h1 className="mt-2 w-full text-center font-black">{order.descricao}</h1>
+              <div className="mt-2 flex items-center justify-center gap-4">
                 <div className="flex items-center gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={order?.autor?.avatar_url} />
-                  <p className="font-medium text-gray-500 text-xs">{order?.autor?.nome || 'Autor não identificado'}</p>
+                  <p className="text-xs font-medium text-gray-500">{order?.autor?.nome || 'Autor não identificado'}</p>
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">
                   <BsCalendarFill />
                   <p className="text-xs font-medium">{dayjs(order?.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
                 </div>
               </div>
-              <div className="flex items-center justify-center gap-2 w-full mt-2">
+              <div className="mt-2 flex w-full items-center justify-center gap-2">
                 <div className="flex items-center gap-2">
                   <MdEngineering />
-                  <p className="font-medium text-gray-500 text-xs uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
+                  <p className="text-xs font-medium uppercase text-gray-500">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <IoMdAlert />
-                  <p className="font-medium text-gray-500 text-xs uppercase">{order?.urgencia}</p>
+                  <p className="text-xs font-medium uppercase text-gray-500">{order?.urgencia}</p>
                 </div>
               </div>
               {order?.dataEfetivacao ? (
-                <div className="flex w-full justify-center mt-4 items-center gap-2 text-green-500">
+                <div className="mt-4 flex w-full items-center justify-center gap-2 text-green-500">
                   <BsCalendarCheckFill />
                   <p className="text-xs font-medium">{dayjs(order?.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
                 </div>
               ) : (
                 <FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               )}
-              <div className="w-full p-2 rounded-md bg-gray-800 flex items-center gap-2 justify-center">
-                <h1 className="text-white font-bold">EXECUÇÃO</h1>
+              <NotificationCreationBlock nomeDoProjeto={infoHolder.projeto.nome} codProjeto={infoHolder.projeto.identificador} />
+              <div className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+                <h1 className="font-bold text-white">EXECUÇÃO</h1>
               </div>
-              <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+              <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
                 <div className="w-full lg:w-[25%]">
                   <Select
                     label={'CATEGORIA'}
@@ -167,7 +169,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                   )}
                 </div>
               </div>
-              <div className="w-full flex items-center justify-center mt-1">
+              <div className="mt-1 flex w-full items-center justify-center">
                 <div className="w-full lg:w-1/2">
                   <Select
                     label={'URGÊNCIA'}
@@ -194,10 +196,10 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                 history={order.periodo.historico}
               />
             </div>
-            <div className="py-1 w-full flex items-center justify-end border-t border-gray-200 px-4 mt-2">
+            <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
               <button
                 onClick={() => handleOrderUpdate()}
-                className="text-[#15599a] font-bold py-1 hover:text-[#15599a] hover:scale-105 duration-300 ease-in-out"
+                className="py-1 font-bold text-[#15599a] duration-300 ease-in-out hover:scale-105 hover:text-[#15599a]"
               >
                 SALVAR
               </button>

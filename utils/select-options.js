@@ -902,6 +902,15 @@ export const amperageOptions = [
   { id: 7, label: '100A', value: '100A' },
   { id: 8, label: '200A', value: '200A' },
 ]
+export const paymentMethods = [
+  { id: 1, label: 'À VISTA (GERAL)', value: 'À VISTA (GERAL)', apportionment: false, modality: null },
+  { id: 2, label: 'À VISTA (DINHEIRO)', value: 'À VISTA (DINHEIRO)', apportionment: false, modality: null },
+  { id: 3, label: 'À VISTA (PIX)', value: 'À VISTA (PIX)', apportionment: false, modality: null },
+  { id: 4, label: 'À VISTA (DÉBITO)', value: 'À VISTA (DÉBITO)', apportionment: false, modality: null },
+  { id: 5, label: 'BOLETO', value: 'BOLETO', apportionment: true, modality: 'SIMPLES' },
+  { id: 6, label: 'PARCELADO (CRÉDITO)', value: 'PARCELADO (CRÉDITO)', apportionment: true, modality: 'SIMPLES' },
+  { id: 7, label: 'FINANCIAMENTO', value: 'FINANCIAMENTO', apportionment: true, modality: 'COMPOSTOS' },
+]
 export const energyPATypes = [
   { id: 1, label: 'CONTRA À REDE', value: 'CONTRA À REDE' },
   { id: 2, label: 'À FAVOR DA REDE', value: 'À FAVOR DA REDE' },
@@ -968,3 +977,18 @@ export const orientationIcons = {
   SUL: MdSouth,
   SUDESTE: MdSouthEast,
 }
+
+export const revenueSources = [
+  { id: 1, label: 'SISTEMA FOTOVOLTAICO', value: 'SISTEMA FOTOVOLTAICO' },
+  { id: 2, label: 'SISTEMA FOTOVOLTAICO (OFF GRID)', value: 'SISTEMA FOTOVOLTAICO (OFF GRID)' },
+  { id: 3, label: 'BOMBA SOLAR', value: 'BOMBA SOLAR' },
+  { id: 4, label: 'OPERAÇÃO E MANUTENÇÃO', value: 'OPERAÇÃO E MANUTENÇÃO' },
+  { id: 5, label: 'TROCA DE PADRÃO', value: 'TROCA DE PADRÃO' },
+  { id: 6, label: 'REFORMA DE PADRÃO', value: 'REFORMA DE PADRÃO' },
+  { id: 7, label: 'MANUTENÇÃO CORRETIVA', value: 'MANUTENÇÃO CORRETIVA' },
+  { id: 8, label: 'MANUTENÇÃO PREVENTIVA', value: 'MANUTENÇÃO PREVENTIVA' },
+  { id: 9, label: 'MONTAGEM E DESMONTAGEM', value: 'MONTAGEM E DESMONTAGEM' },
+  { id: 10, label: 'TROCA DE STRING BOX', value: 'TROCA DE STRING BOX' },
+  { id: 11, label: 'SUBESTAÇÃO DE ENERGIA', value: 'SUBESTAÇÃO DE ENERGIA' },
+  { id: 12, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
+]

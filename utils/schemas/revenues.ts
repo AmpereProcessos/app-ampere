@@ -1,0 +1,145 @@
+import { z } from 'zod'
+import { AuthorSchema } from './users'
+import { ObjectId } from 'mongodb'
+
+const ObjectItem = {
+  _id: {
+    $oid: '64e7aa7c164a5e0bd82262c6',
+  },
+  tipo: 'SISTEMA FOTOVOLTAICO',
+  autor: {
+    id: '6318db05929e9f8731d8d9bb',
+    nome: 'Lucas Fernandes',
+  },
+  projeto: {
+    id: '6353ea37e559693d01d59df9',
+    nome: 'EMERENCIANO PADUA VILELA NETO ',
+    identificador: 49,
+  },
+  total: 25000,
+  efetivacao: {
+    efetivado: true,
+    data: '2019-09-12T07:00:00.000Z',
+  },
+  dataInsercao: '2019-09-12T07:00:00.000Z',
+  criterioReferencia: false,
+  criterioCompetencia: true,
+}
+
+const GeneralRevenueSchema = z.object({
+  nome: z.string(),
+  tipo: z.string(),
+  autor: AuthorSchema,
+  projeto: z.object({
+    id: z.string().optional().nullable(),
+    nome: z.string().optional().nullable(),
+    identificador: z.string().optional().nullable(),
+  }),
+  total: z.number(),
+  metodo: z.string(),
+  efetivacao: z.object({
+    efetivado: z.boolean().optional().nullable(),
+    data: z.string().datetime().optional().nullable(),
+  }),
+  fracionamento: z.array(
+    z.object({
+      porcentagem: z.number(),
+      dataPrevisaoRecebimento: z.string().datetime(),
+      dataRecebimento: z.string().datetime().optional().nullable(),
+    })
+  ),
+  dataInsercao: z.string().datetime(),
+})
+
+export const InsertRevenueSchema = z.object({
+  nome: z
+    .string({ required_error: 'Nome da receita não informada.', invalid_type_error: 'Tipo não o nome da receita.' })
+    .min(5, 'Preencha um nome de ao menos 5 caracteres.'),
+  tipo: z.string({ required_error: 'Tipo da receita não informada.', invalid_type_error: 'Tipo não válido para o tipo da receita.' }),
+  autor: AuthorSchema,
+  projeto: z.object({
+    id: z
+      .string({ required_error: 'ID do projeto não informado.', invalid_type_error: 'Tipo não válido para o ID do projeto.' })
+      .optional()
+      .nullable(),
+    nome: z
+      .string({ required_error: 'Nome do projeto não informado.', invalid_type_error: 'Tipo não válido para o nome do projeto.' })
+      .optional()
+      .nullable(),
+    identificador: z
+      .string({
+        required_error: 'Identificador do projeto não informado.',
+        invalid_type_error: 'Tipo não válido para o identificador do projeto.',
+      })
+      .optional()
+      .nullable(),
+  }),
+  total: z.number({ required_error: 'Total da receita não informado.' }).min(0, 'Valor de receita inválido.'),
+  metodo: z.string({ required_error: 'Método de recebimento não informado.', invalid_type_error: 'Tipo não válido para o método de recebimento.' }),
+  efetivacao: z.object({
+    efetivado: z
+      .boolean({ required_error: 'Status de efetivação não informado.', invalid_type_error: 'Tipo não válido para o status de efetivação.' })
+      .optional()
+      .nullable(),
+    data: z
+      .string({ required_error: 'Data de efetivação não informada.', invalid_type_error: 'Tipo não válido para a data de efetivação.' })
+      .datetime()
+      .optional()
+      .nullable(),
+  }),
+  fracionamento: z.array(
+    z.object({
+      porcentagem: z.number({
+        required_error: 'Porcentagem do fracionamento de receita não informado.',
+        invalid_type_error: 'Tipo não válido para a porcentagem do fracionamento.',
+      }),
+      dataPrevisaoRecebimento: z
+        .string({
+          required_error: 'Data de previsão de recebimento não informada.',
+          invalid_type_error: 'Tipo não válido para a previsão da data de recebimento.',
+        })
+        .datetime(),
+      dataRecebimento: z
+        .string({
+          required_error: 'Data de recebimento não informada.',
+          invalid_type_error: 'Tipo não válido para a data de recebimento.',
+        })
+        .datetime()
+        .optional()
+        .nullable(),
+    })
+  ),
+  dataInsercao: z
+    .string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção.' })
+    .datetime(),
+})
+
+const RevenueEntitySchema = z.object({
+  _id: z.instanceof(ObjectId),
+  nome: z.string(),
+  tipo: z.string(),
+  autor: AuthorSchema,
+  projeto: z.object({
+    id: z.string().optional().nullable(),
+    nome: z.string().optional().nullable(),
+    identificador: z.string().optional().nullable(),
+  }),
+  total: z.number(),
+  metodo: z.string(),
+  efetivacao: z.object({
+    efetivado: z.boolean().optional().nullable(),
+    data: z.string().datetime().optional().nullable(),
+  }),
+  fracionamento: z.array(
+    z.object({
+      porcentagem: z.number(),
+      dataPrevisaoRecebimento: z.string().datetime(),
+      dataRecebimento: z.string().datetime().optional().nullable(),
+    })
+  ),
+  dataInsercao: z.string().datetime(),
+})
+
+export type TRevenue = z.infer<typeof GeneralRevenueSchema>
+
+export type TRevenueDTO = TRevenue & { _id: string }

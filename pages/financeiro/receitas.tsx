@@ -96,7 +96,7 @@ function Receitas() {
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio comercial</p>
+            <p className="text-center text-2xl font-black uppercase text-[#15599a]">RECEITAS</p>
           </div>
           {dropdownMenuVisible ? (
             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
@@ -208,9 +208,6 @@ function Receitas() {
         {modalRevenue.isOpen && modalRevenue.id ? (
           <EditRevenue session={session} revenueId={modalRevenue.id} closeModal={() => setModalRevenue({ isOpen: false, id: null })} />
         ) : null}
-        {/* {modalRevenue && modalIsOpen ? (
-          <ExpenseModal expense={modalRevenue} closeModal={handleCloseModal} />
-        ) : null} */}
       </div>
       <a
         onClick={() => setNewExpenseModalIsOpen(true)}

@@ -1,4 +1,4 @@
-import { TProject } from '@/utils/schemas/projects'
+import { TProject, TProjectDTO } from '@/utils/schemas/projects'
 import { TBirthdayRecord } from '@/utils/schemas/stats'
 import axios from 'axios'
 import { useState } from 'react'
@@ -8,7 +8,7 @@ export async function fetchClients() {
   const { data } = await axios.get('/api/projects/todos')
   if (!data) return []
   if (!Array.isArray(data)) return []
-  return data as TProject[]
+  return data as TProjectDTO[]
 }
 
 export function useClients(enabled: boolean) {

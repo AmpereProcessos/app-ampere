@@ -19,6 +19,7 @@ import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoContratoBlock from './blocosInfoProjeto/InfoContratoBlock'
 import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessionariaBlock'
+import InfoReceitasBlock from './blocosInfoProjeto/InfoReceitasBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
@@ -130,6 +131,12 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 minimalInfo={false}
                 showPaymentInfo={true}
+              />
+              <InfoReceitasBlock
+                session={session}
+                projectId={projectId}
+                projectName={infoHolder.nomeDoContrato}
+                projectIdentificator={project.qtde}
               />
               <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) && (

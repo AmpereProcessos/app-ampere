@@ -5,20 +5,18 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 
 // Expenses by Project
-async function fetchProjectRevenues(projectId: string) {
+async function fetchProjectRevenues({ projectId }: { projectId: string }) {
   try {
-    const { data: revenues } = await axios.get(`/api/receitas?projectId=${projectId}`)
-    return revenues
+    const { data } = await axios.get(`/api/receitas?projectId=${projectId}`)
+    return data.data as TRevenueDTO[]
   } catch (error) {
     throw error
   }
 }
-export function useProjectRevenues(projectId: string, enabled: boolean) {
+export function useProjectRevenues({ projectId }: { projectId: string }) {
   return useQuery({
-    queryKey: ['projectRevenues', projectId],
-    queryFn: async () => await fetchProjectRevenues(projectId),
-    enabled: !!enabled,
-    refetchOnWindowFocus: false,
+    queryKey: ['project-revenues', projectId],
+    queryFn: async () => await fetchProjectRevenues({ projectId }),
   })
 }
 
@@ -80,7 +78,6 @@ export function useRevenues() {
     ...useQuery({
       queryKey: ['revenues'],
       queryFn: async () => await fetchRevenues(),
-      refetchOnWindowFocus: false,
       select: (data) => handleModelData(data),
     }),
     filters,

@@ -33,7 +33,7 @@ const GeneralRevenueSchema = z.object({
   projeto: z.object({
     id: z.string().optional().nullable(),
     nome: z.string().optional().nullable(),
-    identificador: z.string().optional().nullable(),
+    identificador: z.union([z.string(), z.number()]).optional().nullable(),
   }),
   total: z.number(),
   metodo: z.string(),
@@ -67,10 +67,16 @@ export const InsertRevenueSchema = z.object({
       .optional()
       .nullable(),
     identificador: z
-      .string({
-        required_error: 'Identificador do projeto não informado.',
-        invalid_type_error: 'Tipo não válido para o identificador do projeto.',
-      })
+      .union([
+        z.string({
+          required_error: 'Identificador do projeto não informado.',
+          invalid_type_error: 'Tipo não válido para o identificador do projeto.',
+        }),
+        z.number({
+          required_error: 'Identificador do projeto não informado.',
+          invalid_type_error: 'Tipo não válido para o identificador do projeto.',
+        }),
+      ])
       .optional()
       .nullable(),
   }),
@@ -122,7 +128,7 @@ const RevenueEntitySchema = z.object({
   projeto: z.object({
     id: z.string().optional().nullable(),
     nome: z.string().optional().nullable(),
-    identificador: z.string().optional().nullable(),
+    identificador: z.union([z.string(), z.number()]).optional().nullable(),
   }),
   total: z.number(),
   metodo: z.string(),

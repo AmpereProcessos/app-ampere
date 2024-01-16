@@ -26,6 +26,7 @@ const getRevenues: NextApiHandler<GetResponse> = async (req, res) => {
   // Query for a given project revenues
   if (projectId) {
     if (typeof projectId != 'string') throw new createHttpError.BadRequest('ID de projeto inválido.')
+    console.log('PROJETO ID', projectId)
     const revenues = await collection.find({ 'projeto.id': projectId }).toArray()
     return res.status(200).json({ data: revenues })
   }
@@ -44,7 +45,7 @@ type PostResponse = {
 
 const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-
+  console.log(req.body)
   const revenue = InsertRevenueSchema.parse(req.body)
 
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FaLink } from 'react-icons/fa'
+import { FaLink, FaUser } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
@@ -22,6 +22,7 @@ import ProjectVinculationMenu from '../despesas/ProjectVinculationMenu'
 import Fractionnements from './Fractionnements'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createRevenue } from '@/utils/methods/mutation/revenues'
+import { BsCode } from 'react-icons/bs'
 
 function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fracionamento'] }) {
   const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
@@ -80,18 +81,19 @@ function NewRevenue({ session, closeModal }: NewRevenueProps) {
     dataInsercao: new Date().toISOString(),
   })
 
-  function linkClient(info: any) {
-    const { _id, nomeDoContrato, qtde } = info
+  function handleLink(info: { id: string | null; nome: string | null; identificador: string | number | null }) {
+    console.log(info)
+    const { id, nome, identificador } = info
     const project = {
-      id: _id,
-      nome: nomeDoContrato,
-      identificador: qtde,
+      id: id,
+      nome: nome,
+      identificador: identificador,
     }
     setInfoHolder((prev) => ({ ...prev, projeto: project }))
-    toast.success('Projeto vinculado com sucesso!')
-    return
+
+    return toast.success('Projeto vinculado com sucesso!')
   }
-  function unlinkClient() {
+  function handleUnlink() {
     setInfoHolder((prev) => ({
       ...prev,
       projeto: {
@@ -109,17 +111,7 @@ function NewRevenue({ session, closeModal }: NewRevenueProps) {
     affectedQueryKey: ['revenues'],
     callbackFn: () => console.log(),
   })
-  async function validate() {
-    if (!infoHolder.tipo) {
-      toast.error('Preencha o tipo da receita.')
-      return false
-    }
-    if (infoHolder.total <= 0) {
-      toast.error('Valor da receita inválido.')
-      return false
-    }
-  }
-
+  console.log('INFOHOLDER', infoHolder)
   return (
     <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <div className="fixed left-[50%] top-[50%] z-[100] h-[70%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
@@ -135,14 +127,18 @@ function NewRevenue({ session, closeModal }: NewRevenueProps) {
             </button>
           </div>
           <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <ProjectVinculationMenu linkClient={linkClient} unlinkClient={unlinkClient} />
-            {infoHolder.projeto ? (
-              <>
-                <div className="my-2 flex w-full flex-col">
-                  <h1 className="w-full text-center font-raleway text-sm font-normal text-gray-500">NOME DO PROJETO</h1>
-                  <p className="w-full text-center font-raleway text-lg font-black text-gray-700">{infoHolder.projeto.nome}</p>
+            <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
+            {infoHolder.projeto.id ? (
+              <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
+                <div className="flex items-center gap-2">
+                  <BsCode size={'20px'} color="rgb(31,41,55)" />
+                  <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
                 </div>
-              </>
+                <div className="flex items-center gap-2">
+                  <FaUser size={'20px'} color="rgb(31,41,55)" />
+                  <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+                </div>
+              </div>
             ) : null}
             <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-1/2">

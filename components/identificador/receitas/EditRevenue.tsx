@@ -21,6 +21,8 @@ import { editRevenue } from '@/utils/methods/mutation/revenues'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { TRevenue, TRevenueDTO } from '@/utils/schemas/revenues'
 import { formatDate } from '../../../utils/constants'
+import { BsCode } from 'react-icons/bs'
+import { FaUser } from 'react-icons/fa'
 
 function getMissingPercentage({ fractionnement }: { fractionnement: TRevenueDTO['fracionamento'] }) {
   const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
@@ -57,18 +59,19 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
     dataInsercao: new Date().toISOString(),
   })
 
-  function linkClient(info: any) {
-    const { _id, nomeDoContrato, qtde } = info
+  function handleLink(info: { id: string | null; nome: string | null; identificador: string | number | null }) {
+    console.log(info)
+    const { id, nome, identificador } = info
     const project = {
-      id: _id,
-      nome: nomeDoContrato,
-      identificador: qtde,
+      id: id,
+      nome: nome,
+      identificador: identificador,
     }
     setInfoHolder((prev) => ({ ...prev, projeto: project }))
-    toast.success('Projeto vinculado com sucesso!')
-    return
+
+    return toast.success('Projeto vinculado com sucesso!')
   }
-  function unlinkClient() {
+  function handleUnlink() {
     setInfoHolder((prev) => ({
       ...prev,
       projeto: {
@@ -104,14 +107,18 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
             </button>
           </div>
           <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <ProjectVinculationMenu linkClient={linkClient} unlinkClient={unlinkClient} />
-            {infoHolder.projeto ? (
-              <>
-                <div className="my-2 flex w-full flex-col">
-                  <h1 className="w-full text-center font-raleway text-sm font-normal text-gray-500">NOME DO PROJETO</h1>
-                  <p className="w-full text-center font-raleway text-lg font-black text-gray-700">{infoHolder.projeto.nome}</p>
+            <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
+            {infoHolder.projeto.id ? (
+              <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
+                <div className="flex items-center gap-2">
+                  <BsCode size={'20px'} color="rgb(31,41,55)" />
+                  <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
                 </div>
-              </>
+                <div className="flex items-center gap-2">
+                  <FaUser size={'20px'} color="rgb(31,41,55)" />
+                  <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+                </div>
+              </div>
             ) : null}
             <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-1/2">

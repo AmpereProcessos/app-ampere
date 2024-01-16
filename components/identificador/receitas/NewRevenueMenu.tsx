@@ -24,6 +24,7 @@ type NewRevenueMenuProps = {
   projectId?: string | null
   projectName?: string | null
   projectIdentificator?: string | null
+  closeMenu: () => void
 }
 function NewRevenueMenu({ session, projectId, projectName, projectIdentificator }: NewRevenueMenuProps) {
   const queryClient = useQueryClient()
@@ -53,7 +54,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
     mutationKey: ['create-revenue'],
     mutationFn: createRevenue,
     queryClient: queryClient,
-    affectedQueryKey: ['revenues'],
+    affectedQueryKey: ['project-revenues', projectId],
     callbackFn: () => console.log(),
   })
   return (

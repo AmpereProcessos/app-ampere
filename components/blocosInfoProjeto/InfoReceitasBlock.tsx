@@ -36,7 +36,13 @@ function InfoReceitasBlock({ session, projectId, projectName, projectIdentificat
         )}
       </div>
       {newRevenueMenuIsOpen ? (
-        <NewRevenueMenu session={session} projectId={projectId} projectName={projectName} projectIdentificator={projectIdentificator} />
+        <NewRevenueMenu
+          session={session}
+          projectId={projectId}
+          projectName={projectName}
+          projectIdentificator={projectIdentificator}
+          closeMenu={() => setNewRevenueMenuIsOpen(false)}
+        />
       ) : null}
       <div className="mt-4 flex w-full flex-col flex-wrap items-start justify-center gap-4 px-2 lg:flex-row">
         {isLoading ? <LoadingPage /> : null}

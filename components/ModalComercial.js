@@ -36,7 +36,7 @@ import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
-import { handleComercialProjectUpdate } from '../utils/methods/mutation/comercial'
+import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
 import { useSession } from 'next-auth/react'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
@@ -49,15 +49,13 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   const [infoHolder, setInfo] = useState(project)
 
   const [changes, setChanges] = useState({})
-  const [msg, setMsg] = useState({
-    text: '',
-    color: '',
-  })
+
   const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: handleComercialProjectUpdate,
-    affectedQueryKey: ['comercial-projects'],
+    mutationFn: handleComercialUpdate,
+    affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
+    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['comercial-projects'] }),
   })
 
   useEffect(() => {
@@ -73,17 +71,15 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
             </div>
             <div className="flex items-center gap-x-2">
-              {msg.text && <p className={`hidden text-sm italic lg:block ${msg.color}`}>{msg.text}</p>}
               <SaveButton
                 text={'Salvar alterações'}
                 icon={<FaSave />}
-                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes })}
+                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
               />
               <button>
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            {msg.text && <p className={`block text-sm italic lg:hidden ${msg.color}`}>{msg.text}</p>}
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}

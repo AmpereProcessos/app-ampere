@@ -79,7 +79,7 @@ function RevenueCard({ revenue, openModal }: RevenueCardProps) {
         >
           {revenue.nome}
         </h1>
-        <div className="flex items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
+        <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
           <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(revenue.total)}</h1>
         </div>
       </div>

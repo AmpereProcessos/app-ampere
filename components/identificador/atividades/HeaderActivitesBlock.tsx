@@ -13,7 +13,6 @@ function HeaderActivitesBlock({ session }: HeaderActivitesBlockProps) {
   const { data: activities, filters, setFilters } = useResponsibleActivities({ id: session.user.id })
 
   const openActivitiesCount = activities ? activities.filter((a) => !a.dataConclusao).length : 0
-  console.log(activities)
   return (
     <div className="relative flex items-center">
       <button onClick={() => setActivitiesModalIsOpen(true)} className={`${openActivitiesCount ? 'text-red-500' : 'text-[#fead41]'}`}>

@@ -45,13 +45,13 @@ type PostResponse = {
 
 const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  console.log(req.body)
-  const revenue = InsertRevenueSchema.parse(req.body)
 
+  const revenue = InsertRevenueSchema.parse(req.body)
+  const author = { id: session.user.id, nome: session.user.name, avatar_url: session.user.image }
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const collection: Collection<TRevenue> = db.collection('receitas')
 
-  const insertResponse = await collection.insertOne({ ...revenue, dataInsercao: new Date().toISOString() })
+  const insertResponse = await collection.insertOne({ ...revenue, autor: author, dataInsercao: new Date().toISOString() })
 
   if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro na criação da receita.')
 

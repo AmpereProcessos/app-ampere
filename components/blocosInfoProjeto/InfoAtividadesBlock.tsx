@@ -51,7 +51,6 @@ type InfoAtividadesBlockProps = {
 function InfoAtividadesBlock({ projectId, projectName, projectIdentifier, session }: InfoAtividadesBlockProps) {
   const queryClient = useQueryClient()
   const { data: projectActivities, isSuccess, isLoading, isError } = useProjectActivities({ id: projectId })
-  console.log('ATIVIDADES DO PROJETO', projectActivities)
   return (
     <>
       <div className="flex w-full items-center justify-center gap-6 rounded-md bg-[#fead41] p-2">

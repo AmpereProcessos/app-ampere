@@ -66,7 +66,14 @@ function InfoAtividadesBlock({ projectId, projectName, projectIdentifier, sessio
         {isError ? <ErrorComponent msg={'Erro ao carregar atividades do projeto'} /> : null}
         {isSuccess ? (
           projectActivities.length > 0 ? (
-            projectActivities.map((activity) => <ProjectActivityCard key={activity._id} activity={activity} projectId={projectId} />)
+            projectActivities.map((activity) => (
+              <ProjectActivityCard
+                key={activity._id}
+                activity={activity}
+                projectId={projectId}
+                mutateCallback={async () => await queryClient.invalidateQueries({ queryKey: ['activities-by-responsible', session.user.id] })}
+              />
+            ))
           ) : (
             <h1 className="w-full py-1 text-center text-sm italic text-gray-500">Nenhuma atividade cadastrada...</h1>
           )

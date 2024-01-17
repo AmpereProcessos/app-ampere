@@ -22,7 +22,7 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { accessGrantingStatus, contractStatus, executionStatus, inspectionStatus } from '@/utils/select-options'
+import { accessGrantingStatus, contractStatus, executionStatus, inspectionStatus, journeyPendings } from '@/utils/select-options'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { TProjectDTO } from '@/utils/schemas/projects'
@@ -115,23 +115,23 @@ function Posvenda() {
   if (status != 'authenticated') return <LoadingPage />
 
   return (
-    <div className="p-6 grow">
+    <div className="grow p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-2">
-            <p className="font-black uppercase text-center text-2xl text-[#15599a]">PROJETOS EM JORNADA</p>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM JORNADA</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
-        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+        <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -181,7 +181,7 @@ function Posvenda() {
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
               {/* <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                 <button
                   onClick={() => setCardMode(!cardMode)}
@@ -205,7 +205,7 @@ function Posvenda() {
                   ORDERNAR
                 </button>
               </div> */}
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <TextInput
                   label="NOME DO CONTRATO"
                   placeholder="Digite o nome do contrato..."
@@ -218,8 +218,29 @@ function Posvenda() {
                   handleChange={(value) => setFilters((prev) => ({ ...prev, moduleQty: value }))}
                   placeholder="Digite o número de módulos..."
                 />
-                <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                  <div className="flex items-center gap-x-2 justify-center">
+                <div className="w-full lg:w-[350px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'PENDÊNCIAS DA JORNADA'}
+                    selected={filters.journeyPendings}
+                    options={journeyPendings}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        journeyPendings: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        journeyPendings: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                  <div className="flex items-center justify-center gap-x-2">
                     <div className="w-full lg:w-[250px]">
                       <DateInput
                         width={'100%'}
@@ -281,15 +302,15 @@ function Posvenda() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div className={`flex h flex-col gap-1`}>
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div className={`h flex flex-col gap-1`}>
                   <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
                     ORDERNAR POR CONTATO
                   </label>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder != 'ASC' ? 'ASC' : null }))}
-                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                      className={`rounded border  border-[#15599a] py-1 font-bold ${
                         filters.contactOrder == 'ASC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       } px-3`}
                     >
@@ -297,7 +318,7 @@ function Posvenda() {
                     </button>
                     <button
                       onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder != 'DESC' ? 'DESC' : null }))}
-                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                      className={`rounded border  border-[#15599a] py-1 font-bold ${
                         filters.contactOrder == 'DESC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       } px-3`}
                     >
@@ -305,14 +326,14 @@ function Posvenda() {
                     </button>
                   </div>
                 </div>
-                <div className={`flex h flex-col gap-1`}>
+                <div className={`h flex flex-col gap-1`}>
                   <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
                     MODO DE VISUALIZAÇÃO
                   </label>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setMode('CARD')}
-                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                      className={`rounded border  border-[#15599a] py-1 font-bold ${
                         mode == 'CARD' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       } px-3`}
                     >
@@ -320,7 +341,7 @@ function Posvenda() {
                     </button>
                     <button
                       onClick={() => setMode('SIMPLIFIED')}
-                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                      className={`rounded border  border-[#15599a] py-1 font-bold ${
                         mode == 'SIMPLIFIED' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
                       } px-3`}
                     >
@@ -329,7 +350,7 @@ function Posvenda() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <div className="w-full lg:w-[250px]">
                   <MultipleSelectInput
                     width={'100%'}
@@ -465,7 +486,7 @@ function Posvenda() {
                   />
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <div
                   onClick={() =>
                     setFilters({
@@ -475,7 +496,7 @@ function Posvenda() {
                   }
                   className={`${
                     filters.necessaryDistribution ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   NECESSÁRIO DISTRIBUIÇÃO
                 </div>
@@ -488,7 +509,7 @@ function Posvenda() {
                   }
                   className={`${
                     filters.missingSignature ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   FALTANDO ASSINATURA
                 </div>
@@ -501,7 +522,7 @@ function Posvenda() {
                   }
                   className={`${
                     filters.pendingContact ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   CONTATO PENDENTE
                 </div>
@@ -510,7 +531,7 @@ function Posvenda() {
           ) : null}
         </AnimatePresence>
       </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+      <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos em jornada.'} /> : null}
         {isSuccess ? projects.map((project) => <PosVendaCard key={project._id} projectId={project._id} project={project} mode={mode} />) : null}

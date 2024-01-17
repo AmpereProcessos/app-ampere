@@ -828,6 +828,21 @@ export const units = [
   { id: 8, label: 'LITROS (L)', value: 'L' },
   { id: 9, label: 'MESA', value: 'MESA' },
 ]
+export const journeyPendings = [
+  { id: 1, label: 'PENDENTE BOAS VINDAS', value: 'boasVindas' },
+  { id: 2, label: 'PENDENTE ASS.DOCUMENTOS', value: 'assDocumentacoes' },
+  { id: 3, label: 'PENDENTE COMPRA DO KIT', value: 'compraDoKit' },
+  { id: 4, label: 'PENDENTE NF FATURADA', value: 'nfFaturada' },
+  { id: 5, label: 'PENDENTE PREV. ENTREGA', value: 'prevChegada' },
+  { id: 6, label: 'PENDENTE RESP.CONCESSIONÁRIA', value: 'respConcessionaria' },
+  { id: 7, label: 'PENDENTE ENTREGA DO KIT', value: 'entregaDoKit' },
+  { id: 8, label: 'PENDENTE INSTALAÇÃO AGENDADA', value: 'instalacaoAgendada' },
+  { id: 9, label: 'PENDENTE INSTALAÇÃO REALIZADA', value: 'instalacaoRealizada' },
+  { id: 10, label: 'PENDENTE VISTORIA', value: 'vistoriaConcessionaria' },
+  { id: 11, label: 'PENDENTE SISTEMA LIGADO', value: 'sistemaLigado' },
+  { d: 12, label: 'PENDENTE ENTREGA TÉCNICA', value: 'entregaTecnica' },
+  { id: 13, label: 'JORNADA NÃO CONCLUÍDA', value: 'jornadaConcluida' },
+]
 export const inverterFixationOptions = [
   { id: 1, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
   { id: 2, label: 'ALVENARIA', value: 'ALVENARIA' },

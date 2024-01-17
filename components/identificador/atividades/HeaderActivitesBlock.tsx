@@ -10,7 +10,7 @@ type HeaderActivitesBlockProps = {
 }
 function HeaderActivitesBlock({ session }: HeaderActivitesBlockProps) {
   const [activitiesModalIsOpen, setActivitiesModalIsOpen] = useState<boolean>(false)
-  const { data: activities } = useResponsibleActivities({ id: session.user.id })
+  const { data: activities, filters, setFilters } = useResponsibleActivities({ id: session.user.id })
 
   const openActivitiesCount = activities ? activities.filter((a) => !a.dataConclusao).length : 0
   console.log(activities)
@@ -25,7 +25,13 @@ function HeaderActivitesBlock({ session }: HeaderActivitesBlockProps) {
         </div>
       ) : null}
       {activitiesModalIsOpen ? (
-        <HeaderActivitiesModal closeModal={() => setActivitiesModalIsOpen(false)} userId={session.user.id} activities={activities || []} />
+        <HeaderActivitiesModal
+          closeModal={() => setActivitiesModalIsOpen(false)}
+          userId={session.user.id}
+          activities={activities || []}
+          filters={filters}
+          setFilters={setFilters}
+        />
       ) : null}
     </div>
   )

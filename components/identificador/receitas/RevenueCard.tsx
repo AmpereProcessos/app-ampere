@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { BsCalendarFill, BsCalendarPlus, BsCheck2All, BsCircleHalf, BsEyeFill, BsEyeSlashFill } from 'react-icons/bs'
+import { BsCalendarFill, BsCalendarPlus, BsCheck2All, BsCircleHalf, BsEyeFill, BsEyeSlashFill, BsFillPatchCheckFill } from 'react-icons/bs'
 import { FaFilePdf, FaUserAlt } from 'react-icons/fa'
 import { formatDate, formatLongString, formatToMoney } from '../../../utils/constants'
 import { AiFillEdit, AiOutlineEdit, AiOutlineMoneyCollect, AiTwotoneEdit } from 'react-icons/ai'
@@ -54,7 +54,7 @@ function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO[
   if (!hasPendency)
     return (
       <div className="flex items-center gap-2">
-        <BsCheck2All color="#2c6e49" />
+        <BsFillPatchCheckFill color="#2c6e49" />
         <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">TOTALMENTE RECEBIDO</p>
       </div>
     )

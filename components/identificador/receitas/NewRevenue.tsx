@@ -82,7 +82,6 @@ function NewRevenue({ session, closeModal }: NewRevenueProps) {
   })
 
   function handleLink(info: { id: string | null; nome: string | null; identificador: string | number | null }) {
-    console.log(info)
     const { id, nome, identificador } = info
     const project = {
       id: id,

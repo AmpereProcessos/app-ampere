@@ -83,6 +83,7 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
     mutationFn: createActivity,
     queryClient: queryClient,
     affectedQueryKey: ['activities-by-project', projectId],
+    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['activities-by-responsible', session.user.id] }),
   })
   return (
     <div className="flex w-full flex-col px-2">

@@ -30,7 +30,7 @@ const GeneralExpenseSchema = z.object({
   projeto: z.object({
     id: z.string().optional().nullable(),
     nome: z.string().optional().nullable(),
-    identificador: z.number().optional().nullable(),
+    identificador: z.union([z.string(), z.number()]).optional().nullable(),
     tipo: z.string().optional().nullable(),
   }),
   idFormularioAlmoxarifado: z.string().optional().nullable(),
@@ -53,7 +53,10 @@ const InsertExpenseSchema = z.object({
   projeto: z.object({
     id: z.string({ invalid_type_error: 'Tipo não válido para o ID do projeto de referência.' }).optional().nullable(),
     nome: z.string({ invalid_type_error: 'Tipo não válido para o nome do projeto de referência.' }).optional().nullable(),
-    identificador: z.number({ invalid_type_error: 'Tipo não válido para o identificador do projeto de referência.' }).optional().nullable(),
+    identificador: z
+      .union([z.string(), z.number()], { invalid_type_error: 'Tipo não válido para o identificador do projeto de referência.' })
+      .optional()
+      .nullable(),
     tipo: z.string({ invalid_type_error: 'Tipo não válido para o tipo do projeto de referência.' }).optional().nullable(),
   }),
   idFormularioAlmoxarifado: z.string({ invalid_type_error: 'Tipo não válido para o ID de formulário de almoxarifado.' }).optional().nullable(),
@@ -85,7 +88,7 @@ const ExpenseEntitySchema = z.object({
   projeto: z.object({
     id: z.string().optional().nullable(),
     nome: z.string().optional().nullable(),
-    identificador: z.number().optional().nullable(),
+    identificador: z.union([z.string(), z.number()]).optional().nullable(),
     tipo: z.string().optional().nullable(),
   }),
   idFormularioAlmoxarifado: z.string().optional().nullable(),

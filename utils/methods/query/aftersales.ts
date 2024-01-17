@@ -139,6 +139,7 @@ export function useAfterSalesProjects() {
     grantingStatus: string[]
     inspectionStatus: string[]
     executionStatus: string[]
+    journeyPendings: string[]
     necessaryDistribution: boolean
     missingSignature: boolean
     pendingContact: boolean
@@ -159,6 +160,7 @@ export function useAfterSalesProjects() {
     grantingStatus: [],
     inspectionStatus: [],
     executionStatus: [],
+    journeyPendings: [],
     necessaryDistribution: false,
     missingSignature: false,
     pendingContact: false,
@@ -194,6 +196,11 @@ export function useAfterSalesProjects() {
   function matchExecutionStatus(project: TProjectDTO) {
     if (filters.executionStatus.length == 0) return true
     else return filters.executionStatus.includes(project.obra?.statusDaObra || '')
+  }
+  function matchJourneyPendings(project: TProjectDTO) {
+    if (filters.journeyPendings.length == 0) return true
+    const matchesPendings = filters.journeyPendings.every((field) => !project.jornada[field as keyof TProjectDTO['jornada']])
+    return matchesPendings
   }
   function matchInspectionStatus(project: TProjectDTO) {
     if (filters.inspectionStatus.length == 0) return true
@@ -259,6 +266,7 @@ export function useAfterSalesProjects() {
         matchCity(project) &&
         matchDeliveryStatus(project) &&
         matchExecutionStatus(project) &&
+        matchJourneyPendings(project) &&
         matchInspectionStatus(project) &&
         matchGrantingStatus(project) &&
         matchNecessaryDistribution(project) &&

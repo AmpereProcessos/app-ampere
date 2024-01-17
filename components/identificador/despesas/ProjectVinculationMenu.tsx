@@ -66,9 +66,9 @@ function ProjectVinculationMenu({ handleLink, handleUnlink }: ProjectVinculation
     <div className="flex w-full flex-col">
       <div
         onClick={() => setMenuIsOpen((prev) => !prev)}
-        className="flex w-fit cursor-pointer items-center justify-center gap-2 self-center text-blue-500 duration-300 ease-in-out hover:text-blue-600"
+        className="flex w-fit cursor-pointer items-center justify-center gap-2 self-center rounded bg-blue-500 px-2 py-1 text-white duration-300 ease-in-out hover:bg-blue-600"
       >
-        <h1 className="font-medium">VINCULE UM PROJETO</h1>
+        <h1 className="font-bold">VINCULE UM PROJETO</h1>
         <FaLink />
       </div>
       <AnimatePresence>

@@ -1661,6 +1661,15 @@ export const cidadesAtendidas = [
   'JATAÍ', // GO
   'ANÁPOLIS', // GO
   'RIO VERDE', // GO
+  'ELDORADO', // "SP"
+  'IGUATEMI', // MS
+  'TACURU', // MS
+  'SETE QUEDAS', // MS
+  'PARANHOS', // MS
+  'AMAMBAÍ', // MS
+  'ARAL MOREIRA', // MS
+  'CAARAPÓ', // MS
+  'JUTÍ', //MS
 ]
 export const cidadesGoias = [
   'CALDAS NOVAS', // GO

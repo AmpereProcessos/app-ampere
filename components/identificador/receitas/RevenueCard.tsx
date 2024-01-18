@@ -11,6 +11,7 @@ import { MdOutlineAssignmentLate, MdPayment, MdTimer } from 'react-icons/md'
 import { FaDiamond } from 'react-icons/fa6'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { TbAlertHexagon } from 'react-icons/tb'
 
 function renderStatusTag({ total, realization }: { total: number; realization: TRevenueDTO['efetivacao'] }) {
   if (realization.efetivado)
@@ -50,6 +51,14 @@ function renderStatusTag({ total, realization }: { total: number; realization: T
   )
 }
 function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO['fracionamento'] }) {
+  const hasFractionnement = fractionnement.length > 0
+  if (!hasFractionnement)
+    return (
+      <div className="flex items-center gap-2">
+        <TbAlertHexagon color="#6c757d" />
+        <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">SEM FRACIONAMENTOS</p>
+      </div>
+    )
   const hasPendency = fractionnement.some((fraction) => !fraction.dataRecebimento)
   if (!hasPendency)
     return (

@@ -3,7 +3,8 @@ import connectToCRMDatabase from '../../utils/services/mongodb/crm/main'
 import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
 import connectToUsersDatabase from '../../utils/services/mongodb/users'
 import { ObjectId } from 'mongodb'
-
+import GenerationFactors from '../../utils/jsons/fatores-geracao.json'
+import { formatDateAsLocale } from '../../utils/methods/formatting'
 function getList({ str, category }) {
   if (category != 'MONTAGEM') return null
   if (typeof str != 'string') return null
@@ -27,52 +28,34 @@ function getList({ str, category }) {
 export default async function handler(req, res) {
   const projectDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
   const projectsCollection = await projectDb.collection('dados')
-  const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-  const crmProjectsCollection = crmDb.collection('projects')
 
-  const projectsWithProposeId = await projectsCollection
-    .aggregate([
-      {
-        $match: {
-          idPropostaCRM: { $ne: null },
-          tipoDeServico: 'SISTEMA FOTOVOLTAICO',
-        },
-      },
-      {
-        $project: {
-          nomeDoContrato: 1,
-          idPropostaCRM: 1,
-        },
-      },
-    ])
-    .toArray()
-  const proposes = await crmProposesCollection
-    .aggregate([
-      {
-        $project: {
-          precificacao: 1,
-        },
-      },
-    ])
-    .toArray()
-  const formatted = projectsWithProposeId.map((project) => {
-    const proposeId = project.idPropostaCRM
-    const equivalentPropose = proposes.find((propose) => propose._id == proposeId)
-    if (!equivalentPropose) return null
-    const kitPrice = equivalentPropose.precificacao.kit?.custo || 0
+  const projects = await projectsCollection.find({ 'contrato.status': 'ASSINADO', 'vistoria.status': 'REALIZADA' }).toArray()
+
+  const filtered = projects.filter((project) => {
+    const genFactor = GenerationFactors.find((gen) => gen.CIDADE == project.cidade)?.ANUAL || 127
+    console.log(genFactor)
+    const peakPower = project.sistema.potPico || 0
+    const expectedGen = peakPower * genFactor
+    return expectedGen >= 9000
+  })
+
+  const formatted = filtered.map((project) => {
+    const genFactor = GenerationFactors.find((gen) => gen.CIDADE == project.cidade)?.ANUAL || 127
+    console.log(genFactor)
+    const peakPower = project.sistema.potPico || 0
+    const expectedGen = peakPower * genFactor
     return {
-      updateOne: {
-        filter: { _id: new ObjectId(project._id) },
-        update: {
-          $set: {
-            'compra.previsaoValorDoKit': Number(Number(kitPrice).toFixed(2)),
-          },
-        },
-      },
+      NOME: project.nomeDoContrato,
+      TELEFONE: project.telefone,
+      VENDEDOR: project.vendedor.nome,
+      'POTÊNCIA PICO': project.sistema.potPico,
+      'EXPECTATIVA DE GERAÇÃO': expectedGen || 0,
+      ASSINATURA: formatDateAsLocale(project.contrato.dataAssinatura),
     }
   })
-  console.log(formatted.length)
-
-  const dbResponse = await projectsCollection.bulkWrite(formatted)
-  res.json(dbResponse)
+  const totalPower = formatted.reduce((acc, current) => {
+    return acc + current['POTÊNCIA PICO']
+  }, 0)
+  console.log(totalPower)
+  res.json(formatted)
 }

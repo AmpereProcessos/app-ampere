@@ -29,7 +29,7 @@ import { useSession } from 'next-auth/react'
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
-    const { data: session } = useSession()
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
@@ -102,18 +102,17 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                     project={project}
                   />
                 )}
-              {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
-                <InfoCompraBlock
-                  editor={true}
-                  project={project}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  showDeliveryInfoOnly={false}
-                  showMonetaryValues={true}
-                />
-              )}
+              <InfoCompraBlock
+                editor={true}
+                project={project}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showDeliveryInfoOnly={false}
+                showMonetaryValues={true}
+              />
+
               <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               <InfoArquivosBlock
                 project={project}

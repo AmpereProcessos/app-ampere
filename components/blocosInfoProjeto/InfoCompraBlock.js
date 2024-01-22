@@ -34,8 +34,8 @@ function InfoCompraBlock({
             editable={comercialEditionOnly}
             checked={infoHolder.compra.liberacao}
             handleChange={(value) => {
-              setChanges((prev) => ({ ...prev, 'compra.liberacao': value }))
-              setInfo((prev) => ({ ...prev, compra: { ...prev.compra, liberacao: value } }))
+              setChanges((prev) => ({ ...prev, 'compra.liberacao': value, status: 'PREDEFINIÇÃO DE EQUIPAMENTOS' }))
+              setInfo((prev) => ({ ...prev, compra: { ...prev.compra, liberacao: value, status: 'PREDEFINIÇÃO DE EQUIPAMENTOS' } }))
             }}
           />
           {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (

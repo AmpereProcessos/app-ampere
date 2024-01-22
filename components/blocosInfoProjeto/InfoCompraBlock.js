@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { formatDate, fornecedores, statusLiberacao } from '../../utils/constants'
+import { formatDate, formatToMoney, fornecedores, statusLiberacao } from '../../utils/constants'
 import DateInput from '../DateInput'
 import NumberInput from '../NumberInput'
 import SelectInput from '../SelectInput'
@@ -12,6 +12,25 @@ import { supplementationStatus } from '../../utils/select-options'
 import CheckboxInput from '../inputs/Checkbox'
 import { BsCalendarFill } from 'react-icons/bs'
 
+function getPrevisionStatus({ forecast, final }) {
+  if (!final || final == 0)
+    return (
+      <h1 className="absolute right-10 top-10 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500">
+        PREVISTO PARA O KIT: {formatToMoney(forecast)}
+      </h1>
+    )
+  if (final < forecast)
+    return (
+      <h1 className="absolute right-10 top-10 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500">
+        PREVISTO PARA O KIT: {formatToMoney(forecast)}
+      </h1>
+    )
+  return (
+    <h1 className="absolute right-10 top-10 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500">
+      PREVISTO PARA O KIT: {formatToMoney(forecast)}
+    </h1>
+  )
+}
 function InfoCompraBlock({
   editor,
   comercialEditionOnly,
@@ -26,7 +45,11 @@ function InfoCompraBlock({
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
-      <div className="mb-4 flex w-full flex-col items-center justify-center gap-2">
+      <div className="relative mb-4 flex w-full flex-col items-center justify-center gap-2">
+        {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
+        {/* <h1 className="absolute right-10 top-10 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500">
+          PREVISTO PARA O KIT {formatToMoney(infoHolder.compra.previsaoValorDoKit)}
+        </h1> */}
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA COMPRA'}
@@ -140,6 +163,31 @@ function InfoCompraBlock({
             })
           }}
         />
+        {comercialEditionOnly ? (
+          <NumberInput
+            tag={'R$'}
+            label={'PREV. VALOR DO KIT'}
+            editable={editor}
+            value={
+              infoHolder.compra?.previsaoValorDoKit != undefined && infoHolder.compra?.previsaoValorDoKit != '-'
+                ? infoHolder.compra?.previsaoValorDoKit
+                : 0
+            }
+            handleChange={(value) => {
+              setChanges({
+                ...changes,
+                'compra.previsaoValorDoKit': Number(value),
+              })
+              setInfo({
+                ...infoHolder,
+                compra: {
+                  ...infoHolder.compra,
+                  previsaoValorDoKit: Number(value),
+                },
+              })
+            }}
+          />
+        ) : null}
         {showMonetaryValues && (
           <NumberInput
             tag={'R$'}
@@ -286,29 +334,6 @@ function InfoCompraBlock({
       </div>
       {!showDeliveryInfoOnly && (
         <div className="flex flex-wrap justify-center gap-2 pb-2 ">
-          {/* <DateInput
-            label={'Data de liberação p/ compra'}
-            editable={comercialEditionOnly}
-            value={
-              infoHolder.compra?.dataLiberacao != undefined && infoHolder.compra.dataLiberacao != '-'
-                ? new Date(infoHolder.compra.dataLiberacao).toISOString().slice(0, 10)
-                : 0
-            }
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'compra.dataLiberacao': isNaN(value) ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                compra: {
-                  ...infoHolder.compra,
-                  dataLiberacao: isNaN(value) ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          /> */}
-
           <TextInput
             label={'INFORMAÇÕES'}
             value={infoHolder.compra?.informacoes ? infoHolder.compra?.informacoes : ''}

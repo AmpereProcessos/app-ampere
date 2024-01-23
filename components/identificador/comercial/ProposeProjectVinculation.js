@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import TextInput from '../../inputs/Text'
 import { useMutationWithFeedback } from '../../../utils/methods/mutation/general-hook'
-import { updateCRMProject } from '../../../utils/methods/mutation/comercial'
+import { updateCRMProject } from '../../../utils/methods/crm-integration'
 
 import toast from 'react-hot-toast'
 import { updateProject } from '../../../utils/methods/mutation/clients'
@@ -55,15 +55,15 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
     }
   }
   return (
-    <div className="flex flex-col min-w-[350px]">
+    <div className="flex min-w-[350px] flex-col">
       <button
         onClick={() => setMenuIsOpen((prev) => !prev)}
-        className={`text-sm text-gray-500 hover:text-cyan-500 duration-300 ease-in-out text-center`}
+        className={`text-center text-sm text-gray-500 duration-300 ease-in-out hover:text-cyan-500`}
       >
         {menuIsOpen ? 'FECHAR MENU' : 'ABRIR MENU DE VINCULAÇÃO'}
       </button>
       {menuIsOpen ? (
-        <div className="w-full border border-gray-300 flex flex-col gap-2 p-3 rounded">
+        <div className="flex w-full flex-col gap-2 rounded border border-gray-300 p-3">
           <TextInput
             label={'ID DO PROJETO NO CRM'}
             value={CRMInformation.projectId}
@@ -80,7 +80,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
           />
           <button
             onClick={mutate}
-            className="w-full text-sm py-2 rounded-md border border-black hover:bg-black hover:text-white duration-300 ease-in-out font-medium tracking-tight leading-none"
+            className="w-full rounded-md border border-black py-2 text-sm font-medium leading-none tracking-tight duration-300 ease-in-out hover:bg-black hover:text-white"
           >
             VINCULAR
           </button>

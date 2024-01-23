@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { RiDashboardFill } from 'react-icons/ri'
 import { TbRecharging, TbDashboard } from 'react-icons/tb'
-import { FaDatabase, FaShoppingCart, FaTools, FaTasks, FaSolarPanel, FaBox } from 'react-icons/fa'
+import { FaDatabase, FaShoppingCart, FaTools, FaTasks, FaSolarPanel, FaBox, FaWarehouse } from 'react-icons/fa'
 import { TbTruckDelivery, TbReportAnalytics } from 'react-icons/tb'
 import { AiOutlineForm, AiOutlinePercentage } from 'react-icons/ai'
 import {
@@ -220,7 +220,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           {checkRoute('Almoxarifado', true) ? (
             <Link href={'/almoxarifado'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <FaBox style={{ color: '#15599a', fontSize: '20px' }} />
+                <FaWarehouse style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>
               </a>
             </Link>

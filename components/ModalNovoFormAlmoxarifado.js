@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import createHttpError from 'http-errors'
 import { toast } from 'react-hot-toast'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import Select from 'react-select'
 import { useSession } from 'next-auth/react'
 
@@ -38,8 +38,8 @@ const OVERLAY_STYLES = {
   backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
 }
-function NovoFormulario({ setModalIsOpen, getForms }) {
-  const { data: session } = useSession()
+function NovoFormulario({ session, closeModal, invalidateQuery }) {
+  const queryClient = useQueryClient()
   const [mutationStatus, setMutationStatus] = useState()
   // Getting data from database to enable integration with clients and materials
   const { data: clients, isFetching: clientsFetching } = useClients(!!session.user)
@@ -182,7 +182,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
         materiais: [],
       })
       toast.success('Formulário criado com sucesso !')
-      getForms()
+      invalidateQuery()
     } catch (error) {
       if (createHttpError.isHttpError(error) && error.expose) toast.error(error.message)
       else toast.error('Erro no processo de criação do formulário.')
@@ -193,20 +193,20 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
-          <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">ABERTURA DE REQUISIÇÃO</h1>
+          <div className="flex h-full flex-col">
+            <div className="flex justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+              <h1 className="pl-6 font-bold uppercase text-[#15599a]">ABERTURA DE REQUISIÇÃO</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setModalIsOpen(false)
+                    closeModal()
                   }}
                   style={{ color: 'red' }}
                 />
               </button>
             </div>
-            <div className="flex flex-col grow overflow-y-auto">
-              <div className="w-full flex items-center justify-center gap-4 mt-4">
+            <div className="flex grow flex-col overflow-y-auto">
+              <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <div className="flex items-center gap-1">
                   <input
                     id="usoCliente"
@@ -246,8 +246,8 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                 </div>
               </div>
               {callInfo.uso == 'CLIENTE' ? (
-                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
-                  <span className="text-center uppercase font-bold">CLIENTE</span>
+                <div className="mt-2 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row lg:items-center">
+                  <span className="text-center font-bold uppercase">CLIENTE</span>
                   <div className={'grow'}>
                     <Select
                       isMulti={false}
@@ -291,8 +291,8 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                 </div>
               ) : null}
               {callInfo.uso == 'TERCEIRO' ? (
-                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
-                  <span className="text-center uppercase font-bold">TERCEIRO</span>
+                <div className="mt-2 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row lg:items-center">
+                  <span className="text-center font-bold uppercase">TERCEIRO</span>
                   <input
                     value={callInfo.nomeTerceiro}
                     onChange={(e) =>
@@ -302,16 +302,16 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                       }))
                     }
                     placeholder="Digite aqui o nome do terceiro..."
-                    className="outline-none grow p-1 h-[41px] border border-gray-200 rounded-md text-center"
+                    className="h-[41px] grow rounded-md border border-gray-200 p-1 text-center outline-none"
                   />
                 </div>
               ) : null}
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">RESPONSÁVEL</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">RESPONSÁVEL</span>
                 <select
                   value={callInfo.responsavel}
                   onChange={(e) => setCallInfo({ ...callInfo, responsavel: e.target.value })}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   <option value={'A DEFINIR'}>A DEFINIR</option>
                   <option value={'DANNIEL RODRIGUES'}>DANNIEL RODRIGUES</option>
@@ -320,8 +320,8 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   <option value={'DIOGO PAULINO'}>DIOGO PAULINO</option>
                 </select>
               </div>
-              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">EQUIPE RESP</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row lg:items-center">
+                <span className="text-center font-bold uppercase">EQUIPE RESP</span>
                 <div className={'grow'}>
                   <SelectInput
                     label="EQUIPE"
@@ -334,12 +334,12 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   {/* <p className="text-gray-600 text-center">{dados.equipeResp ? dados.equipeResp : '-'}</p> */}
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">SERVIÇO</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">SERVIÇO</span>
                 <select
                   value={callInfo.servico}
                   onChange={(e) => setCallInfo({ ...callInfo, servico: e.target.value })}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   <option value={'PADRÃO'}>PADRÃO</option>
                   <option value={'ESTRUTURA'}>ESTRUTURA</option>
@@ -349,17 +349,17 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                 </select>
               </div>
-              <div className="w-full flex flex-col border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">ADICIONAR MATERIAIS</span>
+              <div className="mt-4 flex w-full flex-col border border-gray-200 p-2">
+                <span className="text-center font-bold uppercase">ADICIONAR MATERIAIS</span>
                 <AddMaterialFormulario materials={materials} materialsFetching={materialsFetching} addMaterial={addMaterial} />
               </div>
-              {materialMsg && <p className="text-sm italic text-red-500 text-center">{materialMsg}</p>}
-              <div className="flex grow flex-col gap-y-2 border border-gray-200 p-2 mt-4">
-                <h1 className="font-bold text-center">SAÍDA</h1>
+              {materialMsg && <p className="text-center text-sm italic text-red-500">{materialMsg}</p>}
+              <div className="mt-4 flex grow flex-col gap-y-2 border border-gray-200 p-2">
+                <h1 className="text-center font-bold">SAÍDA</h1>
                 <div className="flex flex-col overflow-y-auto overscroll-y-auto">
                   {callInfo.materiais.map((obj, index) => (
                     <div key={index} className="flex items-center justify-between px-2">
-                      <p className="list-none text-center text-gray-600 font-bold">
+                      <p className="list-none text-center font-bold text-gray-600">
                         {obj.nome} - ({obj.qtdeSaida})
                       </p>
                       <button
@@ -375,13 +375,13 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   ))}
                 </div>
               </div>
-              <div className="flex items-center justify-center w-full max-h-[40px] h-[40px]">
+              <div className="flex h-[40px] max-h-[40px] w-full items-center justify-center">
                 {!isLoading ? (
-                  <button onClick={mutate} className="w-fit rounded p-2 bg-blue-300 hover:bg-blue-700 text-white font-bold">
+                  <button onClick={mutate} className="w-fit rounded bg-blue-300 p-2 font-bold text-white hover:bg-blue-700">
                     ABRIR FORMULÁRIO
                   </button>
                 ) : (
-                  <div className={`flex items-center justify-center h-[40px] w-full`}>
+                  <div className={`flex h-[40px] w-full items-center justify-center`}>
                     <LoadingPage />
                   </div>
                 )}

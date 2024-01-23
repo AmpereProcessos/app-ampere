@@ -8,17 +8,17 @@ import { FaBox } from 'react-icons/fa'
 import { ImPriceTag } from 'react-icons/im'
 import { AiFillWarning, AiOutlineReload, AiOutlineSearch } from 'react-icons/ai'
 
-import ModalControlAlmoxarifado from '../../components/ModalControlAlmoxarifado'
-import ModalNovoItemAlmoxarifado from '../../components/ModalNovoItemAlmoxarifado'
-import LoadingPage from '../../components/utils/LoadingPage'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
-import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
-import ModalEntradaAlmoxarifado from '../../components/ModalEntradaAlmoxarifado'
-import { useMaterialsWithFilters } from '../../utils/methods/query/materials'
+import ModalControlAlmoxarifado from '../../../components/ModalControlAlmoxarifado'
+import ModalNovoItemAlmoxarifado from '../../../components/ModalNovoItemAlmoxarifado'
+import LoadingPage from '../../../components/utils/LoadingPage'
+import FilterButton from '../../../components/utils/Buttons/FilterButton'
+import FetchDataButton from '../../../components/utils/Buttons/FetchDataButton'
+import ModalEntradaAlmoxarifado from '../../../components/ModalEntradaAlmoxarifado'
+import { useMaterialsWithFilters } from '../../../utils/methods/query/materials'
 import { TbReportSearch } from 'react-icons/tb'
-import TextInput from '../../components/inputs/Text'
-import NumberInput from '../../components/inputs/Number'
-import MaterialCard from '../../components/identificador/almoxarifado/MaterialCard'
+import TextInput from '../../../components/inputs/Text'
+import NumberInput from '../../../components/inputs/Number'
+import MaterialCard from '../../../components/identificador/almoxarifado/MaterialCard'
 function Estoque() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -50,18 +50,18 @@ function Estoque() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow flex flex-col">
+      <div className="flex grow flex-col p-6">
         <div className="flex flex-col items-center border-b border-gray-200 pb-2">
-          <div className="w-full flex items-center justify-between">
+          <div className="flex w-full items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight">ESTOQUE</h1>
             <Link href="/almoxarifado/pdfRelatorioEstoque">
-              <a className="font-bold tracking-tight flex items-center gap-1">
+              <a className="flex items-center gap-1 font-bold tracking-tight">
                 <p className="text-sm text-gray-600">RELATÓRIO</p>
                 <TbReportSearch />
               </a>
             </Link>
           </div>
-          <div className="flex items-center gap-1 justify-end w-full">
+          <div className="flex w-full items-center justify-end gap-1">
             <TextInput
               showLabel={false}
               placeholder={'Filtre pelo nome do produto...'}
@@ -75,8 +75,13 @@ function Estoque() {
               handleChange={(value) => setFilters((prev) => ({ ...prev, qtyLessThan: value }))}
             />
           </div>
+          <div className="flex w-full items-center justify-start">
+            <Link href="/almoxarifado/estoque/analitico">
+              <a className="rounded border border-[#fead61] p-1 font-medium text-[#fead61]">ANALÍTICO</a>
+            </Link>
+          </div>
         </div>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">
+        <div className="mt-4 flex w-full grow flex-wrap justify-around gap-3">
           {materials ? (
             materials.map((material) => (
               <MaterialCard key={material._id} material={material} handleClick={() => setEditModal({ isOpen: true, info: material })} />
@@ -87,15 +92,15 @@ function Estoque() {
         </div>
         <div
           onClick={() => setNewItemModalIsOpen(true)}
-          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+          className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
         >
-          <p className="uppercase font-bold text-sm">NOVO ITEM</p>
+          <p className="text-sm font-bold uppercase">NOVO ITEM</p>
         </div>
         <div
           onClick={() => setEntranceModalIsOpen(true)}
-          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150 ml-36"
+          className="left-150 fixed bottom-10 ml-36 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
         >
-          <p className="uppercase font-bold text-sm">ENTRADA</p>
+          <p className="text-sm font-bold uppercase">ENTRADA</p>
         </div>
         {editModal.isOpen && editModal.info ? (
           <ModalControlAlmoxarifado

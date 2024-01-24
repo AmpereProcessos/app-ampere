@@ -75,6 +75,7 @@ const NewWarehouseFormularySchema = z.object({
     bairro: z.string(),
     endereco: z.string(),
     numeroOuIdentificador: z.string(),
+    complemento: z.string(),
     distancia: z.number().optional().nullable(),
   }),
   materiais: z.array(

@@ -141,7 +141,7 @@ function Formularios() {
                     label={'NOME DO FORMULÁRIO...'}
                     value={filters.search}
                     placeholder={'Preencha aqui o nome do formulário...'}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, identifier: value }))}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
@@ -184,7 +184,7 @@ function Formularios() {
                 <FormAlmoxarifadoCard key={form._id} form={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />
               ))
             ) : (
-              <p>Nenhum formulário encontrado para o parâmetros de filtro.</p>
+              <p className="w-full text-center font-medium italic text-gray-500">Nenhum formulário encontrado para o parâmetros de filtro.</p>
             )}
           </div>
         ) : null}

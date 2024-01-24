@@ -9,7 +9,12 @@ export default async function handler(req, res) {
           $project: {
             qtde: 1,
             nomeDoContrato: 1,
+            cep: 1,
+            uf: 1,
             cidade: 1,
+            bairro: 1,
+            logradouro: 1,
+            numeroResidencia: 1,
             'sistema.topologia': 1,
             'obra.equipeResp': 1,
             segmento: 1,

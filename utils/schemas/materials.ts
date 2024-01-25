@@ -20,7 +20,7 @@ const GeneralMaterialSchema = z.object({
     .nullable(),
 })
 
-const InsertMaterialSchema = z.object({
+export const InsertMaterialSchema = z.object({
   nome: z.string({ required_error: 'Nome do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome do material.' }),
   nomeTecnico: z
     .string({ required_error: 'Nome técnico do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome técnico do material.' })

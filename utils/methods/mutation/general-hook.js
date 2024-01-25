@@ -23,9 +23,9 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
       toast.dismiss(loadingToast)
       const msg = typeof data == 'string' ? data : 'Atualização feita com sucesso !'
       toast.success(msg)
+      if (callbackFn) callbackFn()
     },
     onSettled: async (data, error) => {
-      if (callbackFn) callbackFn()
       await queryClient.invalidateQueries({ queryKey: affectedQueryKey })
     },
     onError: (error, variables, context) => {

@@ -1,5 +1,5 @@
 import { Collection, Db, ObjectId } from 'mongodb'
-import connectToDatabase from '../../../utils/services/mongodb/warehouse'
+import connectToDatabase from '../../../../utils/services/mongodb/warehouse'
 import createHttpError from 'http-errors'
 import { TWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
 import { NextApiHandler } from 'next'

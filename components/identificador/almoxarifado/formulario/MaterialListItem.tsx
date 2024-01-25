@@ -1,52 +1,71 @@
 import NumberInput from '@/components/inputs/Number'
+import { isEmpty } from '@/utils/methods/shared'
 import { TNewWarehouseFormulary, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import React from 'react'
+import { BsCode } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
 import { TbRulerMeasure } from 'react-icons/tb'
 
 type MaterialListItem = {
   material: TNewWarehouseFormulary['materiais'][number]
   index: number
-  removeMaterial: (index: number) => void
+  removeMaterial: ({ id, index }: { id?: string | null; index: number }) => void
+  formHolder: TNewWarehouseFormulary
+  setFormHolder: React.Dispatch<React.SetStateAction<TNewWarehouseFormulary>>
+  blockTakeAway: boolean
+  blockDevolution: boolean
 }
-function MaterialListItem({ material, index, removeMaterial }: MaterialListItem) {
+function MaterialListItem({ material, index, removeMaterial, formHolder, setFormHolder, blockTakeAway, blockDevolution }: MaterialListItem) {
   return (
-    <div className="flex w-full items-center justify-between rounded border border-gray-300 p-2">
-      <div className="flex flex-col">
+    <div className="flex w-full flex-col items-center justify-between gap-1 rounded border border-gray-300 p-2 lg:flex-row">
+      <div className="flex w-full flex-row gap-1 lg:w-[40%] lg:flex-col lg:gap-0">
         <h1 className="text-sm font-medium text-gray-500">{material.nome}</h1>
         <div className="flex items-center gap-1">
           <TbRulerMeasure />
           <p className="text-xs italic text-gray-500">{material.grandeza}</p>
+          <BsCode />
+          <p className="text-xs italic text-gray-500">#{material.id || 'NÃO DEFIDO'}</p>
+          <button
+            onClick={() => removeMaterial({ id: material.id, index })}
+            className="rounded-lg border border-red-500 bg-red-100 p-1 text-center text-xxs font-medium text-red-500"
+          >
+            EXCLUIR
+          </button>
         </div>
       </div>
-      <div className="flex items-center gap-1">
-        <div className="grow">
-          <NumberInput
-            label="QTDE DE SAÍDA"
-            placeholder="Preencha a quantidade de saída..."
-            value={material.qtdeRetirada}
-            handleChange={(value) => console.log(value)}
-            width="100%"
+      <div className="flex w-full items-center gap-1 lg:w-[60%]">
+        <div className="w-[50%]">
+          <input
+            disabled={blockTakeAway}
+            value={!isEmpty(material.qtdeRetirada) ? material.qtdeRetirada?.toString() : ''}
+            onChange={(e) => {
+              const value = Number(e.target.value)
+              const materialsList = [...formHolder.materiais]
+              materialsList[index].qtdeRetirada = value
+              setFormHolder((prev) => ({ ...prev, materiais: materialsList }))
+            }}
+            min={0}
+            id={'qtdeRetirada'}
+            type="number"
+            className="h-full w-full rounded-md border border-gray-200 bg-gray-100 p-3 text-xs outline-none placeholder:italic"
           />
         </div>
-        <div className="grow">
-          <NumberInput
-            label="QTDE DE DEVOLUÇÃO"
-            placeholder="Preencha a quantidade de devolução..."
-            value={material.qtdeDevolucao}
-            handleChange={(value) => console.log(value)}
-            width="100%"
+        <div className="w-[50%]">
+          <input
+            disabled={blockDevolution}
+            value={!isEmpty(material.qtdeDevolucao) ? material.qtdeDevolucao?.toString() : ''}
+            onChange={(e) => {
+              const value = Number(e.target.value)
+              const materialsList = [...formHolder.materiais]
+              materialsList[index].qtdeDevolucao = value
+              setFormHolder((prev) => ({ ...prev, materiais: materialsList }))
+            }}
+            min={0}
+            id={'qtdeDevolucao'}
+            type="number"
+            className="h-full w-full rounded-md border border-gray-200 bg-gray-100 p-3 text-xs outline-none placeholder:italic disabled:bg-gray-400"
           />
         </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <button
-          onClick={() => removeMaterial(index)}
-          type="button"
-          className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-        >
-          <MdDelete style={{ color: 'red' }} />
-        </button>
       </div>
     </div>
   )

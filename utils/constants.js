@@ -2091,120 +2091,40 @@ export const fornecedores = [
     label: 'SOL MAIS',
     value: 'SOL MAIS',
   },
+  { label: 'A.DIAS SOLAR', value: 'A.DIAS SOLAR' },
   {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },
 ]
 export const equipesTecnicas = [
-  {
-    label: 'EQUIPE 1 - JOSÉ ROBERTO',
-    value: 'EQUIPE 1 - JOSÉ ROBERTO',
-  },
-  {
-    label: 'EQUIPE 2 - EDUARDO',
-    value: 'EQUIPE 2-EDUARDO',
-  },
-  {
-    label: 'EQUIPE 3 - EDMAR',
-    value: 'EQUIPE 3-EDIMAR',
-  },
-  {
-    label: 'EQUIPE 4 - ERICK',
-    value: 'EQUIPE 4-ERICK',
-  },
-  {
-    label: 'EQUIPE 5 - JUNIN',
-    value: 'EQUIPE 5-JUNIN',
-  },
-  {
-    label: 'EQUIPE 6 - FELIPE',
-    value: 'EQUIPE 6-FELIPE',
-  },
-  {
-    label: 'EQUIPE 7 - ADENILSON',
-    value: 'EQUIPE 7- ADENILSON',
-  },
-  {
-    label: 'EQUIPE 8 - DIONLEN', // mudar para DIONLEN
-    value: 'EQUIPE 8 - DIONLEN', // mudar para DIONLEN
-  },
-  {
-    label: 'EQUIPE 9 - REGINALDO',
-    value: 'EQUIPE 9 - REGINALDO',
-  },
-  {
-    label: 'EQUIPE 10 - LUIZ',
-    value: 'EQUIPE 10 - LUIZ',
-  },
-  {
-    label: 'EQUIPE 11 - GILMAR',
-    value: 'EQUIPE 11 - GILMAR',
-  },
-  {
-    label: 'EQUIPE 12 - MARCUS V.',
-    value: 'EQUIPE 12 - MARCUS V.',
-  },
-  {
-    label: 'EQUIPE 13 - EDUARDO FRANCO',
-    value: 'EQUIPE 13 - EDUARDO FRANCO',
-  },
-  {
-    label: 'EQUIPE 14 - GERSON',
-    value: 'EQUIPE 14 - GERSON',
-  },
-  {
-    label: 'EQUIPE 15 - MARCUS B. (INACIOLANDIA)',
-    value: 'EQUIPE 15 - MARCOS B.',
-  },
-  {
-    label: 'EQUIPE 16 - JOÃO FILHO',
-    value: 'EQUIPE 16 - JOÃO FILHO',
-  },
-  {
-    label: 'EQUIPE 17 - MATHEUS E DIOGO',
-    value: 'EQUIPE 17 - MATHEUS E DIOGO',
-  },
-  {
-    label: 'EQUIPE 18 - GABRIEL E DANILO',
-    value: 'EQUIPE 18 - GABRIEL E DANILO',
-  },
-  {
-    label: 'EQUIPE 19 - LUIZ PEDRO',
-    value: 'EQUIPE 19 - LUIZ PEDRO',
-  },
-  {
-    label: 'EQUIPE 20 - RAFAEL E RODRIGO',
-    value: 'EQUIPE 20 - RAFAEL E RODRIGO',
-  },
-  {
-    label: 'EQUIPE 21 - LEONILDO',
-    value: 'EQUIPE 21 - LEONILDO',
-  },
-  {
-    label: 'EQUIPE O&M',
-    value: 'EQUIPE O&M',
-  },
-  {
-    label: 'EQUIPE EXTERNA - VINICIUS',
-    value: 'EQUIPE EXTERNA - VINICIUS',
-  },
-  {
-    label: 'EQUIPE EXTERNA - JEFFERSON',
-    value: 'EQUIPE EXTERNA - JEFFERSON',
-  },
-  {
-    label: 'EQUIPE EXTERNA - JAIMIRES',
-    value: 'EQUIPE EXTERNA - JAIMIRES',
-  },
-  {
-    label: 'NÃO DEFINIDO',
-    value: 'NÃO DEFINIDO',
-  },
-  {
-    label: 'VAZIO',
-    value: undefined,
-  },
+  { id: 1, label: 'EQUIPE 1 - JOSÉ ROBERTO', value: 'EQUIPE 1 - JOSÉ ROBERTO' },
+  { id: 2, label: 'EQUIPE 2 - EDUARDO', value: 'EQUIPE 2-EDUARDO' },
+  { id: 3, label: 'EQUIPE 3 - EDMAR', value: 'EQUIPE 3-EDIMAR' },
+  { id: 4, label: 'EQUIPE 4 - ERICK', value: 'EQUIPE 4-ERICK' },
+  { id: 5, label: 'EQUIPE 5 - JUNIN', value: 'EQUIPE 5-JUNIN' },
+  { id: 6, label: 'EQUIPE 6 - FELIPE', value: 'EQUIPE 6-FELIPE' },
+  { id: 7, label: 'EQUIPE 7 - ADENILSON', value: 'EQUIPE 7- ADENILSON' },
+  { id: 8, label: 'EQUIPE 8 - DIONLEN', value: 'EQUIPE 8 - DIONLEN' },
+  { id: 9, label: 'EQUIPE 9 - REGINALDO', value: 'EQUIPE 9 - REGINALDO' },
+  { id: 10, label: 'EQUIPE 10 - LUIZ', value: 'EQUIPE 10 - LUIZ' },
+  { id: 11, label: 'EQUIPE 11 - GILMAR', value: 'EQUIPE 11 - GILMAR' },
+  { id: 12, label: 'EQUIPE 12 - MARCUS V.', value: 'EQUIPE 12 - MARCUS V.' },
+  { id: 13, label: 'EQUIPE 13 - EDUARDO FRANCO', value: 'EQUIPE 13 - EDUARDO FRANCO' },
+  { id: 14, label: 'EQUIPE 14 - GERSON', value: 'EQUIPE 14 - GERSON' },
+  { id: 15, label: 'EQUIPE 15 - MARCUS B. (INACIOLANDIA)', value: 'EQUIPE 15 - MARCOS B.' },
+  { id: 16, label: 'EQUIPE 16 - JOÃO FILHO', value: 'EQUIPE 16 - JOÃO FILHO' },
+  { id: 17, label: 'EQUIPE 17 - MATHEUS E DIOGO', value: 'EQUIPE 17 - MATHEUS E DIOGO' },
+  { id: 18, label: 'EQUIPE 18 - GABRIEL E DANILO', value: 'EQUIPE 18 - GABRIEL E DANILO' },
+  { id: 19, label: 'EQUIPE 19 - LUIZ PEDRO', value: 'EQUIPE 19 - LUIZ PEDRO' },
+  { id: 20, label: 'EQUIPE 20 - RAFAEL E RODRIGO', value: 'EQUIPE 20 - RAFAEL E RODRIGO' },
+  { id: 21, label: 'EQUIPE 21 - LEONILDO', value: 'EQUIPE 21 - LEONILDO' },
+  { id: 22, label: 'EQUIPE O&M', value: 'EQUIPE O&M' },
+  { id: 23, label: 'EQUIPE EXTERNA - VINICIUS', value: 'EQUIPE EXTERNA - VINICIUS' },
+  { id: 24, label: 'EQUIPE EXTERNA - JEFFERSON', value: 'EQUIPE EXTERNA - JEFFERSON' },
+  { id: 25, label: 'EQUIPE EXTERNA - JAIMIRES', value: 'EQUIPE EXTERNA - JAIMIRES' },
+  { id: 26, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 27, label: 'VAZIO', value: undefined },
 ]
 export const centrosDeCusto = [
   {

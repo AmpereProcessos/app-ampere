@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 const GeneralMaterialUpdateRegistry = z.object({
   alteracao: z.number(),
-  tipo: z.union([z.literal('RETIDA'), z.literal('DEVOLUÇÃO')], z.literal('ENTRADA')),
+  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO')], z.literal('ENTRADA')),
   idFormulario: z.string().optional().nullable(),
   material: z.object({
     id: z.string(),
@@ -11,19 +11,20 @@ const GeneralMaterialUpdateRegistry = z.object({
   }),
   projeto: z.object({
     id: z.string().optional().nullable(),
-    nome: z.string(),
+    nome: z.string().optional().nullable(),
   }),
   qtdeAnterior: z.number(),
   qtdeNovo: z.number(),
   autor: z.object({
     id: z.string(),
     nome: z.string(),
+    avatar_url: z.string().optional().nullable(),
   }),
 })
 
 const InsertMaterialUpdateRegistrySchema = z.object({
   alteracao: z.number({ required_error: 'Alteração não informada.', invalid_type_error: 'Tipo não válido para alteração.' }),
-  tipo: z.union([z.literal('RETIDA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA')], {
+  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA')], {
     required_error: 'Tipo da alteração não informada.',
     invalid_type_error: 'Tipo não válido para o tipo da alteração.',
   }),
@@ -40,7 +41,10 @@ const InsertMaterialUpdateRegistrySchema = z.object({
       .string({ required_error: 'Nome do projeto não informado.', invalid_type_error: 'Tipo não válido para o nome do projeto.' })
       .optional()
       .nullable(),
-    nome: z.string(),
+    nome: z
+      .string({ required_error: 'Nome do projeto não informado.', invalid_type_error: 'Tipo não válido para o nome do projeto.' })
+      .optional()
+      .nullable(),
   }),
   qtdeAnterior: z.number({ required_error: 'Quantidade anterior não informada.', invalid_type_error: 'Tipo não válido para quantidade anterior.' }),
   qtdeNovo: z.number({ required_error: 'Nova quantidade não informada.', invalid_type_error: 'Tipo não válido para nova quantidade.' }),
@@ -53,6 +57,7 @@ const InsertMaterialUpdateRegistrySchema = z.object({
       required_error: 'Nome do autor da alteração não informado.',
       invalid_type_error: 'Tipo não válido para o nome do autor da alteração.',
     }),
+    avatar_url: z.string().optional().nullable(),
   }),
 })
 

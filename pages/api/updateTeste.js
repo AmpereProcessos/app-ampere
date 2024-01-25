@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const sales = await collection
     .find({
       $and: [
-        { 'contrato.dataAssinatura': { $gte: '2023-01-01T00:00:00.000Z' } },
+        { 'contrato.dataAssinatura': { $gte: '2022-01-01T00:00:00.000Z' } },
         { 'contrato.dataAssinatura': { $lte: '2023-12-31T21:00:00.000Z' } },
       ],
     })
@@ -26,20 +26,12 @@ export default async function handler(req, res) {
       CIDADE: sale.cidade,
       VENDEDOR: sale.vendedor.nome,
       'DATA ASSINATURA': formatDateAsLocale(sale.contrato.dataAssinatura),
-      'VALOR DO CONTRATO': getContractValue({
-        projectValue: sale.sistema.valorProjeto,
-        paValue: sale.padrao.valor,
-        structureValue: sale.estruturaPersonalizada.valor,
-      }),
-      'STATUS DA OBRA': sale.obra.statusDaObra,
-      'COBRANÇA FEITA': sale.pagamento.cobrancaFeita ? 'SIM' : 'NÃO',
-      'FATURAMENTO FEITO': sale.faturamento.concluido ? 'SIM' : 'NÃO',
     }
   })
+  const ordered = exportation.sort((a, b) => a['NOME DO CLIENTE'].trim().localeCompare(b['NOME DO CLIENTE'].trim()))
   console.log(exportation.length)
-  return res.json(exportation)
+  return res.json(ordered)
 }
-
 // Update Many example:
 // let arr = await collection.updateMany(
 //   {

@@ -1,6 +1,21 @@
 import axios from 'axios'
 import createHttpError from 'http-errors'
 
+type UpdateManyMaterialsParams = {
+  formularyId?: string
+  project: { id?: string | null; nome?: string | null }
+  updates: { id: string; nome: string; diferenca: number }[]
+}
+export async function updateManyMaterials({ formularyId, project, updates }: UpdateManyMaterialsParams) {
+  try {
+    const { data } = await axios.put('/api/almoxarifado/estoque/operacoes-massa', { formularyId, project, updates })
+    if (typeof data.message != 'string') return 'Atualizações realizadas com sucesso !'
+    return data.message as string
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function debitMaterials({ formId, projectId, identifier, changes, tag }) {
   console.log('ID DO FORMULÁRIO', formId)
   console.log('MATERIAIS DEBITADOS', changes)

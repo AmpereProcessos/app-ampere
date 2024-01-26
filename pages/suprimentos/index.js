@@ -70,6 +70,7 @@ function Suprimentos() {
         pago: 0,
         resultado: 0,
         pendentes: 0,
+        pendentesPronto: 0,
         emRota: 0,
       }
     const projectsQty = info.length
@@ -93,7 +94,13 @@ function Suprimentos() {
     const pendingPurchases = info.reduce((acc, current) => {
       const purchased = !!current.compra?.dataPedido
       const status = current.compra.status
-      if ((!purchased && status == 'NÃO DEFINIDO') || !status) return acc + 1
+      if (!purchased) return acc + 1
+      else return acc
+    }, 0)
+    const pendingReadyToBuy = info.reduce((acc, current) => {
+      const purchased = !!current.compra?.dataPedido
+      const accessGrantingAproveed = current.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO'
+      if (!purchased && accessGrantingAproveed) return acc + 1
       else return acc
     }, 0)
     const onDeliveryRoute = info.reduce((acc, current) => {
@@ -108,6 +115,7 @@ function Suprimentos() {
       pago: formatDecimalPlaces(totalPaidInKits, 2),
       resultado: 100 - (totalPaidInKits / totalPredictedPayInKits) * 100,
       pendentes: pendingPurchases,
+      pendentesPronto: pendingReadyToBuy,
       emRota: onDeliveryRoute,
     }
   }
@@ -124,23 +132,23 @@ function Suprimentos() {
   if (status != 'authenticated') return <LoadingPage />
   if (projectsSuccess && projects) {
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio de suprimentos</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de suprimentos</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -158,6 +166,7 @@ function Suprimentos() {
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendentes} </div>
+                <p className="text-xs text-gray-500">{getStats({ info: projects }).pendentesPronto} aptas para compra</p>
               </div>
             </div>
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
@@ -195,16 +204,16 @@ function Suprimentos() {
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
                     label={'NOME DO CONTRATO'}
                     value={filters.search}
                     placeholder={'Digite o nome do contrato...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
-                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                    <div className="flex items-center gap-x-2 justify-center">
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
                       <DateInput
                         label={'DEPOIS DE'}
                         value={filters.date.after ? formatDate(filters.date.after) : undefined}
@@ -268,7 +277,15 @@ function Suprimentos() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-end justify-center gap-2 lg:flex-row">
+                  <button
+                    onClick={() => setFilters((prev) => ({ ...prev, yetToBuy: !prev.yetToBuy }))}
+                    className={`rounded-md border border-blue-600 ${
+                      filters.yetToBuy ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600'
+                    }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                  >
+                    APTO PARA COMPRA
+                  </button>
                   <MultipleSelectInput
                     label={'STATUS DE SUPLEMENTAÇÃO'}
                     selected={filters.supplyStatus}
@@ -338,7 +355,7 @@ function Suprimentos() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {projects.map((project, index) => (
             <motion.div
               onClick={() => {
@@ -348,7 +365,7 @@ function Suprimentos() {
               animate={{ opacity: 1, translateX: 0, translateY: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
-              className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
+              className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
                 project.compra.dataPedido == undefined ? getBorderColor(project.compra.dataLiberacao) : 'border border-gray-200'
               } hover:bg-blue-100`}
             >
@@ -358,17 +375,17 @@ function Suprimentos() {
                   <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
                   <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
-                <div className="grid grid-cols-2 mt-2">
+                <div className="mt-2 grid grid-cols-2">
                   <div className="flex flex-col items-start">
                     <span className="text-xxs">INFORMAÇÕES</span>
-                    <p className="text-xs  text-gray-600 uppercase">{project.compra.informacoes ? project.compra.informacoes : '-'}</p>
+                    <p className="text-xs  uppercase text-gray-600">{project.compra.informacoes ? project.compra.informacoes : '-'}</p>
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xxs">STATUS</span>
-                    <p className="text-xs text-center text-gray-600">{project.compra.status ? project.compra.status : '-'}</p>
+                    <p className="text-center text-xs text-gray-600">{project.compra.status ? project.compra.status : '-'}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 items-center mt-1">
+                <div className="mt-1 grid grid-cols-3 items-center">
                   <div className="flex flex-col items-start">
                     <span className="text-xxs">FORNECEDOR</span>
                     <p className="text-xs text-yellow-500">{project.compra.fornecedor ? project.compra.fornecedor : '-'}</p>
@@ -378,7 +395,7 @@ function Suprimentos() {
                     {dayjs(new Date()).isBefore(dayjs(dayjs(project.compra.previsaoEntrega).add(22, 'hour'))) ? (
                       <p
                         className={`text-xs ${
-                          dayjs(project.compra.previsaoEntrega).diff(new Date(), 'day') < 7 ? 'text-red-500 font-bold' : 'text-green-500 font-bold'
+                          dayjs(project.compra.previsaoEntrega).diff(new Date(), 'day') < 7 ? 'font-bold text-red-500' : 'font-bold text-green-500'
                         } text-center`}
                       >
                         {project.compra.previsaoEntrega
@@ -388,7 +405,7 @@ function Suprimentos() {
                           : '-'}
                       </p>
                     ) : (
-                      <p className="text-red-500 font-bold text-xs lg:text-sm">PREV.VENCIDA</p>
+                      <p className="text-xs font-bold text-red-500 lg:text-sm">PREV.VENCIDA</p>
                     )}
                   </div>
                   <div className="flex flex-col items-end">
@@ -398,7 +415,7 @@ function Suprimentos() {
                 </div>
                 <div className="flex flex-col items-center pt-1">
                   <span className="text-xxs">FATURAMENTO</span>
-                  <p className="text-xs text-center text-gray-600 uppercase">
+                  <p className="text-center text-xs uppercase text-gray-600">
                     {project.faturamento?.previsaoFaturamento ? project.faturamento?.previsaoFaturamento : '-'}
                   </p>
                 </div>
@@ -424,7 +441,7 @@ function Suprimentos() {
                       DATA PAGAMENTO LIMITE EM: {dayjs(project.compra.dataMaxPagamento).diff(new Date(), 'day')} DIA(S)
                     </p>
                   ) : (
-                    <p className="text-center text-sm text-red-500 italic font-bold">PAGAMENTO ATRASADO</p>
+                    <p className="text-center text-sm font-bold italic text-red-500">PAGAMENTO ATRASADO</p>
                   )
                 ) : (
                   false
@@ -434,8 +451,8 @@ function Suprimentos() {
           ))}
         </div>
         <Link href={'/obras/conferenciaMaterial'}>
-          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">CONFERÊNCIA DE MATERIAIS</p>
+          <a className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <p className="text-sm font-bold uppercase">CONFERÊNCIA DE MATERIAIS</p>
           </a>
         </Link>
 

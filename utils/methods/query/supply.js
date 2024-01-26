@@ -15,6 +15,7 @@ export function useSupplyProjects({ enabled }) {
     supplyStatus: [],
     deliveryStatus: [],
     accessGrantingStatus: [],
+    yetToBuy: false,
     search: '',
     date: {
       after: null,
@@ -42,6 +43,10 @@ export function useSupplyProjects({ enabled }) {
       project[filters.date.field1][filters.date.field2] <= filters.date.before
     )
   }
+  function matchYetToBuy(project) {
+    if (!filters.yetToBuy) return true
+    return project.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO' && !project.compra.dataPedido
+  }
   function matchSearch(project) {
     if (filters.search.trim().length == 0) return true
     else return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase())
@@ -50,7 +55,12 @@ export function useSupplyProjects({ enabled }) {
     var modeledData = data
     return modeledData.filter(
       (project) =>
-        matchSupplyStatus(project) && matchDeliveryStatus(project) && matchAccessGrantingStatus(project) && matchDate(project) && matchSearch(project)
+        matchSupplyStatus(project) &&
+        matchDeliveryStatus(project) &&
+        matchYetToBuy(project) &&
+        matchAccessGrantingStatus(project) &&
+        matchDate(project) &&
+        matchSearch(project)
     )
   }
   return {

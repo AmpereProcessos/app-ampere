@@ -10,25 +10,47 @@ import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMate
 import SelectInputPersonalized from '../inputs/Select'
 import { supplementationStatus } from '../../utils/select-options'
 import CheckboxInput from '../inputs/Checkbox'
-import { BsCalendarFill } from 'react-icons/bs'
+import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
+import { FaMoon } from 'react-icons/fa'
 
 function getPrevisionStatus({ forecast, final }) {
   if (!final || final == 0)
     return (
-      <h1 className="absolute right-10 top-10 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500">
+      <h1 className="relative right-0 top-0 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500 lg:absolute lg:right-10">
         PREVISTO PARA O KIT: {formatToMoney(forecast)}
       </h1>
     )
   if (final < forecast)
     return (
-      <h1 className="absolute right-10 top-10 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500">
+      <h1 className="relative right-0 top-0 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:right-10">
         PREVISTO PARA O KIT: {formatToMoney(forecast)}
       </h1>
     )
   return (
-    <h1 className="absolute right-10 top-10 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500">
+    <h1 className="relative right-0 top-0 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500 lg:absolute lg:right-10">
       PREVISTO PARA O KIT: {formatToMoney(forecast)}
     </h1>
+  )
+}
+function getAccessGrantingStatus({ status }) {
+  if (status == 'PARECER DE ACESSO APROVADO')
+    return (
+      <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:left-10">
+        <BsCheckAll />
+        <h1>{status}</h1>
+      </div>
+    )
+  if (status == 'PARECER APROVADO - NOTURNO')
+    return (
+      <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
+        <FaMoon />
+        <h1>{status}</h1>
+      </div>
+    )
+  return (
+    <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
+      <h1>{status}</h1>
+    </div>
   )
 }
 function InfoCompraBlock({
@@ -47,9 +69,8 @@ function InfoCompraBlock({
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
       <div className="relative mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
-        {/* <h1 className="absolute right-10 top-10 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500">
-          PREVISTO PARA O KIT {formatToMoney(infoHolder.compra.previsaoValorDoKit)}
-        </h1> */}
+        {getAccessGrantingStatus({ status: infoHolder.parecer.statusDoParecerDeAcesso })}
+
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA COMPRA'}

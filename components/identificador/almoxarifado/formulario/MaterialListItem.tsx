@@ -2,6 +2,7 @@ import NumberInput from '@/components/inputs/Number'
 import { isEmpty } from '@/utils/methods/shared'
 import { TNewWarehouseFormulary, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import React from 'react'
+import toast from 'react-hot-toast'
 import { BsCode } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
 import { TbRulerMeasure } from 'react-icons/tb'
@@ -57,7 +58,16 @@ function MaterialListItem({ material, index, removeMaterial, formHolder, setForm
             onChange={(e) => {
               const value = Number(e.target.value)
               const materialsList = [...formHolder.materiais]
-              materialsList[index].qtdeDevolucao = value
+
+              // Checking for the case where user puts a devolution value higher than the takeway
+              if (value > materialsList[index].qtdeRetirada) {
+                toast.error('Quantidade de devolução não pode exceder a de retirada.')
+                // Setting the devolution to the max value, which is the take away qty
+                materialsList[index].qtdeDevolucao = materialsList[index].qtdeRetirada
+              } else {
+                materialsList[index].qtdeDevolucao = value
+              }
+
               setFormHolder((prev) => ({ ...prev, materiais: materialsList }))
             }}
             min={0}

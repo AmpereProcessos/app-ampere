@@ -1,5 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
+import { InsertNewWarehouseFormularySchema, TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
 import connectToDatabase from '@/utils/services/mongodb/warehouse'
 import createHttpError from 'http-errors'
 import { Collection, Db, ObjectId } from 'mongodb'
@@ -31,6 +31,27 @@ const getForms: NextApiHandler<GetResponse> = async (req, res) => {
     .toArray()
   return res.status(200).json({ data: forms })
 }
+
+type PostResponse = {
+  data: {
+    insertedId: string
+  }
+  message: string
+}
+const createForm: NextApiHandler<PostResponse> = async (req, res) => {
+  const session = validateAuthenticationWithSession(req, res)
+
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const collection: Collection<TNewWarehouseFormulary> = db.collection('formularios')
+  const form = InsertNewWarehouseFormularySchema.parse(req.body)
+  if (!form) throw new createHttpError.BadRequest('Informações para a criação formulário não fornecidas.')
+
+  const insertResponse = await collection.insertOne(form)
+
+  if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro na inserção do formulário.')
+  return res.status(201).json({ data: { insertedId: insertResponse.insertedId.toString() }, message: 'Formulário criado com sucesso !' })
+}
+
 type PutResponse = {
   data: string
   message: string
@@ -44,16 +65,15 @@ const editForm: NextApiHandler<PutResponse> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const collection: Collection<TNewWarehouseFormulary> = db.collection('formularios')
 
-  const changes = req.body.data
+  const changes = InsertNewWarehouseFormularySchema.partial().parse(req.body)
 
-  delete changes._id
   const updateResponse = await collection.updateOne(
     {
       _id: new ObjectId(id),
     },
     {
       $set: {
-        ...req.body.data,
+        ...changes,
       },
     }
   )
@@ -62,4 +82,4 @@ const editForm: NextApiHandler<PutResponse> = async (req, res) => {
 
   return res.status(201).json({ data: 'Formulário atualizado com sucesso!', message: 'Formulário atualizado com sucesso!' })
 }
-export default apiHandler({ GET: getForms })
+export default apiHandler({ GET: getForms, POST: createForm, PUT: editForm })

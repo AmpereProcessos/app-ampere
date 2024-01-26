@@ -14,7 +14,7 @@ import { useMaterials } from '@/utils/methods/query/materials'
 import MaterialsBlock from './MaterialsBlock'
 import { equipesTecnicas, serviceOrdersCategories } from '@/utils/constants'
 import CheckboxInput from '@/components/inputs/Checkbox'
-import { createStockFormulary } from '@/utils/methods/mutation/stock-formularies'
+import { createStockFormulary, updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { isError, useQueryClient } from 'react-query'
@@ -23,6 +23,47 @@ import { FaUser } from 'react-icons/fa'
 import { BsCode } from 'react-icons/bs'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import { TExpense } from '@/utils/schemas/expenses'
+import { insertExpense } from '@/utils/methods/mutation/expenses'
+
+function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormulary }) {
+  const items = info.materiais.map((material) => {
+    const item: TExpense['itens'][number] = {
+      idMaterial: material.id,
+      descricao: material.nome,
+      preco: material.preco,
+      qtde: material.qtdeRetirada - material.qtdeDevolucao,
+      unidade: material.grandeza,
+    }
+    return item
+  })
+  const total = items.reduce((acc, current) => acc + current.preco * current.qtde, 0)
+  return {
+    rateio: 'CUSTOS DIRETOS',
+    categoria: 'INSUMOS DE ALMOXARIFADO',
+    descricao: info.titulo,
+    projeto: {
+      id: info.projeto.id,
+      nome: info.projeto.nome,
+      identificador: info.projeto.identificador, // identificador QTDE do projeto no banco de projetos
+      tipo: '',
+    },
+    idFormularioAlmoxarifado: info._id,
+    autor: {
+      id: session.user.id,
+      nome: session.user.name,
+      avatar_url: session.user.image,
+    },
+    itens: items,
+    total: total,
+    efetivacao: {
+      efetivado: true,
+      data: new Date().toISOString(),
+    },
+    criterioCompetencia: true,
+    dataInsercao: new Date().toISOString(),
+  }
+}
 type EditFormProps = {
   formularyId: string
   session: Session
@@ -114,39 +155,51 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
       }
     }, 1000)
   }
-  async function handleFormularyCreation() {
+  async function handleFormularyConclusion() {
     try {
-      if (infoHolder.materiais.length == 0) return toast.error('Adicione ao menos um material.')
-
-      // Formatting updates for material withdrawal
+      // Formatting updates for material devolution
       const updates = infoHolder.materiais
         .filter((m) => !!m.id)
         .map((material) => {
           return {
             id: material.id as string,
             nome: material.nome,
-            diferenca: -material.qtdeRetirada,
+            diferenca: material.qtdeDevolucao,
           }
         })
+      // Getting an expense object to create expense from materials take away
+      const expense = getExpensesFromFormulary({ session, info: infoHolder })
       const project = infoHolder.projeto
-      const title = project.id ? `SAIDA PARA ${project.nome}` : infoHolder.titulo
-      const formulary = { ...infoHolder, titulo: title }
-      // Calling method for stock formulary creation
-      const formularyId = await createStockFormulary({ info: formulary, mode: 'id' })
+
       // Calling method for stock quantities update
       const updateResponse = await updateManyMaterials({ formularyId, project, updates })
+      // Calling method to generate a expense from formulary
+      const expenseResponse = await insertExpense({ ...expense })
+      // Calling method for the update of the formulary itself
+      const formularyResponse = await updateWarehouseFormulary({
+        id: formularyId,
+        changes: { ...infoHolder, dataEfetivacao: new Date().toISOString() },
+      })
 
-      return updateResponse
+      return 'Formulário de saída de materiais finalizado com sucesso !'
     } catch (error) {
       throw error
     }
   }
-  const { mutate: handleCreation } = useMutationWithFeedback({
-    mutationKey: ['create-stock-formulary'],
-    mutationFn: handleFormularyCreation,
+
+  const { mutate: handleConclusion, isLoading: loadingConclusion } = useMutationWithFeedback({
+    mutationKey: ['conclude-warehouse-formulary', formularyId],
+    mutationFn: handleFormularyConclusion,
     queryClient: queryClient,
-    affectedQueryKey: ['warehouse-forms'],
-    callbackFn: () => resetInfoHolder(),
+    affectedQueryKey: ['warehouse-form-by-id', formularyId],
+    callbackFn: () => invalidateQuery(),
+  })
+  const { mutate: handleUpdate, isLoading: loadingUpdate } = useMutationWithFeedback({
+    mutationKey: ['edit-warehouse-formulary', formularyId],
+    mutationFn: updateWarehouseFormulary,
+    queryClient: queryClient,
+    affectedQueryKey: ['warehouse-form-by-id', formularyId],
+    callbackFn: () => invalidateQuery(),
   })
   useEffect(() => {
     if (formulary) setInfoHolder(formulary as TNewWarehouseFormulary)
@@ -248,7 +301,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                 <div className="grid grid-cols-1 grid-rows-3 items-center gap-6 px-2 lg:grid-cols-3 lg:grid-rows-1">
                   <TextInput
                     label="CEP"
-                    value={infoHolder.localizacao.cep || ''}
+                    value={(infoHolder.localizacao.cep as string) || ''}
                     placeholder="Preencha aqui o CEP do cliente."
                     handleChange={(value) => {
                       if (value.length == 9) {
@@ -346,15 +399,25 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                   />
                 </div>
               </div>
-              <div className="my-1 flex w-full items-center justify-end">
-                <button
-                  disabled={isLoading}
-                  onClick={() => handleCreation()}
-                  className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
-                >
-                  CRIAR FORMULÁRIO
-                </button>
-              </div>
+              {infoHolder.dataEfetivacao ? (
+                <div className="my-1 flex w-full items-center justify-end gap-2">
+                  <button
+                    disabled={loadingConclusion || loadingUpdate}
+                    // @ts-ignore
+                    onClick={() => handleUpdate({ id: formularyId, changes: infoHolder })}
+                    className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                  >
+                    SALVAR
+                  </button>
+                  <button
+                    disabled={loadingConclusion || loadingUpdate}
+                    onClick={() => handleConclusion()}
+                    className="rounded bg-green-600 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-green-700"
+                  >
+                    FINALIZAR
+                  </button>
+                </div>
+              ) : null}
             </>
           ) : null}
         </div>

@@ -7,6 +7,7 @@ import MaterialItem from './MaterialItem'
 import MaterialListItem from './MaterialListItem'
 import toast from 'react-hot-toast'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
+import { updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 
 type MaterialsBlockProps = {
   formularyId?: string
@@ -46,14 +47,18 @@ function MaterialsBlock({ formularyId, formHolder, setFormHolder, blockTakeAway 
     const loadingToastId = toast.loading('Atualizando quantidades no estoque...')
     const project = formHolder.projeto
     const updates = [{ id: id, nome: nome, diferenca: -qtde }]
+
+    const updateFormularyResponse = await updateWarehouseFormulary({ id: formularyId, changes: { materiais: materialsList } })
     const updateResponse = await updateManyMaterials({ formularyId, project, updates })
+
     toast.dismiss(loadingToastId)
     toast.success(updateResponse)
     return setFormHolder((prev) => ({ ...prev, materiais: materialsList }))
   }
   async function removeMaterial({ id, index }: { id?: string | null; index: number }) {
     const materialsList = [...formHolder.materiais]
-    const materialRemoved = materialsList[index]
+    const materialRemoved = { ...materialsList[index] }
+    materialsList.splice(index, 1)
 
     if (id && formularyId) {
       const project = formHolder.projeto
@@ -61,12 +66,13 @@ function MaterialsBlock({ formularyId, formHolder, setFormHolder, blockTakeAway 
       const materialQtyReturn = materialRemoved.qtdeRetirada - materialRemoved.qtdeDevolucao
       const updates = [{ id: id, nome: materialName, diferenca: materialQtyReturn }]
       const loadingToastId = toast.loading('Devolvendo quantidades ao estoque...')
+
+      const updateFormularyResponse = await updateWarehouseFormulary({ id: formularyId, changes: { materiais: materialsList } })
       const updateResponse = await updateManyMaterials({ formularyId, project, updates })
       toast.dismiss(loadingToastId)
       toast.success(updateResponse)
     }
 
-    materialsList.splice(index, 1)
     setFormHolder((prev) => ({ ...prev, materiais: materialsList }))
   }
   return (

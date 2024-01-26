@@ -71,7 +71,7 @@ const GeneralNewWarehouseFormularySchema = z.object({
     identificador: z.union([z.string(), z.number()]).optional().nullable(),
   }),
   localizacao: z.object({
-    cep: z.string().optional().nullable(),
+    cep: z.union([z.string(), z.number()]).optional().nullable(),
     uf: z.string().optional().nullable(),
     cidade: z.string().optional().nullable(),
     bairro: z.string(),
@@ -113,7 +113,7 @@ export const InsertNewWarehouseFormularySchema = z.object({
       .nullable(),
   }),
   localizacao: z.object({
-    cep: z.string({ invalid_type_error: 'Tipo inválido para CEP da localização.' }).optional().nullable(),
+    cep: z.union([z.string(), z.number()], { invalid_type_error: 'Tipo inválido para CEP da localização.' }).optional().nullable(),
     uf: z.string({ invalid_type_error: 'Tipo inválido para a UF da localização.' }).optional().nullable(),
     cidade: z.string({ invalid_type_error: 'Tipo inválido para a cidade da localização.' }).optional().nullable(),
     bairro: z.string({ invalid_type_error: 'Tipo inválido para o bairro da localização.' }),

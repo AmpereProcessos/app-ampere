@@ -1,8 +1,12 @@
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
+import { TExpense } from '@/utils/schemas/expenses'
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
 import { TMaterial } from '@/utils/schemas/materials'
-import connectToDatabase from '@/utils/services/mongodb/warehouse'
-import { Collection, Db, ObjectId } from 'mongodb'
+import { TProject } from '@/utils/schemas/projects'
+import connectToDatabase from '@/utils/services/mongodb/projects'
+import connectToWarehouseDatabase from '@/utils/services/mongodb/warehouse'
+import createHttpError from 'http-errors'
+import { Collection, Db, ObjectId, WithId } from 'mongodb'
 import { NextApiHandler } from 'next'
 import { z } from 'zod'
 
@@ -30,7 +34,7 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
   const project = ProjectReferenceSchema.parse(req.body.project)
   const updates = z.array(UpdateSchema).parse(req.body.updates)
 
-  const warehouseDb: Db = await connectToDatabase(process.env.DB_KEY)
+  const warehouseDb: Db = await connectToWarehouseDatabase(process.env.DB_KEY)
   const materialCollection: Collection<TMaterial> = warehouseDb.collection('material')
   const logCollection: Collection<TMaterialUpdateRegistry> = warehouseDb.collection('alteracoes')
 
@@ -46,34 +50,35 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
       },
     }
   })
-  const logs = updates.map((update) => {
-    const equivalentMaterial = materials.find((material) => material._id.toString() == update.id)
-    if (!equivalentMaterial) return null
-    const previousQty = equivalentMaterial.qtde
-    const newQty = equivalentMaterial.qtde + update.diferenca
-    const log: TMaterialUpdateRegistry = {
-      alteracao: update.diferenca,
-      tipo: update.diferenca < 0 ? 'RETIRADA' : 'DEVOLUÇÃO',
-      idFormulario: formularyId,
-      material: {
-        id: update.id,
-        nome: update.nome,
-      },
-      projeto: {
-        id: project.id,
-        nome: project.nome,
-      },
-      qtdeAnterior: previousQty,
-      qtdeNovo: newQty,
-      autor: author,
-    }
-    return log
-  })
-  const filteredLogs = logs.filter((l) => !!l) as TMaterialUpdateRegistry[]
+  const logs = updates
+    .map((update) => {
+      const equivalentMaterial = materials.find((material) => material._id.toString() == update.id)
+      if (!equivalentMaterial) return null
+      const previousQty = equivalentMaterial.qtde
+      const newQty = equivalentMaterial.qtde + update.diferenca
+      const log: TMaterialUpdateRegistry = {
+        alteracao: update.diferenca,
+        tipo: update.diferenca < 0 ? 'RETIRADA' : 'DEVOLUÇÃO',
+        idFormulario: formularyId,
+        material: {
+          id: update.id,
+          nome: update.nome,
+        },
+        projeto: {
+          id: project.id,
+          nome: project.nome,
+        },
+        qtdeAnterior: previousQty,
+        qtdeNovo: newQty,
+        autor: author,
+      }
+      return log
+    })
+    .filter((l) => !!l) as TMaterialUpdateRegistry[]
 
   const bulkwriteResponse = await materialCollection.bulkWrite(bulkwrite)
   console.log('BULKWRITE', bulkwriteResponse)
-  const logInsertResponse = await logCollection.insertMany(filteredLogs)
+  const logInsertResponse = await logCollection.insertMany(logs)
   console.log('LOG', logInsertResponse)
 
   return res.status(201).json({ data: 'Atualizações feitas com sucesso !', message: 'Atualizações feitas com sucesso !' })

@@ -11,3 +11,13 @@ export async function createStockFormulary({ info, mode }: { info: TNewWarehouse
     throw error
   }
 }
+
+export async function updateWarehouseFormulary({ id, changes }: { id: string; changes: Partial<TNewWarehouseFormulary> }) {
+  try {
+    const { data } = await axios.put(`/api/almoxarifado/formularios/test?id=${id}`, changes)
+    if (typeof data.message != 'string') return 'Formulário atualizado com sucesso !'
+    return data.message
+  } catch (error) {
+    throw error
+  }
+}

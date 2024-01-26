@@ -2092,6 +2092,7 @@ export const fornecedores = [
     value: 'SOL MAIS',
   },
   { label: 'A.DIAS SOLAR', value: 'A.DIAS SOLAR' },
+  { label: 'ALUMIFIX SOLAR', value: 'ALUMIFIX SOLAR' },
   {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',

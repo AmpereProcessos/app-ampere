@@ -19,6 +19,9 @@ export function useComercialProjects({ enabled }) {
     sellerName: [],
     insiderName: [],
     supplyStatus: [],
+    signaturePendency: false,
+    noCRMVinculation: false,
+    noAnalysisVinculation: false,
     date: {
       after: null,
       before: null,
@@ -56,6 +59,19 @@ export function useComercialProjects({ enabled }) {
     if (filters.supplyStatus.length == 0) return true
     return filters.supplyStatus.includes(project.compra.status)
   }
+  function matchSignaturePendency(project) {
+    if (!filters.signaturePendency) return true
+    return !!project.contrato.dataLiberacao && !project.contrato.dataAssinatura
+  }
+  function matchNoCRMVinculation(project) {
+    if (!filters.noCRMVinculation) return true
+    return !project.idProjetoCRM
+  }
+  function matchNoAnalysisVinculation(project) {
+    if (!filters.noAnalysisVinculation) return true
+    return !project.idVisitaTecnica
+  }
+
   function matchDate(project) {
     if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
     return (
@@ -74,6 +90,9 @@ export function useComercialProjects({ enabled }) {
         matchSellerName(project) &&
         matchInsiderName(project) &&
         matchSupplyStatus(project) &&
+        matchSignaturePendency(project) &&
+        matchNoCRMVinculation(project) &&
+        matchNoAnalysisVinculation(project) &&
         matchDate(project)
     )
   }

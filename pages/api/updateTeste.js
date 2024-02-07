@@ -7,30 +7,7 @@ import { ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
 export default async function handler(req, res) {
-  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const collection = db.collection('dados')
-
-  const sales = await collection
-    .find({
-      $and: [
-        { 'contrato.dataAssinatura': { $gte: '2022-01-01T00:00:00.000Z' } },
-        { 'contrato.dataAssinatura': { $lte: '2023-12-31T21:00:00.000Z' } },
-      ],
-    })
-    .toArray()
-
-  const exportation = sales.map((sale) => {
-    return {
-      'NOME DO CLIENTE': sale.nomeDoContrato,
-      TIPO: sale.tipoDeServico,
-      CIDADE: sale.cidade,
-      VENDEDOR: sale.vendedor.nome,
-      'DATA ASSINATURA': formatDateAsLocale(sale.contrato.dataAssinatura),
-    }
-  })
-  const ordered = exportation.sort((a, b) => a['NOME DO CLIENTE'].trim().localeCompare(b['NOME DO CLIENTE'].trim()))
-  console.log(exportation.length)
-  return res.json(ordered)
+  return res.json('DESATIVADA')
 }
 // Update Many example:
 // let arr = await collection.updateMany(

@@ -26,7 +26,7 @@ import { allActiveSellers, allSellers, contractStatus, insiders, sellers, servic
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { formatDateInputChange } from '../../utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
-import { FaSignature } from 'react-icons/fa'
+import { FaCode, FaSignature } from 'react-icons/fa'
 import { MdAttachMoney, MdCreate, MdOutlineAttachMoney } from 'react-icons/md'
 import { getContractValue } from '../../utils/methods/util/projects'
 
@@ -385,6 +385,47 @@ function Comercial() {
                     />
                   </div>
                 </div>
+                <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        signaturePendency: !filters.signaturePendency,
+                      }))
+                    }
+                    className={`${
+                      filters.signaturePendency ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    ASSINATURA PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        noAnalysisVinculation: !filters.noAnalysisVinculation,
+                      }))
+                    }
+                    className={`${
+                      filters.noAnalysisVinculation ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    SEM VINCULAÇÃO DE ANÁLISE TÉCNICA
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        noCRMVinculation: !filters.noCRMVinculation,
+                      }))
+                    }
+                    className={`${
+                      filters.noCRMVinculation ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    SEM VINCULAÇÃO DE PROJETO CRM
+                  </div>
+                </div>
                 <div className="flex items-center justify-between gap-x-2">
                   <Link href="/comercial/analise">
                     <a className="rounded border border-[#fead61] p-1 font-medium text-[#fead61]">ANALÍTICO</a>
@@ -456,6 +497,22 @@ function Comercial() {
                       {project.compra.liberacao ? project.compra.status || 'NÃO DEFINIDO' : 'NÃO LIBERADA'}
                     </p>
                   </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {project.idProjetoCRM ? <FaCode color={'rgb(34,197,94)'} /> : null}
+                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">
+                      IDENTIFICADOR: <strong>{project.codigoSVB}</strong>
+                    </h1>
+                  </div>
+                  {project.idVisitaTecnica ? (
+                    <div className="flex items-center gap-2">
+                      {project.idVisitaTecnica ? <FaCode color={'rgb(34,197,94)'} /> : null}
+                      <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">VISITA VINCULADA</h1>
+                    </div>
+                  ) : (
+                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">SEM VISITA VINCULADA</h1>
+                  )}
                 </div>
               </div>
             </motion.div>

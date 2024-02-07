@@ -29,6 +29,8 @@ export default async function handler(req, res) {
             'compra.status': 1,
             'compra.dataPagamento': 1,
             'parecer.dataParecerDeAcesso': 1,
+            idProjetoCRM: 1,
+            idVisitaTecnica: 1,
             insider: 1,
           },
         },

@@ -1,132 +1,59 @@
-import axios from 'axios'
+import { apiHandler } from '@/utils/api'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getContractValue } from '@/utils/methods/util/projects'
+import { TExpense } from '@/utils/schemas/expenses'
+import { TProject } from '@/utils/schemas/projects'
+import connectToDatabase from '@/utils/services/mongodb/projects'
 import dayjs from 'dayjs'
-import { ObjectId } from 'mongodb'
-import connectToDatabase from '../../utils/services/mongodb/projects'
+import { Collection, Db } from 'mongodb'
+import { NextApiHandler } from 'next'
+import { totalmem } from 'os'
 
-function getTotalCosts(costs) {
-  const total = costs.reduce((acc, current) => {
-    const toSum = current.total || 0
-    return acc + toSum
-  }, 0)
-  return total
-}
-export default async function handler(req, res) {
-  if (req.method == 'GET') {
-    const projectsDb = await connectToDatabase(process.env.DB_KEY, 'projetos')
-    const projectsCollection = projectsDb.collection('dados')
-    const projects = await projectsCollection
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
-            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-            'compra.dataPedido': null,
-            'compra.statusLiberacao': { $ne: 'PAGO' },
-          },
-        },
-        {
-          $project: {
-            qtde: 1,
-            nomeDoContrato: 1,
-            tipoDeServico: 1,
-            'contrato.dataAssinatura': 1,
-            'contrato.status': 1,
-            sistema: 1,
-            'compra.statusLiberacao': 1,
-            'compra.tipoDoKit': 1,
-          },
-        },
-        {
-          $sort: {
-            'contrato.dataAssinatura': 1,
-          },
-        },
-      ])
-      .toArray()
-    const formatted = projects.map((project) => {
-      return {
-        QTDE: project.qtde,
-        'NOME DO CLIENTE': project.nomeDoContrato,
-        'STATUS DO CONTRATO': project.contrato?.status,
-        'TIPO DE SERVIÇO': project.tipoDeServico,
-        'DATA DE ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
-        'TIPO DO KIT': project.compra?.tipoDoKit,
-        'STATUS DE COMPRA': project.compra.statusLiberacao,
-        TOPOLOGIA: project.sistema?.topologia,
-        'QTDE MODULOS': project.sistema?.qtdeModulos,
-        'POTÊNCIA DOS MÓDULOS': project.sistema?.potModulos,
-        'POTÊNCIA PICO': project.sistema?.potPico,
-        'VALOR DO PROJETO': project.sistema?.valorProjeto,
-        INVERSOR: project.sistema?.inversor,
-      }
-    })
-    // const costsCollection = projectsDb.collection('despesas')
-    // const projects = await projectsCollection
-    //   .aggregate([
-    //     {
-    //       $match: {
-    //         $and: [{ 'obra.saida': { $gte: '2023-06-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2023-08-31T18:00:00.000Z' } }],
-    //       },
-    //     },
-    //     {
-    //       $project: {
-    //         qtde: 1,
-    //         nomeDoContrato: 1,
-    //         cidade: 1,
-    //         uf: 1,
-    //         tipoDeServico: 1,
-    //         'obra.saida': 1,
-    //         'contrato.dataAssinatura': 1,
-    //         'material.previsaoCustos': 1,
-    //         'material.efetivoCustos': 1,
-    //         'sistema.potPico': 1,
-    //         'sistema.topologia': 1,
-    //         'sistema.inversor': 1,
-    //       },
-    //     },
-    //     {
-    //       $sort: {
-    //         qtde: 1,
-    //       },
-    //     },
-    //   ])
-    //   .toArray()
-    // const costs = await costsCollection
-    //   .aggregate([
-    //     {
-    //       $project: {
-    //         projeto: 1,
-    //         total: 1,
-    //       },
-    //     },
-    //   ])
-    //   .toArray()
-    // const formatteditems = projects.map((project) => {
-    //   var totalCost = 0
-    //   const vinculatedCosts = costs.filter((cost) => cost.projeto?.id == project._id)
-    //   if (vinculatedCosts) {
-    //     totalCost = getTotalCosts(vinculatedCosts)
-    //   }
-    //   return {
-    //     QTDE: project.qtde,
-    //     'NOME DO CONTRATO': project.nomeDoContrato,
-    //     'TIPO DE SERVIÇO': project.tipoDeServico,
-    //     'DATA ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
-    //     'SAÍDA DE OBRA': project.obra?.saida ? dayjs(project.obra.saida).add(3, 'hours').format('DD/MM/YYYY') : null,
-    //     ESTADO: project.uf,
-    //     CIDADE: project.cidade,
-    //     'POTÊNCIA PICO': project.sistema?.potPico,
-    //     TOPOLOGIA: project.sistema?.topologia,
-    //     INVERSOR: project.sistema?.inversor,
-    //     'PREVISÃO DE CUSTOS': project.material?.previsaoCustos,
-    //     'EFETIVO DE CUSTOS (PREENCHIDO)': project.material?.efetivoCustos,
-    //     'EFETIVO DE CUSTOS (ALMOXARIFADO)': totalCost,
-    //   }
+const getExport: NextApiHandler<{ data: any }> = async (req, res) => {
+  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const collection: Collection<TProject> = db.collection('dados')
+  const expensesCollection: Collection<TExpense> = db.collection('despesas')
+  const projects = await collection.find({ 'obra.saida': { $gte: '2023-11-01T00:00:00.000Z' } }, { sort: { 'contrato.dataAssinatura': 1 } }).toArray()
+  const expenses = await expensesCollection.find({}).toArray()
+  const formatted = projects.map((project) => {
+    const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id.toString())
+    const itens = projectExpenses.flatMap((exp) => exp.itens)
+    const total = projectExpenses.reduce((acc, current) => acc + current.total, 0)
+
+    return {
+      periodo: dayjs(project.obra.saida).format('MM/YYYY'),
+      nome: project.nomeDoContrato,
+      cidade: project.cidade,
+      assinatura: formatDateAsLocale(project.contrato.dataAssinatura),
+      finalizacao: formatDateAsLocale(project.obra.saida),
+      itens: itens,
+      totalGasto: total,
+    }
+    // var obj = {
+    //   PERIODO: dayjs(project.contrato.dataAssinatura).format('MM/YYYY'),
+    //   'NOME DO CLIENTE': project.nomeDoContrato,
+    //   'VALOR DO CONTRATO': getContractValue({
+    //     projectValue: project.sistema.valorProjeto,
+    //     structureValue: project.estruturaPersonalizada.valor,
+    //     paValue: project.padrao.valor,
+    //   }),
+    //   'STATUS DO PARECER': project.parecer.statusDoParecerDeAcesso,
+    //   'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
+    //   'DATA DE LIBERAÇÃO PARA COMPRA': formatDateAsLocale(project.compra.dataLiberacao),
+    //   'DATA DE COMPRA DO KIT': formatDateAsLocale(project.compra.dataPedido),
+    //   'DATA DE PAGAMENTO DO KIT': formatDateAsLocale(project.compra.dataPagamento),
+    //   'DATA DE SAIDA DE OBRA': formatDateAsLocale(project.obra.saida),
+    //   'VALOR DO KIT': project.compra.valorDoKit,
+    // }
+    // projectExpenses.forEach((exp) => {
+    //   obj[exp.categoria] = exp.total
     // })
-    // res.json(formatteditems)
-    res.json(formatted)
-  }
+  })
+  return res.json({ data: formatted })
 }
+export default apiHandler({
+  GET: getExport,
+})
 /*  
   // let annualGenFactor = cidadesAtendidas.map(async (cidade) => {
   //   return {

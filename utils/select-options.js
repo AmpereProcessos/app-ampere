@@ -612,6 +612,33 @@ export const allSellers = [
     comissionAsActive: 0,
     comissionWithInside: 0,
   },
+  {
+    id: 54,
+    active: true,
+    label: 'ADRIANA FRANÇOISE',
+    value: 'ADRIANA FRANÇOISE',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
+  {
+    id: 55,
+    active: true,
+    label: 'JOSÉ ROBERTO',
+    value: 'JOSÉ ROBERTO',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
+  {
+    id: 56,
+    active: true,
+    label: 'LAYANE FERNANDA',
+    value: 'LAYANE FERNANDA',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
 export const allActiveSellers = allSellers.filter((s) => s.active)

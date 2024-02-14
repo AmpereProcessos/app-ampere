@@ -80,7 +80,7 @@ function FinancesAuditing() {
 
     const expensesByType = info.reduce((acc: { [key: string]: number }, current) => {
       Object.entries(current.despesas).forEach(([key, value]) => {
-        if (!acc[key]) acc[key] = value
+        if (!acc[key]) acc[key] = 0
         acc[key] += value
       })
       return acc

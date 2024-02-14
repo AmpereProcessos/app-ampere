@@ -11,6 +11,8 @@ import FormularyCard from '@/components/identificador/almoxarifado/formulario/Fo
 import { useQueryClient } from 'react-query'
 import EditForm from '@/components/identificador/almoxarifado/formulario/EditForm'
 import { formatToMoney } from '@/utils/constants'
+import { FaCity, FaSignature, FaTools } from 'react-icons/fa'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
 
 const currentDate = dayjs()
 const beforeParam = currentDate.toISOString()
@@ -87,18 +89,58 @@ function Test() {
       throw error
     }
   }
+  function getStats(info?: Exportation[]) {
+    if (!info)
+      return {
+        totais: [],
+      }
+    const totalsByMonth = info.reduce<{ [key: string]: number }>((acc, current) => {
+      if (!acc[current.periodo]) acc[current.periodo] = 0
+      acc[current.periodo] += current.totalGasto
+      return acc
+    }, {})
+    return {
+      totais: Object.entries(totalsByMonth).map(([key, value]) => ({ periodo: key, total: value })),
+    }
+  }
   useEffect(() => {
     const func = async () => await getForms()
     func()
   }, [])
   return (
-    <div className="flex grow flex-col gap-2">
+    <div className="flex grow flex-col gap-2 px-2">
+      <h1 className="w-full text-center text-lg font-black">RELATÓRIO DE GASTOS EM INSUMOS</h1>
+      <h1 className="text-start font-bold tracking-tight">GASTOS POR PERÍODO</h1>
+      <div className="flex w-full flex-wrap justify-around">
+        {getStats(exportation).totais.map((t) => (
+          <div className="flex items-center gap-2 rounded-lg bg-gray-800 p-1 px-2">
+            <h1 className="tracking-tight text-white">{t.periodo}</h1>
+            <h1 className="font-bold text-white">{formatToMoney(t.total)}</h1>
+          </div>
+        ))}
+      </div>
+      <h1 className="text-start font-bold tracking-tight">GASTOS POR PROJETO</h1>
       {exportation.map((exp, index) => (
-        <div key={index} className="flex w-full flex-col border border-gray-200 p-1">
+        <div key={index} className="flex w-full flex-col border border-gray-200 p-2">
           <div className="flex w-full items-center justify-between">
             <h1 className="tracking-tightlg:text-sm cursor-pointer text-xs font-black leading-none">{exp.nome}</h1>
             <div className="flex min-w-fit items-center gap-2 rounded-full bg-black px-2 py-1 ">
               <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(exp.totalGasto)}</h1>
+            </div>
+          </div>
+          <div className="flex w-full items-center gap-2">
+            <div className="flex items-center gap-2">
+              <FaCity />
+              <h1 className="text-xs text-gray-500">{exp.cidade}</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaSignature />
+              <h1 className="text-xs text-gray-500">ASSINADO EM: {exp.assinatura}</h1>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FaTools />
+              <h1 className="text-xs text-gray-500">CONCLUÍDO EM: {exp.finalizacao}</h1>
             </div>
           </div>
           <h1 className="text-xs tracking-tight text-gray-500">ITENS</h1>

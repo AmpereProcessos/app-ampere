@@ -26,9 +26,6 @@ export async function handleComercialUpdate({ previousData, newData, changes, qu
   const isReleasedForPurchase = !!newData.compra.liberacao
 
   try {
-    const toReleaseForPurchase = isSigned && serviceType == 'SISTEMA FOTOVOLTAICO'
-    if (toReleaseForPurchase && !isReleasedForPurchase) throw new Error('Confira a liberação para compra.')
-
     // const wasUnsigned = previousData.contrato.status != 'ASSINADO'
     // const isSigned = newData.contrato.status == 'ASSINADO'
     if (wasUnsigned && isSigned) {

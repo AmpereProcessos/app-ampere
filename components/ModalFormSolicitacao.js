@@ -21,6 +21,7 @@ import CheckboxInput from './CheckboxInput'
 import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
 import toast from 'react-hot-toast'
 import { allSellers } from '../utils/select-options'
+import { useQueryClient } from 'react-query'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -206,6 +207,7 @@ const validation = {
   },
 }
 function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroEditor, getFormularios }) {
+  const queryClient = useQueryClient()
   // Router
   const router = useRouter()
   const [dados, setDados] = useState(solicitacao)
@@ -270,29 +272,36 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
   }
 
   // Handling Alterations
-  function saveChanges() {
-    axios.put('/api/solicitacoes/contrato', dados).then((res) => {
-      setMessage({ text: 'Alterações feitas', color: 'text-green-500' })
-    })
+  async function saveChanges() {
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      await axios.put('/api/solicitacoes/contrato', dados)
+      toast.dismiss(loadingToastId)
+      await queryClient.invalidateQueries({ queryKey: ['contract-requests'] })
+      return toast.success('Alterações feitas com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      const msg = getErrorMessage(error)
+      return toast.error(msg)
+    }
   }
   async function rejectSolicitacao() {
     if (!dados.comentariosAoVendedor || dados.comentariosAoVendedor.trim().length < 5) {
-      setCreationMsg({
+      return setCreationMsg({
         text: 'Discorra sobre o motivo da reprova',
         color: 'text-red-500',
       })
-    } else {
-      axios
-        .put('/api/solicitacoes/contrato', {
-          _id: solicitacao._id,
-          aprovacao: false,
-        })
-        .then((res) =>
-          setCreationMsg({
-            text: 'Solicitação rejeitada!',
-            color: 'text-red-500',
-          })
-        )
+    }
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      await axios.put('/api/solicitacoes/contrato', { _id: solicitacao._id, aprovacao: false })
+      toast.dismiss(loadingToastId)
+      await queryClient.invalidateQueries({ queryKey: ['contract-requests'] })
+      return toast.success('Solicitação rejeitada !')
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      const msg = getErrorMessage(error)
+      return toast.error(msg)
     }
   }
   // Utils
@@ -357,6 +366,24 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       holder.push(str)
     }
     return holder.join(' - ')
+  }
+  function getKitInfo(dados) {
+    let moduleSplitMarca = dados.marcaModulos.split('/')
+    let moduleSplitQtde = dados.qtdeModulos.split('/')
+    let moduleSplitPot = dados.potModulos.split('/')
+    let holder = []
+    for (let i = 0; i < moduleSplitMarca.length; i++) {
+      let str = `${moduleSplitQtde} - ${moduleSplitMarca}(${moduleSplitPot}W)`
+      holder.push(str)
+    }
+    let inverterSplitMarca = dados.marcaInversor.split('/')
+    let inverterSplitQtde = dados.qtdeInversor.split('/')
+    let inverterSplitPot = dados.potInversor.split('/')
+    for (let i = 0; i < inverterSplitMarca.length; i++) {
+      let str = `${inverterSplitQtde} - ${inverterSplitMarca}(${inverterSplitPot}W)`
+      holder.push(str)
+    }
+    return holder.join('\n')
   }
   function getSummedValues({ qtde, pot }) {
     let splitQtde = qtde.split('/')
@@ -459,7 +486,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       tipoDoKit: dados.tipoDoKit ? dados.tipoDoKit : 'NÃO DEFINIDO',
       valorDoKit: 0,
       previsaoValorDoKit: dados.previsaoValorDoKit,
-      kitInfo: '',
+      kitInfo: getKitInfo(dados),
       fornecedor: 'NÃO DEFINIDO',
       dataPedido: undefined, // formatar como data
       dataPagamento: undefined,
@@ -665,22 +692,22 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
     }
   }
   async function addProject() {
-    await axios.put('/api/solicitacoes/contrato', {
-      _id: solicitacao._id,
-      aprovacao: true,
-      dataAprovacao: new Date().toISOString(),
-    })
-    sendEmail()
-    notifyCobrancas()
-    if (dados.idProjetoCRM) await notifySellerInCRM(insertObj.vendedor.nome, dados.idProjetoCRM, 'SOLICITAÇÃO DE CONTRATO APROVADA.')
-
-    axios.post('/api/projects/add', insertObj).then((res) => {
-      setCreationMsg({
-        text: 'Projeto adicionado!',
-        color: 'text-green-500',
-      })
-    })
-    setDados({ ...dados, aprovacao: true })
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      await axios.put('/api/solicitacoes/contrato', { _id: solicitacao._id, aprovacao: true, dataAprovacao: new Date().toISOString() })
+      sendEmail()
+      notifyCobrancas()
+      if (dados.idProjetoCRM) await notifySellerInCRM(insertObj.vendedor.nome, dados.idProjetoCRM, 'SOLICITAÇÃO DE CONTRATO APROVADA.')
+      await axios.post('/api/projects/add', insertObj)
+      toast.dismiss(loadingToastId)
+      await queryClient.invalidateQueries({ queryKey: ['contract-requests'] })
+      toast.success('Projeto adicionado !')
+      setDados({ ...dados, aprovacao: true })
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      const msg = getErrorMessage(error)
+      return toast.error(msg)
+    }
   }
 
   async function uploadFiles() {
@@ -780,7 +807,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       setFileMsg({ text: 'Erro ao exluir arquivo.', color: 'text-red-500' })
     }
   }
-  console.log(dados)
+  console.log(getKitInfo(dados))
   return (
     <>
       <div style={OVERLAY_STYLES}>

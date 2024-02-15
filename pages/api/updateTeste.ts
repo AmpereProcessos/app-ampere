@@ -3,12 +3,95 @@ import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
-import { ObjectId } from 'mongodb'
+import { Collection, Db, ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
-export default async function handler(req, res) {
-  return res.json('DESATIVADA')
+import { NextApiHandler } from 'next'
+import { TProject } from '@/utils/schemas/projects'
+import { apiHandler } from '@/utils/api'
+import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
+
+const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const mainCollection: Collection<TProject> = db.collection('dados')
+
+  // const projects = await mainCollection.find({ 'compra.statusEntrega': 'EM ROTA', 'compra.liberacao': null }).toArray()
+
+  // const bulkwrite = projects
+  //   .map((project) => {
+  //     const libDate = project.parecer.dataParecerDeAcesso
+  //     return {
+  //       updateOne: {
+  //         filter: { _id: new ObjectId(project._id) },
+  //         update: {
+  //           $set: {
+  //             'compra.liberacao': true,
+  //             'compra.dataLiberacao': libDate,
+  //           },
+  //         },
+  //       },
+  //     }
+  //   })
+  //   .filter((b) => !!b)
+  // const bkResponse = await mainCollection.bulkWrite(bulkwrite)
+  // return res.json(bkResponse)
+  return res.json({ data: 'DESATIVADA' })
 }
+export default apiHandler({
+  GET: handleUpdateTeste,
+})
+// export default async function handler(req, res) {
+//   const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+//   const collection = db.collection('dados')
+//   let suprimentos = await collection
+//     .aggregate([
+//       {
+//         $sort: {
+//           qtde: 1,
+//         },
+//       },
+//       {
+//         $match: {
+//           tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+//           'compra.liberacao': true,
+//           'compra.status': { $ne: 'CONCLUIDA' },
+//           'parecer.statusDoParecerDeAcesso': { $ne: 'PARECER DE ACESSO APROVADO' },
+//           'project.compra.dataPedido': null,
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           nomeDoContrato: 1,
+//           qtde: 1,
+//           compra: 1,
+//           tipoDeServico: 1,
+//           'faturamento.previsaoFaturamento': 1,
+//           'parecer.statusDoParecerDeAcesso': 1,
+//           'sistema.potPico': 1,
+//           'sistema.qtdeModulos': 1,
+//           'pagamento.status': 1,
+//         },
+//       },
+//     ])
+//     .toArray()
+//   console.log(suprimentos.length)
+//   const bulkwrite = suprimentos.map((s) => {
+//     return {
+//       updateOne: {
+//         filter: { _id: new ObjectId(s._id) },
+//         update: {
+//           $set: {
+//             'compra.liberacao': null,
+//             'compra.dataLiberacao': null,
+//           },
+//         },
+//       },
+//     }
+//   })
+//   const bkResponse = await collection.
+//   return res.json(bkResponse)
+// }
 // Update Many example:
 // let arr = await collection.updateMany(
 //   {

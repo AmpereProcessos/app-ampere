@@ -519,8 +519,8 @@ function Comercial() {
           ))}
         </div>
         {session.user?.regional == undefined && (
-          <Link href={'/comercial/formulariosSolicitacao'}>
-            <a className="left-150 fixed bottom-10 ml-36 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <Link href={'/comercial/solicitacoes-contrato'}>
+            <a className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
               <p className="text-sm font-bold uppercase">Formulários</p>
             </a>
           </Link>

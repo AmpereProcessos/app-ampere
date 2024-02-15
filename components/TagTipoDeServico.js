@@ -1,37 +1,33 @@
-import React from "react";
-function getServiceTypeTagColor(type) {
+import React from 'react'
+export function getServiceTypeTagColor(type) {
   var obj = {
-    "SISTEMA FOTOVOLTAICO": {
-      combination: "bg-[#15599a] text-[#fead61]",
+    'SISTEMA FOTOVOLTAICO': {
+      combination: 'bg-[#15599a] text-[#fead61]',
     },
-    "SISTEMA FOTOVOLTAICO (OFF GRID)": {
-      combination: "bg-[#fead61] text-[#15599a]",
+    'SISTEMA FOTOVOLTAICO (OFF GRID)': {
+      combination: 'bg-[#fead61] text-[#15599a]',
     },
-    "AUMENTO DE SISTEMA FOTOVOLTAICO": {
-      combination: "bg-green-500 text-white",
+    'AUMENTO DE SISTEMA FOTOVOLTAICO': {
+      combination: 'bg-green-500 text-white',
     },
-    "BOMBA SOLAR": {
-      combination: "bg-[#000066] text-white",
+    'BOMBA SOLAR': {
+      combination: 'bg-[#000066] text-white',
     },
-    "OPERAÇÃO E MANUTENÇÃO": {
-      combination: "bg-[#8604c2] text-white",
+    'OPERAÇÃO E MANUTENÇÃO': {
+      combination: 'bg-[#8604c2] text-white',
     },
-    "SUBESTAÇÃO DE ENERGIA": {
-      combination: "bg-[#e6e6e6] text-[#15599a]",
+    'SUBESTAÇÃO DE ENERGIA': {
+      combination: 'bg-[#e6e6e6] text-[#15599a]',
     },
-  };
-  return obj[type] ? obj[type].combination : "bg-black text-white";
+  }
+  return obj[type] ? obj[type].combination : 'bg-black text-white'
 }
 function TagTipoDeServico({ tipoDeServico }) {
   return (
-    <div
-      className={`${getServiceTypeTagColor(
-        tipoDeServico
-      )} text-xs font-bold text-center rounded-br-lg rounded-bl-lg`}
-    >
-      {tipoDeServico ? tipoDeServico : "NÃO DEFINIDO"}
+    <div className={`${getServiceTypeTagColor(tipoDeServico)} rounded-br-lg rounded-bl-lg text-center text-xs font-bold`}>
+      {tipoDeServico ? tipoDeServico : 'NÃO DEFINIDO'}
     </div>
-  );
+  )
 }
 
-export default TagTipoDeServico;
+export default TagTipoDeServico

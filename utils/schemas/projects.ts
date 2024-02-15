@@ -131,87 +131,114 @@ const GeneralProjectSchema = z.object({
   }),
   linkDrive: z.string(),
   links: z.object({
-    chamadosSuporte: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    chamadosSuprimentos: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    contratos: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    documentos: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    equipamentos: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    manutencaoPreventiva: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    obras: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    projetos: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
-    visitaTecnica: z.array(
-      z.object({
-        title: z.string(),
-        link: z.string(),
-        format: z.string(),
-        category: z.string(),
-        // Define the schema for LinksItem here
-      })
-    ),
+    chamadosSuporte: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    chamadosSuprimentos: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    contratos: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    documentos: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    equipamentos: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    manutencaoPreventiva: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    obras: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    projetos: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
+    visitaTecnica: z
+      .array(
+        z.object({
+          title: z.string(),
+          link: z.string(),
+          format: z.string(),
+          category: z.string(),
+          // Define the schema for LinksItem here
+        })
+      )
+      .optional()
+      .nullable(),
   }),
   logradouro: z.string(),
   manutencaoPreventiva: z.object({

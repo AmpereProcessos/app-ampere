@@ -1,27 +1,31 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+
+import { TbExternalLink } from 'react-icons/tb'
+import { AiOutlineSearch, AiOutlineCheck } from 'react-icons/ai'
+import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from 'react-icons/md'
+import { VscChromeClose } from 'react-icons/vsc'
+import { FaSave } from 'react-icons/fa'
+import { FiDelete } from 'react-icons/fi'
+
 import TextInput from './TextInput'
 import SelectInput from './SelectInput'
 import NumberInput from './NumberInput'
 import DateInput from './DateInput'
-import { TbExternalLink } from 'react-icons/tb'
-import { AiOutlineSearch, AiOutlineCheck } from 'react-icons/ai'
-import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from 'react-icons/md'
-import { cidadesAtendidas, credores, customersAcquisitionChannels, fileTypes, tiposDePadrao, tiposDeServico, vendedores } from '../utils/constants'
-import { VscChromeClose } from 'react-icons/vsc'
-import { FaSave } from 'react-icons/fa'
-import { useRouter } from 'next/router'
-import axios from 'axios'
-import FileLinkBlock from './utils/FileLinkBlock'
-import SaveButton from './utils/Buttons/SaveButton'
-import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { storage } from '../utils/services/firebase/firebase-storage'
-import Link from 'next/link'
-import { FiDelete } from 'react-icons/fi'
 import CheckboxInput from './CheckboxInput'
+import SaveButton from './utils/Buttons/SaveButton'
+import FileLinkBlock from './utils/FileLinkBlock'
+
+import { cidadesAtendidas, credores, customersAcquisitionChannels, fileTypes, tiposDePadrao, tiposDeServico, vendedores } from '../utils/constants'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
-import toast from 'react-hot-toast'
 import { allSellers } from '../utils/select-options'
-import { useQueryClient } from 'react-query'
+import CRMReferencesBlock from './identificador/solicitacoesContrato/blocos/CRMReferences'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -857,8 +861,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </a>
                   </Link>
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTRATO</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    DADOS PARA CONTRATO
+                  </span>
                   <div className="flex flex-wrap justify-around gap-2">
                     <TextInput
                       label={'Nome/Razão Social'}
@@ -1169,8 +1175,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </div>
                   )}
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTATO</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    DADOS PARA CONTATO
+                  </span>
                   <div className="flex flex-wrap justify-around gap-2">
                     <TextInput
                       label={'NOME DO CONTATO 1'}
@@ -1225,9 +1233,15 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </div>
                   </div>
                 </div>
+                {dados.idPropostaCRM || dados.idProjetoCRM ? (
+                  <CRMReferencesBlock opportunityId={dados.idProjetoCRM} proposeId={dados.idPropostaCRM} />
+                ) : null}
+
                 {dados.clienteAmpere != 'SIM' ? (
-                  <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                    <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DA INSTALAÇÃO</span>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                      DADOS DA INSTALAÇÃO
+                    </span>
                     <div className="flex flex-wrap justify-around gap-2">
                       <TextInput
                         label={'NOME DO TITULAR DO PROJETO'}
@@ -1668,8 +1682,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                   </div>
                 ) : null}
 
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DO SISTEMA</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DADOS DO SISTEMA</span>
                   {dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
                     <span className="mt-1 border-t border-blue-500 py-2 text-center text-sm font-bold uppercase text-[#fead61]">
                       DADOS DO SISTEMA (AUMENTO)
@@ -2121,8 +2135,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </>
                   ) : null}
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ESTRUTURA DE MONTAGEM</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    ESTRUTURA DE MONTAGEM
+                  </span>
                   <div className="flex flex-wrap justify-around gap-2">
                     <SelectInput
                       label={'TIPO DA ESTRUTURA'}
@@ -2308,8 +2324,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     )}
                   </div>
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">O&M E SEGURO</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">O&M E SEGURO</span>
                   <div className="flex flex-wrap justify-around gap-2">
                     <SelectInput
                       label={'KIT COM O&M ?'}
@@ -2464,8 +2480,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                   )}
                 </div>
                 {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(dados.tipoDeServico) && (
-                  <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                    <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">AUMENTO DE CARGA</span>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                      AUMENTO DE CARGA
+                    </span>
                     <div className="flex justify-center">
                       <SelectInput
                         label={'HAVERÁ TROCA DE PADRÃO?'}
@@ -2590,8 +2608,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                   </div>
                 )}
 
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    DADOS FINANCEIROS E NEGOCIAÇÃO
+                  </span>
                   <div className="mt-2 flex flex-wrap justify-around gap-2">
                     <TextInput
                       label={'NOME DO PAGADOR'}
@@ -2884,8 +2904,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     />
                   </div>
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DISTRIBUIÇÃO DE CRÉDITOS</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    DISTRIBUIÇÃO DE CRÉDITOS
+                  </span>
                   <div className="mt-2 flex justify-center">
                     <SelectInput
                       label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}
@@ -2968,8 +2990,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                   )}
                 </div>
                 {dados.links?.length > 0 ? (
-                  <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                    <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DOCUMENTAÇÃO</span>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DOCUMENTAÇÃO</span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.links.map((x, index) => (
                         <FileLinkBlock key={index} obj={x} deleteFile={(obj) => deleteFile(obj)} />
@@ -3021,8 +3043,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                   false
                 )}
                 {dados.linksVisita?.length > 0 ? (
-                  <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                    <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ARQUIVOS VISITA TÉCNICA</span>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                      ARQUIVOS VISITA TÉCNICA
+                    </span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.linksVisita.map((x, index) => (
                         <div key={index} className="flex items-center gap-x-2">
@@ -3036,8 +3060,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </div>
                   </div>
                 ) : (
-                  <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                    <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">VINCULAR VISITA TÉCNICA</span>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                      VINCULAR VISITA TÉCNICA
+                    </span>
                     <div className="flex flex-col items-center">
                       <TextInput
                         normalCase={true}
@@ -3055,8 +3081,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     </div>
                   </div>
                 )}
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-                  <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO</span>
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO
+                  </span>
                   <div className="flex flex-wrap justify-around gap-2">
                     <TextInput
                       label={'Nome do Projeto'}
@@ -3223,7 +3251,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     />
                   </div>
                 </div>
-                <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
                   <div className="mt-2 flex w-full flex-col items-center self-center px-2">
                     <span className="text-center font-raleway text-sm font-bold uppercase">COMENTÁRIOS AO VENDEDOR</span>
                     <textarea

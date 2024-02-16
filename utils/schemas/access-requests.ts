@@ -31,5 +31,7 @@ const GeneralAccessRequestSchema = z.object({
     texto: z.string(),
     data: z.string().datetime().optional().nullable(),
   }),
+  dataAprovacao: z.string().datetime().optional().nullable(),
+  dataReprovacao: z.string().datetime().optional().nullable(),
   dataInsercao: z.string().datetime(),
 })

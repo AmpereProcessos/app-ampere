@@ -137,6 +137,7 @@ export const InsertNewWarehouseFormularySchema = z.object({
   dataInsercao: z.string().datetime(),
 })
 export type TNewWarehouseFormulary = z.infer<typeof GeneralNewWarehouseFormularySchema>
+export type TNewWarehouseFormularyDTO = TNewWarehouseFormulary & { _id: string }
 export type TWarehouseFormulary = z.infer<typeof GeneralWarehouseFormularySchema>
 
 export type TWarehouseFormularyDTO = TWarehouseFormulary & { _id: string }

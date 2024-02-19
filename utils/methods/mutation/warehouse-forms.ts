@@ -21,3 +21,13 @@ export async function updateWarehouseFormulary({ id, changes }: { id: string; ch
     throw error
   }
 }
+
+export async function deleteWarehouseFormulary({ id }: { id: string }) {
+  try {
+    const { data } = await axios.delete(`/api/almoxarifado/formularios?id=${id}`)
+    if (typeof data.message != 'string') return 'Formulário excluído com sucesso !'
+    return data.message
+  } catch (error) {
+    throw error
+  }
+}

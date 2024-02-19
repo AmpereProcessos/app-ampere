@@ -85,10 +85,29 @@ const editForm: NextApiHandler<PutResponse> = async (req, res) => {
   return res.status(201).json({ data: 'Formulário atualizado com sucesso!', message: 'Formulário atualizado com sucesso!' })
 }
 
+type DeleteResponse = {
+  data: string
+  message: string
+}
+
+const deleteFormulary: NextApiHandler<DeleteResponse> = async (req, res) => {
+  const session = validateAuthenticationWithSession(req, res)
+  const { id } = req.query
+  if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
+
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const collection: Collection<TWarehouseFormulary> = db.collection('formularios')
+
+  const deleteResponse = await collection.deleteOne({ _id: new ObjectId(id) })
+  if (deleteResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao delete formulário.')
+  if (deleteResponse.deletedCount == 0) throw new createHttpError.NotFound('Formulário não encontrado.')
+  return res.status(201).json({ data: 'Formulário excluído com sucesso !', message: 'Formulário excluído com sucesso !' })
+}
 export default apiHandler({
   GET: getForms,
   POST: createForm,
   PUT: editForm,
+  DELETE: deleteFormulary,
 })
 // export default async function handler(req, res) {
 //   if (req.method === 'POST') {

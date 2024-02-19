@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 const GeneralMaterialUpdateRegistry = z.object({
   alteracao: z.number(),
-  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO')], z.literal('ENTRADA')),
+  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA'), z.literal('ALTERAÇÃO MANUAL')]),
   idFormulario: z.string().optional().nullable(),
   material: z.object({
     id: z.string(),
@@ -20,11 +20,12 @@ const GeneralMaterialUpdateRegistry = z.object({
     nome: z.string(),
     avatar_url: z.string().optional().nullable(),
   }),
+  dataInsercao: z.string().datetime(),
 })
 
 const InsertMaterialUpdateRegistrySchema = z.object({
   alteracao: z.number({ required_error: 'Alteração não informada.', invalid_type_error: 'Tipo não válido para alteração.' }),
-  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA')], {
+  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA'), z.literal('ALTERAÇÃO MANUAL')], {
     required_error: 'Tipo da alteração não informada.',
     invalid_type_error: 'Tipo não válido para o tipo da alteração.',
   }),
@@ -59,6 +60,7 @@ const InsertMaterialUpdateRegistrySchema = z.object({
     }),
     avatar_url: z.string().optional().nullable(),
   }),
+  dataInsercao: z.string().datetime(),
 })
 
 export type TMaterialUpdateRegistry = z.infer<typeof GeneralMaterialUpdateRegistry>

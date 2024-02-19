@@ -1,5 +1,7 @@
 import axios from 'axios'
 import createHttpError from 'http-errors'
+import { deleteWarehouseFormulary } from './warehouse-forms'
+import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 
 type UpdateManyMaterialsParams = {
   formularyId?: string
@@ -12,6 +14,7 @@ export async function updateManyMaterials({ formularyId, project, updates }: Upd
     if (typeof data.message != 'string') return 'Atualizações realizadas com sucesso !'
     return data.message as string
   } catch (error) {
+    if (formularyId) await deleteWarehouseFormulary({ id: formularyId })
     throw error
   }
 }
@@ -113,13 +116,21 @@ export async function addMaterial(newMaterialObj) {
   }
 }
 
-export async function updateMaterial({ id, changes }) {
+export async function updateMaterial({ id, changes }: { id: string; changes: Partial<TMaterialDTO> }) {
   try {
-    const { data } = await axios.put('/api/almoxarifado/materiais', {
-      id: id,
-      changes: changes,
-    })
-    return 'Material alterado com sucesso !'
+    const { data } = await axios.put(`/api/almoxarifado/estoque?id=${id}`, changes)
+    if (typeof data.message != 'string') return 'Material atualizado com sucesso !'
+    return data.message
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function createMaterial({ info }: { info: TMaterial }) {
+  try {
+    const { data } = await axios.post('/api/almoxarifado/estoque', info)
+    if (typeof data.message != 'string') return 'Material criado com sucesso !'
+    return data.message
   } catch (error) {
     throw error
   }

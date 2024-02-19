@@ -144,7 +144,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
     callbackFn: () => resetInfoHolder(),
   })
   return (
-    <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
+    <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
         <div className="flex h-full flex-col">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
@@ -256,7 +256,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
             <div className="grid grid-cols-1 grid-rows-3 items-center gap-6 px-2 lg:grid-cols-3 lg:grid-rows-1">
               <TextInput
                 label="CEP"
-                value={infoHolder.localizacao.cep || ''}
+                value={infoHolder.localizacao.cep?.toString() || ''}
                 placeholder="Preencha aqui o CEP do cliente."
                 handleChange={(value) => {
                   if (value.length == 9) {

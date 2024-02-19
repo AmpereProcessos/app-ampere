@@ -3,7 +3,7 @@ import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 import TextInput from '@/components/inputs/Text'
 import { useClients } from '@/utils/methods/query/clients'
 import { getCEPInfo } from '@/utils/methods/shared'
-import { TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
+import { TNewWarehouseFormulary, TNewWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import { Session } from 'next-auth'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -26,7 +26,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import { TExpense } from '@/utils/schemas/expenses'
 import { insertExpense } from '@/utils/methods/mutation/expenses'
 
-function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormulary }) {
+function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormularyDTO }) {
   const items = info.materiais.map((material) => {
     const item: TExpense['itens'][number] = {
       idMaterial: material.id,
@@ -48,7 +48,7 @@ function getExpensesFromFormulary({ session, info }: { session: Session; info: T
       identificador: info.projeto.identificador, // identificador QTDE do projeto no banco de projetos
       tipo: '',
     },
-    idFormularioAlmoxarifado: info._id,
+    idFormularioAlmoxarifado: info._id || '',
     autor: {
       id: session.user.id,
       nome: session.user.name,
@@ -75,7 +75,8 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
   const { data: formulary, isLoading, isError, isSuccess } = useWarehouseFormById({ id: formularyId })
 
   const [externalResponsible, setExternalResponsible] = useState<boolean>(false)
-  const [infoHolder, setInfoHolder] = useState<TNewWarehouseFormulary>({
+  const [infoHolder, setInfoHolder] = useState<TNewWarehouseFormularyDTO>({
+    _id: 'holder',
     titulo: '',
     categoria: '',
     responsaveis: '',
@@ -104,6 +105,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
   })
   function resetInfoHolder() {
     setInfoHolder({
+      _id: 'holder',
       titulo: '',
       categoria: '',
       responsaveis: '',
@@ -201,15 +203,20 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     affectedQueryKey: ['warehouse-form-by-id', formularyId],
     callbackFn: () => invalidateQuery(),
   })
+  console.log(infoHolder)
   useEffect(() => {
-    if (formulary) setInfoHolder(formulary as TNewWarehouseFormulary)
+    if (formulary) setInfoHolder(formulary as TNewWarehouseFormularyDTO)
   }, [formulary])
   return (
-    <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
+    <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
         <div className="flex h-full flex-col">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVO FORMULÁRIO</h3>
+            <div className="flex flex-col">
+              <h3 className="text-xl font-bold text-[#353432] dark:text-white ">EDITAR FORMULÁRIO</h3>
+              <p className="text-xs text-gray-500">#{formularyId}</p>
+            </div>
+
             <button
               onClick={() => closeModal()}
               type="button"
@@ -293,7 +300,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                 <MaterialsBlock
                   formularyId={formularyId}
                   formHolder={infoHolder}
-                  setFormHolder={setInfoHolder}
+                  setFormHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TNewWarehouseFormulary>>}
                   blockTakeAway={true}
                   blockDevolution={false}
                 />
@@ -399,7 +406,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                   />
                 </div>
               </div>
-              {infoHolder.dataEfetivacao ? (
+              {!infoHolder.dataEfetivacao ? (
                 <div className="my-1 flex w-full items-center justify-end gap-2">
                   <button
                     disabled={loadingConclusion || loadingUpdate}

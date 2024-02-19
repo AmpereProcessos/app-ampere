@@ -23,10 +23,10 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
       toast.dismiss(loadingToast)
       const msg = typeof data == 'string' ? data : 'Atualização feita com sucesso !'
       toast.success(msg)
-      if (callbackFn) callbackFn()
     },
     onSettled: async (data, error) => {
       await queryClient.invalidateQueries({ queryKey: affectedQueryKey })
+      if (callbackFn) callbackFn()
     },
     onError: (error, variables, context) => {
       // Rollback changes if needed

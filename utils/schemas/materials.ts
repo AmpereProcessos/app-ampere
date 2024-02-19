@@ -11,6 +11,7 @@ const GeneralMaterialSchema = z.object({
   localizacao: z.string().optional().nullable(),
   grandeza: z.string().optional().nullable(),
   codigo: z.string().optional().nullable(),
+  anotacoes: z.string().optional().nullable(),
   recontagem: z
     .object({
       data: z.string(),
@@ -21,7 +22,9 @@ const GeneralMaterialSchema = z.object({
 })
 
 export const InsertMaterialSchema = z.object({
-  nome: z.string({ required_error: 'Nome do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome do material.' }),
+  nome: z
+    .string({ required_error: 'Nome do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome do material.' })
+    .min(3, 'Nome do material deve conter ao menos 3 caracteres.'),
   nomeTecnico: z
     .string({ required_error: 'Nome técnico do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome técnico do material.' })
     .optional()
@@ -37,8 +40,8 @@ export const InsertMaterialSchema = z.object({
     .nullable(),
   qtdeMinima: z
     .number({
-      required_error: 'Quantidade miníma do material não fornecido.',
-      invalid_type_error: 'Tipo não válido para o quantidade miníma do material.',
+      required_error: 'Quantidade mínima do material não fornecido.',
+      invalid_type_error: 'Tipo não válido para o quantidade mínima do material.',
     })
     .optional()
     .nullable(),
@@ -54,6 +57,7 @@ export const InsertMaterialSchema = z.object({
     .string({ required_error: 'Código do material não fornecido.', invalid_type_error: 'Tipo não válido para o código do material.' })
     .optional()
     .nullable(),
+  anotacoes: z.string().optional().nullable(),
   recontagem: z
     .object({
       data: z.string(),

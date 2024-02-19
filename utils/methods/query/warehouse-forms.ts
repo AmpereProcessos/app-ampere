@@ -1,4 +1,4 @@
-import { TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
+import { TNewWarehouseFormularyDTO, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import axios from 'axios'
 import { useState } from 'react'
 import { useInfiniteQuery, useQuery } from 'react-query'
@@ -64,7 +64,7 @@ async function fetchWarehouseFormById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/almoxarifado/formularios?id=${id}`)
 
-    return data.data as TWarehouseFormularyDTO
+    return data.data as TNewWarehouseFormularyDTO
   } catch (error) {
     throw error
   }
@@ -74,5 +74,21 @@ export function useWarehouseFormById({ id }: { id: string }) {
   return useQuery({
     queryKey: ['warehouse-form-by-id', id],
     queryFn: async () => await fetchWarehouseFormById({ id }),
+    refetchOnWindowFocus: false,
+  })
+}
+
+async function fetchNewWarehouseForms({ after, before }: { after: string; before: string }) {
+  try {
+    const { data } = await axios.get(`/api/almoxarifado/formularios/test/?after=${after}&before=${before}`)
+    return data.data as TNewWarehouseFormularyDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+export function useNewWarehouseForms({ after, before }: { after: string; before: string }) {
+  return useQuery({
+    queryKey: ['warehouse-forms', after, before],
+    queryFn: async () => await fetchNewWarehouseForms({ after, before }),
   })
 }

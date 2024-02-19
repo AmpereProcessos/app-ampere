@@ -1,5 +1,5 @@
-import connectToDatabase from '../../utils/services/mongodb/warehouse'
 import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
+import connectToWarehouseDatabase from '../../utils/services/mongodb/warehouse'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
@@ -10,9 +10,15 @@ import { NextApiHandler } from 'next'
 import { TProject } from '@/utils/schemas/projects'
 import { apiHandler } from '@/utils/api'
 import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
+import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToWarehouseDatabase(process.env.DB_KEY)
+  const logsCollection: Collection<TMaterialUpdateRegistry> = db.collection('alteracoes')
+
+  const deleteResponse = await logsCollection.deleteMany({
+    $or: [{ 'material.id': '64d143b9a44d78ad3f3cff40' }, { 'material.id': '64e781ac52a1e57fee30aa18' }],
+  })
   // const mainCollection: Collection<TProject> = db.collection('dados')
 
   // const projects = await mainCollection.find({ 'compra.statusEntrega': 'EM ROTA', 'compra.liberacao': null }).toArray()
@@ -35,7 +41,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //   .filter((b) => !!b)
   // const bkResponse = await mainCollection.bulkWrite(bulkwrite)
   // return res.json(bkResponse)
-  return res.json({ data: 'DESATIVADA' })
+  return res.json(deleteResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

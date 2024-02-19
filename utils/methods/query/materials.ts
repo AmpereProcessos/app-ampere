@@ -3,6 +3,7 @@ import { useQuery } from 'react-query'
 import { isEmpty } from '../shared'
 import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 import { useState } from 'react'
+import { TMaterialUpdateRegistryDTO } from '@/utils/schemas/material-updates-registry'
 
 export async function fetchMaterials() {
   try {
@@ -13,11 +14,12 @@ export async function fetchMaterials() {
   }
 }
 async function fetchMaterialLogs(materialId: string) {
-  const { data } = await axios.get(`/api/almoxarifado/logMateriais?materialId=${materialId}`)
-
-  if (!data) return []
-  if (!Array.isArray(data)) return []
-  return data
+  try {
+    const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?materialId=${materialId}`)
+    return data.data as TMaterialUpdateRegistryDTO[]
+  } catch (error) {
+    throw error
+  }
 }
 
 type UseMaterialsFilters = {
@@ -91,6 +93,21 @@ export function useMaterials() {
     setFilters,
   }
 }
+
+async function fetchMaterialById({ id }: { id: string }) {
+  try {
+    const { data } = await axios.get(`/api/almoxarifado/estoque?id=${id}`)
+    return data.data as TMaterialDTO
+  } catch (error) {
+    throw error
+  }
+}
+export function useMaterialById({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ['material-by-id', id],
+    queryFn: async () => await fetchMaterialById({ id }),
+  })
+}
 export function useMaterialsWithFilters(enabled: boolean, filters: any) {
   const { search, qtyLessThan } = filters
 
@@ -113,7 +130,7 @@ export function useMaterialsWithFilters(enabled: boolean, filters: any) {
 }
 export function useMaterialLogs(materialId: string) {
   return useQuery({
-    queryKey: ['materialLog', materialId],
+    queryKey: ['material-update-registries', materialId],
     queryFn: async () => await fetchMaterialLogs(materialId),
     refetchOnWindowFocus: false,
   })

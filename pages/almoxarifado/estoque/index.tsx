@@ -5,17 +5,12 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
 import { FaBox, FaMapMarkerAlt } from 'react-icons/fa'
-import { ImPriceTag } from 'react-icons/im'
-import { AiFillWarning, AiOutlineReload, AiOutlineSearch } from 'react-icons/ai'
 
-import ModalControlAlmoxarifado from '../../../components/ModalControlAlmoxarifado'
-import ModalNovoItemAlmoxarifado from '../../../components/ModalNovoItemAlmoxarifado'
 import LoadingPage from '../../../components/utils/LoadingPage'
-import FilterButton from '../../../components/utils/Buttons/FilterButton'
-import FetchDataButton from '../../../components/utils/Buttons/FetchDataButton'
+
 import ModalEntradaAlmoxarifado from '../../../components/ModalEntradaAlmoxarifado'
 import { useMaterials, useMaterialsWithFilters } from '../../../utils/methods/query/materials'
-import { TbReportSearch, TbRulerMeasure } from 'react-icons/tb'
+import { TbRulerMeasure } from 'react-icons/tb'
 import TextInput from '../../../components/inputs/Text'
 import NumberInput from '../../../components/inputs/Number'
 import MaterialCard from '../../../components/identificador/almoxarifado/MaterialCard'
@@ -26,6 +21,8 @@ import { IoResize } from 'react-icons/io5'
 import NewMaterial from '@/components/identificador/estoque/NewMaterial'
 import { formatToMoney } from '@/utils/constants'
 import EditMaterial from '@/components/identificador/estoque/EditMaterial'
+import { BsCalendarPlus } from 'react-icons/bs'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
 function Estoque() {
   const router = useRouter()
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
@@ -37,19 +34,11 @@ function Estoque() {
   })
   const isAuthorized = !!session?.user.accessibleRoutes?.includes('Almoxarifado') || !!session?.user.accessibleRoutes?.includes('Obras')
   const { data: materials, isLoading, isError, isSuccess, filters, setFilters } = useMaterials()
+
+  const [newMaterialModalIsOpen, setNewMaterialModalIsOpen] = useState(false)
   const [editMaterialModal, setEditMaterialModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
-  const [editModal, setEditModal] = useState({
-    isOpen: false,
-    info: {},
-  })
-  const [newItemModalIsOpen, setNewItemModalIsOpen] = useState(false)
+
   const [entranceModalIsOpen, setEntranceModalIsOpen] = useState(false)
-
-  async function handleUpdates(id) {
-    let { data } = await axios.get(`/api/almoxarifado/materiais?id=${id}`)
-
-    setEditModal((prev) => ({ ...prev, info: data }))
-  }
 
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
@@ -135,7 +124,7 @@ function Estoque() {
             ) : null}
           </AnimatePresence>
           <div className="mt-2 flex w-full items-center justify-end gap-2">
-            <Link href="/almoxarifado/pdfRelatorioEstoque">
+            <Link href="/almoxarifado/estoque/relatorio-pdf">
               <a className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#fead41] px-2 py-1 text-sm font-bold tracking-tight text-white">
                 <h1>RELATÓRIO</h1>
               </a>
@@ -200,6 +189,14 @@ function Estoque() {
                     </>
                   ) : null}
                 </div>
+                <div className="mt-2 flex w-full items-center justify-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <BsCalendarPlus />
+                    <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                      {formatDateAsLocale(material.dataInsercao, true)}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -214,7 +211,7 @@ function Estoque() {
           )}
         </div> */}
         <div
-          onClick={() => setNewItemModalIsOpen(true)}
+          onClick={() => setNewMaterialModalIsOpen(true)}
           className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
         >
           <p className="text-sm font-bold uppercase">NOVO ITEM</p>
@@ -228,17 +225,7 @@ function Estoque() {
         {editMaterialModal.isOpen && editMaterialModal.id ? (
           <EditMaterial materialId={editMaterialModal.id} closeModal={() => setEditMaterialModal({ id: null, isOpen: false })} />
         ) : null}
-        {editModal.isOpen && editModal.info ? (
-          <ModalControlAlmoxarifado
-            credentials={session?.user}
-            closeModal={() => setEditModal((prev) => ({ isOpen: false, info: {} }))}
-            info={editModal.info}
-            handleUpdates={handleUpdates}
-          />
-        ) : (
-          false
-        )}
-        {newItemModalIsOpen && <NewMaterial closeModal={() => setNewItemModalIsOpen(false)} />}
+        {newMaterialModalIsOpen && <NewMaterial closeModal={() => setNewMaterialModalIsOpen(false)} />}
         {entranceModalIsOpen ? <ModalEntradaAlmoxarifado closeModal={() => setEntranceModalIsOpen((prev) => !prev)} /> : null}
       </div>
     )

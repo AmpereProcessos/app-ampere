@@ -14,7 +14,7 @@ type NewMaterialProps = {
 }
 function NewMaterial({ closeModal }: NewMaterialProps) {
   const queryClient = useQueryClient()
-  const [infoHolder, setInfoHolder] = useState<TMaterial>({ nome: '', nomeTecnico: '', preco: 0, qtde: 0 })
+  const [infoHolder, setInfoHolder] = useState<TMaterial>({ nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() })
   const { mutate: handleMaterialCreation, isLoading } = useMutationWithFeedback({
     mutationKey: ['create-material'],
     mutationFn: createMaterial,

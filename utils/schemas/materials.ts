@@ -19,6 +19,7 @@ const GeneralMaterialSchema = z.object({
     })
     .optional()
     .nullable(),
+  dataInsercao: z.string().datetime(),
 })
 
 export const InsertMaterialSchema = z.object({
@@ -65,6 +66,7 @@ export const InsertMaterialSchema = z.object({
     })
     .optional()
     .nullable(),
+  dataInsercao: z.string({ required_error: 'Data de inserção não informada.' }).datetime(),
 })
 
 export type TMaterial = z.infer<typeof GeneralMaterialSchema>

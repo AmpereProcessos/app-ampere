@@ -52,3 +52,9 @@ const Options = Object.entries(obj).map(([key, value], index) => {
 })
 
 console.log(Options)
+
+const routes = ['PPS', 'SUPRIMENTOS']
+
+const allowed = ['PPS', 'OBRAS', 'ALMOXARIFADO'].some((r) => routes.includes(r))
+
+console.log(allowed)

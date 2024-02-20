@@ -93,50 +93,10 @@ function Formularios() {
               )}
             </div>
           </div>
-          {/* <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
-                <VscDiffAdded />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
-              </div>
-            </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTO</h1>
-                <MdAttachMoney />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vendido} </div>
-              </div>
-            </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">EM CONFECÇÃO</h1>
-                <MdCreate />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).confeccionar}</div>
-              </div>
-            </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PARA ASSINAR</h1>
-                <FaSignature />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).assinar}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).vendidoAssinar} para assinar</p>
-              </div>
-            </div>
-          </div> */}
           <AnimatePresence>
             {dropdownMenuVisible ? (
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div className="flex flex-col flex-wrap items-end justify-center gap-2 lg:flex-row">
                   <TextInput
                     label={'NOME DO FORMULÁRIO...'}
                     value={filters.search}
@@ -170,6 +130,22 @@ function Formularios() {
                       }
                     />
                   </div>
+                  <button
+                    onClick={() => setFilters((prev) => ({ ...prev, done: !prev.done }))}
+                    className={`rounded-md border border-blue-600 ${
+                      filters.done ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600'
+                    }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                  >
+                    FINALIZADOS
+                  </button>
+                  <button
+                    onClick={() => setFilters((prev) => ({ ...prev, notDone: !prev.notDone }))}
+                    className={`rounded-md border border-orange-600 ${
+                      filters.notDone ? 'bg-orange-600 text-white' : 'bg-transparent text-orange-600'
+                    }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                  >
+                    EM ABERTO
+                  </button>
                 </div>
               </motion.div>
             ) : null}

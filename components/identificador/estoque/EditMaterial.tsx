@@ -18,7 +18,14 @@ type EditMaterialProps = {
 function EditMaterial({ materialId, closeModal }: EditMaterialProps) {
   const queryClient = useQueryClient()
   const { data: material } = useMaterialById({ id: materialId })
-  const [infoHolder, setInfoHolder] = useState<TMaterialDTO>({ _id: 'holder', nome: '', nomeTecnico: '', preco: 0, qtde: 0 })
+  const [infoHolder, setInfoHolder] = useState<TMaterialDTO>({
+    _id: 'holder',
+    nome: '',
+    nomeTecnico: '',
+    preco: 0,
+    qtde: 0,
+    dataInsercao: new Date().toISOString(),
+  })
 
   const { mutate: handleMaterialUpdate, isLoading } = useMutationWithFeedback({
     mutationKey: ['update-material', materialId],

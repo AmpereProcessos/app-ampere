@@ -13,35 +13,6 @@ type FormAlmoxarifadoCardProps = {
   openModal: (id: string) => void
 }
 function FormAlmoxarifadoCard({ form, openModal }: FormAlmoxarifadoCardProps) {
-  const [msg, setMsg] = useState({ text: '', color: '' })
-  const [formInfo, setFormInfo] = useState(form)
-  // async function fetchSaidaDeObra(e: MouseEvent, id: string) {
-  //   e.stopPropagation()
-  //   try {
-  //     let { data } = await axios.get(`/api/projects/fetchDoc/${id}`)
-  //     let projectPai = data[0]
-  //     if (projectPai.obra?.saida) {
-  //       setFormInfo({ ...formInfo, saidaDeObra: projectPai.obra.saida })
-  //       await axios.put('/api/almoxarifado/formularios', {
-  //         id: form._id,
-  //         data: {
-  //           saidaDeObra: projectPai.obra.saida,
-  //         },
-  //       })
-  //       var previousForms = [...forms]
-  //       previousForms[index].saidaDeObra == projectPai.obra.saida
-  //       setFilteredForms((prev) => previousForms)
-  //       // getForms();
-  //     } else {
-  //       setMsg({
-  //         text: 'Saída de obra não preenchida.',
-  //         color: 'text-red-500',
-  //       })
-  //     }
-  //   } catch (error) {
-  //     setMsg({ text: 'Um erro ocorreu.', color: 'text-red-500' })
-  //   }
-  // }
   function getCardColor(status: boolean) {
     if (status == true)
       return (

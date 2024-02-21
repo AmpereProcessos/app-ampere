@@ -242,6 +242,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <TextInput
                   label="TITULO DO FORMULÁRIO"
+                  editable={!isFormularyFinished}
                   placeholder="Preencha aqui um titulo para identificação e filtro desse formulário posteriomente..."
                   value={infoHolder.titulo}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titulo: value }))}

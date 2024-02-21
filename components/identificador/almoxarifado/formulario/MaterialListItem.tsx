@@ -40,7 +40,7 @@ function MaterialListItem({ material, index, removeMaterial, formHolder, setForm
       <div className="flex w-full items-center gap-1 lg:w-[60%]">
         <div className="w-[50%]">
           <input
-            disabled={blockTakeAway}
+            disabled={blockTakeAway || isFormularyFinished}
             value={!isEmpty(material.qtdeRetirada) ? material.qtdeRetirada?.toString() : ''}
             onChange={(e) => {
               const value = Number(e.target.value)
@@ -51,12 +51,12 @@ function MaterialListItem({ material, index, removeMaterial, formHolder, setForm
             min={0}
             id={'qtdeRetirada'}
             type="number"
-            className="h-full w-full rounded-md border border-gray-200 bg-gray-100 p-3 text-xs outline-none placeholder:italic"
+            className="h-full w-full rounded-md border border-gray-200 bg-gray-100 p-3 text-xs outline-none placeholder:italic disabled:bg-gray-400"
           />
         </div>
         <div className="w-[50%]">
           <input
-            disabled={blockDevolution}
+            disabled={blockDevolution || isFormularyFinished}
             value={!isEmpty(material.qtdeDevolucao) ? material.qtdeDevolucao?.toString() : ''}
             onChange={(e) => {
               const value = Number(e.target.value)
@@ -65,7 +65,7 @@ function MaterialListItem({ material, index, removeMaterial, formHolder, setForm
               // Checking for the case where user puts a devolution value higher than the takeway
               if (value > materialsList[index].qtdeRetirada) {
                 toast.error('Quantidade de devolução não pode exceder a de retirada.')
-                // Setting the devolution to the max value, which is the take away qty
+                // Setting the devolution to the max value, which is the taken away qty
                 materialsList[index].qtdeDevolucao = materialsList[index].qtdeRetirada
               } else {
                 materialsList[index].qtdeDevolucao = value

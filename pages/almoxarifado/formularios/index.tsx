@@ -159,7 +159,7 @@ function Formularios() {
         {isSuccess ? (
           <div className="mt-4 flex grow flex-wrap justify-around gap-3">
             {forms.length > 0 ? (
-              forms.map((form, index) => <FormularyCard formulary={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />)
+              forms.map((form, index) => <FormularyCard key={form._id} formulary={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />)
             ) : (
               <p className="w-full text-center font-medium italic text-gray-500">Nenhum formulário encontrado para o parâmetros de filtro.</p>
             )}

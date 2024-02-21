@@ -12,9 +12,9 @@ import { z } from 'zod'
 
 const FormularyIdSchema = z.string({ invalid_type_error: 'Tipo inválido para o ID do formulário.' }).optional().nullable()
 const UpdateSchema = z.object({
-  id: z.string({ invalid_type_error: 'Tipo inválido para o ID do materia.' }),
-  nome: z.string({ invalid_type_error: 'Tipo inválido para o nome d' }),
-  diferenca: z.number({ required_error: 'Diferença para atualização não informada.' }),
+  id: z.string({ invalid_type_error: 'Tipo inválido para o ID do material.' }),
+  nome: z.string({ invalid_type_error: 'Tipo inválido para o nome do material' }),
+  diferenca: z.number({ required_error: 'Diferença para atualização do material não informada.' }),
 })
 const ProjectReferenceSchema = z.object({
   id: z.string({ required_error: 'ID de referência do projeto não fornecido.' }).optional().nullable(),
@@ -33,6 +33,8 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
   const formularyId = FormularyIdSchema.parse(req.body.formularyId)
   const project = ProjectReferenceSchema.parse(req.body.project)
   const updates = z.array(UpdateSchema).parse(req.body.updates)
+
+  if (updates.length == 0) return res.status(201).json({ data: 'Atualizações feitas com sucesso !', message: 'Atualizações feitas com sucesso !' })
 
   const warehouseDb: Db = await connectToWarehouseDatabase(process.env.DB_KEY)
   const materialCollection: Collection<TMaterial> = warehouseDb.collection('material')
@@ -65,6 +67,7 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
     .filter((b) => !!b?.updateOne)
 
   const logs = updates
+    .filter((u) => u.diferenca != 0)
     .map((update) => {
       const equivalentMaterial = materials.find((material) => material._id.toString() == update.id)
       if (!equivalentMaterial) return null
@@ -94,7 +97,7 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
   const bulkwriteResponse = await materialCollection.bulkWrite(bulkwrite)
 
   // @ts-ignore
-  const logInsertResponse = await logCollection.insertMany(logs)
+  if (logs.length > 0) await logCollection.insertMany(logs)
 
   return res.status(201).json({ data: 'Atualizações feitas com sucesso !', message: 'Atualizações feitas com sucesso !' })
 }

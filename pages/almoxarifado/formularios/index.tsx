@@ -8,47 +8,50 @@ import TextInput from '@/components/inputs/Text'
 import DateInput from '@/components/inputs/Date'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 
+import ModalNewFormulary from '../../../components/identificador/almoxarifado/formulario/NewForm'
+import ModalEditFormulary from '../../../components/identificador/almoxarifado/formulario/EditForm'
+
 import ErrorComponent from '@/components/utils/ErrorComponent'
-import LoadingPage from '../../components/utils/LoadingPage'
-import FormAlmoxarifadoCard from '../../components/FormAlmoxarifadoCard'
+import LoadingPage from '../../../components/utils/LoadingPage'
+import FormAlmoxarifadoCard from '../../../components/FormAlmoxarifadoCard'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
-import { useWarehouseForms } from '@/utils/methods/query/warehouse-forms'
+import { useNewWarehouseForms, useWarehouseForms } from '@/utils/methods/query/warehouse-forms'
 import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
-import ModalNewFormulary from '../../components/ModalNovoFormAlmoxarifado'
-import ModalEditFormulary from '../../components/ModalFormAlmoxarifado'
-
 import { useQueryClient } from 'react-query'
-const currentDate = dayjs()
-const beforeParam = currentDate.toISOString()
-const afterParam = currentDate.subtract(3, 'month').toISOString()
+import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
+import { getFirstDayOfMonth, getLastDayOfMonth } from '@/utils/methods/dates'
+
+type TDateParam = {
+  after: string
+  before: string
+}
+
+type TEditModal = {
+  isOpen: boolean
+  id: string | null
+}
+
+const referenceDate = dayjs().subtract(6, 'month')
+const referenceYear = referenceDate.get('year')
+const referenceMonth = referenceDate.get('month')
+const afterParam = getFirstDayOfMonth({ year: referenceYear, month: referenceMonth, resetHour: true })
+const beforeParam = getLastDayOfMonth({ resetHour: true })
 
 function Formularios() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/authHome')
-    },
-  })
-  const [dateParam, setDateParam] = useState<{ after: string; before: string }>({
-    after: afterParam,
-    before: beforeParam,
-  })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
+
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+  const [dateParam, setDateParam] = useState<TDateParam>({ after: afterParam, before: beforeParam })
 
   const { data: forms, isLoading, isError, isSuccess, filters, setFilters } = useWarehouseForms({ after: dateParam.after, before: dateParam.before })
 
   const [newFormModalIsOpen, setNewFormModalIsOpen] = useState(false)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalForm, setModalForm] = useState<{ isOpen: boolean; id: string | null }>({
-    isOpen: false,
-    id: null,
-  })
-
+  const [modalForm, setModalForm] = useState<TEditModal>({ isOpen: false, id: null })
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
@@ -156,9 +159,7 @@ function Formularios() {
         {isSuccess ? (
           <div className="mt-4 flex grow flex-wrap justify-around gap-3">
             {forms.length > 0 ? (
-              forms.map((form, index) => (
-                <FormAlmoxarifadoCard key={form._id} form={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />
-              ))
+              forms.map((form, index) => <FormularyCard formulary={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />)
             ) : (
               <p className="w-full text-center font-medium italic text-gray-500">Nenhum formulário encontrado para o parâmetros de filtro.</p>
             )}
@@ -168,15 +169,21 @@ function Formularios() {
         {modalForm.isOpen && modalForm.id ? (
           <ModalEditFormulary
             session={session}
-            formId={modalForm.id}
-            invalidateQuery={async () => await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })}
+            formularyId={modalForm.id}
+            invalidateQuery={async () => {
+              await queryClient.cancelQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })
+              await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })
+            }}
             closeModal={() => setModalForm({ isOpen: false, id: null })}
           />
         ) : null}
         {newFormModalIsOpen && (
           <ModalNewFormulary
             session={session}
-            invalidateQuery={async () => await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })}
+            invalidateQuery={async () => {
+              await queryClient.cancelQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })
+              await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', dateParam.after, dateParam.before] })
+            }}
             closeModal={() => setNewFormModalIsOpen(false)}
           />
         )}

@@ -17,6 +17,7 @@ type MaterialListItem = {
   blockDevolution: boolean
 }
 function MaterialListItem({ material, index, removeMaterial, formHolder, setFormHolder, blockTakeAway, blockDevolution }: MaterialListItem) {
+  const isFormularyFinished = !!formHolder.dataEfetivacao
   return (
     <div className="flex w-full flex-col items-center justify-between gap-1 rounded border border-gray-300 p-2 lg:flex-row">
       <div className="flex w-full flex-row gap-1 lg:w-[40%] lg:flex-col lg:gap-0">
@@ -26,12 +27,14 @@ function MaterialListItem({ material, index, removeMaterial, formHolder, setForm
           <p className="text-xs italic text-gray-500">{material.grandeza}</p>
           <BsCode />
           <p className="text-xs italic text-gray-500">#{material.id || 'NÃO DEFIDO'}</p>
-          <button
-            onClick={() => removeMaterial({ id: material.id, index })}
-            className="rounded-lg border border-red-500 bg-red-100 p-1 text-center text-xxs font-medium text-red-500"
-          >
-            EXCLUIR
-          </button>
+          {!isFormularyFinished ? (
+            <button
+              onClick={() => removeMaterial({ id: material.id, index })}
+              className="rounded-lg border border-red-500 bg-red-100 p-1 text-center text-xxs font-medium text-red-500"
+            >
+              EXCLUIR
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="flex w-full items-center gap-1 lg:w-[60%]">

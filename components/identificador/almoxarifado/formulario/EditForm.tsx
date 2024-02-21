@@ -14,7 +14,7 @@ import { useMaterials } from '@/utils/methods/query/materials'
 import MaterialsBlock from './MaterialsBlock'
 import { equipesTecnicas, serviceOrdersCategories } from '@/utils/constants'
 import CheckboxInput from '@/components/inputs/Checkbox'
-import { createStockFormulary, updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
+import { createWarehouseFormulary, deleteWarehouseFormulary, updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { isError, useQueryClient } from 'react-query'
@@ -72,9 +72,10 @@ type EditFormProps = {
 }
 function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFormProps) {
   const queryClient = useQueryClient()
+  const [externalResponsible, setExternalResponsible] = useState<boolean>(false)
+
   const { data: formulary, isLoading, isError, isSuccess } = useWarehouseFormById({ id: formularyId })
 
-  const [externalResponsible, setExternalResponsible] = useState<boolean>(false)
   const [infoHolder, setInfoHolder] = useState<TNewWarehouseFormularyDTO>({
     _id: 'holder',
     titulo: '',
@@ -103,36 +104,6 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     dataEfetivacao: null,
     dataInsercao: new Date().toISOString(),
   })
-  function resetInfoHolder() {
-    setInfoHolder({
-      _id: 'holder',
-      titulo: '',
-      categoria: '',
-      responsaveis: '',
-      projeto: {
-        id: null,
-        nome: null,
-      },
-      localizacao: {
-        cep: null,
-        uf: null,
-        cidade: null,
-        bairro: '',
-        endereco: '',
-        numeroOuIdentificador: '',
-        complemento: '',
-        distancia: null,
-      },
-      materiais: [],
-      autor: {
-        id: session.user.id,
-        nome: session.user.name,
-        avatar_url: session.user.image,
-      },
-      dataEfetivacao: null,
-      dataInsercao: new Date().toISOString(),
-    })
-  }
   async function setAddressDataByCEP(cep: string) {
     const addressInfo = await getCEPInfo(cep)
     const toastID = toast.loading('Buscando informações sobre o CEP...', {
@@ -189,6 +160,34 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     }
   }
 
+  async function handleFormularyDelete() {
+    try {
+      const project = infoHolder.projeto
+
+      const devolutionLoadingToastId = toast.loading('Devolvendo todos os materiais usados.')
+      // Formatting updates for material devolution
+      const updates = infoHolder.materiais
+        .filter((m) => !!m.id)
+        .map((material) => {
+          return {
+            id: material.id as string,
+            nome: material.nome,
+            diferenca: material.qtdeRetirada - material.qtdeDevolucao, // returning to stock only what wasnt already returned (qtdeDevolucao) in a finished formulary
+          }
+        })
+        .filter((u) => u.diferenca != 0)
+      await updateManyMaterials({ formularyId, project, updates })
+      toast.dismiss(devolutionLoadingToastId)
+
+      const deleteLoadingToastId = toast.loading('Excluindo formulário.')
+      const deleteResponse = await deleteWarehouseFormulary({ id: formularyId })
+      toast.dismiss(deleteLoadingToastId)
+      return deleteResponse
+    } catch (error) {
+      toast.dismiss()
+      throw error
+    }
+  }
   const { mutate: handleConclusion, isLoading: loadingConclusion } = useMutationWithFeedback({
     mutationKey: ['conclude-warehouse-formulary', formularyId],
     mutationFn: handleFormularyConclusion,
@@ -203,7 +202,18 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     affectedQueryKey: ['warehouse-form-by-id', formularyId],
     callbackFn: () => invalidateQuery(),
   })
-  console.log(infoHolder)
+  const { mutate: handleDelete, isLoading: loadingDelete } = useMutationWithFeedback({
+    mutationKey: ['delete-warehouse-formulary', formularyId],
+    mutationFn: handleFormularyDelete,
+    queryClient: queryClient,
+    affectedQueryKey: ['warehouse-form-by-id', formularyId],
+    callbackFn: () => {
+      invalidateQuery()
+      closeModal()
+    },
+  })
+
+  const isFormularyFinished = !!infoHolder.dataEfetivacao
   useEffect(() => {
     if (formulary) setInfoHolder(formulary as TNewWarehouseFormularyDTO)
   }, [formulary])
@@ -240,11 +250,8 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                 {infoHolder.projeto ? (
                   <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
                     <div className="flex items-center gap-2">
-                      <BsCode size={'20px'} color="rgb(31,41,55)" />(
-                      <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
-                        #{infoHolder.projeto.identificador || 'N/A'}
-                      </p>
-                      )
+                      <BsCode size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway text-sm font-medium">#{infoHolder.projeto.id || 'N/A'}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <FaUser size={'20px'} color="rgb(31,41,55)" />
@@ -424,7 +431,18 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     FINALIZAR
                   </button>
                 </div>
-              ) : null}
+              ) : (
+                <div className="my-1 flex w-full items-center justify-start gap-2">
+                  <button
+                    disabled={loadingDelete}
+                    // @ts-ignore
+                    onClick={() => handleDelete({ id: formularyId })}
+                    className="rounded bg-red-600 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500"
+                  >
+                    EXCLUIR FORMULÁRIO
+                  </button>
+                </div>
+              )}
             </>
           ) : null}
         </div>

@@ -26,33 +26,30 @@ export function useWarehouseForms({ after, before }: { after: string; before: st
     notDone: false,
     services: [],
   })
-  function matchSearch(form: TWarehouseFormularyDTO) {
+  function matchSearch(form: TNewWarehouseFormularyDTO) {
     if (filters.search.trim().length == 0) return true
-    return (
-      form.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase()) ||
-      form.nomeTerceiro?.toUpperCase().includes(filters.search.toUpperCase())
-    )
+    return form.titulo.toUpperCase().includes(filters.search.toUpperCase())
   }
-  function matchDone(form: TWarehouseFormularyDTO) {
+  function matchDone(form: TNewWarehouseFormularyDTO) {
     if (!filters.done) return true
     return !!form.dataEfetivacao
   }
-  function matchNotDone(form: TWarehouseFormularyDTO) {
+  function matchNotDone(form: TNewWarehouseFormularyDTO) {
     if (!filters.notDone) return true
     return !form.dataEfetivacao
   }
-  function matchService(form: TWarehouseFormularyDTO) {
+  function matchService(form: TNewWarehouseFormularyDTO) {
     if (filters.services.length == 0) return true
-    return filters.services.includes(form.servico)
+    return filters.services.includes(form.categoria)
   }
-  function handleModelData(data: TWarehouseFormularyDTO[]) {
+  function handleModelData(data: TNewWarehouseFormularyDTO[]) {
     var modeledData = data
     return modeledData.filter((form) => matchSearch(form) && matchDone(form) && matchNotDone(form) && matchService(form))
   }
   return {
     ...useQuery({
       queryKey: ['warehouse-forms', after, before],
-      queryFn: async () => await fetchWarehouseForms({ after, before }),
+      queryFn: async () => await fetchNewWarehouseForms({ after, before }),
       select: (data) => handleModelData(data),
     }),
     filters,
@@ -80,7 +77,7 @@ export function useWarehouseFormById({ id }: { id: string }) {
 
 async function fetchNewWarehouseForms({ after, before }: { after: string; before: string }) {
   try {
-    const { data } = await axios.get(`/api/almoxarifado/formularios/test/?after=${after}&before=${before}`)
+    const { data } = await axios.get(`/api/almoxarifado/formularios?after=${after}&before=${before}`)
     return data.data as TNewWarehouseFormularyDTO[]
   } catch (error) {
     throw error

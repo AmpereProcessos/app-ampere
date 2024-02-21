@@ -11,9 +11,62 @@ import { TProject } from '@/utils/schemas/projects'
 import { apiHandler } from '@/utils/api'
 import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
+import { TMaterial } from '@/utils/schemas/materials'
+import { TNewWarehouseFormulary, TWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
+  const projectsDb: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToWarehouseDatabase(process.env.DB_KEY)
+
+  const projectsCollection: Collection<TProject> = projectsDb.collection('dados')
+  const projects = await projectsCollection.find({}).toArray()
+
+  const formulariesCollection: Collection<TWarehouseFormulary> = db.collection('formularios')
+  const formularies = await formulariesCollection.find({}).toArray()
+
+  const newFormularies = formularies.map((form) => {
+    const equivalentProject = projects.find((project) => project._id.toString() == form.idPai)
+    const insertDate = form._id.getTimestamp().toISOString()
+    const newFormulary: TNewWarehouseFormulary = {
+      titulo: `SAIDA PARA ${form.nomeDoContrato || form.nomeTerceiro}`,
+      categoria: form.servico,
+      responsaveis: form.equipeResp || form.nomeTerceiro || 'NÃO DEFINIDO',
+      projeto: {
+        id: equivalentProject?._id.toString(),
+        nome: equivalentProject?.nomeDoContrato,
+        identificador: equivalentProject?.qtde,
+      },
+      localizacao: {
+        cep: equivalentProject?.cep,
+        uf: equivalentProject?.uf,
+        cidade: equivalentProject?.cidade,
+        bairro: equivalentProject?.bairro || '',
+        endereco: equivalentProject?.logradouro || '',
+        numeroOuIdentificador: equivalentProject?.numeroResidencia.toString() || '',
+        complemento: '',
+        distancia: null,
+      },
+      materiais: form.materiais.map((mat) => ({
+        id: mat.id,
+        nome: mat.nome,
+        preco: mat.precoUnit,
+        grandeza: mat.grandeza,
+        qtdeRetirada: mat.qtdeSaida || 0,
+        qtdeDevolucao: mat.qtdeDevolucao || 0,
+      })),
+      autor: {
+        id: '639b4b9ffbca702a25180057',
+        nome: 'Almoxarifado',
+        avatar_url:
+          'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-alex.jpeg?alt=media&token=37101720-3dee-43ee-a3e4-07ed654a3ad0',
+      },
+      dataEfetivacao: form.dataEfetivacao,
+      dataInsercao: insertDate,
+    }
+    return newFormulary
+  })
   // const bulkwrite = projects
+
   //   .map((project) => {
   //     const libDate = project.parecer.dataParecerDeAcesso
   //     return {
@@ -31,7 +84,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //   .filter((b) => !!b)
   // const bkResponse = await mainCollection.bulkWrite(bulkwrite)
   // return res.json(bkResponse)
-  return res.json('DESATIVADA')
+  return res.json(newFormularies)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

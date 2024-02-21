@@ -45,7 +45,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
           <div className="flex items-center gap-2">
             <BsCalendar2Check color="rgb(22,101,52)" />
             <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
-              {formatDateAsLocale(formulary.dataEfetivacao)}
+              {formatDateAsLocale(formulary.dataEfetivacao, true)}
             </p>
           </div>
         ) : null}
@@ -63,7 +63,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
       <div className="mt-2 flex w-full items-center justify-between">
         <div className={`flex items-center gap-2`}>
           <BsCalendarPlus />
-          <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(formulary.dataInsercao)}</p>
+          <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(formulary.dataInsercao, true)}</p>
         </div>
         <div className="flex items-center justify-center gap-2">
           <Avatar url={formulary.autor.avatar_url} width={25} height={25} fallback={formatNameAsInitials(formulary.autor.nome)} />

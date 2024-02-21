@@ -14,7 +14,7 @@ import { useMaterials } from '@/utils/methods/query/materials'
 import MaterialsBlock from './MaterialsBlock'
 import { equipesTecnicas, serviceOrdersCategories } from '@/utils/constants'
 import CheckboxInput from '@/components/inputs/Checkbox'
-import { createStockFormulary } from '@/utils/methods/mutation/warehouse-forms'
+import { createWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useQueryClient } from 'react-query'
@@ -127,11 +127,11 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
       const title = project.id ? `SAIDA PARA ${project.nome}` : infoHolder.titulo
       const formulary = { ...infoHolder, titulo: title }
       // Calling method for stock formulary creation
-      const formularyId = await createStockFormulary({ info: formulary, mode: 'id' })
+      const formularyId = await createWarehouseFormulary({ info: formulary, mode: 'id' })
       // Calling method for stock quantities update
       const updateResponse = await updateManyMaterials({ formularyId, project, updates })
 
-      return updateResponse
+      return 'Formulário criado com sucesso !'
     } catch (error) {
       throw error
     }
@@ -141,7 +141,10 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
     mutationFn: handleFormularyCreation,
     queryClient: queryClient,
     affectedQueryKey: ['warehouse-forms'],
-    callbackFn: () => resetInfoHolder(),
+    callbackFn: async () => {
+      await invalidateQuery()
+      resetInfoHolder()
+    },
   })
   return (
     <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">

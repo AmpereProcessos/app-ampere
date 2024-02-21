@@ -1,7 +1,7 @@
 import { TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
 import axios from 'axios'
 
-export async function createStockFormulary({ info, mode }: { info: TNewWarehouseFormulary; mode: 'id' | 'message' }) {
+export async function createWarehouseFormulary({ info, mode }: { info: TNewWarehouseFormulary; mode: 'id' | 'message' }) {
   try {
     const { data } = await axios.post('/api/almoxarifado/formularios', info)
     if (mode == 'id') return data.data.insertedId
@@ -14,7 +14,7 @@ export async function createStockFormulary({ info, mode }: { info: TNewWarehouse
 
 export async function updateWarehouseFormulary({ id, changes }: { id: string; changes: Partial<TNewWarehouseFormulary> }) {
   try {
-    const { data } = await axios.put(`/api/almoxarifado/formularios/test?id=${id}`, changes)
+    const { data } = await axios.put(`/api/almoxarifado/formularios?id=${id}`, changes)
     if (typeof data.message != 'string') return 'Formulário atualizado com sucesso !'
     return data.message
   } catch (error) {
@@ -26,7 +26,7 @@ export async function deleteWarehouseFormulary({ id }: { id: string }) {
   try {
     const { data } = await axios.delete(`/api/almoxarifado/formularios?id=${id}`)
     if (typeof data.message != 'string') return 'Formulário excluído com sucesso !'
-    return data.message
+    return data.message as string
   } catch (error) {
     throw error
   }

@@ -28,3 +28,28 @@ export function getArrOfYearsBetweenYears({ initialYear, endYear }: { initialYea
   const arr = Array.from({ length: endYear - initialYear + 1 }, (_, index) => initialYear + index)
   return arr
 }
+
+export function getDifferenceBetweenTimes(timeOne: string, timeTwo: string) {
+  // Parse time strings into hours and minutes
+  var time1Parts = timeOne.split(':')
+  var time2Parts = timeTwo.split(':')
+
+  var time1Hours = parseInt(time1Parts[0])
+  var time1Minutes = parseInt(time1Parts[1])
+
+  var time2Hours = parseInt(time2Parts[0])
+  var time2Minutes = parseInt(time2Parts[1])
+
+  // Calculate total minutes for each time
+  var totalMinutesTime1 = time1Hours * 60 + time1Minutes
+  var totalMinutesTime2 = time2Hours * 60 + time2Minutes
+
+  // Find the absolute difference in minutes between the two times
+  var differenceInMinutes = Math.abs(totalMinutesTime1 - totalMinutesTime2)
+
+  // Convert the difference back into hours and minutes format
+  var differenceHoursTotal = differenceInMinutes / 60
+  var differenceHours = Math.floor(differenceInMinutes / 60)
+  var differenceMinutes = differenceInMinutes % 60
+  return { hoursTotal: differenceHoursTotal, minutesTotal: differenceInMinutes, hoursFixed: differenceHours, minutesFixed: differenceMinutes }
+}

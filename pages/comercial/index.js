@@ -50,12 +50,7 @@ function getContractTagColor(status) {
 function Comercial() {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/authHome')
-    },
-  })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
 
   const { data: projects, isSuccess: projectsSuccess, filters, setFilters } = useComercialProjects({ enabled: !!session?.user })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)

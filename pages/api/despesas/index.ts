@@ -28,11 +28,11 @@ const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
   // Query for a given project expenses
   if (projectId) {
     if (typeof projectId != 'string') throw new createHttpError.BadRequest('ID de projeto inválido.')
-    const expenses = await collection.find({ 'projeto.id': projectId }).toArray()
+    const expenses = await collection.find({ 'projeto.id': projectId }, { sort: { _id: -1 } }).toArray()
     return res.status(200).json({ data: expenses })
   }
 
-  const expenses = await collection.find({}).toArray()
+  const expenses = await collection.find({}, { sort: { _id: -1 } }).toArray()
   return res.status(200).json({ data: expenses })
 }
 

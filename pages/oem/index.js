@@ -1,46 +1,42 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
-import Select from "react-select";
-import {
-  cidadesAtendidas,
-  equipesTecnicas,
-  oemPlans,
-} from "../../utils/constants";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AiOutlineSearch } from "react-icons/ai";
-import { GiPoliceBadge } from "react-icons/gi";
-import ModalOeM from "../../components/ModalOeM";
-import Link from "next/link";
-import dayjs from "dayjs";
-import SelectInput from "../../components/SelectInput";
-import TagTipoDeServico from "../../components/TagTipoDeServico";
-import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import React, { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import Select from 'react-select'
+import { cidadesAtendidas, equipesTecnicas, oemPlans } from '../../utils/constants'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { GiPoliceBadge } from 'react-icons/gi'
+import ModalOeM from '../../components/ModalOeM'
+import Link from 'next/link'
+import dayjs from 'dayjs'
+import SelectInput from '../../components/SelectInput'
+import TagTipoDeServico from '../../components/TagTipoDeServico'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 const statusStyles = {
   REALIZADO: {
-    textColor: "text-green-500",
+    textColor: 'text-green-500',
   },
-  "NÃO REALIZADO": {
-    textColor: "text-red-500",
+  'NÃO REALIZADO': {
+    textColor: 'text-red-500',
   },
-};
+}
 function OeM({ users }) {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
-  const [projects, setProjects] = useState();
-  const [filteredProjects, setFilteredProjects] = useState();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [opInProgress, setOpInProgress] = useState(false);
+  const [projects, setProjects] = useState()
+  const [filteredProjects, setFilteredProjects] = useState()
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [opInProgress, setOpInProgress] = useState(false)
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     equipResp: [],
@@ -54,320 +50,244 @@ function OeM({ users }) {
     maiorQueQtdeModulos: null,
     menorQueQtdeModulos: null,
     usinaLigadaFilter: [],
-    condicaoOeM: "TODOS",
-  });
+    condicaoOeM: 'TODOS',
+  })
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
     field1: null,
     field2: null,
-  });
-  const [searchFilter, setSearchFilter] = useState("");
-  const [neighborhoodSearchFilter, setNeighborhoodSearchFilter] = useState("");
-  const [modalProject, setModalProject] = useState({});
+  })
+  const [searchFilter, setSearchFilter] = useState('')
+  const [neighborhoodSearchFilter, setNeighborhoodSearchFilter] = useState('')
+  const [modalProject, setModalProject] = useState({})
   function getProjects(credenciais) {
-    if (credenciais.visualizacao == "REGIONAL") {
+    if (credenciais.visualizacao == 'REGIONAL') {
       axios
-        .post("/api/projects/oem", {
+        .post('/api/projects/oem', {
           filtrarPor: credenciais.visualizacao,
           parametro: credenciais.regional,
         })
         .then((res) => {
-          setProjects(res.data);
-          setFilteredProjects(res.data);
-        });
+          setProjects(res.data)
+          setFilteredProjects(res.data)
+        })
     } else {
-      axios.get("/api/projects/oem").then((res) => {
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-      });
+      axios.get('/api/projects/oem').then((res) => {
+        setProjects(res.data)
+        setFilteredProjects(res.data)
+      })
     }
   }
   function handleSearchFilter(value) {
-    setSearchFilter(value);
-    if (value != "" || " ") {
-      let filtered = filterProjects();
-      let newArr = filtered.filter((project) =>
-        project.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredProjects(newArr);
+    setSearchFilter(value)
+    if (value != '' || ' ') {
+      let filtered = filterProjects()
+      let newArr = filtered.filter((project) => project.nomeDoContrato.toUpperCase().includes(value.toUpperCase()))
+      setFilteredProjects(newArr)
     } else {
-      setFilteredProjects(projects);
+      setFilteredProjects(projects)
     }
   }
   function handleNeighborhoodSearchFilter(value) {
-    setNeighborhoodSearchFilter(value);
-    if (value != "" || " ") {
-      let filtered = filterProjects();
-      let newArr = filtered.filter((project) =>
-        project.bairro?.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredProjects(newArr);
+    setNeighborhoodSearchFilter(value)
+    if (value != '' || ' ') {
+      let filtered = filterProjects()
+      let newArr = filtered.filter((project) => project.bairro?.toUpperCase().includes(value.toUpperCase()))
+      setFilteredProjects(newArr)
     } else {
-      setFilteredProjects(projects);
+      setFilteredProjects(projects)
     }
   }
   function filterProjects() {
-    var newArr;
+    var newArr
     if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.equipResp.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.equipResp.includes(call.obra?.equipeResp)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.equipResp.includes(call.obra?.equipeResp))
     }
     if (filters.usinaLigadaFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.usinaLigadaFilter.includes(call.conferencias.usinaLigada.status)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.usinaLigadaFilter.includes(call.conferencias.usinaLigada.status))
     }
     if (filters.obraStatusFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.obraStatusFilter.includes(call.obra?.statusDaObra)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.obraStatusFilter.includes(call.obra?.statusDaObra))
     }
     if (filters.planoOeM.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.planoOeM.includes(call.oem?.plano)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.planoOeM.includes(call.oem?.plano))
     }
     if (filters.clienteOeM) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) => project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => project.tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO')
     }
     if (filters.ordenarAlfabeticamente) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.sort((a, b) =>
-        a.nomeDoContrato.trim().localeCompare(b.nomeDoContrato.trim())
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.sort((a, b) => a.nomeDoContrato.trim().localeCompare(b.nomeDoContrato.trim()))
     }
     if (filters.manutencaoPendente) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) => project.manutencaoPreventiva.status == "NÃO REALIZADO"
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => project.manutencaoPreventiva.status == 'NÃO REALIZADO')
     }
-    if (filters.condicaoOeM != "TODOS") {
-      if (!newArr) newArr = projects;
-      if (filters.condicaoOeM == "O&M EM VENCIMENTO") {
+    if (filters.condicaoOeM != 'TODOS') {
+      if (!newArr) newArr = projects
+      if (filters.condicaoOeM == 'O&M EM VENCIMENTO') {
         newArr = newArr.filter(
           (project) =>
             project.medidor?.data &&
-            dayjs().diff(dayjs(project.medidor?.data), "days") > 350 &&
-            dayjs().diff(dayjs(project.medidor?.data), "days") <= 365
-        );
+            dayjs().diff(dayjs(project.medidor?.data), 'days') > 350 &&
+            dayjs().diff(dayjs(project.medidor?.data), 'days') <= 365
+        )
       }
-      if (filters.condicaoOeM == "O&M VENCIDO") {
-        newArr = newArr.filter(
-          (project) =>
-            project.medidor?.data &&
-            dayjs().diff(dayjs(project.medidor?.data), "days") > 365
-        );
+      if (filters.condicaoOeM == 'O&M VENCIDO') {
+        newArr = newArr.filter((project) => project.medidor?.data && dayjs().diff(dayjs(project.medidor?.data), 'days') > 365)
       }
-      if (filters.condicaoOeM == "O&M ATIVO") {
-        newArr = newArr.filter(
-          (project) =>
-            project.medidor?.data &&
-            dayjs().diff(dayjs(project.medidor?.data), "days") < 365
-        );
+      if (filters.condicaoOeM == 'O&M ATIVO') {
+        newArr = newArr.filter((project) => project.medidor?.data && dayjs().diff(dayjs(project.medidor?.data), 'days') < 365)
       }
     }
     if (filters.manutencaoAtrasada) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = projects
       newArr = newArr.filter((project) => {
         if (project.medidor.data) {
-          var timeDiff = Math.abs(
-            new Date().getTime() - new Date(project.medidor?.data).getTime()
-          );
-          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-          console.log(diffDays);
-          return (
-            project.manutencaoPreventiva.status == "NÃO REALIZADO" &&
-            diffDays > 304
-          );
-        } else return false;
-      });
+          var timeDiff = Math.abs(new Date().getTime() - new Date(project.medidor?.data).getTime())
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
+          console.log(diffDays)
+          return project.manutencaoPreventiva.status == 'NÃO REALIZADO' && diffDays > 304
+        } else return false
+      })
     }
     if (filters.limparAteDezembro) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = projects
       newArr = newArr.filter((project) => {
         if (project.medidor.data) {
-          var timeDiff = Math.abs(
-            new Date("2023-12-31T20:35:47.757Z").getTime() -
-              new Date(project.medidor?.data).getTime()
-          );
-          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-          console.log(diffDays);
-          return (
-            project.manutencaoPreventiva.status == "NÃO REALIZADO" &&
-            diffDays > 365
-          );
-        } else return false;
-      });
+          var timeDiff = Math.abs(new Date('2023-12-31T20:35:47.757Z').getTime() - new Date(project.medidor?.data).getTime())
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
+          console.log(diffDays)
+          return project.manutencaoPreventiva.status == 'NÃO REALIZADO' && diffDays > 365
+        } else return false
+      })
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = projects
       newArr = newArr.filter(
-        (call) =>
-          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (call) => call[dateFilter.field1][dateFilter.field2] >= dateFilter.after && call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
     if (filters.maiorQueQtdeModulos > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (call) =>
-          Number(call.sistema.qtdeModulos) >=
-          Number(filters.maiorQueQtdeModulos)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => Number(call.sistema.qtdeModulos) >= Number(filters.maiorQueQtdeModulos))
     }
     if (filters.menorQueQtdeModulos > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (call) =>
-          Number(call.sistema.qtdeModulos) <=
-          Number(filters.menorQueQtdeModulos)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => Number(call.sistema.qtdeModulos) <= Number(filters.menorQueQtdeModulos))
     }
     if (!newArr) {
-      setFilteredProjects(projects);
-      return projects;
+      setFilteredProjects(projects)
+      return projects
     } else {
-      setFilteredProjects([...newArr]);
-      return newArr;
+      setFilteredProjects([...newArr])
+      return newArr
     }
   }
   function getListCumulativeModules() {
-    var totalSum = 0;
+    var totalSum = 0
     for (var i = 0; i < filteredProjects.length; i++) {
-      let modules = filteredProjects[i].sistema.qtdeModulos
-        ? filteredProjects[i].sistema.qtdeModulos
-        : null;
+      let modules = filteredProjects[i].sistema.qtdeModulos ? filteredProjects[i].sistema.qtdeModulos : null
       if (isNaN(modules)) {
-        totalSum = totalSum;
+        totalSum = totalSum
       } else {
-        totalSum = totalSum + modules;
+        totalSum = totalSum + modules
       }
     }
-    return totalSum.toFixed(0);
+    return totalSum.toFixed(0)
   }
   function handleUpdates(id) {
-    axios
-      .get(`/api/projects/fetchDoc/${id}`)
-      .then((res) => setModalProject({ ...res.data[0] }));
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => setModalProject({ ...res.data[0] }))
   }
 
   function handleOpenModal(id) {
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      setModalProject(res.data[0]);
-      setModalIsOpen(true);
-    });
+      setModalProject(res.data[0])
+      setModalIsOpen(true)
+    })
   }
   function checkOeMEnding(dataMedidor, tipoDeServico, dataAssinatura) {
-    if (tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
-      if (dayjs().diff(dayjs(dataAssinatura), "days") > 15) {
-        return { text: "O&M VENCIDO", color: "text-red-500" };
+    if (tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO') {
+      if (dayjs().diff(dayjs(dataAssinatura), 'days') > 15) {
+        return { text: 'O&M VENCIDO', color: 'text-red-500' }
       } else {
-        return { text: "O&M EM ANDAMENTO", color: "text-red-500" };
+        return { text: 'O&M EM ANDAMENTO', color: 'text-red-500' }
       }
     } else {
       if (dataMedidor) {
-        if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
-          return { text: "O&M VENCIDO", color: "text-red-500" };
-        } else if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
-          return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
+        if (dayjs().diff(dayjs(dataMedidor), 'days') > 365) {
+          return { text: 'O&M VENCIDO', color: 'text-red-500' }
+        } else if (dayjs().diff(dayjs(dataMedidor), 'days') > 350) {
+          return { text: 'O&M EM VENCIMENTO', color: 'text-orange-500' }
         } else {
-          return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+          return { text: 'O&M EM ANDAMENTO', color: 'text-green-500' }
         }
-      } else return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+      } else return { text: 'O&M EM ANDAMENTO', color: 'text-green-500' }
     }
   }
   useEffect(() => {
-    if (
-      session?.user.accessibleRoutes.includes("O&M") ||
-      session?.user.accessibleRoutes.includes("Marketing")
-    ) {
+    if (session?.user.accessibleRoutes.includes('O&M') || session?.user.accessibleRoutes.includes('Marketing')) {
       if (!projects) {
-        getProjects(session.user);
+        getProjects(session.user)
       }
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
+  }, [session])
 
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full gap-2">
-            <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
-              <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
-                Projetos no estágio de O&M
-              </p>
-              <p className="font-bold text-[#fead61]">
-                ({filteredProjects?.length})
-              </p>
-              {filteredProjects && (
-                <p className="font-bold text-[#fead61]">
-                  ({getListCumulativeModules().replace(".", ",")} módulos)
-                </p>
-              )}
+          <div className="flex w-full items-center justify-between gap-2">
+            <div className="flex flex-col items-center gap-2 font-['Roboto'] lg:flex-row">
+              <p className="text-center text-2xl font-bold uppercase text-[#15599a]">Projetos no estágio de O&M</p>
+              <p className="font-bold text-[#fead61]">({filteredProjects?.length})</p>
+              {filteredProjects && <p className="font-bold text-[#fead61]">({getListCumulativeModules().replace('.', ',')} módulos)</p>}
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropupCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(false)}
-                />
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropdownCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(true)}
-                />
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col w-full gap-y-2 mt-4"
-              >
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <input
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                     placeholder="DIGITE O NOME DO CONTRATO"
                     value={searchFilter}
                     onChange={(e) => handleSearchFilter(e.target.value)}
                   />
                   <input
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                     placeholder="DIGITE O BAIRRO"
                     value={neighborhoodSearchFilter}
-                    onChange={(e) =>
-                      handleNeighborhoodSearchFilter(e.target.value)
-                    }
+                    onChange={(e) => handleNeighborhoodSearchFilter(e.target.value)}
                   />
                   <input
                     type="number"
                     placeholder="< NºMÓDULOS"
-                    className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[150px]"
                     value={filters.menorQueQtdeModulos}
                     onChange={(e) =>
                       setFilters({
@@ -379,7 +299,7 @@ function OeM({ users }) {
                   <input
                     type="number"
                     placeholder="> NºMÓDULOS"
-                    className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[150px]"
                     value={filters.maiorQueQtdeModulos}
                     onChange={(e) =>
                       setFilters({
@@ -388,50 +308,32 @@ function OeM({ users }) {
                       })
                     }
                   />
-                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                    <div className="flex items-center gap-x-2 justify-center">
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Depois de:
-                        </span>
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
-                          value={
-                            dateFilter.after &&
-                            new Date(dateFilter.after)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
+                          value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                           onChange={(e) =>
                             setDateFilter({
                               ...dateFilter,
-                              after: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
+                              after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                             })
                           }
                         />
                       </div>
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Antes de:
-                        </span>
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
-                          value={
-                            dateFilter.before &&
-                            new Date(dateFilter.before)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
+                          value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                           onChange={(e) =>
                             setDateFilter({
                               ...dateFilter,
-                              before: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
+                              before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                             })
                           }
                         />
@@ -444,27 +346,25 @@ function OeM({ users }) {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
-                        placeholder={"CAMPO DE FILTRO"}
+                        placeholder={'CAMPO DE FILTRO'}
                         options={[
-                          { label: "SAÍDA DE OBRA", value: "obra.saida" },
-                          { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                          { label: 'SAÍDA DE OBRA', value: 'obra.saida' },
+                          { label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
                           {
-                            label: "DATA MANUTENÇÃO",
-                            value: "manutencaoPreventiva.data",
+                            label: 'DATA MANUTENÇÃO',
+                            value: 'manutencaoPreventiva.data',
                           },
-                          { label: "NÃO DEFINIDO", value: null },
+                          { label: 'NÃO DEFINIDO', value: null },
                         ]}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,
-                            field1:
-                              e.value != null ? e.value.split(".")[0] : null,
-                            field2:
-                              e.value != null ? e.value.split(".")[1] : null,
+                            field1: e.value != null ? e.value.split('.')[0] : null,
+                            field2: e.value != null ? e.value.split('.')[1] : null,
                           })
                         }
                       />
@@ -472,53 +372,53 @@ function OeM({ users }) {
                   </div>
                   <div className="w-full lg:w-[250px]">
                     <Select
-                      placeholder={"CONDIÇÃO DO O&M"}
+                      placeholder={'CONDIÇÃO DO O&M'}
                       isMulti={false}
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       value={
                         filters.condicaoOeM
                           ? [
-                              { label: "TODOS", value: "TODOS" },
+                              { label: 'TODOS', value: 'TODOS' },
                               {
-                                label: "O&M EM VENCIMENTO",
-                                value: "O&M EM VENCIMENTO",
+                                label: 'O&M EM VENCIMENTO',
+                                value: 'O&M EM VENCIMENTO',
                               },
-                              { label: "O&M VENCIDO", value: "O&M VENCIDO" },
-                              { label: "O&M ATIVO", value: "O&M ATIVO" },
+                              { label: 'O&M VENCIDO', value: 'O&M VENCIDO' },
+                              { label: 'O&M ATIVO', value: 'O&M ATIVO' },
                             ].find((x) => x.value == filters.condicaoOeM)
                           : undefined
                       }
                       options={[
-                        { label: "TODOS", value: "TODOS" },
+                        { label: 'TODOS', value: 'TODOS' },
                         {
-                          label: "O&M EM VENCIMENTO",
-                          value: "O&M EM VENCIMENTO",
+                          label: 'O&M EM VENCIMENTO',
+                          value: 'O&M EM VENCIMENTO',
                         },
-                        { label: "O&M VENCIDO", value: "O&M VENCIDO" },
-                        { label: "O&M ATIVO", value: "O&M ATIVO" },
+                        { label: 'O&M VENCIDO', value: 'O&M VENCIDO' },
+                        { label: 'O&M ATIVO', value: 'O&M ATIVO' },
                       ]}
                       onChange={(item) => {
-                        console.log(item);
-                        setFilters({ ...filters, condicaoOeM: item.value });
+                        console.log(item)
+                        setFilters({ ...filters, condicaoOeM: item.value })
                       }}
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[250px]">
                     <Select
                       isMulti
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       placeholder="PLANO DE O&M"
@@ -528,10 +428,7 @@ function OeM({ users }) {
                           planoOeM: e.map((x) => x.value),
                         })
                       }
-                      options={[
-                        ...oemPlans.map((plano) => plano),
-                        { label: "NÃO DEFINIDO", value: undefined },
-                      ]}
+                      options={[...oemPlans.map((plano) => plano), { label: 'NÃO DEFINIDO', value: undefined }]}
                     />
                   </div>
                   <div className="w-full lg:w-[250px]">
@@ -540,8 +437,8 @@ function OeM({ users }) {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       placeholder="STATUS DA OBRA"
@@ -553,20 +450,20 @@ function OeM({ users }) {
                       }
                       options={[
                         {
-                          value: "EM ANDAMENTO",
-                          label: "EM ANDAMENTO",
+                          value: 'EM ANDAMENTO',
+                          label: 'EM ANDAMENTO',
                         },
                         {
-                          value: "PAUSADA",
-                          label: "PAUSADA",
+                          value: 'PAUSADA',
+                          label: 'PAUSADA',
                         },
                         {
-                          value: "AGENDADA",
-                          label: "AGENDADA",
+                          value: 'AGENDADA',
+                          label: 'AGENDADA',
                         },
                         {
-                          value: "AGUARDANDO AGENDAMENTO",
-                          label: "AGUARDANDO AGENDAMENTO",
+                          value: 'AGUARDANDO AGENDAMENTO',
+                          label: 'AGUARDANDO AGENDAMENTO',
                         },
                       ]}
                     />
@@ -577,8 +474,8 @@ function OeM({ users }) {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       placeholder="USINA LIGADA"
@@ -589,8 +486,8 @@ function OeM({ users }) {
                         })
                       }
                       options={[
-                        { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
-                        { label: "REALIZADO", value: "REALIZADO" },
+                        { label: 'NÃO REALIZADO', value: 'NÃO REALIZADO' },
+                        { label: 'REALIZADO', value: 'REALIZADO' },
                       ]}
                     />
                   </div>
@@ -600,8 +497,8 @@ function OeM({ users }) {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       placeholder="EQUIP.RESP"
@@ -620,8 +517,8 @@ function OeM({ users }) {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       placeholder="CIDADE"
@@ -635,12 +532,12 @@ function OeM({ users }) {
                         return {
                           label: cidade,
                           value: cidade,
-                        };
+                        }
                       })}
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div
                     onClick={() =>
                       setFilters({
@@ -649,8 +546,8 @@ function OeM({ users }) {
                       })
                     }
                     className={`${
-                      filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.clienteOeM ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     CLIENTES O&M
                   </div>
@@ -662,10 +559,8 @@ function OeM({ users }) {
                       })
                     }
                     className={`${
-                      filters.ordenarAlfabeticamente
-                        ? "bg-[#15599a]"
-                        : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.ordenarAlfabeticamente ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     ORDENAR ALFABETICAMENTE
                   </div>
@@ -677,10 +572,8 @@ function OeM({ users }) {
                       })
                     }
                     className={`${
-                      filters.manutencaoPendente
-                        ? "bg-[#15599a]"
-                        : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.manutencaoPendente ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     MANUTENÇÃO PENDENTE
                   </div>
@@ -692,10 +585,8 @@ function OeM({ users }) {
                       })
                     }
                     className={`${
-                      filters.manutencaoAtrasada
-                        ? "bg-[#15599a]"
-                        : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.manutencaoAtrasada ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     MANUTENÇÃO ATRASADA
                   </div>
@@ -707,8 +598,8 @@ function OeM({ users }) {
                       })
                     }
                     className={`${
-                      filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.limparAteDezembro ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     LIMPAR ATÉ DEZEMBRO
                   </div>
@@ -716,7 +607,7 @@ function OeM({ users }) {
                 <div className="flex items-center justify-end gap-x-2">
                   <button
                     onClick={filterProjects}
-                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+                    className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] px-2 font-bold hover:bg-[#15599a] hover:text-white"
                   >
                     <p>Filtrar</p>
                     <AiOutlineSearch />
@@ -726,31 +617,29 @@ function OeM({ users }) {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+        <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
           {filteredProjects ? (
             filteredProjects.map((project) => (
               <div
                 onClick={() => {
-                  handleOpenModal(project._id);
+                  handleOpenModal(project._id)
                 }}
                 key={project._id}
-                className="w-full md:w-[350px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
+                className="w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px]  lg:w-[450px]"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                      {project.tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO' && (
                         <GiPoliceBadge
                           style={{
-                            fontSize: "20px",
-                            color: "#15599a",
+                            fontSize: '20px',
+                            color: '#15599a',
                           }}
                         />
-                      )}{" "}
-                      <p className="text-xs text-gray-700">
-                        {project.nomeDoContrato}
-                      </p>
+                      )}{' '}
+                      <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
                     </div>
 
                     <p className="text-xs text-[#15599a]">#{project.qtde}</p>
@@ -758,72 +647,40 @@ function OeM({ users }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xxs">CIDADE</span>
-                      <p className="text-xs text-gray-600 uppercase">
-                        {project.cidade ? project.cidade : "-"}
-                      </p>
+                      <p className="text-xs uppercase text-gray-600">{project.cidade ? project.cidade : '-'}</p>
                     </div>
-                    {checkOeMEnding(
-                      project.medidor.data,
-                      project.tipoDeServico,
-                      project.contrato.dataAssinatura
-                    ).text && (
+                    {checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text && (
                       <span
                         className={`text-xs ${
-                          checkOeMEnding(
-                            project.medidor.data,
-                            project.tipoDeServico,
-                            project.contrato.dataAssinatura
-                          ).color
+                          checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color
                         } text-center font-bold`}
                       >
-                        {
-                          checkOeMEnding(
-                            project.medidor.data,
-                            project.tipoDeServico,
-                            project.contrato.dataAssinatura
-                          ).text
-                        }
+                        {checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text}
                       </span>
                     )}
                     <div>
                       <span className="text-xxs">TOPOLOGIA</span>
-                      <p className="text-xs text-center text-gray-600">
-                        {project.projeto.topologia
-                          ? project.projeto.topologia
-                          : "-"}
-                      </p>
+                      <p className="text-center text-xs text-gray-600">{project.projeto.topologia ? project.projeto.topologia : '-'}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xxs">EQUIPE OBRAS</span>
-                      <p className="text-xs text-yellow-500">
-                        {project.obra.equipeResp
-                          ? project.obra.equipeResp
-                          : "-"}
-                      </p>
+                      <p className="text-xs text-yellow-500">{project.obra.equipeResp ? project.obra.equipeResp : '-'}</p>
                     </div>
                     <div>
                       <span className="text-xxs">USINA LIGADA</span>
-                      <p
-                        className={`text-xs ${
-                          statusStyles[project.conferencias.usinaLigada.status]
-                            .textColor
-                        }`}
-                      >
-                        {project.conferencias.usinaLigada != undefined &&
-                        project.conferencias.usinaLigada.status != "-"
+                      <p className={`text-xs ${statusStyles[project.conferencias.usinaLigada.status].textColor}`}>
+                        {project.conferencias.usinaLigada != undefined && project.conferencias.usinaLigada.status != '-'
                           ? project.conferencias.usinaLigada.status
-                          : "-"}
+                          : '-'}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center justify-center">
                     <div className="flex flex-col items-center">
-                      <span className="text-xxs text-center">PLANO O&M</span>
-                      <p className="text-xs text-yellow-500 text-center">
-                        {project.oem?.plano ? project.oem.plano : "-"}
-                      </p>
+                      <span className="text-center text-xxs">PLANO O&M</span>
+                      <p className="text-center text-xs text-yellow-500">{project.oem?.plano ? project.oem.plano : '-'}</p>
                     </div>
                   </div>
                 </div>
@@ -833,16 +690,9 @@ function OeM({ users }) {
             <LoadingPage />
           )}
         </div>
-        <Link href={"/oem/propostas"}>
-          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">Propostas</p>
-          </a>
-        </Link>
-        <Link href={"/oem/baixaPerformance"}>
-          <a className="fixed ml-36 bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">
-              ACOMPANHAMENTO DE PERFORMANCE
-            </p>
+        <Link href={'/oem/baixaPerformance'}>
+          <a className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <p className="text-sm font-bold uppercase">ACOMPANHAMENTO DE PERFORMANCE</p>
           </a>
         </Link>
         {modalIsOpen && (
@@ -851,16 +701,14 @@ function OeM({ users }) {
             setModalIsOpen={setModalIsOpen}
             modalIsOpen={modalIsOpen}
             project={modalProject}
-            editor={
-              session?.user?.accessibleRoutes.includes("O&M") ? true : false
-            }
+            editor={session?.user?.accessibleRoutes.includes('O&M') ? true : false}
             credentials={session?.user}
             handleUpdates={handleUpdates}
           />
         )}
       </div>
-    );
+    )
   }
 }
 
-export default OeM;
+export default OeM

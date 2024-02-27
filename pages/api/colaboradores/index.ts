@@ -1,0 +1,56 @@
+import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
+import { InsertUserSchema, TEmployee } from '@/utils/schemas/users'
+import connectToAdministrationDatabase from '@/utils/services/mongodb/administration'
+import createHttpError from 'http-errors'
+import { Collection, ObjectId } from 'mongodb'
+import { NextApiHandler } from 'next'
+
+type GetResponse = {
+  data: TEmployee | TEmployee[]
+}
+
+const getEmployees: NextApiHandler<GetResponse> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+  if (!session.user.accessibleRoutes?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+
+  const { id } = req.query
+
+  const db = await connectToAdministrationDatabase(process.env.DB_KEY)
+  const usersCollection: Collection<TEmployee> = db.collection('colaboradores')
+  if (id) {
+    if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
+
+    const colaborator = await usersCollection.findOne({ _id: new ObjectId(id) })
+    if (!colaborator) throw new createHttpError.NotFound('Colaborador não encontrado.')
+    return res.status(200).json({ data: colaborator })
+  }
+  const colaborators = await usersCollection.find({}, { sort: { nome: 1 } }).toArray()
+
+  return res.status(200).json({ data: colaborators })
+}
+
+type PostResponse = {
+  data: {
+    insertedId: string
+  }
+  message: string
+}
+
+const createColaborator: NextApiHandler<PostResponse> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+  if (!session.user.accessibleRoutes?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+
+  const colaborator = InsertUserSchema.parse(req.body)
+
+  const db = await connectToAdministrationDatabase(process.env.DB_KEY)
+  const usersCollection: Collection<TEmployee> = db.collection('colaboradores')
+  const insertResponse = await usersCollection.insertOne({ ...colaborator })
+  if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao inserir colaborador.')
+  const insertedId = insertResponse.insertedId.toString()
+
+  return res.status(201).json({ data: { insertedId }, message: 'Colaborador criado com sucesso !' })
+}
+export default apiHandler({
+  POST: createColaborator,
+  GET: getEmployees,
+})

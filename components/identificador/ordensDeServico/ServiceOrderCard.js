@@ -11,45 +11,45 @@ import Avatar from '../../utils/Avatar'
 
 function ServiceOrderCard({ order, handleOpenModal }) {
   return (
-    <div className="flex w-full lg:min-w-[500px] lg:w-[500px] items-center rounded-md border border-gray-200">
-      <div className={`h-full min-w-[7px] w-[7px] rounded-bl-md rounded-tl-md bg-blue-300`}></div>
+    <div className="flex w-full items-center rounded-md border border-gray-200 lg:w-[500px] lg:min-w-[500px]">
+      <div className={`h-full w-[7px] min-w-[7px] rounded-bl-md rounded-tl-md bg-blue-300`}></div>
       <div className="flex grow flex-col p-3">
-        <div className="w-full flex items-center justify-between">
+        <div className="flex w-full items-center justify-between">
           <h1
             onClick={() => handleOpenModal(order)}
             className="w-full cursor-pointer text-center text-sm font-bold leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500 lg:text-start"
           >
             {order.favorecido.nome}
           </h1>
-          {order.projeto ? <p className="text-[#fead41] font-bold">#{order.projeto.identificador}</p> : null}
+          {order.projeto ? <p className="font-bold text-[#fead41]">#{order.projeto.identificador}</p> : null}
         </div>
-        <div className="flex w-full justify-between items-center gap-2 mt-2">
+        <div className="mt-2 flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <MdCategory />
-            <p className="text-xs  tracking-tight leading-none font-bold text-[#15599a]">{order.categoria}</p>
+            <p className="text-xs  font-bold leading-none tracking-tight text-[#15599a]">{order.categoria}</p>
           </div>
           <div className="flex items-center gap-2">
             <IoMdAlert />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{order.urgencia}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{order.urgencia}</p>
           </div>
         </div>
-        <div className="flex w-full justify-between items-center gap-2 mt-2">
+        <div className="mt-2 flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <FaCity />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">
+            <p className="text-xs leading-none tracking-tight text-gray-500">
               {order.localizacao.cidade}-{order.localizacao.uf}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <FaUser />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{order.responsavel.nome || 'NÃO DEFINIDO'}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{order.responsavel.nome || 'NÃO DEFINIDO'}</p>
           </div>
         </div>
-        <h1 className="text-sm text-gray-500 mt-2">OBSERVAÇÕES</h1>
-        <div className="w-full p-3 h-[80px] text-xs text-gray-600 bg-gray-100 flex items-center justify-center overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <p>{order.observacoes}</p>
+        <h1 className="mt-2 text-sm text-gray-500">OBSERVAÇÕES</h1>
+        <div className="overscroll-y flex h-[80px] max-h-[80px] w-full items-center justify-center overflow-y-auto bg-gray-100 p-3 text-xs text-gray-600 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          {order.observacoes}
         </div>
-        <div className="w-full gap-4 flex-col lg:flex-row flex items-center justify-between mt-2">
+        <div className="mt-2 flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
           <div className={`flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
             <BsCalendarFill />
             <p className="text-xs font-medium">
@@ -58,15 +58,15 @@ function ServiceOrderCard({ order, handleOpenModal }) {
           </div>
           <div className="flex items-center gap-2">
             <Link href={`/ordemDeServico/pdf/${order._id}`}>
-              <a className="cursor-pointer text-gray-500 hover:text-cyan-500 duration-300 ease-in-out flex items-center gap-1">
+              <a className="flex cursor-pointer items-center gap-1 text-gray-500 duration-300 ease-in-out hover:text-cyan-500">
                 <IoMdDocument style={{ fontSize: '20px' }} />
-                <p className="font-medium text-xs">DOCUMENTO</p>
+                <p className="text-xs font-medium">DOCUMENTO</p>
               </a>
             </Link>
           </div>
           <div className="flex items-center gap-2">
             <Avatar url={order.autor?.avatar_url} fallback={'U'} height={25} width={25} />
-            <p className="font-medium text-gray-500 text-xs">{order.autor?.nome}</p>
+            <p className="text-xs font-medium text-gray-500">{order.autor?.nome}</p>
           </div>
         </div>
       </div>

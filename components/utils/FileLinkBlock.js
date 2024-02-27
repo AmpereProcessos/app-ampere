@@ -8,87 +8,88 @@ import { fileTypes } from '../../utils/constants'
 import { AiFillFile } from 'react-icons/ai'
 import { renderIcon } from '../../utils/methods/rendering'
 import { useClickOutside } from '../../utils/hooks'
+import { handleDownload } from '@/utils/methods/firebase'
 function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
   const divRef = useRef(null)
   useClickOutside(divRef, () => setDeleteMenu(false))
   const [deleteMenu, setDeleteMenu] = useState(false)
 
-  async function handleDownload(url) {
-    var splitFileName = obj.title.replace('/', '').toUpperCase().split(' ')
-    var fixedFileName = splitFileName.join('_')
-    if (prefix) {
-      fixedFileName = `${prefix}-${fixedFileName}`
-    }
-    let fileRef = ref(storage, obj.link)
-    const metadata = await getMetadata(fileRef)
+  // async function handleDownload(url) {
+  //   var splitFileName = obj.title.replace('/', '').toUpperCase().split(' ')
+  //   var fixedFileName = splitFileName.join('_')
+  //   if (prefix) {
+  //     fixedFileName = `${prefix}-${fixedFileName}`
+  //   }
+  //   let fileRef = ref(storage, obj.link)
+  //   const metadata = await getMetadata(fileRef)
 
-    const filePath = fileRef.fullPath
-    const extension = fileTypes[metadata.contentType]?.extension
+  //   const filePath = fileRef.fullPath
+  //   const extension = fileTypes[metadata.contentType]?.extension
 
-    try {
-      const response = await axios.get(`/api/firebase/download?filePath=${encodeURIComponent(filePath)}`, {
-        responseType: 'blob',
-      })
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `${fixedFileName}${extension}`)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-    } catch (error) {
-      alert('Houve um erro no download do arquivo.')
-    }
+  //   try {
+  //     const response = await axios.get(`/api/firebase/download?filePath=${encodeURIComponent(filePath)}`, {
+  //       responseType: 'blob',
+  //     })
+  //     const url = window.URL.createObjectURL(new Blob([response.data]))
+  //     const link = document.createElement('a')
+  //     link.href = url
+  //     link.setAttribute('download', `${fixedFileName}${extension}`)
+  //     document.body.appendChild(link)
+  //     link.click()
+  //     link.remove()
+  //   } catch (error) {
+  //     alert('Houve um erro no download do arquivo.')
+  //   }
 
-    // const xhr = new XMLHttpRequest();
-    // xhr.responseType = "blob";
-    // xhr.onload = (event) => {
-    //   const blob = xhr.response;
-    //   console.log(blob);
-    // };
-    // xhr.open("GET", url);
-    // xhr.send();
+  //   // const xhr = new XMLHttpRequest();
+  //   // xhr.responseType = "blob";
+  //   // xhr.onload = (event) => {
+  //   //   const blob = xhr.response;
+  //   //   console.log(blob);
+  //   // };
+  //   // xhr.open("GET", url);
+  //   // xhr.send();
 
-    // let fileRef = ref(storage, obj.link);
-    // const resp = await getBlob(fileRef);
-    // console.log(resp);
-  }
+  //   // let fileRef = ref(storage, obj.link);
+  //   // const resp = await getBlob(fileRef);
+  //   // console.log(resp);
+  // }
   function handleRenderIcon(format) {
     const extensionInfo = Object.values(fileTypes).find((f) => f.title == format)
     if (!extensionInfo)
       return (
-        <div className="text-black text-lg">
+        <div className="text-lg text-black">
           <AiFillFile />{' '}
         </div>
       )
-    return <div className="text-black text-lg">{renderIcon(extensionInfo.icon)}</div>
+    return <div className="text-lg text-black">{renderIcon(extensionInfo.icon)}</div>
   }
   return (
-    <div ref={divRef} className="flex flex-col w-full rounded-md border border-cyan-500 p-2">
-      <div className="flex items-center w-full gap-2">
+    <div ref={divRef} className="flex w-full flex-col rounded-md border border-cyan-500 p-2">
+      <div className="flex w-full items-center gap-2">
         {handleRenderIcon(obj.format)}
-        <a href={obj.link} className="font-bold text-gray-500 hover:text-cyan-500 duration-300 ease-in-out leading-none tracking-tight text-sm">
+        <a href={obj.link} className="text-sm font-bold leading-none tracking-tight text-gray-500 duration-300 ease-in-out hover:text-cyan-500">
           {obj.title}
         </a>
       </div>
-      <div className="w-full flex items-center justify-between gap-2 mt-1">
-        <h1 className="text-gray-500 text-xs font-medium italic text-center">{obj.format}</h1>
+      <div className="mt-1 flex w-full items-center justify-between gap-2">
+        <h1 className="text-center text-xs font-medium italic text-gray-500">{obj.format}</h1>
         <div className="flex items-center gap-2">
           <div
-            onClick={() => handleDownload(obj.link)}
-            className="flex items-center justify-center text-blue-700 hover:text-blue-500 hover:scale-105 duration-300 ease-in-out cursor-pointer"
+            onClick={() => handleDownload({ fileName: obj.title, fileUrl: obj.link })}
+            className="flex cursor-pointer items-center justify-center text-blue-700 duration-300 ease-in-out hover:scale-105 hover:text-blue-500"
           >
             <TbDownload />
           </div>
           {showDeleteMenu ? (
-            <div className="grid grid-cols-1 relative">
+            <div className="relative grid grid-cols-1">
               {deleteMenu ? (
                 <div className="flex flex-col items-center justify-center">
-                  <div onClick={() => setDeleteMenu(false)} className="w-fit text-red-500 scale-110 cursor-pointer text-[20px]">
+                  <div onClick={() => setDeleteMenu(false)} className="w-fit scale-110 cursor-pointer text-[20px] text-red-500">
                     <MdDelete />
                   </div>
-                  <div className="w-fit rounded bg-[#fff] z-2 shadow-lg border border-gray-200 absolute -top-8">
-                    <button onClick={() => deleteFile(obj)} className="text-gray-700 font-bold text-xs hover:bg-red-200 p-2">
+                  <div className="z-2 absolute -top-8 w-fit rounded border border-gray-200 bg-[#fff] shadow-lg">
+                    <button onClick={() => deleteFile(obj)} className="p-2 text-xs font-bold text-gray-700 hover:bg-red-200">
                       EXCLUIR
                     </button>
                   </div>
@@ -97,7 +98,7 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
                 <div className="flex items-center justify-center">
                   <div
                     onClick={() => setDeleteMenu(true)}
-                    className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
+                    className="w-fit cursor-pointer text-[20px] text-red-500 opacity-40 duration-300 ease-in hover:scale-110 hover:text-red-500 hover:opacity-100"
                   >
                     <MdDelete />
                   </div>
@@ -111,17 +112,17 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
   )
   return (
     <div ref={divRef} className="flex items-center justify-center gap-2">
-      <a className="text-xs text-[#15599a] font-bold text-center" href={obj.link}>
+      <a className="text-center text-xs font-bold text-[#15599a]" href={obj.link}>
         {obj.title} ({obj.format})
       </a>
-      <div className="grid grid-cols-1 relative">
+      <div className="relative grid grid-cols-1">
         {deleteMenu ? (
           <div className="flex flex-col items-center justify-center">
-            <div onClick={() => setDeleteMenu(false)} className="w-fit text-red-500 scale-110 cursor-pointer text-[20px]">
+            <div onClick={() => setDeleteMenu(false)} className="w-fit scale-110 cursor-pointer text-[20px] text-red-500">
               <MdDelete />
             </div>
-            <div className="w-fit rounded bg-[#fff] z-2 shadow-lg border border-gray-200 absolute -top-8">
-              <button onClick={() => deleteFile(obj)} className="text-gray-700 font-bold text-xs hover:bg-red-200 p-2">
+            <div className="z-2 absolute -top-8 w-fit rounded border border-gray-200 bg-[#fff] shadow-lg">
+              <button onClick={() => deleteFile(obj)} className="p-2 text-xs font-bold text-gray-700 hover:bg-red-200">
                 EXCLUIR
               </button>
             </div>
@@ -130,7 +131,7 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
           <div className="flex items-center justify-center">
             <div
               onClick={() => setDeleteMenu(true)}
-              className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
+              className="w-fit cursor-pointer text-[20px] text-red-500 opacity-40 duration-300 ease-in hover:scale-110 hover:text-red-500 hover:opacity-100"
             >
               <MdDelete />
             </div>
@@ -139,7 +140,7 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
       </div>
       <div
         onClick={() => handleDownload(obj.link)}
-        className="flex items-center justify-center text-blue-700 hover:text-blue-500 hover:scale-105 duration-300 ease-in-out cursor-pointer"
+        className="flex cursor-pointer items-center justify-center text-blue-700 duration-300 ease-in-out hover:scale-105 hover:text-blue-500"
       >
         <TbDownload />
       </div>

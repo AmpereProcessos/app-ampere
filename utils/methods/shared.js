@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast'
 import { orientacoes } from '../constants'
 import genFactors from '../jsons/fatores-geracao.json'
+import axios from 'axios'
 async function updatingCRMProjectsManually(req, res) {
   // // COnnecting to CRM projects and proposes db/collection
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
@@ -119,9 +120,11 @@ async function updatingCRMProjectsManually(req, res) {
 export async function getCEPInfo(cep) {
   try {
     const { data } = await axios.get(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`)
+    console.log(data.erro)
     if (data.erro) throw new Error('Erro')
     return data
   } catch (error) {
+    console.log(error)
     toast.error('Erro ao buscar informações à partir do CEP.')
     return null
   }

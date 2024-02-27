@@ -1,38 +1,64 @@
 import { ExpenseRevenueList, TProjectFinances } from '@/pages/api/stats/financial-auditing'
 import { TExpense } from '@/utils/schemas/expenses'
 import { TProject, TProjectDTO, TProjectEntity } from '@/utils/schemas/projects'
+import { TMonitoringPropose } from '@/utils/schemas/proposes/monitoring.schema'
+import { TSolarSystemPropose } from '@/utils/schemas/proposes/solar-system.schema'
 import createHttpError from 'http-errors'
-import { Collection, ObjectId } from 'mongodb'
+import { Collection, ObjectId, WithId } from 'mongodb'
 
+const PriceDescription = {
+  kit: 'KIT FOTOVOLTAICO',
+  instalacao: 'INSTALAÇÃO',
+  maoDeObra: 'MÃO DE OBRA',
+  projeto: 'CUSTOS DE PROJETO',
+  venda: 'CUSTOS DE VENDA',
+  padrao: 'ADEQUAÇÕES DE PADRÃO',
+  estrutura: 'ADEQUAÇÕES DE ESTRUTURA',
+  extra: 'OUTROS SERVIÇOS',
+}
 type GetFinancesByProjectIdParams = {
   projectId: string
   projectsCollection: Collection<TProject>
   expensesCollection: Collection<TExpense>
+  proposesCollection: Collection<TSolarSystemPropose>
 }
 const projection = {
   _id: 1,
   nomeDoContrato: 1,
+  codigoSVB: 1,
+  idProjetoCRM: 1,
+  idPropostaCRM: 1,
   tipoDeServico: 1,
-  cidade: 1,
-  'vendedor.nome': 1,
   'contrato.dataAssinatura': 1,
   'obra.saida': 1,
+  cidade: 1,
+  'vendedor.nome': 1,
   comissoes: 1,
   'compra.valorDoKit': 1,
   'sistema.valorProjeto': 1,
   'sistema.topologia': 1,
   'sistema.qtdeModulos': 1,
+  'sistema.potPico': 1,
   'padrao.valor': 1,
   'estruturaPersonalizada.valor': 1,
 }
-export async function getFinancesByProjectId({ projectId, projectsCollection, expensesCollection }: GetFinancesByProjectIdParams) {
+export async function getFinancesByProjectId({
+  projectId,
+  projectsCollection,
+  expensesCollection,
+  proposesCollection,
+}: GetFinancesByProjectIdParams) {
   try {
     const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) }, { projection: projection })
     if (!project) throw createHttpError.NotFound('Projeto não encontrado.')
     const projectExpenses = await expensesCollection.find({ 'projeto.id': projectId }).toArray()
+    var propose: WithId<TSolarSystemPropose> | null = null
+    if (project.idPropostaCRM) propose = await proposesCollection.findOne({ _id: new ObjectId(project.idPropostaCRM) })
+
     // Defining project info]
     const _id = project._id.toString()
     const nome = project.nomeDoContrato
+    const potencia = project.sistema.potPico
     const tipoDeServico = project.tipoDeServico
     const cidade = project.cidade
     const vendedor = project.vendedor.nome
@@ -40,6 +66,9 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
     const dataConclusaoObra = project.obra.saida
     const topologia = project.sistema.topologia || ''
     const qtdeModulos = project.sistema.qtdeModulos || 0
+    const idProjetoCRM = project.idProjetoCRM || ''
+    const idPropostaCRM = project.idPropostaCRM || ''
+    const identificador = project.codigoSVB || ''
 
     const systemRevenue = project.sistema.valorProjeto
     const energyPaRevenue = project.padrao.valor || 0
@@ -58,6 +87,9 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
         total: expense.total,
       }
     })
+
+    // Getting expenses prevision
+    const pricingPreview = project.tipoDeServico == 'SISTEMA FOTOVOLTAICO' ? propose?.precificacao || undefined : undefined
     // Pushing cost of the kit generator, if it exists
     const kitCost = project.compra.valorDoKit || 0
     if (kitCost) expenses.push({ id: undefined, categoria: 'CUSTO DO KIT GERADOR', itens: [], total: kitCost })
@@ -77,12 +109,17 @@ export async function getFinancesByProjectId({ projectId, projectsCollection, ex
     const projectFinances: TProjectFinances = {
       _id,
       nome,
+      potencia,
+      identificador,
+      idProjetoCRM,
+      idPropostaCRM,
       cidade,
       vendedor,
       topologia,
       qtdeModulos,
       dataAssinatura,
       dataConclusaoObra,
+      previsaoDespesas: pricingPreview,
       despesas: {},
       despesasLista: expenses,
       receitas: {},

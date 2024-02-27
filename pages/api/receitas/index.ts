@@ -27,12 +27,12 @@ const getRevenues: NextApiHandler<GetResponse> = async (req, res) => {
   if (projectId) {
     if (typeof projectId != 'string') throw new createHttpError.BadRequest('ID de projeto inválido.')
     console.log('PROJETO ID', projectId)
-    const revenues = await collection.find({ 'projeto.id': projectId }).toArray()
+    const revenues = await collection.find({ 'projeto.id': projectId }, { sort: { _id: -1 } }).toArray()
     return res.status(200).json({ data: revenues })
   }
   console.log('CHEGOU AQUI')
   // Query for all revenues
-  const revenues = await collection.find({}).toArray()
+  const revenues = await collection.find({}, { sort: { _id: -1 } }).toArray()
   return res.status(200).json({ data: revenues })
 }
 

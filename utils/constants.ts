@@ -1,5 +1,7 @@
 import axios from 'axios'
+import { Session } from 'next-auth'
 import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletypeXml, BsFillPlayBtnFill, BsImage } from 'react-icons/bs'
+import { IconType } from 'react-icons/lib'
 //teste
 
 export const margemLucro = 0.12
@@ -228,7 +230,14 @@ export const reportsByPlan = {
   },
 }
 
-export const fileTypes = {
+type FileTypes = {
+  [contentType: string]: {
+    title: string
+    extension: string
+    icon: IconType
+  }
+}
+export const fileTypes: FileTypes = {
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
     title: 'WORD',
     extension: '.docx',
@@ -2362,39 +2371,39 @@ export const tiposEstruturaCRM = [
   { label: 'Solo', value: 'Solo' },
   { label: 'Sem estrutura', value: 'Sem estrutura' },
 ]
-export function validateAuthorization(session, paramRoute) {
+export function validateAuthorization(session: Session, paramRoute: string) {
   if (!session) return false
-  if (session.user.accessibleRoutes.includes(paramRoute)) return true
+  if (session.user.accessibleRoutes?.includes(paramRoute)) return true
   return false
 }
 
-export function formatProjectCode(value) {
+export function formatProjectCode(value: string) {
   if (value) {
     console.log('FORMATADO', value.toUpperCase().split(' ').join(''))
     return value.split(' ').join('')
   }
   return ''
 }
-export function formatToPhone(value) {
+export function formatToPhone(value: string) {
   if (!value) return ''
   value = value.replace(/\D/g, '')
   value = value.replace(/(\d{2})(\d)/, '($1) $2')
   value = value.replace(/(\d)(\d{4})$/, '$1-$2')
   return value
 }
-export function formatToMoney(value, tag = 'R$') {
+export function formatToMoney(value: string | number, tag = 'R$') {
   return `${tag} ${Number(value).toLocaleString('pt-br', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`
 }
-export function formatDecimalPlaces(value, minPlaces = 0, maxPlaces = 2) {
+export function formatDecimalPlaces(value: string | number, minPlaces = 0, maxPlaces = 2) {
   return Number(value).toLocaleString('pt-br', {
     minimumFractionDigits: minPlaces,
     maximumFractionDigits: maxPlaces,
   })
 }
-export function formatCPFCpnj(value) {
+export function formatCPFCpnj(value: string) {
   const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
@@ -2403,24 +2412,24 @@ export function formatCPFCpnj(value) {
 
   return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
-export function formatDate(value) {
+export function formatDate(value: string) {
   return new Date(value).toISOString().slice(0, 10)
 }
-export function formatPersonalName(value) {
+export function formatPersonalName(value: string) {
   if (typeof value == 'string') {
     const splittedStr = value.split(' ')
     const formattedNameArr = splittedStr.map((x) => x.charAt(0).toUpperCase() + x.slice(1))
     return formattedNameArr.join(' ')
   } else return ''
 }
-export function formatLongString(str, size = 35) {
+export function formatLongString(str: string, size = 35) {
   if (str && str.length > size) {
     return str.substring(0, size) + '\u2026'
   } else {
     return str
   }
 }
-export async function getDistanceBetweenCities(destination, origin) {
+export async function getDistanceBetweenCities(destination: string, origin: string) {
   console.log(process.env.DB_KEY)
   const proxyurl = 'https://cors-anywhere.herokuapp.com/'
   const url = `https://maps.googleapis.com/maps/api/integracao/google-apis/distancematrix/json?origins=${origin}&destinations=${destination}&departure_time=now&key=${process.env.DISTANCE_API}`
@@ -2432,7 +2441,7 @@ export async function getDistanceBetweenCities(destination, origin) {
     console.log('ERRO', error)
   }
 }
-function getLevenshteinDistance(string1, string2) {
+function getLevenshteinDistance(string1: string, string2: string) {
   const matrix = Array(string1.length + 1)
     .fill(null)
     .map(() => Array(string2.length + 1).fill(null))
@@ -2454,7 +2463,7 @@ function getLevenshteinDistance(string1, string2) {
 
   return matrix[string1.length][string2.length]
 }
-export function calculateStringSimilarity(string1, string2) {
+export function calculateStringSimilarity(string1: string, string2: string) {
   const maxLength = Math.max(string1.length, string2.length)
   const distance = getLevenshteinDistance(string1, string2)
   const similarity = (maxLength - distance) / maxLength

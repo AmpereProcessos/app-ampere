@@ -14,39 +14,60 @@ import { formatToMoney } from '@/utils/constants'
 import { FaCity, FaSignature, FaTools } from 'react-icons/fa'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { useNewWarehouseForms } from '@/utils/methods/query/warehouse-forms'
+import NewEmployee from '@/components/identificador/colaboradores/NewEmployee'
+import { getMetadata, ref } from 'firebase/storage'
+import { storage } from '@/utils/services/firebase/firebase-storage'
+import { useEmployees } from '@/utils/methods/query/users'
+import EmployeeCard from '@/components/identificador/colaboradores/EmployeeCard'
+import LoadingPage from '@/components/utils/LoadingPage'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import EditEmployee from '@/components/identificador/colaboradores/EditEmployee'
+import { useRouter } from 'next/router'
 
-const currentDate = dayjs()
-const beforeParam = currentDate.toISOString()
-const afterParam = currentDate.subtract(3, 'month').toISOString()
+type TEditModal = {
+  isOpen: boolean
+  id: string | null
+}
+
 function Test() {
+  const router = useRouter()
   const queryClient = useQueryClient()
-  const { data: session, status } = useSession()
-  const { data: forms } = useNewWarehouseForms({ after: afterParam, before: beforeParam })
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-  const [modalForm, setModalForm] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
+  const { data: employees, isLoading, isSuccess, isError } = useEmployees()
 
-  if (status != 'authenticated') return <></>
+  const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
+  const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null })
+
+  if (status != 'authenticated') return <LoadingPage />
   return (
-    <div className="flex grow flex-col p-6">
-      <button onClick={() => setModalIsOpen(true)}>ABRIR MODAL</button>
-      {modalIsOpen ? (
-        <NewForm
-          session={session}
-          closeModal={() => setModalIsOpen(false)}
-          invalidateQuery={async () => await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', afterParam, beforeParam] })}
-        />
-      ) : null}
-      <div className="flex w-full flex-wrap gap-3">
-        {forms?.map((formulary) => <FormularyCard formulary={formulary} openModal={(id) => setModalForm({ isOpen: true, id: id })} />)}
+    <div className="grow p-6">
+      <div className="flex h-full grow flex-col">
+        <div className="flex w-full items-center justify-between border-b border-gray-200 pb-2">
+          <div className="flex flex-col">
+            <h1 className="text-lg font-black">CONTROLE DE COLABORADORES</h1>
+            <p className="text-sm text-[#71717A]">Gerencie, adicione e edite colaboradores</p>
+            <p className="text-sm text-[#71717A]">{isSuccess ? employees.length : '0'} colaboradores atualmente cadastrados</p>
+          </div>
+          <button
+            onClick={() => setNewEmployeeModalIsOpen(true)}
+            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+          >
+            NOVO COLABORADOR
+          </button>
+        </div>
+        <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
+          {isLoading ? <LoadingPage /> : null}
+          {isError ? <ErrorComponent msg="Erro ao buscar usuários" /> : null}
+          {isSuccess &&
+            employees.map((employee, index: number) => (
+              <EmployeeCard key={employee._id?.toString()} employee={employee} openModal={(id) => setEditEmployeeModal({ isOpen: true, id: id })} />
+            ))}
+        </div>
+        {newEmployeeModalIsOpen ? <NewEmployee closeModal={() => setNewEmployeeModalIsOpen(false)} session={session} /> : null}
+        {editEmployeeModal.isOpen && editEmployeeModal.id ? (
+          <EditEmployee userId={editEmployeeModal.id} closeModal={() => setEditEmployeeModal({ isOpen: false, id: null })} session={session} />
+        ) : null}
       </div>
-      {modalForm.id && modalForm.isOpen ? (
-        <EditForm
-          formularyId={modalForm.id}
-          session={session}
-          invalidateQuery={async () => await queryClient.invalidateQueries({ queryKey: ['warehouse-forms', afterParam, beforeParam] })}
-          closeModal={() => setModalForm({ isOpen: false, id: null })}
-        />
-      ) : null}
     </div>
   )
 }

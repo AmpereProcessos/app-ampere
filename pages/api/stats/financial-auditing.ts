@@ -2,6 +2,8 @@ import { getFinancesByProjectId } from '@/repositories/finances-auditing/queries
 import { apiHandler } from '@/utils/api'
 import { TExpense } from '@/utils/schemas/expenses'
 import { TProject, TProjectDTO } from '@/utils/schemas/projects'
+import { TSolarSystemPropose } from '@/utils/schemas/proposes/solar-system.schema'
+import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
 import { Collection, ObjectId } from 'mongodb'
@@ -23,12 +25,16 @@ export type ExpenseRevenueList = {
 export type TProjectFinances = {
   _id: string
   nome: string
+  potencia: number
+  identificador: string | number
+  idProjetoCRM: string
   cidade: string
   vendedor: string
   topologia: string
   qtdeModulos: number
   dataAssinatura: string | null | undefined
   dataConclusaoObra: string | null | undefined
+  previsaoDespesas?: TSolarSystemPropose['precificacao']
   despesas: { [key: string]: number }
   despesasLista?: ExpenseRevenueList
   receitas: { [key: string]: number }
@@ -48,6 +54,8 @@ type PartialTProject = Pick<
   | 'sistema'
   | 'padrao'
   | 'estruturaPersonalizada'
+  | 'codigoSVB'
+  | 'idProjetoCRM'
 >
 const DatetimeStringSchema = z
   .string({ required_error: 'Parâmetro de data não fornecido.', invalid_type_error: 'Tipo inválido para o parâmetro de data.' })
@@ -60,12 +68,16 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
   const { after, before, field, id } = req.query
 
   const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+
   const projectsCollection: Collection<TProject> = db.collection('dados')
   const expensesCollection: Collection<TExpense> = db.collection('despesas')
+  const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection('proposes')
+
   // In case query is for project especific finances
   if (id) {
     if (typeof id != 'string' || !ObjectId.isValid(id)) throw createHttpError.BadRequest('ID inválido.')
-    const projectFinances = await getFinancesByProjectId({ projectId: id, projectsCollection, expensesCollection })
+    const projectFinances = await getFinancesByProjectId({ projectId: id, projectsCollection, expensesCollection, proposesCollection })
     return res.json(projectFinances)
   }
   // In case query is for financial auditing of especific period
@@ -84,6 +96,8 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
         $project: {
           _id: 1,
           nomeDoContrato: 1,
+          codigoSVB: 1,
+          idProjetoCRM: 1,
           tipoDeServico: 1,
           'contrato.dataAssinatura': 1,
           'obra.saida': 1,
@@ -94,6 +108,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
           'sistema.valorProjeto': 1,
           'sistema.topologia': 1,
           'sistema.qtdeModulos': 1,
+          'sistema.potPico': 1,
           'padrao.valor': 1,
           'estruturaPersonalizada.valor': 1,
         },
@@ -107,17 +122,19 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     .toArray()) as PartialTProject[]
 
   const expenses = await expensesCollection.find({}).toArray()
-
-  const projectFinances = projects.map((project) => {
+  const projectFinances: TProjectFinances[] = projects.map((project) => {
     // Defining project info
     const nome = project.nomeDoContrato
+    const potencia = project.sistema.potPico
     const tipoDeServico = project.tipoDeServico
     const dataAssinatura = project.contrato.dataAssinatura
     const dataConclusaoObra = project.obra.saida
     const cidade = project.cidade
     const vendedor = project.vendedor.nome
-    const topologia = project.sistema.topologia
+    const topologia = project.sistema.topologia || 'NÃO DEFINIDO'
     const qtdeModulos = project.sistema.qtdeModulos || 0
+    const idProjetoCRM = project.idProjetoCRM || ''
+    const identificador = project.codigoSVB || ''
     // Formatting the project expenses
     const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id)
     const kitCost = project.compra.valorDoKit || 0
@@ -147,6 +164,9 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
       return {
         _id: project._id,
         nome,
+        identificador,
+        idProjetoCRM,
+        potencia,
         cidade,
         vendedor,
         topologia,
@@ -166,6 +186,9 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     return {
       _id: project._id,
       nome,
+      identificador,
+      idProjetoCRM,
+      potencia,
       cidade,
       vendedor,
       topologia,

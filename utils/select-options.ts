@@ -1,5 +1,29 @@
 import { MdEast, MdNorth, MdNorthEast, MdNorthWest, MdSouth, MdSouthEast, MdSouthWest, MdWest } from 'react-icons/md'
 
+export const NaturalPersonMaritalStatus = [
+  { id: 1, label: 'SOLTEIRO', value: 'SOLTEIRO' },
+  { id: 2, label: 'CASADO', value: 'CASADO' },
+  { id: 3, label: 'VIÚVO', value: 'VIÚVO' },
+  { id: 4, label: 'DIVORCIADO', value: 'DIVORCIADO' },
+  { id: 5, label: 'SEPERADO JURIDICAMENTE', value: 'SEPERADO JURIDICAMENTE' },
+]
+export const VisualizationTypes = [
+  { id: 1, label: 'OPERACIONAL', value: 'OPERACIONAL' },
+  { id: 2, label: 'EXECUÇÃO', value: 'EXECUÇÃO' },
+  { id: 3, label: 'VENDAS', value: 'VENDAS' },
+]
+export const VinculationCompanies = [
+  { id: 1, label: 'AMPERE ENGENHARIA E CONSULTORIA ELETRICA LTDA', value: 'AMPERE ENGENHARIA E CONSULTORIA ELETRICA LTDA' },
+  { id: 2, label: 'DAP CONSULTORIA INTEGRADA LTDA', value: 'DAP CONSULTORIA INTEGRADA LTDA' },
+]
+export const InstructionLevels = [
+  { id: 1, label: 'FUNDAMENTAL INCOMPLETO', value: 'FUNDAMENTAL INCOMPLETO' },
+  { id: 2, label: 'FUNDAMENTAL COMPLETO', value: 'FUNDAMENTAL COMPLETO' },
+  { id: 3, label: 'MÉDIO INCOMPLETO', value: 'MÉDIO INCOMPLETO' },
+  { id: 4, label: 'MÉDIO COMPLETO', value: 'MÉDIO COMPLETO' },
+  { id: 5, label: 'SUPERIOR INCOMPLETO', value: 'SUPERIOR INCOMPLETO' },
+  { id: 6, label: 'SUPERIOR COMPLETO', value: 'SUPERIOR COMPLETO' },
+]
 export const ppsCallStatus = [
   {
     id: 1,

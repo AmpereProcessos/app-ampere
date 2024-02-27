@@ -1,14 +1,5 @@
 import { z } from 'zod'
-import {
-  proposeTemplates,
-  ProposeTemplateOptions,
-  StructureTypes,
-  orientations,
-  Phases,
-  VoltageOptions,
-  TariffSubgroups,
-  EnergyDistributionCompanies,
-} from '../../constants'
+
 import { ObjectId } from 'mongodb'
 
 export const ModuleSchema = z.object({
@@ -42,7 +33,7 @@ export type TPricingItem = z.infer<typeof PricingItemSchema>
 
 export const GeneralSolarSystemProposeSchema = z.object({
   nome: z.string(),
-  template: z.enum(ProposeTemplateOptions),
+  template: z.string(),
   projeto: z.object({
     nome: z.string(),
     id: z.string(),
@@ -50,14 +41,14 @@ export const GeneralSolarSystemProposeSchema = z.object({
   premissas: z.object({
     consumoEnergiaMensal: z.number(),
     fatorSimultaneidade: z.number(),
-    distribuidora: z.enum(EnergyDistributionCompanies),
-    subgrupo: z.enum(TariffSubgroups).optional().nullable(),
+    distribuidora: z.string(),
+    subgrupo: z.string().optional().nullable(),
     tarifaEnergia: z.number(),
     tarifaTUSD: z.number(),
-    tensaoRede: z.enum(VoltageOptions),
-    fase: z.enum(Phases),
-    tipoEstrutura: z.enum(StructureTypes),
-    orientacao: z.enum(orientations),
+    tensaoRede: z.string(),
+    fase: z.string(),
+    tipoEstrutura: z.string(),
+    orientacao: z.string(),
     distancia: z.number(),
   }),
   kit: z.object({
@@ -83,7 +74,7 @@ export const GeneralSolarSystemProposeSchema = z.object({
 })
 export const InsertSolarSystemProposeSchema = z.object({
   nome: z.string({ required_error: 'Nome da proposta não fornecido.', invalid_type_error: 'Tipo não válido para o nome da proposta.' }),
-  template: z.enum(ProposeTemplateOptions, {
+  template: z.string({
     required_error: 'Template não fornecido.',
     invalid_type_error: 'Tipo não válido para template da proposta.',
   }),
@@ -106,12 +97,12 @@ export const InsertSolarSystemProposeSchema = z.object({
       required_error: 'Premissa de fator de simultaneidade não fornecido.',
       invalid_type_error: 'Tipo não válido para a premissa de fator de simultaneidade.',
     }),
-    distribuidora: z.enum(EnergyDistributionCompanies, {
+    distribuidora: z.string({
       required_error: 'Premissa de distribuidora de energia não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de distribuidora de energia.',
     }),
     subgrupo: z
-      .enum(TariffSubgroups, {
+      .string({
         required_error: 'Premissa de subgrupo de tarifa não fornecida.',
         invalid_type_error: 'Tipo não válido para a premissa de subgrupo de tarifa.',
       })
@@ -125,19 +116,19 @@ export const InsertSolarSystemProposeSchema = z.object({
       required_error: 'Premissa de tarifa de fio B não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de tarifa de fio B.',
     }),
-    tensaoRede: z.enum(VoltageOptions, {
+    tensaoRede: z.string({
       required_error: 'Premissa de tensão de rede não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de tensão de rede.',
     }),
-    fase: z.enum(Phases, {
+    fase: z.string({
       required_error: 'Premissa de fase de distribuição não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de fase de distribuição.',
     }),
-    tipoEstrutura: z.enum(StructureTypes, {
+    tipoEstrutura: z.string({
       required_error: 'Premissa de tipo de estrutura não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de tipo de estrutura.',
     }),
-    orientacao: z.enum(orientations, {
+    orientacao: z.string({
       required_error: 'Premissa de orientação não fornecida.',
       invalid_type_error: 'Tipo não válido para a premissa de orientação.',
     }),
@@ -179,7 +170,7 @@ export const InsertSolarSystemProposeSchema = z.object({
 export const SolarSystemProposeEntitySchema = z.object({
   _id: z.instanceof(ObjectId),
   nome: z.string(),
-  template: z.enum(ProposeTemplateOptions),
+  template: z.string(),
   projeto: z.object({
     nome: z.string(),
     id: z.string(),
@@ -187,14 +178,14 @@ export const SolarSystemProposeEntitySchema = z.object({
   premissas: z.object({
     consumoEnergiaMensal: z.number(),
     fatorSimultaneidade: z.number(),
-    distribuidora: z.enum(EnergyDistributionCompanies),
-    subgrupo: z.enum(TariffSubgroups).optional().nullable(),
+    distribuidora: z.string(),
+    subgrupo: z.string().optional().nullable(),
     tarifaEnergia: z.number(),
     tarifaTUSD: z.number(),
-    tensaoRede: z.enum(VoltageOptions),
-    fase: z.enum(Phases),
-    tipoEstrutura: z.enum(StructureTypes),
-    orientacao: z.enum(orientations),
+    tensaoRede: z.string(),
+    fase: z.string(),
+    tipoEstrutura: z.string(),
+    orientacao: z.string(),
     distancia: z.number(),
   }),
   kit: z.object({

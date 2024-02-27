@@ -13,145 +13,196 @@ import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
 import { TMaterial } from '@/utils/schemas/materials'
 import { TNewWarehouseFormulary, TWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
+import connectToColaboratorsDatabase from '@/utils/services/mongodb/users'
+import { TEmployee, TEmployeeDTO } from '@/utils/schemas/users'
+import connectToAdministrationDatabase from '@/utils/services/mongodb/administration'
+
+type TPreviousUser = {
+  nome: string
+  password: string
+  accessibleRoutes?: string[]
+  admin?: boolean
+  admission?: string
+  avatar_url?: string
+  birthday?: string
+  controller?: boolean
+  cpf?: string
+  rg?: string
+  email: string
+  equipe?: string
+  manager?: string
+  vendedor?: string
+  visualizacao?: 'OBRAS' | 'VENDEDOR' | 'INSIDE'
+}
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const projectsDb: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  // const db: Db = await connectToWarehouseDatabase(process.env.DB_KEY)
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
 
-  // const projectsCollection: Collection<TProject> = projectsDb.collection('dados')
-  // const projects = await projectsCollection.find({}).toArray()
+  const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  // const formulariesCollection: Collection<TWarehouseFormulary> = db.collection('formularios')
-  // const formularies = await formulariesCollection.find({}).toArray()
+  const supplyProjects = await projectsCollection
+    .find(
+      {
+        'contrato.status': 'ASSINADO',
+        'contrato.dataAssinatura': { $gte: '2023-06-01T00:00:00.000Z' },
+        tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+      },
+      { sort: { qtde: 1 } }
+    )
+    .toArray()
 
-  // const newFormularies = formularies.map((form) => {
-  //   const equivalentProject = projects.find((project) => project._id.toString() == form.idPai)
-  //   const insertDate = form._id.getTimestamp().toISOString()
-  //   const newFormulary: TNewWarehouseFormulary = {
-  //     titulo: `SAIDA PARA ${form.nomeDoContrato || form.nomeTerceiro}`,
-  //     categoria: form.servico,
-  //     responsaveis: form.equipeResp || form.nomeTerceiro || 'NÃO DEFINIDO',
-  //     projeto: {
-  //       id: equivalentProject?._id.toString(),
-  //       nome: equivalentProject?.nomeDoContrato,
-  //       identificador: equivalentProject?.qtde,
-  //     },
-  //     localizacao: {
-  //       cep: equivalentProject?.cep,
-  //       uf: equivalentProject?.uf,
-  //       cidade: equivalentProject?.cidade,
-  //       bairro: equivalentProject?.bairro || '',
-  //       endereco: equivalentProject?.logradouro || '',
-  //       numeroOuIdentificador: equivalentProject?.numeroResidencia.toString() || '',
-  //       complemento: '',
-  //       distancia: null,
-  //     },
-  //     materiais: form.materiais.map((mat) => ({
-  //       id: mat.id,
-  //       nome: mat.nome,
-  //       preco: mat.precoUnit,
-  //       grandeza: mat.grandeza,
-  //       qtdeRetirada: mat.qtdeSaida || 0,
-  //       qtdeDevolucao: mat.qtdeDevolucao || 0,
-  //     })),
-  //     autor: {
-  //       id: '639b4b9ffbca702a25180057',
-  //       nome: 'Almoxarifado',
-  //       avatar_url:
-  //         'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-alex.jpeg?alt=media&token=37101720-3dee-43ee-a3e4-07ed654a3ad0',
-  //     },
-  //     dataEfetivacao: form.dataEfetivacao,
-  //     dataInsercao: insertDate,
-  //   }
-  //   return newFormulary
-  // })
-  // const bulkwrite = projects
-
-  //   .map((project) => {
-  //     const libDate = project.parecer.dataParecerDeAcesso
-  //     return {
-  //       updateOne: {
-  //         filter: { _id: new ObjectId(project._id) },
-  //         update: {
-  //           $set: {
-  //             'compra.liberacao': true,
-  //             'compra.dataLiberacao': libDate,
-  //           },
-  //         },
-  //       },
-  //     }
-  //   })
-  //   .filter((b) => !!b)
-  // const bkResponse = await mainCollection.bulkWrite(bulkwrite)
-  // return res.json(bkResponse)
-  return res.json('DESATIVADA')
+  const exportation = supplyProjects.map((project) => {
+    return {
+      QTDE: project.qtde,
+      'CODIGO CRM': project.codigoSVB,
+      NOME: project.nomeDoContrato,
+      CIDADE: project.cidade,
+      VENDEDOR: project.vendedor.nome,
+      TOPOLOGIA: project.sistema.topologia,
+      'POTÊNCIA PICO': project.sistema.potPico,
+      'VALOR DO CONTRATO': getContractValue({
+        projectValue: project.sistema.valorProjeto,
+        paValue: project.padrao.valor,
+        structureValue: project.estruturaPersonalizada.valor,
+      }),
+      FORNECEDOR: project.compra.fornecedor,
+      'PREVISTO P/ KIT': project.compra.previsaoValorDoKit || 0,
+      'VALOR DO KIT': project.compra.valorDoKit || null,
+    }
+  })
+  console.log(exportation.length)
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: handleUpdateTeste,
 })
-// export default async function handler(req, res) {
-//   const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-//   const collection = db.collection('dados')
-//   let suprimentos = await collection
-//     .aggregate([
-//       {
-//         $sort: {
-//           qtde: 1,
-//         },
-//       },
-//       {
-//         $match: {
-//           tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-//           'compra.liberacao': true,
-//           'compra.status': { $ne: 'CONCLUIDA' },
-//           'parecer.statusDoParecerDeAcesso': { $ne: 'PARECER DE ACESSO APROVADO' },
-//           'project.compra.dataPedido': null,
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           nomeDoContrato: 1,
-//           qtde: 1,
-//           compra: 1,
-//           tipoDeServico: 1,
-//           'faturamento.previsaoFaturamento': 1,
-//           'parecer.statusDoParecerDeAcesso': 1,
-//           'sistema.potPico': 1,
-//           'sistema.qtdeModulos': 1,
-//           'pagamento.status': 1,
-//         },
-//       },
-//     ])
-//     .toArray()
-//   console.log(suprimentos.length)
-//   const bulkwrite = suprimentos.map((s) => {
-//     return {
-//       updateOne: {
-//         filter: { _id: new ObjectId(s._id) },
-//         update: {
-//           $set: {
-//             'compra.liberacao': null,
-//             'compra.dataLiberacao': null,
-//           },
-//         },
-//       },
-//     }
-//   })
-//   const bkResponse = await collection.
-//   return res.json(bkResponse)
+
+// CREATING EMPLOYEES BY USERS
+// const usersDb = await connectToColaboratorsDatabase(process.env.DB_KEY)
+// const usersCollection: Collection<TPreviousUser> = usersDb.collection('users')
+
+// const adminstrationDb = await connectToAdministrationDatabase(process.env.DB_KEY)
+// const employeesCollection = await adminstrationDb.collection('colaboradores')
+
+// const users = await usersCollection.find({}).toArray()
+
+// const VisualizationTypesMap = {
+//   OBRAS: 'EXECUÇÃO',
+//   VENDEDOR: 'VENDAS',
+//   INSIDE: 'VENDAS',
 // }
-// Update Many example:
-// let arr = await collection.updateMany(
-//   {
-//     "pagamento.forma": "CAPITAL PROPRIO",
-//   },
-//   {
-//     $set: {
-//       "pagamento.forma": "CAPITAL PRÓPRIO",
+// const newUsers = users.map((user) => {
+//   const insertDate = user._id.getTimestamp().toISOString()
+//   const newUser: TEmployeeDTO = {
+//     _id: {
+//       $oid: user._id,
 //     },
+//     acessoAtivo: true,
+//     nome: user.nome,
+//     email: user.email,
+//     telefone: '',
+//     senha: user.password,
+//     avatar_url: user.avatar_url,
+//     visualizacao: {
+//       tipo: user.visualizacao ? (VisualizationTypesMap[user.visualizacao] as TEmployeeDTO['visualizacao']['tipo']) : 'OPERACIONAL',
+//       referencia: !!user.visualizacao ? user.vendedor || user.equipe : null,
+//     },
+//     permissoes: {
+//       rotas: user.accessibleRoutes || [],
+//       usuarios: {
+//         escopo: null,
+//         visualizar: !!user.manager,
+//         editar: !!user.manager,
+//         criar: !!user.manager,
+//       },
+//       comercial: {
+//         visualizar: !!user.accessibleRoutes?.includes('PPS'),
+//         editar: !!user.accessibleRoutes?.includes('PPS'),
+//       },
+//       posVenda: {
+//         visualizar: !!user.accessibleRoutes?.includes('Pós-Venda'),
+//         editar: !!user.accessibleRoutes?.includes('Pós-Venda'),
+//       },
+//       suprimentos: {
+//         visualizar: !!user.accessibleRoutes?.includes('Suprimentos'),
+//         editar: !!user.accessibleRoutes?.includes('Suprimentos'),
+//       },
+//       engenharia: {
+//         visualizar: !!user.accessibleRoutes?.includes('Projetos'),
+//         editar: !!user.accessibleRoutes?.includes('Projetos'),
+//       },
+//       execucao: {
+//         visualizar: !!user.accessibleRoutes?.includes('Obras'),
+//         editar: !!user.accessibleRoutes?.includes('Obras'),
+//       },
+//       suporte: {
+//         visualizar: !!user.accessibleRoutes?.includes('O&M'),
+//         editar: !!user.accessibleRoutes?.includes('O&M'),
+//       },
+//       financeiro: {
+//         visualizar: !!user.accessibleRoutes?.includes('Financeiro'),
+//         editar: !!user.accessibleRoutes?.includes('Financeiro'),
+//       },
+//       administrativo: {
+//         visualizar: !!user.accessibleRoutes?.includes('ADM'),
+//         editar: !!user.accessibleRoutes?.includes('ADM'),
+//       },
+//       recursosHumanos: {
+//         visualizar: !!user.accessibleRoutes?.includes('RH'),
+//         editar: !!user.accessibleRoutes?.includes('RH'),
+//       },
+//       gestao: {
+//         visualizarResultados: !!user.manager,
+//       },
+//       ordensDeServico: {
+//         criar: !!user.controller,
+//         visualizar: !!user.controller,
+//         editar: !!user.controller,
+//       },
+//     },
+//     empresaVinculada: '', //
+//     dataNascimento: '', //
+//     localNascimento: '',
+//     nacionalidade: 'Brasileiro', //
+//     estadoCivil: '', //
+//     grauInstrucao: '', //
+//     tituloEleitor: '', //
+//     carteiraTrabalho: {
+//       pisPaseb: '', //
+//       numero: '', //
+//       serie: '', //
+//     },
+//     rg: user.rg || '', //
+//     cpf: user.cpf || '', //
+//     carteiraTransito: {
+//       numero: '', //
+//       dataVencimento: null, //
+//     },
+//     qtdeFilhos: 0, //
+//     localizacao: {
+//       cep: null, //
+//       uf: null, //
+//       cidade: null, //
+//       bairro: '', //
+//       endereco: '', //
+//       numeroOuIdentificador: '', //
+//     },
+//     dataAdmissao: user.admission, //
+//     cargos: [], //
+//     salarioBase: 0,
+//     horariosTrabalho: [], //
+//     contatosAuxiliares: [],
+//     autor: {
+//       id: '6318db05929e9f8731d8d9bb',
+//       nome: 'Lucas Fernandes',
+//       avatar_url: 'https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4',
+//     },
+//     dataInsercao: insertDate,
 //   }
-// );
+//   return newUser
+// })
+
+// return res.json(newUsers)
 
 // SCRIPT PARA EXPORTAÇÃO DO RELATÓRIO DE ANÁLISE ECONOMICA DOS PROJETOS
 // const db = await connectToDatabase(process.env.DB_KEY, "projetos");

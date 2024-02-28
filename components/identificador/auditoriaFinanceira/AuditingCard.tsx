@@ -6,20 +6,26 @@ import React from 'react'
 import { BsCode } from 'react-icons/bs'
 import { FaSignature, FaTools } from 'react-icons/fa'
 import { ImPower } from 'react-icons/im'
+import { TbActivity } from 'react-icons/tb'
 
 function getBarColor(margin: number) {
   if (margin >= 0.1) return 'bg-green-500'
   if (margin > 0.05 && margin < 1) return 'bg-orange-500'
   return 'bg-red-500'
 }
-function getResult({ revenues, expenses }: { revenues: TProjectFinances['receitas']; expenses: TProjectFinances['despesas'] }) {
+function getResult({ revenues, expenses, power }: { revenues: TProjectFinances['receitas']; expenses: TProjectFinances['despesas']; power: number }) {
   const totalExpenses = Object.values(expenses).reduce((acc, current) => acc + current, 0)
   const totalRevenues = Object.values(revenues).reduce((acc, current) => acc + current, 0)
+
+  const salePowerMetric = totalRevenues / power
+  const supplyPowerMetric = (expenses['CUSTO DO KIT GERADOR'] || 0) / power
 
   const margin = (totalRevenues - totalExpenses) / totalRevenues
   return {
     margem: margin,
     liquido: totalRevenues - totalExpenses,
+    valorWattVenda: salePowerMetric,
+    valorWattCompra: supplyPowerMetric,
   }
 }
 type AuditingCardProps = {
@@ -27,7 +33,7 @@ type AuditingCardProps = {
   handleClick: (id: string) => void
 }
 function AuditingCard({ info, handleClick }: AuditingCardProps) {
-  const { liquido, margem } = getResult({ revenues: info.receitas, expenses: info.despesas })
+  const { liquido, margem, valorWattVenda, valorWattCompra } = getResult({ revenues: info.receitas, expenses: info.despesas, power: info.potencia })
   const revenues = Object.entries(info.receitas).filter(([key, value]) => value != 0)
   const totalRevenue = revenues.reduce((acc, [key, value]) => acc + value, 0)
   const expenses = Object.entries(info.despesas).filter(([key, value]) => value != 0)
@@ -63,6 +69,26 @@ function AuditingCard({ info, handleClick }: AuditingCardProps) {
           <ImPower />
           <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{info.potencia} kWp</p>
         </div>
+        <div className="flex items-center gap-2">
+          <ImPower />
+          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{info.potencia} kWp</p>
+        </div>
+      </div>
+      <div className="mt-2 flex w-full items-center justify-center gap-2">
+        <div className="flex items-center gap-2">
+          <TbActivity />
+          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+            Vendido a {formatDecimalPlaces(valorWattVenda)} R$/kWp
+          </p>
+        </div>
+        {valorWattCompra ? (
+          <div className="flex items-center gap-2">
+            <TbActivity />
+            <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+              Compra a {formatDecimalPlaces(valorWattCompra)} R$/kWp
+            </p>
+          </div>
+        ) : null}
       </div>
       <div className="mt-3 flex w-full items-center justify-between gap-2">
         <h1 className=" text-[0.6rem] font-black leading-none tracking-tight text-[#70e000]">RECEITAS</h1>

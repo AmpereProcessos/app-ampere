@@ -1,5 +1,6 @@
 import { TEmployeeDTO, TUserDTO } from '@/utils/schemas/users'
 import axios from 'axios'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 
 async function fetchUsers() {
@@ -38,10 +39,27 @@ async function fetchEmployees() {
 }
 
 export function useEmployees() {
-  return useQuery({
-    queryKey: ['employees'],
-    queryFn: fetchEmployees,
+  const [filters, setFilters] = useState({
+    search: '',
   })
+
+  function matchSearch(employee: TEmployeeDTO) {
+    if (filters.search.trim().length == 0) return true
+    return employee.nome.toUpperCase().includes(filters.search.toUpperCase())
+  }
+  function handleModelData(data: TEmployeeDTO[]) {
+    var modeledData = data
+    return modeledData.filter((employee) => matchSearch(employee))
+  }
+  return {
+    ...useQuery({
+      queryKey: ['employees'],
+      queryFn: fetchEmployees,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
 }
 
 async function fetchEmployeeById({ id }: { id: string }) {

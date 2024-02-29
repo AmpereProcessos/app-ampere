@@ -16,6 +16,8 @@ import { TNewWarehouseFormulary, TWarehouseFormulary } from '@/utils/schemas/war
 import connectToColaboratorsDatabase from '@/utils/services/mongodb/users'
 import { TEmployee, TEmployeeDTO } from '@/utils/schemas/users'
 import connectToAdministrationDatabase from '@/utils/services/mongodb/administration'
+import { TExpense } from '@/utils/schemas/expenses'
+import exp from 'constants'
 
 type TPreviousUser = {
   nome: string
@@ -38,10 +40,31 @@ type TPreviousUser = {
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
 
-  const ordersCollection: Collection = db.collection('ordensDeServico')
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const expensesCollection: Collection<TExpense> = db.collection('despesas')
 
-  const updateResponse = await ordersCollection.updateMany({ 'responsavel.nome': 'EQUIPE O&M' }, { $set: { 'responsavel.nome': 'EQUIPE OEM' } })
+  const projects = await projectsCollection
+    .find({
+      $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2024-01-31T22:00:00.000Z' } }],
+    })
+    .toArray()
+  const expenses = await expensesCollection.find({}, { projection: { categoria: 1, projeto: 1, total: 1 } }).toArray()
 
+  const exportation = projects.map((project) => {
+    const projectExpenses = expenses.filter((e) => e.projeto?.id == project._id.toString())
+    const expensesByCategory = projectExpenses.reduce((acc: { [key: string]: number }, current) => {
+      if (!acc[current.categoria]) acc[current.categoria] = 0
+      acc[current.categoria] += current.total
+      return acc
+    }, {})
+    return {
+      ID: project._id,
+      QTDE: project.qtde,
+      NOME: project.nomeDoContrato,
+      'CONCLUSÃO DE SERVIÇO': formatDateAsLocale(project.obra.saida),
+      ...expensesByCategory,
+    }
+  })
   // const exportation = supplyProjects.map((project) => {
   //   return {
   //     QTDE: project.qtde,
@@ -62,7 +85,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
 
-  return res.json(updateResponse)
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

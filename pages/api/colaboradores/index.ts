@@ -11,7 +11,8 @@ type GetResponse = {
 
 const getEmployees: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  if (!session?.user.permissoes.rotas?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+  if (!session?.user.permissoes.recursosHumanos.visualizar)
+    throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
 
   const { id } = req.query
 
@@ -38,7 +39,8 @@ type PostResponse = {
 
 const createColaborator: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  if (!session?.user.permissoes.rotas?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+  if (!session?.user.permissoes.recursosHumanos.visualizar)
+    throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
 
   const colaborator = InsertUserSchema.parse(req.body)
 

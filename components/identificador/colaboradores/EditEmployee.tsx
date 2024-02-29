@@ -214,7 +214,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
                       label="NACIONALIDADE"
                       placeholder="Preencha aqui a nacionalidade do colaborador..."
                       value={infoHolder.nacionalidade}
-                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nacionalidade: formatToPhone(value) }))}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nacionalidade: value }))}
                       width="100%"
                     />
                   </div>

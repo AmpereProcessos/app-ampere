@@ -260,7 +260,6 @@ export const InsertUserSchema = z.object({
       required_error: 'Data de nascimento do colaborador não informado.',
       invalid_type_error: 'Tipo não válido para data de nascimento do colaborador.',
     })
-    .datetime({ message: 'Formato inválido para data de nascimento.' })
     .optional()
     .nullable(),
   localNascimento: z.string({

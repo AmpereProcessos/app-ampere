@@ -11,6 +11,9 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import EditEmployee from '@/components/identificador/colaboradores/EditEmployee'
 
 import { useEmployees } from '@/utils/methods/query/users'
+import { AnimatePresence, motion } from 'framer-motion'
+import TextInput from '@/components/inputs/Text'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 type TEditModal = {
   isOpen: boolean
   id: string | null
@@ -20,7 +23,8 @@ function Employees() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
-  const { data: employees, isLoading, isSuccess, isError } = useEmployees()
+  const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees()
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
   const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null })
@@ -34,15 +38,15 @@ function Employees() {
             <div className="flex flex-col items-center gap-2 lg:flex-row">
               <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
             </div>
-            {/* {dropdownMenuVisible ? (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
-          </div>
-        ) : (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
-          </div>
-        )} */}
+            {dropdownMenuVisible ? (
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+              </div>
+            ) : (
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+              </div>
+            )}
           </div>
           <div className="flex w-full items-center justify-end">
             <button
@@ -52,6 +56,20 @@ function Employees() {
               NOVO COLABORADOR
             </button>
           </div>
+          <AnimatePresence>
+            {dropdownMenuVisible ? (
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                  <TextInput
+                    label={'NOME'}
+                    value={filters.search}
+                    placeholder={'Digite o nome do colaborador...'}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
         <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
           {isLoading ? <LoadingPage /> : null}

@@ -1,19 +1,9 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { AiOutlineSearch } from 'react-icons/ai'
-import { MdDateRange } from 'react-icons/md'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { BsDownload } from 'react-icons/bs'
-import Select from 'react-select'
+
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { motion, AnimatePresence } from 'framer-motion'
-import ModalNovoLead from '../../components/ModalNovoLead'
-import LeadCard from '../../components/LeadCard'
-import { cidadesAtendidas, formatDate, vendedores } from '../../utils/constants'
-import AnimatedTextAndIconButton from '../../components/AnimatedTextAndIconButton'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
-import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
+
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../../components/utils/LoadingPage'
 

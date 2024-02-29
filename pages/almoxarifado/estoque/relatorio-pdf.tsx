@@ -22,15 +22,6 @@ function RelatorioEstoque() {
   const [showFilter, setShowFilter] = useState(true)
   const [toBuyFilter, setToBuyFilter] = useState(false)
 
-  function checkQty({ qty, minQty }) {
-    console.log(minQty, !isNaN(minQty))
-    if (!isNaN(minQty)) {
-      return qty <= minQty
-    } else {
-      return qty <= 0
-    }
-  }
-
   useUnauthorizedRedirect({ session, routes: ['Almoxarifado'] })
 
   if (status == 'loading') return <LoadingPage />

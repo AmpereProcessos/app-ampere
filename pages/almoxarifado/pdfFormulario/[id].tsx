@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from '../../../utils/images/logo-texto-azul.png'
+import Logo from '../../../utils/images/logo-semtexto-branco.png'
 import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import { Collection, Db, ObjectId } from 'mongodb'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import { formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { TMaterial } from '@/utils/schemas/materials'
-import { BsCode } from 'react-icons/bs'
+import { BsCalendarCheck, BsCalendarPlus, BsCode } from 'react-icons/bs'
 
 type PDFFormularioProps = {
   formularyJSON: string
@@ -25,6 +25,74 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
     return total
   }
 
+  return (
+    <div className="flex w-full items-center justify-center">
+      <div className="flex h-[29.7cm] w-[21cm] flex-col">
+        <div className="flex items-center justify-center gap-4 border border-black bg-black p-3">
+          <Link href={'/almoxarifado/formularios'}>
+            <div className="flex cursor-pointer items-center justify-end">
+              <Image height={30} width={30} src={Logo} />
+            </div>
+          </Link>
+          <h1 className="text-center text-xl font-black leading-none tracking-tight text-white">RELATÓRIO DE SAÍDA DE MATERIAIS</h1>
+        </div>
+        <div className="flex w-full flex-col border-x border-black">
+          <h1 className="w-full text-center text-lg font-black">{formulary.titulo}</h1>
+          <div className="my-2 flex w-full items-center justify-center gap-2">
+            <div className="flex items-center gap-1">
+              <BsCode />
+              <h1 className="text-xs tracking-tight text-gray-500">{formulary._id}</h1>
+            </div>
+            <div className="flex items-center gap-1">
+              <BsCalendarPlus />
+              <h1 className="text-xs tracking-tight text-gray-500">ABERTO EM: {formatDateAsLocale(formulary.dataInsercao, true)}</h1>
+            </div>
+            <div className="flex items-center gap-1">
+              <BsCalendarCheck />
+              <h1 className="text-xs tracking-tight text-gray-500">
+                FINALIZADO EM: {formatDateAsLocale(formulary.dataEfetivacao, true) || 'NÃO FINALIZADO'}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex w-full flex-col">
+          <div className="flex items-center gap-2 border border-black bg-black p-2">
+            <h1 className="w-[30%] text-center text-sm font-bold text-white">PRODUTO</h1>
+            <h1 className="w-[15%] text-center text-sm font-bold text-white">RETIRADA</h1>
+            <h1 className="w-[15%] text-center text-sm font-bold text-white">DEVOLUÇÃO</h1>
+            <h1 className="w-[15%] text-center text-sm font-bold text-white">DIFERENÇA</h1>
+            <h1 className="w-[25%] text-center text-sm font-bold text-white">CUSTO</h1>{' '}
+          </div>
+
+          {formulary.materiais.map((material) => (
+            <div className="flex items-center gap-2 border-x border-b border-black p-2">
+              <div className="flex w-[30%] flex-col">
+                <h1 className="w-full text-start text-xs font-medium text-black">{material.nome}</h1>
+                <div className="flex w-full items-center gap-1">
+                  <BsCode />
+                  <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                </div>
+              </div>
+              <h1 className="w-[15%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtdeRetirada)}</h1>
+              <h1 className="w-[15%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtdeDevolucao)}</h1>
+              <h1 className="w-[15%] text-center text-xs font-medium text-black">
+                {formatDecimalPlaces(material.qtdeRetirada - material.qtdeDevolucao)}
+              </h1>
+              <h1 className="w-[25%] text-center text-xs font-medium text-black">
+                {formatToMoney(material.preco * (material.qtdeRetirada - material.qtdeDevolucao))}
+              </h1>
+            </div>
+          ))}
+          <div className="flex items-center gap-2 border-x border-b border-black p-2">
+            <h1 className="w-[75%] text-center text-lg font-black text-black">TOTAL</h1>
+
+            <h1 className="w-[25%] text-center text-lg font-black text-black">{formatToMoney(getTotalCost(formulary.materiais))}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
   return (
     <div className="h-[29.7cm] w-[21cm]  p-4 px-4">
       <h1 className="mb-6 text-center text-xl font-bold">REQUISIÇÃO DE SAÍDA DE MATERIAIS</h1>

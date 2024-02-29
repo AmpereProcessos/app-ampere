@@ -3,15 +3,15 @@ import TextInput from '@/components/inputs/Text'
 import { formatDate } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { formatDateInputChange } from '@/utils/methods/shared'
-import { TCorporatePosition, TUser } from '@/utils/schemas/users'
+import { TCorporatePosition, TEmployeeDTO, TUser } from '@/utils/schemas/users'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCalendarMinus, BsCalendarPlus, BsCode } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
 
 type PositionsMenuProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployeeDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployeeDTO>>
 }
 function PositionsMenu({ infoHolder, setInfoHolder }: PositionsMenuProps) {
   const [positionHolder, setPositionHolder] = useState<TCorporatePosition>({ cargo: '', cbo: '', dataInicio: new Date().toISOString() })

@@ -1,7 +1,7 @@
 import TextInput from '@/components/inputs/Text'
 import { formatDate, formatToPhone } from '@/utils/constants'
 import { formatToCPForCNPJ } from '@/utils/methods/formatting'
-import { TEmployee } from '@/utils/schemas/users'
+import { TEmployee, TEmployeeDTO } from '@/utils/schemas/users'
 import React, { useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
 import SystemAccess from './blocos/SystemAccess'
@@ -205,8 +205,15 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
                 />
               </div>
             </div>
-            <SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-            <CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            <SystemAccess
+              initialMode={true}
+              infoHolder={infoHolder as TEmployeeDTO}
+              setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>}
+            />
+            <CorporativeInformation
+              infoHolder={infoHolder as TEmployeeDTO}
+              setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>}
+            />
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button

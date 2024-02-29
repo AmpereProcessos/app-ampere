@@ -13,6 +13,9 @@ import Documents from './blocos/Documents'
 import { useEmployeeById } from '@/utils/methods/query/users'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import { useQueryClient } from 'react-query'
+import { updateEmployee } from '@/utils/methods/mutation/employees'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 
 type EditEmployeeProps = {
   userId: string
@@ -20,6 +23,7 @@ type EditEmployeeProps = {
   closeModal: () => void
 }
 function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
+  const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TEmployeeDTO>({
     _id: 'id-holder',
     acessoAtivo: false,
@@ -126,6 +130,12 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
   })
   const { data: employee, isLoading, isSuccess, isError } = useEmployeeById({ id: userId })
 
+  const { mutate: handleUpdateEmployee, isLoading: updateLoading } = useMutationWithFeedback({
+    mutationKey: ['create-employee'],
+    mutationFn: updateEmployee,
+    queryClient: queryClient,
+    affectedQueryKey: ['employees'],
+  })
   useEffect(() => {
     if (employee) setInfoHolder(employee)
   }, [employee])
@@ -146,71 +156,84 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorComponent msg={'Erro ao buscar informações do '} /> : null}
           {isSuccess ? (
-            <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-              <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
-              <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-1/2">
-                  <TextInput
-                    label="NOME DO COLABORADOR"
-                    placeholder="Preencha aqui o nome do colaborador..."
-                    value={infoHolder.nome}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
-                    width="100%"
-                  />
+            <>
+              {' '}
+              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
+                <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="NOME DO COLABORADOR"
+                      placeholder="Preencha aqui o nome do colaborador..."
+                      value={infoHolder.nome}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="CPF DO COLABORADOR"
+                      placeholder="Preencha aqui o CPF do colaborador..."
+                      value={infoHolder.cpf}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, cpf: formatToCPForCNPJ(value) }))}
+                      width="100%"
+                    />
+                  </div>
                 </div>
-                <div className="w-full lg:w-1/2">
-                  <TextInput
-                    label="CPF DO COLABORADOR"
-                    placeholder="Preencha aqui o CPF do colaborador..."
-                    value={infoHolder.cpf}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, cpf: formatToCPForCNPJ(value) }))}
-                    width="100%"
-                  />
+                <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="EMAIL DO COLABORADOR"
+                      placeholder="Preencha aqui o email do colaborador..."
+                      value={infoHolder.email}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, email: value }))}
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="TELEFONE DO COLABORADOR"
+                      placeholder="Preencha aqui o telefone do colaborador..."
+                      value={infoHolder.telefone}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, telefone: formatToPhone(value) }))}
+                      width="100%"
+                    />
+                  </div>
                 </div>
+                <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <DateInput
+                      label="DATA DE NASCIMENTO"
+                      value={infoHolder.dataNascimento ? formatDate(infoHolder.dataNascimento) : undefined}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))}
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="NACIONALIDADE"
+                      placeholder="Preencha aqui a nacionalidade do colaborador..."
+                      value={infoHolder.nacionalidade}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nacionalidade: formatToPhone(value) }))}
+                      width="100%"
+                    />
+                  </div>
+                </div>
+                <SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
+                <Documents employeeId={userId} session={session} />
               </div>
-              <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-1/2">
-                  <TextInput
-                    label="EMAIL DO COLABORADOR"
-                    placeholder="Preencha aqui o email do colaborador..."
-                    value={infoHolder.email}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, email: value }))}
-                    width="100%"
-                  />
-                </div>
-                <div className="w-full lg:w-1/2">
-                  <TextInput
-                    label="TELEFONE DO COLABORADOR"
-                    placeholder="Preencha aqui o telefone do colaborador..."
-                    value={infoHolder.telefone}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, telefone: formatToPhone(value) }))}
-                    width="100%"
-                  />
-                </div>
+              <div className="my-1 flex w-full items-center justify-end">
+                <button
+                  disabled={updateLoading}
+                  // @ts-ignore
+                  onClick={() => handleUpdateEmployee({ id: userId, changes: infoHolder })}
+                  className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                >
+                  ATUALIZAR COLABORADOR
+                </button>
               </div>
-              <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-1/2">
-                  <DateInput
-                    label="DATA DE NASCIMENTO"
-                    value={infoHolder.dataNascimento ? formatDate(infoHolder.dataNascimento) : undefined}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))}
-                    width="100%"
-                  />
-                </div>
-                <div className="w-full lg:w-1/2">
-                  <TextInput
-                    label="NACIONALIDADE"
-                    placeholder="Preencha aqui a nacionalidade do colaborador..."
-                    value={infoHolder.nacionalidade}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nacionalidade: formatToPhone(value) }))}
-                    width="100%"
-                  />
-                </div>
-              </div>
-              <SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <Documents employeeId={userId} session={session} />
-            </div>
+            </>
           ) : null}
         </div>
       </div>

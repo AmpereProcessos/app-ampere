@@ -1,14 +1,14 @@
 import TimeInput from '@/components/inputs/TimeInput'
 import { getDifferenceBetweenTimes } from '@/utils/methods/dates'
-import { TUser, TWorkingHours } from '@/utils/schemas/users'
+import { TEmployeeDTO, TUser, TWorkingHours } from '@/utils/schemas/users'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaPlayCircle, FaRegClock, FaStopCircle } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 
 type WorkingHoursMenuProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployeeDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployeeDTO>>
 }
 function WorkingHoursMenu({ infoHolder, setInfoHolder }: WorkingHoursMenuProps) {
   const [workingHoursHolder, setWorkingHoursHolder] = useState<TWorkingHours>({

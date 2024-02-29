@@ -38,16 +38,9 @@ type TPreviousUser = {
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
 
-  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const ordersCollection: Collection = db.collection('ordensDeServico')
 
-  const supplyProjects = await projectsCollection
-    .find(
-      {
-        $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $gte: '2024-01-31T12:00:00.000Z' } }],
-      },
-      { projection: { nomeDoContrato: 1 }, sort: { qtde: 1 } }
-    )
-    .toArray()
+  const updateResponse = await ordersCollection.updateMany({ 'responsavel.nome': 'EQUIPE O&M' }, { $set: { 'responsavel.nome': 'EQUIPE OEM' } })
 
   // const exportation = supplyProjects.map((project) => {
   //   return {
@@ -68,8 +61,8 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //     'VALOR DO KIT': project.compra.valorDoKit || null,
   //   }
   // })
-  console.log(supplyProjects.length)
-  return res.json(supplyProjects)
+
+  return res.json(updateResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

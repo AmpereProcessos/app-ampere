@@ -140,7 +140,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
   const router = useRouter()
   const { data: session } = useSession()
-  const editor = session?.user?.permissoes.rotas.includes('PPS') && session?.user?.visualizacao.tipo == undefined
+  const editor = session?.user?.permissoes.rotas.includes('PPS')
 
   const { data: call, isLoading: callLoading, isFetched: callFetched } = usePPSCall(callId, !!callId)
   const [infoHolder, setInfoHolder] = useState(call)

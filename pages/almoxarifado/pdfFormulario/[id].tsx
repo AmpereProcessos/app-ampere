@@ -6,10 +6,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
 import { GetServerSidePropsContext } from 'next'
-import { TNewWarehouseFormularyDTO, TWarehouseFormulary, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
+import { TNewWarehouseFormulary, TNewWarehouseFormularyDTO, TWarehouseFormulary, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { TMaterial } from '@/utils/schemas/materials'
+import { BsCode } from 'react-icons/bs'
 
 type PDFFormularioProps = {
   formularyJSON: string
@@ -74,7 +76,13 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
           </div>
           {formulary.materiais.map((material, index) => (
             <div key={index} className="grid grid-cols-6 gap-x-2 border-x border-b border-gray-700">
-              <p className="col-span-2 whitespace-nowrap py-4 text-center text-xs font-medium text-gray-900">{material.nome}</p>
+              <div className="col-span-2 flex flex-col items-center justify-center">
+                <p className="whitespace-nowrap text-center text-xs font-medium text-gray-900">{material.nome}</p>
+                <div className="flex items-center gap-1">
+                  <BsCode />
+                  <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                </div>
+              </div>
               {/* <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">{material.id || 'N/A'}</p> */}
               <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">
                 {formatDecimalPlaces(material.qtdeRetirada)}
@@ -345,15 +353,21 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     }
   const db: Db = await connectToDatabase(process.env.DB_KEY)
-  const collection: Collection<TWarehouseFormulary> = db.collection('formularios')
-
-  const formulary = await collection.findOne({ _id: new ObjectId(id) })
+  const formulariesCollection: Collection<TNewWarehouseFormulary> = db.collection('formularios')
+  const materialsCollection: Collection<TMaterial> = db.collection('material')
+  const formulary = await formulariesCollection.findOne({ _id: new ObjectId(id) })
   if (!formulary)
     return {
       props: {
         error: 'Oops, o formulário solicitado não foi encontrado.',
       },
     }
+  const materials = await materialsCollection.find({}, { projection: { codigo: 1 } }).toArray()
+
+  const ajustedList = formulary.materiais.map((material) => {
+    const equivalentMaterial = materials.find((m) => m._id.toString() == material.id)
+    return { ...material, idExterno: equivalentMaterial?.codigo }
+  })
   // Pass data to the page via props
-  return { props: { formularyJSON: JSON.stringify(formulary) } }
+  return { props: { formularyJSON: JSON.stringify({ ...formulary, materiais: ajustedList }) } }
 }

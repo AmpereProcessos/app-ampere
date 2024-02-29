@@ -2,15 +2,15 @@ import TextInput from '@/components/inputs/Text'
 import TimeInput from '@/components/inputs/TimeInput'
 import { formatToPhone } from '@/utils/constants'
 import { getDifferenceBetweenTimes } from '@/utils/methods/dates'
-import { TEmployeeAuxiliarContact, TUser, TWorkingHours } from '@/utils/schemas/users'
+import { TEmployeeAuxiliarContact, TEmployeeDTO, TUser, TWorkingHours } from '@/utils/schemas/users'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaPhone, FaPlayCircle, FaRegClock, FaStopCircle, FaUsers } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 
 type AuxiliarContactsMenuProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployeeDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployeeDTO>>
 }
 function AuxiliarContactsMenu({ infoHolder, setInfoHolder }: AuxiliarContactsMenuProps) {
   const [contactsHolder, setContactsHolder] = useState<TEmployeeAuxiliarContact>({

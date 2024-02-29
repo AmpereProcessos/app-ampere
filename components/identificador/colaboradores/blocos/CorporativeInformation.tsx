@@ -6,7 +6,7 @@ import { cidadesAtendidas, formatDate } from '@/utils/constants'
 import { estadosECidades } from '@/utils/estados_cidades'
 import { formatToCEP } from '@/utils/methods/formatting'
 import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
-import { TEmployee, TUser } from '@/utils/schemas/users'
+import { TEmployee, TEmployeeDTO, TUser } from '@/utils/schemas/users'
 import { InstructionLevels, NaturalPersonMaritalStatus, VinculationCompanies } from '@/utils/select-options'
 import React from 'react'
 import toast from 'react-hot-toast'
@@ -15,8 +15,8 @@ import WorkingHoursMenu from '../WorkingHoursMenu'
 import AuxiliarContactsMenu from '../AuxiliarContactsMenu'
 
 type CorporativeInformationProps = {
-  infoHolder: TEmployee
-  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployee>>
+  infoHolder: TEmployeeDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployeeDTO>>
 }
 function CorporativeInformation({ infoHolder, setInfoHolder }: CorporativeInformationProps) {
   async function setAddressDataByCEP(cep: string) {
@@ -68,11 +68,11 @@ function CorporativeInformation({ infoHolder, setInfoHolder }: CorporativeInform
         </div>
       </div>
       <h1 className="w-full pt-2 text-center text-sm font-medium">CARGOS</h1>
-      <PositionsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+      <PositionsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
       <h1 className="w-full pt-2 text-center text-sm font-medium">HORÁRIOS DE TRABALHO</h1>
-      <WorkingHoursMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+      <WorkingHoursMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
       <h1 className="w-full pt-2 text-center text-sm font-medium">CONTATOS AUXILIARES</h1>
-      <AuxiliarContactsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+      <AuxiliarContactsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput

@@ -27,8 +27,8 @@ function OSDaEquipe() {
     before: null,
     status: 'EM ABERTO',
     simplified: false,
-    enabled: !!session?.user?.equipe,
-    responsibleName: session?.user?.equipe,
+    enabled: !!session?.user?.visualizacao.referencia,
+    responsibleName: session?.user?.visualizacao.referencia,
   })
   const [modalInfo, setModalInfo] = useState({
     isOpen: false,

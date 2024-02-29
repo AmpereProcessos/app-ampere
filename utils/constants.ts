@@ -2129,7 +2129,7 @@ export const equipesTecnicas = [
   { id: 19, label: 'EQUIPE 19 - LUIZ PEDRO', value: 'EQUIPE 19 - LUIZ PEDRO' },
   { id: 20, label: 'EQUIPE 20 - RAFAEL E RODRIGO', value: 'EQUIPE 20 - RAFAEL E RODRIGO' },
   { id: 21, label: 'EQUIPE 21 - LEONILDO', value: 'EQUIPE 21 - LEONILDO' },
-  { id: 22, label: 'EQUIPE O&M', value: 'EQUIPE O&M' },
+  { id: 22, label: 'EQUIPE OEM', value: 'EQUIPE OEM' },
   { id: 23, label: 'EQUIPE EXTERNA - VINICIUS', value: 'EQUIPE EXTERNA - VINICIUS' },
   { id: 24, label: 'EQUIPE EXTERNA - JEFFERSON', value: 'EQUIPE EXTERNA - JEFFERSON' },
   { id: 25, label: 'EQUIPE EXTERNA - JAIMIRES', value: 'EQUIPE EXTERNA - JAIMIRES' },

@@ -523,274 +523,272 @@ function Acompanhamento() {
     )
   }
   useEffect(() => {
-    if (!session?.user.permissoes.gestao.visualizarResultados) {
-      getInfo()
-    } else {
-      if (session?.user) {
-        router.push('/')
-      }
+    if (session) {
+      const userHasAcess = !!session?.user.permissoes.gestao.visualizarResultados
+      if (userHasAcess) return getInfo()
+      else router.push('/')
     }
   }, [session])
-  if (session?.user?.manager == true)
-    return (
-      <div className="flex grow flex-col gap-2 p-6">
-        <div className="flex flex-col items-center border-b border-gray-200 py-2">
-          <h1 className="font-raleway text-2xl font-bold text-[#15599a]">RESULTADOS AMPÈRE</h1>
-          <div className="flex items-center justify-around gap-2 py-2">
-            <Select
-              isMulti
-              placeholder="VENDEDORES"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  vendedorFilter: e.map((x) => x.value),
-                })
-              }
-              options={vendedores.map((vendedor) => {
-                return { label: vendedor.nome, value: vendedor.nome }
-              })}
-            />
-            <Select
-              isMulti
-              placeholder="CIDADES"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  cidadeFilter: e.map((x) => x.value),
-                })
-              }
-              options={cidadesAtendidas.map((cidade) => {
-                return { label: cidade, value: cidade }
-              })}
-            />
-            <Select
-              isMulti
-              placeholder="TIPO DE SERVIÇO"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  tipoDeServicoFilter: e.map((x) => x.value),
-                })
-              }
-              options={tiposDeServico.map((tipo) => tipo)}
-            />
-            <select
-              value={filters.regionalFilter}
-              onChange={(e) => setFilters({ ...filters, regionalFilter: e.target.value })}
-              className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
-            >
-              <option value={'GERAL'}>GERAL</option>
-              <option value={'REGIONAL ITUIUTABA'}>REGIONAL ITUIUTABA</option>
-              <option value={'REGIONAL UBERLÂNDIA'}>REGIONAL UBERLÂNDIA</option>
-            </select>
-            <select
-              value={filters.tipoVendaFilter}
-              onChange={(e) => setFilters({ ...filters, tipoVendaFilter: e.target.value })}
-              className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
-            >
-              <option value={'GERAL'}>VENDAS GERAIS</option>
-              <option value={'SOMENTE VENDEDOR'}>SOMENTE VENDEDOR</option>
-              <option value={'ATRAVÉS DE INSIDE'}>ATRAVÉS DE INSIDE</option>
-            </select>
-            <div className="hidden gap-x-2 lg:flex">
-              <div className="flex w-fit flex-col items-center">
-                <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
-                <input
-                  className="w-full text-center text-xs uppercase text-gray-600 outline-none"
-                  type="date"
-                  value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
-                  onChange={(e) =>
-                    setDateFilter({
-                      ...dateFilter,
-                      after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
-                    })
-                  }
-                />
-              </div>
-              <div className="flex w-fit flex-col items-center">
-                <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
-                <input
-                  className="w-full text-center text-xs uppercase text-gray-600 outline-none"
-                  type="date"
-                  value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
-                  onChange={(e) =>
-                    setDateFilter({
-                      ...dateFilter,
-                      before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
-                    })
-                  }
-                />
-              </div>
-              <Select
-                isMulti={false}
-                placeholder={'CAMPO DE FILTRO'}
-                options={[
-                  { label: 'SAÍDA DE OBRA', value: 'obra.saida' },
-                  {
-                    label: 'DATA DO PARECER',
-                    value: 'parecer.dataParecerDeAcesso',
-                  },
-                  { label: 'ASS.CONTRATO', value: 'contrato.dataAssinatura' },
-                  { label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
-                  { label: 'NÃO DEFINIDO', value: null },
-                ]}
+
+  return (
+    <div className="flex grow flex-col gap-2 p-6">
+      <div className="flex flex-col items-center border-b border-gray-200 py-2">
+        <h1 className="font-raleway text-2xl font-bold text-[#15599a]">RESULTADOS AMPÈRE</h1>
+        <div className="flex items-center justify-around gap-2 py-2">
+          <Select
+            isMulti
+            placeholder="VENDEDORES"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
+            options={vendedores.map((vendedor) => {
+              return { label: vendedor.nome, value: vendedor.nome }
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="CIDADES"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+            options={cidadesAtendidas.map((cidade) => {
+              return { label: cidade, value: cidade }
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="TIPO DE SERVIÇO"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                tipoDeServicoFilter: e.map((x) => x.value),
+              })
+            }
+            options={tiposDeServico.map((tipo) => tipo)}
+          />
+          <select
+            value={filters.regionalFilter}
+            onChange={(e) => setFilters({ ...filters, regionalFilter: e.target.value })}
+            className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
+          >
+            <option value={'GERAL'}>GERAL</option>
+            <option value={'REGIONAL ITUIUTABA'}>REGIONAL ITUIUTABA</option>
+            <option value={'REGIONAL UBERLÂNDIA'}>REGIONAL UBERLÂNDIA</option>
+          </select>
+          <select
+            value={filters.tipoVendaFilter}
+            onChange={(e) => setFilters({ ...filters, tipoVendaFilter: e.target.value })}
+            className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
+          >
+            <option value={'GERAL'}>VENDAS GERAIS</option>
+            <option value={'SOMENTE VENDEDOR'}>SOMENTE VENDEDOR</option>
+            <option value={'ATRAVÉS DE INSIDE'}>ATRAVÉS DE INSIDE</option>
+          </select>
+          <div className="hidden gap-x-2 lg:flex">
+            <div className="flex w-fit flex-col items-center">
+              <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
+              <input
+                className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                type="date"
+                value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                 onChange={(e) =>
                   setDateFilter({
                     ...dateFilter,
-                    field1: e.value != null ? e.value.split('.')[0] : null,
-                    field2: e.value != null ? e.value.split('.')[1] : null,
+                    after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                   })
                 }
               />
             </div>
+            <div className="flex w-fit flex-col items-center">
+              <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
+              <input
+                className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                type="date"
+                value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={'CAMPO DE FILTRO'}
+              options={[
+                { label: 'SAÍDA DE OBRA', value: 'obra.saida' },
+                {
+                  label: 'DATA DO PARECER',
+                  value: 'parecer.dataParecerDeAcesso',
+                },
+                { label: 'ASS.CONTRATO', value: 'contrato.dataAssinatura' },
+                { label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
+                { label: 'NÃO DEFINIDO', value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value != null ? e.value.split('.')[0] : null,
+                  field2: e.value != null ? e.value.split('.')[1] : null,
+                })
+              }
+            />
           </div>
         </div>
-        <div className="flex w-full items-center justify-end py-2">
-          <button
-            onClick={() => setShowClientsNames((prev) => !prev)}
-            className={`flex items-center gap-2 rounded p-1 font-medium ${renderShowClientsButtonStyles(showClientsNames)}`}
+      </div>
+      <div className="flex w-full items-center justify-end py-2">
+        <button
+          onClick={() => setShowClientsNames((prev) => !prev)}
+          className={`flex items-center gap-2 rounded p-1 font-medium ${renderShowClientsButtonStyles(showClientsNames)}`}
+        >
+          <p>MOSTRAR CLIENTES</p>
+          {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
+        </button>
+      </div>
+      <AnimatePresence>
+        {showClientsNames ? (
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0.6 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
           >
-            <p>MOSTRAR CLIENTES</p>
-            {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
-          </button>
+            {renderClients()}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <div className="grid-rows-10 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
+        <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">Obras finalizadas</h1>
+          </div>
+          <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">{getObrasFinalizadas()} obras</p>
         </div>
-        <AnimatePresence>
-          {showClientsNames ? (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0.6 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
-            >
-              {renderClients()}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-
-        <div className="grid-rows-10 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
-          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">Obras finalizadas</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">{getObrasFinalizadas()} obras</p>
+        <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">Potência Pico instalada</h1>
           </div>
-          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">Potência Pico instalada</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaInstalada()} kWp</p>
-          </div>
-          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">Potência Pico homologada</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaHomologada()} kWp</p>
-          </div>
-          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TEMPO MÉDIO PARA INSTALAÇÃO</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeInstalacao()} dias</p>
-          </div>
-          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeAprovacao()} dias</p>
-          </div>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaInstalada()} kWp</p>
         </div>
-        <div className="grid grid-cols-1 grid-rows-5  gap-x-3 lg:grid-cols-5 lg:grid-rows-1">
-          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getTotalVendido().vendas}</p>
+        <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">Potência Pico homologada</h1>
           </div>
-          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">Potência Pico Vendida</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getPotenciaVendida()} kWp</p>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaHomologada()} kWp</p>
+        </div>
+        <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TEMPO MÉDIO PARA INSTALAÇÃO</h1>
           </div>
-          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TOTAL VENDIDO</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
-              R$ {getTotalVendido().total.toLocaleString('pt-BR')}
-            </p>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeInstalacao()} dias</p>
+        </div>
+        <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
           </div>
-          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TICKET MÉDIO</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
-              R$ {getTotalVendido().ticketMedio.toLocaleString('pt-BR')}
-            </p>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeAprovacao()} dias</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 grid-rows-5  gap-x-3 lg:grid-cols-5 lg:grid-rows-1">
+        <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
           </div>
-          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <h1 className="text-center text-xl text-gray-600">NPS</h1>
-            <div className="flex grow items-center justify-center">
-              <div className="h-[150px] w-[150px]">
-                <CircularProgressbar
-                  styles={buildStyles({
-                    // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                    strokeLinecap: 'butt',
-                    // Text size
-                    textSize: '12px',
-                    // How long animation takes to go from one percentage to another, in seconds
-                    pathTransitionDuration: 0.5,
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getTotalVendido().vendas}</p>
+        </div>
+        <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">Potência Pico Vendida</h1>
+          </div>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getPotenciaVendida()} kWp</p>
+        </div>
+        <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TOTAL VENDIDO</h1>
+          </div>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
+            R$ {getTotalVendido().total.toLocaleString('pt-BR')}
+          </p>
+        </div>
+        <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TICKET MÉDIO</h1>
+          </div>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
+            R$ {getTotalVendido().ticketMedio.toLocaleString('pt-BR')}
+          </p>
+        </div>
+        <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <h1 className="text-center text-xl text-gray-600">NPS</h1>
+          <div className="flex grow items-center justify-center">
+            <div className="h-[150px] w-[150px]">
+              <CircularProgressbar
+                styles={buildStyles({
+                  // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                  strokeLinecap: 'butt',
+                  // Text size
+                  textSize: '12px',
+                  // How long animation takes to go from one percentage to another, in seconds
+                  pathTransitionDuration: 0.5,
 
-                    // Can specify path transition in more detail, or remove it entirely
-                    // pathTransition: 'none',
+                  // Can specify path transition in more detail, or remove it entirely
+                  // pathTransition: 'none',
 
-                    // Colors
-                    pathColor: `#15599a`,
-                    textColor: '#15599a',
-                    trailColor: '#d6d6d6',
-                    backgroundColor: '#3e98c7',
-                  })}
-                  value={Number(getNps())}
-                  text={`${getNps()}%`}
-                  strokeWidth={6}
-                />
-              </div>
+                  // Colors
+                  pathColor: `#15599a`,
+                  textColor: '#15599a',
+                  trailColor: '#d6d6d6',
+                  backgroundColor: '#3e98c7',
+                })}
+                value={Number(getNps())}
+                text={`${getNps()}%`}
+                strokeWidth={6}
+              />
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 grid-rows-2 gap-x-3 lg:grid-cols-2 lg:grid-rows-1">
-          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
-              R$ {getCustos().totalValorDoKit.toLocaleString('pt-BR')}
-            </p>
+      </div>
+      <div className="grid grid-cols-1 grid-rows-2 gap-x-3 lg:grid-cols-2 lg:grid-rows-1">
+        <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
           </div>
-          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
-            <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">TOTAL GASTOS EM INSUMOS</h1>
-              <h1 className={`font-bold ${getCustos().totalEfetivoCustos / getCustos().totalPrevCustos > 1 ? 'text-red-500' : 'text-green-500'}`}>
-                {((getCustos().totalEfetivoCustos * 100) / getCustos().totalPrevCustos).toFixed(2).replace('.', ',')} %
-              </h1>
-            </div>
-            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
-              R$ {getCustos().totalEfetivoCustos.toLocaleString('pt-BR')}
-            </p>
-            <div className="flex flex-col">
-              {/* <p>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
+            R$ {getCustos().totalValorDoKit.toLocaleString('pt-BR')}
+          </p>
+        </div>
+        <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TOTAL GASTOS EM INSUMOS</h1>
+            <h1 className={`font-bold ${getCustos().totalEfetivoCustos / getCustos().totalPrevCustos > 1 ? 'text-red-500' : 'text-green-500'}`}>
+              {((getCustos().totalEfetivoCustos * 100) / getCustos().totalPrevCustos).toFixed(2).replace('.', ',')} %
+            </h1>
+          </div>
+          <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
+            R$ {getCustos().totalEfetivoCustos.toLocaleString('pt-BR')}
+          </p>
+          <div className="flex flex-col">
+            {/* <p>
                 PORCENTAGEM DE NÃO PREENCHIMENTO:{" "}
                 <strong>
                   {(getCustos().porcentagemCustoNaoPreenchido * 100).toFixed()}%
                 </strong>
               </p> */}
-              <p>
-                TOTAL PREVISTO EM INSUMOS <strong className="text-[#fead61]">R$ {getCustos().totalPrevCustos.toLocaleString('pt-BR')}</strong>
-              </p>
-            </div>
+            <p>
+              TOTAL PREVISTO EM INSUMOS <strong className="text-[#fead61]">R$ {getCustos().totalPrevCustos.toLocaleString('pt-BR')}</strong>
+            </p>
           </div>
         </div>
       </div>
-    )
+    </div>
+  )
 }
 
 export default Acompanhamento

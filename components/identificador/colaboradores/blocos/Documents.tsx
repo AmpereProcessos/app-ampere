@@ -24,8 +24,8 @@ function Documents({ employeeId, session }: DocumentsProps) {
     url: '',
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     dataInsercao: new Date().toISOString(),
   })

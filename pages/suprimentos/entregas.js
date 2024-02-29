@@ -1,204 +1,159 @@
-import axios from "axios";
-import React, { useState, useEffect, useContext } from "react";
-import EntregasCard from "../../components/EntregasCard";
-import Select from "react-select";
-import dayjs from "dayjs";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AiOutlineSearch } from "react-icons/ai";
-import { AppContext } from "../../context/AppContext";
-import { useRouter } from "next/router";
-import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import React, { useState, useEffect, useContext } from 'react'
+import EntregasCard from '../../components/EntregasCard'
+import Select from 'react-select'
+import dayjs from 'dayjs'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { useRouter } from 'next/router'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 function Entregas() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/signin')
     },
-  });
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  })
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState([])
+  const [filteredProjects, setFilteredProjects] = useState([])
   const [filters, setFilters] = useState({
     deliveryStatus: [],
     rastreioFilter: false,
     ordenatePrev: false,
-    searchFilter: "",
-  });
+    searchFilter: '',
+  })
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
     field1: null,
     field2: null,
-  });
+  })
   function getProjects() {
-    axios.get("/api/projects/suprimentos").then((res) => {
-      setFilteredProjects(res.data);
-      setProjects(res.data);
-    });
+    axios.get('/api/projects/suprimentos').then((res) => {
+      setFilteredProjects(res.data)
+      setProjects(res.data)
+    })
   }
   function filterProjects() {
-    var newArr;
+    var newArr
     if (filters.deliveryStatus.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) =>
-        filters.deliveryStatus.includes(project.compra.statusEntrega)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => filters.deliveryStatus.includes(project.compra.statusEntrega))
     }
     if (filters.rastreioFilter) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) => project.compra.rastreio?.trim().length > 0
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => project.compra.rastreio?.trim().length > 0)
     }
     if (filters.ordenatePrev) {
-      console.log("PASSEI POR AQUI");
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((obj) => obj.compra.previsaoEntrega != null);
+      console.log('PASSEI POR AQUI')
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((obj) => obj.compra.previsaoEntrega != null)
       newArr = newArr.sort((a, b) => {
-        if (dayjs(a.compra.previsaoEntrega).isBefore(b.compra.previsaoEntrega))
-          return -1;
-        else if (
-          dayjs(a.compra.previsaoEntrega).isAfter(b.compra.previsaoEntrega)
-        )
-          return 1;
-        else return 0;
-      });
-      console.log(newArr);
+        if (dayjs(a.compra.previsaoEntrega).isBefore(b.compra.previsaoEntrega)) return -1
+        else if (dayjs(a.compra.previsaoEntrega).isAfter(b.compra.previsaoEntrega)) return 1
+        else return 0
+      })
+      console.log(newArr)
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = projects
       newArr = newArr.filter(
-        (call) =>
-          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (call) => call[dateFilter.field1][dateFilter.field2] >= dateFilter.after && call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
     if (!newArr) {
-      setFilteredProjects(projects);
-      return projects;
+      setFilteredProjects(projects)
+      return projects
     } else {
-      setFilteredProjects(newArr);
-      return newArr;
+      setFilteredProjects(newArr)
+      return newArr
     }
   }
   function handleSearchFilter(value) {
-    setFilters({ ...filters, searchFilter: value });
-    if (value != "" || " ") {
-      let filtered = filterProjects();
-      let newArr = filtered.filter((call) =>
-        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredProjects(newArr);
+    setFilters({ ...filters, searchFilter: value })
+    if (value != '' || ' ') {
+      let filtered = filterProjects()
+      let newArr = filtered.filter((call) => call.nomeDoContrato.toUpperCase().includes(value.toUpperCase()))
+      setFilteredProjects(newArr)
     } else {
-      setFilteredProjects(projects);
+      setFilteredProjects(projects)
     }
   }
   function sortByPrevEntrega() {
     var newArr = filteredProjects.sort((a, b) => {
-      return (
-        new Date(b.compra?.previsaoEntrega) -
-        new Date(a.compra?.previsaoEntrega)
-      );
-      setFilteredProjects(newArr);
-    });
+      return new Date(b.compra?.previsaoEntrega) - new Date(a.compra?.previsaoEntrega)
+      setFilteredProjects(newArr)
+    })
   }
   useEffect(() => {
-    if (
-      session?.user.accessibleRoutes.includes("Suprimentos") ||
-      session?.user.accessibleRoutes.includes("Marketing")
-    ) {
-      getProjects();
+    if (session?.user.permissoes.rotas.includes('Suprimentos') || session?.user.permissoes.rotas.includes('Marketing')) {
+      getProjects()
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="flex flex-col p-6 grow">
-        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1 w-full">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-              <p className="font-bold text-[#15599a] text-xl">ENTREGAS</p>
-              <p className="font-bold text-[#fead61]">
-                ({filteredProjects.length})
-              </p>
+      <div className="flex grow flex-col p-6">
+        <div className="flex w-full flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+              <p className="text-xl font-bold text-[#15599a]">ENTREGAS</p>
+              <p className="font-bold text-[#fead61]">({filteredProjects.length})</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropupCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(false)}
-                />
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropdownCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(true)}
-                />
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col w-full gap-y-2 mt-4"
-              >
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <input
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                     placeholder="DIGITE O NOME DO CONTRATO"
                     value={filters.searchFilter}
                     onChange={(e) => handleSearchFilter(e.target.value)}
                   />
-                  <div className="flex gap-x-2 w-full lg:w-fit">
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Depois de:
-                      </span>
+                  <div className="flex w-full gap-x-2 lg:w-fit">
+                    <div className="flex w-fit flex-col items-center">
+                      <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                       <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                         type="date"
-                        value={
-                          dateFilter.after &&
-                          new Date(dateFilter.after).toISOString().slice(0, 10)
-                        }
+                        value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,
-                            after: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
+                            after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                           })
                         }
                       />
                     </div>
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Antes de:
-                      </span>
+                    <div className="flex w-fit flex-col items-center">
+                      <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                       <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                         type="date"
-                        value={
-                          dateFilter.before &&
-                          new Date(dateFilter.before).toISOString().slice(0, 10)
-                        }
+                        value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,
-                            before: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
+                            before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                           })
                         }
                       />
@@ -206,43 +161,41 @@ function Entregas() {
                     <div className="w-full lg:w-[250px]">
                       <Select
                         isMulti={false}
-                        placeholder={"CAMPO DE FILTRO"}
+                        placeholder={'CAMPO DE FILTRO'}
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         options={[
                           {
-                            label: "DATA PAGAMENTO",
-                            value: "compra.dataPagamento",
+                            label: 'DATA PAGAMENTO',
+                            value: 'compra.dataPagamento',
                           },
                           {
-                            label: "DATA MÁX P/ PAGAMENTO",
-                            value: "compra.dataMaxPagamento",
+                            label: 'DATA MÁX P/ PAGAMENTO',
+                            value: 'compra.dataMaxPagamento',
                           },
                           {
-                            label: "PREVISÃO DE ENTREGA",
-                            value: "compra.previsaoEntrega",
+                            label: 'PREVISÃO DE ENTREGA',
+                            value: 'compra.previsaoEntrega',
                           },
-                          { label: "NÃO DEFINIDO", value: null },
+                          { label: 'NÃO DEFINIDO', value: null },
                         ]}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,
-                            field1:
-                              e.value != null ? e.value.split(".")[0] : null,
-                            field2:
-                              e.value != null ? e.value.split(".")[1] : null,
+                            field1: e.value != null ? e.value.split('.')[0] : null,
+                            field2: e.value != null ? e.value.split('.')[1] : null,
                           })
                         }
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div
                     onClick={() =>
                       setFilters({
@@ -251,8 +204,8 @@ function Entregas() {
                       })
                     }
                     className={`${
-                      filters.ordenatePrev ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] text-center flex text-xs lg:text-base justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.ordenatePrev ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-center text-xs font-bold text-white lg:text-base`}
                   >
                     ORDENAR POR PREVISÃO
                   </div>
@@ -264,8 +217,8 @@ function Entregas() {
                       })
                     }
                     className={`${
-                      filters.rastreioFilter ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] text-center flex text-xs lg:text-base justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      filters.rastreioFilter ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-center text-xs font-bold text-white lg:text-base`}
                   >
                     RASTREIO PREENCHIDO
                   </div>
@@ -276,8 +229,8 @@ function Entregas() {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       onChange={(e) =>
@@ -287,13 +240,13 @@ function Entregas() {
                         })
                       }
                       options={[
-                        { value: "EM ROTA", label: "EM ROTA" },
+                        { value: 'EM ROTA', label: 'EM ROTA' },
                         {
-                          value: "AGUARDANDO COMPRA",
-                          label: "AGUARDANDO COMPRA",
+                          value: 'AGUARDANDO COMPRA',
+                          label: 'AGUARDANDO COMPRA',
                         },
-                        { value: "CANCELADO", label: "CANCELADO" },
-                        { value: undefined, label: "NÃO DEFINIDO" },
+                        { value: 'CANCELADO', label: 'CANCELADO' },
+                        { value: undefined, label: 'NÃO DEFINIDO' },
                       ]}
                     />
                   </div>
@@ -301,7 +254,7 @@ function Entregas() {
                 <div className="flex items-center justify-end gap-x-2">
                   <button
                     onClick={filterProjects}
-                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+                    className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] px-2 font-bold hover:bg-[#15599a] hover:text-white"
                   >
                     <p>Filtrar</p>
                     <AiOutlineSearch />
@@ -311,14 +264,14 @@ function Entregas() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="mt-2 flex flex-col gap-2">
           {filteredProjects.map((project, index) => (
             <EntregasCard index={index} key={project._id} project={project} />
           ))}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Entregas;
+export default Entregas

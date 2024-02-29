@@ -12,12 +12,12 @@ function GestaoAlmoxarifado() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
   useEffect(() => {
-    if (!session?.user?.accessibleRoutes?.includes('Obras') && !session?.user?.accessibleRoutes?.includes('Almoxarifado')) {
+    if (!session?.user?.permissoes.rotas?.includes('Obras') && !session?.user?.permissoes.rotas?.includes('Almoxarifado')) {
       router.push('/')
     }
   }, [session])

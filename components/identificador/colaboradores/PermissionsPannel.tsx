@@ -1,10 +1,10 @@
 import CheckboxInput from '@/components/inputs/Checkbox'
-import { TUser } from '@/utils/schemas/users'
+import { TEmployee, TUser } from '@/utils/schemas/users'
 import React from 'react'
 
 type PermissionsPannelProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployee
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployee>>
 }
 function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps) {
   return (

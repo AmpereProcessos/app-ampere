@@ -25,7 +25,7 @@ function VisitaTecnica() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const {
@@ -47,37 +47,37 @@ function VisitaTecnica() {
   }
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes.includes('Projetos')) return router.push('/')
     }
   }, [session])
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow bg-[#fff] flex flex-col">
-        <div className="flex flex-col gap-2 items-center w-full border-b border-gray-200 pb-2">
-          <div className="flex flex-col lg:flex-row items-center gap-2 w-full">
-            <p className="font-black uppercase  text-2xl text-[#15599a]">ANÁLISES TÉCNICAS</p>
+      <div className="flex grow flex-col bg-[#fff] p-6">
+        <div className="flex w-full flex-col items-center gap-2 border-b border-gray-200 pb-2">
+          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+            <p className="text-2xl font-black  uppercase text-[#15599a]">ANÁLISES TÉCNICAS</p>
           </div>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
             <div className="flex items-center gap-2">
-              <div className="w-[10px] h-[10px] bg-green-500 rounded" />
+              <div className="h-[10px] w-[10px] rounded bg-green-500" />
               <p className="text-sm md:text-base">CONCLUIDO</p>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-[10px] h-[10px] bg-yellow-500 rounded" />
+              <div className="h-[10px] w-[10px] rounded bg-yellow-500" />
               <p className="text-sm md:text-base">EM ANÁLISE TÉCNICA</p>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-[10px] h-[10px] bg-cyan-500 rounded" />
+              <div className="h-[10px] w-[10px] rounded bg-cyan-500" />
               <p className="text-sm md:text-base">PENDÊNCIA COMERCIAL</p>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-[10px] h-[10px] bg-indigo-500 rounded" />
+              <div className="h-[10px] w-[10px] rounded bg-indigo-500" />
               <p className="text-sm md:text-base">VISITA IN LOCO</p>
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row items-end justify-center gap-2 flex-wrap w-full">
+          <div className="flex w-full flex-col flex-wrap items-end justify-center gap-2 lg:flex-row">
             <TextInput
               label={'NOME DO CONTRATO'}
               placeholder={'Digite aqui o nome do contrato...'}
@@ -113,9 +113,9 @@ function VisitaTecnica() {
               selectedItemLabel="NÃO DEFINIDO"
             />
           </div>
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
-            <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-              <div className="flex items-center gap-x-2 justify-center">
+          <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
+            <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+              <div className="flex items-center justify-center gap-x-2">
                 <div className="w-full lg:w-[250px]">
                   <DateInput
                     width={'100%'}
@@ -158,7 +158,7 @@ function VisitaTecnica() {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap justify-around gap-3 mt-4">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {analysisLoading ? <LoadingPage /> : null}
           {analysisError ? <ErrorComponent msg={'Erro ao buscar informações da análise técnica.'} /> : null}
           {analysisSuccess && analysis

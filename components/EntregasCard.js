@@ -1,146 +1,101 @@
-import axios from "axios";
-import React, { useContext, useState } from "react";
-import { motion } from "framer-motion";
-import { AppContext } from "../context/AppContext";
-import SaveButton from "./utils/Buttons/SaveButton";
-import { FaSave } from "react-icons/fa";
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { motion } from 'framer-motion'
+
+import SaveButton from './utils/Buttons/SaveButton'
+import { FaSave } from 'react-icons/fa'
 function EntregasCard({ project, index }) {
-  const { credentials } = useContext(AppContext);
-  const [prevEntrega, setPrevEntrega] = useState(
-    project.compra.previsaoEntrega
-  );
-  const [dataEntrega, setDataEntrega] = useState(project.compra.dataEntrega);
+  const [prevEntrega, setPrevEntrega] = useState(project.compra.previsaoEntrega)
+  const [dataEntrega, setDataEntrega] = useState(project.compra.dataEntrega)
   const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   async function handleChanges() {
-    if (
-      credentials?.visualizacao == "REGIONAL" ||
-      credentials?.visualizacao == "VENDEDOR"
-    ) {
-      setMsg({
-        text: "Seu usuário não tem permisssão de alteração nesse área.",
-        color: "text-red-500",
-      });
-    } else {
-      axios
-        .post(`/api/projects/update/${project._id}`, {
-          "compra.previsaoEntrega": prevEntrega,
-          "compra.dataEntrega": dataEntrega,
+    axios
+      .post(`/api/projects/update/${project._id}`, {
+        'compra.previsaoEntrega': prevEntrega,
+        'compra.dataEntrega': dataEntrega,
+      })
+      .then((res) => {
+        setMsg({ text: 'Alterações feitas', color: 'text-green-500' })
+      })
+      .catch((err) =>
+        setMsg({
+          text: 'Um erro ocorreu, por favor tente novamente',
+          color: 'text-red-500',
         })
-        .then((res) => {
-          setMsg({ text: "Alterações feitas", color: "text-green-500" });
-        })
-        .catch((err) =>
-          setMsg({
-            text: "Um erro ocorreu, por favor tente novamente",
-            color: "text-red-500",
-          })
-        );
-    }
+      )
   }
   return (
     <motion.div
       initial={{ opacity: 0, translateY: -20 }}
       animate={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 0.3, delay: 0.01 * index }}
-      className="flex flex-col w-full"
+      className="flex w-full flex-col"
     >
-      <div className="grid grid-rows-4 grid-cols-1 lg:grid-rows-1 lg:grid-cols-10 gap-2 p-1 border border-gray-200 items-center">
-        <p className="text-[#15599a] font-bold lg:col-span-2 text-center lg:text-start">
-          {project.compra.fornecedor ? (
-            <strong className="text-[#fead61] font-semibold">
-              ({project.compra.fornecedor})
-            </strong>
-          ) : (
-            false
-          )}{" "}
-          #{project.qtde} - {project.nomeDoContrato}
+      <div className="grid grid-cols-1 grid-rows-4 items-center gap-2 border border-gray-200 p-1 lg:grid-cols-10 lg:grid-rows-1">
+        <p className="text-center font-bold text-[#15599a] lg:col-span-2 lg:text-start">
+          {project.compra.fornecedor ? <strong className="font-semibold text-[#fead61]">({project.compra.fornecedor})</strong> : false} #
+          {project.qtde} - {project.nomeDoContrato}
         </p>
-        <div className="hidden lg:flex flex-col items-center col-span-1">
-          <p className="text-gray-600 text-xs">NºMÓDULOS</p>
-          <p className="text-gray-600 text-xs">
-            {project.sistema?.qtdeModulos}
-          </p>
+        <div className="col-span-1 hidden flex-col items-center lg:flex">
+          <p className="text-xs text-gray-600">NºMÓDULOS</p>
+          <p className="text-xs text-gray-600">{project.sistema?.qtdeModulos}</p>
         </div>
-        <div className="hidden lg:flex flex-col items-center col-span-2">
-          <p className="text-gray-600 text-xs">FATURAMENTO</p>
+        <div className="col-span-2 hidden flex-col items-center lg:flex">
+          <p className="text-xs text-gray-600">FATURAMENTO</p>
           <p
             className={`text-gray-600 ${
-              project.faturamento?.previsaoFaturamento?.length > 70
-                ? "text-xxs font-bold"
-                : "text-xs"
-            } uppercase text-center`}
+              project.faturamento?.previsaoFaturamento?.length > 70 ? 'text-xxs font-bold' : 'text-xs'
+            } text-center uppercase`}
           >
-            {project.faturamento?.previsaoFaturamento
-              ? project.faturamento?.previsaoFaturamento
-              : "-"}
+            {project.faturamento?.previsaoFaturamento ? project.faturamento?.previsaoFaturamento : '-'}
           </p>
         </div>
-        <div className="hidden lg:flex flex-col items-center col-span-2">
-          <p className="text-gray-600 text-xs">RASTREIO</p>
+        <div className="col-span-2 hidden flex-col items-center lg:flex">
+          <p className="text-xs text-gray-600">RASTREIO</p>
           <div className="w-full text-center">
             <p
-              className={`text-gray-600 max-w-full break-words ${
-                project.compra?.rastreio?.length > 70
-                  ? "text-xxs font-bold"
-                  : "text-xxs"
-              } uppercase text-center`}
+              className={`max-w-full break-words text-gray-600 ${
+                project.compra?.rastreio?.length > 70 ? 'text-xxs font-bold' : 'text-xxs'
+              } text-center uppercase`}
             >
-              {project.compra?.rastreio ? project.compra?.rastreio : "-"}
+              {project.compra?.rastreio ? project.compra?.rastreio : '-'}
             </p>
           </div>
         </div>
         <div className="flex flex-col items-center lg:col-span-1">
-          <p className="text-gray-600 text-xs">PREV.ENTREGA</p>
+          <p className="text-xs text-gray-600">PREV.ENTREGA</p>
           <input
-            value={
-              prevEntrega ? new Date(prevEntrega).toISOString().slice(0, 10) : 0
-            }
+            value={prevEntrega ? new Date(prevEntrega).toISOString().slice(0, 10) : 0}
             onChange={(e) => {
-              console.log(e.target.value);
-              setPrevEntrega(
-                isNaN(e.target.value)
-                  ? new Date(e.target.value).toISOString()
-                  : null
-              );
+              console.log(e.target.value)
+              setPrevEntrega(isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null)
             }}
             type="date"
-            className="outline-none text-xs"
+            className="text-xs outline-none"
           />
         </div>
         <div className="flex flex-col items-center lg:col-span-1">
-          <p className="text-gray-600 text-xs">DATA ENTREGA</p>
+          <p className="text-xs text-gray-600">DATA ENTREGA</p>
           <input
-            value={
-              dataEntrega ? new Date(dataEntrega).toISOString().slice(0, 10) : 0
-            }
+            value={dataEntrega ? new Date(dataEntrega).toISOString().slice(0, 10) : 0}
             onChange={(e) => {
-              console.log(e.target.value);
-              setDataEntrega(
-                isNaN(e.target.value)
-                  ? new Date(e.target.value).toISOString()
-                  : null
-              );
+              console.log(e.target.value)
+              setDataEntrega(isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null)
             }}
             type="date"
-            className="outline-none text-xs"
+            className="text-xs outline-none"
           />
         </div>
-        <div className="flex justify-center items-center col-span-1">
-          <SaveButton
-            text={"SALVAR"}
-            icon={<FaSave />}
-            handleClick={handleChanges}
-          />
+        <div className="col-span-1 flex items-center justify-center">
+          <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={handleChanges} />
         </div>
       </div>
-      {msg.text && (
-        <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
-      )}
+      {msg.text && <p className={`text-center italic ${msg.color}`}>{msg.text}</p>}
     </motion.div>
-  );
+  )
 }
 
-export default EntregasCard;
+export default EntregasCard

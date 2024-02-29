@@ -35,7 +35,7 @@ const OVERLAY_STYLES = {
   backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
 }
-function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) {
+function ControleAlmoxarifado({ closeModal, info, handleUpdates }) {
   const queryClient = useQueryClient()
   const [materialInfo, setMaterialInfo] = useState(info)
   const [msg, setMsg] = useState({
@@ -88,20 +88,20 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between min-h-[30px]">
-            <h1 className="text-[#15599a] font-bold">{info.nome}</h1>
+          <div className="flex min-h-[30px] items-center justify-between">
+            <h1 className="font-bold text-[#15599a]">{info.nome}</h1>
             <p className="text-xs text-gray-500">#{info._id}</p>
             <div className="">
-              <button className="hover:bg-red-200 rounded-lg p-1">
+              <button className="rounded-lg p-1 hover:bg-red-200">
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
           </div>
-          <div className="grow py-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div className="w-full h-full px-4">
-              <div className="flex flex-col w-full">
-                <h1 className="font-raleway text-center w-full font-medium text-[#15599a]">INFORMAÇÕES DO ITEM</h1>
-                <div className="flex mt-4 flex-col w-full gap-4">
+          <div className="grow overflow-y-auto overscroll-y-auto py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="h-full w-full px-4">
+              <div className="flex w-full flex-col">
+                <h1 className="w-full text-center font-raleway font-medium text-[#15599a]">INFORMAÇÕES DO ITEM</h1>
+                <div className="mt-4 flex w-full flex-col gap-4">
                   <TextFloatingInput
                     label="NOME DO ITEM"
                     value={materialInfo.nome}
@@ -184,8 +184,8 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
                     }
                     width={'100%'}
                   />
-                  <div className="flex flex-col w-full gap-1">
-                    <h1 className="text-gray-500 font-medium text-xs w-full text-center">ANOTAÇÕES</h1>
+                  <div className="flex w-full flex-col gap-1">
+                    <h1 className="w-full text-center text-xs font-medium text-gray-500">ANOTAÇÕES</h1>
                     <textarea
                       value={materialInfo.anotacoes}
                       onChange={(e) =>
@@ -195,12 +195,12 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
                         }))
                       }
                       placeholder="Deixe aqui anotações sobre o item em questão..."
-                      className="w-full h-[80px] p-1 text-sm text-center resize-none outline-blue-200 bg-gray-100 border border-gray-200"
+                      className="h-[80px] w-full resize-none border border-gray-200 bg-gray-100 p-1 text-center text-sm outline-blue-200"
                     />
                   </div>
                 </div>
               </div>
-              <div className="my-2 flex flex-col items-center w-full gap-1">
+              <div className="my-2 flex w-full flex-col items-center gap-1">
                 <div>
                   <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={handleAlteracoes} />
                 </div>

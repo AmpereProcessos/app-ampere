@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import ModalOS from '../../components/ModalOS'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { AppContext } from '../../context/AppContext'
+
 import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
 import Error from 'next/error'
 
@@ -14,7 +14,7 @@ function OSDaEquipe() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const {
@@ -38,18 +38,18 @@ function OSDaEquipe() {
   if (status != 'authenticated') return <Error />
 
   return (
-    <div className="flex flex-col p-6 grow bg-[#fff]">
-      <div className="flex items-center pb-2 border-b border-gray-200">
-        <h1 className="text-[#15599a] font-bold text-xl">ORDENS DE SERVIÇO EM ABERTO</h1>
+    <div className="flex grow flex-col bg-[#fff] p-6">
+      <div className="flex items-center border-b border-gray-200 pb-2">
+        <h1 className="text-xl font-bold text-[#15599a]">ORDENS DE SERVIÇO EM ABERTO</h1>
       </div>
       {isLoading ? <LoadingPage /> : null}
       {isError ? (
-        <div className="w-full grow flex flex-col items-center justify-center">
-          <p className="text-center text-xs text-gray-500 italic">Houve um erro ao buscar ordens de serviço.</p>
+        <div className="flex w-full grow flex-col items-center justify-center">
+          <p className="text-center text-xs italic text-gray-500">Houve um erro ao buscar ordens de serviço.</p>
         </div>
       ) : null}
       {isSuccess ? (
-        <div className="flex flex-wrap mt-4 gap-3 justify-around">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {orders
             ? orders?.map((order, index) => (
                 <ResponsibleServiceOrderCard key={index} order={order} handleOpenModal={() => setModalInfo({ isOpen: true, orderId: order._id })} />

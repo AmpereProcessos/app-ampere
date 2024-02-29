@@ -47,7 +47,7 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
   const revenue = InsertRevenueSchema.parse(req.body)
-  const author = { id: session.user.id, nome: session.user.name, avatar_url: session.user.image }
+  const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const collection: Collection<TRevenue> = db.collection('receitas')
 

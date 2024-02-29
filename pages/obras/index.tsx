@@ -29,7 +29,7 @@ function Obras() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -109,7 +109,7 @@ function Obras() {
   useEffect(() => {
     if (session) {
       // @ts-ignore
-      const userRoutes = session?.user?.accessibleRoutes
+      const userRoutes = session?.user?.permissoes.rotas
       if (!!userRoutes && !userRoutes.includes('Obras') && !userRoutes.includes('Projetos')) {
         router.push('/')
       }

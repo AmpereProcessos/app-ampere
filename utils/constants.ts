@@ -2373,7 +2373,7 @@ export const tiposEstruturaCRM = [
 ]
 export function validateAuthorization(session: Session, paramRoute: string) {
   if (!session) return false
-  if (session.user.accessibleRoutes?.includes(paramRoute)) return true
+  if (session?.user.permissoes.rotas?.includes(paramRoute)) return true
   return false
 }
 

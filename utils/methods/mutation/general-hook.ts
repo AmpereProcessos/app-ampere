@@ -1,8 +1,23 @@
 import toast from 'react-hot-toast'
-import { useMutation } from 'react-query'
+import { QueryClient, useMutation } from 'react-query'
 import { getErrorMessage } from '../handlers'
 
-export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, callbackFn, affectedQueryKey, options = {} }) {
+type UseMutationWithFeedbackParams = {
+  queryClient: QueryClient
+  mutationKey: any[]
+  mutationFn: any
+  callbackFn?: () => void
+  affectedQueryKey: any[]
+  options?: any
+}
+export function useMutationWithFeedback({
+  queryClient,
+  mutationKey,
+  mutationFn,
+  callbackFn,
+  affectedQueryKey,
+  options = {},
+}: UseMutationWithFeedbackParams) {
   const mutation = useMutation({
     mutationKey: mutationKey,
     mutationFn: mutationFn,
@@ -19,7 +34,7 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
     },
     onSuccess: (data, variables, context) => {
       // Dismiss the loading toast and show a success toast
-      const { loadingToast } = context
+      const loadingToast = context?.loadingToast
       toast.dismiss(loadingToast)
       const msg = typeof data == 'string' ? data : 'Atualização feita com sucesso !'
       toast.success(msg)

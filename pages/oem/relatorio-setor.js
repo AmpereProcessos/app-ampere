@@ -37,7 +37,7 @@ function RelatorioSetor() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated: () => {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [showClientsNames, setShowClientsNames] = useState(false)
@@ -122,28 +122,28 @@ function RelatorioSetor() {
   }
   function renderDataGroupedByCity(data) {
     return Object.keys(getDataGroupedByCity(data)).map((city, index) => (
-      <div key={index} className="w-full flex items-center gap-2 py-1 border-b border-gray-300">
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{city}</h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{getDataGroupedByCity(data)[city].plants}</h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{getDataGroupedByCity(data)[city].modules}</h1>
+      <div key={index} className="flex w-full items-center gap-2 border-b border-gray-300 py-1">
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{city}</h1>
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{getDataGroupedByCity(data)[city].plants}</h1>
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{getDataGroupedByCity(data)[city].modules}</h1>
       </div>
     ))
   }
   function renderDataGroupedByCitySecondScenario(data) {
     return Object.keys(getDataGroupedByCitySecondScenario(data)).map((city, index) => (
-      <div key={index} className="w-full flex items-center gap-2 py-1 border-b border-gray-300">
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{city}</h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{getDataGroupedByCitySecondScenario(data)[city].plants.toFixed(0)}</h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{getDataGroupedByCitySecondScenario(data)[city].modules.toFixed(0)}</h1>
+      <div key={index} className="flex w-full items-center gap-2 border-b border-gray-300 py-1">
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{city}</h1>
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{getDataGroupedByCitySecondScenario(data)[city].plants.toFixed(0)}</h1>
+        <h1 className="w-1/3 text-center font-medium text-gray-500">{getDataGroupedByCitySecondScenario(data)[city].modules.toFixed(0)}</h1>
       </div>
     ))
   }
   console.log('UTEIS', businessDays.central, businessDays.dilution)
   return (
-    <div className="p-6 grow">
+    <div className="grow p-6">
       <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
         <h1 className="flex font-Poppins text-2xl font-black text-[#fead61]">RELATÓRIO DO SETOR DE O&M</h1>
-        <div className="w-full flex items-center justify-center gap-2">
+        <div className="flex w-full items-center justify-center gap-2">
           <DateFloatingInput
             label={'DATA DE VENCIMENTO'}
             editable={true}
@@ -169,7 +169,7 @@ function RelatorioSetor() {
             }}
           />
         </div>
-        <div className="w-full flex items-center justify-center gap-2">
+        <div className="flex w-full items-center justify-center gap-2">
           <NumberFloatingInput
             label={'DIAS UTEIS ATÉ VENCIMENTO'}
             editable={true}
@@ -183,7 +183,7 @@ function RelatorioSetor() {
             handleChange={(value) => setBusinessDays((prev) => ({ ...prev, dilution: Number(value) }))}
           />
         </div>
-        <div className="w-full flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <div className="w-full lg:w-[350px]">
             <Select
               placeholder={'CIDADES'}
@@ -203,12 +203,12 @@ function RelatorioSetor() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full grow p-3">
+      <div className="flex w-full grow flex-col p-3">
         {isFetching ? <LoadingPage /> : null}
         {isSuccess ? (
-          <div className="flex flex-col w-full gap-4">
-            <div className="w-full py-2 flex items-center justify-center">
-              <button onClick={() => setShowClientsNames((prev) => !prev)} className={`flex items-center jgap-2 p-1 rounded font-medium`}>
+          <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full items-center justify-center py-2">
+              <button onClick={() => setShowClientsNames((prev) => !prev)} className={`jgap-2 flex items-center rounded p-1 font-medium`}>
                 <p>MOSTRAR CLIENTES</p>
                 {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
               </button>
@@ -218,11 +218,11 @@ function RelatorioSetor() {
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0.6 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col self-center border border-gray-200 p-2 h-fit max-h-[400px] w-full lg:w-[50%] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                  className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
                 >
                   {filteredDataByMaxDateParamSecondScenario.map((client, index) => (
-                    <div key={index} className="w-full flex justify-between items-center font-medium py-1 gap-2">
-                      <div className="flex gap-2 items-center">
+                    <div key={index} className="flex w-full items-center justify-between gap-2 py-1 font-medium">
+                      <div className="flex items-center gap-2">
                         <FaUserAlt style={{ color: '#15599a' }} />
                         <h1>{client.nomeDoContrato}</h1>
                       </div>
@@ -235,102 +235,102 @@ function RelatorioSetor() {
               ) : null}
             </AnimatePresence>
             <div className="flex flex-col items-center  justify-center bg-[#15599a] p-2">
-              <p className="text-3xl text-white font-bold">CENÁRIO GERAL</p>
-              <p className="text-sm italic text-white font-medium text-center">
+              <p className="text-3xl font-bold text-white">CENÁRIO GERAL</p>
+              <p className="text-center text-sm font-medium italic text-white">
                 Considerando vencimento até: {dayjs(dateParam).format('DD/MM/YYYY')}
               </p>
             </div>
 
-            <div className="w-full flex flex-col lg:flex-row items-center gap-2">
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE USINAS A SEREM LIMPAS</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+            <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE USINAS A SEREM LIMPAS</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaHome color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {getOverallTotalQty(filteredDataByMaxDateParam).plants}
                   </p>
                 </div>
               </div>
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE MÓDULOS A SEREM LIMPOS</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE MÓDULOS A SEREM LIMPOS</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaHome color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {getOverallTotalQty(filteredDataByMaxDateParam).modules}
                   </p>
                 </div>
               </div>
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE MÓDULOS POR DIA</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE MÓDULOS POR DIA</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaSolarPanel color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {(getOverallTotalQty(filteredDataByMaxDateParam).modules / businessDays.central).toFixed(0)}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col w-full border border-gray-300 shadow-lg rounded">
-              <div className="flex items-center w-full gap-2 bg-[#15599a]">
-                <h1 className="font-medium text-white w-1/3 text-center">CIDADE</h1>
-                <h1 className="font-medium text-white w-1/3 text-center">Nº DE USINAS</h1>
-                <h1 className="font-medium text-white w-1/3 text-center">Nº DE MÓDULOS</h1>
+            <div className="flex w-full flex-col rounded border border-gray-300 shadow-lg">
+              <div className="flex w-full items-center gap-2 bg-[#15599a]">
+                <h1 className="w-1/3 text-center font-medium text-white">CIDADE</h1>
+                <h1 className="w-1/3 text-center font-medium text-white">Nº DE USINAS</h1>
+                <h1 className="w-1/3 text-center font-medium text-white">Nº DE MÓDULOS</h1>
               </div>
               {renderDataGroupedByCity(filteredDataByMaxDateParam)}
             </div>
             <div className="flex flex-col items-center  justify-center bg-[#fead41] p-2">
-              <p className="text-3xl text-white font-bold">CENÁRIO SECUNDÁRIO</p>
-              <p className="text-sm italic text-white font-medium text-center">
+              <p className="text-3xl font-bold text-white">CENÁRIO SECUNDÁRIO</p>
+              <p className="text-center text-sm font-medium italic text-white">
                 Considerando diluição das manutenção pendentes até {dayjs(dateParams.central).format('DD/MM/YYYY')} em até{' '}
                 {dayjs(dateParams.dilution).format('DD/MM/YYYY')}
               </p>
             </div>
-            <div className="w-full flex flex-col lg:flex-row items-center gap-2">
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE USINAS A SEREM LIMPAS</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+            <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE USINAS A SEREM LIMPAS</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaHome color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {getOverallTotalQty(filteredDataByMaxDateParamSecondScenario).plants}
                   </p>
                 </div>
-                <p className="text-center text-gray-500 italic">
+                <p className="text-center italic text-gray-500">
                   {getDilutedOverallTotalQty(filteredDataByMaxDateParamSecondScenario).plants.toFixed(0)} até{' '}
                   {dayjs(dateParams.central).format('DD/MM/YYYY')}
                 </p>
               </div>
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE MÓDULOS À SEREM LIMPOS</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE MÓDULOS À SEREM LIMPOS</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaSolarPanel color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {getOverallTotalQty(filteredDataByMaxDateParamSecondScenario).modules}
                   </p>
                 </div>
-                <p className="text-center text-gray-500 italic">
+                <p className="text-center italic text-gray-500">
                   {getDilutedOverallTotalQty(filteredDataByMaxDateParamSecondScenario).modules.toFixed(0)} até{' '}
                   {dayjs(dateParams.central).format('DD/MM/YYYY')}
                 </p>
               </div>
-              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
-                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">Nº DE MÓDULOS POR DIA</h1>
-                <div className="flex items-center justify-center w-full gap-2">
+              <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <h1 className="text-center font-Poppins text-lg font-medium text-[#15599a]">Nº DE MÓDULOS POR DIA</h1>
+                <div className="flex w-full items-center justify-center gap-2">
                   <FaSolarPanel color="#fead41" size={'40px'} />
-                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                  <p className="text-center font-Poppins text-2xl font-black text-[#fead41]">
                     {(getOverallTotalQty(filteredDataByMaxDateParamSecondScenario).modules / businessDays.dilution).toFixed(0)}
                   </p>
                 </div>
-                <p className="text-center text-gray-500 italic">
+                <p className="text-center italic text-gray-500">
                   {(getDilutedOverallTotalQty(filteredDataByMaxDateParamSecondScenario).modules / businessDays.central).toFixed(0)} até{' '}
                   {dayjs(dateParams.central).format('DD/MM/YYYY')}
                 </p>
               </div>
             </div>
-            <div className="flex flex-col w-full border border-gray-300 shadow-lg rounded">
-              <div className="flex items-center w-full gap-2 bg-[#15599a]">
-                <h1 className="font-medium text-white w-1/3 text-center">CIDADE</h1>
-                <h1 className="font-medium text-white w-1/3 text-center">Nº DE USINAS</h1>
-                <h1 className="font-medium text-white w-1/3 text-center">Nº DE MÓDULOS</h1>
+            <div className="flex w-full flex-col rounded border border-gray-300 shadow-lg">
+              <div className="flex w-full items-center gap-2 bg-[#15599a]">
+                <h1 className="w-1/3 text-center font-medium text-white">CIDADE</h1>
+                <h1 className="w-1/3 text-center font-medium text-white">Nº DE USINAS</h1>
+                <h1 className="w-1/3 text-center font-medium text-white">Nº DE MÓDULOS</h1>
               </div>
               {renderDataGroupedByCitySecondScenario(filteredDataByMaxDateParamSecondScenario)}
             </div>

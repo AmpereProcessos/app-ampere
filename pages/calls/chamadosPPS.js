@@ -3,18 +3,14 @@ import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import ModalCallPPS from '../../components/ModalCallPPS'
 import { AiOutlineSearch, AiOutlineReload } from 'react-icons/ai'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { MdDateRange } from 'react-icons/md'
+
 import Link from 'next/link'
-import Select from 'react-select'
-import dayjs from 'dayjs'
-import { AppContext } from '../../context/AppContext'
-import { AnimatePresence, motion } from 'framer-motion'
+
 import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
+
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { respChamadosPPS } from '../../utils/constants'
+
 import OpenCalls from '../../components/identificador/chamados/pps/OpenCalls'
 import ClosedCalls from '../../components/identificador/chamados/pps/ClosedCalls'
 var dateFilterParam = new Date()
@@ -46,7 +42,7 @@ function ChamadosPPS() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -76,9 +72,9 @@ function ChamadosPPS() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-        <div className="flex flex-col lg:flex-row items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPORTE AO VENDEDOR</p>
+      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
+        <div className="flex w-full flex-col items-center justify-between border border-gray-200 bg-[#fff] p-4 shadow-xl lg:flex-row">
+          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE SUPORTE AO VENDEDOR</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         {/* Abertos */}
@@ -86,14 +82,13 @@ function ChamadosPPS() {
         {/* Fechados */}
         <ClosedCalls />
         <Link href="/publico/chamadoExternoPPS">
-          <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">Novo chamado</p>
+          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <p className="text-sm font-bold uppercase">Novo chamado</p>
           </div>
         </Link>
         {modalIsOpen && (
           <ModalCallPPS
             modalIsOpen={modalIsOpen}
-            credentials={session?.user}
             updateModalInfo={updateModalInfo}
             info={modalCall}
             setModalIsOpen={setModalIsOpen}

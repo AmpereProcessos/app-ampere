@@ -1,15 +1,15 @@
 import CheckboxInput from '@/components/inputs/Checkbox'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
-import { TUser } from '@/utils/schemas/users'
+import { TEmployee, TEmployeeDTO, TUser } from '@/utils/schemas/users'
 import { VisualizationTypes } from '@/utils/select-options'
 import React, { useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import PermissionsPannel from '../PermissionsPannel'
 
 type SystemAccessProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployeeDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployeeDTO>>
   initialMode: boolean
 }
 function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessProps) {

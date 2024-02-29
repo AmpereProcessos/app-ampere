@@ -25,7 +25,7 @@ function BandoDeDados({ data }) {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -130,36 +130,36 @@ function BandoDeDados({ data }) {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">
                 BANCO DE DADOS <strong className="text-[#fead41]">({filteredProjects?.length || '...'})</strong>
               </p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
                     label="NOME DO CONTRATO"
                     placeholder="Digite o nome do contrato..."
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                     value={filters.search}
                   />
-                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                    <div className="flex items-center gap-x-2 justify-center">
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
                       <div className="w-full lg:w-[250px]">
                         <DateInput
                           width={'100%'}
@@ -221,7 +221,7 @@ function BandoDeDados({ data }) {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
                       width={'100%'}
@@ -328,7 +328,7 @@ function BandoDeDados({ data }) {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div
                     onClick={() =>
                       setFilters({
@@ -338,7 +338,7 @@ function BandoDeDados({ data }) {
                     }
                     className={`${
                       filters.missingDocumentationSignature ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     ASS.DOCUMENTAÇÃO PENDENTE
                   </div>
@@ -358,7 +358,7 @@ function BandoDeDados({ data }) {
                     getProjects(currentPage - 1)
                     setCurrentPage((prevState) => prevState - 1)
                   }}
-                  className="px-3 py-2 cursor-pointer ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
+                  className="ml-0 cursor-pointer rounded-l-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                 >
                   Anterior
                 </a>
@@ -371,11 +371,11 @@ function BandoDeDados({ data }) {
                       getProjects(1)
                     } else return
                   }}
-                  className={`px-3 py-2 cursor-pointer ${
+                  className={`cursor-pointer px-3 py-2 ${
                     currentPage == 1
-                      ? 'text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100'
-                      : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700'
-                  } leading-tight  border border-gray-300`}
+                      ? 'bg-blue-300 text-blue-700 hover:bg-blue-100 hover:text-blue-500'
+                      : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  } border  border-gray-300 leading-tight`}
                 >
                   1
                 </a>
@@ -388,11 +388,11 @@ function BandoDeDados({ data }) {
                       getProjects(2)
                     } else return
                   }}
-                  className={`px-3 py-2 cursor-pointer ${
+                  className={`cursor-pointer px-3 py-2 ${
                     currentPage == 2
-                      ? 'text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100'
-                      : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700'
-                  } leading-tight  border border-gray-300`}
+                      ? 'bg-blue-300 text-blue-700 hover:bg-blue-100 hover:text-blue-500'
+                      : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  } border  border-gray-300 leading-tight`}
                 >
                   2
                 </a>
@@ -405,11 +405,11 @@ function BandoDeDados({ data }) {
                       getProjects(3)
                     } else return
                   }}
-                  className={`px-3 py-2 cursor-pointer ${
+                  className={`cursor-pointer px-3 py-2 ${
                     currentPage == 3
-                      ? 'text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100'
-                      : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700'
-                  } leading-tight  border border-gray-300`}
+                      ? 'bg-blue-300 text-blue-700 hover:bg-blue-100 hover:text-blue-500'
+                      : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  } border  border-gray-300 leading-tight`}
                 >
                   3
                 </a>
@@ -422,11 +422,11 @@ function BandoDeDados({ data }) {
                       getProjects(4)
                     } else return
                   }}
-                  className={`px-3 py-2 cursor-pointer ${
+                  className={`cursor-pointer px-3 py-2 ${
                     currentPage == 4
-                      ? 'text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100'
-                      : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700'
-                  } leading-tight  border border-gray-300`}
+                      ? 'bg-blue-300 text-blue-700 hover:bg-blue-100 hover:text-blue-500'
+                      : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  } border  border-gray-300 leading-tight`}
                 >
                   4
                 </a>
@@ -438,7 +438,7 @@ function BandoDeDados({ data }) {
                     getProjects(currentPage + 1)
                     setCurrentPage((prevState) => prevState + 1)
                   }}
-                  className="px-3 py-2 cursor-pointer leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
+                  className="cursor-pointer rounded-r-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                 >
                   Próximo
                 </a>
@@ -446,12 +446,12 @@ function BandoDeDados({ data }) {
             </ul>
           </nav>
         </div>
-        <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+        <div className="mt-4  flex flex-wrap justify-around gap-3">
           {!filteredProjects ? (
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -477,13 +477,13 @@ function BandoDeDados({ data }) {
                 animate={{ opacity: 1, translateX: 0 }}
                 transition={{ duration: 0.3, delay: 0.01 * index }}
                 key={project._id}
-                className="w-full md:w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                className="w-full cursor-pointer border  border-gray-200 p-3 hover:bg-blue-100 md:w-[250px] lg:w-[450px]"
               >
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
                   <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
-                <div className="flex items-center mt-2 justify-between">
+                <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-xxs">CIDADE</span>
                     <p className="text-xs text-yellow-500">{project.cidade && project.cidade}</p>
@@ -493,9 +493,9 @@ function BandoDeDados({ data }) {
                     <p className="text-xs text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
                   </div>
                 </div>
-                <div className="flex items-center mt-2 justify-between">
+                <div className="mt-2 flex items-center justify-between">
                   <p className="text-xs text-gray-700">TIPO DE SERVIÇO</p>
-                  <p className="text-xs text-gray-700 font-bold">{project.tipoDeServico ? project.tipoDeServico : '-'}</p>
+                  <p className="text-xs font-bold text-gray-700">{project.tipoDeServico ? project.tipoDeServico : '-'}</p>
                 </div>
               </motion.div>
             ))

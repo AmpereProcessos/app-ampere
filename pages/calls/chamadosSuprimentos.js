@@ -28,7 +28,7 @@ function ChamadosSuprimentos() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -128,7 +128,7 @@ function ChamadosSuprimentos() {
     setModalIsOpen(true)
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Suprimentos')) {
+    if (session?.user.permissoes.rotas.includes('Suprimentos')) {
       if (!openCalls.general) {
         getCalls()
       }
@@ -141,38 +141,38 @@ function ChamadosSuprimentos() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-        <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPRIMENTOS</p>
+      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
+        <div className="flex w-full items-center justify-between border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE SUPRIMENTOS</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         {/**Abertos */}
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS ABERTOS</p>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+                <p className="text-center text-xl font-bold uppercase text-[#15599a]">CHAMADOS ABERTOS</p>
                 <p className="font-bold text-[#fead61]">({openCalls.filtered?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {openCallsDropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       type="text"
                       value={openCallsFilters.search}
                       onChange={(e) => handleOpenCallsSearchFilter(e.target.value)}
-                      className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                      className="h-[41px] w-full  rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CONTRATO"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -203,49 +203,49 @@ function ChamadosSuprimentos() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             {openCalls.filtered ? (
               openCalls.filtered?.length > 0 ? (
                 openCalls.filtered.map((chamado) => (
                   <div
                     key={chamado._id}
                     onClick={() => handleOpenModal(chamado)}
-                    className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+                    className={`h-[200px] w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                   >
-                    <div className="flex justify-between gap-3 items-center w-full">
-                      <h1 className="uppercase text-base font-bold">
+                    <div className="flex w-full items-center justify-between gap-3">
+                      <h1 className="text-base font-bold uppercase">
                         <strong className="text-[#15599a]">{chamado.codigoProjeto}</strong> {chamado.nomeDoContrato}
                       </h1>
                       <p
-                        className={`text-xs text-center font-bold border-2 ${statusStyles[chamado.status].text} ${
+                        className={`border-2 text-center text-xs font-bold ${statusStyles[chamado.status].text} ${
                           statusStyles[chamado.status].border
-                        } p-1 rounded-lg`}
+                        } rounded-lg p-1`}
                       >
                         {chamado.status}
                       </p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">FORNECEDOR</p>
-                      <p className="text-[#fead61] font-bold text-xs">{chamado.fornecedor}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">FORNECEDOR</p>
+                      <p className="text-xs font-bold text-[#fead61]">{chamado.fornecedor}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">AVARIAS</p>
-                      <p className="text-red-500 font-bold text-xs">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">AVARIAS</p>
+                      <p className="text-xs font-bold text-red-500">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">MATERIAL FALTANDO</p>
-                      <p className="text-red-500 font-bold text-xs">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">MATERIAL FALTANDO</p>
+                      <p className="text-xs font-bold text-red-500">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
+                    <div className="mt-3 flex justify-between">
                       <div className="flex flex-col items-center">
-                        <p className="text-gray-500 font-bold text-xs">DATA DE ENTREGA</p>
-                        <p className="text-red-500 font-bold text-xs">
+                        <p className="text-xs font-bold text-gray-500">DATA DE ENTREGA</p>
+                        <p className="text-xs font-bold text-red-500">
                           {chamado.dataEntrega ? dayjs(chamado.dataEntrega).format('DD/MM/YYYY') : '-'}
                         </p>
                       </div>
                       <div className="flex flex-col items-center">
-                        <p className="text-gray-500 font-bold text-xs">DIAS DESDE ENTREGA</p>
-                        <p className="text-gray-500 font-bold text-xs">
+                        <p className="text-xs font-bold text-gray-500">DIAS DESDE ENTREGA</p>
+                        <p className="text-xs font-bold text-gray-500">
                           {chamado.dataEntrega ? dayjs().diff(new Date(chamado.dataEntrega), 'days') : '-'}
                         </p>
                       </div>
@@ -259,7 +259,7 @@ function ChamadosSuprimentos() {
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                  className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -279,32 +279,32 @@ function ChamadosSuprimentos() {
           </div>
         </div>
         {/**Fechados */}
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS FINALIZADOS</p>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+                <p className="text-center text-xl font-bold uppercase text-[#15599a]">CHAMADOS FINALIZADOS</p>
                 <p className="font-bold text-[#fead61]">({closedCalls.filtered?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {closedCallsDropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       type="text"
                       value={closedCallsFilters.search}
                       onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
-                      className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                      className="h-[41px] w-full  rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CONTRATO"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -335,38 +335,38 @@ function ChamadosSuprimentos() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex justify-around flex-wrap gap-2 w-full h-[600px] p-4 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="overscroll-y flex h-[600px] w-full flex-wrap justify-around gap-2 overflow-y-auto p-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             {closedCalls.filtered ? (
               closedCalls.filtered?.length > 0 ? (
                 closedCalls.filtered.map((chamado) => (
                   <div
                     onClick={() => handleOpenModal(chamado)}
                     key={chamado._id}
-                    className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+                    className={`h-[200px] w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                   >
-                    <div className="flex justify-between gap-3 items-center w-full">
-                      <h1 className="uppercase text-base font-bold">
+                    <div className="flex w-full items-center justify-between gap-3">
+                      <h1 className="text-base font-bold uppercase">
                         <strong className="text-[#15599a]">{chamado.codigoProjeto}</strong> {chamado.nomeDoContrato}
                       </h1>
-                      <p className={`text-xs text-center font-bold border-2 border-green-500 text-green-500 p-1 rounded-lg`}>{chamado.status}</p>
+                      <p className={`rounded-lg border-2 border-green-500 p-1 text-center text-xs font-bold text-green-500`}>{chamado.status}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">FORNECEDOR</p>
-                      <p className="text-[#15599a] font-bold text-xs">{chamado.fornecedor}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">FORNECEDOR</p>
+                      <p className="text-xs font-bold text-[#15599a]">{chamado.fornecedor}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">DATA DE ENTREGA</p>
-                      <p className="text-[#15599a] font-bold text-xs">
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">DATA DE ENTREGA</p>
+                      <p className="text-xs font-bold text-[#15599a]">
                         {chamado.dataEntrega ? dayjs(chamado.dataEntrega).format('DD/MM/YYYY') : '-'}
                       </p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">AVARIAS</p>
-                      <p className="text-red-500 font-bold text-xs">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">AVARIAS</p>
+                      <p className="text-xs font-bold text-red-500">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
                     </div>
-                    <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">MATERIAL FALTANDO</p>
-                      <p className="text-red-500 font-bold text-xs">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
+                    <div className="mt-3 flex justify-between">
+                      <p className="text-xs font-bold text-gray-500">MATERIAL FALTANDO</p>
+                      <p className="text-xs font-bold text-red-500">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
                     </div>
                   </div>
                 ))
@@ -377,7 +377,7 @@ function ChamadosSuprimentos() {
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                  className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"

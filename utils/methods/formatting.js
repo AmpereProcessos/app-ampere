@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 export function formatNameAsInitials(name) {
-  const splittedName = name.split(' ')
+  const splittedName = name.replace('-', '').split(' ')
   const firstLetter = splittedName[0][0]
   var secondLetter
   if (['DE', 'DA', 'DO', 'DOS', 'DAS'].includes(splittedName[1])) secondLetter = splittedName[2] ? splittedName[2][0] : ''

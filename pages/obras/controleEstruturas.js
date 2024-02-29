@@ -1,129 +1,99 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { AiOutlineSearch } from "react-icons/ai";
-import Select from "react-select";
-import EstruturaCard from "../../components/EstruturaCard";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { AiOutlineSearch } from 'react-icons/ai'
+import Select from 'react-select'
+import EstruturaCard from '../../components/EstruturaCard'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 function ControleEstruturas() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/signin')
     },
-  });
+  })
 
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState([])
+  const [filteredProjects, setFilteredProjects] = useState([])
   const [filters, setFilters] = useState({
-    searchFilter: "",
+    searchFilter: '',
     estruturaPersFilter: [],
     entregaEstruturaFilter: [],
     liberacaoStatus: [],
     segmentoFilter: [],
     pendencia: false,
-  });
+  })
   function getProjects() {
-    axios.get("/api/gestaoDeObras/estruturas").then((res) => {
-      setFilteredProjects(res.data);
-      setProjects(res.data);
-    });
+    axios.get('/api/gestaoDeObras/estruturas').then((res) => {
+      setFilteredProjects(res.data)
+      setProjects(res.data)
+    })
   }
   function filterProjects() {
-    var newArr;
+    var newArr
     if (filters.estruturaPersFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.estruturaPersFilter.includes(call.estruturaPersonalizada.status)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.estruturaPersFilter.includes(call.estruturaPersonalizada.status))
     }
     if (filters.entregaEstruturaFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.entregaEstruturaFilter.includes(
-          call.estruturaPersonalizada.statusEntrega
-        )
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.entregaEstruturaFilter.includes(call.estruturaPersonalizada.statusEntrega))
     }
     if (filters.liberacaoStatus.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.liberacaoStatus.includes(call.compra.statusLiberacao)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.liberacaoStatus.includes(call.compra.statusLiberacao))
     }
     if (filters.segmentoFilter.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.segmentoFilter.includes(call.segmento)
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((call) => filters.segmentoFilter.includes(call.segmento))
     }
     if (filters.searchFilter.trim().length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = projects.filter((call) =>
-        call.nomeDoContrato
-          .toUpperCase()
-          .includes(filters.searchFilter.toUpperCase())
-      );
+      if (!newArr) newArr = projects
+      newArr = projects.filter((call) => call.nomeDoContrato.toUpperCase().includes(filters.searchFilter.toUpperCase()))
     }
     if (filters.pendencia) {
-      if (!newArr) newArr = projects;
-      newArr = projects.filter(
-        (call) =>
-          call.estruturaPersonalizada.status != "PRONTA" &&
-          call.compra.statusLiberacao == "PAGO"
-      );
+      if (!newArr) newArr = projects
+      newArr = projects.filter((call) => call.estruturaPersonalizada.status != 'PRONTA' && call.compra.statusLiberacao == 'PAGO')
     }
-    if (!newArr) setFilteredProjects(projects);
+    if (!newArr) setFilteredProjects(projects)
     else {
-      setFilteredProjects(newArr);
+      setFilteredProjects(newArr)
     }
   }
   function ordenate() {
-    let arr = filteredProjects.sort(
-      (a, b) =>
-        new Date(a.projeto.dataAssDocumentacao).getTime() -
-        new Date(b.projeto.dataAssDocumentacao).getTime()
-    );
-    setFilteredProjects([...arr]);
+    let arr = filteredProjects.sort((a, b) => new Date(a.projeto.dataAssDocumentacao).getTime() - new Date(b.projeto.dataAssDocumentacao).getTime())
+    setFilteredProjects([...arr])
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("Obras")) {
-      getProjects();
+    if (session?.user.permissoes.rotas.includes('Obras')) {
+      getProjects()
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="p-6 grow bg-[#fff]">
-        <div className="flex flex-col w-full items-center border-b border-gray-200 mb-2">
-          <h1 className="text-[#fead61] font-bold text-xl pb-2">
-            CONTROLE DE ESTRUTURA ({filteredProjects.length})
-          </h1>
-          <div className="flex flex-wrap w-full items-center gap-x-2 justify-center">
+      <div className="grow bg-[#fff] p-6">
+        <div className="mb-2 flex w-full flex-col items-center border-b border-gray-200">
+          <h1 className="pb-2 text-xl font-bold text-[#fead61]">CONTROLE DE ESTRUTURA ({filteredProjects.length})</h1>
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-2">
             <input
-              type={"text"}
+              type={'text'}
               placeholder="Digite o nome do contrato"
               value={filters.searchFilter}
-              className={
-                "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
-              }
-              onChange={(e) =>
-                setFilters({ ...filters, searchFilter: e.target.value })
-              }
+              className={'rounded border border-gray-200 p-1.5 outline-none placeholder:italic'}
+              onChange={(e) => setFilters({ ...filters, searchFilter: e.target.value })}
             />
             <div
-              onClick={() =>
-                setFilters({ ...filters, pendencia: !filters.pendencia })
-              }
+              onClick={() => setFilters({ ...filters, pendencia: !filters.pendencia })}
               className={`${
-                filters.pendencia ? "bg-[#15599a]" : "bg-blue-300"
-              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                filters.pendencia ? 'bg-[#15599a]' : 'bg-blue-300'
+              } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
             >
               PENDÊNCIAS
             </div>
@@ -138,24 +108,24 @@ function ControleEstruturas() {
               }
               options={[
                 {
-                  value: "COMERCIAL",
-                  label: "COMERCIAL",
+                  value: 'COMERCIAL',
+                  label: 'COMERCIAL',
                 },
                 {
-                  value: "INDUSTRIAL",
-                  label: "INDUSTRIAL",
+                  value: 'INDUSTRIAL',
+                  label: 'INDUSTRIAL',
                 },
                 {
-                  value: "RESIDENCIAL",
-                  label: "RESIDENCIAL",
+                  value: 'RESIDENCIAL',
+                  label: 'RESIDENCIAL',
                 },
                 {
-                  value: "RURAL",
-                  label: "RURAL",
+                  value: 'RURAL',
+                  label: 'RURAL',
                 },
                 {
                   value: undefined,
-                  label: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
                 },
               ]}
             />
@@ -170,20 +140,20 @@ function ControleEstruturas() {
               }
               options={[
                 {
-                  value: "PRONTA",
-                  label: "PRONTA",
+                  value: 'PRONTA',
+                  label: 'PRONTA',
                 },
                 {
-                  value: "PENDÊNCIA",
-                  label: "PENDÊNCIA",
+                  value: 'PENDÊNCIA',
+                  label: 'PENDÊNCIA',
                 },
                 {
-                  value: "N/A",
-                  label: "N/A",
+                  value: 'N/A',
+                  label: 'N/A',
                 },
                 {
                   value: undefined,
-                  label: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
                 },
               ]}
             />
@@ -198,24 +168,24 @@ function ControleEstruturas() {
               }
               options={[
                 {
-                  label: "AGUARDANDO COMPRA",
-                  value: "AGUARDANDO COMPRA",
+                  label: 'AGUARDANDO COMPRA',
+                  value: 'AGUARDANDO COMPRA',
                 },
                 {
-                  label: "EM ROTA",
-                  value: "EM ROTA",
+                  label: 'EM ROTA',
+                  value: 'EM ROTA',
                 },
                 {
-                  label: "ENTREGUE",
-                  value: "ENTREGUE",
+                  label: 'ENTREGUE',
+                  value: 'ENTREGUE',
                 },
                 {
-                  label: "CANCELADO",
-                  value: "CANCELADO",
+                  label: 'CANCELADO',
+                  value: 'CANCELADO',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
             />
@@ -230,42 +200,42 @@ function ControleEstruturas() {
                 })
               }
               options={[
-                { value: "PAGO", label: "PAGO" },
+                { value: 'PAGO', label: 'PAGO' },
                 {
-                  value: "REALIZAR COMPRA",
-                  label: "REALIZAR COMPRA",
+                  value: 'REALIZAR COMPRA',
+                  label: 'REALIZAR COMPRA',
                 },
                 {
-                  value: "AGUARDANDO PAGAMENTO DO BANCO",
-                  label: "AGUARDANDO PAGAMENTO DO BANCO",
+                  value: 'AGUARDANDO PAGAMENTO DO BANCO',
+                  label: 'AGUARDANDO PAGAMENTO DO BANCO',
                 },
                 {
-                  value: "AGUARDANDO CLIENTE PAGAR",
-                  label: "AGUARDANDO CLIENTE PAGAR",
+                  value: 'AGUARDANDO CLIENTE PAGAR',
+                  label: 'AGUARDANDO CLIENTE PAGAR',
                 },
                 {
-                  value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-                  label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                  value: 'AGUARDANDO LIBERAÇÃO DE CRÉDITO',
+                  label: 'AGUARDANDO LIBERAÇÃO DE CRÉDITO',
                 },
                 {
-                  value: "AGUARDANDO PARECER DE ACESSO",
-                  label: "AGUARDANDO PARECER DE ACESSO",
+                  value: 'AGUARDANDO PARECER DE ACESSO',
+                  label: 'AGUARDANDO PARECER DE ACESSO',
                 },
                 {
-                  value: "AGUARDANDO N.F",
-                  label: "AGUARDANDO N.F",
+                  value: 'AGUARDANDO N.F',
+                  label: 'AGUARDANDO N.F',
                 },
               ]}
             />
             <button
               onClick={ordenate}
-              className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] py-2 px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>ORDENAR</p>
             </button>
             <button
               onClick={filterProjects}
-              className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] py-2 px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />
@@ -274,16 +244,12 @@ function ControleEstruturas() {
         </div>
         <div className="flex flex-col gap-y-2">
           {filteredProjects.map((project) => (
-            <EstruturaCard
-              credentials={session?.user}
-              project={project}
-              key={project._id}
-            />
+            <EstruturaCard project={project} key={project._id} />
           ))}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default ControleEstruturas;
+export default ControleEstruturas

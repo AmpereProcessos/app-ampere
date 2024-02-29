@@ -1,80 +1,65 @@
-import Link from "next/link";
-import React, { useContext, useEffect } from "react";
-import { useRouter } from "next/router";
-import { AppContext } from "../../context/AppContext";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import Link from 'next/link'
+import React, { useContext, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 function Calls() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/signin')
     },
-  });
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  })
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="flex flex-col bg-gray-100 grow p-6 w-full">
-        <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-['Roboto']">
-            Tipos de chamados
-          </h1>
+      <div className="flex w-full grow flex-col bg-gray-100 p-6">
+        <div className="flex w-full items-center justify-around border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <h1 className="text-center font-['Roboto'] text-xl font-bold uppercase text-[#15599a]">Tipos de chamados</h1>
         </div>
 
-        <div className="flex gap-4 mt-5 flex-wrap w-full">
-          {session?.user?.accessibleRoutes.includes("PPS") ||
-          session?.user?.visualizacao == "REGIONAL" ? (
+        <div className="mt-5 flex w-full flex-wrap gap-4">
+          {session?.user?.permissoes.rotas.includes('PPS') ? (
             <Link href="/calls/chamadosPPS">
-              <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
-                <h1 className="text-center uppercase font-raleway">
-                  Chamados Suporte PPS
-                </h1>
+              <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-200 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
+                <h1 className="text-center font-raleway uppercase">Chamados Suporte PPS</h1>
               </div>
             </Link>
           ) : (
             false
           )}
-          {session?.user?.accessibleRoutes?.includes("O&M") ||
-          session?.user?.accessibleRoutes?.includes("Pós-Venda") ? (
+          {session?.user?.permissoes.rotas?.includes('O&M') || session?.user?.permissoes.rotas?.includes('Pós-Venda') ? (
             <Link href="/calls/chamadosSuporte">
-              <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
-                <h1 className="text-center uppercase font-raleway">
-                  Chamados Suporte
-                </h1>
+              <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-200 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
+                <h1 className="text-center font-raleway uppercase">Chamados Suporte</h1>
               </div>
             </Link>
           ) : (
             false
           )}
-          {session?.user?.accessibleRoutes.includes("Projetos") ? (
+          {session?.user?.permissoes.rotas.includes('Projetos') ? (
             <Link href="/calls/chamadosProjetos">
-              <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
-                <h1 className="text-center uppercase font-raleway">
-                  Chamados Projetos
-                </h1>
+              <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-200 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
+                <h1 className="text-center font-raleway uppercase">Chamados Projetos</h1>
               </div>
             </Link>
           ) : (
             false
           )}
-          {session?.user?.accessibleRoutes.includes("ADM") ? (
+          {session?.user?.permissoes.rotas.includes('ADM') ? (
             <Link href="/calls/chamadosADM">
-              <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
-                <h1 className="text-center uppercase font-raleway">
-                  Chamados ADM
-                </h1>
+              <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-200 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
+                <h1 className="text-center font-raleway uppercase">Chamados ADM</h1>
               </div>
             </Link>
           ) : (
             false
           )}
-          {session?.user?.accessibleRoutes.includes("Suprimentos") ? (
+          {session?.user?.permissoes.rotas.includes('Suprimentos') ? (
             <Link href="/calls/chamadosSuprimentos">
-              <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
-                <h1 className="text-center uppercase font-raleway">
-                  Chamados Suprimentos
-                </h1>
+              <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-200 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
+                <h1 className="text-center font-raleway uppercase">Chamados Suprimentos</h1>
               </div>
             </Link>
           ) : (
@@ -82,8 +67,8 @@ function Calls() {
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Calls;
+export default Calls

@@ -11,7 +11,7 @@ import Link from 'next/link'
 import Select from 'react-select'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { cidadesAtendidas, cities, tiposChamadosSuporte } from '../../utils/constants'
-import { AppContext } from '../../context/AppContext'
+
 import dayjs from 'dayjs'
 import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -44,7 +44,7 @@ function ChamadosSuporte() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] = useState(false)
@@ -214,7 +214,7 @@ function ChamadosSuporte() {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('O&M') || session?.user.accessibleRoutes.includes('Pós-Venda')) {
+    if (session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')) {
       if (!inProgress) {
         getCalls()
       }
@@ -227,35 +227,35 @@ function ChamadosSuporte() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-        <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPORTE TÉCNICO</p>
+      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
+        <div className="flex w-full items-center justify-between border border-gray-200 bg-[#fff] p-4 shadow-xl">
+          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE SUPORTE TÉCNICO</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">Chamados abertos</p>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+                <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
                 <p className="font-bold text-[#fead61]">({filteredInProgress?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {openCallsDropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       type="text"
-                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                      className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
                       value={inProgressCallsFilters.searchFilter}
                       onChange={(e) => handleInProgressCallsSearchFilter(e.target.value)}
@@ -378,13 +378,13 @@ function ChamadosSuporte() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             {filteredInProgress ? (
               filteredInProgress.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className={`w-[450px] max-h-[200px] cursor-pointer border ${getDeadlineStatus(
+                  className={`max-h-[200px] w-[450px] cursor-pointer border ${getDeadlineStatus(
                     call.tipoChamado,
                     call.plano,
                     call.oemConcluido,
@@ -392,32 +392,32 @@ function ChamadosSuporte() {
                     call.statusChamado
                   )} p-3 hover:bg-blue-100`}
                 >
-                  <div className="grid grid-cols-6 gap-2 items-center w-full">
-                    <h1 className="uppercase text-sm col-span-3 font-semibold">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
-                    {call.cidade && <p className="text-xxs uppercase text-gray-700 col-span-1 text-center font-bold">{call.cidade}</p>}
+                  <div className="grid w-full grid-cols-6 items-center gap-2">
+                    <h1 className="col-span-3 text-sm font-semibold uppercase">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
+                    {call.cidade && <p className="col-span-1 text-center text-xxs font-bold uppercase text-gray-700">{call.cidade}</p>}
                     <p
-                      className={`text-xs col-span-2 text-center font-bold border p-1 rounded-lg ${statusStyles[call.statusChamado].textColor} ${
+                      className={`col-span-2 rounded-lg border p-1 text-center text-xs font-bold ${statusStyles[call.statusChamado].textColor} ${
                         statusStyles[call.statusChamado].borderColor
                       }`}
                     >
                       {call.statusChamado}
                     </p>
                   </div>
-                  <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">Responsável:</p>
+                  <div className="mt-2 flex w-full items-center justify-between">
+                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
                     <p className="text-xs text-gray-500">{call.responsavel}</p>
                   </div>
-                  <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                  <div className="mt-2 hidden w-full items-center justify-between lg:flex">
+                    <p className="text-xs uppercase text-gray-500">DEMANDA</p>
                     <p className={`text-xs ${call.demanda == 'EXTERNA' ? 'text-red-500' : 'text-gray-500'}`}>{call.demanda ? call.demanda : '-'}</p>
                   </div>
-                  <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">Tipo de chamado:</p>
+                  <div className="mt-2 flex w-full items-center justify-between">
+                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
                     <p className="text-xs text-gray-500">{call.tipoChamado}</p>
                   </div>
-                  <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
-                    <p className="text-xxs text-gray-500 uppercase">{dayjs().diff(dayjs(call.abertura), 'hours')} horas em aberto</p>
+                  <div className="mt-2 flex w-full items-center justify-between">
+                    <p className="text-xs uppercase text-gray-500">ABERTURA</p>
+                    <p className="text-xxs uppercase text-gray-500">{dayjs().diff(dayjs(call.abertura), 'hours')} horas em aberto</p>
                     <p className="text-xs text-gray-500">{new Date(call.abertura).toLocaleString()}</p>
                   </div>
                   {call.tipoChamado.includes('GARANTIA') &&
@@ -434,27 +434,27 @@ function ChamadosSuporte() {
             )}
           </div>
         </div>
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[500px]">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS FINALIZADOS</p>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+                <p className="text-center text-xl font-bold uppercase text-[#15599a]">CHAMADOS FINALIZADOS</p>
                 <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {closedCallsDropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <p>Entre:</p>
                     <input
                       value={dayjs(closedCallsFilters.afterDateFilter).format('YYYY-MM-DD')}
@@ -465,7 +465,7 @@ function ChamadosSuporte() {
                         })
                       }
                       type="date"
-                      className="border border-gray-200 outline-none p-2"
+                      className="border border-gray-200 p-2 outline-none"
                     />
                     <p>&</p>
                     <input
@@ -477,16 +477,16 @@ function ChamadosSuporte() {
                         })
                       }
                       type="date"
-                      className="border border-gray-200 outline-none p-2"
+                      className="border border-gray-200 p-2 outline-none"
                     />
                     <FetchDataButton handleClick={getClosedCallsByDate} text={'BUSCAR'} icon={<MdDateRange />} />
                   </div>
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       value={closedCallsFilters.searchFilter}
                       onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
-                      className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                      className="h-[41px] w-full  rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                     />
                     <div className="w-full lg:w-[250px]">
                       <Select
@@ -577,15 +577,15 @@ function ChamadosSuporte() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             {filteredClosedCalls ? (
               filteredClosedCalls.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className="w-[370px] max-h-[180px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                  className="max-h-[180px] w-[370px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
-                  <div className="flex justify-between items-center w-full gap-2">
+                  <div className="flex w-full items-center justify-between gap-2">
                     {call.feedbackValor != undefined && call.feedbackValor != '' ? (
                       <BsFillPatchCheckFill
                         style={{
@@ -597,28 +597,28 @@ function ChamadosSuporte() {
                     ) : (
                       false
                     )}
-                    <h1 className="uppercase text-sm font-semibold">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
+                    <h1 className="text-sm font-semibold uppercase">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
                     {call.cidade && <p className="text-xs uppercase text-gray-700">{call.cidade}</p>}
                     <p
-                      className={`text-xs font-bold border p-1 rounded-lg ${statusStyles[call.statusChamado].textColor} ${
+                      className={`rounded-lg border p-1 text-xs font-bold ${statusStyles[call.statusChamado].textColor} ${
                         statusStyles[call.statusChamado].borderColor
                       }`}
                     >
                       {call.statusChamado}
                     </p>
                   </div>
-                  <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">Responsável:</p>
+                  <div className="mt-2 flex w-full items-center justify-between">
+                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
                     <p className="text-xs text-gray-500">{call.responsavel}</p>
                   </div>
                   {call.demanda && (
-                    <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                      <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                    <div className="mt-2 hidden w-full items-center justify-between lg:flex">
+                      <p className="text-xs uppercase text-gray-500">DEMANDA</p>
                       <p className="text-xs text-gray-500">{call.demanda}</p>
                     </div>
                   )}
-                  <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">Tipo de chamado:</p>
+                  <div className="mt-2 flex w-full items-center justify-between">
+                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
                     <p className="text-xs text-gray-500">{call.tipoChamado}</p>
                   </div>
                 </div>
@@ -630,15 +630,15 @@ function ChamadosSuporte() {
         </div>
         <div
           onClick={() => setCreationModal(true)}
-          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+          className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
         >
-          <p className="uppercase font-bold text-sm">Novo chamado</p>
+          <p className="text-sm font-bold uppercase">Novo chamado</p>
         </div>
         {creationModal && <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />}
         {modalIsOpen && (
           <ModalCallSuporte
             modalIsOpen={modalIsOpen}
-            credentials={session?.user}
+            session={session?.user}
             updateModalInfo={updateModalInfo}
             setModalIsOpen={setModalIsOpen}
             info={modalCall}

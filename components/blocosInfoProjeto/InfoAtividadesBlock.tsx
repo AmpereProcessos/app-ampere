@@ -6,9 +6,7 @@ import { TActivity } from '@/utils/schemas/activities'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { MdOutlineCheckBox } from 'react-icons/md'
-import { useUsers } from '@/utils/methods/query/users'
-import TextInput from '../inputs/Text'
-import dayjs from 'dayjs'
+
 import SelectInputWithImages from '../inputs/SelectWithImages'
 import { formatNameAsInitials } from '@/utils/methods/formatting'
 import toast from 'react-hot-toast'

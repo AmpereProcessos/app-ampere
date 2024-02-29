@@ -1,246 +1,230 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import TextInput from "../../components/TextInput";
-import { AppContext } from "../../context/AppContext";
-import { HiPencilAlt } from "react-icons/hi";
-import { TbLicenseOff } from "react-icons/tb";
-import { BsGraphDown } from "react-icons/bs";
-import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
-import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
-import SelectInput from "../../components/SelectInput";
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from 'react'
+import TextInput from '../../components/TextInput'
+
+import { HiPencilAlt } from 'react-icons/hi'
+import { TbLicenseOff } from 'react-icons/tb'
+import { BsGraphDown } from 'react-icons/bs'
+import { MdSignalWifiStatusbarConnectedNoInternet4 } from 'react-icons/md'
+import BaixaPerformanceModal from '../../components/BaixaPerformanceModal'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
+import SelectInput from '../../components/SelectInput'
 
 function getProblemsNotBooked(badPerformers, monitoramentoBook) {
-  const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina));
+  const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina))
 
-  const filteredArr = badPerformers.filter(
-    (item) => !nomeUsinaSet.has(item.nomeUsina)
-  );
-  return filteredArr;
+  const filteredArr = badPerformers.filter((item) => !nomeUsinaSet.has(item.nomeUsina))
+  return filteredArr
 }
 function BaixaPerformance() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/signin')
     },
-  });
+  })
 
-  const [token, setToken] = useState("");
-  const [authorization, setAuthorization] = useState("");
+  const [token, setToken] = useState('')
+  const [authorization, setAuthorization] = useState('')
 
-  const [badPerformers, setBadPerformers] = useState([]);
-  const [monitoramentoBook, setMonitoramentoBook] = useState([]);
-  const [filteredMonitoramentoBook, setFilteredMonitoramentoBook] = useState(
-    []
-  );
+  const [badPerformers, setBadPerformers] = useState([])
+  const [monitoramentoBook, setMonitoramentoBook] = useState([])
+  const [filteredMonitoramentoBook, setFilteredMonitoramentoBook] = useState([])
 
   const [filters, setFilters] = useState({
-    searchFilter: "",
-    status: "TODOS",
-  });
-  const [inProgress, setInProgress] = useState(false);
+    searchFilter: '',
+    status: 'TODOS',
+  })
+  const [inProgress, setInProgress] = useState(false)
   const statusStyles = {
     PENDENTE: {
-      textColor: "text-red-400",
-      borderColor: "border-red-400",
+      textColor: 'text-red-400',
+      borderColor: 'border-red-400',
     },
-    "EM ANDAMENTO": {
-      textColor: "text-blue-300",
-      borderColor: "border-blue-300",
+    'EM ANDAMENTO': {
+      textColor: 'text-blue-300',
+      borderColor: 'border-blue-300',
     },
     EXECUTADO: {
-      textColor: "text-yellow-500",
-      borderColor: "border-yellow-500",
+      textColor: 'text-yellow-500',
+      borderColor: 'border-yellow-500',
     },
     RESOLVIDO: {
-      textColor: "text-green-400",
-      borderColor: "border-green-400",
+      textColor: 'text-green-400',
+      borderColor: 'border-green-400',
     },
-  };
-  const [modalItem, setModalItem] = useState({});
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  }
+  const [modalItem, setModalItem] = useState({})
+  const [modalIsOpen, setModalIsOpen] = useState(false)
   async function getBadPerformers() {
     if (token.trim().length > 15) {
-      setInProgress(true);
+      setInProgress(true)
       try {
         let { data } = await axios.post(
-          "https://api-v2.solarview.com.br/unitList?page=1",
+          'https://api-v2.solarview.com.br/unitList?page=1',
           {
             pageSize: 942,
           },
           {
             headers: {
-              "solarview-tokenUniversal": token,
+              'solarview-tokenUniversal': token,
             },
           }
-        );
-        var arr = [];
+        )
+        var arr = []
         data.data.map((user) => {
-          var parsed = JSON.parse(user.consumerUnit30dPerformance);
-          if (parsed != null && typeof parsed == "object") {
-            let dados30d = JSON.parse(user.consumerUnit30dPerformance);
-            let reg = dados30d[4];
-            let nomeUsina = user.consumerUnitName;
+          var parsed = JSON.parse(user.consumerUnit30dPerformance)
+          if (parsed != null && typeof parsed == 'object') {
+            let dados30d = JSON.parse(user.consumerUnit30dPerformance)
+            let reg = dados30d[4]
+            let nomeUsina = user.consumerUnitName
             if (Number(reg) <= 80) {
-              arr.push({ nomeUsina: nomeUsina, performance: Number(reg) });
+              arr.push({ nomeUsina: nomeUsina, performance: Number(reg) })
             }
           }
-        });
-        let filteredArr = getProblemsNotBooked(arr, monitoramentoBook);
-        setBadPerformers(filteredArr);
-        setInProgress(false);
+        })
+        let filteredArr = getProblemsNotBooked(arr, monitoramentoBook)
+        setBadPerformers(filteredArr)
+        setInProgress(false)
       } catch (error) {
-        alert("Erro na requisição.");
-        setInProgress(false);
+        alert('Erro na requisição.')
+        setInProgress(false)
       }
     } else {
-      setInProgress(false);
-      alert("Por favor, preencha um token válido.");
+      setInProgress(false)
+      alert('Por favor, preencha um token válido.')
     }
   }
   async function getDeyeBadPerfomers() {
     if (authorization.trim().length > 700) {
-      setInProgress(true);
+      setInProgress(true)
       try {
-        const { data } = await axios.get(
-          `/api/o&m/deyeBadPerformers?authorization=${authorization}`
-        );
-        const arr = data.data;
+        const { data } = await axios.get(`/api/o&m/deyeBadPerformers?authorization=${authorization}`)
+        const arr = data.data
         var formattedArr = arr.map((item) => {
-          const station = item.station;
+          const station = item.station
           return {
             nomeUsina: station.name,
-            performance: station.generationCapacity
-              ? station.generationCapacity * 100
-              : 0,
-          };
-        });
-        formattedArr = formattedArr.filter(
-          (item) => item.performance && item.performance < 55
-        );
-        console.log(formattedArr);
-        setBadPerformers(formattedArr);
-        setInProgress(false);
+            performance: station.generationCapacity ? station.generationCapacity * 100 : 0,
+          }
+        })
+        formattedArr = formattedArr.filter((item) => item.performance && item.performance < 55)
+        console.log(formattedArr)
+        setBadPerformers(formattedArr)
+        setInProgress(false)
       } catch (error) {
-        console.log("ERRO", error);
-        setInProgress(false);
-        alert("Erro na requisição.");
+        console.log('ERRO', error)
+        setInProgress(false)
+        alert('Erro na requisição.')
       }
     } else {
-      setInProgress(false);
-      alert("Por favor, preencha uma autorização válida.");
+      setInProgress(false)
+      alert('Por favor, preencha uma autorização válida.')
     }
   }
   async function getMonitoramentoBook() {
     try {
-      let { data } = await axios.get("/api/o&m/monitoramento");
-      setMonitoramentoBook(data);
-      setFilteredMonitoramentoBook(data);
+      let { data } = await axios.get('/api/o&m/monitoramento')
+      setMonitoramentoBook(data)
+      setFilteredMonitoramentoBook(data)
     } catch (error) {
-      alert(error.response.data);
+      alert(error.response.data)
     }
   }
   function getToBeAnalized(arrayOfBadPerformers) {
     let toAnalize = arrayOfBadPerformers.filter((item) => {
-      let holder = monitoramentoBook.find(
-        (cliente) =>
-          cliente.nomeUsina == item.nome && cliente.status != "RESOLVIDO"
-      );
-      console.log(holder);
-      return !holder;
-    });
-    console.log(toAnalize);
-    setBadPerformers(toAnalize);
+      let holder = monitoramentoBook.find((cliente) => cliente.nomeUsina == item.nome && cliente.status != 'RESOLVIDO')
+      console.log(holder)
+      return !holder
+    })
+    console.log(toAnalize)
+    setBadPerformers(toAnalize)
   }
   function handleOpenModal(item) {
-    setModalItem(item);
-    setModalIsOpen(true);
+    setModalItem(item)
+    setModalIsOpen(true)
   }
   function handleSearchFilter(value) {
-    setFilters((prev) => ({ ...prev, searchFilter: value }));
-    if (value != "" || " ") {
-      let filtered = monitoramentoBook.filter((item) =>
-        item.nomeUsina.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredMonitoramentoBook(filtered);
-      return filtered;
+    setFilters((prev) => ({ ...prev, searchFilter: value }))
+    if (value != '' || ' ') {
+      let filtered = monitoramentoBook.filter((item) => item.nomeUsina.toUpperCase().includes(value.toUpperCase()))
+      setFilteredMonitoramentoBook(filtered)
+      return filtered
     } else {
-      setFilteredMonitoramentoBook(monitoramentoBook);
-      return monitoramentoBook;
+      setFilteredMonitoramentoBook(monitoramentoBook)
+      return monitoramentoBook
     }
   }
   function handleFilterByStatus(value) {
-    var filtered = handleSearchFilter(filters.searchFilter);
-    if (value != "TODOS") {
-      setFilters((prev) => ({ ...prev, status: value }));
-      filtered = filtered.filter((x) => x.status == value);
-      setFilteredMonitoramentoBook(filtered);
+    var filtered = handleSearchFilter(filters.searchFilter)
+    if (value != 'TODOS') {
+      setFilters((prev) => ({ ...prev, status: value }))
+      filtered = filtered.filter((x) => x.status == value)
+      setFilteredMonitoramentoBook(filtered)
     } else {
-      setFilteredMonitoramentoBook(filtered);
+      setFilteredMonitoramentoBook(filtered)
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("O&M")) {
-      getMonitoramentoBook();
+    if (session?.user.permissoes.rotas.includes('O&M')) {
+      getMonitoramentoBook()
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  console.log(monitoramentoBook);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  console.log(monitoramentoBook)
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="p-6 grow flex flex-col">
-        <div className="p-2 border-b border-gray-200">
-          <h1 className="font-bold text-[#15599a] text-xl">
-            IDENTIFICAÇÃO DE BAIXA PERFORMANCE{" "}
-            {badPerformers.length > 0 && `(${badPerformers.length})`}
+      <div className="flex grow flex-col p-6">
+        <div className="border-b border-gray-200 p-2">
+          <h1 className="text-xl font-bold text-[#15599a]">
+            IDENTIFICAÇÃO DE BAIXA PERFORMANCE {badPerformers.length > 0 && `(${badPerformers.length})`}
           </h1>
         </div>
-        <div className="flex items-center gap-4 justify-center">
-          <div className="flex justify-center gap-2 items-center mt-2">
+        <div className="flex items-center justify-center gap-4">
+          <div className="mt-2 flex items-center justify-center gap-2">
             <TextInput
               editable={true}
-              label={"Token Solar View"}
+              label={'Token Solar View'}
               placeholder="Preencha aqui o token SolarView"
               value={token}
               handleChange={(value) => setToken(value)}
             />
             <button
               onClick={getBadPerformers}
-              className="p-2 rounded bg-[#15599a] text-xs text-white font-bold hover:bg-[#fead61] hover:text-black transition duration-300 ease-in-out hover:scale-105"
+              className="rounded bg-[#15599a] p-2 text-xs font-bold text-white transition duration-300 ease-in-out hover:scale-105 hover:bg-[#fead61] hover:text-black"
             >
               BUSCAR
             </button>
           </div>
-          <div className="flex justify-center gap-2 items-center mt-2">
+          <div className="mt-2 flex items-center justify-center gap-2">
             <TextInput
               editable={true}
-              label={"Authorization Deye"}
+              label={'Authorization Deye'}
               placeholder="Preencha aqui a authorization da Deye"
               value={authorization}
               handleChange={(value) => setAuthorization(value)}
             />
             <button
               onClick={getDeyeBadPerfomers}
-              className="p-2 rounded bg-[#15599a] text-xs text-white font-bold hover:bg-[#fead61] hover:text-black transition duration-300 ease-in-out hover:scale-105"
+              className="rounded bg-[#15599a] p-2 text-xs font-bold text-white transition duration-300 ease-in-out hover:scale-105 hover:bg-[#fead61] hover:text-black"
             >
               BUSCAR
             </button>
           </div>
         </div>
-        <div className="flex flex-col items-center mt-4">
+        <div className="mt-4 flex flex-col items-center">
           {inProgress && (
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -257,123 +241,80 @@ function BaixaPerformance() {
               <span className="sr-only">Loading...</span>
             </div>
           )}
-          <h1 className="text-center font-bold text-xl text-[#fead41]">
-            {badPerformers.length > 0
-              ? `USINAS A ANALISAR (${badPerformers.length})`
-              : "SEM USINAS A ANALISAR..."}
+          <h1 className="text-center text-xl font-bold text-[#fead41]">
+            {badPerformers.length > 0 ? `USINAS A ANALISAR (${badPerformers.length})` : 'SEM USINAS A ANALISAR...'}
           </h1>
           <div className="flex flex-wrap justify-between gap-2">
             {badPerformers.map((usina, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 justify-between w-[300px] h-[60px] rounded-md border border-gray-200 shadow-md"
-              >
-                <div className="flex items-center justify-center bg-red-400 text-white font-bold h-full w-[50px] text-xs rounded-tl-md rounded-bl-md">
-                  {usina.performance.toFixed(2).replace(".", ",")} %
+              <div key={index} className="flex h-[60px] w-[300px] items-center justify-between gap-2 rounded-md border border-gray-200 shadow-md">
+                <div className="flex h-full w-[50px] items-center justify-center rounded-tl-md rounded-bl-md bg-red-400 text-xs font-bold text-white">
+                  {usina.performance.toFixed(2).replace('.', ',')} %
                 </div>
-                <p className="text-gray-700 text-center text-xs">
-                  {usina.nomeUsina}
-                </p>
+                <p className="text-center text-xs text-gray-700">{usina.nomeUsina}</p>
                 <button
                   onClick={() => handleOpenModal(usina)}
-                  className="bg-[#fead61] flex items-center justify-center h-full text-[#15599a] hover:bg-[#15599a] w-[30px] hover:text-white rounded-tr-md rounded-br-md"
+                  className="flex h-full w-[30px] items-center justify-center rounded-tr-md rounded-br-md bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white"
                 >
                   <HiPencilAlt />
                 </button>
               </div>
             ))}
           </div>
-          <div className="flex flex-col mt-6 w-full">
-            <h1 className="text-center font-bold text-[#fead41] text-xl">
-              ANÁLISES EM ABERTO ({monitoramentoBook.length})
-            </h1>
-            <div className="flex items-center justify-center gap-2 my-2">
+          <div className="mt-6 flex w-full flex-col">
+            <h1 className="text-center text-xl font-bold text-[#fead41]">ANÁLISES EM ABERTO ({monitoramentoBook.length})</h1>
+            <div className="my-2 flex items-center justify-center gap-2">
               <SelectInput
-                label={"STATUS"}
+                label={'STATUS'}
                 value={filters.status}
                 editable={true}
                 handleChange={(value) => handleFilterByStatus(value)}
                 options={[
-                  { label: "PENDENTE", value: "PENDENTE" },
-                  { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
-                  { label: "EXECUTADO", value: "EXECUTADO" },
-                  { label: "TODOS", value: "TODOS" },
+                  { label: 'PENDENTE', value: 'PENDENTE' },
+                  { label: 'EM ANDAMENTO', value: 'EM ANDAMENTO' },
+                  { label: 'EXECUTADO', value: 'EXECUTADO' },
+                  { label: 'TODOS', value: 'TODOS' },
                 ]}
               />
               <input
-                type={"text"}
-                className={
-                  "outline-none h-[36px] w-[350px] border border-gray-200 text-center text-xs p-2 rounded-md"
-                }
-                placeholder={"DIGITE O NOME DA USINA..."}
+                type={'text'}
+                className={'h-[36px] w-[350px] rounded-md border border-gray-200 p-2 text-center text-xs outline-none'}
+                placeholder={'DIGITE O NOME DA USINA...'}
                 onChange={(e) => handleSearchFilter(e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-6 w-full">
-              <div className="bg-[#15599a] text-white text-center font-bold border-r border-white">
-                STATUS
-              </div>
-              <div className="bg-[#15599a] text-white text-center font-bold border-r border-white">
-                CÓDIGO DO CLIENTE
-              </div>
-              <div className="bg-[#15599a] text-white text-center font-bold col-span-2 border-r border-white">
-                NOME DA USINA
-              </div>
-              <div className="bg-[#15599a] text-white text-center font-bold col-span-2">
-                PROBLEMA
-              </div>
+            <div className="grid w-full grid-cols-6">
+              <div className="border-r border-white bg-[#15599a] text-center font-bold text-white">STATUS</div>
+              <div className="border-r border-white bg-[#15599a] text-center font-bold text-white">CÓDIGO DO CLIENTE</div>
+              <div className="col-span-2 border-r border-white bg-[#15599a] text-center font-bold text-white">NOME DA USINA</div>
+              <div className="col-span-2 bg-[#15599a] text-center font-bold text-white">PROBLEMA</div>
             </div>
             {filteredMonitoramentoBook.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleOpenModal({ ...item, created: true })}
-                className="grid bg-slate-50 hover:bg-blue-100 grid-cols-6 w-full border-b border-[#15599a] cursor-pointer"
+                className="grid w-full cursor-pointer grid-cols-6 border-b border-[#15599a] bg-slate-50 hover:bg-blue-100"
               >
-                <div className="text-center font-bold border-x border-[#15599a] p-1">
-                  <h1 className={`${statusStyles[item.status].textColor}`}>
-                    {item.status}
-                  </h1>
+                <div className="border-x border-[#15599a] p-1 text-center font-bold">
+                  <h1 className={`${statusStyles[item.status].textColor}`}>{item.status}</h1>
                 </div>
-                <div className="text-gray-700 text-center font-bold border-r border-[#15599a] p-1">
-                  #{item.codProjeto}
-                </div>
-                <div className="text-gray-700 text-center font-bold col-span-2 border-r border-[#15599a] p-1">
-                  {item.nomeUsina}
-                </div>
-                <div className="flex items-center justify-center gap-4 col-span-2 border-r border-[#15599a] p-1">
-                  <p className="text-gray-700 text-center font-bold">
-                    {item.problema}
-                  </p>
-                  {item.problema == "PROBLEMA COM CONEXÃO" && (
-                    <MdSignalWifiStatusbarConnectedNoInternet4
-                      style={{ color: "#FF9D00", fontSize: "20px" }}
-                    />
+                <div className="border-r border-[#15599a] p-1 text-center font-bold text-gray-700">#{item.codProjeto}</div>
+                <div className="col-span-2 border-r border-[#15599a] p-1 text-center font-bold text-gray-700">{item.nomeUsina}</div>
+                <div className="col-span-2 flex items-center justify-center gap-4 border-r border-[#15599a] p-1">
+                  <p className="text-center font-bold text-gray-700">{item.problema}</p>
+                  {item.problema == 'PROBLEMA COM CONEXÃO' && (
+                    <MdSignalWifiStatusbarConnectedNoInternet4 style={{ color: '#FF9D00', fontSize: '20px' }} />
                   )}
-                  {item.problema == "PROBLEMA COM GERAÇÃO" && (
-                    <BsGraphDown
-                      style={{ color: "#FF9D00", fontSize: "20px" }}
-                    />
-                  )}
-                  {item.problema == "PLANO EXPIRADO" && (
-                    <TbLicenseOff
-                      style={{ color: "#FF9D00", fontSize: "20px" }}
-                    />
-                  )}
+                  {item.problema == 'PROBLEMA COM GERAÇÃO' && <BsGraphDown style={{ color: '#FF9D00', fontSize: '20px' }} />}
+                  {item.problema == 'PLANO EXPIRADO' && <TbLicenseOff style={{ color: '#FF9D00', fontSize: '20px' }} />}
                 </div>
               </div>
             ))}
           </div>
         </div>
-        {modalIsOpen && (
-          <BaixaPerformanceModal
-            info={modalItem}
-            setModalIsOpen={setModalIsOpen}
-            handleUpdates={getMonitoramentoBook}
-          />
-        )}
+        {modalIsOpen && <BaixaPerformanceModal info={modalItem} setModalIsOpen={setModalIsOpen} handleUpdates={getMonitoramentoBook} />}
       </div>
-    );
+    )
   }
 }
 
-export default BaixaPerformance;
+export default BaixaPerformance

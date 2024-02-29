@@ -42,7 +42,7 @@ export function useUnauthorizedRedirect({ session, routes }: UseUnauthorizedRedi
 
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes?.some((r) => routes.includes(r))) router.push('/')
     }
   }, [session, router])

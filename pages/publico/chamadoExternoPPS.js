@@ -248,10 +248,10 @@ function ChamadoExternoPPS() {
   }
   if (insertStatus == 'success')
     return (
-      <div className="flex w-full h-full grow flex-col items-center justify-center gap-4">
+      <div className="flex h-full w-full grow flex-col items-center justify-center gap-4">
         <BsClipboardCheckFill style={{ color: 'rgb(34,197,94)', fontSize: '60px' }} />
         <h1 className="text-lg font-medium italic text-gray-600">Solicitação criada com sucesso !</h1>
-        <button onClick={() => setInsertStatus(null)} className="text-sm text-blue-500 hover:text-cyan-500 font-bold tracking-tight  font-raleway">
+        <button onClick={() => setInsertStatus(null)} className="font-raleway text-sm font-bold tracking-tight text-blue-500  hover:text-cyan-500">
           ABRIR NOVO CHAMADO
         </button>
       </div>
@@ -259,21 +259,21 @@ function ChamadoExternoPPS() {
 
   return (
     <div className="flex h-full flex-col bg-[#fff] ">
-      <div className="flex items-center justify-center w-full bg-[#15599a] rounded-b py-2 px-2 pb-2 text-lg">
+      <div className="flex w-full items-center justify-center rounded-b bg-[#15599a] py-2 px-2 pb-2 text-lg">
         <h3 className="text-xl font-bold text-white ">NOVO CHAMADO</h3>
       </div>
-      <div className="flex grow flex-col w-full">
+      <div className="flex w-full grow flex-col">
         {/* <div className="mt-4 flex items-center justify-center gap-4">
               <div className="flex items-center gap-2">
-                <Avatar fallback={'U'} height={25} width={25} url={session?.user.image} />
-                <p className="text-xs font-medium text-gray-500">{session?.user.name}</p>
+                <Avatar fallback={'U'} height={25} width={25} url={session?.user.avatar_url} />
+                <p className="text-xs font-medium text-gray-500">{session.user.nome}</p>
               </div>
               <div className="flex items-center gap-2 text-gray-500">
                 <BsCalendarFill />
                 <p className="text-xs font-medium">{dayjs().format('DD/MM/YYYY HH:mm')}</p>
               </div>
             </div> */}
-        <div className="self-center w-full lg:w-[50%] mt-4">
+        <div className="mt-4 w-full self-center lg:w-[50%]">
           <SelectInput
             label="VENDEDOR"
             labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -310,15 +310,15 @@ function ChamadoExternoPPS() {
             <div className="mt-2 flex flex-col items-center gap-1 px-2">
               {infoHolder.projeto.id ? (
                 <div className="flex flex-col items-center gap-1">
-                  <p className="w-full text-center font-Raleway font-bold text-[#fead41]">#{infoHolder.projeto.codigo}</p>
-                  <h1 className="w-full text-center font-Raleway text-xl font-bold leading-none tracking-tight">{infoHolder.projeto.nome}</h1>
+                  <p className="font-Raleway w-full text-center font-bold text-[#fead41]">#{infoHolder.projeto.codigo}</p>
+                  <h1 className="font-Raleway w-full text-center text-xl font-bold leading-none tracking-tight">{infoHolder.projeto.nome}</h1>
                 </div>
               ) : (
                 <>
-                  <p className="w-full lg:w-[60%] text-center italic text-gray-500 text-sm">
+                  <p className="w-full text-center text-sm italic text-gray-500 lg:w-[60%]">
                     Lembrando que o código em questão é o código identificador de projeto no CRM, sendo esse o número que acompanha o padrão:
                   </p>
-                  <h1 className="text-gray-500 text-sm mb-2">
+                  <h1 className="mb-2 text-sm text-gray-500">
                     <strong>CRM</strong>-<strong className="text-[#fead41]">(NÚMERO AQUI)</strong>
                   </h1>
                   <div className="flex items-end gap-2">
@@ -331,7 +331,7 @@ function ChamadoExternoPPS() {
                     />
                     <button
                       onClick={() => getProjectInCRM(infoHolder.projeto.codigo)}
-                      className="p-3 h-[46px] rounded w-fit border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-bold duration-300 ease-in-out"
+                      className="h-[46px] w-fit rounded border border-blue-500 p-3 font-bold text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
                     >
                       PESQUISAR
                     </button>
@@ -342,7 +342,7 @@ function ChamadoExternoPPS() {
           </>
         ) : null}
         <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">CLIENTE</h1>
-        <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+        <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
               label="NOME DO CLIENTE"
@@ -362,7 +362,7 @@ function ChamadoExternoPPS() {
             />
           </div>
         </div>
-        <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+        <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
               label="TELEFONE"
@@ -382,7 +382,7 @@ function ChamadoExternoPPS() {
             />
           </div>
         </div>
-        <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+        <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <SelectInput
               label={'ESTADO'}
@@ -429,7 +429,7 @@ function ChamadoExternoPPS() {
             />
           </div>
         </div>
-        <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+        <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
               label="BAIRRO"
@@ -449,7 +449,7 @@ function ChamadoExternoPPS() {
             />
           </div>
         </div>
-        <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+        <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
               label="NÚMERO/IDENTIFICADOR"
@@ -469,7 +469,7 @@ function ChamadoExternoPPS() {
           </div>
         </div>
         {infoHolder.tipoSolicitacao == 'ANÁLISE DE CRÉDITO' ? (
-          <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+          <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
             <div className="w-full lg:w-[50%]">
               <NumberInput
                 label="RENDA DO CLIENTE"
@@ -492,7 +492,7 @@ function ChamadoExternoPPS() {
         ) : null}
         <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">PREMISSAS</h1>
         {infoHolder.tipoSolicitacao != 'ANÁLISE DE CRÉDITO' ? (
-          <div className="mt-1 flex w-full flex-col items-center gap-2 lg:flex-row px-2">
+          <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <NumberInput
                 label="GERAÇÃO (kWh)"
@@ -548,7 +548,7 @@ function ChamadoExternoPPS() {
           </div>
         ) : null}
         {infoHolder.tipoSolicitacao == 'PROPOSTA COMERCIAL (OFF GRID)' ? (
-          <div className="w-full flex items-center justify-center px-2 mt-2">
+          <div className="mt-2 flex w-full items-center justify-center px-2">
             <ChargeMenu charges={infoHolder.premissas.cargas} addCharge={addCharge} removeCharge={removeCharge} />
           </div>
         ) : null}
@@ -562,7 +562,7 @@ function ChamadoExternoPPS() {
       <div className="my-4 flex w-full items-center justify-center gap-4 px-4">
         <button
           onClick={() => handleCallCreation()}
-          className="font-medium text-[#15599a] border border-[#15599a] hover:text-white hover:bg-[#15599a] p-2 rounded duration-300 ease-in-out hover:scale-110"
+          className="rounded border border-[#15599a] p-2 font-medium text-[#15599a] duration-300 ease-in-out hover:scale-110 hover:bg-[#15599a] hover:text-white"
         >
           ABRIR CHAMADO
         </button>

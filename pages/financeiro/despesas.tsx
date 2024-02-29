@@ -23,10 +23,10 @@ function Despesas() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated: () => {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
-  const isAuthorized = !!session?.user?.accessibleRoutes?.includes('ADM')
+  const isAuthorized = !!session?.user?.permissoes.rotas?.includes('ADM')
 
   const { data: expenses, isLoading, isError, isSuccess, filters, setFilters } = useExpenses()
 

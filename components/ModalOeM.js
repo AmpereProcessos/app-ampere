@@ -63,7 +63,7 @@ function formataCEP(cep) {
 
   return cep
 }
-function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUpdates, credentials, users }) {
+function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, handleUpdates }) {
   useKey('Escape', () => setModalIsOpen(false))
 
   const [infoHolder, setInfo] = useState(project)
@@ -84,61 +84,7 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
     text: '',
     color: 'text-red-500',
   })
-  function handleOSCreation() {
-    var arr
-    if (!credentials?.controller) {
-      setOsMsg({
-        text: 'Usuário não autorizado para geração de OSs.',
-        color: 'text-red-500',
-      })
-    } else {
-      if (osInfo.servicoExecutado.trim().length < 5) {
-        setOsMsg({
-          text: 'Por favor, preencha o serviço a ser executado.',
-          color: 'text-red-500',
-        })
-        return
-      } else {
-        if (infoHolder.ordensDeServico != undefined && infoHolder.ordensDeServico?.length > 0) {
-          infoHolder.ordensDeServico.push({
-            ...osInfo,
-            usuarioEmissor: credentials?.name,
-            index: infoHolder.ordensDeServico?.length,
-            cobrancaRealizada: false,
-          })
-          arr = infoHolder.ordensDeServico
-        } else {
-          arr = [
-            {
-              ...osInfo,
-              usuarioEmissor: credentials?.name,
-              index: 0,
-              cobrancaRealizada: false,
-            },
-          ]
-          infoHolder.ordensDeServico = arr
-        }
-        axios.post('/api/ordensDeServico', { id: project._id, arr: arr }).then((res) => {
-          setOsMsg({
-            text: 'Ordem de serviço gerada',
-            color: 'text-green-500',
-          })
-          setOsInfo({
-            categoria: 'NÃO DEFINIDO',
-            servicoExecutado: '',
-            realizarCobranca: false,
-            valorCobranca: 0,
-            usuarioEmissor: '',
-            grauDeUrgencia: 'NÃO DEFINIDO',
-            observacoes: '',
-            dataDeAbertura: new Date().toISOString(),
-            agendar: false,
-          })
-          handleUpdates(project._id)
-        })
-      }
-    }
-  }
+
   async function handleChanges() {
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg('Alterações feitas')
@@ -149,16 +95,16 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+        <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
             <div className="flex items-center gap-2">
-              <h1 className="text-[#15599a] pl-6  font-bold">
+              <h1 className="pl-6 font-bold  text-[#15599a]">
                 {infoHolder.qtde} - {infoHolder.nomeDoContrato}
               </h1>
-              {infoHolder.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{infoHolder.codigoSVB}</p>}
+              {infoHolder.codigoSVB && <p className="text-sm font-bold text-gray-600">#{infoHolder.codigoSVB}</p>}
             </div>
 
-            <div className="flex gap-x-2 items-center">
+            <div className="flex items-center gap-x-2">
               {msg && <p className="text-sm italic text-green-400">{msg}</p>}
               <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
               <button>
@@ -166,7 +112,7 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
               </button>
             </div>
           </div>
-          <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+          <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto">
             <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
             <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
@@ -179,8 +125,8 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
               project={project}
             />
             <OeMBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg px-2">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ORDENS DE SERVIÇO</span>
+            <div className="flex flex-col border border-[#15599a] px-2 pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ORDENS DE SERVIÇO</span>
               <ProjectServiceOrders projectId={project._id} />
               <OSCreationBlock project={infoHolder} />
             </div>

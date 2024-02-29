@@ -17,7 +17,7 @@ function Recontagem() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [showFilter, setShowFilter] = useState(true)
@@ -49,7 +49,7 @@ function Recontagem() {
   }
   useEffect(() => {
     // console
-    // if (session?.user.accessibleRoutes.includes("Almoxarifado")) {
+    // if (session?.user.permissoes.rotas.includes("Almoxarifado")) {
     if (!materials) {
       getMateriais()
     }
@@ -62,7 +62,7 @@ function Recontagem() {
   console.log(materials)
   if (status == 'loading') return <LoadingPage />
   return (
-    <div className="w-full p-4 px-4 flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2 p-4 px-4">
       <div className="flex items-center justify-center">
         <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={sendAlterations} />
       </div>
@@ -118,32 +118,32 @@ function Recontagem() {
           </div>
         </Link>
       </div> */}
-      <div className="w-full grow flex flex-col">
-        <div className="grid grid-cols-9 gap-x-2 border-b bg-gray-800 w-full">
-          <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">INDEX</p>
-          <p className="text-sm col-span-4 font-medium text-white px-6 py-4 text-center">NOME</p>
-          <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">CÓDIGO</p>
-          <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">QTDE PREVISTA</p>
-          <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">RECONTAGEM</p>
+      <div className="flex w-full grow flex-col">
+        <div className="grid w-full grid-cols-9 gap-x-2 border-b bg-gray-800">
+          <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">INDEX</p>
+          <p className="col-span-4 px-6 py-4 text-center text-sm font-medium text-white">NOME</p>
+          <p className="col-span-2 px-6 py-4 text-center text-sm font-medium text-white">CÓDIGO</p>
+          <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">QTDE PREVISTA</p>
+          <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">RECONTAGEM</p>
         </div>
         {materials && materials?.length
           ? materials.map((material, index) => (
-              <div key={index} className="grid grid-cols-9 gap-x-2 border-b border-x border-gray-700">
-                <div className="col-span-1 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">{index + 1}</div>
-                <div className="text-xs col-span-4 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+              <div key={index} className="grid grid-cols-9 gap-x-2 border-x border-b border-gray-700">
+                <div className="col-span-1 whitespace-nowrap py-4 text-center text-xs font-medium text-gray-900">{index + 1}</div>
+                <div className="col-span-4 whitespace-nowrap px-6 py-4 text-center text-xs font-medium text-gray-900">
                   <p>{material.nome}</p>
                   {material.recontagem ? (
-                    <p className="text-gray-400 text-xs italic">
+                    <p className="text-xs italic text-gray-400">
                       Recontagem feita pela última vez em{' '}
                       <strong className="text-[#fead61]">{dayjs(material.recontagem.data).format('DD/MM/YYYY HH:mm')}</strong> por{' '}
-                      {material.recontagem.responsavel ? material.recontagem.responsavel : session.user?.name}
+                      {material.recontagem.responsavel ? material.recontagem.responsavel : session.user.nome}
                     </p>
                   ) : null}
                 </div>
-                <div className="text-xs col-span-2 break-words text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                <div className="col-span-2 whitespace-nowrap break-words px-6 py-4 text-center text-xs font-medium text-gray-900">
                   {material.codigo ? material.codigo : '-'}
                 </div>
-                <div className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                <div className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">
                   {material.qtde && material.qtde > 0
                     ? Number(material.qtde).toLocaleString('pt-br', {
                         minimumFractionDigits: 2,
@@ -152,7 +152,7 @@ function Recontagem() {
                     : '-'}
                 </div>
 
-                <div className="text-sm col-span-1 text-gray-900 font-medium  text-center whitespace-nowrap">
+                <div className="col-span-1 whitespace-nowrap text-center text-sm  font-medium text-gray-900">
                   <input
                     value={material.recontagem}
                     onChange={(e) => {
@@ -162,7 +162,7 @@ function Recontagem() {
                       setMaterials(materialsCopy)
                     }}
                     type="number"
-                    className="w-full h-full bg-transparent text-center outline-none text-xs"
+                    className="h-full w-full bg-transparent text-center text-xs outline-none"
                   />
                 </div>
               </div>

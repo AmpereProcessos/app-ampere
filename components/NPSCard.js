@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { useQueryClient } from 'react-query'
-function NPSCard({ project, credentials }) {
+function NPSCard({ project }) {
   const queryClient = useQueryClient()
   const [nps, setNps] = useState(project.nps)
   const [obsNps, setObsNps] = useState(project.jornada.obsNps)
@@ -45,39 +45,39 @@ function NPSCard({ project, credentials }) {
     <div className="flex w-[450px] items-center rounded-md border border-gray-200">
       <div className={`h-full w-[5px] rounded-bl-md rounded-tl-md ${getTagColor(nps)}`}></div>
       <div className="flex grow flex-col p-3">
-        <div className="w-full flex items-center justify-between">
+        <div className="flex w-full items-center justify-between">
           <h1 className="w-full text-center text-sm font-bold leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500 lg:text-start">
             {project.nomeDoContrato}
           </h1>
-          <p className="text-[#fead41] font-bold">#{project.qtde}</p>
+          <p className="font-bold text-[#fead41]">#{project.qtde}</p>
         </div>
 
-        <div className="flex w-full justity-center items-center gap-2 mt-2">
+        <div className="justity-center mt-2 flex w-full items-center gap-2">
           <div className="flex items-center gap-2">
             <FaUserAlt />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{project.vendedor?.nome}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{project.vendedor?.nome}</p>
           </div>
           <div className="flex items-center gap-2">
             <BsTelephone />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{project.telefone || 'NÃO FORNECIDO'}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{project.telefone || 'NÃO FORNECIDO'}</p>
           </div>
           <div className="flex items-center gap-2">
             <FaCity />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{project.cidade}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{project.cidade}</p>
           </div>
         </div>
-        <h1 className="text-sm text-gray-500 mt-2">OBSERVAÇÕES</h1>
+        <h1 className="mt-2 text-sm text-gray-500">OBSERVAÇÕES</h1>
         <div className="w-full">
           <textarea
             value={obsNps}
             onChange={(e) => setObsNps(e.target.value)}
-            className="bg-gray-100 resize-none w-full outline-none p-2 text-center h-[50px]"
+            className="h-[50px] w-full resize-none bg-gray-100 p-2 text-center outline-none"
           />
         </div>
-        <div className="flex items-end w-full justify-between">
+        <div className="flex w-full items-end justify-between">
           <div className="flex items-end gap-2">
-            <div className="w-[100px] flex flex-col gap-1">
-              <label htmlFor={'nota'} className={'text-start text-gray-500 font-bold font-raleway text-xs'}>
+            <div className="flex w-[100px] flex-col gap-1">
+              <label htmlFor={'nota'} className={'text-start font-raleway text-xs font-bold text-gray-500'}>
                 NOTA
               </label>
               <select
@@ -85,7 +85,7 @@ function NPSCard({ project, credentials }) {
                 onChange={(e) => {
                   setNps(e.target.value != 'N/A' ? Number(e.target.value) : null)
                 }}
-                className="w-full outline-none bg-transparent text-xs text-gray-500"
+                className="w-full bg-transparent text-xs text-gray-500 outline-none"
               >
                 <option value={undefined}>N/A</option>
                 <option value={'1'}>1</option>
@@ -131,7 +131,7 @@ function NPSCard({ project, credentials }) {
           ) : null}
           <button
             onClick={handleChanges}
-            className="p-1 rounded w-fit border border-blue-500 text-blue-500 font-medium hover:bg-blue-500 hover:text-white duration-300 ease-in-out"
+            className="w-fit rounded border border-blue-500 p-1 font-medium text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
           >
             SALVAR
           </button>

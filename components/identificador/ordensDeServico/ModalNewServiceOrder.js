@@ -93,8 +93,8 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
     },
     autor: {
       id: session?.user.id,
-      nome: session?.user.name,
-      avatar_url: session?.user.image,
+      nome: session.user.nome,
+      avatar_url: session?.user.avatar_url,
     },
     equipamentos: {
       modulos: {
@@ -152,7 +152,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
         animate={{ opacity: 1 }}
         className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[70%]"
       >
-        <div className="flex h-full flex-col w-full">
+        <div className="flex h-full w-full flex-col">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
             <h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVA ORDEM DE SERVIÇO</h3>
             <button
@@ -163,43 +163,43 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex flex-col px-2 w-full h-full overflow-x-hidden overflow-y-auto overscroll-y-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <div className="flex items-center justify-center gap-2 w-full">
-              <h1 className="font-bold text-gray-800 text-xs ">AUTOR</h1>
+          <div className="flex h-full w-full flex-col overflow-y-auto overflow-x-hidden overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="flex w-full items-center justify-center gap-2">
+              <h1 className="text-xs font-bold text-gray-800 ">AUTOR</h1>
               <div className="h-full w-[1px] bg-gray-500"></div>
-              <div className="flex items-center gap-2  justify-center">
+              <div className="flex items-center justify-center  gap-2">
                 <Avatar fallback={'U'} height={25} width={25} url={osInfo?.autor?.avatar_url} />
-                <p className="font-medium text-gray-500 text-xs">{osInfo?.autor?.nome || 'Autor não identificado'}</p>
+                <p className="text-xs font-medium text-gray-500">{osInfo?.autor?.nome || 'Autor não identificado'}</p>
               </div>
             </div>
 
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center text-gray-800">
+            <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+              <div className="flex items-center gap-2 text-gray-800">
                 <FaUser size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{osInfo?.favorecido?.nome || 'N/A'}</p>
+                <p className="font-raleway text-sm font-medium">{osInfo?.favorecido?.nome || 'N/A'}</p>
               </div>
-              <div className="flex gap-2 items-center text-gray-800">
+              <div className="flex items-center gap-2 text-gray-800">
                 <AiFillPhone size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{osInfo?.favorecido?.contato || 'N/A'}</p>
+                <p className="font-raleway text-sm font-medium">{osInfo?.favorecido?.contato || 'N/A'}</p>
               </div>
             </div>
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center">
+            <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+              <div className="flex items-center gap-2">
                 <FaCity size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   {osInfo?.localizacao ? `${osInfo?.localizacao.cidade} - ${osInfo?.localizacao.uf} ` : 'N/A'}
                 </p>
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   {osInfo?.localizacao
                     ? `${osInfo?.localizacao.endereco}, Nº ${osInfo?.localizacao.numeroOuIdentificador}, ${osInfo?.localizacao.bairro} - ${osInfo?.localizacao.cep}`
                     : 'N/A'}
                 </p>
               </div>
             </div>
-            <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+            <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full lg:w-[25%]">
                 <Select
                   label={'CATEGORIA'}
@@ -253,13 +253,13 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 )}
               </div>
             </div>
-            <label className={'font-sans font-bold  text-[#353432] mt-2'}>OBSERVAÇÕES</label>
+            <label className={'font-sans mt-2  font-bold text-[#353432]'}>OBSERVAÇÕES</label>
             <textarea
               value={osInfo.observacoes}
               onChange={(e) => setOsInfo((prev) => ({ ...prev, observacoes: e.target.value }))}
-              className="w-full resize-none min-h-[100px] bg-gray-200 text-sm border border-gray-500 rounded-md outline-none p-4"
+              className="min-h-[100px] w-full resize-none rounded-md border border-gray-500 bg-gray-200 p-4 text-sm outline-none"
             />
-            <div className="w-full flex items-center justify-center">
+            <div className="flex w-full items-center justify-center">
               <div className="w-full lg:w-1/2">
                 <Select
                   label={'URGÊNCIA'}
@@ -275,8 +275,8 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 />
               </div>
             </div>
-            <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">EQUIPAMENTOS</h1>
-            <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+            <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">EQUIPAMENTOS</h1>
+            <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full lg:w-1/3">
                 <Text
                   label={'MODELO DO(S) INVERSOR(ES)'}
@@ -320,7 +320,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 />
               </div>
             </div>
-            <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+            <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full lg:w-1/3">
                 <Text
                   label={'MODELO DOS MODULOS'}
@@ -364,16 +364,16 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 />
               </div>
             </div>
-            <div className="flex w-full items-start gap-2 flex-col lg:flex-row mt-2">
-              <div className="w-full lg:w-[50%] h-full">
+            <div className="mt-2 flex w-full flex-col items-start gap-2 lg:flex-row">
+              <div className="h-full w-full lg:w-[50%]">
                 <TakeMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} useMissingMaterialInformation={useMissingMaterialInformation} />
               </div>
-              <div className="w-full lg:w-[50%] h-full">
+              <div className="h-full w-full lg:w-[50%]">
                 <AvailableMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} useKitInformation={useKitInformation} />
               </div>
             </div>
-            <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">DETALHES</h1>
-            <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+            <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">DETALHES</h1>
+            <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full lg:w-1/3">
                 <Select
                   label={'TOPOLOGIA'}
@@ -409,7 +409,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
               </div>
             </div>
             {osInfo.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
-              <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+              <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
                 <div className="w-full lg:w-1/4">
                   <Text
                     label={'PONTO DE ÁGUA'}
@@ -428,7 +428,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     width={'100%'}
                   />
                 </div>
-                <div className="w-full lg:w-1/4 flex justify-center">
+                <div className="flex w-full justify-center lg:w-1/4">
                   <CheckboxInput
                     labelFalse={'NÃO CONFIGURAR'}
                     labelTrue={'CONFIGURAR'}
@@ -439,7 +439,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     widthFit={true}
                   />
                 </div>
-                <div className="w-full lg:w-1/4 flex justify-center">
+                <div className="flex w-full justify-center lg:w-1/4">
                   <CheckboxInput
                     labelFalse={'NÃO POSSUI TRAFO'}
                     labelTrue={'POSSUI TRAFO'}
@@ -453,7 +453,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
               </div>
             ) : null}
             {osInfo.categoria == 'PADRÃO' ? (
-              <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+              <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
                 <div className="w-full lg:w-1/4">
                   <Select
                     label={'ENTRADA DO PADRÃO'}
@@ -480,7 +480,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     width={'100%'}
                   />
                 </div>
-                <div className="w-full lg:w-1/4 flex justify-center">
+                <div className="flex w-full justify-center lg:w-1/4">
                   <Select
                     label={'AMPERAGEM DO PADRÃO'}
                     value={osInfo.detalhes.amperagemPadrao}
@@ -490,7 +490,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     width={'100%'}
                   />
                 </div>
-                <div className="w-full lg:w-1/4 flex justify-center">
+                <div className="flex w-full justify-center lg:w-1/4">
                   <Select
                     label={'RESPONSABILIDADE DO PADRÃO'}
                     value={osInfo.detalhes.amperagemPadrao}
@@ -506,10 +506,10 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 </div>
               </div>
             ) : null}
-            <div className="py-1 w-full flex items-center justify-end border-t border-gray-200 px-4 mt-2">
+            <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
               <button
                 onClick={() => handleOrderCreation()}
-                className="text-green-500 font-bold py-1 hover:text-green-500 hover:scale-105 duration-300 ease-in-out"
+                className="py-1 font-bold text-green-500 duration-300 ease-in-out hover:scale-105 hover:text-green-500"
               >
                 CRIAR
               </button>

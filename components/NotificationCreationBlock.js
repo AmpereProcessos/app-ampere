@@ -2,8 +2,6 @@ import React, { useContext, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import axios from 'axios'
 
-import { AppContext } from '../context/AppContext'
-
 import { IoIosSend, IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { VscChromeClose } from 'react-icons/vsc'
 import { MdNotifications } from 'react-icons/md'
@@ -65,16 +63,14 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
 
       const notification = {
         destinatario: notInfo.destinatario,
-        remetente: session?.user?.name,
+        remetente: session.user.nome,
         remetenteId: session?.user?.id,
         mensagem: notInfo.mensagem,
         projetoReferencia: codProjeto,
         nomeDoProjeto: nomeDoProjeto,
       }
-      mutate(notification)
-      // await axios.post('/api/notificacoes/1', notification)
-      // toast.dismiss(loadingToastId)
-      // toast.success('Notificação enviada com sucesso !')
+      mutate({ info: notification })
+
       setNotInfo({
         destinatario: null,
         mensagem: '',
@@ -126,8 +122,8 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
                 <h1 className="text-xs font-bold text-gray-800">REMETENTE</h1>
                 <div className="h-full w-[1px] bg-gray-500"></div>
                 <div className="flex items-center justify-center  gap-2">
-                  <Avatar fallback={'U'} height={25} width={25} url={session?.user?.image} />
-                  <p className="text-xs font-medium text-gray-500">{session?.user?.name || 'Autor não identificado'}</p>
+                  <Avatar fallback={'U'} height={25} width={25} url={session.user.avatar_url} />
+                  <p className="text-xs font-medium text-gray-500">{session.user.nome || 'Autor não identificado'}</p>
                 </div>
               </div>
               <SelectInputWithImages

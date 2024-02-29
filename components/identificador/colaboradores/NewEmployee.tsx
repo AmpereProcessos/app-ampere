@@ -10,12 +10,16 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import CorporativeInformation from './blocos/CorporativeInformation'
 import { Session } from 'next-auth'
 import Documents from './blocos/Documents'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { createEmployee } from '@/utils/methods/mutation/employees'
+import { useQueryClient } from 'react-query'
 
 type NewEmployeeProps = {
   session: Session
   closeModal: () => void
 }
 function NewEmployee({ session, closeModal }: NewEmployeeProps) {
+  const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TEmployee>({
     acessoAtivo: false,
     nome: '',
@@ -81,7 +85,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
       },
     },
     empresaVinculada: '', //
-    dataNascimento: '', //
+    dataNascimento: null, //
     localNascimento: '',
     nacionalidade: '', //
     estadoCivil: '', //
@@ -114,10 +118,17 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
     contatosAuxiliares: [],
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     dataInsercao: new Date().toISOString(),
+  })
+
+  const { mutate: handleCreateEmployee, isLoading } = useMutationWithFeedback({
+    mutationKey: ['create-employee'],
+    mutationFn: createEmployee,
+    queryClient: queryClient,
+    affectedQueryKey: ['employees'],
   })
   return (
     <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
@@ -178,7 +189,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
             <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full lg:w-1/2">
                 <DateInput
-                  label="EMAIL DO COLABORADOR"
+                  label="DATA DE NASCIMENTO"
                   value={infoHolder.dataNascimento ? formatDate(infoHolder.dataNascimento) : undefined}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))}
                   width="100%"
@@ -196,6 +207,16 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
             </div>
             <SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+          </div>
+          <div className="my-1 flex w-full items-center justify-end">
+            <button
+              disabled={isLoading}
+              // @ts-ignore
+              onClick={() => handleCreateEmployee({ info: infoHolder })}
+              className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+            >
+              CADASTRAR COLABORADOR
+            </button>
           </div>
         </div>
       </div>

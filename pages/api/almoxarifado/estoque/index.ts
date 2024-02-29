@@ -54,7 +54,7 @@ type PutResponse = {
 
 const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  const author = { id: session.user.id, nome: session.user.name, avatar_url: session.user.image }
+  const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
   const { id } = req.query
   if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido ou não fornecido.')
 

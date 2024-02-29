@@ -20,7 +20,7 @@ function Acompanhamento() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [showClientsNames, setShowClientsNames] = useState(false)
@@ -509,12 +509,12 @@ function Acompanhamento() {
     }
 
     return (
-      <div className="w-full flex flex-col">
-        <h1 className="text-[#fead61] font-medium text-center">
+      <div className="flex w-full flex-col">
+        <h1 className="text-center font-medium text-[#fead61]">
           {filteredArr.length > 1 ? `${filteredArr.length} CLIENTES` : `${filteredArr.length} CLIENTE`}
         </h1>
         {filteredArr.map((item, index) => (
-          <div key={index} className="w-full flex items-center font-medium py-1 gap-2">
+          <div key={index} className="flex w-full items-center gap-2 py-1 font-medium">
             <FaUserAlt style={{ color: '#15599a' }} />
             <h1>{item.nomeDoContrato}</h1>
           </div>
@@ -523,7 +523,7 @@ function Acompanhamento() {
     )
   }
   useEffect(() => {
-    if (session?.user.manager == true) {
+    if (!session?.user.permissoes.gestao.visualizarResultados) {
       getInfo()
     } else {
       if (session?.user) {
@@ -533,9 +533,9 @@ function Acompanhamento() {
   }, [session])
   if (session?.user?.manager == true)
     return (
-      <div className="grow p-6 flex flex-col gap-2">
+      <div className="flex grow flex-col gap-2 p-6">
         <div className="flex flex-col items-center border-b border-gray-200 py-2">
-          <h1 className="text-2xl font-bold text-[#15599a] font-raleway">RESULTADOS AMPÈRE</h1>
+          <h1 className="font-raleway text-2xl font-bold text-[#15599a]">RESULTADOS AMPÈRE</h1>
           <div className="flex items-center justify-around gap-2 py-2">
             <Select
               isMulti
@@ -577,7 +577,7 @@ function Acompanhamento() {
             <select
               value={filters.regionalFilter}
               onChange={(e) => setFilters({ ...filters, regionalFilter: e.target.value })}
-              className="outline-none h-[36px] p-2 rounded-sm border border-gray-200 text-gray-600 font-semibold text-center"
+              className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
             >
               <option value={'GERAL'}>GERAL</option>
               <option value={'REGIONAL ITUIUTABA'}>REGIONAL ITUIUTABA</option>
@@ -586,17 +586,17 @@ function Acompanhamento() {
             <select
               value={filters.tipoVendaFilter}
               onChange={(e) => setFilters({ ...filters, tipoVendaFilter: e.target.value })}
-              className="outline-none h-[36px] p-2 rounded-sm border border-gray-200 text-gray-600 font-semibold text-center"
+              className="h-[36px] rounded-sm border border-gray-200 p-2 text-center font-semibold text-gray-600 outline-none"
             >
               <option value={'GERAL'}>VENDAS GERAIS</option>
               <option value={'SOMENTE VENDEDOR'}>SOMENTE VENDEDOR</option>
               <option value={'ATRAVÉS DE INSIDE'}>ATRAVÉS DE INSIDE</option>
             </select>
-            <div className="hidden lg:flex gap-x-2">
-              <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
+            <div className="hidden gap-x-2 lg:flex">
+              <div className="flex w-fit flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                 <input
-                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                   type="date"
                   value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                   onChange={(e) =>
@@ -607,10 +607,10 @@ function Acompanhamento() {
                   }
                 />
               </div>
-              <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
+              <div className="flex w-fit flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                 <input
-                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                   type="date"
                   value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                   onChange={(e) =>
@@ -645,10 +645,10 @@ function Acompanhamento() {
             </div>
           </div>
         </div>
-        <div className="w-full py-2 flex items-center justify-end">
+        <div className="flex w-full items-center justify-end py-2">
           <button
             onClick={() => setShowClientsNames((prev) => !prev)}
-            className={`flex items-center gap-2 p-1 rounded font-medium ${renderShowClientsButtonStyles(showClientsNames)}`}
+            className={`flex items-center gap-2 rounded p-1 font-medium ${renderShowClientsButtonStyles(showClientsNames)}`}
           >
             <p>MOSTRAR CLIENTES</p>
             {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
@@ -659,78 +659,78 @@ function Acompanhamento() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0.6 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col self-center border border-gray-200 p-2 h-fit max-h-[400px] w-full lg:w-[50%] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+              className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
             >
               {renderClients()}
             </motion.div>
           ) : null}
         </AnimatePresence>
 
-        <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
-          <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="grid-rows-10 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
+          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Obras finalizadas</h1>
             </div>
-            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">{getObrasFinalizadas()} obras</p>
+            <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">{getObrasFinalizadas()} obras</p>
           </div>
-          <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Potência Pico instalada</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getPotenciaInstalada()} kWp</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaInstalada()} kWp</p>
           </div>
-          <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Potência Pico homologada</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getPotenciaHomologada()} kWp</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getPotenciaHomologada()} kWp</p>
           </div>
-          <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TEMPO MÉDIO PARA INSTALAÇÃO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getTempoMedioDeInstalacao()} dias</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeInstalacao()} dias</p>
           </div>
-          <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getTempoMedioDeAprovacao()} dias</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">{getTempoMedioDeAprovacao()} dias</p>
           </div>
         </div>
-        <div className="grid grid-rows-5 grid-cols-1  lg:grid-rows-1 lg:grid-cols-5 gap-x-3">
-          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="grid grid-cols-1 grid-rows-5  gap-x-3 lg:grid-cols-5 lg:grid-rows-1">
+          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">{getTotalVendido().vendas}</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getTotalVendido().vendas}</p>
           </div>
-          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Potência Pico Vendida</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">{getPotenciaVendida()} kWp</p>
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">{getPotenciaVendida()} kWp</p>
           </div>
-          <div className="flex flex-col col-span-1 p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL VENDIDO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
               R$ {getTotalVendido().total.toLocaleString('pt-BR')}
             </p>
           </div>
-          <div className="flex flex-col col-span-1 p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TICKET MÉDIO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
               R$ {getTotalVendido().ticketMedio.toLocaleString('pt-BR')}
             </p>
           </div>
-          <div className="flex flex-col p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
-            <h1 className="text-gray-600 text-xl text-center">NPS</h1>
+          <div className="col-span-1 flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+            <h1 className="text-center text-xl text-gray-600">NPS</h1>
             <div className="flex grow items-center justify-center">
-              <div className="w-[150px] h-[150px]">
+              <div className="h-[150px] w-[150px]">
                 <CircularProgressbar
                   styles={buildStyles({
                     // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
@@ -757,23 +757,23 @@ function Acompanhamento() {
             </div>
           </div>
         </div>
-        <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-x-3">
-          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="grid grid-cols-1 grid-rows-2 gap-x-3 lg:grid-cols-2 lg:grid-rows-1">
+          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
               R$ {getCustos().totalValorDoKit.toLocaleString('pt-BR')}
             </p>
           </div>
-          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="col-span- flex h-[300px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL GASTOS EM INSUMOS</h1>
               <h1 className={`font-bold ${getCustos().totalEfetivoCustos / getCustos().totalPrevCustos > 1 ? 'text-red-500' : 'text-green-500'}`}>
                 {((getCustos().totalEfetivoCustos * 100) / getCustos().totalPrevCustos).toFixed(2).replace('.', ',')} %
               </h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+            <p className="flex grow items-center justify-center text-2xl font-bold text-[#15599a]">
               R$ {getCustos().totalEfetivoCustos.toLocaleString('pt-BR')}
             </p>
             <div className="flex flex-col">

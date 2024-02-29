@@ -2,7 +2,6 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { FaCity, FaHandHoldingUsd, FaMobileAlt, FaMoneyBillWave, FaSave, FaSolarPanel, FaUser } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
-import { AppContext } from '../context/AppContext'
 import { formatDecimalPlaces, respChamadosPPS } from '../utils/constants'
 import { useKey } from '../utils/hooks'
 import PPSModalCallInfo from './PPSModalCallInfo'
@@ -141,7 +140,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
   const router = useRouter()
   const { data: session } = useSession()
-  const editor = session?.user?.accessibleRoutes.includes('PPS') && session?.user?.visualizacao == undefined
+  const editor = session?.user?.permissoes.rotas.includes('PPS') && session?.user?.visualizacao.tipo == undefined
 
   const { data: call, isLoading: callLoading, isFetched: callFetched } = usePPSCall(callId, !!callId)
   const [infoHolder, setInfoHolder] = useState(call)

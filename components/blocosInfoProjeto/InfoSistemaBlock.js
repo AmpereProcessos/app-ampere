@@ -2,13 +2,12 @@ import React, { useContext } from 'react'
 import TextInput from '../TextInput'
 import NumberInput from '../NumberInput'
 import SelectInput from '../SelectInput'
-import { AppContext } from '../../context/AppContext'
+
 function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, showPaymentInfo = false }) {
-  const { credentials } = useContext(AppContext)
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES SOBRE O SISTEMA</span>
-      <div className="flex justify-center items-center py-2">
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O SISTEMA</span>
+      <div className="flex items-center justify-center py-2">
         <SelectInput
           label={'TOPOLOGIA'}
           value={infoHolder.sistema?.topologia ? infoHolder.sistema?.topologia : 'NÃO DEFINIDO'}
@@ -82,7 +81,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
           }}
         />
       </div>
-      <div className="flex gap-2 justify-center flex-wrap">
+      <div className="flex flex-wrap justify-center gap-2">
         <TextInput
           label={'QTDE E POTÊNCIA DO(S) INVERSOR(ES)'}
           editable={editor}
@@ -164,9 +163,9 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
       </div>
       {infoHolder.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' && (
         <>
-          <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
+          <div className="mt-2 flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
             <div
-              className={`flex ${infoHolder.sistema.tipoControlador == 'INTEGRADO AO INVERSOR' && 'col-span-4'} justify-center items-center w-full`}
+              className={`flex ${infoHolder.sistema.tipoControlador == 'INTEGRADO AO INVERSOR' && 'col-span-4'} w-full items-center justify-center`}
             >
               <SelectInput
                 label={'TIPO DO CONTROLADOR'}
@@ -200,7 +199,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
             </div>
             {infoHolder.sistema.tipoControlador != 'INTEGRADO AO INVERSOR' && (
               <>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex w-full items-center justify-center">
                   <TextInput
                     label={'MARCA DO CONTROLADOR'}
                     editable={true}
@@ -220,7 +219,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                     }}
                   />
                 </div>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex w-full items-center justify-center">
                   <NumberInput
                     label={'QTDE DE CONTROLADORES'}
                     editable={true}
@@ -240,7 +239,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                     }}
                   />
                 </div>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex w-full items-center justify-center">
                   <NumberInput
                     label={'CORRENTE DE CARGA (em A)'}
                     editable={true}
@@ -263,8 +262,8 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
               </>
             )}
           </div>
-          <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
-            <div className="flex justify-center items-center w-full">
+          <div className="flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
+            <div className="flex w-full items-center justify-center">
               <TextInput
                 label={'MARCA DA BATERIA'}
                 editable={true}
@@ -284,7 +283,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <NumberInput
                 label={'QTDE DE BATERIAS'}
                 editable={true}
@@ -304,7 +303,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <SelectInput
                 label={'TIPO DA BATERIA'}
                 editable={true}
@@ -329,7 +328,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <NumberInput
                 label={'CAPACIDADE (em Ah)'}
                 editable={true}
@@ -354,7 +353,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
       )}
       {infoHolder.tipoDeServico == 'BOMBA SOLAR' && (
         <>
-          <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2 py-2 border-t border-gray-200">
+          <div className="mt-2 flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-3">
             <div className="flex items-center justify-center">
               <TextInput
                 label={'MARCA BOMBA'}
@@ -416,8 +415,8 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
               />
             </div>
           </div>
-          <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
-            <div className="flex justify-center items-center w-full">
+          <div className="flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
+            <div className="flex w-full items-center justify-center">
               <TextInput
                 label={'MARCA DA BATERIA'}
                 editable={editor}
@@ -437,7 +436,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <NumberInput
                 label={'QTDE DE BATERIAS'}
                 editable={true}
@@ -457,7 +456,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <SelectInput
                 label={'TIPO DA BATERIA'}
                 editable={true}
@@ -482,7 +481,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, sh
                 }}
               />
             </div>
-            <div className="flex justify-center items-center w-full">
+            <div className="flex w-full items-center justify-center">
               <NumberInput
                 label={'CAPACIDADE (em Ah)'}
                 editable={true}

@@ -119,8 +119,8 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
     contatosAuxiliares: [],
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     dataInsercao: new Date().toISOString(),
   })
@@ -191,7 +191,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
               <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                 <div className="w-full lg:w-1/2">
                   <DateInput
-                    label="EMAIL DO COLABORADOR"
+                    label="DATA DE NASCIMENTO"
                     value={infoHolder.dataNascimento ? formatDate(infoHolder.dataNascimento) : undefined}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))}
                     width="100%"

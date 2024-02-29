@@ -29,10 +29,10 @@ function Estoque() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
-  const isAuthorized = !!session?.user.accessibleRoutes?.includes('Almoxarifado') || !!session?.user.accessibleRoutes?.includes('Obras')
+  const isAuthorized = !!session?.user.permissoes.rotas?.includes('Almoxarifado') || !!session?.user.permissoes.rotas?.includes('Obras')
   const { data: materials, isLoading, isError, isSuccess, filters, setFilters } = useMaterials()
 
   const [newMaterialModalIsOpen, setNewMaterialModalIsOpen] = useState(false)

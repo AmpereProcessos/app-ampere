@@ -124,7 +124,7 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
         <TextInput
           label={'CÓDIGO CRM'}
           value={infoHolder.codigoSVB ? infoHolder.codigoSVB : ''}
-          editable={session?.user.accessibleRoutes.includes('PPS')}
+          editable={session?.user.permissoes.rotas.includes('PPS')}
           handleChange={(value) => {
             setChanges({
               ...changes,

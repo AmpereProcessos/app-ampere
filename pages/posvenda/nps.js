@@ -22,7 +22,7 @@ function NPS() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -86,30 +86,27 @@ function NPS() {
     const nps = ((reduced.promoter - reduced.detrator) * 100) / reduced.collected
     return nps.toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   }
-  const renderCards = useMemo(
-    () => data?.map((project, index) => <NPSCard key={project._id} credentials={session?.user} project={project} />),
-    [data]
-  )
+  const renderCards = useMemo(() => data?.map((project, index) => <NPSCard key={project._id} project={project} />), [data])
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow bg-[#fff]">
-        <div className="flex flex-col border-b border-gray-200 mb-6 pb-2 items-center">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">COLETA DE NPS</p>
+      <div className="grow bg-[#fff] p-6">
+        <div className="mb-6 flex flex-col items-center border-b border-gray-200 pb-2">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">COLETA DE NPS</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -150,13 +147,13 @@ function NPS() {
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
                 <NPSFilterBlock filters={filters} setFilters={setFilters} />
               </motion.div>
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex flex-wrap mt-4 gap-3 justify-around">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Houve um erro na busca dos registros...'} /> : null}
           {isSuccess ? (
@@ -171,13 +168,6 @@ function NPS() {
               </div>
             )
           ) : null}
-          {/* {filteredProjects.map((project) => (
-            <NPSCard
-              credentials={session?.user}
-              key={project._id}
-              project={project}
-            />
-          ))} */}
         </div>
       </div>
     )

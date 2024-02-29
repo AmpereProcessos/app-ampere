@@ -8,10 +8,10 @@ import { getFirstDayOfYearString } from '@/utils/methods/dates'
 import { TDashboardStats } from '@/utils/schemas/stats'
 
 function getQueryByVisualization(session: Session) {
-  const visualization = session.user.visualizacao
-  const seller = session.user.vendedor
-  if (visualization == 'INSIDE') return { $or: [{ insider: seller }, { 'vendedor.nome': seller }] }
-  if (visualization == 'VENDEDOR') return { 'vendedor.nome': seller }
+  const visualization = session.user.visualizacao.tipo
+  const seller = session.user.visualizacao.referencia
+
+  if (visualization == 'VENDAS') return { 'vendedor.nome': seller }
   return {}
 }
 

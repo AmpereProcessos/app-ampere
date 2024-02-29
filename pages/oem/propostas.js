@@ -28,7 +28,7 @@ function Propostas() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [newProposeModalIsOpen, setNewProposeModalIsOpen] = useState(false)

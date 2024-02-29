@@ -11,7 +11,7 @@ type GetResponse = {
 
 const getEmployees: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  if (!session.user.accessibleRoutes?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+  if (!session?.user.permissoes.rotas?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
 
   const { id } = req.query
 
@@ -38,7 +38,7 @@ type PostResponse = {
 
 const createColaborator: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  if (!session.user.accessibleRoutes?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
+  if (!session?.user.permissoes.rotas?.includes('RH')) throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
 
   const colaborator = InsertUserSchema.parse(req.body)
 
@@ -50,7 +50,29 @@ const createColaborator: NextApiHandler<PostResponse> = async (req, res) => {
 
   return res.status(201).json({ data: { insertedId }, message: 'Colaborador criado com sucesso !' })
 }
+type PutResponse = {
+  data: string
+  message: string
+}
+
+const editColaborator: NextApiHandler<PutResponse> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+  const { id } = req.query
+  if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
+
+  const changes = InsertUserSchema.partial().parse(req.body)
+
+  const db = await connectToAdministrationDatabase(process.env.DB_KEY)
+  const usersCollection: Collection<TEmployee> = db.collection('colaboradores')
+  const updateResponse = await usersCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })
+
+  if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao atualizar colaborador.')
+  if (updateResponse.matchedCount == 0) throw new createHttpError.NotFound('Colaborador não encontrado.')
+
+  return res.status(201).json({ data: 'Colaborador atualizado com sucesso !', message: 'Colaborador atualizado com sucesso !' })
+}
 export default apiHandler({
-  POST: createColaborator,
   GET: getEmployees,
+  POST: createColaborator,
+  PUT: editColaborator,
 })

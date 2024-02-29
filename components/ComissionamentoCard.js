@@ -1,44 +1,42 @@
-import React, { useState } from "react";
-import axios from "axios";
-function ComissionamentoCard({ info, credentials, getProjects }) {
-  const [infoHolder, setInfo] = useState(info);
-  const [msg, setMsg] = useState("");
-  const [changes, setChanges] = useState({});
-  const editor = true;
+import React, { useState } from 'react'
+import axios from 'axios'
+function ComissionamentoCard({ info, getProjects }) {
+  const [infoHolder, setInfo] = useState(info)
+  const [msg, setMsg] = useState('')
+  const [changes, setChanges] = useState({})
+  const editor = true
   async function notifyPosVenda() {
     try {
-      let data = await axios.post("/api/notificacoes/1", {
-        destinatario: "6353ebc7ef4e1a367a87794b",
+      let data = await axios.post('/api/notificacoes/1', {
+        destinatario: '6353ebc7ef4e1a367a87794b',
         projetoReferencia: info.qtde,
         nomeDoProjeto: info.nomeDoContrato,
-        remetente: "SISTEMA",
+        remetente: 'SISTEMA',
         mensagem: `DOCUMENTO DE COMISSIONAMENTO DO CLIENTE FINALIZADO.`,
-      });
-      if (data) return;
-      console.log(data);
+      })
+      if (data) return
+      console.log(data)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   async function handleChanges() {
-    if (!info.comissionamento.projetos && changes["comissionamento.projetos"]) {
-      await notifyPosVenda();
+    if (!info.comissionamento.projetos && changes['comissionamento.projetos']) {
+      await notifyPosVenda()
     }
     axios.post(`/api/projects/update/${info._id}`, changes).then((res) => {
-      setMsg("Alterações concluidas");
-      getProjects();
-    });
+      setMsg('Alterações concluidas')
+      getProjects()
+    })
   }
   return (
-    <div className="flex flex-col w-full border border-gray-200 p-2">
-      <p className="font-bold font-raleway border-b pb-1 border-gray-200">
+    <div className="flex w-full flex-col border border-gray-200 p-2">
+      <p className="border-b border-gray-200 pb-1 font-raleway font-bold">
         {infoHolder.qtde} - {infoHolder.nomeDoContrato}
       </p>
-      <div className="flex gap-2 mt-2 justify-center flex-wrap">
-        <div className="flex flex-col w-[150px] items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            COMISSIONAMENTO COMERCIAL
-          </span>
+      <div className="mt-2 flex flex-wrap justify-center gap-2">
+        <div className="flex w-[150px] flex-col items-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO COMERCIAL</span>
           <div className="flex">
             <input
               disabled={!editor}
@@ -46,15 +44,15 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
               onChange={(e) => {
                 setChanges({
                   ...changes,
-                  "comissionamento.comercial": e.target.checked,
-                });
+                  'comissionamento.comercial': e.target.checked,
+                })
                 setInfo({
                   ...infoHolder,
                   comissionamento: {
                     ...infoHolder.comissionamento,
                     comercial: e.target.checked,
                   },
-                });
+                })
               }}
               type="checkbox"
               name="comissionamentoComercial"
@@ -65,10 +63,8 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
             </label>
           </div>
         </div>
-        <div className="flex flex-col w-[150px] items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            COMISSIONAMENTO DE SUPRIMENTOS
-          </span>
+        <div className="flex w-[150px] flex-col items-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO DE SUPRIMENTOS</span>
           <div className="flex">
             <input
               disabled={!editor}
@@ -76,15 +72,15 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
               onChange={(e) => {
                 setChanges({
                   ...changes,
-                  "comissionamento.suprimentos": e.target.checked,
-                });
+                  'comissionamento.suprimentos': e.target.checked,
+                })
                 setInfo({
                   ...infoHolder,
                   comissionamento: {
                     ...infoHolder.comissionamento,
                     suprimentos: e.target.checked,
                   },
-                });
+                })
               }}
               type="checkbox"
               name="comissionamentoSuprimentos"
@@ -95,10 +91,8 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
             </label>
           </div>
         </div>
-        <div className="flex flex-col w-[150px] items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            COMISSIONAMENTO PROJETOS
-          </span>
+        <div className="flex w-[150px] flex-col items-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO PROJETOS</span>
           <div className="flex">
             <input
               disabled={!editor}
@@ -106,15 +100,15 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
               onChange={(e) => {
                 setChanges({
                   ...changes,
-                  "comissionamento.projetos": e.target.checked,
-                });
+                  'comissionamento.projetos': e.target.checked,
+                })
                 setInfo({
                   ...infoHolder,
                   comissionamento: {
                     ...infoHolder.comissionamento,
                     projetos: e.target.checked,
                   },
-                });
+                })
               }}
               type="checkbox"
               name="comissionamentoProjetos"
@@ -126,25 +120,21 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col items-center justify-center mt-2">
+      <div className="mt-2 flex w-full flex-col items-center justify-center">
         {msg && <p className="mt-1 text-center text-green-400">{msg}</p>}
         <button
           onClick={handleChanges}
           className={`font-bold ${
-            !info.comissionamento?.projetos &&
-            changes["comissionamento.projetos"]
-              ? "border border-green-500 text-green-500 hover:text-white hover:bg-green-500"
-              : "border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"
-          }  p-2 rounded`}
+            !info.comissionamento?.projetos && changes['comissionamento.projetos']
+              ? 'border border-green-500 text-green-500 hover:bg-green-500 hover:text-white'
+              : 'border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white'
+          }  rounded p-2`}
         >
-          {!info.comissionamento?.projetos &&
-          changes["comissionamento.projetos"]
-            ? "FINALIZAR"
-            : "SALVAR"}
+          {!info.comissionamento?.projetos && changes['comissionamento.projetos'] ? 'FINALIZAR' : 'SALVAR'}
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default ComissionamentoCard;
+export default ComissionamentoCard

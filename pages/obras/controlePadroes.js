@@ -11,7 +11,7 @@ function ControlePadroes() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -67,7 +67,7 @@ function ControlePadroes() {
     setFilteredProjects([...arr])
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Obras')) {
+    if (session?.user.permissoes.rotas.includes('Obras')) {
       getProjects()
     } else {
       if (session?.user) {
@@ -78,22 +78,22 @@ function ControlePadroes() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow bg-[#fff]">
-        <div className="flex flex-col w-full items-center border-b border-gray-200 mb-2">
-          <h1 className="text-[#fead61] font-bold text-xl pb-2">CONTROLE DE PADRÕES ({filteredProjects.length})</h1>
-          <div className="flex flex-wrap w-full items-center gap-x-2 justify-center">
+      <div className="grow bg-[#fff] p-6">
+        <div className="mb-2 flex w-full flex-col items-center border-b border-gray-200">
+          <h1 className="pb-2 text-xl font-bold text-[#fead61]">CONTROLE DE PADRÕES ({filteredProjects.length})</h1>
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-2">
             <input
               type={'text'}
               placeholder="Digite o nome do contrato"
               value={filters.searchFilter}
-              className={'outline-none p-1.5 rounded border border-gray-200 placeholder:italic'}
+              className={'rounded border border-gray-200 p-1.5 outline-none placeholder:italic'}
               onChange={(e) => setFilters({ ...filters, searchFilter: e.target.value })}
             />
             <div
               onClick={() => setFilters({ ...filters, pendencia: !filters.pendencia })}
               className={`${
                 filters.pendencia ? 'bg-[#15599a]' : 'bg-blue-300'
-              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+              } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
             >
               PENDÊNCIAS
             </div>
@@ -239,13 +239,13 @@ function ControlePadroes() {
             />
             <button
               onClick={ordenate}
-              className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] py-2 px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>ORDENAR</p>
             </button>
             <button
               onClick={filterProjects}
-              className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] py-2 px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />
@@ -254,7 +254,7 @@ function ControlePadroes() {
         </div>
         <div className="flex flex-col gap-y-2">
           {filteredProjects.map((project) => (
-            <PadraoCard credentials={session?.user} project={project} key={project._id} />
+            <PadraoCard project={project} key={project._id} />
           ))}
         </div>
       </div>

@@ -57,8 +57,8 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
     dataInsercao: new Date().toISOString(),
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
   })
   const [newResponsibleHolder, setNewResponsibleHolder] = useState<string | null>(null)
@@ -66,7 +66,7 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
   const { data: users } = useUsers({ enabled: true })
   function handleVinculateResponsible(id: string | null) {
     if (!id) return toast.error('Escolha um usuário válido.')
-    const user = users.find((u: any) => u._id == id)
+    const user = users?.find((u: any) => u._id == id)
     if (!user) return
     const newResponsible = {
       id: user._id as string,

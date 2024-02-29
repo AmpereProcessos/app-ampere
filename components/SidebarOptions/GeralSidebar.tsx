@@ -12,6 +12,7 @@ import {
   MdSentimentSatisfiedAlt,
   MdAddIcCall,
   MdAddShoppingCart,
+  MdPeople,
 } from 'react-icons/md'
 import { BiSupport } from 'react-icons/bi'
 import { SiCashapp } from 'react-icons/si'
@@ -21,15 +22,19 @@ import { VscWorkspaceTrusted } from 'react-icons/vsc'
 import { ImFolderOpen, ImCheckboxChecked } from 'react-icons/im'
 
 import Link from 'next/link'
+import { Session } from 'next-auth'
 
-function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualization, userIsController }) {
-  function checkRoute(route, operationalOnly) {
-    if (operationalOnly) {
-      return userAccessibleRoutes?.includes(route) && userVisualization == undefined
-    }
+type GeralSidebarProps = {
+  session: Session
+  userAccessibleRoutes: string[]
+  userIsManager: boolean
+  userIsController: boolean
+}
+function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsController }: GeralSidebarProps) {
+  function checkRoute(route: string) {
     return userAccessibleRoutes?.includes(route)
   }
-  function checkRouteEitherAccess(routes, operationalOnly) {
+  function checkRouteEitherAccess(routes: string[]) {
     return routes.some((route) => userAccessibleRoutes?.includes(route))
   }
 
@@ -134,6 +139,14 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
+          {session.user.permissoes.recursosHumanos.visualizar ? (
+            <Link href="/adm/colaboradores">
+              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+                <MdPeople style={{ color: '#15599a', fontSize: '20px' }} />
+                <p className="pl-3 text-xs text-gray-600">RH</p>
+              </a>
+            </Link>
+          ) : null}
           {checkRoute('ADM') ? (
             <Link href="/adm">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -160,7 +173,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
               <p className="pl-3 text-xs text-gray-600">Chamados</p>
             </a>
           </Link>
-          {checkRoute('ADM', true) ? (
+          {checkRoute('ADM') ? (
             <Link href="/admin/auditoria-financeira">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <BsBank2 style={{ color: '#15599a', fontSize: '20px' }} />
@@ -169,7 +182,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
             </Link>
           ) : null}
 
-          {userIsManager ? (
+          {/* {userIsManager ? (
             <Link href="/operacoes">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <IoIosCalendar style={{ color: '#15599a', fontSize: '20px' }} />
@@ -178,8 +191,8 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
             </Link>
           ) : (
             false
-          )}
-          {checkRoute('Suprimentos', true) ? (
+          )} */}
+          {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos/solicitacoesCompra">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddShoppingCart style={{ color: '#15599a', fontSize: '20px' }} />
@@ -217,7 +230,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {checkRoute('Almoxarifado', true) ? (
+          {checkRoute('Almoxarifado') ? (
             <Link href={'/almoxarifado'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaWarehouse style={{ color: '#15599a', fontSize: '20px' }} />
@@ -227,7 +240,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {checkRoute('ADM', true) ? (
+          {checkRoute('ADM') ? (
             <Link href={'/adm/cobrancas'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdOutlinePayments style={{ color: '#15599a', fontSize: '20px' }} />
@@ -237,7 +250,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {checkRoute('Projetos', true) ? (
+          {checkRoute('Projetos') ? (
             <Link href={'/projetos/comissionamento'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <VscWorkspaceTrusted style={{ color: '#15599a', fontSize: '20px' }} />
@@ -247,7 +260,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {checkRoute('O&M', true) ? (
+          {checkRoute('O&M') ? (
             <Link href="/oem">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaSolarPanel style={{ color: '#15599a', fontSize: '20px' }} />
@@ -257,7 +270,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {userIsManager || userVisualization == 'REGIONAL' ? (
+          {/* {userIsManager ? (
             <Link href={`/vendas/leads`}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddIcCall
@@ -269,8 +282,8 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
                 <p className="pl-3 text-xs text-gray-600">Leads</p>
               </a>
             </Link>
-          ) : null}
-          {checkRoute('Obras', true) ? (
+          ) : null} */}
+          {checkRoute('Obras') ? (
             <Link href="/obras/gestaoDeObras">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdOutlineBuildCircle style={{ color: '#15599a', fontSize: '20px' }} />
@@ -280,7 +293,7 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           ) : (
             false
           )}
-          {userIsManager || userVisualization == 'REGIONAL' ? (
+          {/* {userIsManager ? (
             <Link href="/admin/gestaoTimeVendas">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <TbDashboard style={{ color: '#15599a', fontSize: '20px' }} />
@@ -289,8 +302,8 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
             </Link>
           ) : (
             false
-          )}
-          {checkRoute('Pós-Venda', true) ? (
+          )} */}
+          {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda/nps">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdSentimentSatisfiedAlt style={{ color: '#15599a', fontSize: '20px' }} />
@@ -302,107 +315,6 @@ function GeralSidebar({ userAccessibleRoutes = [], userIsManager, userVisualizat
           )}
         </div>
       </>
-      {/* {credentials?.accessibleRoutes != undefined &&
-        credentials?.accessibleRoutes?.includes("Vendas") &&
-        credentials?.vendedor && (
-          <div className="mt-6">
-            <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
-            <Link href="/vendas">
-              <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <ImFolderOpen
-                  style={{
-                    color: "#15599a",
-                    fontSize: "20px",
-                  }}
-                />
-                <p className="pl-3 text-xs text-gray-600">Projetos</p>
-              </a>
-            </Link>
-            {credentials?.vendedor && (
-              <Link
-                href={`/vendas/emProcesso/${credentials?.visualizacao}?parametro=${credentials?.vendedor}`}
-              >
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <TbRecharging
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Em processo</p>
-                </a>
-              </Link>
-            )}
-            {credentials?.vendedor && (
-              <Link href={`/vendas/formularios`}>
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <AiOutlineForm
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Formulários</p>
-                </a>
-              </Link>
-            )}
-            {credentials?.vendedor && (
-              <Link href={`/vendas/visitasTecnicas`}>
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <TbReportAnalytics
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Visitas Técnicas</p>
-                </a>
-              </Link>
-            )}
-            {credentials?.vendedor && (
-              <Link href={`/vendas/propostasOeM`}>
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <FaSolarPanel
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">O&M</p>
-                </a>
-              </Link>
-            )}
-            {credentials?.vendedor && (
-              <Link href={`/vendas/entregaTecnica`}>
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <BsFillPatchCheckFill
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">
-                    Entregas Técnicas
-                  </p>
-                </a>
-              </Link>
-            )}
-            {credentials.visualizacao == "VENDEDOR" ||
-            credentials.visualizacao == "REGIONAL" ? (
-              <Link href={`/vendas/leads`}>
-                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <MdAddIcCall
-                    style={{
-                      color: "#15599a",
-                      fontSize: "20px",
-                    }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Leads</p>
-                </a>
-              </Link>
-            ) : null}
-          </div>
-        )} */}
     </>
   )
 }

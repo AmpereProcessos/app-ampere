@@ -32,7 +32,7 @@ function FinancesAuditing() {
   const router = useRouter()
   const { data: session, status: sessionStatus } = useSession()
   const isManager = !!session?.user?.manager
-  const isADM = !!session?.user?.accessibleRoutes?.includes('ADM')
+  const isADM = !!session?.user?.permissoes.rotas?.includes('ADM')
 
   const [projectFinancesModal, setProjectFinancesModal] = useState<{ isOpen: boolean; projectId: string | null }>({
     isOpen: false,

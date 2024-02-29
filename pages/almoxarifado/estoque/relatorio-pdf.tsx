@@ -17,7 +17,7 @@ import { BsCode } from 'react-icons/bs'
 
 function RelatorioEstoque() {
   const router = useRouter()
-  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
   const { data: materials, isLoading, isError, isSuccess } = useMaterials()
   const [showFilter, setShowFilter] = useState(true)
   const [toBuyFilter, setToBuyFilter] = useState(false)

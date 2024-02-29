@@ -28,7 +28,7 @@ type PutResponse = {
 
 const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  const author = { id: session.user.id, nome: session.user.name, avatar_url: session.user.image }
+  const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
   // const { formularyId, project, updates } = req.body
   const formularyId = FormularyIdSchema.parse(req.body.formularyId)
   const project = ProjectReferenceSchema.parse(req.body.project)

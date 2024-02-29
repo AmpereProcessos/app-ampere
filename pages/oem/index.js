@@ -27,7 +27,7 @@ function OeM({ users }) {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -236,7 +236,7 @@ function OeM({ users }) {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('O&M') || session?.user.accessibleRoutes.includes('Marketing')) {
+    if (session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Marketing')) {
       if (!projects) {
         getProjects(session.user)
       }
@@ -701,8 +701,7 @@ function OeM({ users }) {
             setModalIsOpen={setModalIsOpen}
             modalIsOpen={modalIsOpen}
             project={modalProject}
-            editor={session?.user?.accessibleRoutes.includes('O&M') ? true : false}
-            credentials={session?.user}
+            editor={session?.user?.permissoes.rotas.includes('O&M') ? true : false}
             handleUpdates={handleUpdates}
           />
         )}

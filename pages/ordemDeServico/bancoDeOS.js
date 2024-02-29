@@ -39,7 +39,7 @@ function BancoDeOS() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -58,26 +58,26 @@ function BancoDeOS() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">BANCO DE ORDENS DE SERVIÇO ({orders?.length || '...'})</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">BANCO DE ORDENS DE SERVIÇO ({orders?.length || '...'})</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
                     label="NOME DO CLIENTE"
                     placeholder="Filtre por nome do cliente..."
@@ -152,7 +152,7 @@ function BancoDeOS() {
                     />
                   </div>
 
-                  <div className="flex items-center gap-x-2 justify-center w-full lg:w-fit">
+                  <div className="flex w-full items-center justify-center gap-x-2 lg:w-fit">
                     <div className="w-full lg:w-1/2">
                       <DateInput
                         width={'100%'}
@@ -171,7 +171,7 @@ function BancoDeOS() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div
                     onClick={() =>
                       setFilters((prev) => ({
@@ -181,7 +181,7 @@ function BancoDeOS() {
                     }
                     className={`${
                       filters.inProgress ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     EM PROCESSO
                   </div>
@@ -194,7 +194,7 @@ function BancoDeOS() {
                     }
                     className={`${
                       filters.inExecution ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     EM EXECUÇÃO
                   </div>
@@ -207,7 +207,7 @@ function BancoDeOS() {
                     }
                     className={`${
                       filters.unassigned ? 'bg-[#15599a]' : 'bg-blue-300'
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                   >
                     PARA DESIGNAR
                   </div>
@@ -216,7 +216,7 @@ function BancoDeOS() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex flex-wrap mt-4 gap-3 justify-around">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {orders ? orders?.map((order, index) => <ServiceOrderCard key={index} order={order} handleOpenModal={handleOpenModal} />) : null}
         </div>
         {modalInfo.isOpen && modalInfo.orderId ? (
@@ -227,8 +227,8 @@ function BancoDeOS() {
           />
         ) : null}
         <Link href={'/ordemDeServico/designacoes'}>
-          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">DESIGNAÇÃO DE OSS</p>
+          <a className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <p className="text-sm font-bold uppercase">DESIGNAÇÃO DE OSS</p>
           </a>
         </Link>
       </div>

@@ -91,19 +91,19 @@ function Analise() {
   }
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes.includes('PPS')) return router.push('/')
     }
   }, [session])
   return (
-    <div className="flex flex-col p-6 grow">
-      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1 mb-2">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-            <p className="font-bold uppercase text-center text-2xl text-[#15599a]">ANÁLISE COMERCIAL</p>
+    <div className="flex grow flex-col p-6">
+      <div className="mb-2 flex flex-col items-center justify-between border-b border-gray-200 p-1">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+            <p className="text-center text-2xl font-bold uppercase text-[#15599a]">ANÁLISE COMERCIAL</p>
           </div>
         </div>
-        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+        <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">CONTAGEM DE PROJETOS</h1>
@@ -135,8 +135,8 @@ function Analise() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-full gap-y-2 mt-4">
-          <div className="flex flex-col lg:flex-row items-end justify-center gap-2 flex-wrap">
+        <div className="mt-4 flex w-full flex-col gap-y-2">
+          <div className="flex flex-col flex-wrap items-end justify-center gap-2 lg:flex-row">
             <TextInput
               label={'NOME DO CONTRATO'}
               value={filters.search}
@@ -164,7 +164,7 @@ function Analise() {
                 }
               />
             </div>
-            <div className="flex items-center gap-x-2 justify-center">
+            <div className="flex items-center justify-center gap-x-2">
               <div className="w-full lg:w-[250px]">
                 <DateInput
                   width={'100%'}
@@ -191,7 +191,7 @@ function Analise() {
               }
               className={`${
                 filters.pendingVinculation ? 'bg-[#15599a]' : 'bg-blue-300'
-              } rounded h-[47px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+              } flex h-[47px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
             >
               SEM VINCULAÇÃO
             </div>
@@ -202,14 +202,14 @@ function Analise() {
       {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
       {isSuccess && projects ? (
         projects.length > 0 ? (
-          <div className="flex flex-col w-full gap-2">
+          <div className="flex w-full flex-col gap-2">
             {projects.map((project) => (
               <AnaliseBlock key={project.id} project={project} />
             ))}
           </div>
         ) : (
-          <div className="grow flex items-center justify-center">
-            <h1 className="text-gray-500 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
+          <div className="flex grow items-center justify-center">
+            <h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
           </div>
         )
       ) : null}

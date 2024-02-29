@@ -1,118 +1,108 @@
-import axios from "axios";
-import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
-import { TbToggleLeft, TbToggleRight } from "react-icons/tb";
-import { AiOutlineSearch } from "react-icons/ai";
-import EntregaTecnicaPresencialCard from "../../components/EntregaTecnicaPresencialCard";
-import { AppContext } from "../../context/AppContext";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import dayjs from 'dayjs'
+import React, { useContext, useEffect, useState } from 'react'
+import { TbToggleLeft, TbToggleRight } from 'react-icons/tb'
+import { AiOutlineSearch } from 'react-icons/ai'
+import EntregaTecnicaPresencialCard from '../../components/EntregaTecnicaPresencialCard'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 
 function EntregaTecnica() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/signin')
     },
-  });
+  })
 
-  const [projects, setProjects] = useState();
-  const [filteredProjects, setFilteredProjects] = useState();
+  const [projects, setProjects] = useState()
+  const [filteredProjects, setFilteredProjects] = useState()
 
   const [filters, setFilters] = useState({
     overdue: false,
-  });
+  })
   async function getProjects() {
     try {
-      if (session?.user.visualizacao == "VENDEDOR") {
-        var { data } = await axios.get(
-          `/api/projects/entregaTecnica?vendedor=${session?.user.vendedor}`
-        );
+      if (session?.user.visualizacao.tipo == 'VENDAS') {
+        var { data } = await axios.get(`/api/projects/entregaTecnica?vendedor=${session?.user.visualizacao.referencia}`)
       } else {
-        var { data } = await axios.get(`/api/projects/entregaTecnica`);
+        var { data } = await axios.get(`/api/projects/entregaTecnica`)
       }
 
-      setProjects(data);
-      setFilteredProjects(data);
-      return;
+      setProjects(data)
+      setFilteredProjects(data)
+      return
     } catch (error) {
-      console.log(error);
-      alert("Erro na comunicação com o servidor");
-      return;
+      console.log(error)
+      alert('Erro na comunicação com o servidor')
+      return
     }
   }
   function filterProjects() {
-    var newArr;
+    var newArr
     if (filters.overdue) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) => dayjs().diff(new Date(project.medidor.data), "days") > 40
-      );
+      if (!newArr) newArr = projects
+      newArr = newArr.filter((project) => dayjs().diff(new Date(project.medidor.data), 'days') > 40)
     }
     if (!newArr) {
-      setFilteredProjects(projects);
-      return projects;
+      setFilteredProjects(projects)
+      return projects
     } else {
-      setFilteredProjects(newArr);
-      return newArr;
+      setFilteredProjects(newArr)
+      return newArr
     }
   }
   useEffect(() => {
     if (session?.user) {
-      getProjects();
+      getProjects()
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
-      <div className="p-6 grow">
-        <div className="pb-2 border-b border-gray-200 flex flex-col">
-          <h1 className="text-center text-[#15599a] text-xl font-bold">
-            ENTREGAS TÉCNICAS PENDENTES ({filteredProjects?.length})
-          </h1>
-          <div className="w-full flex items-center justify-center gap-2">
+      <div className="grow p-6">
+        <div className="flex flex-col border-b border-gray-200 pb-2">
+          <h1 className="text-center text-xl font-bold text-[#15599a]">ENTREGAS TÉCNICAS PENDENTES ({filteredProjects?.length})</h1>
+          <div className="flex w-full items-center justify-center gap-2">
             <button
               onClick={() => {
                 setFilters((prevState) => {
-                  return { ...prevState, overdue: !prevState.overdue };
-                });
+                  return { ...prevState, overdue: !prevState.overdue }
+                })
               }}
-              className={`flex items-center gap-2 rounded text-white p-2 h-[36px] font-bold shadow-md ${
-                filters.overdue ? "bg-red-500" : "bg-[#15599a]"
+              className={`flex h-[36px] items-center gap-2 rounded p-2 font-bold text-white shadow-md ${
+                filters.overdue ? 'bg-red-500' : 'bg-[#15599a]'
               }`}
             >
               {filters.overdue ? (
                 <>
-                  <p>PENDENTES</p>{" "}
-                  <TbToggleRight style={{ fontSize: "25px" }} />
+                  <p>PENDENTES</p> <TbToggleRight style={{ fontSize: '25px' }} />
                 </>
               ) : (
                 <>
-                  <p>EM ABERTO</p> <TbToggleLeft style={{ fontSize: "25px" }} />
+                  <p>EM ABERTO</p> <TbToggleLeft style={{ fontSize: '25px' }} />
                 </>
               )}
             </button>
             <button
               onClick={filterProjects}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+              className="flex h-[36px] items-center gap-x-2 rounded bg-[#fead61] px-2 font-bold hover:bg-[#15599a] hover:text-white"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />
             </button>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-full mt-4 gap-2">
+        <div className="mt-4 flex w-full flex-col items-center justify-center gap-2">
           {filteredProjects ? (
-            filteredProjects.map((project) => (
-              <EntregaTecnicaPresencialCard key={project._id} info={project} />
-            ))
+            filteredProjects.map((project) => <EntregaTecnicaPresencialCard key={project._id} info={project} />)
           ) : (
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,8 +121,8 @@ function EntregaTecnica() {
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default EntregaTecnica;
+export default EntregaTecnica

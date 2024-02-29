@@ -11,32 +11,21 @@ import { TbPresentationAnalytics } from 'react-icons/tb'
 import { FaUser } from 'react-icons/fa'
 
 import LogoSVG from '../utils/svgs/logo.svg'
-import AlertVolts from '../utils/svgs/alert-volts.svg'
-import SleepVolts from '../utils/svgs/sleep-volts.svg'
 
 import HeaderActivitesBlock from './identificador/atividades/HeaderActivitesBlock'
 import Avatar from './utils/Avatar'
-import NotificationModal from './NotificationModal'
-import { AppContext } from '../context/AppContext'
+import NotificationBlock from './identificador/notificacoes/NotificationBlock'
 import ConfigDropDown from './ConfigDropDown'
 import { formatNameAsInitials } from '../utils/methods/formatting'
 
 function Header({ toggleSidebar }) {
-  const { notificacoes } = useContext(AppContext)
   const { data: session, status } = useSession()
   const router = useRouter()
 
   const [configDropDown, setConfigDropDown] = useState(false)
-  const [notificationIsOpen, setNotificationIsOpen] = useState(false)
-  let unreadArr = notificacoes ? notificacoes.filter((x) => x.lido == false) : 0
-  const [unreadCount, setUnreadCount] = useState(unreadArr.length)
 
-  useEffect(() => {
-    let unreadArr = notificacoes ? notificacoes.filter((x) => x.lido == false) : 0
-    setUnreadCount(unreadArr.length)
-  }, [notificacoes])
   if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) return null
-  if (status == 'loading' || status == 'unauthenticated') return null
+  if (status != 'authenticated') return null
   return (
     <div className="sticky top-0 z-[1] grid h-[70px] w-full grid-cols-3 items-center border-b border-gray-200 bg-[#fff] px-3 lg:px-12">
       <div className="flex items-center gap-x-2">
@@ -50,12 +39,13 @@ function Header({ toggleSidebar }) {
 
       <div className="flex items-center justify-end gap-1 lg:gap-3">
         <p className="hidden lg:block">
-          Bem vindo, <strong className="text-[#15599a]">{session?.user.name}</strong> !
+          Bem vindo, <strong className="text-[#15599a]">{session.user.nome}</strong> !
         </p>
         <div onClick={() => setConfigDropDown((prev) => !prev)}>
-          <Avatar url={session.user?.image} fallback={formatNameAsInitials(session.user?.nome || 'USER')} height={40} width={40} />
+          <Avatar url={session.user.avatar_url} fallback={formatNameAsInitials(session.user?.nome || 'USER')} height={40} width={40} />
         </div>
-        <div onClick={() => setNotificationIsOpen(!notificationIsOpen)} className="hidden:flex cursor-pointer items-center">
+        <NotificationBlock session={session} />
+        {/* <div onClick={() => setNotificationIsOpen(!notificationIsOpen)} className="hidden:flex cursor-pointer items-center">
           {unreadCount > 0 ? (
             <div className="flex items-center justify-center">
               <div className="hidden h-[22px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex">
@@ -70,9 +60,9 @@ function Header({ toggleSidebar }) {
               <Image src={SleepVolts} />
             </div>
           )}
-        </div>
+        </div> */}
         <HeaderActivitesBlock session={session} />
-        {session?.user.manager && (
+        {session?.user.permissoes.gestao.visualizarResultados && (
           <div className="hidden lg:block">
             <Link href="/admin/relatorioAdministrativo">
               <TbPresentationAnalytics
@@ -97,8 +87,8 @@ function Header({ toggleSidebar }) {
           />
         </div>
       </div>
-      {configDropDown && <ConfigDropDown closeConfigDropDown={() => setConfigDropDown(false)} setNotificationIsOpen={setNotificationIsOpen} />}
-      {notificationIsOpen && <NotificationModal setNotificationIsOpen={setNotificationIsOpen} />}
+      {configDropDown && <ConfigDropDown closeConfigDropDown={() => setConfigDropDown(false)} />}
+      {/* {notificationIsOpen && <NotificationModal setNotificationIsOpen={setNotificationIsOpen} />} */}
     </div>
   )
 }

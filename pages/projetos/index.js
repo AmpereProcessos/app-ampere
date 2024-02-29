@@ -32,7 +32,7 @@ function Projetos() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -170,7 +170,7 @@ function Projetos() {
 
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes.includes('Projetos')) return router.push('/')
     }
   }, [session])
@@ -178,23 +178,23 @@ function Projetos() {
   if (status == 'authenticated') {
     if (projectsSuccess && projects) {
       return (
-        <div className="p-6 grow">
-          <div className="flex flex-col justify-between items-center  gap-2 border-b border-gray-200 p-1">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-col lg:flex-row items-center gap-2">
-                <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio de engenharia</p>
+        <div className="grow p-6">
+          <div className="flex flex-col items-center justify-between  gap-2 border-b border-gray-200 p-1">
+            <div className="flex w-full items-center justify-between">
+              <div className="flex flex-col items-center gap-2 lg:flex-row">
+                <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de engenharia</p>
               </div>
               {dropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
-            <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+            <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
               <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
                 <div className="flex items-center justify-between">
                   <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -253,16 +253,16 @@ function Projetos() {
             </div>
             <AnimatePresence>
               {dropdownMenuVisible ? (
-                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                  <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                     <TextInput
                       label={'NOME DO CONTRATO'}
                       placeholder={'Digite o nome do contrato...'}
                       value={filters.search}
                       handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                     />
-                    <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                      <div className="flex items-center gap-x-2 justify-center">
+                    <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                      <div className="flex items-center justify-center gap-x-2">
                         <div className="w-full lg:w-[250px]">
                           <DateInput
                             width={'100%'}
@@ -349,7 +349,7 @@ function Projetos() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <div className="w-full lg:w-[250px]">
                       <MultipleSelectInput
                         width={'100%'}
@@ -486,7 +486,7 @@ function Projetos() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                  <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                     <div
                       onClick={() =>
                         setFilters({
@@ -496,7 +496,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.necessaryDistribution ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       NECESSÁRIO DISTRIBUIÇÃO
                     </div>
@@ -509,7 +509,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.necessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       NECESSÁRIO HOMOLOGAÇÃO
                     </div>
@@ -522,7 +522,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.notNecessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       NÃO NECESSÁRIO HOMOLOGAÇÃO
                     </div>
@@ -535,7 +535,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.missingDraw ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       DESENHO PENDENTE
                     </div>
@@ -548,7 +548,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.missingSignature ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       FALTANDO ASSINATURA
                     </div>
@@ -561,7 +561,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.failedGranting ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       PARECER REPROVADO
                     </div>
@@ -574,19 +574,19 @@ function Projetos() {
                       }
                       className={`${
                         filters.failedInspection ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                     >
                       VISTORIA REPROVADA
                     </div>
                   </div>
                   {getTotalCircuitBreakers() ? (
                     <div className="flex flex-col items-center justify-center gap-2">
-                      <h1 className="text-gray-600 font-medium">CONTAGEM DE DISJUNTORES CADASTRADOS</h1>
-                      <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-2">
+                      <h1 className="font-medium text-gray-600">CONTAGEM DE DISJUNTORES CADASTRADOS</h1>
+                      <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-4">
                         {sortTotalCircuitBreakerKeys(Object.keys(getTotalCircuitBreakers())).map(
                           //Object.keys(getTotalCircuitBreakers())
                           (key, index) => (
-                            <p key={index} className={`${getCircuitBreakerTypeColors(key)} p-1 rounded text-center`}>
+                            <p key={index} className={`${getCircuitBreakerTypeColors(key)} rounded p-1 text-center`}>
                               {key} - ({getTotalCircuitBreakers()[key]} UN)
                             </p>
                           )
@@ -598,7 +598,7 @@ function Projetos() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+          <div className="mt-4  flex flex-wrap justify-around gap-3">
             {projects.map((project, index) => (
               <motion.div
                 onClick={() => {
@@ -608,7 +608,7 @@ function Projetos() {
                 initial={{ opacity: 0, translateX: -50, translateY: -35 }}
                 animate={{ opacity: 1, translateX: 0, translateY: 0 }}
                 transition={{ duration: 0.3, delay: 0.01 * index }}
-                className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
+                className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
                   project.parecer.dataParecerDeAcesso != undefined && project.vistoria.status != 'REALIZADA'
                     ? getBorderColorByParecer(new Date(project.parecer.dataParecerDeAcesso), new Date())
                     : 'border border-gray-200'
@@ -628,8 +628,8 @@ function Projetos() {
                       </p>
                     </div>
                     <div className="text-end">
-                      <span className="text-xxs text-end">VISTORIA</span>
-                      <p className="text-xs text-center text-gray-600">{project.vistoria.status ? project.vistoria.status : '-'}</p>
+                      <span className="text-end text-xxs">VISTORIA</span>
+                      <p className="text-center text-xs text-gray-600">{project.vistoria.status ? project.vistoria.status : '-'}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
@@ -640,50 +640,50 @@ function Projetos() {
                       </p>
                     </div>
                     <div>
-                      <span className="text-xxs text-center">
+                      <span className="text-center text-xxs">
                         {project.compra.statusEntrega == 'ENTREGUE' ? 'DATA DE ENTREGA' : 'PREV. DE ENTREGA'}
                       </span>
-                      <p className={`text-gray-600 text-xs uppercase text-center`}>
+                      <p className={`text-center text-xs uppercase text-gray-600`}>
                         {project.compra.statusEntrega == 'ENTREGUE' && project.compra.dataEntrega
                           ? dayjs(project.compra.dataEntrega).add(4, 'h').format('DD/MM/YYYY')
                           : project.compra.previsaoEntrega
-                          ? dayjs(project.compra.previsaoEntrega).add(4, 'h').format('DD/MM/YYYY')
-                          : '-'}
+                            ? dayjs(project.compra.previsaoEntrega).add(4, 'h').format('DD/MM/YYYY')
+                            : '-'}
                       </p>
                     </div>
                     <div>
                       <span className="text-xxs">DESENHO DO TELHADO</span>
-                      <p className="text-xs text-gray-600 text-center">{project.projeto.desenhoTelhado ? project.projeto.desenhoTelhado : '-'}</p>
+                      <p className="text-center text-xs text-gray-600">{project.projeto.desenhoTelhado ? project.projeto.desenhoTelhado : '-'}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="w-full flex flex-col">
+                    <div className="flex w-full flex-col">
                       <span className="text-xxs">DESDE ASS.CONTRATO</span>
-                      <p className={`text-xs uppercase text-red-500 text-start`}>
+                      <p className={`text-start text-xs uppercase text-red-500`}>
                         {project.contrato.dataAssinatura ? `${getDateDiff(new Date(), new Date(project.contrato.dataAssinatura))} DIAS` : '-'}
                       </p>
                     </div>
                     {project.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO COM OBRAS' && (
-                      <div className="w-full flex flex-col">
-                        <span className="text-xxs text-center">DIAS DE OBRA</span>
-                        <p className={`text-xs uppercase text-red-500 text-center`}>
+                      <div className="flex w-full flex-col">
+                        <span className="text-center text-xxs">DIAS DE OBRA</span>
+                        <p className={`text-center text-xs uppercase text-red-500`}>
                           {project.parecer.qtdeDiasObraDeRede ? `${project.parecer.qtdeDiasObraDeRede} DIAS` : '-'}
                         </p>
                       </div>
                     )}
-                    <div className="w-full flex flex-col">
-                      <span className="text-xxs text-end">DESDE APROV.PARECER</span>
-                      <p className={`text-xs uppercase text-red-500 text-end`}>
+                    <div className="flex w-full flex-col">
+                      <span className="text-end text-xxs">DESDE APROV.PARECER</span>
+                      <p className={`text-end text-xs uppercase text-red-500`}>
                         {project.parecer.dataParecerDeAcesso ? `${getDateDiff(new Date(), new Date(project.parecer.dataParecerDeAcesso))} DIAS` : '-'}
                       </p>
                     </div>
                   </div>
                   {project.projeto.dataSolicitacaoAcesso ? (
-                    <div className="flex items-center w-full justify-between">
+                    <div className="flex w-full items-center justify-between">
                       <p className="text-xxs ">
                         {project.parecer?.dataParecerDeAcesso ? 'ATÉ APROVAÇÃO DO PARECER' : 'DESDE A SOLICITAÇÃO DE ACESSO'}
                       </p>
-                      <p className="text-xs text-gray-600 text-start">
+                      <p className="text-start text-xs text-gray-600">
                         {project.parecer?.dataParecerDeAcesso
                           ? `${getDateDiff(new Date(project.parecer?.dataParecerDeAcesso), new Date(project.projeto.dataSolicitacaoAcesso))} DIAS`
                           : `${getDateDiff(new Date(), new Date(project.projeto.dataSolicitacaoAcesso))} DIAS`}
@@ -695,8 +695,8 @@ function Projetos() {
             ))}
           </div>
           <Link href={'/projetos/analisesTecnicas'}>
-            <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-              <p className="uppercase font-bold text-sm">Visitas técnicas</p>
+            <a className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+              <p className="text-sm font-bold uppercase">Visitas técnicas</p>
             </a>
           </Link>
           {modalProject.isOpen && modalProject.projectId && (

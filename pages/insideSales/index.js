@@ -25,7 +25,7 @@ function InsideSales() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -62,7 +62,7 @@ function InsideSales() {
     return (lostNum * 100) / filteredLeads.length
   }
   function getLeads() {
-    if (session?.user.accessibleRoutes.includes('PPS') || session?.user.accessibleRoutes.includes('Marketing')) {
+    if (session?.user.permissoes.rotas.includes('PPS') || session?.user.permissoes.rotas.includes('Marketing')) {
       axios.get(`api/insideSales?after=${new Date(fetchDateFilter.after).toISOString()}&before=${fetchDateFilter.before}`).then((res) => {
         setLeads(res.data)
         setFilteredLeads(res.data)
@@ -71,7 +71,7 @@ function InsideSales() {
       axios
         .post('/api/insideSales', {
           match: {
-            responsavel: session?.user.vendedor,
+            responsavel: session?.user.visualizacao.referencia,
             dataDeAquisicao: {
               $gte: new Date(fetchDateFilter.after).toISOString(),
               $lt: fetchDateFilter.before,
@@ -127,7 +127,7 @@ function InsideSales() {
     link.click()
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('InsideSales')) {
+    if (session?.user.permissoes.rotas.includes('InsideSales')) {
       getLeads()
     } else {
       if (session?.user) {
@@ -139,10 +139,10 @@ function InsideSales() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col grow p-6">
-        <div className="flex flex-col pb-2 border-b border-gray-200">
+      <div className="flex grow flex-col p-6">
+        <div className="flex flex-col border-b border-gray-200 pb-2">
           <div className="flex items-center justify-between">
-            <h1 className="font-bold  text-2xl text-[#15599a]  font-['Roboto'] text-start">
+            <h1 className="text-start  font-['Roboto'] text-2xl  font-bold text-[#15599a]">
               ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
             </h1>
             <div className="flex items-start gap-4">
@@ -168,11 +168,11 @@ function InsideSales() {
               </div>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
@@ -182,11 +182,11 @@ function InsideSales() {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0.6 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col lg:flex-row items-center lg:justify-between mt-4 gap-2 w-full"
+                className="mt-4 flex w-full flex-col items-center gap-2 lg:flex-row lg:justify-between"
               >
                 <div className="flex flex-col gap-2">
-                  <span className="font-['Roboto'] text-xs h-[38px]">ADQUIRIDOS ENTRE:</span>
-                  <div className="flex items-center justify-center flex-wrap gap-2">
+                  <span className="h-[38px] font-['Roboto'] text-xs">ADQUIRIDOS ENTRE:</span>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
                     <input
                       value={formatDate(fetchDateFilter.after)}
                       onChange={(e) =>
@@ -196,7 +196,7 @@ function InsideSales() {
                         })
                       }
                       type="date"
-                      className="border border-gray-200 outline-none py-1 px-2"
+                      className="border border-gray-200 py-1 px-2 outline-none"
                     />
                     <p>&</p>
                     <input
@@ -211,25 +211,25 @@ function InsideSales() {
                         })
                       }
                       type="date"
-                      className="border border-gray-200 outline-none py-1 px-2"
+                      className="border border-gray-200 py-1 px-2 outline-none"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-2">
                     <FetchDataButton text={'BUSCAR'} icon={<MdDateRange />} handleClick={getLeads} />
                     <div
                       onClick={exportData}
-                      className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+                      className="flex cursor-pointer items-center rounded-lg  p-2 font-bold text-[#15599a] transition duration-300 ease-in-out hover:scale-105"
                     >
                       <p className="mr-2 text-sm">BAIXAR DADOS</p>
                       <BsDownload />
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end grow gap-2">
-                  <div className="flex flex-col lg:flex-row items-center gap-2">
+                <div className="flex grow flex-col items-end gap-2">
+                  <div className="flex flex-col items-center gap-2 lg:flex-row">
                     <input
                       type={'text'}
-                      className="outline-none p-1.5 w-full lg:w-[250px] rounded border border-gray-200 placeholder:italic"
+                      className="w-full rounded border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[250px]"
                       placeholder="Digite o nome do contrato"
                       value={filters.pesquisaFilter}
                       onChange={(e) =>
@@ -240,10 +240,10 @@ function InsideSales() {
                       }
                     />
                     <div className="flex gap-x-2">
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
                           value={dateFilter.after ? formatDate(dateFilter.after) : null}
                           onChange={(e) =>
@@ -254,10 +254,10 @@ function InsideSales() {
                           }
                         />
                       </div>
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
                           value={dateFilter.before ? formatDate(dateFilter.before) : null}
                           onChange={(e) =>
@@ -291,7 +291,7 @@ function InsideSales() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col justify-start lg:justify-end lg:flex-row items-center flex-wrap gap-2 w-full">
+                  <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row lg:justify-end">
                     <div className="w-full lg:w-[200px]">
                       <Select
                         isMulti
@@ -374,7 +374,7 @@ function InsideSales() {
                       />
                     </div>
 
-                    {session?.user?.accessibleRoutes.includes('PPS') || session?.user?.accessibleRoutes.includes('Marketing') ? (
+                    {session?.user?.permissoes.rotas.includes('PPS') || session?.user?.permissoes.rotas.includes('Marketing') ? (
                       <div className="w-full lg:w-[200px]">
                         <Select
                           isMulti
@@ -412,7 +412,7 @@ function InsideSales() {
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-wrap justify-around mt-4 gap-3">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {filteredLeads.map((lead) => (
             <LeadCard key={lead._id} lead={lead} getLeads={getLeads} />
           ))}
@@ -424,7 +424,7 @@ function InsideSales() {
         <p className="uppercase font-bold text-sm">NOVO LEAD</p>
       </div> */}
         <AnimatedTextAndIconButton>
-          <p onClick={() => setModalNovoLead(true)} className="uppercase font-bold text-sm h-full w-full text-center">
+          <p onClick={() => setModalNovoLead(true)} className="h-full w-full text-center text-sm font-bold uppercase">
             NOVO LEAD
           </p>
         </AnimatedTextAndIconButton>

@@ -1,29 +1,16 @@
-import Fireworks from '@fireworks-js/react'
 import React, { useEffect, useRef, useState } from 'react'
-import AmpereTeam from '../utils/images/time-ampere.jpg'
-import Image from 'next/image'
 import { useSession } from 'next-auth/react'
-import NewForm from '../components/identificador/almoxarifado/formulario/NewForm'
-import dayjs from 'dayjs'
-import axios from 'axios'
-import { TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
-import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
 import { useQueryClient } from 'react-query'
-import EditForm from '@/components/identificador/almoxarifado/formulario/EditForm'
-import { formatToMoney } from '@/utils/constants'
-import { FaCity, FaSignature, FaTools } from 'react-icons/fa'
-import { formatDateAsLocale } from '@/utils/methods/formatting'
-import { useNewWarehouseForms } from '@/utils/methods/query/warehouse-forms'
+import { useRouter } from 'next/router'
+
 import NewEmployee from '@/components/identificador/colaboradores/NewEmployee'
-import { getMetadata, ref } from 'firebase/storage'
-import { storage } from '@/utils/services/firebase/firebase-storage'
-import { useEmployees } from '@/utils/methods/query/users'
+
 import EmployeeCard from '@/components/identificador/colaboradores/EmployeeCard'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import EditEmployee from '@/components/identificador/colaboradores/EditEmployee'
-import { useRouter } from 'next/router'
 
+import { useEmployees } from '@/utils/methods/query/users'
 type TEditModal = {
   isOpen: boolean
   id: string | null
@@ -32,7 +19,7 @@ type TEditModal = {
 function Test() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
   const { data: employees, isLoading, isSuccess, isError } = useEmployees()
 
   const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
@@ -42,18 +29,29 @@ function Test() {
   return (
     <div className="grow p-6">
       <div className="flex h-full grow flex-col">
-        <div className="flex w-full items-center justify-between border-b border-gray-200 pb-2">
-          <div className="flex flex-col">
-            <h1 className="text-lg font-black">CONTROLE DE COLABORADORES</h1>
-            <p className="text-sm text-[#71717A]">Gerencie, adicione e edite colaboradores</p>
-            <p className="text-sm text-[#71717A]">{isSuccess ? employees.length : '0'} colaboradores atualmente cadastrados</p>
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
+            </div>
+            {/* {dropdownMenuVisible ? (
+          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
           </div>
-          <button
-            onClick={() => setNewEmployeeModalIsOpen(true)}
-            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
-          >
-            NOVO COLABORADOR
-          </button>
+        ) : (
+          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+          </div>
+        )} */}
+          </div>
+          <div className="flex w-full items-center justify-end">
+            <button
+              onClick={() => setNewEmployeeModalIsOpen(true)}
+              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            >
+              NOVO COLABORADOR
+            </button>
+          </div>
         </div>
         <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
           {isLoading ? <LoadingPage /> : null}

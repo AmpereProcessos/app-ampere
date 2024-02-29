@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const logObject = {
       autor: {
         id: session?.user?.id,
-        nome: session?.user?.name,
+        nome: session.user.nome,
       },
       idProjetoAlterado: req.query.id,
       alteracoes: req.body,

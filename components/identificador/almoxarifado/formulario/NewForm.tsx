@@ -49,8 +49,8 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
     materiais: [],
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     dataEfetivacao: null,
     dataInsercao: new Date().toISOString(),
@@ -78,8 +78,8 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
       materiais: [],
       autor: {
         id: session.user.id,
-        nome: session.user.name,
-        avatar_url: session.user.image,
+        nome: session.user.nome,
+        avatar_url: session.user.avatar_url,
       },
       dataEfetivacao: null,
       dataInsercao: new Date().toISOString(),

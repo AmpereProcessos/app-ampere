@@ -26,7 +26,7 @@ function FormulariosSolicitacao() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   if (status != 'authenticated') return <LoadingPage />
@@ -54,7 +54,7 @@ function FormulariosSolicitacao() {
   }
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes || []
+      const userRoutes = session?.user.permissoes.rotas || []
       if (!userRoutes.includes('PPS') && !userRoutes.includes('ADM')) router.push('/')
     }
   }, [session])
@@ -216,8 +216,8 @@ function FormulariosSolicitacao() {
       </div> */}
       {modalIsOpen && (
         <ModalFormSolicitacao
-          editor={session.user.accessibleRoutes?.includes('PPS') ? true : false}
-          financeiroEditor={session.user.accessibleRoutes?.includes('ADM') ? true : false}
+          editor={session?.user.permissoes.rotas?.includes('PPS') ? true : false}
+          financeiroEditor={session?.user.permissoes.rotas?.includes('ADM') ? true : false}
           solicitacao={modalSolicitacao}
           setModalIsOpen={setModalIsOpen}
           getFormularios={getFormularios}

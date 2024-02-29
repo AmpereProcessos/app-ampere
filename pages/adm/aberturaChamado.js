@@ -11,7 +11,7 @@ function AberturaChamadoADM() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -50,7 +50,7 @@ function AberturaChamadoADM() {
       axios
         .post('/api/chamados/adm/mainData', {
           ...callInfo,
-          usuarioEmissor: session?.user?.name,
+          usuarioEmissor: session.user.nome,
         })
         .then((res) => {
           setCallInfo({
@@ -102,10 +102,10 @@ function AberturaChamadoADM() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <section className="min-h-[100vh] flex items-center justify-center bg-[#fff]">
-        <div className="flex flex-col bg-[#fff] p-4 rounded items-center w-[40%] border border-[#15599a]">
-          <h1 className="text-[#15599a] font-bold text-center mt-2">ABERTURA DE CHAMADOS - FINANCEIRO</h1>
-          <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
+      <section className="flex min-h-[100vh] items-center justify-center bg-[#fff]">
+        <div className="flex w-[40%] flex-col items-center rounded border border-[#15599a] bg-[#fff] p-4">
+          <h1 className="mt-2 text-center font-bold text-[#15599a]">ABERTURA DE CHAMADOS - FINANCEIRO</h1>
+          <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
             <span className="font-bold">NOME DO CLIENTE</span>
             <div className={'grow'}>
               <Select
@@ -130,19 +130,19 @@ function AberturaChamadoADM() {
               />
             </div>
           </div>
-          <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
+          <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
             <span className="font-bold">DEMANDA</span>
             <select
               value={callInfo.demanda}
               onChange={(e) => setCallInfo({ ...callInfo, demanda: e.target.value })}
-              className="outline-none grow border border-gray-200 h-[36px] text-center"
+              className="h-[36px] grow border border-gray-200 text-center outline-none"
             >
               <option>PAGAMENTO</option>
               <option>COBRANÇA</option>
               <option>NÃO DEFINIDO</option>
             </select>
           </div>
-          <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
+          <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
             <span className="font-bold">SERVIÇO</span>
             <input
               value={callInfo.servico}
@@ -152,10 +152,10 @@ function AberturaChamadoADM() {
                   servico: e.target.value.toUpperCase(),
                 })
               }
-              className="outline-none h-[36px] font-sm border border-gray-200 p-2 text-center"
+              className="font-sm h-[36px] border border-gray-200 p-2 text-center outline-none"
             />
           </div>
-          <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
+          <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
             <span className="font-bold">{getText(callInfo.demanda)}</span>
             <input
               type={'number'}
@@ -166,11 +166,11 @@ function AberturaChamadoADM() {
                   valor: Number(e.target.value),
                 })
               }
-              className="outline-none h-[36px] font-sm border border-gray-200 p-2 text-center"
+              className="font-sm h-[36px] border border-gray-200 p-2 text-center outline-none"
             />
           </div>
           {callInfo.demanda == 'PAGAMENTO' && (
-            <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
+            <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
               <span className="font-bold">NOME DO RECEBEDOR</span>
               <input
                 value={callInfo.nomeRecebedor ? callInfo.nomeRecebedor : ''}
@@ -180,12 +180,12 @@ function AberturaChamadoADM() {
                     nomeRecebedor: e.target.value.toUpperCase(),
                   })
                 }
-                className="outline-none h-[36px] font-sm border border-gray-200 p-2 text-center"
+                className="font-sm h-[36px] border border-gray-200 p-2 text-center outline-none"
               />
             </div>
           )}
-          <div className="grid grid-rows-2 grid-cols-1 items-center mt-1 w-full">
-            <span className="font-bold text-center">OBSERVAÇÕES</span>
+          <div className="mt-1 grid w-full grid-cols-1 grid-rows-2 items-center">
+            <span className="text-center font-bold">OBSERVAÇÕES</span>
             <textarea
               value={callInfo.observacoes}
               placeholder={'OBSERVAÇÕES ADICIONAIS AQUI...'}
@@ -195,12 +195,12 @@ function AberturaChamadoADM() {
                   observacoes: e.target.value.toUpperCase(),
                 })
               }
-              className="outline-none resize-none font-sm bg-gray-100 p-2 text-center border border-gray-200"
+              className="font-sm resize-none border border-gray-200 bg-gray-100 p-2 text-center outline-none"
             />
           </div>
           {msg.text && <p className={`${msg.color} my-1 italic`}>{msg.text}</p>}
-          <div className="flex justify-center mt-2">
-            <button onClick={createCall} className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
+          <div className="mt-2 flex justify-center">
+            <button onClick={createCall} className="rounded bg-[#fead61] p-2 font-bold hover:bg-[#15599a] hover:text-white">
               ABRIR CHAMADO
             </button>
           </div>

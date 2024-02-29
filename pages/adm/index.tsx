@@ -29,7 +29,7 @@ function Administracao() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -60,7 +60,7 @@ function Administracao() {
 
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes?.includes('ADM')) {
         router.push('/')
       }

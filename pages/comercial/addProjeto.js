@@ -164,7 +164,7 @@ function NovoProjeto() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -599,7 +599,7 @@ function NovoProjeto() {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('PPS')) {
+    if (session?.user.permissoes.rotas.includes('PPS')) {
       return
     } else {
       if (session?.user) {
@@ -610,11 +610,11 @@ function NovoProjeto() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-        <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+      <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
+        <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto">
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações do cliente</span>
-            <div className="flex items-center gap-2 justify-around flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">Informações do cliente</span>
+            <div className="flex flex-wrap items-center justify-around gap-2">
               <TextInput
                 label={'Nome do contrato'}
                 value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ''}
@@ -678,7 +678,7 @@ function NovoProjeto() {
                   setInfo({ ...infoHolder, cep: value })
                 }}
               />
-              <button onClick={findCPF} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
+              <button onClick={findCPF} className="flex h-[30px] items-center rounded bg-[#fead61] p-1">
                 <AiOutlineSearch />
               </button>
               <TextInput
@@ -913,8 +913,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">VISITA TÉCNICA</span>
-            <div className="flex gap-2 justify-around flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">VISITA TÉCNICA</span>
+            <div className="flex flex-wrap justify-around gap-2">
               <div>
                 <input
                   disabled={false}
@@ -967,8 +967,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PADRÃO</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">PADRÃO</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <SelectInput
                 label={'TIPO DO PADRÃO'}
                 editable={true}
@@ -1107,8 +1107,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ESTRUTURA PERSONALIZADA</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ESTRUTURA PERSONALIZADA</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <div>
                 <input
                   disabled={false}
@@ -1220,8 +1220,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">CONTRATO</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">CONTRATO</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <SelectInput
                 label={'STATUS'}
                 editable={true}
@@ -1324,8 +1324,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PAGAMENTO</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">PAGAMENTO</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <SelectInput
                 label={'STATUS PAGAMENTO'}
                 value={infoHolder.pagamento.status ? infoHolder.pagamento.status : 'NÃO DEFINIDO'}
@@ -1483,8 +1483,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações da compra</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">Informações da compra</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <DateInput
                 label={'Data de liberação p/ compra'}
                 editable={true}
@@ -1682,8 +1682,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS INSTALAÇÃO CEMIG</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS INSTALAÇÃO CEMIG</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <TextInput
                 label={'Titular do projeto'}
                 editable={true}
@@ -1754,8 +1754,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">SISTEMA</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">SISTEMA</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <NumberInput
                 label={'NÚMERO DE MÓDULOS'}
                 editable={true}
@@ -1878,8 +1878,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PROJETO</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">PROJETO</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <DateInput
                 label={'Data de assinatura da documentação'}
                 editable={true}
@@ -1964,8 +1964,8 @@ function NovoProjeto() {
                   })
                 }}
               />
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">DIAGRAMA UNIFILAR</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">DIAGRAMA UNIFILAR</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -1988,8 +1988,8 @@ function NovoProjeto() {
                   </label>
                 </div>
               </div>
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">DESENHO DO TELHADO</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">DESENHO DO TELHADO</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2035,8 +2035,8 @@ function NovoProjeto() {
                   })
                 }}
               />
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">AUMENTO DE CARGA</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">AUMENTO DE CARGA</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2061,8 +2061,8 @@ function NovoProjeto() {
                 </div>
               </div>
               {infoHolder.projeto?.aumentoDeCarga == 'SIM' && (
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">STATUS AUMENTO DE CARGA</span>
+                <div className="flex w-[350px] flex-col items-center">
+                  <span className="text-center font-raleway text-sm font-bold uppercase">STATUS AUMENTO DE CARGA</span>
                   <div className="flex">
                     <input
                       disabled={false}
@@ -2166,8 +2166,8 @@ function NovoProjeto() {
                   })
                 }}
               />
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">PROJETO CONCLUÍDO</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">PROJETO CONCLUÍDO</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2193,8 +2193,8 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações sobre a obra</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">Informações sobre a obra</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <SelectInput
                 label={'Laudo'}
                 value={infoHolder.obra?.laudo ? infoHolder.obra?.laudo : 'NÃO DEFINIDO'}
@@ -2214,8 +2214,8 @@ function NovoProjeto() {
                   })
                 }}
               />
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">SOLICITAÇÃO DA OBRA</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">SOLICITAÇÃO DA OBRA</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2297,8 +2297,8 @@ function NovoProjeto() {
                   })
                 }}
               />
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">CHECKLIST OBRA</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">CHECKLIST OBRA</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2321,8 +2321,8 @@ function NovoProjeto() {
                   </label>
                 </div>
               </div>
-              <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">TRAFO</span>
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">TRAFO</span>
                 <div className="flex">
                   <input
                     disabled={false}
@@ -2390,8 +2390,8 @@ function NovoProjeto() {
                 }}
               />
             </div>
-            <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÕES</span>
+            <div className="mt-2 flex w-[450px] flex-col items-center self-center">
+              <span className="text-center font-raleway text-sm font-bold uppercase">OBSERVAÇÕES</span>
               <textarea
                 readOnly={false}
                 value={infoHolder.obra?.observacoes ? infoHolder.obra.observacoes : ''}
@@ -2405,12 +2405,12 @@ function NovoProjeto() {
                     },
                   })
                 }}
-                className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
               />
             </div>
-            <div className="w-full flex items-center justify-center gap-x-4">
-              <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÕES DO KIT</span>
+            <div className="flex w-full items-center justify-center gap-x-4">
+              <div className="mt-2 flex w-[450px] flex-col items-center self-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">INFORMAÇÕES DO KIT</span>
                 <textarea
                   readOnly={false}
                   value={infoHolder.compra?.kitInfo ? infoHolder.compra?.kitInfo : ''}
@@ -2424,11 +2424,11 @@ function NovoProjeto() {
                       },
                     })
                   }}
-                  className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  className="mb-2 h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                 />
               </div>
-              <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">MATERIAL FALTANTE</span>
+              <div className="mt-2 flex w-[450px] flex-col items-center self-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">MATERIAL FALTANTE</span>
                 <textarea
                   readOnly={false}
                   value={infoHolder.material?.materialFaltante ? infoHolder.material?.materialFaltante : ''}
@@ -2442,14 +2442,14 @@ function NovoProjeto() {
                       },
                     })
                   }}
-                  className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  className="mb-2 h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                 />
               </div>
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">MATERIAL</span>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">MATERIAL</span>
+            <div className="flex flex-wrap justify-center gap-2">
               <SelectInput
                 label={'Separação do material'}
                 value={infoHolder.material?.statusSeparacao ? infoHolder.material?.statusSeparacao : 'NÃO DEFINIDO'}
@@ -2518,9 +2518,9 @@ function NovoProjeto() {
               />
             </div>
           </div>
-          {msg && <p className="italic text-center text-red-500">{msg}</p>}
-          <div className="w-full flex items-center justify-center">
-            <button className="p-2 my-2 bg-[#fead61] rounded font-bold hover:bg-[#15599a] hover:text-white" onClick={validateCreation}>
+          {msg && <p className="text-center italic text-red-500">{msg}</p>}
+          <div className="flex w-full items-center justify-center">
+            <button className="my-2 rounded bg-[#fead61] p-2 font-bold hover:bg-[#15599a] hover:text-white" onClick={validateCreation}>
               ADICIONAR PROJETO
             </button>
           </div>

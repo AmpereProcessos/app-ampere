@@ -1,24 +1,33 @@
-import { TEmployeeDTO } from '@/utils/schemas/users'
+import { TEmployeeDTO, TUserDTO } from '@/utils/schemas/users'
 import axios from 'axios'
 import { useQuery } from 'react-query'
 
 async function fetchUsers() {
   try {
-    const { data } = await axios.get('/api/auth/user')
-    return data
+    const { data } = await axios.get('/api/usuarios')
+    return data.data as TUserDTO[]
   } catch (error) {
     throw error
   }
 }
-
-export function useUsers({ enabled }: { enabled: boolean }) {
+export function useUsers() {
   return useQuery({
     queryKey: ['users-simplified'],
     queryFn: fetchUsers,
-    enabled: !!enabled,
   })
 }
-
+async function fetchUserById({ id }: { id: string }) {
+  try {
+    const { data } = await axios.get(`/api/usuarios?id=${id}`)
+    return data.data as TUserDTO
+  } catch (error) {}
+}
+export function useUserById({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ['user-by-id', id],
+    queryFn: async () => await fetchUserById({ id }),
+  })
+}
 async function fetchEmployees() {
   try {
     const { data } = await axios.get('/api/colaboradores')

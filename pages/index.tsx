@@ -63,9 +63,6 @@ function Home() {
   const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
-    onUnauthenticated() {
-      router.push('/auth/authHome')
-    },
   })
   const [year, setYear] = useState<number>(currentYear)
   const { data: stats, isLoading, isSuccess, isError } = useDashboardStats()
@@ -80,13 +77,14 @@ function Home() {
     if (month >= 10) return <p className="text-xs font-semibold text-[#fead61]">{`${month}/${year}`}</p>
     return <p className="text-xs font-semibold text-[#fead61]">{`0${month}/${year}`}</p>
   }
-
+  console.log(session)
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
-    if (session.user?.visualizacao == 'OBRAS') {
+    if (session.user?.visualizacao.tipo == 'EXECUÇÃO') {
       router.push('/ordemDeServico/designadas')
       return <></>
     }
+
     if (isLoading) return <DashboardSkeleton />
     if (isError) return <ErrorComponent msg={'Oops, houve um erro ao carregar o dashboard geral.'} />
     if (isSuccess)

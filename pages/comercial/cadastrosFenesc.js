@@ -19,7 +19,7 @@ function CadastrosFenesc() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -85,7 +85,7 @@ function CadastrosFenesc() {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('PPS')) {
+    if (session?.user.permissoes.rotas.includes('PPS')) {
       if (!registers) {
         getRegisters()
       }
@@ -97,33 +97,33 @@ function CadastrosFenesc() {
   }, [session])
   if (status == 'loading') return <LoadingPage />
   return (
-    <div className="flex flex-col p-6 grow">
+    <div className="flex grow flex-col p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-            <p className="font-bold uppercase text-center text-2xl text-[#15599a]">CADASTROS FENESC</p>
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+            <p className="text-center text-2xl font-bold uppercase text-[#15599a]">CADASTROS FENESC</p>
             <p className="font-bold text-[#fead61]">({filteredRegisters?.length})</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                  <div className="flex items-center gap-x-2 justify-center">
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                  <div className="flex items-center justify-center gap-x-2">
+                    <div className="flex w-fit flex-col items-center">
+                      <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                       <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                         type="date"
                         value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                         onChange={(e) =>
@@ -134,10 +134,10 @@ function CadastrosFenesc() {
                         }
                       />
                     </div>
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
+                    <div className="flex w-fit flex-col items-center">
+                      <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                       <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                         type="date"
                         value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                         onChange={(e) =>
@@ -182,7 +182,7 @@ function CadastrosFenesc() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                 <div
                   onClick={() =>
                     setFilters({
@@ -192,7 +192,7 @@ function CadastrosFenesc() {
                   }
                   className={`${
                     filters.efetivado ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   EFETIVADOS
                 </div>
@@ -205,7 +205,7 @@ function CadastrosFenesc() {
                   }
                   className={`${
                     filters.efetivado ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   NÃO EFETIVADOS
                 </div>
@@ -217,14 +217,14 @@ function CadastrosFenesc() {
           ) : null}
         </AnimatePresence>
       </div>
-      <div className="flex justify-around grow gap-3 mt-4 flex-wrap">
+      <div className="mt-4 flex grow flex-wrap justify-around gap-3">
         {filteredRegisters ? (
           filteredRegisters.map((register) => (
             <div
               key={register._id}
-              className="w-full lg:w-[450px] rounded-md gap-1 flex flex-col border border-gray-300 shadow-sm h-fit lg:h-[290px] p-3"
+              className="flex h-fit w-full flex-col gap-1 rounded-md border border-gray-300 p-3 shadow-sm lg:h-[290px] lg:w-[450px]"
             >
-              <div className="flex items-center justify-between w-full">
+              <div className="flex w-full items-center justify-between">
                 <h1 className="text-lg font-medium">
                   PROJETO <strong className="text-[#15599a]">#{register.codigoSVB}</strong>
                 </h1>
@@ -235,41 +235,41 @@ function CadastrosFenesc() {
                 )}
                 <div className="flex items-center gap-2">
                   <HiIdentification style={{ color: 'rgb(55,65,81)', fontSize: '25px' }} />
-                  <h1 className="text-gray-700 font-medium">{register.cpfCnpj}</h1>
+                  <h1 className="font-medium text-gray-700">{register.cpfCnpj}</h1>
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FaUserAlt style={{ color: '#003d5b' }} />
-                  <h1 className="text-gray-700 font-medium text-xs">{register.nomeVendedor}</h1>
+                  <h1 className="text-xs font-medium text-gray-700">{register.nomeVendedor}</h1>
                 </div>
                 <div className="flex items-center gap-2">
                   <MdEmail style={{ color: '#16B010' }} />
-                  <h1 className="text-gray-700 font-medium text-xs">{register.emailVendedor}</h1>
+                  <h1 className="text-xs font-medium text-gray-700">{register.emailVendedor}</h1>
                 </div>
               </div>
-              <div className="flex flex-col w-full justify-between">
-                <div className="flex gap-3 items-center justify-center">
+              <div className="flex w-full flex-col justify-between">
+                <div className="flex items-center justify-center gap-3">
                   <h1 className="text-sm text-gray-500">FINANCIAMENTO</h1>
                   <BsBank style={{ color: '#fead61' }} />
                 </div>
-                <div className="flex flex-col lg:flex-row w-full items-center justify-between">
+                <div className="flex w-full flex-col items-center justify-between lg:flex-row">
                   <div className="flex flex-col items-center lg:items-start">
-                    <h1 className="text-gray-600 font-medium text-sm">GERENTE</h1>
+                    <h1 className="text-sm font-medium text-gray-600">GERENTE</h1>
                     <h1 className="text-sm font-medium">{register.nomeGerente}</h1>
                   </div>
                   <div className="flex flex-col items-center">
-                    <h1 className="text-gray-600 font-medium text-sm">PA</h1>
+                    <h1 className="text-sm font-medium text-gray-600">PA</h1>
                     <h1 className="text-sm font-medium">{register.pontoAtendimento}</h1>
                   </div>
                   <div className="flex flex-col items-center lg:items-end">
-                    <h1 className="text-gray-600 font-medium text-sm">CONTATO</h1>
+                    <h1 className="text-sm font-medium text-gray-600">CONTATO</h1>
                     <h1 className="text-sm font-medium">{register.telefoneGerente}</h1>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <h1 className="text-gray-600 font-medium text-xs">VALOR</h1>
+                    <h1 className="text-xs font-medium text-gray-600">VALOR</h1>
                     <h1 className="text-sm font-medium">
                       R$
                       {register.valorFinanciado.toLocaleString('pt-br', {
@@ -278,19 +278,19 @@ function CadastrosFenesc() {
                     </h1>
                   </div>
                   <div className="flex flex-col items-end">
-                    <h1 className="text-gray-600 font-medium text-xs">PARCELAS</h1>
+                    <h1 className="text-xs font-medium text-gray-600">PARCELAS</h1>
                     <h1 className="text-sm font-medium">x{register.qtdeParcelas}</h1>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-full justify-between">
-                <div className="flex gap-3 items-center justify-center">
+              <div className="flex w-full flex-col justify-between">
+                <div className="flex items-center justify-center gap-3">
                   <h1 className="text-sm text-gray-500">SISTEMA FOTOVOLTAICO</h1>
                   <FaSolarPanel style={{ color: 'rgb(34,197,94)' }} />
                 </div>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <h1 className="text-gray-600 font-medium text-xs">VALOR</h1>
+                    <h1 className="text-xs font-medium text-gray-600">VALOR</h1>
                     <h1 className="text-sm font-medium">
                       R$
                       {Number(register.valorProjeto).toLocaleString('pt-br', {
@@ -299,20 +299,20 @@ function CadastrosFenesc() {
                     </h1>
                   </div>
                   <div className="flex flex-col items-end">
-                    <h1 className="text-gray-600 font-medium text-xs">POTÊNCIA</h1>
+                    <h1 className="text-xs font-medium text-gray-600">POTÊNCIA</h1>
                     <h1 className="text-sm font-medium">{register.potPico}kWp</h1>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-full">
+              <div className="flex w-full flex-col">
                 <div className="flex items-center gap-2">
                   <AiOutlineCalendar style={{ color: '#15599a' }} />
-                  <h1 className="text-gray-700 font-medium text-xs">
+                  <h1 className="text-xs font-medium text-gray-700">
                     {register.dataRegistro ? dayjs(register.dataRegistro).format('DD/MM/YY HH:mm') : null}
                   </h1>
                 </div>
-                <div className="flex gap-3 items-center justify-center">
-                  <a href={register.proposta.link} className="text-sm text-blue-300 font-medium">
+                <div className="flex items-center justify-center gap-3">
+                  <a href={register.proposta.link} className="text-sm font-medium text-blue-300">
                     PROPOSTA
                   </a>
                   <BsFolderFill style={{ color: 'rgb(30,64,175)' }} />
@@ -321,11 +321,11 @@ function CadastrosFenesc() {
             </div>
           ))
         ) : (
-          <div className="grow flex items-center justify-center">
+          <div className="flex grow items-center justify-center">
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

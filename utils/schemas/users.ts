@@ -141,12 +141,13 @@ const PositionSchema = z.object({
   cbo: z.string({ required_error: 'CBO do cargo não informado.', invalid_type_error: 'Tipo não válido para o CBO do cargo.' }),
   dataInicio: z
     .string({ required_error: 'Data de início do cargo não informada.', invalid_type_error: 'Tipo não válido para a data de início do cargo.' })
-    .datetime(),
+    .datetime({ message: 'Formato inválido para data de início do cargo.' }),
   dataFinal: z
     .string({
       required_error: 'Data de fim do cargo não informada.',
       invalid_type_error: 'Tipo não válido para a data de fim do cargo.',
     })
+    .datetime({ message: 'Formato inválido para data de fim do cargo.' })
     .optional()
     .nullable(),
 })
@@ -259,7 +260,7 @@ export const InsertUserSchema = z.object({
       required_error: 'Data de nascimento do colaborador não informado.',
       invalid_type_error: 'Tipo não válido para data de nascimento do colaborador.',
     })
-    .datetime()
+    .datetime({ message: 'Formato inválido para data de nascimento.' })
     .optional()
     .nullable(),
   localNascimento: z.string({
@@ -358,7 +359,7 @@ export const InsertUserSchema = z.object({
       required_error: 'Data de admissão do colaborador não informado.',
       invalid_type_error: 'Tipo não válido para data de admissão do colaborador.',
     })
-    .datetime()
+    .datetime({ message: 'Formato inválido para data de admissão.' })
     .optional()
     .nullable(),
   cargos: z.array(PositionSchema),
@@ -376,3 +377,33 @@ export const InsertUserSchema = z.object({
 
 export type TEmployee = z.infer<typeof GeneralUserSchema>
 export type TEmployeeDTO = TEmployee & { _id: string }
+
+export type TUser = Pick<
+  TEmployee,
+  | 'acessoAtivo'
+  | 'nome'
+  | 'email'
+  | 'telefone'
+  | 'avatar_url'
+  | 'visualizacao'
+  | 'permissoes'
+  | 'empresaVinculada'
+  | 'cargos'
+  | 'dataInsercao'
+  | 'autor'
+>
+export type TUserDTO = Pick<
+  TEmployeeDTO,
+  | 'acessoAtivo'
+  | '_id'
+  | 'nome'
+  | 'email'
+  | 'telefone'
+  | 'avatar_url'
+  | 'visualizacao'
+  | 'permissoes'
+  | 'empresaVinculada'
+  | 'cargos'
+  | 'dataInsercao'
+  | 'autor'
+>

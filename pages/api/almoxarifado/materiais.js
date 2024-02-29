@@ -2,7 +2,6 @@ import { getSession } from 'next-auth/react'
 import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import connectToProjectsDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
-import { getNotificationObjByMaterialMinQty } from '../../../utils/methods/mutation/notifications'
 import createHttpError from 'http-errors'
 import { errorHandler } from '../../../utils/methods/handlers'
 
@@ -27,31 +26,6 @@ export default async function handler(req, res) {
     }
   }
 
-  // Automatizations involving other dbs/collections
-  async function handleNotifyingSupplySector(materialList, currentMaterials, notificationCollection) {
-    var newNotificationsArr = materialList.map((material) => {
-      const materialId = material.id
-      const correspondentMaterial = currentMaterials?.find((currentMaterial) => currentMaterial._id == materialId)
-      if (!correspondentMaterial) return null
-      const newQty = correspondentMaterial.qtde + material.diff
-      if (!!correspondentMaterial.qtdeMinima && material.diff < 0 && newQty < correspondentMaterial.qtdeMinima) {
-        const notficiationObject = getNotificationObjByMaterialMinQty({
-          materialName: correspondentMaterial.nome,
-          materialNewQty: newQty,
-          materialMinQty: correspondentMaterial.qtdeMinima,
-        })
-        return notficiationObject
-      }
-      return null
-    })
-    newNotificationsArr = newNotificationsArr.filter((not) => !!not)
-    try {
-      if (newNotificationsArr.length > 0) await notificationCollection.insertMany(newNotificationsArr)
-      return
-    } catch (error) {
-      throw error
-    }
-  }
   async function handleStockActivityLogInsertion({
     materialList,
     currentMaterials,
@@ -202,7 +176,6 @@ export default async function handler(req, res) {
       // Getting the current state of materials so to check current quantities
       const currentStateMaterials = await getCurrentMaterials(materialCollection)
 
-      await handleNotifyingSupplySector(changes, currentStateMaterials, notificationCollection)
       console.log('CHANGES', changes)
       // Doing multiple qtde alterations for material items
       const bulkwriteArr = handleBulkWriteFormatting(changes)

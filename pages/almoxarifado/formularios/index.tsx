@@ -43,7 +43,7 @@ const beforeParam = getLastDayOfMonth({ resetHour: true })
 function Formularios() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/authHome') })
+  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   const [dateParam, setDateParam] = useState<TDateParam>({ after: afterParam, before: beforeParam })

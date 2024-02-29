@@ -35,11 +35,11 @@ function ComissaoPage() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const isManager = !!session?.user?.manager
-  const isADM = !!session?.user?.accessibleRoutes.includes('ADM')
+  const isADM = !!session?.user?.permissoes.rotas.includes('ADM')
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 

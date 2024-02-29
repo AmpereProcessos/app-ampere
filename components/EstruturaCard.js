@@ -9,7 +9,7 @@ import { AiFillEye } from 'react-icons/ai'
 import OSCreationBlock from './OSCreationBlock'
 import dayjs from 'dayjs'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
-function EstruturaCard({ project, credentials }) {
+function EstruturaCard({ project }) {
   const [changes, setChanges] = useState({
     'estruturaPersonalizada.dataMontagem': project.estruturaPersonalizada.dataMontagem,
     'estruturaPersonalizada.status': project.estruturaPersonalizada.status,
@@ -25,39 +25,39 @@ function EstruturaCard({ project, credentials }) {
       .then((res) => console.log(res.data))
   }
   return (
-    <div className="w-full p-2 border border-[#15599a] rounded">
-      <div className="flex flex-col lg:grid lg:grid-cols-10 items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
-        <div className="flex flex-col justify-center items-center col-span-2">
+    <div className="w-full rounded border border-[#15599a] p-2">
+      <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 pb-2 lg:grid lg:grid-cols-10">
+        <div className="col-span-2 flex flex-col items-center justify-center">
           <strong className="text-[#15599a]">#{project.qtde} </strong>
-          <p className="font-bold text-center">{project.nomeDoContrato}</p>
+          <p className="text-center font-bold">{project.nomeDoContrato}</p>
         </div>
-        <div className="flex flex-wrap gap-2 items-center grow justify-around col-span-8">
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">PAGAMENTO DO KIT</p>
+        <div className="col-span-8 flex grow flex-wrap items-center justify-around gap-2">
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">PAGAMENTO DO KIT</p>
             <p className="text-xs uppercase text-gray-500">{project.compra.statusLiberacao}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">CIDADE</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">CIDADE</p>
             <p className="text-xs uppercase text-gray-500">{project.cidade}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">BAIRRO</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">BAIRRO</p>
             <p className="text-xs uppercase text-gray-500">{project.bairro}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">LOGRADOURO</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">LOGRADOURO</p>
             <p className="text-xs uppercase text-gray-500">{project.logradouro}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">NÚMERO</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">NÚMERO</p>
             <p className="text-xs uppercase text-gray-500">{project.numeroResidencia}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">STATUS DA ENTREGA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">STATUS DA ENTREGA</p>
             <p className="text-xs uppercase text-gray-500">{project.compra.statusEntrega ? project.compra.statusEntrega : '-'}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">
               {project.compra.statusEntrega == 'ENTREGUE' ? 'DATA DE ENTREGA' : 'PREVISÃO DE ENTREGA'}
             </p>
             <p className="text-xs uppercase text-gray-500">
@@ -66,45 +66,45 @@ function EstruturaCard({ project, credentials }) {
                   ? dayjs(new Date(project.compra.dataEntrega)).add(4, 'hours').format('DD/MM/YYYY')
                   : dayjs(new Date(project.compra.previsaoEntrega)).add(4, 'hours').format('DD/MM/YYYY')
                 : project.compra.previsaoEntrega
-                ? dayjs(new Date(project.compra.previsaoEntrega)).add(4, 'hours').format('DD/MM/YYYY')
-                : '-'}
+                  ? dayjs(new Date(project.compra.previsaoEntrega)).add(4, 'hours').format('DD/MM/YYYY')
+                  : '-'}
             </p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">TIPO DA ESTRUTURA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">TIPO DA ESTRUTURA</p>
             <p className="text-xs uppercase text-gray-500">{project.estruturaPersonalizada?.tipo ? project.estruturaPersonalizada?.tipo : '-'}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">RESP.PAGAMENTO DA ESTRUTURA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">RESP.PAGAMENTO DA ESTRUTURA</p>
             <p className="text-xs uppercase text-gray-500">
               {project.estruturaPersonalizada?.respPagamento ? project.estruturaPersonalizada?.respPagamento : '-'}
             </p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">VALOR DA ESTRUTURA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">VALOR DA ESTRUTURA</p>
             <p className="text-xs uppercase text-gray-500">{project.estruturaPersonalizada?.valor ? project.estruturaPersonalizada?.valor : '-'}</p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">ENTREGA DA ESTRUTURA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">ENTREGA DA ESTRUTURA</p>
             <p className="text-xs uppercase text-gray-500">
               {project.estruturaPersonalizada?.statusEntrega ? project.estruturaPersonalizada?.statusEntrega : '-'}
             </p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">DATA DE ENTREGA DA ESTRUTURA</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">DATA DE ENTREGA DA ESTRUTURA</p>
             <p className="text-xs uppercase text-gray-500">
               {project.estruturaPersonalizada?.dataEntrega
                 ? dayjs(project.estruturaPersonalizada?.dataEntrega).add(4, 'hours').format('DD/MM/YYYY')
                 : '-'}
             </p>
           </div>
-          <div className="flex flex-col items-center w-[200px]">
-            <p className="text-sm uppercase text-[#15599a] font-bold">NºModulos</p>
+          <div className="flex w-[200px] flex-col items-center">
+            <p className="text-sm font-bold uppercase text-[#15599a]">NºModulos</p>
             <p className="text-xs uppercase text-gray-500">{project.sistema.qtdeModulos ? project.sistema.qtdeModulos : '-'}</p>
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-around mt-2">
+      <div className="mt-2 flex flex-wrap items-center justify-around">
         <div className="flex flex-col">
           <h1 className="font-bold">DIA DA MONTAGEM</h1>
           <input
@@ -147,8 +147,8 @@ function EstruturaCard({ project, credentials }) {
       </div>
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-x-2">
-          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ORDEM DE SERVIÇO</span>
-          <button onClick={() => setOSVisible(!osVisible)} className="px-1 h-[20px] rounded bg-[#fead41]  hover:bg-[#15599a] hover:text-white">
+          <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ORDEM DE SERVIÇO</span>
+          <button onClick={() => setOSVisible(!osVisible)} className="h-[20px] rounded bg-[#fead41] px-1  hover:bg-[#15599a] hover:text-white">
             <AiFillEye />
           </button>
         </div>

@@ -48,14 +48,14 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
       }
       const author = {
         id: session.user?.id,
-        nome: session.user?.name,
-        avatar_url: session.user?.image,
+        nome: session.user.nome,
+        avatar_url: session.user.avatar_url,
       }
       await createActivityFromTechAnalysys({ activity: pendencyHolder.descricao, author, project, responsible })
       await notifySellerInCRM(
         pendencyHolder.responsavel,
         infoHolder.projeto?.id,
-        `ATIVIDADE CRIADA POR ${session.user?.name}: ${pendencyHolder.descricao}`
+        `ATIVIDADE CRIADA POR ${session.user.nome}: ${pendencyHolder.descricao}`
       )
       // criar função para notificar vendedor
     }
@@ -126,7 +126,7 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
         </div>
-        <div className="flex w-full gap-2 items-center justify-end my-2">
+        <div className="my-2 flex w-full items-center justify-end gap-2">
           {infoHolder.projeto.id && infoHolder.requerente.idCRM ? (
             <div className="w-fit">
               <CheckboxInput
@@ -149,17 +149,17 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </button>
         </div>
       </div>
-      <h1 className="w-full p-1 bg-gray-500 text-white font-bold text-center rounded-tr-sm rounded-tl-sm">LISTA DE PENDÊNCIAS</h1>
+      <h1 className="w-full rounded-tr-sm rounded-tl-sm bg-gray-500 p-1 text-center font-bold text-white">LISTA DE PENDÊNCIAS</h1>
       {infoHolder.pendencias && infoHolder.pendencias.length > 0 ? (
         infoHolder.pendencias.map((pendency, index) => (
-          <div key={index} className="mt-2 w-full flex flex-col border border-gray-300 p-3 rounded-md shadow-sm">
-            <h1 className="w-full text-start font-bold tracking-tight leading-none ">{pendency.categoria}</h1>
-            <div className="flex items-center justify-start w-full gap-2 mt-1">
+          <div key={index} className="mt-2 flex w-full flex-col rounded-md border border-gray-300 p-3 shadow-sm">
+            <h1 className="w-full text-start font-bold leading-none tracking-tight ">{pendency.categoria}</h1>
+            <div className="mt-1 flex w-full items-center justify-start gap-2">
               <Avatar fallback={'R'} url={getUserAvatarUrl({ users: crmUsers, userName: pendency.responsavel })} height={20} width={20} />
-              <p className="font-medium text-gray-500 text-xs">{pendency.responsavel}</p>
+              <p className="text-xs font-medium text-gray-500">{pendency.responsavel}</p>
             </div>
-            <h1 className="p-2 text-center text-sm text-gray-500 rounded-md bg-gray-100 my-2">{pendency.descricao}</h1>
-            <div className="w-full flex items-center justify-between">
+            <h1 className="my-2 rounded-md bg-gray-100 p-2 text-center text-sm text-gray-500">{pendency.descricao}</h1>
+            <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className={`flex items-center gap-2 text-gray-500`}>
                   <BsCalendarFill />
@@ -190,7 +190,7 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </div>
         ))
       ) : (
-        <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Nenhum pendência cadastrada.</p>
+        <p className="w-full py-2 text-center text-xs font-medium italic text-gray-500">Nenhum pendência cadastrada.</p>
       )}
     </div>
   )

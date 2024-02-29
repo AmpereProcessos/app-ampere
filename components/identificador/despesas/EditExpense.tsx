@@ -56,7 +56,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
     },
     autor: {
       id: session.user?.id,
-      nome: session.user?.name,
+      nome: session.user.nome,
     },
     itens: [],
     total: 0,

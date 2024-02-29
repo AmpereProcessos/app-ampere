@@ -40,9 +40,9 @@ function renderGroupedByResponsible(orders) {
   if (!grouped) return null
 
   return Object.entries(grouped).map(([key, value], index) => (
-    <div key={index} className="flex flex-col w-full">
-      <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">{key}</h1>
-      <div className="mt-1 grid grid-cols-1 lg:grid-cols-3 w-full gap-5">
+    <div key={index} className="flex w-full flex-col">
+      <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">{key}</h1>
+      <div className="mt-1 grid w-full grid-cols-1 gap-5 lg:grid-cols-3">
         {value.map((order, index2) => (
           <DesignationCard key={order._id} order={order} />
         ))}
@@ -55,7 +55,7 @@ function ControleDeOSs({ arr }) {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -119,23 +119,23 @@ function ControleDeOSs({ arr }) {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex flex-col p-6 grow bg-[#fff]">
+      <div className="flex grow flex-col bg-[#fff] p-6">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">GESTÃO DE EXECUÇÕES</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">GESTÃO DE EXECUÇÕES</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">ORDENS</h1>
@@ -176,8 +176,8 @@ function ControleDeOSs({ arr }) {
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <TextInput
                   label="NOME DO CLIENTE"
                   placeholder="Filtre por nome do cliente..."
@@ -227,7 +227,7 @@ function ControleDeOSs({ arr }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <div
                   onClick={() =>
                     setFilters((prev) => ({
@@ -237,7 +237,7 @@ function ControleDeOSs({ arr }) {
                   }
                   className={`${
                     filters.inProgress ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   EM PROCESSO
                 </div>
@@ -250,7 +250,7 @@ function ControleDeOSs({ arr }) {
                   }
                   className={`${
                     filters.inExecution ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   EM EXECUÇÃO
                 </div>
@@ -263,7 +263,7 @@ function ControleDeOSs({ arr }) {
                   }
                   className={`${
                     filters.unassigned ? 'bg-[#15599a]' : 'bg-blue-300'
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
                 >
                   PARA DESIGNAR
                 </div>
@@ -271,7 +271,7 @@ function ControleDeOSs({ arr }) {
             </motion.div>
           ) : null}
         </AnimatePresence>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap">{renderGroupedByResponsible(orders)}</div>
+        <div className="mt-4 flex flex-wrap justify-around gap-3">{renderGroupedByResponsible(orders)}</div>
       </div>
     )
   }

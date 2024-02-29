@@ -10,7 +10,7 @@ import OSCreationBlock from './OSCreationBlock'
 import dayjs from 'dayjs'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
 import { formatDateAsLocale } from '../utils/methods/formatting'
-function PadraoCard({ project, credentials }) {
+function PadraoCard({ project }) {
   const [changes, setChanges] = useState({
     'projeto.fechamentoAC': project.projeto.fechamentoAC,
     'projeto.acStatus': project.projeto.acStatus,
@@ -26,72 +26,72 @@ function PadraoCard({ project, credentials }) {
       .then((res) => console.log(res.data))
   }
   return (
-    <div className="w-full p-2 border border-[#15599a] rounded">
-      <div className="flex flex-col justify-center lg:flex-row items-center gap-x-2 lg:justify-between border-b border-gray-200 pb-2">
-        <div className="flex flex-col justify-center items-center">
+    <div className="w-full rounded border border-[#15599a] p-2">
+      <div className="flex flex-col items-center justify-center gap-x-2 border-b border-gray-200 pb-2 lg:flex-row lg:justify-between">
+        <div className="flex flex-col items-center justify-center">
           <strong className="text-[#15599a]">#{project.qtde} </strong>
-          <p className="font-bold text-center">{project.nomeDoContrato}</p>
+          <p className="text-center font-bold">{project.nomeDoContrato}</p>
         </div>
-        <div className="flex flex-wrap gap-2 items-center grow justify-around">
+        <div className="flex grow flex-wrap items-center justify-around gap-2">
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">PREVISÃO DE ENTREGA</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">PREVISÃO DE ENTREGA</p>
             <p className="text-xs uppercase text-gray-500">{formatDateAsLocale(project.compra.previsaoEntrega) || '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">CIDADE</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">CIDADE</p>
             <p className="text-xs uppercase text-gray-500">{project.cidade}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">BAIRRO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">BAIRRO</p>
             <p className="text-xs uppercase text-gray-500">{project.bairro}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">LOGRADOURO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">LOGRADOURO</p>
             <p className="text-xs uppercase text-gray-500">{project.logradouro}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">NÚMERO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">NÚMERO</p>
             <p className="text-xs uppercase text-gray-500">{project.numeroResidencia}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">DATA ASS.DOCUMENTAÇÃO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">DATA ASS.DOCUMENTAÇÃO</p>
             <p className="text-xs uppercase text-gray-500">
               {project.projeto?.dataAssDocumentacao ? new Date(project.projeto.dataAssDocumentacao).toLocaleDateString() : '-'}
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">STATUS DO PARECER</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">STATUS DO PARECER</p>
             <p className="text-xs uppercase text-gray-500">
               {project.parecer.statusDoParecerDeAcesso ? project.parecer.statusDoParecerDeAcesso : '-'}
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">TIPO DO PADRÃO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">TIPO DO PADRÃO</p>
             <p className="text-xs uppercase text-gray-500">{project.padrao?.tipo ? project.padrao.tipo : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">RESP.PAGAMENTO DO PADRÃO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">RESP.PAGAMENTO DO PADRÃO</p>
             <p className="text-xs uppercase text-gray-500">{project.padrao?.respPagamento ? project.padrao.respPagamento : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">RESP.INSTALAÇÃO DO PADRÃO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">RESP.INSTALAÇÃO DO PADRÃO</p>
             <p className="text-xs uppercase text-gray-500">{project.padrao?.respInstalacao ? project.padrao.respInstalacao : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">VALOR DO PADRÃO</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">VALOR DO PADRÃO</p>
             <p className="text-xs uppercase text-gray-500">{project.padrao?.valor ? project.padrao.valor : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">SAIDA DO CLIENTE</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">SAIDA DO CLIENTE</p>
             <p className="text-xs uppercase text-gray-500">{project.visitaTecnica.saidaDoCliente ? project.visitaTecnica.saidaDoCliente : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">AMPERAGEM</p>
+            <p className="text-sm font-bold uppercase text-[#15599a]">AMPERAGEM</p>
             <p className="text-xs uppercase text-gray-500">{project.visitaTecnica?.amperagem ? project.visitaTecnica.amperagem : '-'}</p>
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-around mt-2">
+      <div className="mt-2 flex flex-wrap items-center justify-around">
         <div className="flex flex-col">
           <h1 className="font-bold">DIA DA MONTAGEM</h1>
           <input
@@ -137,8 +137,8 @@ function PadraoCard({ project, credentials }) {
       </div>
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-x-2">
-          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ORDEM DE SERVIÇO</span>
-          <button onClick={() => setOSVisible(!osVisible)} className="px-1 h-[20px] rounded bg-[#fead41] hover:bg-[#15599a] hover:text-white">
+          <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ORDEM DE SERVIÇO</span>
+          <button onClick={() => setOSVisible(!osVisible)} className="h-[20px] rounded bg-[#fead41] px-1 hover:bg-[#15599a] hover:text-white">
             <AiFillEye />
           </button>
         </div>

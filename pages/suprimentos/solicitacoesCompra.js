@@ -32,7 +32,7 @@ function SolicitacoesCompra() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -98,7 +98,7 @@ function SolicitacoesCompra() {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Suprimentos') || session?.user.accessibleRoutes.includes('ADM')) {
+    if (session?.user.permissoes.rotas.includes('Suprimentos') || session?.user.permissoes.rotas.includes('ADM')) {
       if (!solicitations) getSolicitations()
     } else {
       if (session?.user) {
@@ -110,39 +110,39 @@ function SolicitacoesCompra() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="p-6 grow flex flex-col">
+      <div className="flex grow flex-col p-6">
         <div className="flex flex-col justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
-              <p className="font-bold uppercase text-center text-2xl text-[#15599a]">SOLICITAÇÕES DE COMPRA</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 font-['Roboto'] lg:flex-row">
+              <p className="text-center text-2xl font-bold uppercase text-[#15599a]">SOLICITAÇÕES DE COMPRA</p>
               <p className="font-bold text-[#fead61]">({filteredSolicitations?.length})</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                   <input
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    className="w-full rounded  border border-gray-200 p-1.5 outline-none placeholder:italic lg:w-[350px]"
                     placeholder="DIGITE O NOME DO SOLICITANTE"
                     value={filters.search}
                     onChange={(e) => handleSearchFilter(e.target.value)}
                   />
-                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                    <div className="flex items-center gap-x-2 justify-center">
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
                           value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                           onChange={(e) => {
@@ -153,10 +153,10 @@ function SolicitacoesCompra() {
                           }}
                         />
                       </div>
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
+                      <div className="flex w-fit flex-col items-center">
+                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
                           type="date"
                           value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -200,7 +200,7 @@ function SolicitacoesCompra() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[250px]">
                     <Select
                       isMulti={true}
@@ -269,7 +269,7 @@ function SolicitacoesCompra() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 justify-end items-center">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={() => handleFilters()} />
                 </div>
               </motion.div>
@@ -277,7 +277,7 @@ function SolicitacoesCompra() {
           </AnimatePresence>
         </div>
         {solicitations ? (
-          <div className="flex justify-around mt-4 flex-wrap gap-4">
+          <div className="mt-4 flex flex-wrap justify-around gap-4">
             {filteredSolicitations.length > 0 ? (
               filteredSolicitations.map((solicitation, index) => (
                 <div
@@ -285,28 +285,28 @@ function SolicitacoesCompra() {
                   onClick={() => handleOpenModal(solicitation)}
                   className={`flex flex-col ${getBGColor(
                     solicitation.aprovacao
-                  )} hover:scale-[1.02] duration-300 ease-in-out cursor-pointer hover:bg-blue-50 gap-4 border border-gray-300 shadow-lg w-[450px] p-3 rounded-sm`}
+                  )} w-[450px] cursor-pointer gap-4 rounded-sm border border-gray-300 p-3 shadow-lg duration-300 ease-in-out hover:scale-[1.02] hover:bg-blue-50`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FaUserAlt style={{ color: '#003d5b' }} />
-                      <h1 className="text-gray-700 font-medium">{solicitation.requisitante.nome}</h1>
+                      <h1 className="font-medium text-gray-700">{solicitation.requisitante.nome}</h1>
                     </div>
                     <div className="flex items-center gap-2">
                       <BsFillTelephoneFill style={{ color: '#16B010' }} />
-                      <h1 className="text-gray-700 font-medium">{solicitation.requisitante.telefone}</h1>
+                      <h1 className="font-medium text-gray-700">{solicitation.requisitante.telefone}</h1>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col  items-start">
-                      <h1 className="text-start text-gray-500 text-xs font-medium">STATUS</h1>
-                      <h1 className={`text-xs ${getStatusColor(solicitation.status)} font-medium p-1 rounded-md`}>
+                      <h1 className="text-start text-xs font-medium text-gray-500">STATUS</h1>
+                      <h1 className={`text-xs ${getStatusColor(solicitation.status)} rounded-md p-1 font-medium`}>
                         {solicitation.status ? solicitation.status : 'EM ABERTO'}
                       </h1>
                     </div>
                     <div className="flex flex-col  items-end">
-                      <h1 className="text-end text-gray-500 text-xs font-medium">RESPONSÁVEL</h1>
-                      <h1 className={`text-xs font-medium p-1 rounded-md text-end`}>
+                      <h1 className="text-end text-xs font-medium text-gray-500">RESPONSÁVEL</h1>
+                      <h1 className={`rounded-md p-1 text-end text-xs font-medium`}>
                         {solicitation.responsavel ? solicitation.responsavel : 'NÃO DEFINIDO'}
                       </h1>
                     </div>
@@ -314,45 +314,45 @@ function SolicitacoesCompra() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <h1 className="text-start text-gray-500 text-xs font-medium">SOLICITAÇÃO</h1>
+                      <h1 className="text-start text-xs font-medium text-gray-500">SOLICITAÇÃO</h1>
                       <div className="flex items-center gap-2">
                         <BsCalendarFill style={{ color: '#15599a' }} />
-                        <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                        <h1 className="text-xs font-medium text-gray-700 lg:text-base">
                           {solicitation.dataInsercao ? dayjs(solicitation.dataInsercao).format('DD/MM/YY HH:mm') : null}
                         </h1>
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <h1 className="text-end text-gray-500 text-xs font-medium">PRAZO/URGÊNCIA</h1>
+                      <h1 className="text-end text-xs font-medium text-gray-500">PRAZO/URGÊNCIA</h1>
                       <div className="flex items-center justify-end gap-2">
                         <BsCalendarCheckFill style={{ color: 'rgb(249,115,22)' }} />
-                        <h1 className="text-gray-700 font-medium text-xs lg:text-base">{solicitation.urgencia}</h1>
+                        <h1 className="text-xs font-medium text-gray-700 lg:text-base">{solicitation.urgencia}</h1>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col w-full">
+                  <div className="flex w-full flex-col">
                     <div className="flex items-center justify-center gap-2">
                       <BsFillCartFill />
-                      <h1 className="text-center text-gray-500 text-xs font-medium">ITENS</h1>
+                      <h1 className="text-center text-xs font-medium text-gray-500">ITENS</h1>
                     </div>
                     {solicitation.itens.map((item, index) => {
                       if (index <= 3)
                         return (
-                          <div key={index} className="w-full flex justify-between items-center">
-                            <p className="text-gray-700 text-sm font-light">{formatLongString(item.descricao)}</p>
-                            <p className="text-gray-700 text-sm font-light">x{item.qtde}</p>
+                          <div key={index} className="flex w-full items-center justify-between">
+                            <p className="text-sm font-light text-gray-700">{formatLongString(item.descricao)}</p>
+                            <p className="text-sm font-light text-gray-700">x{item.qtde}</p>
                           </div>
                         )
                     })}
                     {solicitation.itens.length > 4 ? (
-                      <p className="text-gray-700 text-sm w-full text-center font-light">Clique para ver demais itens</p>
+                      <p className="w-full text-center text-sm font-light text-gray-700">Clique para ver demais itens</p>
                     ) : null}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center">
-                <div className="flex items-center w-[50px] h-[50px] ml-2 hover:scale-105 duration-500 ease-in-out">
+              <div className="flex h-full w-full flex-col items-center justify-center">
+                <div className="ml-2 flex h-[50px] w-[50px] items-center duration-500 ease-in-out hover:scale-105">
                   <Image src={SleepVolts} />
                 </div>
                 <p className="text-lg italic text-gray-400">Sem solicitações de compra...</p>
@@ -360,7 +360,7 @@ function SolicitacoesCompra() {
             )}
           </div>
         ) : (
-          <div className="grow flex items-center justify-center">
+          <div className="flex grow items-center justify-center">
             <LoadingPage />
           </div>
         )}

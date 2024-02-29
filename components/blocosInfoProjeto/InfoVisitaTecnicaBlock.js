@@ -30,7 +30,7 @@ function getViewPermissions({ routes }) {
 function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChanges, analysisId }) {
   const { data: session } = useSession()
   const { data: analysis, isSuccess, isLoading, isError } = useTechnicalAnalysisById({ id: analysisId, enabled: !!analysisId })
-  const viewPermissions = getViewPermissions({ routes: session.user?.accessibleRoutes })
+  const viewPermissions = getViewPermissions({ routes: session.user?.permissoes.rotas })
   // Return for technical analysis previous to system
   if (!analysisId)
     return (

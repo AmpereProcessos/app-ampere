@@ -41,8 +41,8 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
     tipo: '',
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     projeto: {
       id: null,

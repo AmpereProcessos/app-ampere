@@ -1,33 +1,30 @@
-import React, { useEffect, useRef } from "react";
-import { FaUser, FaUserCircle, FaUsersCog } from "react-icons/fa";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { MdNotifications } from "react-icons/md";
-import { useRouter } from "next/router";
-function ConfigDropDown({ setNotificationIsOpen, closeConfigDropDown }) {
-  const ref = useRef();
-  const router = useRouter();
-  const { data: session } = useSession();
+import React, { useEffect, useRef } from 'react'
+import { FaUser, FaUserCircle, FaUsersCog } from 'react-icons/fa'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { MdNotifications } from 'react-icons/md'
+import { useRouter } from 'next/router'
+function ConfigDropDown({ closeConfigDropDown }) {
+  const ref = useRef()
+  const router = useRouter()
+  const { data: session } = useSession()
 
   function onClickOutside() {
-    closeConfigDropDown();
+    closeConfigDropDown()
   }
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
-        onClickOutside();
+        onClickOutside()
       }
-    };
-    document.addEventListener("click", (e) => handleClickOutside(e), true);
+    }
+    document.addEventListener('click', (e) => handleClickOutside(e), true)
     return () => {
-      document.removeEventListener("click", (e) => handleClickOutside(e), true);
-    };
-  }, [onClickOutside]);
+      document.removeEventListener('click', (e) => handleClickOutside(e), true)
+    }
+  }, [onClickOutside])
   return (
-    <div
-      ref={ref}
-      className="fixed flex flex-col rounded  w-40 bg-[#fff] border border-gray-200 mt-12 right-4 top-0 shadow-lg py-1"
-    >
+    <div ref={ref} className="fixed right-4 top-0 mt-12  flex w-40 flex-col rounded border border-gray-200 bg-[#fff] py-1 shadow-lg">
       {/* <Link href="/auth/perfil">
         <div className="flex items-center h-[50px] gap-2 cursor-pointer font-bold text-gray-600  hover:bg-blue-200 w-full p-2 border-b border-gray-200">
           <FaUserCircle style={{ fontSize: "25px" }} />
@@ -36,35 +33,33 @@ function ConfigDropDown({ setNotificationIsOpen, closeConfigDropDown }) {
       </Link> */}
       <div
         onClick={() => {
-          router.push(`/auth/meuPerfil/${session.user.id}`);
+          router.push(`/auth/meuPerfil/${session.user.id}`)
         }}
-        className="flex items-center h-[50px] gap-2 cursor-pointer font-bold text-gray-600  hover:bg-blue-200 w-full p-2 border-b border-gray-200"
+        className="flex h-[50px] w-full cursor-pointer items-center gap-2 border-b  border-gray-200 p-2 font-bold text-gray-600 hover:bg-blue-200"
       >
-        <FaUser style={{ fontSize: "15px" }} />
-        <p className="text-sm self-center text-center ml-4">MEU PERFIL</p>
+        <FaUser style={{ fontSize: '15px' }} />
+        <p className="ml-4 self-center text-center text-sm">MEU PERFIL</p>
       </div>
-      <div
+      {/* <div
         onClick={() => {
-          closeConfigDropDown();
-          setNotificationIsOpen(true);
+          closeConfigDropDown()
+          setNotificationIsOpen(true)
         }}
-        className="flex lg:hidden items-center h-[50px] gap-2 cursor-pointer font-bold text-gray-600  hover:bg-blue-200 w-full p-2 border-b border-gray-200"
+        className="flex h-[50px] w-full cursor-pointer items-center gap-2 border-b border-gray-200  p-2 font-bold text-gray-600 hover:bg-blue-200 lg:hidden"
       >
-        <MdNotifications style={{ fontSize: "25px" }} />
-        <p className="text-sm self-center text-center">NOTIFICAÇÕES</p>
-      </div>
-      {session?.user.manager && (
+        <MdNotifications style={{ fontSize: '25px' }} />
+        <p className="self-center text-center text-sm">NOTIFICAÇÕES</p>
+      </div> */}
+      {session?.user.permissoes.usuarios.visualizar && (
         <Link href="/admin/usuarios">
-          <div className="flex items-center h-[50px] gap-2 cursor-pointer font-bold text-gray-600 hover:bg-blue-200 w-full p-2 border-b border-gray-200">
-            <FaUsersCog style={{ fontSize: "25px" }} />
-            <p className="text-sm self-center text-center">
-              CONTROLE DE USUÁRIOS
-            </p>
+          <div className="flex h-[50px] w-full cursor-pointer items-center gap-2 border-b border-gray-200 p-2 font-bold text-gray-600 hover:bg-blue-200">
+            <FaUsersCog style={{ fontSize: '25px' }} />
+            <p className="self-center text-center text-sm">CONTROLE DE USUÁRIOS</p>
           </div>
         </Link>
       )}
     </div>
-  );
+  )
 }
 
-export default ConfigDropDown;
+export default ConfigDropDown

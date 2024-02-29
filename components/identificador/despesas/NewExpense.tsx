@@ -52,7 +52,8 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
     },
     autor: {
       id: session.user?.id,
-      nome: session.user?.name,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     itens: [],
     total: 0,
@@ -158,7 +159,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
     try {
       const user = {
         id: session?.user.id,
-        nome: session?.user.name,
+        nome: session.user.nome,
       }
       const response = await insertExpense({ ...infoHolder, autor: user })
       toast.dismiss(loadingToastID)

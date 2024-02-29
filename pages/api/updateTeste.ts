@@ -43,35 +43,33 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const supplyProjects = await projectsCollection
     .find(
       {
-        'contrato.status': 'ASSINADO',
-        'contrato.dataAssinatura': { $gte: '2023-06-01T00:00:00.000Z' },
-        tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+        $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $gte: '2024-01-31T12:00:00.000Z' } }],
       },
-      { sort: { qtde: 1 } }
+      { projection: { nomeDoContrato: 1 }, sort: { qtde: 1 } }
     )
     .toArray()
 
-  const exportation = supplyProjects.map((project) => {
-    return {
-      QTDE: project.qtde,
-      'CODIGO CRM': project.codigoSVB,
-      NOME: project.nomeDoContrato,
-      CIDADE: project.cidade,
-      VENDEDOR: project.vendedor.nome,
-      TOPOLOGIA: project.sistema.topologia,
-      'POTÊNCIA PICO': project.sistema.potPico,
-      'VALOR DO CONTRATO': getContractValue({
-        projectValue: project.sistema.valorProjeto,
-        paValue: project.padrao.valor,
-        structureValue: project.estruturaPersonalizada.valor,
-      }),
-      FORNECEDOR: project.compra.fornecedor,
-      'PREVISTO P/ KIT': project.compra.previsaoValorDoKit || 0,
-      'VALOR DO KIT': project.compra.valorDoKit || null,
-    }
-  })
-  console.log(exportation.length)
-  return res.json(exportation)
+  // const exportation = supplyProjects.map((project) => {
+  //   return {
+  //     QTDE: project.qtde,
+  //     'CODIGO CRM': project.codigoSVB,
+  //     NOME: project.nomeDoContrato,
+  //     CIDADE: project.cidade,
+  //     VENDEDOR: project.vendedor.nome,
+  //     TOPOLOGIA: project.sistema.topologia,
+  //     'POTÊNCIA PICO': project.sistema.potPico,
+  //     'VALOR DO CONTRATO': getContractValue({
+  //       projectValue: project.sistema.valorProjeto,
+  //       paValue: project.padrao.valor,
+  //       structureValue: project.estruturaPersonalizada.valor,
+  //     }),
+  //     FORNECEDOR: project.compra.fornecedor,
+  //     'PREVISTO P/ KIT': project.compra.previsaoValorDoKit || 0,
+  //     'VALOR DO KIT': project.compra.valorDoKit || null,
+  //   }
+  // })
+  console.log(supplyProjects.length)
+  return res.json(supplyProjects)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

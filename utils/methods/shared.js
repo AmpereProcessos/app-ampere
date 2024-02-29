@@ -138,7 +138,7 @@ export function formatDateInputChange(value) {
   return new Date(value).toISOString()
 }
 export function pushToAuthPage(router) {
-  router.push('/auth/authHome')
+  router.push('/auth/signin')
 }
 export function getGenFactorByOrientation({ city, uf, orientation }) {
   if (!city || !uf) return 127

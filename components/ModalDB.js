@@ -53,8 +53,8 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
     'Financeiro',
     'ADM',
     'RH',
-  ].every((el) => session?.user.accessibleRoutes.includes(el))
-  const userHasOeMAccess = session?.user.accessibleRoutes.includes('O&M')
+  ].every((el) => session?.user.permissoes.rotas.includes(el))
+  const userHasOeMAccess = session?.user.permissoes.rotas.includes('O&M')
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
 
   const [infoHolder, setInfo] = useState(project)

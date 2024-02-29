@@ -1,92 +1,21 @@
-import axios from "axios";
-import { createContext, useState, useEffect } from "react";
-import Router, { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-export const AppContext = createContext();
+import axios from 'axios'
+import { createContext, useState, useEffect } from 'react'
+import Router, { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+export const AppContext = createContext()
 
 export function AppProvider({ children }) {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-
-  const [credentials, setCredentials] = useState(null);
-
-  const [users, setUsers] = useState([]);
-  const [notificacoes, setNotificacoes] = useState([]);
-
-  // Fetch functions
-  function getUsers() {
-    axios.get("/api/auth/user").then((res) => {
-      setUsers(res.data);
-    });
-  }
-  function getNotificacoes(id) {
-    axios
-      .get(`/api/notificacoes/${id}`)
-      .then((res) => setNotificacoes(res.data));
-  }
-  function validateUserSession() {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    let maxSessionTime = storedCredentials?.maxSessionTime;
-    if (new Date(maxSessionTime) > new Date()) {
-      return storedCredentials;
-    } else {
-      return false;
-    }
-  }
-  useEffect(() => {
-    if (session?.user) {
-      getUsers();
-      getNotificacoes(session.user.id);
-    }
-  }, [session]);
-  // useEffect(() => {
-  //   if (!credentials) {
-  //     let storedCredentials = validateUserSession();
-  //     if (storedCredentials) {
-  //       setCredentials(storedCredentials);
-  //       getUsers();
-  //       getNotificacoes(storedcredentials?.id);
-  //     } else {
-  //       if (!window.location.pathname.includes("publico"))
-  //         Router.push("/auth/authHome");
-  //     }
-  //   } else {
-  //     getNotificacoes(credentials?.id);
-  //     getUsers();
-  //   }
-  //   setLoaded(true);
-  // }, []);
-  useEffect(() => {
-    // let validSession = validateUserSession();
-    // if (validSession) {
-    //   if (credentials) {
-    //     getNotificacoes(credentials?.id);
-    //     getUsers();
-    //   }
-    // } else {
-    //   setCredentials(null);
-    //   localStorage.removeItem("credentials");
-    //   if (!window.location.pathname.includes("publico"))
-    //     router.push("/auth/authHome");
-    // }
-    if (session?.user) {
-      getNotificacoes(session.user.id);
-      getUsers();
-    }
-  }, [router.pathname]);
+  const router = useRouter()
+  const { data: session, status } = useSession()
   return (
     <AppContext.Provider
       value={{
         credentials: session?.user,
-        setCredentials,
-        users,
-        notificacoes,
-        getNotificacoes,
       }}
     >
       {children}
     </AppContext.Provider>
-  );
+  )
 }
 // return (
 //   <AppContext.Provider
@@ -100,7 +29,7 @@ export function AppProvider({ children }) {
 //   >
 //     {loaded ? (
 //       credentials ||
-//       window.location.pathname.includes("/auth/authHome") ||
+//       window.location.pathname.includes("/auth/signin") ||
 //       window.location.pathname.includes("publico") ? (
 //         children
 //       ) : (

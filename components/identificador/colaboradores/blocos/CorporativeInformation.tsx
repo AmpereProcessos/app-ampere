@@ -6,7 +6,7 @@ import { cidadesAtendidas, formatDate } from '@/utils/constants'
 import { estadosECidades } from '@/utils/estados_cidades'
 import { formatToCEP } from '@/utils/methods/formatting'
 import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
-import { TUser } from '@/utils/schemas/users'
+import { TEmployee, TUser } from '@/utils/schemas/users'
 import { InstructionLevels, NaturalPersonMaritalStatus, VinculationCompanies } from '@/utils/select-options'
 import React from 'react'
 import toast from 'react-hot-toast'
@@ -15,8 +15,8 @@ import WorkingHoursMenu from '../WorkingHoursMenu'
 import AuxiliarContactsMenu from '../AuxiliarContactsMenu'
 
 type CorporativeInformationProps = {
-  infoHolder: TUser
-  setInfoHolder: React.Dispatch<React.SetStateAction<TUser>>
+  infoHolder: TEmployee
+  setInfoHolder: React.Dispatch<React.SetStateAction<TEmployee>>
 }
 function CorporativeInformation({ infoHolder, setInfoHolder }: CorporativeInformationProps) {
   async function setAddressDataByCEP(cep: string) {

@@ -20,7 +20,10 @@ const sidebar = {
   },
 }
 
-function Sidebar({ sidebarVisible }) {
+type SidebarProps = {
+  sidebarVisible: boolean
+}
+function Sidebar({ sidebarVisible }: SidebarProps) {
   const { data: session, status } = useSession()
   const router = useRouter()
   if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) return null
@@ -33,24 +36,24 @@ function Sidebar({ sidebarVisible }) {
           initial="hidden"
           animate={sidebarVisible ? 'visible' : 'hidden'}
           style={{ maxHeight: 'calc(100vh - 70px)' }}
-          className="flex py-4 px-2 flex-col bg-[#fff] sticky top-[70px] w-full md:w-[250px] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300"
+          className="overscroll-y sticky top-[70px] flex w-full flex-col overflow-y-auto border-r border-gray-300 bg-[#fff] py-4 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:w-[250px]"
         >
-          {session.user?.visualizacao == undefined || session.user?.visualizacao == 'REGIONAL' ? (
+          {session.user?.visualizacao.tipo == 'OPERACIONAL' ? (
             <GeralSidebar
-              userAccessibleRoutes={session.user?.accessibleRoutes}
-              userIsManager={session.user?.manager}
-              userVisualization={session.user?.visualizacao}
-              userIsController={session.user?.controller}
+              session={session}
+              userAccessibleRoutes={session.user?.permissoes.rotas}
+              userIsManager={session.user?.permissoes.comercial.editar}
+              userIsController={session.user?.permissoes.ordensDeServico.visualizar}
             />
           ) : null}
-          {session.user?.visualizacao == 'INSIDE' || session.user?.visualizacao == 'VENDEDOR' ? (
+          {session.user?.visualizacao.tipo == 'VENDAS' ? (
             <VendedorSidebar
-              userAccessibleRoutes={session.user?.accessibleRoutes}
+              userAccessibleRoutes={session.user?.permissoes.rotas}
               userVisualization={session.user?.visualizacao}
-              sellerName={session.user?.vendedor}
+              sellerName={session.user?.visualizacao.referencia}
             />
           ) : null}
-          {session.user?.visualizacao == 'OBRAS' ? <ObrasSidebar technicalTeam={session.user?.equipe} /> : null}
+          {session.user?.visualizacao.tipo == 'EXECUÇÃO' ? <ObrasSidebar technicalTeam={session.user?.visualizacao.referencia} /> : null}
         </motion.div>
       </AnimatePresence>
     )

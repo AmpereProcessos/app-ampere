@@ -12,7 +12,7 @@ function ProjetosSeparacao() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
 
@@ -64,7 +64,7 @@ function ProjetosSeparacao() {
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Obras') || session?.user.accessibleRoutes.includes('Almoxarifado')) {
+    if (session?.user.permissoes.rotas.includes('Obras') || session?.user.permissoes.rotas.includes('Almoxarifado')) {
       getProjects()
     } else {
       if (session?.user) {
@@ -201,11 +201,7 @@ function ProjetosSeparacao() {
         </div>
         <div className="mt-4 flex flex-col flex-wrap gap-3">
           {filteredProjects.map((project) => (
-            <SeparacaoCard
-              key={project._id}
-              info={project}
-              editor={session?.user?.accessibleRoutes.includes('Almoxarifado') && session?.user?.visualizacao == undefined ? true : false}
-            />
+            <SeparacaoCard key={project._id} info={project} editor={session?.user?.permissoes.rotas.includes('Almoxarifado')} />
           ))}
         </div>
       </div>

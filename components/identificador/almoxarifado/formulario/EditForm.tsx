@@ -51,8 +51,8 @@ function getExpensesFromFormulary({ session, info }: { session: Session; info: T
     idFormularioAlmoxarifado: info._id || '',
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     itens: items,
     total: total,
@@ -98,8 +98,8 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     materiais: [],
     autor: {
       id: session.user.id,
-      nome: session.user.name,
-      avatar_url: session.user.image,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
     },
     dataEfetivacao: null,
     dataInsercao: new Date().toISOString(),

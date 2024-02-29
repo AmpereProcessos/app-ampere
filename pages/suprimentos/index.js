@@ -33,7 +33,7 @@ function Suprimentos() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push('/auth/authHome')
+      router.push('/auth/signin')
     },
   })
   dayjs.extend(dayjsBusinessDays)
@@ -125,7 +125,7 @@ function Suprimentos() {
   }
   useEffect(() => {
     if (session) {
-      const userRoutes = session.user.accessibleRoutes
+      const userRoutes = session?.user.permissoes.rotas
       if (!userRoutes.includes('Suprimentos')) return router.push('/')
     }
   }, [session])

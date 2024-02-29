@@ -6,7 +6,6 @@ import Assinatura from '../utils/images/signature-diogo.jpg'
 import dayjs from 'dayjs'
 import { Bar, BarChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, LabelList } from 'recharts'
 import { getGenFactorByOrientation } from '../utils/methods/shared'
-import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
 import { formatToMoney, margemLucro, taxaImposto } from '../utils/constants'
 import { MdTopic } from 'react-icons/md'
 function LaudoIntermediarioUrbano({ analysis }) {

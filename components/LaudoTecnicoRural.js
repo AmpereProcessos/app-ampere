@@ -3,218 +3,217 @@ import Image from 'next/image'
 import Logo from '../utils//images/logo-texto-azul-vertical.png'
 import Assinatura from '../utils/images/signature-diogo.jpg'
 import dayjs from 'dayjs'
-import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
 function LaudoTecnicoRural({ analysis }) {
   return (
-    <div className="w-[21cm] h-[29.7cm]">
-      <div className="flex flex-col w-full h-full">
-        <div className="w-full flex justify-around items-center border border-t-0 border-black py-2 mt-2">
+    <div className="h-[29.7cm] w-[21cm]">
+      <div className="flex h-full w-full flex-col">
+        <div className="mt-2 flex w-full items-center justify-around border border-t-0 border-black py-2">
           <h1 className="font-bold uppercase text-[#15599a]">LAUDO TÉCNICO - RURAL</h1>
-          <div className="w-[47px] h-[47px]">
+          <div className="h-[47px] w-[47px]">
             <Image style={{ width: '47px', height: '47px' }} src={Logo} />
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">INFORMAÇÕES DO CLIENTE</h1>
+          <h1 className="border-x border-black bg-[#15599a] text-center text-sm font-bold text-white">INFORMAÇÕES DO CLIENTE</h1>
           <div className="flex">
-            <div className="grid grid-rows-5 w-[60%]">
+            <div className="grid w-[60%] grid-rows-5">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">CLIENTE</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.nome}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">CLIENTE</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.nome}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">REPRESENTANTE</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">REPRESENTANTE</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">ENDEREÇO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.localizacao.endereco}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">ENDEREÇO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.localizacao.endereco}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">BAIRRO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.localizacao.bairro}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">BAIRRO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.localizacao.bairro}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">DATA DA VISITA</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{dayjs().format('DD/MM/YYYY')}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">DATA DA VISITA</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{dayjs().format('DD/MM/YYYY')}</p>
               </div>
             </div>
-            <div className="grid grid-rows-5 w-[40%]">
+            <div className="grid w-[40%] grid-rows-5">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TELEFONE</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">-</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">TELEFONE</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">-</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">Nº DE PROJETO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.projeto.identificador || 'N/A'}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">Nº DE PROJETO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.projeto.identificador || 'N/A'}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">NÚMERO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.localizacao.numeroOuIdentificador}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">NÚMERO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.localizacao.numeroOuIdentificador}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">MUNICÍPIO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.localizacao.cidade}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">MUNICÍPIO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.localizacao.cidade}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TIPO DE SOLICITAÇÃO</p>
-                <p className="text-center text-[0.6rem] border-r p-1 border-black">{analysis.tipoSolicitacao}</p>
+                <p className="border-r border-black bg-[#fead61] p-1 text-center text-xs font-bold text-white">TIPO DE SOLICITAÇÃO</p>
+                <p className="border-r border-black p-1 text-center text-[0.6rem]">{analysis.tipoSolicitacao}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">EQUIPAMENTOS</h1>
+          <h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
           <div className="flex">
-            <div className="w-[20%] h-full flex justify-center items-center bg-[#15599a] text-center text-white font-bold">
+            <div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
               DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
             </div>
-            <div className="w-[80%] flex flex-col">
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">INVERSORES</h1>
-              <div className="flex border border-black border-b-0">
-                <div className="flex flex-col w-[50%]">
+            <div className="flex w-[80%] flex-col">
+              <h1 className="border border-b-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">INVERSORES</h1>
+              <div className="flex border border-b-0 border-black">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">TOPOLOGIA</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.detalhes.topologia}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">TOPOLOGIA</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.detalhes.topologia}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">QUANTIDADE</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.qtde}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">QUANTIDADE</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.inversor.qtde}</p>
                   </div>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">MARCA DO INVERSOR</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.modelo}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">MARCA DO INVERSOR</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.inversor.modelo}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">POTÊNCIA</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.potencia}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">POTÊNCIA</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.inversor.potencia}</p>
                   </div>
                 </div>
               </div>
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
+              <h1 className="border border-b-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
                 MÓDULOS FOTOVOLTÁICOS
               </h1>
-              <div className="flex  border border-black border-b-0">
-                <div className="flex flex-col w-[50%]">
+              <div className="flex  border border-b-0 border-black">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">QUANTIDADE</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.modulos.qtde}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">QUANTIDADE</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.modulos.qtde}</p>
                   </div>
                 </div>
-                <div className="flex flex-col w-[50%]">
+                <div className="flex w-[50%] flex-col">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold p-1">POTÊNCIA</p>
-                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.modulos.potencia}</p>
+                    <p className="bg-gray-200 p-1 text-center text-xs font-bold">POTÊNCIA</p>
+                    <p className="p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.modulos.potencia}</p>
                   </div>
                 </div>
               </div>
               <div className="flex  border border-black">
-                <p className="bg-gray-200 text-center text-xs font-bold p-1 w-[50%]">MARCA DOS MÓDULOS</p>
-                <p className="text-center text-[0.6rem] font-bold p-1 w-[50%]">{analysis.equipamentos.modulos.modelo}</p>
+                <p className="w-[50%] bg-gray-200 p-1 text-center text-xs font-bold">MARCA DOS MÓDULOS</p>
+                <p className="w-[50%] p-1 text-center text-[0.6rem] font-bold">{analysis.equipamentos.modulos.modelo}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-sm text-white text-center font-bold border border-black border-t-0">EXECUÇÃO</h1>
+          <h1 className="border border-t-0 border-black bg-[#15599a] text-center text-sm font-bold text-white">EXECUÇÃO</h1>
           <div className="grid grid-cols-4 border-b border-black">
-            <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black col-span-2">ESPAÇO NO QGBT</p>
-            <p className="text-xxs text-center border-r border-black col-span-2">{analysis.execucao.espacoQGBT ? 'SIM' : 'NÃO'}</p>
+            <p className="col-span-2 border-r border-black bg-gray-200 text-center text-xxs font-bold">ESPAÇO NO QGBT</p>
+            <p className="col-span-2 border-r border-black text-center text-xxs">{analysis.execucao.espacoQGBT ? 'SIM' : 'NÃO'}</p>
           </div>
           <div className="flex">
-            <div className="grid grid-rows-3 w-[50%]">
+            <div className="grid w-[50%] grid-rows-3">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">LOCAL DE ATERRAMENTO</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.locais.aterramento || '-'}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LOCAL DE ATERRAMENTO</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.locais.aterramento || '-'}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">LOCAL INSTALAÇÃO DO INVERSOR</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.locais.inversor ? analysis.locais.inversor : '-'}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LOCAL INSTALAÇÃO DO INVERSOR</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.locais.inversor ? analysis.locais.inversor : '-'}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">LOCAL INSTALAÇÃO DOS MÓDULOS</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.locais.modulos ? analysis.locais.modulos : '-'}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LOCAL INSTALAÇÃO DOS MÓDULOS</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.locais.modulos ? analysis.locais.modulos : '-'}</p>
               </div>
             </div>
-            <div className="grid grid-rows-3 w-[50%]">
+            <div className="grid w-[50%] grid-rows-3">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">DISTÂNCIA DO INVERSOR AO PADRÃO</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.distancias.cabeamentoCA}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">DISTÂNCIA DO INVERSOR AO PADRÃO</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.distancias.cabeamentoCA}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">DISTÂNCIA DOS MÓDULOS AO INVERSOR</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.distancias.cabeamentoCC}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">DISTÂNCIA DOS MÓDULOS AO INVERSOR</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.distancias.cabeamentoCC}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">DISTÂNCIA DO COMUNICADOR AO ROTEADOR</p>
-                <p className="text-xxs text-center border-r border-black">{analysis.distancias.conexaoInternet}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">DISTÂNCIA DO COMUNICADOR AO ROTEADOR</p>
+                <p className="border-r border-black text-center text-xxs">{analysis.distancias.conexaoInternet}</p>
               </div>
             </div>
           </div>
           <div className="flex flex-col">
-            <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">OBSERVAÇÕES</h1>
-            <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
+            <h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">OBSERVAÇÕES</h1>
+            <div className="flex h-[50px] items-center justify-center border border-t-0 border-black p-2 text-center text-xs">
               {analysis.execucao.observacoes || 'SEM OBSERVAÇÕES PREENCHIDAS'}
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-center text-sm font-bold border border-black border-t-0">SERVIÇOS EXTRAS</h1>
+          <h1 className="border border-t-0 border-black bg-[#15599a] text-center text-sm font-bold text-white">SERVIÇOS EXTRAS</h1>
           <div className="grid grid-cols-2 border-b border-black">
-            <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">REALIMENTAR</p>
-            <p className="text-xxs text-center border-r border-black">{analysis.servicosAdicionais.realimentar ? 'SIM' : 'NÃO'}</p>
+            <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">REALIMENTAR</p>
+            <p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.realimentar ? 'SIM' : 'NÃO'}</p>
           </div>
           <div className="flex">
-            <div className="grid grid-rows-4 w-[50%]">
+            <div className="grid w-[50%] grid-rows-4">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">CASA DE MÁQUINAS</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CASA DE MÁQUINAS</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.casaDeMaquinas ? analysis.servicosAdicionais.casaDeMaquinas : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">INSTALAÇÃO INTERNET</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">INSTALAÇÃO INTERNET</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.roteador ? analysis.servicosAdicionais.roteador : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">INSTALAÇÃO DE ALAMBRADO</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">INSTALAÇÃO DE ALAMBRADO</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.alambrado ? analysis.servicosAdicionais.alambrado : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">TERRAPLANAGEM USINA DE SOLO</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">TERRAPLANAGEM USINA DE SOLO</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.terraplanagem ? analysis.servicosAdicionais.terraplanagem : '-'}
                 </p>
               </div>
             </div>
-            <div className="grid grid-rows-4 w-[50%]">
+            <div className="grid w-[50%] grid-rows-4">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">CONSTRUÇÃO DE BARRACÃO</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CONSTRUÇÃO DE BARRACÃO</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.barracao ? analysis.servicosAdicionais.barracao : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">REDE PARA INTERLIGAR FAZENDA</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">REDE PARA INTERLIGAR FAZENDA</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.redeReligacao ? analysis.servicosAdicionais.redeReligacao : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">BRITAGEM</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">BRITAGEM</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.britagem ? analysis.servicosAdicionais.britagem : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">LIMPEZA DO LOCAL USINA DE SOLO</p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LIMPEZA DO LOCAL USINA DE SOLO</p>
+                <p className="border-r border-black text-center text-xxs">
                   {analysis.servicosAdicionais.limpezaLocal ? analysis.servicosAdicionais.limpezaLocal : '-'}
                 </p>
               </div>
@@ -222,106 +221,106 @@ function LaudoTecnicoRural({ analysis }) {
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-center text-sm font-bold border border-black border-t-0">SUPRIMENTOS</h1>
+          <h1 className="border border-t-0 border-black bg-[#15599a] text-center text-sm font-bold text-white">SUPRIMENTOS</h1>
           <div className="flex flex-col">
             <div className="grid grid-cols-10">
-              <p className="bg-[#fead61] text-center text-white text-sm font-bold col-span-3 border-b border-r border-black">INSUMO</p>
-              <p className="bg-[#fead61] text-center text-white text-sm font-bold col-span-3 border-b border-r border-black">TIPO</p>
-              <p className="bg-[#fead61] text-center text-white text-sm font-bold col-span-2 border-b border-r border-black">QUANTIDADE</p>
-              <p className="bg-[#fead61] text-center text-white text-sm font-bold col-span-2 border-b border-r border-black">MEDIDA</p>
+              <p className="col-span-3 border-b border-r border-black bg-[#fead61] text-center text-sm font-bold text-white">INSUMO</p>
+              <p className="col-span-3 border-b border-r border-black bg-[#fead61] text-center text-sm font-bold text-white">TIPO</p>
+              <p className="col-span-2 border-b border-r border-black bg-[#fead61] text-center text-sm font-bold text-white">QUANTIDADE</p>
+              <p className="col-span-2 border-b border-r border-black bg-[#fead61] text-center text-sm font-bold text-white">MEDIDA</p>
             </div>
             {analysis.suprimentos?.itens?.length > 0 ? (
               analysis.suprimentos.itens.map((supply, index) => (
                 <div key={index} className="grid grid-cols-10">
-                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">{supply.descricao}</p>
-                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">{supply.tipo}</p>
-                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">{supply.qtde}</p>
-                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">{supply.grandeza}</p>
+                  <p className="col-span-3 border-b border-r border-black text-center text-xxs font-bold">{supply.descricao}</p>
+                  <p className="col-span-3 border-b border-r border-black text-center text-xxs font-bold">{supply.tipo}</p>
+                  <p className="col-span-2 border-b border-r border-black text-center text-xxs font-bold">{supply.qtde}</p>
+                  <p className="col-span-2 border-b border-r border-black text-center text-xxs font-bold">{supply.grandeza}</p>
                 </div>
               ))
             ) : (
-              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">SEM ITENS ADICIONADOS</div>
+              <div className="flex h-[50px] items-center justify-center border-b border-r border-black italic">SEM ITENS ADICIONADOS</div>
             )}
           </div>
           <div className="flex flex-col">
-            <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">OBSERVAÇÕES</h1>
-            <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
+            <h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">OBSERVAÇÕES</h1>
+            <div className="flex h-[50px] items-center justify-center border border-t-0 border-black p-2 text-center text-xs">
               {analysis.suprimentos?.observacoes ? analysis.suprimentos.observacoes : 'SEM OBSERVAÇÕES'}
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black border-t-0">PROJETOS</h1>
+          <h1 className="border border-t-0 border-black bg-[#15599a] text-center text-sm font-bold text-white">PROJETOS</h1>
           <div className="flex">
-            <div className="w-[50%] grid grid-cols-2 border-b border-black">
-              <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">CONCESSIONÁRIA</p>
-              <p className="font-bold text-xxs text-center border-r border-black">
+            <div className="grid w-[50%] grid-cols-2 border-b border-black">
+              <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CONCESSIONÁRIA</p>
+              <p className="border-r border-black text-center text-xxs font-bold">
                 {analysis.detalhes.concessionaria ? analysis.detalhes.concessionaria : '-'}
               </p>
             </div>
-            <div className="w-[50%] grid grid-cols-2 border-b border-black">
-              <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">TOPOLOGIA</p>
-              <p className="font-bold text-xxs text-center border-r border-black">
+            <div className="grid w-[50%] grid-cols-2 border-b border-black">
+              <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">TOPOLOGIA</p>
+              <p className="border-r border-black text-center text-xxs font-bold">
                 {analysis.detalhes.topologia ? analysis.detalhes.topologia : '-'}
               </p>
             </div>
           </div>
           <div className="flex flex-col">
-            <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">PADRÃO</h1>
+            <h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">PADRÃO</h1>
             {analysis.padrao.map((paInfo, index) => (
-              <div key={index} className="flex flex-col w-full">
+              <div key={index} className="flex w-full flex-col">
                 {analysis.padrao?.length > 1 ? (
-                  <h1 className="bg-[#fead41] text-white text-xs text-center font-bold border border-black border-t-0">PADRÃO Nº {index + 1}</h1>
+                  <h1 className="border border-t-0 border-black bg-[#fead41] text-center text-xs font-bold text-white">PADRÃO Nº {index + 1}</h1>
                 ) : null}
                 <div className="flex w-full">
-                  <div className="w-[50%] flex flex-col">
+                  <div className="flex w-[50%] flex-col">
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PADRÃO ESTÁ</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.tipo}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">PADRÃO ESTÁ</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.tipo}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">ENTRADA</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.tipoEntrada}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">ENTRADA</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.tipoEntrada}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">SAÍDA</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.tipoSaida}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">SAÍDA</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.tipoSaida}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">Nº DO MEDIDOR</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.codigoMedidor}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">Nº DO MEDIDOR</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.codigoMedidor}</p>
                     </div>
                   </div>
-                  <div className="w-[50%] flex flex-col">
+                  <div className="flex w-[50%] flex-col">
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">LIGAÇÃO</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.ligacao}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LIGAÇÃO</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.ligacao}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">AMPERAGEM</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.amperagem}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">AMPERAGEM</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.amperagem}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">Nº DO POSTE DE DERIVAÇÃO</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.codigoPosteDerivacao || '-'}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">Nº DO POSTE DE DERIVAÇÃO</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.codigoPosteDerivacao || '-'}</p>
                     </div>
                     <div className="grid grid-cols-2 border-b border-black">
-                      <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">MODELO DA CAIXA</p>
-                      <p className="text-center font-bold border-r border-black text-xxs">{paInfo.modeloCaixaMedidor}</p>
+                      <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">MODELO DA CAIXA</p>
+                      <p className="border-r border-black text-center text-xxs font-bold">{paInfo.modeloCaixaMedidor}</p>
                     </div>
                   </div>
                 </div>
                 {paInfo.alteracao ? (
-                  <div className="flex flex-col w-full">
-                    <h1 className="w-full bg-red-500 text-white text-xxs text-center font-bold border border-black border-t-0">POSSUI ALTERAÇÃO</h1>
+                  <div className="flex w-full flex-col">
+                    <h1 className="w-full border border-t-0 border-black bg-red-500 text-center text-xxs font-bold text-white">POSSUI ALTERAÇÃO</h1>
                     <div className="flex w-full">
-                      <div className="w-[50%] grid grid-cols-2 border-b border-black">
-                        <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">NOVA LIGAÇÃO</p>
-                        <p className="text-center font-bold border-r border-black text-xxs">{paInfo.novaLigacao || '-'}</p>
+                      <div className="grid w-[50%] grid-cols-2 border-b border-black">
+                        <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">NOVA LIGAÇÃO</p>
+                        <p className="border-r border-black text-center text-xxs font-bold">{paInfo.novaLigacao || '-'}</p>
                       </div>
-                      <div className="w-[50%] grid grid-cols-2 border-b border-black">
-                        <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">NOVA AMPERAGEM</p>
-                        <p className="text-center font-bold border-r border-black text-xxs">{paInfo.novaAmperagem || '-'}</p>
+                      <div className="grid w-[50%] grid-cols-2 border-b border-black">
+                        <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">NOVA AMPERAGEM</p>
+                        <p className="border-r border-black text-center text-xxs font-bold">{paInfo.novaAmperagem || '-'}</p>
                       </div>
                     </div>
                   </div>
@@ -330,54 +329,54 @@ function LaudoTecnicoRural({ analysis }) {
             ))}
           </div>
           <div className="flex flex-col">
-            <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">TRANSFORMADOR</h1>
+            <h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">TRANSFORMADOR</h1>
 
             <div className="grid grid-rows-2">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">POTÊNCIA DO TRANSFORMADOR</p>
-                <p className="text-center font-bold border-r border-black text-xxs">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">POTÊNCIA DO TRANSFORMADOR</p>
+                <p className="border-r border-black text-center text-xxs font-bold">
                   {analysis.transformador.potencia ? analysis.transformador.potencia : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">Nº DO TRANSFORMADOR</p>
-                <p className="text-center font-bold border-r border-black text-xxs">
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">Nº DO TRANSFORMADOR</p>
+                <p className="border-r border-black text-center text-xxs font-bold">
                   {analysis.transformador.codigo ? analysis.transformador.codigo : '-'}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PADRÃO ACOPLADO</p>
-                <p className="text-center font-bold border-r border-black text-xxs">{analysis.transformador.acopladoPadrao ? 'SIM' : 'NÃO'}</p>
+                <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">PADRÃO ACOPLADO</p>
+                <p className="border-r border-black text-center text-xxs font-bold">{analysis.transformador.acopladoPadrao ? 'SIM' : 'NÃO'}</p>
               </div>
             </div>
           </div>
           <div className="flex flex-col">
-            <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">DESENHO</h1>
+            <h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">DESENHO</h1>
             <div className="flex">
-              <div className="w-[50%] grid grid-rows-2">
+              <div className="grid w-[50%] grid-rows-2">
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-gray-200 text-xxs text-center font-bold border-r border-black">FOTO DO DRONE</p>
-                  <p className="text-xxs text-center font-bold border-r border-black">
+                  <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">FOTO DO DRONE</p>
+                  <p className="border-r border-black text-center text-xxs font-bold">
                     {analysis.detalhes.imagensDrone ? analysis.detalhes.imagensDrone : '-'}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-gray-200 text-xxs text-center font-bold border-r border-black">MEDIDAS NO LOCAL</p>
-                  <p className="text-xxs text-center font-bold border-r border-black">
+                  <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">MEDIDAS NO LOCAL</p>
+                  <p className="border-r border-black text-center text-xxs font-bold">
                     {analysis.detalhes.medicoes ? analysis.detalhes.medicoes : '-'}
                   </p>
                 </div>
               </div>
-              <div className="w-[50%] grid grid-rows-2">
+              <div className="grid w-[50%] grid-rows-2">
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-gray-200 text-xxs text-center font-bold border-r border-black">FOTO DA FACHADA</p>
-                  <p className="text-xxs text-center font-bold border-r border-black">
+                  <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">FOTO DA FACHADA</p>
+                  <p className="border-r border-black text-center text-xxs font-bold">
                     {analysis.detalhes.imagensFachada ? analysis.detalhes.imagensFachada : '-'}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-gray-200 text-xxs text-center font-bold border-r border-black">GOOGLE EARTH</p>
-                  <p className="text-xxs text-center font-bold border-r border-black">
+                  <p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">GOOGLE EARTH</p>
+                  <p className="border-r border-black text-center text-xxs font-bold">
                     {analysis.detalhes.imagensSatelite ? analysis.detalhes.imagensSatelite : '-'}
                   </p>
                 </div>
@@ -391,22 +390,22 @@ function LaudoTecnicoRural({ analysis }) {
             </div>
           </div> */}
         </div>
-        <div className="mt-1 grid gap-x-4 grid-cols-2">
+        <div className="mt-1 grid grid-cols-2 gap-x-4">
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Autorizado por:</p>
-            <div className="w-full flex justify-center items-center">
-              <div className="w-[97px] flex justify-center  items-center text-center">
+            <p className="ml-2 text-start text-xxs">Autorizado por:</p>
+            <div className="flex w-full items-center justify-center">
+              <div className="flex w-[97px] items-center  justify-center text-center">
                 <Image src={Assinatura} />
               </div>
             </div>
 
             <hr className="border-t-2 border-black" />
-            <p className="text-xxs text-center">ASSINATURA DIRETOR DE ENGENHARIA</p>
+            <p className="text-center text-xxs">ASSINATURA DIRETOR DE ENGENHARIA</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Realizado por:</p>
+            <p className="ml-2 text-start text-xxs">Realizado por:</p>
             <hr className="mt-8 border-t-2 border-black" />
-            <p className="text-xxs text-center">ASSINATURA TÉCNICO RESPONSÁVEL</p>
+            <p className="text-center text-xxs">ASSINATURA TÉCNICO RESPONSÁVEL</p>
           </div>
         </div>
       </div>

@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Logo from '../utils//images/logo-texto-azul-vertical.png'
 import Assinatura from '../utils/images/signature-diogo.jpg'
 import dayjs from 'dayjs'
-import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
 function LaudoFormularioVisitaUrbano({ analysis }) {
   return (
     <div className="w-[21cm] h-[29.7cm]">

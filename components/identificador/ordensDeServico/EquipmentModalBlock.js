@@ -8,7 +8,7 @@ import TextInput from '../../inputs/Text'
 import NumberInput from '../../inputs/Number'
 import TakeMaterialsBlock from './TakeMaterialsBlock'
 import AvailableMaterialsBlock from './AvailableMaterialsBlock'
-import { easeInOut } from 'd3-ease'
+import { easeBackInOut } from 'd3-ease'
 const variants = {
   hidden: {
     opacity: 0.2,
@@ -16,7 +16,7 @@ const variants = {
     backgroundColor: 'rgba(255, 255, 255, 0.9)', // Adjust the color and alpha as needed
     transition: {
       duration: 0.5,
-      ease: easeInOut, // Use an easing function
+      ease: easeBackInOut, // Use an easing function
     },
   },
   visible: {
@@ -25,7 +25,7 @@ const variants = {
     backgroundColor: 'rgba(255, 255, 255, 1)', // Normal background color
     transition: {
       duration: 0.5,
-      ease: easeInOut, // Use an easing function
+      ease: easeBackInOut, // Use an easing function
     },
   },
   exit: {
@@ -34,7 +34,7 @@ const variants = {
     backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fading background color
     transition: {
       duration: 0.01,
-      ease: easeInOut, // Use an easing function
+      ease: easeBackInOut, // Use an easing function
     },
   },
 }
@@ -42,17 +42,17 @@ const variants = {
 function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
   const [editEnabled, setEditEnabled] = useState(false)
   return (
-    <div className="flex flex-col w-full mt-4">
-      <div className="w-full p-2 rounded-md bg-gray-800 flex items-center gap-2 justify-center">
-        <h1 className="text-white font-bold">EQUIPAMENTOS</h1>
+    <div className="mt-4 flex w-full flex-col">
+      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+        <h1 className="font-bold text-white">EQUIPAMENTOS</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
         </button>
       </div>
       <AnimatePresence>
         {editEnabled ? (
-          <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-2 mt-2">
-            <div className="flex flex-col lg:flex-row w-full gap-2">
+          <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="mt-2 flex w-full flex-col gap-2">
+            <div className="flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-1/3">
                 <TextInput
                   label={'MODELO DO(S) INVERSOR(ES)'}
@@ -96,7 +96,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 />
               </div>
             </div>
-            <div className="flex flex-col lg:flex-row w-full gap-2">
+            <div className="flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-1/3">
                 <TextInput
                   label={'MODELO DOS MODULOS'}
@@ -142,18 +142,18 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
             </div>
           </motion.div>
         ) : (
-          <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-2 mt-2">
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-4">
-              <div className="flex gap-2 items-center">
+          <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="mt-2 flex w-full flex-col gap-2">
+            <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+              <div className="flex items-center gap-2">
                 <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   {infoHolder.equipamentos.modulos.qtde}x {infoHolder.equipamentos.modulos.modelo || 'N/A'} {infoHolder.equipamentos.modulos.potencia}
                   W
                 </p>
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <PiWaveSineBold size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   ({infoHolder.detalhes.topologia || 'N/A'}) - {infoHolder.equipamentos?.inversor.qtde}x{' '}
                   {infoHolder.equipamentos?.inversor.modelo || 'N/A'} {infoHolder.equipamentos?.inversor.potencia}W
                 </p>
@@ -191,11 +191,11 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
             </div> */}
           </motion.div>
         )}
-        <div className="flex w-full items-start gap-2 flex-col lg:flex-row mt-4">
-          <div className="w-full lg:w-[50%] h-full">
+        <div className="mt-4 flex w-full flex-col items-start gap-2 lg:flex-row">
+          <div className="h-full w-full lg:w-[50%]">
             <TakeMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} />
           </div>
-          <div className="w-full lg:w-[50%] h-full">
+          <div className="h-full w-full lg:w-[50%]">
             <AvailableMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} />
           </div>
         </div>

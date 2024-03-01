@@ -17,57 +17,49 @@ type TEditModal = {
 }
 
 function Test() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
-  const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
-  const { data: employees, isLoading, isSuccess, isError } = useEmployees()
-
-  const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
-  const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null })
-
-  if (status != 'authenticated') return <LoadingPage />
-  return (
-    <div className="grow p-6">
-      <div className="flex h-full grow flex-col">
-        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex w-full items-center justify-between">
-            <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
-            </div>
-            {/* {dropdownMenuVisible ? (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
-          </div>
-        ) : (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
-          </div>
-        )} */}
-          </div>
-          <div className="flex w-full items-center justify-end">
-            <button
-              onClick={() => setNewEmployeeModalIsOpen(true)}
-              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
-            >
-              NOVO COLABORADOR
-            </button>
-          </div>
-        </div>
-        <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
-          {isLoading ? <LoadingPage /> : null}
-          {isError ? <ErrorComponent msg="Erro ao buscar usuários" /> : null}
-          {isSuccess &&
-            employees.map((employee, index: number) => (
-              <EmployeeCard key={employee._id?.toString()} employee={employee} openModal={(id) => setEditEmployeeModal({ isOpen: true, id: id })} />
-            ))}
-        </div>
-        {newEmployeeModalIsOpen ? <NewEmployee closeModal={() => setNewEmployeeModalIsOpen(false)} session={session} /> : null}
-        {editEmployeeModal.isOpen && editEmployeeModal.id ? (
-          <EditEmployee userId={editEmployeeModal.id} closeModal={() => setEditEmployeeModal({ isOpen: false, id: null })} session={session} />
-        ) : null}
-      </div>
-    </div>
-  )
+  return <></>
+  // return (
+  //   <div className="grow p-6">
+  //     <div className="flex h-full grow flex-col">
+  //       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+  //         <div className="flex w-full items-center justify-between">
+  //           <div className="flex flex-col items-center gap-2 lg:flex-row">
+  //             <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
+  //           </div>
+  //           {/* {dropdownMenuVisible ? (
+  //         <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+  //           <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+  //         </div>
+  //       ) : (
+  //         <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+  //           <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+  //         </div>
+  //       )} */}
+  //         </div>
+  //         <div className="flex w-full items-center justify-end">
+  //           <button
+  //             onClick={() => setNewEmployeeModalIsOpen(true)}
+  //             className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+  //           >
+  //             NOVO COLABORADOR
+  //           </button>
+  //         </div>
+  //       </div>
+  //       <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
+  //         {isLoading ? <LoadingPage /> : null}
+  //         {isError ? <ErrorComponent msg="Erro ao buscar usuários" /> : null}
+  //         {isSuccess &&
+  //           employees.map((employee, index: number) => (
+  //             <EmployeeCard key={employee._id?.toString()} employee={employee} openModal={(id) => setEditEmployeeModal({ isOpen: true, id: id })} />
+  //           ))}
+  //       </div>
+  //       {newEmployeeModalIsOpen ? <NewEmployee closeModal={() => setNewEmployeeModalIsOpen(false)} session={session} /> : null}
+  //       {editEmployeeModal.isOpen && editEmployeeModal.id ? (
+  //         <EditEmployee userId={editEmployeeModal.id} closeModal={() => setEditEmployeeModal({ isOpen: false, id: null })} session={session} />
+  //       ) : null}
+  //     </div>
+  //   </div>
+  // )
 }
 // type Exportation = {
 //   periodo: string

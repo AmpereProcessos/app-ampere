@@ -4,6 +4,7 @@ import { isEmpty } from '../shared'
 import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 import { useState } from 'react'
 import { TMaterialUpdateRegistryDTO } from '@/utils/schemas/material-updates-registry'
+import { formatWithoutDiacritics } from '../formatting'
 
 export async function fetchMaterials() {
   try {
@@ -44,7 +45,7 @@ export function useMaterials() {
 
   function matchSearch(material: TMaterialDTO) {
     if (filters.search.trim().length == 0) return true
-    return material.nome.toUpperCase().includes(filters.search.toUpperCase())
+    return formatWithoutDiacritics(material.nome, true).includes(formatWithoutDiacritics(filters.search, true))
   }
   function matchLessThan(material: TMaterialDTO) {
     if (!filters.lessThan) return true

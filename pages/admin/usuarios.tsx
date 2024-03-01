@@ -1,22 +1,26 @@
 import { useEffect, useState, useContext } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/router'
-import ModalNovoUsuario from '../../components/ModalNovoUsuario'
-import CardControleUsuarios from '../../components/CardControleUsuarios'
 import { useSession } from 'next-auth/react'
-import ModalEdicaoUsuario from '../../components/ModalEdicaoUsuario'
-import { useUsers } from '@/utils/methods/query/users'
+
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import UserCard from '@/components/identificador/usuarios/UserCard'
 import NewUser from '@/components/identificador/usuarios/NewUser'
 import EditUser from '@/components/identificador/usuarios/EditUser'
+
+import { useUsers } from '@/utils/methods/query/users'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { AnimatePresence, motion } from 'framer-motion'
+import TextInput from '@/components/inputs/Text'
+
 export default function UsersControl() {
   const router = useRouter()
-  const { data: session, status } = useSession({ required: true })
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
-  const { data: users, isLoading, isError, isSuccess } = useUsers()
+  const { data: session, status } = useSession({ required: true })
+  const { data: users, isLoading, isError, isSuccess, filters, setFilters } = useUsers()
   const [newUserModalIsOpen, setNewUserModalIsOpen] = useState(false)
+
   const [editUserModal, setEditUserModal] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null })
 
   useEffect(() => {
@@ -27,18 +31,20 @@ export default function UsersControl() {
     <div className="grow p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex w-full items-center justify-between">
-          <div className="flex flex-col items-center gap-2 lg:flex-row">
+          <div className="flex flex-col">
             <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE USUÁRIOS</p>
+            <p className="text-sm tracking-tight text-gray-500">{users?.length || '...'} usuários contabilizados</p>
           </div>
-          {/* {dropdownMenuVisible ? (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
-          </div>
-        ) : (
-          <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-            <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
-          </div>
-        )} */}
+
+          {dropdownMenuVisible ? (
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+            </div>
+          ) : (
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+            </div>
+          )}
         </div>
         <div className="flex w-full items-center justify-end">
           <button
@@ -48,6 +54,20 @@ export default function UsersControl() {
             NOVO USUÁRIO
           </button>
         </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
+                <TextInput
+                  label={'NOME'}
+                  value={filters.search}
+                  placeholder={'Digite o nome do colaborador...'}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                />
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
       <div className="mt-4 flex flex-wrap justify-around gap-3">
         {isLoading ? <LoadingPage /> : null}

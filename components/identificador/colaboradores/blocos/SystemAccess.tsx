@@ -2,10 +2,11 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
 import { TEmployee, TEmployeeDTO, TUser } from '@/utils/schemas/users'
-import { VisualizationTypes } from '@/utils/select-options'
+import { VisualizationTypes, allActiveSellers, allSellers } from '@/utils/select-options'
 import React, { useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import PermissionsPannel from '../PermissionsPannel'
+import { equipesTecnicas } from '@/utils/constants'
 
 type SystemAccessProps = {
   infoHolder: TEmployeeDTO
@@ -87,14 +88,42 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
               />
             </div>
             <div className="w-full lg:w-1/2">
-              <TextInput
+              {infoHolder.visualizacao.tipo == 'OPERACIONAL' ? (
+                <div className={`relative flex w-full flex-col gap-1`}>
+                  <h1 className="font-sans text-start  font-bold text-[#353432]">REFERÊNCIA DA VISUALIZAÇÃO</h1>
+                  <h1 className="h-[47px] w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic">NÃO APLICÁVEL</h1>
+                </div>
+              ) : null}
+              {infoHolder.visualizacao.tipo == 'EXECUÇÃO' ? (
+                <SelectInput
+                  label="REFERÊNCIA DA VISUALIZAÇÃO"
+                  value={infoHolder.visualizacao.referencia || undefined}
+                  selectedItemLabel="NÃO DEFINIDO"
+                  options={equipesTecnicas}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev, referencia: value } }))}
+                  onReset={() => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev.visualizacao, referencia: null } }))}
+                  width="100%"
+                />
+              ) : null}
+              {infoHolder.visualizacao.tipo == 'VENDAS' ? (
+                <SelectInput
+                  label="REFERÊNCIA DA VISUALIZAÇÃO"
+                  value={infoHolder.visualizacao.referencia || undefined}
+                  selectedItemLabel="NÃO DEFINIDO"
+                  options={allSellers}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev, referencia: value } }))}
+                  onReset={() => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev.visualizacao, referencia: null } }))}
+                  width="100%"
+                />
+              ) : null}
+              {/* <TextInput
                 label="REFERÊNCIA DA VISUALIZAÇÃO"
                 editable={infoHolder.visualizacao.tipo != 'OPERACIONAL'}
                 placeholder="Preencha aqui a referência do visualização..."
                 value={infoHolder.visualizacao.tipo == 'OPERACIONAL' ? 'NÃO APLICÁVEL' : infoHolder.visualizacao.referencia || ''}
                 handleChange={(value) => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev.visualizacao, referencia: value } }))}
                 width="100%"
-              />
+              /> */}
             </div>
           </div>
           <PermissionsPannel infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

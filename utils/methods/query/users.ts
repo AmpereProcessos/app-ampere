@@ -2,6 +2,7 @@ import { TEmployeeDTO, TUserDTO } from '@/utils/schemas/users'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { formatWithoutDiacritics } from '../formatting'
 
 async function fetchUsers() {
   try {
@@ -12,10 +13,27 @@ async function fetchUsers() {
   }
 }
 export function useUsers() {
-  return useQuery({
-    queryKey: ['users-simplified'],
-    queryFn: fetchUsers,
+  const [filters, setFilters] = useState({
+    search: '',
   })
+
+  function matchSearch(user: TUserDTO) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(user.nome, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
+  function handleModelData(data: TUserDTO[]) {
+    var modeledData = data
+    return modeledData.filter((user) => matchSearch(user))
+  }
+  return {
+    ...useQuery({
+      queryKey: ['users-simplified'],
+      queryFn: fetchUsers,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
 }
 async function fetchUserById({ id }: { id: string }) {
   try {
@@ -45,7 +63,7 @@ export function useEmployees({ active }: { active: boolean }) {
 
   function matchSearch(employee: TEmployeeDTO) {
     if (filters.search.trim().length == 0) return true
-    return employee.nome.toUpperCase().includes(filters.search.toUpperCase())
+    return formatWithoutDiacritics(employee.nome, true).includes(formatWithoutDiacritics(filters.search, true))
   }
   function handleModelData(data: TEmployeeDTO[]) {
     var modeledData = data

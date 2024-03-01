@@ -33,7 +33,7 @@ export default function UsersControl() {
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col">
             <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE USUÁRIOS</p>
-            <p className="text-sm tracking-tight text-gray-500">{users?.length || '...'} usuários contabilizados</p>
+            <p className="text-sm tracking-tight text-gray-500">{users?.length || '...'} usuários contabilizados.</p>
           </div>
 
           {dropdownMenuVisible ? (

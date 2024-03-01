@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import TextInput from '@/components/inputs/Text'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import Link from 'next/link'
 type TEditModal = {
   isOpen: boolean
   id: string | null
@@ -39,9 +40,16 @@ function Employees() {
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col">
               <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
-              <p className="text-sm tracking-tight text-gray-500">{employees?.length || '...'} colaboradores contabilizados</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm tracking-tight text-gray-500">{employees?.length || '...'} colaboradores contabilizados</p>
+                <CheckboxInput
+                  labelFalse="COLABORADORES ATIVOS"
+                  labelTrue="COLABORADORES ATIVOS"
+                  checked={activeOnly}
+                  handleChange={(value) => setActiveOnly(value)}
+                />
+              </div>
             </div>
-
             {dropdownMenuVisible ? (
               <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
@@ -53,12 +61,14 @@ function Employees() {
             )}
           </div>
           <div className="flex w-full items-center justify-between gap-2">
-            <CheckboxInput
-              labelFalse="COLABORADORES ATIVOS"
-              labelTrue="COLABORADORES ATIVOS"
-              checked={activeOnly}
-              handleChange={(value) => setActiveOnly(value)}
-            />
+            <div className="flex items-center gap-2">
+              <Link href={'/adm/propriedades'}>
+                <a className="whitespace-nowrap rounded bg-blue-900 px-4 py-1 text-sm font-medium text-white shadow disabled:bg-blue-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white">
+                  PROPRIEDADES
+                </a>
+              </Link>
+            </div>
+
             <button
               onClick={() => setNewEmployeeModalIsOpen(true)}
               className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"

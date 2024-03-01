@@ -17,6 +17,7 @@ import { useQueryClient } from 'react-query'
 import { updateEmployee } from '@/utils/methods/mutation/employees'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import AvatarAttachment from './AvatarAttachment'
 
 type EditEmployeeProps = {
   userId: string
@@ -160,7 +161,6 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
           {isError ? <ErrorComponent msg={'Erro ao buscar informações do '} /> : null}
           {isSuccess ? (
             <>
-              {' '}
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
                 <div className="flex w-full items-center justify-center">
@@ -177,6 +177,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
                     justify="justify-center"
                   />
                 </div>
+                <AvatarAttachment userId={userId} userName={employee.usuario} avatar_url={employee.avatar_url || null} />
                 <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-1/2">
                     <TextInput

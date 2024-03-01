@@ -18,6 +18,7 @@ import { useEmployeeById, useUserById } from '@/utils/methods/query/users'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import AvatarAttachment from '../colaboradores/AvatarAttachment'
 
 type EditUserProps = { userId: string; session: Session; closeModal: () => void }
 function EditUser({ userId, session, closeModal }: EditUserProps) {
@@ -123,10 +124,11 @@ function EditUser({ userId, session, closeModal }: EditUserProps) {
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorComponent msg={'Erro ao buscar usuário.'} /> : null}
-          {isSuccess ? (
+          {isSuccess && employee ? (
             <>
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
+                <AvatarAttachment userId={userId} userName={employee.usuario} avatar_url={employee.avatar_url || null} />
                 <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                   <div className="w-full">
                     <TextInput

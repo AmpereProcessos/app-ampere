@@ -12,6 +12,7 @@ type GetResponse = {
 const projection = {
   acessoAtivo: 1,
   nome: 1,
+  usuario: 1,
   email: 1,
   telefone: 1,
   avatar_url: 1,

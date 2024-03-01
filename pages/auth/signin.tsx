@@ -51,7 +51,7 @@ function Auth() {
         <Image src={EmptyLogo} width={450} height={450} />
         {/* <h1 className="w-full text-center text-2xl font-black text-white lg:text-5xl">Sistema Ampère Energias</h1> */}
         <h1 className="w-full text-center font-raleway text-xl font-black text-white lg:text-3xl">
-          A ENERGIA QUE MOVE O MUNDO, <strong className="text-[#fead41]">VEM DE VOCÊ !</strong>
+          A ENERGIA QUE MOVE O MUNDO <strong className="text-[#fead41]">VEM DE VOCÊ !</strong>
         </h1>
       </div>
       <div className="flex h-full w-full flex-col items-center rounded-md bg-[#fff] p-6 py-10 lg:w-1/3">

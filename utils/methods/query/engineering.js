@@ -29,6 +29,7 @@ export function useEngineeringProjects({ enabled }) {
     failedGranting: false,
     missingDraw: false,
     missingSignature: false,
+    drawReady: false,
     date: {
       after: null,
       before: null,
@@ -96,6 +97,10 @@ export function useEngineeringProjects({ enabled }) {
     if (!filters.missingSignature) return true
     else return project.projeto.dataLiberacaoDocumentacao != undefined && !project.projeto.dataAssDocumentacao
   }
+  function matchDrawReady(project) {
+    if (!filters.drawReady) return true
+    else return project.projeto.desenhoTelhado == 'OK'
+  }
   function matchDate(project) {
     if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
     return (
@@ -122,6 +127,7 @@ export function useEngineeringProjects({ enabled }) {
         matchFailedGranting(project) &&
         matchMissingDraw(project) &&
         matchMissingSignature(project) &&
+        matchDrawReady(project) &&
         matchDate(project)
     )
   }

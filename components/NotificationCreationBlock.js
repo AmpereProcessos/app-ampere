@@ -133,10 +133,10 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
                 options={
                   users?.map((resp) => ({
                     id: resp._id,
-                    label: resp.nome,
+                    label: resp.usuario,
                     value: resp,
                     url: resp.avatar_url,
-                    fallback: formatNameAsInitials(resp.nome),
+                    fallback: formatNameAsInitials(resp.usuario),
                   })) || []
                 }
                 value={notInfo.destinatario}

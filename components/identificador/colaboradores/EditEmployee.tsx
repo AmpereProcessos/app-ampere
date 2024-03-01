@@ -16,6 +16,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import { useQueryClient } from 'react-query'
 import { updateEmployee } from '@/utils/methods/mutation/employees'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import CheckboxInput from '@/components/inputs/Checkbox'
 
 type EditEmployeeProps = {
   userId: string
@@ -26,8 +27,10 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TEmployeeDTO>({
     _id: 'id-holder',
-    acessoAtivo: false,
+    acessoAtivo: true,
+    colaboradorAtivo: true,
     nome: '',
+    usuario: '',
     email: '',
     telefone: '',
     senha: '',
@@ -160,6 +163,20 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
               {' '}
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
+                <div className="flex w-full items-center justify-center">
+                  <CheckboxInput
+                    checked={infoHolder.colaboradorAtivo}
+                    handleChange={(value) =>
+                      setInfoHolder((prev) => ({
+                        ...prev,
+                        colaboradorAtivo: value,
+                      }))
+                    }
+                    labelFalse="COLABORADOR ATIVO"
+                    labelTrue="COLABORADOR ATIVO"
+                    justify="justify-center"
+                  />
+                </div>
                 <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-1/2">
                     <TextInput

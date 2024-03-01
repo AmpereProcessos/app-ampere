@@ -172,7 +172,9 @@ const AuxiliarContactSchema = z.object({
 export type TEmployeeAuxiliarContact = z.infer<typeof AuxiliarContactSchema>
 export const GeneralUserSchema = z.object({
   acessoAtivo: z.boolean(),
+  colaboradorAtivo: z.boolean(),
   nome: z.string(),
+  usuario: z.string(),
   email: z.string(),
   telefone: z.string(),
   senha: z.string(),
@@ -220,7 +222,13 @@ export const GeneralUserSchema = z.object({
 
 export const InsertUserSchema = z.object({
   acessoAtivo: z.boolean({ required_error: 'Liberação de acesso não informada.', invalid_type_error: 'Tipo não válido para liberação de acesso.' }),
+  colaboradorAtivo: z.boolean({
+    required_error: 'Ativação do colaborador não informada.',
+    invalid_type_error: 'Tipo não válido para ativação do colaborador.',
+  }),
+
   nome: z.string({ required_error: 'Nome do colaborador não informado.', invalid_type_error: 'Tipo não válido para nome do colaborador.' }),
+  usuario: z.string({ required_error: 'Usuário do colaborador não informado.', invalid_type_error: 'Tipo não válido para usuário do colaborador.' }),
   email: z.string({ required_error: 'Email do colaborador não informado.', invalid_type_error: 'Email não válido para nome do colaborador.' }),
   telefone: z.string({
     required_error: 'Telefone do colaborador não informado.',
@@ -381,6 +389,7 @@ export type TUser = Pick<
   TEmployee,
   | 'acessoAtivo'
   | 'nome'
+  | 'usuario'
   | 'email'
   | 'telefone'
   | 'avatar_url'
@@ -396,6 +405,7 @@ export type TUserDTO = Pick<
   | 'acessoAtivo'
   | '_id'
   | 'nome'
+  | 'usuario'
   | 'email'
   | 'telefone'
   | 'avatar_url'

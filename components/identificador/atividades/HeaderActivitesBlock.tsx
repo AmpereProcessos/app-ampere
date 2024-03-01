@@ -16,7 +16,7 @@ function HeaderActivitesBlock({ session }: HeaderActivitesBlockProps) {
   return (
     <div className="relative flex items-center">
       <button onClick={() => setActivitiesModalIsOpen(true)} className={`${openActivitiesCount ? 'text-red-500' : 'text-[#fead41]'}`}>
-        <MdOutlineCheckBox size={23} />
+        <MdOutlineCheckBox size={25} />
       </button>
       {openActivitiesCount > 0 ? (
         <div className="absolute -top-2 -left-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 p-1">

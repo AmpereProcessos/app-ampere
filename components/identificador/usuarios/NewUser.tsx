@@ -14,6 +14,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createEmployee } from '@/utils/methods/mutation/employees'
 import { useQueryClient } from 'react-query'
 import SystemAccess from '../colaboradores/blocos/SystemAccess'
+import CheckboxInput from '@/components/inputs/Checkbox'
 
 type NewUserProps = {
   session: Session
@@ -22,8 +23,10 @@ type NewUserProps = {
 function NewUser({ session, closeModal }: NewUserProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TEmployee>({
-    acessoAtivo: false,
+    acessoAtivo: true,
+    colaboradorAtivo: true,
     nome: '',
+    usuario: '',
     email: '',
     telefone: '',
     senha: '',
@@ -147,6 +150,20 @@ function NewUser({ session, closeModal }: NewUserProps) {
           </div>
           <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <h1 className="w-full rounded bg-gray-800 py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
+            <div className="flex w-full items-center justify-center">
+              <CheckboxInput
+                checked={infoHolder.colaboradorAtivo}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    colaboradorAtivo: value,
+                  }))
+                }
+                labelFalse="COLABORADOR ATIVO"
+                labelTrue="COLABORADOR ATIVO"
+                justify="justify-center"
+              />
+            </div>
             <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
               <div className="w-full">
                 <TextInput

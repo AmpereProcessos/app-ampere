@@ -26,15 +26,11 @@ import { accessGrantingStatus, executionStatus, inspectionStatus, reliabilityAna
 import { useEngineeringProjects } from '../../utils/methods/query/engineering'
 import { formatDateInputChange } from '../../utils/methods/shared'
 import { cidadesAtendidas, vendedores, formatDecimalPlaces, formatDate } from '../../utils/constants'
+import CheckboxInput from '../../components/inputs/Checkbox'
 
 function Projetos() {
   const router = useRouter()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
-  })
+  const { data: session, status } = useSession({ required: true })
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   const {
@@ -486,7 +482,7 @@ function Projetos() {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
+                  <div className="flex flex-wrap items-center justify-center gap-2">
                     <div
                       onClick={() =>
                         setFilters({
@@ -496,7 +492,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.necessaryDistribution ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       NECESSÁRIO DISTRIBUIÇÃO
                     </div>
@@ -509,7 +505,7 @@ function Projetos() {
                       }
                       className={`${
                         filters.necessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       NECESSÁRIO HOMOLOGAÇÃO
                     </div>
@@ -522,9 +518,22 @@ function Projetos() {
                       }
                       className={`${
                         filters.notNecessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       NÃO NECESSÁRIO HOMOLOGAÇÃO
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          drawReady: !prev.drawReady,
+                        }))
+                      }
+                      className={`${
+                        filters.drawReady ? 'bg-green-500' : 'bg-green-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                    >
+                      DESENHO PRONTO
                     </div>
                     <div
                       onClick={() =>
@@ -534,8 +543,8 @@ function Projetos() {
                         })
                       }
                       className={`${
-                        filters.missingDraw ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                        filters.missingDraw ? 'bg-orange-500' : 'bg-orange-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       DESENHO PENDENTE
                     </div>
@@ -547,8 +556,8 @@ function Projetos() {
                         })
                       }
                       className={`${
-                        filters.missingSignature ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                        filters.missingSignature ? 'bg-orange-500' : 'bg-orange-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       FALTANDO ASSINATURA
                     </div>
@@ -560,8 +569,8 @@ function Projetos() {
                         })
                       }
                       className={`${
-                        filters.failedGranting ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                        filters.failedGranting ? 'bg-red-500' : 'bg-red-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       PARECER REPROVADO
                     </div>
@@ -573,8 +582,8 @@ function Projetos() {
                         })
                       }
                       className={`${
-                        filters.failedInspection ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                        filters.failedInspection ? 'bg-red-500' : 'bg-red-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                     >
                       VISTORIA REPROVADA
                     </div>

@@ -34,10 +34,10 @@ function UserCard({ user, openModal }: UserCardProps) {
             onClick={() => openModal(user._id)}
             className="cursor-pointer text-xs font-black leading-none tracking-tight hover:text-cyan-500 lg:text-sm"
           >
-            {user.nome.toUpperCase()}
+            {user.usuario.toUpperCase()}
           </h1>
         </div>
-        <Avatar url={user.avatar_url || undefined} width={35} height={35} fallback={formatNameAsInitials(user.nome)} />
+        <Avatar url={user.avatar_url || undefined} width={35} height={35} fallback={formatNameAsInitials(user.usuario)} />
       </div>
 
       <div className="mt-2 flex w-full items-center gap-2">

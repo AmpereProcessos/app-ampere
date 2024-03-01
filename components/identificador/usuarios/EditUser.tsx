@@ -17,6 +17,7 @@ import SystemAccess from '../colaboradores/blocos/SystemAccess'
 import { useEmployeeById, useUserById } from '@/utils/methods/query/users'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import CheckboxInput from '@/components/inputs/Checkbox'
 
 type EditUserProps = { userId: string; session: Session; closeModal: () => void }
 function EditUser({ userId, session, closeModal }: EditUserProps) {
@@ -24,6 +25,7 @@ function EditUser({ userId, session, closeModal }: EditUserProps) {
   const [infoHolder, setInfoHolder] = useState<TUserDTO>({
     _id: 'id-holder',
     acessoAtivo: true,
+    usuario: '',
     nome: '',
     email: '',
     telefone: '',

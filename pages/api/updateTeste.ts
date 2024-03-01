@@ -14,7 +14,7 @@ import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-regist
 import { TMaterial } from '@/utils/schemas/materials'
 import { TNewWarehouseFormulary, TWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
 import connectToColaboratorsDatabase from '@/utils/services/mongodb/users'
-import { TEmployee, TEmployeeDTO } from '@/utils/schemas/users'
+import { TEmployee, TEmployeeDTO, TUser } from '@/utils/schemas/users'
 import connectToAdministrationDatabase from '@/utils/services/mongodb/administration'
 import { TExpense } from '@/utils/schemas/expenses'
 import exp from 'constants'
@@ -38,58 +38,59 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+  const db: Db = await connectToAdministrationDatabase(process.env.DB_KEY)
 
-  const projectsCollection: Collection<TProject> = db.collection('dados')
-  const expensesCollection: Collection<TExpense> = db.collection('despesas')
+  const employeesCollection: Collection<TUser> = db.collection('colaboradores')
+  const employees = await employeesCollection.find({}).toArray()
 
-  const projects = await projectsCollection
-    .find({
-      $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2024-01-31T22:00:00.000Z' } }],
-    })
-    .toArray()
-  const expenses = await expensesCollection.find({}, { projection: { categoria: 1, projeto: 1, total: 1 } }).toArray()
-
-  const exportation = projects.map((project) => {
-    const projectExpenses = expenses.filter((e) => e.projeto?.id == project._id.toString())
-    const expensesByCategory = projectExpenses.reduce((acc: { [key: string]: number }, current) => {
-      if (!acc[current.categoria]) acc[current.categoria] = 0
-      acc[current.categoria] += current.total
-      return acc
-    }, {})
+  const bulkwriteArr = employees.map((employee) => {
+    const name = employee.nome
     return {
-      ID: project._id,
-      QTDE: project.qtde,
-      NOME: project.nomeDoContrato,
-      'CONCLUSÃO DE SERVIÇO': formatDateAsLocale(project.obra.saida),
-      ...expensesByCategory,
+      updateOne: {
+        filter: { _id: new ObjectId(employee._id) },
+        update: {
+          $set: { colaboradorAtivo: true },
+        },
+      },
     }
   })
-  // const exportation = supplyProjects.map((project) => {
-  //   return {
-  //     QTDE: project.qtde,
-  //     'CODIGO CRM': project.codigoSVB,
-  //     NOME: project.nomeDoContrato,
-  //     CIDADE: project.cidade,
-  //     VENDEDOR: project.vendedor.nome,
-  //     TOPOLOGIA: project.sistema.topologia,
-  //     'POTÊNCIA PICO': project.sistema.potPico,
-  //     'VALOR DO CONTRATO': getContractValue({
-  //       projectValue: project.sistema.valorProjeto,
-  //       paValue: project.padrao.valor,
-  //       structureValue: project.estruturaPersonalizada.valor,
-  //     }),
-  //     FORNECEDOR: project.compra.fornecedor,
-  //     'PREVISTO P/ KIT': project.compra.previsaoValorDoKit || 0,
-  //     'VALOR DO KIT': project.compra.valorDoKit || null,
-  //   }
-  // })
-
-  return res.json(exportation)
+  const bkResponse = await employeesCollection.bulkWrite(bulkwriteArr)
+  return res.status(200).json(bkResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,
 })
+
+// GETTING COMPLETED PROJECTS FOR A GIVEN MONTH
+
+// const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+
+// const projectsCollection: Collection<TProject> = db.collection('dados')
+// const expensesCollection: Collection<TExpense> = db.collection('despesas')
+
+// const projects = await projectsCollection
+//   .find({
+//     $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2024-01-31T22:00:00.000Z' } }],
+//   })
+//   .toArray()
+// const expenses = await expensesCollection.find({}, { projection: { categoria: 1, projeto: 1, total: 1 } }).toArray()
+
+// const exportation = projects.map((project) => {
+//   const projectExpenses = expenses.filter((e) => e.projeto?.id == project._id.toString())
+//   const expensesByCategory = projectExpenses.reduce((acc: { [key: string]: number }, current) => {
+//     if (!acc[current.categoria]) acc[current.categoria] = 0
+//     acc[current.categoria] += current.total
+//     return acc
+//   }, {})
+//   return {
+//     ID: project._id,
+//     QTDE: project.qtde,
+//     NOME: project.nomeDoContrato,
+//     'CONCLUSÃO DE SERVIÇO': formatDateAsLocale(project.obra.saida),
+//     ...expensesByCategory,
+//   }
+// })
+// return res.json(exportation)
 
 // CREATING EMPLOYEES BY USERS
 // const usersDb = await connectToColaboratorsDatabase(process.env.DB_KEY)

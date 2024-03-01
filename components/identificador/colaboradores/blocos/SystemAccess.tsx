@@ -50,7 +50,16 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
             />
           </div>
           <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-            <div className="w-full lg:w-1/3">
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="NOME DO USUÁRIO"
+                placeholder="Preencha aqui o nome do usuário.."
+                value={infoHolder.usuario}
+                handleChange={(value) => setInfoHolder((prev) => ({ ...prev, usuario: value }))}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
               <TextInput
                 label="SENHA DO COLABORADOR"
                 placeholder="Preencha aqui a senha de acesso..."
@@ -59,7 +68,9 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/3">
+          </div>
+          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+            <div className="w-full lg:w-1/2">
               <SelectInput
                 label="TIPO DE VISUALIZAÇÃO"
                 value={infoHolder.visualizacao.tipo || undefined}
@@ -75,7 +86,7 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/3">
+            <div className="w-full lg:w-1/2">
               <TextInput
                 label="REFERÊNCIA DA VISUALIZAÇÃO"
                 editable={infoHolder.visualizacao.tipo != 'OPERACIONAL'}

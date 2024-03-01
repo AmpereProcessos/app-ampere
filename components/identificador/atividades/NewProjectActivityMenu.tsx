@@ -63,14 +63,14 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
   })
   const [newResponsibleHolder, setNewResponsibleHolder] = useState<string | null>(null)
   const queryClient = useQueryClient()
-  const { data: users } = useUsers({ enabled: true })
+  const { data: users } = useUsers()
   function handleVinculateResponsible(id: string | null) {
     if (!id) return toast.error('Escolha um usuário válido.')
     const user = users?.find((u: any) => u._id == id)
     if (!user) return
     const newResponsible = {
       id: user._id as string,
-      nome: user.nome as string,
+      nome: user.usuario as string,
       avatar_url: user.avatar_url as string | null,
     }
     const responsibles = [...newActivityHolder.responsaveis]
@@ -160,12 +160,12 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
                   showLabel={false}
                   value={newResponsibleHolder}
                   options={
-                    users?.map((resp: any) => ({
+                    users?.map((resp) => ({
                       id: resp._id,
-                      label: resp.nome,
+                      label: resp.usuario,
                       value: resp._id,
                       url: resp.avatar_url,
-                      fallback: formatNameAsInitials(resp.nome),
+                      fallback: formatNameAsInitials(resp.usuario),
                     })) || []
                   }
                   handleChange={(value: any) => setNewResponsibleHolder(value)}

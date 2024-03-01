@@ -31,7 +31,7 @@ export const authOptions = {
           if (password !== userInDb?.senha) throw new createHttpError.BadRequest('Senha inválida')
           return {
             id: userInDb._id.toString(),
-            nome: userInDb.nome,
+            nome: userInDb.usuario,
             email: userInDb.email,
             telefone: userInDb.telefone,
             avatar_url: userInDb.avatar_url,

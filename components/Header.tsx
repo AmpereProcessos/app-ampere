@@ -18,13 +18,17 @@ import NotificationBlock from './identificador/notificacoes/NotificationBlock'
 import ConfigDropDown from './ConfigDropDown'
 import { formatNameAsInitials } from '../utils/methods/formatting'
 
-function Header({ toggleSidebar }) {
+type HeaderProps = {
+  toggleSidebar: () => void
+}
+function Header({ toggleSidebar }: HeaderProps) {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const publicOrDocumentPath = router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')
 
-  const [configDropDown, setConfigDropDown] = useState(false)
+  const [configDropDown, setConfigDropDown] = useState<boolean>(false)
+  if (publicOrDocumentPath) return null
 
-  if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) return null
   if (status != 'authenticated') return null
   return (
     <div className="sticky top-0 z-[1] grid h-[70px] w-full grid-cols-3 items-center border-b border-gray-200 bg-[#fff] px-3 lg:px-12">
@@ -45,47 +49,17 @@ function Header({ toggleSidebar }) {
           <Avatar url={session.user.avatar_url} fallback={formatNameAsInitials(session.user?.nome || 'USER')} height={40} width={40} />
         </div>
         <NotificationBlock session={session} />
-        {/* <div onClick={() => setNotificationIsOpen(!notificationIsOpen)} className="hidden:flex cursor-pointer items-center">
-          {unreadCount > 0 ? (
-            <div className="flex items-center justify-center">
-              <div className="hidden h-[22px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex">
-                <Image src={AlertVolts} />
-              </div>
-              <p className="mb-2 hidden h-[20px] w-[20px] items-center justify-center rounded-full bg-red-500 text-center text-xs font-bold lg:flex">
-                {unreadCount}
-              </p>
-            </div>
-          ) : (
-            <div className="hidden h-[22px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex">
-              <Image src={SleepVolts} />
-            </div>
-          )}
-        </div> */}
         <HeaderActivitesBlock session={session} />
-        {session?.user.permissoes.gestao.visualizarResultados && (
-          <div className="hidden lg:block">
+        {session?.user.permissoes.gestao.visualizarResultados ? (
+          <button className="hidden text-[#fead41] lg:block">
             <Link href="/admin/relatorioAdministrativo">
-              <TbPresentationAnalytics
-                style={{
-                  fontSize: '25px',
-
-                  cursor: 'pointer',
-                  color: '#fead61',
-                }}
-              />
+              <TbPresentationAnalytics size={25} />
             </Link>
-          </div>
-        )}
-        <div className="text-[#fead61] duration-500 ease-in-out hover:scale-105 hover:text-orange-500">
-          <BiLogIn
-            onClick={() => signOut()}
-            style={{
-              fontSize: '25px',
-              cursor: 'pointer',
-              color: '#fead61',
-            }}
-          />
-        </div>
+          </button>
+        ) : null}
+        <button className="text-[#fead61] duration-500 ease-in-out hover:scale-105 hover:text-orange-500">
+          <BiLogIn onClick={() => signOut()} size={25} />
+        </button>
       </div>
       {configDropDown && <ConfigDropDown closeConfigDropDown={() => setConfigDropDown(false)} />}
       {/* {notificationIsOpen && <NotificationModal setNotificationIsOpen={setNotificationIsOpen} />} */}

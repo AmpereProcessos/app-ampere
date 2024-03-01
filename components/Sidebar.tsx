@@ -24,40 +24,39 @@ type SidebarProps = {
   sidebarVisible: boolean
 }
 function Sidebar({ sidebarVisible }: SidebarProps) {
-  const { data: session, status } = useSession()
   const router = useRouter()
-  if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) return null
-  if (status == 'loading' || status == 'unauthenticated') return null
-  if (status == 'authenticated') {
-    return (
-      <AnimatePresence>
-        <motion.div
-          variants={sidebar}
-          initial="hidden"
-          animate={sidebarVisible ? 'visible' : 'hidden'}
-          style={{ maxHeight: 'calc(100vh - 70px)' }}
-          className="overscroll-y sticky top-[70px] flex w-full flex-col overflow-y-auto border-r border-gray-300 bg-[#fff] py-4 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:w-[250px]"
-        >
-          {session.user?.visualizacao.tipo == 'OPERACIONAL' ? (
-            <GeralSidebar
-              session={session}
-              userAccessibleRoutes={session.user?.permissoes.rotas}
-              userIsManager={session.user?.permissoes.comercial.editar}
-              userIsController={session.user?.permissoes.ordensDeServico.visualizar}
-            />
-          ) : null}
-          {session.user?.visualizacao.tipo == 'VENDAS' ? (
-            <VendedorSidebar
-              userAccessibleRoutes={session.user?.permissoes.rotas}
-              userVisualization={session.user?.visualizacao}
-              sellerName={session.user?.visualizacao.referencia}
-            />
-          ) : null}
-          {session.user?.visualizacao.tipo == 'EXECUÇÃO' ? <ObrasSidebar technicalTeam={session.user?.visualizacao.referencia} /> : null}
-        </motion.div>
-      </AnimatePresence>
-    )
-  }
+  const publicOrDocumentPath = router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')
+  const { data: session, status } = useSession()
+
+  if (status != 'authenticated' || publicOrDocumentPath) return null
+  return (
+    <AnimatePresence>
+      <motion.div
+        variants={sidebar}
+        initial="hidden"
+        animate={sidebarVisible ? 'visible' : 'hidden'}
+        style={{ maxHeight: 'calc(100vh - 70px)' }}
+        className="overscroll-y sticky top-[70px] flex w-full flex-col overflow-y-auto border-r border-gray-300 bg-[#fff] py-4 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:w-[250px]"
+      >
+        {session.user?.visualizacao.tipo == 'OPERACIONAL' ? (
+          <GeralSidebar
+            session={session}
+            userAccessibleRoutes={session.user?.permissoes.rotas}
+            userIsManager={session.user?.permissoes.comercial.editar}
+            userIsController={session.user?.permissoes.ordensDeServico.visualizar}
+          />
+        ) : null}
+        {session.user?.visualizacao.tipo == 'VENDAS' ? (
+          <VendedorSidebar
+            userAccessibleRoutes={session.user?.permissoes.rotas}
+            userVisualization={session.user?.visualizacao}
+            sellerName={session.user?.visualizacao.referencia}
+          />
+        ) : null}
+        {session.user?.visualizacao.tipo == 'EXECUÇÃO' ? <ObrasSidebar technicalTeam={session.user?.visualizacao.referencia} /> : null}
+      </motion.div>
+    </AnimatePresence>
+  )
 }
 
 export default Sidebar

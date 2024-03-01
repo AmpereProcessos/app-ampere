@@ -15,15 +15,15 @@ import AppHead from '../components/Head/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Toaster } from 'react-hot-toast'
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  const router = useRouter()
   const queryClient = new QueryClient()
   const [sidebarVisible, setSidebarVisible] = useState(false)
 
-  const router = useRouter()
-  useEffect(() => {
-    if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) {
-      setSidebarVisible(false)
-    }
-  }, [router.pathname])
+  // useEffect(() => {
+  //   if (router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')) {
+  //     setSidebarVisible(false)
+  //   }
+  // }, [router.pathname])
   return (
     <>
       <SessionProvider session={session}>
@@ -31,16 +31,16 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         <QueryClientProvider client={queryClient}>
           <DndProvider backend={HTML5Backend}>
             <div className="flex min-h-[100vh] w-screen max-w-full flex-col bg-[#fff] xl:min-h-[100vh]">
-              <Header toggleSidebar={() => setSidebarVisible(!sidebarVisible)} />
+              <Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
               <div className="flex min-h-[100%] grow ">
-                {sidebarVisible && <Sidebar sidebarVisible={sidebarVisible} />}
+                {sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
                 <div
                   style={{
                     width: sidebarVisible ? 'calc(100vw - 250px)' : '100%',
                   }}
                   className={`${sidebarVisible ? 'hidden md:flex md:flex-col' : 'flex flex-col'} grow`}
                 >
-                  <Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible(!sidebarVisible)} {...pageProps} />
+                  <Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible((prev) => !prev)} {...pageProps} />
                   <Toaster />
                 </div>
               </div>

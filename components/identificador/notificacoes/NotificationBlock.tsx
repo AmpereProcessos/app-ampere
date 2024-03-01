@@ -17,7 +17,7 @@ function NotificationBlock({ session }: NotificationBlockProps) {
     <div className="relative flex cursor-pointer items-center">
       {unreadCount > 0 ? (
         <div onClick={() => setModalIsOpen((prev) => !prev)} className="flex items-center justify-center">
-          <div className="hidden h-[22px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex">
+          <div className="hidden h-[25px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex">
             <Image src={AlertVolts} />
           </div>
           <p className="mb-2 hidden h-[20px] w-[20px] items-center justify-center rounded-full bg-red-500 text-center text-xs font-bold lg:flex">
@@ -27,7 +27,7 @@ function NotificationBlock({ session }: NotificationBlockProps) {
       ) : (
         <div
           onClick={() => setModalIsOpen((prev) => !prev)}
-          className="hidden h-[22px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex"
+          className="hidden h-[25px] w-[25px] items-center duration-500 ease-in-out hover:scale-105 lg:flex"
         >
           <Image src={SleepVolts} />
         </div>

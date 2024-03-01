@@ -544,6 +544,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
                 },
               }))
             }}
+            width="100%"
           />
         </div>
         <div className="w-full lg:w-1/5">
@@ -570,7 +571,6 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             />
           )}
         </div>
-
         <div className="w-full lg:w-1/5">
           <NumberInput
             label={'QTDE DE MANUTENÇÕES'}

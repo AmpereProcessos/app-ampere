@@ -27,6 +27,7 @@ export default function UsersControl() {
     if (session && !session.user.permissoes.usuarios.visualizar) router.push('/')
   }, [session])
   if (status != 'authenticated') return <LoadingPage />
+
   return (
     <div className="grow p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

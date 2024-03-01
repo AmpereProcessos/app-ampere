@@ -335,7 +335,7 @@ const GeneralProjectSchema = z.object({
     qtdeReprovas: z.string().optional().nullable(),
     statusDoParecerDeAcesso: z.string().optional().nullable(), // select options
   }),
-  possuiaGB: z.boolean().optional().nullable(),
+  possuiaGD: z.boolean().optional().nullable(),
   possuiDeficiencia: z
     .union([z.literal('SIM'), z.literal('NÃO')])
     .optional()
@@ -386,7 +386,7 @@ const GeneralProjectSchema = z.object({
       status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
     }),
   }),
-  segmento: z.union([z.literal('RESIDENCIAL'), z.literal('RURAL'), z.literal('COMERCIAL'), z.literal('INDUSTRIAL')]),
+  segmento: z.union([z.literal('RESIDENCIAL'), z.literal('RURAL'), z.literal('COMERCIAL'), z.literal('INDUSTRIAL'), z.literal('NÃO DEFINIDO')]),
   sistema: z.object({
     capacidadeBateria: z.number().optional().nullable(),
     marcaBateria: z.string(),

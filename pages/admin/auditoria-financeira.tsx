@@ -31,7 +31,7 @@ const beforeDateParam = new Date().toISOString()
 function FinancesAuditing() {
   const router = useRouter()
   const { data: session, status: sessionStatus } = useSession()
-  const isManager = !!session?.user?.manager
+
   const isADM = !!session?.user?.permissoes.rotas?.includes('ADM')
 
   const [projectFinancesModal, setProjectFinancesModal] = useState<{ isOpen: boolean; projectId: string | null }>({
@@ -96,7 +96,7 @@ function FinancesAuditing() {
   }
   useEffect(() => {
     if (session) {
-      if (!isManager && !isADM) router.push('/')
+      if (!isADM) router.push('/')
     }
   }, [session])
   if (sessionStatus == 'loading') return <LoadingPage />

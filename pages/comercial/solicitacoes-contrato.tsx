@@ -160,60 +160,10 @@ function FormulariosSolicitacao() {
           requests.length > 0 ? (
             requests.map((request) => <RequestCard key={request._id} request={request} openModal={(id) => handleOpenModal(id)} />)
           ) : (
-            <p className="w-full text-center italic text-gray-500">Nenhuma receita encontrada...</p>
+            <p className="w-full text-center italic text-gray-500">Nenhuma solicitação de contrato encontrada...</p>
           )
         ) : null}
       </div>
-      {/* <div className="mt-4 flex w-full flex-wrap justify-around gap-3">
-        {filteredSolicitacoes ? (
-          filteredSolicitacoes.map((solicitacao) => (
-            <div
-              key={solicitacao._id}
-              onClick={() => {
-                handleOpenModal(solicitacao._id)
-              }}
-              className={`flex flex-col ${getCardColor(
-                solicitacao.aprovacao
-              )} w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]`}
-            >
-              <TagTipoDeServico tipoDeServico={solicitacao.tipoDeServico} />
-              <div className="flex flex-col p-2">
-                <p className="text-start text-xs font-bold text-[#fead61]">{solicitacao.codigoSVB}</p>
-                <div className="flex justify-between">
-                  <h1 className="text-xs font-bold text-[#15599a]">{solicitacao.nomeDoContrato}</h1>
-                  {solicitacao.confeccionado && (
-                    <BsPatchCheckFill
-                      style={{
-                        fontSize: '20px',
-                        color: 'rgb(21 128 61)',
-                        marginLeft: '10px',
-                      }}
-                    />
-                  )}
-                </div>
-                <div className="mt-1 grid grid-cols-3">
-                  <div className="flex flex-col items-start gap-1">
-                    <span className="text-xxs">VENDEDOR</span>
-                    <p className="text-xs text-gray-600">{solicitacao.nomeVendedor && solicitacao.nomeVendedor}</p>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-xxs">SOLICITAÇÃO</span>
-                    <p className="text-xs text-gray-600">
-                      {solicitacao.dataSolicitacao ? new Date(solicitacao.dataSolicitacao).toLocaleString() : '-'}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="text-xxs">CIDADE</span>
-                    <p className="text-xs text-gray-600">{solicitacao.cidade ? solicitacao.cidade : '-'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <LoadingPage />
-        )}
-      </div> */}
       {modalIsOpen && (
         <ModalFormSolicitacao
           editor={session?.user.permissoes.rotas?.includes('PPS') ? true : false}

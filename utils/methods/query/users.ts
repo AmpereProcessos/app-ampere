@@ -29,16 +29,16 @@ export function useUserById({ id }: { id: string }) {
     queryFn: async () => await fetchUserById({ id }),
   })
 }
-async function fetchEmployees() {
+async function fetchEmployees({ active }: { active: boolean }) {
   try {
-    const { data } = await axios.get('/api/colaboradores')
+    const { data } = await axios.get(`/api/colaboradores?active=${active}`)
     return data.data as TEmployeeDTO[]
   } catch (error) {
     throw error
   }
 }
 
-export function useEmployees() {
+export function useEmployees({ active }: { active: boolean }) {
   const [filters, setFilters] = useState({
     search: '',
   })
@@ -53,8 +53,8 @@ export function useEmployees() {
   }
   return {
     ...useQuery({
-      queryKey: ['employees'],
-      queryFn: fetchEmployees,
+      queryKey: ['employees', active],
+      queryFn: async () => await fetchEmployees({ active }),
       select: (data) => handleModelData(data),
     }),
     filters,

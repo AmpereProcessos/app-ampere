@@ -14,8 +14,8 @@ const getEmployees: NextApiHandler<GetResponse> = async (req, res) => {
   if (!session?.user.permissoes.recursosHumanos.visualizar)
     throw new createHttpError.Unauthorized('Usuário não possui permissão para essa requisição.')
 
-  const { id } = req.query
-
+  const { id, active } = req.query
+  const activeParam = active == 'true' ? true : false
   const db = await connectToAdministrationDatabase(process.env.DB_KEY)
   const usersCollection: Collection<TEmployee> = db.collection('colaboradores')
   if (id) {
@@ -25,7 +25,7 @@ const getEmployees: NextApiHandler<GetResponse> = async (req, res) => {
     if (!colaborator) throw new createHttpError.NotFound('Colaborador não encontrado.')
     return res.status(200).json({ data: colaborator })
   }
-  const colaborators = await usersCollection.find({}, { sort: { nome: 1 } }).toArray()
+  const colaborators = await usersCollection.find({ colaboradorAtivo: activeParam }, { sort: { nome: 1 } }).toArray()
 
   return res.status(200).json({ data: colaborators })
 }

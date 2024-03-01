@@ -14,6 +14,7 @@ import { useEmployees } from '@/utils/methods/query/users'
 import { AnimatePresence, motion } from 'framer-motion'
 import TextInput from '@/components/inputs/Text'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import CheckboxInput from '@/components/inputs/Checkbox'
 type TEditModal = {
   isOpen: boolean
   id: string | null
@@ -23,8 +24,9 @@ function Employees() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
-  const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees()
+  const [activeOnly, setActiveOnly] = useState<boolean>(true)
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+  const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees({ active: activeOnly })
 
   const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
   const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null })
@@ -35,9 +37,11 @@ function Employees() {
       <div className="flex h-full grow flex-col">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
           <div className="flex w-full items-center justify-between">
-            <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <div className="flex flex-col">
               <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
+              <p className="text-sm tracking-tight text-gray-500">{employees?.length || '...'} colaboradores contabilizados</p>
             </div>
+
             {dropdownMenuVisible ? (
               <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
@@ -48,7 +52,13 @@ function Employees() {
               </div>
             )}
           </div>
-          <div className="flex w-full items-center justify-end">
+          <div className="flex w-full items-center justify-between gap-2">
+            <CheckboxInput
+              labelFalse="COLABORADORES ATIVOS"
+              labelTrue="COLABORADORES ATIVOS"
+              checked={activeOnly}
+              handleChange={(value) => setActiveOnly(value)}
+            />
             <button
               onClick={() => setNewEmployeeModalIsOpen(true)}
               className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
@@ -59,7 +69,7 @@ function Employees() {
           <AnimatePresence>
             {dropdownMenuVisible ? (
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
                   <TextInput
                     label={'NOME'}
                     value={filters.search}

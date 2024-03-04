@@ -96,6 +96,15 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 analysisId={project.idVisitaTecnica}
               />
+              <InfoContratoBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                minimalInfo={false}
+                showPaymentInfo={true}
+              />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoPadraoBlock
                   comercialEdition={true}
@@ -119,15 +128,6 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   showPaymentInfo={true}
                 />
               )}
-              <InfoContratoBlock
-                editor={true}
-                infoHolder={infoHolder}
-                setInfo={setInfo}
-                changes={changes}
-                setChanges={setChanges}
-                minimalInfo={false}
-                showPaymentInfo={true}
-              />
               <InfoReceitasBlock
                 session={session}
                 projectId={projectId}

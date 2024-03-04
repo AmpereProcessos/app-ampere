@@ -59,7 +59,7 @@ const GeneralProjectSchema = z.object({
     dataAssinatura: z.string().optional().nullable(),
     dataLiberacao: z.string().optional().nullable(),
     dataSolicitacao: z.string().optional().nullable(),
-    formaAssinatura: z.union([z.literal('FISICO'), z.literal('DIGITAL')]),
+    formaAssinatura: z.union([z.literal('FISICO'), z.literal('DIGITAL'), z.literal('NÃO DEFINIDO')]),
     status: z.string().optional().nullable(),
   }),
   cpf_cnpj: z.union([z.string(), z.number()]),
@@ -91,7 +91,10 @@ const GeneralProjectSchema = z.object({
     cnpjFaturamento: z.union([z.number(), z.string()]),
     concluido: z.boolean().optional().nullable(),
     dataFaturamento: z.string().optional().nullable(),
-    empresaFaturamento: z.union([z.literal('AMPERE ENERGIAS'), z.literal('ANALISE DO FINANCEIRO'), z.literal('IZAIRA SERVIÇOS')]),
+    empresaFaturamento: z
+      .union([z.literal('AMPERE ENERGIAS'), z.literal('ANALISE DO FINANCEIRO'), z.literal('IZAIRA SERVIÇOS')])
+      .optional()
+      .nullable(),
     observacoes: z.string().optional().nullable(),
     previsaoFaturamento: z.string().optional().nullable(),
   }),
@@ -321,7 +324,10 @@ const GeneralProjectSchema = z.object({
     contatoPagador: z.string(),
     credor: z.string().optional().nullable(), // select options
     dataRecebimento: z.string().optional().nullable(),
-    forma: z.union([z.literal('FINANCIAMENTO'), z.literal('CAPITAL PRÓPRIO')]),
+    forma: z
+      .union([z.literal('FINANCIAMENTO'), z.literal('CAPITAL PRÓPRIO')])
+      .optional()
+      .nullable(),
     pagador: z.string(),
     retorno: z.number().optional().nullable(),
     status: z.string().optional().nullable(), // select options

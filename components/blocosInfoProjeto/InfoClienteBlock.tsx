@@ -243,7 +243,8 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
           />
         </div>
       </div>
-      <div className="mt-2 flex w-full items-center justify-center px-2">
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">ENDEREÇO</h1>
+      <div className="flex w-full items-center justify-center px-2">
         <TextInput
           label={'CEP'}
           placeholder="Preencha o CEP do cliente..."
@@ -354,6 +355,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
           />
         </div>
       </div>
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">INFORMAÇÕES DA VENDA</h1>
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <SelectInput
@@ -466,8 +468,21 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
           />
         </div>
       </div>
+      <div className="mt-2 flex w-full items-center justify-center self-center">
+        <CheckboxInput
+          labelFalse="POSSUIA GD?"
+          labelTrue="POSSUIA GD?"
+          checked={!!infoHolder.possuiaGD}
+          handleChange={(value) => {
+            setInfo((prev) => ({ ...prev, possuiaGD: value }))
+            setChanges((prev) => ({ ...prev, possuiaGD: value }))
+          }}
+        />
+      </div>
+
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">VINCULAÇÕES</h1>
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/4">
           <TextInput
             label={'LINK PASTA NA NUVEM'}
             placeholder="Preencha o link da pasta na nuvem..."
@@ -480,7 +495,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/4">
           <TextInput
             label={'ID DA VISITA TÉCNICA'}
             editable={true}
@@ -493,20 +508,36 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             width="100%"
           />
         </div>
-      </div>
-      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/5">
-          <CheckboxInput
-            labelFalse="POSSUIA GD?"
-            labelTrue="POSSUIA GD?"
-            checked={!!infoHolder.possuiaGD}
+        <div className="w-full lg:w-1/4">
+          <TextInput
+            label={'ID DO PROJETO CRM'}
+            editable={editor}
+            placeholder="Preencha o ID do projeto CRM..."
+            value={infoHolder.idProjetoCRM || ''}
             handleChange={(value) => {
-              setInfo((prev) => ({ ...prev, possuiaGD: value }))
-              setChanges((prev) => ({ ...prev, possuiaGD: value }))
+              setChanges((prev) => ({ ...prev, idProjetoCRM: value }))
+              setInfo((prev) => ({ ...prev, idProjetoCRM: value }))
             }}
+            width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
+          <TextInput
+            label={'ID DA PROPOSTA COMERCIAL'}
+            editable={editor}
+            placeholder="Preencha o ID da proposta comercial..."
+            value={infoHolder.idPropostaCRM || ''}
+            handleChange={(value) => {
+              setChanges((prev) => ({ ...prev, idPropostaCRM: value }))
+              setInfo((prev) => ({ ...prev, idPropostaCRM: value }))
+            }}
+            width="100%"
+          />
+        </div>
+      </div>
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">OPERAÇÃO E MANUTENÇÃO</h1>
+      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+        <div className="w-full lg:w-1/4">
           <CheckboxInput
             labelFalse="POSSUI O&M?"
             labelTrue="POSSUI O&M?"
@@ -517,7 +548,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             }}
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
           <SelectInput
             label={'PLANO DE O&M'}
             editable={editor}
@@ -547,7 +578,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
           {infoHolder.oem?.aplicavel && (
             <NumberInput
               label={'DURAÇÃO DO O&M (EM ANOS)'}
@@ -571,7 +602,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
             />
           )}
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
           <NumberInput
             label={'QTDE DE MANUTENÇÕES'}
             placeholder="Preencha a quantidade de manutenções"

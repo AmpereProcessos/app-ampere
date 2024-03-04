@@ -16,11 +16,13 @@ async function fetchProperties() {
 type UsePropertiesFilters = {
   search: string
   responsibles: string[]
+  tags: string[]
 }
 export function useProperties() {
   const [filters, setFilters] = useState<UsePropertiesFilters>({
     search: '',
     responsibles: [],
+    tags: [],
   })
   function matchSearch(property: TPropertyDTO) {
     if (filters.search.trim().length == 0) return true
@@ -30,10 +32,14 @@ export function useProperties() {
     if (filters.responsibles.length == 0) return true
     return property.responsaveis.some((resp) => filters.responsibles.includes(resp.id))
   }
+  function matchTags(property: TPropertyDTO) {
+    if (filters.tags.length == 0) return true
+    return property.tags.some((tag) => filters.tags.includes(tag))
+  }
 
   function handleModelData(data: TPropertyDTO[]) {
     var modeledData = data
-    return modeledData.filter((property) => matchSearch(property) && matchResponsibles(property))
+    return modeledData.filter((property) => matchSearch(property) && matchResponsibles(property) && matchTags(property))
   }
   return {
     ...useQuery({

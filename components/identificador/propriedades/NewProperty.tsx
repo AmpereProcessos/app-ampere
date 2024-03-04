@@ -91,8 +91,23 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
           <div className="my-1 flex w-full items-center justify-end">
             <button
               disabled={isLoading}
-              // @ts-ignore
-              onClick={() => handleCreateProperty({ info: infoHolder })}
+              onClick={() => {
+                const info = {
+                  nome: infoHolder.nome.toUpperCase(),
+                  identificador: infoHolder.identificador.toUpperCase(),
+                  quantidade: infoHolder.quantidade,
+                  tags: infoHolder.tags,
+                  responsaveis: infoHolder.responsaveis,
+                  autor: {
+                    id: session.user.id,
+                    nome: session.user.nome,
+                    avatar_url: session.user.avatar_url,
+                  },
+                  dataInsercao: new Date().toISOString(),
+                }
+                // @ts-ignore
+                handleCreateProperty({ info: info })
+              }}
               className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
             >
               CADASTRAR PROPRIEDADE

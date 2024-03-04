@@ -24,6 +24,8 @@ function Properties() {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
   const [newPropertyModalIsOpen, setNewPropertyModalIsOpen] = useState<boolean>(false)
   const [editPropertyModal, setEditPropertyModal] = useState<TEditModal>({ id: null, isOpen: false })
+
+  const tags = [...new Set(properties?.flatMap((module) => module.tags) || [])]
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
@@ -57,9 +59,9 @@ function Properties() {
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
                 <div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
                   <TextInput
-                    label={'NOME'}
+                    label={'NOME DO ITEM'}
                     value={filters.search}
-                    placeholder={'Digite o nome do colaborador...'}
+                    placeholder={'Digite o nome do item...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
                   <div className="w-full lg:w-[350px]">
@@ -79,6 +81,27 @@ function Properties() {
                         setFilters((prev) => ({
                           ...prev,
                           responsibles: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[350px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'TAGS'}
+                      selected={filters.tags}
+                      options={tags?.map((tag, index) => ({ id: index + 1, label: tag, value: tag })) || []}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          tags: value as string[],
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          tags: [],
                         }))
                       }
                     />

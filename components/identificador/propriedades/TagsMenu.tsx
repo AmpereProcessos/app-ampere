@@ -12,7 +12,7 @@ function TagsMenu({ propertyHolder, setPropertyHolder }: TagsMenuProps) {
   const [tagHolder, setTagHolder] = useState<TProperty['tags'][number]>('')
   function addProperty(info: TProperty['tags'][number]) {
     const list = [...propertyHolder.tags]
-    list.push(info)
+    list.push(info.toUpperCase())
     setPropertyHolder((prev) => ({ ...prev, tags: list }))
   }
   function removeProperty(index: number) {

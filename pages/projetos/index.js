@@ -352,13 +352,11 @@ function Projetos() {
                         label={'STATUS DE ENTREGA'}
                         selected={filters.deliveryStatus}
                         options={[
-                          { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
-                          {
-                            id: 2,
-                            value: 'AGUARDANDO COMPRA',
-                            label: 'AGUARDANDO COMPRA',
-                          },
-                          { id: 3, value: 'CANCELADO', label: 'CANCELADO' },
+                          { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
+                          { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
+                          { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
+                          { id: 4, label: 'CANCELADO', value: 'CANCELADO' },
+                          { id: 5, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                         ]}
                         selectedItemLabel={'SEM FILTRO'}
                         handleChange={(value) =>

@@ -11,6 +11,16 @@ const PropertyResponsibleSchema = z.object({
     required_error: 'Nome do responsável pela propriedade não informado.',
     invalid_type_error: 'Tipo não válido para o nome do responsável pela propriedade.',
   }),
+  avatar_url: z
+    .string({ required_error: 'Avatar do responsável não informado.', invalid_type_error: 'Tipo não válido para o avatar do responsável.' })
+    .optional()
+    .nullable(),
+  quantidade: z
+    .number({
+      required_error: 'Quantidade em posse do responsável não informada.',
+      invalid_type_error: 'Tipo não válido para a quantidade em posse do responsável.',
+    })
+    .min(1, 'A quantidade em posse do responsável deve ser no mínimo 1.'),
   dataRecebimento: z
     .string({
       required_error: 'Data de recebimento da propriedade não informada.',
@@ -29,6 +39,7 @@ const PropertyResponsibleSchema = z.object({
 const GeneralPropertySchema = z.object({
   nome: z.string(),
   identificador: z.string(),
+  quantidade: z.number(),
   tags: z.array(z.string()),
   autor: AuthorSchema,
   responsaveis: z.array(PropertyResponsibleSchema),
@@ -40,6 +51,12 @@ export const InsertPropertySchema = z.object({
     required_error: 'Identificador da propriedade não informado.',
     invalid_type_error: 'Tipo não válido para o identificador da propriedade.',
   }),
+  quantidade: z
+    .number({
+      required_error: 'Quantidade de itens da propriedade não informada.',
+      invalid_type_error: 'Tipo não válido para a quantidade de itens da propriedade.',
+    })
+    .min(1, 'A quantidade mínima de itens é 1.'),
   tags: z.array(z.string({ required_error: 'Tag não informada.', invalid_type_error: 'Tipo não válido para tag da propriedade.' })),
   autor: AuthorSchema,
   responsaveis: z.array(PropertyResponsibleSchema),
@@ -52,6 +69,7 @@ const PropertyEntitySchema = z.object({
   _id: z.instanceof(ObjectId),
   nome: z.string(),
   identificador: z.string(),
+  quantidade: z.number(),
   tags: z.array(z.string()),
   autor: AuthorSchema,
   responsaveis: z.array(PropertyResponsibleSchema),

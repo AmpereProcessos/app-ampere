@@ -21,7 +21,6 @@ function EmployeeCard({ employee, openModal }: EmployeeCardProps) {
     <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[450px]">
       <div className="flex w-full items-center gap-2">
         <Avatar fallback={formatNameAsInitials(employee.nome)} height={30} width={30} url={employee.avatar_url || undefined} />
-
         <h1
           onClick={() => openModal(employee._id)}
           className="cursor-pointer text-sm font-black uppercase leading-none tracking-tight hover:text-cyan-500 lg:text-sm"

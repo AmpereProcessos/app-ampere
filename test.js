@@ -31,30 +31,49 @@ const arr = Array.from({ length: currentYear - initialYear + 1 }, (_, index) => 
 const max = Math.max.apply(null, arr)
 console.log(max)
 
-const obj = {
-  'jornada.assDocumentacoes': 'PENDENTE ASS.DOCUMENTOS',
-  'jornada.boasVindas': 'PENDENTE BOAS VINDAS',
-  'jornada.compraDoKit': 'PENDENTE COMPRA DO KIT',
-  'jornada.entregaDoKit': 'PENDENTE ENTREGA DO KIT',
-  'jornada.entregaTecnica': 'PENDENTE ENTREGA TÉCNICA',
-  'jornada.instalacaoAgendada': 'PENDENTE INSTALAÇÃO AGENDADA',
-  'jornada.instalacaoRealizada': 'PENDENTE INSTALAÇÃO REALIZADA',
-  'jornada.jornadaConcluida': 'JORNADA NÃO CONCLUÍDA',
-  'jornada.nfFaturada': 'PENDENTE NF FATURADA',
-  'jornada.prevChegada': 'PENDENTE PREVISÃO DE CHEGADA',
-  'jornada.respConcessionaria': 'PENDENTE RESP.CONCESSIONÁRIA',
-  'jornada.sistemaLigado': 'PENDENTE SISTEMA LIGADO',
-  'jornada.vistoriaConcessionaria': 'PENDENTE VISTORIA',
+const responsibles = ['6318db05929e9f8731d8d9bb']
+
+const property = {
+  _id: {
+    $oid: '65e5cd9b1864791818841ce9',
+  },
+  nome: 'CAMISAS M',
+  identificador: 'M341329141',
+  quantidade: 15,
+  tags: ['UNIFORMES'],
+  autor: {
+    id: '6318db05929e9f8731d8d9bb',
+    nome: 'Lucas Fernandes',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2F(6318db05929e9f8731d8d9bb)%20avatar-_l_u_c_a_s_%20_f_e_r_n_a_n_d_e_s_%20-%202024-03-01T14%3A07%3A00.625Z?alt=media&token=435e3f4e-8f9a-431a-85cc-a77e797180cd',
+  },
+  responsaveis: [
+    {
+      id: '6318db05929e9f8731d8d9bb',
+      nome: 'Lucas Fernandes',
+      avatar_url:
+        'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2F(6318db05929e9f8731d8d9bb)%20avatar-_l_u_c_a_s_%20_f_e_r_n_a_n_d_e_s_%20-%202024-03-01T14%3A07%3A00.625Z?alt=media&token=435e3f4e-8f9a-431a-85cc-a77e797180cd',
+      quantidade: 3,
+      dataRecebimento: '2024-03-04T13:32:38.320Z',
+    },
+    {
+      id: '631f832a5ba9ffa2a4cb8369',
+      nome: 'Matheus Oliveira',
+      avatar_url:
+        'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641',
+      quantidade: 10,
+      dataRecebimento: '2024-03-04T13:49:07.740Z',
+    },
+    {
+      id: '632cb56b2410c7c32dfcb8b8',
+      nome: 'Gabriel Martins',
+      avatar_url:
+        'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-suporte_amp%C3%A8re?alt=media&token=aabf5e39-8cee-43b9-a0a3-ed2577b0c4d3',
+      quantidade: 2,
+      dataRecebimento: '2024-03-04T13:49:25.683Z',
+    },
+  ],
+  dataInsercao: '2024-03-04T13:32:38.318Z',
 }
 
-const Options = Object.entries(obj).map(([key, value], index) => {
-  return { id: index + 1, label: value, value: key }
-})
-
-console.log(Options)
-
-const routes = ['PPS', 'SUPRIMENTOS']
-
-const allowed = ['PPS', 'OBRAS', 'ALMOXARIFADO'].some((r) => routes.includes(r))
-
-console.log(allowed)
+console.log(property.responsaveis.some((r) => responsibles.includes(r.id)))

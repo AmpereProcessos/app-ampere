@@ -22,8 +22,10 @@ function TagsMenu({ propertyHolder, setPropertyHolder }: TagsMenuProps) {
   }
   return (
     <div className="flex w-full flex-col items-center gap-1">
-      <h1 className="w-full py-1 text-center font-black">TAGS</h1>
-      <p className="w-full text-center text-sm tracking-tight text-gray-500">Utilize das tags para facilitar filtros e identificação.</p>
+      <h1 className="w-full text-center font-black">TAGS</h1>
+      <p className="w-full text-center text-sm tracking-tight text-gray-500">
+        Utilize das tags para facilitar os filtros e a identificação das propriedades.
+      </p>
       <TextInput
         label="NOME DA TAG"
         placeholder="Preencha o nome da tag..."
@@ -31,7 +33,7 @@ function TagsMenu({ propertyHolder, setPropertyHolder }: TagsMenuProps) {
         handleChange={(value) => setTagHolder(value)}
         width="100%"
       />
-      <div className="flex w-full items-center justify-end">
+      <div className="mt-1 flex w-full items-center justify-end">
         <button
           onClick={() => addProperty(tagHolder)}
           className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
@@ -45,9 +47,8 @@ function TagsMenu({ propertyHolder, setPropertyHolder }: TagsMenuProps) {
             <div key={index} className="flex flex-col rounded-xl bg-[#15599a] p-2">
               <div className="flex w-full items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-[25px] w-[25px] items-center justify-center rounded-full border border-white p-1">
-                    <FaTag size={25} color="white" />
-                  </div>
+                  <FaTag size={15} color="white" />
+
                   <h1 className="text-[0.65rem] font-bold leading-none tracking-tight text-white lg:text-xs">{tag}</h1>
                 </div>
 

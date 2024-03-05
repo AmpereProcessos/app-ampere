@@ -100,166 +100,9 @@ function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, s
           />
         </div>
       </div>
-      {/* <div className="flex flex-wrap justify-center gap-2">
-        {!minimalInfo && (
-          <div className="flex w-[350px] flex-col items-center">
-            <span className="text-center font-raleway text-sm font-bold uppercase">RELATÓRIO DE COMISSIONAMENTO</span>
-            <div className="flex">
-              <input
-                disabled={!editor}
-                checked={infoHolder.comissionamento?.comercial ? true : false}
-                onChange={(e) => {
-                  setChanges({
-                    ...changes,
-                    'comissionamento.comercial': e.target.checked,
-                  })
-                  setInfo({
-                    ...infoHolder,
-                    comissionamento: {
-                      ...infoHolder.comissionamento,
-                      comercial: e.target.checked,
-                    },
-                  })
-                }}
-                type="checkbox"
-                name="comissionamentoComercial"
-                id="comissionamentoComercial"
-              />
-              <label className="ml-2" htmlFor="comissionamentoComercial">
-                OK
-              </label>
-            </div>
-          </div>
-        )}
-
-        {!minimalInfo && (
-          <DateInput
-            label={'Data de solicitação'}
-            editable={editor}
-            value={
-              infoHolder.contrato.dataSolicitacao != undefined && infoHolder.contrato.dataSolicitacao != '-'
-                ? new Date(infoHolder.contrato.dataSolicitacao).toISOString().slice(0, 10)
-                : 0
-            }
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'contrato.dataSolicitacao': dayjs(value).isValid() ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                contrato: {
-                  ...infoHolder.contrato,
-                  dataSolicitacao: dayjs(value).isValid() ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          />
-        )}
-        {!minimalInfo && (
-          <DateInput
-            label={'Data de liberação p/ assinatura'}
-            editable={editor}
-            value={
-              infoHolder.contrato?.dataLiberacao != undefined && infoHolder.contrato?.dataLiberacao != '-'
-                ? new Date(infoHolder.contrato.dataLiberacao).toISOString().slice(0, 10)
-                : 0
-            }
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'contrato.dataLiberacao': dayjs(value).isValid() ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                contrato: {
-                  ...infoHolder.contrato,
-                  dataLiberacao: dayjs(value).isValid() ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          />
-        )}
-        <DateInput
-          label={'Data de assinatura'}
-          editable={editor}
-          value={
-            infoHolder.contrato?.dataAssinatura != undefined && infoHolder.contrato?.dataAssinatura != '-'
-              ? new Date(infoHolder.contrato.dataAssinatura).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'contrato.dataAssinatura': dayjs(value).isValid() ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              contrato: {
-                ...infoHolder.contrato,
-                dataAssinatura: dayjs(value).isValid() ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        />
-        {!minimalInfo && (
-          <SelectInput
-            label={'FORMA DE ASSINATURA'}
-            value={infoHolder.contrato?.formaAssinatura ? infoHolder.contrato?.formaAssinatura : 'NÃO DEFINIDO'}
-            editable={editor}
-            options={[
-              {
-                label: 'FISICO',
-                value: 'FISICO',
-              },
-              {
-                label: 'DIGITAL',
-                value: 'DIGITAL',
-              },
-              {
-                label: 'NÃO DEFINIDO',
-                value: 'NÃO DEFINIDO',
-              },
-            ]}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'contrato.formaAssinatura': value,
-              })
-              setInfo({
-                ...infoHolder,
-                contrato: {
-                  ...infoHolder.contrato,
-                  formaAssinatura: value,
-                },
-              })
-            }}
-          />
-        )}
-        {showPaymentInfo && (
-          <NumberInput
-            label={'PORCENTAGEM DE COMISSÃO'}
-            editable={editor}
-            value={infoHolder.contrato.comissaoVendedor ? infoHolder.contrato.comissaoVendedor : null}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'contrato.comissaoVendedor': Number(value),
-              })
-              setInfo({
-                ...infoHolder,
-                contrato: {
-                  ...infoHolder.contrato,
-                  comissaoVendedor: Number(value),
-                },
-              })
-            }}
-          />
-        )}
-      </div> */}
       {showPaymentInfo ? (
         <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-          <div className="w-full lg:w-1/4">
+          <div className="flex w-full items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelTrue="PORCENTAGENS EFETIVADAS"
               labelFalse="PORCENTAGENS EFETIVADAS"
@@ -268,9 +111,10 @@ function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, s
                 setInfo((prev) => ({ ...prev, comissoes: { ...(prev.comissoes || {}), efetivado: value } }))
                 setChanges((prev) => ({ ...prev, 'comissoes.efetivado': value }))
               }}
+              justify="justify-center"
             />
           </div>
-          <div className="w-full lg:w-1/4">
+          <div className="flex w-full  items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelTrue="PAGAMENTOS FEITOS"
               labelFalse="PAGAMENTOS FEITOS"
@@ -279,6 +123,7 @@ function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, s
                 setInfo((prev) => ({ ...prev, comissoes: { ...(prev.comissoes || {}), pagamentoRealizado: value } }))
                 setChanges((prev) => ({ ...prev, 'comissoes.pagamentoRealizado': value }))
               }}
+              justify="justify-center"
             />
           </div>
           <div className="w-full lg:w-1/4">

@@ -1,7 +1,7 @@
 import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
 import connectToWarehouseDatabase from '../../utils/services/mongodb/warehouse'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
-import { calculateStringSimilarity, formatDate } from '../../utils/constants'
+import { calculateStringSimilarity, equipesTecnicas, formatDate } from '../../utils/constants'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
 import { Collection, Db, ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
@@ -38,24 +38,37 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToAdministrationDatabase(process.env.DB_KEY)
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
 
-  const employeesCollection: Collection<TUser> = db.collection('colaboradores')
-  const employees = await employeesCollection.find({}).toArray()
-
-  const bulkwriteArr = employees.map((employee) => {
-    const name = employee.nome
-    return {
-      updateOne: {
-        filter: { _id: new ObjectId(employee._id) },
-        update: {
-          $set: { colaboradorAtivo: true },
-        },
-      },
-    }
-  })
-  const bkResponse = await employeesCollection.bulkWrite(bulkwriteArr)
-  return res.status(200).json(bkResponse)
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
+  // const projects = await projectsCollection
+  //   .find({ 'obra.equipeResp': { $in: ['TERCERIZADOS', 'EQUIPE 14 - BRUNO REIS'] } }, { projection: { obra: 1 } })
+  //   .toArray()
+  // console.log(projects.length)
+  // const nonExistent: string[] = []
+  // projects.forEach((project) => {
+  //   if (
+  //     !!project.obra.equipeResp &&
+  //     !equipesTecnicas.map((e) => e.value).includes(project.obra.equipeResp || '') &&
+  //     !nonExistent.includes(project.obra.equipeResp)
+  //   ) {
+  //     console.log(project.obra.equipeResp)
+  //     nonExistent.push(project.obra.equipeResp)
+  //   }
+  // })
+  // const bulkwriteArr = projects.map((project) => {
+  //   return {
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(project._id) },
+  //       update: {
+  //         $set: { 'obra.equipeResp': 'TERCEIROS' },
+  //       },
+  //     },
+  //   }
+  // })
+  // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  // return res.status(200).json(bkResponse)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

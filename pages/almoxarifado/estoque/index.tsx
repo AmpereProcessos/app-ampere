@@ -19,7 +19,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { IoResize } from 'react-icons/io5'
 import NewMaterial from '@/components/identificador/estoque/NewMaterial'
-import { formatToMoney } from '@/utils/constants'
+import { formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import EditMaterial from '@/components/identificador/estoque/EditMaterial'
 import { BsCalendarPlus } from 'react-icons/bs'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
@@ -151,7 +151,7 @@ function Estoque() {
                   </h1>
                   <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
                     <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">
-                      {material.qtde} {material.grandeza || 'UN'}
+                      {formatDecimalPlaces(material.qtde)} {material.grandeza || 'UN'}
                     </h1>
                   </div>
                 </div>

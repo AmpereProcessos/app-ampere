@@ -106,7 +106,7 @@ function InfoCompraBlock({
 
         {comercialEditionOnly ? (
           <DateInput
-            label={'Data DE LIBERAÇÃO P/ COMPRA'}
+            label={'DATA DE LIBERAÇÃO P/ COMPRA'}
             editable={editor}
             value={infoHolder.compra.dataLiberacao ? formatDate(infoHolder.compra.dataLiberacao) : undefined}
             handleChange={(value) => {
@@ -360,7 +360,7 @@ function InfoCompraBlock({
         </div>
         <div className="w-full lg:w-1/5">
           <DateInput
-            label={'DATA DE PAGAMENTO (CLIENTE)'}
+            label={'DATA DE PAG. (CLIENTE)'}
             editable={editor}
             value={infoHolder.compra.dataPagamento ? formatDate(infoHolder.compra.dataPagamento) : undefined}
             handleChange={(value) => {
@@ -381,7 +381,7 @@ function InfoCompraBlock({
         </div>
         <div className="w-full lg:w-1/5">
           <DateInput
-            label={'DATA DE PAGAMENTO (FORNECEDOR)'}
+            label={'DATA DE PAG. (FORNECEDOR)'}
             editable={editor}
             value={infoHolder.compra.dataPagamentoEquipamentos ? formatDate(infoHolder.compra.dataPagamentoEquipamentos) : undefined}
             handleChange={(value) => {
@@ -553,119 +553,9 @@ function InfoCompraBlock({
           />
         </div>
       </div>
-      {/* <div className="mb-4 flex w-full flex-col justify-around gap-2 lg:flex-row">
-        <DateInput
-          label={'Data do pagamento (CLIENTE)'}
-          editable={editor}
-          value={
-            infoHolder.compra?.dataPagamento != undefined && infoHolder.compra?.dataPagamento != '-'
-              ? new Date(infoHolder.compra?.dataPagamento).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'compra.dataPagamento': isNaN(value) ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              compra: {
-                ...infoHolder.compra,
-                dataPagamento: isNaN(value) ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        />
-        <DateInput
-          label={'Data do pagamento (FORNECEDOR)'}
-          editable={editor}
-          value={
-            infoHolder.compra?.dataPagamentoEquipamentos != undefined && infoHolder.compra?.dataPagamentoEquipamentos != '-'
-              ? new Date(infoHolder.compra?.dataPagamentoEquipamentos).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'compra.dataPagamentoEquipamentos': isNaN(value) ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              compra: {
-                ...infoHolder.compra,
-                dataPagamentoEquipamentos: isNaN(value) ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        />
 
-        <DateInput
-          label="Data de faturamento"
-          editable={editor}
-          value={infoHolder.faturamento?.dataFaturamento ? new Date(infoHolder.faturamento?.dataFaturamento).toISOString().slice(0, 10) : ''}
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'faturamento.dataFaturamento': isNaN(value) ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              faturamento: {
-                ...infoHolder.faturamento,
-                dataFaturamento: isNaN(value) ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        />
-      </div> */}
-      <div className="flex flex-wrap justify-center gap-2 py-2 ">
-        {/* <DateInput
-          label={'Previsão de entrega'}
-          editable={editor}
-          value={
-            infoHolder.compra.previsaoEntrega != undefined && infoHolder.compra.previsaoEntrega != '-'
-              ? new Date(infoHolder.compra.previsaoEntrega).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'compra.previsaoEntrega': isNaN(value) ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              compra: {
-                ...infoHolder.compra,
-                previsaoEntrega: isNaN(value) ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        />
-        <DateInput
-          label={'Data de entrega'}
-          editable={editor}
-          value={
-            infoHolder.compra.dataEntrega != undefined && infoHolder.compra.dataEntrega != '-'
-              ? new Date(infoHolder.compra.dataEntrega).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'compra.dataEntrega': isNaN(value) ? new Date(value).toISOString() : null,
-            })
-            setInfo({
-              ...infoHolder,
-              compra: {
-                ...infoHolder.compra,
-                dataEntrega: isNaN(value) ? new Date(value).toISOString() : null,
-              },
-            })
-          }}
-        /> */}
-      </div>
       {!showDeliveryInfoOnly && (
-        <div className="mt-2 flex w-full flex-wrap items-center justify-center gap-x-4">
+        <div className="mt-2 flex w-full flex-wrap items-center justify-center gap-x-4 px-2">
           <div className="w-[450px]">
             <ProjectKitInfo infoHolder={infoHolder} setInfoHolder={setInfo} setChanges={setChanges} />
           </div>
@@ -675,7 +565,7 @@ function InfoCompraBlock({
         </div>
       )}
       {!showDeliveryInfoOnly ? (
-        <div className="my-2 flex w-full items-center justify-center self-center">
+        <div className="my-4 flex w-full items-center justify-center self-center">
           <CheckboxInput
             labelFalse="COMISSIONAMENTO SUPRIMENTOS FEITO"
             labelTrue="COMISSIONAMENTO SUPRIMENTOS FEITO"
@@ -695,37 +585,7 @@ function InfoCompraBlock({
             }}
           />
         </div>
-      ) : // <div className="flex flex-wrap justify-center gap-2 pb-2 ">
-      //   <div className="flex w-[350px] flex-col items-center">
-      //     <span className="text-center font-raleway text-sm font-bold uppercase">RELATÓRIO DE COMISS. SUPRIMENTOS</span>
-      //     <div className="flex">
-      //       <input
-      //         disabled={!editor}
-      //         checked={infoHolder.comissionamento?.suprimentos ? true : false}
-      //         onChange={(e) => {
-      //           setChanges({
-      //             ...changes,
-      //             'comissionamento.suprimentos': e.target.checked,
-      //           })
-      //           setInfo({
-      //             ...infoHolder,
-      //             comissionamento: {
-      //               ...infoHolder.comissionamento,
-      //               suprimentos: e.target.checked,
-      //             },
-      //           })
-      //         }}
-      //         type="checkbox"
-      //         name="comissionamentoSuprimentos"
-      //         id="comissionamentoSuprimentos"
-      //       />
-      //       <label className="ml-2" htmlFor="comissionamentoSuprimentos">
-      //         OK
-      //       </label>
-      //     </div>
-      //   </div>
-      // </div>
-      null}
+      ) : null}
     </div>
   )
 }

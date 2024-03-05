@@ -2110,7 +2110,7 @@ export const fornecedores = [
 export const equipesTecnicas = [
   { id: 1, label: 'EQUIPE 1 - JOSÉ ROBERTO', value: 'EQUIPE 1 - JOSÉ ROBERTO' },
   { id: 2, label: 'EQUIPE 2 - EDUARDO', value: 'EQUIPE 2-EDUARDO' },
-  { id: 3, label: 'EQUIPE 3 - EDMAR', value: 'EQUIPE 3-EDIMAR' },
+  { id: 3, label: 'EQUIPE 3 - EDMAR', value: 'EQUIPE 3 - EDMAR' },
   { id: 4, label: 'EQUIPE 4 - ERICK', value: 'EQUIPE 4-ERICK' },
   { id: 5, label: 'EQUIPE 5 - JUNIN', value: 'EQUIPE 5-JUNIN' },
   { id: 6, label: 'EQUIPE 6 - FELIPE', value: 'EQUIPE 6-FELIPE' },
@@ -2133,8 +2133,10 @@ export const equipesTecnicas = [
   { id: 23, label: 'EQUIPE EXTERNA - VINICIUS', value: 'EQUIPE EXTERNA - VINICIUS' },
   { id: 24, label: 'EQUIPE EXTERNA - JEFFERSON', value: 'EQUIPE EXTERNA - JEFFERSON' },
   { id: 25, label: 'EQUIPE EXTERNA - JAIMIRES', value: 'EQUIPE EXTERNA - JAIMIRES' },
-  { id: 26, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-  { id: 27, label: 'VAZIO', value: undefined },
+  { id: 26, label: 'OUTROS', value: 'OUTROS' },
+  { id: 27, label: 'TERCEIROS', value: 'TERCEIROS' },
+  { id: 28, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 29, label: 'VAZIO', value: undefined },
 ]
 export const centrosDeCusto = [
   {

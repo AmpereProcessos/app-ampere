@@ -337,8 +337,8 @@ const GeneralProjectSchema = z.object({
     motivoReprova: z.string().optional().nullable(),
     parecerReprovado: z.string().optional().nullable(),
     pendencias: z.string().optional().nullable(),
-    qtdeDiasObraDeRede: z.string().optional().nullable(),
-    qtdeReprovas: z.string().optional().nullable(),
+    qtdeDiasObraDeRede: z.number().optional().nullable(),
+    qtdeReprovas: z.number().optional().nullable(),
     statusDoParecerDeAcesso: z.string().optional().nullable(), // select options
   }),
   possuiaGD: z.boolean().optional().nullable(),
@@ -353,7 +353,7 @@ const GeneralProjectSchema = z.object({
     dataAssDocumentacao: z.string().optional().nullable(),
     dataSolicitacaoAcesso: z.string().optional().nullable(),
     desenhoTelhado: z.string().optional().nullable(),
-    diagramaUnifilar: z.string(),
+    diagramaUnifilar: z.string().optional().nullable(),
     mapaDeMicro: z.string().optional().nullable(),
     fechamentoAC: z.string().optional().nullable(),
     formaAssDocumentacao: z
@@ -406,7 +406,7 @@ const GeneralProjectSchema = z.object({
     qtdeControlador: z.number().optional().nullable(),
     tipoControlador: z.string(),
     inversor: z.string(),
-    potModulos: z.number().optional().nullable(),
+    potModulos: z.union([z.number(), z.string()]).optional().nullable(),
     qtdeModulos: z.number().optional().nullable(),
     potPico: z.number(),
     topologia: z

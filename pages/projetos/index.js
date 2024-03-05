@@ -594,7 +594,7 @@ function Projetos() {
                           //Object.keys(getTotalCircuitBreakers())
                           (key, index) => (
                             <p key={index} className={`${getCircuitBreakerTypeColors(key)} rounded p-1 text-center`}>
-                              {key} - ({getTotalCircuitBreakers()[key]} UN)
+                              {key} - ({formatDecimalPlaces(getTotalCircuitBreakers()[key])} UN)
                             </p>
                           )
                         )}

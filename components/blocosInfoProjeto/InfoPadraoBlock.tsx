@@ -154,7 +154,7 @@ function InfoPadraoBlock({
           />
         </div>
       </div>
-      <div className="my-2 flex w-full items-center justify-center self-center">
+      <div className="my-4 flex w-full items-center justify-center self-center">
         <CheckboxInput
           labelFalse="NECESSÁRIO AUMENTO DE CARGA"
           labelTrue="NECESSÁRIO AUMENTO DE CARGA"
@@ -340,7 +340,7 @@ function InfoPadraoBlock({
           {showPaymentInfo ? <></> : null}
         </div>
       ) : null}
-      <div className="mt-2 flex w-full items-center justify-center self-center">
+      <div className="my-4 flex w-full items-center justify-center self-center">
         <CheckboxInput
           labelFalse="POSSUI CAIXA CONJUGADA"
           labelTrue="POSSUI CAIXA CONJUGADA"

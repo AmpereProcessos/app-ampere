@@ -101,6 +101,7 @@ function InfoMaterialBlock({
                 },
               }))
             }}
+            width="100%"
           />
         </div>
         <div className="w-full lg:w-1/2">
@@ -122,6 +123,7 @@ function InfoMaterialBlock({
                 },
               }))
             }}
+            width="100%"
           />
         </div>
       </div>

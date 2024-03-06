@@ -50,10 +50,10 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
       // Checking for inconsistency in qty update
       const currentQty = equivalentMaterial.qtde
       const newQty = currentQty + update.diferenca
-      if (newQty < 0)
-        throw new createHttpError.BadRequest(
-          `Quantidade retirada de ${equivalentMaterial.nome} excede o estoque atual contabilizado de ${currentQty}`
-        )
+      // if (newQty < 0)
+      //   throw new createHttpError.BadRequest(
+      //     `Quantidade retirada de ${equivalentMaterial.nome} excede o estoque atual contabilizado de ${currentQty}`
+      //   )
       // If passed validations, creating bulkwrite operation object
       return {
         updateOne: {

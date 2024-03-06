@@ -75,7 +75,7 @@ function MaterialsBlock({ formularyId, formHolder, setFormHolder, blockTakeAway 
       const project = formHolder.projeto
 
       const materialName = materialRemoved.nome
-      const materialQtyReturn = materialRemoved.qtdeRetirada - materialRemoved.qtdeDevolucao
+      const materialQtyReturn = materialRemoved.qtdeRetirada
       const updates = [{ id: id, nome: materialName, diferenca: materialQtyReturn }]
       const loadingToastId = toast.loading('Devolvendo quantidades ao estoque...')
       // Calling method for formulary update in database

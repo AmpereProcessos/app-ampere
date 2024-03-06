@@ -14,7 +14,6 @@ export async function updateManyMaterials({ formularyId, project, updates }: Upd
     if (typeof data.message != 'string') return 'Atualizações realizadas com sucesso !'
     return data.message as string
   } catch (error) {
-    if (formularyId) await deleteWarehouseFormulary({ id: formularyId })
     throw error
   }
 }

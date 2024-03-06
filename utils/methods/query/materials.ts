@@ -8,8 +8,8 @@ import { formatWithoutDiacritics } from '../formatting'
 
 export async function fetchMaterials() {
   try {
-    const { data } = await axios.get('/api/almoxarifado/materiais')
-    return data as TMaterialDTO[]
+    const { data } = await axios.get('/api/almoxarifado/estoque')
+    return data.data as TMaterialDTO[]
   } catch (error) {
     throw error
   }

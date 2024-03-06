@@ -24,7 +24,7 @@ const getMaterials: NextApiHandler<GetResponse> = async (req, res) => {
     return res.status(200).json({ data: material })
   }
 
-  const materials = await collection.find({}).toArray()
+  const materials = await collection.find({}, { sort: { nome: 1 } }).toArray()
   return res.status(200).json({ data: materials })
 }
 

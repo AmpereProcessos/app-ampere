@@ -66,7 +66,10 @@ const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
 
   const material = await collection.findOne({ _id: new ObjectId(id) })
 
-  const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })
+  const updateResponse = await collection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { ...changes, alteracao: { ...author, dataAlteracao: new Date().toISOString() } } }
+  )
   const hasChangedQty = !!changes.qtde && changes.qtde != material?.qtde
 
   if (changes.qtde) if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao atualizar material.')

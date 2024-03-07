@@ -19,6 +19,15 @@ const GeneralMaterialSchema = z.object({
     })
     .optional()
     .nullable(),
+  alteracao: z
+    .object({
+      id: z.string(),
+      nome: z.string(),
+      avatar_url: z.string().optional().nullable(),
+      dataAlteracao: z.string(),
+    })
+    .optional()
+    .nullable(),
   dataInsercao: z.string().datetime(),
 })
 
@@ -63,6 +72,15 @@ export const InsertMaterialSchema = z.object({
     .object({
       data: z.string(),
       responsavel: z.string(),
+    })
+    .optional()
+    .nullable(),
+  alteracao: z
+    .object({
+      id: z.string(),
+      nome: z.string(),
+      avatar_url: z.string().optional().nullable(),
+      dataAlteracao: z.string(),
     })
     .optional()
     .nullable(),

@@ -1,11 +1,14 @@
 import NumberInput from '@/components/inputs/Number'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
+import Avatar from '@/components/utils/Avatar'
+import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateMaterial } from '@/utils/methods/mutation/materials'
 import { TMaterialDTO } from '@/utils/schemas/materials'
 import { units } from '@/utils/select-options'
 import React, { useState } from 'react'
+import { BsCalendarPlus } from 'react-icons/bs'
 import { useQueryClient } from 'react-query'
 
 function renderStatus({ qty, minQty, maxQty }: { qty: number; minQty: number; maxQty: number }) {
@@ -108,7 +111,25 @@ function MaterialBlock({ material }: MaterialBlockProps) {
           />
         </div>
       </div>
-      <div className="mt-2 flex w-full items-center justify-end">
+
+      <div className="mt-2 flex w-full items-center justify-end gap-4">
+        {material.alteracao ? (
+          <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-1`}>
+              <BsCalendarPlus />
+              <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(material.alteracao?.dataAlteracao, true) || 'N/A'}</p>
+            </div>
+            <div className={`flex items-center gap-1`}>
+              <Avatar
+                url={material.alteracao.avatar_url || undefined}
+                width={25}
+                height={25}
+                fallback={formatNameAsInitials(material.alteracao.nome)}
+              />
+              <p className="text-xs font-medium text-gray-500">Atualizado por: {material.alteracao.nome}</p>
+            </div>
+          </div>
+        ) : null}
         <button
           // @ts-ignore
           onClick={() => handleUpdateMaterial({ id: material._id, changes: infoHolder })}

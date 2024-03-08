@@ -48,10 +48,11 @@ function MaterialBlock({ material }: MaterialBlockProps) {
       <div className="mt-2 flex w-full flex-col items-center justify-around gap-2 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
-            label="NOME TÉCNICO"
-            placeholder="Preencha o nome do técnico do item..."
-            value={infoHolder.nomeTecnico || ''}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nomeTecnico: value }))}
+            label="NOME CONVECIONAL"
+            placeholder="Preencha o nome do convencional do item..."
+            labelClassName="font-sans text-xs text-[#353432] text-start"
+            value={infoHolder.nome || ''}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
             width="100%"
           />
         </div>
@@ -89,7 +90,17 @@ function MaterialBlock({ material }: MaterialBlockProps) {
         </div>
       </div>
       <div className="mt-2 flex w-full flex-col items-center justify-around gap-2 lg:flex-row">
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
+          <TextInput
+            label="NOME TÉCNICO"
+            placeholder="Preencha o nome do técnico do item..."
+            labelClassName="font-sans text-xs text-[#353432] text-start"
+            value={infoHolder.nomeTecnico || ''}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nomeTecnico: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
           <TextInput
             label="LOCALIZAÇÃO"
             labelClassName="font-sans text-xs text-[#353432] text-start"
@@ -99,7 +110,7 @@ function MaterialBlock({ material }: MaterialBlockProps) {
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <NumberInput
             label="QUANTIDADE MÁXIMA"
             labelClassName="font-sans text-xs text-[#353432] text-start"
@@ -109,7 +120,7 @@ function MaterialBlock({ material }: MaterialBlockProps) {
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <NumberInput
             label="QUANTIDADE MÍNIMO"
             labelClassName="font-sans text-xs text-[#353432] text-start"

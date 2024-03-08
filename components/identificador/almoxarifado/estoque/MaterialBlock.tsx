@@ -46,7 +46,16 @@ function MaterialBlock({ material }: MaterialBlockProps) {
       </div>
       <p className="w-full text-start text-xs font-medium tracking-tight text-gray-500">{material.nomeTecnico || 'NOME TÉCNICO NÃO DEFINIDO'}</p>
       <div className="mt-2 flex w-full flex-col items-center justify-around gap-2 lg:flex-row">
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
+          <TextInput
+            label="NOME TÉCNICO"
+            placeholder="Preencha o nome do técnico do item..."
+            value={infoHolder.nomeTecnico || ''}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nomeTecnico: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
           <SelectInput
             label="GRANDEZA"
             labelClassName="font-sans text-xs text-[#353432] text-start"
@@ -58,7 +67,7 @@ function MaterialBlock({ material }: MaterialBlockProps) {
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <NumberInput
             label="QUANTIDADE"
             labelClassName="font-sans text-xs text-[#353432] text-start"
@@ -68,7 +77,7 @@ function MaterialBlock({ material }: MaterialBlockProps) {
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <NumberInput
             label="PREÇO UNITÁRIO"
             labelClassName="font-sans text-xs text-[#353432] text-start"

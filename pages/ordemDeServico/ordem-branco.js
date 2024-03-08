@@ -39,25 +39,25 @@ function OrdemServicoEmBranco() {
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold">Nome:</p>
-              <p className="col-span-3 border border-black text-center text-xs">OXFOR COMÉRCIO DE ROUPAS E CALÇADOS</p>
+              <p className="col-span-3 border border-black text-center text-xs">APAE ITUIUTABA</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Endereço:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">RUA TRISTÃO DE CASTRO</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">RUA VER.GERALDO MOISÉS</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Telefone:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">34 9978-8358</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">34 3269-8381</p>
             </div>
           </div>
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold">Bairro:</p>
-              <p className="col-span-3 border border-black text-center text-xs">SÃO BENEDITO</p>
+              <p className="col-span-3 border border-black text-center text-xs">UNIVERSITÁRIO</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Número:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">Nº710</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">Nº69</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Cidade:</p>
@@ -72,22 +72,22 @@ function OrdemServicoEmBranco() {
           <div className="grid-rows-2">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold">Topologia:</p>
-              <p className="col-span-3 border border-black text-center text-xs">MICRO-INVERSOR</p>
+              <p className="col-span-3 border border-black text-center text-xs">INVERSOR</p>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold">NºMódulos:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">N/A</p>
             </div>
           </div>
           <div className="flex items-center">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold">Marca/Modelo:</p>
-              <p className="col-span-3 w-48 border border-black text-center">DEYE</p>
+              <p className="col-span-3 w-48 border border-black text-center">GROWATT</p>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-6 border border-black">
+      {/* <div className="mt-6 border border-black">
         <h1 className="my-2 text-center font-bold">INFORMAÇÕES PARA OBRA</h1>
         <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
           <div className="grid-rows-3 gap-y-px">
@@ -119,13 +119,13 @@ function OrdemServicoEmBranco() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="mt-6 border border-black">
         <h1 className="py-2 text-center font-bold">SERVIÇO A SER EXECUTADO</h1>
         <div className="flex h-[120px] flex-col items-center justify-center">
-          <p className="text-sm">SERVIÇO: LIMPEZA</p>
+          <p className="text-sm">SERVIÇO: OUTROS</p>
           <div className="flex min-h-[50px] flex-col items-center justify-center">
-            <p className="my-2 text-xs">SEM OBSERVAÇÕES DE OS</p>
+            <p className="my-2 text-xs">INSTALAR INVERSOR PROVISÓRIO (AMPÈRE) DE 36KW</p>
           </div>
         </div>
       </div>
@@ -143,10 +143,10 @@ function OrdemServicoEmBranco() {
             </div>
           </div>
           <div className="grid grid-rows-2">
-            <div className="flex items-center gap-x-2">
+            {/* <div className="flex items-center gap-x-2">
               <div className="h-4 w-4 rounded-md border border-black"></div>
               <p className="text-center text-xs">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</p>
-            </div>
+            </div> */}
             <div className="flex items-center">
               <div className="flex items-center gap-x-2 uppercase">
                 <p className="text-xs">Data execução:</p>

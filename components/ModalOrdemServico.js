@@ -30,6 +30,7 @@ import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
 import Select from './inputs/Select'
 import TextInput from './inputs/Text'
 import NotificationCreationBlock from './NotificationCreationBlock'
+import { formatDateAsLocale } from '../utils/methods/formatting'
 
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   const queryClient = useQueryClient()
@@ -90,7 +91,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">
                   <BsCalendarFill />
-                  <p className="text-xs font-medium">{dayjs(order?.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
+                  <p className="text-xs font-medium">{formatDateAsLocale(order?.dataInsercao, true)}</p>
                 </div>
               </div>
               <div className="mt-2 flex w-full items-center justify-center gap-2">
@@ -106,7 +107,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
               {order?.dataEfetivacao ? (
                 <div className="mt-4 flex w-full items-center justify-center gap-2 text-green-500">
                   <BsCalendarCheckFill />
-                  <p className="text-xs font-medium">{dayjs(order?.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
+                  <p className="text-xs font-medium">{formatDateAsLocale(order.dataEfetivacao)}</p>
                 </div>
               ) : (
                 <FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

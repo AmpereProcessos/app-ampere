@@ -541,9 +541,9 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
           <CheckboxInput
             labelFalse="POSSUI O&M?"
             labelTrue="POSSUI O&M?"
-            checked={!!infoHolder.oem.aplicavel}
+            checked={!!infoHolder.oem?.aplicavel}
             handleChange={(value) => {
-              setInfo((prev) => ({ ...prev, oem: { ...prev.oem, aplicavel: value } }))
+              setInfo((prev) => ({ ...prev, oem: { ...(prev.oem || {}), aplicavel: value } }))
               setChanges((prev) => ({ ...prev, 'oem.aplicavel': value }))
             }}
           />
@@ -560,7 +560,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
               setInfo((prev) => ({
                 ...prev,
                 oem: {
-                  ...prev.oem,
+                  ...(prev.oem || {}),
                   plano: value,
                 },
               }))
@@ -570,7 +570,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
               setInfo((prev) => ({
                 ...prev,
                 oem: {
-                  ...prev.oem,
+                  ...(prev.oem || {}),
                   plano: 'NÃO DEFINIDO',
                 },
               }))
@@ -586,17 +586,17 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
               value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
               editable={editor}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
+                setChanges((prev) => ({
+                  ...prev,
                   'oem.duracao': Number(value),
-                })
-                setInfo({
-                  ...infoHolder,
+                }))
+                setInfo((prev) => ({
+                  ...prev,
                   oem: {
-                    ...infoHolder.oem,
+                    ...(prev.oem || {}),
                     duracao: Number(value),
                   },
-                })
+                }))
               }}
               width="100%"
             />
@@ -616,7 +616,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
               setInfo((prev) => ({
                 ...prev,
                 oem: {
-                  ...prev.oem,
+                  ...(prev.oem || {}),
                   qtdeManutencoes: value,
                 },
               }))

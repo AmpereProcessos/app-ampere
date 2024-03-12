@@ -14,7 +14,7 @@ import { useOpenPPSCalls, usePPSCall } from '../../../../utils/methods/query/pps
 import { ppsCallStatus } from '../../../../utils/select-options'
 
 function OpenCalls() {
-  const { data: calls, isLoading, isFetched, filters, setFilters } = useOpenPPSCalls(true)
+  const { data: calls, isLoading, isFetched, filters, setFilters } = useOpenPPSCalls()
 
   const [modalCallIsOpen, setModalCallIsOpen] = useState(false)
   const [modalCallId, setModalCallId] = useState()
@@ -24,7 +24,6 @@ function OpenCalls() {
     setModalCallId(id)
     setModalCallIsOpen(true)
   }
-  console.log(filters)
   return (
     <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

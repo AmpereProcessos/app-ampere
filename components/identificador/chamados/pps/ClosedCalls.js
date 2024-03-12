@@ -34,14 +34,14 @@ const statusStyles = {
     borderColor: 'border-red-400',
   },
 }
-const currentDate = dayjs()
+const currentDate = dayjs().endOf('day')
 const twoDaysAgoDate = currentDate.subtract(2, 'days')
 function ClosedCalls() {
   const [dateParams, setDateParams] = useState({
     after: twoDaysAgoDate.toISOString(),
     before: currentDate.toISOString(),
   })
-  const { data: calls, isLoading, isFetched, filters, setFilters } = useClosedPPSCalls(true, dateParams.after, dateParams.before)
+  const { data: calls, isLoading, isFetched, filters, setFilters } = useClosedPPSCalls(dateParams.after, dateParams.before)
 
   const [modalCallIsOpen, setModalCallIsOpen] = useState(false)
   const [modalCallId, setModalCallId] = useState()
@@ -51,6 +51,7 @@ function ClosedCalls() {
     setModalCallId(id)
     setModalCallIsOpen(true)
   }
+  console.log(currentDate)
   return (
     <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

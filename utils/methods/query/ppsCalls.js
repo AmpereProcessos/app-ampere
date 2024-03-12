@@ -11,7 +11,7 @@ export async function fetchOpenPPSCalls() {
   }
 }
 
-export function useOpenPPSCalls(enabled) {
+export function useOpenPPSCalls() {
   const [filters, setFilters] = useState({
     sellerName: '',
     status: [],
@@ -39,7 +39,6 @@ export function useOpenPPSCalls(enabled) {
     ...useQuery({
       queryKey: ['open-pps-calls'],
       queryFn: fetchOpenPPSCalls,
-      enabled: !!enabled,
       refetchOnWindowFocus: true,
       select: (data) => handleModelData(data),
     }),
@@ -56,7 +55,7 @@ export async function fetchClosedPPSCalls({ after, before }) {
   }
 }
 
-export function useClosedPPSCalls(enabled, after, before) {
+export function useClosedPPSCalls(after, before) {
   const [filters, setFilters] = useState({
     sellerName: '',
     responsible: [],
@@ -79,7 +78,6 @@ export function useClosedPPSCalls(enabled, after, before) {
       queryKey: ['closed-pps-calls', after, before],
       queryFn: async () => await fetchClosedPPSCalls({ after, before }),
       select: (data) => handleModelData(data),
-      enabled: !!enabled,
       refetchOnWindowFocus: true,
     }),
     filters,

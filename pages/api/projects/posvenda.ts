@@ -1,13 +1,14 @@
 import { NextApiHandler } from 'next'
 import connectToDatabase from '../../../utils/services/mongodb/projects'
-import { Db } from 'mongodb'
+import { Collection, Db } from 'mongodb'
 import { apiHandler } from '@/utils/api'
+import { TProject } from '@/utils/schemas/projects'
 
 type GetResponse = any
 
 const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-  const collection = db.collection('dados')
+  const collection: Collection<TProject> = db.collection('dados')
   const projects = await collection
     .aggregate([
       {

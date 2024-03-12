@@ -196,6 +196,8 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   async function handleCloseCall() {
     const loadingToastId = toast.loading('Carregando...')
     try {
+      await queryClient.cancelQueries({ queryKey: ['open-pps-calls'] })
+      await queryClient.cancelQueries({ queryKey: ['closed-pps-calls'] })
       const currentDate = new Date().toISOString()
       setInfoHolder((prev) => ({ ...prev, status: 'REALIZADO', dataEfetivacao: currentDate }))
       const changes = {
@@ -216,6 +218,8 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   async function handleReOpenCall() {
     const loadingToastId = toast.loading('Carregando...')
     try {
+      await queryClient.cancelQueries({ queryKey: ['open-pps-calls'] })
+      await queryClient.cancelQueries({ queryKey: ['closed-pps-calls'] })
       setInfoHolder((prev) => ({ ...prev, status: 'PENDENTE', dataEfetivacao: null }))
       const changes = {
         status: 'PENDENTE',

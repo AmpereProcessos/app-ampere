@@ -31,15 +31,14 @@ export default async function handler(req, res) {
       const collection = db.collection('pps')
       if (status == 'ABERTOS') {
         const openCalls = await collection
-          .aggregate([
+          .find(
             {
-              $match: {
-                status: { $ne: 'REALIZADO' },
-              },
+              status: { $ne: 'REALIZADO' },
             },
-          ])
+            { sort: { dataInsercao: 1 } }
+          )
           .toArray()
-        res.json(openCalls)
+        return res.json(openCalls)
       }
       if (status == 'REALIZADOS') {
         var dateParam
@@ -70,16 +69,15 @@ export default async function handler(req, res) {
         }
 
         const closedCalls = await collection
-          .aggregate([
+          .find(
             {
-              $match: {
-                status: 'REALIZADO',
-                ...dateParam,
-              },
+              status: 'REALIZADO',
+              ...dateParam,
             },
-          ])
+            { sort: { dataEfetivacao: -1 } }
+          )
           .toArray()
-        res.json(closedCalls)
+        return res.json(closedCalls)
       }
     } catch (error) {
       errorHandler(error, res)

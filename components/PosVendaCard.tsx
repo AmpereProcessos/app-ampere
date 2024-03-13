@@ -112,50 +112,54 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
             <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
             <div className="mt-1 flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">TELEFONE</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.telefone}</h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">TELEFONE</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.telefone}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">VENDEDOR</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.vendedor.nome}</h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">VENDEDOR</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.vendedor.nome}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">TIPO DE SERVIÇO</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.tipoDeServico}</h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">TIPO DE SERVIÇO</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">STATUS DO PARECER</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                  {project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}
-                </h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">Nº DE MÓDULOS</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.sistema.qtdeModulos}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}</h1>
+              </div>
+              <div className="flex flex-col items-center lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.projeto.dataLiberacaoDocumentacao ? formatDateAsLocale(project.projeto.dataLiberacaoDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.projeto.dataAssDocumentacao ? formatDateAsLocale(project.projeto.dataAssDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">STATUS DE SUPLEMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                  {project.compra.status || 'NÃO DEFINIDO'}
-                </h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DE SUPLEMENTAÇÃO</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">PREVISÃO DE ENTREGA</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">DATA DE FATURAMENTO</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">FORNECEDOR</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.fornecedor || 'NÃO DEFINIDO'}</h1>
+              </div>
+              <div className="flex flex-col items-center lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">DATA DE FATURAMENTO</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.faturamento?.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
@@ -165,22 +169,18 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
               {project.possuiDeficiencia == 'SIM' ? (
                 <>
                   <div className="flex flex-col items-center lg:items-start">
-                    <h1 className="text-[0.6rem] text-gray-500">PESSOA COM DEFICIÊNCIA</h1>
-                    <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.qualDeficiencia}</h1>
+                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PESSOA COM DEFICIÊNCIA</h1>
+                    <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.qualDeficiencia}</h1>
                   </div>
                 </>
               ) : null}
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">CONTATOS DA JORNADA</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                  {project.jornada.contatos || 'NÃO DEFINIDO'}
-                </h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">CONTATOS DA JORNADA</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.contatos || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] text-gray-500">CUIDADOS NA JORNADA</h1>
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                  {project.jornada.cuidados || 'NÃO DEFINIDO'}
-                </h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">CUIDADOS NA JORNADA</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
               </div>
             </div>
             <div className="mt-3 flex w-full flex-wrap items-center justify-around gap-3 border border-cyan-500 p-2">

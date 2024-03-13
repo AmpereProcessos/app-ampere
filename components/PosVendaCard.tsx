@@ -12,10 +12,11 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 import CheckboxInput from './inputs/Checkbox'
 
 import { TbTruckDelivery } from 'react-icons/tb'
-import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
-import { FaExpandArrowsAlt } from 'react-icons/fa'
+import { BsCalendarFill, BsCheckAll, BsUnlockFill } from 'react-icons/bs'
+import { FaExpandArrowsAlt, FaSignature, FaSolarPanel, FaStore } from 'react-icons/fa'
 import { MdOutlineCheckBox } from 'react-icons/md'
 import ProjectActivityCard from './identificador/atividades/ProjectActivityCard'
+import { getDifferenceBetweenDates } from '@/utils/methods/dates'
 
 type PosVendaCardProps = {
   projectId: string
@@ -40,6 +41,34 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
     const sinceLastContact = getDateDiff(new Date(), new Date(lastContact))
     if (sinceLastContact > 7) return 'bg-red-500'
     else return 'bg-blue-500'
+  }
+  function renderDeliveryInfo({ expectedAt, deliveredAt }: { expectedAt?: string | null; deliveredAt?: string | null }) {
+    if (!!deliveredAt)
+      return (
+        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+          ENTREGUE EM: <strong className="text-cyan-500">{formatDateAsLocale(deliveredAt)}</strong> (HÁ{' '}
+          <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: deliveredAt, end: new Date() })} DIAS</strong> )
+        </h1>
+      )
+    if (expectedAt)
+      return (
+        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+          PREVISTO PARA: {formatDateAsLocale(expectedAt)} (EM{' '}
+          <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: expectedAt, end: new Date() })} DIAS</strong> )
+        </h1>
+      )
+    return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">ENTREGA INDEFINIDA</h1>
+  }
+  function renderAccessInfo({ approvedAt }: { approvedAt?: string | null }) {
+    if (!!approvedAt)
+      return (
+        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+          PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(project.parecer.dataParecerDeAcesso)}</strong> (HÁ{' '}
+          <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: project.parecer.dataParecerDeAcesso, end: new Date() })} DIAS</strong>{' '}
+          )
+        </h1>
+      )
+    return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">PARECER NÃO APROVADO</h1>
   }
   const { mutate: handleUpdateProject, isLoading } = useMutationWithFeedback({
     mutationKey: ['update-after-sales-project'],
@@ -84,45 +113,49 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
             <div className="mt-1 flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">TELEFONE</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.telefone}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.telefone}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">VENDEDOR</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.vendedor.nome}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.vendedor.nome}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">TIPO DE SERVIÇO</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.tipoDeServico}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">STATUS DO PARECER</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                  {project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}
+                </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
                   {project.projeto.dataLiberacaoDocumentacao ? formatDateAsLocale(project.projeto.dataLiberacaoDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
                   {project.projeto.dataAssDocumentacao ? formatDateAsLocale(project.projeto.dataAssDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">STATUS DE SUPLEMENTAÇÃO</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.status || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                  {project.compra.status || 'NÃO DEFINIDO'}
+                </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">PREVISÃO DE ENTREGA</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
                   {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">DATA DE FATURAMENTO</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
                   {project.faturamento?.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
@@ -133,17 +166,21 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
                 <>
                   <div className="flex flex-col items-center lg:items-start">
                     <h1 className="text-[0.6rem] text-gray-500">PESSOA COM DEFICIÊNCIA</h1>
-                    <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.qualDeficiencia}</h1>
+                    <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">{project.qualDeficiencia}</h1>
                   </div>
                 </>
               ) : null}
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">CONTATOS DA JORNADA</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.contatos || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                  {project.jornada.contatos || 'NÃO DEFINIDO'}
+                </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">CUIDADOS NA JORNADA</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                  {project.jornada.cuidados || 'NÃO DEFINIDO'}
+                </h1>
               </div>
             </div>
             <div className="mt-3 flex w-full flex-wrap items-center justify-around gap-3 border border-cyan-500 p-2">
@@ -355,22 +392,73 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
     return (
       <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
         <div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`}></div>
-        <div className="flex w-full grow flex-col items-start justify-between p-3 lg:flex-row lg:items-center">
-          <h1 className="font-bold leading-none tracking-tight">
-            <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
-          </h1>
-          <div className="mt-2 flex items-center gap-3 lg:mt-0">
-            <div className="flex items-center gap-2 text-gray-500">
-              <TbTruckDelivery />
-              <p className="text-sm font-medium">
-                {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
-              </p>
+        <div className="flex w-full grow flex-col p-3">
+          <div className="flex w-full items-center justify-between gap-2">
+            <h1 className="font-bold leading-none tracking-tight">
+              <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
+            </h1>
+            <div className="mt-2 flex items-center gap-3 lg:mt-0">
+              {/* <div className="flex items-center gap-2 text-gray-500">
+                <TbTruckDelivery />
+                <p className="text-sm font-medium">
+                  {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
+                </p>
+              </div> */}
+              <div className="flex items-center gap-2 text-gray-500">
+                <BsCalendarFill />
+                <p className="text-sm font-medium">
+                  {project.jornada.dataUltimoContato
+                    ? `ÚLTIMO CONTATO EM: ${formatDateAsLocale(project.jornada.dataUltimoContato)}`
+                    : 'SEM REGISTRO DE CONTATO'}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-gray-500">
-              <BsCalendarFill />
-              <p className="text-sm font-medium">
-                {project.jornada.dataUltimoContato ? formatDateAsLocale(project.jornada.dataUltimoContato) : 'SEM CONTATO'}
-              </p>
+          </div>
+          <div className="mt-2 flex w-full flex-wrap items-center justify-start gap-4">
+            <div className="flex items-center gap-1">
+              <FaSignature />
+              <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                ASSINADO EM: <strong className="text-cyan-500">{formatDateAsLocale(project.contrato.dataAssinatura)}</strong> (HÁ{' '}
+                <strong className="text-cyan-500">
+                  {getDifferenceBetweenDates({ start: project.contrato.dataAssinatura, end: new Date() })} DIAS
+                </strong>
+                )
+              </h1>
+            </div>
+            {project.compra.dataPedido ? (
+              <div className="flex items-center gap-1">
+                <FaStore />
+                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                  COMPRO COM: <strong className="text-cyan-500">{project.compra?.fornecedor}</strong>
+                </h1>
+              </div>
+            ) : null}
+
+            <div className="flex items-center gap-1">
+              <TbTruckDelivery />
+              {renderDeliveryInfo({ deliveredAt: project.compra.dataEntrega, expectedAt: project.compra.previsaoEntrega })}
+              {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                {project.compra.dataEntrega
+                  ? `ENTREGUE EM: ${formatDateAsLocale(project.compra.dataEntrega)} (HÁ 
+                ${getDifferenceBetweenDates({ start: project.compra.dataEntrega, end: new Date() })} DIAS)`
+                  : `PREVISTO PARA: ${project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}`}
+              </h1> */}
+            </div>
+            <div className="flex items-center gap-1">
+              <BsUnlockFill />
+              {renderAccessInfo({ approvedAt: project.parecer?.dataParecerDeAcesso })}
+              {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                {project.parecer?.dataParecerDeAcesso
+                  ? `PARECER APROVADO EM: ${formatDateAsLocale(project.parecer.dataParecerDeAcesso)} (HÁ 
+                ${getDifferenceBetweenDates({ start: project.parecer.dataParecerDeAcesso, end: new Date() })} DIAS)`
+                  : 'PARECER NÃO APROVADO'}
+              </h1> */}
+            </div>
+            <div className="flex items-center gap-1">
+              <FaSolarPanel />
+              <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <strong className="text-cyan-500">{project.sistema?.qtdeModulos} MÓDULOS</strong>
+              </h1>
             </div>
           </div>
         </div>

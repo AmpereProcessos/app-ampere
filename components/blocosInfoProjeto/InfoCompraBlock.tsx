@@ -5,7 +5,7 @@ import { formatDate, formatToMoney, fornecedores, statusLiberacao } from '../../
 import ProjectKitInfo from '../identificador/suprimentos/ProjectKitInfo'
 import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMaterialInfo'
 import SelectInputPersonalized from '../inputs/Select'
-import { supplementationStatus } from '../../utils/select-options'
+import { deliveryStatus, supplementationStatus } from '../../utils/select-options'
 import CheckboxInput from '../inputs/Checkbox'
 import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
 import { FaMoon } from 'react-icons/fa'
@@ -516,13 +516,7 @@ function InfoCompraBlock({
             editable={editor}
             value={infoHolder.compra?.statusEntrega || 'NÃO DEFINIDO'}
             selectedItemLabel="NÃO DEFINIDO"
-            options={[
-              { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
-              { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
-              { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
-              { id: 4, label: 'CANCELADO', value: 'CANCELADO' },
-              { id: 5, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-            ]}
+            options={deliveryStatus}
             handleChange={(value) => {
               setChanges((prev) => ({
                 ...prev,

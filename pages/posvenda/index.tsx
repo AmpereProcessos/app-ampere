@@ -22,7 +22,7 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { accessGrantingStatus, contractStatus, executionStatus, inspectionStatus, journeyPendings } from '@/utils/select-options'
+import { accessGrantingStatus, contractStatus, deliveryStatus, executionStatus, inspectionStatus, journeyPendings } from '@/utils/select-options'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { TProjectDTO } from '@/utils/schemas/projects'
@@ -398,15 +398,7 @@ function Posvenda() {
                     width={'100%'}
                     label={'STATUS DE ENTREGA'}
                     selected={filters.deliveryStatus}
-                    options={[
-                      { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
-                      {
-                        id: 2,
-                        value: 'AGUARDANDO COMPRA',
-                        label: 'AGUARDANDO COMPRA',
-                      },
-                      { id: 3, value: 'CANCELADO', label: 'CANCELADO' },
-                    ]}
+                    options={deliveryStatus}
                     selectedItemLabel={'SEM FILTRO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

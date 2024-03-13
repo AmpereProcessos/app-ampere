@@ -891,8 +891,15 @@ export const journeyPendings = [
   { id: 9, label: 'PENDENTE INSTALAÇÃO REALIZADA', value: 'instalacaoRealizada' },
   { id: 10, label: 'PENDENTE VISTORIA', value: 'vistoriaConcessionaria' },
   { id: 11, label: 'PENDENTE SISTEMA LIGADO', value: 'sistemaLigado' },
-  { d: 12, label: 'PENDENTE ENTREGA TÉCNICA', value: 'entregaTecnica' },
+  { id: 12, label: 'PENDENTE ENTREGA TÉCNICA', value: 'entregaTecnica' },
   { id: 13, label: 'JORNADA NÃO CONCLUÍDA', value: 'jornadaConcluida' },
+]
+export const deliveryStatus = [
+  { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
+  { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
+  { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
+  { id: 4, label: 'CANCELADO', value: 'CANCELADO' },
+  { id: 5, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
 ]
 export const inverterFixationOptions = [
   { id: 1, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },

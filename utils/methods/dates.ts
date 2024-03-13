@@ -53,3 +53,10 @@ export function getDifferenceBetweenTimes(timeOne: string, timeTwo: string) {
   var differenceMinutes = differenceInMinutes % 60
   return { hoursTotal: differenceHoursTotal, minutesTotal: differenceInMinutes, hoursFixed: differenceHours, minutesFixed: differenceMinutes }
 }
+
+export function getDifferenceBetweenDates({ start, end }: { start?: string | Date | null; end?: string | Date | null }) {
+  const startDate = dayjs(start)
+  const endDate = dayjs(end)
+  const diff = startDate.diff(endDate, 'days')
+  return Math.abs(diff)
+}

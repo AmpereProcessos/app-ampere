@@ -39,25 +39,25 @@ function OrdemServicoEmBranco() {
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold">Nome:</p>
-              <p className="col-span-3 border border-black text-center text-xs">APAE ITUIUTABA</p>
+              <p className="col-span-3 border border-black text-center text-xs">SEST SENAT</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Endereço:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">RUA VER.GERALDO MOISÉS</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">AV. PROF.JOSÉ VIEIRA DE MENDONÇA</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Telefone:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">34 3269-8381</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">(34) 2122-0530</p>
             </div>
           </div>
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold">Bairro:</p>
-              <p className="col-span-3 border border-black text-center text-xs">UNIVERSITÁRIO</p>
+              <p className="col-span-3 border border-black text-center text-xs">NOVO MUNDO</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Número:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">Nº69</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">Nº1105</p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold">Cidade:</p>
@@ -76,13 +76,13 @@ function OrdemServicoEmBranco() {
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold">NºMódulos:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">N/A</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs">30 - 335W</p>
             </div>
           </div>
           <div className="flex items-center">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold">Marca/Modelo:</p>
-              <p className="col-span-3 w-48 border border-black text-center">GROWATT</p>
+              <p className="col-span-3 w-48 border border-black text-center">FRONIUS</p>
             </div>
           </div>
         </div>
@@ -122,10 +122,19 @@ function OrdemServicoEmBranco() {
       </div> */}
       <div className="mt-6 border border-black">
         <h1 className="py-2 text-center font-bold">SERVIÇO A SER EXECUTADO</h1>
-        <div className="flex h-[120px] flex-col items-center justify-center">
-          <p className="text-sm">SERVIÇO: OUTROS</p>
+        <div className="flex h-fit flex-col items-center justify-center">
+          <p className="text-sm font-black">SERVIÇO: MANUTENÇÃO EM SUBESTAÇÃO</p>
           <div className="flex min-h-[50px] flex-col items-center justify-center">
-            <p className="my-2 text-xs">INSTALAR INVERSOR PROVISÓRIO (AMPÈRE) DE 36KW</p>
+            <p className="my-2 text-xs uppercase">Solicitação de abertura de eletrocentros;</p>
+            <p className="my-2 text-xs uppercase">Inspeção termográfica de todos os elementos de média tensão;</p>
+            <p className="my-2 text-xs uppercase">Coleta de registros de atuações do relé (caso houver);</p>
+            <p className="my-2 text-xs uppercase">Verificação e teste de disjuntores;</p>
+            <p className="my-2 text-xs uppercase">Verificação e teste de DPS e eventual troca;</p>
+            <p className="my-2 text-xs uppercase">Teste de Tensão da rede;</p>
+            <p className="my-2 text-xs uppercase">Limpeza do chão e quadros;</p>
+            <p className="my-2 text-xs uppercase">
+              A manutenção será acompanhada pelo Felipe Tadeu, onde será feita as devidas orientações para tais feitos
+            </p>
           </div>
         </div>
       </div>

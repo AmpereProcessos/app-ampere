@@ -104,18 +104,18 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
             {isLoading ? <LoadingPage /> : null}
             {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
             {isSuccess && infoHolder ? (
-              <div className="flex grow py-2 px-2 flex-col gap-y-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-                <div className="flex items-center justify-center gap-4 mt-2">
+              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto py-2 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <div className="mt-2 flex items-center justify-center gap-4">
                   <div className="flex items-center gap-2">
                     <Avatar fallback={'U'} height={25} width={25} url={infoHolder?.requerente?.avatar_url} />
-                    <p className="font-medium text-gray-500 text-xs">{infoHolder?.requerente?.nomeCRM || 'Autor não identificado'}</p>
+                    <p className="text-xs font-medium text-gray-500">{infoHolder?.requerente?.nomeCRM || 'Autor não identificado'}</p>
                   </div>
                   <div className="flex items-center gap-2 text-gray-500">
                     <BsCalendarFill />
                     <p className="text-xs font-medium">{dayjs(infoHolder?.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
                   </div>
                 </div>
-                <div className="flex w-full flex-col gap-2 lg:flex-row justify-center">
+                <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[350px]">
                     <SelectInputWithImages
                       label={'ANALISTA RESPONSÁVEL'}
@@ -236,12 +236,12 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                       <BsCode size={'20px'} color="rgb(31,41,55)" />
                       {analysis.projeto.id ? (
                         <Link href={`https://crm.ampereenergias.com.br/projeto/id/${analysis.projeto.id}`}>
-                          <a className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                          <a className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                             #{analysis.projeto.identificador || 'N/A'}
                           </a>
                         </Link>
                       ) : (
-                        <p className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
+                        <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
                           #{analysis.projeto.identificador || 'N/A'}
                         </p>
                       )}
@@ -263,7 +263,7 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                       <div className="flex items-center gap-2">
                         <BsCode size={'20px'} color="rgb(31,41,55)" />
                         {analysis.aumento.id ? (
-                          <a className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                          <a className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                             #{analysis.aumento.id || 'N/A'}
                           </a>
                         ) : null}
@@ -293,8 +293,8 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                 ) : (
                   <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
                 )}
-                <div className="w-full flex flex-col">
-                  <h1 className="w-full p-1 bg-gray-500 text-white font-bold text-center rounded-tr-sm rounded-tl-sm">COMENTÁRIOS DO REQUERENTE</h1>
+                <div className="flex w-full flex-col">
+                  <h1 className="w-full rounded-tr-sm rounded-tl-sm bg-gray-500 p-1 text-center font-bold text-white">COMENTÁRIOS DO REQUERENTE</h1>
                   <textarea
                     placeholder="SEM COMENTÁRIOS PREENCHIDOS..."
                     value={infoHolder.comentarios || ''}
@@ -302,9 +302,9 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                     onChange={(e) => {
                       setInfoHolder((prev) => ({
                         ...prev,
-                        execucao: prev.execucao ? { ...prev.execucao, observacoes: e.target.value } : { observacoes: e.target.value, itens: [] },
+                        comentarios: e.target.value,
                       }))
-                      setChanges((prev) => ({ ...prev, 'execucao.observacoes': e.target.value }))
+                      setChanges((prev) => ({ ...prev, comentarios: e.target.value }))
                     }}
                     className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
                   />
@@ -331,13 +331,13 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                   updateAnalysis={(change) => mutate({ id: analysisId, changes: change })}
                 />
                 <ConclusionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />{' '}
-                <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2 mt-4">
+                <div className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
                   <h1 className="font-bold text-white">TIPOS DE LAUDO</h1>
                 </div>
-                <div className="w-full flex items-center gap-2 justify-center flex-wrap px-4">
+                <div className="flex w-full flex-wrap items-center justify-center gap-2 px-4">
                   {technicalAnalysisReportTypes.map((type) => (
                     <Link key={type.id} href={`/projetos/laudo/pdf/${analysisId}?tipo=${type.value}`}>
-                      <a className="py-1 px-2 rounded border border-black font-bold text-center w-fit shadow-sm hover:bg-black hover:text-white">
+                      <a className="w-fit rounded border border-black py-1 px-2 text-center font-bold shadow-sm hover:bg-black hover:text-white">
                         {type.value}
                       </a>
                     </Link>

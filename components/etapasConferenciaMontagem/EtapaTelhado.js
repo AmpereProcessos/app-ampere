@@ -219,70 +219,70 @@ function EtapaTelhado({ next, order }) {
   }
 
   return (
-    <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between p-2">
-        <h1 className="text-center font-bold w-full">ETAPA TELHADO</h1>
-        <p className="text-xs font-bold text-gray-600 italic">
+    <div className="my-2 flex w-full flex-col">
+      <div className="flex flex-col items-center justify-between bg-[#fead61] p-2 text-white">
+        <h1 className="w-full text-center font-bold">ETAPA TELHADO</h1>
+        <p className="text-xs font-bold italic text-gray-600">
           (OBS: TODAS AS FOTOS DEVEM SER TIRADAS ATRAVÉS DO APLICATIVO <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>
-      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+      <div className="my-2 flex flex-col items-center gap-y-2 border-y border-gray-200 py-2">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">FIXAÇÃO DOS SUPORTES COM APERTO DE TODOS OS PARAFUSOS E CONFERIR</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">FIXAÇÃO DOS TRILHOS COM APERTO DE TODOS OS PARAFUSOS E CONFERIR TELHAS ALTAS E ONDAS BAIXAS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">FIXAÇÃO DA MANTA ASFÁLTICA (PICHE) NAS SAÍDAS DOS GANCHOS, TELHAS ALTAS E ONDAS BAIXAS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">FAZER ATERRAMENTO DE TODOS OS TRILHOS E COLOCAR AS PONTAS DOS TERRAS PRA DENTRO DA LAJE</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">FIXAÇÃO DOS MICROS INVERSORES E ATERRAR OS MESMOS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             VERIFICAR SE TODAS AS CONEXÕES DE CORRENTE ALTERANADA DOS MICROS ESTEJAM ESTANHADAS E ISOLADAS CORRETAMENTE
           </p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">VERIFICAR SE OS TAPÕES FORAM COLOCADOS NO FINAL DOS MICROS INVERSORES</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             ANTES DA MONTAGEM DOS MÓDULOS FAZER INSPEÇÃO VISUAL SE ESTÁ TUDO CORRETO E CONFERIR SE TEM TELHAS QUEBRADAS
           </p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             DURANTE A FIXAÇÃO DOS MÓDULOS FAZER CONFERÊNCIA SE OS MÓDULOS ESTÃO SENDO CONECTADOS CORRETAMENTE TANTO EM SÉRIE OU NOS MICROS
           </p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             FURANTE A FIXAÇÃO DOS MÓDULOS FAZER OUTRA INSPEÇÃO VISUAL MÓDULO A MÓDULO COM O INTUITO DE RETIRAR TELHAS QUEBRADAS
           </p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             DURANTE TODA A MONTAGEM NO TELHADO LEVAR SACOLAS PARA IR ARMAZENANDO O LIXO QUE APARECE DURANTE O PROCESSO. (LIXO EM RUFOS E CALHAS, LIXO
             EM SAÍDAS DE ÁGUA, ABRAÇADEIRAS DESCARTADAS)
           </p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
             TIRAR UM FOTO E MANDA-LÁ NO GRUPO DO WHATSAPP DA EQUIPE TÉCNICA, RELATANDO CONCLUSÃO DA PRIMEIRA ETAPA.
@@ -293,23 +293,23 @@ function EtapaTelhado({ next, order }) {
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input type={'checkbox'} checked={checkRoofStage} onChange={(e) => setCheckRoofStage(e.target.checked)} />
       </div>
-      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">FOTOS/FILMAGENS</h1>
+      <h1 className="mt-5  w-full text-center text-lg font-bold text-[#fead61]">FOTOS/FILMAGENS</h1>
       <div className="flex flex-wrap justify-center gap-2">
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FOTO(S) DAS ETIQUETAS DOS MÓDULOS</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FOTO(S) DAS ETIQUETAS DOS MÓDULOS</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotoEtiquetaModulos ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotoEtiquetaModulos.length == 1 ? files.fotoEtiquetaModulos[0].name : `${files.fotoEtiquetaModulos[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -327,21 +327,21 @@ function EtapaTelhado({ next, order }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FOTO(S) DAS ETIQUETAS DOS INVERSORES</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FOTO(S) DAS ETIQUETAS DOS INVERSORES</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotoEtiquetaInversores ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotoEtiquetaInversores.length == 1 ? files.fotoEtiquetaInversores[0].name : `${files.fotoEtiquetaInversores[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -359,21 +359,21 @@ function EtapaTelhado({ next, order }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FILMAGEM DE TODO O TELHADO (POR CIMA)</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FILMAGEM DE TODO O TELHADO (POR CIMA)</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.filmagemTelhadoPorCima ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.filmagemTelhadoPorCima.length == 1 ? files.filmagemTelhadoPorCima[0].name : `${files.filmagemTelhadoPorCima[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -391,14 +391,14 @@ function EtapaTelhado({ next, order }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FILMAGEM DE TODO O TELHADO (POR BAIXO)</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FILMAGEM DE TODO O TELHADO (POR BAIXO)</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.filmagemTelhadoPorBaixo ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.filmagemTelhadoPorBaixo.length == 1
                       ? files.filmagemTelhadoPorBaixo[0].name
                       : `${files.filmagemTelhadoPorBaixo[0].name}...`}
@@ -407,7 +407,7 @@ function EtapaTelhado({ next, order }) {
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -425,21 +425,21 @@ function EtapaTelhado({ next, order }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FOTO(S) DOS TRILHOS MONTADOS</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FOTO(S) DOS TRILHOS MONTADOS</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotosTrilhosMontados ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotosTrilhosMontados.length == 1 ? files.fotosTrilhosMontados[0].name : `${files.fotosTrilhosMontados[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -457,16 +457,16 @@ function EtapaTelhado({ next, order }) {
             />
           </div>
         </div>
-        {order?.detalhes?.topologia == 'MICRO' && (
+        {order?.detalhes?.topologia == 'MICRO-INVERSOR' || order?.detalhes?.topologia == 'MICRO' ? (
           <>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTO(S)/FILMAGEM DOS MICROS/INVERSORES INSTALADOS</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTO(S)/FILMAGEM DOS MICROS/INVERSORES INSTALADOS</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotosInversoresAlocados ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotosInversoresAlocados.length == 1
                           ? files.fotosInversoresAlocados[0].name
                           : `${files.fotosInversoresAlocados[0].name}...`}
@@ -475,7 +475,7 @@ function EtapaTelhado({ next, order }) {
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -493,21 +493,21 @@ function EtapaTelhado({ next, order }) {
                 />
               </div>
             </div>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTO(S) DAS CONEXÕES DOS MICROS</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTO(S) DAS CONEXÕES DOS MICROS</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotosConexoesMicros ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotosConexoesMicros.length == 1 ? files.fotosConexoesMicros[0].name : `${files.fotosConexoesMicros[0].name}...`}
                       </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -526,23 +526,23 @@ function EtapaTelhado({ next, order }) {
               </div>
             </div>
           </>
-        )}
+        ) : null}
 
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FOTOS DOS PAINÉIS INSTALADOS</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DOS PAINÉIS INSTALADOS</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotosPaineisInstalados ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotosPaineisInstalados.length == 1 ? files.fotosPaineisInstalados[0].name : `${files.fotosPaineisInstalados[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -562,11 +562,11 @@ function EtapaTelhado({ next, order }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center mt-4">
+      <div className="mt-4 flex items-center justify-center">
         <button
           disabled={inProgress}
           onClick={goNextStage}
-          className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+          className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
         >
           PRÓXIMO
         </button>

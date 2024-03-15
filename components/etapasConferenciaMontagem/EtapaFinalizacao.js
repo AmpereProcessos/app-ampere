@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
 import { updateServiceOrder } from '../../utils/methods/mutation/serviceOrders'
 import { useQueryClient } from 'react-query'
-
+import { estadosECidades } from '../../utils/estados_cidades'
 function EtapaFinalizacao({ closeModal, order, queryKey }) {
   const queryClient = useQueryClient()
   const [checkFinishingStage, setCheckFinishingStage] = useState(false)
@@ -39,27 +39,26 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
 
       return false
     }
-    if (cidadesGoias.includes(order?.localizacao?.cidade)) {
-      if (!files.fotoMedicoesStrings) {
-        toast.error('Por favor, anexe foto(s) das medições de corrente e tensão CC de todas as strings.')
 
-        return false
-      }
-      if (!files.fotoMedicoesCAEntrada) {
-        toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha na entrada de energia.')
+    if (!files.fotoMedicoesStrings) {
+      toast.error('Por favor, anexe foto(s) das medições de corrente e tensão CC de todas as strings.')
 
-        return false
-      }
-      if (!files.fotoMedicoesCADisjuntorAntes) {
-        toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha no quadro antes do disjuntor.')
+      return false
+    }
+    if (!files.fotoMedicoesCAEntrada) {
+      toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha na entrada de energia.')
 
-        return false
-      }
-      if (!files.fotoMedicoesCADisjuntorDepois) {
-        toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha no quadro depois do disjuntor.')
+      return false
+    }
+    if (!files.fotoMedicoesCADisjuntorAntes) {
+      toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha no quadro antes do disjuntor.')
 
-        return false
-      }
+      return false
+    }
+    if (!files.fotoMedicoesCADisjuntorDepois) {
+      toast.error('Por favor, anexe foto(s) das medições de tensão CA fase e linha no quadro depois do disjuntor.')
+
+      return false
     }
 
     return true
@@ -216,92 +215,92 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
     }
   }
   return (
-    <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between rounded-sm p-2">
-        <h1 className="text-center font-bold w-full">ETAPA FINALIZAÇÃO DE OBRA</h1>
-        <h1 className="text-xs font-bold text-gray-600 text-center">
+    <div className="my-2 flex w-full flex-col">
+      <div className="flex flex-col items-center justify-between rounded-sm bg-[#fead61] p-2 text-white">
+        <h1 className="w-full text-center font-bold">ETAPA FINALIZAÇÃO DE OBRA</h1>
+        <h1 className="text-center text-xs font-bold text-gray-600">
           (OBS: TODAS AS FOTOS DEVEM SER TIRADAS ATRAVÉS DO APLICATIVO <strong className="text-[#15599a]">NOTECAM</strong>.)
         </h1>
       </div>
-      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
-        <div className="flex flex-col gap-y-2 w-full">
-          <div className="flex items-center self-center gap-2 font-bold">
+      <div className="my-2 flex flex-col items-center gap-y-2 border-y border-gray-200 py-2">
+        <div className="flex w-full flex-col gap-y-2">
+          <div className="flex items-center gap-2 self-center font-bold">
             <VscDebugBreakpointLog style={{ color: '#15599a', fontSize: '25px' }} />
             <p className="text-gray-900">ANTES DE DESCER DO TELHADO</p>
           </div>
-          <div className="flex flex-col items-center pl-5 mt-2">
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <div className="mt-2 flex flex-col items-center pl-5">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODAS AS FERRAMENTAS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODO O LIXO</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE DESCER DO TELHADO RETIRAR TODAS AS TELHAS QUEBRADAS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE DESCER DO TELHADO CONFERIR SE NÃO FICOU TELHAS ABERTAS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE DESCER DO TELHADO FAZER INSPEÇÃO VISUAL SE TUDO ESTA CORRETO</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">ANTES DE SAIR DA LAJE</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />{' '}
               <p className="col-span-9 font-medium">CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE RETIROU TODAS AS FERRAMENTAS</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE TODO O LIXO DA AMPÉRE FOI RETIRADO</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">FAZER INSPEÇÃO VISUAL SE TUDO ESTA CORRETO</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-2 w-full">
-          <div className="flex items-center self-center gap-2 font-bold">
+        <div className="flex w-full flex-col gap-y-2">
+          <div className="flex items-center gap-2 self-center font-bold">
             <VscDebugBreakpointLog style={{ color: '#15599a', fontSize: '25px' }} />
             <p className="text-gray-900">LOCAL DOS INVERSORES</p>
           </div>
-          <div className="flex flex-col items-center pl-5 mt-2">
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <div className="mt-2 flex flex-col items-center pl-5">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE TODA A SOBRA DE MATERIAL FORAM RETIRADAS DO LOCAL DE MONTAGEM DOS INVERSORES</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE TODAS AS FERRAMENTAS FORAM RETIRADAS DO LOCAL DA INSTALAÇÃO DOS INVERSORES</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE TODO O LIXO FOI RETIRADO DO LOCAL DA INSTALAÇÃO DOS INVERSORES</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 NO TÉRMINO DA MONTAGEM DOS INVERSORES, LAVAR AS MÃOS E PANOS DE LIMPEZA E REALIZAR A HIGIENIZAÇÃO DOS INVERSORES, QDG, STRING, CANOS E
                 CONDULETES
               </p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 FAZER INSPEÇÃO VISUAL NO LOCAL DA MONTAGEM DOS INVERSORES SE ESTA TUDO CORRETO, LEMBRE-SE QUE A MONTAGEM DOS INVERSORES SÃO A VITRINE
@@ -310,35 +309,35 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-2 w-full">
-          <div className="flex items-center self-center gap-2 font-bold">
+        <div className="flex w-full flex-col gap-y-2">
+          <div className="flex items-center gap-2 self-center font-bold">
             <VscDebugBreakpointLog style={{ color: '#15599a', fontSize: '25px' }} />
             <p className="text-gray-900">CASA DO CLIENTE GERAL</p>
           </div>
-          <div className="flex flex-col items-center pl-5 mt-2">
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <div className="mt-2 flex flex-col items-center pl-5">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 CERTIFICAR-SE QUE TODOS OS LIXOS DE TODAS AS ETAPAS FORAM RETIRADOS E DESCARTADOS NOS SEUS DEVIDOS LUGARES
               </p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">CONFERIR SE PLACA DE GERAÇÃO FOI INSTALADA</p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 ANTES DE SAIR DA CASA DO CLIENTE FAZER UMA ULTIMA INSPEÇÃO VISUAL PRA VERIFICAR SE TUDO ESTÁ CORRETO
               </p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 ANTES DE SAIR DA CASA DO CLIENTE PERGUNTAR SE ESTA TUDO CORRETO OU SE PODEMOS FAZER MAIS ALGUMA COISA POR ELE
               </p>
             </div>
-            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+            <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
               <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
               <p className="col-span-9 font-medium">
                 DESPEDIR-SE DO CLIENTE E FALAR PRA ELE QUE O ENGENHEIRO RESPONSÁVEL VAI FAZER UMA INSPEÇÃO E CONFIGURAÇÕES E AJUSTES FINAIS SE HOUVER
@@ -352,16 +351,16 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input type={'checkbox'} checked={checkFinishingStage} onChange={(e) => setCheckFinishingStage(e.target.checked)} />
       </div>
-      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">FOTOS/FILMAGENS</h1>
-      <div className="flex flex-wrap justify-center gap-2 mt-3">
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FILMAGEM DO TESTE DE ÁGUA (VISTO DO TELHADO)</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+      <h1 className="mt-5  w-full text-center text-lg font-bold text-[#fead61]">FOTOS/FILMAGENS</h1>
+      <div className="mt-3 flex flex-wrap justify-center gap-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FILMAGEM DO TESTE DE ÁGUA (VISTO DO TELHADO)</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.filmagemTesteAguaDoTelhado ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.filmagemTesteAguaDoTelhado.length == 1
                       ? files.filmagemTesteAguaDoTelhado[0].name
                       : `${files.filmagemTesteAguaDoTelhado[0].name}...`}
@@ -370,7 +369,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -388,14 +387,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FILMAGEM DO PÓS TESTE DE ÁGUA (VISTO DA LAJE)</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FILMAGEM DO PÓS TESTE DE ÁGUA (VISTO DA LAJE)</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.filmagemPosTesteAguaNaLaje ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.filmagemPosTesteAguaNaLaje.length == 1
                       ? files.filmagemPosTesteAguaNaLaje[0].name
                       : `${files.filmagemPosTesteAguaNaLaje[0].name}...`}
@@ -404,7 +403,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -422,14 +421,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">FOTO/FILMAGEM DA ANTENA/DATALOGGER/DTU PÓS-CONFIGURAÇÃO</label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">FOTO/FILMAGEM DA ANTENA/DATALOGGER/DTU PÓS-CONFIGURAÇÃO</label>
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotoDataloggerPosConfig ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotoDataloggerPosConfig.length == 1
                       ? files.fotoDataloggerPosConfig[0].name
                       : `${files.fotoDataloggerPosConfig[0].name}...`}
@@ -438,7 +437,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -458,21 +457,21 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
         </div>
         {cidadesGoias.includes(order?.localizacao?.cidade) && (
           <>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DAS MEDIÇÕES DE CORRENTE E TENSÃO CC DE TODAS AS STRINGS</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DAS MEDIÇÕES DE CORRENTE E TENSÃO CC DE TODAS AS STRINGS</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotoMedicoesStrings ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotoMedicoesStrings.length == 1 ? files.fotoMedicoesStrings[0].name : `${files.fotoMedicoesStrings[0].name}...`}
                       </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -490,21 +489,21 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
                 />
               </div>
             </div>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTOS DE TENSÃO CA FASE E LINHA NA ENTRADA DE ENERGIA</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NA ENTRADA DE ENERGIA</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotoMedicoesCAEntrada ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotoMedicoesCAEntrada.length == 1 ? files.fotoMedicoesCAEntrada[0].name : `${files.fotoMedicoesCAEntrada[0].name}...`}
                       </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -522,14 +521,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
                 />
               </div>
             </div>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA ANTES DO DISJUNTOR</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA ANTES DO DISJUNTOR</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotoMedicoesCADisjuntorAntes ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotoMedicoesCADisjuntorAntes.length == 1
                           ? files.fotoMedicoesCADisjuntorAntes[0].name
                           : `${files.fotoMedicoesCADisjuntorAntes[0].name}...`}
@@ -538,7 +537,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -556,14 +555,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
                 />
               </div>
             </div>
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA DEPOIS DO DISJUNTOR</label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA DEPOIS DO DISJUNTOR</label>
+              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
                 <div className="absolute">
                   {files.fotoMedicoesCADisjuntorDepois ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
+                      <span className="block text-center font-normal text-gray-400">
                         {files.fotoMedicoesCADisjuntorDepois.length == 1
                           ? files.fotoMedicoesCADisjuntorDepois[0].name
                           : `${files.fotoMedicoesCADisjuntorDepois[0].name}...`}
@@ -572,7 +571,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -594,11 +593,11 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
         )}
       </div>
 
-      <div className="flex items-center justify-center mt-4">
+      <div className="mt-4 flex items-center justify-center">
         <button
           disabled={finishInProgress}
           onClick={finishOS}
-          className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+          className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
         >
           FINALIZAR OS
         </button>

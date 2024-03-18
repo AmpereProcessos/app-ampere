@@ -2,9 +2,11 @@ import { apiHandler } from '@/utils/api'
 import { TCRMClient } from '@/utils/schemas/crm/clients.schema'
 import { TCRMProject } from '@/utils/schemas/crm/projects.schema'
 import { TCRMUser } from '@/utils/schemas/crm/users.schema'
+import { TProject } from '@/utils/schemas/projects'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
-import { Collection, ObjectId, WithId } from 'mongodb'
+import { Collection, Db, ObjectId, WithId } from 'mongodb'
 import { NextApiHandler } from 'next'
 import { z } from 'zod'
 
@@ -20,9 +22,9 @@ const getIndications: NextApiHandler<GetResponse> = async (req, res) => {
   if (!projectId || typeof projectId != 'string' || !ObjectId.isValid(projectId))
     throw new createHttpError.BadRequest('ID do projeto não encontrado.')
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-  const projectsCollection: Collection<TCRMProject> = crmDb.collection('projects')
+  const crmProjectsCollection: Collection<TCRMProject> = crmDb.collection('projects')
 
-  const findResponse = await projectsCollection.find({ idIndicacao: projectId }).toArray()
+  const findResponse = await crmProjectsCollection.find({ idIndicacao: projectId }).toArray()
   const indications: TIndicationProject[] = findResponse.map((f) => {
     return {
       _id: f._id.toString(),
@@ -38,14 +40,10 @@ const getIndications: NextApiHandler<GetResponse> = async (req, res) => {
 const IndicationSchema = z.object({
   nome: z.string({ required_error: 'Nome do indicado não informado.', invalid_type_error: 'Tipo não válido para o nome do indicado.' }),
   telefone: z.string({ required_error: 'Telefone do indicado não informado.', invalid_type_error: 'Tipo não válido para o telefone do indicado.' }),
-  nomeIndicador: z.string({ required_error: 'Nome do indicador não informado.', invalid_type_error: 'Tipo não válido para o nome do indicador.' }),
-  idIndicacao: z
-    .string({
-      required_error: 'ID de referência do indicador não informado.',
-      invalid_type_error: 'Tipo não válido para o ID de referência do indicador.',
-    })
-    .optional()
-    .nullable(),
+  idIndicacao: z.string({
+    required_error: 'ID de referência do indicador não informado.',
+    invalid_type_error: 'Tipo não válido para o ID de referência do indicador.',
+  }),
 })
 export type TIndicationBody = z.infer<typeof IndicationSchema>
 type PostResponse = {
@@ -57,12 +55,20 @@ type PostResponse = {
 const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, res) => {
   const indication = IndicationSchema.parse(req.body)
   console.log(indication)
+  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const indicator = await projectsCollection.findOne(
+    { _id: new ObjectId(indication.idIndicacao) },
+    { projection: { nomeDoContrato: 1, vendedor: 1 } }
+  )
+
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-  const projectsCollection: Collection<TCRMProject> = crmDb.collection('projects')
+  const crmProjectsCollection: Collection<TCRMProject> = crmDb.collection('projects')
   const usersCollection: Collection<TCRMUser> = crmDb.collection('users')
   const clientsCollection: Collection<TCRMClient> = crmDb.collection('clients')
+
   const receivers = await usersCollection.find({ 'permissoes.projetos.serRecebedor': true }).toArray()
-  const newReceiver = await getNewReceiver({ collection: projectsCollection, receivers })
+  const newReceiver = await getNewReceiver({ collection: crmProjectsCollection, receivers })
   const insider = { id: newReceiver.id, nome: newReceiver.nome, avatar_url: newReceiver.avatar_url }
 
   const insertClientObject: TCRMClient = {
@@ -73,7 +79,7 @@ const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, re
     cpfCnpj: '',
     telefonePrimario: indication.telefone,
     telefoneSecundario: '',
-    indicador: indication.nomeIndicador,
+    indicador: indicator?.nomeDoContrato,
     email: '',
     cep: '',
     bairro: '',
@@ -86,8 +92,7 @@ const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, re
   }
   const insertedClientResponse = await clientsCollection.insertOne(insertClientObject)
   const insertedClientId = insertedClientResponse.insertedId.toString()
-  console.log('CLIENTE', insertedClientId)
-  const identifier = await getNewProjectIdentifier({ collection: projectsCollection })
+  const identifier = await getNewProjectIdentifier({ collection: crmProjectsCollection })
 
   const insertProjectObj: TCRMProject = {
     nome: insertClientObject.nome,
@@ -97,7 +102,7 @@ const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, re
     responsavel: insider,
     representante: insider,
     clienteId: insertedClientId,
-    descricao: `Cliente obtido por indicação do(a) ${indication.nomeIndicador}`,
+    descricao: `Cliente obtido por indicação do(a) ${indicator?.nomeDoContrato}. O vendedor do projeto do indicador foi: ${indicator?.vendedor.nome}.`,
     localizacao: {
       cep: '',
       uf: insertClientObject.uf || '',
@@ -117,7 +122,7 @@ const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, re
 
     dataInsercao: new Date().toISOString(),
   }
-  const insertedProjectResponse = await projectsCollection.insertOne(insertProjectObj)
+  const insertedProjectResponse = await crmProjectsCollection.insertOne(insertProjectObj)
   const insertedProjectId = insertedProjectResponse.insertedId.toString()
   console.log('PROJETO', insertedProjectId)
   return res.status(201).json({ data: { insertedId: insertedProjectId }, message: 'Indicação criada com sucesso !' })

@@ -56,9 +56,9 @@ function IndicationsBlock({ projectId, projectName }: IndicationsBlockProps) {
         <button
           disabled={creationLoading}
           onClick={() =>
-            // @ts-ignore
+            //@ts-ignore
             handleCreateIndication({
-              indication: { nome: indication.nome, telefone: indication.telefone, nomeIndicador: projectName, idIndicacao: projectId },
+              indication: { nome: indication.nome, telefone: indication.telefone, idIndicacao: projectId },
             })
           }
           className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"

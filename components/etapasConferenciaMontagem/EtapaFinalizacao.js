@@ -455,142 +455,141 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
             />
           </div>
         </div>
-        {cidadesGoias.includes(order?.localizacao?.cidade) && (
-          <>
-            <div className="flex w-fit flex-col items-center">
-              <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DAS MEDIÇÕES DE CORRENTE E TENSÃO CC DE TODAS AS STRINGS</label>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
-                <div className="absolute">
-                  {files.fotoMedicoesStrings ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-center font-normal text-gray-400">
-                        {files.fotoMedicoesStrings.length == 1 ? files.fotoMedicoesStrings[0].name : `${files.fotoMedicoesStrings[0].name}...`}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setFiles({
-                      ...files,
-                      fotoMedicoesStrings: e.target.files,
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                  multiple={true}
-                  accept=".png, .jpeg, .mp4"
-                />
+
+        <>
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTO DAS MEDIÇÕES DE CORRENTE E TENSÃO CC DE TODAS AS STRINGS</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="absolute">
+                {files.fotoMedicoesStrings ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-center font-normal text-gray-400">
+                      {files.fotoMedicoesStrings.length == 1 ? files.fotoMedicoesStrings[0].name : `${files.fotoMedicoesStrings[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
               </div>
+              <input
+                onChange={(e) =>
+                  setFiles({
+                    ...files,
+                    fotoMedicoesStrings: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
+              />
             </div>
-            <div className="flex w-fit flex-col items-center">
-              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NA ENTRADA DE ENERGIA</label>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
-                <div className="absolute">
-                  {files.fotoMedicoesCAEntrada ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-center font-normal text-gray-400">
-                        {files.fotoMedicoesCAEntrada.length == 1 ? files.fotoMedicoesCAEntrada[0].name : `${files.fotoMedicoesCAEntrada[0].name}...`}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setFiles({
-                      ...files,
-                      fotoMedicoesCAEntrada: e.target.files,
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                  multiple={true}
-                  accept=".png, .jpeg, .mp4"
-                />
+          </div>
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NA ENTRADA DE ENERGIA</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="absolute">
+                {files.fotoMedicoesCAEntrada ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-center font-normal text-gray-400">
+                      {files.fotoMedicoesCAEntrada.length == 1 ? files.fotoMedicoesCAEntrada[0].name : `${files.fotoMedicoesCAEntrada[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
               </div>
+              <input
+                onChange={(e) =>
+                  setFiles({
+                    ...files,
+                    fotoMedicoesCAEntrada: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
+              />
             </div>
-            <div className="flex w-fit flex-col items-center">
-              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA ANTES DO DISJUNTOR</label>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
-                <div className="absolute">
-                  {files.fotoMedicoesCADisjuntorAntes ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-center font-normal text-gray-400">
-                        {files.fotoMedicoesCADisjuntorAntes.length == 1
-                          ? files.fotoMedicoesCADisjuntorAntes[0].name
-                          : `${files.fotoMedicoesCADisjuntorAntes[0].name}...`}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setFiles({
-                      ...files,
-                      fotoMedicoesCADisjuntorAntes: e.target.files,
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                  multiple={true}
-                  accept=".png, .jpeg, .mp4"
-                />
+          </div>
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA ANTES DO DISJUNTOR</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="absolute">
+                {files.fotoMedicoesCADisjuntorAntes ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-center font-normal text-gray-400">
+                      {files.fotoMedicoesCADisjuntorAntes.length == 1
+                        ? files.fotoMedicoesCADisjuntorAntes[0].name
+                        : `${files.fotoMedicoesCADisjuntorAntes[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
               </div>
+              <input
+                onChange={(e) =>
+                  setFiles({
+                    ...files,
+                    fotoMedicoesCADisjuntorAntes: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
+              />
             </div>
-            <div className="flex w-fit flex-col items-center">
-              <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA DEPOIS DO DISJUNTOR</label>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
-                <div className="absolute">
-                  {files.fotoMedicoesCADisjuntorDepois ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-center font-normal text-gray-400">
-                        {files.fotoMedicoesCADisjuntorDepois.length == 1
-                          ? files.fotoMedicoesCADisjuntorDepois[0].name
-                          : `${files.fotoMedicoesCADisjuntorDepois[0].name}...`}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setFiles({
-                      ...files,
-                      fotoMedicoesCADisjuntorDepois: e.target.files,
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                  multiple={true}
-                  accept=".png, .jpeg, .mp4"
-                />
+          </div>
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]">FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA DEPOIS DO DISJUNTOR</label>
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="absolute">
+                {files.fotoMedicoesCADisjuntorDepois ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-center font-normal text-gray-400">
+                      {files.fotoMedicoesCADisjuntorDepois.length == 1
+                        ? files.fotoMedicoesCADisjuntorDepois[0].name
+                        : `${files.fotoMedicoesCADisjuntorDepois[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
               </div>
+              <input
+                onChange={(e) =>
+                  setFiles({
+                    ...files,
+                    fotoMedicoesCADisjuntorDepois: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
+              />
             </div>
-          </>
-        )}
+          </div>
+        </>
       </div>
 
       <div className="mt-4 flex items-center justify-center">

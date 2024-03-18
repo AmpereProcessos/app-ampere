@@ -2,6 +2,7 @@ import { apiHandler } from '@/utils/api'
 import { TCRMClient } from '@/utils/schemas/crm/clients.schema'
 import { TCRMProject } from '@/utils/schemas/crm/projects.schema'
 import { TCRMUser } from '@/utils/schemas/crm/users.schema'
+import { TNotification } from '@/utils/schemas/notifications'
 import { TProject } from '@/utils/schemas/projects'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
 import connectToDatabase from '@/utils/services/mongodb/projects'
@@ -124,6 +125,7 @@ const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, re
   }
   const insertedProjectResponse = await crmProjectsCollection.insertOne(insertProjectObj)
   const insertedProjectId = insertedProjectResponse.insertedId.toString()
+
   console.log('PROJETO', insertedProjectId)
   return res.status(201).json({ data: { insertedId: insertedProjectId }, message: 'Indicação criada com sucesso !' })
 }

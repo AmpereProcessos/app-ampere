@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 const GeneralNotificationSchema = z.object({
   remetente: z.string(),
-  remetenteId: z.string(),
+  remetenteId: z.string().optional().nullable(),
   destinatario: z.string(),
   projetoReferencia: z.union([z.number(), z.string()]).optional().nullable(),
   nomeDoProjeto: z.string().optional().nullable(),
@@ -14,7 +14,7 @@ const GeneralNotificationSchema = z.object({
 })
 export const InsertNotificationSchema = z.object({
   remetente: z.string({ required_error: 'Remetente não informado.', invalid_type_error: 'Tipo não válido para remetente.' }),
-  remetenteId: z.string(),
+  remetenteId: z.string({ invalid_type_error: 'Tipo não válido para o ID do remetente.' }).optional().nullable(),
   destinatario: z.string({ required_error: 'Destinatário não informado.', invalid_type_error: 'Tipo não válido para destinatário.' }),
   projetoReferencia: z
     .union([z.number(), z.string()], {
@@ -50,7 +50,7 @@ export const InsertNotificationSchema = z.object({
 const NotificationEntitySchema = z.object({
   _id: z.instanceof(ObjectId),
   remetente: z.string(),
-  remetenteId: z.string(),
+  remetenteId: z.string().optional().nullable(),
   destinatario: z.string(),
   projetoReferencia: z.union([z.number(), z.string()]).optional().nullable(),
   nomeDoProjeto: z.string().optional().nullable(),

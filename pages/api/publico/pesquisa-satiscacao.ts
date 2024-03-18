@@ -1,4 +1,5 @@
 import { apiHandler } from '@/utils/api'
+import { TNotification } from '@/utils/schemas/notifications'
 import { TProject } from '@/utils/schemas/projects'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
@@ -50,7 +51,16 @@ const answerSurver: NextApiHandler<PutResponse> = async (req, res) => {
   const nps = Math.ceil(points.reduce((acc, current) => acc + current, 0) / points.length)
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const collection: Collection<TProject> = db.collection('dados')
+  const notificationsCollection: Collection<TNotification> = db.collection('notificacoes')
 
+  const project = await collection.findOne({ _id: new ObjectId(id) }, { projection: { qtde: 1, nomeDoContrato: 1 } })
+  if (!project) throw new createHttpError.NotFound('Projeto não encontrado.')
+  await notifyAfterSales({
+    projectName: project.nomeDoContrato || '',
+    projectIdentifier: project.qtde,
+    nps: nps,
+    collection: notificationsCollection,
+  })
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { satisfacao: answer.satisfaction, nps: nps } })
   if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao responder a pesquisa.')
   if (!updateResponse.matchedCount) throw new createHttpError.NotFound('Projeto não encontrado.')
@@ -58,3 +68,28 @@ const answerSurver: NextApiHandler<PutResponse> = async (req, res) => {
 }
 
 export default apiHandler({ PUT: answerSurver })
+
+type NotifyAfterSalesProps = {
+  projectName: string
+  projectIdentifier: string | number
+  collection: Collection<TNotification>
+  nps: number
+}
+async function notifyAfterSales({ projectName, projectIdentifier, collection, nps }: NotifyAfterSalesProps) {
+  try {
+    const notification = {
+      destinatario: '6353ebc7ef4e1a367a87794b',
+      remetente: 'SISTEMA',
+      mensagem: `CLIENTE ${projectName} RESPONDEU A PESQUISA DE SATISFAÇÃO, DANDO UM NPS DE ${nps}`,
+      projetoReferencia: projectIdentifier,
+      nomeDoProjeto: projectName,
+      dataDeEnvio: new Date(),
+      lido: false,
+    }
+    const insertResponse = await collection.insertOne(notification)
+    if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao criar notificação.')
+    return insertResponse.insertedId.toString()
+  } catch (error) {
+    throw error
+  }
+}

@@ -140,7 +140,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
           ))}
         </div>
       </div>
-      {avg && avg > 7 ? (
+      {/* {avg && avg > 7 ? (
         <div className="flex w-full flex-col gap-2">
           <p className="my-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
             Gostou dos nossos serviços ? Indique um conhecido para começar já a economizar na conta de luz.
@@ -190,7 +190,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
             </button>
           </div>
         </div>
-      ) : null}
+      ) : null} */}
       <div className="mt-4 flex w-full items-center justify-center">
         <button
           onClick={() => handleSurverAnswer()}

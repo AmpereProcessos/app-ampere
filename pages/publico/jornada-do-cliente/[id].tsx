@@ -13,11 +13,10 @@ import { IoMdPower } from 'react-icons/io'
 import { MdFeedback } from 'react-icons/md'
 import JourneyItem from '@/components/identificador/jornada-do-cliente/JourneyItem'
 import ErrorComponent from '@/components/utils/ErrorComponent'
-
-type ClientJourneyProps = {
-  projectJSON: string
-  error: string | null | undefined
-}
+import TextInput from '@/components/inputs/Text'
+import { formatToPhone } from '@/utils/constants'
+import SatisfactionSurvey from '@/components/identificador/posvenda/SatisfactionSurvey'
+import IndicationsBlock from '@/components/identificador/posvenda/IndicationsBlock'
 
 type TPoints = {
   sale: number | null
@@ -26,6 +25,22 @@ type TPoints = {
   afterSales: number | null
 }
 
+function getAvarege(points: TPoints) {
+  const filtered = Object.values(points).filter((v) => !!v)
+  if (filtered.length < 4) return null
+  const sum =
+    filtered.reduce((acc, current) => {
+      const accNumber = acc || 0
+      const currentNumber = current || 0
+      return accNumber + currentNumber
+    }, 0) || 0
+  return sum / filtered.length
+}
+
+type ClientJourneyProps = {
+  projectJSON: string
+  error: string | null | undefined
+}
 function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
   const [points, setPoints] = useState<TPoints>({
     sale: null,
@@ -33,6 +48,9 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
     execution: null,
     afterSales: null,
   })
+  const [indications, setIndications] = useState([{ nome: '', telefone: '' }])
+  const avg = getAvarege(points)
+  console.log(avg)
   if (error) return <ErrorComponent msg={error} />
   const project: TProjectDTO = JSON.parse(projectJSON)
   return (
@@ -43,9 +61,15 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
           <h1 className="text-center text-3xl font-black md:text-5xl">SUA JORNADA DO CLIENTE</h1>
           <Image src={Logo} alt="Logo" width={60} height={60} />
         </div>
-        <p className="mt-2 text-lg font-medium tracking-tight text-gray-500 md:text-xl">ACOMPANHE O PROCESSO DO SEU PROJETO CONOSCO</p>
-        <h2 className="mt-4 text-3xl font-black text-[#15599a] md:text-4xl">{project.nomeDoContrato}</h2>
+        <p className="mt-2 text-center text-lg font-medium tracking-tight text-gray-500 md:text-xl">ACOMPANHE O PROCESSO DO SEU PROJETO CONOSCO</p>
+        <h2 className="mt-4 text-center text-3xl font-black text-[#15599a] md:text-4xl">{project.nomeDoContrato}</h2>
 
+        {!project.nps && (!!project.jornada.dataEntregaTecnicaRemota || !!project.jornada.jornadaConcluida) ? (
+          <SatisfactionSurvey projectId={project._id} />
+        ) : null}
+        {project.nps && (!!project.jornada.dataEntregaTecnicaRemota || !!project.jornada.jornadaConcluida) ? (
+          <IndicationsBlock projectId={project._id} projectName={project.nomeDoContrato} />
+        ) : null}
         <div className="grid grid-cols-1 gap-6">
           <JourneyItem
             active={!!project.jornada.boasVindas}
@@ -115,102 +139,14 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             icon={BsCalendarCheckFill}
           />
           <JourneyItem
-            active={!!project.jornada.dataEntregaTecnicaRemota}
+            active={!!project.jornada.jornadaConcluida}
             title="Conclusão da jornada"
             description="Entrega final do seu projeto Ampère Energias."
             index={10}
-            date={project.jornada.dataEntregaTecnicaRemota}
+            date={project.jornada.dataConclusao || project.jornada.dataEntregaTecnicaRemota}
             icon={BsPatchCheckFill}
           />
         </div>
-        {!!project.jornada.dataEntregaTecnicaRemota || !!project.jornada.jornadaConcluida ? (
-          <>
-            <div className="my-6 h-[1px] w-full bg-gray-500"></div>
-            <h1 className="my-4 rounded-full bg-[#fead41] px-4 py-2 text-lg font-black leading-none tracking-tight text-white">
-              PESQUISA DE SATISFAÇÃO
-            </h1>
-            <p className="w-full self-center text-center font-medium tracking-tight text-gray-500 lg:w-[60%]">Seu projeto conosco foi concluído.</p>
-            <p className="mt-2 w-full self-center text-center font-medium tracking-tight text-gray-500 lg:w-[60%]">
-              Esperamos que sua experiência conosco tenha sido a melhor possível até e gostaríamos de uma opinião sua para que pudessemos melhorar
-              ainda mais os nossos serviços.
-            </p>
-            <p className="mt-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
-              Clique por favor abaixo na sua nota para algumas das etapas dos seus projetos.
-            </p>
-            <div className="mt-4 flex w-full flex-col gap-2">
-              <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
-                VENDA
-              </h1>
-              <div className="flex w-full flex-wrap items-center justify-around gap-2">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                  <div
-                    key={n}
-                    onClick={() => setPoints((prev) => ({ ...prev, sale: n }))}
-                    className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full lg:h-12 lg:w-12 ${
-                      points.sale == n ? 'bg-black text-white' : ''
-                    } border border-black text-xs font-black duration-200 ease-in-out hover:bg-black hover:text-white lg:text-sm`}
-                  >
-                    {n}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 flex w-full flex-col gap-2">
-              <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
-                ENTREGA
-              </h1>
-              <div className="flex w-full flex-wrap items-center justify-around gap-2">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                  <div
-                    key={n}
-                    onClick={() => setPoints((prev) => ({ ...prev, delivery: n }))}
-                    className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full lg:h-12 lg:w-12 ${
-                      points.delivery == n ? 'bg-black text-white' : ''
-                    } border border-black text-xs font-black duration-200 ease-in-out hover:bg-black hover:text-white lg:text-sm`}
-                  >
-                    {n}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 flex w-full flex-col gap-2">
-              <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
-                EXECUÇÃO/MONTAGEM
-              </h1>
-              <div className="flex w-full flex-wrap items-center justify-around gap-2">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                  <div
-                    key={n}
-                    onClick={() => setPoints((prev) => ({ ...prev, execution: n }))}
-                    className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full lg:h-12 lg:w-12 ${
-                      points.execution == n ? 'bg-black text-white' : ''
-                    } border border-black text-xs font-black duration-200 ease-in-out hover:bg-black hover:text-white lg:text-sm`}
-                  >
-                    {n}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 flex w-full flex-col gap-2">
-              <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
-                PÓS-VENDA
-              </h1>
-              <div className="flex w-full flex-wrap items-center justify-around gap-2">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                  <div
-                    key={n}
-                    onClick={() => setPoints((prev) => ({ ...prev, afterSales: n }))}
-                    className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full lg:h-12 lg:w-12 ${
-                      points.afterSales == n ? 'bg-black text-white' : ''
-                    } border border-black text-xs font-black duration-200 ease-in-out hover:bg-black hover:text-white lg:text-sm`}
-                  >
-                    {n}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        ) : null}
 
         {/* <div className="flex justify-center">
           <div className="w-full max-w-3xl">

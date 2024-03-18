@@ -5,12 +5,10 @@ import { TExpense } from '@/utils/schemas/expenses'
 import { TProject } from '@/utils/schemas/projects'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import dayjs from 'dayjs'
-import { Collection, Db } from 'mongodb'
+import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<{ data: any }> = async (req, res) => {
-  // const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-  // const collection: Collection<TProject> = db.collection('dados')
   // const expensesCollection: Collection<TExpense> = db.collection('despesas')
   // // const projects = await collection.find({ 'obra.saida': { $gte: '2023-11-01T00:00:00.000Z' } }, { sort: { 'obra.saida': 1 } }).toArray()
   // const projects = await collection
@@ -66,6 +64,7 @@ const getExport: NextApiHandler<{ data: any }> = async (req, res) => {
   //   // return obj
   // })
   // return res.json({ data: formatted })
+
   return res.json({ data: 'DESATIVADA' })
 }
 export default apiHandler({

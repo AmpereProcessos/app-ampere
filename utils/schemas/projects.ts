@@ -131,6 +131,7 @@ const GeneralProjectSchema = z.object({
     vistoriaConcessionaria: z.boolean().optional().nullable(),
     contatos: z.string().optional().nullable(),
     cuidados: z.string().optional().nullable(),
+    dataConclusao: z.string().optional().nullable(),
   }),
   linkDrive: z.string(),
   links: z.object({
@@ -276,6 +277,12 @@ const GeneralProjectSchema = z.object({
   nomeDoContrato: z.string(),
   nomeDoProjeto: z.string(),
   nps: z.number().optional().nullable(),
+  satisfacao: z.object({
+    venda: z.number().optional().nullable(),
+    entrega: z.number().optional().nullable(),
+    execucao: z.number().optional().nullable(),
+    posVenda: z.number().optional().nullable(),
+  }),
   numeroResidencia: z.union([z.string(), z.number()]),
   obra: z.object({
     checklist: z

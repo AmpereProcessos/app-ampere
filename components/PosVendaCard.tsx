@@ -320,8 +320,11 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
                 checked={!!infoHolder.jornada.jornadaConcluida}
                 handleChange={(value) => {
                   // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.jornadaConcluida': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, jornadaConcluida: value } }))
+                  handleUpdateProject({
+                    id: projectId,
+                    changes: { 'jornada.jornadaConcluida': value, 'jornada.dataConclusao': new Date().toISOString() },
+                  })
+                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, jornadaConcluida: value, dataConclusao: new Date().toISOString() } }))
                 }}
               />
             </div>

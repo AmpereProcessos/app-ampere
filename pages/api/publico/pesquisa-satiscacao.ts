@@ -80,7 +80,7 @@ async function notifyAfterSales({ projectName, projectIdentifier, collection, np
     const notification = {
       destinatario: '6353ebc7ef4e1a367a87794b',
       remetente: 'SISTEMA',
-      mensagem: `CLIENTE ${projectName} RESPONDEU A PESQUISA DE SATISFAÇÃO, DANDO UM NPS DE ${nps}`,
+      mensagem: `CLIENTE RESPONDEU A PESQUISA DE SATISFAÇÃO, DANDO UM NPS DE ${nps}.`,
       projetoReferencia: projectIdentifier,
       nomeDoProjeto: projectName,
       dataDeEnvio: new Date(),

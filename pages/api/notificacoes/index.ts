@@ -41,7 +41,7 @@ const createNotification: NextApiHandler<PostResponse> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const collection: Collection<TNotification> = db.collection('notificacoes')
 
-  const insertResponse = await collection.insertOne(notification)
+  const insertResponse = await collection.insertOne({ ...notification, dataDeEnvio: new Date() })
 
   if (!insertResponse.acknowledged) throw new createHttpError.BadRequest('Oops, houve um erro ao criar notificação.')
   return res.status(201).json({ data: { insertedId: insertResponse.insertedId.toString() }, message: 'Notificação criada com sucesso !' })
@@ -61,7 +61,6 @@ const editNotification: NextApiHandler<PutResponse> = async (req, res) => {
   const notification = InsertNotificationSchema.partial().parse(req.body)
   const update = {
     ...notification,
-    dataDeEnvio: notification.dataDeEnvio ? new Date(notification.dataDeEnvio) : undefined,
     dataDeLeitura: notification.dataDeLeitura ? new Date(notification.dataDeLeitura) : undefined,
   }
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')

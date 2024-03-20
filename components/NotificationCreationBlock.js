@@ -68,6 +68,7 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
         mensagem: notInfo.mensagem,
         projetoReferencia: codProjeto,
         nomeDoProjeto: nomeDoProjeto,
+        lido: false,
       }
       mutate({ info: notification })
 

@@ -18,6 +18,7 @@ import { TEmployee, TEmployeeDTO, TUser } from '@/utils/schemas/users'
 import connectToAdministrationDatabase from '@/utils/services/mongodb/administration'
 import { TExpense } from '@/utils/schemas/expenses'
 import exp from 'constants'
+import { TNotification } from '@/utils/schemas/notifications'
 
 type TPreviousUser = {
   nome: string
@@ -38,8 +39,21 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+  const notificationsCollection: Collection<TNotification> = db.collection('notificacoes')
+  const notifications = await notificationsCollection.find({}).toArray()
+  const bulkwriteArr = notifications.map((notification) => {
+    const insertionDate = notification._id.getTimestamp()
+    return {
+      updateOne: {
+        filter: { _id: new ObjectId(notification._id) },
+        update: {
+          $set: { dataDeEnvio: insertionDate },
+        },
+      },
+    }
+  })
+  const bkResponse = await notificationsCollection.bulkWrite(bulkwriteArr)
   // const projectsCollection: Collection<TProject> = db.collection('dados')
   // const projects = await projectsCollection
   //   .find({ 'obra.equipeResp': { $in: ['TERCERIZADOS', 'EQUIPE 14 - BRUNO REIS'] } }, { projection: { obra: 1 } })
@@ -68,7 +82,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // })
   // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
-  return res.status(200).json('DESATIVADA')
+  return res.status(200).json(bulkwriteArr)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

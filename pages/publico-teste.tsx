@@ -11,13 +11,165 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import EditEmployee from '@/components/identificador/colaboradores/EditEmployee'
 
 import { useEmployees } from '@/utils/methods/query/users'
+import { BsCalendarPlus, BsCheck, BsCheckAll, BsCode } from 'react-icons/bs'
+import { MdEmail } from 'react-icons/md'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { TNotificationDTO } from '@/utils/schemas/notifications'
+import Notifications from '../projetos.notificacoes.json'
 type TEditModal = {
   isOpen: boolean
   id: string | null
 }
 
+function renderHeader({ projectName, sender }: { projectName: string; sender: string }) {
+  if (sender == 'SISTEMA') return <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">AUTOMAÇÃO</h1>
+  return (
+    <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">
+      <strong className="text-[#15599a]">{sender.toUpperCase()}</strong> DIZ:
+    </h1>
+  )
+}
+
+const notifications = [
+  {
+    _id: '65df860e52e08050e832ef6d',
+    destinatario: '6318db05929e9f8731d8d9bb',
+    remetente: 'Lucas Fernandes',
+    remetenteId: '6318db05929e9f8731d8d9bb',
+    mensagem: 'testee21432131',
+    projetoReferencia: 1747,
+    nomeDoProjeto: 'CRISTIANO APARECIDO SIQUEIRA BORGES',
+    dataDeEnvio: new Date().toISOString(),
+    lido: false,
+    dataDeLeitura: null,
+  },
+  {
+    _id: '65f36cb5482174546faef483',
+    destinatario: '6353eb83ef4e1a367a877949',
+    nomeDoProjeto: 'TESTANDO PROJETO',
+    remetente: 'SISTEMA',
+    mensagem: 'Olá, acabo de aprovar uma solicitação de contrato do cliente Diego Rodrigues - casa. Desde já agradeço, Volts.',
+    dataDeEnvio: new Date().toISOString(),
+    lido: true,
+    dataDeLeitura: '2024-03-15T18:14:38.105Z',
+  },
+  {
+    _id: '65bbd86762c5363fc6e2bc4b',
+    destinatario: '64638b6c2071c508968bdf08',
+    remetente: 'Luis Eduardo',
+    remetenteId: '659e8961df037400d84571ac',
+    mensagem: 'TERMO ASSINADO SEGUIR COM O MESMO MATERIAL',
+    projetoReferencia: 2050,
+    nomeDoProjeto: 'ROGERIO GEROLINETO FONSECA',
+    dataDeEnvio: '2024-02-01T17:44:07.817Z',
+
+    lido: true,
+    dataDeLeitura: '2024-02-02T17:11:13.843Z',
+  },
+]
+const notificacao: TNotificationDTO = {
+  _id: '65f36cb5482174546faef483',
+  destinatario: '6353eb83ef4e1a367a877949',
+  nomeDoProjeto: 'TESTANDO PROJETO',
+  remetente: 'SISTEMA',
+  mensagem: 'Olá, acabo de aprovar uma solicitação de contrato do cliente Diego Rodrigues - casa. Desde já agradeço, Volts.',
+  dataDeEnvio: new Date().toISOString(),
+  lido: true,
+  dataDeLeitura: '2024-03-15T18:14:38.105Z',
+}
 function Test() {
-  return <></>
+  return (
+    <div className="flex w-full grow flex-col items-center justify-center gap-2">
+      {Notifications.map((notificacao, index) => (
+        <div key={index} className={'flex w-[350px] flex-col gap-1 rounded-md border border-gray-200 p-3'}>
+          {renderHeader({ projectName: notificacao.nomeDoProjeto || '', sender: notificacao.remetente })}
+          {notificacao.nomeDoProjeto ? (
+            <div className="flex w-full items-center gap-1 text-green-500">
+              <BsCode color="rgb(34,197,94)" size={20} />
+              <p className="text-xs font-medium tracking-tight text-gray-500">
+                <strong className="text-[#fead41]">({notificacao.projetoReferencia})</strong> {notificacao.nomeDoProjeto}
+              </p>
+            </div>
+          ) : null}
+
+          <div className="flex items-center justify-center rounded-md border border-gray-200 bg-gray-50 p-2 text-center text-xs tracking-tight">
+            {notificacao.mensagem}
+          </div>
+          <div className="mt-2 flex w-full items-center justify-between gap-2">
+            <div className="flex items-center gap-1">
+              <BsCalendarPlus />
+              <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(notificacao.dataDeEnvio.$date, true)}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {notificacao.remetenteId && (
+                <button onClick={() => {}} className="outline-none transition duration-300 ease-in-out hover:scale-125">
+                  <MdEmail style={{ fontSize: '20px', color: '#15599a' }} />{' '}
+                </button>
+              )}
+              {notificacao.lido ? (
+                <div className="flex items-center gap-1 rounded-full bg-green-500 px-2 py-1 text-white">
+                  <BsCheckAll />
+                  <p className="text-[0.60rem] font-bold">LIDO</p>
+                </div>
+              ) : (
+                <button className="flex items-center gap-1 rounded-full bg-gray-500 px-2 py-1 text-white duration-300 ease-in-out hover:scale-[1.05] hover:bg-green-500">
+                  <BsCheck />
+                  <p className="text-[0.60rem] font-bold">NÃO LIDO</p>
+                </button>
+                // <button
+                //   onClick={() => {
+                //     // @ts-ignore
+                //     handleUpdate({
+                //       id: notificacao._id,
+                //       changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
+                //     })
+                //   }}
+                //   className="outline-none transition duration-300 ease-in-out hover:scale-150"
+                // >
+
+                // </button>
+              )}
+            </div>
+          </div>
+          {/* <div className="mt-1 flex items-center justify-between gap-2 pr-2">
+          <div>
+            <p className="text-xs text-gray-500">{formatDateAsLocale(notificacao.dataDeEnvio)}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {notificacao.remetenteId && (
+              <button onClick={() => {}} className="outline-none transition duration-300 ease-in-out hover:scale-125">
+                <MdEmail style={{ fontSize: '20px', color: '#15599a' }} />{' '}
+              </button>
+            )}
+
+            {notificacao.lido ? (
+              <BsCheckAll style={{ fontSize: '20px', color: 'green' }} />
+            ) : (
+              <button
+                onClick={() => {
+                  // @ts-ignore
+                  handleUpdate({
+                    id: notificacao._id,
+                    changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
+                  })
+                }}
+                className="outline-none transition duration-300 ease-in-out hover:scale-150"
+              >
+                <BsCheck
+                  style={{
+                    fontSize: '20px',
+                    color: 'gray',
+                    cursor: 'pointer',
+                  }}
+                />
+              </button>
+            )}
+          </div>
+        </div> */}
+        </div>
+      ))}
+    </div>
+  )
   // return (
   //   <div className="grow p-6">
   //     <div className="flex h-full grow flex-col">

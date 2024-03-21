@@ -134,7 +134,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
           {isError ? <ErrorComponent msg={'Houve um erro ao buscar informações da despesa.'} /> : null}
           {isSuccess ? (
             <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-              <div className="mt-2 flex w-full items-center justify-center">
+              <div className="mt-2 flex w-full items-center justify-center gap-2">
                 <div className={`flex items-center gap-2`}>
                   <BsCalendarPlus />
                   <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(expense.dataInsercao)}</p>
@@ -144,7 +144,6 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                   <p className="text-xs font-medium text-gray-500">{expense.autor?.nome}</p>
                 </div>
               </div>
-              <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
               {infoHolder.projeto?.id ? (
                 <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
                   <div className="flex items-center gap-2">
@@ -157,6 +156,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                   </div>
                 </div>
               ) : null}
+              <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
               <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
                 <div className="w-full lg:w-1/2">
                   <SelectInput

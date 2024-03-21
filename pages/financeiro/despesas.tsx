@@ -20,12 +20,7 @@ import { formatToMoney } from '@/utils/constants'
 
 function Despesas() {
   const router = useRouter()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated: () => {
-      router.push('/auth/signin')
-    },
-  })
+  const { data: session, status } = useSession({ required: true })
   const isAuthorized = !!session?.user?.permissoes.rotas?.includes('ADM')
 
   const { data: expenses, isLoading, isError, isSuccess, filters, setFilters } = useExpenses()

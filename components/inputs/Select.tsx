@@ -115,7 +115,7 @@ function SelectInput<T>({
             }}
             className="grow cursor-pointer text-[#353432]"
           >
-            {selectedId && options ? options.filter((item) => item.id == selectedId)[0].label : selectedItemLabel}
+            {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : selectedItemLabel}
           </p>
         )}
         {selectMenuIsOpen ? (

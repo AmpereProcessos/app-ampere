@@ -2150,6 +2150,7 @@ export const centrosDeCusto = [
     nome: 'CUSTOS DIRETOS',
     categorias: [
       { label: "KIT'S GERADORES", value: "KIT'S GERADORES" },
+      { label: 'ART', value: 'ART' },
       { label: 'INSUMOS DE ALMOXARIFADO', value: 'INSUMOS DE ALMOXARIFADO' },
       { label: 'OUTROS CUSTOS DIRETOS', value: 'OUTROS CUSTOS DIRETOS' }, // outros custos de serviço ou produto
     ],

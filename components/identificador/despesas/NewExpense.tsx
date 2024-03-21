@@ -157,11 +157,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
     setInsertLoading(true)
     const loadingToastID = toast.loading('Processando...')
     try {
-      const user = {
-        id: session?.user.id,
-        nome: session.user.nome,
-      }
-      const response = await insertExpense({ ...infoHolder, autor: user })
+      const response = await insertExpense({ ...infoHolder })
       toast.dismiss(loadingToastID)
       toast.success(response)
       clearInfoHolder()
@@ -178,6 +174,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
     const total = getExpenseTotal(infoHolder.itens)
     setInfoHolder((prev) => ({ ...prev, total: total }))
   }, [infoHolder.itens])
+  console.log(infoHolder)
   return (
     <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[75%]">
@@ -192,20 +189,29 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
+          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             {infoHolder.projeto?.id ? (
-              <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
-                <div className="flex items-center gap-2">
-                  <BsCode size={'20px'} color="rgb(31,41,55)" />
-                  <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaUser size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+              <div className="flex w-fit flex-col gap-2 self-center rounded-md border border-gray-500 p-3">
+                <h1 className="text-xs font-black tracking-tight">PROJETO VINCULADO</h1>
+                <div className="flex items-center justify-center gap-1">
+                  <BsCode />
+                  <p className="font-bold leading-none tracking-tighter text-gray-500">
+                    {infoHolder.projeto.nome} (<strong className="text-[#fead41]">#{infoHolder.projeto.identificador}</strong>)
+                  </p>
                 </div>
               </div>
-            ) : null}
+            ) : // <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
+            //   <div className="flex items-center gap-2">
+            //     <BsCode size={'20px'} color="rgb(31,41,55)" />
+            //     <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
+            //   </div>
+            //   <div className="flex items-center gap-2">
+            //     <FaUser size={'20px'} color="rgb(31,41,55)" />
+            //     <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+            //   </div>
+            // </div>
+            null}
+            <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
             <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-1/2">
                 <SelectInput

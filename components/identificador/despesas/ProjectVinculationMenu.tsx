@@ -8,6 +8,8 @@ import { FaLink } from 'react-icons/fa'
 import SelectInput from '../../inputs/Select'
 
 import { useClients } from '../../../utils/methods/query/clients'
+import { VscChromeClose } from 'react-icons/vsc'
+import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 
 const variants = {
   hidden: {
@@ -64,13 +66,24 @@ function ProjectVinculationMenu({ handleLink, handleUnlink }: ProjectVinculation
   console.log(selectedClient)
   return (
     <div className="flex w-full flex-col">
-      <div
-        onClick={() => setMenuIsOpen((prev) => !prev)}
-        className="flex w-fit cursor-pointer items-center justify-center gap-2 self-center rounded bg-blue-500 px-2 py-1 text-white duration-300 ease-in-out hover:bg-blue-600"
-      >
-        <h1 className="font-bold">VINCULE UM PROJETO</h1>
-        <FaLink />
-      </div>
+      {menuIsOpen ? (
+        <button
+          onClick={() => setMenuIsOpen((prev) => !prev)}
+          className="flex w-fit cursor-pointer items-center justify-center gap-2 self-center rounded border border-red-500 px-2 py-1 text-red-500 duration-300 ease-in-out hover:border-red-600"
+        >
+          <VscChromeClose />
+          <h1 className="font-bold">FECHAR MENU DE VINCULAÇÃO DE PROJETO</h1>
+        </button>
+      ) : (
+        <button
+          onClick={() => setMenuIsOpen((prev) => !prev)}
+          className="flex w-fit cursor-pointer items-center justify-center gap-2 self-center rounded border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:border-blue-600"
+        >
+          <FaLink />
+          <h1 className="font-bold">ABRIR MENU DE VINCULAÇÃO DE PROJETO</h1>
+        </button>
+      )}
+
       <AnimatePresence>
         {menuIsOpen ? (
           <motion.div
@@ -81,7 +94,7 @@ function ProjectVinculationMenu({ handleLink, handleUnlink }: ProjectVinculation
             className="mt-2 flex w-full items-end gap-2 border border-gray-200 p-3 shadow-sm"
           >
             <div className="grow">
-              <SelectInput
+              <SelectVirtualizedInput
                 label={'PROJETO AMPÈRE'}
                 selectedItemLabel={'NÃO DEFINIDO'}
                 value={selectedClient.id}

@@ -1989,6 +1989,10 @@ export const tiposDeServico = [
     value: 'SUBESTAÇÃO DE ENERGIA',
   },
   {
+    label: 'HOMOLOGAÇÃO',
+    value: 'HOMOLOGAÇÃO',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

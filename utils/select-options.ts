@@ -16,6 +16,7 @@ export const VinculationCompanies = [
   { id: 1, label: 'AMPERE ENGENHARIA E CONSULTORIA ELETRICA LTDA', value: 'AMPERE ENGENHARIA E CONSULTORIA ELETRICA LTDA' },
   { id: 2, label: 'DAP CONSULTORIA INTEGRADA LTDA', value: 'DAP CONSULTORIA INTEGRADA LTDA' },
 ]
+
 export const InstructionLevels = [
   { id: 1, label: 'FUNDAMENTAL INCOMPLETO', value: 'FUNDAMENTAL INCOMPLETO' },
   { id: 2, label: 'FUNDAMENTAL COMPLETO', value: 'FUNDAMENTAL COMPLETO' },

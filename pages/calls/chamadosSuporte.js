@@ -352,18 +352,17 @@ function ChamadosSuporte() {
                         }
                         options={[
                           {
-                            value: 'GABRIEL MARTINS',
-                            label: 'GABRIEL MARTINS',
+                            id: 1,
+                            value: 'SUPORTE',
+                            label: 'SUPORTE',
                           },
                           {
-                            value: 'MARCOS DIAS',
-                            label: 'MARCOS DIAS',
-                          },
-                          {
+                            id: 2,
                             value: 'PÓS-VENDA',
                             label: 'PÓS-VENDA',
                           },
                           {
+                            id: 3,
                             value: 'A DEFINIR',
                             label: 'A DEFINIR',
                           },
@@ -551,18 +550,17 @@ function ChamadosSuporte() {
                         }
                         options={[
                           {
-                            value: 'GABRIEL MARTINS',
-                            label: 'GABRIEL MARTINS',
+                            id: 1,
+                            value: 'SUPORTE',
+                            label: 'SUPORTE',
                           },
                           {
-                            value: 'MARCOS DIAS',
-                            label: 'MARCOS DIAS',
-                          },
-                          {
+                            id: 2,
                             value: 'PÓS-VENDA',
                             label: 'PÓS-VENDA',
                           },
                           {
+                            id: 3,
                             value: 'A DEFINIR',
                             label: 'A DEFINIR',
                           },

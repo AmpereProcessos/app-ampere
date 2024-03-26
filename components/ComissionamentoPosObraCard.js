@@ -314,6 +314,10 @@ function ComissionamentoPosObraCard({ project, index, handleUpdates }) {
                   value: 'EQUIPAMENTOS PARA GARANTIA',
                 },
                 {
+                  label: 'ROTEADOR COMPATÍVEL',
+                  value: 'ROTEADOR COMPATÍVEL',
+                },
+                {
                   label: 'NÃO DEFINIDO',
                   value: 'NÃO DEFINIDO',
                 },

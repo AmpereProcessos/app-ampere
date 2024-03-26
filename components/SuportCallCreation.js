@@ -111,9 +111,9 @@ function CreateModal({ setModalIsOpen, getCalls }) {
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
-          <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">ABERTURA DE CHAMADO</h1>
+          <div className="flex h-full flex-col">
+            <div className="flex justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+              <h1 className="pl-6 font-bold uppercase text-[#15599a]">ABERTURA DE CHAMADO</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -125,8 +125,8 @@ function CreateModal({ setModalIsOpen, getCalls }) {
               </button>
             </div>
             <div className="flex flex-col overflow-y-auto">
-              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">Nome do cliente</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row lg:items-center">
+                <span className="text-center font-bold uppercase">Nome do cliente</span>
                 <div className={'grow'}>
                   <Select
                     isMulti={false}
@@ -158,25 +158,25 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">Nome da usina</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">Nome da usina</span>
                 <input
                   value={callInfo.nomeUsina}
                   onChange={(e) => setCallInfo({ ...callInfo, nomeUsina: e.target.value })}
-                  className="outline-none text-sm text-center grow placeholder:italic"
+                  className="grow text-center text-sm outline-none placeholder:italic"
                   type="text"
                 />
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">EQUIPE RESPONSÁVEL</span>
-                <p className="text-sm text-center grow">{callInfo.equipeResp ? callInfo.equipeResp : '-'}</p>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">EQUIPE RESPONSÁVEL</span>
+                <p className="grow text-center text-sm">{callInfo.equipeResp ? callInfo.equipeResp : '-'}</p>
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">Cidade</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">Cidade</span>
                 <select
                   value={callInfo.cidade}
                   onChange={(e) => setCallInfo({ ...callInfo, cidade: e.target.value })}
-                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   {cidadesAtendidas.map((city) => (
                     <option key={city} value={city}>
@@ -185,37 +185,36 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">Responsável</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">Responsável</span>
                 <select
                   value={callInfo.responsavel}
                   onChange={(e) => setCallInfo({ ...callInfo, responsavel: e.target.value })}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   <option value={'A DEFINIR'}>A DEFINIR</option>
-                  <option value={'GABRIEL MARTINS'}>GABRIEL MARTINS</option>
-                  <option value={'MARCOS DIAS'}>MARCOS DIAS</option>
+                  <option value={'SUPORTE'}>SUPORTE</option>
                   <option value={'PÓS-VENDA'}>PÓS-VENDA</option>
                 </select>
               </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">Demanda</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                <span className="text-center font-bold uppercase">Demanda</span>
                 <select
                   value={callInfo.demanda}
                   onChange={(e) => setCallInfo({ ...callInfo, demanda: e.target.value })}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   <option value={'INTERNA'}>INTERNA</option>
                   <option value={'EXTERNA'}>EXTERNA</option>
                   <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                 </select>
               </div>
-              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">TIPO DE CHAMADO</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2">
+                <span className="text-center font-bold uppercase">TIPO DE CHAMADO</span>
                 <select
                   value={callInfo.tipoChamado}
                   onChange={(e) => setCallInfo({ ...callInfo, tipoChamado: e.target.value })}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                 >
                   {tiposChamadosSuporte.map((chamado) => (
                     <option key={chamado.tipo} value={chamado.tipo}>
@@ -225,8 +224,8 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                 </select>
               </div>
               {callInfo.tipoChamado == 'DEFEITOS E GARANTIA' && (
-                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center uppercase font-bold">EQUIPAMENTO DEFEITUOSO</span>
+                <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                  <span className="text-center font-bold uppercase">EQUIPAMENTO DEFEITUOSO</span>
                   <select
                     value={callInfo.equipamento ? callInfo.equipamento : 'NÃO DEFINIDO'}
                     onChange={(e) =>
@@ -235,7 +234,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                         equipamento: e.target.value,
                       })
                     }
-                    className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                    className="mt-2 grow text-center text-xs outline-none lg:mt-0"
                   >
                     <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                     <option value={'PLACA'}>PLACA</option>
@@ -245,8 +244,8 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                 </div>
               )}
               {!['PROBLEMAS COM CONCESSIONÁRIA', 'GOTEIRA', 'DISTRIBUIÇÃO DE CRÉDITOS', 'RETRABALHO EM ESTRUTURA'].includes(callInfo.tipoChamado) && (
-                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center uppercase font-bold">LINK DA PLANTA</span>
+                <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+                  <span className="text-center font-bold uppercase">LINK DA PLANTA</span>
                   <input
                     value={callInfo.linkMonitoramento}
                     onChange={(e) =>
@@ -255,13 +254,13 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                         linkMonitoramento: e.target.value,
                       })
                     }
-                    className="outline-none text-sm text-center grow placeholder:italic"
+                    className="grow text-center text-sm outline-none placeholder:italic"
                     type="text"
                   />
                 </div>
               )}
-              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="font-bold text-center font-raleway">DESCRIÇÃO DO CHAMADO</span>
+              <div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2">
+                <span className="text-center font-raleway font-bold">DESCRIÇÃO DO CHAMADO</span>
                 <textarea
                   value={callInfo.descricaoProblema}
                   onChange={(e) =>
@@ -271,10 +270,10 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                     })
                   }
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
+                  className="mt-1 h-fit min-h-[100px] grow resize-none rounded bg-gray-200 p-3 text-center text-sm outline-none placeholder:italic"
                 />
               </div>
-              <button onClick={createCall} className="bg-blue-600 mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2">
+              <button onClick={createCall} className="mt-1 bg-blue-600 p-2 font-bold hover:bg-[#15599a] hover:text-white">
                 CRIAR CHAMADO
               </button>
               {message.text && <p className={`${message.color} text-center text-sm`}>{message.text}</p>}

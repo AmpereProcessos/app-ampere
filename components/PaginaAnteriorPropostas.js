@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 function PaginaAnteriorPropostas() {
   return (
@@ -112,7 +112,7 @@ function PaginaAnteriorPropostas() {
     //     />
     //   </div>
     // </div>
-  );
+  )
 }
 
-export default PaginaAnteriorPropostas;
+export default PaginaAnteriorPropostas

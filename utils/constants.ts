@@ -2106,6 +2106,7 @@ export const fornecedores = [
   },
   { label: 'A.DIAS SOLAR', value: 'A.DIAS SOLAR' },
   { label: 'ALUMIFIX SOLAR', value: 'ALUMIFIX SOLAR' },
+  { label: 'CORDEIRO', value: 'CORDEIRO' },
   {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',

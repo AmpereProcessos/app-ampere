@@ -31,6 +31,10 @@ function InfoComissionamentoBlock({ editor, infoHolder, setInfo, changes, setCha
               value: 'EQUIPAMENTOS PARA GARANTIA',
             },
             {
+              label: 'ROTEADOR COMPATÍVEL',
+              value: 'ROTEADOR COMPATÍVEL',
+            },
+            {
               label: 'NÃO DEFINIDO',
               value: 'NÃO DEFINIDO',
             },

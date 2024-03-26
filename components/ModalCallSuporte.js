@@ -334,8 +334,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
                 className="mt-2 grow text-center text-xs outline-none lg:mt-0"
               >
                 <option value={'A DEFINIR'}>A DEFINIR</option>
-                <option value={'GABRIEL MARTINS'}>GABRIEL MARTINS</option>
-                <option value={'MARCOS DIAS'}>MARCOS DIAS</option>
+                <option value={'SUPORTE'}>SUPORTE</option>
                 <option value={'PÓS-VENDA'}>PÓS-VENDA</option>
               </select>
             </div>

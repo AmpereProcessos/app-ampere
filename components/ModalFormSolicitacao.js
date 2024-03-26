@@ -2871,6 +2871,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                                 value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
                               },
                               {
+                                label: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
+                                value: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
+                              },
+                              {
                                 label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                                 value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                               },

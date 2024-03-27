@@ -11,7 +11,7 @@ export async function getSectorStats() {
   }
 }
 
-export function useOeMReportData(enabled) {
+export function useOeMReportData() {
   const [filters, setFilters] = useState({
     cityArr: null,
   })
@@ -23,15 +23,14 @@ export function useOeMReportData(enabled) {
     }
     return data.filter((d) => isSameCity(d))
   }
-  const query = useQuery({
-    queryKey: ['oem-report'],
-    queryFn: getSectorStats,
-    enabled: !!enabled,
-    refetchOnWindowFocus: false,
-    select: (data) => filterData(data),
-  })
+
   return {
-    ...query,
+    ...useQuery({
+      queryKey: ['oem-report'],
+      queryFn: getSectorStats,
+      refetchOnWindowFocus: false,
+      select: (data) => filterData(data),
+    }),
     filters,
     setFilters,
   }

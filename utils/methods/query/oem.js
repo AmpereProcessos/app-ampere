@@ -13,15 +13,16 @@ export async function getSectorStats() {
 
 export function useOeMReportData() {
   const [filters, setFilters] = useState({
-    cityArr: null,
+    city: [],
   })
 
-  function filterData(data) {
-    const isSameCity = (d) => {
-      if (!filters.cityArr || filters.cityArr?.length == 0) return true
-      else return filters.cityArr.includes(d.cidade)
-    }
-    return data.filter((d) => isSameCity(d))
+  function matchCity(project) {
+    if (filters.city.length == 0) return true
+    return filters.city.includes(project.cidade)
+  }
+  function handleModelData(data) {
+    var modeledData = data
+    return modeledData.filter((project) => matchCity(project))
   }
 
   return {
@@ -29,7 +30,7 @@ export function useOeMReportData() {
       queryKey: ['oem-report'],
       queryFn: getSectorStats,
       refetchOnWindowFocus: false,
-      select: (data) => filterData(data),
+      select: (data) => handleModelData(data),
     }),
     filters,
     setFilters,

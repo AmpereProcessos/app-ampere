@@ -331,6 +331,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
           // 'adm02@ampereenergias.com.br',
           // 'estagioadm@ampereenergias.com.br',
           'amperecontasareceber@outlook.com',
+          'felipe.tadeu@ampereenergias.com.br',
         ],
       })
       console.log('EMAIL ENVIADO')

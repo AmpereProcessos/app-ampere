@@ -48,22 +48,33 @@ function ModalEntradaAlmoxarifado({ closeModal }) {
         }
         console.log(result)
         const NFeItems = result.nfeProc.NFe.infNFe.det
-        const formattedITems = NFeItems.map((x) => {
-          const itemInfo = x.prod
+        if (Array.isArray(NFeItems)) {
+          const formattedITems = NFeItems.map((x) => {
+            const itemInfo = x.prod
+            const nome = itemInfo.xProd
+            const qtde = itemInfo.qCom
+            const grandeza = itemInfo.uCom
+            const valor = itemInfo.vUnCom
+            return {
+              nome: nome,
+              qtde: Number(qtde),
+              grandeza: grandeza,
+              preco: Number(valor),
+              dataInsercao: new Date().toISOString(),
+            }
+          })
+          console.log(formattedITems)
+          setItems(formattedITems)
+        } else {
+          const itemInfo = NFeItems.prod
           const nome = itemInfo.xProd
           const qtde = itemInfo.qCom
           const grandeza = itemInfo.uCom
           const valor = itemInfo.vUnCom
-          return {
-            nome: nome,
-            qtde: Number(qtde),
-            grandeza: grandeza,
-            preco: Number(valor),
-            dataInsercao: new Date().toISOString(),
-          }
-        })
-        console.log(formattedITems)
-        setItems(formattedITems)
+          const items = [{ nome: nome, qtde: Number(qtde), grandeza: grandeza, preco: Number(valor), dataInsercao: new Date().toISOString() }]
+          setItems(items)
+        }
+
         // var json = JSON.stringify(result, null, 4);
         // var newArr = JSON.parse(json);
         // newArr = newArr.Relatorio_gd.Linha.filter(

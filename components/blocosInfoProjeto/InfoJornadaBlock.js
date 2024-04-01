@@ -1,12 +1,20 @@
 import React from 'react'
 import CheckboxInput from '../inputs/Checkbox'
+import Link from 'next/link'
 function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">JORNADA DO CLIENTE</span>
-      <div className="w-full flex px-2">
-        <div className="w-full flex items-center justify-around flex-wrap gap-3 rounded p-2 border border-cyan-500">
-          <h1 className="w-full text-start font-bold text-xs text-cyan-500 tracking-tight leading-none">JORNADA DO CLIENTE</h1>
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">JORNADA DO CLIENTE</span>
+      <div className="flex w-full px-2">
+        <div className="flex w-full flex-wrap items-center justify-around gap-3 rounded border border-cyan-500 p-2">
+          <div className="flex w-full items-center justify-between gap-2">
+            <h1 className="text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
+            <div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
+              <Link href={`/publico/jornada-do-cliente/${project._id}`}>
+                <a className="text-[0.65rem] font-bold">LINK DA JORNADA</a>
+              </Link>
+            </div>
+          </div>
           <CheckboxInput
             labelFalse={'BOAS VINDAS'}
             labelTrue={'BOAS VINDAS'}

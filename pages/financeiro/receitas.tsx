@@ -18,6 +18,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import { useRevenues } from '@/utils/methods/query/revenues'
 import { TRevenueDTO } from '@/utils/schemas/revenues'
 import { formatToMoney } from '@/utils/constants'
+import { VscDiffAdded } from 'react-icons/vsc'
 
 function Receitas() {
   const router = useRouter()
@@ -42,6 +43,7 @@ function Receitas() {
   function getStats({ info }: { info?: TRevenueDTO[] }) {
     if (!info)
       return {
+        receitas: 0,
         recebido: 0,
         receber: 0,
         receberHoje: 0,
@@ -82,6 +84,7 @@ function Receitas() {
     }, 0)
 
     return {
+      receitas: info.length,
       recebido: received,
       receber: toReceive.overall,
       receberHoje: toReceive.today,
@@ -111,6 +114,15 @@ function Receitas() {
           )}
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">RECEITAS</h1>
+              <VscDiffAdded />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: revenues }).receitas}</div>
+            </div>
+          </div>
           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">RECEBIDO</h1>

@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
 import { NextApiHandler } from 'next'
 import { TProject } from '@/utils/schemas/projects'
-import { apiHandler } from '@/utils/api'
+import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
 import { TMaterial } from '@/utils/schemas/materials'
@@ -39,21 +39,41 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-  const notificationsCollection: Collection<TNotification> = db.collection('notificacoes')
-  const notifications = await notificationsCollection.find({}).toArray()
-  const bulkwriteArr = notifications.map((notification) => {
-    const insertionDate = notification._id.getTimestamp()
-    return {
-      updateOne: {
-        filter: { _id: new ObjectId(notification._id) },
-        update: {
-          $set: { dataDeEnvio: insertionDate },
-        },
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const projects = await projectsCollection
+    .find({ 'contrato.status': 'ASSINADO', 'contrato.dataAssinatura': { $gte: '2023-06-01T00:00:00.000Z' } })
+    .toArray()
+  const revenues = projects.map((project) => {
+    const revenue = {
+      nome: `CONTRATO DE ${project.nomeDoContrato}`,
+      tipo: project.tipoDeServico,
+      autor: {
+        id: session.user.id,
+        nome: session.user.nome,
+        avatar_url: session.user.avatar_url,
       },
+      projeto: {
+        id: project._id,
+        nome: project.nomeDoContrato,
+        identificador: project.qtde,
+      },
+      total: getContractValue({
+        projectValue: project.sistema.valorProjeto,
+        structureValue: project.estruturaPersonalizada.valor,
+        paValue: project.padrao.valor,
+      }),
+      metodo: project.pagamento.forma == 'FINANCIAMENTO' ? 'FINANCIAMENTO' : 'À VISTA (GERAL)',
+      efetivacao: {
+        efetivado: true,
+        data: project.contrato.dataAssinatura,
+      },
+      fracionamento: [],
+      dataInsercao: project.contrato.dataAssinatura,
     }
+    return revenue
   })
-  const bkResponse = await notificationsCollection.bulkWrite(bulkwriteArr)
   // const projectsCollection: Collection<TProject> = db.collection('dados')
   // const projects = await projectsCollection
   //   .find({ 'obra.equipeResp': { $in: ['TERCERIZADOS', 'EQUIPE 14 - BRUNO REIS'] } }, { projection: { obra: 1 } })
@@ -82,7 +102,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // })
   // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
-  return res.status(200).json(bulkwriteArr)
+  return res.status(200).json(revenues)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

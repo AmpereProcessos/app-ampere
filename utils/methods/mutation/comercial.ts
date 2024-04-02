@@ -80,7 +80,7 @@ type GenerateContractRevenueParams = {
   data: TProjectDTO
   queryClient: QueryClient
 }
-async function generateContractRevenue({ data, queryClient }: GenerateContractRevenueParams) {
+export async function generateContractRevenue({ data, queryClient }: GenerateContractRevenueParams) {
   try {
     const revenue = {
       nome: `CONTRATO DE ${data.nomeDoContrato}`,
@@ -109,7 +109,7 @@ async function generateContractRevenue({ data, queryClient }: GenerateContractRe
       dataInsercao: new Date().toISOString(),
     }
     await createRevenue({ info: revenue })
-    await queryClient.invalidateQueries({ queryKey: ['activities-by-project', data._id] })
+    await queryClient.invalidateQueries({ queryKey: ['project-revenues', data._id] })
   } catch (error) {
     throw error
   }

@@ -1,7 +1,17 @@
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { BsCalendarFill, BsCalendarPlus, BsCheck2All, BsCircleHalf, BsEyeFill, BsEyeSlashFill, BsFillPatchCheckFill } from 'react-icons/bs'
+import {
+  BsCalendarCheck,
+  BsCalendarEvent,
+  BsCalendarFill,
+  BsCalendarPlus,
+  BsCheck2All,
+  BsCircleHalf,
+  BsEyeFill,
+  BsEyeSlashFill,
+  BsFillPatchCheckFill,
+} from 'react-icons/bs'
 import { FaFilePdf, FaUserAlt } from 'react-icons/fa'
 import { formatDate, formatLongString, formatToMoney } from '../../../utils/constants'
 import { AiFillEdit, AiOutlineEdit, AiOutlineMoneyCollect, AiTwotoneEdit } from 'react-icons/ai'
@@ -12,6 +22,7 @@ import { FaDiamond } from 'react-icons/fa6'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { TbAlertHexagon } from 'react-icons/tb'
+import { VscChromeClose } from 'react-icons/vsc'
 
 function renderStatusTag({ total, realization }: { total: number; realization: TRevenueDTO['efetivacao'] }) {
   if (realization.efetivado)
@@ -110,6 +121,16 @@ function RevenueCard({ revenue, openModal }: RevenueCardProps) {
           </p>
         </div>
         {renderPendencyStatus({ fractionnement: revenue.fracionamento })}
+      </div>
+      <div className="mt-1 flex w-full items-center justify-between">
+        <div className={`flex items-center gap-2`}>
+          {revenue.efetivacao.efetivado ? <BsCheck2All color="#2c6e49" /> : <VscChromeClose color="#ed174c" />}
+          <p className="text-xs font-medium text-gray-500">{revenue.efetivacao.efetivado ? 'EFETIVADA' : 'NÃO EFETIVADO'}</p>
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          {revenue.efetivacao.efetivado ? <BsCalendarCheck color="#2c6e49" /> : <BsCalendarEvent color="#ffbd00" />}
+          <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(revenue.efetivacao.data)}</p>
+        </div>
       </div>
       <div className="mt-2 flex w-full items-center justify-between">
         <div className={`flex items-center gap-2`}>

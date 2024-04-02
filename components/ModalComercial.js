@@ -130,6 +130,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               )}
               <InfoReceitasBlock
                 session={session}
+                project={infoHolder}
                 projectId={projectId}
                 projectName={infoHolder.nomeDoContrato}
                 projectIdentificator={project.qtde}

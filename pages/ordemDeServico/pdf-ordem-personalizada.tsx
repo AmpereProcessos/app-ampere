@@ -12,10 +12,13 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import ServiceOrderPDF from '@/components/OSMontagemPDF'
 import PadraoOS from '@/components/PadraoOS'
 import PreventivaOS from '@/components/PreventivaOS'
+import OSCorretiva from '@/components/OSCorretivaPDF'
 import { formatToCEP } from '@/utils/methods/formatting'
 import { getCEPInfo } from '@/utils/methods/shared'
 import { estadosECidades } from '@/utils/estados_cidades'
 import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
+import Logo from '@/utils/images/logo-texto-azul-vertical.png'
+import Image from 'next/image'
 function OrdemServicoEmBranco() {
   const [infoHolder, setInfoHolder] = useState<TServiceOrder>({
     categoria: 'MONTAGEM',
@@ -107,7 +110,7 @@ function OrdemServicoEmBranco() {
           ...prev,
           localizacao: {
             ...prev.localizacao,
-            logradouro: addressInfo.logradouro,
+            endereco: addressInfo.logradouro,
             bairro: addressInfo.bairro,
             uf: addressInfo.uf,
             cidade: addressInfo.localidade.toUpperCase(),
@@ -558,8 +561,11 @@ function OrdemServicoEmBranco() {
         </div>
       </div>
       <>
+        {/**@ts-ignore */}
         {infoHolder.categoria == 'PADRÃO' && <PadraoOS order={infoHolder} />}
+        {/**@ts-ignore */}
         {infoHolder.categoria == 'MONTAGEM' && <ServiceOrderPDF order={infoHolder} />}
+        {/**@ts-ignore */}
         {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={infoHolder} />}
         {/* {infoHolder.categoria == 'ESTRUTURA' && (
           <EstruturaOS
@@ -568,171 +574,46 @@ function OrdemServicoEmBranco() {
             servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
           />
         )} */}
+        {/**@ts-ignore */}
         {(infoHolder.categoria == 'MANUTENÇÃO CORRETIVA' || infoHolder.categoria == 'OUTROS') && <OSCorretiva order={data} />}
       </>
-      {/* <div className="mt-4 h-[29.7cm] w-[21cm] p-4 px-12">
-        <h1 className="mb-6 text-center text-xl font-bold">ORDEM DE SERVIÇO</h1>
-        <div className="grid grid-cols-2">
-          <div className="flex justify-between">
-            <Link href="/">
-              <div className="flex items-center justify-center">
-                <Image height="100px" width="100px" src={Logo} />
-              </div>
-            </Link>
-            <div className="pl-2">
-              <p className="text-center font-bold">AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME</p>
-              <p className="text-center font-bold">
-                CNPJ <br />
-                27.901.968/0001-45
-              </p>
-            </div>
+      {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
+        <div className="h-[29.7cm] w-[21cm] p-4">
+          <div className="flex justify-center">
+            <Image height="70px" width="70px" src={Logo} />
           </div>
-          <div className="flex flex-col justify-center gap-y-2 border border-black pl-2">
-            <div className="flex justify-between border-b border-black">
-              <p className="pr-2 text-end">ID da O.S</p>
-              <p className="pr-2 text-center">N/A</p>
-            </div>
-            <div className="flex justify-between border-b border-black">
-              <p className="pr-2 text-end">DATA DE ABERTURA</p>
-              <p className="pr-2 text-center">{new Date().toLocaleDateString()}</p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-6 border border-black">
-          <h1 className="my-2 text-center font-bold">DADOS DO CLIENTE</h1>
-          <div className="grid h-full grid-cols-2 gap-x-2 px-6 pb-2">
-            <div className="h-full grid-rows-3">
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Nome:</p>
-                <p className="col-span-3 border border-black text-center text-xs"></p>
-              </div>
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Endereço:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
-              </div>
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Telefone:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
-              </div>
-            </div>
-            <div className="h-full grid-rows-3">
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Bairro:</p>
-                <p className="col-span-3 border border-black text-center text-xs"></p>
-              </div>
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Número:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
-              </div>
-              <div className="grid grid-cols-4">
-                <p className="font-semibold uppercase">Cidade:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-6 border border-black">
-          <h1 className="my-2 text-center font-bold">DADOS DO SISTEMA</h1>
-          <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
-            <div className="grid-rows-2">
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">Topologia:</p>
-                <p className="col-span-3 border border-black text-center text-xs"></p>
-              </div>
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">NºMódulos:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">Marca/Modelo:</p>
-                <p className="col-span-3 w-48 border border-black text-center"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-6 border border-black">
-          <h1 className="my-2 text-center font-bold">INFORMAÇÕES PARA OBRA</h1>
-          <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
-            <div className="grid-rows-3 gap-y-px">
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">CONFIGURAR?:</p>
-                <p className="col-span-3 border border-black text-center"></p>
-              </div>
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 text-center font-semibold">PONTO DE ÁGUA:</p>
-                <div className="col-span-3 flex items-center justify-center border border-t-0 border-black"></div>
-              </div>
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">SENHA DO WI-FI:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center"></p>
-              </div>
-            </div>
-            <div className="grid-rows-3">
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 font-semibold uppercase">TIPO DE TELHA:</p>
-                <p className="col-span-3 border border-black text-center"></p>
-              </div>
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 text-center font-semibold">TIPO DE ESTRUTURA:</p>
-                <div className="col-span-3 flex items-center justify-center border border-t-0 border-black"></div>
-              </div>
-              <div className="grid grid-cols-5">
-                <p className="col-span-2 text-center font-semibold">TRAFO?:</p>
-                <p className="col-span-3 border border-t-0 border-black text-center"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-6 border border-black">
-          <h1 className="py-2 text-center font-bold">SERVIÇO A SER EXECUTADO</h1>
-          <div className="flex h-fit min-h-[120px] flex-col items-center justify-center">
-          </div>
-        </div>
-        <div className="mt-6 border border-black px-4 pb-4">
-          <h1 className="py-1 text-center font-bold">CONFERÊNCIA DOS CHECKLIST</h1>
-          <div className="grid grid-cols-2 pb-2">
-            <div className="grid grid-rows-2">
-              <div className="flex items-center gap-x-2">
-                <div className="h-4 w-4 rounded-md border border-black"></div>
-                <p className="text-center text-xs">https://forms.gle/FTvLg1Eey2xzPqL37</p>
-              </div>
-              <div className="flex items-center gap-x-2">
-                <div className="h-4 w-4 rounded-md border border-black"></div>
-                <p className="text-center text-xs">CHECKLIST DE MATERIAL</p>
-              </div>
-            </div>
-            <div className="grid grid-rows-2">
-              <div className="flex items-center gap-x-2">
-                <div className="h-4 w-4 rounded-md border border-black"></div>
-                <p className="text-center text-xs">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</p>
-              </div>
-              <div className="flex items-center">
-                <div className="flex items-center gap-x-2 uppercase">
-                  <p className="text-xs">Data execução:</p>
-                  <p>____/____/_____</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 grid grid-cols-2 gap-x-4">
-            <div className="flex flex-col">
-              <p className="text-start">Autorizado por:</p>
-              <div className="items-centertext-center flex w-[150px]  justify-center">
-                <Image src={Assinatura} />
-              </div>
+
+          <h1 className="mt-6 text-center font-bold">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</h1>
+          <div className="mt-8 px-4">
+            <p className="text-center font-raleway">
+              Eu, {infoHolder.favorecido.nome}, declaro que a equipe técnica da empresa <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>
+              , inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no dia ____/____/_____ à manutenção preventiva, prevista em contrato, do sistema
+              fotovoltaico de {((infoHolder.equipamentos.modulos.qtde || 0) * (infoHolder.equipamentos.modulos.potencia || 0)) / 1000} kWp instalado
+              na{' '}
+              <strong>
+                {infoHolder.localizacao.endereco ? infoHolder.localizacao.endereco : '-'}, Nº{' '}
+                {infoHolder.localizacao.numeroOuIdentificador ? infoHolder.localizacao.numeroOuIdentificador : '-'},{' '}
+                {infoHolder.localizacao.bairro ? infoHolder.localizacao.bairro : '-'}
+              </strong>{' '}
+              , no município de <strong>{infoHolder.localizacao.cidade ? infoHolder.localizacao.cidade : '-'}</strong>.
+            </p>
+            <p className="mt-12">Por ser verdade assino este termo</p>
+            <p className="mt-6 text-end">Ituiutaba, ____/____/_____</p>
+            <div className="mt-32 flex flex-col">
               <hr className="border-t-2 border-black" />
-              <p>ASSINATURA DIRETOR DE ENGENHARIA</p>
+              <p className="mt-4 text-center font-raleway font-bold">TÉCNICO</p>
             </div>
-            <div className="flex flex-col">
-              <p className="text-start">Realizado por:</p>
-              <hr className="mt-12 border-t-2 border-black" />
-              <p>ASSINATURA TÉCNICO RESPONSÁVEL</p>
+            <div className="mt-32 flex flex-col">
+              <hr className="border-t-2 border-black" />
+              <p className="mt-4 text-center font-raleway font-bold">CLIENTE</p>
+            </div>
+            <div className="mt-72">
+              <p className="text-center font-raleway">Avenida Nove, 233 - Centro, Ituiutaba-MG</p>
+              <p className="text-center">ampereenergiascomercial@gmail.com</p>
             </div>
           </div>
         </div>
-      </div> */}
+      ) : null}
     </div>
   )
 }

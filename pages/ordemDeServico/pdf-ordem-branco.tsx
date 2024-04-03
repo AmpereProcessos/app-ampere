@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Assinatura from '../../utils/images/signature-diogo.jpg'
 import Logo from '../../utils/images/logo-texto-azul-vertical.png'
 function OrdemServicoEmBranco() {
+  const [infoHolder, setInfoHolder] = useState<>()
   return (
     <div className="h-[29.7cm] w-[21cm]  p-4 px-12">
       <h1 className="mb-6 text-center text-xl font-bold">ORDEM DE SERVIÇO</h1>
@@ -39,29 +40,29 @@ function OrdemServicoEmBranco() {
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Nome:</p>
-              <p className="col-span-3 border border-black text-center text-xs">MARCIA</p>
+              <p className="col-span-3 border border-black text-center text-xs"></p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Endereço:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">AVENIDA 37</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Telefone:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">(34) 2122-0530</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
             </div>
           </div>
           <div className="h-full grid-rows-3">
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Bairro:</p>
-              <p className="col-span-3 border border-black text-center text-xs">SETOR SUL</p>
+              <p className="col-span-3 border border-black text-center text-xs"></p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Número:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">Nº 485</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
             </div>
             <div className="grid grid-cols-4">
               <p className="font-semibold uppercase">Cidade:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">ITUIUTABA</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
             </div>
           </div>
         </div>
@@ -72,17 +73,17 @@ function OrdemServicoEmBranco() {
           <div className="grid-rows-2">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">Topologia:</p>
-              <p className="col-span-3 border border-black text-center text-xs">INVERSOR</p>
+              <p className="col-span-3 border border-black text-center text-xs"></p>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">NºMódulos:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center text-xs">10 - 330W</p>
+              <p className="col-span-3 border border-t-0 border-black text-center text-xs"></p>
             </div>
           </div>
           <div className="flex items-center">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">Marca/Modelo:</p>
-              <p className="col-span-3 w-48 border border-black text-center">FRONIUS</p>
+              <p className="col-span-3 w-48 border border-black text-center"></p>
             </div>
           </div>
         </div>
@@ -93,40 +94,40 @@ function OrdemServicoEmBranco() {
           <div className="grid-rows-3 gap-y-px">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">CONFIGURAR?:</p>
-              <p className="col-span-3 border border-black text-center">SIM</p>
+              <p className="col-span-3 border border-black text-center"></p>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 text-center font-semibold">PONTO DE ÁGUA:</p>
-              <div className="col-span-3 flex items-center justify-center border border-t-0 border-black">SIM</div>
+              <div className="col-span-3 flex items-center justify-center border border-t-0 border-black"></div>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">SENHA DO WI-FI:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center">-</p>
+              <p className="col-span-3 border border-t-0 border-black text-center"></p>
             </div>
           </div>
           <div className="grid-rows-3">
             <div className="grid grid-cols-5">
               <p className="col-span-2 font-semibold uppercase">TIPO DE TELHA:</p>
-              <p className="col-span-3 border border-black text-center">-</p>
+              <p className="col-span-3 border border-black text-center"></p>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 text-center font-semibold">TIPO DE ESTRUTURA:</p>
-              <div className="col-span-3 flex items-center justify-center border border-t-0 border-black">TELHADO</div>
+              <div className="col-span-3 flex items-center justify-center border border-t-0 border-black"></div>
             </div>
             <div className="grid grid-cols-5">
               <p className="col-span-2 text-center font-semibold">TRAFO?:</p>
-              <p className="col-span-3 border border-t-0 border-black text-center">NÃO</p>
+              <p className="col-span-3 border border-t-0 border-black text-center"></p>
             </div>
           </div>
         </div>
       </div>
       <div className="mt-6 border border-black">
         <h1 className="py-2 text-center font-bold">SERVIÇO A SER EXECUTADO</h1>
-        <div className="flex h-fit flex-col items-center justify-center">
-          <p className="text-sm font-black">MANUTENÇÃO E CONFIGURAÇÃO</p>
+        <div className="flex h-fit min-h-[120px] flex-col items-center justify-center">
+          {/* <p className="text-sm font-black">MANUTENÇÃO E CONFIGURAÇÃO</p>
           <div className="flex min-h-[50px] flex-col items-center justify-center">
             <p className="my-2 text-xs uppercase">SEM OBSERVAÇÕES ADICIONAIS</p>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="mt-6 border border-black px-4 pb-4">

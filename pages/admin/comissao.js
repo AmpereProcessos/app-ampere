@@ -38,7 +38,7 @@ function ComissaoPage() {
       router.push('/auth/signin')
     },
   })
-  const isManager = !!session?.user?.manager
+  const isManager = !!session?.user.permissoes.financeiro.editar
   const isADM = !!session?.user?.permissoes.rotas.includes('ADM')
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)

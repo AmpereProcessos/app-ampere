@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 
-import { cidadesAtendidas, vendedores } from '../../../utils/constants'
+import { cidadesAtendidas, formatDate, vendedores } from '../../../utils/constants'
 
 import TextInput from '../../inputs/Text'
 import NumberInput from '../../inputs/Number'
@@ -9,19 +9,20 @@ import SelectInput from '../../inputs/Select'
 import DateInput from '../../inputs/Date'
 import MultipleSelectInput from '../../inputs/MultipleSelect'
 import { allSellers } from '../../../utils/select-options'
+import { formatDateInputChange } from '../../../utils/methods/shared'
 
 function NPSFilterBlock({ filters, setFilters }) {
   return (
-    <div className="flex flex-col w-full gap-y-2 mt-4">
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+    <div className="mt-4 flex w-full flex-col gap-y-2">
+      <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
         <TextInput
           label="NOME DO CONTRATO"
           placeholder="Digite o nome do contrato..."
           value={filters.search}
           handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
         />
-        <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-          <div className="flex items-center gap-x-2 justify-center">
+        <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+          <div className="flex items-center justify-center gap-x-2">
             <div className="w-full lg:w-[250px]">
               <DateInput
                 width={'100%'}
@@ -71,7 +72,7 @@ function NPSFilterBlock({ filters, setFilters }) {
             />
           </div>
         </div>
-        <div className="flex items-center gap-x-2 justify-center">
+        <div className="flex items-center justify-center gap-x-2">
           <div className="w-full lg:w-[250px]">
             <NumberInput
               label="MAIOR QUE"
@@ -90,7 +91,7 @@ function NPSFilterBlock({ filters, setFilters }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+      <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
         <div className="w-full lg:w-[250px]">
           <MultipleSelectInput
             width={'100%'}
@@ -134,12 +135,12 @@ function NPSFilterBlock({ filters, setFilters }) {
           />
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+      <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
         <div
           onClick={() => setFilters({ ...filters, unCollected: !filters.unCollected })}
           className={`cursor-pointer p-2 ${
             filters.unCollected ? 'bg-blue-500 text-white' : 'bg-transparent text-blue-500'
-          } rounded font-bold w-fit border border-blue-500`}
+          } w-fit rounded border border-blue-500 font-bold`}
         >
           NÃO COLETADOS
         </div>
@@ -147,7 +148,7 @@ function NPSFilterBlock({ filters, setFilters }) {
           onClick={() => setFilters({ ...filters, withObs: !filters.withObs })}
           className={`cursor-pointer p-2 ${
             filters.withObs ? 'bg-blue-500 text-white' : 'bg-transparent text-blue-500'
-          } rounded font-bold w-fit border border-blue-500`}
+          } w-fit rounded border border-blue-500 font-bold`}
         >
           COM OBSERVAÇÕES
         </div>
@@ -155,7 +156,7 @@ function NPSFilterBlock({ filters, setFilters }) {
           onClick={() => setFilters({ ...filters, withoutObs: !filters.withoutObs })}
           className={`cursor-pointer p-2 ${
             filters.withoutObs ? 'bg-blue-500 text-white' : 'bg-transparent text-blue-500'
-          } rounded font-bold w-fit border border-blue-500`}
+          } w-fit rounded border border-blue-500 font-bold`}
         >
           SEM OBSERVAÇÕES
         </div>

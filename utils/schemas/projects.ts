@@ -458,3 +458,15 @@ const GeneralProjectSchema = z.object({
 export type TProject = z.infer<typeof GeneralProjectSchema>
 export type TProjectEntity = TProject & { _id: ObjectId }
 export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }
+
+const Comissions = z.array(
+  z.object({
+    comissionado: z.object({
+      idCRM: z.string(),
+      nome: z.string(),
+      avatar_url: z.string().optional().nullable(),
+    }),
+    valor: z.number().optional().nullable(),
+    dataPagamento: z.string().datetime().optional(),
+  })
+)

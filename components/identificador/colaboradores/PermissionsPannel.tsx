@@ -98,6 +98,44 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
           }))
         }
       />
+      {/**PÓS VENDAS */}
+      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE PÓS-VENDA</h1>
+      <CheckboxInput
+        labelFalse="APTO A VISUALIZAR SETOR DE PÓS VENDA"
+        labelTrue="APTO A VISUALIZAR SETOR DE PÓS VENDA"
+        checked={infoHolder.permissoes.posVenda.visualizar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              posVenda: {
+                ...prev.permissoes.posVenda,
+                visualizar: value,
+              },
+            },
+          }))
+        }
+      />
+      <CheckboxInput
+        labelFalse="APTO A EDITAR RELACIONADOS A SETOR DE PÓS VENDA"
+        labelTrue="APTO A EDITAR RELACIONADOS A SETOR DE PÓS VENDA"
+        checked={infoHolder.permissoes.posVenda.editar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              posVenda: {
+                ...prev.permissoes.posVenda,
+                editar: value,
+              },
+            },
+          }))
+        }
+      />
       {/**SETOR SUPRIMENTOS */}
       <h1 className="w-full text-start text-sm text-gray-500">SETOR SUPRIMENTOS</h1>
       <CheckboxInput
@@ -206,6 +244,82 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
               ...prev.permissoes,
               execucao: {
                 ...prev.permissoes.execucao,
+                editar: value,
+              },
+            },
+          }))
+        }
+      />
+      {/**SETOR DE SUPORTE */}
+      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE SUPORTE</h1>
+      <CheckboxInput
+        labelFalse="APTO A VISUALIZAR SETOR DE SUPORTE"
+        labelTrue="APTO A VISUALIZAR SETOR DE SUPORTE"
+        checked={infoHolder.permissoes.suporte.visualizar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              suporte: {
+                ...prev.permissoes.suporte,
+                visualizar: value,
+              },
+            },
+          }))
+        }
+      />
+      <CheckboxInput
+        labelFalse="APTO A EDITAR RELACIONADOS A SETOR DE SUPORTE"
+        labelTrue="APTO A EDITAR RELACIONADOS A SETOR DE SUPORTE"
+        checked={infoHolder.permissoes.suporte.editar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              suporte: {
+                ...prev.permissoes.suporte,
+                editar: value,
+              },
+            },
+          }))
+        }
+      />
+      {/**SETOR DE ADMINISTRATIVO */}
+      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE ADMINISTRATIVO</h1>
+      <CheckboxInput
+        labelFalse="APTO A VISUALIZAR SETOR DE ADMINISTRATIVO"
+        labelTrue="APTO A VISUALIZAR SETOR DE ADMINISTRATIVO"
+        checked={infoHolder.permissoes.administrativo.visualizar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              administrativo: {
+                ...prev.permissoes.administrativo,
+                visualizar: value,
+              },
+            },
+          }))
+        }
+      />
+      <CheckboxInput
+        labelFalse="APTO A EDITAR RELACIONADOS A SETOR DE ADMINISTRATIVO"
+        labelTrue="APTO A EDITAR RELACIONADOS A SETOR DE ADMINISTRATIVO"
+        checked={infoHolder.permissoes.administrativo.editar}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              administrativo: {
+                ...prev.permissoes.administrativo,
                 editar: value,
               },
             },
@@ -333,6 +447,26 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
               ordensDeServico: {
                 ...prev.permissoes.ordensDeServico,
                 visualizar: value,
+              },
+            },
+          }))
+        }
+      />
+      {/**GESTÃO */}
+      <h1 className="w-full text-start text-sm text-gray-500">GESTÃO</h1>
+      <CheckboxInput
+        labelFalse="APTO A VISUALIZAR RESULTADOS"
+        labelTrue="APTO A VISUALIZAR RESULTADOS"
+        checked={infoHolder.permissoes.gestao.visualizarResultados}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              gestao: {
+                ...prev.permissoes.gestao,
+                visualizarResultados: value,
               },
             },
           }))

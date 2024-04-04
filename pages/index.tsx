@@ -99,7 +99,7 @@ function Home() {
                 className="flex h-full flex-col items-center justify-center bg-gradient-to-r from-yellow-300 to-[#fead41]"
               >
                 <p className="bg-transparent text-xxs font-bold text-[#15599a] lg:text-sm">
-                  {stats.potenciaMeta}kWp ({formatDecimalPlaces((stats.potenciaMeta * 100) / 300)}%)
+                  {formatDecimalPlaces(stats.potenciaMeta)}kWp ({formatDecimalPlaces((stats.potenciaMeta * 100) / 300)}%)
                 </p>
               </div>
               {stats.potenciaMeta < 300 ? (
@@ -148,7 +148,9 @@ function Home() {
                       <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
                         {renderAvatarBySeller(stats.ranking.quinto.nome)}
                         <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quinto.nome}</h1>
-                        <p className="text-center text-lg font-medium text-green-500">{formatDecimalPlaces(stats.ranking.quinto.potencia)} kWp</p>
+                        <p className="text-center text-lg font-medium text-green-500">
+                          {formatDecimalPlaces(stats.ranking.quinto.potencia || 0)} kWp
+                        </p>
                         <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
                       </div>
                     </div>

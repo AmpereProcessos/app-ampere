@@ -7,7 +7,7 @@ type DateInputProps = {
   showLabel?: boolean
   value: string | undefined
   editable?: boolean
-  handleChange: (value: string | undefined) => void
+  handleChange: (value: string | undefined | null) => void
 }
 function DateInput({
   width,
@@ -31,12 +31,12 @@ function DateInput({
         readOnly={!editable}
         value={value ? value : ''}
         onChange={(e) => {
-          handleChange(e.target.value != '' ? e.target.value : undefined)
+          handleChange(e.target.value != '' ? e.target.value : null)
         }}
         id={inputIdentifier}
-        onReset={() => handleChange(undefined)}
+        onReset={() => handleChange(null)}
         type="date"
-        className="w-full h-[47px] rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className="h-[47px] w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
       />
     </div>
   )

@@ -21,7 +21,7 @@ function AnaliseBlock({ project }) {
   function renderLinks({ links, category }) {
     if (!links) return null
     return (
-      <div className="w-full flex justify-around gap-3 mt-4 flex-wrap px-2">
+      <div className="mt-4 flex w-full flex-wrap justify-around gap-3 px-2">
         {links.map((link, index) => (
           <div key={`${link.title} - ${index}`} className="w-full lg:w-[400px]">
             <FileLinkBlock obj={link} prefix={project.nome} deleteFile={(link) => deleteFile(link, category)} showDeleteMenu={false} />{' '}
@@ -31,66 +31,70 @@ function AnaliseBlock({ project }) {
     )
   }
   return (
-    <div className="flex gap-2 w-full shadow-sm border border-gray-300 rounded-md">
+    <div className="flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
       <div className={`h-full w-[7px] ${getBarColor(project)} rounded-tl-md rounded-bl-md`}></div>
-      <div className="flex flex-col w-full grow p-3">
-        <div className="flex items-center w-full gap-2">
-          <div className="flex flex-col min-w-[350px]">
+      <div className="flex w-full grow flex-col p-3">
+        <div className="flex w-full items-center gap-2">
+          <div className="flex min-w-[350px] flex-col">
             <div className="flex items-center gap-1">
-              <h1 className="text-[#fead41] font-black">{project.identificadorCRM}</h1>
+              <h1 className="font-black text-[#fead41]">{project.identificadorCRM}</h1>
               <h1 className="font-bold leading-none tracking-tight">{project.nome}</h1>
             </div>
             <p className="text-xs text-gray-500">{project.tipoServico}</p>
           </div>
-          <div className="grow flex items-center justify-between">
+          <div className="flex grow items-center justify-between">
             <div className="flex items-center gap-2">
               <FaUserAlt />
-              <p className="text-gray-500 font-medium">{project.vendedor}</p>
+              <p className="font-medium text-gray-500">{project.vendedor}</p>
             </div>
             <div className="flex items-center gap-2">
               <ImPower />
-              <p className="text-gray-500 font-medium">{formatDecimalPlaces(project.potenciaPico)}W</p>
+              <p className="font-medium text-gray-500">{formatDecimalPlaces(project.potenciaPico)}W</p>
             </div>
             <div className="flex items-center gap-2">
               <FaSolarPanel />
-              <p className="text-gray-500 font-medium">{formatToMoney(project.valorProjeto)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorProjeto)}</p>
             </div>
             <div className="flex items-center gap-2">
               <MdElectricMeter />
-              <p className="text-gray-500 font-medium">{formatToMoney(project.valorPadrao)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorPadrao)}</p>
             </div>
             <div className="flex items-center gap-2">
               <BsHouse />
-              <p className="text-gray-500 font-medium">{formatToMoney(project.valorEstrutura)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorEstrutura)}</p>
             </div>
             <div className="flex items-center gap-2">
               <MdOutlineAttachMoney />
-              <p className="text-gray-500 font-medium">{formatToMoney(project.valorContrato)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorContrato)}</p>
             </div>
           </div>
         </div>
         {project.proposta.id ? (
-          <div className="flex flex-col w-full rounded mt-1 bg-gray-100 p-1">
-            <div className="flex items-center w-full justify-between">
+          <div className="mt-1 flex w-full flex-col rounded bg-gray-100 p-1">
+            <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <IoMdDocument />
-                <h1 className="text-gray-500 font-medium text-xs">PROPOSTA VINCULADA</h1>
+                <h1 className="text-xs font-medium text-gray-500">PROPOSTA VINCULADA</h1>
               </div>
             </div>
-            <div className="flex items-center w-full gap-2">
-              <div className="flex flex-col min-w-[350px]">
-                <h1 className="font-bold leading-none tracking-tight text-[#15599a] text-sm">{formatLongString(project.proposta.nome, 30)}</h1>
+            <div className="flex w-full items-center gap-2">
+              <div className="flex min-w-[350px] flex-col">
+                <h1 className="text-sm font-bold leading-none tracking-tight text-[#15599a]">{formatLongString(project.proposta.nome, 30)}</h1>
               </div>
-              <div className="grow flex items-center justify-between">
+              <div className="flex grow items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ImPower />
-                  <p className={`${project.potenciaPico == project.proposta.potenciaPico ? 'text-green-500' : 'text-[#F31559]'} font-medium`}>
+                  <p
+                    className={`${
+                      Math.abs(project.potenciaPico - project.proposta.potenciaPico) > 1 ? 'text-green-500' : 'text-[#F31559]'
+                    } font-medium`}
+                  >
                     {project.proposta.potenciaPico}W
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <MdOutlineAttachMoney />
-                  <p className={`${project.valorContrato == project.proposta.valor ? 'text-green-500' : 'text-[#F31559]'} font-medium`}>
+                  <p className={`${Math.abs(project.valorContrato - project.proposta.valor) > 1 ? 'text-green-500' : 'text-[#F31559]'} font-medium`}>
                     {formatToMoney(project.proposta.valor)}
                   </p>
                 </div>
@@ -98,8 +102,8 @@ function AnaliseBlock({ project }) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col w-full items-center justify-center p-1">
-            <h1 className="p-1 text-xs rounded text-[#F31559] font-bold border border-red-500">SEM PROPOSTA VINCULADA</h1>
+          <div className="flex w-full flex-col items-center justify-center p-1">
+            <h1 className="rounded border border-red-500 p-1 text-xs font-bold text-[#F31559]">SEM PROPOSTA VINCULADA</h1>
             <ProposeProjectVinculation
               idProject={project.id}
               idSolicitation={project.idSolicitacaoContrato}
@@ -109,14 +113,14 @@ function AnaliseBlock({ project }) {
             />
           </div>
         )}
-        <div className="w-full flex items-center justify-start mt-1">
+        <div className="mt-1 flex w-full items-center justify-start">
           <div className="flex items-center gap-1">
             {showAdditionalInfo ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(true)} />
               </div>
             )}
@@ -124,37 +128,37 @@ function AnaliseBlock({ project }) {
           </div>
         </div>
         {showAdditionalInfo ? (
-          <div className="w-full flex flex-col">
+          <div className="flex w-full flex-col">
             <div className="flex items-center justify-around">
               <div className="flex flex-col items-center">
-                <h1 className="text-center text-gray-600 text-xs">CPF/CNPJ</h1>
-                <h1 className="text-center text-gray-600 text-sm font-medium">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
+                <h1 className="text-center text-xs text-gray-600">CPF/CNPJ</h1>
+                <h1 className="text-center text-sm font-medium text-gray-600">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
               </div>
               <div className="flex flex-col items-center">
-                <h1 className="text-center text-gray-600 text-xs">CIDADE</h1>
-                <h1 className="text-center text-gray-600 text-sm font-medium">{project.cidade ? project.cidade : '-'}</h1>
+                <h1 className="text-center text-xs text-gray-600">CIDADE</h1>
+                <h1 className="text-center text-sm font-medium text-gray-600">{project.cidade ? project.cidade : '-'}</h1>
               </div>
               <div className="flex flex-col items-center">
-                <h1 className="text-center text-gray-600 text-xs">BAIRRO</h1>
-                <h1 className="text-center text-gray-600 text-sm font-medium">{project.bairro ? project.bairro : '-'}</h1>
+                <h1 className="text-center text-xs text-gray-600">BAIRRO</h1>
+                <h1 className="text-center text-sm font-medium text-gray-600">{project.bairro ? project.bairro : '-'}</h1>
               </div>
               <div className="flex flex-col items-center">
-                <h1 className="text-center text-gray-600 text-xs">LOGRADOURO</h1>
-                <h1 className="text-center text-gray-600 text-sm font-medium">{project.logradouro ? project.logradouro : '-'}</h1>
+                <h1 className="text-center text-xs text-gray-600">LOGRADOURO</h1>
+                <h1 className="text-center text-sm font-medium text-gray-600">{project.logradouro ? project.logradouro : '-'}</h1>
               </div>
               <div className="flex flex-col items-center">
-                <h1 className="text-center text-gray-600 text-xs">Nº</h1>
-                <h1 className="text-center text-gray-600 text-sm font-medium">
+                <h1 className="text-center text-xs text-gray-600">Nº</h1>
+                <h1 className="text-center text-sm font-medium text-gray-600">
                   {project.numeroOuIdentificador ? project.numeroOuIdentificador : '-'}
                 </h1>
               </div>
             </div>
             {project.links && (
-              <div className="w-full grid grid-cols-1 gap-2 mt-4">
+              <div className="mt-4 grid w-full grid-cols-1 gap-2">
                 {Object.keys(project.links).map((category, index) =>
                   project.links[category]?.length > 0 ? (
-                    <div key={index} className="flex flex-col w-full">
-                      <h1 className="w-full p-1 rounded-tl-md rounded-tr-md bg-cyan-700 text-white font-bold text-center">
+                    <div key={index} className="flex w-full flex-col">
+                      <h1 className="w-full rounded-tl-md rounded-tr-md bg-cyan-700 p-1 text-center font-bold text-white">
                         {category.toUpperCase()}
                       </h1>
 
@@ -180,55 +184,55 @@ function AnaliseBlock({ project }) {
     </div>
   )
   return (
-    <div className="flex flex-col w-full p-1 border border-gray-200">
-      <div className="w-full grid grid-cols-8 items-center">
-        <div className="flex flex-col col-span-2">
-          <div className="flex items-center gap-2 col-span-2">
+    <div className="flex w-full flex-col border border-gray-200 p-1">
+      <div className="grid w-full grid-cols-8 items-center">
+        <div className="col-span-2 flex flex-col">
+          <div className="col-span-2 flex items-center gap-2">
             {showAdditionalInfo ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(true)} />
               </div>
             )}
-            <div className="text-sm gap-2 flex items-center">
+            <div className="flex items-center gap-2 text-sm">
               <strong className="text-[#fead61]">({project.identificadorCRM})</strong>
               {project.nome} <strong className="text-[#15599a]">{project.identificador}</strong> -{' '}
             </div>
           </div>
-          {project.proposta ? <h1 className={`text-blue-700 text-xs font-medium text-center`}>{project.proposta.nome}</h1> : null}
+          {project.proposta ? <h1 className={`text-center text-xs font-medium text-blue-700`}>{project.proposta.nome}</h1> : null}
         </div>
 
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">TIPO DE SERVIÇO</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{project.tipoServico}</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">TIPO DE SERVIÇO</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{project.tipoServico}</h1>
         </div>
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">POTÊNCIA PICO</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{project.potenciaPico}kWp</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">POTÊNCIA PICO</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{project.potenciaPico}kWp</h1>
           {project.proposta ? (
             <h1 className={`${project.proposta.potenciaPico == project.potenciaPico ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
               {project.proposta.potenciaPico}
             </h1>
           ) : null}
         </div>
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">VALOR DO PROJETO</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{formatToMoney(project.valorProjeto)}</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">VALOR DO PROJETO</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorProjeto)}</h1>
         </div>
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">VALOR DO PADRÃO</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{formatToMoney(project.valorPadrao)}</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">VALOR DO PADRÃO</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorPadrao)}</h1>
         </div>
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">VALOR DA ESTRUTURA</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{formatToMoney(project.valorEstrutura)}</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">VALOR DA ESTRUTURA</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorEstrutura)}</h1>
         </div>
-        <div className="flex flex-col items-center col-span-1">
-          <h1 className="text-center text-gray-600 text-xs">VALOR DO CONTRATO</h1>
-          <h1 className="text-center text-gray-600 text-sm font-medium">{formatToMoney(project.valorContrato)}</h1>
+        <div className="col-span-1 flex flex-col items-center">
+          <h1 className="text-center text-xs text-gray-600">VALOR DO CONTRATO</h1>
+          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorContrato)}</h1>
           {project.proposta ? (
             <h1 className={`${project.proposta.valor == project.valorContrato ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
               {formatToMoney(project.proposta.valor)}
@@ -237,27 +241,27 @@ function AnaliseBlock({ project }) {
         </div>
       </div>
       {showAdditionalInfo ? (
-        <div className="w-full flex flex-col">
+        <div className="flex w-full flex-col">
           <div className="flex items-center justify-around">
             <div className="flex flex-col items-center">
-              <h1 className="text-center text-gray-600 text-xs">CPF/CNPJ</h1>
-              <h1 className="text-center text-gray-600 text-sm font-medium">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
+              <h1 className="text-center text-xs text-gray-600">CPF/CNPJ</h1>
+              <h1 className="text-center text-sm font-medium text-gray-600">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-center text-gray-600 text-xs">CIDADE</h1>
-              <h1 className="text-center text-gray-600 text-sm font-medium">{project.cidade ? project.cidade : '-'}</h1>
+              <h1 className="text-center text-xs text-gray-600">CIDADE</h1>
+              <h1 className="text-center text-sm font-medium text-gray-600">{project.cidade ? project.cidade : '-'}</h1>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-center text-gray-600 text-xs">BAIRRO</h1>
-              <h1 className="text-center text-gray-600 text-sm font-medium">{project.bairro ? project.bairro : '-'}</h1>
+              <h1 className="text-center text-xs text-gray-600">BAIRRO</h1>
+              <h1 className="text-center text-sm font-medium text-gray-600">{project.bairro ? project.bairro : '-'}</h1>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-center text-gray-600 text-xs">LOGRADOURO</h1>
-              <h1 className="text-center text-gray-600 text-sm font-medium">{project.logradouro ? project.logradouro : '-'}</h1>
+              <h1 className="text-center text-xs text-gray-600">LOGRADOURO</h1>
+              <h1 className="text-center text-sm font-medium text-gray-600">{project.logradouro ? project.logradouro : '-'}</h1>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-center text-gray-600 text-xs">Nº</h1>
-              <h1 className="text-center text-gray-600 text-sm font-medium">{project.numeroOuIdentificador ? project.numeroOuIdentificador : '-'}</h1>
+              <h1 className="text-center text-xs text-gray-600">Nº</h1>
+              <h1 className="text-center text-sm font-medium text-gray-600">{project.numeroOuIdentificador ? project.numeroOuIdentificador : '-'}</h1>
             </div>
           </div>
           {/* {project.links && (

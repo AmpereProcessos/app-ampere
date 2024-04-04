@@ -304,24 +304,24 @@ async function getSalesRanking({ collection, partialQuery }: GetStats) {
       .toArray()
     return {
       primeiro: {
-        nome: ranking[0]._id as string,
-        potencia: ranking[0].potencia as number,
+        nome: ranking[0]?._id as string,
+        potencia: ranking[0]?.potencia as number,
       },
       segundo: {
-        nome: ranking[1]._id as string,
-        potencia: ranking[1].potencia as number,
+        nome: ranking[1]?._id as string,
+        potencia: ranking[1]?.potencia as number,
       },
       terceiro: {
-        nome: ranking[2]._id as string,
-        potencia: ranking[2].potencia as number,
+        nome: ranking[2]?._id as string,
+        potencia: ranking[2]?.potencia as number,
       },
       quarto: {
-        nome: ranking[3]._id as string,
-        potencia: ranking[3].potencia as number,
+        nome: ranking[3]?._id as string,
+        potencia: ranking[3]?.potencia as number,
       },
       quinto: {
-        nome: ranking[4]._id as string,
-        potencia: ranking[4].potencia as number,
+        nome: ranking[4]?._id as string,
+        potencia: ranking[4]?.potencia as number,
       },
     }
   } catch (error) {

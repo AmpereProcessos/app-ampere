@@ -19,7 +19,7 @@ export async function handleOeMUpdate({ previousData, newData, changes, queryCli
   const previousMaintenanceDate = previousData.manutencaoPreventiva.data
   const newMaintenanceDate = newData.manutencaoPreventiva.data
 
-  if (hasOeMPlan && previousMaintenanceDate != newMaintenanceDate) {
+  if (hasOeMPlan && !!newMaintenanceDate && previousMaintenanceDate != newMaintenanceDate) {
     const emailMessage = {
       emailTo: 'processos@ampereenergias.com.br', // amperecontasareceber@gmail.com
       subject: 'EXECUÇÃO DE MANUTENÇÃO',

@@ -499,7 +499,7 @@ function OemPage() {
           </a>
         </Link>
         {modalProject.id && modalProject.isOpen && (
-          <ModalOeM closeModal={() => setModalProject({ id: null, isOpen: false })} modalIsOpen={modalProject.isOpen} project={modalProject} />
+          <ModalOeM closeModal={() => setModalProject({ id: null, isOpen: false })} modalIsOpen={modalProject.isOpen} projectId={modalProject.id} />
         )}
       </div>
     )

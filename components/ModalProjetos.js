@@ -26,76 +26,14 @@ import ErrorPage from './utils/ErrorPage'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { updateProject } from '../utils/methods/mutation/clients'
 import { useSession } from 'next-auth/react'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  width: '93%',
-  height: '98%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
-function formataCPF(cpf) {
-  //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, '')
-  //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-}
-function formataCEP(cep) {
-  cep = cep
-    .replace(/\D/g, '')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-    .replace(/(-\d{3})\d+?$/, '$1')
-
-  return cep
-}
+import { handleEngineeringUpdate } from '../utils/methods/mutation/engineering'
 function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
-    const { data: session } = useSession()
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
-  const { mutate } = useMutationWithFeedback({
-    mutationKey: ['update-project'],
-    mutationFn: updateProject,
-    affectedQueryKey: ['engineering-projects'],
-    queryClient: queryClient,
-  })
-  const [msg, setMsg] = useState('')
-
-  async function notifyAccessGrantingApproval() {
-    const notifyObj = {
-      destinatario: '64638b6c2071c508968bdf08',
-      remetente: 'SISTEMA',
-      mensagem: `Parecer de acesso aprovado.`,
-      projetoReferencia: infoHolder.qtde,
-      nomeDoProjeto: infoHolder.nomeDoContrato,
-    }
-    await axios.post('/api/notificacoes/1', notifyObj)
-    return
-  }
-
-  async function handleChanges() {
-    const previousStatus = project.parecer.statusDoParecerDeAcesso
-    const newStatus = infoHolder.parecer.statusDoParecerDeAcesso
-    if (previousStatus != 'PARECER DE ACESSO APROVADO' && newStatus == 'PARECER DE ACESSO APROVADO') {
-      notifyAccessGrantingApproval()
-    }
-    mutate({ id: projectId, changes: changes })
-  }
 
   function getParecerWarning(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime())
@@ -119,10 +57,15 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
       return 'border border-gray-200'
     }
   }
+
+  const { mutate: updateProject } = useMutationWithFeedback({
+    mutationKey: ['update-project'],
+    mutationFn: handleEngineeringUpdate,
+    affectedQueryKey: ['project-by-id', projectId],
+    queryClient: queryClient,
+    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['engineering-projects'] }),
+  })
   useEffect(() => {
-    // if (project?.idVisitaTecnica?.trim().length > 10) {
-    //   getVisitaInfo(project.idVisitaTecnica)
-    // }
     setInfo(project)
   }, [project])
   return (
@@ -144,13 +87,15 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
               )}
             </div>
             <div className="flex items-center gap-x-2">
-              <p className={`hidden text-sm italic text-green-500 lg:block`}>{msg}</p>
-              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
+              <SaveButton
+                text={'Salvar alterações'}
+                icon={<FaSave />}
+                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
+              />
               <button>
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            <p className={`block text-sm italic text-green-500 lg:hidden`}>{msg}</p>
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}

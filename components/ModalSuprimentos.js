@@ -42,9 +42,6 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
   })
 
   useEffect(() => {
-    // if (project?.idVisitaTecnica?.trim().length > 10) {
-    //   getVisitaInfo(project.idVisitaTecnica)
-    // }
     setInfo(project)
   }, [project])
 

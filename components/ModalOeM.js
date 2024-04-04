@@ -28,70 +28,23 @@ import SaveButton from './utils/Buttons/SaveButton'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
 import ExecutionCommissioningBlock from './blocosInfoProjeto/InfoComissionamentoBlock'
 import OeMBlock from './blocosInfoProjeto/InfoOeMBlock'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  width: '93%',
-  height: '98%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
-function formataCPF(cpf) {
-  //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, '')
-  //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-}
-function formataCEP(cep) {
-  cep = cep
-    .replace(/\D/g, '')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-    .replace(/(-\d{3})\d+?$/, '$1')
-
-  return cep
-}
-function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, handleUpdates }) {
-  useKey('Escape', () => setModalIsOpen(false))
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { handleOeMUpdate } from '../utils/methods/mutation/oem'
+import { useQueryClient } from 'react-query'
+function ModalOeM({ closeModal, modalIsOpen, project }) {
+  const queryClient = useQueryClient()
+  useKey('Escape', () => closeModal())
 
   const [infoHolder, setInfo] = useState(project)
   const [msg, setMsg] = useState('')
   const [changes, setChanges] = useState({})
-  const [osInfo, setOsInfo] = useState({
-    categoria: 'NÃO DEFINIDO',
-    servicoExecutado: '',
-    realizarCobranca: false,
-    valorCobranca: 0,
-    usuarioEmissor: '',
-    grauDeUrgencia: 'NÃO DEFINIDO',
-    observacoes: '',
-    dataDeAbertura: new Date().toISOString(),
-    agendar: false,
-  })
-  const [osMsg, setOsMsg] = useState({
-    text: '',
-    color: 'text-red-500',
-  })
 
-  async function handleChanges() {
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg('Alterações feitas')
-      handleUpdates(project._id)
-    })
-  }
-  console.log(changes)
+  const { mutate: updateProject } = useMutationWithFeedback({
+    mutationKey: ['update-project'],
+    mutationFn: handleOeMUpdate,
+    affectedQueryKey: ['oem-projects'],
+    queryClient: queryClient,
+  })
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
@@ -106,9 +59,13 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, handleUpdates })
 
             <div className="flex items-center gap-x-2">
               {msg && <p className="text-sm italic text-green-400">{msg}</p>}
-              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
+              <SaveButton
+                text={'Salvar alterações'}
+                icon={<FaSave />}
+                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
+              />
               <button>
-                <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
+                <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
           </div>
@@ -187,7 +144,6 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, handleUpdates })
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
-                handleUpdates={handleUpdates}
                 project={project}
               />
             ) : null}
@@ -212,7 +168,6 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, handleUpdates })
                   value: 'links.manutencaoCorretiva',
                 },
               ]}
-              handleUpdates={handleUpdates}
             />
           </div>
         </div>

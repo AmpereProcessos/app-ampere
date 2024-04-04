@@ -194,18 +194,17 @@ function Comercial() {
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
                 <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
-                    label={'CÓDIGO CRM'}
-                    value={filters.identifier}
-                    placeholder={'Digite o código CRM do projeto...'}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, identifier: value }))}
-                  />
-                  <TextInput
                     label={'NOME DO CONTRATO'}
                     value={filters.search}
                     placeholder={'Digite o nome do contrato...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
-
+                  <TextInput
+                    label={'CÓDIGO CRM'}
+                    value={filters.identifier}
+                    placeholder={'Digite o código CRM do projeto...'}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, identifier: value }))}
+                  />
                   <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
                     <div className="flex items-center justify-center gap-x-2">
                       <div className="w-full lg:w-[250px]">

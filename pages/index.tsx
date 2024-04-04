@@ -10,13 +10,13 @@ import DashboardSkeleton from '../components/skeletons/DashboardSkeleton'
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../components/utils/LoadingPage'
 import { formatDecimalPlaces, sellerPhotos } from '../utils/constants'
-import { FaBirthdayCake } from 'react-icons/fa'
 
-import { BsFillCalendarEventFill } from 'react-icons/bs'
 import { useDashboardStats, useSalesGraphStats } from '@/utils/methods/query/stats'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import ClientsBirthdays from '@/components/identificador/dashboard/ClientsBirthdays'
 import { getArrOfYearsBetweenYears } from '@/utils/methods/dates'
+
+const months = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO']
 
 const currentDate = new Date()
 const currentYear = currentDate.getFullYear()
@@ -91,7 +91,9 @@ function Home() {
       return (
         <div className="relative grow p-6">
           <div className="flex w-full flex-col">
-            <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">RANKING DE VENDAS (2024)</h1>
+            <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">
+              RANKING DE VENDAS ({months[new Date().getMonth()]})
+            </h1>
             <div className="flex w-full justify-center gap-2">
               <div className="flex w-full items-center justify-center lg:w-[70%]">
                 <div className="flex w-full items-center justify-center">

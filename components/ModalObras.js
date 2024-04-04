@@ -28,6 +28,7 @@ import { useClientById } from '../utils/methods/query/clients'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import { useSession } from 'next-auth/react'
+import { handleExecutionUpdate } from '@/utils/methods/mutation/execution'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -36,9 +37,9 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
 
-  const { mutate } = useMutationWithFeedback({
+  const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: updateProject,
+    mutationFn: handleExecutionUpdate,
     affectedQueryKey: ['execution-projects'],
     queryClient: queryClient,
   })
@@ -60,7 +61,11 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
             </div>
             <div className="flex items-center gap-x-2">
               {/* {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>} */}
-              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
+              <SaveButton
+                text={'Salvar alterações'}
+                icon={<FaSave />}
+                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
+              />
               <button>
                 <VscChromeClose onClick={() => closeModal(false)} style={{ color: 'red' }} />
               </button>

@@ -4,7 +4,7 @@ import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { Session } from 'next-auth'
 import { Collection, Db, MatchKeysAndValues } from 'mongodb'
 import { TProject } from '@/utils/schemas/projects'
-import { getFirstDayOfYearString } from '@/utils/methods/dates'
+import { getFirstDayOfMonth, getFirstDayOfYearString } from '@/utils/methods/dates'
 import { TDashboardStats } from '@/utils/schemas/stats'
 
 function getQueryByVisualization(session: Session) {
@@ -272,7 +272,8 @@ async function getSupplyStats({ collection, partialQuery }: GetStats) {
   }
 }
 async function getSalesRanking({ collection, partialQuery }: GetStats) {
-  const firstDayString = getFirstDayOfYearString({})
+  const firstDayString = getFirstDayOfMonth({})
+  console.log(firstDayString)
   try {
     const ranking = await collection
       .aggregate([

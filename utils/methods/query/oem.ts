@@ -1,0 +1,187 @@
+import { TProjectDTO } from '@/utils/schemas/projects'
+import axios from 'axios'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
+import { formatWithoutDiacritics } from '../formatting'
+import dayjs from 'dayjs'
+
+export async function getSectorStats() {
+  try {
+    const { data } = await axios.get('/api/stats/sector-reports/oem')
+    return data as TProjectDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UseOeMReportDataFilters = {
+  city: string[]
+}
+export function useOeMReportData() {
+  const [filters, setFilters] = useState<UseOeMReportDataFilters>({
+    city: [],
+  })
+
+  function matchCity(project: TProjectDTO) {
+    if (filters.city.length == 0) return true
+    return filters.city.includes(project.cidade)
+  }
+  function handleModelData(data: TProjectDTO[]) {
+    var modeledData = data
+    return modeledData.filter((project) => matchCity(project))
+  }
+
+  return {
+    ...useQuery({
+      queryKey: ['oem-report'],
+      queryFn: getSectorStats,
+      refetchOnWindowFocus: false,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}
+
+async function fetchProjects() {
+  try {
+    const { data } = await axios.get('/api/projects/oem')
+    return data as TProjectDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UseOeMProjectsFilters = {
+  search: string
+  neighborhoodSearch: string
+  city: string[]
+  technicalTeam: string[]
+  executionStatus: string[]
+  oemPlan: string[]
+  serviceType: string[]
+  pendingMaintenance: boolean
+  overdueMaintenance: boolean
+  systemOffline: boolean
+  modulesQtyGte: number | null
+  modulesQtyLte: number | null
+  date: {
+    after: string | null
+    before: string | null
+    field1: string | null
+    field2: string | null
+  }
+}
+export function useOeMProjects() {
+  const [filters, setFilters] = useState<UseOeMProjectsFilters>({
+    search: '',
+    neighborhoodSearch: '',
+    city: [],
+    technicalTeam: [],
+    executionStatus: [],
+    oemPlan: [],
+    serviceType: [],
+    pendingMaintenance: false,
+    overdueMaintenance: false,
+    systemOffline: false,
+    modulesQtyGte: null,
+    modulesQtyLte: null,
+    date: {
+      after: null,
+      before: null,
+      field1: null,
+      field2: null,
+    },
+  })
+  function matchSearch(project: TProjectDTO) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(filters.search.toUpperCase())
+  }
+  function matchNeighborhoodSearchSearch(project: TProjectDTO) {
+    if (filters.neighborhoodSearch.trim().length == 0) return true
+    return formatWithoutDiacritics(project.bairro, true).includes(filters.neighborhoodSearch.toUpperCase())
+  }
+  function matchCity(project: TProjectDTO) {
+    if (filters.city.length == 0) return true
+    return filters.city.includes(project.cidade)
+  }
+  function matchTechnicalTeam(project: TProjectDTO) {
+    if (filters.technicalTeam.length == 0) return true
+    return filters.technicalTeam.includes(project.obra.equipeResp || '')
+  }
+  function matchExecutionStatus(project: TProjectDTO) {
+    if (filters.executionStatus.length == 0) return true
+    return filters.executionStatus.includes(project.obra.statusDaObra || '')
+  }
+  function matchOeMPlan(project: TProjectDTO) {
+    if (filters.oemPlan.length == 0) return true
+    return filters.oemPlan.includes(project.oem.plano || '')
+  }
+  function matchServiceType(project: TProjectDTO) {
+    if (filters.serviceType.length == 0) return true
+    return filters.serviceType.includes(project.tipoDeServico)
+  }
+  function matchPendingMaintenance(project: TProjectDTO) {
+    if (!filters.pendingMaintenance) return true
+    return project.manutencaoPreventiva.status == 'NÃO REALIZADO'
+  }
+  function matchOverdueMaintenance(project: TProjectDTO) {
+    if (!filters.overdueMaintenance) return true
+    const maintenanceQty = project.oem.qtdeManutencoes || 0
+    const isOverDue = project.manutencaoPreventiva.data
+      ? maintenanceQty > 2
+        ? dayjs(new Date()).diff(project.manutencaoPreventiva.data, 'day') > 730
+        : false
+      : dayjs(new Date()).diff(project.medidor.data, 'day') > 365
+    return isOverDue
+  }
+  function matchSystemOffline(project: TProjectDTO) {
+    if (!filters.systemOffline) return true
+    return project.conferencias.usinaLigada.status != 'REALIZADO'
+  }
+  function matchModulesQtyGte(project: TProjectDTO) {
+    if (!filters.modulesQtyGte) return true
+    return (project.sistema.qtdeModulos || 0) > filters.modulesQtyGte
+  }
+  function matchModulesQtyLte(project: TProjectDTO) {
+    if (!filters.modulesQtyLte) return true
+    return (project.sistema.qtdeModulos || 0) < filters.modulesQtyLte
+  }
+  function matchDate(project: TProjectDTO) {
+    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    return (
+      // @ts-ignore
+      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      // @ts-ignore
+      project[filters.date.field1][filters.date.field2] <= filters.date.before
+    )
+  }
+  function handleModelData(data: TProjectDTO[]) {
+    var modeledData = data
+    return modeledData.filter(
+      (project) =>
+        matchSearch(project) &&
+        matchNeighborhoodSearchSearch(project) &&
+        matchCity(project) &&
+        matchTechnicalTeam(project) &&
+        matchExecutionStatus(project) &&
+        matchOeMPlan(project) &&
+        matchServiceType(project) &&
+        matchPendingMaintenance(project) &&
+        matchOverdueMaintenance(project) &&
+        matchSystemOffline(project) &&
+        matchModulesQtyGte(project) &&
+        matchModulesQtyLte(project) &&
+        matchDate(project)
+    )
+  }
+  return {
+    ...useQuery({
+      queryKey: ['oem-projects'],
+      queryFn: fetchProjects,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}

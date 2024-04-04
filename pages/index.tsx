@@ -91,6 +91,21 @@ function Home() {
       return (
         <div className="relative grow p-6">
           <div className="flex w-full flex-col">
+            <h1 className="w-full text-center text-lg font-extrabold">META DO MÊS DE {months[new Date().getMonth()]}</h1>
+            <div className="flex h-[45px] w-full items-center justify-between self-center border border-gray-500 bg-[#a8a9aa]">
+              <div
+                // style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
+                style={{ width: `${(stats.potenciaMeta / 300) * 100}%` }}
+                className="flex h-full flex-col items-center justify-center bg-gradient-to-r from-yellow-300 to-[#fead41]"
+              >
+                <p className="bg-transparent text-xxs font-bold text-[#15599a] lg:text-sm">
+                  {stats.potenciaMeta}kWp ({formatDecimalPlaces((stats.potenciaMeta * 100) / 300)}%)
+                </p>
+              </div>
+              {stats.potenciaMeta < 300 ? (
+                <p className="grow text-center font-bold text-white">{formatDecimalPlaces(300 - stats.potenciaMeta)}kWp</p>
+              ) : null}
+            </div>
             <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">
               RANKING DE VENDAS ({months[new Date().getMonth()]})
             </h1>

@@ -55,6 +55,7 @@ export type TDashboardStats = {
       potencia: number
     }
   }
+  potenciaMeta: number
   nps: number
 }
 export type TSaleGraphStat = {

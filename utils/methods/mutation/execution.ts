@@ -22,7 +22,7 @@ export async function handleExecutionUpdate({ previousData, newData, changes, qu
     // If execution passed status to CONCLUIDA, sending email to finances sector
     if (wasExecutionUnfinished && isExecutionFinished) {
       const emailMessage = {
-        emailTo: 'processos@ampereenergias.com.br', // amperecontasareceber@gmail.com
+        emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
         subject: 'FINALIZAÇÃO DE OBRA/SERVIÇO',
         message: `Olá, passando para te informar que o cliente ${newData.nomeDoContrato} teve sua obra/execução de serviço finalizada. Desde já agradeço, Volts.`,
       }

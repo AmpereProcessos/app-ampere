@@ -25,7 +25,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
 
   if (!!newMeterChangeDate && previousMeterChangeDate != newMeterChangeDate) {
     const emailMessage = {
-      emailTo: 'processos@ampereenergias.com.br', // amperecontasareceber@gmail.com
+      emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
       subject: 'TROCA DE MEDIDOR',
       message: `Olá, passando para te informar que o cliente ${newData.nomeDoContrato} teve a troca do medidor notificada no dia ${formatDateAsLocale(
         newMeterChangeDate

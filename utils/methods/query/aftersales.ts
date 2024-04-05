@@ -112,7 +112,7 @@ export function useNPS(enabled: boolean) {
       queryKey: ['nps'],
       queryFn: fetchNPSData,
       refetchOnWindowFocus: false,
-      // select: (data) => handelModelData(data),
+      select: (data) => handelModelData(data),
       enabled: !!enabled,
     }),
     filters,

@@ -342,6 +342,7 @@ async function getNPS({ collection, partialQuery }: GetStats) {
         },
       ])
       .toArray()
+
     let detratores = await collection
       .aggregate([
         {

@@ -41,16 +41,10 @@ function NPS() {
     const projectsQty = info.length
     const { promoters, detrators, collected } = info.reduce(
       (acc, current) => {
-        if (acc == {}) {
-          acc = {
-            promoters: 0,
-            detrators: 0,
-          }
-        }
         const currentNPSValue = current.nps
-        if (currentNPSValue && currentNPSValue >= 9) acc.promoters = acc.promoters + 1
-        if (currentNPSValue && currentNPSValue <= 6) acc.detrators = acc.detrators + 1
-        if (currentNPSValue && currentNPSValue >= 0 && currentNPSValue <= 10) acc.collected = acc.collected + 1
+        if (currentNPSValue != null && currentNPSValue >= 9) acc.promoters = acc.promoters + 1
+        if (currentNPSValue != null && currentNPSValue <= 6) acc.detrators = acc.detrators + 1
+        if (currentNPSValue != null && currentNPSValue <= 10) acc.collected = acc.collected + 1
         return acc
       },
       { promoters: 0, detrators: 0, collected: 0 }
@@ -86,6 +80,7 @@ function NPS() {
     const nps = ((reduced.promoter - reduced.detrator) * 100) / reduced.collected
     return nps.toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   }
+
   const renderCards = useMemo(() => data?.map((project, index) => <NPSCard key={project._id} project={project} />), [data])
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {

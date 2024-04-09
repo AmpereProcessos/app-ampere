@@ -122,9 +122,17 @@ export const responsibles = [
     id: '659e8961df037400d84571ac',
     nome: 'Luis Eduardo',
     apelido: 'LUIS EDUARDO',
-    ativo: true,
+    ativo: false,
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-luis_eduardo?alt=media&token=57cbbdbe-709c-4778-b5e4-4d823bd41621',
+  },
+  {
+    id: '63754046d2073932d9180821',
+    nome: 'Rafael Feo',
+    apelido: 'RAFAEL FEO',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-rafael_feo?alt=media&token=edec02ff-c2df-455d-ad30-8358710dda93',
   },
   {
     id: '6537c52474d5eecc1b67f1ee',

@@ -130,14 +130,14 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
         const msg = getErrorMessage(error)
         toast.error(msg)
       }
-    }
+    } else setFinishInProgress(false)
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <h1 className="text-center font-bold text-[#15599a]">CONFERÊNCIA DE FECHAMENTO DA OS</h1>
-      <div className="flex flex-col w-full mt-3 gap-2">
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+      <div className="mt-3 flex w-full flex-col gap-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.realimentacaoFeita}
             onChange={(e) => setInfo({ ...infoHolder, realimentacaoFeita: e.target.checked })}
@@ -147,7 +147,7 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
           />
           <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">REALIMENTAÇÃO FEITA ?</label>
         </div>
-        <div className="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full justify-center p-2">
+        <div className="flex w-full items-center justify-center rounded border border-gray-200 p-2 pl-4 dark:border-gray-700">
           <input
             checked={infoHolder.ramalPassado}
             onChange={(e) => setInfo({ ...infoHolder, ramalPassado: e.target.checked })}
@@ -157,22 +157,22 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
           />
           <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">RAMAL PASSADO ?</label>
         </div>
-        <div className="flex gap-2 justify-around flex-wrap">
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="padraoMontado">
+        <div className="flex flex-wrap justify-around gap-2">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="padraoMontado">
               FOTO DO PADRÃO MONTADO
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.padraoMontado ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">{images.padraoMontado.name}</span>
+                    <span className="block text-center font-normal text-gray-400">{images.padraoMontado.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -189,21 +189,21 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="ligacoesFeitas">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="ligacoesFeitas">
               FOTO DAS LIGAÇÕES FEITAS
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.ligacoesFeitas ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">{images.ligacoesFeitas.name}</span>
+                    <span className="block text-center font-normal text-gray-400">{images.ligacoesFeitas.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -220,21 +220,21 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="ligacoesFeitas">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="ligacoesFeitas">
               FOTO DO DISJUNTOR
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
                 {images.disjuntor ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">{images.disjuntor.name}</span>
+                    <span className="block text-center font-normal text-gray-400">{images.disjuntor.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                   </div>
                 )}
               </div>
@@ -253,7 +253,7 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <h1 className="text-center text-[#15599a] font-bold">ANOTAÇÕES DA OS</h1>
+          <h1 className="text-center font-bold text-[#15599a]">ANOTAÇÕES DA OS</h1>
           <textarea
             value={infoHolder.anotacoes}
             onChange={(e) =>
@@ -262,16 +262,16 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
                 anotacoes: e.target.value.toUpperCase(),
               })
             }
-            className={'outline-none border text-xs border-gray-200 p-2 w-full lg:w-[600px] text-center resize-none min-h-[200px]'}
+            className={'min-h-[200px] w-full resize-none border border-gray-200 p-2 text-center text-xs outline-none lg:w-[600px]'}
           />
         </div>
       </div>
 
-      <div className="my-2 flex items-center justify-center mt-6">
+      <div className="my-2 mt-6 flex items-center justify-center">
         <button
           disabled={finishInProgress}
           onClick={finishOS}
-          className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+          className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
         >
           FINALIZAR OS
         </button>

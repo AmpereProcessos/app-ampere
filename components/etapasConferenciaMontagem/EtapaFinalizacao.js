@@ -21,17 +21,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
   function validateStage() {
     if (!checkFinishingStage) {
       toast.error('Por favor, preencha sobre a conferência de execução dos procedimentos dessa etapa.')
-
       return false
     }
     if (!files.filmagemTesteAguaDoTelhado) {
       toast.error('Por favor, anexe a filmagem do teste de água (visto do telhado).')
-
       return false
     }
     if (!files.filmagemPosTesteAguaNaLaje) {
       toast.error('Por favor, anexe a filmagem do teste de água (visto da laje).')
-
       return false
     }
     if (!files.fotoDataloggerPosConfig) {
@@ -212,7 +209,7 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
         toast.error(msg)
         setFinishInProgress(false)
       }
-    }
+    } else setFinishInProgress(false)
   }
   return (
     <div className="my-2 flex w-full flex-col">

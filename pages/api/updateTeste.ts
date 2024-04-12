@@ -39,41 +39,90 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const session = await validateAuthenticationWithSession(req, res)
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
   const projects = await projectsCollection
-    .find({ 'contrato.status': 'ASSINADO', 'contrato.dataAssinatura': { $gte: '2023-06-01T00:00:00.000Z' } })
+    .find({
+      $and: [
+        { 'contrato.dataAssinatura': { $gte: '2024-01-01T00:00:00.000Z' } },
+        { 'contrato.dataAssinatura': { $lte: '2024-04-30T00:00:00.000Z' } },
+      ],
+    })
     .toArray()
-  const revenues = projects.map((project) => {
-    const revenue = {
-      nome: `CONTRATO DE ${project.nomeDoContrato}`,
-      tipo: project.tipoDeServico,
-      autor: {
-        id: session.user.id,
-        nome: session.user.nome,
-        avatar_url: session.user.avatar_url,
-      },
-      projeto: {
-        id: project._id,
-        nome: project.nomeDoContrato,
-        identificador: project.qtde,
-      },
-      total: getContractValue({
-        projectValue: project.sistema.valorProjeto,
-        structureValue: project.estruturaPersonalizada.valor,
-        paValue: project.padrao.valor,
+  const purchases = projects.map((project) => {
+    return {
+      QTDE: project.qtde,
+      'NOME DO CLIENTE': project.nomeDoContrato,
+      TIPO: project.tipoDeServico,
+      ESTADO: project.uf,
+      CIDADE: project.cidade,
+      VENDEDOR: project.vendedor.nome,
+      'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
+      'VALOR DO CONTRATO': getContractValue({
+        projectValue: project.sistema.valorProjeto || 0,
+        paValue: project.padrao.valor || 0,
+        structureValue: project.estruturaPersonalizada.valor || 0,
       }),
-      metodo: project.pagamento.forma == 'FINANCIAMENTO' ? 'FINANCIAMENTO' : 'À VISTA (GERAL)',
-      efetivacao: {
-        efetivado: true,
-        data: project.contrato.dataAssinatura,
-      },
-      fracionamento: [],
-      dataInsercao: project.contrato.dataAssinatura,
+      'STATUS DA OBRA': project.obra.statusDaObra,
+      'SAIDA DE OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : null,
+      'COBRANÇA FEITA': project.pagamento.cobrancaFeita ? 'SIM' : 'NÃO',
+      'DATA DE RECEBIMENTO': project.pagamento.dataRecebimento ? formatDateAsLocale(project.pagamento.dataRecebimento) : null,
+      'FATURAMENTO FEITO': project.faturamento.concluido ? 'SIM' : 'NÃO',
+      'DATA DE FATURAMENTO': project.faturamento.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : null,
     }
-    return revenue
   })
+  // const projects = await projectsCollection
+  //   .find({ $and: [{ 'compra.dataPedido': { $gte: '2023-06-01T00:00:00.000Z' } }, { 'compra.dataPedido': { $lte: '2024-04-10T22:00:00.000Z' } }] })
+  //   .toArray()
+  // const purchases = projects.map((project) => {
+  //   return {
+  //     QTDE: project.qtde,
+  //     'NOME DO CLIENTE': project.nomeDoContrato,
+  //     TIPO: project.tipoDeServico,
+  //     VENDEDOR: project.vendedor.nome,
+  //     ESTADO: project.uf,
+  //     CIDADE: project.cidade,
+  //     TOPOLOGIA: project.sistema.topologia,
+  //     FORNECEDOR: project.compra.fornecedor,
+  //     MODULOS: `${project.sistema.qtdeModulos} x ${project.sistema.potModulos}W`,
+  //     INVERSORES: `${project.sistema.inversor}`,
+  //     'VALOR PREVISTO DO KIT': project.compra.previsaoValorDoKit,
+  //     'VALOR PAGO NO KIT': project.compra.valorDoKit,
+  //     'DATA DE LIBERAÇÃO PARA COMPRA': project.compra.dataLiberacao ? formatDateAsLocale(project.compra.dataLiberacao) : null,
+  //     'DATA DE COMPRA': project.compra.dataPedido ? formatDateAsLocale(project.compra.dataPedido) : null,
+
+  //     'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : null,
+  //   }
+  // })
+  // const revenues = projects.map((project) => {
+  //   const revenue = {
+  //     nome: `CONTRATO DE ${project.nomeDoContrato}`,
+  //     tipo: project.tipoDeServico,
+  //     autor: {
+  //       id: session.user.id,
+  //       nome: session.user.nome,
+  //       avatar_url: session.user.avatar_url,
+  //     },
+  //     projeto: {
+  //       id: project._id,
+  //       nome: project.nomeDoContrato,
+  //       identificador: project.qtde,
+  //     },
+  //     total: getContractValue({
+  //       projectValue: project.sistema.valorProjeto,
+  //       structureValue: project.estruturaPersonalizada.valor,
+  //       paValue: project.padrao.valor,
+  //     }),
+  //     metodo: project.pagamento.forma == 'FINANCIAMENTO' ? 'FINANCIAMENTO' : 'À VISTA (GERAL)',
+  //     efetivacao: {
+  //       efetivado: true,
+  //       data: project.contrato.dataAssinatura,
+  //     },
+  //     fracionamento: [],
+  //     dataInsercao: project.contrato.dataAssinatura,
+  //   }
+  //   return revenue
+  // })
   // const projectsCollection: Collection<TProject> = db.collection('dados')
   // const projects = await projectsCollection
   //   .find({ 'obra.equipeResp': { $in: ['TERCERIZADOS', 'EQUIPE 14 - BRUNO REIS'] } }, { projection: { obra: 1 } })
@@ -102,7 +151,8 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // })
   // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
-  return res.status(200).json(revenues)
+  console.log(purchases.length)
+  return res.status(200).json(purchases)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

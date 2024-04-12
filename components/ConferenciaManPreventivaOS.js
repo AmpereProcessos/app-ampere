@@ -381,7 +381,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
         const msg = getErrorMessage(error)
         toast.error(msg)
       }
-    }
+    } else setFinishInProgress(false)
   }
 
   console.log(infoHolder)

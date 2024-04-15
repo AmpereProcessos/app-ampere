@@ -281,7 +281,7 @@ async function getSalesRanking({ collection, partialQuery }: GetStats) {
         {
           $match: {
             'contrato.dataAssinatura': { $gte: firstDayString },
-            tipoDeServico: 'SISTEMA FOTOVOLTAICO',
+            tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
           },
         },
         {

@@ -16,7 +16,7 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import { useFinancialAuditing } from '@/utils/methods/query/financial-auditing'
 import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 
-import { TProjectFinances } from '../api/stats/financial-auditing'
+import { TProjectFinances } from '../../api/stats/financial-auditing'
 
 import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { FaCashRegister, FaPercent } from 'react-icons/fa'

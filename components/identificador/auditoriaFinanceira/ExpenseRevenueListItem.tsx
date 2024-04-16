@@ -6,9 +6,10 @@ import { FaDiamond } from 'react-icons/fa6'
 type ExpenseRevenueListItemProps = {
   finance: ExpenseRevenueList[number]
   tag: 'EXPENSE' | 'REVENUE'
+  initialShowItems?: boolean
 }
-function ExpenseRevenueListItem({ finance, tag }: ExpenseRevenueListItemProps) {
-  const [showItems, setShowItems] = useState<boolean>(false)
+function ExpenseRevenueListItem({ finance, tag, initialShowItems = false }: ExpenseRevenueListItemProps) {
+  const [showItems, setShowItems] = useState<boolean>(initialShowItems)
 
   return (
     <div className="flex w-full flex-col rounded-md border border-gray-200 p-2">

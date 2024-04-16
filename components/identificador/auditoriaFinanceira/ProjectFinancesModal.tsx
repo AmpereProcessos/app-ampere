@@ -5,7 +5,7 @@ import { formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { useProjectFinances } from '@/utils/methods/query/financial-auditing'
 import React from 'react'
-import { FaCashRegister, FaCity, FaSignature, FaSolarPanel, FaTools, FaUser } from 'react-icons/fa'
+import { FaCashRegister, FaCity, FaExternalLinkAlt, FaSignature, FaSolarPanel, FaTools, FaUser } from 'react-icons/fa'
 import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { VscChromeClose } from 'react-icons/vsc'
 import ExpenseRevenueListItem from './ExpenseRevenueListItem'
@@ -15,6 +15,7 @@ import { RxDownload, RxUpload } from 'react-icons/rx'
 import { BsCode } from 'react-icons/bs'
 import { ImPower } from 'react-icons/im'
 import { MdAttachMoney, MdSignalCellularAlt } from 'react-icons/md'
+import Link from 'next/link'
 
 const PriceDescription = {
   kit: 'KIT FOTOVOLTAICO',
@@ -169,6 +170,14 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
                     <p className="w-full text-center text-2xl font-black">R$ {formatDecimalPlaces(resultado)}</p>
                     <p className="w-full text-center text-sm font-black text-cyan-500">MARGEM DE {formatDecimalPlaces(margem * 100)}%</p>
                   </div>
+                </div>
+                <div className="flex w-full items-center justify-end">
+                  <Link href={`/admin/auditoria-financeira/pdf/${projectId}`}>
+                    <a className="flex items-center gap-1 rounded-md py-1 px-2 text-white duration-300 ease-in-out hover:bg-gray-50 hover:text-gray-800">
+                      <FaExternalLinkAlt />
+                      <p className="text-xs tracking-tight">IR À PÁGINA DE RELATÓRIO</p>
+                    </a>
+                  </Link>
                 </div>
               </div>
               <div className="flex w-full items-center justify-center">

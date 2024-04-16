@@ -28,6 +28,7 @@ export type TProjectFinances = {
   potencia: number
   identificador: string | number
   idProjetoCRM: string
+  idPropostaCRM: string
   cidade: string
   vendedor: string
   topologia: string
@@ -56,6 +57,7 @@ type PartialTProject = Pick<
   | 'estruturaPersonalizada'
   | 'codigoSVB'
   | 'idProjetoCRM'
+  | 'idPropostaCRM'
 >
 const DatetimeStringSchema = z
   .string({ required_error: 'Parâmetro de data não fornecido.', invalid_type_error: 'Tipo inválido para o parâmetro de data.' })
@@ -98,6 +100,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
           nomeDoContrato: 1,
           codigoSVB: 1,
           idProjetoCRM: 1,
+          idPropostaCRM: 1,
           tipoDeServico: 1,
           'contrato.dataAssinatura': 1,
           'obra.saida': 1,
@@ -134,6 +137,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
     const topologia = project.sistema.topologia || 'NÃO DEFINIDO'
     const qtdeModulos = project.sistema.qtdeModulos || 0
     const idProjetoCRM = project.idProjetoCRM || ''
+    const idPropostaCRM = project.idPropostaCRM || ''
     const identificador = project.codigoSVB || ''
     // Formatting the project expenses
     const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id)
@@ -166,6 +170,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
         nome,
         identificador,
         idProjetoCRM,
+        idPropostaCRM,
         potencia,
         cidade,
         vendedor,
@@ -188,6 +193,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
       nome,
       identificador,
       idProjetoCRM,
+      idPropostaCRM,
       potencia,
       cidade,
       vendedor,

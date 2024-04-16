@@ -3,6 +3,7 @@ import { TBirthdayRecord } from '@/utils/schemas/stats'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { formatWithoutDiacritics } from '../formatting'
 
 export async function fetchClients() {
   const { data } = await axios.get('/api/projects/todos')
@@ -73,6 +74,79 @@ export function useClientsBirthdays() {
     ...useQuery({
       queryKey: ['clients-birthdays'],
       queryFn: fetchBirthDays,
+      select: (data) => handelModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}
+
+async function fetchSellerSales() {
+  try {
+    const { data } = await axios.get('/api/projects/por-vendedor')
+    return data.data as TProjectDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UseSellerSalesFilters = {
+  search: string
+  city: string[]
+  deliveryStatus: string[]
+  executionStatus: string[]
+  inspectionStatus: string[]
+  grantingStatus: string[]
+}
+export function useSellerSales() {
+  const [filters, setFilters] = useState<UseSellerSalesFilters>({
+    search: '',
+    city: [],
+    deliveryStatus: [],
+    executionStatus: [],
+    inspectionStatus: [],
+    grantingStatus: [],
+  })
+  function matchSearch(project: TProjectDTO) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
+  function matchCity(project: TProjectDTO) {
+    if (filters.city.length == 0) return true
+    else return filters.city.includes(project.cidade)
+  }
+  function matchDeliveryStatus(project: TProjectDTO) {
+    if (filters.deliveryStatus.length == 0) return true
+    else return filters.deliveryStatus.includes(project.compra?.statusEntrega || '')
+  }
+  function matchExecutionStatus(project: TProjectDTO) {
+    if (filters.executionStatus.length == 0) return true
+    else return filters.executionStatus.includes(project.obra?.statusDaObra || '')
+  }
+  function matchInspectionStatus(project: TProjectDTO) {
+    if (filters.inspectionStatus.length == 0) return true
+    else return filters.inspectionStatus.includes(project.vistoria?.status || '')
+  }
+  function matchGrantingStatus(project: TProjectDTO) {
+    if (filters.grantingStatus.length == 0) return true
+    else return filters.grantingStatus.includes(project.parecer?.statusDoParecerDeAcesso || '')
+  }
+  function handelModelData(data: TProjectDTO[]) {
+    var modeledData = data
+    return modeledData.filter(
+      (project) =>
+        matchSearch(project) &&
+        matchCity(project) &&
+        matchDeliveryStatus(project) &&
+        matchExecutionStatus(project) &&
+        matchInspectionStatus(project) &&
+        matchGrantingStatus(project)
+    )
+  }
+  return {
+    ...useQuery({
+      queryKey: ['seller-sales'],
+      queryFn: fetchSellerSales,
       select: (data) => handelModelData(data),
     }),
     filters,

@@ -58,7 +58,7 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
             <p className="pl-3 text-xs text-gray-600">Projetos</p>
           </a>
         </Link>
-        {!!sellerName ? (
+        {/* {!!sellerName ? (
           <Link href={`/vendas/emProcesso/${userVisualization}?parametro=${sellerName}`}>
             <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
               <TbRecharging
@@ -110,7 +110,7 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
               <p className="pl-3 text-xs text-gray-600">Entregas Técnicas</p>
             </a>
           </Link>
-        ) : null}
+        ) : null} */}
         {/* {sellerName ? (
           <Link href={`/vendas/leads`}>
             <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">

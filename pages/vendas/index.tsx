@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import ModalVendas from '../../components/ModalVendas'
-import axios from 'axios'
-import Link from 'next/link'
-import { AiOutlineSearch } from 'react-icons/ai'
-import Select from 'react-select'
-import { cidadesAtendidas } from '../../utils/constants'
+
+import { formatDate } from '../../utils/constants'
 
 import AllCities from './../../utils/jsons/cidades.json'
 import { useSession } from 'next-auth/react'
@@ -19,24 +14,18 @@ import TextInput from '@/components/inputs/Text'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { accessGrantingStatus, executionStatus, inspectionStatus } from '@/utils/select-options'
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
-const statusStyles = {
-  ASSINADO: {
-    textColor: 'text-green-500',
-  },
-  'NÃO ASSINADO': {
-    textColor: 'text-red-500',
-  },
-  SOLICITADO: {
-    textColor: 'text-yellow-500',
-  },
-}
-function Vendas() {
-  const router = useRouter()
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
-  const { data: session, status } = useSession({ required: true })
-  const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useSellerSales()
-  if (status != 'authenticated') return <LoadingPage />
+import DateInput from '@/components/inputs/Date'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import SelectInput from '@/components/inputs/Select'
+import ModalDB from '@/components/ModalDB'
 
+function Vendas() {
+  const { data: session, status } = useSession({ required: true })
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+  const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useSellerSales()
+  const [modalProject, setModalProject] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null })
+
+  if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
@@ -65,6 +54,92 @@ function Vendas() {
                   placeholder={'Digite o nome do contrato...'}
                   handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                 />
+                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                  <div className="flex items-center justify-center gap-x-2">
+                    <div className="w-full lg:w-[250px]">
+                      <DateInput
+                        width={'100%'}
+                        label={'DEPOIS DE'}
+                        value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <DateInput
+                        width={'100%'}
+                        label={'ANTES DE'}
+                        value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full lg:w-[350px]">
+                    <SelectInput
+                      width={'100%'}
+                      label={'CAMPO DE FILTRO'}
+                      value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                      options={[
+                        {
+                          id: 1,
+                          label: 'DATA DE ASSINATURA',
+                          value: 'contrato.dataAssinatura',
+                        },
+                        {
+                          id: 2,
+                          label: 'DATA DE APROVAÇÃO DO PARECER',
+                          value: 'parecer.dataParecerDeAcesso',
+                        },
+                        {
+                          id: 3,
+                          label: 'DATA PAGAMENTO PARCIAL',
+                          value: 'compra.dataPagamento',
+                        },
+                        {
+                          id: 4,
+                          label: 'DATA PAGAMENTO FINAL',
+                          value: 'pagamento.dataRecebimento',
+                        },
+                        {
+                          id: 5,
+                          label: 'DATA DE ENTREGA',
+                          value: 'compra.dataEntrega',
+                        },
+                        {
+                          id: 6,
+                          label: 'DATA DE SAÍDA DE OBRA',
+                          value: 'obra.saida',
+                        },
+                        {
+                          id: 7,
+                          label: 'DATA DE MANUTENÇÃO PREVENTIVA',
+                          value: 'manutencaoPreventiva.data',
+                        },
+                      ]}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          date: {
+                            ...prev.date,
+                            field1: value != null ? value.split('.')[0] : null,
+                            field2: value != null ? value.split('.')[1] : null,
+                          },
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          date: {
+                            after: null,
+                            before: null,
+                            field1: null,
+                            field2: null,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
                 <div className="w-full lg:w-[250px]">
                   <MultipleSelectInput
                     width={'100%'}
@@ -192,7 +267,8 @@ function Vendas() {
                 animate={{ opacity: 1, translateX: 0 }}
                 transition={{ duration: 0.3, delay: 0.01 * index }}
                 key={project._id}
-                className="w-full cursor-pointer border  border-gray-200 md:w-[350px] lg:w-[450px]"
+                onClick={() => setModalProject({ id: project._id, isOpen: true })}
+                className="w-full cursor-pointer border border-gray-200 duration-300 ease-in-out  hover:bg-blue-50 md:w-[350px] lg:w-[450px]"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2 pb-3">
@@ -244,11 +320,24 @@ function Vendas() {
                       <p className="text-xs font-medium tracking-tight">{project.vistoria.status || 'NÃO DEFINIDO'}</p>
                     </div>
                   </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div className="flex flex-col items-start">
+                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">PLANO DE O&M</span>
+                      <p className="text-xs font-medium tracking-tight">{project.oem?.plano || 'NÃO DEFINIDO'}</p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">NPS</span>
+                      <p className="text-xs font-medium tracking-tight">{project.nps || 'NÃO DEFINIDO'}</p>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))
           : null}
       </div>
+      {modalProject.isOpen && modalProject.id && (
+        <ModalDB projectId={modalProject.id} closeModal={() => setModalProject({ isOpen: false, id: null })} modalIsOpen={modalProject.isOpen} />
+      )}
     </div>
   )
 }

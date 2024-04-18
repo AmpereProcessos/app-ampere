@@ -37,7 +37,7 @@ import { useQueryClient } from 'react-query'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
 import OSCreationBlock from './OSCreationBlock'
 
-function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
+function ModalDB({ projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
   const { data: session } = useSession()
   const userHasOverallAccess = [
@@ -56,7 +56,6 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   ].every((el) => session?.user.permissoes.rotas.includes(el))
   const userHasOeMAccess = session?.user.permissoes.rotas.includes('O&M')
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
-
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
   const [msg, setMsg] = useState({
@@ -224,6 +223,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
+                ableToDelete={userHasOverallAccess}
                 categories={[
                   { label: 'DOCUMENTOS', value: 'links.documentos' },
                   { label: 'CONTRATOS', value: 'links.contratos' },

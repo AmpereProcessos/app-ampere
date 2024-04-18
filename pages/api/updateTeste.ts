@@ -43,10 +43,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const projectsCollection: Collection<TProject> = db.collection('dados')
   const projects = await projectsCollection
     .find({
-      $and: [
-        { 'contrato.dataAssinatura': { $gte: '2024-01-01T00:00:00.000Z' } },
-        { 'contrato.dataAssinatura': { $lte: '2024-04-30T00:00:00.000Z' } },
-      ],
+      $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2024-04-30T00:00:00.000Z' } }],
     })
     .toArray()
   const purchases = projects.map((project) => {

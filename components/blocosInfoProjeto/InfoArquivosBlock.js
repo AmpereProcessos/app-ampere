@@ -8,11 +8,10 @@ import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
 
-function InfoArquivosBlock({ project, infoHolder, categories }) {
+function InfoArquivosBlock({ project, infoHolder, categories, ableToDelete = true }) {
   const queryClient = useQueryClient()
 
   async function deleteFile(obj, category) {
-    let ableToDelete = categories.some((item) => item.value == `links.${category}`)
     if (!ableToDelete) return toast.error('Seu usuário não possui permissão para exclusão desse arquivo.')
 
     const loadingToastId = toast.loading('Processando...')
@@ -44,7 +43,7 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
   function renderLinks({ links, category }) {
     if (!links) return null
     return (
-      <div className="w-full flex justify-around gap-3 mt-4 flex-wrap px-2">
+      <div className="mt-4 flex w-full flex-wrap justify-around gap-3 px-2">
         {links.map((link, index) => (
           <div key={`${link.title} - ${index}`} className="w-full lg:w-[400px]">
             <FileLinkBlock obj={link} prefix={infoHolder.nomeDoContrato} deleteFile={(link) => deleteFile(link, category)} />{' '}
@@ -54,9 +53,9 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
     )
   }
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md w-full">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ARQUIVOS DO PROJETO</span>
-      <div className="flex flex-col items-center w-full">
+    <div className="flex w-full flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ARQUIVOS DO PROJETO</span>
+      <div className="flex w-full flex-col items-center">
         <AnexoArquivo
           id={project._id}
           prevLinks={project.links ? project.links : {}}
@@ -65,11 +64,11 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
         />
       </div>
       {project.links && (
-        <div className="w-full grid grid-cols-1 gap-2 mt-4">
+        <div className="mt-4 grid w-full grid-cols-1 gap-2">
           {Object.keys(project.links).map((category, index) =>
             project.links[category]?.length > 0 ? (
-              <div key={index} className="flex flex-col w-full">
-                <h1 className="w-full p-1 rounded-tl-md rounded-tr-md bg-cyan-700 text-white font-bold text-center">{category.toUpperCase()}</h1>
+              <div key={index} className="flex w-full flex-col">
+                <h1 className="w-full rounded-tl-md rounded-tr-md bg-cyan-700 p-1 text-center font-bold text-white">{category.toUpperCase()}</h1>
 
                 {renderLinks({ links: project.links[category], category: category })}
                 {/* {project.links[category].map((obj, index2) => (

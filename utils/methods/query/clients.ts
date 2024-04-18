@@ -97,6 +97,12 @@ type UseSellerSalesFilters = {
   executionStatus: string[]
   inspectionStatus: string[]
   grantingStatus: string[]
+  date: {
+    after: string | null
+    before: string | null
+    field1: string | null
+    field2: string | null
+  }
 }
 export function useSellerSales() {
   const [filters, setFilters] = useState<UseSellerSalesFilters>({
@@ -106,6 +112,12 @@ export function useSellerSales() {
     executionStatus: [],
     inspectionStatus: [],
     grantingStatus: [],
+    date: {
+      after: null,
+      before: null,
+      field1: null,
+      field2: null,
+    },
   })
   function matchSearch(project: TProjectDTO) {
     if (filters.search.trim().length == 0) return true
@@ -131,6 +143,15 @@ export function useSellerSales() {
     if (filters.grantingStatus.length == 0) return true
     else return filters.grantingStatus.includes(project.parecer?.statusDoParecerDeAcesso || '')
   }
+  function matchDate(project: TProjectDTO) {
+    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    return (
+      // @ts-ignore
+      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      // @ts-ignore
+      project[filters.date.field1][filters.date.field2] <= filters.date.before
+    )
+  }
   function handelModelData(data: TProjectDTO[]) {
     var modeledData = data
     return modeledData.filter(
@@ -140,7 +161,8 @@ export function useSellerSales() {
         matchDeliveryStatus(project) &&
         matchExecutionStatus(project) &&
         matchInspectionStatus(project) &&
-        matchGrantingStatus(project)
+        matchGrantingStatus(project) &&
+        matchDate(project)
     )
   }
   return {

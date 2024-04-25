@@ -8,7 +8,23 @@ import dayjs from 'dayjs'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
-const getExport: NextApiHandler<{ data: any }> = async (req, res) => {
+const getExport: NextApiHandler<any> = async (req, res) => {
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+
+  const over40kWpProjects = await projectsCollection.find({ 'contrato.status': 'ASSINADO', 'sistema.potPico': { $gte: 40 } }).toArray()
+
+  const ProjectsFormatted = over40kWpProjects.map((project) => {
+    return {
+      QTDE: project.qtde,
+      NOME: project.nomeDoContrato,
+      TELEFONE: project.telefone || 'N/A',
+      'POTÊNCIA PICO': project.sistema.potPico,
+      'PARECER DE ACESSO': project.parecer.dataParecerDeAcesso ? formatDateAsLocale(project.parecer.dataParecerDeAcesso) : 'N/A',
+      'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
+    }
+  })
+  console.log(ProjectsFormatted.length)
   // const expensesCollection: Collection<TExpense> = db.collection('despesas')
   // // const projects = await collection.find({ 'obra.saida': { $gte: '2023-11-01T00:00:00.000Z' } }, { sort: { 'obra.saida': 1 } }).toArray()
   // const projects = await collection
@@ -65,7 +81,7 @@ const getExport: NextApiHandler<{ data: any }> = async (req, res) => {
   // })
   // return res.json({ data: formatted })
 
-  return res.json({ data: 'DESATIVADA' })
+  return res.json(ProjectsFormatted)
 }
 export default apiHandler({
   GET: getExport,

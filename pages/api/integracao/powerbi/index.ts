@@ -66,7 +66,13 @@ const exportData: NextApiHandler<GetResponse> = async (req, res) => {
       'DATA DE PEDIDO': project.compra.dataPedido ? formatDateAsLocale(project.compra.dataPedido) : null,
       'DATA DE PREVISÃO DE ENTREGA': project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : null,
       'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : null,
-
+      'STATUS DO PARECER DE ACESSO': project.parecer.statusDoParecerDeAcesso,
+      'DATA DE APROVAÇÃO DO PARECER': project.parecer.dataParecerDeAcesso,
+      'DESENHO DE TELHADO FEITO': project.projeto.desenhoTelhado,
+      'MAPA DE MICRO FEITO': project.projeto.mapaDeMicro,
+      'STATUS DA VISTORIA': project.vistoria.status,
+      'DATA DE PEDIDO DA VISTORIA': project.vistoria.dataPedido,
+      'STATUS DA TROCA DE MEDIDOR': project.medidor.status,
       'TOTAL DE RECEITAS': totalEarned,
       'TOTAL DE DESPESAS': totalSpend,
     }

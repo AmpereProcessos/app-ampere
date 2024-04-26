@@ -51,7 +51,7 @@ const exportData: NextApiHandler<GetResponse> = async (req, res) => {
       'CANAL DE VENDA': project.canalVenda,
       'CÓDIGO DO CRM': project.codigoSVB,
       VENDEDOR: project.vendedor.nome,
-      'STATUS DO CONTRATO': project.contrato.dataAssinatura,
+      'STATUS DO CONTRATO': project.contrato.status,
       'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
       'FORMA DE PAGAMENTO': project.pagamento.forma,
       CREDOR: project.pagamento.credor,

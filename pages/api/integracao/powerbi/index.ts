@@ -85,6 +85,8 @@ const exportData: NextApiHandler<GetResponse> = async (req, res) => {
       'STATUS DA TROCA DE MEDIDOR': project.medidor.status,
       'STATUS DA MANUTENÇÃO PREVENTIVA': project.manutencaoPreventiva.status,
       'DATA DA MANUTENÇÃO PREVENTIVA': project.manutencaoPreventiva.data ? formatDateAsLocale(project.manutencaoPreventiva.data) : null,
+      'DATA DE COLETA DO NPS': project.jornada.dataNps ? formatDateAsLocale(project.jornada.dataNps) : null,
+      NPS: project.nps,
       'TOTAL DE RECEITAS': totalEarned,
       'TOTAL DE DESPESAS': totalSpend,
     }

@@ -43,31 +43,42 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const projectsCollection: Collection<TProject> = db.collection('dados')
   const projects = await projectsCollection
     .find({
-      $and: [{ 'obra.saida': { $gte: '2024-01-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2024-04-30T00:00:00.000Z' } }],
+      $and: [{ 'medidor.data': { $gte: '2024-04-01T00:00:00.000Z' } }, { 'medidor.data': { $lte: '2024-04-30T00:00:00.000Z' } }],
     })
     .toArray()
-  const purchases = projects.map((project) => {
+
+  const meterChanged = projects.map((project) => {
     return {
       QTDE: project.qtde,
-      'NOME DO CLIENTE': project.nomeDoContrato,
-      TIPO: project.tipoDeServico,
-      ESTADO: project.uf,
+      NOME: project.nomeDoContrato,
+      TELEFONE: project.telefone,
+      UF: project.uf,
       CIDADE: project.cidade,
-      VENDEDOR: project.vendedor.nome,
-      'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
-      'VALOR DO CONTRATO': getContractValue({
-        projectValue: project.sistema.valorProjeto || 0,
-        paValue: project.padrao.valor || 0,
-        structureValue: project.estruturaPersonalizada.valor || 0,
-      }),
-      'STATUS DA OBRA': project.obra.statusDaObra,
-      'SAIDA DE OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : null,
-      'COBRANÇA FEITA': project.pagamento.cobrancaFeita ? 'SIM' : 'NÃO',
-      'DATA DE RECEBIMENTO': project.pagamento.dataRecebimento ? formatDateAsLocale(project.pagamento.dataRecebimento) : null,
-      'FATURAMENTO FEITO': project.faturamento.concluido ? 'SIM' : 'NÃO',
-      'DATA DE FATURAMENTO': project.faturamento.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : null,
+      'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
     }
   })
+  // const purchases = projects.map((project) => {
+  //   return {
+  //     QTDE: project.qtde,
+  //     'NOME DO CLIENTE': project.nomeDoContrato,
+  //     TIPO: project.tipoDeServico,
+  //     ESTADO: project.uf,
+  //     CIDADE: project.cidade,
+  //     VENDEDOR: project.vendedor.nome,
+  //     'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
+  //     'VALOR DO CONTRATO': getContractValue({
+  //       projectValue: project.sistema.valorProjeto || 0,
+  //       paValue: project.padrao.valor || 0,
+  //       structureValue: project.estruturaPersonalizada.valor || 0,
+  //     }),
+  //     'STATUS DA OBRA': project.obra.statusDaObra,
+  //     'SAIDA DE OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : null,
+  //     'COBRANÇA FEITA': project.pagamento.cobrancaFeita ? 'SIM' : 'NÃO',
+  //     'DATA DE RECEBIMENTO': project.pagamento.dataRecebimento ? formatDateAsLocale(project.pagamento.dataRecebimento) : null,
+  //     'FATURAMENTO FEITO': project.faturamento.concluido ? 'SIM' : 'NÃO',
+  //     'DATA DE FATURAMENTO': project.faturamento.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : null,
+  //   }
+  // })
   // const projects = await projectsCollection
   //   .find({ $and: [{ 'compra.dataPedido': { $gte: '2023-06-01T00:00:00.000Z' } }, { 'compra.dataPedido': { $lte: '2024-04-10T22:00:00.000Z' } }] })
   //   .toArray()
@@ -148,8 +159,8 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // })
   // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
-  console.log(purchases.length)
-  return res.status(200).json(purchases)
+
+  return res.status(200).json(meterChanged)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

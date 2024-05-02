@@ -27,6 +27,7 @@ const getStats: NextApiHandler<GetResponse> = async (req, res) => {
   const homologationStats = await getHomologationStats({ collection: collection, partialQuery: partialQuery })
   const supplyStats = await getSupplyStats({ collection: collection, partialQuery: partialQuery })
   const salesRanking = await getSalesRanking({ collection: collection, partialQuery: partialQuery })
+  console.log(salesRanking)
   const nps = await getNPS({ collection: collection, partialQuery: partialQuery })
   const powerSold = await getAchievedPowerSale({ collection, partialQuery: partialQuery })
   const stats: TDashboardStats = {
@@ -393,7 +394,7 @@ async function getAchievedPowerSale({ collection, partialQuery }: GetStats) {
       },
     ])
     .toArray()
-  const power = powerAccumutated[0].sum || 0
+  const power = powerAccumutated[0]?.sum || 0
   return power
 }
 

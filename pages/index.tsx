@@ -106,59 +106,64 @@ function Home() {
                 <p className="grow text-center font-bold text-white">{formatDecimalPlaces(300 - stats.potenciaMeta)}kWp</p>
               ) : null}
             </div>
-            <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">
-              RANKING DE VENDAS ({months[new Date().getMonth()]})
-            </h1>
-            <div className="flex w-full justify-center gap-2">
-              <div className="flex w-full items-center justify-center lg:w-[70%]">
-                <div className="flex w-full items-center justify-center">
-                  <div className="mb-2 flex w-full flex-col items-center">
-                    <div className="flex h-[400px] w-full items-end justify-center gap-4 p-0 lg:h-[400px] lg:w-[1200px] lg:gap-10 lg:p-6">
-                      <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                        {renderAvatarBySeller(stats.ranking.quarto.nome)}
-                        <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quarto.nome}</h1>
-                        <p className="text-center text-lg font-medium text-green-500">{formatDecimalPlaces(stats.ranking.quarto.potencia)} kWp</p>
-                        <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
-                      </div>
-                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                        {renderAvatarBySeller(stats.ranking.segundo.nome)}
-                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.segundo.nome}</h1>
-                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                          {formatDecimalPlaces(stats.ranking.segundo.potencia)} kWp
-                        </p>
-                        <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
-                      </div>
-                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                        {renderAvatarBySeller(stats.ranking.primeiro.nome)}
+            {stats.ranking.primeiro.potencia ? (
+              <>
+                <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">
+                  RANKING DE VENDAS ({months[new Date().getMonth()]})
+                </h1>
+                <div className="flex w-full justify-center gap-2">
+                  <div className="flex w-full items-center justify-center lg:w-[70%]">
+                    <div className="flex w-full items-center justify-center">
+                      <div className="mb-2 flex w-full flex-col items-center">
+                        <div className="flex h-[400px] w-full items-end justify-center gap-4 p-0 lg:h-[400px] lg:w-[1200px] lg:gap-10 lg:p-6">
+                          <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
+                            {renderAvatarBySeller(stats.ranking.quarto.nome)}
+                            <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quarto.nome}</h1>
+                            <p className="text-center text-lg font-medium text-green-500">{formatDecimalPlaces(stats.ranking.quarto.potencia)} kWp</p>
+                            <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
+                          </div>
+                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                            {renderAvatarBySeller(stats.ranking.segundo.nome)}
+                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.segundo.nome}</h1>
+                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                              {formatDecimalPlaces(stats.ranking.segundo.potencia)} kWp
+                            </p>
+                            <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
+                          </div>
+                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                            {renderAvatarBySeller(stats.ranking.primeiro.nome)}
 
-                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.primeiro.nome}</h1>
-                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                          {formatDecimalPlaces(stats.ranking.primeiro.potencia)} kWp
-                        </p>
-                        <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
-                      </div>
-                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                        {renderAvatarBySeller(stats.ranking.terceiro.nome)}
-                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.terceiro.nome}</h1>
-                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                          {formatDecimalPlaces(stats.ranking.terceiro.potencia)} kWp
-                        </p>
-                        <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
-                      </div>
-                      <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                        {renderAvatarBySeller(stats.ranking.quinto.nome)}
-                        <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quinto.nome}</h1>
-                        <p className="text-center text-lg font-medium text-green-500">
-                          {formatDecimalPlaces(stats.ranking.quinto.potencia || 0)} kWp
-                        </p>
-                        <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
+                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.primeiro.nome}</h1>
+                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                              {formatDecimalPlaces(stats.ranking.primeiro.potencia)} kWp
+                            </p>
+                            <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
+                          </div>
+                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                            {renderAvatarBySeller(stats.ranking.terceiro.nome)}
+                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.terceiro.nome}</h1>
+                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                              {formatDecimalPlaces(stats.ranking.terceiro.potencia)} kWp
+                            </p>
+                            <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
+                          </div>
+                          <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
+                            {renderAvatarBySeller(stats.ranking.quinto.nome)}
+                            <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quinto.nome}</h1>
+                            <p className="text-center text-lg font-medium text-green-500">
+                              {formatDecimalPlaces(stats.ranking.quinto.potencia || 0)} kWp
+                            </p>
+                            <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="grid-rows-10 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
+              </>
+            ) : null}
+
+            <div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
                   <h1 className="w-full text-center uppercase text-gray-600">Obras finalizadas no mês</h1>

@@ -28,6 +28,7 @@ export function useEngineeringProjects({ enabled }) {
     failedInspection: false,
     failedGranting: false,
     missingDraw: false,
+    missingDiagram: false,
     missingSignature: false,
     drawReady: false,
     date: {
@@ -93,6 +94,10 @@ export function useEngineeringProjects({ enabled }) {
     if (!filters.missingDraw) return true
     else return project.projeto.desenhoTelhado != 'OK'
   }
+  function matchMissingDiagram(project) {
+    if (!filters.missingDiagram) return true
+    return project.projeto.diagramaUnifilar != 'Ok'
+  }
   function matchMissingSignature(project) {
     if (!filters.missingSignature) return true
     else return project.projeto.dataLiberacaoDocumentacao != undefined && !project.projeto.dataAssDocumentacao
@@ -126,6 +131,7 @@ export function useEngineeringProjects({ enabled }) {
         matchFailedInspection(project) &&
         matchFailedGranting(project) &&
         matchMissingDraw(project) &&
+        matchMissingDiagram(project) &&
         matchMissingSignature(project) &&
         matchDrawReady(project) &&
         matchDate(project)

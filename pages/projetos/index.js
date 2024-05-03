@@ -537,6 +537,19 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
+                          missingDiagram: !filters.missingDiagram,
+                        })
+                      }
+                      className={`${
+                        filters.missingDiagram ? 'bg-orange-500' : 'bg-orange-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                    >
+                      DIAGRAMA PENDENTE
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
                           missingDraw: !filters.missingDraw,
                         })
                       }

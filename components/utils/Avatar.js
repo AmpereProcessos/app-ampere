@@ -4,8 +4,10 @@ import React from 'react'
 function Avatar({ url, width, height, fallback }) {
   if (!url)
     return (
-      <div className="rounded-full bg-gray-700 flex items-center justify-center" style={{ width: width, height: height }}>
-        <p className="text-white font-bold">{fallback || 'U'}</p>
+      <div className="flex items-center justify-center rounded-full bg-gray-700" style={{ width: width, height: height }}>
+        <p style={{ fontSize: width * 0.5 }} className="font-bold text-white">
+          {fallback || 'U'}
+        </p>
       </div>
     )
   return (

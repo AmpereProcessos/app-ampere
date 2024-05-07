@@ -15,6 +15,7 @@ export default async function handler(req, res) {
       autor: {
         id: session?.user?.id,
         nome: session.user.nome,
+        avatar_url: session.user.avatar_url,
       },
       idProjetoAlterado: req.query.id,
       alteracoes: req.body,

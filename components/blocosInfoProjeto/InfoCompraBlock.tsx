@@ -96,34 +96,31 @@ function InfoCompraBlock({
               setInfo((prev) => ({ ...prev, compra: { ...prev.compra, liberacao: value, status: 'PREDEFINIÇÃO DE EQUIPAMENTOS' } }))
             }}
           />
-          {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (
+          {/* {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (
             <div className="flex items-center gap-2 text-gray-500">
               <BsCalendarFill />
               <p className="text-xs font-medium">{dayjs(infoHolder.compra.dataLiberacao).add(3, 'hour').format('DD/MM/YYYY')}</p>
             </div>
-          ) : null}
+          ) : null} */}
         </div>
-
-        {comercialEditionOnly ? (
-          <DateInput
-            label={'DATA DE LIBERAÇÃO P/ COMPRA'}
-            editable={editor}
-            value={infoHolder.compra.dataLiberacao ? formatDate(infoHolder.compra.dataLiberacao) : undefined}
-            handleChange={(value) => {
-              setChanges((prev) => ({
-                ...prev,
-                'compra.dataLiberacao': formatDateInputChange(value),
-              }))
-              setInfo((prev) => ({
-                ...prev,
-                compra: {
-                  ...prev.compra,
-                  dataLiberacao: formatDateInputChange(value),
-                },
-              }))
-            }}
-          />
-        ) : null}
+        <DateInput
+          label={'DATA DE LIBERAÇÃO P/ COMPRA'}
+          editable={editor}
+          value={infoHolder.compra.dataLiberacao ? formatDate(infoHolder.compra.dataLiberacao) : undefined}
+          handleChange={(value) => {
+            setChanges((prev) => ({
+              ...prev,
+              'compra.dataLiberacao': formatDateInputChange(value),
+            }))
+            setInfo((prev) => ({
+              ...prev,
+              compra: {
+                ...prev.compra,
+                dataLiberacao: formatDateInputChange(value),
+              },
+            }))
+          }}
+        />
       </div>
       <div className="mb-4 flex w-full items-center justify-center">
         <SelectInputPersonalized

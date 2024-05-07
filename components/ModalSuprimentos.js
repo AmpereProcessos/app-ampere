@@ -14,6 +14,7 @@ import ErrorPage from './utils/ErrorPage'
 
 import { useKey } from '../utils/hooks'
 import { useClientById } from '../utils/methods/query/clients'
+import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { updateProject } from '../utils/methods/mutation/clients'
 
@@ -32,6 +33,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
   const { mutate } = useMutationWithFeedback({
@@ -110,7 +112,14 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 showMonetaryValues={true}
               />
 
-              <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoPagamentoBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}

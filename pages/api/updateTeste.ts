@@ -19,6 +19,8 @@ import connectToAdministrationDatabase from '@/utils/services/mongodb/administra
 import { TExpense } from '@/utils/schemas/expenses'
 import exp from 'constants'
 import { TNotification } from '@/utils/schemas/notifications'
+import { TContractRequest } from '@/utils/schemas/contract-requests'
+import { TProjectUpdateLog, TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type TPreviousUser = {
   nome: string
@@ -39,24 +41,33 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-  const projectsCollection: Collection<TProject> = db.collection('dados')
-  const projects = await projectsCollection
-    .find({
-      $and: [{ 'medidor.data': { $gte: '2024-04-01T00:00:00.000Z' } }, { 'medidor.data': { $lte: '2024-04-30T00:00:00.000Z' } }],
-    })
-    .toArray()
-
-  const meterChanged = projects.map((project) => {
-    return {
-      QTDE: project.qtde,
-      NOME: project.nomeDoContrato,
-      TELEFONE: project.telefone,
-      UF: project.uf,
-      CIDADE: project.cidade,
-      'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
-    }
-  })
+  // const projects = await projectsCollection
+  //   .find({
+  //     $and: [{ 'parecer.dataParecerDeAcesso': { $ne: null } }, { 'vistoria.dataPedido': null }],
+  //   })
+  //   .toArray()
+  // const requests = await contractRequestsCollection.find({}).toArray()
+  // const result = projects.map((project) => {
+  //   const equivalentRequest = requests.find((r) => r._id.toString() == project.idSolicitacaoContrato)
+  //   console.log('SOLICITAÇÃO', equivalentRequest?.nomeDoContrato)
+  //   return {
+  //     QTDE: project.qtde,
+  //     NOME: project.nomeDoContrato,
+  //     'CPF/CNPJ': project.cpf_cnpj,
+  //     TELEFONE: project.telefone,
+  //     EMAIL: project.email,
+  //     UF: project.uf,
+  //     CIDADE: project.cidade,
+  //     BAIRRO: project.bairro,
+  //     LOGRADOURO: project.logradouro,
+  //     'NÚMERO DA RESIDÊNCIA': project.numeroResidencia,
+  //     'ESTADO CIVIL': equivalentRequest?.estadoCivil,
+  //     PROFISSÃO: equivalentRequest?.profissao,
+  //     'STATUS DO CONTRATO': project.contrato.status,
+  //     'ASSINATURA DO CONTRATO': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
+  //     'LIBERAÇÃO DO PARECER': project.parecer.dataParecerDeAcesso ? formatDateAsLocale(project.parecer.dataParecerDeAcesso) : null,
+  //   }
+  // })
   // const purchases = projects.map((project) => {
   //   return {
   //     QTDE: project.qtde,
@@ -157,10 +168,10 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //     },
   //   }
   // })
-  // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  // const bkResponse = await logsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(meterChanged)
+  return res.status(200).json('desativada')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

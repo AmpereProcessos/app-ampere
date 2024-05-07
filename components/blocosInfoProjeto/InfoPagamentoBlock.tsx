@@ -10,6 +10,10 @@ import TextInput from '../inputs/Text'
 import CheckboxInput from '../inputs/Checkbox'
 import DateInput from '../inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import { MdVisibility } from 'react-icons/md'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import Payment from '../identificador/registrosAlteracoesProjeto/secao/Payment'
 
 type InfoPagamentoBlockProps = {
   editor: boolean
@@ -17,12 +21,15 @@ type InfoPagamentoBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   showADMOnly: boolean
 }
-function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, showADMOnly = false }: InfoPagamentoBlockProps) {
+function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, showADMOnly = false }: InfoPagamentoBlockProps) {
+  console.log('LOGS', updateLogs)
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE PAGAMENTO</span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<Payment logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput

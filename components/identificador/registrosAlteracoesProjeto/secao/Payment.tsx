@@ -27,7 +27,9 @@ function Payment({ logs }: PaymentUpdateLogsProps) {
       {relatedLogs.length > 0 ? (
         relatedLogs.map((log) => <UpdateLogCard key={log._id} log={log} />)
       ) : (
-        <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">Sem análises</p>
+        <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+          Sem registros de atualização.
+        </p>
       )}
     </div>
   )

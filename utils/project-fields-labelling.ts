@@ -318,10 +318,6 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'QTDE DE DISTRIBUIÇÕES',
     getFormattedValue: (value: any) => value,
   },
-  'pagamento.forma': {
-    label: 'FORMA DE PAGAMENTO',
-    getFormattedValue: (value: any) => value,
-  },
   'sistema.valorProjeto': {
     label: 'VALOR DO PROJETO',
     getFormattedValue: (value: any) => formatDecimalPlaces(value),
@@ -390,8 +386,112 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'CAPACIDADE (Ah)',
     getFormattedValue: (value: any) => value,
   },
-  'sistema.iniciar': {
+  'projeto.iniciar': {
     label: 'INICIAR PROJETO',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.realizarHomologacao': {
+    label: 'REALIZAR HOMOLOGAÇÃO',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
+  'projeto.projetista.nome': {
+    label: 'PROJETISTA',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.diagramaUnifilar': {
+    label: 'DIAGRAMA UNIFILAR FEITO',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.desenhoTelhado': {
+    label: 'DESENHO DO TELHADO FEITO',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.mapaDeMicro': {
+    label: 'MAPA DE MICRO FEITO',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.formaAssDocumentacao': {
+    label: 'FORMA DE ASSINATURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.dataLiberacaoDocumentacao': {
+    label: 'DESENHO DO TELHADO FEITO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'projeto.dataAssDocumentacao': {
+    label: 'DATA DE ASSINATURA DA DOCUMENTAÇÃOO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'projeto.dataSolicitacaoAcesso': {
+    label: 'DATA DE SOLICITAÇÃO DE ACESSO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'parecer.dataParecerDeAcesso': {
+    label: 'DATA DO PARECER DE ACESSO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'parecer.statusDoParecerDeAcesso': {
+    label: 'STATUS DO PARECER DE ACESSO',
+    getFormattedValue: (value: any) => value,
+  },
+  'parecer.qtdeDiasObraDeRede': {
+    label: 'QUANTOS DIAS DE OBRA?',
+    getFormattedValue: (value: any) => value,
+  },
+  'parecer.parecerReprovado': {
+    label: 'HOUVE REPROVA DE PARECER',
+    getFormattedValue: (value: any) => value,
+  },
+  'parecer.qtdeReprovas': {
+    label: 'Nº DE REPROVAS',
+    getFormattedValue: (value: any) => value,
+  },
+  'parecer.motivoReprova': {
+    label: 'MOTIVO DA REPROVA',
+    getFormattedValue: (value: any) => value,
+  },
+  'parecer.pendencias': {
+    label: 'PENDÊNCIAS DO PARECER',
+    getFormattedValue: (value: any) => value,
+  },
+  'vistoria.dataPedido': {
+    label: 'DATA DE PEDIDO DA VISTORIA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'vistoria.status': {
+    label: 'STATUS DA VISTORIA',
+    getFormattedValue: (value: any) => value,
+  },
+  'vistoria.vistoriaReprovada': {
+    label: 'HOUVE REPROVA DE VISTORIA',
+    getFormattedValue: (value: any) => value,
+  },
+  'vistoria.qtdeReprovas': {
+    label: 'Nº DE REPROVAS',
+    getFormattedValue: (value: any) => value,
+  },
+  'vistoria.motivoReprova': {
+    label: 'MOTIVO DA REPROVA',
+    getFormattedValue: (value: any) => value,
+  },
+  'vistoria.equipeDeCampoNecessaria': {
+    label: 'EQUIPE DE CAMPO NECESSÁRIA',
+    getFormattedValue: (value: any) => value,
+  },
+  'medidor.data': {
+    label: 'DATA DE TROCA DO MEDIDOR',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'medidor.status': {
+    label: 'STATUS DA TROCA DO MEDIDOR',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.projetoConcluido': {
+    label: 'PROJETO CONCLUIDO',
+    getFormattedValue: (value: any) => value,
+  },
+  'pagamento.forma': {
+    label: 'FORMA DE PAGAMENTO',
     getFormattedValue: (value: any) => value,
   },
   'pagamento.credor': {

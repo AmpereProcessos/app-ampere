@@ -8,8 +8,9 @@ import { MdEdit } from 'react-icons/md'
 
 type UpdateLogCardProps = {
   log: TProjectUpdateLogDTO
+  relatedFields: string[]
 }
-function UpdateLogCard({ log }: UpdateLogCardProps) {
+function UpdateLogCard({ log, relatedFields }: UpdateLogCardProps) {
   return (
     <div className="flex w-full flex-col gap-1 rounded border border-gray-300 p-3">
       <div className="flex w-full items-center justify-between gap-2">
@@ -28,6 +29,7 @@ function UpdateLogCard({ log }: UpdateLogCardProps) {
       <div className="flex w-full flex-wrap items-center justify-start gap-2">
         {Object.entries(log.alteracoes).map(([field, value]) => {
           const updateLog = getUpdateLogFormatted({ field, value })
+          if (!relatedFields.includes(field)) return null
           if (!updateLog) return null
           return (
             <div className="flex w-fit items-center gap-1 rounded-lg border border-gray-500 px-2 py-1">

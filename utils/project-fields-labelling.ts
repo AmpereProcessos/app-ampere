@@ -187,12 +187,40 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     getFormattedValue: (value: any) => value,
   },
   'padrao.valor': {
-    label: 'AMPERAGEM',
+    label: 'VALOR DO PADRÃO',
     getFormattedValue: (value: any) => formatDecimalPlaces(value),
   },
   'padrao.caixaConjugada': {
     label: 'AMPERAGEM',
     getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.tipo': {
+    label: 'TIPO DA ESTRUTURA',
+    getFormattedValue: (value: any) => value || 'NÃO DEFINIDO',
+  },
+  'estruturaPersonalizada.aplicavel': {
+    label: 'NECESSÁRIO ADEQUAÇÃO DE ESTRUTURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.status': {
+    label: 'STATUS DE EXECUÇÃO DA ESTRUTURA PERSONALIZADA',
+    getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.respPagamento': {
+    label: 'PAGAMENTO DA ESTRUTURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.valor': {
+    label: 'VALOR DA ESTRUTURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.statusEntrega': {
+    label: 'STATUS DA ENTREGA DA ESTRUTURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'estruturaPersonalizada.dataEntrega': {
+    label: 'DATA DE ENTREGA DA ESTRUTURA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
   },
   'pagamento.forma': {
     label: 'FORMA DE PAGAMENTO',

@@ -9,6 +9,8 @@ import NumberInput from '../inputs/Number'
 import DateInput from '../inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import Structure from '../identificador/registrosAlteracoesProjeto/secao/Structure'
 
 type InfoEstruturaBlockProps = {
   comercialEdition: boolean
@@ -37,6 +39,7 @@ function InfoEstruturaBlock({
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
         INFORMAÇÕES SOBRE A ESTRUTURA
       </span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<Structure logs={updateLogs} />} />
       <div className="flex w-full items-center justify-center self-center lg:w-1/3">
         <SelectInput
           label={'TIPO DA ESTRUTURA'}

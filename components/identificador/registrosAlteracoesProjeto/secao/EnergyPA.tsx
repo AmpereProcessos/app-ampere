@@ -26,7 +26,7 @@ function EnergyPA({ logs }: EnergyPAUpdateLogsProps) {
   return (
     <div className="flex w-full flex-col gap-1">
       {relatedLogs.length > 0 ? (
-        relatedLogs.map((log) => <UpdateLogCard key={log._id} log={log} />)
+        relatedLogs.map((log) => <UpdateLogCard key={log._id} log={log} relatedFields={RelatedFields} />)
       ) : (
         <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
           Sem registros de atualização relacionados ao dados do padrão.

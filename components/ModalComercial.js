@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 
 import { useKey } from '../utils/hooks'
-import { getErrorMessage, handleCRMProjectUpdatesAutomations } from '../utils/methods/handlers'
 
 import { FaSave } from 'react-icons/fa'
 
@@ -123,6 +121,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                 />
               )}
@@ -135,6 +134,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                 />
               )}
@@ -162,12 +162,20 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={false}
                   showMonetaryValues={true}
                 />
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-                <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+                <InfoDadosConcessionariaBlock
+                  editor={true}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  updateLogs={updateLogs || []}
+                />
               )}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
                 <InfoSistemaBlock
@@ -177,6 +185,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   changes={changes}
                   setChanges={setChanges}
                   showPaymentInfo={true}
+                  updateLogs={updateLogs || []}
                 />
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) ? (
@@ -186,12 +195,28 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   project={project}
                 />
               ) : null}
 
-              <InfoObrasBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-              <InfoMaterialBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoObrasBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+                updateLogs={updateLogs || []}
+              />
+              <InfoMaterialBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}

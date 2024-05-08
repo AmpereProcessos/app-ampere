@@ -92,7 +92,14 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 setChanges={setChanges}
                 analysisId={project.idVisitaTecnica}
               />
-              <InfoSistemaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoSistemaBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) &&
                 infoHolder.estruturaPersonalizada.aplicavel == 'SIM' && (
                   <InfoEstruturaBlock
@@ -102,6 +109,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                     setInfo={setInfo}
                     changes={changes}
                     setChanges={setChanges}
+                    updateLogs={updateLogs || []}
                     showPaymentInfo={false}
                     project={project}
                   />
@@ -113,6 +121,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showDeliveryInfoOnly={false}
                 showMonetaryValues={true}
               />

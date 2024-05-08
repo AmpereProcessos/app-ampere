@@ -8,6 +8,7 @@ import CheckboxInput from '../inputs/Checkbox'
 import NumberInput from '../inputs/Number'
 import DateInput from '../inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoEstruturaBlockProps = {
   comercialEdition: boolean
@@ -16,6 +17,7 @@ type InfoEstruturaBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
   showPaymentInfo: boolean
 }
@@ -26,6 +28,7 @@ function InfoEstruturaBlock({
   setInfo,
   changes,
   setChanges,
+  updateLogs,
   project,
   showPaymentInfo = true,
 }: InfoEstruturaBlockProps) {

@@ -4,11 +4,11 @@ import SelectInput from '../SelectInput'
 import DateInput from '../DateInput'
 import { oemPlans, statusObra } from '../../utils/constants'
 
-function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges, project }) {
+function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges, project, updateLogs }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">OPERAÇÃO E MANUTENÇÃO</span>
-      <div className="flex gap-2 justify-around flex-wrap">
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">OPERAÇÃO E MANUTENÇÃO</span>
+      <div className="flex flex-wrap justify-around gap-2">
         <div>
           <input
             disabled={!editor}
@@ -111,8 +111,8 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges, projec
             })
           }}
         />
-        <div className="flex flex-col w-[350px] items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">O&M CONCLUÍDO ?</span>
+        <div className="flex w-[350px] flex-col items-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">O&M CONCLUÍDO ?</span>
           <div className="flex">
             <input
               disabled={!editor}

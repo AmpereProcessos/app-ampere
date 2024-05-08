@@ -1,3 +1,4 @@
+import { formatDecimalPlaces } from './constants'
 import { formatDateAsLocale } from './methods/formatting'
 
 export const FieldsFormattings: { [key: string]: { label: string; getFormattedValue: (value: any) => any } } = {
@@ -95,7 +96,7 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
   },
   'oem.aplicavel': {
     label: 'APLICABILIDADE DO O&M',
-    getFormattedValue: (value: any) => value,
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
   },
   'oem.duracao': {
     label: 'DURAÇÃO DO O&M',
@@ -111,6 +112,86 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
   },
   idSolicitacaoContrato: {
     label: 'ID DE SOLICITAÇÃO DO CONTRATO',
+    getFormattedValue: (value: any) => value,
+  },
+  'contrato.formaAssinatura': {
+    label: 'FORMA DE ASSINATURA',
+    getFormattedValue: (value: any) => value,
+  },
+  'contrato.status': {
+    label: 'STATUS DO CONTRATO',
+    getFormattedValue: (value: any) => value,
+  },
+  'contrato.dataSolicitacao': {
+    label: 'DATA DE SOLICITAÇÃO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'contrato.dataLiberacao': {
+    label: 'DATA DE LIBERAÇÃO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'contrato.dataAssinatura': {
+    label: 'DATA DE ASSINATURA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'comissoes.efetivado': {
+    label: 'PORCENTAGENS EFETIVADAS',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
+  'comissoes.pagamentoRealizado': {
+    label: 'PAGAMENTOS FEITOS',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
+  'comissoes.porcentagemVendedor': {
+    label: 'PORCENTAGEM DO VENDEDOR',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'comissoes.porcentagemInsider': {
+    label: 'PORCENTAGEM DO INSIDER',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'comissionamento.comercial': {
+    label: 'COMISSIONAMENTO COMERCIAL FEITO',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
+  'visitaTecnica.amperagem': {
+    label: 'AMPERAGEM',
+    getFormattedValue: (value: any) => value,
+  },
+  'padrao.tipo': {
+    label: 'TIPO DO PADRÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'padrao.tipoEntrada': {
+    label: 'TIPO DE ENTRADA DO PADRÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'visitaTecnica.saidaDoCliente': {
+    label: 'TIPO DE SAIDA DO PADRÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.aumentoDeCarga': {
+    label: 'NECESSÁRIO AUMENTO DE CARGA',
+    getFormattedValue: (value: any) => value,
+  },
+  'projeto.acStatus': {
+    label: 'AMPERAGEM',
+    getFormattedValue: (value: any) => value,
+  },
+  'padrao.respPagamento': {
+    label: 'RESP. PAGAMENTO DO PADRÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'padrao.respInstalacao': {
+    label: 'RESP. INSTALAÇÃO DO PADRÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'padrao.valor': {
+    label: 'AMPERAGEM',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'padrao.caixaConjugada': {
+    label: 'AMPERAGEM',
     getFormattedValue: (value: any) => value,
   },
   'pagamento.forma': {
@@ -135,7 +216,7 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
   },
   'pagamento.dataRecebimento': {
     label: 'DATA DE RECEBIMENTO',
-    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : null),
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
   },
   'faturamento.empresaFaturamento': {
     label: 'REMPRESA DE FATURAMENTO',

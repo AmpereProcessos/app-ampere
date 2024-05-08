@@ -15,6 +15,7 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
 import { TbAlertCircle } from 'react-icons/tb'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoProjetoBlockProps = {
   editor: boolean
@@ -22,9 +23,10 @@ type InfoProjetoBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
 }
-function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, project }: InfoProjetoBlockProps) {
+function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, project }: InfoProjetoBlockProps) {
   const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
   const isPendingProjectInitiation =
     !!project && (!project.projeto.iniciar || project.projeto.iniciar == 'NÃO' || project.projeto.iniciar == 'NÃO DEFINIDO')

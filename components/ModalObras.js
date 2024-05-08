@@ -98,6 +98,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
                 showDeliveryInfo={true}
                 showMaterialInfo={true}
@@ -114,6 +115,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showPaymentInfo={false}
               />
               <InfoVisitaTecnicaBlock
@@ -122,6 +124,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 analysisId={project.idVisitaTecnica}
               />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
@@ -132,6 +135,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                 />
               )}
@@ -144,6 +148,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                 />
               )}
@@ -153,6 +158,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showCircuitBreakers={true}
               />
               <InfoArquivosBlock

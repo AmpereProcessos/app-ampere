@@ -10,6 +10,7 @@ import { executionStatus } from '@/utils/select-options'
 import ProjectKitInfo from '../identificador/suprimentos/ProjectKitInfo'
 import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMaterialInfo'
 import ObservationsBlock from '../identificador/obras/ObservationsBlock'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoObrasBlockProps = {
   editor: boolean
@@ -17,6 +18,7 @@ type InfoObrasBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
   showMaterialInfo: boolean
   showDeliveryInfo: boolean
@@ -27,6 +29,7 @@ function InfoObrasBlock({
   setInfo,
   changes,
   setChanges,
+  updateLogs,
   project,
   showMaterialInfo = false,
   showDeliveryInfo = false,

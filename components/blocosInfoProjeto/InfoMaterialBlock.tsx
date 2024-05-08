@@ -8,6 +8,7 @@ import NumberInput from '../inputs/Number'
 import SelectInput from '../inputs/Select'
 import toast from 'react-hot-toast'
 import { TbCircuitChangeover } from 'react-icons/tb'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type TCircuitBreaker = {
   tipo: 'NÃO DEFINIDO' | 'MONOFÁSICO' | 'BIFÁSICO' | 'TRIFÁSICO'
@@ -21,6 +22,7 @@ type InfoMaterialBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
   showCircuitBreakers: boolean
   circuitBreakerAddition: boolean
@@ -31,6 +33,7 @@ function InfoMaterialBlock({
   setInfo,
   changes,
   setChanges,
+  updateLogs,
   showCircuitBreakers,
   circuitBreakerAddition,
 }: InfoMaterialBlockProps) {

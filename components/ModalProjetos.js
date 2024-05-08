@@ -118,7 +118,14 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 updateLogs={updateLogs || []}
               />
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-                <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+                <InfoDadosConcessionariaBlock
+                  editor={true}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  updateLogs={updateLogs || []}
+                />
               )}
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>
@@ -215,6 +222,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 analysisId={project.idVisitaTecnica}
               />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
@@ -225,6 +233,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={false}
                 />
               )}
@@ -234,6 +243,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showPaymentInfo={true}
               />
               {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
@@ -245,6 +255,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={false}
                   showMonetaryValues={true}
                 />
@@ -255,16 +266,26 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 handleUpdates={handleUpdates}
                 project={project}
               />
-              <InfoObrasBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
+              <InfoObrasBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+                project={project}
+              />
               <InfoMaterialBlock
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
                 showCircuitBreakers={true}
                 circuitBreakerAddition={true}

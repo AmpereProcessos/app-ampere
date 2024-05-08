@@ -119,6 +119,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                   showPaymentOnly={true}
                 />
@@ -132,6 +133,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={true}
                 />
               )}
@@ -141,6 +143,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 minimalInfo={true}
                 showPaymentInfo={true}
               />
@@ -161,6 +164,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={false}
                   showMonetaryValues={true}
                 />
@@ -171,10 +175,26 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showPaymentInfo={true}
               />
-              <InfoObrasBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-              <InfoMaterialBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoObrasBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+                project={project}
+              />
+              <InfoMaterialBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}

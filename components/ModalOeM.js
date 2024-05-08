@@ -123,6 +123,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={false}
                 />
               ) : null}
@@ -136,6 +137,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={false}
                 />
               )}
@@ -147,15 +149,30 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={true}
                   showMonetaryValues={false}
                 />
               ) : null}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-                <InfoDadosConcessionariaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+                <InfoDadosConcessionariaBlock
+                  editor={false}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  updateLogs={updateLogs || []}
+                />
               )}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
-                <InfoSistemaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+                <InfoSistemaBlock
+                  editor={false}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  updateLogs={updateLogs || []}
+                />
               )}
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(project.tipoDeServico) ? (
                 <InfoProjetoBlock
@@ -164,6 +181,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   project={project}
                 />
               ) : null}
@@ -175,6 +193,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   project={project}
                 />
               ) : null}

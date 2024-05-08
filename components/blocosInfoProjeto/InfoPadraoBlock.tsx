@@ -5,6 +5,9 @@ import SelectInput from '../inputs/Select'
 import TextInput from '../inputs/Text'
 import CheckboxInput from '../inputs/Checkbox'
 import NumberInput from '../inputs/Number'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import EnergyPA from '../identificador/registrosAlteracoesProjeto/secao/EnergyPA'
 
 type InfoPadraoBlockProps = {
   comercialEdition: boolean
@@ -13,6 +16,7 @@ type InfoPadraoBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   showPaymentInfo: boolean
   showPaymentOnly: boolean
 }
@@ -23,6 +27,7 @@ function InfoPadraoBlock({
   setInfo,
   changes,
   setChanges,
+  updateLogs,
   showPaymentInfo = true,
   showPaymentOnly = false,
 }: InfoPadraoBlockProps) {
@@ -31,6 +36,7 @@ function InfoPadraoBlock({
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
         INFORMAÇÕES SOBRE PADRÃO DE ENERGIA
       </span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<EnergyPA logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
@@ -309,34 +315,6 @@ function InfoPadraoBlock({
             </div>
           ) : null}
 
-          {/* {!showPaymentOnly ? (
-          <SelectInput
-            label={'AUMENTO DE CARGA'}
-            editable={comercialEdition}
-            value={infoHolder.projeto.aumentoDeCarga ? infoHolder.projeto.aumentoDeCarga : 'NÃO DEFINIDO'}
-            options={[
-              { label: 'SIM', value: 'SIM' },
-              { label: 'NÃO', value: 'NÃO' },
-              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-            ]}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'projeto.aumentoDeCarga': value,
-                'projeto.acStatus': value == 'SIM' && infoHolder.acStatus != 'REALIZADO' ? 'PENDÊNCIA' : undefined,
-              })
-              setInfo({
-                ...infoHolder,
-                projeto: {
-                  ...infoHolder.projeto,
-                  aumentoDeCarga: value,
-                  acStatus: value == 'SIM' && infoHolder.acStatus != 'REALIZADO' ? 'PENDÊNCIA' : undefined,
-                },
-              })
-            }}
-          />
-        ) : null} */}
-
           {showPaymentInfo ? <></> : null}
         </div>
       ) : null}
@@ -360,38 +338,6 @@ function InfoPadraoBlock({
           }}
         />
       </div>
-      {/* {!showPaymentOnly ? (
-        <div className="flex flex-wrap justify-center gap-2 border-t border-gray-200 pt-2">
-          <div className="flex w-[350px] flex-col items-center">
-            <span className="text-center font-raleway text-sm font-bold uppercase">CAIXA CONJUGADA</span>
-            <div className="flex">
-              <input
-                disabled={!comercialEdition}
-                checked={infoHolder.padrao.caixaConjugada == 'SIM' ? true : false}
-                onChange={(e) => {
-                  setChanges({
-                    ...changes,
-                    'padrao.caixaConjugada': e.target.checked ? 'SIM' : 'NÃO',
-                  })
-                  setInfo({
-                    ...infoHolder,
-                    padrao: {
-                      ...infoHolder.padrao,
-                      caixaConjugada: e.target.checked ? 'SIM' : 'NÃO',
-                    },
-                  })
-                }}
-                type="checkbox"
-                name="caixaConjugada"
-                id="caixaConjugada"
-              />
-              <label className="ml-2" htmlFor="caixaConjugada">
-                SIM ?
-              </label>
-            </div>
-          </div>
-        </div>
-      ) : null} */}
     </div>
   )
 }

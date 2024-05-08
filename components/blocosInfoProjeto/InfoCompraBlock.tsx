@@ -91,8 +91,8 @@ function InfoCompraBlock({
         {getAccessGrantingStatus({ status: infoHolder.parecer.statusDoParecerDeAcesso })}
         <div className="flex flex-col items-center">
           <CheckboxInput
-            labelFalse={'LIBERADO PARA COMPRA'}
-            labelTrue={'LIBERADO PARA COMPRA'}
+            labelFalse={'LIBERADO PARA SUPRIMENTOS'}
+            labelTrue={'LIBERADO PARA SUPRIMENTOS'}
             checked={!!infoHolder.compra.liberacao}
             handleChange={(value) => {
               setChanges((prev) => ({ ...prev, 'compra.liberacao': value, status: 'PREDEFINIÇÃO DE EQUIPAMENTOS' }))

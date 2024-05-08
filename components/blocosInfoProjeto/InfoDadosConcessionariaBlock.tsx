@@ -3,6 +3,7 @@ import React from 'react'
 import TextInput from '../inputs/Text'
 import SelectInput from '../inputs/Select'
 import NumberInput from '../inputs/Number'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoDadosConcessionariaBlockProps = {
   editor: boolean
@@ -10,8 +11,9 @@ type InfoDadosConcessionariaBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
 }
-function InfoDadosConcessionariaBlock({ editor, infoHolder, setInfo, changes, setChanges }: InfoDadosConcessionariaBlockProps) {
+function InfoDadosConcessionariaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs }: InfoDadosConcessionariaBlockProps) {
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">

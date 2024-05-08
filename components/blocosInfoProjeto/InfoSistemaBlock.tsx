@@ -5,6 +5,7 @@ import SelectInput from '../inputs/Select'
 import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
 import CheckboxInput from '../inputs/Checkbox'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoSistemaBlockProps = {
   editor: boolean
@@ -12,9 +13,10 @@ type InfoSistemaBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   showPaymentInfo: boolean
 }
-function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, showPaymentInfo = false }: InfoSistemaBlockProps) {
+function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, showPaymentInfo = false }: InfoSistemaBlockProps) {
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O SISTEMA</span>

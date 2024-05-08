@@ -322,6 +322,78 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'FORMA DE PAGAMENTO',
     getFormattedValue: (value: any) => value,
   },
+  'sistema.valorProjeto': {
+    label: 'VALOR DO PROJETO',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'sistema.potPico': {
+    label: 'POTÊNCIA PICO',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'sistema.topologia': {
+    label: 'TOPOLOGIA',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.inversor': {
+    label: 'QTDE E POTÊNCIA DO(S) INVERSOR(ES)',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.qtdeModulos': {
+    label: 'NÚMERO DE MÓDULOS',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.potModulos': {
+    label: 'POTÊNCIA DOS MÓDULOS',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.tipoControlador': {
+    label: 'TIPO DO CONTROLADOR',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.marcaControlador': {
+    label: 'MARCA DO CONTROLADOR',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.qtdeControlador': {
+    label: 'QTDE DE CONTROLADORES',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.correnteControlador': {
+    label: 'CORRENTE DE CARGA (A)',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.marcaBomba': {
+    label: 'MARCA DA BOMBA',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.qtdeBomba': {
+    label: 'QTDE DE BOMBAS',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.potBomba': {
+    label: 'POTÊNCIA DA BOMBA',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.marcaBateria': {
+    label: 'MARCA DA BATERIAA',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.qtdeBateria': {
+    label: 'QTDE DE BATERIAS',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.tipoBateria': {
+    label: 'TIPO DA BATERIA',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.capacidadeBateria': {
+    label: 'CAPACIDADE (Ah)',
+    getFormattedValue: (value: any) => value,
+  },
+  'sistema.iniciar': {
+    label: 'INICIAR PROJETO',
+    getFormattedValue: (value: any) => value,
+  },
   'pagamento.credor': {
     label: 'CREDOR',
     getFormattedValue: (value: any) => value,

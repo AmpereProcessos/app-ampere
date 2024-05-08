@@ -6,6 +6,8 @@ import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
 import CheckboxInput from '../inputs/Checkbox'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import System from '../identificador/registrosAlteracoesProjeto/secao/System'
 
 type InfoSistemaBlockProps = {
   editor: boolean
@@ -20,6 +22,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O SISTEMA</span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<System logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         {showPaymentInfo ? (
           <div className="w-full lg:w-1/2">
@@ -289,7 +292,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
           <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <TextInput
-                label={'MARCA BOMBA'}
+                label={'MARCA DA BOMBA'}
                 editable={editor}
                 value={infoHolder.sistema.marcaBomba}
                 placeholder="Preencha aqui a marca da bomba..."
@@ -311,7 +314,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
             </div>
             <div className="w-full lg:w-1/3">
               <NumberInput
-                label={'QTDE BOMBA'}
+                label={'QTDE DE BOMBAS'}
                 editable={editor}
                 value={infoHolder.sistema.qtdeBomba || null}
                 placeholder="Preencha aqui a quantidade de bombas..."
@@ -333,7 +336,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
             </div>
             <div className="w-full lg:w-1/3">
               <NumberInput
-                label={'POTÊNCIA BOMBA'}
+                label={'POTÊNCIA DA BOMBA'}
                 editable={editor}
                 value={infoHolder.sistema.potBomba || null}
                 placeholder="Preencha aqui a potência da(s) bomba(s)..."

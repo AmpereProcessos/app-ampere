@@ -22,12 +22,11 @@ export default async function handler(req, res) {
       dataAlteracao: new Date().toISOString(),
       dataAlteracaoFormatada: new Date().toLocaleString('pt-br'),
     }
+    // Validating for non empty update objects
     if (session && Object.keys(req.body).length > 0) {
       await logCollection.insertOne(logObject)
     }
-    // let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
     var newObj = await collection.updateOne({ _id: ObjectId(req.query.id) }, { $set: { ...req.body } })
-    // var newObj = { ...obj, ...req.body };
     return res.json(newObj)
   } else if (req.method == 'PUT') {
     try {

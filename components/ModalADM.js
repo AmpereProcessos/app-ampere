@@ -30,6 +30,7 @@ import { useQueryClient } from 'react-query'
 import LoadingPage from './utils/LoadingPage'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import { useSession } from 'next-auth/react'
+import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -57,15 +58,19 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
-
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
 
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
-    affectedQueryKey: ['adm-projects'],
+    affectedQueryKey: ['project-by-id', projectId], // ['adm-projects'],
     queryClient: queryClient,
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['adm-projects'] })
+    },
   })
 
   useEffect(() => {
@@ -103,6 +108,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 changes={changes}
                 setChanges={setChanges}
                 project={project}
+                updateLogs={updateLogs || []}
               />
               <InfoDespesasBlock projectId={infoHolder._id} />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) ? (
@@ -144,6 +150,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 showADMOnly={true}
               />
               {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (

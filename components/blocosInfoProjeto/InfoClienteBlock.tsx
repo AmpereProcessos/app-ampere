@@ -71,28 +71,6 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
       }
     }, 1000)
   }
-  async function getVisitaInfo(id: string) {
-    const { data } = await axios.post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
-      arquivos: 1,
-    })
-
-    const analysisFiles = data.arquivos
-    if (analysisFiles.length == 0) return toast.error('Visita não possui arquivos vinculados.')
-    const formattedFiles = analysisFiles.map((f: any) => ({ title: f.descricao, link: f.url, category: 'VISITA TÉCNICA', format: f.formato }))
-    setInfo((prev) => ({
-      ...prev,
-      links: {
-        ...prev.links,
-        visitaTecnica: formattedFiles,
-      },
-    }))
-    setChanges((prev) => ({
-      ...prev,
-      'links.visitaTecnica': formattedFiles,
-    }))
-    //@ts-ignore
-    mutate({ id: infoHolder._id, changes: changes })
-  }
 
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">

@@ -25,16 +25,13 @@ import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
-import ESigningBlock from './blocosInfoProjeto/ESigningBlock'
 
 import SaveButton from './utils/Buttons/SaveButton'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
-import { updateProject } from '../utils/methods/mutation/clients'
 import { useQueryClient } from 'react-query'
 import { useClientById } from '../utils/methods/query/clients'
 import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
-import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
 import { useSession } from 'next-auth/react'
@@ -56,7 +53,10 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
     mutationFn: handleComercialUpdate,
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
-    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['comercial-projects'] }),
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['comercial-projects'] })
+    },
   })
 
   useEffect(() => {

@@ -39,8 +39,12 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
-    affectedQueryKey: ['supply-projects'],
+    affectedQueryKey: ['project-by-id', projectId], // ['supply-projects'],
     queryClient: queryClient,
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['supply-projects'] })
+    },
   })
 
   useEffect(() => {

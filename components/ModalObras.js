@@ -26,22 +26,27 @@ import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import { useClientById } from '../utils/methods/query/clients'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { updateProject } from '@/utils/methods/mutation/clients'
 import { useSession } from 'next-auth/react'
 import { handleExecutionUpdate } from '@/utils/methods/mutation/execution'
+import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
 
   const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: handleExecutionUpdate,
-    affectedQueryKey: ['execution-projects'],
+    affectedQueryKey: ['project-by-id', projectId], // ['execution-projects'],
     queryClient: queryClient,
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['execution-projects'] })
+    },
   })
 
   const [changes, setChanges] = useState({})
@@ -85,6 +90,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 changes={changes}
                 setChanges={setChanges}
                 project={project}
+                updateLogs={updateLogs || []}
               />
               <InfoObrasBlock
                 editor={true}

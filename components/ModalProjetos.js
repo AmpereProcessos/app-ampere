@@ -27,11 +27,13 @@ import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { updateProject } from '../utils/methods/mutation/clients'
 import { useSession } from 'next-auth/react'
 import { handleEngineeringUpdate } from '../utils/methods/mutation/engineering'
+import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
 function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
 
@@ -63,7 +65,10 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
     mutationFn: handleEngineeringUpdate,
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
-    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['engineering-projects'] }),
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['engineering-projects'] })
+    },
   })
   useEffect(() => {
     setInfo(project)
@@ -110,6 +115,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 changes={changes}
                 setChanges={setChanges}
                 project={project}
+                updateLogs={updateLogs || []}
               />
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />

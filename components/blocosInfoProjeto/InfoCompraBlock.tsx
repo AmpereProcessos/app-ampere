@@ -15,6 +15,7 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import SelectInput from '../inputs/Select'
 import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
+import { TbAlertCircle } from 'react-icons/tb'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -79,13 +80,15 @@ function InfoCompraBlock({
   showMonetaryValues = false,
   showDeliveryInfoOnly = false,
 }: InfoCompraBlockProps) {
+  const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
+  const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
+
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
       <div className="relative mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
         {getAccessGrantingStatus({ status: infoHolder.parecer.statusDoParecerDeAcesso })}
-
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA COMPRA'}
@@ -122,6 +125,17 @@ function InfoCompraBlock({
           }}
         />
       </div>
+      {isContractAttached && isPendingPurchaseAnalysisLiberation ? (
+        <div className="px my-2 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 py-1 px-2 italic text-yellow-500">
+          <div className="flex items-center justify-center gap-1">
+            <TbAlertCircle />
+            <p className="text-sm">LEMBRETE</p>
+          </div>
+          <p className="w-full text-center text-[0.65rem]">
+            NOTAMOS QUE EXISTE UM CONTRATO ASSINADO ANEXADO, LEMBRE-SE DE LIBERAR O PROJETO PARA ANÁLISE DE COMPRA, SE APLICÁVEL.
+          </p>
+        </div>
+      ) : null}
       <div className="mb-4 flex w-full items-center justify-center">
         <SelectInputPersonalized
           label="STATUS DA SUPLEMENTAÇÃO"

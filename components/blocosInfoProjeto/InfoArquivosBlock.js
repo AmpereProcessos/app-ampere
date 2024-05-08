@@ -60,6 +60,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, ableToDelete = tru
           id={project._id}
           prevLinks={project.links ? project.links : {}}
           client={`${infoHolder._id}-${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
+          project={infoHolder}
           categories={categories}
         />
       </div>

@@ -14,6 +14,7 @@ import DateInput from '../inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
+import { TbAlertCircle } from 'react-icons/tb'
 
 type InfoProjetoBlockProps = {
   editor: boolean
@@ -24,6 +25,10 @@ type InfoProjetoBlockProps = {
   project: TProjectDTO
 }
 function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, project }: InfoProjetoBlockProps) {
+  const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
+  const isPendingProjectInitiation =
+    !!project && (!project.projeto.iniciar || project.projeto.iniciar == 'NÃO' || project.projeto.iniciar == 'NÃO DEFINIDO')
+
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O PROJETO</span>
@@ -65,7 +70,17 @@ function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
           }}
         />
       </div>
-
+      {isContractAttached && isPendingProjectInitiation ? (
+        <div className="px my-2 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 py-1 px-2 italic text-orange-500">
+          <div className="flex items-center justify-center gap-1">
+            <TbAlertCircle />
+            <p className="text-sm">LEMBRETE</p>
+          </div>
+          <p className="w-full text-center text-[0.65rem]">
+            NOTAMOS QUE EXISTE UM CONTRATO ASSINADO ANEXADO, LEMBRE-SE DE INICIAR O PROJETO, SE APLICÁVEL.
+          </p>
+        </div>
+      ) : null}
       <div className="flex w-full items-center justify-center self-center px-2 lg:w-1/3">
         <SelectInput
           label={'PROJETISTA'}

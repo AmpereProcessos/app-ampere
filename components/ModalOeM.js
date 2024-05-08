@@ -32,11 +32,12 @@ import { useClientById } from '@/utils/methods/query/clients'
 import { useKey } from '../utils/hooks'
 import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
+import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
   const queryClient = useQueryClient()
   useKey('Escape', () => closeModal())
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
-
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState({})
   const [changes, setChanges] = useState({})
 
@@ -45,7 +46,10 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
     mutationFn: handleOeMUpdate,
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
-    callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['oem-projects'] }),
+    callbackFn: async () => {
+      setChanges({})
+      await queryClient.invalidateQueries({ queryKey: ['oem-projects'] })
+    },
   })
 
   useEffect(() => {
@@ -87,6 +91,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                 changes={changes}
                 setChanges={setChanges}
                 project={project}
+                updateLogs={updateLogs || []}
               />
               <ExecutionCommissioningBlock
                 editor={true}

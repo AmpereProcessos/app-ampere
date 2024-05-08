@@ -11,11 +11,13 @@ import { fileTypes, formatLongString } from '../utils/constants'
 import { storage } from '../utils/services/firebase/firebase-storage'
 import { BiSolidCloudDownload } from 'react-icons/bi'
 import { getErrorMessage } from '../utils/methods/handlers'
+import { TProjectDTO } from '@/utils/schemas/projects'
+import { TbAlertCircle } from 'react-icons/tb'
 
-function renderInputText(files) {
+function renderInputText(files: FileList | null) {
   if (!files)
     return (
-      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 px-2 text-center">
+      <p className="mb-2 px-2 text-center text-sm text-gray-500 dark:text-gray-400">
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
@@ -27,13 +29,20 @@ function renderInputText(files) {
   return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{filesAsArr[0]?.name}</p>
 }
 
-function AnexoArquivo({ categories, client, id, multiple }) {
+type ProjectFileAttachmentBlockProps = {
+  categories: { label: string; value: string }[]
+  client: string
+  project?: TProjectDTO
+  id: string
+  multiple: boolean
+}
+function ProjectFileAttachmentBlock({ categories, client, project, id, multiple = true }: ProjectFileAttachmentBlockProps) {
   const queryClient = useQueryClient()
   const [fileInfo, setFileInfo] = useState({
     name: '',
     category: null,
   })
-  const [files, setFiles] = useState(null)
+  const [files, setFiles] = useState<FileList | null>(null)
   const [loading, setLoading] = useState(false)
   async function uploadFiles() {
     if (fileInfo.name.trim().length < 3) {
@@ -59,7 +68,7 @@ function AnexoArquivo({ categories, client, id, multiple }) {
           const uploadResult = await uploadBytes(fileRef, file)
           console.log('UPLOAD RESULT', uploadResult)
           var url = await getDownloadURL(ref(storage, uploadResult.metadata.fullPath))
-          let name = file.length > 1 ? `${fileInfo.name} (${i + 1})` : `${fileInfo.name}`
+          let name = files.length > 1 ? `${fileInfo.name} (${i + 1})` : `${fileInfo.name}`
           linkArr.push({
             title: name,
             link: url,
@@ -99,6 +108,10 @@ function AnexoArquivo({ categories, client, id, multiple }) {
       toast.error(msg)
     }
   }
+  const isAttachingContract = fileInfo.name.toUpperCase().includes('CONTRATO ASSINADO') || fileInfo.name.toUpperCase().includes('CONTRATOASSINADO')
+  const isPendingProjectInitiation =
+    !!project && (!project.projeto.iniciar || project.projeto.iniciar == 'NÃO' || project.projeto.iniciar == 'NÃO DEFINIDO')
+  const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
 
   return (
     <div className="flex w-full flex-col gap-2 px-4">
@@ -114,7 +127,7 @@ function AnexoArquivo({ categories, client, id, multiple }) {
           </div>
           <input
             onChange={(e) => setFiles(e.target.files)}
-            multiple={multiple != undefined ? multiple : true}
+            multiple={multiple}
             id="dropzone-file"
             type="file"
             className="absolute h-full w-full opacity-0"
@@ -143,6 +156,28 @@ function AnexoArquivo({ categories, client, id, multiple }) {
           />
         </div>
       </div>
+      {isAttachingContract && isPendingProjectInitiation ? (
+        <div className="px my-1 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 py-1 px-2 italic text-orange-500">
+          <div className="flex items-center justify-center gap-1">
+            <TbAlertCircle />
+            <p className="text-sm">LEMBRETE</p>
+          </div>
+          <p className="w-full text-center text-[0.65rem]">
+            NOTAMOS QUE VOCÊ ESTÁ ANEXANDO O CONTRATO ASSINADO, LEMBRE-SE DE INICIAR O PROJETO, SE APLICÁVEL.
+          </p>
+        </div>
+      ) : null}
+      {isAttachingContract && isPendingPurchaseAnalysisLiberation ? (
+        <div className="px my-1 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 py-1 px-2 italic text-yellow-500">
+          <div className="flex items-center justify-center gap-1">
+            <TbAlertCircle />
+            <p className="text-sm">LEMBRETE</p>
+          </div>
+          <p className="w-full text-center text-[0.65rem]">
+            NOTAMOS QUE VOCÊ ESTÁ ANEXANDO O CONTRATO ASSINADO, LEMBRE-SE DE LIBERAR O PROJETO PARA ANÁLISE DE COMPRA, SE APLICÁVEL.
+          </p>
+        </div>
+      ) : null}
       <button
         disabled={loading}
         onClick={uploadFiles}
@@ -154,4 +189,4 @@ function AnexoArquivo({ categories, client, id, multiple }) {
   )
 }
 
-export default AnexoArquivo
+export default ProjectFileAttachmentBlock

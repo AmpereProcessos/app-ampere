@@ -18,7 +18,7 @@ function UpdateLogsBlock({ logs, SectionElement }: UpdateLogsBlockProps) {
             className="flex items-center gap-1 rounded-full border border-red-500 bg-red-100 px-2 py-1 text-red-500"
           >
             <FaClipboardList />
-            <p className="text-xs font-medium">FECHAR REGISTRO DE ALTERAÇÕES</p>
+            <p className="text-[0.65rem] font-medium">FECHAR REGISTRO DE ALTERAÇÕES</p>
           </button>
         ) : (
           <button
@@ -26,7 +26,7 @@ function UpdateLogsBlock({ logs, SectionElement }: UpdateLogsBlockProps) {
             className="flex items-center gap-1 rounded-full border border-cyan-500 bg-cyan-100 px-2 py-1 text-cyan-500"
           >
             <FaClipboardList />
-            <p className="text-xs font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
+            <p className="text-[0.65rem] font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
           </button>
         )}
       </div>

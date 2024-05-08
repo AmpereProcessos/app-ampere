@@ -130,7 +130,7 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     getFormattedValue: (value: any) => value,
   },
   'pagamento.cobrancaFeita': {
-    label: 'COBRANÇA FEITA',
+    label: 'PAGAMENTO CONCLUÍDO',
     getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
   },
   'pagamento.dataRecebimento': {

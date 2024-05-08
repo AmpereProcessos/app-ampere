@@ -1,7 +1,7 @@
 import React from 'react'
 import CheckboxInput from '../inputs/Checkbox'
 import Link from 'next/link'
-function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges }) {
+function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [] }) {
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">JORNADA DO CLIENTE</span>

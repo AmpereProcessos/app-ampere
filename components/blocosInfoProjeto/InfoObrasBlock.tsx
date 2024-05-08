@@ -29,7 +29,7 @@ function InfoObrasBlock({
   setInfo,
   changes,
   setChanges,
-  updateLogs,
+  updateLogs = [],
   project,
   showMaterialInfo = false,
   showDeliveryInfo = false,

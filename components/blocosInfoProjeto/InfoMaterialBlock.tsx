@@ -33,7 +33,7 @@ function InfoMaterialBlock({
   setInfo,
   changes,
   setChanges,
-  updateLogs,
+  updateLogs = [],
   showCircuitBreakers,
   circuitBreakerAddition,
 }: InfoMaterialBlockProps) {

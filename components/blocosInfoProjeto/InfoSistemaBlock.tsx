@@ -16,7 +16,7 @@ type InfoSistemaBlockProps = {
   updateLogs: TProjectUpdateLogDTO[]
   showPaymentInfo: boolean
 }
-function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, showPaymentInfo = false }: InfoSistemaBlockProps) {
+function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], showPaymentInfo = false }: InfoSistemaBlockProps) {
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O SISTEMA</span>

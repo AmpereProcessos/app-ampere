@@ -36,6 +36,7 @@ import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { useQueryClient } from 'react-query'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
 import OSCreationBlock from './OSCreationBlock'
+import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 
 function ModalDB({ projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
@@ -56,6 +57,8 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
   ].every((el) => session?.user.permissoes.rotas.includes(el))
   const userHasOeMAccess = session?.user.permissoes.rotas.includes('O&M')
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
+
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
   const [msg, setMsg] = useState({
@@ -104,6 +107,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
               />
               <InfoVisitaTecnicaBlock
@@ -122,6 +126,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={userHasOverallAccess}
                 />
               )}
@@ -134,6 +139,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={userHasOverallAccess}
                 />
               )}
@@ -143,11 +149,26 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 minimalInfo={false}
                 showPaymentInfo={true}
               />
-              <InfoJornadaBlock editor={userHasOverallAccess} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
-              <InfoPagamentoBlock editor={userHasOverallAccess} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoJornadaBlock
+                editor={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
+              <InfoPagamentoBlock
+                editor={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) && (
                 <InfoCompraBlock
                   editor={userHasOverallAccess}
@@ -157,6 +178,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={false}
                   showMonetaryValues={false}
                 />
@@ -168,6 +190,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                 />
               )}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
@@ -177,6 +200,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   showPaymentInfo={userHasOverallAccess}
                 />
               )}
@@ -187,6 +211,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setInfo={setInfo}
                   changes={changes}
                   setChanges={setChanges}
+                  updateLogs={updateLogs || []}
                   project={project}
                 />
               ) : null}
@@ -196,6 +221,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
               />
               <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
@@ -209,6 +235,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
               />
               <InfoOeMBlock
@@ -217,9 +244,17 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 project={project}
               />
-              <InfoMaterialBlock editor={userHasOverallAccess} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoMaterialBlock
+                editor={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}

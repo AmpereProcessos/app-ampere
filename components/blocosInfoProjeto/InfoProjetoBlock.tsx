@@ -26,7 +26,7 @@ type InfoProjetoBlockProps = {
   updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
 }
-function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, project }: InfoProjetoBlockProps) {
+function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], project }: InfoProjetoBlockProps) {
   const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
   const isPendingProjectInitiation =
     !!project && (!project.projeto.iniciar || project.projeto.iniciar == 'NÃO' || project.projeto.iniciar == 'NÃO DEFINIDO')

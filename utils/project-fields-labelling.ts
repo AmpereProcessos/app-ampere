@@ -222,6 +222,86 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'DATA DE ENTREGA DA ESTRUTURA',
     getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
   },
+  'compra.liberacao': {
+    label: 'LIBERADO PARA SUPRIMENTOS',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
+  'compra.dataLiberacao': {
+    label: 'DATA DE LIBERAÇÃO P/ COMPRA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.status': {
+    label: 'STATUS DA SUPLEMENTAÇÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.tipoDoKit': {
+    label: 'TIPO DO KIT',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.previsaoValorDoKit': {
+    label: 'PREV. VALOR DO KIT',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'compra.fornecedor': {
+    label: 'FORNECEDOR',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.dataPedido': {
+    label: 'DATA DO PEDIDO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.valorDoKit': {
+    label: 'VALOR DO KIT',
+    getFormattedValue: (value: any) => formatDecimalPlaces(value),
+  },
+  'compra.rastreio': {
+    label: 'RASTREIO',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.informacoes': {
+    label: 'OUTRAS INFORMAÇÕES',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.dataMaxPagamento': {
+    label: 'DATA MÁX P/ PAGAMENTO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.dataPagamento': {
+    label: 'DATA DE PAG. (CLIENTE)',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.dataPagamentoEquipamentos': {
+    label: 'DATA DE PAG. (FORNECEDOR)',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'faturamento.previsaoFaturamento': {
+    label: 'INFORMAÇÕES DE FATURAMENTO',
+    getFormattedValue: (value: any) => value,
+  },
+  'faturamento.dataFaturamento': {
+    label: 'DATA DE FATURAMENTO',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.localEntrega': {
+    label: 'LOCAL DE ENTREGA',
+    getFormattedValue: (value: any) => value,
+  },
+  'compra.previsaoEntrega': {
+    label: 'DATA DE PREVISÃO DE ENTREGA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.dataEntrega': {
+    label: 'DATA DE ENTREGA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'compra.statusEntrega': {
+    label: 'STATUS DA ENTREGA',
+    getFormattedValue: (value: any) => value,
+  },
+  'comissionamento.suprimentos': {
+    label: 'COMISSIONAMENTO DE SUPRIMENTOS FEITO',
+    getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
+  },
   'pagamento.forma': {
     label: 'FORMA DE PAGAMENTO',
     getFormattedValue: (value: any) => value,

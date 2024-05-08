@@ -27,7 +27,7 @@ function InfoPadraoBlock({
   setInfo,
   changes,
   setChanges,
-  updateLogs,
+  updateLogs = [],
   showPaymentInfo = true,
   showPaymentOnly = false,
 }: InfoPadraoBlockProps) {

@@ -30,7 +30,7 @@ function InfoEstruturaBlock({
   setInfo,
   changes,
   setChanges,
-  updateLogs,
+  updateLogs = [],
   project,
   showPaymentInfo = true,
 }: InfoEstruturaBlockProps) {

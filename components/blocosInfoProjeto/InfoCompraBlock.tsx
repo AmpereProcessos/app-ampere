@@ -16,6 +16,9 @@ import SelectInput from '../inputs/Select'
 import NumberInput from '../inputs/Number'
 import TextInput from '../inputs/Text'
 import { TbAlertCircle } from 'react-icons/tb'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import Purchase from '../identificador/registrosAlteracoesProjeto/secao/Purchase'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -66,6 +69,7 @@ type InfoCompraBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   showMonetaryValues: boolean
   showDeliveryInfoOnly: boolean
 }
@@ -77,6 +81,7 @@ function InfoCompraBlock({
   setInfo,
   changes,
   setChanges,
+  updateLogs = [],
   showMonetaryValues = false,
   showDeliveryInfoOnly = false,
 }: InfoCompraBlockProps) {
@@ -86,7 +91,8 @@ function InfoCompraBlock({
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
-      <div className="relative mb-4 flex w-full flex-col items-center justify-center gap-2">
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<Purchase logs={updateLogs} />} />
+      <div className="relative mt-2 mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
         {getAccessGrantingStatus({ status: infoHolder.parecer.statusDoParecerDeAcesso })}
         <div className="flex flex-col items-center">

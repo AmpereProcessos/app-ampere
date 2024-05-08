@@ -490,6 +490,34 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'PROJETO CONCLUIDO',
     getFormattedValue: (value: any) => value,
   },
+  'obra.statusSolicitacao': {
+    label: 'OBRA SOLICITADA',
+    getFormattedValue: (value: any) => value,
+  },
+  'obra.checklist': {
+    label: 'CHECKLIST DE OBRA PRONTO',
+    getFormattedValue: (value: any) => value,
+  },
+  'obra.entrada': {
+    label: 'DATA DE ENTRADA NA OBRA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'obra.saida': {
+    label: 'DATA DE SAÍDA DA OBRA',
+    getFormattedValue: (value: any) => (value ? formatDateAsLocale(value) : 'INDEFINIDO'),
+  },
+  'obra.equipeResp': {
+    label: 'EQUIPE RESPONSÁVEL',
+    getFormattedValue: (value: any) => value,
+  },
+  'obra.statusDaObra': {
+    label: 'STATUS DA OBRA',
+    getFormattedValue: (value: any) => value,
+  },
+  'obra.observacoes': {
+    label: 'OBSERVAÇÃO',
+    getFormattedValue: (value: any) => value,
+  },
   'pagamento.forma': {
     label: 'FORMA DE PAGAMENTO',
     getFormattedValue: (value: any) => value,

@@ -9,6 +9,7 @@ import DateInput from '../inputs/Date'
 import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import NumberInput from '../inputs/Number'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 
 type InfoContratoBlockProps = {
   editor: boolean
@@ -17,6 +18,7 @@ type InfoContratoBlockProps = {
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
   project: TProjectDTO
+  updateLogs: TProjectUpdateLogDTO[]
   showPaymentInfo?: boolean
 }
 function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, showPaymentInfo = false }: InfoContratoBlockProps) {

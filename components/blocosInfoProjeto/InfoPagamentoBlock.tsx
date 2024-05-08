@@ -24,7 +24,7 @@ type InfoPagamentoBlockProps = {
   updateLogs: TProjectUpdateLogDTO[]
   showADMOnly: boolean
 }
-function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs, showADMOnly = false }: InfoPagamentoBlockProps) {
+function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], showADMOnly = false }: InfoPagamentoBlockProps) {
   console.log('LOGS', updateLogs)
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">

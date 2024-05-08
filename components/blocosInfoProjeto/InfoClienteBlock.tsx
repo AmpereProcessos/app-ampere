@@ -20,6 +20,9 @@ import { TProjectDTO } from '@/utils/schemas/projects'
 import { getCEPInfo } from '@/utils/methods/shared'
 import CheckboxInput from '../inputs/Checkbox'
 import { estadosECidades } from '@/utils/estados_cidades'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
 
 type InfoClientBlockProps = {
   editor: boolean
@@ -27,9 +30,10 @@ type InfoClientBlockProps = {
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  updateLogs: TProjectUpdateLogDTO[]
   project: TProjectDTO
 }
-function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, project }: InfoClientBlockProps) {
+function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], project }: InfoClientBlockProps) {
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { mutate } = useMutationWithFeedback({
@@ -93,6 +97,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, pro
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DO CLIENTE</span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<Client logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput

@@ -17,6 +17,9 @@ export function useNPS(enabled: boolean) {
     sellerName: string[]
     search: string
     unCollected: boolean
+    onlyPromoters: boolean
+    onlyDetrators: boolean
+    onlyNeutrals: boolean
     withObs: boolean
     withoutObs: boolean
     npsRange: {
@@ -36,6 +39,9 @@ export function useNPS(enabled: boolean) {
     sellerName: [],
     search: '',
     unCollected: false,
+    onlyPromoters: false,
+    onlyDetrators: false,
+    onlyNeutrals: false,
     withObs: false,
     withoutObs: false,
     npsRange: {
@@ -61,6 +67,18 @@ export function useNPS(enabled: boolean) {
   function matchUnCollected(project: TProjectDTO) {
     if (!filters.unCollected) return true
     return !project.nps
+  }
+  function matchOnlyPromoters(project: TProjectDTO) {
+    if (!filters.onlyPromoters) return true
+    return project.nps != null && project.nps >= 9
+  }
+  function matchOnlyDetrators(project: TProjectDTO) {
+    if (!filters.onlyDetrators) return true
+    return project.nps != null && project.nps <= 6
+  }
+  function matchOnlyNeutrals(project: TProjectDTO) {
+    if (!filters.onlyNeutrals) return true
+    return project.nps != null && project.nps > 6 && project.nps < 9
   }
   function matchWithObs(project: TProjectDTO) {
     if (!filters.withObs) return true
@@ -99,6 +117,9 @@ export function useNPS(enabled: boolean) {
         matchCity(project) &&
         matchSeller(project) &&
         matchUnCollected(project) &&
+        matchOnlyPromoters(project) &&
+        matchOnlyNeutrals(project) &&
+        matchOnlyDetrators(project) &&
         matchWithObs(project) &&
         matchWithoutObs(project) &&
         matchNpsRange(project) &&

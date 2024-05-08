@@ -1,5 +1,6 @@
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import React, { useState } from 'react'
+import { FaClipboardList } from 'react-icons/fa'
 import { MdVisibility } from 'react-icons/md'
 
 type UpdateLogsBlockProps = {
@@ -11,13 +12,23 @@ function UpdateLogsBlock({ logs, SectionElement }: UpdateLogsBlockProps) {
   return (
     <div className="flex w-full flex-col gap-2 px-2">
       <div className="flex w-full items-center justify-end">
-        <button
-          onClick={() => setShowMenu((prev) => !prev)}
-          className="flex items-center gap-1 rounded-full border border-cyan-500 bg-cyan-100 px-2 py-1 text-cyan-500"
-        >
-          <MdVisibility />
-          <p className="text-xs font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
-        </button>
+        {showMenu ? (
+          <button
+            onClick={() => setShowMenu((prev) => !prev)}
+            className="flex items-center gap-1 rounded-full border border-red-500 bg-red-100 px-2 py-1 text-red-500"
+          >
+            <FaClipboardList />
+            <p className="text-xs font-medium">FECHAR REGISTRO DE ALTERAÇÕES</p>
+          </button>
+        ) : (
+          <button
+            onClick={() => setShowMenu((prev) => !prev)}
+            className="flex items-center gap-1 rounded-full border border-cyan-500 bg-cyan-100 px-2 py-1 text-cyan-500"
+          >
+            <FaClipboardList />
+            <p className="text-xs font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
+          </button>
+        )}
       </div>
       {showMenu ? SectionElement : null}
     </div>

@@ -137,10 +137,34 @@ function NPSFilterBlock({ filters, setFilters }) {
       </div>
       <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
         <div
+          onClick={() => setFilters({ ...filters, onlyPromoters: !filters.onlyPromoters })}
+          className={`cursor-pointer p-2 ${
+            filters.onlyPromoters ? 'bg-green-500 text-white' : 'bg-transparent text-green-500'
+          } w-fit rounded border border-green-500 font-bold`}
+        >
+          PROMOTORES
+        </div>
+        <div
+          onClick={() => setFilters({ ...filters, onlyDetrators: !filters.onlyDetrators })}
+          className={`cursor-pointer p-2 ${
+            filters.onlyDetrators ? 'bg-red-500 text-white' : 'bg-transparent text-red-500'
+          } w-fit rounded border border-red-500 font-bold`}
+        >
+          DETRATORES
+        </div>
+        <div
+          onClick={() => setFilters({ ...filters, onlyNeutrals: !filters.onlyNeutrals })}
+          className={`cursor-pointer p-2 ${
+            filters.onlyNeutrals ? 'bg-blue-300 text-white' : 'bg-transparent text-blue-300'
+          } w-fit rounded border border-blue-300 font-bold`}
+        >
+          NEUTROS
+        </div>
+        <div
           onClick={() => setFilters({ ...filters, unCollected: !filters.unCollected })}
           className={`cursor-pointer p-2 ${
-            filters.unCollected ? 'bg-blue-500 text-white' : 'bg-transparent text-blue-500'
-          } w-fit rounded border border-blue-500 font-bold`}
+            filters.unCollected ? 'bg-gray-500 text-white' : 'bg-transparent text-gray-500'
+          } w-fit rounded border border-gray-500 font-bold`}
         >
           NÃO COLETADOS
         </div>

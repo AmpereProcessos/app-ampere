@@ -78,6 +78,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 changes={changes}
                 setChanges={setChanges}
                 project={project}
+                updateLogs={updateLogs || []}
               />
               <InfoVisitaTecnicaBlock
                 editor={false}

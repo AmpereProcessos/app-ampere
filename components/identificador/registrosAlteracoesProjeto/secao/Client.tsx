@@ -4,23 +4,42 @@ import React from 'react'
 import UpdateLogCard from '../UpdateLogCard'
 
 const RelatedFields = [
-  'pagamento.forma',
-  'pagamento.credor',
-  'pagamento.pagador',
-  'pagamento.contatoPagador',
-  'pagamento.cobrancaFeita',
-  'pagamento.dataRecebimento',
-  'faturamento.empresaFaturamento',
-  'faturamento.cnpjFaturamento',
-  'faturamento.concluido',
+  'nomeDoContrato',
+  'nomeDoProjeto',
+  'codigoSVB',
+  'cpf_cnpj',
+  'tipoDeServico',
+  'regional',
+  'telefone',
+  'email',
+  'cep',
+  'uf',
+  'cidade',
+  'bairro',
+  'logradouro',
+  'numeroResidencia',
+  'canalVenda',
+  'segmento',
+  'vendedor.nome',
+  'insider',
+  'possuiaGD',
+  'linkDrive',
+  'idVisitaTecnica',
+  'idProjetoCRM',
+  'idPropostaCRM',
+  'oem.aplicavel',
+  'oem.duracao',
+  'oem.qtdeManutencoes',
+  'obsComercial',
+  'idSolicitacaoContrato',
 ]
 function getRelatedLogs(logs: TProjectUpdateLogDTO[]) {
   return logs.filter((log) => Object.keys(log.alteracoes).some((a) => RelatedFields.includes(a)))
 }
-type PaymentUpdateLogsProps = {
+type ClientUpdateLogsProps = {
   logs: TProjectUpdateLogDTO[]
 }
-function Payment({ logs }: PaymentUpdateLogsProps) {
+function Client({ logs }: ClientUpdateLogsProps) {
   const relatedLogs = getRelatedLogs(logs)
   return (
     <div className="flex w-full flex-col gap-1">
@@ -28,11 +47,11 @@ function Payment({ logs }: PaymentUpdateLogsProps) {
         relatedLogs.map((log) => <UpdateLogCard key={log._id} log={log} />)
       ) : (
         <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
-          Sem registros de atualização relacionados a pagamento.
+          Sem registros de atualização relacionados ao dados do cliente.
         </p>
       )}
     </div>
   )
 }
 
-export default Payment
+export default Client

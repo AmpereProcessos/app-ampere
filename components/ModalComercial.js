@@ -38,6 +38,7 @@ import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
 import { useSession } from 'next-auth/react'
+import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal(false))
@@ -45,7 +46,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
 
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
-
+  const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
 
   const [changes, setChanges] = useState({})
@@ -87,7 +88,15 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
-              <InfoClienteBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
+              <InfoClienteBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+                project={project}
+              />
               <InfoVisitaTecnicaBlock
                 editor={false}
                 infoHolder={infoHolder}
@@ -102,6 +111,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
+                updateLogs={updateLogs || []}
                 minimalInfo={false}
                 showPaymentInfo={true}
               />
@@ -135,7 +145,14 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 projectName={infoHolder.nomeDoContrato}
                 projectIdentificator={project.qtde}
               />
-              <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoPagamentoBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+              />
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) && (
                 <InfoCompraBlock
                   editor={true}

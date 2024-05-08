@@ -59,27 +59,6 @@ function NPS() {
       nps: formatDecimalPlaces(nps, 2),
     }
   }
-  function getNPSValue(data) {
-    if (!data) return 0
-    const reduced = data.reduce(
-      (acc, current) => {
-        if (acc == {}) {
-          acc = {
-            promoter: 0,
-            detrator: 0,
-          }
-        }
-        const currentNPSValue = current.nps
-        if (currentNPSValue && currentNPSValue >= 9) acc.promoter = acc.promoter + 1
-        if (currentNPSValue && currentNPSValue <= 6) acc.detrator = acc.detrator + 1
-        if (currentNPSValue && currentNPSValue >= 0 && currentNPSValue <= 10) acc.collected = acc.collected + 1
-        return acc
-      },
-      { promoter: 0, detrator: 0, collected: 0 }
-    )
-    const nps = ((reduced.promoter - reduced.detrator) * 100) / reduced.collected
-    return nps.toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  }
 
   const renderCards = useMemo(() => data?.map((project, index) => <NPSCard key={project._id} project={project} />), [data])
   if (status == 'loading') return <LoadingPage />

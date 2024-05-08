@@ -4,6 +4,8 @@ import TextInput from '../inputs/Text'
 import SelectInput from '../inputs/Select'
 import NumberInput from '../inputs/Number'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import ElectricalInstallation from '../identificador/registrosAlteracoesProjeto/secao/ElectricalInstallation'
 
 type InfoDadosConcessionariaBlockProps = {
   editor: boolean
@@ -19,6 +21,7 @@ function InfoDadosConcessionariaBlock({ editor, infoHolder, setInfo, changes, se
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
         INFORMAÇÕES SOBRE A INSTALAÇÃO (CONCESSIONÁRIA)
       </span>
+      <UpdateLogsBlock logs={updateLogs} SectionElement={<ElectricalInstallation logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
@@ -66,7 +69,7 @@ function InfoDadosConcessionariaBlock({ editor, infoHolder, setInfo, changes, se
         </div>
         <div className="w-full lg:w-1/4">
           <SelectInput
-            label={'DISTRIBUIÇÃO DE CRÉDITOS'}
+            label={'NECESSÁRIO DISTRIBUIÇÃO DE CRÉDITOS'}
             value={infoHolder.dadosCemig?.distCreditos}
             selectedItemLabel="NÃO DEFINIDO"
             editable={editor}

@@ -434,7 +434,24 @@ function BandoDeDados({ data }) {
               <li>
                 <a
                   onClick={() => {
-                    if (currentPage == 4) return
+                    if (currentPage != 5) {
+                      setCurrentPage(5)
+                      getProjects(5)
+                    } else return
+                  }}
+                  className={`cursor-pointer px-3 py-2 ${
+                    currentPage == 5
+                      ? 'bg-blue-300 text-blue-700 hover:bg-blue-100 hover:text-blue-500'
+                      : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  } border  border-gray-300 leading-tight`}
+                >
+                  5
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={() => {
+                    if (currentPage == 5) return
                     getProjects(currentPage + 1)
                     setCurrentPage((prevState) => prevState + 1)
                   }}

@@ -302,6 +302,22 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     label: 'COMISSIONAMENTO DE SUPRIMENTOS FEITO',
     getFormattedValue: (value: any) => (value ? 'SIM' : 'NÃO'),
   },
+  'dadosCemig.titularProjeto': {
+    label: 'NOME DO TITULAR',
+    getFormattedValue: (value: any) => value,
+  },
+  'dadosCemig.numeroInstalacao': {
+    label: 'NÚMERO DA INSTALAÇÃO',
+    getFormattedValue: (value: any) => value,
+  },
+  'dadosCemig.distCreditos': {
+    label: 'NECESSÁRIO DISTRIBUIÇÃO DE CRÉDITOS',
+    getFormattedValue: (value: any) => value,
+  },
+  'dadosCemig.qtdeDistCreditos': {
+    label: 'QTDE DE DISTRIBUIÇÕES',
+    getFormattedValue: (value: any) => value,
+  },
   'pagamento.forma': {
     label: 'FORMA DE PAGAMENTO',
     getFormattedValue: (value: any) => value,

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
               $ne: 'CONCLUIDA',
             },
             'contrato.status': 'ASSINADO',
-            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+            tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA'] },
           },
         },
         {

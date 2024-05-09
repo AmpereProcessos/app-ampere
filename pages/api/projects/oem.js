@@ -17,7 +17,7 @@ export default async function handler(req, res) {
               {
                 'obra.statusDaObra': 'CONCLUIDA',
               },
-              { tipoDeServico: 'OPERAÇÃO E MANUTENÇÃO' },
+              { tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA'] } },
             ],
             'oem.oemConcluido': { $ne: true },
             'oem.plano': { $nin: [null, 'NÃO SE APLICA'] },

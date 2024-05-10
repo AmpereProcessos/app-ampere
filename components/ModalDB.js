@@ -206,6 +206,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) ? (
                 <InfoProjetoBlock
+                  comercialEdition={userHasOverallAccess}
                   editor={userHasOverallAccess}
                   infoHolder={infoHolder}
                   setInfo={setInfo}

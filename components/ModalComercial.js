@@ -190,6 +190,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) ? (
                 <InfoProjetoBlock
+                  comercialEdition={true}
                   editor={true}
                   infoHolder={infoHolder}
                   setInfo={setInfo}

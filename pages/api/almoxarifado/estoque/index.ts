@@ -1,10 +1,11 @@
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
-import { InsertMaterialSchema, TMaterial } from '@/utils/schemas/materials'
+import { InputMaterialUpdateSchema, InsertMaterialSchema, TMaterial } from '@/utils/schemas/materials'
 import connectToDatabase from '@/utils/services/mongodb/warehouse'
 import createHttpError from 'http-errors'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
+import { z } from 'zod'
 
 type GetResponse = {
   data: TMaterial | TMaterial[]
@@ -101,4 +102,55 @@ const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
   }
   return res.status(201).json({ data: 'Material atualizado com sucesso !', message: 'Material atualizado com sucesso !' })
 }
-export default apiHandler({ GET: getMaterials, POST: createMaterial, PUT: updateMaterial })
+
+type PatchResponse = {
+  data: string
+  message: string
+}
+
+const inputMaterial: NextApiHandler<PatchResponse> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+  const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
+
+  const { id } = req.query
+  if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido ou não fornecido.')
+
+  const changes = InputMaterialUpdateSchema.parse(req.body)
+
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const collection: Collection<TMaterial> = db.collection('material')
+  const logCollection: Collection<TMaterialUpdateRegistry> = db.collection('alteracoes')
+
+  const material = await collection.findOne({ _id: new ObjectId(id) }, { projection: { qtde: 1, preco: 1 } })
+  if (!material) throw new createHttpError.NotFound('Material para atualização não informado.')
+  // Calculating new pricing based on current qty and price and input qty and price
+  const newPrice = (material.qtde * material.preco + changes.qtdeEntrada * changes.precoEntrada) / (material.qtde + changes.qtdeEntrada)
+  // Defining the difference to increase to material qty
+  const diff = changes.qtdeEntrada
+  const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $inc: { qtde: diff }, $set: { preco: newPrice } })
+  if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao atualizar material.')
+
+  // Creating update log for this operation
+  const log: TMaterialUpdateRegistry = {
+    alteracao: diff,
+    tipo: 'ENTRADA',
+    idFormulario: undefined,
+    material: {
+      id: id,
+      nome: material.nome,
+    },
+    projeto: {
+      id: undefined,
+      nome: undefined,
+    },
+    qtdeAnterior: material.qtde,
+    qtdeNovo: material.qtde + diff,
+    autor: author,
+    dataInsercao: new Date().toISOString(),
+  }
+
+  await logCollection.insertOne(log)
+
+  return res.status(201).json({ data: 'Entrada de material feita com sucesso !', message: 'Entrada de material feita com sucesso !' })
+}
+export default apiHandler({ GET: getMaterials, POST: createMaterial, PUT: updateMaterial, PATCH: inputMaterial })

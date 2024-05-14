@@ -12,16 +12,21 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const over40kWpProjects = await projectsCollection.find({ 'contrato.status': 'ASSINADO', 'sistema.potPico': { $gte: 40 } }).toArray()
+  const lastChangedMeter = await projectsCollection
+    .find({ 'medidor.data': { $ne: null } }, { sort: { 'medidor.data': -1 } })
+    .limit(30)
+    .toArray()
 
-  const ProjectsFormatted = over40kWpProjects.map((project) => {
+  const ProjectsFormatted = lastChangedMeter.map((project) => {
     return {
       QTDE: project.qtde,
       NOME: project.nomeDoContrato,
       TELEFONE: project.telefone || 'N/A',
-      'POTÊNCIA PICO': project.sistema.potPico,
-      'PARECER DE ACESSO': project.parecer.dataParecerDeAcesso ? formatDateAsLocale(project.parecer.dataParecerDeAcesso) : 'N/A',
+      VENDEDOR: project.vendedor.nome,
+      CIDADE: project.cidade,
+      UF: project.uf,
       'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
+      'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
     }
   })
   console.log(ProjectsFormatted.length)

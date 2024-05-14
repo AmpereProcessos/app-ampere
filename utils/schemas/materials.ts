@@ -87,6 +87,18 @@ export const InsertMaterialSchema = z.object({
   dataInsercao: z.string({ required_error: 'Data de inserção não informada.' }).datetime(),
 })
 
+export const InputMaterialUpdateSchema = z.object({
+  qtdeEntrada: z.number({
+    required_error: 'Quantidade em entrada não informada.',
+    invalid_type_error: 'Tipo não válido para quantidade em entrada.',
+  }),
+  precoEntrada: z.number({
+    required_error: 'Preço em entrada não informada.',
+    invalid_type_error: 'Tipo não válido para preço em entrada.',
+  }),
+})
+
+export type TInputMaterialData = z.infer<typeof InputMaterialUpdateSchema>
 export type TMaterial = z.infer<typeof GeneralMaterialSchema>
 
 export type TMaterialDTO = TMaterial & { _id: string }

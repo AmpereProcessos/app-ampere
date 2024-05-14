@@ -14,7 +14,7 @@ export async function fetchMaterials() {
     throw error
   }
 }
-async function fetchMaterialLogs(materialId: string) {
+async function fetchMaterialLogsByMaterialId(materialId: string) {
   try {
     const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?materialId=${materialId}`)
     return data.data as TMaterialUpdateRegistryDTO[]
@@ -132,7 +132,24 @@ export function useMaterialsWithFilters(enabled: boolean, filters: any) {
 export function useMaterialLogs(materialId: string) {
   return useQuery({
     queryKey: ['material-update-registries', materialId],
-    queryFn: async () => await fetchMaterialLogs(materialId),
+    queryFn: async () => await fetchMaterialLogsByMaterialId(materialId),
+    refetchOnWindowFocus: false,
+  })
+}
+
+async function fetchMaterialLogsBy({ type }: { type: string }) {
+  try {
+    const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?type=${type}`)
+    return data.data as TMaterialUpdateRegistryDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useMaterialLogsByType({ type }: { type: string }) {
+  return useQuery({
+    queryKey: ['materials-logs-by-type', type],
+    queryFn: async () => await fetchMaterialLogsBy({ type }),
     refetchOnWindowFocus: false,
   })
 }

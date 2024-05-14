@@ -1,9 +1,16 @@
 import { ObjectId } from 'mongodb'
 import { z } from 'zod'
 
+export const MaterialUpdateRegistryType = z.union(
+  [z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA'), z.literal('ALTERAÇÃO MANUAL')],
+  {
+    required_error: 'Tipo de atualização do material não informado.',
+    invalid_type_error: 'Tipo não válido para o tipo de atualização do material.',
+  }
+)
 const GeneralMaterialUpdateRegistry = z.object({
   alteracao: z.number(),
-  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA'), z.literal('ALTERAÇÃO MANUAL')]),
+  tipo: MaterialUpdateRegistryType,
   idFormulario: z.string().optional().nullable(),
   material: z.object({
     id: z.string(),
@@ -25,10 +32,7 @@ const GeneralMaterialUpdateRegistry = z.object({
 
 const InsertMaterialUpdateRegistrySchema = z.object({
   alteracao: z.number({ required_error: 'Alteração não informada.', invalid_type_error: 'Tipo não válido para alteração.' }),
-  tipo: z.union([z.literal('RETIRADA'), z.literal('DEVOLUÇÃO'), z.literal('ENTRADA'), z.literal('ALTERAÇÃO MANUAL')], {
-    required_error: 'Tipo da alteração não informada.',
-    invalid_type_error: 'Tipo não válido para o tipo da alteração.',
-  }),
+  tipo: MaterialUpdateRegistryType,
   idFormulario: z
     .string({ required_error: 'Referência do formulário não informada.', invalid_type_error: 'Tipo não válido para a referência do formulário.' })
     .optional()

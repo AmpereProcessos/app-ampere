@@ -1,7 +1,7 @@
 import axios from 'axios'
 import createHttpError from 'http-errors'
 import { deleteWarehouseFormulary } from './warehouse-forms'
-import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
+import { TInputMaterialData, TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 
 type UpdateManyMaterialsParams = {
   formularyId?: string
@@ -18,6 +18,19 @@ export async function updateManyMaterials({ formularyId, project, updates }: Upd
   }
 }
 
+type InputMaterialParams = {
+  materialId: string
+  changes: TInputMaterialData
+}
+export async function inputMaterialUpdate({ materialId, changes }: InputMaterialParams) {
+  try {
+    const { data } = await axios.patch(`/api/almoxarifado/estoque?id=${materialId}`, changes)
+    if (typeof data.message != 'string') return 'Entrada de material feita com sucesso !'
+    return data.message
+  } catch (error) {
+    throw error
+  }
+}
 export async function debitMaterials({ formId, projectId, identifier, changes, tag }) {
   console.log('ID DO FORMULÁRIO', formId)
   console.log('MATERIAIS DEBITADOS', changes)

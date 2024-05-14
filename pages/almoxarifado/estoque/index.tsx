@@ -216,12 +216,12 @@ function Estoque() {
         >
           <p className="text-sm font-bold uppercase">NOVO ITEM</p>
         </div>
-        <div
-          onClick={() => setEntranceModalIsOpen(true)}
-          className="left-150 fixed bottom-10 ml-36 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
-        >
-          <p className="text-sm font-bold uppercase">ENTRADA</p>
-        </div>
+        <Link href={'/almoxarifado/estoque/entrada'}>
+          <div className="left-150 fixed bottom-10 ml-36 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <p className="text-sm font-bold uppercase">ENTRADA</p>
+          </div>
+        </Link>
+
         {editMaterialModal.isOpen && editMaterialModal.id ? (
           <EditMaterial materialId={editMaterialModal.id} closeModal={() => setEditMaterialModal({ id: null, isOpen: false })} />
         ) : null}

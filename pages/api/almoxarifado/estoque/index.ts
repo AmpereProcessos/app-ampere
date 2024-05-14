@@ -121,7 +121,7 @@ const inputMaterial: NextApiHandler<PatchResponse> = async (req, res) => {
   const collection: Collection<TMaterial> = db.collection('material')
   const logCollection: Collection<TMaterialUpdateRegistry> = db.collection('alteracoes')
 
-  const material = await collection.findOne({ _id: new ObjectId(id) }, { projection: { qtde: 1, preco: 1 } })
+  const material = await collection.findOne({ _id: new ObjectId(id) }, { projection: { nome: 1, qtde: 1, preco: 1 } })
   if (!material) throw new createHttpError.NotFound('Material para atualização não informado.')
   // Calculating new pricing based on current qty and price and input qty and price
   const newPrice = (material.qtde * material.preco + changes.qtdeEntrada * changes.precoEntrada) / (material.qtde + changes.qtdeEntrada)

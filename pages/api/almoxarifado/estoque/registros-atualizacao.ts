@@ -29,7 +29,7 @@ const getRegistries: NextApiHandler<GetResponse> = async (req, res) => {
   if (type) {
     const fixedType = MaterialUpdateRegistryType.parse(type)
     const registries = await logCollection
-      .find({ tipo: fixedType }, { sort: { _id: 1 } })
+      .find({ tipo: fixedType }, { sort: { _id: -1 } })
       .limit(30)
       .toArray()
     return res.status(200).json({ data: registries })

@@ -310,12 +310,9 @@ function Suprimentos() {
                     selected={filters.deliveryStatus}
                     options={[
                       { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
-                      {
-                        id: 2,
-                        value: 'AGUARDANDO COMPRA',
-                        label: 'AGUARDANDO COMPRA',
-                      },
-                      { id: 3, value: 'CANCELADO', label: 'CANCELADO' },
+                      { id: 2, value: 'AGUARDANDO COMPRA', label: 'AGUARDANDO COMPRA' },
+                      { id: 3, value: 'ENTREGUE', label: 'ENTREGUE' },
+                      { id: 4, value: 'CANCELADO', label: 'CANCELADO' },
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) =>

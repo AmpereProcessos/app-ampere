@@ -1175,6 +1175,11 @@ export const projetistas = [
     cod: 55,
   },
   {
+    nome: 'EVELLYN SILVA AZEVEDO',
+    label: 'EVELLYN',
+    cod: 56,
+  },
+  {
     nome: 'NÃO DEFINIDO',
     label: 'NÃO DEFINIDO',
     cod: 0,

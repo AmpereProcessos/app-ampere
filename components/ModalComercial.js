@@ -102,6 +102,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 changes={changes}
                 setChanges={setChanges}
                 analysisId={project.idVisitaTecnica}
+                session={session}
               />
               <InfoContratoBlock
                 editor={true}

@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       const crmProjectsCollection = crmDb.collection('projects')
       console.log('CHANGES', changes)
       await updateAppProjectsComission({ collection: appProjectsCollection, changes })
-      await updateCRMProjectsComission({ collection: crmProjectsCollection, changes })
+
       res.status(200).json('Atualizações feitas com sucesso !')
     } catch (error) {
       errorHandler(error, res)
@@ -187,33 +187,6 @@ async function updateAppProjectsComission({ collection, changes }) {
     })
     if (bulkwriteAppUpdate.length > 0) {
       await collection.bulkWrite(bulkwriteAppUpdate)
-      return
-    }
-    return
-  } catch (error) {
-    throw error
-  }
-}
-async function updateCRMProjectsComission({ collection, changes }) {
-  try {
-    const bulkwriteCRMUpdate = changes
-      .filter((project) => !!project.crmProjectId)
-      .map((project) => {
-        const { crmProjectId, appProjectId, sellerCommission, insiderCommission } = project
-        return {
-          updateOne: {
-            filter: { _id: new ObjectId(crmProjectId) },
-            update: {
-              $set: {
-                'comissoes.responsavel': sellerCommission,
-                'comissoes.representante': insiderCommission,
-              },
-            },
-          },
-        }
-      })
-    if (bulkwriteCRMUpdate.length > 0) {
-      const dbResponse = await collection.bulkWrite(bulkwriteCRMUpdate)
       return
     }
     return

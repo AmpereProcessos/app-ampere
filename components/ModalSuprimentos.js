@@ -91,6 +91,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 changes={changes}
                 setChanges={setChanges}
                 analysisId={project.idVisitaTecnica}
+                session={session}
               />
               <InfoSistemaBlock
                 editor={true}

@@ -689,35 +689,61 @@ export const technicalAnalysisStatus = [
 export const technicalAnalysisSolicitationTypes = [
   {
     id: 1,
-    label: 'VISITA TÉCNICA REMOTA - URBANA',
-    value: 'VISITA TÉCNICA REMOTA - URBANA',
+    label: 'ANÁLISE TÉCNICA REMOTA URBANA',
+    value: 'ANÁLISE TÉCNICA REMOTA URBANA',
+    descriptions: [
+      'Requisite uma análise técnica de instalação urbana ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações e imagens relevantes à análise.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
   },
   {
     id: 2,
-    label: 'VISITA TÉCNICA REMOTA - RURAL',
-    value: 'VISITA TÉCNICA REMOTA - RURAL',
+    label: 'ANÁLISE TÉCNICA REMOTA RURAL',
+    value: 'ANÁLISE TÉCNICA REMOTA RURAL',
+    descriptions: [
+      'Requisite uma análise técnica de instalação rural ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações e imagens relevantes à análise.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
   },
   {
     id: 3,
-    label: 'VISITA TÉCNICA IN LOCO - URBANA',
-    value: 'VISITA TÉCNICA IN LOCO - URBANA',
+    label: 'ANÁLISE TÉCNICA IN LOCO',
+    value: 'ANÁLISE TÉCNICA IN LOCO',
+    descriptions: [
+      'Requisite uma análise técnica in loco ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações relevantes para a visita in loco.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
   },
   {
     id: 4,
-    label: 'VISITA TÉCNICA IN LOCO - RURAL',
-    value: 'VISITA TÉCNICA IN LOCO - RURAL',
+    label: 'ORÇAMENTAÇÃO',
+    value: 'ORÇAMENTAÇÃO',
+    descriptions: [
+      'Requisite um orçamento de itens específicos ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para a especificação os itens a serem orçados.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
   },
   {
     id: 5,
-    label: 'AUMENTO DE SISTEMA',
-    value: 'AUMENTO DE SISTEMA',
+    label: 'DESENHO PERSONALIZADO',
+    value: 'DESENHO PERSONALIZADO',
+    descriptions: [
+      'Requisite um desenho personalizado ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações relevantes para a execução do desenho.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
   },
-  { id: 6, label: 'DESENHO PERSONALIZADO', value: 'DESENHO PERSONALIZADO' },
-  { id: 7, label: 'ORÇAMENTAÇÃO', value: 'ORÇAMENTAÇÃO' },
 ]
 export const technicalAnalysisPendencyCategories = [
   { id: 1, label: 'PENDÊNCIA COMERCIAL', value: 'PENDÊNCIA COMERCIAL' },
-  { id: 2, label: 'PENDÊNCIA COM TERCEIROS', value: 'PENDÊNCIA COM TERCEIROS' }, // COTAÇÕES, ETC
+  { id: 2, label: 'PENDÊNCIA TERCEIROS', value: 'PENDÊNCIA TERCEIROS' }, // COTAÇÕES, ETC
   { id: 3, label: 'PENDÊNCIA CONCESSIONÁRIA', value: 'PENDÊNCIA CONCESSIONÁRIA' },
   { id: 4, label: 'OUTROS', value: 'OUTROS' },
 ]
@@ -930,6 +956,16 @@ export const structureTypes = [
   { id: 5, label: 'CARPORT', value: 'CARPORT' },
   { id: 6, label: 'ESTRUTURA PERSONALIZADA', value: 'ESTRUTURA PERSONALIZADA' },
   { id: 7, label: 'N/A', value: 'N/A' },
+]
+export const crmStructureTypes = [
+  { id: 1, label: 'Carport', value: 'Carport' },
+  { id: 2, label: 'Cerâmico', value: 'Cerâmico' },
+  { id: 3, label: 'Fibrocimento', value: 'Fibrocimento' },
+  { id: 4, label: 'Laje', value: 'Laje' },
+  { id: 5, label: 'Metálico', value: 'Metálico' },
+  { id: 6, label: 'Zipado', value: 'Zipado' },
+  { id: 7, label: 'Solo', value: 'Solo' },
+  { id: 8, label: 'Sem estrutura', value: 'Sem estrutura' },
 ]
 export const supplyOptions = {
   GRAMPO: {

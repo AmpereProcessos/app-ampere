@@ -5,6 +5,8 @@ import { createRevenue } from '../../../utils/methods/mutation/revenues'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { notifySeller, updateCRMProject } from '../crm-integration'
 import { QueryClient } from 'react-query'
+import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
+import { updateOpportunity } from './crm/opportunities'
 
 type HandleComercialUpdateProps = {
   previousData: TProjectDTO
@@ -121,6 +123,8 @@ type HandleCRMAutomationsParams = {
 }
 async function handleCRMAutomation({ previousData, newData }: HandleCRMAutomationsParams) {
   const projectId = previousData._id
+  const contractRequestDate = newData.contrato.dataSolicitacao
+  const idContractRequest = newData.idSolicitacaoContrato
   const idCRMProject = newData.idProjetoCRM as string
   const idCRMPropose = newData.idPropostaCRM
   const email = newData.email
@@ -140,9 +144,21 @@ async function handleCRMAutomation({ previousData, newData }: HandleCRMAutomatio
   // Checking for signature event
   if (wasUnsigned && isSigned && !!signatureDate) {
     // Update  crm project
-    const changes = { contrato: { id: projectId, idProposta: idCRMPropose, dataAssinatura: signatureDate }, dataPerda: null, motivoPerda: null }
-    await updateCRMProject({ idCRMProject: idCRMProject, changes: changes })
-    await notifySeller({ sellerName, idCRMProject, message: 'CONTRATO ATUALIZADO COMO ASSINADO.' })
+    const changes: Partial<TOpportunity> = {
+      ganho: {
+        idProjeto: projectId,
+        idProposta: idCRMPropose,
+        data: signatureDate,
+        idSolicitacao: idContractRequest,
+        dataSolicitacao: contractRequestDate,
+      },
+      perda: {
+        data: null,
+        descricaoMotivo: null,
+      },
+    }
+    await updateOpportunity({ id: idCRMProject, changes: changes })
+    // await notifySeller({ sellerName, idCRMProject, message: 'CONTRATO ATUALIZADO COMO ASSINADO.' })
     const rdSaleNotification = { operation: 'SALE', email: email, value: contractValue }
     if (email) await notifyRDStationWin({ info: rdSaleNotification })
 
@@ -151,15 +167,18 @@ async function handleCRMAutomation({ previousData, newData }: HandleCRMAutomatio
   // Checking for rescission
   if (isTerminated) {
     console.log('PASSED IN CONTRACT TERMINATION')
-    const changes = { contrato: null, dataPerda: new Date().toISOString(), motivoPerda: 'RESCISÃO CONTRATUAL' }
-    await updateCRMProject({ idCRMProject: idCRMProject, changes: changes })
+    const changes: Partial<TOpportunity> = {
+      ganho: { data: null },
+      perda: { data: new Date().toISOString(), descricaoMotivo: 'RESCISÃO CONTRATUAL' },
+    }
+    await updateOpportunity({ id: idCRMProject, changes: changes })
     return 'Automações de rescisão contratual realizadas.'
   }
   // Checking for unsigning
   if (wasSigned && !isSigned && !isTerminated) {
     console.log('PASSED IN CONTRACT UNSIGNING')
-    const changes = { contrato: null }
-    await updateCRMProject({ idCRMProject: idCRMProject, changes: changes })
+    const changes: Partial<TOpportunity> = { ganho: { data: null } }
+    await updateOpportunity({ id: idCRMProject, changes: changes })
     return 'Automações de dessasinatura realizadas.'
   }
   return 'Automações de CRM concluídas.'

@@ -1,8 +1,6 @@
 import React from 'react'
-import NumberInput from '../NumberInput'
-import TextInput from '../TextInput'
+
 import { IoMdAdd } from 'react-icons/io'
-import { useTechnicalAnalysisById } from '../../utils/methods/query/techAnalysis'
 import LoadingPage from '../utils/LoadingPage'
 import ErrorComponent from '../utils/ErrorComponent'
 import Avatar from '../utils/Avatar'
@@ -11,7 +9,12 @@ import { TbRulerMeasure } from 'react-icons/tb'
 import { MdTopic } from 'react-icons/md'
 import { formatDateAsLocale } from '../../utils/methods/formatting'
 import { BsCalendarCheckFill, BsCalendarFill } from 'react-icons/bs'
-function getViewPermissions({ routes }) {
+import { TProjectDTO } from '@/utils/schemas/projects'
+import { Session } from 'next-auth'
+import { useTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
+import TextInput from '../inputs/Text'
+import TechnicalAnalysisFiles from '../identificador/analisesTecnicas/TechnicalAnalysisFiles'
+function getViewPermissions({ routes }: { routes?: string[] }) {
   if (!routes) {
     return {
       suprimentos: false,
@@ -27,10 +30,19 @@ function getViewPermissions({ routes }) {
 
   return permission
 }
-function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChanges, analysisId }) {
-  const { data: session } = useSession()
-  const { data: analysis, isSuccess, isLoading, isError } = useTechnicalAnalysisById({ id: analysisId, enabled: !!analysisId })
-  const viewPermissions = getViewPermissions({ routes: session.user?.permissoes.rotas })
+
+type InfoVisitaTecnicaBlockProps = {
+  editor: boolean
+  infoHolder: TProjectDTO
+  setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
+  changes: { [key: string]: any }
+  setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
+  analysisId: string
+  session: Session
+}
+function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChanges, analysisId, session }: InfoVisitaTecnicaBlockProps) {
+  const { data: analysis, isLoading, isError, isSuccess } = useTechnicalAnalysisById({ id: analysisId })
+  const viewPermissions = getViewPermissions({ routes: session?.user?.permissoes.rotas })
   // Return for technical analysis previous to system
   if (!analysisId)
     return (
@@ -68,6 +80,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             label={'TÉCNICO RESPONSÁVEL'}
             editable={editor}
             value={infoHolder.visitaTecnica?.tecnico ? infoHolder.visitaTecnica?.tecnico : ''}
+            placeholder="Preencha o nome do técnico responsável."
             handleChange={(value) => {
               setChanges({
                 ...changes,
@@ -86,6 +99,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             label={'Tipo da telha'}
             editable={editor}
             value={infoHolder.visitaTecnica?.tipoDaTelha ? infoHolder.visitaTecnica?.tipoDaTelha : ''}
+            placeholder="Preencha o tipo da telha."
             handleChange={(value) => {
               setChanges({
                 ...changes,
@@ -229,7 +243,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                       <h1 className="w-full text-start font-bold leading-none tracking-tight ">{pendency.categoria}</h1>
                       <div className="mt-1 flex w-full items-center justify-start gap-2">
                         <Avatar fallback={'R'} url={null} height={20} width={20} />
-                        <p className="text-xs font-medium text-gray-500">{pendency.responsavel}</p>
+                        <p className="text-xs font-medium text-gray-500">{pendency.responsavel.nome}</p>
                       </div>
                       <h1 className="my-2 rounded-md bg-gray-100 p-2 text-center text-sm text-gray-500">{pendency.descricao}</h1>
                       <div className="flex w-full items-center justify-start">
@@ -238,10 +252,10 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                             <BsCalendarFill />
                             <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataInsercao)}</p>
                           </div>
-                          {pendency.dataEfetivacao ? (
+                          {pendency.dataFinalizacao ? (
                             <div className={`flex items-center gap-2 text-gray-500`}>
                               <BsCalendarCheckFill color="rgb(34,197,94)" />
-                              <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataEfetivacao, true)}</p>
+                              <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataFinalizacao, true)}</p>
                             </div>
                           ) : null}
                         </div>
@@ -298,153 +312,9 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                 </div>
               </div>
             ) : null}
+            <TechnicalAnalysisFiles analysisId={analysisId} />
           </div>
         ) : null}
-
-        {/* <div className="flex gap-2 justify-around flex-wrap">
-          <div className="flex items-center w-[350px] justify-center">
-            <input
-              disabled={!editor}
-              checked={infoHolder.visitaTecnica?.status === 'REALIZADA' ? true : false}
-              onChange={(e) => {
-                setChanges({
-                  ...changes,
-                  'visitaTecnica.status': e.target.checked ? 'REALIZADA' : 'PENDÊNCIA',
-                })
-                setInfo({
-                  ...infoHolder,
-                  visitaTecnica: {
-                    ...infoHolder.visitaTecnica,
-                    status: e.target.checked ? 'REALIZADA' : 'PENDÊNCIA',
-                  },
-                })
-              }}
-              type="checkbox"
-              name="visitaTecnica"
-              id="visitaTecnica"
-            />
-            <label className="ml-2" htmlFor="visitaTecnica">
-              REALIZADA ?
-            </label>
-          </div>
-          <TextInput
-            label={'TÉCNICO RESPONSÁVEL'}
-            editable={editor}
-            value={infoHolder.visitaTecnica?.tecnico ? infoHolder.visitaTecnica?.tecnico : ''}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'visitaTecnica.tecnico': value,
-              })
-              setInfo({
-                ...infoHolder,
-                visitaTecnica: {
-                  ...infoHolder.visitaTecnica,
-                  tecnico: value,
-                },
-              })
-            }}
-          />
-          <TextInput
-            label={'Tipo da telha'}
-            editable={editor}
-            value={infoHolder.visitaTecnica?.tipoDaTelha ? infoHolder.visitaTecnica?.tipoDaTelha : ''}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'visitaTecnica.tipoDaTelha': value,
-              })
-              setInfo({
-                ...infoHolder,
-                visitaTecnica: {
-                  ...infoHolder.visitaTecnica,
-                  tipoDaTelha: value,
-                },
-              })
-            }}
-          />
-        </div>
-        {(infoVisita?.suprimentos || infoVisita?.obsSuprimentos) && (
-          <div className="flex flex-col items-center">
-            <div className="flex flex-col mx-12 mt-2 gap-2">
-              {infoVisita.suprimentos ? (
-                <div className="grid grid-cols-6 w-full">
-                  <p className="text-md text-[#fead61] font-bold text-center">descricao</p>
-                  <p className="text-md text-[#fead61] font-bold text-center">TIPO</p>
-                  <p className="text-md text-[#fead61] font-bold text-center">QUANTIDADE</p>
-                  <p className="text-md text-[#fead61] font-bold text-center">UNIDADE</p>
-                  <p className="text-md text-[#fead61] font-bold text-center col-span-2">AÇÃO</p>
-                </div>
-              ) : null}
-
-              {infoVisita.suprimentos?.map((suprimento, index) => (
-                <div key={index} className="grid grid-cols-6 w-full">
-                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.descricao}</p>
-                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.tipo}</p>
-                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.qtde}</p>
-                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.medida}</p>
-                  <div className="flex items-center justify-center gap-1 col-span-2">
-                    <button
-                      onClick={() => {
-                        setChanges({
-                          ...changes,
-                          'compra.kitInfo': infoHolder.compra?.kitInfo
-                            ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
-                            : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
-                        })
-                        setInfo({
-                          ...infoHolder,
-                          compra: {
-                            ...infoHolder.compra,
-                            kitInfo: infoHolder.compra?.kitInfo
-                              ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
-                              : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
-                          },
-                        })
-                      }}
-                      className="flex items-center gap-1 text-xs p-1 rounded border border-[#fead61] text-[#fead61] hover:bg-[#fead61] hover:text-black font-bold"
-                    >
-                      <IoMdAdd />
-                      <p>KIT</p>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setChanges({
-                          ...changes,
-                          'material.materialFaltante': infoHolder.material?.materialFaltante
-                            ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
-                            : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
-                        })
-                        setInfo({
-                          ...infoHolder,
-                          material: {
-                            ...infoHolder.material,
-                            materialFaltante: infoHolder.material?.materialFaltante
-                              ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
-                              : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
-                          },
-                        })
-                      }}
-                      className="flex items-center gap-1 text-xs p-1 rounded border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white font-bold"
-                    >
-                      <IoMdAdd />
-                      <p>FALTANTE</p>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col w-full self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÕES P/SUPRIMENTOS</span>
-              <textarea
-                value={infoVisita.obsSuprimentos}
-                readOnly={true}
-                placeholder={'Observações p/ suprimentos aqui...'}
-                className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-              />
-            </div>
-          </div>
-        )} */}
       </div>
     )
 }

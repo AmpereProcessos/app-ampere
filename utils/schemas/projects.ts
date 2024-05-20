@@ -267,7 +267,7 @@ const GeneralProjectSchema = z.object({
     previsaoCustos: z.number().optional().nullable(),
     efetivoCustos: z.number().optional().nullable(),
     entregaFaltando: z.boolean().optional().nullable(),
-    materialFaltante: z.boolean().optional().nullable(),
+    materialFaltante: z.string().optional().nullable(),
     statusSeparacao: z.union([z.literal('SEPARADO'), z.literal('NÃO DEFINIDO'), z.literal('INICIAR SEPARAÇÃO')]),
   }),
   medidor: z.object({

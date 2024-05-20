@@ -21,7 +21,7 @@ const getReference: NextApiHandler<GetResponse> = async (req, res) => {
 
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
   const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection('projects')
-  const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection('proposes')
+  const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection('proposals')
 
   const propose = await proposesCollection.findOne({ _id: new ObjectId(proposeId) })
   const opportunity = await opportunitiesCollection.findOne({ _id: new ObjectId(opportunityId) })

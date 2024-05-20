@@ -33,7 +33,9 @@ import { useKey } from '../utils/hooks'
 import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
+import { useSession } from 'next-auth/react'
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
   useKey('Escape', () => closeModal())
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
@@ -114,6 +116,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                 changes={changes}
                 setChanges={setChanges}
                 analysisId={project.idVisitaTecnica}
+                session={session}
               />
               {!['BOMBA SOLAR', 'OPERAÇÃO E MANUTENÇÃO'].includes(project.tipoDeServico) ? (
                 <InfoPadraoBlock

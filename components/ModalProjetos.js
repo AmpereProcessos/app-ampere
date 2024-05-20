@@ -224,6 +224,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setChanges={setChanges}
                 updateLogs={updateLogs || []}
                 analysisId={project.idVisitaTecnica}
+                session={session}
               />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoPadraoBlock

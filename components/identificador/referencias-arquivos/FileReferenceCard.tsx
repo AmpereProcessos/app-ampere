@@ -39,31 +39,6 @@ function FileReferenceCard({ info }: FileReferenceCardProps) {
           >
             <TbDownload />
           </div>
-          {/* {showDeleteMenu ? (
-            <div className="relative grid grid-cols-1">
-              {deleteMenu ? (
-                <div className="flex flex-col items-center justify-center">
-                  <div onClick={() => setDeleteMenu(false)} className="w-fit scale-110 cursor-pointer text-[20px] text-red-500">
-                    <MdDelete />
-                  </div>
-                  <div className="z-2 absolute -top-8 w-fit rounded border border-gray-200 bg-[#fff] shadow-lg">
-                    <button onClick={() => deleteFile(obj)} className="p-2 text-xs font-bold text-gray-700 hover:bg-red-200">
-                      EXCLUIR
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  <div
-                    onClick={() => setDeleteMenu(true)}
-                    className="w-fit cursor-pointer text-[20px] text-red-500 opacity-40 duration-300 ease-in hover:scale-110 hover:text-red-500 hover:opacity-100"
-                  >
-                    <MdDelete />
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : null} */}
         </div>
       </div>
     </div>

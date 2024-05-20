@@ -17,6 +17,7 @@ import { useComercialAnalyticalData } from '../../utils/methods/query/comercial'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { MdAttachMoney } from 'react-icons/md'
 import { ImPower } from 'react-icons/im'
+import { TComercialAnalyticalItem } from '../api/projects/analitico/comercial'
 
 const currentDate = new Date()
 
@@ -38,7 +39,7 @@ function Analise() {
     before: dateFilter.before,
   })
 
-  function getStats({ info }) {
+  function getStats({ info }: { info: TComercialAnalyticalItem[] | undefined }) {
     if (!info)
       return {
         projetos: {
@@ -92,7 +93,6 @@ function Analise() {
   useEffect(() => {
     if (session) {
       const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('PPS')) return router.push('/')
     }
   }, [session])
   return (
@@ -153,7 +153,7 @@ function Analise() {
                 handleChange={(value) =>
                   setFilters((prev) => ({
                     ...prev,
-                    sellerName: value,
+                    sellerName: value as string[],
                   }))
                 }
                 onReset={() =>

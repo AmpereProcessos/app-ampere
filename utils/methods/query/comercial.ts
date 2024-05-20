@@ -1,3 +1,5 @@
+import { TComercialAnalyticalItem } from '@/pages/api/projects/analitico/comercial'
+import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
@@ -10,8 +12,27 @@ async function fetchProjects() {
     throw error
   }
 }
-export function useComercialProjects({ enabled }) {
-  const [filters, setFilters] = useState({
+
+type UseComercialProjectsFilters = {
+  identifier: string | null
+  search: string
+  contractStatus: string[]
+  serviceType: string[]
+  sellerName: string[]
+  insiderName: string[]
+  supplyStatus: string[]
+  signaturePendency: boolean
+  noCRMVinculation: boolean
+  noAnalysisVinculation: boolean
+  date: {
+    after: string | null
+    before: string | null
+    field1: string | null
+    field2: string | null
+  }
+}
+export function useComercialProjects({ enabled }: { enabled: boolean }) {
+  const [filters, setFilters] = useState<UseComercialProjectsFilters>({
     identifier: null,
     search: '',
     contractStatus: [],
@@ -30,56 +51,58 @@ export function useComercialProjects({ enabled }) {
     },
   })
 
-  function matchSearch(project) {
+  function matchSearch(project: TProjectDTO) {
     if (filters.search.trim().length == 0) return true
     else return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase())
   }
-  function matchIdentifier(project) {
+  function matchIdentifier(project: TProjectDTO) {
     if (!filters.identifier) return true
     if (typeof project.codigoSVB == 'string') return project.codigoSVB.includes(filters.identifier.toUpperCase())
     if (typeof project.codigoSVB == 'number') return project.codigoSVB.toString().includes(filters.identifier)
   }
-  function matchContractStatus(project) {
+  function matchContractStatus(project: TProjectDTO) {
     if (filters.contractStatus.length == 0) return true
-    else return filters.contractStatus.includes(project.contrato?.status)
+    else return filters.contractStatus.includes(project.contrato?.status || '')
   }
-  function matchServiceType(project) {
+  function matchServiceType(project: TProjectDTO) {
     if (filters.serviceType.length == 0) return true
     else return filters.serviceType.includes(project.tipoDeServico)
   }
-  function matchSellerName(project) {
+  function matchSellerName(project: TProjectDTO) {
     if (filters.sellerName.length == 0) return true
     else return filters.sellerName.includes(project.vendedor?.nome)
   }
-  function matchInsiderName(project) {
+  function matchInsiderName(project: TProjectDTO) {
     if (filters.insiderName.length == 0) return true
-    else return filters.insiderName.includes(project.insider)
+    else return filters.insiderName.includes(project.insider || '')
   }
-  function matchSupplyStatus(project) {
+  function matchSupplyStatus(project: TProjectDTO) {
     if (filters.supplyStatus.length == 0) return true
-    return filters.supplyStatus.includes(project.compra.status)
+    return filters.supplyStatus.includes(project.compra.status || '')
   }
-  function matchSignaturePendency(project) {
+  function matchSignaturePendency(project: TProjectDTO) {
     if (!filters.signaturePendency) return true
     return !!project.contrato.dataLiberacao && !project.contrato.dataAssinatura
   }
-  function matchNoCRMVinculation(project) {
+  function matchNoCRMVinculation(project: TProjectDTO) {
     if (!filters.noCRMVinculation) return true
     return !project.idProjetoCRM
   }
-  function matchNoAnalysisVinculation(project) {
+  function matchNoAnalysisVinculation(project: TProjectDTO) {
     if (!filters.noAnalysisVinculation) return true
     return !project.idVisitaTecnica
   }
 
-  function matchDate(project) {
+  function matchDate(project: TProjectDTO) {
     if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
     return (
+      // @ts-ignore
       project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      // @ts-ignore
       project[filters.date.field1][filters.date.field2] <= filters.date.before
     )
   }
-  function handleModelData(data) {
+  function handleModelData(data: TProjectDTO[]) {
     var modeledData = data
     return modeledData.filter(
       (project) =>
@@ -107,36 +130,41 @@ export function useComercialProjects({ enabled }) {
   }
 }
 
-async function fetchComercialAnalyticalData({ after, before }) {
+async function fetchComercialAnalyticalData({ after, before }: { after: string; before: string }) {
   try {
     const { data } = await axios.get(`/api/projects/analitico/comercial?after=${after}&before=${before}&field=${'contrato.dataAssinatura'}`)
-    return data
+    return data.data as TComercialAnalyticalItem[]
   } catch (error) {
     throw error
   }
 }
 
-export function useComercialAnalyticalData({ after, before }) {
-  const [filters, setFilters] = useState({
+type UseComercialAnalyticalDataFilters = {
+  search: string
+  sellerName: string[]
+  pendingVinculation: boolean
+}
+export function useComercialAnalyticalData({ after, before }: { after: string; before: string }) {
+  const [filters, setFilters] = useState<UseComercialAnalyticalDataFilters>({
     search: '',
     sellerName: [],
     pendingVinculation: false,
   })
-  function matchSearch(project) {
+  function matchSearch(project: TComercialAnalyticalItem) {
     if (filters.search.trim().length == 0) return true
     return project.nome.toUpperCase().includes(filters.search.toUpperCase())
   }
-  function matchSellerName(project) {
+  function matchSellerName(project: TComercialAnalyticalItem) {
     if (filters.sellerName.length == 0) return true
     else return filters.sellerName.includes(project.vendedor)
   }
-  function matchPendingVinculation(project) {
+  function matchPendingVinculation(project: TComercialAnalyticalItem) {
     if (!filters.pendingVinculation) return true
     return !project.proposta.id
   }
-  function handleModelData(data) {
+  function handleModelData(data: TComercialAnalyticalItem[]) {
     var modeledData = data
-    return modeledData.filter((project) => matchSearch(project) && matchPendingVinculation(project) && matchSellerName(project))
+    return modeledData?.filter((project) => matchSearch(project) && matchPendingVinculation(project) && matchSellerName(project)) || []
   }
   return {
     ...useQuery({

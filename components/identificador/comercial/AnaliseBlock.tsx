@@ -7,24 +7,34 @@ import { formatDecimalPlaces, formatLongString, formatToMoney } from '../../../u
 import { MdElectricMeter, MdOutlineAttachMoney, MdRoofing } from 'react-icons/md'
 import { BsHouse } from 'react-icons/bs'
 import ProposeProjectVinculation from './ProposeProjectVinculation'
+import { TComercialAnalyticalItem } from '@/pages/api/projects/analitico/comercial'
+import { TProject } from '@/utils/schemas/projects'
 
-function getBarColor(project) {
+function getBarColor(project: TComercialAnalyticalItem) {
   const contractValue = project.valorContrato
   const proposeValue = project.proposta.valor
+  const valueIsEqual = Math.abs(contractValue - (proposeValue || 0)) <= 5
+
   const contractPeakPower = project.potenciaPico
   const proposePeakPower = project.proposta.potenciaPico
-  if (contractValue == proposeValue && contractPeakPower == proposePeakPower) return 'bg-green-500'
+  const powerIsEqual = Math.abs(contractPeakPower - (proposePeakPower || 0)) <= 5
+  if (valueIsEqual && powerIsEqual) return 'bg-green-500'
   return 'bg-red-500'
 }
-function AnaliseBlock({ project }) {
+
+type AnaliseBlockProps = {
+  project: TComercialAnalyticalItem
+}
+function AnaliseBlock({ project }: AnaliseBlockProps) {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false)
-  function renderLinks({ links, category }) {
+  function renderLinks({ links, category }: { links: TComercialAnalyticalItem['links']; category: string }) {
     if (!links) return null
     return (
       <div className="mt-4 flex w-full flex-wrap justify-around gap-3 px-2">
-        {links.map((link, index) => (
+        {/**@ts-ignore */}
+        {links[category]?.map((link: any, index: number) => (
           <div key={`${link.title} - ${index}`} className="w-full lg:w-[400px]">
-            <FileLinkBlock obj={link} prefix={project.nome} deleteFile={(link) => deleteFile(link, category)} showDeleteMenu={false} />{' '}
+            <FileLinkBlock obj={link} prefix={project.nome} deleteFile={() => {}} showDeleteMenu={false} />{' '}
           </div>
         ))}
       </div>
@@ -57,11 +67,11 @@ function AnaliseBlock({ project }) {
             </div>
             <div className="flex items-center gap-2">
               <MdElectricMeter />
-              <p className="font-medium text-gray-500">{formatToMoney(project.valorPadrao)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorPadrao || 0)}</p>
             </div>
             <div className="flex items-center gap-2">
               <BsHouse />
-              <p className="font-medium text-gray-500">{formatToMoney(project.valorEstrutura)}</p>
+              <p className="font-medium text-gray-500">{formatToMoney(project.valorEstrutura || 0)}</p>
             </div>
             <div className="flex items-center gap-2">
               <MdOutlineAttachMoney />
@@ -79,14 +89,14 @@ function AnaliseBlock({ project }) {
             </div>
             <div className="flex w-full items-center gap-2">
               <div className="flex min-w-[350px] flex-col">
-                <h1 className="text-sm font-bold leading-none tracking-tight text-[#15599a]">{formatLongString(project.proposta.nome, 30)}</h1>
+                <h1 className="text-sm font-bold leading-none tracking-tight text-[#15599a]">{formatLongString(project.proposta.nome || '', 30)}</h1>
               </div>
               <div className="flex grow items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ImPower />
                   <p
                     className={`${
-                      Math.abs(project.potenciaPico - project.proposta.potenciaPico) > 1 ? 'text-green-500' : 'text-[#F31559]'
+                      Math.abs(project.potenciaPico - (project.proposta.potenciaPico || 0)) < 5 ? 'text-green-500' : 'text-[#F31559]'
                     } font-medium`}
                   >
                     {project.proposta.potenciaPico}W
@@ -94,8 +104,12 @@ function AnaliseBlock({ project }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <MdOutlineAttachMoney />
-                  <p className={`${Math.abs(project.valorContrato - project.proposta.valor) > 1 ? 'text-green-500' : 'text-[#F31559]'} font-medium`}>
-                    {formatToMoney(project.proposta.valor)}
+                  <p
+                    className={`${
+                      Math.abs(project.valorContrato - (project.proposta.valor || 0)) < 5 ? 'text-green-500' : 'text-[#F31559]'
+                    } font-medium`}
+                  >
+                    {formatToMoney(project.proposta.valor || 0)}
                   </p>
                 </div>
               </div>
@@ -107,7 +121,6 @@ function AnaliseBlock({ project }) {
             <ProposeProjectVinculation
               idProject={project.id}
               idSolicitation={project.idSolicitacaoContrato}
-              idProjectCRM={project.idProjetoCRM}
               signatureDate={project.dataAssinatura}
               contractRequestDate={project.dataSolicitacao}
             />
@@ -156,7 +169,7 @@ function AnaliseBlock({ project }) {
             {project.links && (
               <div className="mt-4 grid w-full grid-cols-1 gap-2">
                 {Object.keys(project.links).map((category, index) =>
-                  project.links[category]?.length > 0 ? (
+                  project.links && project.links[category as keyof TProject['links']]?.length > 0 ? (
                     <div key={index} className="flex w-full flex-col">
                       <h1 className="w-full rounded-tl-md rounded-tr-md bg-cyan-700 p-1 text-center font-bold text-white">
                         {category.toUpperCase()}
@@ -183,107 +196,107 @@ function AnaliseBlock({ project }) {
       </div>
     </div>
   )
-  return (
-    <div className="flex w-full flex-col border border-gray-200 p-1">
-      <div className="grid w-full grid-cols-8 items-center">
-        <div className="col-span-2 flex flex-col">
-          <div className="col-span-2 flex items-center gap-2">
-            {showAdditionalInfo ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-                <IoMdArrowDropupCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(false)} />
-              </div>
-            ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-                <IoMdArrowDropdownCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(true)} />
-              </div>
-            )}
-            <div className="flex items-center gap-2 text-sm">
-              <strong className="text-[#fead61]">({project.identificadorCRM})</strong>
-              {project.nome} <strong className="text-[#15599a]">{project.identificador}</strong> -{' '}
-            </div>
-          </div>
-          {project.proposta ? <h1 className={`text-center text-xs font-medium text-blue-700`}>{project.proposta.nome}</h1> : null}
-        </div>
+  // return (
+  //   <div className="flex w-full flex-col border border-gray-200 p-1">
+  //     <div className="grid w-full grid-cols-8 items-center">
+  //       <div className="col-span-2 flex flex-col">
+  //         <div className="col-span-2 flex items-center gap-2">
+  //           {showAdditionalInfo ? (
+  //             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+  //               <IoMdArrowDropupCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(false)} />
+  //             </div>
+  //           ) : (
+  //             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+  //               <IoMdArrowDropdownCircle style={{ fontSize: '15px' }} onClick={() => setShowAdditionalInfo(true)} />
+  //             </div>
+  //           )}
+  //           <div className="flex items-center gap-2 text-sm">
+  //             <strong className="text-[#fead61]">({project.identificadorCRM})</strong>
+  //             {project.nome} <strong className="text-[#15599a]">{project.identificador}</strong> -{' '}
+  //           </div>
+  //         </div>
+  //         {project.proposta ? <h1 className={`text-center text-xs font-medium text-blue-700`}>{project.proposta.nome}</h1> : null}
+  //       </div>
 
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">TIPO DE SERVIÇO</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{project.tipoServico}</h1>
-        </div>
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">POTÊNCIA PICO</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{project.potenciaPico}kWp</h1>
-          {project.proposta ? (
-            <h1 className={`${project.proposta.potenciaPico == project.potenciaPico ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
-              {project.proposta.potenciaPico}
-            </h1>
-          ) : null}
-        </div>
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">VALOR DO PROJETO</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorProjeto)}</h1>
-        </div>
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">VALOR DO PADRÃO</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorPadrao)}</h1>
-        </div>
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">VALOR DA ESTRUTURA</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorEstrutura)}</h1>
-        </div>
-        <div className="col-span-1 flex flex-col items-center">
-          <h1 className="text-center text-xs text-gray-600">VALOR DO CONTRATO</h1>
-          <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorContrato)}</h1>
-          {project.proposta ? (
-            <h1 className={`${project.proposta.valor == project.valorContrato ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
-              {formatToMoney(project.proposta.valor)}
-            </h1>
-          ) : null}
-        </div>
-      </div>
-      {showAdditionalInfo ? (
-        <div className="flex w-full flex-col">
-          <div className="flex items-center justify-around">
-            <div className="flex flex-col items-center">
-              <h1 className="text-center text-xs text-gray-600">CPF/CNPJ</h1>
-              <h1 className="text-center text-sm font-medium text-gray-600">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
-            </div>
-            <div className="flex flex-col items-center">
-              <h1 className="text-center text-xs text-gray-600">CIDADE</h1>
-              <h1 className="text-center text-sm font-medium text-gray-600">{project.cidade ? project.cidade : '-'}</h1>
-            </div>
-            <div className="flex flex-col items-center">
-              <h1 className="text-center text-xs text-gray-600">BAIRRO</h1>
-              <h1 className="text-center text-sm font-medium text-gray-600">{project.bairro ? project.bairro : '-'}</h1>
-            </div>
-            <div className="flex flex-col items-center">
-              <h1 className="text-center text-xs text-gray-600">LOGRADOURO</h1>
-              <h1 className="text-center text-sm font-medium text-gray-600">{project.logradouro ? project.logradouro : '-'}</h1>
-            </div>
-            <div className="flex flex-col items-center">
-              <h1 className="text-center text-xs text-gray-600">Nº</h1>
-              <h1 className="text-center text-sm font-medium text-gray-600">{project.numeroOuIdentificador ? project.numeroOuIdentificador : '-'}</h1>
-            </div>
-          </div>
-          {/* {project.links && (
-            <div className="flex justify-center gap-2 gap-y-4 mt-3 flex-wrap">
-              {Object.keys(project.links).map((category, index) =>
-                project.links[category]?.length > 0 ? (
-                  <div key={index} className="flex flex-col w-full lg:w-[45%] p-1 shadow-sm">
-                    <h1 className="font-bold text-center text-green-500">{category.toUpperCase()}</h1>
-                    <div className="flex flex-col items-center gap-1">
-                      {project.links[category].map((obj, index2) => (
-                        <FileLinkBlock key={index2} obj={obj} deleteFile={(obj) => alert('Exclusão de arquivos não permitida nessa área.')} />
-                      ))}
-                    </div>
-                  </div>
-                ) : null
-              )}
-            </div>
-          )} */}
-        </div>
-      ) : null}
-    </div>
-  )
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">TIPO DE SERVIÇO</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{project.tipoServico}</h1>
+  //       </div>
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">POTÊNCIA PICO</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{project.potenciaPico}kWp</h1>
+  //         {project.proposta ? (
+  //           <h1 className={`${project.proposta.potenciaPico == project.potenciaPico ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
+  //             {project.proposta.potenciaPico}
+  //           </h1>
+  //         ) : null}
+  //       </div>
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">VALOR DO PROJETO</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorProjeto)}</h1>
+  //       </div>
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">VALOR DO PADRÃO</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorPadrao)}</h1>
+  //       </div>
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">VALOR DA ESTRUTURA</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorEstrutura)}</h1>
+  //       </div>
+  //       <div className="col-span-1 flex flex-col items-center">
+  //         <h1 className="text-center text-xs text-gray-600">VALOR DO CONTRATO</h1>
+  //         <h1 className="text-center text-sm font-medium text-gray-600">{formatToMoney(project.valorContrato)}</h1>
+  //         {project.proposta ? (
+  //           <h1 className={`${project.proposta.valor == project.valorContrato ? 'text-green-500' : 'text-red-500'} text-xs font-medium`}>
+  //             {formatToMoney(project.proposta.valor)}
+  //           </h1>
+  //         ) : null}
+  //       </div>
+  //     </div>
+  //     {showAdditionalInfo ? (
+  //       <div className="flex w-full flex-col">
+  //         <div className="flex items-center justify-around">
+  //           <div className="flex flex-col items-center">
+  //             <h1 className="text-center text-xs text-gray-600">CPF/CNPJ</h1>
+  //             <h1 className="text-center text-sm font-medium text-gray-600">{project.cpfCnpj ? project.cpfCnpj : '-'}</h1>
+  //           </div>
+  //           <div className="flex flex-col items-center">
+  //             <h1 className="text-center text-xs text-gray-600">CIDADE</h1>
+  //             <h1 className="text-center text-sm font-medium text-gray-600">{project.cidade ? project.cidade : '-'}</h1>
+  //           </div>
+  //           <div className="flex flex-col items-center">
+  //             <h1 className="text-center text-xs text-gray-600">BAIRRO</h1>
+  //             <h1 className="text-center text-sm font-medium text-gray-600">{project.bairro ? project.bairro : '-'}</h1>
+  //           </div>
+  //           <div className="flex flex-col items-center">
+  //             <h1 className="text-center text-xs text-gray-600">LOGRADOURO</h1>
+  //             <h1 className="text-center text-sm font-medium text-gray-600">{project.logradouro ? project.logradouro : '-'}</h1>
+  //           </div>
+  //           <div className="flex flex-col items-center">
+  //             <h1 className="text-center text-xs text-gray-600">Nº</h1>
+  //             <h1 className="text-center text-sm font-medium text-gray-600">{project.numeroOuIdentificador ? project.numeroOuIdentificador : '-'}</h1>
+  //           </div>
+  //         </div>
+  //         {/* {project.links && (
+  //           <div className="flex justify-center gap-2 gap-y-4 mt-3 flex-wrap">
+  //             {Object.keys(project.links).map((category, index) =>
+  //               project.links[category]?.length > 0 ? (
+  //                 <div key={index} className="flex flex-col w-full lg:w-[45%] p-1 shadow-sm">
+  //                   <h1 className="font-bold text-center text-green-500">{category.toUpperCase()}</h1>
+  //                   <div className="flex flex-col items-center gap-1">
+  //                     {project.links[category].map((obj, index2) => (
+  //                       <FileLinkBlock key={index2} obj={obj} deleteFile={(obj) => alert('Exclusão de arquivos não permitida nessa área.')} />
+  //                     ))}
+  //                   </div>
+  //                 </div>
+  //               ) : null
+  //             )}
+  //           </div>
+  //         )} */}
+  //       </div>
+  //     ) : null}
+  //   </div>
+  // )
 }
 
 export default AnaliseBlock

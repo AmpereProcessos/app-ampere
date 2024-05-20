@@ -7,15 +7,23 @@ import toast from 'react-hot-toast'
 import { updateProject } from '../../../utils/methods/mutation/clients'
 import createHttpError from 'http-errors'
 import { useQueryClient } from 'react-query'
+import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
+import { updateOpportunity } from '@/utils/methods/mutation/crm/opportunities'
 
-function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, contractRequestDate }) {
+type ProposeProjectVinculationProps = {
+  idProject: string
+  idSolicitation: string | null | undefined
+  signatureDate: string | null | undefined
+  contractRequestDate: string | null | undefined
+}
+function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, contractRequestDate }: ProposeProjectVinculationProps) {
   const queryClient = useQueryClient()
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [CRMInformation, setCRMInformation] = useState({
     projectId: '',
     proposeId: '',
   })
-  const { mutate } = useMutationWithFeedback({
+  const { mutate, isLoading } = useMutationWithFeedback({
     mutationKey: ['crm-vinculation', idProject],
     mutationFn: handleVinculation,
     affectedQueryKey: ['analytical-comercial'],
@@ -31,25 +39,22 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
       }
       const projectId = CRMInformation.projectId.trim()
       const proposeId = CRMInformation.proposeId.trim()
-      const crmChanges = {
-        propostaAtiva: proposeId,
-        solicitacaoContrato: {
-          id: idSolicitation,
+      const crmChanges: Partial<TOpportunity> = {
+        ganho: {
+          idProjeto: idProject,
+          data: signatureDate,
           idProposta: proposeId,
           dataSolicitacao: contractRequestDate,
+          idSolicitacao: idSolicitation,
         },
-        contrato: {
-          id: idProject,
-          idProposta: proposeId,
-          dataAssinatura: signatureDate,
-        },
+        idPropostaAtiva: proposeId,
       }
       const projectChanges = {
         idPropostaCRM: proposeId,
         idProjetoCRM: projectId,
       }
       await updateProject({ id: idProject, changes: projectChanges })
-      await updateCRMProject({ idCRMProject: projectId, changes: crmChanges })
+      await updateOpportunity({ id: projectId, changes: crmChanges })
     } catch (error) {
       throw error
     }
@@ -79,7 +84,9 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
             width={'100%'}
           />
           <button
-            onClick={mutate}
+            // @ts-ignore
+            disabled={isLoading}
+            onClick={() => mutate()}
             className="w-full rounded-md border border-black py-2 text-sm font-medium leading-none tracking-tight duration-300 ease-in-out hover:bg-black hover:text-white"
           >
             VINCULAR

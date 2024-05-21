@@ -24,7 +24,7 @@ import FileLinkBlock from './utils/FileLinkBlock'
 import { cidadesAtendidas, credores, customersAcquisitionChannels, fileTypes, tiposDePadrao, tiposDeServico, vendedores } from '../utils/constants'
 import { storage } from '../utils/services/firebase/firebase-storage'
 import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
-import { allSellers } from '../utils/select-options'
+import { allSellers, ContractRequestPaymentOptions } from '../utils/select-options'
 import CRMReferencesBlock from './identificador/solicitacoesContrato/blocos/CRMReferences'
 const phoneMask = (value) => {
   if (!value) return ''
@@ -702,7 +702,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       await axios.put('/api/solicitacoes/contrato', { _id: solicitacao._id, aprovacao: true, dataAprovacao: new Date().toISOString() })
       sendEmail()
       notifyCobrancas()
-      if (dados.idProjetoCRM) await notifySellerInCRM(insertObj.vendedor.nome, dados.idProjetoCRM, 'SOLICITAÇÃO DE CONTRATO APROVADA.')
+      // if (dados.idProjetoCRM) await notifySellerInCRM(insertObj.vendedor.nome, dados.idProjetoCRM, 'SOLICITAÇÃO DE CONTRATO APROVADA.')
       await axios.post('/api/projects/add', insertObj)
       toast.dismiss(loadingToastId)
       await queryClient.invalidateQueries({ queryKey: ['contract-requests'] })
@@ -2846,49 +2846,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                     <SelectInput
                       label={'FORMA DE PAGAMENTO'}
                       editable={editor}
-                      options={
-                        dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)'
-                          ? [
-                              {
-                                label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                                value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                              },
-                              {
-                                label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                                value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                              },
-                              {
-                                label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                                value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                              },
-                              {
-                                label: 'NÃO DEFINIDO',
-                                value: 'NÃO DEFINIDO',
-                              },
-                            ]
-                          : [
-                              {
-                                label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
-                                value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
-                              },
-                              {
-                                label: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                                value: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                              },
-                              {
-                                label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                                value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                              },
-                              {
-                                label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                                value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                              },
-                              {
-                                label: 'NÃO DEFINIDO',
-                                value: 'NÃO DEFINIDO',
-                              },
-                            ]
-                      }
+                      options={ContractRequestPaymentOptions}
                       value={dados.formaDePagamento}
                       handleChange={(value) => setDados({ ...dados, formaDePagamento: value })}
                     />

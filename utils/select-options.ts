@@ -1,5 +1,38 @@
 import { MdEast, MdNorth, MdNorthEast, MdNorthWest, MdSouth, MdSouthEast, MdSouthWest, MdWest } from 'react-icons/md'
 
+export const ContractRequestPaymentOptions = [
+  {
+    id: 1,
+    label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
+    value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
+  },
+  {
+    id: 2,
+    label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+    value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+  },
+  {
+    id: 3,
+    label: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
+    value: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
+  },
+  {
+    id: 4,
+    label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+    value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+  },
+  {
+    id: 5,
+    label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+    value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+  },
+  {
+    id: 6,
+    label: 'NÃO DEFINIDO',
+    value: 'NÃO DEFINIDO',
+  },
+]
+
 export const NaturalPersonMaritalStatus = [
   { id: 1, label: 'SOLTEIRO', value: 'SOLTEIRO' },
   { id: 2, label: 'CASADO', value: 'CASADO' },

@@ -33,26 +33,26 @@ function Formulario({ info }) {
     return { totalPot, summedModules }
   }
   return (
-    <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto py-2">
-      <div className="flex flex-col gap-y-2 h-full">
+    <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto py-2">
+      <div className="flex h-full flex-col gap-y-2">
         <>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <h1 className="text-center font-bold text-[#fead61] mt-1 text-xl">FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO</h1>
-            <h1 className="text-center font-bold my-1 text-green-500">SERVIÇO: {dados.tipoDeServico}</h1>
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <h1 className="mt-1 text-center text-xl font-bold text-[#fead61]">FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO</h1>
+            <h1 className="my-1 text-center font-bold text-green-500">SERVIÇO: {dados.tipoDeServico}</h1>
           </div>
-          <div className="w-full flex justify-around border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+          <div className="flex w-full justify-around border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
             <div className="text-center">
-              <p className="text-[#15599a] font-bold">VENDEDOR</p>
+              <p className="font-bold text-[#15599a]">VENDEDOR</p>
               <p className="text-sm">{dados.nomeVendedor ? dados.nomeVendedor : '-'}</p>
             </div>
             <div className="text-center">
-              <p className="text-[#15599a] font-bold">CONTATO VENDEDOR</p>
+              <p className="font-bold text-[#15599a]">CONTATO VENDEDOR</p>
               <p className="text-sm">{dados.telefoneVendedor ? dados.telefoneVendedor : '-'}</p>
             </div>
           </div>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTRATO</span>
-            <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTRATO</span>
+            <div className="flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'Nome/Razão Social'}
                 editable={false}
@@ -117,7 +117,7 @@ function Formulario({ info }) {
                 }
               />
               <TextInput label={'CEP'} editable={false} value={dados.cep} handleChange={(value) => setDados({ ...dados, cep: formatCEP(value) })} />
-              <button onClick={() => findCPF('enderecoCobranca')} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
+              <button onClick={() => findCPF('enderecoCobranca')} className="flex h-[30px] items-center rounded bg-[#fead61] p-1">
                 <AiOutlineSearch />
               </button>
               <SelectInput
@@ -305,13 +305,13 @@ function Formulario({ info }) {
                 </>
               )}
             </div>
-            <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">COMO VOCÊ CHEGOU A ESSE CLIENTE?</span>
+            <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+              <span className="text-center font-raleway text-sm font-bold uppercase">COMO VOCÊ CHEGOU A ESSE CLIENTE?</span>
               <textarea
                 readOnly={!false}
                 placeholder={'Descrição aqui..'}
                 value={dados.comoChegouAoCliente}
-                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                 onChange={(e) =>
                   setDados({
                     ...dados,
@@ -320,8 +320,8 @@ function Formulario({ info }) {
                 }
               />
             </div>
-            <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÃO COMERCIAL</span>
+            <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+              <span className="text-center font-raleway text-sm font-bold uppercase">OBSERVAÇÃO COMERCIAL</span>
               <textarea
                 readOnly={!false}
                 placeholder={'Observações comerciais aqui..'}
@@ -332,11 +332,11 @@ function Formulario({ info }) {
                     obsComercial: e.target.value.toUpperCase(),
                   })
                 }
-                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
               />
             </div>
             {['SISTEMA FOTOVOLTAICO (OFF GRID)', 'BOMBA SOLAR'].includes(dados.tipoDeServico) && (
-              <div className="flex items-center justify-center mt-2">
+              <div className="mt-2 flex items-center justify-center">
                 <SelectInput
                   label={'TIPO DE VENDA'}
                   value={dados.tipoVenda ? dados.tipoVenda : 'NÃO DEFINIDO'}
@@ -357,9 +357,9 @@ function Formulario({ info }) {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTATO</span>
-            <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTATO</span>
+            <div className="flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'NOME DO CONTATO 1'}
                 value={dados.nomeContatoJornadaUm}
@@ -390,8 +390,8 @@ function Formulario({ info }) {
                   })
                 }
               />
-              <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">CUIDADOS PARA CONTATO COM O CLIENTE</span>
+              <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+                <span className="text-center font-raleway text-sm font-bold uppercase">CUIDADOS PARA CONTATO COM O CLIENTE</span>
                 <textarea
                   readOnly={true}
                   placeholder={
@@ -400,15 +400,15 @@ function Formulario({ info }) {
                   value={dados.cuidadosContatoJornada}
                   className={`w-full text-center ${
                     dados.cuidadosContatoJornada.length > 150 ? 'h-[150px]' : 'h-[80px]'
-                  } bg-gray-200 resize-none p-2 outline-none border border-gray-600`}
+                  } resize-none border border-gray-600 bg-gray-200 p-2 outline-none`}
                 />
               </div>
             </div>
           </div>
           {dados.clienteAmpere != 'SIM' ? (
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS DA INSTALAÇÃO</span>
-              <div className="flex gap-2 justify-around flex-wrap">
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DA INSTALAÇÃO</span>
+              <div className="flex flex-wrap justify-around gap-2">
                 <TextInput
                   label={'NOME DO TITULAR DO PROJETO'}
                   editable={false}
@@ -601,7 +601,7 @@ function Formulario({ info }) {
               </div>
               {dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (
                 <div className="flex flex-col border-t border-gray-200 pt-2">
-                  <div className="flex items-center justify-center col-span-3">
+                  <div className="col-span-3 flex items-center justify-center">
                     <SelectInput
                       label={'HAVERÁ MUDANÇA DE LOCAL'}
                       editable={true}
@@ -648,7 +648,7 @@ function Formulario({ info }) {
                     />
                   </div>
                   {dados.mudancaLocal == 'SIM' ? (
-                    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
+                    <div className="flex flex-col gap-2 p-2 lg:grid lg:grid-cols-3">
                       <div className="flex items-center justify-center">
                         <SelectInput
                           label={'TIPO DA LIGAÇÃO (NOVO LOCAL)'}
@@ -698,7 +698,7 @@ function Formulario({ info }) {
                           ]}
                         />
                       </div>
-                      <div className="flex items-center justify-center gap-x-2 flex-wrap">
+                      <div className="flex flex-wrap items-center justify-center gap-x-2">
                         <TextInput
                           editable={true}
                           label={'CEP INSTALAÇÃO (NOVO LOCAL)'}
@@ -712,7 +712,7 @@ function Formulario({ info }) {
                         />
                         <button
                           onClick={() => findCPFRemontagem('enderecoInstalacao')}
-                          className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+                          className="flex h-[30px] items-center rounded bg-[#fead61] p-1"
                         >
                           <AiOutlineSearch />
                         </button>
@@ -817,7 +817,7 @@ function Formulario({ info }) {
                           }
                         />
                       </div>
-                      <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+                      <div className="col-span-3 flex flex-wrap items-center justify-center gap-2">
                         <TextInput
                           label={'LATITUDE (NOVO LOCAL)'}
                           value={dados.latitudeRemontagem}
@@ -849,10 +849,10 @@ function Formulario({ info }) {
           ) : null}
 
           {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(dados.tipoDeServico) && (
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS DO SISTEMA</span>
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DO SISTEMA</span>
               {dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
-                <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2  mt-1">DADOS DO SISTEMA (AUMENTO)</span>
+                <span className="mt-1 py-2 text-center text-sm font-bold uppercase  text-[#fead61]">DADOS DO SISTEMA (AUMENTO)</span>
               ) : null}
               <div className="flex justify-center">
                 <SelectInput
@@ -906,7 +906,7 @@ function Formulario({ info }) {
                   }}
                 />
               </div>
-              <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
+              <div className="mt-2 flex flex-wrap justify-around gap-2 border-t border-gray-200 py-2">
                 <TextInput
                   label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'MARCA DO INVERSOR/MICRO' : ' MARCA DO DRIVER'}
                   editable={false}
@@ -927,11 +927,11 @@ function Formulario({ info }) {
                   handleChange={(value) => setDados({ ...dados, potInversor: value })}
                 />
               </div>
-              <div className="flex flex-col text-sm lg:text-base  items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
+              <div className="flex flex-col items-center text-sm  lg:text-base">
+                <span className="text-center font-raleway text-sm font-bold uppercase">
                   {dados.tipoDeServico != 'BOMBA SOLAR' ? 'INFORMAÇÃO MICRO/INVERSOR' : 'INFORMAÇÃO DRIVERS'}
                 </span>
-                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                <p className="w-full text-center text-xs  text-gray-600 outline-none">
                   {getJoinedInfo({
                     marca: dados.marcaInversor ? dados.marcaInversor?.toString().toUpperCase() : '',
                     qtde: dados.qtdeInversor ? dados.qtdeInversor?.toString() : '',
@@ -940,7 +940,7 @@ function Formulario({ info }) {
                 </p>
               </div>
               {dados.topologia == 'OTIMIZADOR' && (
-                <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <div className="mt-2 flex flex-wrap justify-around gap-2">
                   <TextInput
                     label={'MARCA DO OTIMIZADOR'}
                     editable={false}
@@ -962,7 +962,7 @@ function Formulario({ info }) {
                   />
                 </div>
               )}
-              <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+              <div className="mx-2 mt-2 flex flex-wrap justify-around gap-2 border-t border-gray-200 pt-2">
                 <TextInput
                   label={'MARCA DOS MÓDULOS'}
                   editable={false}
@@ -983,9 +983,9 @@ function Formulario({ info }) {
                   handleChange={(value) => setDados({ ...dados, potModulos: value })}
                 />
               </div>
-              <div className="flex flex-col text-sm lg:text-base  items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÃO MÓDULOS</span>
-                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+              <div className="flex flex-col items-center text-sm  lg:text-base">
+                <span className="text-center font-raleway text-sm font-bold uppercase">INFORMAÇÃO MÓDULOS</span>
+                <p className="w-full text-center text-xs  text-gray-600 outline-none">
                   {getJoinedInfo({
                     marca: dados.marcaModulos ? dados.marcaModulos.toString().toUpperCase() : '',
                     qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : '',
@@ -995,8 +995,8 @@ function Formulario({ info }) {
               </div>
               {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' && (
                 <>
-                  <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
-                    <div className="flex justify-center items-center w-full">
+                  <div className="mt-2 flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
+                    <div className="flex w-full items-center justify-center">
                       <TextInput
                         label={'MARCA DO CONTROLADOR'}
                         editable={false}
@@ -1009,7 +1009,7 @@ function Formulario({ info }) {
                         }
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'QTDE DE CONTROLADORES'}
                         editable={false}
@@ -1022,7 +1022,7 @@ function Formulario({ info }) {
                         }
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <SelectInput
                         label={'TIPO DO CONTROLADOR'}
                         editable={false}
@@ -1041,7 +1041,7 @@ function Formulario({ info }) {
                         handleChange={(value) => setDados({ ...dados, tipoControlador: value })}
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'CORRENTE DE CARGA (em A)'}
                         editable={false}
@@ -1055,8 +1055,8 @@ function Formulario({ info }) {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
-                    <div className="flex justify-center items-center w-full">
+                  <div className="flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
+                    <div className="flex w-full items-center justify-center">
                       <TextInput
                         label={'MARCA DA BATERIA'}
                         editable={false}
@@ -1069,7 +1069,7 @@ function Formulario({ info }) {
                         }
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'QTDE DE BATERIAS'}
                         editable={false}
@@ -1077,7 +1077,7 @@ function Formulario({ info }) {
                         handleChange={(value) => setDados({ ...dados, qtdeBateria: Number(value) })}
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <SelectInput
                         label={'TIPO DA BATERIA'}
                         editable={false}
@@ -1090,7 +1090,7 @@ function Formulario({ info }) {
                         handleChange={(value) => setDados({ ...dados, tipoBateria: value })}
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'CAPACIDADE (em Ah)'}
                         editable={false}
@@ -1108,7 +1108,7 @@ function Formulario({ info }) {
               )}
               {dados.tipoDeServico == 'BOMBA SOLAR' && (
                 <>
-                  <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2 py-2 border-t border-gray-200">
+                  <div className="mt-2 flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-3">
                     <div className="flex items-center justify-center">
                       <TextInput
                         label={'MARCA BOMBA'}
@@ -1139,8 +1139,8 @@ function Formulario({ info }) {
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
-                    <div className="flex justify-center items-center w-full">
+                  <div className="flex flex-col items-center border-t border-gray-200 py-2 lg:grid lg:grid-cols-4">
+                    <div className="flex w-full items-center justify-center">
                       <TextInput
                         label={'MARCA DA BATERIA'}
                         editable={false}
@@ -1153,7 +1153,7 @@ function Formulario({ info }) {
                         }
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'QTDE DE BATERIAS'}
                         editable={false}
@@ -1161,7 +1161,7 @@ function Formulario({ info }) {
                         handleChange={(value) => setDados({ ...dados, qtdeBateria: Number(value) })}
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <SelectInput
                         label={'TIPO DA BATERIA'}
                         editable={false}
@@ -1174,7 +1174,7 @@ function Formulario({ info }) {
                         handleChange={(value) => setDados({ ...dados, tipoBateria: value })}
                       />
                     </div>
-                    <div className="flex justify-center items-center w-full">
+                    <div className="flex w-full items-center justify-center">
                       <NumberInput
                         label={'CAPACIDADE (em Ah)'}
                         editable={false}
@@ -1192,7 +1192,7 @@ function Formulario({ info }) {
               )}
               {dados.clienteAmpere != 'SIM' && dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
                 <>
-                  <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
+                  <span className="mt-1 border-t border-blue-500 py-2 text-center text-sm font-bold uppercase text-[#fead61]">
                     DADOS DO SISTEMA (ANTERIOR)
                   </span>
                   <div className="flex justify-center">
@@ -1221,7 +1221,7 @@ function Formulario({ info }) {
                       ]}
                     />
                   </div>
-                  <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
+                  <div className="mt-2 flex flex-wrap justify-around gap-2 border-t border-gray-200 py-2">
                     <TextInput
                       label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'MARCA DO INVERSOR/MICRO (ANTERIOR)' : ' MARCA DO DRIVER (ANTERIOR)'}
                       editable={false}
@@ -1242,11 +1242,11 @@ function Formulario({ info }) {
                       handleChange={(value) => setDados({ ...dados, potInversorAnterior: value })}
                     />
                   </div>
-                  <div className="flex flex-col text-sm lg:text-base  items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                  <div className="flex flex-col items-center text-sm  lg:text-base">
+                    <span className="text-center font-raleway text-sm font-bold uppercase">
                       {dados.tipoDeServico != 'BOMBA SOLAR' ? 'INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)' : 'INFORMAÇÃO DRIVERS (ANTERIOR)'}
                     </span>
-                    <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                    <p className="w-full text-center text-xs  text-gray-600 outline-none">
                       {getJoinedInfo({
                         marca: dados.marcaInversorAnterior ? dados.marcaInversorAnterior?.toString().toUpperCase() : '',
                         qtde: dados.qtdeInversorAnterior ? dados.qtdeInversorAnterior?.toString() : '',
@@ -1255,7 +1255,7 @@ function Formulario({ info }) {
                     </p>
                   </div>
                   {dados.topologiaAnterior == 'OTIMIZADOR' && (
-                    <div className="flex gap-2 justify-around flex-wrap mt-2">
+                    <div className="mt-2 flex flex-wrap justify-around gap-2">
                       <TextInput
                         label={'MARCA DO OTIMIZADOR (ANTERIOR)'}
                         editable={false}
@@ -1292,7 +1292,7 @@ function Formulario({ info }) {
                       />
                     </div>
                   )}
-                  <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+                  <div className="mx-2 mt-2 flex flex-wrap justify-around gap-2 border-t border-gray-200 pt-2">
                     <TextInput
                       label={'MARCA DOS MÓDULOS (ANTERIOR)'}
                       editable={false}
@@ -1313,9 +1313,9 @@ function Formulario({ info }) {
                       handleChange={(value) => setDados({ ...dados, potModulosAnterior: value })}
                     />
                   </div>
-                  <div className="flex flex-col text-sm lg:text-base  items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÃO MÓDULOS (ANTERIOR)</span>
-                    <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                  <div className="flex flex-col items-center text-sm  lg:text-base">
+                    <span className="text-center font-raleway text-sm font-bold uppercase">INFORMAÇÃO MÓDULOS (ANTERIOR)</span>
+                    <p className="w-full text-center text-xs  text-gray-600 outline-none">
                       {getJoinedInfo({
                         marca: dados.marcaModulosAnterior ? dados.marcaModulosAnterior.toString().toUpperCase() : '',
                         qtde: dados.qtdeModulosAnterior ? dados.qtdeModulosAnterior.toString() : '',
@@ -1328,9 +1328,9 @@ function Formulario({ info }) {
             </div>
           )}
 
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ESTRUTURA DE MONTAGEM</span>
-            <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ESTRUTURA DE MONTAGEM</span>
+            <div className="flex flex-wrap justify-around gap-2">
               <SelectInput
                 label={'TIPO DA ESTRUTURA'}
                 editable={false}
@@ -1515,9 +1515,9 @@ function Formulario({ info }) {
               )}
             </div>
           </div>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">O&M E SEGURO</span>
-            <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">O&M E SEGURO</span>
+            <div className="flex flex-wrap justify-around gap-2">
               <SelectInput
                 label={'KIT COM O&M ?'}
                 editable={false}
@@ -1567,7 +1567,7 @@ function Formulario({ info }) {
                 </>
               )}
             </div>
-            <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <div className="mt-2 flex flex-wrap justify-around gap-2">
               <SelectInput
                 label={'CLIENTE SEGURADO?'}
                 editable={false}
@@ -1626,7 +1626,7 @@ function Formulario({ info }) {
               )}
             </div>
             {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && (
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <SelectInput
                   label={'FORMA de PAGAMENTO'}
                   editable={false}
@@ -1671,8 +1671,8 @@ function Formulario({ info }) {
             )}
           </div>
           {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(dados.tipoDeServico) ? (
-            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">AUMENTO DE CARGA</span>
+            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">AUMENTO DE CARGA</span>
               <div className="flex justify-center">
                 <SelectInput
                   label={'HAVERÁ TROCA DE PADRÃO?'}
@@ -1696,7 +1696,7 @@ function Formulario({ info }) {
                 />
               </div>
               {dados.aumentoDeCarga == 'SIM' && (
-                <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <div className="mt-2 flex flex-wrap justify-around gap-2">
                   <SelectInput
                     label={'CAIXA CONJUGADA?'}
                     editable={false}
@@ -1797,9 +1797,9 @@ function Formulario({ info }) {
             </div>
           ) : null}
 
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
-            <div className="flex gap-2 justify-around flex-wrap mt-2">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
+            <div className="mt-2 flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'NOME DO PAGADOR'}
                 editable={false}
@@ -1819,7 +1819,7 @@ function Formulario({ info }) {
                 handleChange={(value) => setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })}
               />
             </div>
-            <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <div className="mt-2 flex flex-wrap justify-around gap-2">
               <SelectInput
                 label={'NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?'}
                 editable={false}
@@ -1846,7 +1846,7 @@ function Formulario({ info }) {
               )}
             </div>
             {dados.tipoDeServico != 'MONTAGEM E DESMONTAGEM' ? (
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="mt-2 flex flex-wrap justify-around gap-2">
                 <SelectInput
                   label={'LOCAL DE ENTREGA'}
                   editable={false}
@@ -1922,7 +1922,7 @@ function Formulario({ info }) {
               </div>
             ) : null}
 
-            <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <div className="mt-2 flex flex-wrap justify-around gap-2">
               <NumberInput
                 label={'VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)'}
                 editable={false}
@@ -2029,59 +2029,21 @@ function Formulario({ info }) {
                 ]}
                 handleChange={(value) => setDados({ ...dados, necessidadeCodigoFiname: value })}
               />
-              <SelectInput
+              <TextInput
                 label={'FORMA DE PAGAMENTO'}
                 editable={false}
-                options={
-                  dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)'
-                    ? [
-                        {
-                          label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                          value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
-                        },
-                        {
-                          label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                          value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                        },
-                        {
-                          label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                          value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                        },
-                        {
-                          label: 'NÃO DEFINIDO',
-                          value: 'NÃO DEFINIDO',
-                        },
-                      ]
-                    : [
-                        {
-                          label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
-                          value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
-                        },
-                        {
-                          label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                          value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
-                        },
-                        {
-                          label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                          value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
-                        },
-                        {
-                          label: 'NÃO DEFINIDO',
-                          value: 'NÃO DEFINIDO',
-                        },
-                      ]
-                }
                 value={dados.formaDePagamento}
+                placeholder={'Forma de pagamento...'}
                 handleChange={(value) => setDados({ ...dados, formaDePagamento: value })}
               />
             </div>
-            <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">DESCRIÇÃO DA NEGOCIAÇÃO</span>
+            <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+              <span className="text-center font-raleway text-sm font-bold uppercase">DESCRIÇÃO DA NEGOCIAÇÃO</span>
               <textarea
                 readOnly={true}
                 placeholder={'Descreva aqui a negociação'}
                 value={dados.descricaoNegociacao}
-                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
                 onChange={(e) =>
                   setDados({
                     ...dados,
@@ -2091,9 +2053,9 @@ function Formulario({ info }) {
               />
             </div>
           </div>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DISTRIBUIÇÃO DE CRÉDITOS</span>
-            <div className="flex justify-center mt-2">
+          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DISTRIBUIÇÃO DE CRÉDITOS</span>
+            <div className="mt-2 flex justify-center">
               <SelectInput
                 label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}
                 value={dados.possuiDistribuicao}
@@ -2113,9 +2075,9 @@ function Formulario({ info }) {
             {dados.possuiDistribuicao == 'SIM' && (
               <>
                 {dados.distribuicoes.length > 0 && (
-                  <div className="flex flex-col gap-2 mt-4">
+                  <div className="mt-4 flex flex-col gap-2">
                     {dados.distribuicoes.map((distribuicao, index) => (
-                      <div key={index} className="flex justify-around flex-wrap">
+                      <div key={index} className="flex flex-wrap justify-around">
                         <p className="text-sm font-bold text-gray-600 ">INSTALAÇÃO Nº{distribuicao.numInstalacao}</p>
                         <p className="text-sm font-bold text-gray-600">{distribuicao.excedente}%</p>
                       </div>

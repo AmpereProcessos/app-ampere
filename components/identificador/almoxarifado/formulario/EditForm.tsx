@@ -34,7 +34,7 @@ function getExpensesFromFormulary({ session, info }: { session: Session; info: T
       descricao: material.nome,
       preco: material.preco,
       qtde: material.qtdeRetirada - material.qtdeDevolucao,
-      unidade: material.grandeza,
+      unidade: material.grandeza || 'UN',
     }
     return item
   })

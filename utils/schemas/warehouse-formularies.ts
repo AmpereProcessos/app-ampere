@@ -86,7 +86,7 @@ const GeneralNewWarehouseFormularySchema = z.object({
       nome: z.string(),
       preco: z.number(),
       idExterno: z.string().optional().nullable(),
-      grandeza: z.string(),
+      grandeza: z.string().optional().nullable(),
       qtdeRetirada: z.number(),
       qtdeDevolucao: z.number(),
     })
@@ -129,7 +129,7 @@ export const InsertNewWarehouseFormularySchema = z.object({
       nome: z.string(),
       preco: z.number(),
       idExterno: z.string().optional().nullable(),
-      grandeza: z.string(),
+      grandeza: z.string().optional().nullable(),
       qtdeRetirada: z.number(),
       qtdeDevolucao: z.number(),
     })

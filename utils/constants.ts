@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { easeBackInOut } from 'd3-ease'
 import { Session } from 'next-auth'
 import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletypeXml, BsFillPlayBtnFill, BsImage } from 'react-icons/bs'
 import { IconType } from 'react-icons/lib'
@@ -1491,6 +1492,33 @@ export const sellerPhotos = [
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-luciano_lopes?alt=media&token=6aa53091-06ed-4770-b0fd-4768b1e62ab8',
   },
 ]
+export const GeneralVisibleHiddenExitMotionVariants = {
+  hidden: {
+    opacity: 0.2,
+    scale: 0.95, // Scale down slightly
+    transition: {
+      duration: 0.5,
+      ease: easeBackInOut, // Use an easing function
+    },
+  },
+  visible: {
+    opacity: 1,
+    scale: 1, // Scale down slightly
+    transition: {
+      duration: 0.5,
+      ease: easeBackInOut, // Use an easing function
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 1.05, // Scale down slightly
+
+    transition: {
+      duration: 0.01,
+      ease: easeBackInOut, // Use an easing function
+    },
+  },
+}
 export const cities = [
   {
     name: 'Ituiutaba',

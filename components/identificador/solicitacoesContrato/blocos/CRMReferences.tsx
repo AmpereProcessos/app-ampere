@@ -65,7 +65,7 @@ function CRMReferencesBlock({ proposeId, opportunityId }: CRMReferencesBlockProp
                   </h1>
                   <div className="flex items-center gap-1 rounded-full bg-cyan-500 px-2 py-1 text-white">
                     <AiFillThunderbolt />
-                    <h1 className="text-[0.58rem] font-medium lg:text-xs">{formatDecimalPlaces(propose.potenciaPico)} kWp</h1>
+                    <h1 className="text-[0.58rem] font-medium lg:text-xs">{formatDecimalPlaces(propose.potenciaPico || 0)} kWp</h1>
                   </div>
                 </div>
               </div>

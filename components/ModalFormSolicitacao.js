@@ -26,6 +26,8 @@ import { storage } from '../utils/services/firebase/firebase-storage'
 import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
 import { allSellers, ContractRequestPaymentOptions } from '../utils/select-options'
 import CRMReferencesBlock from './identificador/solicitacoesContrato/blocos/CRMReferences'
+import { fetchTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
+import TechnicalAnalysis from './identificador/solicitacoesContrato/blocos/TechnicalAnalysis'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -244,31 +246,29 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
     setDadosDistribuicao({ numInstalacao: '', excedente: 0 })
   }
   // Handling Visita Tecnica Vinculation
-  const [idVisitaTecnica, setIdVisitaTecnica] = useState('')
+  const [idVisitaTecnica, setIdVisitaTecnica] = useState(dados.idVisitaTecnica)
   async function vinculateVisitaTecnica() {
     try {
-      if (idVisitaTecnica.trim().length < 10) {
-        return toast.error('Preencha um ID inválido.')
+      if (idVisitaTecnica.trim().length == 0) {
+        await axios.put('/api/solicitacoes/contrato', { ...dados, idVisitaTecnica: null })
+        setDados((prev) => ({ ...prev, idVisitaTecnica: null }))
       }
-      const { data: technicalAnalysisInfo } = await axios.post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
-        nome: 1,
-        requerente: 1,
-        analista: 1,
-        'detalhes.tipoEstrutura': 1,
-        'detalhes.tipoTelha': 1,
-        arquivos: 1,
-      })
 
-      setDados({
+      if (idVisitaTecnica.trim().length < 10) return toast.error('Preencha um ID inválido.')
+
+      const analysis = await fetchTechnicalAnalysisById({ id: idVisitaTecnica })
+
+      const updateData = {
         ...dados,
-        nomeDoProjeto: technicalAnalysisInfo.nome,
+        nomeDoProjeto: analysis.nome,
         visitaTecnica: 'REALIZADA',
-        respVisitaTecnica: technicalAnalysisInfo.analista?.apelido,
-        linksVisita: technicalAnalysisInfo.arquivos?.map((f) => ({ title: f.descricao, link: f.url, format: f.formato })),
-        materialEstrutura: technicalAnalysisInfo.detalhes.tipoEstrutura,
-        tipoDaTelha: technicalAnalysisInfo.detalhes.tipoTelha,
+        respVisitaTecnica: analysis.analista?.nome,
+        materialEstrutura: analysis.detalhes.tipoEstrutura,
+        tipoDaTelha: analysis.detalhes.tipoTelha,
         idVisitaTecnica: idVisitaTecnica,
-      })
+      }
+      await axios.put('/api/solicitacoes/contrato', updateData)
+      setDados(updateData)
     } catch (error) {
       const msg = getErrorMessage(error)
       toast.error(msg)
@@ -812,7 +812,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       setFileMsg({ text: 'Erro ao exluir arquivo.', color: 'text-red-500' })
     }
   }
-  console.log(getKitInfo(dados))
+
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -3005,45 +3005,28 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                 ) : (
                   false
                 )}
-                {dados.linksVisita?.length > 0 ? (
-                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
-                      ARQUIVOS VISITA TÉCNICA
-                    </span>
-                    <div className="flex flex-col items-center gap-2">
-                      {dados.linksVisita.map((x, index) => (
-                        <div key={index} className="flex items-center gap-x-2">
-                          <a className="text-blue-300" href={x.link}>
-                            {x.title}
-                            {x.format ? ` - ${x.format}` : false}
-                          </a>
-                          <AiOutlineCheck style={{ color: '#49be25', fontSize: '18px' }} />
-                        </div>
-                      ))}
-                    </div>
+
+                <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                  <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+                    VINCULAR VISITA TÉCNICA
+                  </span>
+                  <div className="flex flex-col items-center">
+                    <TextInput
+                      normalCase={true}
+                      label={'ID DA VISITA TÉCNICA'}
+                      editable={true}
+                      value={idVisitaTecnica}
+                      handleChange={(value) => setIdVisitaTecnica(value)}
+                    />
+                    <button
+                      onClick={vinculateVisitaTecnica}
+                      className="mt-4 rounded border-2 border-[#fead61] p-1 text-xs font-bold text-[#fead61] transition duration-300 ease-in-out hover:scale-105 hover:bg-[#fead61] hover:text-black "
+                    >
+                      VINCULAR
+                    </button>
                   </div>
-                ) : (
-                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
-                      VINCULAR VISITA TÉCNICA
-                    </span>
-                    <div className="flex flex-col items-center">
-                      <TextInput
-                        normalCase={true}
-                        label={'ID DA VISITA TÉCNICA'}
-                        editable={true}
-                        value={idVisitaTecnica}
-                        handleChange={(value) => setIdVisitaTecnica(value)}
-                      />
-                      <button
-                        onClick={vinculateVisitaTecnica}
-                        className="mt-4 rounded border-2 border-[#fead61] p-1 text-xs font-bold text-[#fead61] transition duration-300 ease-in-out hover:scale-105 hover:bg-[#fead61] hover:text-black "
-                      >
-                        VINCULAR VISITA TÉCNICA
-                      </button>
-                    </div>
-                  </div>
-                )}
+                </div>
+                {dados.idVisitaTecnica ? <TechnicalAnalysis analysisId={dados.idVisitaTecnica} /> : null}
                 <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
                   <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
                     DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO

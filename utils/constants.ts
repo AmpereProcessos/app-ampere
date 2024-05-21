@@ -1480,6 +1480,16 @@ export const sellerPhotos = [
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-felipe_nobrega?alt=media&token=3402f4da-c765-4e80-a5b2-6bf10cdf4acf',
   },
+  {
+    nome: 'JOSÉ ROBERTO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-jos%C3%A9_roberto_dos_santos_sales?alt=media&token=b0233c01-5a2b-4763-847c-7a64037a5f14',
+  },
+  {
+    nome: 'LUCIANO LOPES',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-luciano_lopes?alt=media&token=6aa53091-06ed-4770-b0fd-4768b1e62ab8',
+  },
 ]
 export const cities = [
   {

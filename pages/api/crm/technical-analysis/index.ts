@@ -13,7 +13,7 @@ const getTechnicalAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
   const { id } = req.query
-
+  console.log(id)
   const db = await connectToCRMDatabase(process.env.CRM_KEY)
   const collection: Collection<TTechnicalAnalysis> = db.collection('technical-analysis')
 

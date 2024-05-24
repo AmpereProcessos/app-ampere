@@ -1,8 +1,14 @@
 import TagTipoDeServico from '@/components/TagTipoDeServico'
+import { ProjectTypesCollors } from '@/utils/constants'
 import { TProjectDTODBSimplified } from '@/utils/schemas/projects'
 import React from 'react'
 import { FaCity, FaPhone, FaSignature, FaTag } from 'react-icons/fa'
+import { FaDiamond } from 'react-icons/fa6'
 import { MdDashboard } from 'react-icons/md'
+
+function getBarColor(type: string) {
+  return ProjectTypesCollors[type as keyof typeof ProjectTypesCollors] || 'bg-black'
+}
 
 type ProjectDBCardProps = {
   project: TProjectDTODBSimplified
@@ -10,9 +16,9 @@ type ProjectDBCardProps = {
 }
 function ProjectDBCard({ project, handleClick }: ProjectDBCardProps) {
   return (
-    <div className="flex w-full flex-col border md:w-[350px] lg:w-[500px]">
-      <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-      <div className="flex w-full flex-col gap-4 p-3">
+    <div className="flex w-full rounded-md border bg-[#fff] md:w-[350px] lg:w-[500px]">
+      <div className={`h-full w-[7px] ${getBarColor(project.tipoDeServico)} rounded-bl-md rounded-tl-md`}></div>
+      <div className="flex grow flex-col gap-2 p-3">
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <h1
@@ -23,6 +29,10 @@ function ProjectDBCard({ project, handleClick }: ProjectDBCardProps) {
             </h1>
           </div>
           <h1 className="rounded-full bg-black px-2 py-1 text-[0.55rem] font-bold text-white lg:text-xs">{project.qtde}</h1>
+        </div>
+        <div className="flex w-full items-center gap-2">
+          <FaDiamond />
+          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{project.tipoDeServico}</p>
         </div>
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">

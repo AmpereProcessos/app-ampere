@@ -22,6 +22,15 @@ export const routes = [
   'RH',
   'Almoxarifado',
 ]
+
+export const ProjectTypesCollors = {
+  'SISTEMA FOTOVOLTAICO': 'bg-[#15599a]',
+  'SISTEMA FOTOVOLTAICO (OFF GRID)': 'bg-[#fead61]',
+  'AUMENTO DE SISTEMA FOTOVOLTAICO': 'bg-green-500',
+  'BOMBA SOLAR': 'bg-[#000066]',
+  'OPERAÇÃO E MANUTENÇÃO': 'bg-[#8604c2]',
+  'SUBESTAÇÃO DE ENERGIA': 'bg-[#e6e6e6] text-[#15599a]',
+}
 export const tiposDeTelha = [
   { label: 'PORTUGUESA', value: 'PORTUGUESA' },
   { label: 'FRANCESA', value: 'FRANCESA' },

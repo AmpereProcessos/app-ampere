@@ -16,7 +16,7 @@ import TextInput from '../../components/inputs/Text'
 import LoadingPage from '../../components/utils/LoadingPage'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
 
-import { cidadesAtendidas, equipesTecnicas, formatDate, vendedores } from '../../utils/constants'
+import { cidadesAtendidas, equipesTecnicas, formatDate, ProjectTypesCollors, vendedores } from '../../utils/constants'
 import { allSellers, customersAcquisitionChannels, insiders } from '../../utils/select-options'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { formatDateInputChange } from '../../utils/methods/shared'
@@ -59,6 +59,18 @@ function MainDatebasePage() {
           </div>
           {filterMenuIsOpen ? <FilterMenu updateFilters={updateFilters} queryLoading={isLoading} resetSelectedPage={() => setPage(1)} /> : null}
         </div>
+        <div className="my-2 flex w-full flex-col flex-wrap items-center justify-center gap-2">
+          <h1 className="text-sm font-bold tracking-tight">LEGENDA DOS TIPOS DE SERVIÇOS</h1>
+          <div className="flex w-full flex-wrap items-center justify-around gap-2">
+            {Object.entries(ProjectTypesCollors).map(([key, value]) => (
+              <div className="flex items-center gap-1">
+                <div className={`min-w-5 min-h-5 h-5 w-5 rounded-full ${value}`}></div>
+                <p className="text-xs font-bold tracking-tight text-gray-500">{key}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <ProjectsDBPagination
           activePage={page}
           selectPage={(page) => setPage(page)}

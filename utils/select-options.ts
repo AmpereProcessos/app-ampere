@@ -904,7 +904,7 @@ export const customersAcquisitionChannels = [
   { id: 9, label: 'TELEVENDAS', value: 'TELEVENDAS' },
   { id: 10, label: 'EVENTO', value: 'EVENTO' },
   { id: 11, label: 'PASSIVO', value: 'PASSIVO' },
-  { id: 12, bel: 'PROSPECÇÃO ATIVA', value: 'PROSPECÇÃO ATIVA' },
+  { id: 12, label: 'PROSPECÇÃO ATIVA', value: 'PROSPECÇÃO ATIVA' },
 ]
 export const additionalCostsCategories = [
   {

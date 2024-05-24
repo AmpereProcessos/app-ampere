@@ -63,7 +63,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           </a>
         </Link>
 
-        <Link href="/gestaoDeProjetos/bancoDeDados">
+        <Link href="/gestaoDeProjetos/banco-de-dados">
           <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <FaDatabase
               style={{

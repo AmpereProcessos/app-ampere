@@ -459,6 +459,115 @@ export type TProject = z.infer<typeof GeneralProjectSchema>
 export type TProjectEntity = TProject & { _id: ObjectId }
 export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }
 
+export type TProjectDBSimplified = Pick<
+  TProject,
+  | 'nomeDoContrato'
+  | 'tipoDeServico'
+  | 'contrato'
+  | 'qtde'
+  | 'vendedor'
+  | 'telefone'
+  | 'email'
+  | 'codigoSVB'
+  | 'uf'
+  | 'cidade'
+  | 'bairro'
+  | 'logradouro'
+  | 'numeroResidencia'
+>
+export type TProjectDTODBSimplified = TProjectDBSimplified & { _id: string }
+export const ProjectDBSimplifiedProjection = {
+  _id: 1,
+  nomeDoContrato: 1,
+  tipoDeServico: 1,
+  'contrato.status': 1,
+  qtde: 1,
+  vendedor: 1,
+  telefone: 1,
+  email: 1,
+  codigoSVB: 1,
+  uf: 1,
+  cidade: 1,
+  bairro: 1,
+  logradouro: 1,
+  numeroResidencia: 1,
+}
+
+const PersonalizedFieldFilters = z.enum(
+  [
+    'contrato.dataAssinatura',
+    'projeto.dataSolicitacaoAcesso',
+    'parecer.dataParecerDeAcesso',
+    'compra.dataPagamento',
+    'compra.dataPedido',
+    'compra.previsaoEntrega',
+    'compra.dataEntrega',
+    'obra.saida',
+    'vistoria.dataPedido',
+    'medidor.data',
+  ],
+  { required_error: 'Filtro de campo de período não informado.', invalid_type_error: 'Tipo não válido para o campo de filtro de período.' }
+)
+
+export const PersonalizedFiltersSchema = z.object({
+  name: z.string({
+    required_error: 'Filtro do nome do contrato não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro de nome do contrato.',
+  }),
+  period: z.object({
+    after: z
+      .string({ required_error: 'Filtro de depois de não informado.', invalid_type_error: 'Tipo não válido para o filtro de depois de.' })
+      .optional()
+      .nullable(),
+    before: z
+      .string({ required_error: 'Filtro de antes de não informado.', invalid_type_error: 'Tipo não válido para o filtro de antes de.' })
+      .optional()
+      .nullable(),
+    field: PersonalizedFieldFilters.optional().nullable(),
+  }),
+  state: z.array(z.string({ required_error: 'Estado de filtro não informada.', invalid_type_error: 'Tipo não válido para estado de filtro.' }), {
+    required_error: 'Lista de estados de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de estados de filtro.',
+  }),
+  city: z.array(z.string({ required_error: 'Cidade de filtro não informada.', invalid_type_error: 'Tipo não válido para cidade de filtro.' }), {
+    required_error: 'Lista de cidades de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de cidades de filtro.',
+  }),
+  serviceType: z.array(
+    z.string({ required_error: 'Tipo de serviço de filtro não informada.', invalid_type_error: 'Tipo não válido para tipo de serviço de filtro.' }),
+    {
+      required_error: 'Lista de tipos de serviço de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para lista de tipos de serviço de filtro.',
+    }
+  ),
+  seller: z.array(z.string({ required_error: 'Vendedor de filtro não informada.', invalid_type_error: 'Tipo não válido para vendedor de filtro.' }), {
+    required_error: 'Lista de vendedores de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de vendedores de filtro.',
+  }),
+  insider: z.array(z.string({ required_error: 'SDR de filtro não informada.', invalid_type_error: 'Tipo não válido para SDR de filtro.' }), {
+    required_error: 'Lista de SDRs de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de SDRs de filtro.',
+  }),
+  technicalTeam: z.array(
+    z.string({ required_error: 'Equipe técnica de filtro não informada.', invalid_type_error: 'Tipo não válido para equipe técnica de filtro.' }),
+    {
+      required_error: 'Lista de equipes técnicas de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para lista de equipes técnicas de filtro.',
+    }
+  ),
+  acquisitionChannel: z.array(
+    z.string({
+      required_error: 'Canal de aquisição de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para canal de aquisição de filtro.',
+    }),
+    {
+      required_error: 'Lista de canais de aquisição de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para lista de canais de aquisição de filtro.',
+    }
+  ),
+})
+export type TPersonalizedProjectsFilter = z.infer<typeof PersonalizedFiltersSchema>
+
 const Comissions = z.array(
   z.object({
     comissionado: z.object({

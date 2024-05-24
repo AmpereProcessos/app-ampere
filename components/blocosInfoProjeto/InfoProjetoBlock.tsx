@@ -733,28 +733,28 @@ function InfoProjetoBlock({
               />
             </div>
           </div>
-          <div className="my-4 mt-6 flex w-full items-center justify-center self-center">
-            <CheckboxInput
-              labelFalse="PROJETO CONCLUIDO"
-              labelTrue="PROJETO CONCLUIDO"
-              checked={infoHolder.projeto.projetoConcluido == 'SIM'}
-              handleChange={(value) => {
-                setInfo((prev) => ({
-                  ...prev,
-                  projeto: {
-                    ...prev.projeto,
-                    projetoConcluido: value ? 'SIM' : 'NÃO',
-                  },
-                }))
-                setChanges((prev) => ({
-                  ...prev,
-                  'projeto.projetoConcluido': value ? 'SIM' : 'NÃO',
-                }))
-              }}
-            />
-          </div>
         </>
       ) : null}
+      <div className="my-4 mt-6 flex w-full items-center justify-center self-center">
+        <CheckboxInput
+          labelFalse="PROJETO CONCLUIDO"
+          labelTrue="PROJETO CONCLUIDO"
+          checked={infoHolder.projeto.projetoConcluido == 'SIM'}
+          handleChange={(value) => {
+            setInfo((prev) => ({
+              ...prev,
+              projeto: {
+                ...prev.projeto,
+                projetoConcluido: value ? 'SIM' : 'NÃO',
+              },
+            }))
+            setChanges((prev) => ({
+              ...prev,
+              'projeto.projetoConcluido': value ? 'SIM' : 'NÃO',
+            }))
+          }}
+        />
+      </div>
     </div>
   )
 }

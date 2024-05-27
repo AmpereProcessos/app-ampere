@@ -9,7 +9,7 @@ import { getContractValue } from '../../utils/methods/util/projects'
 import { NextApiHandler } from 'next'
 import { TProject } from '@/utils/schemas/projects'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { TTechnicalAnalysis } from '@/utils/schemas/technical-analyis'
+
 import { TMaterialUpdateRegistry } from '@/utils/schemas/material-updates-registry'
 import { TMaterial } from '@/utils/schemas/materials'
 import { TNewWarehouseFormulary, TWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
@@ -21,6 +21,7 @@ import exp from 'constants'
 import { TNotification } from '@/utils/schemas/notifications'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
 import { TProjectUpdateLog, TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import { allSellers } from '@/utils/select-options'
 
 type TPreviousUser = {
   nome: string
@@ -41,30 +42,31 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const sortedSellers = allSellers.sort((a, b) => a.value.localeCompare(b.value)).map((s, index) => ({ ...s, id: index + 1 }))
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const projects = await projectsCollection
-    .find({
-      'contrato.status': 'ASSINADO',
-      tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
-      'compra.dataPedido': { $ne: null },
-      $or: [{ 'compra.dataEntrega': { $gte: '2024-03-01T00:00:00.000Z' } }, { 'compra.statusEntrega': { $ne: 'ENTREGUE' } }],
-    })
-    .toArray()
+  // const projects = await projectsCollection
+  //   .find({
+  //     'contrato.status': 'ASSINADO',
+  //     tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
+  //     'compra.dataPedido': { $ne: null },
+  //     $or: [{ 'compra.dataEntrega': { $gte: '2024-03-01T00:00:00.000Z' } }, { 'compra.statusEntrega': { $ne: 'ENTREGUE' } }],
+  //   })
+  //   .toArray()
 
-  const formatted = projects.map((project) => {
-    return {
-      QTDE: project.qtde,
-      'NOME DO CONTRATO': project.nomeDoContrato,
-      'VALOR DO PROJETO': project.sistema.valorProjeto,
-      'VALOR PAGO NO KIT': project.compra.valorDoKit || 0,
-      'POTÊNCIA PICO': project.sistema.potPico,
-      FORNECEDOR: project.compra.fornecedor || 'NÃO DEFINIDO',
-      'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'NÃO ENTREGUE',
-      'STATUS DA ENTREGA': project.compra.statusEntrega,
-    }
-  })
+  // const formatted = projects.map((project) => {
+  //   return {
+  //     QTDE: project.qtde,
+  //     'NOME DO CONTRATO': project.nomeDoContrato,
+  //     'VALOR DO PROJETO': project.sistema.valorProjeto,
+  //     'VALOR PAGO NO KIT': project.compra.valorDoKit || 0,
+  //     'POTÊNCIA PICO': project.sistema.potPico,
+  //     FORNECEDOR: project.compra.fornecedor || 'NÃO DEFINIDO',
+  //     'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'NÃO ENTREGUE',
+  //     'STATUS DA ENTREGA': project.compra.statusEntrega,
+  //   }
+  // })
   // const requests = await contractRequestsCollection.find({}).toArray()
   // const result = projects.map((project) => {
   //   const equivalentRequest = requests.find((r) => r._id.toString() == project.idSolicitacaoContrato)
@@ -190,7 +192,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const bkResponse = await logsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(formatted)
+  return res.status(200).json(sortedSellers)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

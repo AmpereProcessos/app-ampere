@@ -1,36 +1,63 @@
 import React, { useState } from 'react'
-import EnergyDiscountImage from '@/utils/images/discount-image.png'
+import EnergyDiscountImage from '@/utils/svgs/manage-money.svg'
 import LogoAmpere from '@/utils/images/logo-texto-azul.png'
 import LogoEnergea from '@/utils/images/energea-color.png'
 import Image from 'next/image'
 import { FaMinus, FaPlus } from 'react-icons/fa'
-import { formatToMoney } from '@/utils/constants'
+import { formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import SelectInput from '@/components/inputs/Select'
+import TextInput from '@/components/inputs/Text'
+import { TSimulation } from '@/pages/api/integracao/rd-station/energy-consortium'
+import axios from 'axios'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { AnimatePresence, motion } from 'framer-motion'
 
-type TSimulation = {
-  expense: number
-  distributor: 'CEMIG' | 'EQUATORIAL'
-  tariff: number
-  connection: string
+const DISCOUNT = 0.18
+const BASE_PUBLIC_ILUMINATION_PRICE = 20
+const CONNECTIONS = [
+  { id: 1, label: 'MONOFÁSICO', value: 'MONOFÁSICO', disponibility: 30 },
+  { id: 2, label: 'BIFÁSICO', value: 'BIFÁSICO', disponibility: 50 },
+  { id: 3, label: 'TRIFÁSICO', value: 'TRIFÁSICO', disponibility: 100 },
+]
+const ENERGY_TARIFFS = [
+  { id: 1, distributor: 'CEMIG', tariff: 0.93 },
+  { id: 2, distributor: 'EQUATORIAL', tariff: 0.8 },
+]
+
+type TStateHolder = {
+  status: null | 'loading' | 'concluded' | 'error'
+  text: string
 }
+
 function EnergyConsortiumCalculator() {
-  const DISCOUNT = 0.18
-  const BASE_PUBLIC_ILUMINATION_PRICE = 20
-  const CONNECTIONS = [
-    { id: 1, label: 'MONOFÁSICO', value: 'MONOFÁSICO', disponibility: 30 },
-    { id: 2, label: 'BIFÁSICO', value: 'BIFÁSICO', disponibility: 50 },
-    { id: 3, label: 'TRIFÁSICO', value: 'TRIFÁSICO', disponibility: 100 },
-  ]
-  const ENERGY_TARIFFS = [
-    { id: 1, distributor: 'CEMIG', tariff: 0.93 },
-    { id: 2, distributor: 'EQUATORIAL', tariff: 0.8 },
-  ]
+  const [stateHolder, setStateHolder] = useState<TStateHolder>({
+    status: null,
+    text: '',
+  })
   const [simulation, setSimulation] = useState<TSimulation>({
+    userName: '',
+    userEmail: '',
     expense: 250,
     distributor: 'CEMIG',
     tariff: 0.93,
     connection: 'BIFÁSICO',
   })
+  const [result, setResult] = useState({ newExpense: 0, economy: 0 })
+  async function handleSimulation({ simulation }: { simulation: TSimulation }) {
+    try {
+      setStateHolder({ status: 'loading', text: 'Iniciando simulação...' })
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // 3 sec
+      setStateHolder({ status: 'loading', text: 'Executando cálculos...' })
+      const { data } = await axios.post('/api/integracao/rd-station/energy-consortium', simulation)
+      const newExpense = data.data?.newExpense || 0
+      const economy = data.data?.economy || 0
+      setStateHolder({ status: 'concluded', text: 'Simulação concluída !' })
+      return setResult({ newExpense, economy })
+    } catch (error) {
+      const msg = getErrorMessage(error)
+      setStateHolder({ status: 'error', text: msg })
+    }
+  }
   function handleCalculation({ simulation }: { simulation: TSimulation }) {
     const { expense, distributor, tariff, connection } = simulation
     const disponibility = CONNECTIONS.find((c) => c.value == connection)?.disponibility || 30
@@ -51,12 +78,76 @@ function EnergyConsortiumCalculator() {
     <div className="flex h-full w-full flex-col items-center justify-center bg-[#15599a] p-3 font-[Inter] lg:flex-row">
       <div className="flex h-full w-full flex-col justify-between lg:w-2/3">
         <div className="flex w-full grow items-center justify-center">
-          <Image src={EnergyDiscountImage} width={600} height={600} />
+          <div className="h-[250px] w-[250px] lg:h-[600px] lg:w-[600px]">
+            <Image src={EnergyDiscountImage} alt="" />
+          </div>
         </div>
+        <a className="text-[0.3rem] text-gray-100" href="https://storyset.com/people">
+          People illustrations by Storyset
+        </a>
       </div>
       <div className="flex h-full w-full grow flex-col rounded-tl-md rounded-br-md bg-[#fff] p-6">
         <h1 className="w-full text-center text-2xl font-black text-[#15599a]">SIMULE AQUI SEU DESCONTO DE ENERGIA</h1>
         <div className="mt-6 flex w-full grow flex-col gap-5">
+          <div className="flex w-full flex-col items-center gap-4 self-center lg:w-[70%] lg:flex-row">
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="SEU NOME"
+                placeholder="Preencha aqui o seu nome..."
+                value={simulation.userName}
+                handleChange={(value) => setSimulation((prev) => ({ ...prev, userName: value }))}
+                width="100%"
+                labelClassName="tracking-tight font-medium"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="SEU EMAIL"
+                placeholder="Preencha aqui o seu email..."
+                value={simulation.userEmail}
+                handleChange={(value) => setSimulation((prev) => ({ ...prev, userEmail: value }))}
+                width="100%"
+                labelClassName="tracking-tight font-medium"
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-col items-center gap-4 self-center lg:w-[70%] lg:flex-row">
+            <div className="w-full lg:w-1/2">
+              <SelectInput
+                label="SUA DISTRIBUIDORA DE ENERGIA"
+                labelClassName="tracking-tight font-medium"
+                value={simulation.distributor}
+                options={ENERGY_TARIFFS.map((t) => ({ ...t, label: t.distributor, value: t.distributor }))}
+                selectedItemLabel="NÃO DEFINIDA"
+                handleChange={(value) => {
+                  const tariff = ENERGY_TARIFFS.find((t) => t.distributor == value)
+                  setSimulation((prev) => ({ ...prev, distributor: value, tariff: tariff?.tariff || 0.93 }))
+                }}
+                onReset={() =>
+                  setSimulation((prev) => ({
+                    ...prev,
+                    distributor: ENERGY_TARIFFS[0].distributor as TSimulation['distributor'],
+                    tariff: ENERGY_TARIFFS[0].tariff,
+                  }))
+                }
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <SelectInput
+                label="SEU TIPO DE CONEXÃO"
+                labelClassName="tracking-tight  font-medium"
+                value={simulation.connection}
+                options={CONNECTIONS}
+                selectedItemLabel="NÃO DEFINIDA"
+                handleChange={(value) => {
+                  setSimulation((prev) => ({ ...prev, connection: value }))
+                }}
+                onReset={() => setSimulation((prev) => ({ ...prev, connection: 'BIFÁSICO' }))}
+                width="100%"
+              />
+            </div>
+          </div>
           <div className="flex w-full flex-col items-center gap-4 self-center lg:w-[70%]">
             <h1 className="w-full text-center text-sm font-medium tracking-tight">QUANTO VOCÊ GASTA DE ENERGIA POR MÊS ? </h1>
             <div className="flex w-full items-center justify-between gap-4 self-center">
@@ -101,44 +192,44 @@ function EnergyConsortiumCalculator() {
               </button>
             </div>
           </div>
-          <div className="flex w-full flex-col items-center gap-4 self-center lg:w-[70%] lg:flex-row">
-            <div className="w-full lg:w-1/2">
-              <SelectInput
-                label="DISTRIBUIDORA DE ENERGIA"
-                labelClassName="tracking-tight  font-medium"
-                value={simulation.distributor}
-                options={ENERGY_TARIFFS.map((t) => ({ ...t, label: t.distributor, value: t.distributor }))}
-                selectedItemLabel="NÃO DEFINIDA"
-                handleChange={(value) => {
-                  const tariff = ENERGY_TARIFFS.find((t) => t.distributor == value)
-                  setSimulation((prev) => ({ ...prev, distributor: value, tariff: tariff?.tariff || 0.93 }))
-                }}
-                onReset={() =>
-                  setSimulation((prev) => ({
-                    ...prev,
-                    distributor: ENERGY_TARIFFS[0].distributor as TSimulation['distributor'],
-                    tariff: ENERGY_TARIFFS[0].tariff,
-                  }))
-                }
-                width="100%"
-              />
+          {!stateHolder.status || stateHolder.status == 'error' ? (
+            <div className="flex min-h-[50px] w-full flex-col items-center justify-center gap-1">
+              <button
+                onClick={() => handleSimulation({ simulation })}
+                className="rounded bg-black p-3 px-12 font-bold text-white duration-300 hover:scale-[1.02] hover:bg-gray-800"
+              >
+                SIMULAR
+              </button>
+              {stateHolder.status == 'error' ? <h1 className="text-center font-medium text-red-500">{stateHolder.text}</h1> : null}
             </div>
-            <div className="w-full lg:w-1/2">
-              <SelectInput
-                label="CONEXÃO"
-                labelClassName="tracking-tight  font-medium"
-                value={simulation.connection}
-                options={CONNECTIONS}
-                selectedItemLabel="NÃO DEFINIDA"
-                handleChange={(value) => {
-                  setSimulation((prev) => ({ ...prev, connection: value }))
-                }}
-                onReset={() => setSimulation((prev) => ({ ...prev, connection: 'BIFÁSICO' }))}
-                width="100%"
-              />
+          ) : null}
+          {stateHolder.status == 'concluded' ? (
+            <AnimatePresence>
+              <motion.div
+                key={'editor'}
+                variants={GeneralVisibleHiddenExitMotionVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="flex w-full flex-col gap-4 self-center lg:w-[70%]"
+              >
+                <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
+                <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
+                  <h1 className="text-3xl font-black tracking-tight">{formatToMoney(result.economy)} / MÊS</h1>
+                  <div className="h-[1px] w-full bg-black lg:h-full lg:w-[1px]"></div>
+                  <h1 className="text-3xl font-black tracking-tight">
+                    <strong className="text-[#04e762]">{formatToMoney(result.economy * 12)}</strong> / ANO
+                  </h1>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          ) : null}
+          {stateHolder.status == 'loading' ? (
+            <div className="flex min-h-[50px] w-full items-center justify-center">
+              <h1 className="animate-pulse text-center font-medium text-gray-500">{stateHolder.text}</h1>
             </div>
-          </div>
-          <div className="flex w-full flex-col gap-4 self-center lg:w-[70%]">
+          ) : null}
+          {/* <div className="flex w-full flex-col gap-4 self-center lg:w-[70%]">
             <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
             <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
               <h1 className="text-3xl font-black tracking-tight">{formatToMoney(handleCalculation({ simulation }).economy)} / MÊS</h1>
@@ -147,11 +238,11 @@ function EnergyConsortiumCalculator() {
                 <strong className="text-[#04e762]">{formatToMoney(handleCalculation({ simulation }).economy * 12)}</strong> / ANO
               </h1>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex w-full items-center justify-end gap-4 p-6">
           <Image src={LogoAmpere} height={50} width={150} />
-          <Image src={LogoEnergea} height={50} width={120} />
+          <Image src={LogoEnergea} height={50} width={150} />
         </div>
       </div>
     </div>

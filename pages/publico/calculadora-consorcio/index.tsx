@@ -11,6 +11,7 @@ import { TSimulation } from '@/pages/api/integracao/rd-station/energy-consortium
 import axios from 'axios'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { AnimatePresence, motion } from 'framer-motion'
+import Link from 'next/link'
 
 const DISCOUNT = 0.18
 const BASE_PUBLIC_ILUMINATION_PRICE = 20
@@ -220,6 +221,18 @@ function EnergyConsortiumCalculator() {
                   <h1 className="text-3xl font-black tracking-tight">
                     <strong className="text-[#04e762]">{formatToMoney(result.economy * 12)}</strong> / ANO
                   </h1>
+                </div>
+                <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:justify-end">
+                  <h1 className="text-sm tracking-tight text-gray-500">Deseja economizar na sua conta de energia ?</h1>
+                  <Link
+                    href={
+                      'https://portal.energea.com.br/auto-servir?empresa=1714682702286x426663626911252500&REP=1714682746611x553649292113980600&plano=1667231520862x115446081571782660'
+                    }
+                  >
+                    <button className="rounded bg-green-600 p-2 px-12 text-xs font-bold text-white duration-300 hover:scale-[1.02] hover:bg-green-700">
+                      ADQUIRA JÁ
+                    </button>
+                  </Link>
                 </div>
               </motion.div>
             </AnimatePresence>

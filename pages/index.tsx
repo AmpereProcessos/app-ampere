@@ -91,7 +91,7 @@ function Home() {
       return (
         <div className="relative grow p-6">
           <div className="flex w-full flex-col">
-            <h1 className="w-full text-center text-lg font-extrabold">META DO MÊS DE {months[new Date().getMonth()]}</h1>
+            {/* <h1 className="w-full text-center text-lg font-extrabold">META DO MÊS DE {months[new Date().getMonth()]}</h1>
             <div className="flex h-[45px] w-full items-center justify-between self-center border border-gray-500 bg-[#a8a9aa]">
               <div
                 // style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
@@ -161,7 +161,7 @@ function Home() {
                   </div>
                 </div>
               </>
-            ) : null}
+            ) : null} */}
 
             <div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">

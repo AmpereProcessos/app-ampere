@@ -22,7 +22,7 @@ function renderInputText(files: File | null) {
   return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{files.name}</p>
 }
 
-export type InputMaterialItem = { nome: string; preco: number; qtde: number; grandeza: string }
+export type InputMaterialItem = { codigo: string | number; nome: string; preco: number; qtde: number; grandeza: string }
 async function readXML(file: File) {
   return new Promise<InputMaterialItem[]>((resolve, reject) => {
     const fileReader = new FileReader()
@@ -48,13 +48,16 @@ async function readXML(file: File) {
         let items: InputMaterialItem[] = []
 
         if (Array.isArray(NFeItems)) {
-          items = NFeItems.map((x: any) => {
+          items = NFeItems.map((x: any, index) => {
             const itemInfo = x.prod
             const nome = itemInfo.xProd
             const qtde = itemInfo.qCom
             const grandeza = itemInfo.uCom
             const valor = itemInfo.vUnCom
+            const NCMCode = itemInfo.NCM
+            console.log(itemInfo.xProd)
             return {
+              codigo: index,
               nome: nome,
               qtde: Number(qtde),
               grandeza: grandeza,
@@ -67,7 +70,8 @@ async function readXML(file: File) {
           const qtde = itemInfo.qCom
           const grandeza = itemInfo.uCom
           const valor = itemInfo.vUnCom
-          items = [{ nome: nome, qtde: Number(qtde), grandeza: grandeza, preco: Number(valor) }]
+          const NCMCode = itemInfo.NCM
+          items = [{ codigo: NCMCode || 1, nome: nome, qtde: Number(qtde), grandeza: grandeza, preco: Number(valor) }]
         }
 
         resolve(items)
@@ -94,7 +98,6 @@ function MaterialsInput() {
     console.log(items)
     setItemsHolder(items)
   }
-
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col p-6">
@@ -148,6 +151,7 @@ function MaterialsInput() {
         {itemsHolder.length > 0 ? (
           itemsHolder.map((item, index) => (
             <InputMaterialCard
+              key={item.codigo}
               inputMaterial={item}
               materials={materials || []}
               clearMaterialHolder={() => {

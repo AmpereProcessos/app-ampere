@@ -52,6 +52,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
       const qtdeEntrada = inputMaterial.qtde
       const precoEntrada = inputMaterial.preco
       const response = await inputMaterialUpdate({ materialId, changes: { qtdeEntrada, precoEntrada } })
+      setMaterialId(null)
       return response
     } catch (error) {
       throw error
@@ -164,7 +165,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
             <button
               disabled={isLoading}
               // @ts-ignore
-              onClick={() => handleUpdate({ inputMaterial, vinculationMaterial })}
+              onClick={() => handleUpdate({ inputMaterial: infoHolder, vinculationMaterial })}
               className="rounded bg-green-500 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-green-700"
             >
               ATUALIZAR

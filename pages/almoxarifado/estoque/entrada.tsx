@@ -95,7 +95,6 @@ function MaterialsInput() {
   async function handleDataExtraction(file: File | null) {
     if (!file) return toast.error('Nenhum arquivo vinculado.')
     const items = await readXML(file)
-    console.log(items)
     setItemsHolder(items)
   }
   if (status != 'authenticated') return <LoadingPage />

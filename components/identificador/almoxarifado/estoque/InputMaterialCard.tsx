@@ -71,7 +71,11 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
   })
   return (
     <div className="flex w-full flex-col rounded border border-gray-500 p-3 shadow-sm lg:w-[650px]">
-      <h1 className="grow text-xs font-black leading-none tracking-tight lg:text-sm">{infoHolder.nome}</h1>
+      <div className="flex w-full items-center justify-between gap-2">
+        <h1 className="grow text-xs font-black leading-none tracking-tight lg:text-sm">{infoHolder.nome}</h1>
+        <h2 className="rounded-lg bg-blue-50 px-2 py-1 text-[0.6rem] text-blue-500">#{infoHolder.codigo}</h2>
+      </div>
+
       <h1 className="my-2 text-[0.65rem] font-bold leading-none tracking-tight text-gray-500 lg:text-xs">INFORMAÇÕES IDENTIFICADAS</h1>
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-1">

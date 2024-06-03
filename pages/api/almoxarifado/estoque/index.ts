@@ -72,13 +72,15 @@ const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
     { $set: { ...changes, alteracao: { ...author, dataAlteracao: new Date().toISOString() } } }
   )
   const hasChangedQty = !!changes.qtde && changes.qtde != material?.qtde
-
+  const hasChangedPrice = !!changes.preco && changes.preco != material?.preco
   if (changes.qtde) if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao atualizar material.')
   if (!updateResponse.matchedCount) throw new createHttpError.NotFound('Material não encontrado.')
 
-  if (hasChangedQty) {
+  if (hasChangedQty || hasChangedPrice) {
     const newQty = changes.qtde || 0
     const currentQty = material?.qtde || 0
+    const newPrice = changes.preco || null
+    const currentPrice = material?.preco || null
     const difference = newQty - currentQty
     const log: TMaterialUpdateRegistry = {
       alteracao: difference,
@@ -92,8 +94,10 @@ const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
         id: null,
         nome: null,
       },
-      qtdeAnterior: currentQty,
-      qtdeNovo: newQty,
+      qtdeAnterior: hasChangedQty ? currentQty : null,
+      qtdeNovo: hasChangedQty ? newQty : null,
+      precoAnterior: hasChangedPrice ? currentPrice : null,
+      precoNovo: hasChangedPrice ? newPrice : null,
       autor: author,
       dataInsercao: new Date().toISOString(),
     }
@@ -145,6 +149,8 @@ const inputMaterial: NextApiHandler<PatchResponse> = async (req, res) => {
     },
     qtdeAnterior: material.qtde,
     qtdeNovo: material.qtde + diff,
+    precoAnterior: material.preco,
+    precoNovo: newPrice,
     autor: author,
     dataInsercao: new Date().toISOString(),
   }

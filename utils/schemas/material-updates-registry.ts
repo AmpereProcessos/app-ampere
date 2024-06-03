@@ -20,8 +20,10 @@ const GeneralMaterialUpdateRegistry = z.object({
     id: z.string().optional().nullable(),
     nome: z.string().optional().nullable(),
   }),
-  qtdeAnterior: z.number(),
-  qtdeNovo: z.number(),
+  qtdeAnterior: z.number().optional().nullable(),
+  qtdeNovo: z.number().optional().nullable(),
+  precoAnterior: z.number().optional().nullable(),
+  precoNovo: z.number().optional().nullable(),
   autor: z.object({
     id: z.string(),
     nome: z.string(),
@@ -51,8 +53,19 @@ const InsertMaterialUpdateRegistrySchema = z.object({
       .optional()
       .nullable(),
   }),
-  qtdeAnterior: z.number({ required_error: 'Quantidade anterior não informada.', invalid_type_error: 'Tipo não válido para quantidade anterior.' }),
-  qtdeNovo: z.number({ required_error: 'Nova quantidade não informada.', invalid_type_error: 'Tipo não válido para nova quantidade.' }),
+  qtdeAnterior: z
+    .number({ required_error: 'Quantidade anterior não informada.', invalid_type_error: 'Tipo não válido para quantidade anterior.' })
+    .optional()
+    .nullable(),
+  qtdeNovo: z
+    .number({ required_error: 'Nova quantidade não informada.', invalid_type_error: 'Tipo não válido para nova quantidade.' })
+    .optional()
+    .nullable(),
+  precoAnterior: z
+    .number({ required_error: 'Preço anterior não informada.', invalid_type_error: 'Tipo não válido para preço anterior.' })
+    .optional()
+    .nullable(),
+  precoNovo: z.number({ required_error: 'Preço novo não informada.', invalid_type_error: 'Tipo não válido para preço novo.' }).optional().nullable(),
   autor: z.object({
     id: z.string({
       required_error: 'Referência do autor da alteração não informado.',

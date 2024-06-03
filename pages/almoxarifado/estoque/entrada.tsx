@@ -97,6 +97,7 @@ function MaterialsInput() {
     const items = await readXML(file)
     setItemsHolder(items)
   }
+  console.log(itemsHolder)
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col p-6">

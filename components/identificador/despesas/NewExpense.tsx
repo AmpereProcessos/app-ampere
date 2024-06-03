@@ -20,6 +20,7 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { BsCode } from 'react-icons/bs'
 import { units } from '@/utils/select-options'
+import EditExpenseFinalPriceMenu from './EditExpenseFinalPriceMenu'
 
 function getExpenseCategories(costApportionment: string) {
   if (!costApportionment) return []
@@ -410,7 +411,6 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
                 </div>
               )}
             </div>
-
             <div className="my-2 flex w-full items-center justify-center">
               <div className="w-full lg:w-[40%]">
                 <NumberInput
@@ -423,6 +423,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
                 />
               </div>
             </div>
+            {infoHolder.itens.length > 0 ? <EditExpenseFinalPriceMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> : null}
 
             <div className="mt-2 flex w-full items-center justify-end">
               <button

@@ -14,7 +14,7 @@ import CheckboxInput from '../../inputs/Checkbox'
 import { Session } from 'next-auth'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import Avatar from '@/components/utils/Avatar'
-import { TExpenseDTO } from '@/utils/schemas/expenses'
+import { TExpense, TExpenseDTO } from '@/utils/schemas/expenses'
 import { useExpenseById } from '@/utils/methods/query/expenses'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -23,6 +23,7 @@ import SelectInput from '@/components/inputs/Select'
 import ProjectVinculationMenu from './ProjectVinculationMenu'
 import NumberInput from '@/components/inputs/Number'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import EditExpenseFinalPriceMenu from './EditExpenseFinalPriceMenu'
 
 function getExpenseCategories(costApportionment: string) {
   if (!costApportionment) return []
@@ -269,8 +270,8 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
 
                   <h1 className="w-1/6 text-center font-bold">VALOR TOTAL</h1>
                 </div>
-                {expense.itens.length > 0 ? (
-                  expense.itens.map((item, index) => (
+                {infoHolder.itens.length > 0 ? (
+                  infoHolder.itens.map((item, index) => (
                     <ExpenseListItem key={index} item={item} index={index} items={infoHolder.itens} setExpenseInfo={setInfoHolder} />
                   ))
                 ) : (
@@ -290,6 +291,12 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                     />
                   </div>
                 </div>
+                {infoHolder.itens.length > 0 ? (
+                  <EditExpenseFinalPriceMenu
+                    infoHolder={infoHolder}
+                    setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
+                  />
+                ) : null}
               </div>
               <div className="flex w-full items-center justify-end px-2">
                 <button

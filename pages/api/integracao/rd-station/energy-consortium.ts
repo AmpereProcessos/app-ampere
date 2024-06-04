@@ -1,4 +1,5 @@
 import { apiHandler } from '@/utils/api'
+import { formatToMoney } from '@/utils/constants'
 import connectToDatabase from '@/utils/services/mongodb/inside-sales'
 import axios from 'axios'
 import { Collection } from 'mongodb'
@@ -103,6 +104,9 @@ const createLeadFromSimulation: NextApiHandler<PostResponse> = async (req, res) 
   const cf_valor_conta_de_luz = valor_conta_de_luz.find(
     (rdParam) => simulation.expense > rdParam.parametros.min && simulation.expense <= rdParam.parametros.max
   )
+
+  const { newExpense, economy } = handleCalculation({ simulation })
+
   const { data: rdResponse } = await axios.post(`https://api.rd.services/platform/conversions?api_key=${process.env.RD_API_KEY}`, {
     event_type: 'CONVERSION',
     event_family: 'CDP',
@@ -111,13 +115,15 @@ const createLeadFromSimulation: NextApiHandler<PostResponse> = async (req, res) 
       email: simulation.userEmail,
       personal_phone: '',
       name: simulation.userName,
-      cf_qual_o_valor_da_sua_conta_de_luz: cf_valor_conta_de_luz ? cf_valor_conta_de_luz.value : undefined,
+      cf_economia_mes_calc: formatToMoney(economy),
+      cf_economia_ano_calc: formatToMoney(economy * 12),
+      cf_valor_estimativa_consorcio: formatToMoney(newExpense),
+      cf_valor_conta_energia_consorcio: formatToMoney(simulation.expense),
       state: '',
       city: '',
     },
   })
   console.log(rdResponse)
-  const { newExpense, economy } = handleCalculation({ simulation })
 
   return res.status(200).json({ data: { newExpense, economy }, message: 'Simulação concluída com sucesso !' })
 }

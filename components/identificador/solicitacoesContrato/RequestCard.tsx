@@ -1,7 +1,7 @@
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { TContractRequestPartialDTO } from '@/utils/schemas/contract-requests'
 import React from 'react'
-import { BsCalendarPlus } from 'react-icons/bs'
+import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
 import { FaCity, FaCode, FaUser } from 'react-icons/fa'
 import { TbCategoryFilled } from 'react-icons/tb'
 
@@ -36,7 +36,7 @@ type RequestCardProps = {
 }
 function RequestCard({ request, openModal }: RequestCardProps) {
   return (
-    <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[450px]">
+    <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[550px]">
       <div className="flex w-full items-center justify-between gap-2">
         <h1
           onClick={() => openModal(request._id)}
@@ -77,9 +77,17 @@ function RequestCard({ request, openModal }: RequestCardProps) {
           <TbCategoryFilled />
           <p className="text-xs font-medium text-gray-500">{request.tipoDeServico}</p>
         </div>
-        <div className={`flex items-center gap-2`}>
-          <BsCalendarPlus />
-          <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(request.dataSolicitacao)}</p>
+        <div className="flex items-center gap-2">
+          {request.dataAprovacao ? (
+            <div className={`flex items-center gap-2`}>
+              <BsCalendarCheck color="rgb(34,197,94)" />
+              <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(request.dataAprovacao, true)}</p>
+            </div>
+          ) : null}
+          <div className={`flex items-center gap-2`}>
+            <BsCalendarPlus />
+            <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(request.dataSolicitacao, true)}</p>
+          </div>
         </div>
       </div>
     </div>

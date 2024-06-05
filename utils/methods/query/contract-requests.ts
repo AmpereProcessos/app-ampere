@@ -1,4 +1,4 @@
-import { TContractRequestPartialDTO } from '@/utils/schemas/contract-requests'
+import { TContractRequestDTO, TContractRequestPartialDTO } from '@/utils/schemas/contract-requests'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
@@ -64,4 +64,18 @@ export function useContractRequests() {
     filters,
     setFilters,
   }
+}
+
+async function fetchRequestById({ id }: { id: string }) {
+  try {
+    const { data } = await axios.get(`/api/solicitacoes/contrato?id=${id}`)
+    return data as TContractRequestDTO
+  } catch (error) {}
+}
+
+export function useContractRequestById({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ['contract-request-by-id', id],
+    queryFn: async () => await fetchRequestById({ id }),
+  })
 }

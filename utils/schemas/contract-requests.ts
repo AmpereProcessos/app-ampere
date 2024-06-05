@@ -100,6 +100,7 @@ const GeneralContractRequestSchema = z.object({
   descricaoNegociacao: z.string(),
   possuiDistribuicao: z.enum(['SIM', 'NÃO']).nullable().optional(),
   realizarHomologacao: z.boolean().optional(),
+  previsaoCustos: z.number().optional().nullable(),
   obsComercial: z.string().optional(),
   distribuicoes: z.array(z.object({ numInstalacao: z.string(), excedente: z.number().optional() })),
   links: z

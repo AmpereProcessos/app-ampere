@@ -9,7 +9,7 @@ import { AiFillFile } from 'react-icons/ai'
 import { renderIcon } from '../../utils/methods/rendering'
 import { useClickOutside } from '../../utils/hooks'
 import { handleDownload } from '@/utils/methods/firebase'
-function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
+function ArchiveLinkBlock({ obj, deleteFile, showDeleteMenu = true }) {
   const divRef = useRef(null)
   useClickOutside(divRef, () => setDeleteMenu(false))
   const [deleteMenu, setDeleteMenu] = useState(false)

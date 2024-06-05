@@ -13,8 +13,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
   const lastChangedMeter = await projectsCollection
-    .find({ 'medidor.data': { $ne: null } }, { sort: { 'medidor.data': -1 } })
-    .limit(30)
+    .find({ $or: [{ segmento: 'RURAL' }, { bairro: { $regex: 'RURAL' } }], 'contrato.status': 'ASSINADO' })
     .toArray()
 
   const ProjectsFormatted = lastChangedMeter.map((project) => {
@@ -26,7 +25,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
       CIDADE: project.cidade,
       UF: project.uf,
       'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
-      'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
+      // 'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
     }
   })
   console.log(ProjectsFormatted.length)

@@ -25,33 +25,14 @@ function FormulariosSolicitacao() {
   const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
   })
   if (status != 'authenticated') return <LoadingPage />
 
   const { data: requests, isLoading, isError, isSuccess, filters, setFilters } = useContractRequests()
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
 
-  const [solicitacoes, setSolicitacoes] = useState()
-  const [filteredSolicitacoes, setFilteredSolicitacoes] = useState()
+  const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalSolicitacao, setModalSolicitacao] = useState({})
-
-  function getFormularios() {
-    axios.get('/api/solicitacoes/contrato').then((res) => {
-      setSolicitacoes(res.data)
-      setFilteredSolicitacoes(res.data)
-    })
-  }
-
-  async function handleOpenModal(id: string) {
-    const { data } = await axios.get(`/api/solicitacoes/getContrato/${id}`)
-    setModalSolicitacao(data[0])
-    setModalIsOpen(true)
-  }
   useEffect(() => {
     if (session) {
       const userRoutes = session?.user.permissoes.rotas || []
@@ -158,21 +139,21 @@ function FormulariosSolicitacao() {
         {isError ? <ErrorComponent msg={'Erro ao buscar requisições de contrato.'} /> : null}
         {isSuccess && requests ? (
           requests.length > 0 ? (
-            requests.map((request) => <RequestCard key={request._id} request={request} openModal={(id) => handleOpenModal(id)} />)
+            requests.map((request) => <RequestCard key={request._id} request={request} openModal={(id) => setEditModal({ id: id, isOpen: true })} />)
           ) : (
             <p className="w-full text-center italic text-gray-500">Nenhuma solicitação de contrato encontrada...</p>
           )
         ) : null}
       </div>
-      {modalIsOpen && (
+      {editModal.id && editModal.isOpen ? (
         <ModalFormSolicitacao
           editor={session?.user.permissoes.rotas?.includes('PPS') ? true : false}
           financeiroEditor={session?.user.permissoes.rotas?.includes('ADM') ? true : false}
-          solicitacao={modalSolicitacao}
-          setModalIsOpen={setModalIsOpen}
-          getFormularios={getFormularios}
+          solicitacaoId={editModal.id}
+          closeModal={() => setEditModal({ id: null, isOpen: false })}
+          getFormularios={() => {}}
         />
-      )}
+      ) : null}
     </div>
   )
 }

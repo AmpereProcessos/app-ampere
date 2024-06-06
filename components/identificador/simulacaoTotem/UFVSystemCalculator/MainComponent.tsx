@@ -61,9 +61,9 @@ function MainComponent() {
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white font-['Raleway']`}>
-        <div className="relative flex h-[350px] w-full items-center justify-center">
+        <div className="relative flex h-[200px] w-full items-center justify-center lg:h-[350px]">
           {/** LARGE DEVICES */}
-          <div className="absolute top-0 z-[2] hidden h-[350px] w-full lg:block">
+          <div className="absolute top-0 z-[2] hidden h-[200px] w-full lg:block lg:h-[350px]">
             <Image
               src={BackgroundImageWithSmallLogo}
               alt="FUNDO"
@@ -73,7 +73,7 @@ function MainComponent() {
             />
           </div>
           {/** SMALL DEVICES */}
-          <div className="absolute top-0 z-[2] block h-[350px] w-full lg:hidden">
+          <div className="absolute top-0 z-[2] block h-[200px] w-full lg:hidden lg:h-[350px]">
             <Image
               src={BackgroundImageWithBigLogo}
               alt="FUNDO"
@@ -94,20 +94,20 @@ function MainComponent() {
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[150px] bg-[rgba(21,89,154,1)]"
+                      className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
                     />
                   ) : (
-                    <div className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[150px] bg-[rgba(79,88,96,1)]" />
+                    <div className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
                   )}
                   {stage > 2 ? (
                     <motion.div
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-1/2 right-[50.23%] top-[42.5%] bottom-[45%] w-[150px] bg-[rgba(21,89,154,1)]"
+                      className="absolute left-1/2 right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
                     />
                   ) : (
-                    <div className="absolute left-1/2 right-[3.6%] top-[42.5%] bottom-[45%] w-[150px] bg-[rgba(79,88,96,1)]" />
+                    <div className="absolute left-1/2 right-[3.6%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
                   )}
                   <div className="absolute inset-y-0 left-0 right-[90.99%] w-[30px] font-black">
                     <div className="absolute inset-0 w-[30px] rounded-full bg-[rgba(21,89,154,1)]" />

@@ -258,7 +258,7 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
   async function vinculateVisitaTecnica() {
     try {
       if (idVisitaTecnica.trim().length == 0) {
-        await axios.put('/api/solicitacoes/contrato', { ...dados, idVisitaTecnica: null })
+        await editContractRequest({ id: solicitacaoId, changes: { idVisitaTecnica: null } })
         setDados((prev) => ({ ...prev, idVisitaTecnica: null }))
       }
 

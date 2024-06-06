@@ -125,6 +125,15 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
         </div>
       </div>
       <div className="flex w-full grow flex-col">
+        <div className="my-2 flex w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
+          <button
+            onClick={() => resetSimulation()}
+            className="flex cursor-pointer items-center gap-2 rounded bg-[rgba(58,181,74,255)] p-2 px-4 font-bold text-white duration-300 ease-in-out hover:scale-105 hover:bg-green-400"
+          >
+            <MdOutlineRestartAlt style={{ fontSize: '25px' }} />
+            <p>NOVA SIMULAÇÃO</p>
+          </button>
+        </div>
         <div className="my-3 flex w-full flex-col">
           <h1 className="text-center font-bold tracking-tight">
             <strong className="text-[#15599a]">{nome}</strong>, a manutenção e limpeza de um sistema fotovoltaico é essencial para garantir o seu

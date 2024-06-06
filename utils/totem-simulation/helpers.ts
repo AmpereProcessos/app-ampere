@@ -84,3 +84,7 @@ export function getOeMInvestimentByModuleQty(moduleQty: number) {
     sunPlusPlan: 1.5 * PriceByModule * moduleQty + 1.5 * 4 * FIXED_DISTANCE,
   }
 }
+
+export function getInsuranceInvestmentByReferenceValue(referenceValue: number) {
+  return referenceValue * 0.03
+}

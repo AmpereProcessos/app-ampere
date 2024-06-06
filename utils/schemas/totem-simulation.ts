@@ -11,6 +11,7 @@ export const GeneralTotemSimulationSchema = z.object({
   telefone: z.string(),
   dataNascimento: z.string().optional().nullable(),
   premissas: z.object({
+    valorReferencia: z.number().optional().nullable(),
     numModulos: z.number().optional().nullable(),
     potenciaPico: z.number().optional().nullable(),
     valorFaturaEnergia: z.number().optional().nullable(),

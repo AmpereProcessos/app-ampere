@@ -1,25 +1,29 @@
-import React, { useState } from 'react'
+import { TTotemSimulation } from '@/utils/schemas/totem-simulation'
 import BackgroundImageWithSmallLogo from '@/utils/images/background-with-white-logo.png'
 import BackgroundImageWithBigLogo from '@/utils/images/background-with-big-white-logo.png'
-import AmpereWhiteLogo from '@/utils/svgs/logo-texto-branco-vertical.svg'
 import Image from 'next/image'
+import React, { useState } from 'react'
 import { AiFillInstagram, AiFillPhone } from 'react-icons/ai'
 import { TbWorld } from 'react-icons/tb'
 import { motion } from 'framer-motion'
-import { TTotemSimulation } from '@/utils/schemas/totem-simulation'
 import FirstStage from './stages/FirstStage'
 import SecondStage from './stages/SecondStage'
 import ThirdStage from './stages/ThirdStage'
-import { getUFVSystemInvestmentByEnergyBill } from '@/utils/totem-simulation/helpers'
+import {
+  getInsuranceInvestmentByReferenceValue,
+  getOeMInvestimentByModuleQty,
+  getUFVSystemInvestmentByEnergyBill,
+} from '@/utils/totem-simulation/helpers'
 import { createTotemSimulation } from '@/utils/methods/mutation/totem-simulation'
+import { formatToMoney } from '@/utils/constants'
 import ResultStage from './stages/ResultStage'
-
 type MainComponentProps = {
   resetSimulation: () => void
 }
 function MainComponent({ resetSimulation }: MainComponentProps) {
+  const [stage, setStage] = useState(1)
   const [infoHolder, setInfoHolder] = useState<TTotemSimulation>({
-    tipoSimulacao: 'CALCULADORA DE ENERGIA SOLAR',
+    tipoSimulacao: 'CALCULADORA DE SEGURO SOLAR',
     nome: '',
     cpfCpnj: '',
     uf: '',
@@ -28,6 +32,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
     telefone: '',
     dataNascimento: '',
     premissas: {
+      valorReferencia: null,
       numModulos: null,
       valorFaturaEnergia: null,
     },
@@ -38,16 +43,15 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
       investimento: null,
     },
   })
-  const [stage, setStage] = useState(1)
   async function handleCreateSimulation(simulation: TTotemSimulation) {
-    const { investiment, modulePower, moduleQty, effectivePeakPower } = getUFVSystemInvestmentByEnergyBill(
-      simulation.premissas.valorFaturaEnergia || 0
-    )
+    const investiment = getInsuranceInvestmentByReferenceValue(simulation.premissas.valorReferencia || 0)
     try {
       const response = await createTotemSimulation({
         simulation: {
           ...simulation,
-          sugestao: { investimento: investiment, numModulos: moduleQty, potModulos: modulePower, potenciaPico: effectivePeakPower },
+          sugestao: {
+            investimento: investiment,
+          },
         },
       })
       return setStage(4)
@@ -56,7 +60,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
     }
   }
   if (stage == 4)
-    return <ResultStage nome={infoHolder.nome} valorFaturaEnergia={infoHolder.premissas.valorFaturaEnergia || 0} resetSimulation={resetSimulation} />
+    return <ResultStage nome={infoHolder.nome} valorReferencia={infoHolder.premissas.valorReferencia || 0} resetSimulation={resetSimulation} />
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white`}>

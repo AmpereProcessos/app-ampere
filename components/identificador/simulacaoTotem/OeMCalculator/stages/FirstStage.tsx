@@ -22,7 +22,7 @@ function FirstStage({ infoHolder, setInfoHolder, moveToNextStage }: FirstStagePr
       <div className="flex h-[300px] w-full flex-1 flex-grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
         <div className="flex h-[146px] w-[300px] flex-col items-center justify-center lg:w-[350px]">
           <div className="relative w-full leading-none">
-            <p className="m-0 inline text-[19px] font-normal leading-[1.2] text-[rgba(79,88,96,1)]">
+            <p className="m-0 inline text-center text-[19px] font-normal leading-[1.2] text-[rgba(79,88,96,1)]">
               Simule o investimento e o retorno que você terá obtendo nossos serviços de{' '}
               <strong className="m-0 inline text-[19px] font-black leading-[1.2] text-[rgba(21,89,154,1)]">Operação & Manutenção</strong>!
             </p>

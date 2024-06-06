@@ -31,7 +31,7 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
             className="flex cursor-pointer items-center gap-2 rounded bg-[rgba(58,181,74,255)] p-2 px-4 font-bold text-white duration-300 ease-in-out hover:scale-105 hover:bg-green-400"
           >
             <MdOutlineRestartAlt style={{ fontSize: '25px' }} />
-            <p>Nova simulação</p>
+            <p>NOVA SIMULAÇÃO</p>
           </button>
         </div>
         <div className="relative flex w-full flex-col items-start gap-4 leading-none">

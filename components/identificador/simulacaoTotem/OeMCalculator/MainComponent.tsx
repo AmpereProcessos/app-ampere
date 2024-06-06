@@ -13,8 +13,10 @@ import { getOeMInvestimentByModuleQty, getUFVSystemInvestmentByEnergyBill } from
 import { createTotemSimulation } from '@/utils/methods/mutation/totem-simulation'
 import { formatToMoney } from '@/utils/constants'
 import ResultStage from './stages/ResultStage'
-type MainComponentProps = {}
-function MainComponent() {
+type MainComponentProps = {
+  resetSimulation: () => void
+}
+function MainComponent({ resetSimulation }: MainComponentProps) {
   const [stage, setStage] = useState(1)
   const [infoHolder, setInfoHolder] = useState<TTotemSimulation>({
     tipoSimulacao: 'CALCULADORA DE MANUTENÇÃO E LIMPEZA',
@@ -59,29 +61,8 @@ function MainComponent() {
       <ResultStage
         nome={infoHolder.nome}
         numModulos={infoHolder.premissas.numModulos || 0}
-        resetSimulation={() => {
-          setInfoHolder({
-            tipoSimulacao: 'CALCULADORA DE ENERGIA SOLAR',
-            nome: '',
-            cpfCpnj: '',
-            uf: '',
-            cidade: '',
-            email: '',
-            telefone: '',
-            dataNascimento: '',
-            premissas: {
-              numModulos: null,
-              valorFaturaEnergia: null,
-            },
-            sugestao: {
-              numModulos: null,
-              potModulos: null,
-              potenciaPico: null,
-              investimento: null,
-            },
-          })
-          setStage(1)
-        }}
+        potenciaPico={infoHolder.premissas.potenciaPico || null}
+        resetSimulation={resetSimulation}
       />
     )
   return (

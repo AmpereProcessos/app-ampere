@@ -9,7 +9,7 @@ import Select from 'react-select'
 import { cidadesAtendidas, tiposDeServico, vendedores } from '../../utils/constants'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FaUserAlt } from 'react-icons/fa'
-
+import { allSellers } from '../../utils/select-options'
 function renderShowClientsButtonStyles(show) {
   if (!show) return 'bg-gray-100 text-gray-300 border border-gray-300 hover:bg-blue-100 hover:text-blue-400'
   else return 'bg-blue-100 text-blue-400 hover:bg-gray-100 hover:text-gray-300 border border-gray-300'
@@ -544,8 +544,8 @@ function Acompanhamento() {
                 vendedorFilter: e.map((x) => x.value),
               })
             }
-            options={vendedores.map((vendedor) => {
-              return { label: vendedor.nome, value: vendedor.nome }
+            options={allSellers.map((vendedor) => {
+              return { label: vendedor.label, value: vendedor.value }
             })}
           />
           <Select

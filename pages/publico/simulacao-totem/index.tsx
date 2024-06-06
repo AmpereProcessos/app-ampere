@@ -22,14 +22,17 @@ function EventTotemSimulationPage() {
         </div>
       </div>
       <div className="flex w-[80%] grow flex-col justify-center p-6">
-        <h1 className="my-2 w-full text-center text-3xl font-black tracking-tight"> SEJA BEM VINDO AO TOTEM DE SIMULAÇÃO DA AMPÈRE ENERGIAS !</h1>
-        <p className="mb-3 w-full text-center text-xl tracking-tight text-gray-500">
+        <h1 className="my-2 w-full text-center text-xl font-black tracking-tight lg:text-3xl">
+          {' '}
+          SEJA BEM VINDO AO TOTEM DE SIMULAÇÃO DA AMPÈRE ENERGIAS !
+        </h1>
+        <p className="mb-3 w-full text-center text-base tracking-tight text-gray-500 lg:text-xl">
           Dentre as opções abaixo, selecione a modalidade que gostaria de simular.
         </p>
         <div className="flex w-full flex-col items-center justify-center gap-4">
           <button
             onClick={() => setType('ufv-system-calculator')}
-            className="group flex w-[80%] flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a]"
+            className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
             <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE ENERGIA SOLAR</h1>
             <h1 className="text-[#15599a] group-hover:text-white">
@@ -41,7 +44,7 @@ function EventTotemSimulationPage() {
           </button>
           <button
             onClick={() => setType('ufv-insurance-calculator')}
-            className="group flex w-[80%] flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a]"
+            className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
             <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE SEGURO SOLAR</h1>
             <h1 className="text-[#15599a] group-hover:text-white">
@@ -53,7 +56,7 @@ function EventTotemSimulationPage() {
           </button>
           <button
             onClick={() => setType('ufv-oem-calculator')}
-            className="group flex w-[80%] flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a]"
+            className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
             <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE MANUTENÇÃO E LIMPEZA</h1>
             <h1 className="text-[#15599a] group-hover:text-white">
@@ -73,7 +76,7 @@ function EventTotemSimulationPage() {
             <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
           </h1>
         </div>
-        <div className="flex w-full items-center justify-center gap-3">
+        <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
           <div className="flex items-center gap-1 text-white">
             <AiFillInstagram size="35px" />
             <p>@ampereenergias</p>

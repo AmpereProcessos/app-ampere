@@ -61,9 +61,9 @@ function MainComponent() {
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white font-['Raleway']`}>
-        <div className="relative flex h-[200px] w-full items-center justify-center lg:h-[350px]">
+        <div className="relative flex h-[150px] w-full items-center justify-center lg:h-[350px]">
           {/** LARGE DEVICES */}
-          <div className="absolute top-0 z-[2] hidden h-[200px] w-full lg:block lg:h-[350px]">
+          <div className="absolute top-0 z-[2] hidden h-[150px] w-full lg:block lg:h-[350px]">
             <Image
               src={BackgroundImageWithSmallLogo}
               alt="FUNDO"
@@ -73,7 +73,7 @@ function MainComponent() {
             />
           </div>
           {/** SMALL DEVICES */}
-          <div className="absolute top-0 z-[2] block h-[200px] w-full lg:hidden lg:h-[350px]">
+          <div className="absolute top-0 z-[2] block h-[150px] w-full lg:hidden lg:h-[350px]">
             <Image
               src={BackgroundImageWithBigLogo}
               alt="FUNDO"
@@ -160,8 +160,8 @@ function MainComponent() {
             </div>
           </div>
         </div>
-        <div className="flex h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
-          <div className="flex items-center justify-center gap-3">
+        <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 px-10">
+          <div className="flex flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex w-[80px] flex-col items-center justify-center">
               <Image src={AmpereWhiteLogo} quality={100} height={80} width={80} alt="LOGO" style={{ objectFit: 'cover' }} />
             </div>
@@ -170,7 +170,7 @@ function MainComponent() {
               <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
             </h1>
           </div>
-          <div className="flex w-full items-center justify-center gap-3">
+          <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex items-center gap-1 text-white">
               <AiFillInstagram size="35px" />
               <p>@ampereenergias</p>

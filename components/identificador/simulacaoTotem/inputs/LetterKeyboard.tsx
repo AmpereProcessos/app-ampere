@@ -17,7 +17,7 @@ function LetterVirtualKeyboard({ closeModal, handleClick, dropLastLetter, showEm
     <div
       className={`absolute left-[50%] ${
         showEmailDomains ? 'top-[250px]' : 'top-[230px]'
-      }  z-[1000] min-h-fit w-[120%] max-w-[300px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:min-h-[350px] lg:w-[600px] lg:max-w-full`}
+      }  z-[1000] min-h-fit w-[130%] max-w-[320px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] xs:max-w-[350px] lg:min-h-[350px] lg:w-[600px] lg:max-w-[600px]`}
     >
       <div className="flex h-full w-full flex-col gap-2">
         <div className="flex w-full items-center justify-between">
@@ -135,19 +135,19 @@ function LetterVirtualKeyboard({ closeModal, handleClick, dropLastLetter, showEm
           <div className="grid w-full grid-cols-3 gap-2">
             <div
               onClick={() => handleClick('HOTMAIL.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-sm shadow-sm hover:bg-blue-100"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.6rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'HOTMAIL.COM'}</p>
             </div>
             <div
               onClick={() => handleClick('GMAIL.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-sm shadow-sm hover:bg-blue-100"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.6rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'GMAIL.COM'}</p>
             </div>
             <div
               onClick={() => handleClick('OUTLOOK.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-sm shadow-sm hover:bg-blue-100"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.6rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'OUTLOOK.COM'}</p>
             </div>

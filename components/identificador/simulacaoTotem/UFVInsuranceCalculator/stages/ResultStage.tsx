@@ -225,8 +225,8 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-black lg:w-[80%]">
               <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-black p-3">
                 <h1 className="w-2/3 text-center text-xs font-bold text-white lg:text-sm">PROTEÇÃO</h1>
-                <h1 className="w-2/3 text-center text-xs font-bold text-white lg:text-sm">GARANTIA</h1>
-                <h1 className="w-2/3 text-center text-xs font-bold text-white lg:text-sm">SEGURO</h1>
+                <h1 className="w-1/3 text-center text-xs font-bold text-white lg:text-sm">GARANTIA</h1>
+                <h1 className="w-1/3 text-center text-xs font-bold text-white lg:text-sm">SEGURO</h1>
               </div>
               <div className="flex w-full flex-col gap-2 p-3">
                 {protectionDescription.map((value) => (

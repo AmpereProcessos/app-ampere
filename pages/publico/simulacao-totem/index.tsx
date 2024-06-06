@@ -75,7 +75,7 @@ function EventTotemSimulationPage() {
 
       <div className="flex h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
         <div className="flex items-center justify-center gap-3">
-          <h1 className="font-black text-white">
+          <h1 className="text-center font-black text-white">
             A energia que move o mundo{'  '}
             <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
           </h1>

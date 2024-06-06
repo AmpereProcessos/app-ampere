@@ -4,31 +4,45 @@ import connectToCRMDatabase from '../../../utils/services/mongodb/crm/main'
 import { errorHandler } from '../../../utils/methods/handlers'
 import { getContractValue } from '../../../utils/methods/util/projects'
 import createHttpError from 'http-errors'
-import { ObjectId } from 'mongodb'
-export default async function handler(req, res) {
+import { Collection, Db, ObjectId, WithId } from 'mongodb'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { TProject } from '@/utils/schemas/projects'
+import { TUser } from '@/utils/schemas/crm/user.schema'
+import { z } from 'zod'
+import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
+
+const DateQuerySchema = z.object({
+  after: z
+    .string({ required_error: 'Parâmetros de período inválidos.', invalid_type_error: 'Parâmetros de período inválidos.' })
+    .datetime({ message: 'Parâmetros de período inválidos.' }),
+  before: z
+    .string({ required_error: 'Parâmetros de período inválidos.', invalid_type_error: 'Parâmetros de período inválidos.' })
+    .datetime({ message: 'Parâmetros de período inválidos.' }),
+})
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method == 'GET') {
     try {
-      const { after, before } = req.query
-      const appDb = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
-      const appProjectsCollection = appDb.collection('dados')
+      const { after, before } = DateQuerySchema.parse(req.query)
+      const appDb: Db = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
+      const appProjectsCollection: Collection<TProject> = appDb.collection('dados')
 
-      const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-      const crmUsersCollection = crmDb.collection('users')
-      const crmProjectsCollection = crmDb.collection('projects')
+      const crmDb = await connectToCRMDatabase(process.env.DB_KEY)
+      const crmUsersCollection: Collection<TUser> = crmDb.collection('users')
+      const crmProjectsCollection: Collection<TOpportunity> = crmDb.collection('opportunities')
 
       const crmUsers = await crmUsersCollection.find({}).toArray()
-      const crmProjects = await crmProjectsCollection.find({ 'contrato.dataAssinatura': { $ne: null } }).toArray()
+
+      const crmProjects = await crmProjectsCollection.find({ 'ganho.data': { $ne: null } }).toArray()
       const projects = await getFilteredProjects({ collection: appProjectsCollection, after, before })
-
       const commissionInfo = projects.map((project) => {
-        const equivalentProjectInCRM = crmProjects.find((crmProject) => crmProject._id == project.idProjetoCRM)
-        const representative = equivalentProjectInCRM?.representante
-        const responsible = equivalentProjectInCRM?.responsavel
-
-        const representativeUserInfo = crmUsers.find((user) => representative?.id == user._id)
-        const responsibleUserInfo = crmUsers.find((user) => responsible?.id == user._id)
-
-        const isFromSDR = representativeUserInfo?.grupo?.id == 4
+        const crmOpportunity = crmProjects.find((crmProject) => crmProject._id.toString() == project.idProjetoCRM)
+        const crmOpportunityResponsibles = crmOpportunity?.responsaveis || []
+        const crmSeller = crmOpportunityResponsibles.find((r) => r.papel == 'VENDEDOR')
+        const crmSDR = crmOpportunityResponsibles.find((r) => r.papel == 'SDR')
+        console.log(crmSeller, crmSDR)
+        const sellerUserInfo = crmUsers.find((user) => crmSeller?.id == user._id.toString())
+        const sdrUserInfo = crmUsers.find((user) => crmSDR?.id == user._id.toString())
 
         // Defining commission values
         var commission = {
@@ -45,7 +59,7 @@ export default async function handler(req, res) {
           commission.insider = definedInsiderCommission || 0
         } else {
           // Else, use commission values defined in CRM for the responsible and representative
-          commission = getCRMCommissionValues({ responsibleUserInfo, representativeUserInfo, isFromSDR })
+          commission = getCRMCommissionValues({ sellerUserInfo, sdrUserInfo })
         }
         return {
           id: project._id,
@@ -56,7 +70,7 @@ export default async function handler(req, res) {
           identificadorCRM: project.codigoSVB,
           cidade: project.cidade,
           vendedor: project.vendedor.nome,
-          insider: isFromSDR ? representative.nome : null,
+          insider: project.insider,
           dataAssinatura: project.contrato?.dataAssinatura,
           dataRecebimentoParcial: project.compra?.dataPagamento,
           potenciaPico: project.sistema?.potPico,
@@ -75,7 +89,7 @@ export default async function handler(req, res) {
           },
         }
       })
-      res.json(commissionInfo)
+      res.status(200).json(commissionInfo)
     } catch (error) {
       console.log(error)
       errorHandler(error, res)
@@ -101,7 +115,12 @@ export default async function handler(req, res) {
   }
 }
 
-async function getFilteredProjects({ collection, after, before }) {
+type GetFilteredProjectsParams = {
+  collection: Collection<TProject>
+  after: string
+  before: string
+}
+async function getFilteredProjects({ collection, after, before }: GetFilteredProjectsParams) {
   try {
     const projects = await collection
       .aggregate([
@@ -146,25 +165,31 @@ async function getFilteredProjects({ collection, after, before }) {
         },
       ])
       .toArray()
-    return projects
+    return projects as WithId<TProject>[]
   } catch (error) {
     throw error
   }
 }
-function getCRMCommissionValues({ representativeUserInfo, responsibleUserInfo, isFromSDR }) {
+
+type GetCRMCommissionValuesParams = {
+  sellerUserInfo: TUser | undefined
+  sdrUserInfo: TUser | undefined
+}
+function getCRMCommissionValues({ sellerUserInfo, sdrUserInfo }: GetCRMCommissionValuesParams) {
   var commission = {
     seller: 0,
     insider: 0,
   }
-  if (representativeUserInfo && responsibleUserInfo) {
-    if (isFromSDR) {
-      // console.log(representative?.nome, responsible?.nome)
-      commission.seller = responsibleUserInfo.comissao.comRepresentante
-      commission.insider = representativeUserInfo.comissao.semRepresentante
-    } else {
-      commission.seller = responsibleUserInfo.comissao.semRepresentante
-    }
+  if (!sellerUserInfo && !sdrUserInfo) return commission
+  // In case there is information about an SDR, than, it is a sale with Representante
+  if (!!sdrUserInfo) {
+    // console.log(representative?.nome, responsible?.nome)
+    commission.seller = sellerUserInfo?.comissoes.comSDR || 0
+    commission.insider = sdrUserInfo?.comissoes?.semSDR || 0
+  } else {
+    commission.seller = sellerUserInfo?.comissoes?.semSDR || 0
   }
+
   return commission
 }
 

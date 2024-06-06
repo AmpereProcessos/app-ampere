@@ -172,8 +172,8 @@ export const UserEntitySchema = z.object({
   visibilidade: z.union([z.literal('GERAL'), z.literal('PRÓPRIA'), z.array(z.string())]),
   funisVisiveis: z.union([z.literal('TODOS'), z.array(z.number())]),
   comissao: z.object({
-    comRepresentante: z.number(),
-    semRepresentante: z.number(),
+    semSDR: z.number().optional().nullable(),
+    comSDR: z.number().optional().nullable(),
   }),
   grupo: z.object({
     id: z.number(),

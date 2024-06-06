@@ -162,10 +162,10 @@ function MainComponent() {
         </div>
         <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 px-10">
           <div className="flex flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex w-[80px] flex-col items-center justify-center">
+            <div className="z-10 flex w-[80px] flex-col items-center justify-center">
               <Image src={AmpereWhiteLogo} quality={100} height={80} width={80} alt="LOGO" style={{ objectFit: 'cover' }} />
             </div>
-            <h1 className="text-white">
+            <h1 className="text-center text-white">
               A energia que move o mundo{'  '}
               <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
             </h1>

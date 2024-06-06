@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import KeyboardModal from './NumberKeyboard'
+import { useClickOutside } from '@/utils/hooks'
 type TotemNumberInputProps = {
   width?: string
   label: string
@@ -11,6 +12,7 @@ type TotemNumberInputProps = {
   handleChange: (value: string) => void
 }
 function TotemNumberInput({ width, label, showLabel, showTag = true, value, editable = true, placeholder, handleChange }: TotemNumberInputProps) {
+  const divReff = useRef(null)
   const [isFocused, setIsFocused] = useState(false)
   const inputIdentifier = label.toLowerCase().replace(' ', '_')
   function handleAjust(number: number) {
@@ -24,8 +26,9 @@ function TotemNumberInput({ width, label, showLabel, showTag = true, value, edit
     console.log('FUI CHAMADO', newValue)
     handleChange(newValue)
   }
+  useClickOutside(divReff, () => setIsFocused(false))
   return (
-    <div className={`relative flex min-h-[50px] w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
+    <div ref={divReff} className={`relative flex min-h-[50px] w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className="font-sans font-bold  text-[#353432]">
           {label}

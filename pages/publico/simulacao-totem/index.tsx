@@ -9,11 +9,13 @@ import { MdSecurity } from 'react-icons/md'
 import { FaSolarPanel } from 'react-icons/fa'
 import { BsSpeedometer2 } from 'react-icons/bs'
 import UFVSystemCalculationMainComponent from '@/components/identificador/simulacaoTotem/UFVSystemCalculator/MainComponent'
+import OeMCalculationMainComponent from '@/components/identificador/simulacaoTotem/OeMCalculator/MainComponent'
 type TSimulationTypes = 'ufv-system-calculator' | 'ufv-insurance-calculator' | 'ufv-oem-calculator'
 
 function EventTotemSimulationPage() {
   const [type, setType] = useState<TSimulationTypes | null>(null)
   if (type == 'ufv-system-calculator') return <UFVSystemCalculationMainComponent />
+  if (type == 'ufv-oem-calculator') return <OeMCalculationMainComponent />
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className="flex h-[120px] w-full items-center justify-center bg-[#15599a]">

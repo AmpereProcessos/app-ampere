@@ -28,10 +28,10 @@ function FirstStage({ infoHolder, setInfoHolder, moveToNextStage }: FirstStagePr
               showLabel={false}
               label=""
               placeholder=""
-              value={infoHolder.valorFaturaEnergia || null}
+              value={infoHolder.premissas.valorFaturaEnergia || null}
               handleChange={(value) => {
                 console.log('VALOR', value)
-                setInfoHolder((prev) => ({ ...prev, valorFaturaEnergia: Number(value) }))
+                setInfoHolder((prev) => ({ ...prev, premissas: { ...prev.premissas, valorFaturaEnergia: Number(value) } }))
               }}
               showTag={true}
             />

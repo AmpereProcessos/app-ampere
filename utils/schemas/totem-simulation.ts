@@ -9,9 +9,18 @@ export const GeneralTotemSimulationSchema = z.object({
   cidade: z.string(),
   email: z.string(),
   telefone: z.string(),
-  valorFaturaEnergia: z.number().optional().nullable(),
   dataNascimento: z.string().optional().nullable(),
-  investimentoEstimado: z.number().optional().nullable(),
+  premissas: z.object({
+    numModulos: z.number().optional().nullable(),
+    potenciaPico: z.number().optional().nullable(),
+    valorFaturaEnergia: z.number().optional().nullable(),
+  }),
+  sugestao: z.object({
+    numModulos: z.number().optional().nullable(),
+    potModulos: z.number().optional().nullable(),
+    potenciaPico: z.number().optional().nullable(),
+    investimento: z.union([z.number(), z.string()]).optional().nullable(),
+  }),
 })
 
 export type TTotemSimulation = z.infer<typeof GeneralTotemSimulationSchema>

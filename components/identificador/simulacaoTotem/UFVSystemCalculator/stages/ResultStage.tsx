@@ -17,7 +17,7 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
   }
   const props = getInfo(Number(valorFaturaEnergia))
   return (
-    <div className={`flex grow flex-col bg-white font-['Raleway']`}>
+    <div className={`flex grow flex-col bg-white font-raleway`}>
       <div className="flex h-[82px] w-full items-center justify-center self-stretch bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="flex w-[80px] flex-col items-center justify-center">
           {/* <img src={Logo} style={{ width: "100%" }} /> */}

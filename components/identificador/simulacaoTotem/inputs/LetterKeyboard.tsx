@@ -1,3 +1,4 @@
+import { useClickOutside } from '@/utils/hooks'
 import React from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
 type LetterVirtualKeyboardProps = {
@@ -17,7 +18,7 @@ function LetterVirtualKeyboard({ closeModal, handleClick, dropLastLetter, showEm
     <div
       className={`absolute left-[50%] ${
         showEmailDomains ? 'top-[250px]' : 'top-[230px]'
-      }  z-[1000] min-h-fit w-[130%] max-w-[320px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] xs:max-w-[350px] lg:min-h-[350px] lg:w-[600px] lg:max-w-[600px]`}
+      }  xxs:w-[340px] z-[1000] min-h-fit w-[310px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] xs:w-[380px] sm:w-[500px] lg:min-h-[350px] lg:w-[600px] lg:max-w-[600px]`}
     >
       <div className="flex h-full w-full flex-col gap-2">
         <div className="flex w-full items-center justify-between">
@@ -36,7 +37,7 @@ function LetterVirtualKeyboard({ closeModal, handleClick, dropLastLetter, showEm
               <div
                 key={letterIndex}
                 onClick={() => handleClick(letter)}
-                className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-2 text-[0.65rem] shadow-sm hover:bg-blue-100 lg:p-4 lg:text-sm"
+                className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-2 text-xs shadow-sm hover:bg-blue-100 xs:text-[0.9rem] lg:p-4 lg:text-sm"
               >
                 <p>{letter}</p>
               </div>
@@ -47,19 +48,19 @@ function LetterVirtualKeyboard({ closeModal, handleClick, dropLastLetter, showEm
           <div className="grid w-full grid-cols-3 gap-2">
             <div
               onClick={() => handleClick('HOTMAIL.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.65rem] shadow-sm hover:bg-blue-100 lg:text-sm"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.7rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'HOTMAIL.COM'}</p>
             </div>
             <div
               onClick={() => handleClick('GMAIL.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.65rem] shadow-sm hover:bg-blue-100 lg:text-sm"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.7rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'GMAIL.COM'}</p>
             </div>
             <div
               onClick={() => handleClick('OUTLOOK.COM')}
-              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.65rem] shadow-sm hover:bg-blue-100 lg:text-sm"
+              className="flex cursor-pointer items-center justify-center rounded-md border border-gray-200 p-4 text-[0.7rem] shadow-sm hover:bg-blue-100 lg:text-sm"
             >
               <p>{'OUTLOOK.COM'}</p>
             </div>

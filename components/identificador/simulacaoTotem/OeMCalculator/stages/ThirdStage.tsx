@@ -181,7 +181,7 @@ function ThirdStage({ infoHolder, setInfoHolder, createSimulation }: ThirdStageP
             <button
               type="submit"
               onClick={handleFinishForm}
-              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02] lg:w-[320px]"
+              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02] lg:w-full"
             >
               <p className="w-full text-sm lg:text-[19px]">Visualizar simulação</p>
             </button>

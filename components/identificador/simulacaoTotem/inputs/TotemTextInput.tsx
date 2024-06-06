@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import LetterKeyboard from './LetterKeyboard'
+import { useClickOutside } from '@/utils/hooks'
 type TotemTextInputProps = {
   width?: string
   label: string
@@ -22,6 +23,7 @@ function TotemTextInput({
   editable = true,
   handleChange,
 }: TotemTextInputProps) {
+  const divReff = useRef(null)
   const [isFocused, setIsFocused] = useState(false)
   const inputIdentifier = label.toLowerCase().replace(' ', '_')
   function handleAjust(letter: string) {
@@ -35,8 +37,9 @@ function TotemTextInput({
     console.log('FUI CHAMADO', newValue)
     handleChange(newValue)
   }
+  useClickOutside(divReff, () => setIsFocused(false))
   return (
-    <div className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
+    <div ref={divReff} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className={labelClassName}>
           {label}

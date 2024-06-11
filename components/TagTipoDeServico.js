@@ -19,6 +19,9 @@ export function getServiceTypeTagColor(type) {
     'SUBESTAÇÃO DE ENERGIA': {
       combination: 'bg-[#e6e6e6] text-[#15599a]',
     },
+    'SEGURO DE SISTEMA FOTOVOLTAICO': {
+      combination: 'bg-[#E4CCFF] text-[#15599a]',
+    },
   }
   return obj[type] ? obj[type].combination : 'bg-black text-white'
 }

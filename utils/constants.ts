@@ -2045,6 +2045,10 @@ export const tiposDeServico = [
     value: 'HOMOLOGAÇÃO',
   },
   {
+    label: 'SEGURO DE SISTEMA FOTOVOLTAICO',
+    value: 'SEGURO DE SISTEMA FOTOVOLTAICO',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

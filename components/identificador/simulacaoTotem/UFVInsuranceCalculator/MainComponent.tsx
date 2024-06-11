@@ -64,9 +64,9 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white`}>
-        <div className="relative flex h-[80px] w-full items-center justify-center lg:h-[350px]">
+        <div className="relative flex h-[80px] w-full items-center justify-center sm:h-[300px] lg:h-[350px]">
           {/** LARGE DEVICES */}
-          <div className="absolute top-0 z-[2] hidden h-[80px] w-full lg:block lg:h-[350px]">
+          <div className="absolute top-0 z-[2] hidden h-[80px] w-full sm:h-[300px] lg:block lg:h-[350px]">
             <Image
               src={BackgroundImageWithSmallLogo}
               alt="FUNDO"
@@ -76,7 +76,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
             />
           </div>
           {/** SMALL DEVICES */}
-          <div className="absolute top-0 z-[2] block h-[80px] w-full lg:hidden lg:h-[350px]">
+          <div className="absolute top-0 z-[2] block h-[80px] w-full sm:h-[300px] lg:hidden lg:h-[350px]">
             <Image
               src={BackgroundImageWithBigLogo}
               alt="FUNDO"

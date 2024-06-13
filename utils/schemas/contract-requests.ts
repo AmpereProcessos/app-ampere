@@ -69,6 +69,7 @@ const GeneralContractRequestSchema = z.object({
   possuiOeM: z.enum(['SIM', 'NÃO']),
   planoOeM: z.enum(['PLANO SOL +', 'MANUTENÇÃO SIMPLES', 'NÃO SE APLICA', 'PLANO SOL']),
   clienteSegurado: z.enum(['SIM', 'NÃO']),
+  valorSeguro: z.number(),
   tempoSegurado: z.string(),
   formaPagamentoOeMOuSeguro: z.string(),
   valorOeMOuSeguro: z.number().nullable().optional(),

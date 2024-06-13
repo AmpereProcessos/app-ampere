@@ -20,7 +20,7 @@ export function getServiceTypeTagColor(type) {
       combination: 'bg-[#e6e6e6] text-[#15599a]',
     },
     'SEGURO DE SISTEMA FOTOVOLTAICO': {
-      combination: 'bg-[#E4CCFF] text-[#15599a]',
+      combination: 'bg-[#b990e7] text-white',
     },
   }
   return obj[type] ? obj[type].combination : 'bg-black text-white'

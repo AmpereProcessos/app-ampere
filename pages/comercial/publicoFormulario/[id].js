@@ -36,7 +36,7 @@ function Formulario({ info }) {
     <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto py-2">
       <div className="flex h-full flex-col gap-y-2">
         <>
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
             <h1 className="mt-1 text-center text-xl font-bold text-[#fead61]">FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO</h1>
             <h1 className="my-1 text-center font-bold text-green-500">SERVIÇO: {dados.tipoDeServico}</h1>
           </div>
@@ -50,8 +50,8 @@ function Formulario({ info }) {
               <p className="text-sm">{dados.telefoneVendedor ? dados.telefoneVendedor : '-'}</p>
             </div>
           </div>
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTRATO</span>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DADOS PARA CONTRATO</span>
             <div className="flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'Nome/Razão Social'}
@@ -357,8 +357,8 @@ function Formulario({ info }) {
               </div>
             )}
           </div>
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS PARA CONTATO</span>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DADOS PARA CONTATO</span>
             <div className="flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'NOME DO CONTATO 1'}
@@ -406,8 +406,8 @@ function Formulario({ info }) {
             </div>
           </div>
           {dados.clienteAmpere != 'SIM' ? (
-            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DA INSTALAÇÃO</span>
+            <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+              <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DADOS DA INSTALAÇÃO</span>
               <div className="flex flex-wrap justify-around gap-2">
                 <TextInput
                   label={'NOME DO TITULAR DO PROJETO'}
@@ -849,8 +849,8 @@ function Formulario({ info }) {
           ) : null}
 
           {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(dados.tipoDeServico) && (
-            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS DO SISTEMA</span>
+            <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+              <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DADOS DO SISTEMA</span>
               {dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
                 <span className="mt-1 py-2 text-center text-sm font-bold uppercase  text-[#fead61]">DADOS DO SISTEMA (AUMENTO)</span>
               ) : null}
@@ -1328,8 +1328,8 @@ function Formulario({ info }) {
             </div>
           )}
 
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ESTRUTURA DE MONTAGEM</span>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ESTRUTURA DE MONTAGEM</span>
             <div className="flex flex-wrap justify-around gap-2">
               <SelectInput
                 label={'TIPO DA ESTRUTURA'}
@@ -1515,164 +1515,99 @@ function Formulario({ info }) {
               )}
             </div>
           </div>
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">O&M E SEGURO</span>
-            <div className="flex flex-wrap justify-around gap-2">
-              <SelectInput
-                label={'KIT COM O&M ?'}
-                editable={false}
-                options={[
-                  {
-                    label: 'NÃO',
-                    value: 'NÃO',
-                  },
-                  {
-                    label: 'SIM',
-                    value: 'SIM',
-                  },
-                  {
-                    label: 'NÃO DEFINIDO',
-                    value: 'NÃO DEFINIDO',
-                  },
-                ]}
-                value={dados.possuiOeM}
-                handleChange={(value) => setDados({ ...dados, possuiOeM: value })}
-              />
-              {dados.possuiOeM == 'SIM' && (
-                <>
-                  <SelectInput
-                    label={'QUAL PLANO DE O&M?'}
-                    editable={false}
-                    options={[
-                      {
-                        label: 'MANUTENÇÃO SIMPLES',
-                        value: 'MANUTENÇÃO SIMPLES',
-                      },
-                      {
-                        label: 'PLANO SOL',
-                        value: 'PLANO SOL',
-                      },
-                      {
-                        label: 'PLANO SOL +',
-                        value: 'PLANO SOL +',
-                      },
-                      {
-                        label: 'NÃO SE APLICA',
-                        value: 'NÃO SE APLICA',
-                      },
-                    ]}
-                    value={dados.planoOeM}
-                    handleChange={(value) => setDados({ ...dados, planoOeM: value })}
-                  />
-                </>
-              )}
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">O&M</span>
+            <div className="flex items-center justify-center">
+              <div className="w-fit">
+                <CheckboxInput
+                  editable={false}
+                  labelFalse={'POSSUI O&M'}
+                  labelTrue={'POSSUI O&M'}
+                  title={'APLICAÇÃO DE O&M'}
+                  checked={dados.possuiOeM == 'SIM'}
+                  handleChange={(value) => setDados((prev) => ({ ...prev, possuiOeM: !!value ? 'SIM' : 'NÃO' }))}
+                />
+              </div>
             </div>
-            <div className="mt-2 flex flex-wrap justify-around gap-2">
-              <SelectInput
-                label={'CLIENTE SEGURADO?'}
-                editable={false}
-                options={[
-                  {
-                    label: 'SIM',
-                    value: 'SIM',
-                  },
-                  {
-                    label: 'NÃO',
-                    value: 'NÃO',
-                  },
-                  {
-                    label: 'NÃO DEFINIDO',
-                    value: 'NÃO DEFINIDO',
-                  },
-                ]}
-                value={dados.clienteSegurado ? dados.clienteSegurado : 'NÃO DEFINIDO'}
-                handleChange={(value) => setDados({ ...dados, clienteSegurado: value })}
-              />
-              {dados.clienteSegurado == 'SIM' && (
-                <>
-                  <SelectInput
-                    label={'TEMPO SEGURADO'}
-                    editable={false}
-                    options={[
-                      {
-                        label: '1 ANO',
-                        value: '1 ANO',
-                      },
-                      {
-                        label: '2 ANOS',
-                        value: '2 ANOS',
-                      },
-                      {
-                        label: '3 ANOS',
-                        value: '3 ANOS',
-                      },
-                      {
-                        label: '4 ANOS',
-                        value: '4 ANOS',
-                      },
-                      {
-                        label: '5 ANOS',
-                        value: '5 ANOS',
-                      },
-                      {
-                        label: 'NÃO SE APLICA',
-                        value: 'NÃO SE APLICA',
-                      },
-                    ]}
-                    value={dados.tempoSegurado}
-                    handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
-                  />
-                </>
-              )}
-            </div>
-            {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && (
-              <div className="mt-2 flex flex-wrap justify-around gap-2">
+            {dados.possuiOeM == 'SIM' ? (
+              <div className="mt-2 flex w-full items-center justify-center gap-2">
+                <NumberInput
+                  label={'VALOR DO O&M (ADICIONAL)'}
+                  value={dados.valorOeMOuSeguro}
+                  editable={false}
+                  handleChange={(value) => setDados((prev) => ({ ...prev, valorOeMOuSeguro: Number(value) }))}
+                />
                 <SelectInput
-                  label={'FORMA de PAGAMENTO'}
+                  label={'PLANO DE O&M'}
                   editable={false}
                   options={[
                     {
-                      label: 'INCLUSO NO FINANCIAMENTO',
-                      value: 'INCLUSO NO FINANCIAMENTO',
+                      label: 'MANUTENÇÃO SIMPLES',
+                      value: 'MANUTENÇÃO SIMPLES',
                     },
                     {
-                      label: 'DIRETO PRO FORNECEDOR',
-                      value: 'DIRETO PRO FORNECEDOR',
+                      label: 'PLANO SOL',
+                      value: 'PLANO SOL',
                     },
                     {
-                      label: 'A VISTA PARA AMPÈRE',
-                      value: 'A VISTA PARA AMPÈRE',
+                      label: 'PLANO SOL +',
+                      value: 'PLANO SOL +',
                     },
                     {
                       label: 'NÃO SE APLICA',
                       value: 'NÃO SE APLICA',
                     },
                   ]}
-                  value={dados.formaPagamentoOeMOuSeguro}
-                  handleChange={(value) =>
-                    setDados({
-                      ...dados,
-                      formaPagamentoOeMOuSeguro: value,
-                    })
-                  }
-                />
-                <NumberInput
-                  label={'VALOR O&M+SEGURO (se não incluso)'}
-                  editable={false}
-                  value={dados.valorOeMOuSeguro}
-                  handleChange={(value) =>
-                    setDados({
-                      ...dados,
-                      valorOeMOuSeguro: Number(value),
-                    })
-                  }
+                  value={dados.planoOeM}
+                  handleChange={(value) => setDados({ ...dados, planoOeM: value })}
                 />
               </div>
-            )}
+            ) : null}
+          </div>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">SEGURO</span>
+            <div className="flex items-center justify-center">
+              <div className="w-fit">
+                <CheckboxInput
+                  editable={false}
+                  labelFalse={'CLIENTE SEGURADO'}
+                  labelTrue={'CLIENTE SEGURADO'}
+                  title={'APLICAÇÃO DE SEGURO'}
+                  checked={dados.clienteSegurado == 'SIM'}
+                  handleChange={(value) => setDados((prev) => ({ ...prev, clienteSegurado: !!value ? 'SIM' : 'NÃO' }))}
+                />
+              </div>
+            </div>
+            {dados.clienteSegurado == 'SIM' ? (
+              <div className="flex w-full items-center justify-center gap-2">
+                <NumberInput
+                  label={'VALOR DO SEGURO (ADICIONAL)'}
+                  value={dados.valorSeguro}
+                  editable={false}
+                  handleChange={(value) => setDados((prev) => ({ ...prev, valorSeguro: Number(value) }))}
+                />
+                <SelectInput
+                  label={'TEMPO SEGURADO'}
+                  editable={false}
+                  options={[
+                    {
+                      label: '1 ANO',
+                      value: '1 ANO',
+                    },
+                    {
+                      label: 'NÃO SE APLICA',
+                      value: 'NÃO SE APLICA',
+                    },
+                  ]}
+                  value={dados.tempoSegurado}
+                  handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
+                />
+              </div>
+            ) : null}
           </div>
           {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(dados.tipoDeServico) ? (
-            <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">AUMENTO DE CARGA</span>
+            <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+              <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">AUMENTO DE CARGA</span>
               <div className="flex justify-center">
                 <SelectInput
                   label={'HAVERÁ TROCA DE PADRÃO?'}
@@ -1797,8 +1732,10 @@ function Formulario({ info }) {
             </div>
           ) : null}
 
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+              DADOS FINANCEIROS E NEGOCIAÇÃO
+            </span>
             <div className="mt-2 flex flex-wrap justify-around gap-2">
               <TextInput
                 label={'NOME DO PAGADOR'}
@@ -2053,8 +1990,10 @@ function Formulario({ info }) {
               />
             </div>
           </div>
-          <div className="flex w-full flex-col border border-[#15599a] bg-[#fff] pb-2 shadow-lg">
-            <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">DISTRIBUIÇÃO DE CRÉDITOS</span>
+          <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+            <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
+              DISTRIBUIÇÃO DE CRÉDITOS
+            </span>
             <div className="mt-2 flex justify-center">
               <SelectInput
                 label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}

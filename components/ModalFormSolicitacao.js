@@ -2323,159 +2323,92 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
                     </div>
                   </div>
                   <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">O&M E SEGURO</span>
-                    <div className="flex flex-wrap justify-around gap-2">
-                      <SelectInput
-                        label={'KIT COM O&M ?'}
-                        editable={editor}
-                        options={[
-                          {
-                            label: 'NÃO',
-                            value: 'NÃO',
-                          },
-                          {
-                            label: 'SIM',
-                            value: 'SIM',
-                          },
-                          {
-                            label: 'NÃO DEFINIDO',
-                            value: 'NÃO DEFINIDO',
-                          },
-                        ]}
-                        value={dados.possuiOeM}
-                        handleChange={(value) => setDados({ ...dados, possuiOeM: value })}
-                      />
-                      {dados.possuiOeM == 'SIM' && (
-                        <>
-                          <SelectInput
-                            label={'QUAL PLANO DE O&M?'}
-                            editable={editor}
-                            options={[
-                              {
-                                label: 'MANUTENÇÃO SIMPLES',
-                                value: 'MANUTENÇÃO SIMPLES',
-                              },
-                              {
-                                label: 'PLANO SOL',
-                                value: 'PLANO SOL',
-                              },
-                              {
-                                label: 'PLANO SOL +',
-                                value: 'PLANO SOL +',
-                              },
-                              {
-                                label: 'NÃO SE APLICA',
-                                value: 'NÃO SE APLICA',
-                              },
-                            ]}
-                            value={dados.planoOeM}
-                            handleChange={(value) => setDados({ ...dados, planoOeM: value })}
-                          />
-                        </>
-                      )}
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">O&M</span>
+                    <div className="flex items-center justify-center">
+                      <div className="w-fit">
+                        <CheckboxInput
+                          labelFalse={'POSSUI O&M'}
+                          labelTrue={'POSSUI O&M'}
+                          title={'APLICAÇÃO DE O&M'}
+                          checked={dados.possuiOeM == 'SIM'}
+                          handleChange={(value) => setDados((prev) => ({ ...prev, possuiOeM: !!value ? 'SIM' : 'NÃO' }))}
+                        />
+                      </div>
                     </div>
-                    <div className="mt-2 flex flex-wrap justify-around gap-2">
-                      <SelectInput
-                        label={'CLIENTE SEGURADO?'}
-                        editable={editor}
-                        options={[
-                          {
-                            label: 'SIM',
-                            value: 'SIM',
-                          },
-                          {
-                            label: 'NÃO',
-                            value: 'NÃO',
-                          },
-                          {
-                            label: 'NÃO DEFINIDO',
-                            value: 'NÃO DEFINIDO',
-                          },
-                        ]}
-                        value={dados.clienteSegurado ? dados.clienteSegurado : 'NÃO DEFINIDO'}
-                        handleChange={(value) => setDados({ ...dados, clienteSegurado: value })}
-                      />
-                      {dados.clienteSegurado == 'SIM' && (
-                        <>
-                          <SelectInput
-                            label={'TEMPO SEGURADO'}
-                            editable={editor}
-                            options={[
-                              {
-                                label: '1 ANO',
-                                value: '1 ANO',
-                              },
-                              {
-                                label: '2 ANOS',
-                                value: '2 ANOS',
-                              },
-                              {
-                                label: '3 ANOS',
-                                value: '3 ANOS',
-                              },
-                              {
-                                label: '4 ANOS',
-                                value: '4 ANOS',
-                              },
-                              {
-                                label: '5 ANOS',
-                                value: '5 ANOS',
-                              },
-                              {
-                                label: 'NÃO SE APLICA',
-                                value: 'NÃO SE APLICA',
-                              },
-                            ]}
-                            value={dados.tempoSegurado}
-                            handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
-                          />
-                        </>
-                      )}
-                    </div>
-                    {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && (
-                      <div className="mt-2 flex flex-wrap justify-around gap-2">
+                    {dados.possuiOeM == 'SIM' ? (
+                      <div className="mt-2 flex w-full items-center justify-center gap-2">
+                        <NumberInput
+                          label={'VALOR DO O&M (ADICIONAL)'}
+                          value={dados.valorOeMOuSeguro}
+                          editable={true}
+                          handleChange={(value) => setDados((prev) => ({ ...prev, valorOeMOuSeguro: Number(value) }))}
+                        />
                         <SelectInput
-                          label={'FORMA de PAGAMENTO'}
+                          label={'PLANO DE O&M'}
                           editable={editor}
                           options={[
                             {
-                              label: 'INCLUSO NO FINANCIAMENTO',
-                              value: 'INCLUSO NO FINANCIAMENTO',
+                              label: 'MANUTENÇÃO SIMPLES',
+                              value: 'MANUTENÇÃO SIMPLES',
                             },
                             {
-                              label: 'DIRETO PRO FORNECEDOR',
-                              value: 'DIRETO PRO FORNECEDOR',
+                              label: 'PLANO SOL',
+                              value: 'PLANO SOL',
                             },
                             {
-                              label: 'A VISTA PARA AMPÈRE',
-                              value: 'A VISTA PARA AMPÈRE',
+                              label: 'PLANO SOL +',
+                              value: 'PLANO SOL +',
                             },
                             {
                               label: 'NÃO SE APLICA',
                               value: 'NÃO SE APLICA',
                             },
                           ]}
-                          value={dados.formaPagamentoOeMOuSeguro}
-                          handleChange={(value) =>
-                            setDados({
-                              ...dados,
-                              formaPagamentoOeMOuSeguro: value,
-                            })
-                          }
-                        />
-                        <NumberInput
-                          label={'VALOR O&M+SEGURO (se não incluso)'}
-                          editable={editor}
-                          value={dados.valorOeMOuSeguro}
-                          handleChange={(value) =>
-                            setDados({
-                              ...dados,
-                              valorOeMOuSeguro: Number(value),
-                            })
-                          }
+                          value={dados.planoOeM}
+                          handleChange={(value) => setDados({ ...dados, planoOeM: value })}
                         />
                       </div>
-                    )}
+                    ) : null}
+                  </div>
+                  <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                    <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">SEGURO</span>
+                    <div className="flex items-center justify-center">
+                      <div className="w-fit">
+                        <CheckboxInput
+                          labelFalse={'CLIENTE SEGURADO'}
+                          labelTrue={'CLIENTE SEGURADO'}
+                          title={'APLICAÇÃO DE SEGURO'}
+                          checked={dados.clienteSegurado == 'SIM'}
+                          handleChange={(value) => setDados((prev) => ({ ...prev, clienteSegurado: !!value ? 'SIM' : 'NÃO' }))}
+                        />
+                      </div>
+                    </div>
+                    {dados.clienteSegurado == 'SIM' ? (
+                      <div className="flex w-full items-center justify-center gap-2">
+                        <NumberInput
+                          label={'VALOR DO SEGURO (ADICIONAL)'}
+                          value={dados.valorSeguro}
+                          editable={true}
+                          handleChange={(value) => setDados((prev) => ({ ...prev, valorSeguro: Number(value) }))}
+                        />
+                        <SelectInput
+                          label={'TEMPO SEGURADO'}
+                          editable={editor}
+                          options={[
+                            {
+                              label: '1 ANO',
+                              value: '1 ANO',
+                            },
+                            {
+                              label: 'NÃO SE APLICA',
+                              value: 'NÃO SE APLICA',
+                            },
+                          ]}
+                          value={dados.tempoSegurado}
+                          handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
+                        />
+                      </div>
+                    ) : null}
                   </div>
                   {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(dados.tipoDeServico) && (
                     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
@@ -2596,7 +2529,7 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
                             }}
                           />
                           <NumberInput
-                            label={'VALOR DO PADRÃO'}
+                            label={'VALOR DO PADRÃO (ADICIONAL)'}
                             editable={editor}
                             value={dados.valorPadrao}
                             handleChange={(value) => setDados({ ...dados, valorPadrao: Number(value) })}

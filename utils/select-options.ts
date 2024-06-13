@@ -693,6 +693,15 @@ export const allSellers = [
     comissionAsActive: 0.5,
     comissionWithInside: 0.5,
   },
+  {
+    id: 62,
+    active: true,
+    label: 'ANA BEATRIZ',
+    value: 'ANA BEATRIZ',
+    qualification: '',
+    comissionAsActive: 1,
+    comissionWithInside: 1,
+  },
 ].sort((a, b) => a.value.localeCompare(b.value))
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
 export const allActiveSellers = allSellers.filter((s) => s.active)

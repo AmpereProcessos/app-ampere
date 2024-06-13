@@ -701,7 +701,10 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
                 label="DATA DE INÍCIO DO SEGURO"
                 value={infoHolder.seguro?.dataInicio ? formatDate(infoHolder.seguro.dataInicio) : undefined}
                 handleChange={(value) => {
-                  setInfo((prev) => ({ ...prev, seguro: { ...(prev.seguro || {}), dataInicio: formatDateInputChange(value) } }))
+                  {
+                    setInfo((prev) => ({ ...prev, seguro: { ...(prev.seguro || {}), dataInicio: formatDateInputChange(value) } }))
+                    setChanges((prev) => ({ ...prev, 'seguro.dataInicio': formatDateInputChange(value) }))
+                  }
                 }}
                 width="100%"
               />

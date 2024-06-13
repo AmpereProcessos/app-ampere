@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { cidadesAtendidas, oemPlans, tiposDeServico, vendedores } from '../../utils/constants'
+import { cidadesAtendidas, formatDate, oemPlans, tiposDeServico, vendedores } from '../../utils/constants'
 import NumberInput from '../inputs/Number'
 import SelectInput from '../inputs/Select'
 import SelectInputVirtualized from '../inputs/SelectVirtualized'
@@ -17,12 +17,13 @@ import { updateProject } from '@/utils/methods/mutation/clients'
 import { useQueryClient } from 'react-query'
 import { formatToCEP, formatToCPForCNPJ } from '@/utils/methods/formatting'
 import { TProjectDTO } from '@/utils/schemas/projects'
-import { getCEPInfo } from '@/utils/methods/shared'
+import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
 import CheckboxInput from '../inputs/Checkbox'
 import { estadosECidades } from '@/utils/estados_cidades'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
+import DateInput from '../inputs/Date'
 
 type InfoClientBlockProps = {
   editor: boolean
@@ -519,94 +520,194 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
         </div>
       </div>
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">OPERAÇÃO E MANUTENÇÃO</h1>
-      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/4">
-          <CheckboxInput
-            labelFalse="POSSUI O&M?"
-            labelTrue="POSSUI O&M?"
-            checked={!!infoHolder.oem?.aplicavel}
-            handleChange={(value) => {
-              setInfo((prev) => ({ ...prev, oem: { ...(prev.oem || {}), aplicavel: value } }))
-              setChanges((prev) => ({ ...prev, 'oem.aplicavel': value }))
-            }}
-          />
-        </div>
-        <div className="w-full lg:w-1/4">
-          <SelectInput
-            label={'PLANO DE O&M'}
-            editable={editor}
-            value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
-            selectedItemLabel="NÃO DEFINIDO"
-            options={oemPlans.map((plan, index) => ({ id: index + 1, ...plan }))}
-            handleChange={(value) => {
-              setChanges((prev) => ({ ...prev, 'oem.plano': value }))
-              setInfo((prev) => ({
-                ...prev,
-                oem: {
-                  ...(prev.oem || {}),
-                  plano: value,
-                },
-              }))
-            }}
-            onReset={() => {
-              setChanges((prev) => ({ ...prev, 'oem.plano': 'NÃO DEFINIDO' }))
-              setInfo((prev) => ({
-                ...prev,
-                oem: {
-                  ...(prev.oem || {}),
-                  plano: 'NÃO DEFINIDO',
-                },
-              }))
-            }}
-            width="100%"
-          />
-        </div>
-        <div className="w-full lg:w-1/4">
-          {infoHolder.oem?.aplicavel && (
-            <NumberInput
-              label={'DURAÇÃO DO O&M (EM ANOS)'}
-              placeholder="Preencha a duração do O&M em anos..."
-              value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
-              editable={editor}
+      <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2">
+        <div className="flex items-center justify-center">
+          <div className="w-fit">
+            <CheckboxInput
+              labelFalse="POSSUI O&M?"
+              labelTrue="POSSUI O&M?"
+              checked={!!infoHolder.oem?.aplicavel}
               handleChange={(value) => {
-                setChanges((prev) => ({
-                  ...prev,
-                  'oem.duracao': Number(value),
-                }))
-                setInfo((prev) => ({
-                  ...prev,
-                  oem: {
-                    ...(prev.oem || {}),
-                    duracao: Number(value),
-                  },
-                }))
+                setInfo((prev) => ({ ...prev, oem: { ...(prev.oem || {}), aplicavel: value } }))
+                setChanges((prev) => ({ ...prev, 'oem.aplicavel': value }))
               }}
-              width="100%"
             />
-          )}
+          </div>
         </div>
-        <div className="w-full lg:w-1/4">
-          <NumberInput
-            label={'QTDE DE MANUTENÇÕES'}
-            placeholder="Preencha a quantidade de manutenções"
-            value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
-            editable={editor}
-            handleChange={(value) => {
-              setChanges((prev) => ({
-                ...prev,
-                'oem.qtdeManutencoes': value,
-              }))
-              setInfo((prev) => ({
-                ...prev,
-                oem: {
-                  ...(prev.oem || {}),
-                  qtdeManutencoes: value,
-                },
-              }))
-            }}
-            width="100%"
-          />
+        {!!infoHolder.oem?.aplicavel ? (
+          <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+            <div className="w-full lg:w-1/4">
+              <SelectInput
+                label={'PLANO DE O&M'}
+                editable={editor}
+                value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
+                selectedItemLabel="NÃO DEFINIDO"
+                options={oemPlans.map((plan, index) => ({ id: index + 1, ...plan }))}
+                handleChange={(value) => {
+                  setChanges((prev) => ({ ...prev, 'oem.plano': value }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    oem: {
+                      ...(prev.oem || {}),
+                      plano: value,
+                    },
+                  }))
+                }}
+                onReset={() => {
+                  setChanges((prev) => ({ ...prev, 'oem.plano': 'NÃO DEFINIDO' }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    oem: {
+                      ...(prev.oem || {}),
+                      plano: 'NÃO DEFINIDO',
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/4">
+              <NumberInput
+                label={'VALOR DO O&M (ADICIONAL)'}
+                placeholder="Preencha o valor do O&M, se adicional."
+                value={infoHolder.oem?.valor ? infoHolder.oem?.valor : 0}
+                editable={editor}
+                handleChange={(value) => {
+                  setChanges((prev) => ({
+                    ...prev,
+                    'oem.valor': value,
+                  }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    oem: {
+                      ...(prev.oem || {}),
+                      valor: value,
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/4">
+              <NumberInput
+                label={'DURAÇÃO DO O&M (EM ANOS)'}
+                placeholder="Preencha a duração do O&M em anos..."
+                value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
+                editable={editor}
+                handleChange={(value) => {
+                  setChanges((prev) => ({
+                    ...prev,
+                    'oem.duracao': Number(value),
+                  }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    oem: {
+                      ...(prev.oem || {}),
+                      duracao: Number(value),
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/4">
+              <NumberInput
+                label={'QTDE DE MANUTENÇÕES'}
+                placeholder="Preencha a quantidade de manutenções"
+                value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
+                editable={editor}
+                handleChange={(value) => {
+                  setChanges((prev) => ({
+                    ...prev,
+                    'oem.qtdeManutencoes': value,
+                  }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    oem: {
+                      ...(prev.oem || {}),
+                      qtdeManutencoes: value,
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">SEGURO</h1>
+      <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2">
+        <div className="flex items-center justify-center">
+          <div className="w-fit">
+            <CheckboxInput
+              labelFalse="POSSUI SEGURO"
+              labelTrue="POSSUI SEGURO"
+              checked={!!infoHolder.seguro?.aplicavel}
+              handleChange={(value) => {
+                setInfo((prev) => ({ ...prev, seguro: { ...(prev.seguro || {}), aplicavel: value } }))
+                setChanges((prev) => ({ ...prev, 'seguro.aplicavel': value }))
+              }}
+            />
+          </div>
         </div>
+        {!!infoHolder.seguro?.aplicavel ? (
+          <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+            <div className="w-full lg:w-1/3">
+              <NumberInput
+                label={'DURAÇÃO DO SEGURO (EM ANOS)'}
+                placeholder="Preencha a duração do seguro em anos..."
+                value={infoHolder.seguro?.duracao ? infoHolder.seguro?.duracao : 0}
+                editable={editor}
+                handleChange={(value) => {
+                  setChanges((prev) => ({
+                    ...prev,
+                    'seguro.duracao': Number(value),
+                  }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    seguro: {
+                      ...(prev.seguro || {}),
+                      duracao: Number(value),
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/3">
+              <NumberInput
+                label={'VALOR DO SEGURO (ADICIONAL)'}
+                placeholder="Preencha o valor seguro, se adicional."
+                value={infoHolder.seguro?.valor ? infoHolder.seguro?.valor : 0}
+                editable={editor}
+                handleChange={(value) => {
+                  setChanges((prev) => ({
+                    ...prev,
+                    'seguro.valor': value,
+                  }))
+                  setInfo((prev) => ({
+                    ...prev,
+                    seguro: {
+                      ...(prev.seguro || {}),
+                      valor: value,
+                    },
+                  }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/3">
+              <DateInput
+                label="DATA DE INÍCIO DO SEGURO"
+                value={infoHolder.seguro?.dataInicio ? formatDate(infoHolder.seguro.dataInicio) : undefined}
+                handleChange={(value) => {
+                  setInfo((prev) => ({ ...prev, seguro: { ...(prev.seguro || {}), dataInicio: formatDateInputChange(value) } }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
       <div className="my-1 flex w-full items-center px-2">
         <textarea

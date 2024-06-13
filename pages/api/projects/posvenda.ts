@@ -69,6 +69,7 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
           'medidor.data': 1,
           'vistoria.status': 1,
           'vistoria.dataPedido': 1,
+          seguro: 1,
           possuiDeficiencia: 1,
           qualDeficiencia: 1,
           nps: 1,

@@ -42,10 +42,10 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const sortedSellers = allSellers.sort((a, b) => a.value.localeCompare(b.value)).map((s, index) => ({ ...s, id: index + 1 }))
   // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
   // const projectsCollection: Collection<TProject> = db.collection('dados')
 
+  // const updateResponse = await projectsCollection.updateMany({}, { $set: { seguro: { aplicavel: false } } })
   // const projects = await projectsCollection
   //   .find({
   //     'contrato.status': 'ASSINADO',
@@ -192,7 +192,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const bkResponse = await logsCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(sortedSellers)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

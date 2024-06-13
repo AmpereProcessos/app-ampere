@@ -17,7 +17,7 @@ export default async function handler(req, res) {
               },
               {
                 tipoDeServico: {
-                  $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'],
+                  $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM', 'SEGURO DE SISTEMA FOTOVOLTAICO'],
                 },
                 'contrato.status': 'ASSINADO',
               },

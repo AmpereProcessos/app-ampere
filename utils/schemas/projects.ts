@@ -311,6 +311,12 @@ const GeneralProjectSchema = z.object({
     qtdeManutencoes: z.number().optional().nullable(),
     valor: z.number().optional().nullable(),
   }),
+  seguro: z.object({
+    aplicavel: z.boolean(),
+    valor: z.number().optional().nullable(),
+    duracao: z.number().optional().nullable(),
+    dataInicio: z.string().optional().nullable(),
+  }),
   ondeTrabalha: z.string(),
   padrao: z.object({
     caixaConjugada: z.string().optional().nullable(),

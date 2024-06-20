@@ -1,7 +1,7 @@
 import DateInput from '@/components/inputs/Date'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
-import { equipesTecnicas, formatDate, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
+import { equipesTecnicas, formatDate, GeneralVisibleHiddenExitMotionVariants, tiposDeServico } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { TPersonalizedProjectsFilter } from '@/utils/schemas/projects'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import AllCities from '@/utils/jsons/cidades.json'
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { allSellers, customersAcquisitionChannels, insiders } from '@/utils/select-options'
+import { allSellers, customersAcquisitionChannels, insiders, serviceTypes } from '@/utils/select-options'
 type FilterMenuProps = {
   updateFilters: (filters: TPersonalizedProjectsFilter) => void
   queryLoading: boolean
@@ -86,6 +86,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                   { id: 8, label: 'SAÍDA DE OBRA', value: 'obra.saida' },
                   { id: 9, label: 'PEDIDO DE VISTORIA', value: 'vistoria.dataPedido' },
                   { id: 10, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                  { id: 11, label: 'DATA DE MANUTENÇÃO', value: 'manutencaoPreventiva.data' },
                 ]}
                 selectedItemLabel={'SEM FILTRO'}
                 handleChange={(value) =>
@@ -147,6 +148,28 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                 setFiltersHolder((prev) => ({
                   ...prev,
                   acquisitionChannel: [],
+                }))
+              }}
+              width="100%"
+              labelClassName="text-xs font-medium tracking-tight text-black"
+            />
+          </div>
+          <div className="w-full lg:w-[200px]">
+            <MultipleSelectInput
+              label="TIPO DE SERVIÇO"
+              selected={filtersHolder.serviceType}
+              options={serviceTypes}
+              selectedItemLabel="NÃO DEFINIDO"
+              handleChange={(value) => {
+                setFiltersHolder((prev) => ({
+                  ...prev,
+                  serviceType: value as string[],
+                }))
+              }}
+              onReset={() => {
+                setFiltersHolder((prev) => ({
+                  ...prev,
+                  serviceType: [],
                 }))
               }}
               width="100%"

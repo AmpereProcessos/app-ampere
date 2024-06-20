@@ -2,9 +2,10 @@ import { ObjectId } from 'mongodb'
 import connectToDatabase from '../../../../utils/services/mongodb/projects'
 import { getSession } from 'next-auth/react'
 import { errorHandler } from '../../../../utils/methods/handlers'
+import { apiHandler, validateAuthenticationWithSession } from '../../../../utils/api'
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const session = await getSession({ req: req })
+    const session = await validateAuthenticationWithSession(req, res)
     const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
     const collection = db.collection('dados')
     const logCollection = db.collection('logAlteracoes')
@@ -14,8 +15,8 @@ export default async function handler(req, res) {
     const logObject = {
       autor: {
         id: session?.user?.id,
-        nome: session.user.nome,
-        avatar_url: session.user.avatar_url,
+        nome: session?.user.nome,
+        avatar_url: session?.user.avatar_url,
       },
       idProjetoAlterado: req.query.id,
       alteracoes: req.body,

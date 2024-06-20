@@ -511,6 +511,7 @@ const PersonalizedFieldFilters = z.enum(
     'obra.saida',
     'vistoria.dataPedido',
     'medidor.data',
+    'manutencaoPreventiva.data',
   ],
   { required_error: 'Filtro de campo de período não informado.', invalid_type_error: 'Tipo não válido para o campo de filtro de período.' }
 )

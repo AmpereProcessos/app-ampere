@@ -125,7 +125,7 @@ export const InsertNewWarehouseFormularySchema = z.object({
   }),
   materiais: z.array(
     z.object({
-      id: z.string({ invalid_type_error: 'Tipo inválido para CEP da localização.' }).optional().nullable(),
+      id: z.string({ invalid_type_error: 'Tipo inválido para o ID do material.' }).optional().nullable(),
       nome: z.string(),
       preco: z.number(),
       idExterno: z.string().optional().nullable(),

@@ -191,6 +191,16 @@ export const serviceTypes = [
     label: 'SUBESTAÇÃO DE ENERGIA',
     value: 'SUBESTAÇÃO DE ENERGIA',
   },
+  {
+    id: 13,
+    label: 'HOMOLOGAÇÃO',
+    value: 'HOMOLOGAÇÃO',
+  },
+  {
+    id: 14,
+    label: 'SEGURO DE SISTEMA FOTOVOLTAICO',
+    value: 'SEGURO DE SISTEMA FOTOVOLTAICO',
+  },
 ]
 export const allSellers = [
   {

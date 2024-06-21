@@ -31,6 +31,7 @@ export function getObjectDifference(obj1: any, obj2: any, parentKey = '') {
 }
 
 export function getObservationsGroupedByTopic(observations: TServiceOrderDTO['observacoes']) {
+  if (!Array.isArray(observations)) return []
   const reduced = observations.reduce((acc: { [key: string]: string[] }, current) => {
     const topic = current.topico.toUpperCase()
     if (!acc[topic]) acc[topic] = []

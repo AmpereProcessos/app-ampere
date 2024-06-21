@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AllCities from '@/utils/jsons/cidades.json'
-import { TServiceOrder } from '@/utils/schemas/service-order'
+import { TServiceOrder, TServiceOrderDTO } from '@/utils/schemas/service-order'
 import SelectInput from '@/components/inputs/Select'
 import { equipesTecnicas, serviceOrdersCategories, tiposDeEstruturas, tiposDePadrao, tiposDeTelha } from '@/utils/constants'
 import TextInput from '@/components/inputs/Text'
@@ -19,6 +19,7 @@ import { estadosECidades } from '@/utils/estados_cidades'
 import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 import Logo from '@/utils/images/logo-texto-azul-vertical.png'
 import Image from 'next/image'
+import ObservationModalBlock from '@/components/identificador/ordensDeServico/ObservationModalBlock'
 function OrdemServicoEmBranco() {
   const [infoHolder, setInfoHolder] = useState<TServiceOrder>({
     categoria: 'MONTAGEM',
@@ -86,12 +87,12 @@ function OrdemServicoEmBranco() {
       tipoEstrutura: '',
       tipoTelha: undefined,
       tipoPadrao: '',
-      tipoSaidaPadrao: '',
+      tipoSaidaPadrao: 'N/A',
       amperagemPadrao: '',
-      responsabilidadePadrao: '',
+      responsabilidadePadrao: 'NÃO SE APLICA',
       topologia: '',
     },
-    observacoes: '',
+    observacoes: [],
     anotacoes: '',
     dataInsercao: new Date().toISOString(),
   })
@@ -280,7 +281,7 @@ function OrdemServicoEmBranco() {
                 <TextInput
                   label={'NOME DO RESPONSÁVEL'}
                   placeholder={'Preencha o nome do responsável pela execução...'}
-                  value={infoHolder.responsavel.nome}
+                  value={infoHolder.responsavel.nome || ''}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
                   width={'100%'}
                 />
@@ -297,11 +298,9 @@ function OrdemServicoEmBranco() {
               )}
             </div>
           </div>
-          <label className={'font-sans mt-2  font-bold text-[#353432]'}>OBSERVAÇÕES</label>
-          <textarea
-            value={infoHolder.observacoes}
-            onChange={(e) => setInfoHolder((prev) => ({ ...prev, observacoes: e.target.value }))}
-            className="min-h-[100px] w-full resize-none rounded-md border border-gray-500 bg-gray-200 p-4 text-sm outline-none"
+          <ObservationModalBlock
+            infoHolder={infoHolder as TServiceOrderDTO}
+            setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TServiceOrderDTO>>}
           />
           <div className="flex w-full items-center justify-center">
             <div className="w-full lg:w-1/2">
@@ -340,7 +339,7 @@ function OrdemServicoEmBranco() {
               <NumberInput
                 label={'QTDE DE INVERSOR(ES)'}
                 placeholder={'Preencha a quantidade de inversores...'}
-                value={infoHolder.equipamentos.inversor.qtde}
+                value={infoHolder.equipamentos.inversor.qtde || null}
                 handleChange={(value) =>
                   setInfoHolder((prev) => ({
                     ...prev,
@@ -351,10 +350,10 @@ function OrdemServicoEmBranco() {
               />
             </div>
             <div className="w-full lg:w-1/3">
-              <NumberInput
+              <TextInput
                 label={'POTÊNCIA DO(S) INVERSOR(ES)'}
                 placeholder={'Preencha a potência dos inversores...'}
-                value={infoHolder.equipamentos.inversor.potencia}
+                value={infoHolder.equipamentos.inversor.potencia?.toString() || ''}
                 handleChange={(value) =>
                   setInfoHolder((prev) => ({
                     ...prev,
@@ -384,7 +383,7 @@ function OrdemServicoEmBranco() {
               <NumberInput
                 label={'QTDE DE MODULOS'}
                 placeholder={'Preencha a quantidade de módulos...'}
-                value={infoHolder.equipamentos.modulos.qtde}
+                value={infoHolder.equipamentos.modulos.qtde || null}
                 handleChange={(value) =>
                   setInfoHolder((prev) => ({
                     ...prev,
@@ -395,10 +394,10 @@ function OrdemServicoEmBranco() {
               />
             </div>
             <div className="w-full lg:w-1/3">
-              <NumberInput
+              <TextInput
                 label={'POTÊNCIA DOS MODULOS'}
                 placeholder={'Preencha a potência dos módulos...'}
-                value={infoHolder.equipamentos.modulos.potencia}
+                value={infoHolder.equipamentos.modulos.potencia?.toString() || ''}
                 handleChange={(value) =>
                   setInfoHolder((prev) => ({
                     ...prev,
@@ -475,7 +474,7 @@ function OrdemServicoEmBranco() {
                 <TextInput
                   label={'SENHA DO WIFI'}
                   placeholder={'Senha do Wi-Fi do cliente...'}
-                  value={infoHolder.detalhes.senhaWifi}
+                  value={infoHolder.detalhes.senhaWifi || ''}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, senhaWifi: value } }))}
                   width={'100%'}
                 />
@@ -485,7 +484,7 @@ function OrdemServicoEmBranco() {
                   labelFalse={'NÃO CONFIGURAR'}
                   labelTrue={'CONFIGURAR'}
                   labelClassName="font-sans font-bold  text-[#353432]"
-                  checked={infoHolder.detalhes.configuracaoMonitoramento}
+                  checked={!!infoHolder.detalhes.configuracaoMonitoramento}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, configuracaoMonitoramento: value } }))}
                 />
               </div>
@@ -526,7 +525,7 @@ function OrdemServicoEmBranco() {
                   ]}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoSaidaPadrao: value } }))}
-                  onReset={() => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoSaidaPadrao: '' } }))}
+                  onReset={() => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoSaidaPadrao: 'N/A' } }))}
                   width={'100%'}
                 />
               </div>
@@ -588,8 +587,8 @@ function OrdemServicoEmBranco() {
             <p className="text-center font-raleway">
               Eu, {infoHolder.favorecido.nome}, declaro que a equipe técnica da empresa <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>
               , inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no dia ____/____/_____ à manutenção preventiva, prevista em contrato, do sistema
-              fotovoltaico de {((infoHolder.equipamentos.modulos.qtde || 0) * (infoHolder.equipamentos.modulos.potencia || 0)) / 1000} kWp instalado
-              na{' '}
+              fotovoltaico de {((infoHolder.equipamentos.modulos.qtde || 0) * (Number(infoHolder.equipamentos.modulos.potencia) || 0)) / 1000} kWp
+              instalado na{' '}
               <strong>
                 {infoHolder.localizacao.endereco ? infoHolder.localizacao.endereco : '-'}, Nº{' '}
                 {infoHolder.localizacao.numeroOuIdentificador ? infoHolder.localizacao.numeroOuIdentificador : '-'},{' '}

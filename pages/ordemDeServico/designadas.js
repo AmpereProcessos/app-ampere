@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import ModalOS from '../../components/ModalOS'
 import LoadingPage from '../../components/utils/LoadingPage'
 
-import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
+import { useServiceOrders } from '../../utils/methods/query/service-orders'
 import Error from 'next/error'
 
 import ResponsibleServiceOrderCard from '../../components/identificador/ordensDeServico/ResponsibleServiceOrderCard'

@@ -7,6 +7,7 @@ import TextInput from '../../inputs/Text'
 import { formatToPhone } from '../../../utils/constants'
 import SelectInput from '../../inputs/Select'
 import { estadosECidades } from '../../../utils/estados_cidades'
+import { TServiceOrderDTO } from '@/utils/schemas/service-order'
 const variants = {
   hidden: {
     opacity: 0.2,
@@ -28,20 +29,24 @@ const variants = {
   },
 }
 
-function FavoredModalBlock({ infoHolder, setInfoHolder }) {
+type FavoredModalBlockProps = {
+  infoHolder: TServiceOrderDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TServiceOrderDTO>>
+}
+function FavoredModalBlock({ infoHolder, setInfoHolder }: FavoredModalBlockProps) {
   const [editEnabled, setEditEnabled] = useState(false)
   return (
-    <div className="flex flex-col w-full mt-4">
-      <div className="w-full p-2 rounded-md bg-gray-800 flex items-center gap-2 justify-center">
-        <h1 className="text-white font-bold">FAVORECIDO</h1>
+    <div className="mt-4 flex w-full flex-col">
+      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+        <h1 className="font-bold text-white">FAVORECIDO</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
         </button>
       </div>
       <AnimatePresence>
         {editEnabled ? (
-          <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-2 mt-2">
-            <div className="flex flex-col lg:flex-row w-full gap-2">
+          <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="mt-2 flex w-full flex-col gap-2">
+            <div className="flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-[50%]">
                 <TextInput
                   label={'NOME'}
@@ -61,8 +66,8 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                 />
               </div>
             </div>
-            <div className="flex flex-col lg:flex-row w-full gap-2">
-              <div className="w-full lg:w-[50%] gap-2 flex items-center">
+            <div className="flex w-full flex-col gap-2 lg:flex-row">
+              <div className="flex w-full items-center gap-2 lg:w-[50%]">
                 <div className="w-[20%]">
                   <SelectInput
                     label={'UF'}
@@ -70,7 +75,7 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                     options={Object.keys(estadosECidades).map((op, index) => ({ id: index + 1, label: op, value: op }))}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, uf: value } }))}
-                    onReset={() => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, uf: null } }))}
+                    onReset={() => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, uf: '' } }))}
                     width={'100%'}
                   />
                 </div>
@@ -80,12 +85,16 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                     value={infoHolder.localizacao?.cidade}
                     options={
                       infoHolder.localizacao?.uf
-                        ? estadosECidades[infoHolder.localizacao.uf]?.map((op, index) => ({ id: index + 1, label: op, value: op }))
+                        ? estadosECidades[infoHolder.localizacao.uf as keyof typeof estadosECidades]?.map((op, index) => ({
+                            id: index + 1,
+                            label: op,
+                            value: op,
+                          }))
                         : null
                     }
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, cidade: value } }))}
-                    onReset={() => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, cidade: null } }))}
+                    onReset={() => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, cidade: '' } }))}
                     width={'100%'}
                   />
                 </div>
@@ -100,7 +109,7 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                 />
               </div>
             </div>
-            <div className="flex flex-col lg:flex-row w-full gap-2">
+            <div className="flex w-full flex-col gap-2 lg:flex-row">
               <div className="w-full lg:w-[50%]">
                 <TextInput
                   label={'ENDEREÇO'}
@@ -114,35 +123,35 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                 <TextInput
                   label={'NÚMERO OU IDENTIFICADOR'}
                   placeholder={'Preencha o número ou identificador da residência do cliente favorecido...'}
-                  value={infoHolder.localizacao.numeroOuIdentificador}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.endereco, numeroOuIdentificador: value } }))}
+                  value={infoHolder.localizacao.numeroOuIdentificador || ''}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, numeroOuIdentificador: value } }))}
                   width={'100%'}
                 />
               </div>
             </div>
           </motion.div>
         ) : (
-          <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-1 mt-2">
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center text-gray-800">
+          <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="mt-2 flex w-full flex-col gap-1">
+            <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+              <div className="flex items-center gap-2 text-gray-800">
                 <FaUser size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{infoHolder.favorecido?.nome || 'N/A'}</p>
+                <p className="font-raleway text-sm font-medium">{infoHolder.favorecido?.nome || 'N/A'}</p>
               </div>
-              <div className="flex gap-2 items-center text-gray-800">
+              <div className="flex items-center gap-2 text-gray-800">
                 <AiFillPhone size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{infoHolder.favorecido?.contato || 'N/A'}</p>
+                <p className="font-raleway text-sm font-medium">{infoHolder.favorecido?.contato || 'N/A'}</p>
               </div>
             </div>
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center">
+            <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+              <div className="flex items-center gap-2">
                 <FaCity size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   {infoHolder.localizacao ? `${infoHolder.localizacao.cidade} - ${infoHolder.localizacao.uf} ` : 'N/A'}
                 </p>
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
+                <p className="font-raleway text-sm font-medium">
                   {infoHolder.localizacao
                     ? `${infoHolder.localizacao.endereco}, Nº ${infoHolder.localizacao.numeroOuIdentificador}, ${infoHolder.localizacao.bairro} - ${infoHolder.localizacao.cep}`
                     : 'N/A'}

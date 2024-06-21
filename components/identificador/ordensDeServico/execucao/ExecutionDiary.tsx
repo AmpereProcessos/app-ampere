@@ -17,9 +17,9 @@ type ExecutionDiaryProps = {
   history?: { entrada: string; saida?: string; anotacoes: string }[]
 }
 
-function getEarliestDate(history:{ entrada: string; saida?: string; anotacoes: string }[] ) {
-  const dateArr = history.map(h => Number(new Date(h.entrada)) )
-  const minDate=new Date(Math.min.apply(null,dateArr));
+function getEarliestDate(history: { entrada: string; saida?: string; anotacoes: string }[]) {
+  const dateArr = history.map((h) => Number(new Date(h.entrada)))
+  const minDate = new Date(Math.min.apply(null, dateArr))
   return minDate.toISOString()
 }
 function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: ExecutionDiaryProps) {
@@ -86,7 +86,7 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
     try {
       const earliestDate = getEarliestDate(historyCopy)
       // Create update object
-      var updateObj:any = {'periodo.historico': historyCopy, 'periodo.inicio': earliestDate}
+      var updateObj: any = { 'periodo.historico': historyCopy, 'periodo.inicio': earliestDate }
       await updateServiceOrder({
         orderId: orderId,
         info: updateObj,
@@ -103,23 +103,22 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
   }
 
   return (
-    <div className="w-full flex flex-col">
-      <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-[#15599A] mt-4">DIÁRIO DE EXECUÇÃO</h1>
+    <div className="flex w-full flex-col">
+      <h1 className="mt-4 w-full rounded-md bg-[#15599A] p-2 text-center font-bold text-white">DIÁRIO DE EXECUÇÃO</h1>
       <div className="my-2 flex items-center justify-center">
         {entryDatetime && !exitDatetime ? (
           <button
             onClick={() => finishOS()}
-            className="py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out"
+            className="rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
           >
             FINALIZAR ORDEM DE SERVIÇO
           </button>
         ) : null}
       </div>
-      <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-2 mt-2">
+      <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <Datetime
             label="CHECK-IN"
-            
             value={infoHolder.entrada}
             handleChange={(value) => {
               localStorage.setItem(`${orderId}-checkin`, JSON.stringify(formatDateInputChange(value)))
@@ -128,21 +127,27 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
             width="100%"
           />
         </div>
-        <div className='w-full lg:w-1/2'>
-          <TextInput label='ANOTAÇÕES' placeholder='Preencha aqui anotações sobre o registro de execução...' value={infoHolder.anotacoes} handleChange={(value)=> setInfoHolder(prev=> ({...prev, anotacoes: value}))} width='100%'/>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="ANOTAÇÕES"
+            placeholder="Preencha aqui anotações sobre o registro de execução..."
+            value={infoHolder.anotacoes}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, anotacoes: value }))}
+            width="100%"
+          />
         </div>
       </div>
-      <div className="w-full flex items-center justify-end my-1">
+      <div className="my-1 flex w-full items-center justify-end">
         <button
           onClick={() => openExecutionRecord()}
-          className="py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out"
+          className="rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
         >
           ABRIR REGISTRO DE EXECUÇÃO
         </button>
       </div>
       {history ? (
-        <div className="w-full flex flex-col gap-1 mt-2">
-          <h1 className="font-bold tracking-tight leading-none">HISTÓRICO</h1>
+        <div className="mt-2 flex w-full flex-col gap-1">
+          <h1 className="font-bold leading-none tracking-tight">HISTÓRICO</h1>
           {history.map((item, index) => (
             <ExecutionDiaryRecord orderId={orderId} item={item} itemIndex={index} history={history} />
             // <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">

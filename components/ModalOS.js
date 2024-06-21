@@ -18,7 +18,7 @@ import ConferenciaPadraoOS from './ConferenciaPadraoOS'
 import ExecutionDiary from './identificador/ordensDeServico/execucao/ExecutionDiary'
 
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
-import { useServiceOrderById } from '../utils/methods/query/serviceOrders'
+import { useServiceOrderById } from '../utils/methods/query/service-orders'
 import LoadingPage from './utils/LoadingPage'
 
 function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
@@ -40,11 +40,11 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col w-full h-full overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+        <div className="flex h-full w-full flex-col overflow-y-auto overscroll-y-auto">
+          <div className="flex flex-row items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
             <div className="flex flex-col">
-              <h1 className="text-[#15599a] p-0 lg:pl-6 text-center font-bold">FINALIZAÇÃO DE ORDEM DE SERVIÇO</h1>
-              <h1 className="text-xxs p-0 lg:pl-6 text-start font-bold text-gray-500">#{order?._id || '...'}</h1>
+              <h1 className="p-0 text-center font-bold text-[#15599a] lg:pl-6">FINALIZAÇÃO DE ORDEM DE SERVIÇO</h1>
+              <h1 className="p-0 text-start text-xxs font-bold text-gray-500 lg:pl-6">#{order?._id || '...'}</h1>
             </div>
 
             <button>
@@ -53,83 +53,83 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? (
-            <div className="grow flex items-center justify-center flex-col">
+            <div className="flex grow flex-col items-center justify-center">
               <BiSolidError color="rgb(239,68,68)" />
-              <p className="text-center text-gray-500 italic">Erro ao buscar informações da Ordem de Serviço...</p>
+              <p className="text-center italic text-gray-500">Erro ao buscar informações da Ordem de Serviço...</p>
             </div>
           ) : null}
           {isSuccess ? (
-            <div className="flex w-full flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300 p-3">
-              <div className="flex items-center gap-2 justify-center">
+            <div className="overscroll-y flex w-full flex-col overflow-y-auto border-r border-gray-300 p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="flex items-center justify-center gap-2">
                 <MdCategory />
-                <p className="font-medium text-blue-500 text-lg uppercase">{order?.categoria}</p>
+                <p className="text-lg font-medium uppercase text-blue-500">{order?.categoria}</p>
               </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 w-full mt-2">
+              <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
                 <div className="flex items-center gap-2">
                   <MdEngineering />
-                  <p className="text-xs font-medium text-gray-500 lg:text-lg uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
+                  <p className="text-xs font-medium uppercase text-gray-500 lg:text-lg">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <IoMdAlert />
-                  <p className="text-xs font-medium text-gray-500 lg:text-lg uppercase">{order?.urgencia}</p>
+                  <p className="text-xs font-medium uppercase text-gray-500 lg:text-lg">{order?.urgencia}</p>
                 </div>
               </div>
 
-              <div className={`flex w-full justify-center mt-2 items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
+              <div className={`mt-2 flex w-full items-center justify-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
                 {order.dataEfetivacao ? <BsCalendarCheckFill /> : <BsCalendarFill />}
                 <p className="text-xs font-medium">{dayjs(order?.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
               </div>
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">FAVORECIDO</h1>
-              <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-                <div className="flex gap-2 items-center text-gray-800">
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">FAVORECIDO</h1>
+              <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                <div className="flex items-center gap-2 text-gray-800">
                   <FaUser size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway font-medium text-sm">{order?.favorecido?.nome || 'N/A'}</p>
+                  <p className="font-raleway text-sm font-medium">{order?.favorecido?.nome || 'N/A'}</p>
                 </div>
               </div>
-              <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-                <div className="flex gap-2 items-center">
+              <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                <div className="flex items-center gap-2">
                   <FaCity size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway font-medium text-sm">
+                  <p className="font-raleway text-sm font-medium">
                     {order?.localizacao ? `${order?.localizacao.cidade} - ${order?.localizacao.uf} ` : 'N/A'}
                   </p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway font-medium text-sm">
+                  <p className="font-raleway text-sm font-medium">
                     {order?.localizacao
                       ? `${order?.localizacao.endereco}, Nº ${order?.localizacao.numeroOuIdentificador}, ${order?.localizacao.bairro} - ${order?.localizacao.cep}`
                       : 'N/A'}
                   </p>
                 </div>
               </div>
-              <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">OBSERVAÇÕES</h1>
-              <div className="w-full min-h-[80px] rounded-bl-sm rounded-br-sm flex items-center justify-center p-3 bg-gray-200 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                <p className="text-xs text-gray-600 font-medium">{order.observacoes || 'SEM OBSERVAÇÕES'}</p>
+              <h1 className="mt-4 w-full rounded-tr-md rounded-tl-md bg-gray-800 p-2 text-center font-bold text-white">OBSERVAÇÕES</h1>
+              <div className="overscroll-y flex min-h-[80px] w-full items-center justify-center overflow-y-auto rounded-bl-sm rounded-br-sm bg-gray-200 p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <p className="text-xs font-medium text-gray-600">{order.observacoes || 'SEM OBSERVAÇÕES'}</p>
               </div>
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">EQUIPAMENTOS</h1>
-              <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-                <div className="flex gap-2 items-center">
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">EQUIPAMENTOS</h1>
+              <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                <div className="flex items-center gap-2">
                   <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway font-medium text-sm">
+                  <p className="font-raleway text-sm font-medium">
                     {order.equipamentos.modulos.qtde}x {order.equipamentos.modulos.modelo || 'N/A'} {order.equipamentos.modulos.potencia}W
                   </p>
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <PiWaveSineBold size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway font-medium text-sm">
+                  <p className="font-raleway text-sm font-medium">
                     ({order.detalhes.topologia || 'N/A'}) - {order.equipamentos?.inversor.qtde}x {order.equipamentos?.inversor.modelo || 'N/A'}{' '}
                     {order.equipamentos?.inversor.potencia}W
                   </p>
                 </div>
               </div>
-              <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-start mt-2">
+              <div className="mt-2 flex w-full flex-col items-start justify-center gap-2 md:flex-row lg:gap-4">
                 {order.equipamentos?.disponivel ? (
-                  <div className="flex flex-col gap-1 border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
-                    <h1 className="tracking-tight text-center font-medium">DISPONÍVEIS</h1>
+                  <div className="flex w-full flex-col gap-1 rounded-lg border border-cyan-500 p-3 lg:w-fit">
+                    <h1 className="text-center font-medium tracking-tight">DISPONÍVEIS</h1>
                     {order.equipamentos.disponivel.map((equip, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <BsSuitDiamondFill />
-                        <p className="text-xs text-gray-500 tracking-tight">
+                        <p className="text-xs tracking-tight text-gray-500">
                           {equip.qtde ? `${equip.qtde}x ` : ''}
                           {equip.descricao}
                         </p>
@@ -138,12 +138,12 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                   </div>
                 ) : null}
                 {order.equipamentos?.retirada ? (
-                  <div className="flex flex-col gap-1  border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
-                    <h1 className="tracking-tight text-center font-medium">RETIRADA</h1>
+                  <div className="flex w-full flex-col  gap-1 rounded-lg border border-cyan-500 p-3 lg:w-fit">
+                    <h1 className="text-center font-medium tracking-tight">RETIRADA</h1>
                     {order.equipamentos.retirada.map((equip, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <BsSuitDiamondFill />
-                        <p className="text-xs text-gray-500 tracking-tight">
+                        <p className="text-xs tracking-tight text-gray-500">
                           {equip.qtde ? `${equip.qtde}x ` : ''}
                           {equip.descricao}
                         </p>
@@ -152,51 +152,51 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                   </div>
                 ) : null}
               </div>
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">DETALHES</h1>
-              <div className="flex w-full justify-center gap-2 lg:gap-4 flex-row items-center mt-2 flex-wrap">
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">DETALHES</h1>
+              <div className="mt-2 flex w-full flex-row flex-wrap items-center justify-center gap-2 lg:gap-4">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <IoMdWater />
-                    <p className="font-medium text-gray-500 text-xs uppercase">PONTO DE ÁGUA</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">PONTO DE ÁGUA</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.pontoAgua || 'N/A'}</h1>
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{order.detalhes.pontoAgua || 'N/A'}</h1>
                 </div>
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <MdOutlineWifiPassword />
-                    <p className="font-medium text-gray-500 text-xs uppercase">SENHA DO WI-FI</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">SENHA DO WI-FI</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.senhaWifi || 'N/A'}</h1>
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{order.detalhes.senhaWifi || 'N/A'}</h1>
                 </div>
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <BsFillGearFill />
-                    <p className="font-medium text-gray-500 text-xs uppercase">CONFIGURAR MONITORAMENTO</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">CONFIGURAR MONITORAMENTO</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">
                     {order.detalhes.configuracaoMonitoramento ? 'SIM' : 'N/A'}
                   </h1>
                 </div>
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <IoMdResize />
-                    <p className="font-medium text-gray-500 text-xs uppercase">POSSUI TRAFO</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">POSSUI TRAFO</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.possuiTrafo ? 'SIM' : 'N/A'}</h1>
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{order.detalhes.possuiTrafo ? 'SIM' : 'N/A'}</h1>
                 </div>
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <BsHouse />
-                    <p className="font-medium text-gray-500 text-xs uppercase">TIPO ESTRUTURA</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">TIPO ESTRUTURA</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.tipoEstrutura || 'N/A'}</h1>
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{order.detalhes.tipoEstrutura || 'N/A'}</h1>
                 </div>
-                <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <div className="flex flex-col rounded-md border border-gray-500 p-3">
                   <div className="flex items-center gap-2">
                     <TbTopologyFullHierarchy />
-                    <p className="font-medium text-gray-500 text-xs uppercase">TOPOLOGIA</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">TOPOLOGIA</p>
                   </div>
-                  <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.topologia || 'N/A'}</h1>
+                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{order.detalhes.topologia || 'N/A'}</h1>
                 </div>
               </div>
               <ExecutionDiary
@@ -205,7 +205,7 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                 exitDatetime={order.periodo?.fim}
                 history={order.periodo.historico}
               />
-              <div className="w-full h-[5px] bg-black my-2"></div>
+              <div className="my-2 h-[5px] w-full bg-black"></div>
               {order.categoria == 'PADRÃO' && <ConferenciaPadraoOS order={order} closeModal={closeModal} queryKey={queryKey} />}
               {order.categoria == 'MANUTENÇÃO PREVENTIVA' && <ConferenciaManPreventivaOS order={order} closeModal={closeModal} queryKey={queryKey} />}
               {order.categoria == 'MONTAGEM' && <ConferenciaMontagemOS order={order} closeModal={closeModal} queryKey={queryKey} />}

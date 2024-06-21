@@ -22,6 +22,8 @@ import { TNotification } from '@/utils/schemas/notifications'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
 import { TProjectUpdateLog, TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import { allSellers } from '@/utils/select-options'
+import { TOpportunity } from '@/utils/schemas/crm-project'
+import { TServiceOrder } from '@/utils/schemas/service-order'
 
 type TPreviousUser = {
   nome: string
@@ -42,7 +44,30 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const serviceOrderCollection: Collection<TServiceOrder> = db.collection('ordensDeServico')
+
+  const serviceOrders = await serviceOrderCollection.find({}).toArray()
+
+  const bulkwriteArr = serviceOrders.map((serviceOrder) => {
+    const splittedObservations =
+      serviceOrder.observacoes
+        ?.split('\n')
+        .map((o) => o.split(';'))
+        .flat(1)
+        .map((o) => o.split('/ '))
+        .flat(1)
+        .filter((s) => !!s) || []
+    const newObservations = splittedObservations.map((s) => ({ topico: 'GERAL', descricao: s }))
+    return {
+      updateOne: {
+        filter: { _id: new ObjectId(serviceOrder._id) },
+        update: {
+          $set: { observacoes: newObservations },
+        },
+      },
+    }
+  })
   // const projectsCollection: Collection<TProject> = db.collection('dados')
 
   // const updateResponse = await projectsCollection.updateMany({}, { $set: { seguro: { aplicavel: false } } })
@@ -189,10 +214,10 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //     },
   //   }
   // })
-  // const bkResponse = await logsCollection.bulkWrite(bulkwriteArr)
+  const bkResponse = await serviceOrderCollection.bulkWrite(bulkwriteArr)
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json('DESATIVADA')
+  return res.status(200).json(bkResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

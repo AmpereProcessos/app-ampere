@@ -8,7 +8,7 @@ import Image from 'next/image'
 import EstruturaOS from '../../../components/EstruturaOS'
 import OSCorretiva from '../../../components/OSCorretivaPDF'
 import { useRouter } from 'next/router'
-import { useServiceOrderById } from '../../../utils/methods/query/serviceOrders'
+import { useServiceOrderById } from '../../../utils/methods/query/service-orders'
 import LoadingPage from '../../../components/utils/LoadingPage'
 function OSInfo({ info, index }) {
   const router = useRouter()

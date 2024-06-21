@@ -13,10 +13,16 @@ import NumberInput from '../../inputs/Number'
 import Text from '../../inputs/Text'
 import TakeMaterialsBlock from './TakeMaterialsBlock'
 import AvailableMaterialsBlock from './AvailableMaterialsBlock'
-import CheckboxInput from '../../CheckboxInput'
+
 import { equipesTecnicas, serviceOrdersCategories, tiposDeEstruturas, tiposDePadrao, tiposDeTelha } from '../../../utils/constants'
 import { useQueryClient } from 'react-query'
-function getEquipmentList({ str, category }) {
+import { TProjectDTO } from '@/utils/schemas/projects'
+import { Session } from 'next-auth'
+import { TServiceOrder, TServiceOrderDTO } from '@/utils/schemas/service-order'
+import { getServiceObservationsFromObras } from '@/utils/methods/util/service-order'
+import ObservationModalBlock from './ObservationModalBlock'
+import CheckboxInput from '@/components/inputs/Checkbox'
+function getEquipmentList({ str, category }: { str: string; category: string }) {
   if (category != 'MONTAGEM') return null
   if (typeof str != 'string') return null
   const spllited = str.split('\n')
@@ -37,22 +43,32 @@ function getEquipmentList({ str, category }) {
   })
   return formattedSpllited.filter((x) => !!x)
 }
-function getInverterInfoByStr(str) {
+function getInverterInfoByStr(str: string) {
   const regexInverterQty = /^(\d{1,3})x/i
   const regexInverterModel = /x([^()]+)/
   const regexInverterPower = /\((\d+)W\)/
-  const inverterQty = regexInverterQty.exec(str) ? regexInverterQty.exec(str)[0].slice(0, -1) : null
-  const inverterModel = regexInverterModel.exec(str) ? regexInverterModel.exec(str)[0].substring(1) : null
-  const inverterPower = regexInverterPower.exec(str) ? regexInverterPower.exec(str)[0].replace('(', '').replace(')', '').replace('W', '') : null
+  const x = regexInverterQty.exec(str)
+  const inverterQty = regexInverterQty.exec(str) ? (regexInverterQty.exec(str) as RegExpExecArray)[0]?.slice(0, -1) : null
+  const inverterModel = regexInverterModel.exec(str) ? (regexInverterModel.exec(str) as RegExpExecArray)[0].substring(1) : null
+  const inverterPower = regexInverterPower.exec(str)
+    ? (regexInverterPower.exec(str) as RegExpExecArray)[0].replace('(', '').replace(')', '').replace('W', '')
+    : null
   return {
     modelo: inverterModel,
-    qtde: inverterQty,
+    qtde: Number(inverterQty) || 0,
     potencia: inverterPower,
   }
 }
-function ModalNewServiceOrder({ project, categories, closeModal, session }) {
+
+type ModalNewServiceOrderProps = {
+  project: TProjectDTO
+  categories: { label: string; value: string }[]
+  closeModal: () => void
+  session: Session
+}
+function ModalNewServiceOrder({ project, categories, closeModal, session }: ModalNewServiceOrderProps) {
   const queryClient = useQueryClient()
-  const [osInfo, setOsInfo] = useState({
+  const [osInfo, setOsInfo] = useState<TServiceOrder>({
     categoria: 'MONTAGEM',
     favorecido: {
       nome: project.nomeDoContrato || '',
@@ -66,12 +82,12 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
     },
     descricao: '', // servico executado
     localizacao: {
-      cep: project.cep,
+      cep: project.cep.toString(),
       uf: project.uf,
       cidade: project.cidade,
       bairro: project.bairro,
       endereco: project.logradouro,
-      numeroOuIdentificador: project.numeroResidencia,
+      numeroOuIdentificador: project.numeroResidencia.toString() || '',
     },
     responsavel: {
       nome: project.obra?.equipeResp || '',
@@ -100,7 +116,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
       modulos: {
         modelo: '',
         qtde: project.sistema?.qtdeModulos,
-        potencia: project.sistema?.potModulos,
+        potencia: project.sistema?.potModulos?.toString(),
       },
       inversor: getInverterInfoByStr(project.sistema?.inversor || ''),
       disponivel: null,
@@ -119,14 +135,15 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
       responsabilidadePadrao: project.padrao?.respInstalacao,
       topologia: project.sistema?.topologia,
     },
-    observacoes: project.obra?.observacoes || '',
+    observacoes: getServiceObservationsFromObras(project.obra.observacoes),
+    dataInsercao: new Date().toISOString(),
   })
   async function handleOrderCreation() {
     const loadingToastId = toast.loading('Carregando...')
     try {
       const resp = await createServiceOrder({ info: osInfo, queryClient, invalidateKey: ['project-service-orders', project._id] })
       toast.dismiss(loadingToastId)
-      toast.success(resp)
+      toast.success(resp || 'Ordem criada com sucesso !')
     } catch (error) {
       toast.dismiss(loadingToastId)
       const msg = getErrorMessage(equipesTecnicas)
@@ -136,13 +153,13 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
   function useKitInformation() {
     setOsInfo((prev) => ({
       ...prev,
-      equipamentos: { ...prev.equipamentos, disponivel: getEquipmentList({ str: project.compra?.kitInfo, category: 'MONTAGEM' }) },
+      equipamentos: { ...prev.equipamentos, disponivel: getEquipmentList({ str: project.compra?.kitInfo || '', category: 'MONTAGEM' }) },
     }))
   }
   function useMissingMaterialInformation() {
     setOsInfo((prev) => ({
       ...prev,
-      equipamentos: { ...prev.equipamentos, retirada: getEquipmentList({ str: project.material?.materialFaltante, category: 'MONTAGEM' }) },
+      equipamentos: { ...prev.equipamentos, retirada: getEquipmentList({ str: project.material?.materialFaltante || '', category: 'MONTAGEM' }) },
     }))
   }
   return (
@@ -204,9 +221,14 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 <Select
                   label={'CATEGORIA'}
                   value={osInfo.categoria}
-                  options={categories || serviceOrdersCategories}
+                  options={(categories || serviceOrdersCategories).map((c, index) => ({
+                    id: index + 1,
+                    label: c.label,
+                    value: c.value as TServiceOrder['categoria'],
+                  }))}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, categoria: value }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, categoria: 'OUTROS' }))}
                   width={'100%'}
                 />
               </div>
@@ -229,6 +251,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   ]}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: value } }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: 'EXTERNO' } }))}
                   width={'100%'}
                 />
               </div>
@@ -237,7 +260,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   <Text
                     label={'NOME DO RESPONSÁVEL'}
                     placeholder={'Preencha o nome do responsável pela execução...'}
-                    value={osInfo.responsavel.nome}
+                    value={osInfo.responsavel.nome || ''}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
                     width={'100%'}
                   />
@@ -248,17 +271,17 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     options={equipesTecnicas.map((team, index) => ({ ...team, id: index + 1 }))}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+                    onReset={() => setOsInfo((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: '' } }))}
                     width={'100%'}
                   />
                 )}
               </div>
             </div>
-            <label className={'font-sans mt-2  font-bold text-[#353432]'}>OBSERVAÇÕES</label>
-            <textarea
-              value={osInfo.observacoes}
-              onChange={(e) => setOsInfo((prev) => ({ ...prev, observacoes: e.target.value }))}
-              className="min-h-[100px] w-full resize-none rounded-md border border-gray-500 bg-gray-200 p-4 text-sm outline-none"
+            <ObservationModalBlock
+              infoHolder={osInfo as TServiceOrderDTO}
+              setInfoHolder={setOsInfo as React.Dispatch<React.SetStateAction<TServiceOrderDTO>>}
             />
+
             <div className="flex w-full items-center justify-center">
               <div className="w-full lg:w-1/2">
                 <Select
@@ -271,6 +294,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   ]}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, urgencia: value }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, urgencia: 'NÃO DEFINIDO' }))}
                   width={'100%'}
                 />
               </div>
@@ -281,7 +305,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 <Text
                   label={'MODELO DO(S) INVERSOR(ES)'}
                   placeholder={'Preencha o modelo dos inversores...'}
-                  value={osInfo.equipamentos.inversor.modelo}
+                  value={osInfo.equipamentos.inversor.modelo || ''}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -295,7 +319,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 <NumberInput
                   label={'QTDE DE INVERSOR(ES)'}
                   placeholder={'Preencha a quantidade de inversores...'}
-                  value={osInfo.equipamentos.inversor.qtde}
+                  value={osInfo.equipamentos.inversor.qtde || null}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -306,10 +330,10 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 />
               </div>
               <div className="w-full lg:w-1/3">
-                <NumberInput
+                <Text
                   label={'POTÊNCIA DO(S) INVERSOR(ES)'}
                   placeholder={'Preencha a potência dos inversores...'}
-                  value={osInfo.equipamentos.inversor.potencia}
+                  value={osInfo.equipamentos.inversor.potencia?.toString() || ''}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -325,7 +349,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 <Text
                   label={'MODELO DOS MODULOS'}
                   placeholder={'Preencha o modelo dos módulos...'}
-                  value={osInfo.equipamentos.modulos.modelo}
+                  value={osInfo.equipamentos.modulos.modelo || ''}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -339,7 +363,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 <NumberInput
                   label={'QTDE DE MODULOS'}
                   placeholder={'Preencha a quantidade de módulos...'}
-                  value={osInfo.equipamentos.modulos.qtde}
+                  value={osInfo.equipamentos.modulos.qtde || null}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -350,10 +374,10 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 />
               </div>
               <div className="w-full lg:w-1/3">
-                <NumberInput
+                <Text
                   label={'POTÊNCIA DOS MODULOS'}
                   placeholder={'Preencha a potência dos módulos...'}
-                  value={osInfo.equipamentos.modulos.potencia}
+                  value={osInfo.equipamentos.modulos.potencia?.toString() || ''}
                   handleChange={(value) =>
                     setOsInfo((prev) => ({
                       ...prev,
@@ -384,6 +408,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   ]}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, topologia: value } }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, topologia: '' } }))}
                   width={'100%'}
                 />
               </div>
@@ -394,6 +419,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   options={tiposDeEstruturas.map((structure, index) => ({ ...structure, id: index + 1 }))}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoEstrutura: value } }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoEstrutura: '' } }))}
                   width={'100%'}
                 />
               </div>
@@ -404,6 +430,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   options={tiposDeTelha.map((roofType, index) => ({ ...roofType, id: index + 1 }))}
                   selectedItemLabel={'NÃO DEFINIDO'}
                   handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoTelha: value } }))}
+                  onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoTelha: '' } }))}
                   width={'100%'}
                 />
               </div>
@@ -423,7 +450,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                   <Text
                     label={'SENHA DO WIFI'}
                     placeholder={'Senha do Wi-Fi do cliente...'}
-                    value={osInfo.detalhes.senhaWifi}
+                    value={osInfo.detalhes.senhaWifi || ''}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, senhaWifi: value } }))}
                     width={'100%'}
                   />
@@ -433,10 +460,8 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     labelFalse={'NÃO CONFIGURAR'}
                     labelTrue={'CONFIGURAR'}
                     labelClassName="font-sans font-bold  text-[#353432]"
-                    checked={osInfo.detalhes.configuracaoMonitoramento}
-                    title={'CONFIGURAÇÃO DE MONITORAMENTO'}
+                    checked={!!osInfo.detalhes.configuracaoMonitoramento}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, configuracaoMonitoramento: value } }))}
-                    widthFit={true}
                   />
                 </div>
                 <div className="flex w-full justify-center lg:w-1/4">
@@ -444,10 +469,8 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     labelFalse={'NÃO POSSUI TRAFO'}
                     labelTrue={'POSSUI TRAFO'}
                     labelClassName="font-sans font-bold  text-[#353432]"
-                    checked={osInfo.detalhes.possuiTrafo}
-                    title={'SISTEMA COM TRAFO'}
+                    checked={!!osInfo.detalhes.possuiTrafo}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, possuiTrafo: value } }))}
-                    widthFit={true}
                   />
                 </div>
               </div>
@@ -464,6 +487,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoPadrao: value } }))}
+                    onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoPadrao: '' } }))}
                     width={'100%'}
                   />
                 </div>
@@ -477,6 +501,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoSaidaPadrao: value } }))}
+                    onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, tipoSaidaPadrao: 'N/A' } }))}
                     width={'100%'}
                   />
                 </div>
@@ -487,20 +512,22 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                     options={tiposDePadrao.map((type, index) => ({ ...type, id: index + 1 }))}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, amperagemPadrao: value } }))}
+                    onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, amperagemPadrao: '' } }))}
                     width={'100%'}
                   />
                 </div>
                 <div className="flex w-full justify-center lg:w-1/4">
                   <Select
                     label={'RESPONSABILIDADE DO PADRÃO'}
-                    value={osInfo.detalhes.amperagemPadrao}
+                    value={osInfo.detalhes.responsabilidadePadrao}
                     options={[
                       { id: 1, label: 'AMPERE', value: 'AMPERE' },
                       { id: 2, label: 'CLIENTE', value: 'CLIENTE' },
                       { id: 3, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
-                    handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, amperagemPadrao: value } }))}
+                    handleChange={(value) => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, responsabilidadePadrao: value } }))}
+                    onReset={() => setOsInfo((prev) => ({ ...prev, detalhes: { ...prev.detalhes, responsabilidadePadrao: 'NÃO SE APLICA' } }))}
                     width={'100%'}
                   />
                 </div>

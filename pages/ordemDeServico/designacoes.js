@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import dayjs from 'dayjs'
 
-import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
+import { useServiceOrders } from '../../utils/methods/query/service-orders'
 import { cidadesAtendidas, serviceOrdersCategories } from '../../utils/constants'
 
 import DesignationCard from '../../components/identificador/ordensDeServico/DesignationCard'

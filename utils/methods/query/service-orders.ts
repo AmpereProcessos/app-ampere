@@ -1,21 +1,41 @@
+import { TServiceOrdersByFiltersResult } from '@/pages/api/ordensDeServico/search'
+import { TPersonalizedServiceOrderFilter, TServiceOrderDTO } from '@/utils/schemas/service-order'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 
-async function fetchServiceOrders({ after, before, status, simplified, responsibleName }) {
+type FetchServiceOrdersParams = {
+  after: string
+  before: string
+  status: string
+  simplified: boolean
+  responsibleName: string
+}
+
+async function fetchServiceOrders({ after, before, status, simplified, responsibleName }: FetchServiceOrdersParams) {
   try {
     const { data } = await axios.get(
       `/api/ordensDeServico?after=${after}&before=${before}&status=${status}&simplified=${simplified}&responsibleName=${responsibleName}`
     )
-    return data
+    return data as TServiceOrderDTO[]
   } catch (error) {
     throw error
   }
 }
 
-export function useServiceOrders({ after, before, status, simplified, responsibleName, enabled }) {
-  const [filters, setFilters] = useState({
+type UseServiceOrdersFilters = {
+  city: string[]
+  category: string[]
+  search: string
+  urgency: string | null
+  unfinished: boolean
+  inProgress: boolean
+  inExecution: boolean
+  unassigned: boolean
+}
+export function useServiceOrders({ after, before, status, simplified, responsibleName }: FetchServiceOrdersParams) {
+  const [filters, setFilters] = useState<UseServiceOrdersFilters>({
     city: [],
     category: [],
     search: '',
@@ -25,44 +45,44 @@ export function useServiceOrders({ after, before, status, simplified, responsibl
     inExecution: false,
     unassigned: false,
   })
-  function matchCity(order) {
+  function matchCity(order: TServiceOrderDTO) {
     if (filters.city.length == 0) return true
     return filters.city.includes(order.localizacao.cidade)
   }
-  function matchCategory(order) {
+  function matchCategory(order: TServiceOrderDTO) {
     if (filters.category.length == 0) return true
     return filters.category.includes(order.categoria)
   }
-  function matchSearch(order) {
+  function matchSearch(order: TServiceOrderDTO) {
     if (filters.search.trim().length == 0) return true
     return order.favorecido.nome.toUpperCase().includes(filters.search.toUpperCase())
   }
-  function matchUrgency(order) {
+  function matchUrgency(order: TServiceOrderDTO) {
     if (!filters.urgency) return true
     return order.urgencia == filters.urgency
   }
-  function matchUnfinished(order) {
+  function matchUnfinished(order: TServiceOrderDTO) {
     if (!filters.unfinished) return true
     return !order.dataEfetivacao
   }
-  function matchInProgress(order) {
+  function matchInProgress(order: TServiceOrderDTO) {
     if (!filters.inProgress) return true
     return !!order.periodo.inicio && !order.periodo.fim
   }
-  function matchInExecution(order) {
+  function matchInExecution(order: TServiceOrderDTO) {
     if (!filters.inExecution) return true
     const currentDayStart = dayjs().set('hour', 0).toDate()
     const currentDayEnd = dayjs().set('hour', 23).toDate()
     const hasExecutionLogToday = order.periodo.historico?.some(
-      (h) => new Date(h.entrada) >= currentDayStart && new Date(h.entrada) <= currentDayEnd && !h.saida
+      (h) => h && new Date(h.entrada) >= currentDayStart && new Date(h.entrada) <= currentDayEnd && !h.saida
     )
     return hasExecutionLogToday
   }
-  function matchUnassigned(order) {
+  function matchUnassigned(order: TServiceOrderDTO) {
     if (!filters.unassigned) return true
     return !order.responsavel.nome
   }
-  function handleModelData(data) {
+  function handleModelData(data: TServiceOrderDTO[]) {
     var modeledData = data
     return modeledData.filter(
       (order) =>
@@ -80,7 +100,6 @@ export function useServiceOrders({ after, before, status, simplified, responsibl
     ...useQuery({
       queryKey: ['service-orders', after, before],
       queryFn: async () => await fetchServiceOrders({ after, before, status, simplified, responsibleName }),
-      enabled: !!enabled,
       refetchOnWindowFocus: false,
       select: (data) => handleModelData(data),
     }),
@@ -88,7 +107,7 @@ export function useServiceOrders({ after, before, status, simplified, responsibl
     setFilters,
   }
 }
-async function fetchServiceOrdersByProject({ projectId }) {
+async function fetchServiceOrdersByProject({ projectId }: { projectId: string }) {
   try {
     const { data } = await axios.get(`/api/ordensDeServico?projectId=${projectId}`)
     return data
@@ -97,16 +116,16 @@ async function fetchServiceOrdersByProject({ projectId }) {
   }
 }
 
-export function useProjectServiceOrders({ projectId, enabled }) {
+export function useProjectServiceOrders({ projectId }: { projectId: string }) {
   return useQuery({
     queryKey: ['project-service-orders', projectId],
     queryFn: async () => await fetchServiceOrdersByProject({ projectId }),
-    enabled: !!enabled,
+
     refetchOnWindowFocus: false,
   })
 }
 
-async function fetchServiceOrderById({ id }) {
+async function fetchServiceOrderById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/ordensDeServico?id=${id}`)
     return data
@@ -114,11 +133,48 @@ async function fetchServiceOrderById({ id }) {
     throw error
   }
 }
-export function useServiceOrderById({ id, enabled }) {
+export function useServiceOrderById({ id }: { id: string }) {
   return useQuery({
     queryKey: ['service-order', id],
     queryFn: async () => fetchServiceOrderById({ id }),
     refetchOnWindowFocus: false,
-    enabled: !!enabled && !!id,
   })
+}
+
+async function fetchServiceOrdersByPersonalizedFilters({ page, filters }: { page: number; filters: TPersonalizedServiceOrderFilter }) {
+  try {
+    const { data } = await axios.post(`/api/ordensDeServico/search?page=${page}`, filters)
+
+    return data.data as TServiceOrdersByFiltersResult
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useServiceOrdersByPersonalizedFilters({ page }: { page: number }) {
+  const [filters, setFilters] = useState<TPersonalizedServiceOrderFilter>({
+    name: '',
+    state: [],
+    city: [],
+    category: [],
+    urgency: [],
+    period: {
+      after: null,
+      before: null,
+      field: null,
+    },
+    pending: true,
+  })
+
+  function updateFilters(filters: TPersonalizedServiceOrderFilter) {
+    setFilters(filters)
+  }
+
+  return {
+    ...useQuery({
+      queryKey: ['service-orders-by-filters', page, filters],
+      queryFn: async () => await fetchServiceOrdersByPersonalizedFilters({ page, filters }),
+    }),
+    updateFilters,
+  }
 }

@@ -22,7 +22,7 @@ import Avatar from './utils/Avatar'
 
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
-import { useServiceOrderById } from '../utils/methods/query/serviceOrders'
+import { useServiceOrderById } from '../utils/methods/query/service-orders'
 import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 
 import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
@@ -31,12 +31,94 @@ import Select from './inputs/Select'
 import TextInput from './inputs/Text'
 import NotificationCreationBlock from './NotificationCreationBlock'
 import { formatDateAsLocale } from '../utils/methods/formatting'
+import { TServiceOrderDTO } from '@/utils/schemas/service-order'
 
-function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
+type ModalOrdemServicoProps = {
+  orderId: string
+  closeModal: () => void
+  modalIsOpen: boolean
+}
+function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServicoProps) {
   const queryClient = useQueryClient()
-  const { data: order, isSuccess, isError } = useServiceOrderById({ id: orderId, enabled: !!orderId })
+  const { data: order, isSuccess, isError } = useServiceOrderById({ id: orderId })
 
-  const [infoHolder, setInfoHolder] = useState(order)
+  const [infoHolder, setInfoHolder] = useState<TServiceOrderDTO>({
+    _id: 'id-holder',
+    categoria: 'MONTAGEM',
+    favorecido: {
+      nome: '',
+      contato: '',
+    },
+    projeto: {
+      id: '', // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+      nome: '', // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+      identificador: 1, // identificador QTDE do projeto no banco de projetos
+      tipo: '', // tipo do projeto
+    },
+    descricao: '', // servico executado
+    localizacao: {
+      cep: '',
+      uf: '',
+      cidade: '',
+      bairro: '',
+      endereco: '',
+      numeroOuIdentificador: '',
+    },
+    responsavel: {
+      nome: '',
+      tipo: 'EXTERNO',
+    },
+    // configurar: false,
+    urgencia: 'POUCO URGENTE',
+    periodo: {
+      inicio: null,
+      fim: null,
+      historico: [],
+    },
+    pagamento: {
+      recebedor: null,
+      valor: null,
+    },
+    cobranca: {
+      pagador: null,
+      valor: null,
+    },
+    autor: {
+      id: '',
+      nome: '',
+      avatar_url: null,
+    },
+    equipamentos: {
+      modulos: {
+        modelo: '',
+        qtde: 0,
+        potencia: 0,
+      },
+      inversor: {
+        modelo: '',
+        qtde: 0,
+        potencia: 0,
+      },
+      disponivel: [],
+      retirada: [],
+    },
+    detalhes: {
+      pontoAgua: '',
+      senhaWifi: '',
+      configuracaoMonitoramento: false,
+      possuiTrafo: false,
+      tipoEstrutura: '',
+      tipoTelha: undefined,
+      tipoPadrao: '',
+      tipoSaidaPadrao: 'N/A',
+      amperagemPadrao: '',
+      responsabilidadePadrao: 'NÃO SE APLICA',
+      topologia: '',
+    },
+    observacoes: [],
+    anotacoes: '',
+    dataInsercao: new Date().toISOString(),
+  })
   async function handleOrderUpdate() {
     const loadingToastId = toast.loading('Processando...')
     const changesObject = getObjectDifference(order, infoHolder)
@@ -49,7 +131,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
         queryClient: queryClient,
       })
       toast.dismiss(loadingToastId)
-      toast.success(msg)
+      toast.success(msg || 'Ordem atualizada com sucesso !')
     } catch (error) {
       toast.dismiss(loadingToastId)
       const msg = getErrorMessage(error)
@@ -124,6 +206,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                     options={serviceOrdersCategories}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
+                    onReset={() => setInfoHolder((prev) => ({ ...prev, categoria: 'OUTROS' }))}
                     width={'100%'}
                   />
                 </div>
@@ -146,6 +229,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: value } }))}
+                    onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: 'EXTERNO' } }))}
                     width={'100%'}
                   />
                 </div>
@@ -154,7 +238,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                     <TextInput
                       label={'NOME DO RESPONSÁVEL'}
                       placeholder={'Preencha o nome do responsável pela execução...'}
-                      value={infoHolder.responsavel.nome}
+                      value={infoHolder.responsavel.nome || ''}
                       handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
                       width={'100%'}
                     />
@@ -165,6 +249,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                       options={equipesTecnicas.map((team, index) => ({ ...team, id: index + 1 }))}
                       selectedItemLabel={'NÃO DEFINIDO'}
                       handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+                      onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: '' } }))}
                       width={'100%'}
                     />
                   )}
@@ -182,11 +267,12 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, urgencia: value }))}
+                    onReset={() => setInfoHolder((prev) => ({ ...prev, urgencia: 'NÃO DEFINIDO' }))}
                     width={'100%'}
                   />
                 </div>
               </div>
-              <FavoredModalBlock order={order} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+              <FavoredModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <DetailsModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

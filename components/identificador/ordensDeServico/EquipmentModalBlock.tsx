@@ -9,6 +9,7 @@ import NumberInput from '../../inputs/Number'
 import TakeMaterialsBlock from './TakeMaterialsBlock'
 import AvailableMaterialsBlock from './AvailableMaterialsBlock'
 import { easeBackInOut } from 'd3-ease'
+import { TServiceOrderDTO } from '@/utils/schemas/service-order'
 const variants = {
   hidden: {
     opacity: 0.2,
@@ -39,7 +40,11 @@ const variants = {
   },
 }
 
-function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
+type EquipmentModalBlockProps = {
+  infoHolder: TServiceOrderDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TServiceOrderDTO>>
+}
+function EquipmentModalBlock({ infoHolder, setInfoHolder }: EquipmentModalBlockProps) {
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
@@ -57,7 +62,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <TextInput
                   label={'MODELO DO(S) INVERSOR(ES)'}
                   placeholder={'Preencha o modelo dos inversores...'}
-                  value={infoHolder.equipamentos.inversor.modelo}
+                  value={infoHolder.equipamentos.inversor.modelo || ''}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -71,7 +76,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <NumberInput
                   label={'QTDE DE INVERSOR(ES)'}
                   placeholder={'Preencha a quantidade de inversores...'}
-                  value={infoHolder.equipamentos.inversor.qtde}
+                  value={infoHolder.equipamentos.inversor.qtde || null}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -85,7 +90,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <NumberInput
                   label={'POTÊNCIA DO(S) INVERSOR(ES)'}
                   placeholder={'Preencha a potência dos inversores...'}
-                  value={infoHolder.equipamentos.inversor.potencia}
+                  value={infoHolder.equipamentos.inversor.potencia || null}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -101,7 +106,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <TextInput
                   label={'MODELO DOS MODULOS'}
                   placeholder={'Preencha o modelo dos módulos...'}
-                  value={infoHolder.equipamentos.modulos.modelo}
+                  value={infoHolder.equipamentos.modulos.modelo || ''}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -115,7 +120,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <NumberInput
                   label={'QTDE DE MODULOS'}
                   placeholder={'Preencha a quantidade de módulos...'}
-                  value={infoHolder.equipamentos.modulos.qtde}
+                  value={infoHolder.equipamentos.modulos.qtde || null}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -129,7 +134,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
                 <NumberInput
                   label={'POTÊNCIA DOS MODULOS'}
                   placeholder={'Preencha a potência dos módulos...'}
-                  value={infoHolder.equipamentos.modulos.potencia}
+                  value={infoHolder.equipamentos.modulos.potencia || null}
                   handleChange={(value) =>
                     setInfoHolder((prev) => ({
                       ...prev,
@@ -193,10 +198,10 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }) {
         )}
         <div className="mt-4 flex w-full flex-col items-start gap-2 lg:flex-row">
           <div className="h-full w-full lg:w-[50%]">
-            <TakeMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} />
+            <TakeMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} useMissingMaterialInformation={null} />
           </div>
           <div className="h-full w-full lg:w-[50%]">
-            <AvailableMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} />
+            <AvailableMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} useKitInformation={null} />
           </div>
         </div>
       </AnimatePresence>

@@ -221,7 +221,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             false
           )}
           {userIsController ? (
-            <Link href={'/ordemDeServico/bancoDeOS'}>
+            <Link href={'/ordemDeServico'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdDesignServices style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Banco de OS</p>

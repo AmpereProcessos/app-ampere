@@ -10,7 +10,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import LoadingPage from '../../components/utils/LoadingPage'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
+import { useServiceOrders } from '../../utils/methods/query/service-orders'
 import { cidadesAtendidas, formatDate, serviceOrdersCategories } from '../../utils/constants'
 
 import ServiceOrderCard from '../../components/identificador/ordensDeServico/ServiceOrderCard'

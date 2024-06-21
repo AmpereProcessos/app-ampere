@@ -3,13 +3,18 @@ import DateInput from '../../inputs/Date'
 import { formatDate } from '../../../utils/constants'
 import { formatDateInputChange } from '../../../utils/methods/shared'
 import { VscChromeClose } from 'react-icons/vsc'
+import { TServiceOrderDTO } from '@/utils/schemas/service-order'
 
-function FinishOrderBlock({ infoHolder, setInfoHolder }) {
+type FinishOrderBlockProps = {
+  infoHolder: TServiceOrderDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TServiceOrderDTO>>
+}
+function FinishOrderBlock({ infoHolder, setInfoHolder }: FinishOrderBlockProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   return (
-    <div className="flex flex-col items-center w-full justify-center gap-2">
+    <div className="flex w-full flex-col items-center justify-center gap-2">
       {menuIsOpen ? (
-        <div className="flex items-center gap-2 mt-2">
+        <div className="mt-2 flex items-center gap-2">
           <DateInput
             label={'DATA DE FINALIZAÇÃO'}
             labelClassName="font-bold text-xs text-gray-500"
@@ -26,10 +31,10 @@ function FinishOrderBlock({ infoHolder, setInfoHolder }) {
         </div>
       ) : (
         <>
-          <div className="flex self-center justify-center mt-4 items-center gap-2 text-gray-600 border border-gray-600 p-1 rounded w-fit">
+          <div className="mt-4 flex w-fit items-center justify-center gap-2 self-center rounded border border-gray-600 p-1 text-gray-600">
             <p className="text-xs font-medium">EM ANDAMENTO</p>
           </div>
-          <button onClick={() => setMenuIsOpen(true)} className="text-green-500 text-sm font-medium mb-4">
+          <button onClick={() => setMenuIsOpen(true)} className="mb-4 text-sm font-medium text-green-500">
             FINALIZAR
           </button>
         </>

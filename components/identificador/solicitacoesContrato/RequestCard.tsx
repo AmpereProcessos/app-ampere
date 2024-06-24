@@ -3,6 +3,7 @@ import { TContractRequestPartialDTO } from '@/utils/schemas/contract-requests'
 import React from 'react'
 import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
 import { FaCity, FaCode, FaUser } from 'react-icons/fa'
+import { MdOutlineBusiness } from 'react-icons/md'
 import { TbCategoryFilled } from 'react-icons/tb'
 
 function getCardStatus({ approved, contractMade }: { approved?: boolean | null; contractMade: boolean }) {
@@ -77,6 +78,12 @@ function RequestCard({ request, openModal }: RequestCardProps) {
           <TbCategoryFilled />
           <p className="text-xs font-medium text-gray-500">{request.tipoDeServico}</p>
         </div>
+        <div className={`flex items-center gap-2`}>
+          <MdOutlineBusiness />
+          <p className="text-xs font-medium text-gray-500">{request.nomeParceiro}</p>
+        </div>
+      </div>
+      <div className="mt-2 flex items-center justify-end gap-2">
         <div className="flex items-center gap-2">
           {request.dataAprovacao ? (
             <div className={`flex items-center gap-2`}>

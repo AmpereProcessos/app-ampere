@@ -8,21 +8,22 @@ import { FaCity, FaUser } from 'react-icons/fa'
 import { IoMdAlert } from 'react-icons/io'
 import Link from 'next/link'
 import { TbExternalLink } from 'react-icons/tb'
+import { AiFillEdit } from 'react-icons/ai'
 
-function ProjectServiceOrderCard({ order, projectId }) {
+function ProjectServiceOrderCard({ order, projectId, handleClick }) {
   return (
-    <div className="flex min-h-[80px] h-[80px] max-h-[150px] w-full items-center rounded-md border border-gray-200">
+    <div className="flex h-[80px] max-h-[150px] min-h-[80px] w-full items-center rounded-md border border-gray-200">
       <div className={`flex h-[100%] w-[5px] rounded-bl-md rounded-tl-md bg-blue-400`}></div>
-      <div className="flex grow flex-col p-3 h-full">
-        <div className="h-full w-full flex items-center justify-between">
+      <div className="flex h-full grow flex-col p-3">
+        <div className="flex h-full w-full items-center justify-between">
           <div className="flex flex-col gap-2">
-            <h1 className="text-center text-[#15599a] text-sm font-bold leading-none tracking-tight duration-300 ease-in-out  lg:text-start">
+            <h1 className="text-center text-sm font-bold leading-none tracking-tight text-[#15599a] duration-300 ease-in-out  lg:text-start">
               {order.descricao}
             </h1>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
                 <Avatar url={order.autor?.avatar_url} fallback={'U'} height={20} width={20} />
-                <p className="font-medium text-gray-500 text-xs">{order.autor?.nome || 'AUTOR INDEFINIDO'}</p>
+                <p className="text-xs font-medium text-gray-500">{order.autor?.nome || 'AUTOR INDEFINIDO'}</p>
               </div>
               <div className={`flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
                 {order.dataEfetivacao ? <BsFillCalendarCheckFill /> : <BsCalendarFill />}
@@ -33,7 +34,7 @@ function ProjectServiceOrderCard({ order, projectId }) {
               </div>
             </div>
           </div>
-          <div className="grow flex justify-around items-center gap-2">
+          <div className="flex grow items-center justify-around gap-2">
             <div className="flex flex-col items-center gap-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-xs font-medium">CATEGORIA</h1>
@@ -66,14 +67,20 @@ function ProjectServiceOrderCard({ order, projectId }) {
             </div>
           </div>
           <div className="flex items-center justify-center gap-2">
+            <button
+              onClick={() => handleClick(order._id)}
+              className="flex h-[30px] items-center gap-1 rounded border border-blue-500 p-1 text-blue-500 duration-300 ease-in-out hover:border-blue-800 hover:text-blue-800"
+            >
+              <AiFillEdit />
+            </button>
             <Link href={`/ordemDeServico/pdf/${order._id}`}>
-              <a className="cursor-pointer p-1 rounded h-[30px] font-bold text-[#fead61] border border-[#fead61] hover:text-black hover:bg-[#fead61]">
+              <a className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
                 <TbExternalLink />
               </a>
             </Link>
             {order.categoria == 'MANUTENÇÃO PREVENTIVA' && projectId ? (
               <Link href={`/oem/pdfTermo/${projectId}`}>
-                <a className="cursor-pointer p-1 rounded h-[30px] font-bold text-cyan-500 border border-cyan-500 hover:text-black hover:bg-cyan-500">
+                <a className="h-[30px] cursor-pointer rounded border border-cyan-500 p-1 font-bold text-cyan-500 hover:bg-cyan-500 hover:text-black">
                   <HiOutlineDocumentText />
                 </a>
               </Link>

@@ -44,31 +44,21 @@ type TPreviousUser = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const serviceOrderCollection: Collection<TServiceOrder> = db.collection('ordensDeServico')
+  // const db: Db = await connectToRequestsDatabase(process.env.DB_KEY)
+  // const contractRequestsCollection = db.collection('contrato')
 
-  const serviceOrders = await serviceOrderCollection.find({}).toArray()
+  // const updateManyResponse = await contractRequestsCollection.updateMany(
+  //   {},
+  //   { $set: { idParceiro: '65454ba15cf3e3ecf534b308', nomeParceiro: 'Ampère Energias' } }
+  // )
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
 
-  const bulkwriteArr = serviceOrders.map((serviceOrder) => {
-    const splittedObservations =
-      serviceOrder.observacoes
-        ?.split('\n')
-        .map((o) => o.split(';'))
-        .flat(1)
-        .map((o) => o.split('/ '))
-        .flat(1)
-        .filter((s) => !!s) || []
-    const newObservations = splittedObservations.map((s) => ({ topico: 'GERAL', descricao: s }))
-    return {
-      updateOne: {
-        filter: { _id: new ObjectId(serviceOrder._id) },
-        update: {
-          $set: { observacoes: newObservations },
-        },
-      },
-    }
-  })
   // const projectsCollection: Collection<TProject> = db.collection('dados')
+
+  // const updateManyResponse = await projectsCollection.updateMany(
+  //   {},
+  //   { $set: { idParceiro: '65454ba15cf3e3ecf534b308', nomeParceiro: 'Ampère Energias' } }
+  // )
 
   // const updateResponse = await projectsCollection.updateMany({}, { $set: { seguro: { aplicavel: false } } })
   // const projects = await projectsCollection
@@ -189,35 +179,10 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //   return revenue
   // })
   // const projectsCollection: Collection<TProject> = db.collection('dados')
-  // const projects = await projectsCollection
-  //   .find({ 'obra.equipeResp': { $in: ['TERCERIZADOS', 'EQUIPE 14 - BRUNO REIS'] } }, { projection: { obra: 1 } })
-  //   .toArray()
-  // console.log(projects.length)
-  // const nonExistent: string[] = []
-  // projects.forEach((project) => {
-  //   if (
-  //     !!project.obra.equipeResp &&
-  //     !equipesTecnicas.map((e) => e.value).includes(project.obra.equipeResp || '') &&
-  //     !nonExistent.includes(project.obra.equipeResp)
-  //   ) {
-  //     console.log(project.obra.equipeResp)
-  //     nonExistent.push(project.obra.equipeResp)
-  //   }
-  // })
-  // const bulkwriteArr = projects.map((project) => {
-  //   return {
-  //     updateOne: {
-  //       filter: { _id: new ObjectId(project._id) },
-  //       update: {
-  //         $set: { 'obra.equipeResp': 'TERCEIROS' },
-  //       },
-  //     },
-  //   }
-  // })
-  const bkResponse = await serviceOrderCollection.bulkWrite(bulkwriteArr)
+
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(bkResponse)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

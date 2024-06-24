@@ -37,6 +37,7 @@ export default async function handler(req, res) {
             dataSolicitacao: 1,
             aprovacao: 1,
             dataAprovacao: 1,
+            nomeParceiro: 1,
             idVisitaTecnica: 1,
             idProjetoCRM: 1,
             idPropostaCRM: 1,

@@ -24,6 +24,7 @@ import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateL
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
 import DateInput from '../inputs/Date'
+import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
 
 type InfoClientBlockProps = {
   editor: boolean
@@ -36,6 +37,7 @@ type InfoClientBlockProps = {
 }
 function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], project }: InfoClientBlockProps) {
   const { data: session } = useSession()
+  const { data: partners } = usePartnersSimplified()
   const queryClient = useQueryClient()
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
@@ -173,29 +175,19 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
         </div>
         <div className="w-full lg:w-1/4">
           <SelectInput
-            label={'REGIONAL'}
+            label={'EMPRESA/FILIAL'}
             editable={editor}
-            value={infoHolder.regional}
+            value={infoHolder.idParceiro}
             selectedItemLabel="NÃO DEFINIDO"
-            options={[
-              {
-                id: 1,
-                label: 'REGIONAL ITUIUTABA',
-                value: 'REGIONAL ITUIUTABA',
-              },
-              {
-                id: 2,
-                label: 'REGIONAL UBERLÂNDIA',
-                value: 'REGIONAL UBERLÂNDIA',
-              },
-            ]}
+            options={partners?.map((p) => ({ id: p._id, label: p.nome, value: p._id })) || []}
             handleChange={(value) => {
-              setChanges({ ...changes, regional: value })
-              setInfo({ ...infoHolder, regional: value })
+              const partner = partners?.find((p) => p._id == value)
+              setChanges({ ...changes, idParceiro: value, nomeParceiro: partner?.nome })
+              setInfo({ ...infoHolder, idParceiro: value, nomeParceiro: partner?.nome })
             }}
             onReset={() => {
-              setChanges({ ...changes, regional: '' })
-              setInfo({ ...infoHolder, regional: '' })
+              setChanges({ ...changes, idParceiro: null, nomeParceiro: null })
+              setInfo({ ...infoHolder, idParceiro: null, nomeParceiro: null })
             }}
             width="100%"
           />

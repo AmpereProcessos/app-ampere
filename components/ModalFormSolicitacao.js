@@ -34,6 +34,7 @@ import ErrorPage from './utils/ErrorPage'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { editContractRequest } from '@/utils/methods/mutation/contract-requests'
 import FilesBlock from './identificador/solicitacoesContrato/blocos/FilesBlock'
+import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -221,9 +222,9 @@ const validation = {
 
 function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEditor, getFormularios }) {
   const { data: request, isLoading, isError, isSuccess } = useContractRequestById({ id: solicitacaoId })
+  const { data: partners } = usePartnersSimplified()
   const queryClient = useQueryClient()
   // Router
-  const router = useRouter()
   const [dados, setDados] = useState(null)
   // Messages
   const [msg, setMessage] = useState({ text: '', color: '' })
@@ -577,6 +578,8 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
       possuiDeficiencia: dados.possuiDeficiencia,
       qualDeficiencia: dados.qualDeficiencia,
       nps: undefined,
+      idParceiro: dados.idParceiro,
+      nomeParceiro: dados.nomeParceiro,
       idVisitaTecnica: dados.idVisitaTecnica,
       idProjetoCRM: dados.idProjetoCRM,
       idPropostaCRM: dados?.idPropostaCRM,
@@ -872,6 +875,16 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
                             nomeDoContrato: value.toUpperCase(),
                           })
                         }
+                      />
+                      <SelectInput
+                        label={'EMPRESA/FILIAL'}
+                        value={dados.idParceiro}
+                        options={partners?.map((p) => ({ label: p.nome, value: p._id })) || []}
+                        editable={true}
+                        handleChange={(value) => {
+                          const partner = partners?.find((p) => p._id == value)
+                          setDados((prev) => ({ ...prev, nomeParceiro: partner?.nome || null, idParceiro: value }))
+                        }}
                       />
                       <SelectInput
                         label={'Vendedor'}

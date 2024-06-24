@@ -18,46 +18,48 @@ function ResponsibleServiceOrderCard({ order, handleOpenModal }) {
       onClick={() => handleOpenModal(order)}
       className="flex w-[450px] cursor-pointer items-center rounded-md border border-gray-200 hover:bg-blue-50"
     >
-      <div className={`h-full min-w-[7px] w-[7px] ${getBarColor(order.periodo)} rounded-tl-md rounded-bl-md`}></div>
+      <div className={`h-full w-[7px] min-w-[7px] ${getBarColor(order.periodo)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex grow flex-col p-3">
-        <div className="w-full flex items-center justify-between">
+        <div className="flex w-full items-center justify-between">
           <h1
             onClick={() => handleOpenModal(order)}
             className="w-full cursor-pointer text-center text-sm font-bold leading-none tracking-tight duration-300 ease-in-out lg:text-start"
           >
             {order.favorecido.nome}
           </h1>
-          {order.projeto ? <p className="text-[#fead41] font-bold">#{order.projeto.identificador}</p> : null}
+          {order.projeto ? <p className="font-bold text-[#fead41]">#{order.projeto.identificador}</p> : null}
         </div>
         <div className={`mb-2 flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
           <BsCalendarFill />
           <p className="text-xs font-medium">{dayjs(order.dataEfetivacao ? order.dataEfetivacao : order.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
         </div>
-        <div className="flex w-full justify-between items-center gap-2 mt-2">
+        <div className="mt-2 flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <MdCategory />
-            <p className="text-xs  tracking-tight leading-none font-bold text-[#15599a]">{order.categoria}</p>
+            <p className="text-xs  font-bold leading-none tracking-tight text-[#15599a]">{order.categoria}</p>
           </div>
           <div className="flex items-center gap-2">
             <IoMdAlert />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{order.urgencia}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{order.urgencia}</p>
           </div>
         </div>
-        <div className="flex w-full justify-between items-center gap-2 mt-2">
+        <div className="mt-2 flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <FaCity />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">
+            <p className="text-xs leading-none tracking-tight text-gray-500">
               {order.localizacao.cidade}-{order.localizacao.uf}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <FaUser />
-            <p className="text-xs text-gray-500 tracking-tight leading-none">{order.responsavel.nome || 'NÃO DEFINIDO'}</p>
+            <p className="text-xs leading-none tracking-tight text-gray-500">{order.responsavel.nome || 'NÃO DEFINIDO'}</p>
           </div>
         </div>
-        <h1 className="text-sm text-gray-500 mt-2">OBSERVAÇÕES</h1>
-        <div className="w-full p-3 h-[80px] text-xs text-gray-600 bg-gray-100 flex items-center justify-center overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <p>{order.observacoes}</p>
+        <h1 className="mt-2 text-sm text-gray-500">OBSERVAÇÕES</h1>
+        <div className="overscroll-y flex h-[80px] w-full flex-col items-center justify-center overflow-y-auto bg-gray-100 p-3 text-xs text-gray-600 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          {order.observacoes.map((o) => (
+            <p className="text-xs text-gray-500">{o.descricao}</p>
+          ))}
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { FaCity, FaSolarPanel, FaUser } from 'react-icons/fa'
 import { BsCalendarCheckFill, BsCalendarFill, BsFillGearFill, BsHouse, BsSuitDiamondFill } from 'react-icons/bs'
 import { PiWaveSineBold } from 'react-icons/pi'
 import { TbTopologyFullHierarchy } from 'react-icons/tb'
-import { MdCategory, MdEngineering, MdLocationPin, MdOutlineWifiPassword } from 'react-icons/md'
+import { MdCategory, MdDelete, MdEngineering, MdLocationPin, MdOutlineWifiPassword } from 'react-icons/md'
 
 import ConferenciaManPreventivaOS from './ConferenciaManPreventivaOS'
 import ConferenciaMontagemOS from './ConferenciaMontagemOS'
@@ -103,8 +103,21 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                 </div>
               </div>
               <h1 className="mt-4 w-full rounded-tr-md rounded-tl-md bg-gray-800 p-2 text-center font-bold text-white">OBSERVAÇÕES</h1>
-              <div className="overscroll-y flex min-h-[80px] w-full items-center justify-center overflow-y-auto rounded-bl-sm rounded-br-sm bg-gray-200 p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-                <p className="text-xs font-medium text-gray-600">{order.observacoes || 'SEM OBSERVAÇÕES'}</p>
+              <div className="mt-2 flex w-full flex-col gap-2 px-2">
+                {order.observacoes.length > 0 ? (
+                  order.observacoes.map((obs, index) => (
+                    <div key={index} className="flex w-full flex-col rounded-md border border-gray-500">
+                      <div className="flex min-h-[25px] w-full flex-col items-start justify-between gap-1 lg:flex-row">
+                        <div className="flex w-full items-center justify-center rounded-br-md rounded-tl-md bg-cyan-700 lg:w-[40%]">
+                          <p className="w-full text-center text-xs font-medium text-white">{obs.topico}</p>
+                        </div>
+                      </div>
+                      <h1 className="w-full p-2 text-center text-xs font-medium tracking-tight text-gray-500">{obs.descricao}</h1>
+                    </div>
+                  ))
+                ) : (
+                  <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhuma observação adicionada ao projeto.</p>
+                )}
               </div>
               <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">EQUIPAMENTOS</h1>
               <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">

@@ -135,7 +135,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }: Moda
       responsabilidadePadrao: project.padrao?.respInstalacao,
       topologia: project.sistema?.topologia,
     },
-    observacoes: getServiceObservationsFromObras(project.obra.observacoes),
+    observacoes: [],
     dataInsercao: new Date().toISOString(),
   })
   async function handleOrderCreation() {
@@ -280,6 +280,9 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }: Moda
             <ObservationModalBlock
               infoHolder={osInfo as TServiceOrderDTO}
               setInfoHolder={setOsInfo as React.Dispatch<React.SetStateAction<TServiceOrderDTO>>}
+              useObservationsFromProject={() =>
+                setOsInfo((prev) => ({ ...prev, observacoes: [...prev.observacoes, ...getServiceObservationsFromObras(project.obra.observacoes)] }))
+              }
             />
 
             <div className="flex w-full items-center justify-center">

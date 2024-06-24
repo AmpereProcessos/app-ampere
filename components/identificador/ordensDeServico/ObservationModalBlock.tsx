@@ -31,8 +31,9 @@ const variants = {
 type ObservationModalBlockProps = {
   infoHolder: TServiceOrderDTO
   setInfoHolder: React.Dispatch<React.SetStateAction<TServiceOrderDTO>>
+  useObservationsFromProject?: () => void
 }
-function ObservationModalBlock({ infoHolder, setInfoHolder }: ObservationModalBlockProps) {
+function ObservationModalBlock({ infoHolder, setInfoHolder, useObservationsFromProject }: ObservationModalBlockProps) {
   const [observationItemHolder, setObservationItemHolder] = useState<TServiceOrderDTO['observacoes'][number]>({
     topico: 'GERAL',
     descricao: '',
@@ -57,6 +58,16 @@ function ObservationModalBlock({ infoHolder, setInfoHolder }: ObservationModalBl
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
         </button>
       </div>
+      {useObservationsFromProject ? (
+        <div className="flex w-full items-center justify-end p-1">
+          <button
+            onClick={() => useObservationsFromProject()}
+            className="w-fit self-center rounded p-2 text-xs font-medium text-cyan-500 duration-300 ease-in-out  hover:bg-blue-50 hover:text-cyan-500"
+          >
+            USAR OBSERVAÇÕES DE OBRA
+          </button>
+        </div>
+      ) : null}
       <AnimatePresence>
         {editEnabled ? (
           <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="flex w-full flex-col gap-2">

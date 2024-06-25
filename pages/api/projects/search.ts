@@ -48,6 +48,10 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   const insiderQuery: Filter<TProject> = filters.insider.length > 0 ? { insider: { $in: filters.insider } } : {}
   const technicalTeamQuery: Filter<TProject> = filters.technicalTeam.length > 0 ? { 'obra.equipeResp': { $in: filters.technicalTeam } } : {}
   const acquisitionChannelQuery: Filter<TProject> = filters.acquisitionChannel.length > 0 ? { canalVenda: { $in: filters.acquisitionChannel } } : {}
+  const modulesQtyQuery: Filter<TProject> =
+    filters.modulesQty.greater != null && filters.modulesQty.less != null
+      ? { $and: [{ 'sistema.qtdeModulos': { $gte: filters.modulesQty.greater } }, { 'sistema.qtdeModulos': { $lte: filters.modulesQty.less } }] }
+      : {}
   const query = {
     ...nameQuery,
     ...dateQuery,
@@ -58,6 +62,7 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
     ...insiderQuery,
     ...technicalTeamQuery,
     ...acquisitionChannelQuery,
+    ...modulesQtyQuery,
   }
   console.log(query)
   const skip = PAGE_SIZE * (Number(page) - 1)

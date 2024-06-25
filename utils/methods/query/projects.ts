@@ -18,6 +18,10 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
   const [filters, setFilters] = useState<TPersonalizedProjectsFilter>({
     name: '',
     period: { after: null, before: null, field: null },
+    modulesQty: {
+      greater: null,
+      less: null,
+    },
     state: [],
     city: [],
     serviceType: [],

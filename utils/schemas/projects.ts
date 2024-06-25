@@ -574,6 +574,10 @@ export const PersonalizedFiltersSchema = z.object({
       invalid_type_error: 'Tipo não válido para lista de canais de aquisição de filtro.',
     }
   ),
+  modulesQty: z.object({
+    greater: z.number({ invalid_type_error: 'Tipo não válido para o filtro de módulos maior que.' }).optional().nullable(),
+    less: z.number({ invalid_type_error: 'Tipo não válido para o filtro de módulos menor que.' }).optional().nullable(),
+  }),
 })
 export type TPersonalizedProjectsFilter = z.infer<typeof PersonalizedFiltersSchema>
 

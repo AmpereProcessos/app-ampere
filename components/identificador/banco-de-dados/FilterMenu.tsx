@@ -10,6 +10,7 @@ import AllCities from '@/utils/jsons/cidades.json'
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { allSellers, customersAcquisitionChannels, insiders, serviceTypes } from '@/utils/select-options'
+import NumberInput from '@/components/inputs/Number'
 type FilterMenuProps = {
   updateFilters: (filters: TPersonalizedProjectsFilter) => void
   queryLoading: boolean
@@ -19,6 +20,10 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
   const [filtersHolder, setFiltersHolder] = useState<TPersonalizedProjectsFilter>({
     name: '',
     period: { after: null, before: null, field: null },
+    modulesQty: {
+      greater: null,
+      less: null,
+    },
     state: [],
     city: [],
     serviceType: [],
@@ -67,6 +72,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                   handleChange={(value) =>
                     setFiltersHolder((prev) => ({ ...prev, period: { ...prev.period, before: formatDateInputChange(value) } }))
                   }
+                  labelClassName="text-xs font-medium tracking-tight text-black"
                 />
               </div>
             </div>
@@ -107,6 +113,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                     },
                   }))
                 }
+                labelClassName="text-xs font-medium tracking-tight text-black"
               />
             </div>
           </div>
@@ -211,6 +218,28 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
               labelClassName="text-xs font-medium tracking-tight text-black"
               width="100%"
             />
+          </div>
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <div className="w-full lg:w-[300px]">
+              <NumberInput
+                label="NºMÓDULOS >"
+                placeholder="Preencha a quantidade mínima de módulos"
+                value={filtersHolder.modulesQty.greater || null}
+                handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, modulesQty: { ...prev.modulesQty, greater: value } }))}
+                width="100%"
+                labelClassName="text-xs font-medium tracking-tight text-black"
+              />
+            </div>
+            <div className="w-full lg:w-[300px]">
+              <NumberInput
+                label="NºMÓDULOS <"
+                placeholder="Preencha a quantidade máxima de módulos"
+                value={filtersHolder.modulesQty.less || null}
+                handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, modulesQty: { ...prev.modulesQty, less: value } }))}
+                width="100%"
+                labelClassName="text-xs font-medium tracking-tight text-black"
+              />
+            </div>
           </div>
         </div>
         <div className="flex w-full flex-col flex-wrap items-center justify-end gap-2 lg:flex-row">

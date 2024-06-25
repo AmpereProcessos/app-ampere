@@ -188,19 +188,15 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   project={project}
                 />
               ) : null}
-
-              {project.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
-                <InfoObrasBlock
-                  editor={true}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  updateLogs={updateLogs || []}
-                  project={project}
-                />
-              ) : null}
-
+              <InfoObrasBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                updateLogs={updateLogs || []}
+                project={project}
+              />
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}

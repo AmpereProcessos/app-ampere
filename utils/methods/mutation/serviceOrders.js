@@ -21,3 +21,13 @@ export async function updateServiceOrder({ info, orderId, invalidateKey, queryCl
     throw error
   }
 }
+
+export async function deleteServiceOrder({ id }) {
+  try {
+    const { data } = await axios.delete(`/api/ordensDeServico?id=${id}`)
+    if (typeof data.message != 'string') return 'Ordem de serviço excluída com sucesso !'
+    return data.message
+  } catch (error) {
+    throw error
+  }
+}

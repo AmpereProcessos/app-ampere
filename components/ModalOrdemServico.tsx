@@ -23,7 +23,7 @@ import Avatar from './utils/Avatar'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
 import { useServiceOrderById } from '../utils/methods/query/service-orders'
-import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+import { deleteServiceOrder, updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 
 import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
 
@@ -32,6 +32,7 @@ import TextInput from './inputs/Text'
 import NotificationCreationBlock from './NotificationCreationBlock'
 import { formatDateAsLocale } from '../utils/methods/formatting'
 import { TServiceOrderDTO } from '@/utils/schemas/service-order'
+import { useSession } from 'next-auth/react'
 
 type ModalOrdemServicoProps = {
   orderId: string
@@ -39,6 +40,7 @@ type ModalOrdemServicoProps = {
   modalIsOpen: boolean
 }
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServicoProps) {
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: order, isSuccess, isError } = useServiceOrderById({ id: orderId })
 
@@ -132,6 +134,19 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
       })
       toast.dismiss(loadingToastId)
       toast.success(msg || 'Ordem atualizada com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      const msg = getErrorMessage(error)
+      toast.error(msg)
+    }
+  }
+  async function handleOrderDelete(id: string) {
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      const msg = await deleteServiceOrder({ id })
+      toast.dismiss(loadingToastId)
+      toast.success(msg || 'Ordem excluída com sucesso !')
+      return closeModal()
     } catch (error) {
       toast.dismiss(loadingToastId)
       const msg = getErrorMessage(error)
@@ -283,7 +298,18 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
                 history={order.periodo.historico}
               />
             </div>
-            <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
+            <div className="mt-2 flex w-full items-center justify-between border-t border-gray-200 py-1 px-4">
+              {session?.user.permissoes.ordensDeServico.editar ? (
+                <button
+                  onClick={() => handleOrderDelete(orderId)}
+                  className="py-1 font-bold text-red-500 duration-300 ease-in-out hover:scale-105 hover:text-red-700"
+                >
+                  EXCLUIR
+                </button>
+              ) : (
+                <></>
+              )}
+
               <button
                 onClick={() => handleOrderUpdate()}
                 className="py-1 font-bold text-[#15599a] duration-300 ease-in-out hover:scale-105 hover:text-[#15599a]"

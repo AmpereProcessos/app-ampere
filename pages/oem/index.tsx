@@ -29,6 +29,7 @@ import { FaList, FaSolarPanel } from 'react-icons/fa'
 import { TbAlertOctagonFilled } from 'react-icons/tb'
 import { MdError } from 'react-icons/md'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getDifferenceBetweenDates } from '@/utils/methods/dates'
 const statusStyles = {
   REALIZADO: {
     textColor: 'text-green-500',
@@ -92,16 +93,16 @@ function OemPage() {
       return acc + currentQty
     }, 0)
     const pendingMaintenance = info.reduce((acc, current) => {
-      const isPending = current.manutencaoPreventiva.status != 'REALIZADO'
+      const isPending = current.manutencoes.some((m) => !m.dataEfetivacao)
       if (isPending) acc += 1
       return acc
     }, 0)
     const overdueMaintenance = info.reduce((acc, current) => {
-      const isOverDue = current.manutencaoPreventiva.data
-        ? (current.oem.qtdeManutencoes || 0) > 2
-          ? dayjs(new Date()).diff(current.manutencaoPreventiva.data, 'day') > 730
-          : false
-        : dayjs(new Date()).diff(current.medidor.data, 'day') > 365
+      const referenceDate = current.medidor.data ? current.medidor.data : current.contrato.dataAssinatura
+      const isOverDue = current.manutencoes.some(
+        (m, index) =>
+          !m.dataEfetivacao && referenceDate && getDifferenceBetweenDates({ start: new Date(referenceDate), end: new Date() }) > (index + 1) * 365
+      )
       if (isOverDue) acc += 1
       return acc
     }, 0)
@@ -268,7 +269,7 @@ function OemPage() {
                           {
                             id: 3,
                             label: 'EXECUÇÃO DA MANUTENÇÃO',
-                            value: 'manutencaoPreventiva.data',
+                            value: 'manutencoes.dataEfetivacao',
                           },
                         ]}
                         selectedItemLabel={'SEM FILTRO'}

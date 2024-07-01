@@ -92,7 +92,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                   { id: 8, label: 'SAÍDA DE OBRA', value: 'obra.saida' },
                   { id: 9, label: 'PEDIDO DE VISTORIA', value: 'vistoria.dataPedido' },
                   { id: 10, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
-                  { id: 11, label: 'DATA DE MANUTENÇÃO', value: 'manutencaoPreventiva.data' },
+                  { id: 11, label: 'DATA DE MANUTENÇÃO', value: 'manutencoes.dataEfetivacao' },
                 ]}
                 selectedItemLabel={'SEM FILTRO'}
                 handleChange={(value) =>

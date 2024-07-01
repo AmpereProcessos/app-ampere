@@ -326,16 +326,23 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
   function getOeMInfo({ possuiOEM, plano }) {
     if (possuiOEM == 'SIM') {
       if (plano == 'MANUTENÇÃO SIMPLES' || plano == 'MANUTENÇÃO SIMLES') {
-        return { duracao: 0, qtdeManutencoes: 1 }
+        return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }] }
       } else if (plano == 'PLANO SOL') {
-        return { duracao: 1, qtdeManutencoes: 1 }
+        return { duracao: 1, qtdeManutencoes: 1, manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }] }
       } else if (plano == 'PLANO SOL +') {
-        return { duracao: 1, qtdeManutencoes: 2 }
+        return {
+          duracao: 1,
+          qtdeManutencoes: 2,
+          manutencoes: [
+            { titulo: 'PRIMEIRA MANUTENÇÃO', dataEfetivacao: null },
+            { titulo: 'SEGUNDA MANUTENÇÃO', dataEfetivacao: null },
+          ],
+        }
       } else if (plano == 'NÃO SE APLICA') {
-        return { duracao: 0, qtdeManutencoes: 0 }
-      } else return { duracao: 0, qtdeManutencoes: 0 }
+        return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] }
+      } else return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] }
     } else {
-      return { duracao: 0, qtdeManutencoes: 0 }
+      return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] }
     }
   }
   function getObraObs() {
@@ -528,6 +535,7 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
         materialFaltante: '',
       },
       manutencaoPreventiva: { status: 'NÃO REALIZADO', data: null },
+      manutencoes: getOeMInfo({ possuiOEM: dados.possuiOeM, plano: dados.planoOeM }).manutencoes,
       relatorios: {
         envioUm: { status: 'NÃO REALIZADO', data: null },
         envioDois: { status: 'NÃO REALIZADO', data: null },

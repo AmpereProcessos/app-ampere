@@ -43,8 +43,45 @@ type TPreviousUser = {
   visualizacao?: 'OBRAS' | 'VENDEDOR' | 'INSIDE'
 }
 
+type Maintenance = {
+  titulo: string
+  dataEfetivacao?: string | null
+}
+
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToRequestsDatabase(process.env.DB_KEY)
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+
+  const projectsSimplified = await projectsCollection.find({}, { projection: { oem: 1, manutencaoPreventiva: 1 } }).toArray()
+
+  const bulkwriteArr = projectsSimplified
+    .map((project) => {
+      const maintenancesArr: Maintenance[] = []
+      const qtyMaintenance = project.oem?.qtdeManutencoes || 0
+      const maintenance = project.manutencaoPreventiva
+      maintenancesArr.push({
+        titulo: qtyMaintenance > 1 ? 'PRIMEIRA MANUTENÇÃO' : 'MANUTENÇÃO',
+        dataEfetivacao: maintenance.data,
+      })
+      if (qtyMaintenance > 1) {
+        maintenancesArr.push({
+          titulo: 'SEGUNDA MANUTENÇÃO',
+          dataEfetivacao: null,
+        })
+      }
+      return {
+        updateOne: {
+          filter: { _id: new ObjectId(project._id) },
+          update: {
+            $set: {
+              manutencoes: maintenancesArr,
+            },
+          },
+        },
+      }
+    })
+    .filter((p) => p != null)
+
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(
@@ -182,7 +219,8 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json('DESATIVADA')
+  const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  return res.status(200).json(bkResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

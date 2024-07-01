@@ -1,6 +1,17 @@
 import z from 'zod'
 import { TActivityDTO } from './activities'
 import { ObjectId } from 'mongodb'
+
+const MaintenanceItem = z.object({
+  titulo: z.string({ required_error: 'Título da manutenção não informado.', invalid_type_error: 'Tipo não válido para o título da manutenção.' }),
+  dataEfetivacao: z
+    .string({
+      required_error: 'Data de efetivação da manutenção não informada.',
+      invalid_type_error: 'Tipo não válido para a data de efetivação da manutenção.',
+    })
+    .optional()
+    .nullable(),
+})
 const GeneralProjectSchema = z.object({
   app: z.object({
     data: z.string().optional().nullable(),
@@ -251,6 +262,7 @@ const GeneralProjectSchema = z.object({
     data: z.string().optional().nullable(),
     status: z.union([z.literal('NÃO REALIZADO'), z.literal('REALIZADO')]),
   }),
+  manutencoes: z.array(MaintenanceItem),
   material: z.object({
     avarias: z.boolean().optional().nullable(),
     chamadoIrregularidade: z.boolean().optional().nullable(), // EXCLUIR,
@@ -513,7 +525,7 @@ const PersonalizedFieldFilters = z.enum(
     'obra.saida',
     'vistoria.dataPedido',
     'medidor.data',
-    'manutencaoPreventiva.data',
+    'manutencoes.dataEfetivacao',
   ],
   { required_error: 'Filtro de campo de período não informado.', invalid_type_error: 'Tipo não válido para o campo de filtro de período.' }
 )

@@ -41,6 +41,7 @@ export default async function handler(req, res) {
             sistema: 1,
             app: 1,
             manutencaoPreventiva: 1,
+            manutencoes: 1,
             'medidor.data': 1,
           },
         },
@@ -75,7 +76,7 @@ export default async function handler(req, res) {
             $or: [
               { 'medidor.data': { $gte: '2021-06-01T00:00:00.000Z' } },
               { 'medidor.data': null },
-              { 'manutencaoPreventiva.status': { $ne: 'REALIZADO' } },
+              { 'manutencaoPreventiva.data': { $ne: 'REALIZADO' } },
             ],
           },
         },

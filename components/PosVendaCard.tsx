@@ -18,6 +18,7 @@ import { MdOutlineCheckBox } from 'react-icons/md'
 import ProjectActivityCard from './identificador/atividades/ProjectActivityCard'
 import { getDifferenceBetweenDates } from '@/utils/methods/dates'
 import Link from 'next/link'
+import dayjs from 'dayjs'
 
 type PosVendaCardProps = {
   projectId: string
@@ -39,7 +40,7 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
   }
   function getBarColor(lastContact: string | undefined | null) {
     if (!lastContact) return 'bg-red-500'
-    const sinceLastContact = getDateDiff(new Date(), new Date(lastContact))
+    const sinceLastContact = dayjs().diff(lastContact, 'day')
     if (sinceLastContact > 7) return 'bg-red-500'
     else return 'bg-blue-500'
   }

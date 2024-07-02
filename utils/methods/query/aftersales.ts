@@ -246,7 +246,7 @@ export function useAfterSalesProjects() {
     if (!lastContact) return true
     // In case there's more than 7 days since contact
     const sinceLastContact = dayjs().diff(lastContact, 'day')
-    if (sinceLastContact > 7) return true
+    if (sinceLastContact >= 7) return true
     return false
   }
   function matchDate(project: TProjectDTO) {

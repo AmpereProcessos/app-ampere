@@ -65,3 +65,32 @@ export function getDifferenceBetweenDates({ start, end }: { start?: string | Dat
   const diff = startDate.diff(endDate, 'days')
   return Math.abs(diff)
 }
+type GetPeriodDateParamsByReferenceDateParams = {
+  reference: string | Date
+  type?: 'month' | 'year'
+  resetStart?: boolean
+  resetEnd?: boolean
+}
+export function getPeriodDateParamsByReferenceDate({ reference, type = 'month', resetStart, resetEnd }: GetPeriodDateParamsByReferenceDateParams) {
+  if (type == 'month') {
+    var start = dayjs(reference).startOf('month')
+    var end = dayjs(reference).endOf('month')
+    if (!!resetStart) start = start.subtract(3, 'hour')
+    if (!!resetEnd) end = end.startOf('day').subtract(3, 'hour')
+    return { start: start.toDate(), end: end.toDate() }
+  }
+  if (type == 'year') {
+    var start = dayjs(reference).startOf('year')
+    var end = dayjs(reference).endOf('year')
+    if (!!resetStart) start = start.subtract(3, 'hour')
+    if (!!resetEnd) end = end.startOf('day').subtract(3, 'hour')
+    return { start: start.toDate(), end: end.toDate() }
+  }
+
+  // Default for month
+  var start = dayjs(reference).startOf('month')
+  var end = dayjs(reference).endOf('month')
+  if (!!resetStart) start = start.subtract(3, 'hour')
+  if (!!resetEnd) end = end.startOf('day').subtract(3, 'hour')
+  return { start: start.toDate(), end: end.toDate() }
+}

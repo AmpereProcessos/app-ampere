@@ -22,7 +22,7 @@ import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { useQueryClient } from 'react-query'
 import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
-import { getFirstDayOfMonth, getLastDayOfMonth } from '@/utils/methods/dates'
+import { getFirstDayOfMonth, getLastDayOfMonth, getPeriodDateParamsByReferenceDate } from '@/utils/methods/dates'
 
 type TDateParam = {
   after: string
@@ -34,19 +34,16 @@ type TEditModal = {
   id: string | null
 }
 
-const referenceDate = dayjs().subtract(6, 'month')
-const referenceYear = referenceDate.get('year')
-const referenceMonth = referenceDate.get('month')
-const afterParam = getFirstDayOfMonth({ year: referenceYear, month: referenceMonth, resetHour: true })
-const beforeParam = getLastDayOfMonth({ resetHour: true })
+const currentDate = new Date()
 
+const { start, end } = getPeriodDateParamsByReferenceDate({ reference: currentDate, type: 'year' })
 function Formularios() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push('/auth/signin') })
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
-  const [dateParam, setDateParam] = useState<TDateParam>({ after: afterParam, before: beforeParam })
+  const [dateParam, setDateParam] = useState<TDateParam>({ after: start.toISOString(), before: end.toISOString() })
 
   const { data: forms, isLoading, isError, isSuccess, filters, setFilters } = useWarehouseForms({ after: dateParam.after, before: dateParam.before })
 

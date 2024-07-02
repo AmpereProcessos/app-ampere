@@ -63,7 +63,7 @@ function Posvenda() {
       if (!lastContact) return (acc += 1)
       // In case there's more than 7 days since contact
       const sinceLastContact = dayjs().diff(lastContact, 'day')
-      if (sinceLastContact > 7) return (acc += 1)
+      if (sinceLastContact >= 7) return (acc += 1)
       return acc
     }, 0)
     const docsToElaborate = info.reduce((acc, current) => {

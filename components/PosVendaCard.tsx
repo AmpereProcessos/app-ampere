@@ -41,7 +41,7 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
   function getBarColor(lastContact: string | undefined | null) {
     if (!lastContact) return 'bg-red-500'
     const sinceLastContact = dayjs().diff(lastContact, 'day')
-    if (sinceLastContact > 7) return 'bg-red-500'
+    if (sinceLastContact >= 7) return 'bg-red-500'
     else return 'bg-blue-500'
   }
   function renderDeliveryInfo({ expectedAt, deliveredAt }: { expectedAt?: string | null; deliveredAt?: string | null }) {

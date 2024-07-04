@@ -48,39 +48,18 @@ type Maintenance = {
   dataEfetivacao?: string | null
 }
 
+const UFEquivalent = {
+  M: 'MG',
+  mg: 'MG',
+  Mg: 'MG',
+}
+
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const projectsSimplified = await projectsCollection.find({}, { projection: { oem: 1, manutencaoPreventiva: 1 } }).toArray()
-
-  const bulkwriteArr = projectsSimplified
-    .map((project) => {
-      const maintenancesArr: Maintenance[] = []
-      const qtyMaintenance = project.oem?.qtdeManutencoes || 0
-      const maintenance = project.manutencaoPreventiva
-      maintenancesArr.push({
-        titulo: qtyMaintenance > 1 ? 'PRIMEIRA MANUTENÇÃO' : 'MANUTENÇÃO',
-        dataEfetivacao: maintenance.data,
-      })
-      if (qtyMaintenance > 1) {
-        maintenancesArr.push({
-          titulo: 'SEGUNDA MANUTENÇÃO',
-          dataEfetivacao: null,
-        })
-      }
-      return {
-        updateOne: {
-          filter: { _id: new ObjectId(project._id) },
-          update: {
-            $set: {
-              manutencoes: maintenancesArr,
-            },
-          },
-        },
-      }
-    })
-    .filter((p) => p != null)
+  // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
+  // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
 
   // const contractRequestsCollection = db.collection('contrato')
 
@@ -219,8 +198,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.status(200).json(bkResponse)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

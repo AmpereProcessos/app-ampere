@@ -2476,7 +2476,9 @@ export function formatCPFCpnj(value: string) {
 
   return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
-export function formatDate(value: string) {
+export function formatDate(value: any) {
+  if (!value) return undefined
+  if (isNaN(new Date(value).getMilliseconds())) return undefined
   return new Date(value).toISOString().slice(0, 10)
 }
 export function formatPersonalName(value: string) {

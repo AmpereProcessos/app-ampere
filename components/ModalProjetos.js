@@ -7,6 +7,9 @@ import NotificationCreationBlock from './NotificationCreationBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import { useKey } from '../utils/hooks'
 
+// TESTING
+import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
+// TESTING
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
@@ -127,6 +130,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   updateLogs={updateLogs || []}
                 />
               )}
+              <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>
                 <div className="flex flex-wrap justify-center gap-2">

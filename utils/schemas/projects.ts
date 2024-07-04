@@ -1,6 +1,7 @@
 import z from 'zod'
 import { TActivityDTO } from './activities'
 import { ObjectId } from 'mongodb'
+import { THomologation } from './partial/homologation'
 
 const MaintenanceItem = z.object({
   titulo: z.string({ required_error: 'Título da manutenção não informado.', invalid_type_error: 'Tipo não válido para o título da manutenção.' }),
@@ -376,7 +377,7 @@ const GeneralProjectSchema = z.object({
   projeto: z.object({
     acStatus: z.string().optional().nullable(), // select options
     aumentoDeCarga: z.union([z.literal('SIM'), z.literal('NÃO')]),
-    dataLiberacaoDocumentacao: z.string(),
+    dataLiberacaoDocumentacao: z.string().optional().nullable(),
     dataAssDocumentacao: z.string().optional().nullable(),
     dataSolicitacaoAcesso: z.string().optional().nullable(),
     desenhoTelhado: z.string().optional().nullable(),
@@ -478,6 +479,7 @@ const GeneralProjectSchema = z.object({
 export type TProject = z.infer<typeof GeneralProjectSchema>
 export type TProjectEntity = TProject & { _id: ObjectId }
 export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }
+export type TProjectDTOWithHomologation = TProject & { homologacao: THomologation }
 
 export type TProjectDBSimplified = Pick<
   TProject,

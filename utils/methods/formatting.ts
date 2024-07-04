@@ -14,6 +14,11 @@ export function formatDateAsLocale(date: string | Date | null | undefined, showH
   return dayjs(date).add(3, 'hour').format('DD/MM/YYYY')
 }
 
+export function formatDateTime(value: any) {
+  if (!value) return undefined
+  if (isNaN(new Date(value).getMilliseconds())) return undefined
+  return dayjs(value).format('YYYY-MM-DDTHH:mm')
+}
 export function formatToCEP(value: string) {
   let cep = value
     .replace(/\D/g, '')

@@ -1,15 +1,12 @@
-import { MongoClient } from "mongodb";
-
-let cachedDb = null;
+import { MongoClient } from 'mongodb'
+import clientPromise from './mongo-client'
+let cachedDb = null
 export default async function connectToDatabase(uri) {
   if (cachedDb) {
-    return cachedDb;
+    return cachedDb
   }
-  const client = await MongoClient.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  const db = client.db("operacoes");
-  cachedDb = db;
-  return db;
+  const client = await clientPromise
+  const db = client.db('operacoes')
+  cachedDb = db
+  return db
 }

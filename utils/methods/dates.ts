@@ -34,6 +34,12 @@ export function formatDateQuery(date: string, type: 'start' | 'end') {
   if (type == 'end') return dayjs(date).endOf('day').subtract(3, 'hour').toISOString()
   return dayjs(date).startOf('day').subtract(3, 'hour').toISOString()
 }
+
+export function getHoursDiff({ start, finish }: { start: string | Date; finish: string | Date }) {
+  const hourDiff = dayjs(finish).diff(dayjs(start), 'hour')
+  return hourDiff
+}
+
 export function getDifferenceBetweenTimes(timeOne: string, timeTwo: string) {
   // Parse time strings into hours and minutes
   var time1Parts = timeOne.split(':')

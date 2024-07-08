@@ -70,32 +70,47 @@ export default async function handler(req, res) {
         },
       ])
       .toArray()
-    const docsToMake = await projectsCollection.countDocuments({
+    const docsToMake = await collection2.countDocuments({
       'homologacao.homologar': true,
       'homologacao.dataLiberacao': { $ne: null },
+      'homologacao.dataEfetivacao': null,
       'homologacao.documentacao.dataConclusaoElaboracao': null,
     })
-    const docsToSign = await projectsCollection.countDocuments({
+    const docsToSign = await collection2.countDocuments({
       'homologacao.homologar': true,
       'homologacao.dataLiberacao': { $ne: null },
       $and: [{ 'homologacao.documentacao.dataLiberacao': { $ne: null } }, { 'homologacao.documentacao.dataAssinatura': null }],
     })
-    const accessToRequest = await projectsCollection.countDocuments({
-      'homologacao.homologar': true,
-      'homologacao.dataLiberacao': { $ne: null },
-      'homologacao.acesso.dataSolicitacao': null,
+    const accessToRequest = await collection2.countDocuments({
+      $and: [
+        {
+          'homologacao.homologar': true,
+        },
+        {
+          'homologacao.dataEfetivacao': null,
+        },
+        {
+          'homologacao.dataLiberacao': { $ne: null },
+        },
+        {
+          'homologacao.acesso.dataSolicitacao': null,
+        },
+      ],
     })
-    const accessPendingResponse = await projectsCollection.countDocuments({
+    const accessPendingResponse = await collection2.countDocuments({
       'homologacao.homologar': true,
+      'homologacao.dataEfetivacao': null,
       'homologacao.dataLiberacao': { $ne: null },
       $and: [{ 'homologacao.documentacao.dataSolicitacao': { $ne: null } }, { 'homologacao.documentacao.dataResposta': null }],
     })
-    const vistoryPendingRequest = await projectsCollection.countDocuments({
-      'obra.statusDaObra': 'CONCLUIDA',
+    const vistoryPendingRequest = await collection2.countDocuments({
+      'obra.statusDaObra': { $regex: 'CONCLUIDA' },
+      'homologacao.dataEfetivacao': null,
       'homologacao.vistoria.dataSolicitacao': null,
     })
-    const vistoryPendingResponse = await projectsCollection.countDocuments({
-      'obra.statusDaObra': 'CONCLUIDA',
+    const vistoryPendingResponse = await collection2.countDocuments({
+      'obra.statusDaObra': { $regex: 'CONCLUIDA' },
+      'homologacao.dataEfetivacao': null,
       $and: [{ 'homologacao.vistoria.dataSolicitacao': { $ne: null } }, { 'homologacao.vistoria.dataEfetivacao': null }],
     })
     res.json({

@@ -1,3 +1,4 @@
+import { TExecutionStats } from '@/pages/api/stats/sector-reports/execution'
 import { TDashboardStats, TSaleGraphStat } from '@/utils/schemas/stats'
 import axios from 'axios'
 import { useQuery } from 'react-query'
@@ -27,5 +28,21 @@ export function useSalesGraphStats({ year }: { year: number }) {
   return useQuery({
     queryKey: ['sales-graph-stats', year],
     queryFn: async () => await fetchSalesGraphStats({ year }),
+  })
+}
+
+async function fetchExecutionStats() {
+  try {
+    const { data } = await axios.get('/api/stats/sector-reports/execution')
+    return data.data as TExecutionStats
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useExecutionStats() {
+  return useQuery({
+    queryKey: ['execution-stats'],
+    queryFn: fetchExecutionStats,
   })
 }

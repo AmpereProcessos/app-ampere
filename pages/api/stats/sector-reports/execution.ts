@@ -8,7 +8,7 @@ import createHttpError from 'http-errors'
 import { Collection, Db, Filter, WithId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
-type TExecutionStats = {
+export type TExecutionStats = {
   periodo: TExecutionPeriodStatsResult
   adequacoesPadrao: {
     total: number
@@ -18,6 +18,7 @@ type TExecutionStats = {
     total: number
     pagos: number
   }
+  ordensServico: TServiceOrderStats
 }
 
 type GetResponse = {
@@ -31,7 +32,7 @@ const getExecutionSectorStatsRoute: NextApiHandler<GetResponse> = async (req, re
 
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const projectsCollection: Collection<TProject> = db.collection('dados')
-  // const serviceOrdersCollection: Collection<TServiceOrder> = db.collection('ordensDeServico')
+  const serviceOrdersCollection: Collection<TServiceOrder> = db.collection('ordensDeServico')
 
   const afterDate = dayjs().subtract(30, 'days').toDate()
   const beforeDate = dayjs().toDate()
@@ -40,7 +41,10 @@ const getExecutionSectorStatsRoute: NextApiHandler<GetResponse> = async (req, re
   const paAdequations = await getPendingPAAdequations({ collection: projectsCollection })
   const structureAdequations = await getPendingStructureAdequations({ collection: projectsCollection })
 
-  return res.status(200).json({ data: { periodo: periodResults, adequacoesPadrao: paAdequations, adequacoesEstrutura: structureAdequations } })
+  const serviceOrderStats = await getServiceOrdersInformation({ collection: serviceOrdersCollection, afterDate, beforeDate })
+  return res.status(200).json({
+    data: { periodo: periodResults, adequacoesPadrao: paAdequations, adequacoesEstrutura: structureAdequations, ordensServico: serviceOrderStats },
+  })
 }
 export default apiHandler({ GET: getExecutionSectorStatsRoute })
 
@@ -178,8 +182,124 @@ type GetServiceOrdersInformationParams = {
   beforeDate: Date
   collection: Collection<TServiceOrder>
 }
-async function getServiceOrdersInformation({ collection, afterDate, beforeDate }: GetServiceOrdersInformationParams) {
+type TPendingServiceOrdersReduced = {
+  total: number
+  porResponsavel: { [key: string]: number }
+  porCategoria: { [key: string]: number }
+}
+type TConcludedServiceOrdersReduced = {
+  total: number
+  porResponsavel: { [key: string]: { qtde: number; tempoExecucao: number } }
+  porCategoria: { [key: string]: { qtde: number; tempoExecucao: number } }
+}
+type TServiceOrderStats = {
+  pendentes: {
+    total: number
+    porResponsavel: {
+      responsavel: string
+      qtde: number
+    }[]
+    porCategoria: {
+      responsavel: string
+      qtde: number
+    }[]
+  }
+  finalizadas: {
+    total: number
+    porResponsavel: {
+      responsavel: string
+      qtde: number
+      tempoMedioExecucao: number
+    }[]
+    porCategoria: {
+      responsavel: string
+      qtde: number
+      tempoMedioExecucao: number
+    }[]
+  }
+}
+async function getServiceOrdersInformation({ collection, afterDate, beforeDate }: GetServiceOrdersInformationParams): Promise<TServiceOrderStats> {
   try {
-    const pendingServiceOrders = await collection.countDocuments({ dataEfetivacao: null })
-  } catch (error) {}
+    const afterDateAsString = afterDate.toISOString()
+    const beforeDateAsString = beforeDate.toISOString()
+
+    const matchPending: Filter<TServiceOrder> = { dataEfetivacao: null }
+    const matchConcluded: Filter<TServiceOrder> = {
+      $and: [{ dataEfetivacao: { $gte: afterDateAsString } }, { dataEfetivacao: { $lte: beforeDateAsString } }],
+    }
+    const project = { categoria: 1, 'responsavel.nome': 1, dataEfetivacao: 1, dataInsercao: 1 }
+    const pendingServiceOrders = await collection.find(matchPending, { projection: project }).toArray()
+    const concludedServiceOrders = await collection.find(matchConcluded, { projection: project }).toArray()
+
+    const pendingResultsReduced = pendingServiceOrders.reduce(
+      (acc: TPendingServiceOrdersReduced, current) => {
+        const responsibleName = current.responsavel.nome || 'NÃO DEFINIDO'
+        const category = current.categoria
+        if (!acc.porResponsavel[responsibleName]) acc.porResponsavel[responsibleName] = 0
+        if (!acc.porCategoria[category]) acc.porCategoria[category] = 0
+
+        acc.total += 1
+        acc.porResponsavel[responsibleName] += 1
+        acc.porCategoria[category] += 1
+        return acc
+      },
+      {
+        total: 0,
+        porResponsavel: {},
+        porCategoria: {},
+      }
+    )
+    const concludedResultsReduced = concludedServiceOrders.reduce(
+      (acc: TConcludedServiceOrdersReduced, current) => {
+        const responsibleName = current.responsavel.nome || 'NÃO DEFINIDO'
+        const category = current.categoria
+        if (!acc.porResponsavel[responsibleName]) {
+          acc.porResponsavel[responsibleName] = { qtde: 0, tempoExecucao: 0 }
+        }
+        if (!acc.porCategoria[category]) {
+          acc.porCategoria[category] = { qtde: 0, tempoExecucao: 0 }
+        }
+
+        const executionStart = current.dataInsercao ? new Date(current.dataInsercao) : null
+        const executionEnd = current.dataEfetivacao ? new Date(current.dataEfetivacao) : null
+        const executionHours = !!executionStart && !!executionEnd ? getHoursDiff({ start: executionStart, finish: executionEnd }) : 0
+
+        acc.total += 1
+        acc.porResponsavel[responsibleName].qtde += 1
+        acc.porResponsavel[responsibleName].tempoExecucao += executionHours
+
+        acc.porCategoria[category].qtde += 1
+        acc.porCategoria[category].tempoExecucao += executionHours
+        return acc
+      },
+      {
+        total: 0,
+        porResponsavel: {},
+        porCategoria: {},
+      }
+    )
+    const result = {
+      pendentes: {
+        total: pendingResultsReduced.total,
+        porResponsavel: Object.entries(pendingResultsReduced.porResponsavel).map(([key, value]) => ({ responsavel: key, qtde: value })),
+        porCategoria: Object.entries(pendingResultsReduced.porCategoria).map(([key, value]) => ({ responsavel: key, qtde: value })),
+      },
+      finalizadas: {
+        total: concludedResultsReduced.total,
+        porResponsavel: Object.entries(concludedResultsReduced.porResponsavel).map(([key, value]) => ({
+          responsavel: key,
+          qtde: value.qtde,
+          tempoMedioExecucao: value.tempoExecucao / value.qtde,
+        })),
+        porCategoria: Object.entries(concludedResultsReduced.porCategoria).map(([key, value]) => ({
+          responsavel: key,
+          qtde: value.qtde,
+          tempoMedioExecucao: value.tempoExecucao / value.qtde,
+        })),
+      },
+    }
+    return result
+  } catch (error) {
+    throw error
+  }
 }

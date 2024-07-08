@@ -898,10 +898,11 @@ export const executionStatus = [
   { id: 1, label: 'AGENDADA', value: 'AGENDADA' },
   { id: 2, label: 'AGUARDANDO AGENDAMENTO', value: 'AGUARDANDO AGENDAMENTO' },
   { id: 3, label: 'CONCLUIDA', value: 'CONCLUIDA' },
-  { id: 4, label: 'EM ANDAMENTO', value: 'EM ANDAMENTO' },
-  { id: 5, label: 'OBRA CANCELADA', value: 'OBRA CANCELADA' },
-  { id: 6, label: 'CASA EM CONSTRUÇÃO', value: 'CASA EM CONSTRUÇÃO' },
-  { id: 7, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 4, label: 'CONCLUIDA PARCIAL', value: 'CONCLUIDA PARCIAL' },
+  { id: 5, label: 'EM ANDAMENTO', value: 'EM ANDAMENTO' },
+  { id: 6, label: 'OBRA CANCELADA', value: 'OBRA CANCELADA' },
+  { id: 7, label: 'CASA EM CONSTRUÇÃO', value: 'CASA EM CONSTRUÇÃO' },
+  { id: 8, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
 ]
 export const inspectionStatus = [
   { id: 1, label: 'REALIZADA', value: 'REALIZADA' },

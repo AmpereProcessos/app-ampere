@@ -17,12 +17,7 @@ function renderShowClientsButtonStyles(show) {
 
 function Acompanhamento() {
   const router = useRouter()
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
-  })
+  const { data: session, status } = useSession({ required: true })
   const [showClientsNames, setShowClientsNames] = useState(false)
   const [info, setInfo] = useState([])
   const [dateFilter, setDateFilter] = useState({

@@ -27,6 +27,7 @@ export function useExecutionProjects() {
     paAlterationApplied: boolean
     paAlterationPending: boolean
     partialPaymentDone: boolean
+    partialExecutionPending: boolean
     missingObservations: boolean
     outsideMatrix: boolean
   }
@@ -44,6 +45,7 @@ export function useExecutionProjects() {
     paAlterationApplied: false,
     paAlterationPending: false,
     partialPaymentDone: false,
+    partialExecutionPending: false,
     missingObservations: false,
     outsideMatrix: false,
   })
@@ -99,6 +101,10 @@ export function useExecutionProjects() {
     if (!filters.partialPaymentDone) return true
     return !!project.compra.dataPagamento
   }
+  function matchPartialExecutionPending(project: TProjectDTO) {
+    if (!filters.partialExecutionPending) return true
+    return project.obra.statusDaObra == 'CONCLUIDA PARCIAL' && !!project.homologacao.vistoria.dataEfetivacao
+  }
   function matchMissingObservations(project: TProjectDTO) {
     if (!filters.missingObservations) return true
     return project.obra.observacoes?.trim().length <= 2
@@ -124,6 +130,7 @@ export function useExecutionProjects() {
         matchPaAlterationApplied(project) &&
         matchPaAlterationPending(project) &&
         matchPartialPaymentDone(project) &&
+        matchPartialExecutionPending(project) &&
         matchMissingObservations(project) &&
         matchOutsideMatrix(project)
     )

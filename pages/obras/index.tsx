@@ -23,6 +23,7 @@ import { executionStatus, serviceTypes, structureTypes } from '../../utils/selec
 import { TProjectDTO } from '../../utils/schemas/projects'
 import { TbTextPlus, TbTruckDelivery } from 'react-icons/tb'
 import { GrStorage } from 'react-icons/gr'
+import { BsPatchCheckFill } from 'react-icons/bs'
 
 function Obras() {
   const router = useRouter()
@@ -393,6 +394,32 @@ function Obras() {
                     onClick={() =>
                       setFilters({
                         ...filters,
+                        partialExecutionPending: !filters.partialExecutionPending,
+                      })
+                    }
+                    className={`${
+                      filters.partialExecutionPending ? 'bg-[#fead41]' : 'bg-orange-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    MONTAGEM PARCIAL PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        personalizedStructureApplied: !filters.personalizedStructureApplied,
+                      })
+                    }
+                    className={`${
+                      filters.personalizedStructureApplied ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    COM ESTRUTURA PERSONALIZADA
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
                         personalizedStructureApplied: !filters.personalizedStructureApplied,
                       })
                     }
@@ -495,11 +522,18 @@ function Obras() {
                   <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex w-1/3 flex-col items-start">
                     <span className="text-xxs">STATUS</span>
                     <p className="text-xs text-gray-600">{project.obra.statusDaObra ? project.obra.statusDaObra : '-'}</p>
                   </div>
-                  <div>
+                  <div className="flex w-1/3 flex-col items-center">
+                    <span className="text-xxs">VISTORIA</span>
+                    <div className="flex items-center gap-1 text-green-600">
+                      {!!project.homologacao.vistoria.dataEfetivacao ? <BsPatchCheckFill color="rgb(22,163,74)" /> : null}
+                      <p className="text-xs text-gray-600">{!!project.homologacao.vistoria.dataEfetivacao ? 'FEITA' : 'PENDENTE'}</p>
+                    </div>
+                  </div>
+                  <div className="flex w-1/3 flex-col items-end">
                     <span className="text-xxs">LAUDO</span>
                     <p className="text-center text-xs text-gray-600">{project.obra.laudo ? project.obra.laudo : '-'}</p>
                   </div>

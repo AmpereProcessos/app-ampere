@@ -13,6 +13,8 @@ import ObservationsBlock from '../identificador/obras/ObservationsBlock'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import Execution from '../identificador/registrosAlteracoesProjeto/secao/Execution'
+import { BsPatchCheckFill } from 'react-icons/bs'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
 
 type InfoObrasBlockProps = {
   editor: boolean
@@ -40,6 +42,14 @@ function InfoObrasBlock({
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE A OBRA</span>
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Execution logs={updateLogs} />} />
+      {!!infoHolder.homologacao.vistoria.dataEfetivacao ? (
+        <div className="flex items-center gap-1 self-center">
+          <BsPatchCheckFill color="rgb(22,163,74)" />
+          <p className="text-xs tracking-tight text-gray-500">
+            VISTORIA CONCLUÍDA EM {formatDateAsLocale(infoHolder.homologacao.vistoria.dataEfetivacao)}
+          </p>
+        </div>
+      ) : null}
       <div className="my-4 flex w-full flex-col items-center justify-center gap-2 self-center px-2 lg:flex-row">
         <CheckboxInput
           labelFalse="OBRA SOLICITADA"

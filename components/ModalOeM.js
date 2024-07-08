@@ -34,6 +34,7 @@ import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { useSession } from 'next-auth/react'
+import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
   const { data: session } = useSession()
   const queryClient = useQueryClient()
@@ -157,7 +158,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   showMonetaryValues={false}
                 />
               ) : null}
-              {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+              {/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoDadosConcessionariaBlock
                   editor={false}
                   infoHolder={infoHolder}
@@ -166,7 +167,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                   setChanges={setChanges}
                   updateLogs={updateLogs || []}
                 />
-              )}
+              )} */}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
                 <InfoSistemaBlock
                   editor={false}
@@ -178,16 +179,16 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                 />
               )}
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(project.tipoDeServico) ? (
-                <InfoProjetoBlock
-                  editor={false}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  updateLogs={updateLogs || []}
-                  project={project}
-                />
-              ) : null}
+                <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} /> // <InfoProjetoBlock
+              ) : //   editor={false}
+              //   infoHolder={infoHolder}
+              //   setInfo={setInfo}
+              //   changes={changes}
+              //   setChanges={setChanges}
+              //   updateLogs={updateLogs || []}
+              //   project={project}
+              // />
+              null}
               <InfoObrasBlock
                 editor={true}
                 infoHolder={infoHolder}

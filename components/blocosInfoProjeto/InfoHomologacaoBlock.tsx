@@ -24,7 +24,7 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
   return (
     <div className="flex flex-col gap-2 rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
-        (TESTE) INFORMAÇÕES SOBRE PROJETO E HOMOLOGAÇÃO
+        INFORMAÇÕES SOBRE PROJETO E HOMOLOGAÇÃO
       </span>
       <div className="flex w-full flex-col gap-2 px-2">
         <PendenciesInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
@@ -57,6 +57,19 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
             <VistoryInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
           </>
         ) : null}
+        <div className="my-4 flex w-full items-center justify-center">
+          <div className="w-fit">
+            <CheckboxInput
+              labelFalse="PROJETO/HOMOLOGAÇÃO CONCLUÍDOS"
+              labelTrue="PROJETO/HOMOLOGAÇÃO CONCLUÍDOS"
+              checked={!!infoHolder.homologacao.dataEfetivacao}
+              handleChange={(value) => {
+                setInfo((prev) => ({ ...prev, homologacao: { ...prev.homologacao, dataEfetivacao: value ? new Date().toISOString() : null } }))
+                setChanges((prev) => ({ ...prev, 'homologacao.dataEfetivacao': value ? new Date().toISOString() : null }))
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

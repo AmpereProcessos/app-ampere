@@ -51,7 +51,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
       </div>
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
-        <Link href="/gestaoDeProjetos/emAndamento">
+        <Link href="/gestao-de-projetos/emAndamento">
           <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <TbRecharging
               style={{
@@ -63,7 +63,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           </a>
         </Link>
 
-        <Link href="/gestaoDeProjetos/banco-de-dados">
+        <Link href="/gestao-de-projetos/banco-de-dados">
           <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <FaDatabase
               style={{
@@ -221,7 +221,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             false
           )}
           {userIsController ? (
-            <Link href={'/ordemDeServico'}>
+            <Link href={'/ordens-de-servico'}>
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdDesignServices style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
@@ -284,7 +284,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             </Link>
           ) : null} */}
           {checkRoute('Obras') ? (
-            <Link href="/obras/gestaoDeObras">
+            <Link href="/obras/gestao-obras">
               <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdOutlineBuildCircle style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Gestão de Obras</p>

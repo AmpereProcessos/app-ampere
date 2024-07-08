@@ -1,0 +1,115 @@
+import NumberInput from '@/components/inputs/Number'
+import SelectInput from '@/components/inputs/Select'
+import SelectInputWithImages from '@/components/inputs/SelectWithImages'
+import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
+import React from 'react'
+
+type StructureInformationBlockProps = {
+  infoHolder: TContractRequestDTO
+  setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>
+  userHasEditPermission: boolean
+}
+function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: StructureInformationBlockProps) {
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DA ESTRUTURA DE INSTALAÇÃO</h1>
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-1/4">
+          <SelectInput
+            label={'TIPO DA ESTRUTURA'}
+            value={infoHolder.tipoEstrutura}
+            editable={userHasEditPermission}
+            selectedItemLabel="NÃO DEFINIDO"
+            options={[
+              { id: 1, label: 'TELHADO', value: 'TELHADO' },
+              { id: 2, label: 'CARPORT', value: 'CARPORT' },
+              { id: 3, label: 'SOLO', value: 'SOLO' },
+              { id: 4, label: 'ESTRUTURA PERSONALIZADA', value: 'ESTRUTURA PERSONALIZADA' },
+            ]}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, tipoEstrutura: value }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, tipoEstrutura: 'TELHADO' }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
+          <SelectInput
+            label={'MATERIAL DA ESTRUTURA'}
+            value={infoHolder.materialEstrutura}
+            editable={userHasEditPermission}
+            selectedItemLabel="NÃO DEFINIDO"
+            options={[
+              { id: 1, label: 'MADEIRA', value: 'MADEIRA' },
+              { id: 2, label: 'FERRO', value: 'FERRO' },
+            ]}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, materialEstrutura: value }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, materialEstrutura: null }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
+          <SelectInput
+            label={'NECESSÁRIO ADEQUAÇÃO'}
+            value={infoHolder.estruturaAmpere}
+            editable={userHasEditPermission}
+            selectedItemLabel="NÃO DEFINIDO"
+            options={[
+              { id: 1, label: 'SIM', value: 'SIM' },
+              { id: 2, label: 'NÃO', value: 'NÃO' },
+            ]}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, estruturaAmpere: value }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, estruturaAmpere: 'NÃO' }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
+          <SelectInput
+            label={'RESPONSÁVEL PELA ADEQUAÇÃO'}
+            value={infoHolder.responsavelEstrutura}
+            editable={userHasEditPermission}
+            selectedItemLabel="NÃO DEFINIDO"
+            options={[
+              { id: 1, label: 'AMPERE', value: 'AMPERE' },
+              { id: 2, label: 'CLIENTE', value: 'CLIENTE' },
+              { id: 2, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
+            ]}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavelEstrutura: value }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, responsavelEstrutura: 'NÃO SE APLICA' }))}
+            width="100%"
+          />
+        </div>
+      </div>
+      {infoHolder.responsavelEstrutura == 'AMPERE' ? (
+        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="w-full lg:w-1/2">
+            <SelectInput
+              label={'FORMA DE PAGAMENTO DA ESTRUTURA'}
+              value={infoHolder.formaPagamentoEstrutura}
+              editable={userHasEditPermission}
+              selectedItemLabel="NÃO DEFINIDO"
+              options={[
+                { id: 1, label: 'INCLUSO NO FINANCIAMENTO', value: 'INCLUSO NO FINANCIAMENTO' },
+                { id: 2, label: 'DIRETO PRO FORNECEDOR', value: 'DIRETO PRO FORNECEDOR' },
+                { id: 3, label: 'A VISTA PARA AMPÈRE', value: 'A VISTA PARA AMPÈRE' },
+                { id: 4, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
+              ]}
+              handleChange={(value) => setInfoHolder((prev) => ({ ...prev, formaPagamentoEstrutura: value }))}
+              onReset={() => setInfoHolder((prev) => ({ ...prev, formaPagamentoEstrutura: 'NÃO SE APLICA' }))}
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-1/2">
+            <NumberInput
+              label="VALOR DA ESTRUTURA"
+              placeholder="Preencha aqui o valor da estrutura..."
+              value={infoHolder.valorEstrutura || null}
+              handleChange={(value) => setInfoHolder((prev) => ({ ...prev, valorEstrutura: value }))}
+              width="100%"
+            />
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export default StructureInformationBlock

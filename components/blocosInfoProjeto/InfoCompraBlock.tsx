@@ -39,15 +39,15 @@ function getPrevisionStatus({ forecast, final }: { forecast?: number | null; fin
     </h1>
   )
 }
-function getAccessGrantingStatus({ status }: { status: TProjectDTO['parecer']['statusDoParecerDeAcesso'] }) {
-  if (status == 'PARECER DE ACESSO APROVADO')
+function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao']['status'] }) {
+  if (status == 'APROVADO')
     return (
       <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:left-10">
         <BsCheckAll />
         <h1>{status}</h1>
       </div>
     )
-  if (status == 'PARECER APROVADO - NOTURNO')
+  if (status == 'APROVADO NOTURNO')
     return (
       <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
         <FaMoon />
@@ -94,7 +94,7 @@ function InfoCompraBlock({
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Purchase logs={updateLogs} />} />
       <div className="relative mt-2 mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
-        {getAccessGrantingStatus({ status: infoHolder.parecer.statusDoParecerDeAcesso })}
+        {getAccessGrantingStatus({ status: infoHolder.homologacao.status })}
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA SUPRIMENTOS'}

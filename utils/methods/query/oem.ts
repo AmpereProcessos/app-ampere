@@ -2,7 +2,7 @@ import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { formatWithoutDiacritics } from '../formatting'
+import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 import dayjs from 'dayjs'
 
 export async function getSectorStats() {
@@ -68,8 +68,7 @@ type UseOeMProjectsFilters = {
   date: {
     after: string | null
     before: string | null
-    field1: string | null
-    field2: string | null
+    field: string | null
   }
 }
 export function useOeMProjects() {
@@ -89,8 +88,7 @@ export function useOeMProjects() {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
   })
   function matchSearch(project: TProjectDTO) {
@@ -148,12 +146,13 @@ export function useOeMProjects() {
     return (project.sistema.qtdeModulos || 0) < filters.modulesQtyLte
   }
   function matchDate(project: TProjectDTO) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
     return (
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      fieldValue >= filters.date.after &&
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
+      fieldValue <= filters.date.before
     )
   }
   function handleModelData(data: TProjectDTO[]) {

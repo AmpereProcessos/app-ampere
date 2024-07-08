@@ -34,6 +34,7 @@ import { useEffect } from 'react'
 import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
 import { useSession } from 'next-auth/react'
 import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
+import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal(false))
@@ -168,7 +169,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   showMonetaryValues={true}
                 />
               )}
-              {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+              {/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoDadosConcessionariaBlock
                   editor={true}
                   infoHolder={infoHolder}
@@ -177,7 +178,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setChanges={setChanges}
                   updateLogs={updateLogs || []}
                 />
-              )}
+              )} */}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
                 <InfoSistemaBlock
                   editor={true}
@@ -190,17 +191,18 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 />
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) ? (
-                <InfoProjetoBlock
-                  comercialEdition={true}
-                  editor={true}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  updateLogs={updateLogs || []}
-                  project={project}
-                />
-              ) : null}
+                <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              ) : // <InfoProjetoBlock
+              //   comercialEdition={true}
+              //   editor={true}
+              //   infoHolder={infoHolder}
+              //   setInfo={setInfo}
+              //   changes={changes}
+              //   setChanges={setChanges}
+              //   updateLogs={updateLogs || []}
+              //   project={project}
+              // />
+              null}
 
               <InfoObrasBlock
                 editor={true}

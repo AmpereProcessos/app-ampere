@@ -18,7 +18,7 @@ export default async function handler(req, res) {
             vendedor: 1,
             cidade: 1,
             nps: 1,
-            'medidor.data': 1,
+            'homologacao.vistoria.dataEfetivacao': 1,
             'jornada.dataNps': 1,
             'jornada.obsNps': 1,
           },

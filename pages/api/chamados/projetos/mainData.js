@@ -49,28 +49,6 @@ export default async function handler(req, res) {
       ])
       .toArray()
 
-    let assinatura = await collection2
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': 'ASSINADO',
-          },
-        },
-        {
-          $match: {
-            'projeto.projetoConcluido': { $ne: 'SIM' },
-            $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
-            'projeto.dataAssDocumentacao': null, // filtrar statusDoParecerDeAcesso = "AGUARDANDO ASSINATURA"
-          },
-        },
-        {
-          $project: {
-            'projeto.dataAssDocumentacao': 1,
-            'parecer.statusDoParecerDeAcesso': 1,
-          },
-        },
-      ])
-      .toArray()
     let comissionamento = await collection2
       .aggregate([
         {
@@ -92,63 +70,46 @@ export default async function handler(req, res) {
         },
       ])
       .toArray()
-    let parecer = await collection2
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
-          },
-        },
-        {
-          $match: {
-            'projeto.projetoConcluido': { $ne: 'SIM' },
-            $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
-            'parecer.statusDoParecerDeAcesso': {
-              $in: [
-                'PENDENCIAS',
-                'SOLICITAR ACESSO',
-                'SOLICITAR TROCA DE TITULARIDADE',
-                'SOLICITAR AUMENTO DE CARGA',
-                'AGUARDANDO TROCA DE TITULARIDADE',
-                'AGUARDANDO AUMENTO DE CARGA',
-                'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
-              ],
-            },
-          },
-        },
-      ])
-      .toArray()
-    let vistoria = await collection2
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': 'ASSINADO',
-            'obra.statusDaObra': 'CONCLUIDA',
-            'vistoria.status': {
-              $in: ['NÃO DEFINIDO', 'AGUARDANDO CONCESSIONARIA'],
-            },
-          },
-        },
-        {
-          $project: {
-            'obra.statusDaObra': 1,
-            'vistoria.status': 1,
-          },
-        },
-      ])
-      .toArray()
+    const docsToMake = await projectsCollection.countDocuments({
+      'homologacao.homologar': true,
+      'homologacao.dataLiberacao': { $ne: null },
+      'homologacao.documentacao.dataConclusaoElaboracao': null,
+    })
+    const docsToSign = await projectsCollection.countDocuments({
+      'homologacao.homologar': true,
+      'homologacao.dataLiberacao': { $ne: null },
+      $and: [{ 'homologacao.documentacao.dataLiberacao': { $ne: null } }, { 'homologacao.documentacao.dataAssinatura': null }],
+    })
+    const accessToRequest = await projectsCollection.countDocuments({
+      'homologacao.homologar': true,
+      'homologacao.dataLiberacao': { $ne: null },
+      'homologacao.acesso.dataSolicitacao': null,
+    })
+    const accessPendingResponse = await projectsCollection.countDocuments({
+      'homologacao.homologar': true,
+      'homologacao.dataLiberacao': { $ne: null },
+      $and: [{ 'homologacao.documentacao.dataSolicitacao': { $ne: null } }, { 'homologacao.documentacao.dataResposta': null }],
+    })
+    const vistoryPendingRequest = await projectsCollection.countDocuments({
+      'obra.statusDaObra': 'CONCLUIDA',
+      'homologacao.vistoria.dataSolicitacao': null,
+    })
+    const vistoryPendingResponse = await projectsCollection.countDocuments({
+      'obra.statusDaObra': 'CONCLUIDA',
+      $and: [{ 'homologacao.vistoria.dataSolicitacao': { $ne: null } }, { 'homologacao.vistoria.dataEfetivacao': null }],
+    })
     res.json({
       assinatura: {
-        confeccionar: assinatura.filter((x) => x.parecer.statusDoParecerDeAcesso != 'AGUARDANDO ASSINATURA').length,
-        paraAssinar: assinatura.filter((x) => x.parecer.statusDoParecerDeAcesso == 'AGUARDANDO ASSINATURA').length,
+        confeccionar: docsToMake,
+        paraAssinar: docsToSign,
       },
       parecer: {
-        solicitar: parecer.filter((x) => x.parecer.statusDoParecerDeAcesso != 'AGUARDANDO RESPOSTA DA CONCESSIONARIA').length,
-        aguardando: parecer.filter((x) => x.parecer.statusDoParecerDeAcesso == 'AGUARDANDO RESPOSTA DA CONCESSIONARIA').length,
+        solicitar: accessToRequest,
+        aguardando: accessPendingResponse,
       },
       vistoria: {
-        pendente: vistoria.filter((x) => x.vistoria.status == 'NÃO DEFINIDO').length,
-        aguardando: vistoria.filter((x) => x.vistoria.status == 'AGUARDANDO CONCESSIONARIA').length,
+        pendente: vistoryPendingRequest,
+        aguardando: vistoryPendingResponse,
       },
       comissionamento: {
         total: comissionamento.length,

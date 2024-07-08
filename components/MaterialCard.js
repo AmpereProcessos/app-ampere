@@ -12,7 +12,7 @@ function MaterialCard({ project }) {
   })
   function handleChanges(changes) {
     axios
-      .post('/api/gestaoDeObras/material', {
+      .post('/api/gestao-obras/material', {
         id: project._id,
         mudancas: changes,
       })
@@ -60,31 +60,31 @@ function MaterialCard({ project }) {
       .catch((err) => setMsg({ text: err.response.data, color: 'text-red-500' }))
   }
   return (
-    <div className="flex flex-col p-2 shadow-lg w-full border border-[#15599a]">
+    <div className="flex w-full flex-col border border-[#15599a] p-2 shadow-lg">
       <div className="flex items-center justify-between">
-        <h1 className="text-[#15599a] font-bold">
+        <h1 className="font-bold text-[#15599a]">
           (#{project.qtde}) {project.nomeDoContrato}
         </h1>
         <div className="flex items-center gap-2">
           <div className="flex flex-col items-center">
-            <h1 className="text-center font-bold text-gray-700 text-sm">FORNECEDOR</h1>
+            <h1 className="text-center text-sm font-bold text-gray-700">FORNECEDOR</h1>
             <h1 className="text-center text-xs text-gray-500">{infoHolder.compra?.fornecedor ? infoHolder.compra.fornecedor : '-'}</h1>
           </div>
           <div className="flex flex-col items-center">
-            <h1 className="text-center font-bold text-gray-700 text-sm">DATA DE ENTREGA</h1>
+            <h1 className="text-center text-sm font-bold text-gray-700">DATA DE ENTREGA</h1>
             <h1 className="text-center text-xs text-gray-500">
               {infoHolder.compra?.dataEntrega ? dayjs(infoHolder.compra.dataEntrega).format('DD/MM/YYYY') : '-'}
             </h1>
           </div>
           <div className="flex flex-col items-center">
-            <h1 className="text-center font-bold text-gray-700 text-sm">TEMPO DESDE ENTREGA</h1>
+            <h1 className="text-center text-sm font-bold text-gray-700">TEMPO DESDE ENTREGA</h1>
             <h1 className="text-center text-xs text-gray-500">{infoHolder.tempoPassado ? `${infoHolder.tempoPassado} DIAS` : '-'}</h1>
           </div>
         </div>
 
-        <div className="flex items-center gap-x-2 flex-wrap justify-center pb-2">
-          <div className="flex flex-col w-fit items-center">
-            <span className="font-bold font-raleway text-center text-sm">CONFERENCIA FEITA ?</span>
+        <div className="flex flex-wrap items-center justify-center gap-x-2 pb-2">
+          <div className="flex w-fit flex-col items-center">
+            <span className="text-center font-raleway text-sm font-bold">CONFERENCIA FEITA ?</span>
             <div className="flex">
               <input
                 disabled={false}
@@ -111,8 +111,8 @@ function MaterialCard({ project }) {
               </label>
             </div>
           </div>
-          <div className="flex flex-col w-fit items-center">
-            <span className="font-bold font-raleway text-center text-sm">AVARIAS ?</span>
+          <div className="flex w-fit flex-col items-center">
+            <span className="text-center font-raleway text-sm font-bold">AVARIAS ?</span>
             <div className="flex">
               <input
                 disabled={false}
@@ -139,8 +139,8 @@ function MaterialCard({ project }) {
               </label>
             </div>
           </div>
-          <div className="flex flex-col w-fit items-center">
-            <span className="font-bold font-raleway text-center text-sm">MATERIAL DO KIT FALTANDO ?</span>
+          <div className="flex w-fit flex-col items-center">
+            <span className="text-center font-raleway text-sm font-bold">MATERIAL DO KIT FALTANDO ?</span>
             <div className="flex">
               <input
                 disabled={false}
@@ -172,9 +172,9 @@ function MaterialCard({ project }) {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-wrap items-center justify-center gap-x-4  border-t border-gray-200">
-        <div className="flex flex-col w-[300px] self-center mt-2 items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÕES DO KIT</span>
+      <div className="flex w-full flex-wrap items-center justify-center gap-x-4  border-t border-gray-200">
+        <div className="mt-2 flex w-[300px] flex-col items-center self-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">INFORMAÇÕES DO KIT</span>
           <textarea
             value={infoHolder.compra.kitInfo ? infoHolder.compra.kitInfo : ''}
             readOnly={true}
@@ -193,11 +193,11 @@ function MaterialCard({ project }) {
                 },
               })
             }}
-            className="w-full mb-2 text-center text-gray-600 text-xs h-[100px] resize-none p-2 outline-none border border-gray-600"
+            className="mb-2 h-[100px] w-full resize-none border border-gray-600 p-2 text-center text-xs text-gray-600 outline-none"
           />
         </div>
-        <div className="flex flex-col w-[300px] self-center mt-2 items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">MATERIAL DO ESCRITÓRIO</span>
+        <div className="mt-2 flex w-[300px] flex-col items-center self-center">
+          <span className="text-center font-raleway text-sm font-bold uppercase">MATERIAL DO ESCRITÓRIO</span>
           <textarea
             value={infoHolder.material.materialFaltante ? infoHolder.material.materialFaltante : ''}
             disabled={true}
@@ -216,15 +216,15 @@ function MaterialCard({ project }) {
                 },
               })
             }}
-            className="w-full mb-2 text-center text-gray-600 text-xs h-[100px] resize-none p-2 outline-none border border-gray-600"
+            className="mb-2 h-[100px] w-full resize-none border border-gray-600 p-2 text-center text-xs text-gray-600 outline-none"
           />
         </div>
       </div>
       {infoHolder.material.entregaFaltando || infoHolder.material.avarias ? (
         <div className="flex flex-col items-center gap-2">
           <div className="flex justify-center">
-            <div className="flex flex-col w-[300px] self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">DESCRIÇÃO DO PROBLEMA</span>
+            <div className="mt-2 flex w-[300px] flex-col items-center self-center">
+              <span className="text-center font-raleway text-sm font-bold uppercase">DESCRIÇÃO DO PROBLEMA</span>
               <textarea
                 value={infoHolder.material.descricaoProblema}
                 placeholder={'Descrição do problema encontrado aqui...'}
@@ -241,15 +241,15 @@ function MaterialCard({ project }) {
                     'material.descricaoProblema': e.target.value,
                   })
                 }}
-                className="w-full mb-2 text-center text-xs h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="mb-2 h-[100px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center text-xs outline-none"
               />
             </div>
           </div>
           {msg.text && <p className={`text-center italic ${msg.color}`}>{msg.text}</p>}
           {infoHolder.material.chamadoIrregularidade ? (
-            <p className="text-center text-green-500 font-bold">CHAMADO CRIADO PARA ESSE CLIENTE</p>
+            <p className="text-center font-bold text-green-500">CHAMADO CRIADO PARA ESSE CLIENTE</p>
           ) : (
-            <button onClick={openCall} className="p-2 rounded border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a]">
+            <button onClick={openCall} className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] hover:bg-[#15599a] hover:text-white">
               ABRIR CHAMADO
             </button>
           )}

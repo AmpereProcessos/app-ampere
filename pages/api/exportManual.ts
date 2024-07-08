@@ -67,7 +67,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   //     structureValue: project.estruturaPersonalizada.valor,
   //   //     paValue: project.padrao.valor,
   //   //   }),
-  //   //   'STATUS DO PARECER': project.parecer.statusDoParecerDeAcesso,
+  //   //   'STATUS DO PARECER': project.homologacao.status,
   //   //   'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
   //   //   'DATA DE LIBERAÇÃO PARA COMPRA': formatDateAsLocale(project.compra.dataLiberacao),
   //   //   'DATA DE COMPRA DO KIT': formatDateAsLocale(project.compra.dataPedido),

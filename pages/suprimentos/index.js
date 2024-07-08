@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useQueryClient } from 'react-query'
 
 import { formatDate, formatDecimalPlaces } from '../../utils/constants'
-import { accessGrantingStatus, supplementationStatus } from '../../utils/select-options'
+import { accessGrantingStatus, HomologationControlStatus, supplementationStatus } from '../../utils/select-options'
 import { useSupplyProjects } from '../../utils/methods/query/supply'
 import { formatDateInputChange } from '../../utils/methods/shared'
 
@@ -99,7 +99,7 @@ function Suprimentos() {
     }, 0)
     const pendingReadyToBuy = info.reduce((acc, current) => {
       const purchased = !!current.compra?.dataPedido
-      const accessGrantingAproveed = current.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO'
+      const accessGrantingAproveed = current.homologacao.status == 'APROVADO'
       if (!purchased && accessGrantingAproveed) return acc + 1
       else return acc
     }, 0)
@@ -228,7 +228,7 @@ function Suprimentos() {
                     <div className="w-full lg:w-[250px]">
                       <SelectInput
                         label={'CAMPO DE FILTRO'}
-                        value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                        value={filters.date.field || null}
                         options={[
                           {
                             id: 1,
@@ -257,8 +257,7 @@ function Suprimentos() {
                             ...prev,
                             date: {
                               ...prev.date,
-                              field1: value != null ? value.split('.')[0] : null,
-                              field2: value != null ? value.split('.')[1] : null,
+                              field: value,
                             },
                           }))
                         }
@@ -268,8 +267,7 @@ function Suprimentos() {
                             date: {
                               after: null,
                               before: null,
-                              field1: null,
-                              field2: null,
+                              field: null,
                             },
                           }))
                         }
@@ -332,7 +330,7 @@ function Suprimentos() {
                   <MultipleSelectInput
                     label={'STATUS DO PARECER'}
                     selected={filters.accessGrantingStatus}
-                    options={accessGrantingStatus}
+                    options={HomologationControlStatus}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

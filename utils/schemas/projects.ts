@@ -1,7 +1,7 @@
 import z from 'zod'
 import { TActivityDTO } from './activities'
 import { ObjectId } from 'mongodb'
-import { THomologation } from './partial/homologation'
+import { GeneralHomologationSchema, THomologation } from './partial/homologation'
 
 const MaintenanceItem = z.object({
   titulo: z.string({ required_error: 'Título da manutenção não informado.', invalid_type_error: 'Tipo não válido para o título da manutenção.' }),
@@ -63,9 +63,12 @@ const GeneralProjectSchema = z.object({
     valorDoKit: z.number().optional().nullable(),
   }),
   conferencias: z.object({
-    energiaInjetada: z.object({ data: z.string(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
-    monitoramentoFeito: z.object({ data: z.string(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
-    usinaLigada: z.object({ data: z.string(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
+    energiaInjetada: z.object({ data: z.string().optional().nullable(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
+    monitoramentoFeito: z.object({
+      data: z.string().optional().nullable(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    usinaLigada: z.object({ data: z.string().optional().nullable(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
   }),
   contrato: z.object({
     dataAssinatura: z.string().optional().nullable(),
@@ -125,8 +128,8 @@ const GeneralProjectSchema = z.object({
     assDocumentacoes: z.boolean().optional().nullable(),
     boasVindas: z.boolean().optional().nullable(),
     compraDoKit: z.boolean().optional().nullable(),
-    dataEntregaTecnicaPresencial: z.string(),
-    dataEntregaTecnicaRemota: z.string(),
+    dataEntregaTecnicaPresencial: z.string().optional().nullable(),
+    dataEntregaTecnicaRemota: z.string().optional().nullable(),
     dataNps: z.string().optional().nullable(),
     dataUltimoContato: z.string().optional().nullable(),
     entregaDoKit: z.boolean().optional().nullable(),
@@ -334,6 +337,10 @@ const GeneralProjectSchema = z.object({
   }),
   ondeTrabalha: z.string(),
   padrao: z.object({
+    aumentoCarga: z.object({
+      aplicavel: z.boolean(),
+      dataEfetivacao: z.string().optional().nullable(),
+    }),
     caixaConjugada: z.string().optional().nullable(),
     respInstalacao: z
       .union([z.literal('CLIENTE'), z.literal('AMPERE'), z.literal('NÃO SE APLICA')])
@@ -399,6 +406,7 @@ const GeneralProjectSchema = z.object({
     projetoConcluido: z.union([z.literal('SIM'), z.literal('NÃO')]),
     realizarHomologacao: z.boolean().optional().nullable(),
   }),
+  homologacao: GeneralHomologationSchema,
   qtde: z.number(),
   qualDeficiencia: z.string().optional().nullable(),
   regional: z.string().nullable(),
@@ -518,15 +526,15 @@ export const ProjectDBSimplifiedProjection = {
 const PersonalizedFieldFilters = z.enum(
   [
     'contrato.dataAssinatura',
-    'projeto.dataSolicitacaoAcesso',
-    'parecer.dataParecerDeAcesso',
+    'homologacao.acesso.dataSolicitacao',
+    'homologacao.acesso.dataResposta',
     'compra.dataPagamento',
     'compra.dataPedido',
     'compra.previsaoEntrega',
     'compra.dataEntrega',
     'obra.saida',
-    'vistoria.dataPedido',
-    'medidor.data',
+    'homologacao.vistoria.dataSolicitacao',
+    'homologacao.vistoria.dataEfetivacao',
     'manutencoes.dataEfetivacao',
   ],
   { required_error: 'Filtro de campo de período não informado.', invalid_type_error: 'Tipo não válido para o campo de filtro de período.' }

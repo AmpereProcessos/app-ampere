@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import TextInput from '@/components/inputs/Text'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { accessGrantingStatus, executionStatus, inspectionStatus } from '@/utils/select-options'
+import { accessGrantingStatus, executionStatus, HomologationControlStatus, inspectionStatus } from '@/utils/select-options'
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
 import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
@@ -77,7 +77,7 @@ function Vendas() {
                     <SelectInput
                       width={'100%'}
                       label={'CAMPO DE FILTRO'}
-                      value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                      value={filters.date.field || null}
                       options={[
                         {
                           id: 1,
@@ -121,8 +121,7 @@ function Vendas() {
                           ...prev,
                           date: {
                             ...prev.date,
-                            field1: value != null ? value.split('.')[0] : null,
-                            field2: value != null ? value.split('.')[1] : null,
+                            field: value,
                           },
                         }))
                       }
@@ -132,8 +131,7 @@ function Vendas() {
                           date: {
                             after: null,
                             before: null,
-                            field1: null,
-                            field2: null,
+                            field: null,
                           },
                         }))
                       }
@@ -172,7 +170,7 @@ function Vendas() {
                     width={'100%'}
                     label={'STATUS DO PARECER'}
                     selected={filters.grantingStatus}
-                    options={accessGrantingStatus}
+                    options={HomologationControlStatus}
                     selectedItemLabel={'SEM FILTRO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

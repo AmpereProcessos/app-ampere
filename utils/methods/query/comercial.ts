@@ -3,6 +3,7 @@ import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { getProjectNestedFieldValue } from '../formatting'
 
 async function fetchProjects() {
   try {
@@ -27,8 +28,7 @@ type UseComercialProjectsFilters = {
   date: {
     after: string | null
     before: string | null
-    field1: string | null
-    field2: string | null
+    field: string | null
   }
 }
 export function useComercialProjects({ enabled }: { enabled: boolean }) {
@@ -46,8 +46,7 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
   })
 
@@ -94,12 +93,13 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
   }
 
   function matchDate(project: TProjectDTO) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
     return (
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      fieldValue >= filters.date.after &&
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
+      fieldValue <= filters.date.before
     )
   }
   function handleModelData(data: TProjectDTO[]) {

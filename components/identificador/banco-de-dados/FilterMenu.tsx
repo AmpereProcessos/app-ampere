@@ -83,15 +83,15 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
                 value={filtersHolder.period.field}
                 options={[
                   { id: 1, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
-                  { id: 2, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
-                  { id: 3, label: 'DATA DO PARECER', value: 'parecer.dataParecerDeAcesso' },
+                  { id: 2, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'homologacao.acesso.dataSolicitacao' },
+                  { id: 3, label: 'DATA DO PARECER', value: 'homologacao.acesso.dataResposta' },
                   { id: 4, label: 'DATA PAG.KIT', value: 'compra.dataPagamento' },
                   { id: 5, label: 'DATA PEDIDO', value: 'compra.dataPedido' },
                   { id: 6, label: 'DATA DE PREV.ENTREGA', value: 'compra.previsaoEntrega' },
                   { id: 7, label: 'DATA DE ENTREGA', value: 'compra.dataEntrega' },
                   { id: 8, label: 'SAÍDA DE OBRA', value: 'obra.saida' },
-                  { id: 9, label: 'PEDIDO DE VISTORIA', value: 'vistoria.dataPedido' },
-                  { id: 10, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                  { id: 9, label: 'PEDIDO DE VISTORIA', value: 'homologacao.vistoria.dataSolicitacao' },
+                  { id: 10, label: 'TROCA DO MEDIDOR', value: 'homologacao.vistoria.dataEfetivacao' },
                   { id: 11, label: 'DATA DE MANUTENÇÃO', value: 'manutencoes.dataEfetivacao' },
                 ]}
                 selectedItemLabel={'SEM FILTRO'}

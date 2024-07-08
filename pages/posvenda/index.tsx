@@ -22,7 +22,15 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { accessGrantingStatus, contractStatus, deliveryStatus, executionStatus, inspectionStatus, journeyPendings } from '@/utils/select-options'
+import {
+  accessGrantingStatus,
+  contractStatus,
+  deliveryStatus,
+  executionStatus,
+  HomologationControlStatus,
+  inspectionStatus,
+  journeyPendings,
+} from '@/utils/select-options'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { TProjectDTO } from '@/utils/schemas/projects'
@@ -67,16 +75,14 @@ function Posvenda() {
       return acc
     }, 0)
     const docsToElaborate = info.reduce((acc, current) => {
-      const projectStarted = current.projeto.iniciar == 'SIM'
-      const missingDocSigning = !current.projeto.dataAssDocumentacao
-      const notWaitingStatus = current.parecer.statusDoParecerDeAcesso != 'AGUARDANDO ASSINATURA'
-      if (projectStarted && missingDocSigning && notWaitingStatus) return acc + 1
+      const projectStarted = !!current.homologacao.dataLiberacao
+      const missignDocElaboration = !current.homologacao.documentacao.dataLiberacao
+      if (projectStarted && missignDocElaboration) return acc + 1
       return acc
     }, 0)
     const docsToSign = info.reduce((acc, current) => {
-      const missingDocSigning = !current.projeto.dataAssDocumentacao
-      const waitingStatus = current.parecer.statusDoParecerDeAcesso == 'AGUARDANDO ASSINATURA'
-      if (missingDocSigning && waitingStatus) return acc + 1
+      const missingDocSigning = !!current.homologacao.documentacao.dataLiberacao && !current.homologacao.documentacao.dataAssinatura
+      if (missingDocSigning) return acc + 1
       return acc
     }, 0)
     const deliveries = info.reduce(
@@ -258,23 +264,24 @@ function Posvenda() {
                       />
                     </div>
                   </div>
-                  <div className="w-full lg:w-[250px]">
+                  <div className="w-full lg:w-[350px]">
                     <SelectInput
                       width={'100%'}
                       label={'CAMPO DE FILTRO'}
-                      value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                      value={filters.date.field || null}
                       options={[
                         { id: 1, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
                         { id: 2, label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
-                        { id: 3, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
-                        { id: 4, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
-                        { id: 5, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
-                        { id: 6, label: 'PREV. ENTREGA', value: 'compra.previsaoEntrega' },
-                        { id: 7, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                        { id: 3, label: 'DATA LIB.DOCUMENTAÇÃO', value: 'homologacao.documentacao.dataLiberacao' },
+                        { id: 4, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'homologacao.documentacao.dataAssinatura' },
+                        { id: 5, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'homologacao.acesso.dataSolicitacao' },
+                        { id: 6, label: 'DATA DE APROVAÇÃO DO PARECER', value: 'homologacao.acesso.dataResposta' },
+                        { id: 7, label: 'PREV. ENTREGA', value: 'compra.previsaoEntrega' },
                         { id: 8, label: 'ENTRADA NA OBRA', value: 'obra.entrada' },
                         { id: 9, label: 'SAIDA DE OBRA', value: 'obra.saida' },
-                        { id: 10, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
-                        { id: 11, label: 'NÃO DEFINIDO', value: null },
+                        { id: 10, label: 'PEDIDO DA VISTORIA', value: 'homologacao.vistoria.dataSolicitacao' },
+                        { id: 11, label: 'TROCA DO MEDIDOR', value: 'homologacao.vistoria.dataEfetivacao' },
+                        { id: 12, label: 'NÃO DEFINIDO', value: null },
                       ]}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
@@ -282,8 +289,7 @@ function Posvenda() {
                           ...prev,
                           date: {
                             ...prev.date,
-                            field1: value != null ? value.split('.')[0] : null,
-                            field2: value != null ? value.split('.')[1] : null,
+                            field: value,
                           },
                         }))
                       }
@@ -293,8 +299,7 @@ function Posvenda() {
                           date: {
                             after: null,
                             before: null,
-                            field1: null,
-                            field2: null,
+                            field: null,
                           },
                         }))
                       }
@@ -419,7 +424,7 @@ function Posvenda() {
                     width={'100%'}
                     label={'STATUS DO PARECER'}
                     selected={filters.grantingStatus}
-                    options={accessGrantingStatus}
+                    options={HomologationControlStatus}
                     selectedItemLabel={'SEM FILTRO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

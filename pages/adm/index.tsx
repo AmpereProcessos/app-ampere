@@ -157,7 +157,7 @@ function Administracao() {
                     <SelectInput
                       width={'100%'}
                       label={'CAMPO DE FILTRO'}
-                      value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                      value={filters.date.field || null}
                       options={[
                         { id: 1, label: 'SAÍDA DE OBRA', value: 'obra.saida' },
                         { id: 2, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
@@ -169,8 +169,7 @@ function Administracao() {
                           ...prev,
                           date: {
                             ...prev.date,
-                            field1: value != null ? value.split('.')[0] : null,
-                            field2: value != null ? value.split('.')[1] : null,
+                            field: value,
                           },
                         }))
                       }
@@ -180,8 +179,7 @@ function Administracao() {
                           date: {
                             after: null,
                             before: null,
-                            field1: null,
-                            field2: null,
+                            field: null,
                           },
                         }))
                       }

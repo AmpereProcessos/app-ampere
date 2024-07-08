@@ -7,6 +7,7 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, UploadResult } from 'fi
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCloudUploadFill } from 'react-icons/bs'
+import { useQueryClient } from 'react-query'
 
 type TFileHolder = { title: string; files: FileList | null }
 type FilesBlockProps = {
@@ -16,6 +17,7 @@ type FilesBlockProps = {
   vinculationPending: boolean
 }
 function FilesBlock({ tag, files, vinculateFiles, vinculationPending }: FilesBlockProps) {
+  const queryClient = useQueryClient()
   const [fileHolder, setFileHolder] = useState<TFileHolder>({ title: '', files: null })
 
   async function attachFiles(fileHolder: TFileHolder) {

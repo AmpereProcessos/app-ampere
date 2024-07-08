@@ -472,18 +472,18 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
         <CheckboxInput
           labelFalse="INICIAR PROJETO"
           labelTrue="INICIAR PROJETO"
-          checked={infoHolder.projeto.iniciar == 'SIM'}
+          checked={!!infoHolder.homologacao.dataLiberacao}
           handleChange={(value) => {
             setInfo((prev) => ({
               ...prev,
-              projeto: {
-                ...prev.projeto,
-                iniciar: value ? 'SIM' : 'NÃO DEFINIDO',
+              homologacao: {
+                ...prev.homologacao,
+                dataLiberacao: value ? new Date().toISOString() : null,
               },
             }))
             setChanges((prev) => ({
               ...prev,
-              'projeto.iniciar': value ? 'SIM' : 'NÃO DEFINIDO',
+              'homologacao.dataLiberacao': value ? new Date().toISOString() : null,
             }))
           }}
         />

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { getProjectNestedFieldValue } from '../formatting'
 
 async function fetchProjects() {
   try {
@@ -20,8 +21,7 @@ export function useSupplyProjects({ enabled }) {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
   })
   function matchSupplyStatus(project) {
@@ -34,18 +34,16 @@ export function useSupplyProjects({ enabled }) {
   }
   function matchAccessGrantingStatus(project) {
     if (filters.accessGrantingStatus.length == 0) return true
-    return filters.accessGrantingStatus.includes(project.parecer?.statusDoParecerDeAcesso)
+    return filters.accessGrantingStatus.includes(project.homologacao.status)
   }
   function matchDate(project) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
-    return (
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
-    )
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
+    return fieldValue >= filters.date.after && fieldValue <= filters.date.before
   }
   function matchYetToBuy(project) {
     if (!filters.yetToBuy) return true
-    return project.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO' && !project.compra.dataPedido
+    return project.homologacao.status == 'APROVADO' && !project.compra.dataPedido
   }
   function matchSearch(project) {
     if (filters.search.trim().length == 0) return true

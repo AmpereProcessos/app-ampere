@@ -82,6 +82,23 @@ function PendenciesInformation({ infoHolder, setInfoHolder, changes, setChanges 
             }}
           />
         </div>
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="DISTRIBUIÇÃO DE CRÉDITOS FEITA"
+            labelTrue="DISTRIBUIÇÃO DE CRÉDITOS FEITA"
+            checked={!!infoHolder.homologacao.pendencias.distribuicoes}
+            handleChange={(value) => {
+              setInfoHolder((prev) => ({
+                ...prev,
+                homologacao: {
+                  ...prev.homologacao,
+                  pendencias: { ...prev.homologacao.pendencias, distribuicoes: value ? new Date().toISOString() : null },
+                },
+              }))
+              setChanges((prev) => ({ ...prev, 'homologacao.pendencias.distribuicoes': value ? new Date().toISOString() : null }))
+            }}
+          />
+        </div>
       </div>
     </div>
   )

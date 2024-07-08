@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import ProjectList from '../../components/ProjectList'
-import ProjectModal from '../../components/ProjectModal'
+
 import { FaUser } from 'react-icons/fa'
 import connectToDatabase from '../../utils/services/mongodb/projects'
 import { useSession } from 'next-auth/react'
@@ -279,13 +277,6 @@ function InProgress({ data }) {
             )}
           </div>
         </div>
-        {/* {modalIsOpen && (
-          <ProjectModal
-            closeModal={() => setModalIsOpen(false)}
-            estagio={modalProject.estagio}
-            project={modalProject.projeto}
-          />
-        )} */}
       </div>
     </>
   )
@@ -310,104 +301,25 @@ export async function getServerSideProps(context) {
           'compra.dataPedido': 1,
           'compra.statusLiberacao': 1,
           'compra.statusEntrega': 1,
-          'projeto.dataAssDocumentacao': 1,
-          'parecer.statusDoParecerDeAcesso': 1,
+          'homologacao.status': 1,
+          'homologacao.documentacao': 1,
           'obra.statusDaObra': 1,
-          vistoria: 1,
+
           'conferencias.usinaLigada': 1,
           'jornada.entregaTecnica': 1,
         },
       },
     ])
     .toArray()
-  // let aguardandoPagamento = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "compra.statusLiberacao": "AGUARDANDO PAGAMENTO",
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
-  // let suprimentos = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "compra.statusEntrega": {
-  //           $in: [
-  //             "EM ROTA",
-  //             "AGUARDANDO COMPRA",
-  //             "",
-  //             null,
-  //             undefined,
-  //             " ",
-  //             "NÃO DEFINIDO",
-  //           ],
-  //         },
-  //         "contrato.status": "ASSINADO",
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
-  // let projetos = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "projeto.projetoConcluido": { $ne: "SIM" },
-  //         $or: [
-  //           { "compra.statusLiberacao": "PAGO" },
-  //           { "projeto.iniciar": "SIM" },
-  //         ],
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
-  // let obras = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "obra.statusDaObra": {
-  //           $in: [
-  //             "AGENDADA",
-  //             "AGUARDANDO AGENDAMENTO",
-  //             "EM ANDAMENTO",
-  //             "CASA EM CONSTRUÇÃO",
-  //             null,
-  //             undefined,
-  //             "",
-  //             " ",
-  //             "NÃO DEFINIDO",
-  //           ],
-  //         },
-  //         "contrato.status": "ASSINADO",
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
+
   let assContrato = arr.filter((x) => x.contrato.status == 'SOLICITADO' || x.contrato.status == 'NÃO ASSINADO')
   let compraDoKit = arr.filter((x) => x.compra.statusLiberacao == 'REALIZAR COMPRA')
   let entregaDoKit = arr.filter((x) => x.compra?.statusEntrega == 'EM ROTA')
-  let assDocumentacoes = arr.filter((x) =>
-    ['AGUARDANDO ASSINATURA', 'AGUARDANDO FORMULÁRIOS', 'INICIAR PROJETO', 'AGUARDANDO FATURAMENTO ART', 'AUMENTO DE CARGA'].includes(
-      x.parecer?.statusDoParecerDeAcesso
-    )
-  )
-  let libConc = arr.filter((x) =>
-    [
-      'AGUARDANDO AUMENTO DE CARGA',
-      'SOLICITAR TROCA DE TITULARIDADE',
-      'AGUARDANDO TROCA DE TITULARIDADE',
-      'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
-      'SOLICITAR ACESSO',
-      'SOLICITAR AUMENTO DE CARGA',
-      'PENDENCIAS',
-    ].includes(x.parecer?.statusDoParecerDeAcesso)
-  )
+  let assDocumentacoes = arr.filter((x) => !!x.homologacao.documentacao.dataLiberacao && !x.homologacao.documentacao.dataAssinatura)
+  let libConc = arr.filter((x) => !!x.homologacao.acesso.dataSolicitacao & !x.homologacao.acesso.dataSolicitacao)
   let agendamentoObra = arr.filter((x) => ['AGUARDANDO AGENDAMENTO', 'CASA EM CONSTRUÇÃO'].includes(x.obra.statusDaObra))
   let terminoObra = arr.filter((x) => ['AGENDADA', 'EM ANDAMENTO'].includes(x.obra.statusDaObra))
-  let vistoriaConcessionaria = arr.filter(
-    (x) => x.obra.statusDaObra == 'CONCLUIDA' && (x.vistoria.status == 'AGUARDANDO CONCESSIONARIA' || x.vistoria.status == 'AGUARDANDO OBRA DE REDE')
-  )
+  let vistoriaConcessionaria = arr.filter((x) => !!x.homologacao.vistoria.dataSolicitacao && !x.homologacao.vistoria.dataResposta)
   let ligamentoUsina = arr.filter((x) => x.conferencias?.usinaLigada.status == 'NÃO REALIZADO')
   let entregaTecnica = arr.filter((x) => x.jornada?.entregaTecnica != true && x.contrato.status == 'ASSINADO' && x.obra.statusDaObra == 'CONCLUIDA')
 

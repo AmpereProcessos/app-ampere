@@ -84,7 +84,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             title="Assinatura das documentações"
             description="A assinatura das documentações de homologação junto à sua concessionária."
             index={2}
-            date={project.projeto.dataAssDocumentacao}
+            date={project.homologacao.documentacao.dataAssinatura}
             icon={FaSignature}
           />
           <JourneyItem
@@ -92,7 +92,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             title="Liberação do parecer de acesso"
             description="Resposta da concessionária acerca da aprovação de acesso (instalação de sistema solar) a rede elétrica."
             index={3}
-            date={project.parecer.dataParecerDeAcesso}
+            date={project.homologacao.acesso.dataResposta}
             icon={MdFeedback}
           />
           <JourneyItem
@@ -135,7 +135,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             title="Vistoria da concessionária"
             description="Realização da vistoria técnica e troca de medidor pela concessionária."
             index={9}
-            date={project.medidor.data}
+            date={project.homologacao.vistoria.dataEfetivacao}
             icon={BsCalendarCheckFill}
           />
           <JourneyItem

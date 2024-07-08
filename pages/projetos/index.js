@@ -10,7 +10,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { FaMoneyBillWaveAlt, FaMoon, FaSignature } from 'react-icons/fa'
 import { BsPatchCheck } from 'react-icons/bs'
-import { TbCheckupList } from 'react-icons/tb'
+import { TbAlertHexagonFilled, TbCheckupList } from 'react-icons/tb'
 
 import ModalProjetos from '../../components/ModalProjetos'
 import ProjetosSkeleton from '../../components/skeletons/ProjetosSkeleton'
@@ -22,11 +22,19 @@ import SelectInput from '../../components/inputs/Select'
 import DateInput from '../../components/inputs/Date'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 
-import { accessGrantingStatus, executionStatus, inspectionStatus, reliabilityAnalysts, serviceTypes } from '../../utils/select-options'
+import {
+  accessGrantingStatus,
+  executionStatus,
+  HomologationControlStatus,
+  inspectionStatus,
+  reliabilityAnalysts,
+  serviceTypes,
+} from '../../utils/select-options'
 import { useEngineeringProjects } from '../../utils/methods/query/engineering'
 import { formatDateInputChange } from '../../utils/methods/shared'
 import { cidadesAtendidas, vendedores, formatDecimalPlaces, formatDate } from '../../utils/constants'
 import CheckboxInput from '../../components/inputs/Checkbox'
+import { MdAddAlert } from 'react-icons/md'
 
 function Projetos() {
   const router = useRouter()
@@ -86,7 +94,7 @@ function Projetos() {
         projetos: 0,
         potencia: 0,
         pareceresNoturnos: 0,
-        pendenciasDebitos: 0,
+        pendencias: 0,
         pareceresAprovados: 0,
         assinaturasPendentes: 0,
         vistoriasPendentes: 0,
@@ -98,27 +106,27 @@ function Projetos() {
       return acc + currentPower
     }, 0)
     const withNightlyAccessGrantings = info.reduce((acc, current) => {
-      const hasNigthlyAccessGranting = current.parecer.statusDoParecerDeAcesso == 'PARECER APROVADO - NOTURNO'
+      const hasNigthlyAccessGranting = current.homologacao.status.includes('NOTURNO')
       if (hasNigthlyAccessGranting) return acc + 1
       return acc
     }, 0)
-    const withDebitDependencies = info.reduce((acc, current) => {
-      const hasDebitDependencies = current.parecer.statusDoParecerDeAcesso == 'PENDÊNCIAS - DÉBITOS'
-      if (hasDebitDependencies) return acc + 1
+    const withPendencies = info.reduce((acc, current) => {
+      const hasPendencies = current.homologacao.status.includes('PENDÊNCIA')
+      if (hasPendencies) return acc + 1
       return acc
     }, 0)
     const withAccessGranted = info.reduce((acc, current) => {
-      const hasAccessGranted = current.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO'
+      const hasAccessGranted = current.homologacao.status == 'APROVADO'
       if (hasAccessGranted) return acc + 1
       return acc
     }, 0)
     const withMissingSignature = info.reduce((acc, current) => {
-      const hasMissingSignature = current.projeto.dataLiberacaoDocumentacao != undefined && !current.projeto.dataAssDocumentacao
+      const hasMissingSignature = !!current.homologacao.documentacao.dataLiberacao && !current.homologacao.documentacao.dataAssinatura
       if (hasMissingSignature) return acc + 1
       return acc
     }, 0)
     const withInspectionDepency = info.reduce((acc, current) => {
-      const pendantInspection = !!current.vistoria?.dataPedido && current.vistoria.status != 'REALIZADA'
+      const pendantInspection = !!current.homologacao.vistoria?.dataSolicitacao && current.homologacao.vistoria.dataEfetivacao
       if (pendantInspection) return acc + 1
       return acc
     }, 0)
@@ -126,7 +134,7 @@ function Projetos() {
       projetos: projectsQty,
       potencia: formatDecimalPlaces(totalPower),
       pareceresNoturnos: formatDecimalPlaces(withNightlyAccessGrantings, 0),
-      pendenciasDebitos: formatDecimalPlaces(withDebitDependencies, 0),
+      pendencias: formatDecimalPlaces(withPendencies, 0),
       pareceresAprovados: formatDecimalPlaces(withAccessGranted, 0),
       assinaturasPendentes: formatDecimalPlaces(withMissingSignature, 0),
       vistoriasPendentes: formatDecimalPlaces(withInspectionDepency, 0),
@@ -239,11 +247,11 @@ function Projetos() {
               </div>
               <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
                 <div className="flex items-center justify-between">
-                  <h1 className="text-sm font-medium uppercase tracking-tight">PENDÊNCIAS COM DÉBITOS</h1>
-                  <FaMoneyBillWaveAlt />
+                  <h1 className="text-sm font-medium uppercase tracking-tight">HOMOLOGAÇÃO COM PENDÊNCIAS</h1>
+                  <TbAlertHexagonFilled />
                 </div>
                 <div className="mt-2 flex w-full flex-col">
-                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendenciasDebitos} </div>
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendencias} </div>
                 </div>
               </div>
             </div>
@@ -282,20 +290,17 @@ function Projetos() {
                         <SelectInput
                           width={'100%'}
                           label={'CAMPO DE FILTRO'}
-                          value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                          value={filters.date.field || null}
                           options={[
-                            {
-                              id: 1,
-                              label: 'DATA DE PAGAMENTO',
-                              value: 'compra.dataPagamento',
-                            },
+                            { id: 1, label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
                             { id: 2, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
-                            { id: 3, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
-                            { id: 4, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
-                            { id: 5, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
-                            { id: 6, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
-                            { id: 7, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
-                            { id: 8, label: 'NÃO DEFINIDO', value: null },
+                            { id: 3, label: 'DATA LIB.DOCUMENTAÇÃO', value: 'homologacao.documentacao.dataLiberacao' },
+                            { id: 4, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'homologacao.documentacao.dataAssinatura' },
+                            { id: 6, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'homologacao.acesso.dataSolicitacao' },
+                            { id: 7, label: 'DATA DE RESPOSTA DO PARECER', value: 'homologacao.acesso.dataResposta' },
+                            { id: 8, label: 'DATA DE PEDIDO DA VISTORIA', value: 'homologacao.vistoria.dataSolicitacao' },
+                            { id: 9, label: 'TROCA DO MEDIDOR', value: 'homologacao.vistoria.dataEfetivacao' },
+                            { id: 10, label: 'NÃO DEFINIDO', value: null },
                           ]}
                           selectedItemLabel={'SEM FILTRO'}
                           handleChange={(value) =>
@@ -303,8 +308,7 @@ function Projetos() {
                               ...prev,
                               date: {
                                 ...prev.date,
-                                field1: value != null ? value.split('.')[0] : null,
-                                field2: value != null ? value.split('.')[1] : null,
+                                field: value,
                               },
                             }))
                           }
@@ -378,7 +382,7 @@ function Projetos() {
                         width={'100%'}
                         label={'STATUS DO PARECER'}
                         selected={filters.grantingStatus}
-                        options={accessGrantingStatus}
+                        options={HomologationControlStatus}
                         selectedItemLabel={'SEM FILTRO'}
                         handleChange={(value) =>
                           setFilters((prev) => ({
@@ -629,8 +633,8 @@ function Projetos() {
                 animate={{ opacity: 1, translateX: 0, translateY: 0 }}
                 transition={{ duration: 0.3, delay: 0.01 * index }}
                 className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-                  project.parecer.dataParecerDeAcesso != undefined && project.vistoria.status != 'REALIZADA'
-                    ? getBorderColorByParecer(new Date(project.parecer.dataParecerDeAcesso), new Date())
+                  project.homologacao.acesso.dataResposta != undefined && !project.homologacao.vistoria.dataEfetivacao
+                    ? getBorderColorByParecer(new Date(project.homologacao.acesso.dataResposta), new Date())
                     : 'border border-gray-200'
                 }  hover:bg-blue-100`}
               >
@@ -643,20 +647,18 @@ function Projetos() {
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xxs">PARECER DE ACESSO</span>
-                      <p className="text-xs text-gray-600">
-                        {project.parecer.statusDoParecerDeAcesso ? project.parecer.statusDoParecerDeAcesso : '-'}
-                      </p>
+                      <p className="text-xs text-gray-600">{project.homologacao.status ? project.homologacao.status : '-'}</p>
                     </div>
                     <div className="text-end">
                       <span className="text-end text-xxs">VISTORIA</span>
-                      <p className="text-center text-xs text-gray-600">{project.vistoria.status ? project.vistoria.status : '-'}</p>
+                      <p className="text-center text-xs text-gray-600">{!!project.homologacao.vistoria.dataEfetivacao ? 'FEITA' : 'PENDENTE'}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-xxs">DIAGRAMA UNIFILAR</span>
-                      <p className={`${project.projeto.diagramaUnifilar ? 'text-yellow-500' : 'text-red-400'} text-xs uppercase`}>
-                        {project.projeto.diagramaUnifilar ? project.projeto.diagramaUnifilar : 'PENDENTE'}
+                      <p className={`${project.homologacao.pendencias.diagramas ? 'text-yellow-500' : 'text-red-400'} text-xs uppercase`}>
+                        {project.homologacao.pendencias.diagramas ? 'FEITO' : 'PENDENTE'}
                       </p>
                     </div>
                     <div>
@@ -673,7 +675,7 @@ function Projetos() {
                     </div>
                     <div>
                       <span className="text-xxs">DESENHO DO TELHADO</span>
-                      <p className="text-center text-xs text-gray-600">{project.projeto.desenhoTelhado ? project.projeto.desenhoTelhado : '-'}</p>
+                      <p className="text-center text-xs text-gray-600">{project.homologacao.pendencias.desenhos ? 'FEITO' : 'PENDENTE'}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
@@ -683,30 +685,27 @@ function Projetos() {
                         {project.contrato.dataAssinatura ? `${getDateDiff(new Date(), new Date(project.contrato.dataAssinatura))} DIAS` : '-'}
                       </p>
                     </div>
-                    {project.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO COM OBRAS' && (
-                      <div className="flex w-full flex-col">
-                        <span className="text-center text-xxs">DIAS DE OBRA</span>
-                        <p className={`text-center text-xs uppercase text-red-500`}>
-                          {project.parecer.qtdeDiasObraDeRede ? `${project.parecer.qtdeDiasObraDeRede} DIAS` : '-'}
-                        </p>
-                      </div>
-                    )}
                     <div className="flex w-full flex-col">
                       <span className="text-end text-xxs">DESDE APROV.PARECER</span>
                       <p className={`text-end text-xs uppercase text-red-500`}>
-                        {project.parecer.dataParecerDeAcesso ? `${getDateDiff(new Date(), new Date(project.parecer.dataParecerDeAcesso))} DIAS` : '-'}
+                        {project.homologacao.acesso.dataResposta
+                          ? `${getDateDiff(new Date(), new Date(project.homologacao.acesso.dataResposta))} DIAS`
+                          : '-'}
                       </p>
                     </div>
                   </div>
-                  {project.projeto.dataSolicitacaoAcesso ? (
+                  {project.homologacao.acesso.dataSolicitacao ? (
                     <div className="flex w-full items-center justify-between">
                       <p className="text-xxs ">
-                        {project.parecer?.dataParecerDeAcesso ? 'ATÉ APROVAÇÃO DO PARECER' : 'DESDE A SOLICITAÇÃO DE ACESSO'}
+                        {!!project.homologacao.acesso.dataResposta ? 'ATÉ APROVAÇÃO DO PARECER' : 'DESDE A SOLICITAÇÃO DE ACESSO'}
                       </p>
                       <p className="text-start text-xs text-gray-600">
-                        {project.parecer?.dataParecerDeAcesso
-                          ? `${getDateDiff(new Date(project.parecer?.dataParecerDeAcesso), new Date(project.projeto.dataSolicitacaoAcesso))} DIAS`
-                          : `${getDateDiff(new Date(), new Date(project.projeto.dataSolicitacaoAcesso))} DIAS`}
+                        {project.homologacao.acesso.dataResposta
+                          ? `${getDateDiff(
+                              new Date(project.homologacao.acesso.dataResposta),
+                              new Date(project.homologacao.acesso.dataSolicitacao)
+                            )} DIAS`
+                          : `${getDateDiff(new Date(), new Date(project.homologacao.acesso.dataSolicitacao))} DIAS`}
                       </p>
                     </div>
                   ) : null}

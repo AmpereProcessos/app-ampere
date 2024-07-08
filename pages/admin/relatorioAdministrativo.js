@@ -85,7 +85,7 @@ function Acompanhamento() {
   function getPotenciaHomologada() {
     var filteredArr = info
     filteredArr = filteredArr.filter(
-      (x) => x.parecer.dataParecerDeAcesso != null && x.parecer.dataParecerDeAcesso != undefined && x.parecer.dataParecerDeAcesso != '-'
+      (x) => x.homologacao.acesso.dataResposta != null && x.homologacao.acesso.dataResposta != undefined && x.homologacao.acesso.dataResposta != '-'
     )
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info
@@ -204,7 +204,7 @@ function Acompanhamento() {
   }
   function getTempoMedioDeAprovacao() {
     var filteredArr = info
-    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
+    filteredArr = filteredArr.filter((x) => x.homologacao.status != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
@@ -238,7 +238,7 @@ function Acompanhamento() {
     }
     var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let diff = dayjs(filteredArr[i].parecer.dataParecerDeAcesso).diff(filteredArr[i].projeto.dataAssDocumentacao, 'day')
+      let diff = dayjs(filteredArr[i].homologacao.acesso.dataResposta).diff(filteredArr[i].homologacao.acesso.dataSolicitacao, 'day')
       if (isNaN(diff)) {
         sum = sum
       } else {
@@ -248,40 +248,7 @@ function Acompanhamento() {
 
     return (sum / filteredArr.length).toFixed(2)
   }
-  function getTempoMedioDeCompra() {
-    var filteredArr = info
-    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
-    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info
-      filteredArr = filteredArr.filter(
-        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      )
-    }
-    if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info
-      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
-    }
-    if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info
-      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
-    }
 
-    if (filters.regionalFilter != 'GERAL') {
-      if (!filteredArr) filteredArr = info
-      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
-    }
-    var sum = 0
-    for (let i = 0; i < filteredArr.length; i++) {
-      let diff = dayjs(filteredArr[i].compra.dataPedido).diff(filteredArr[i].compra.dataLiberacao, 'day')
-      if (isNaN(diff)) {
-        sum = sum
-      } else {
-        sum = sum + diff
-      }
-    }
-
-    return (sum / filteredArr.length).toFixed(2)
-  }
   function getTempoMedioDeInstalacao() {
     var filteredArr = info
     filteredArr = filteredArr.filter((x) => x.obra?.statusDaObra == 'CONCLUIDA')
@@ -475,7 +442,7 @@ function Acompanhamento() {
   }
   function renderClients() {
     var filteredArr = info
-    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
+    filteredArr = filteredArr.filter((x) => x.homologacao.status != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
@@ -626,7 +593,7 @@ function Acompanhamento() {
                 { label: 'SAÍDA DE OBRA', value: 'obra.saida' },
                 {
                   label: 'DATA DO PARECER',
-                  value: 'parecer.dataParecerDeAcesso',
+                  value: 'homologacao.acesso.dataResposta',
                 },
                 { label: 'ASS.CONTRATO', value: 'contrato.dataAssinatura' },
                 { label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },

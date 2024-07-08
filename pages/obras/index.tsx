@@ -339,43 +339,7 @@ function Obras() {
                       }
                     />
                   </div>
-                  <div className="w-full lg:w-[250px]">
-                    <MultipleSelectInput
-                      width={'100%'}
-                      label={'A.C STATUS'}
-                      selected={filters.paAlterationStatus}
-                      options={[
-                        {
-                          id: 1,
-                          label: 'PENDÊNCIA',
-                          value: 'PENDÊNCIA',
-                        },
-                        {
-                          id: 2,
-                          label: 'REALIZADO',
-                          value: 'REALIZADO',
-                        },
-                        {
-                          id: 3,
-                          label: 'SOLICITADO COM G.D',
-                          value: 'SOLICITADO COM G.D',
-                        },
-                      ]}
-                      selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          paAlterationStatus: value as string[],
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          paAlterationStatus: [],
-                        }))
-                      }
-                    />
-                  </div>
+
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
                       width={'100%'}
@@ -455,6 +419,19 @@ function Obras() {
                     onClick={() =>
                       setFilters({
                         ...filters,
+                        paAlterationPending: !filters.paAlterationPending,
+                      })
+                    }
+                    className={`${
+                      filters.paAlterationPending ? 'bg-orange-500' : 'bg-orange-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    TROCA DE PADRÃO PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
                         partialPaymentDone: !filters.partialPaymentDone,
                       })
                     }
@@ -506,8 +483,8 @@ function Obras() {
               animate={{ opacity: 1, translateX: 0, translateY: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-                project.parecer.dataParecerDeAcesso != undefined && project.vistoria.status != 'REALIZADA'
-                  ? getBorderColorByParecer(project.parecer.dataParecerDeAcesso, new Date().toISOString(), project.obra.statusDaObra || '')
+                project.homologacao.acesso.dataResposta != undefined && !project.homologacao.vistoria.dataEfetivacao
+                  ? getBorderColorByParecer(project.homologacao.acesso.dataResposta, new Date().toISOString(), project.obra.statusDaObra || '')
                   : 'border border-gray-200'
               }  hover:bg-blue-100`}
             >
@@ -563,9 +540,9 @@ function Obras() {
                   <div>
                     <span className="text-xxs">FIM DO PARECER EM</span>
                     <p className="text-center text-xs uppercase text-[#15599a]">
-                      {project.parecer.dataParecerDeAcesso
-                        ? 120 - dayjs(new Date()).diff(project.parecer.dataParecerDeAcesso, 'days') > 0
-                          ? `${120 - dayjs(new Date()).diff(project.parecer.dataParecerDeAcesso, 'days')} dias`
+                      {project.homologacao.acesso.dataResposta
+                        ? 120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, 'days') > 0
+                          ? `${120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, 'days')} dias`
                           : 'VENCIDO'
                         : '-'}
                     </p>

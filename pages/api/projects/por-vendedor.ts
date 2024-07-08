@@ -33,7 +33,7 @@ const getSellerSales: NextApiHandler<GetResponse> = async (req, res) => {
           'compra.dataEntrega': 1,
           'pagamento.status': 1,
           'pagamento.dataRecebimento': 1,
-          'parecer.dataParecerDeAcesso': 1,
+          'homologacao.acesso.dataResposta': 1,
           cidade: 1,
           uf: 1,
           telefone: 1,

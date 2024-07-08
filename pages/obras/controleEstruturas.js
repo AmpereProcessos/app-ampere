@@ -26,7 +26,7 @@ function ControleEstruturas() {
     pendencia: false,
   })
   function getProjects() {
-    axios.get('/api/gestaoDeObras/estruturas').then((res) => {
+    axios.get('/api/gestao-obras/estruturas').then((res) => {
       setFilteredProjects(res.data)
       setProjects(res.data)
     })
@@ -63,7 +63,9 @@ function ControleEstruturas() {
     }
   }
   function ordenate() {
-    let arr = filteredProjects.sort((a, b) => new Date(a.projeto.dataAssDocumentacao).getTime() - new Date(b.projeto.dataAssDocumentacao).getTime())
+    let arr = filteredProjects.sort(
+      (a, b) => new Date(a.homologacao.documentacao.dataAssinatura).getTime() - new Date(b.homologacao.documentacao.dataAssinatura).getTime()
+    )
     setFilteredProjects([...arr])
   }
   useEffect(() => {

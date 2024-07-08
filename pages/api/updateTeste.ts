@@ -58,6 +58,31 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
+  const previousEngineeringQuery = await projectsCollection
+    .find(
+      {
+        'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
+        'projeto.projetoConcluido': { $ne: 'SIM' },
+        $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
+      },
+      { projection: { nomeDoContrato: 1 } }
+    )
+    .toArray()
+  const newEngineeringQuery = await projectsCollection
+    .find(
+      {
+        'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
+        'homologacao.dataEfetivacao': null,
+        $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'homologacao.dataLiberacao': { $ne: null } }],
+      },
+      { projection: { nomeDoContrato: 1 } }
+    )
+    .toArray()
+  const diff = previousEngineeringQuery
+    .map((p) => p.nomeDoContrato)
+    .filter((p) => {
+      return !newEngineeringQuery.map((e) => e.nomeDoContrato).includes(p)
+    })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
 
@@ -117,7 +142,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //     PROFISSÃO: equivalentRequest?.profissao,
   //     'STATUS DO CONTRATO': project.contrato.status,
   //     'ASSINATURA DO CONTRATO': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : null,
-  //     'LIBERAÇÃO DO PARECER': project.parecer.dataParecerDeAcesso ? formatDateAsLocale(project.parecer.dataParecerDeAcesso) : null,
+  //     'LIBERAÇÃO DO PARECER': project.homologacao.acesso.dataResposta ? formatDateAsLocale(project.homologacao.acesso.dataResposta) : null,
   //   }
   // })
   // const purchases = projects.map((project) => {
@@ -198,7 +223,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json('DESATIVADA')
+  return res.status(200).json(diff)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

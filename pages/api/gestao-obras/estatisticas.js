@@ -8,13 +8,13 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'projeto.aumentoDeCarga': 'SIM',
-            'projeto.acStatus': { $ne: 'REALIZADO' },
+            'padrao.aumentoCarga.aplicavel': true,
+            'padrao.aumentoCarga.dataEfetivacao': null,
           },
         },
         {
           $project: {
-            'compra.statusLiberacao': 1,
+            'compra.dataPagamento ': 1,
           },
         },
       ])
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
         },
         {
           $project: {
-            'compra.dataLiberacao': 1,
+            'compra.dataPagamento ': 1,
           },
         },
       ])
@@ -86,11 +86,11 @@ export default async function handler(req, res) {
     var arr = {
       padroes: {
         total: padroes.length,
-        parcial: padroes.filter((x) => x.compra.statusLiberacao == 'PAGO').length,
+        parcial: padroes.filter((x) => !!x.compra.dataPagamento).length,
       },
       estruturas: {
         total: estruturas.length,
-        parcial: estruturas.filter((x) => x.compra.statusLiberacao == 'PAGO').length,
+        parcial: estruturas.filter((x) => !!x.compra.dataPagamento).length,
       },
       obras: {
         total: obras.length,

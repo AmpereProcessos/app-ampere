@@ -44,10 +44,10 @@ function NPSFilterBlock({ filters, setFilters }) {
             <SelectInput
               width={'100%'}
               label={'CAMPO DE FILTRO'}
-              value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+              value={filters.date.field || null}
               options={[
                 { id: 1, label: 'COLETA DO NPS', value: 'jornada.dataNps' },
-                { id: 2, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                { id: 2, label: 'TROCA DO MEDIDOR', value: 'homologacao.vistoria.dataEfetivacao' },
               ]}
               selectedItemLabel={'SEM FILTRO'}
               handleChange={(value) =>
@@ -55,8 +55,7 @@ function NPSFilterBlock({ filters, setFilters }) {
                   ...prev,
                   date: {
                     ...prev.date,
-                    field1: value != null ? value.split('.')[0] : null,
-                    field2: value != null ? value.split('.')[1] : null,
+                    field: value,
                   },
                 }))
               }
@@ -64,8 +63,8 @@ function NPSFilterBlock({ filters, setFilters }) {
                 setFilters((prev) => ({
                   ...prev,
                   date: {
-                    field1: null,
-                    field2: null,
+                    ...prev.date,
+                    field: value,
                   },
                 }))
               }

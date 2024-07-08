@@ -109,8 +109,7 @@ function ProjectFileAttachmentBlock({ categories, client, project, id, multiple 
     }
   }
   const isAttachingContract = fileInfo.name.toUpperCase().includes('CONTRATO ASSINADO') || fileInfo.name.toUpperCase().includes('CONTRATOASSINADO')
-  const isPendingProjectInitiation =
-    !!project && (!project.projeto.iniciar || project.projeto.iniciar == 'NÃO' || project.projeto.iniciar == 'NÃO DEFINIDO')
+  const isPendingProjectInitiation = !!project && !project.homologacao.dataLiberacao
   const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
 
   return (

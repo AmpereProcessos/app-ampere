@@ -14,14 +14,14 @@ type HandleEngineeringUpdateParams = {
 export async function handleEngineeringUpdate({ previousData, newData, changes, queryClient }: HandleEngineeringUpdateParams) {
   const projectId = previousData._id
 
-  const previousMeterChangeDate = previousData.medidor.data
-  const newMeterChangeDate = newData.medidor.data
+  const previousMeterChangeDate = previousData.homologacao.vistoria.dataEfetivacao
+  const newMeterChangeDate = newData.homologacao.vistoria.dataEfetivacao
 
-  const previousDocumentLiberationDate = previousData.projeto.dataLiberacaoDocumentacao
-  const newDocumentLiberationDate = newData.projeto.dataLiberacaoDocumentacao
+  const previousDocumentLiberationDate = previousData.homologacao.documentacao.dataLiberacao
+  const newDocumentLiberationDate = newData.homologacao.documentacao.dataLiberacao
 
-  const previousAccessGrantingStatus = previousData.parecer.statusDoParecerDeAcesso
-  const newAccessGrantingStatus = newData.parecer.statusDoParecerDeAcesso
+  const previousAccessGrantingStatus = previousData.homologacao.status
+  const newAccessGrantingStatus = newData.homologacao.status
 
   if (!!newMeterChangeDate && previousMeterChangeDate != newMeterChangeDate) {
     const emailMessage = {
@@ -40,7 +40,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
       remetenteId: null,
       mensagem: `Olá, passando para te notificar sobre a liberação das documentações do(a) cliente ${
         newData.nomeDoContrato
-      } no dia ${formatDateAsLocale(newData.projeto.dataLiberacaoDocumentacao)}.`,
+      } no dia ${formatDateAsLocale(newData.homologacao.documentacao.dataLiberacao)}.`,
       projetoReferencia: newData.qtde,
       nomeDoProjeto: newData.nomeDoContrato,
       lido: false,
@@ -49,11 +49,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
     await createNotification({ info: notification })
   }
 
-  if (
-    !!newAccessGrantingStatus &&
-    previousAccessGrantingStatus != 'PARECER DE ACESSO APROVADO' &&
-    newAccessGrantingStatus == 'PARECER DE ACESSO APROVADO'
-  ) {
+  if (!!newAccessGrantingStatus && previousAccessGrantingStatus != 'APROVADO' && newAccessGrantingStatus == 'APROVADO') {
     const notification = {
       destinatario: '64638b6c2071c508968bdf08',
       remetente: 'SISTEMA',

@@ -13,8 +13,8 @@ export default async function handler(req, res) {
         {
           $match: {
             'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
-            'projeto.projetoConcluido': { $ne: 'SIM' },
-            $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
+            'homologacao.dataEfetivacao': null,
+            $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'homologacao.dataLiberacao': { $ne: null } }],
           },
         },
         {
@@ -25,16 +25,7 @@ export default async function handler(req, res) {
             cidade: 1,
             tipoDeServico: 1,
             'vendedor.nome': 1,
-            'parecer.statusDoParecerDeAcesso': 1,
-            'parecer.dataParecerDeAcesso': 1,
-            'parecer.parecerReprovado': 1,
-            'parecer.qtdeDiasObraDeRede': 1,
-            'vistoria.status': 1,
-            'vistoria.dataPedido': 1,
-            'vistoria.vistoriaReprovada': 1,
-            'medidor.data': 1,
-            projeto: 1,
-            'dadosCemig.distCreditos': 1,
+            homologacao: 1,
             'obra.statusDaObra': 1,
             'compra.statusEntrega': 1,
             'compra.dataEntrega': 1,

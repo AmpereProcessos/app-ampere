@@ -8,6 +8,9 @@ import NumberInput from '../inputs/Number'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import EnergyPA from '../identificador/registrosAlteracoesProjeto/secao/EnergyPA'
+import DateInput from '../inputs/Date'
+import { formatDate } from '@/utils/constants'
+import { formatDateInputChange } from '@/utils/methods/shared'
 
 type InfoPadraoBlockProps = {
   comercialEdition: boolean
@@ -164,61 +167,36 @@ function InfoPadraoBlock({
         <CheckboxInput
           labelFalse="NECESSÁRIO AUMENTO DE CARGA"
           labelTrue="NECESSÁRIO AUMENTO DE CARGA"
-          checked={infoHolder.projeto.aumentoDeCarga == 'SIM'}
+          checked={!!infoHolder.padrao.aumentoCarga.aplicavel}
           handleChange={(value) => {
             setInfo((prev) => ({
               ...prev,
-              projeto: {
-                ...prev.projeto,
-                aumentoDeCarga: value ? 'SIM' : 'NÃO',
-                acStatus: value && infoHolder.projeto.acStatus != 'REALIZADO' ? 'PENDÊNCIA' : undefined,
+              padrao: {
+                ...prev.padrao,
+                aumentoCarga: { ...prev.padrao.aumentoCarga, aplicavel: value },
               },
             }))
             setChanges((prev) => ({
               ...prev,
-              'projeto.aumentoDeCarga': value ? 'SIM' : 'NÃO',
-              'projeto.acStatus': value && infoHolder.projeto.acStatus != 'REALIZADO' ? 'PENDÊNCIA' : undefined,
+              'padrao.aumentoCarga.aplicavel': value,
             }))
           }}
         />
       </div>
-      {infoHolder.projeto.aumentoDeCarga == 'SIM' ? (
-        <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+      {!!infoHolder.padrao.aumentoCarga.aplicavel ? (
+        <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-1/4">
-            <SelectInput
-              label={'STATUS AUMENTO DE CARGA'}
-              editable={technicalEdition}
-              value={infoHolder.projeto.acStatus ? infoHolder.projeto.acStatus : 'NÃO DEFINIDO'}
-              selectedItemLabel="NÃO DEFINIDO"
-              options={[
-                { id: 1, label: 'PENDÊNCIA', value: 'PENDÊNCIA' },
-                { id: 2, label: 'REALIZADO', value: 'REALIZADO' },
-                { id: 3, label: 'SOLICITADO COM G.D', value: 'SOLICITADO COM G.D' },
-              ]}
+            <DateInput
+              label="DATA DE REALIZAÇÃO DO AUMENTO DE CARGA"
+              value={formatDate(infoHolder.padrao.aumentoCarga.dataEfetivacao)}
               handleChange={(value) => {
-                setChanges((prev) => ({
-                  ...prev,
-                  'projeto.acStatus': value,
-                }))
                 setInfo((prev) => ({
                   ...prev,
-                  projeto: {
-                    ...prev.projeto,
-                    acStatus: value,
-                  },
+                  padrao: { ...prev.padrao, aumentoCarga: { ...prev.padrao.aumentoCarga, dataEfetivacao: formatDateInputChange(value) } },
                 }))
-              }}
-              onReset={() => {
                 setChanges((prev) => ({
                   ...prev,
-                  'projeto.acStatus': null,
-                }))
-                setInfo((prev) => ({
-                  ...prev,
-                  projeto: {
-                    ...prev.projeto,
-                    acStatus: null,
-                  },
+                  'padrao.aumentoCarga.dataEfetivacao': formatDateInputChange(value),
                 }))
               }}
               width="100%"

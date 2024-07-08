@@ -65,9 +65,8 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
     if (!!approvedAt)
       return (
         <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-          PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(project.parecer.dataParecerDeAcesso)}</strong> (HÁ{' '}
-          <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: project.parecer.dataParecerDeAcesso, end: new Date() })} DIAS</strong>{' '}
-          )
+          PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(approvedAt)}</strong> (HÁ{' '}
+          <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: approvedAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
     return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">PARECER NÃO APROVADO</h1>
@@ -142,18 +141,22 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.homologacao.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
-                  {project.projeto.dataLiberacaoDocumentacao ? formatDateAsLocale(project.projeto.dataLiberacaoDocumentacao) : 'NÃO DEFINIDO'}
+                  {project.homologacao.documentacao.dataLiberacao
+                    ? formatDateAsLocale(project.homologacao.documentacao.dataLiberacao)
+                    : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
-                  {project.projeto.dataAssDocumentacao ? formatDateAsLocale(project.projeto.dataAssDocumentacao) : 'NÃO DEFINIDO'}
+                  {project.homologacao.documentacao.dataAssinatura
+                    ? formatDateAsLocale(project.homologacao.documentacao.dataAssinatura)
+                    : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
@@ -465,13 +468,7 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
             </div>
             <div className="flex items-center gap-1">
               <BsUnlockFill />
-              {renderAccessInfo({ approvedAt: project.parecer?.dataParecerDeAcesso })}
-              {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                {project.parecer?.dataParecerDeAcesso
-                  ? `PARECER APROVADO EM: ${formatDateAsLocale(project.parecer.dataParecerDeAcesso)} (HÁ 
-                ${getDifferenceBetweenDates({ start: project.parecer.dataParecerDeAcesso, end: new Date() })} DIAS)`
-                  : 'PARECER NÃO APROVADO'}
-              </h1> */}
+              {renderAccessInfo({ approvedAt: project.homologacao.acesso.dataResposta })}
             </div>
             <div className="flex items-center gap-1">
               <FaSolarPanel />

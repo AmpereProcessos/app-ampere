@@ -37,6 +37,7 @@ import { useQueryClient } from 'react-query'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
 import OSCreationBlock from './OSCreationBlock'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
+import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 
 function ModalDB({ projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
@@ -184,7 +185,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   showMonetaryValues={false}
                 />
               )}
-              {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+              {/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoDadosConcessionariaBlock
                   editor={userHasOverallAccess}
                   infoHolder={infoHolder}
@@ -193,7 +194,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   setChanges={setChanges}
                   updateLogs={updateLogs || []}
                 />
-              )}
+              )} */}
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) && (
                 <InfoSistemaBlock
                   editor={userHasOverallAccess}
@@ -206,17 +207,18 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 />
               )}
               {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) ? (
-                <InfoProjetoBlock
-                  comercialEdition={userHasOverallAccess}
-                  editor={userHasOverallAccess}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  updateLogs={updateLogs || []}
-                  project={project}
-                />
-              ) : null}
+                <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              ) : // <InfoProjetoBlock
+              //   comercialEdition={userHasOverallAccess}
+              //   editor={userHasOverallAccess}
+              //   infoHolder={infoHolder}
+              //   setInfo={setInfo}
+              //   changes={changes}
+              //   setChanges={setChanges}
+              //   updateLogs={updateLogs || []}
+              //   project={project}
+              // />
+              null}
               <InfoObrasBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}

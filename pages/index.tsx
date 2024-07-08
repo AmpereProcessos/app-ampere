@@ -81,7 +81,7 @@ function Home() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     if (session.user?.visualizacao.tipo == 'EXECUÇÃO') {
-      router.push('/ordemDeServico/designadas')
+      router.push('/ordens-de-servico/designadas')
       return <></>
     }
 

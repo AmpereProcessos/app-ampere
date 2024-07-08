@@ -123,7 +123,7 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
   const requests = await requestsCollection.find({}).toArray()
   const opportunities = await opportunitiesCollection.find({}, { projection: { _id: 1, nome: 1 } }).toArray()
   const bulkwriteArr = projects.map((project) => {
-    // const equivalentRequest = requests.find((r) => r._id.toString() == project.idSolicitacaoContrato)
+    const equivalentRequest = requests.find((r) => r._id.toString() == project.idSolicitacaoContrato)
     const equivalentOpportunity = opportunities.find((o) => o._id.toString() == project.idProjetoCRM)
     const homologationEffectivationDate =
       project.projeto.projetoConcluido == 'SIM'
@@ -141,7 +141,11 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
         desenhos: project.projeto?.desenhoTelhado == 'OK' ? project.projeto.dataLiberacaoDocumentacao || new Date().toISOString() : null,
         diagramas: project.projeto?.diagramaUnifilar == 'Ok' ? project.projeto.dataLiberacaoDocumentacao || new Date().toISOString() : null,
         formularios: project.projeto.dataLiberacaoDocumentacao || new Date().toISOString(),
-        mapasDeMicro: project.projeto?.mapaDeMicro ? project.projeto.dataLiberacaoDocumentacao || new Date().toISOString() : null,
+        mapasDeMicro:
+          project.projeto?.mapaDeMicro == 'OK' || project.projeto?.mapaDeMicro == '-'
+            ? project.projeto.dataLiberacaoDocumentacao || new Date().toISOString()
+            : null,
+        distribuicoes: null,
       },
       oportunidade: {
         id: project.idProjetoCRM || '',
@@ -161,6 +165,11 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
         grupo: (SegmentEquivalents[project.segmento as keyof typeof SegmentEquivalents] as THomologation['instalacao']['grupo']) || 'RESIDENCIAL',
         numeroCliente: '',
         numeroInstalacao: project.dadosCemig.numeroInstalacao?.toString() || '',
+        dependentes: equivalentRequest
+          ? equivalentRequest?.distribuicoes?.map((d) => ({ numeroInstalacao: d.numInstalacao, recebimentoPercentual: d.excedente || 0 }))
+          : project.dadosCemig.distCreditos == 'SIM'
+            ? [{ numeroInstalacao: 'DEFINIR', recebimentoPercentual: 0 }]
+            : [],
       },
       documentacao: {
         formaAssinatura: project.projeto.formaAssDocumentacao == 'DIGITAL' ? 'DIGITAL' : 'FÍSICA',
@@ -185,7 +194,7 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
         dataEfetivacao: project.medidor.data,
       },
       dataEfetivacao: homologationEffectivationDate,
-      dataLiberacao: project.contrato.dataAssinatura || null,
+      dataLiberacao: project.projeto.iniciar == 'SIM' ? project.contrato.dataAssinatura : null,
     }
     return {
       updateOne: {
@@ -193,6 +202,12 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
         update: {
           $set: {
             homologacao: homologation,
+            'padrao.aumentoCarga.aplicavel': project.projeto.aumentoDeCarga == 'SIM', // CORRIGINDO CAMPOS DE AUMENTO DE CARGA
+            'padrao.aumentoCarga.dataEfetivacao':
+              project.projeto.aumentoDeCarga == 'SIM'
+                ? project.projeto.fechamentoAC ||
+                  (project.projeto.acStatus == 'REALIZADO' ? project.parecer.dataParecerDeAcesso || project.obra.saida : null)
+                : null, // CORRIGINDO CAMPOS DE AUMENTO DE CARGA
           },
         },
       },
@@ -200,7 +215,7 @@ const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
   })
 
   const bulkwriteUpdate = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.status(200).json(bulkwriteArr)
+  return res.status(200).json(bulkwriteUpdate)
 }
 
 export default apiHandler({ GET: handleHomologationsMigration })

@@ -73,7 +73,7 @@ function ProjectServiceOrderCard({ order, projectId, handleClick }) {
             >
               <AiFillEdit />
             </button>
-            <Link href={`/ordemDeServico/pdf/${order._id}`}>
+            <Link href={`/ordens-de-servico/pdf/${order._id}`}>
               <a className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
                 <TbExternalLink />
               </a>

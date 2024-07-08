@@ -3,6 +3,12 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { getProjectNestedFieldValue } from '../formatting'
+
+function getNestedFieldValue(project: TProjectDTO, path: string) {
+  // @ts-ignore
+  return path.split('.').reduce((acc, part) => acc && acc[part as keyof TProjectDTO], project)
+}
 
 async function fetchNPSData() {
   const { data } = await axios.get('/api/projects/nps')
@@ -29,8 +35,7 @@ export function useNPS(enabled: boolean) {
     date: {
       after: string | null
       before: string | null
-      field1: string | null
-      field2: string | null
+      field: string | null
     }
     npsValue: number | null
   }
@@ -51,8 +56,7 @@ export function useNPS(enabled: boolean) {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
     npsValue: null,
   })
@@ -101,12 +105,13 @@ export function useNPS(enabled: boolean) {
     else return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase())
   }
   function matchDate(project: TProjectDTO) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
     return (
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      fieldValue >= filters.date.after &&
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
+      fieldValue <= filters.date.before
     )
   }
 
@@ -168,8 +173,7 @@ export function useAfterSalesProjects() {
     date: {
       after: string | null
       before: string | null
-      field1: string | null
-      field2: string | null
+      field: string | null
     }
   }
   const [filters, setFilters] = useState<AfterSalesFilters>({
@@ -189,8 +193,7 @@ export function useAfterSalesProjects() {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
   })
 
@@ -229,15 +232,15 @@ export function useAfterSalesProjects() {
   }
   function matchGrantingStatus(project: TProjectDTO) {
     if (filters.grantingStatus.length == 0) return true
-    else return filters.grantingStatus.includes(project.parecer?.statusDoParecerDeAcesso || '')
+    else return filters.grantingStatus.includes(project.homologacao.status || '')
   }
   function matchNecessaryDistribution(project: TProjectDTO) {
     if (!filters.necessaryDistribution) return true
-    else return project.dadosCemig.distCreditos == 'SIM'
+    else return project.homologacao.instalacao.dependentes.length > 0
   }
   function matchMissingSignature(project: TProjectDTO) {
     if (!filters.missingSignature) return true
-    else return project.projeto.dataLiberacaoDocumentacao != undefined && !project.projeto.dataAssDocumentacao
+    else return !!project.homologacao.documentacao.dataLiberacao && !project.homologacao.documentacao.dataAssinatura
   }
   function matchPendingContact(project: TProjectDTO) {
     if (!filters.pendingContact) return true
@@ -250,12 +253,13 @@ export function useAfterSalesProjects() {
     return false
   }
   function matchDate(project: TProjectDTO) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getNestedFieldValue(project, filters.date.field)
     return (
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      fieldValue >= filters.date.after &&
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
+      fieldValue <= filters.date.before
     )
   }
   function orderByContact(projects: TProjectDTO[]) {

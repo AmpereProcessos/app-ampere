@@ -16,7 +16,7 @@ function ConferenciaMaterial() {
   const [projects, setProjects] = useState([])
   const [filteredProjects, setFilteredProjects] = useState([])
   function getProjects() {
-    axios.get('/api/gestaoDeObras/material').then((res) => {
+    axios.get('/api/gestao-obras/material').then((res) => {
       setProjects(res.data)
       setFilteredProjects(res.data)
     })

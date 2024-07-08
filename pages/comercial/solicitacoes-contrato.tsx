@@ -21,12 +21,12 @@ import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { allSellers, serviceTypes } from '@/utils/select-options'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import RequestCard from '@/components/identificador/solicitacoesContrato/RequestCard'
+import ContractRequestControlModal from '@/components/identificador/solicitacoesContrato/ControlModal'
 function FormulariosSolicitacao() {
   const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
   })
-  if (status != 'authenticated') return <LoadingPage />
 
   const { data: requests, isLoading, isError, isSuccess, filters, setFilters } = useContractRequests()
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
@@ -39,6 +39,7 @@ function FormulariosSolicitacao() {
       if (!userRoutes.includes('PPS') && !userRoutes.includes('ADM')) router.push('/')
     }
   }, [session])
+  if (status != 'authenticated') return <LoadingPage />
 
   return (
     <div className="flex grow flex-col p-6">
@@ -145,7 +146,11 @@ function FormulariosSolicitacao() {
           )
         ) : null}
       </div>
-      {editModal.id && editModal.isOpen ? (
+      {editModal.isOpen && editModal.id ? (
+        <ContractRequestControlModal session={session} requestId={editModal.id} closeModal={() => setEditModal({ id: null, isOpen: false })} />
+      ) : null}
+
+      {/* {editModal.id && editModal.isOpen ? (
         <ModalFormSolicitacao
           editor={session?.user.permissoes.rotas?.includes('PPS') ? true : false}
           financeiroEditor={session?.user.permissoes.rotas?.includes('ADM') ? true : false}
@@ -153,7 +158,7 @@ function FormulariosSolicitacao() {
           closeModal={() => setEditModal({ id: null, isOpen: false })}
           getFormularios={() => {}}
         />
-      ) : null}
+      ) : null} */}
     </div>
   )
 }

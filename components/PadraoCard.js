@@ -12,14 +12,13 @@ import ProjectServiceOrders from './identificador/ordensDeServico/ProjectService
 import { formatDateAsLocale } from '../utils/methods/formatting'
 function PadraoCard({ project }) {
   const [changes, setChanges] = useState({
-    'projeto.fechamentoAC': project.projeto.fechamentoAC,
-    'projeto.acStatus': project.projeto.acStatus,
+    'padrao.aumentoCarga.dataEfetivacao': project.padrao.aumentoCarga.dataEfetivacao,
   })
   const [osVisible, setOSVisible] = useState(false)
   const [ordensDeServico, setOrdens] = useState(project.ordensDeServico ? project.ordensDeServico : [])
   function handleChanges(mudancas) {
     axios
-      .post('/api/gestaoDeObras/padroes', {
+      .post('/api/gestao-obras/padroes', {
         id: project._id,
         mudancas: mudancas,
       })
@@ -56,14 +55,12 @@ function PadraoCard({ project }) {
           <div className="flex flex-col items-center">
             <p className="text-sm font-bold uppercase text-[#15599a]">DATA ASS.DOCUMENTAÇÃO</p>
             <p className="text-xs uppercase text-gray-500">
-              {project.projeto?.dataAssDocumentacao ? new Date(project.projeto.dataAssDocumentacao).toLocaleDateString() : '-'}
+              {project.homologacao.documentacao.dataAssinatura ? new Date(project.homologacao.documentacao.dataAssinatura).toLocaleDateString() : '-'}
             </p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm font-bold uppercase text-[#15599a]">STATUS DO PARECER</p>
-            <p className="text-xs uppercase text-gray-500">
-              {project.parecer.statusDoParecerDeAcesso ? project.parecer.statusDoParecerDeAcesso : '-'}
-            </p>
+            <p className="text-xs uppercase text-gray-500">{project.homologacao.status ? project.homologacao.status : '-'}</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm font-bold uppercase text-[#15599a]">TIPO DO PADRÃO</p>
@@ -96,44 +93,22 @@ function PadraoCard({ project }) {
           <h1 className="font-bold">DIA DA MONTAGEM</h1>
           <input
             type="date"
-            value={changes['projeto.fechamentoAC'] ? new Date(changes['projeto.fechamentoAC']).toISOString().slice(0, 10) : null}
+            value={
+              changes['padrao.aumentoCarga.dataEfetivacao']
+                ? new Date(changes['padrao.aumentoCarga.dataEfetivacao']).toISOString().slice(0, 10)
+                : null
+            }
             onChange={(e) => {
               handleChanges({
-                'projeto.fechamentoAC': new Date(e.target.value),
+                'padrao.aumentoCarga.dataEfetivacao': new Date(e.target.value),
               })
               setChanges({
                 ...changes,
-                'projeto.fechamentoAC': new Date(e.target.value),
+                'padrao.aumentoCarga.dataEfetivacao': new Date(e.target.value),
               })
             }}
           />
         </div>
-        <SelectInput
-          label={'STATUS AUMENTO DE CARGA'}
-          editable={true}
-          value={changes['projeto.acStatus']}
-          options={[
-            {
-              label: 'PENDÊNCIA',
-              value: 'PENDÊNCIA',
-            },
-            {
-              label: 'REALIZADO',
-              value: 'REALIZADO',
-            },
-            {
-              label: 'SOLICITADO COM G.D',
-              value: 'SOLICITADO COM G.D',
-            },
-          ]}
-          handleChange={(value) => {
-            handleChanges({ 'projeto.acStatus': value })
-            setChanges({
-              ...changes,
-              'projeto.acStatus': value,
-            })
-          }}
-        />
       </div>
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-x-2">

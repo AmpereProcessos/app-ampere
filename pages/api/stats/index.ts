@@ -117,7 +117,7 @@ async function getHomologationStats({ collection, partialQuery }: GetStats) {
             ...partialQuery,
             'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-            'parecer.statusDoParecerDeAcesso': { $ne: 'CANCELADO' },
+            'homologacao.status': { $ne: 'CANCELADO' },
             'obra.saida': { $ne: '-' },
             'obra.statusDaObra': { $ne: 'OBRA CANCELADA' },
           },
@@ -128,14 +128,14 @@ async function getHomologationStats({ collection, partialQuery }: GetStats) {
               ano: {
                 $year: {
                   $dateFromString: {
-                    dateString: '$parecer.dataParecerDeAcesso',
+                    dateString: '$homologacao.acesso.dataResposta',
                   },
                 },
               },
               mes: {
                 $month: {
                   $dateFromString: {
-                    dateString: '$parecer.dataParecerDeAcesso',
+                    dateString: '$homologacao.acesso.dataResposta',
                   },
                 },
               },
@@ -145,12 +145,12 @@ async function getHomologationStats({ collection, partialQuery }: GetStats) {
                 $dateDiff: {
                   startDate: {
                     $dateFromString: {
-                      dateString: '$projeto.dataAssDocumentacao',
+                      dateString: '$homologacao.dataLiberacao',
                     },
                   },
                   endDate: {
                     $dateFromString: {
-                      dateString: '$parecer.dataParecerDeAcesso',
+                      dateString: '$homologacao.acesso.dataResposta',
                     },
                   },
                   unit: 'day',

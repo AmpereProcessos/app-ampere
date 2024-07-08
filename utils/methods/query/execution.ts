@@ -25,7 +25,7 @@ export function useExecutionProjects() {
     personalizedStructureApplied: boolean
     personalizedStructureStatus: string[]
     paAlterationApplied: boolean
-    paAlterationStatus: string[]
+    paAlterationPending: boolean
     partialPaymentDone: boolean
     missingObservations: boolean
     outsideMatrix: boolean
@@ -42,7 +42,7 @@ export function useExecutionProjects() {
     personalizedStructureApplied: false,
     personalizedStructureStatus: [],
     paAlterationApplied: false,
-    paAlterationStatus: [],
+    paAlterationPending: false,
     partialPaymentDone: false,
     missingObservations: false,
     outsideMatrix: false,
@@ -89,11 +89,11 @@ export function useExecutionProjects() {
   }
   function matchPaAlterationApplied(project: TProjectDTO) {
     if (!filters.paAlterationApplied) return true
-    return project.projeto.aumentoDeCarga == 'SIM'
+    return !!project.padrao.aumentoCarga.aplicavel
   }
-  function matchPaAlterationStatus(project: TProjectDTO) {
-    if (filters.paAlterationStatus.length == 0) return true
-    return filters.paAlterationStatus.includes(project.projeto.acStatus || '')
+  function matchPaAlterationPending(project: TProjectDTO) {
+    if (!filters.paAlterationPending) return true
+    return !project.padrao.aumentoCarga.dataEfetivacao
   }
   function matchPartialPaymentDone(project: TProjectDTO) {
     if (!filters.partialPaymentDone) return true
@@ -122,7 +122,7 @@ export function useExecutionProjects() {
         matchPersonalizedStructureApplied(project) &&
         matchPersonalizedStructureStatus(project) &&
         matchPaAlterationApplied(project) &&
-        matchPaAlterationStatus(project) &&
+        matchPaAlterationPending(project) &&
         matchPartialPaymentDone(project) &&
         matchMissingObservations(project) &&
         matchOutsideMatrix(project)

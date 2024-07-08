@@ -28,7 +28,7 @@ export default async function handler(req, res) {
             bairro: 1,
             logradouro: 1,
             numeroResidencia: 1,
-            'projeto.dataAssDocumentacao': 1,
+            'homologacao.documentacao.dataAssinatura': 1,
             'compra.statusEntrega': 1,
             'compra.dataEntrega': 1,
             'compra.previsaoEntrega': 1,

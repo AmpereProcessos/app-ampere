@@ -254,7 +254,7 @@ function OemPage() {
                       <SelectInput
                         width={'100%'}
                         label={'CAMPO DE FILTRO'}
-                        value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                        value={filters.date.field || null}
                         options={[
                           {
                             id: 1,
@@ -278,8 +278,7 @@ function OemPage() {
                             ...prev,
                             date: {
                               ...prev.date,
-                              field1: value != null ? value.split('.')[0] : null,
-                              field2: value != null ? value.split('.')[1] : null,
+                              field: value,
                             },
                           }))
                         }
@@ -289,8 +288,7 @@ function OemPage() {
                             date: {
                               after: null,
                               before: null,
-                              field1: null,
-                              field2: null,
+                              field: null,
                             },
                           }))
                         }

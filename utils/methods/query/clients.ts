@@ -3,7 +3,7 @@ import { TBirthdayRecord } from '@/utils/schemas/stats'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { formatWithoutDiacritics } from '../formatting'
+import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 
 export async function fetchClients() {
   const { data } = await axios.get('/api/projects/todos')
@@ -100,8 +100,7 @@ type UseSellerSalesFilters = {
   date: {
     after: string | null
     before: string | null
-    field1: string | null
-    field2: string | null
+    field: string | null
   }
 }
 export function useSellerSales() {
@@ -115,8 +114,7 @@ export function useSellerSales() {
     date: {
       after: null,
       before: null,
-      field1: null,
-      field2: null,
+      field: null,
     },
   })
   function matchSearch(project: TProjectDTO) {
@@ -141,15 +139,16 @@ export function useSellerSales() {
   }
   function matchGrantingStatus(project: TProjectDTO) {
     if (filters.grantingStatus.length == 0) return true
-    else return filters.grantingStatus.includes(project.parecer?.statusDoParecerDeAcesso || '')
+    else return filters.grantingStatus.includes(project.homologacao.status)
   }
   function matchDate(project: TProjectDTO) {
-    if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
     return (
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] >= filters.date.after &&
+      fieldValue >= filters.date.after &&
       // @ts-ignore
-      project[filters.date.field1][filters.date.field2] <= filters.date.before
+      fieldValue <= filters.date.before
     )
   }
   function handelModelData(data: TProjectDTO[]) {

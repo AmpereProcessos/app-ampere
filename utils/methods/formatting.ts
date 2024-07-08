@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { TProjectDTO } from '../schemas/projects'
 
 export function formatNameAsInitials(name: string) {
   const splittedName = name.replace('-', '').split(' ')
@@ -51,4 +52,8 @@ export function formatWithoutDiacritics(string: string, useUpperCase?: boolean) 
       .toUpperCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
+}
+export function getProjectNestedFieldValue(project: TProjectDTO, path: string) {
+  // @ts-ignore
+  return path.split('.').reduce((acc, part) => acc && acc[part as keyof TProjectDTO], project)
 }

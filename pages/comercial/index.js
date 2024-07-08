@@ -228,7 +228,7 @@ function Comercial() {
                       <SelectInput
                         width={'100%'}
                         label={'CAMPO DE FILTRO'}
-                        value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                        value={filters.date.field || null}
                         options={[
                           {
                             id: 1,
@@ -252,8 +252,7 @@ function Comercial() {
                             ...prev,
                             date: {
                               ...prev.date,
-                              field1: value != null ? value.split('.')[0] : null,
-                              field2: value != null ? value.split('.')[1] : null,
+                              field: value,
                             },
                           }))
                         }
@@ -263,8 +262,7 @@ function Comercial() {
                             date: {
                               after: null,
                               before: null,
-                              field1: null,
-                              field2: null,
+                              field: null,
                             },
                           }))
                         }
@@ -482,7 +480,7 @@ function Comercial() {
                   <div className="flex flex-col items-start">
                     <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
-                      {project.parecer.dataParecerDeAcesso ? 'LIBERADO' : 'NÃO LIBERADO'}
+                      {!!project.homologacao?.acesso.dataResposta ? 'LIBERADO' : 'NÃO LIBERADO'}
                     </p>
                   </div>
                   <div className="flex flex-col items-end">

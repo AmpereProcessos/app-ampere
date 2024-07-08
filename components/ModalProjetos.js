@@ -84,13 +84,13 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
             <div className="flex items-center gap-2">
               <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
               {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
-              {project?.parecer.dataParecerDeAcesso != undefined && project?.vistoria.status != 'REALIZADA' && (
+              {!!project?.homologacao.acesso.dataResposta && !project?.homologacao.vistoria.dataEfetivacao && (
                 <div
                   className={`p-1 text-center text-xs font-bold italic ${
-                    getParecerWarning(new Date(project?.parecer.dataParecerDeAcesso), new Date()).style
+                    getParecerWarning(new Date(project?.homologacao.acesso.dataResposta), new Date()).style
                   }`}
                 >
-                  {getParecerWarning(new Date(project?.parecer.dataParecerDeAcesso), new Date()).text}
+                  {getParecerWarning(new Date(project?.homologacao.acesso.dataResposta), new Date()).text}
                 </div>
               )}
             </div>
@@ -120,7 +120,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 project={project}
                 updateLogs={updateLogs || []}
               />
-              {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+              {/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoDadosConcessionariaBlock
                   editor={true}
                   infoHolder={infoHolder}
@@ -129,7 +129,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   setChanges={setChanges}
                   updateLogs={updateLogs || []}
                 />
-              )}
+              )} */}
               <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>
@@ -265,7 +265,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   showMonetaryValues={true}
                 />
               )}
-              <InfoProjetoBlock
+              {/* <InfoProjetoBlock
                 editor={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
@@ -274,7 +274,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 updateLogs={updateLogs || []}
                 handleUpdates={handleUpdates}
                 project={project}
-              />
+              /> */}
               <InfoObrasBlock
                 editor={true}
                 infoHolder={infoHolder}

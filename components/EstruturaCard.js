@@ -18,7 +18,7 @@ function EstruturaCard({ project }) {
   const [ordensDeServico, setOrdens] = useState(project.ordensDeServico)
   function handleChanges(mudancas) {
     axios
-      .post('/api/gestaoDeObras/estruturas', {
+      .post('/api/gestao-obras/estruturas', {
         id: project._id,
         mudancas: mudancas,
       })

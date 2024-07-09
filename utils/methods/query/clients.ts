@@ -23,7 +23,7 @@ export function useClients(enabled: boolean) {
 async function fetchClientById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/projects/fetchDoc/${id}`)
-    return data[0]
+    return data
   } catch (error) {
     throw error
   }

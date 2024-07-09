@@ -31,33 +31,13 @@ import LoadingPage from './utils/LoadingPage'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import { useSession } from 'next-auth/react'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  width: '93%',
-  height: '98%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
+import { getErrorMessage } from '@/utils/methods/handlers'
 
 function ModalADM({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
-  const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isSuccess, isLoading, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
@@ -72,7 +52,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
       await queryClient.invalidateQueries({ queryKey: ['adm-projects'] })
     },
   })
-
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -96,7 +76,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
             {/* <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p> */}
           </div>
           {isLoading ? <LoadingPage /> : null}
-          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />

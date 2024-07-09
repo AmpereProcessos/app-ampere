@@ -35,13 +35,14 @@ import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
 import { useSession } from 'next-auth/react'
 import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
 import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
+import { getErrorMessage } from '../utils/methods/handlers'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal(false))
   const { data: session } = useSession()
   const queryClient = useQueryClient()
 
-  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
 
@@ -58,6 +59,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
     },
   })
 
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -82,7 +84,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
             </div>
           </div>
           {isLoading ? <LoadingPage /> : null}
-          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />

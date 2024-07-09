@@ -31,11 +31,12 @@ import { updateProject } from '../utils/methods/mutation/clients'
 import { useSession } from 'next-auth/react'
 import { handleEngineeringUpdate } from '../utils/methods/mutation/engineering'
 import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
-function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
+import { getErrorMessage } from '../utils/methods/handlers'
+function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
-  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
@@ -73,6 +74,8 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
       await queryClient.invalidateQueries({ queryKey: ['engineering-projects'] })
     },
   })
+
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -304,7 +307,6 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   { label: 'OBRAS', value: 'links.obras' },
                   { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
                 ]}
-                handleUpdates={handleUpdates}
               />
             </div>
           ) : null}

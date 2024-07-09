@@ -472,6 +472,24 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
           }))
         }
       />
+      <CheckboxInput
+        labelFalse="APTO A RESTRINGIR PROJETOS"
+        labelTrue="APTO A RESTRINGIR PROJETOS"
+        checked={infoHolder.permissoes.gestao.restringirProjetos}
+        justify="justify-start"
+        handleChange={(value) =>
+          setInfoHolder((prev) => ({
+            ...prev,
+            permissoes: {
+              ...prev.permissoes,
+              gestao: {
+                ...prev.permissoes.gestao,
+                restringirProjetos: value,
+              },
+            },
+          }))
+        }
+      />
     </>
   )
 }

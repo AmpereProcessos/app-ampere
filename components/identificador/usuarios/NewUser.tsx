@@ -81,6 +81,7 @@ function NewUser({ session, closeModal }: NewUserProps) {
       },
       gestao: {
         visualizarResultados: false,
+        restringirProjetos: false,
       },
       ordensDeServico: {
         criar: false,

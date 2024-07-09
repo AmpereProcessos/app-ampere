@@ -19,13 +19,15 @@ import ProjectActivityCard from './identificador/atividades/ProjectActivityCard'
 import { getDifferenceBetweenDates } from '@/utils/methods/dates'
 import Link from 'next/link'
 import dayjs from 'dayjs'
+import { Session } from 'next-auth'
 
 type PosVendaCardProps = {
+  session: Session
   projectId: string
   project: TProjectDTO
   mode: 'CARD' | 'SIMPLIFIED'
 }
-function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
+function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfo] = useState(project)
 
@@ -406,7 +408,7 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
           </div>
         </div>
         {modalProjectIsOpen ? (
-          <ModalDB projectId={projectId} closeModal={() => setModalProjectIsOpen(false)} modalIsOpen={modalProjectIsOpen} />
+          <ModalDB session={session} projectId={projectId} closeModal={() => setModalProjectIsOpen(false)} modalIsOpen={modalProjectIsOpen} />
         ) : null}
       </div>
     )

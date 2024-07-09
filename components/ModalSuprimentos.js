@@ -27,12 +27,13 @@ import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import { useSession } from 'next-auth/react'
+import { getErrorMessage } from '../utils/methods/handlers'
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
-  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
@@ -47,6 +48,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
     },
   })
 
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -70,7 +72,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
             {/* <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p> */}
           </div>
           {isLoading ? <LoadingPage /> : null}
-          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />

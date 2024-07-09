@@ -55,34 +55,13 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-  const projectsCollection: Collection<TProject> = db.collection('dados')
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const previousEngineeringQuery = await projectsCollection
-    .find(
-      {
-        'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
-        'projeto.projetoConcluido': { $ne: 'SIM' },
-        $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
-      },
-      { projection: { nomeDoContrato: 1 } }
-    )
-    .toArray()
-  const newEngineeringQuery = await projectsCollection
-    .find(
-      {
-        'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
-        'homologacao.dataEfetivacao': null,
-        $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'homologacao.dataLiberacao': { $ne: null } }],
-      },
-      { projection: { nomeDoContrato: 1 } }
-    )
-    .toArray()
-  const diff = previousEngineeringQuery
-    .map((p) => p.nomeDoContrato)
-    .filter((p) => {
-      return !newEngineeringQuery.map((e) => e.nomeDoContrato).includes(p)
-    })
+  const adminstrationDb = await connectToAdministrationDatabase(process.env.DB_KEY)
+  const usersCollection: Collection<TEmployee> = adminstrationDb.collection('colaboradores')
+
+  const updateResponse = await usersCollection.updateMany({}, { $set: { 'permissoes.gestao.restringirProjetos': false } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
 
@@ -223,7 +202,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(diff)
+  return res.status(200).json(updateResponse)
 }
 export default apiHandler({
   GET: handleUpdateTeste,

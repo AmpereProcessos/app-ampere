@@ -334,7 +334,12 @@ function Vendas() {
           : null}
       </div>
       {modalProject.isOpen && modalProject.id && (
-        <ModalDB projectId={modalProject.id} closeModal={() => setModalProject({ isOpen: false, id: null })} modalIsOpen={modalProject.isOpen} />
+        <ModalDB
+          session={session}
+          projectId={modalProject.id}
+          closeModal={() => setModalProject({ isOpen: false, id: null })}
+          modalIsOpen={modalProject.isOpen}
+        />
       )}
     </div>
   )

@@ -482,6 +482,13 @@ const GeneralProjectSchema = z.object({
       .optional()
       .nullable(),
   }),
+  restricao: z
+    .object({
+      aplicavel: z.boolean().optional().nullable(),
+      observacoes: z.string().optional().nullable(),
+    })
+    .optional()
+    .nullable(),
 })
 
 export type TProject = z.infer<typeof GeneralProjectSchema>

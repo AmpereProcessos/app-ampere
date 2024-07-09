@@ -29,12 +29,13 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useSession } from 'next-auth/react'
 import { handleExecutionUpdate } from '@/utils/methods/mutation/execution'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
+import { getErrorMessage } from '@/utils/methods/handlers'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
   const queryClient = useQueryClient()
-  const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isSuccess, isLoading, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
 
@@ -51,6 +52,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
 
   const [changes, setChanges] = useState({})
 
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])

@@ -35,11 +35,12 @@ import ErrorPage from './utils/ErrorPage'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { useSession } from 'next-auth/react'
 import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
+import { getErrorMessage } from '@/utils/methods/handlers'
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
   const { data: session } = useSession()
   const queryClient = useQueryClient()
   useKey('Escape', () => closeModal())
-  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState({})
   const [changes, setChanges] = useState({})
@@ -55,6 +56,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
     },
   })
 
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     if (project) setInfo(project)
   }, [project])

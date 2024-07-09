@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { FaSave } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
-
-import axios from 'axios'
 
 import SaveButton from './utils/Buttons/SaveButton'
 import { useSession } from 'next-auth/react'
@@ -21,9 +19,7 @@ import InfoContratoBlock from './blocosInfoProjeto/InfoContratoBlock'
 import InfoJornadaBlock from './blocosInfoProjeto/InfoJornadaBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
-import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessionariaBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
-import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoComissionamentoBlock from './blocosInfoProjeto/InfoComissionamentoBlock'
 import InfoOeMBlock from './blocosInfoProjeto/InfoOeMBlock'
@@ -38,10 +34,12 @@ import ProjectServiceOrders from './identificador/ordensDeServico/ProjectService
 import OSCreationBlock from './OSCreationBlock'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
+import RestrictionBlock from './blocosInfoProjeto/RestrictionBlock'
+import { getErrorMessage } from '@/utils/methods/handlers'
 
-function ModalDB({ projectId, modalIsOpen, closeModal }) {
+function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
-  const { data: session } = useSession()
+
   const userHasOverallAccess = [
     'Projetos',
     'Obras',
@@ -57,21 +55,21 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
     'RH',
   ].every((el) => session?.user.permissoes.rotas.includes(el))
   const userHasOeMAccess = session?.user.permissoes.rotas.includes('O&M')
-  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
+  const userHasRestrictionPermission = session.user.permissoes.gestao.restringirProjetos
+
+  const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
 
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
-  const [msg, setMsg] = useState({
-    text: '',
-    color: '',
-  })
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
   })
+
+  const errorMsg = getErrorMessage(error)
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -85,16 +83,13 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
               {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
             </div>
             <div className="flex items-center gap-x-2">
-              {msg.text && <p className={`hidden text-sm italic lg:block ${msg.color}`}>{msg.text}</p>}
               {userHasOverallAccess || userHasOeMAccess ? (
                 <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               ) : null}
-
               <button>
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            {msg.text && <p className={`block text-sm italic lg:hidden ${msg.color}`}>{msg.text}</p>}
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
@@ -259,6 +254,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 updateLogs={updateLogs || []}
               />
+
               <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
@@ -273,6 +269,9 @@ function ModalDB({ projectId, modalIsOpen, closeModal }) {
                   { label: 'MANUTENÇÃO CORRETIVA', value: 'links.manutencaoCorretiva' },
                 ]}
               />
+              {userHasRestrictionPermission ? (
+                <RestrictionBlock infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              ) : null}
             </div>
           ) : null}
         </div>

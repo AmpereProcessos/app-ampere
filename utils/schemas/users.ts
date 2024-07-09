@@ -117,6 +117,10 @@ const PermissionsSchema = z.object({
       required_error: 'Ativação da permissão de visualização de resultados.',
       invalid_type_error: 'Tipo não válido para permissão de visualização de resultados.',
     }),
+    restringirProjetos: z.boolean({
+      required_error: 'Ativação da permissão de restrição de projetos.',
+      invalid_type_error: 'Tipo não válido para permissão de restrição de projetos.',
+    }),
   }),
   ordensDeServico: z.object({
     visualizar: z.boolean({

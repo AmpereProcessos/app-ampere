@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState } from 'react'
 
 import ModalDB from '../../components/ModalDB'
 
@@ -8,18 +6,10 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { AiOutlineSearch } from 'react-icons/ai'
 
-import DateInput from '../../components/inputs/Date'
-import SelectInput from '../../components/inputs/Select'
-import TextInput from '../../components/inputs/Text'
 import LoadingPage from '../../components/utils/LoadingPage'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
 
-import { cidadesAtendidas, equipesTecnicas, formatDate, ProjectTypesCollors, vendedores } from '../../utils/constants'
-import { allSellers, customersAcquisitionChannels, insiders } from '../../utils/select-options'
-import MultipleSelectInput from '../../components/inputs/MultipleSelect'
-import { formatDateInputChange } from '../../utils/methods/shared'
+import { ProjectTypesCollors } from '../../utils/constants'
 import { useProjectsByPersonalizedFilters } from '@/utils/methods/query/projects'
 import FilterMenu from '@/components/identificador/banco-de-dados/FilterMenu'
 import ProjectsDBPagination from '@/components/identificador/banco-de-dados/Pagination'
@@ -145,6 +135,7 @@ function MainDatebasePage() {
         </div> */}
         {modalProject.isOpen && modalProject.projectId && (
           <ModalDB
+            session={session}
             projectId={modalProject.projectId}
             closeModal={() => setModalProject({ isOpen: false, projectId: null })}
             modalIsOpen={modalProject.isOpen}

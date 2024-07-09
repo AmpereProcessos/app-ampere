@@ -81,6 +81,7 @@ function EditUser({ userId, session, closeModal }: EditUserProps) {
       },
       gestao: {
         visualizarResultados: false,
+        restringirProjetos: false,
       },
       ordensDeServico: {
         criar: false,

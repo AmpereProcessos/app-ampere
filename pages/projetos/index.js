@@ -55,18 +55,6 @@ function Projetos() {
     isOpen: false,
     projectId: null,
   })
-  function handleUpdates(id) {
-    var index = projects.findIndex((x) => x._id == id)
-    var indexFiltered = projects.findIndex((x) => x._id == id)
-    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      var arr = [...projects]
-      arr[index] = res.data[0]
-      var arrFiltered = [...projects]
-      arrFiltered[indexFiltered] = res.data[0]
-      setModalProject(res.data[0])
-    })
-  }
-
   function getBorderColorByParecer(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime())
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
@@ -722,7 +710,6 @@ function Projetos() {
             <ModalProjetos
               projectId={modalProject.projectId}
               modalIsOpen={modalProject.isOpen}
-              handleUpdates={handleUpdates}
               closeModal={() => setModalProject({ isOpen: false, projectId: null })}
             />
           )}

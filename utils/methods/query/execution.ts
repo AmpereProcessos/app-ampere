@@ -1,7 +1,9 @@
+import { TEnergyPAExecution } from '@/pages/api/gestao-obras/padroes'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { formatWithoutDiacritics } from '../formatting'
 
 async function fetchProjects() {
   try {
@@ -139,6 +141,63 @@ export function useExecutionProjects() {
     ...useQuery({
       queryKey: ['execution-projects'],
       queryFn: fetchProjects,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}
+
+async function fetchPAExecutionProjects() {
+  try {
+    const { data } = await axios.get('/api/gestao-obras/padroes')
+    return data.data as TEnergyPAExecution[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export type UsePAExecutionProjectsFilters = {
+  search: string
+  segments: string[]
+  accessStatus: string[]
+  pendingPaid: boolean
+}
+export function usePAExecutionProjects() {
+  const [filters, setFilters] = useState<UsePAExecutionProjectsFilters>({
+    search: '',
+    segments: [],
+    accessStatus: [],
+    pendingPaid: false,
+  })
+
+  function matchSearch(project: TEnergyPAExecution) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
+
+  function matchSegments(project: TEnergyPAExecution) {
+    if (filters.segments.length == 0) return true
+    return filters.segments.includes(project.segmento)
+  }
+  function matchAccessStatus(project: TEnergyPAExecution) {
+    if (filters.accessStatus.length == 0) return true
+    return filters.accessStatus.includes(project.homologacao.status)
+  }
+
+  function matchPendingReady(project: TEnergyPAExecution) {
+    if (!filters.pendingPaid) return true
+    return !project.padrao.aumentoCarga.dataEfetivacao && !!project.compra.dataPagamento
+  }
+
+  function handleModelData(data: TEnergyPAExecution[]) {
+    var modeledData = data
+    return modeledData.filter((project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPendingReady(project))
+  }
+  return {
+    ...useQuery({
+      queryKey: ['pa-execution-projects'],
+      queryFn: fetchPAExecutionProjects,
       select: (data) => handleModelData(data),
     }),
     filters,

@@ -21,7 +21,7 @@ const GeneralProjectSchema = z.object({
   }),
   bairro: z.string(),
   canalVenda: z.string(),
-  cep: z.union([z.string(), z.number()]),
+  cep: z.union([z.string(), z.number()]).optional().nullable(),
   cidade: z.string(),
   codigoSVB: z.union([z.string(), z.number()]),
   comissionamento: z
@@ -301,7 +301,7 @@ const GeneralProjectSchema = z.object({
     execucao: z.number().optional().nullable(),
     posVenda: z.number().optional().nullable(),
   }),
-  numeroResidencia: z.union([z.string(), z.number()]),
+  numeroResidencia: z.union([z.string(), z.number()]).optional().nullable(),
   obra: z.object({
     checklist: z
       .union([z.literal('SIM'), z.literal('NÃO')])

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { TProjectDTO } from '../schemas/projects'
+import { TLocation } from '../schemas/useful'
 
 export function formatNameAsInitials(name: string) {
   const splittedName = name.replace('-', '').split(' ')
@@ -56,4 +57,16 @@ export function formatWithoutDiacritics(string: string, useUpperCase?: boolean) 
 export function getProjectNestedFieldValue(project: TProjectDTO, path: string) {
   // @ts-ignore
   return path.split('.').reduce((acc, part) => acc && acc[part as keyof TProjectDTO], project)
+}
+
+export function formatLocation({ location, includeUf, includeCity }: { location: TLocation; includeUf?: boolean; includeCity?: boolean }) {
+  var addressStr = ''
+  if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`
+  if (includeUf && location.uf) addressStr = addressStr + ` (${location.uf}), `
+  if (!location.endereco) return ''
+  addressStr = addressStr + location.endereco
+  if (location.numeroOuIdentificador) addressStr = addressStr + `, Nº ${location.numeroOuIdentificador}`
+  if (location.bairro) addressStr = addressStr + `, ${location.bairro}`
+  addressStr += '.'
+  return addressStr.toUpperCase()
 }

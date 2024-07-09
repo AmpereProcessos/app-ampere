@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { TNotificationDTO } from '@/utils/schemas/notifications'
+import { BsCheck } from 'react-icons/bs'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import { formatDate } from '@/utils/constants'
 
 type TEditModal = {
   isOpen: boolean
@@ -64,7 +67,43 @@ const notificacao: TNotificationDTO = {
   dataDeLeitura: '2024-03-15T18:14:38.105Z',
 }
 function Test() {
-  return <></>
+  const [date, setDate] = useState<Date | null>(null)
+  console.log(date)
+  return (
+    <>
+      <div className="relative mt-2 flex w-full items-center justify-center">
+        <label htmlFor="date-picker" className={`flex min-h-[58px] w-full flex-col items-center justify-center`}>
+          <div className={`flex w-fit items-center gap-2 p-3`}>
+            <div
+              className={`flex h-[16px] w-[16px] cursor-pointer items-center justify-center rounded-full border border-black`}
+              onClick={() => {
+                setDate(date ? null : new Date())
+              }}
+            >
+              {date ? <BsCheck style={{ color: 'black' }} /> : null}
+            </div>
+            <p
+              className={'cursor-pointer text-xs font-medium leading-none'}
+              onClick={() => {
+                setDate(date ? null : new Date())
+              }}
+            >
+              CONCLUÍDO
+            </p>
+          </div>
+        </label>
+        <input
+          value={formatDate(date)}
+          onChange={(e) => {
+            setDate(e.target.value != '' ? new Date(formatDateInputChange(e.target.value)) : null)
+          }}
+          id="date-picker"
+          type="date"
+          className="absolute h-full w-full opacity-0"
+        />
+      </div>
+    </>
+  )
   // return (
   //   <div className="grow p-6">
   //     <div className="flex h-full grow flex-col">

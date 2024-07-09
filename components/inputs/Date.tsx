@@ -4,6 +4,7 @@ type DateInputProps = {
   width?: string
   label: string
   labelClassName?: string
+  inputClassName?: string
   showLabel?: boolean
   value: string | undefined
   editable?: boolean
@@ -13,6 +14,7 @@ function DateInput({
   width,
   label,
   labelClassName = 'font-sans font-bold text-[#353432]',
+  inputClassName = 'h-[47px] w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic',
   showLabel = true,
   value,
   editable = true,
@@ -36,7 +38,7 @@ function DateInput({
         id={inputIdentifier}
         onReset={() => handleChange(null)}
         type="date"
-        className="h-[47px] w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className={inputClassName}
       />
     </div>
   )

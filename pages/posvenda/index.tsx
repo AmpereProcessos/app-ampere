@@ -531,7 +531,9 @@ function Posvenda() {
       <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos em jornada.'} /> : null}
-        {isSuccess ? projects.map((project) => <PosVendaCard key={project._id} projectId={project._id} project={project} mode={mode} />) : null}
+        {isSuccess
+          ? projects.map((project) => <PosVendaCard session={session} key={project._id} projectId={project._id} project={project} mode={mode} />)
+          : null}
       </div>
     </div>
   )

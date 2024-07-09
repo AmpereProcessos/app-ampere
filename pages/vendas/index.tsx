@@ -87,7 +87,7 @@ function Vendas() {
                         {
                           id: 2,
                           label: 'DATA DE APROVAÇÃO DO PARECER',
-                          value: 'parecer.dataParecerDeAcesso',
+                          value: 'homologacao.acesso.dataResposta',
                         },
                         {
                           id: 3,
@@ -208,28 +208,6 @@ function Vendas() {
                   />
                 </div>
                 <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={'100%'}
-                    label={'STATUS DA VISTORIA'}
-                    selected={filters.inspectionStatus}
-                    options={inspectionStatus}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        inspectionStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        inspectionStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="w-full lg:w-[250px]">
                   <MultipleSelectInputVirtualized
                     width={'100%'}
                     label={'CIDADE'}
@@ -298,7 +276,7 @@ function Vendas() {
                     <div className="flex flex-col items-start">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</span>
                       <p className="text-xs font-medium tracking-tight text-green-500">
-                        {project.parecer.dataParecerDeAcesso ? 'LIBERADO' : 'NÃO LIBERADO'}
+                        {!!project.homologacao.acesso.dataResposta ? 'LIBERADO' : 'NÃO LIBERADO'}
                       </p>
                     </div>
                     <div className="flex flex-col items-end">
@@ -315,7 +293,7 @@ function Vendas() {
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA VISTORIA</span>
-                      <p className="text-xs font-medium tracking-tight">{project.vistoria.status || 'NÃO DEFINIDO'}</p>
+                      <p className="text-xs font-medium tracking-tight">{!!project.homologacao.vistoria.dataEfetivacao ? 'CONCLUÍDA' : 'PENDENTE'}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">

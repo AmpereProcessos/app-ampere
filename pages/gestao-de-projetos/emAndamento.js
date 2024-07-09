@@ -302,9 +302,10 @@ export async function getServerSideProps(context) {
           'compra.statusLiberacao': 1,
           'compra.statusEntrega': 1,
           'homologacao.status': 1,
+          'homologacao.acesso.dataSolicitacao': 1,
           'homologacao.documentacao': 1,
+          'homologacao.vistoria.dataSolicitacao': 1,
           'obra.statusDaObra': 1,
-
           'conferencias.usinaLigada': 1,
           'jornada.entregaTecnica': 1,
         },

@@ -92,7 +92,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
             </div>
           </div>
           {isLoading ? <LoadingPage /> : null}
-          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />

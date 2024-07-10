@@ -37,7 +37,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
     }, 1000)
   }
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DA INSTALAÇÃO</h1>
       <div className="flex items-center justify-center">
         <div className="w-fit">
@@ -49,7 +49,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
             label={'NOME DO TITULAR DO PROJETO'}
@@ -113,7 +113,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
             label={'LOGIN(CEMIG ATENDE)'}
@@ -135,7 +135,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput
             label={'CEP INSTALAÇÃO'}
@@ -192,7 +192,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
             label={'BAIRRO DE INSTALAÇÃO'}
@@ -254,7 +254,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-1/2 lg:w-full">
           <TextInput
             label={'LATITUDE DE INSTALAÇÃO'}

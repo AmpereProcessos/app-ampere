@@ -10,9 +10,9 @@ type ContactInformationBlockProps = {
 }
 function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: ContactInformationBlockProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DE CONTATO</h1>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-1/4 lg:w-full">
           <TextInput
             label={'NOME DO CONTATO 1'}
@@ -64,7 +64,7 @@ function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full">
           <div className="mt-2 flex w-full flex-col items-center self-center px-2">
             <span className="text-center font-raleway text-sm font-bold uppercase">CUIDADOS PARA CONTATO COM O CLIENTE</span>

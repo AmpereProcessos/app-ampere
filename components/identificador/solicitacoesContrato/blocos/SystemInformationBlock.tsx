@@ -24,9 +24,9 @@ type SystemInformationBlockProps = {
 }
 function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: SystemInformationBlockProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DA COMPOSIÇÃO DO PROJETO</h1>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <SelectInput
             label={'TOPOLOGIA'}
@@ -86,7 +86,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
           </p>
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput
             label={'MARCA DOS MÓDULOS'}
@@ -132,7 +132,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
       </div>
       {infoHolder.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' ? (
         <>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/4">
               <SelectInput
                 label={'TIPO DO CONTROLADOR'}
@@ -179,7 +179,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
               />
             </div>
           </div>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/4">
               <SelectInput
                 label={'TIPO DA BATERIA'}
@@ -231,7 +231,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
       {infoHolder.tipoDeServico.includes('AUMENTO') ? (
         <>
           <h1 className="w-full rounded bg-orange-800 p-1 text-center font-bold text-white">INFORMAÇÕES DO SISTEMA ANTERIOR</h1>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/4">
               <SelectInput
                 label={'TOPOLOGIA'}
@@ -291,7 +291,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <TextInput
                 label={'MARCA DOS MÓDULOS'}
@@ -335,7 +335,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <SelectInput
                 label={'TIPO DO KIT'}
@@ -358,6 +358,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
                 placeholder="Preencha aqui a previsão de custo do kit..."
                 value={infoHolder.previsaoValorDoKit || null}
                 handleChange={(value) => setInfoHolder((prev) => ({ ...prev, previsaoValorDoKit: value }))}
+                width="100%"
               />
             </div>
             <div className="w-full lg:w-1/3">

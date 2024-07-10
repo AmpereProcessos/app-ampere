@@ -28,6 +28,8 @@ import {
 } from '@/utils/methods/util/contract-requests'
 import axios from 'axios'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import Link from 'next/link'
+import { FaFile } from 'react-icons/fa'
 
 type ContractRequestControlModalProps = {
   requestId: string
@@ -201,7 +203,15 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
           {isError ? <ErrorComponent msg={'Houve um erro ao buscar informações do formulário de contrato.'} /> : null}
           {isSuccess ? (
             <>
-              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <div className="flex w-full items-center justify-end">
+                  <Link href={`/comercial/publicoFormulario/${requestId}`}>
+                    <button className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400">
+                      <FaFile />
+                      <p className="text-xs font-bold tracking-tight">DOCUMENTO EM PDF</p>
+                    </button>
+                  </Link>
+                </div>
                 <GeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
                 <ContactInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
                 <ElectricalInstallationInformationBlock

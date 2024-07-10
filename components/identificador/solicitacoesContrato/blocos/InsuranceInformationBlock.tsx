@@ -11,7 +11,7 @@ type InsuranceInformationBlockProps = {
 }
 function InsuranceInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: InsuranceInformationBlockProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE SERVIÇOS DE SEGURO</h1>
       <div className="flex items-center justify-center">
         <div className="w-fit">
@@ -23,7 +23,7 @@ function InsuranceInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <NumberInput
             label="VALOR DO SEGURO (SE ADICIONAL)"

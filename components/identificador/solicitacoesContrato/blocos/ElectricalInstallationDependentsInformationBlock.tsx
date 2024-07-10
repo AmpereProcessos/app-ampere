@@ -76,12 +76,16 @@ function ElectricalInstallationDependentsInformationBlock({
           </div>
           <div className="flex w-full items-start justify-around gap-4">
             {infoHolder.distribuicoes.map((dist, index) => (
-              <div className="flex items-center gap-2 rounded-lg border border-gray-500 p-3">
-                <p className="text-xs tracking-tight text-gray-500">{dist.numInstalacao}</p>
-                <h1 className="bg-black text-[0.6rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)}%</h1>
-                <button onClick={() => removeDistribution(index)}>
-                  <MdDelete />
-                </button>
+              <div className="flex min-w-[250px] flex-col items-center gap-2 rounded-lg border border-gray-500 px-6 py-2">
+                <div className="flex w-full items-center justify-between gap-2">
+                  <p className="text-xs tracking-tight text-gray-500">{dist.numInstalacao}</p>
+                  <h1 className="bg-black text-[0.6rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)}%</h1>
+                </div>
+                <div className="flex w-full items-center justify-end">
+                  <button onClick={() => removeDistribution(index)}>
+                    <MdDelete />
+                  </button>
+                </div>
               </div>
             ))}
           </div>

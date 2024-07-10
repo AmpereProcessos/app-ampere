@@ -42,7 +42,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
     }, 1000)
   }
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
       <div className="flex items-center justify-center">
         <div className="w-fit">
@@ -54,7 +54,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <SelectInput
             label={'VENDEDOR'}
@@ -111,7 +111,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
             label={'NOME/RAZÃO SOCIAL'}
@@ -163,7 +163,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-1/2 lg:w-full">
           <TextInput
             label={'Telefone'}
@@ -185,7 +185,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <SelectInput
             label={'ESTADO CIVIL'}
@@ -240,7 +240,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2">
+      <div className="flex w-full flex-col items-center justify-center gap-4">
         <div className="w-fit self-center">
           <CheckboxInput
             labelFalse="CLIENTE POSSUI ALGUMA DEFICIÊNCIA"
@@ -259,7 +259,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         ) : null}
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput
             label={'CEP'}
@@ -316,7 +316,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <TextInput
             label={'BAIRRO'}
@@ -378,7 +378,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/4">
           <SelectInput
             label={'CANAL DE VENDA'}

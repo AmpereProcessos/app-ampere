@@ -12,7 +12,7 @@ type EnergyPAInformationBlockProps = {
 }
 function EnergyPAInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: EnergyPAInformationBlockProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PADRÃO DE ENERGIA</h1>
       <div className="flex flex-wrap items-center justify-center gap-4">
         <div className="w-fit">
@@ -43,7 +43,7 @@ function EnergyPAInformationBlock({ infoHolder, setInfoHolder, userHasEditPermis
 
       {infoHolder.aumentoDeCarga == 'SIM' ? (
         <>
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
             <div className="w-full lg:w-1/4">
               <SelectInput
                 label={'AMPERAGEM DO PADRÃO'}

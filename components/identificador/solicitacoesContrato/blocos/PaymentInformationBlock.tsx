@@ -14,9 +14,9 @@ type PaymentInformationBlockProps = {
 }
 function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: PaymentInformationBlockProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PAGAMENTO</h1>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput
             label={'NOME DO PAGADOR'}
@@ -48,7 +48,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-fit">
           <CheckboxInput
             labelFalse="NECESSÁRIO INSCRIÇÃO RURAL NA NF"
@@ -86,7 +86,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       ) : null}
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput
             label={'LOCAL DE ENTREGA'}
@@ -129,7 +129,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       </div>
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <NumberInput
             label="VALOR DO CONTRATO (SEM ADICIONAIS)"
@@ -156,7 +156,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
         </div>
       </div>
       {infoHolder.origemRecurso == 'FINANCIAMENTO' ? (
-        <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+        <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <SelectInput
               label={'CREDOR'}
@@ -191,7 +191,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           </div>
         </div>
       ) : null}
-      <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <NumberInput
             label="SE PARCELADO, Nº DE PARCELAS"

@@ -58,10 +58,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
   // const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const adminstrationDb = await connectToAdministrationDatabase(process.env.DB_KEY)
-  const usersCollection: Collection<TEmployee> = adminstrationDb.collection('colaboradores')
-
-  const updateResponse = await usersCollection.updateMany({}, { $set: { 'permissoes.gestao.restringirProjetos': false } })
+  // const updateResponse = await usersCollection.updateMany({}, { $set: { 'permissoes.gestao.restringirProjetos': false } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
 
@@ -202,7 +199,8 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(updateResponse)
+  // const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

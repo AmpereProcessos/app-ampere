@@ -352,11 +352,11 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
             label={'Nª DA RESIDÊNCIA'}
             placeholder="Preencha o número do endereço de correspondência..."
             editable={userHasEditPermission}
-            value={infoHolder.numeroInstalacao || ''}
+            value={infoHolder.numeroResCobranca || ''}
             handleChange={(value) =>
               setInfoHolder((prev) => ({
                 ...prev,
-                numeroInstalacao: value,
+                numeroResCobranca: value,
               }))
             }
             width="100%"

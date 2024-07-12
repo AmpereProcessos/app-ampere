@@ -50,7 +50,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/2">
           <TextInput
             label={'NOME DO TITULAR DO PROJETO'}
             placeholder="Preencha o nome do titular do projeto..."
@@ -65,7 +65,24 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label={'NÚMERO DA INSTALAÇÃO ELÉTRICA'}
+            placeholder="Preencha o nome do titular do projeto..."
+            editable={userHasEditPermission}
+            value={infoHolder.numeroInstalacao || ''}
+            handleChange={(value) =>
+              setInfoHolder((prev) => ({
+                ...prev,
+                numeroInstalacao: value.toUpperCase(),
+              }))
+            }
+            width="100%"
+          />
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
+        <div className="w-full lg:w-1/3">
           <SelectInput
             label={'TIPO DO TITULAR'}
             editable={userHasEditPermission}
@@ -81,7 +98,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/3">
           <SelectInput
             label={'TIPO DA LIGAÇÃO'}
             editable={userHasEditPermission}
@@ -97,7 +114,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/3">
           <SelectInput
             label={'TIPO DA INSTALAÇÃO'}
             editable={userHasEditPermission}
@@ -228,11 +245,11 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
             label={'Nª DE INSTALAÇÃO'}
             placeholder="Preencha o número do endereço de instalação..."
             editable={userHasEditPermission}
-            value={infoHolder.numeroInstalacao || ''}
+            value={infoHolder.numeroResInstalacao || ''}
             handleChange={(value) =>
               setInfoHolder((prev) => ({
                 ...prev,
-                numeroInstalacao: value,
+                numeroResInstalacao: value,
               }))
             }
             width="100%"

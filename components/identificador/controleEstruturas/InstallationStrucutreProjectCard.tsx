@@ -1,6 +1,10 @@
+import DateInput from '@/components/inputs/Date'
 import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
-import { formatToMoney } from '@/utils/constants'
+import { formatDate, formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
+import { updateProject } from '@/utils/methods/mutation/clients'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { formatDateInputChange } from '@/utils/methods/shared'
 import { TProject } from '@/utils/schemas/projects'
 import { TLocation } from '@/utils/schemas/useful'
 import React from 'react'
@@ -8,6 +12,7 @@ import { BsBank2, BsPatchCheckFill } from 'react-icons/bs'
 import { FaSolarPanel, FaTruck } from 'react-icons/fa'
 import { FaDiamond, FaLocationDot } from 'react-icons/fa6'
 import { MdOutlineAttachMoney } from 'react-icons/md'
+import { useQueryClient } from 'react-query'
 
 function getStatusTag(isExecuted: boolean) {
   if (!isExecuted)
@@ -57,6 +62,7 @@ type InstallationStrucutreProjectCardProps = {
   project: TInstallationStructureExecution
 }
 function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProjectCardProps) {
+  const queryClient = useQueryClient()
   const isExecuted = project.estruturaPersonalizada.status == 'PRONTA' || !!project.estruturaPersonalizada.dataMontagem
   const location: TLocation = {
     cep: project.cep?.toString(),
@@ -66,6 +72,25 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
     endereco: project.logradouro,
     numeroOuIdentificador: project.numeroResidencia?.toString(),
   }
+
+  async function updateStructureAdequationExecutionDate(date: string | null) {
+    try {
+      await updateProject({
+        id: project._id,
+        changes: { 'estruturaPersonalizada.dataMontagem': date, 'estruturaPersonalizada.status': !!date ? 'PRONTA' : 'NÃO DEFINIDO' },
+      })
+
+      return 'Projeto atualizado com sucesso !'
+    } catch (error) {
+      throw error
+    }
+  }
+  const { mutate: handleUpdate, isLoading } = useMutationWithFeedback({
+    mutationKey: ['update-project', project._id],
+    mutationFn: updateStructureAdequationExecutionDate,
+    affectedQueryKey: ['structure-execution-projects'],
+    queryClient: queryClient,
+  })
   return (
     <div className="flex w-full flex-col gap-4 rounded border border-gray-500 bg-[#fff] p-3 font-[Inter] shadow-md lg:w-[600px]">
       <div className="flex w-full items-center justify-between gap-2">
@@ -134,6 +159,22 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
               {formatLocation({ location, includeUf: true, includeCity: true })}
             </h1>
           </div>
+        </div>
+      </div>
+
+      <div className="flex w-full items-center justify-end">
+        <div className="w-fit">
+          <DateInput
+            label="DATA DE EXECUÇÃO"
+            labelClassName="text-[0.6rem] tracking-tight"
+            editable={!isLoading}
+            // inputClassName="w-full rounded-md border border-gray-200 p-2 text-[0.7rem] outline-none placeholder:italic"
+            value={formatDate(project.estruturaPersonalizada.dataMontagem)}
+            handleChange={(value) => {
+              handleUpdate(formatDateInputChange(value))
+            }}
+            width="100%"
+          />
         </div>
       </div>
     </div>

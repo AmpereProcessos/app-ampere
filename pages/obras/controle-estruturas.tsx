@@ -1,34 +1,36 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { AiOutlineSearch } from 'react-icons/ai'
-import Select from 'react-select'
-import PadraoCard from '../../components/PadraoCard'
-import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
-import LoadingPage from '../../components/utils/LoadingPage'
-import { usePAExecutionProjects } from '@/utils/methods/query/execution'
-import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import PAAdequationsFilterMenu from '@/components/identificador/controlePadroes/FilterMenu'
+import StructuresAdequationsFilterMenu from '@/components/identificador/controleEstruturas/FilterMenu'
+import InstallationStrucutreProjectCard from '@/components/identificador/controleEstruturas/InstallationStrucutreProjectCard'
 import ErrorComponent from '@/components/utils/ErrorComponent'
-import PAAdequationProjectCard from '@/components/identificador/controlePadroes/PAAdequationProjectCard'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import { useInstallationStructureExecutionProjects } from '@/utils/methods/query/execution'
+import { useSession } from 'next-auth/react'
+import React, { useState } from 'react'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { TInstallationStructureExecution } from '../api/gestao-obras/estruturas'
 import { VscDiffAdded } from 'react-icons/vsc'
-import { TEnergyPAExecution } from '../api/gestao-obras/padroes'
 import { FaTools } from 'react-icons/fa'
 
-function EnergyPAControls() {
-  const router = useRouter()
+function InstallationStructureControls() {
   const { data: session, status } = useSession({ required: true })
   const isAuthorized = session?.user.permissoes.rotas.includes('Obras')
-  const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = usePAExecutionProjects()
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
 
-  function getStats(info: TEnergyPAExecution[]) {
-    const pending = info.reduce((acc, current) => (!current.padrao.aumentoCarga.dataEfetivacao ? acc + 1 : acc), 0)
-    const pendingPaid = info.reduce(
-      (acc, current) => (!current.padrao.aumentoCarga.dataEfetivacao && !!current.compra.dataPagamento ? acc + 1 : acc),
+  const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useInstallationStructureExecutionProjects()
+
+  function getStats(info: TInstallationStructureExecution[]) {
+    const pending = info.reduce(
+      (acc, current) => (!current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status != 'PRONTA' ? acc + 1 : acc),
       0
     )
+    const pendingPaid = info.reduce(
+      (acc, current) =>
+        !current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status != 'PRONTA' && !!current.compra.dataPagamento
+          ? acc + 1
+          : acc,
+      0
+    )
+
     return {
       projetos: info.length,
       pendentes: pending,
@@ -42,7 +44,7 @@ function EnergyPAControls() {
       <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS COM ADEQUAÇÃO DE PADRÃO</p>
+            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS COM ADEQUAÇÃO DE ESTRUTURA</p>
           </div>
           {filterMenuIsOpen ? (
             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
@@ -75,14 +77,14 @@ function EnergyPAControls() {
             </div>
           </div>
         </div>
-        <PAAdequationsFilterMenu filterMenuIsOpen={filterMenuIsOpen} filters={filters} setFilters={setFilters} />
+        <StructuresAdequationsFilterMenu filterMenuIsOpen={filterMenuIsOpen} filters={filters} setFilters={setFilters} />
       </div>
-      <div className="flex w-full flex-col gap-2 py-2">
+      <div className="flex w-full flex-wrap justify-around gap-2 py-2">
         {isLoading ? <LoadingPage /> : null}
-        {isError ? <ErrorComponent msg={'Erro ao encontrar projetos para adequação de padrão.'} /> : null}
+        {isError ? <ErrorComponent msg="Oops, houve um erro ao encontrar projetos para adequação de estrutura." /> : null}
         {isSuccess ? (
           projects.length > 0 ? (
-            projects.map((project) => <PAAdequationProjectCard key={project._id} project={project} />)
+            projects.map((project) => <InstallationStrucutreProjectCard key={project._id} project={project} />)
           ) : (
             <p className="w-full text-center font-medium text-gray-500">Nenhum projeto foi encontrado...</p>
           )
@@ -92,4 +94,4 @@ function EnergyPAControls() {
   )
 }
 
-export default EnergyPAControls
+export default InstallationStructureControls

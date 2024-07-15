@@ -119,7 +119,7 @@ function GestaoDeObras() {
             <p className="text-center font-light text-gray-500">Área de gestão e controle de adequações de padrões pendentes.</p>
           </div>
         </Link>
-        <Link href="/obras/controleEstruturas">
+        <Link href="/obras/controle-estruturas">
           <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
             <h1 className="text-center font-bold leading-none tracking-tight">CONTROLE DE ESTRUTURAS</h1>
             <div className="flex w-full items-center justify-center p-2">

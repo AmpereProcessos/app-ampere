@@ -31,7 +31,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
           onClick={(e) => openModal(formulary._id)}
           className="cursor-pointer text-xs font-black leading-none tracking-tight hover:text-cyan-500 lg:text-sm"
         >
-          {formulary.titulo}
+          {formulary.titulo || 'NÃO DEFINIDO'}
         </h1>
         {getCardColor(!!formulary.dataEfetivacao)}
       </div>

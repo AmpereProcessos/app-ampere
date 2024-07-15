@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { formatWithoutDiacritics } from '../formatting'
+import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
 
 async function fetchProjects() {
   try {
@@ -198,6 +199,82 @@ export function usePAExecutionProjects() {
     ...useQuery({
       queryKey: ['pa-execution-projects'],
       queryFn: fetchPAExecutionProjects,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}
+
+async function fetchInstallationStructureProjects() {
+  try {
+    const { data } = await axios.get('/api/gestao-obras/estruturas')
+
+    return data.data as TInstallationStructureExecution[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export type UseInstallationStructureExecutionProjectsFilters = {
+  search: string
+  segments: string[]
+  pendingPaid: boolean
+  pendingDelivery: boolean
+  pendingReady: boolean
+}
+
+export function useInstallationStructureExecutionProjects() {
+  const [filters, setFilters] = useState<UseInstallationStructureExecutionProjectsFilters>({
+    search: '',
+    segments: [],
+    pendingPaid: false,
+    pendingDelivery: false,
+    pendingReady: false,
+  })
+
+  function matchSearch(project: TInstallationStructureExecution) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
+
+  function matchSegments(project: TInstallationStructureExecution) {
+    if (filters.segments.length == 0) return true
+    return filters.segments.includes(project.segmento)
+  }
+
+  function matchPendingPayment(project: TInstallationStructureExecution) {
+    if (!filters.pendingPaid) return true
+    return !project.estruturaPersonalizada.dataMontagem && project.estruturaPersonalizada.status != 'PRONTA' && !!project.compra.dataPagamento
+  }
+  function matchPendingDelivery(project: TInstallationStructureExecution) {
+    if (!filters.pendingDelivery) return true
+    return (
+      !project.estruturaPersonalizada.dataMontagem &&
+      project.estruturaPersonalizada.status != 'PRONTA' &&
+      !!project.estruturaPersonalizada.dataEntrega
+    )
+  }
+  function matchPendingReady(project: TInstallationStructureExecution) {
+    if (!filters.pendingReady) return true
+    return (
+      !project.estruturaPersonalizada.dataMontagem &&
+      project.estruturaPersonalizada.status != 'PRONTA' &&
+      !!project.estruturaPersonalizada.dataEntrega &&
+      !!project.compra.dataPagamento
+    )
+  }
+
+  function handleModelData(data: TInstallationStructureExecution[]) {
+    return data.filter(
+      (project) =>
+        matchSearch(project) && matchSegments(project) && matchPendingPayment(project) && matchPendingDelivery(project) && matchPendingReady(project)
+    )
+  }
+  return {
+    ...useQuery({
+      queryKey: ['structure-execution-projects'],
+      queryFn: fetchInstallationStructureProjects,
       select: (data) => handleModelData(data),
     }),
     filters,

@@ -79,10 +79,10 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
             ) : null}
             <div className="flex items-center gap-2">
               <Link href={`/ordens-de-servico/pdf/${serviceOrder._id}`}>
-                <a className="flex cursor-pointer items-center gap-1 text-gray-500 duration-300 ease-in-out hover:text-cyan-500">
+                <div className="flex cursor-pointer items-center gap-1 text-gray-500 duration-300 ease-in-out hover:text-cyan-500">
                   <IoMdDocument style={{ fontSize: '20px' }} />
                   <p className="text-[0.6rem] font-medium">DOCUMENTO</p>
-                </a>
+                </div>
               </Link>
             </div>
           </div>

@@ -862,10 +862,10 @@ function ModalFormSolicitacao({ solicitacaoId, closeModal, editor, financeiroEdi
                   <div className="flex w-full items-center justify-center gap-2 border border-[#15599a] bg-[#fff] py-2 shadow-lg">
                     <h1 className="text-md w-fit text-center font-bold text-green-500 lg:text-xl">REVISÃO DAS INFORMAÇÕES</h1>
                     <Link href={`/comercial/publicoFormulario/${dados._id}`}>
-                      <a className="flex items-center justify-center gap-2 rounded border border-[#fead61] p-2 text-sm font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black ">
+                      <div className="flex items-center justify-center gap-2 rounded border border-[#fead61] p-2 text-sm font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black ">
                         <TbExternalLink />
                         <p>PDF</p>
-                      </a>
+                      </div>
                     </Link>
                   </div>
                   <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">

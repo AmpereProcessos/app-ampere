@@ -28,9 +28,9 @@ function CRMReferencesBlock({ proposeId, opportunityId }: CRMReferencesBlockProp
             </h1>
             <div className="flex w-full grow flex-col gap-1 p-4 pt-2">
               <Link href={`https://crm.ampereenergias.com.br/projeto/id/${opportunityId}`}>
-                <a className="w-full text-center text-sm font-black leading-none tracking-tight text-[#15599a] hover:text-cyan-500">
+                <div className="w-full text-center text-sm font-black leading-none tracking-tight text-[#15599a] hover:text-cyan-500">
                   <strong className="text-[#fead41]">({opportunity.identificador})</strong> {opportunity?.nome}
-                </a>
+                </div>
               </Link>
               <div className="flex items-center justify-center gap-2">
                 <BsCode />

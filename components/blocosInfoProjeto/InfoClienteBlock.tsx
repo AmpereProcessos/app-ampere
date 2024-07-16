@@ -727,10 +727,10 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
       {infoHolder.idSolicitacaoContrato ? (
         <div className="flex w-full items-center justify-center">
           <Link href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}>
-            <a className="mt-2 flex cursor-pointer items-center rounded border border-orange-200 p-2 py-2 pl-2 duration-300 ease-in hover:scale-[1.02] hover:bg-orange-200">
+            <div className="mt-2 flex cursor-pointer items-center rounded border border-orange-200 p-2 py-2 pl-2 duration-300 ease-in hover:scale-[1.02] hover:bg-orange-200">
               <FaFilePdf style={{ color: '#fead41', fontSize: '20px' }} />
               <p className="pl-3 text-sm font-medium text-gray-600">SOLICITAÇÃO DE CONTRATO</p>
-            </a>
+            </div>
           </Link>
         </div>
       ) : null}

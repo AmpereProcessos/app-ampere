@@ -83,14 +83,14 @@ function Operacoes() {
                     <h1 className="w-full text-center text-lg font-medium">{operation.nome}</h1>
                     <div className="flex items-center gap-2">
                       <Link href={`/operacoes/calendario/${operation._id}`}>
-                        <a onClick={(e) => e.stopPropagation()} className="text-[#15599a] duration-300 ease-in-out hover:scale-105">
+                        <div onClick={(e) => e.stopPropagation()} className="text-[#15599a] duration-300 ease-in-out hover:scale-105">
                           <TbExternalLink
                             style={{
                               fontSize: '26px',
                               cursor: 'pointer',
                             }}
                           />
-                        </a>
+                        </div>
                       </Link>
 
                       {session?.user.permissoes.execucao.editar ? (

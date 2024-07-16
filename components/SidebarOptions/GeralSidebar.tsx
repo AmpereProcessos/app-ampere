@@ -43,16 +43,16 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
       <div>
         <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
         <Link href="/">
-          <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <RiDashboardFill style={{ color: '#15599a', fontSize: '20px' }} />
             <p className="pl-3 text-xs text-gray-600">Dashboard</p>
-          </a>
+          </div>
         </Link>
       </div>
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
         <Link href="/gestao-de-projetos/emAndamento">
-          <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <TbRecharging
               style={{
                 color: '#15599a',
@@ -60,11 +60,11 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               }}
             />
             <p className="pl-3 text-xs text-gray-600">Em andamento</p>
-          </a>
+          </div>
         </Link>
 
         <Link href="/gestao-de-projetos/banco-de-dados">
-          <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <FaDatabase
               style={{
                 color: '#15599a',
@@ -72,7 +72,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               }}
             />
             <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
-          </a>
+          </div>
         </Link>
       </div>
 
@@ -81,86 +81,86 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           <h2 className="text-xs text-gray-500">SETORES</h2>
           {checkRoute('PPS') ? (
             <Link href="/comercial">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <SiCashapp style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Comercial</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaShoppingCart style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Suprimentos</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRouteEitherAccess(['Projetos', 'Pós-Venda']) ? (
             <Link href="/projetos">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdEngineering style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Projetos</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('Obras') ? (
             <Link href="/obras">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaTools style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Obras</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRouteEitherAccess(['O&M', 'Pós-Venda']) ? (
             <Link href={'/oem/comissionamento'}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <ImCheckboxChecked style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Comissionamento Pós-Obra</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <BiSupport style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Pós-Venda</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {session.user.permissoes.recursosHumanos.visualizar ? (
             <Link href="/adm/colaboradores">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdPeople style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">RH</p>
-              </a>
+              </div>
             </Link>
           ) : null}
           {checkRoute('ADM') ? (
             <Link href="/adm">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <BsFolderPlus style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">ADM</p>
-              </a>
+              </div>
             </Link>
           ) : null}
           {/* {checkRoute('InsideSales') ? (
-            <Link href="/insideSales">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <Link  href="/insideSales">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddIcCall style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Inside Sales</p>
-              </a>
+              </div>
             </Link>
           ) : null} */}
         </div>
@@ -168,111 +168,111 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           <h2 className="text-xs text-gray-500">OUTROS</h2>
 
           <Link href="/calls">
-            <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
               <FaTasks style={{ color: '#15599a', fontSize: '20px' }} />
               <p className="pl-3 text-xs text-gray-600">Chamados</p>
-            </a>
+            </div>
           </Link>
           {checkRoute('ADM') ? (
             <Link href="/admin/auditoria-financeira">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <BsBank2 style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Auditoria Financeira</p>
-              </a>
+              </div>
             </Link>
           ) : null}
 
           {/* {userIsManager ? (
-            <Link href="/operacoes">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <Link  href="/operacoes">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <IoIosCalendar style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Operações</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )} */}
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos/solicitacoesCompra">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddShoppingCart style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Solicitações de Compra</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {(userIsManager || checkRoute('ADM')) && (
             <Link href="/admin/comissao">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <AiOutlinePercentage style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Comissões</p>
-              </a>
+              </div>
             </Link>
           )}
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos/entregas">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <TbTruckDelivery style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Entregas</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {userIsController ? (
             <Link href={'/ordens-de-servico'}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdDesignServices style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('Almoxarifado') ? (
             <Link href={'/almoxarifado'}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaWarehouse style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('ADM') ? (
             <Link href={'/adm/cobrancas'}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdOutlinePayments style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Cobranças</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('Projetos') ? (
             <Link href={'/projetos/comissionamento'}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <VscWorkspaceTrusted style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Comissionamento</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {checkRoute('O&M') ? (
             <Link href="/oem">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaSolarPanel style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">O&M</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {/* {userIsManager ? (
-            <Link href={`/vendas/leads`}>
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <Link  href={`/vendas/leads`}>
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddIcCall
                   style={{
                     color: '#15599a',
@@ -280,35 +280,35 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
                   }}
                 />
                 <p className="pl-3 text-xs text-gray-600">Leads</p>
-              </a>
+              </div>
             </Link>
           ) : null} */}
           {checkRoute('Obras') ? (
             <Link href="/obras/gestao-obras">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdOutlineBuildCircle style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Gestão de Obras</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )}
           {/* {userIsManager ? (
-            <Link href="/admin/gestaoTimeVendas">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <Link  href="/admin/gestaoTimeVendas">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <TbDashboard style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Gestão - Time de Vendas</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false
           )} */}
           {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda/nps">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdSentimentSatisfiedAlt style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">NPS</p>
-              </a>
+              </div>
             </Link>
           ) : (
             false

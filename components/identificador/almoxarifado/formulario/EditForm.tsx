@@ -418,9 +418,9 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
               {!infoHolder.dataEfetivacao ? (
                 <div className="my-1 flex w-full items-center justify-end gap-2">
                   <Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-                    <a className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
+                    <div className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
                       DOCUMENTO (PDF)
-                    </a>
+                    </div>
                   </Link>
                   <button
                     disabled={loadingConclusion || loadingUpdate}
@@ -449,9 +449,9 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     EXCLUIR FORMULÁRIO
                   </button>
                   <Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-                    <a className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
+                    <div className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
                       DOCUMENTO (PDF)
-                    </a>
+                    </div>
                   </Link>
                 </div>
               )}

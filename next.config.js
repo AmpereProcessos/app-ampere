@@ -1,15 +1,6 @@
 /** @type {import('next').NextConfig} */
-const withTM = require('next-transpile-modules')([
-  '@fullcalendar/common',
-  '@babel/preset-react',
-  '@fullcalendar/common',
-  '@fullcalendar/daygrid',
-  '@fullcalendar/interaction',
-  '@fullcalendar/react',
-  '@fullcalendar/timegrid',
-])
 
-module.exports = withTM({
+const nextConfig = {
   reactStrictMode: true,
   env: {
     DISTANCE_API: process.env.DISTANCE_API,
@@ -31,6 +22,26 @@ module.exports = withTM({
     ],
   },
   images: {
-    domains: ['avatars.githubusercontent.com', 'firebasestorage.googleapis.com', 'sc-erp.s3.amazonaws.com', 'localhost'],
+    // domains: ['avatars.githubusercontent.com', 'firebasestorage.googleapis.com', 'sc-erp.s3.amazonaws.com', 'localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'sc-erp.s3.amazonaws.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
   },
-})
+}
+
+module.exports = nextConfig

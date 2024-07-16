@@ -702,9 +702,9 @@ function Projetos() {
             ))}
           </div>
           <Link href={'/projetos/analisesTecnicas'}>
-            <a className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
               <p className="text-sm font-bold uppercase">Visitas técnicas</p>
-            </a>
+            </div>
           </Link>
           {modalProject.isOpen && modalProject.projectId && (
             <ModalProjetos

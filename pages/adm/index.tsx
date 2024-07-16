@@ -368,9 +368,9 @@ function Administracao() {
           : null}
       </div>
       <Link href={'/comercial/solicitacoes-contrato'}>
-        <a className="fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+        <div className="fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
           <p className="text-sm font-bold uppercase">SOLICITAÇÕES DE CONTRATO</p>
-        </a>
+        </div>
       </Link>
       {modalProject.isOpen && modalProject.projectId ? (
         <ModalADM

@@ -125,14 +125,14 @@ function Estoque() {
           </AnimatePresence>
           <div className="mt-2 flex w-full items-center justify-end gap-2">
             <Link href="/almoxarifado/estoque/relatorio-pdf">
-              <a className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#fead41] px-2 py-1 text-sm font-bold tracking-tight text-white">
+              <div className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#fead41] px-2 py-1 text-sm font-bold tracking-tight text-white">
                 <h1>RELATÓRIO</h1>
-              </a>
+              </div>
             </Link>
             <Link href="/almoxarifado/estoque/analitico">
-              <a className="flex cursor-pointer items-center gap-2 rounded-lg bg-black px-2 py-1 text-sm font-bold tracking-tight text-white">
+              <div className="flex cursor-pointer items-center gap-2 rounded-lg bg-black px-2 py-1 text-sm font-bold tracking-tight text-white">
                 <h1>ANÁLISE DE ESTOQUE</h1>
-              </a>
+              </div>
             </Link>
           </div>
         </div>

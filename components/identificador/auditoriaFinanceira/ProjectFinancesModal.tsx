@@ -173,10 +173,10 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
                 </div>
                 <div className="flex w-full items-center justify-end">
                   <Link href={`/admin/auditoria-financeira/pdf/${projectId}`}>
-                    <a className="flex items-center gap-1 rounded-md py-1 px-2 text-white duration-300 ease-in-out hover:bg-gray-50 hover:text-gray-800">
+                    <div className="flex items-center gap-1 rounded-md py-1 px-2 text-white duration-300 ease-in-out hover:bg-gray-50 hover:text-gray-800">
                       <FaExternalLinkAlt />
                       <p className="text-xs tracking-tight">IR À PÁGINA DE RELATÓRIO</p>
-                    </a>
+                    </div>
                   </Link>
                 </div>
               </div>

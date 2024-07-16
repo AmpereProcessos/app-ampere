@@ -236,9 +236,9 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                       <BsCode size={'20px'} color="rgb(31,41,55)" />
                       {analysis.projeto.id ? (
                         <Link href={`https://crm.ampereenergias.com.br/projeto/id/${analysis.projeto.id}`}>
-                          <a className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                          <div className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                             #{analysis.projeto.identificador || 'N/A'}
-                          </a>
+                          </div>
                         </Link>
                       ) : (
                         <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
@@ -337,9 +337,9 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                 <div className="flex w-full flex-wrap items-center justify-center gap-2 px-4">
                   {technicalAnalysisReportTypes.map((type) => (
                     <Link key={type.id} href={`/projetos/laudo/pdf/${analysisId}?tipo=${type.value}`}>
-                      <a className="w-fit rounded border border-black py-1 px-2 text-center font-bold shadow-sm hover:bg-black hover:text-white">
+                      <div className="w-fit rounded border border-black py-1 px-2 text-center font-bold shadow-sm hover:bg-black hover:text-white">
                         {type.value}
-                      </a>
+                      </div>
                     </Link>
                   ))}
                 </div>

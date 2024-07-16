@@ -35,9 +35,9 @@ function Header({ toggleSidebar }: HeaderProps) {
       <div className="flex items-center gap-x-2">
         <FaBars onClick={toggleSidebar} style={{ fontSize: '23px', color: '#15599a', cursor: 'pointer' }} />
       </div>
-      <div className="flex h-[58px] cursor-pointer items-center justify-center">
+      <div className="relative flex h-[58px] w-[58px] cursor-pointer items-center justify-center">
         <Link href="/">
-          <Image height={'58px'} width={'58px'} src={LogoSVG} objectFit="fill" />
+          <Image fill={true} src={LogoSVG} alt="Logo" />
         </Link>
       </div>
 

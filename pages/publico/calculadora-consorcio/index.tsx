@@ -254,8 +254,8 @@ function EnergyConsortiumCalculator() {
           </div> */}
         </div>
         <div className="flex w-full items-center justify-end gap-4 p-6">
-          <Image src={LogoAmpere} height={50} width={150} />
-          <Image src={LogoEnergea} height={50} width={150} />
+          <Image src={LogoAmpere} height={50} width={150} alt="Logo Ampère" />
+          <Image src={LogoEnergea} height={50} width={150} alt="Logo Energea" />
         </div>
       </div>
     </div>

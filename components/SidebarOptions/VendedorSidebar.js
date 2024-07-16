@@ -25,10 +25,10 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
       <div>
         <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
         <Link href="/">
-          <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <RiDashboardFill style={{ color: '#15599a', fontSize: '20px' }} />
             <p className="pl-3 text-xs text-gray-600">Dashboard</p>
-          </a>
+          </div>
         </Link>
       </div>
       {userVisualization == 'INSIDE' ? (
@@ -36,10 +36,10 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
           <h2 className="text-xs text-gray-500">SETORES</h2>
           {checkRoute('InsideSales') ? (
             <Link href="/insideSales">
-              <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <MdAddIcCall style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Inside Sales</p>
-              </a>
+              </div>
             </Link>
           ) : null}
         </div>
@@ -48,7 +48,7 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
         <Link href="/vendas">
-          <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
             <ImFolderOpen
               style={{
                 color: '#15599a',
@@ -56,11 +56,11 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
               }}
             />
             <p className="pl-3 text-xs text-gray-600">Projetos</p>
-          </a>
+          </div>
         </Link>
         {/* {!!sellerName ? (
           <Link href={`/vendas/emProcesso/${userVisualization}?parametro=${sellerName}`}>
-            <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
               <TbRecharging
                 style={{
                   color: '#15599a',
@@ -68,25 +68,25 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
                 }}
               />
               <p className="pl-3 text-xs text-gray-600">Em processo</p>
-            </a>
+            </div>
           </Link>
         ) : null}
         {sellerName ? (
           <Link href={`/vendas/formularios`}>
-            <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-              <AiOutlineForm
+            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+              <diviOutlineForm
                 style={{
                   color: '#15599a',
                   fontSize: '20px',
                 }}
               />
               <p className="pl-3 text-xs text-gray-600">Formulários</p>
-            </a>
+            </div>
           </Link>
         ) : null}
         {sellerName ? (
           <Link href={`/vendas/visitasTecnicas`}>
-            <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
               <TbReportAnalytics
                 style={{
                   color: '#15599a',
@@ -94,13 +94,13 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
                 }}
               />
               <p className="pl-3 text-xs text-gray-600">Visitas Técnicas</p>
-            </a>
+            </div>
           </Link>
         ) : null}
 
         {sellerName ? (
           <Link href={`/vendas/entregaTecnica`}>
-            <a className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
               <BsFillPatchCheckFill
                 style={{
                   color: '#15599a',
@@ -108,12 +108,12 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
                 }}
               />
               <p className="pl-3 text-xs text-gray-600">Entregas Técnicas</p>
-            </a>
+            </div>
           </Link>
         ) : null} */}
         {/* {sellerName ? (
           <Link href={`/vendas/leads`}>
-            <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+            <div className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
               <MdAddIcCall
                 style={{
                   color: "#15599a",
@@ -121,7 +121,7 @@ function VendedorSidebar({ userAccessibleRoutes = [], userVisualization, sellerN
                 }}
               />
               <p className="pl-3 text-xs text-gray-600">Leads</p>
-            </a>
+            </div>
           </Link>
         ) : null} */}
       </div>

@@ -331,9 +331,9 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                     <BsCode size={'20px'} color="rgb(31,41,55)" />
                     {call.projeto.id ? (
                       <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${call.projeto.id}`}>
-                        <a className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                        <div className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                           #{call.projeto.codigo || 'N/A'}
-                        </a>
+                        </div>
                       </Link>
                     ) : (
                       <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">

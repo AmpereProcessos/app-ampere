@@ -63,9 +63,9 @@ function Employees() {
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Link href={'/adm/propriedades'}>
-                <a className="whitespace-nowrap rounded bg-blue-900 px-4 py-1 text-sm font-medium text-white shadow disabled:bg-blue-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white">
+                <div className="whitespace-nowrap rounded bg-blue-900 px-4 py-1 text-sm font-medium text-white shadow disabled:bg-blue-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white">
                   PROPRIEDADES
-                </a>
+                </div>
               </Link>
             </div>
 

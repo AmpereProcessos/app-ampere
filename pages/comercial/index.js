@@ -420,7 +420,7 @@ function Comercial() {
                 </div>
                 <div className="flex items-center justify-between gap-x-2">
                   <Link href="/comercial/analise">
-                    <a className="rounded border border-[#fead61] p-1 font-medium text-[#fead61]">ANALÍTICO</a>
+                    <div className="rounded border border-[#fead61] p-1 font-medium text-[#fead61]">ANALÍTICO</div>
                   </Link>
                   {/* <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterProjects} /> */}
                 </div>
@@ -512,9 +512,9 @@ function Comercial() {
         </div>
         {session.user?.regional == undefined && (
           <Link href={'/comercial/solicitacoes-contrato'}>
-            <a className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <div className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
               <p className="text-sm font-bold uppercase">Formulários</p>
-            </a>
+            </div>
           </Link>
         )}
         {modalProject.isOpen && modalProject.projectId ? (

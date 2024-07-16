@@ -74,15 +74,15 @@ function ProjectServiceOrderCard({ order, projectId, handleClick }) {
               <AiFillEdit />
             </button>
             <Link href={`/ordens-de-servico/pdf/${order._id}`}>
-              <a className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
+              <div className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
                 <TbExternalLink />
-              </a>
+              </div>
             </Link>
             {order.categoria == 'MANUTENÇÃO PREVENTIVA' && projectId ? (
               <Link href={`/oem/pdfTermo/${projectId}`}>
-                <a className="h-[30px] cursor-pointer rounded border border-cyan-500 p-1 font-bold text-cyan-500 hover:bg-cyan-500 hover:text-black">
+                <div className="h-[30px] cursor-pointer rounded border border-cyan-500 p-1 font-bold text-cyan-500 hover:bg-cyan-500 hover:text-black">
                   <HiOutlineDocumentText />
-                </a>
+                </div>
               </Link>
             ) : null}
           </div>

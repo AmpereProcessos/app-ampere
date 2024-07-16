@@ -15,16 +15,16 @@ function FilesBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
       <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
         <h1 className="font-bold text-white">ARQUIVOS</h1>
       </div>
-      <div className="flex flex-col w-full items-center">
+      <div className="flex w-full flex-col items-center">
         <h1 className="font-sans font-bold  text-[#353432]">LINK PARA ARQUIVOS AUXILIARES</h1>
         {infoHolder.arquivosAuxiliares ? (
           <Link href={infoHolder.arquivosAuxiliares}>
-            <a className="w-fit text-center text-blue-300 self-center font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+            <div className="w-fit cursor-pointer self-center text-center font-raleway text-sm font-medium text-blue-300 duration-300 ease-in-out hover:text-cyan-300">
               {infoHolder.arquivosAuxiliares}
-            </a>
+            </div>
           </Link>
         ) : (
-          <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Link não preenchido.</p>
+          <p className="w-full py-2 text-center text-xs font-medium italic text-gray-500">Link não preenchido.</p>
         )}
       </div>
       <div className="mt-2 flex w-full flex-wrap justify-around gap-2">
@@ -35,7 +35,7 @@ function FilesBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             </div>
           ))
         ) : (
-          <p className="w-full font-medium text-center text-xs italic text-gray-500">Nenhum arquivo adicionado.</p>
+          <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
         )}
       </div>
     </div>

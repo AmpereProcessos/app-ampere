@@ -206,7 +206,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 <h1 className="text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
                 <div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
                   <Link href={`/publico/jornada-do-cliente/${project._id}`}>
-                    <a className="text-[0.65rem] font-bold">LINK DA JORNADA</a>
+                    <div className="text-[0.65rem] font-bold">LINK DA JORNADA</div>
                   </Link>
                 </div>
               </div>

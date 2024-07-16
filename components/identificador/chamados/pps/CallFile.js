@@ -35,17 +35,17 @@ function CallFile({ info }) {
     }
   }
   return (
-    <div className="flex items-center justify-between gap-2 w-full border border-cyan-500 rounded-md p-2">
+    <div className="flex w-full items-center justify-between gap-2 rounded-md border border-cyan-500 p-2">
       <div className="flex items-center gap-2">
         <MdAttachFile color="rgb(107,114,128)" />
         <Link href={info.link}>
-          <a className="text-sm text-gray-600 font-medium hover:text-cyan-500 duration-300 ease-in-out">{info.title || 'ARQUIVO'}</a>
+          <div className="text-sm font-medium text-gray-600 duration-300 ease-in-out hover:text-cyan-500">{info.title || 'ARQUIVO'}</div>
         </Link>
-        {info.format ? <p className="text-[0.6rem] text-[#fead41] font-medium">({info.format})</p> : null}
+        {info.format ? <p className="text-[0.6rem] font-medium text-[#fead41]">({info.format})</p> : null}
       </div>
       <div
         onClick={() => handleDownload(info)}
-        className="flex items-center justify-center text-blue-700 hover:text-blue-500 hover:scale-105 duration-300 ease-in-out cursor-pointer"
+        className="flex cursor-pointer items-center justify-center text-blue-700 duration-300 ease-in-out hover:scale-105 hover:text-blue-500"
       >
         <TbDownload />
       </div>

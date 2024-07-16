@@ -12,7 +12,7 @@ function Avatar({ url, width, height, fallback }) {
     )
   return (
     <div style={{ width: width, height: height }} className="flex items-center justify-center">
-      <Image src={url} alt="Avatar" fill={true} width={width} height={height} style={{ borderRadius: '100%' }} />
+      <Image src={url} alt="Avatar" width={width} height={height} style={{ borderRadius: '100%' }} />
     </div>
   )
 }

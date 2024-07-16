@@ -11,7 +11,7 @@ type TEditModal = {
 }
 
 function renderHeader({ projectName, sender }: { projectName: string; sender: string }) {
-  if (sender == 'SISTEMA') return <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">AUTOMAÇÃO</h1>
+  if (sender == 'SISTEMA') return <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">AUTOMAÇÃO </h1>
   return (
     <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">
       <strong className="text-[#15599a]">{sender.toUpperCase()}</strong> DIZ:

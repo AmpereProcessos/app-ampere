@@ -41,8 +41,8 @@ function AnimatedModalWrapper({ children, modalIsOpen, width, height }) {
     zIndex: 1000,
   }
   return (
-    <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="relative left-[50%] top-[50%] z-[100] h-[70%] w-[75%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px]">
+    <div id="modal-wrapper" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
+      <div className="relative left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px]">
         {children}
       </div>
     </div>

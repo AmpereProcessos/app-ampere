@@ -15,6 +15,7 @@ import { useQueryClient } from 'react-query'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import toast from 'react-hot-toast'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import CheckboxWithDate from '@/components/inputs/CheckboxWithData'
 
 type PAAdequationProjectCardProps = {
   project: TEnergyPAExecution
@@ -122,7 +123,15 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
         </div>
       </div>
       <div className="flex w-full items-center justify-end">
-        <div className="w-fit">
+        <CheckboxWithDate
+          labelFalse="EXECUTADO"
+          labelTrue="EXECUTADO"
+          editable={!isLoading}
+          showDate={!!project.padrao.aumentoCarga.dataEfetivacao}
+          date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
+          handleChange={(value) => handleUpdate(formatDateInputChange(value))}
+        />
+        {/* <div className="w-fit">
           <DateInput
             label="DATA DE EXECUÇÃO"
             labelClassName="text-[0.6rem] tracking-tight"
@@ -134,7 +143,7 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
             }}
             width="100%"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )

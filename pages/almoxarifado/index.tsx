@@ -29,7 +29,7 @@ function GestaoAlmoxarifado() {
         <h1 className="text-center text-2xl font-black uppercase text-[#15599a]">Áreas de controle</h1>
         <div className="mt-5 flex w-full flex-wrap justify-center gap-4">
           <Link href="/almoxarifado/formularios">
-            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
               <h1 className="text-center font-bold leading-none tracking-tight">FORMULÁRIOS DE SAÍDA</h1>
               <div className="flex w-full items-center justify-center p-2">
                 <FaWpforms style={{ color: '#15599a', fontSize: '45px' }} />
@@ -38,7 +38,7 @@ function GestaoAlmoxarifado() {
             </div>
           </Link>
           <Link href="/almoxarifado/estoque">
-            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
               <h1 className="text-center font-bold leading-none tracking-tight">ESTOQUE</h1>
               <div className="flex w-full items-center justify-center p-2">
                 <FaBox style={{ color: '#15599a', fontSize: '45px' }} />
@@ -47,7 +47,7 @@ function GestaoAlmoxarifado() {
             </div>
           </Link>
           <Link href="/obras/conferenciaMaterial">
-            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
               <h1 className="text-center font-bold leading-none tracking-tight">ENTREGAS PARA CONFERÊNCIA</h1>
               <div className="flex w-full items-center justify-center p-2">
                 <BsClipboardCheckFill style={{ color: '#15599a', fontSize: '45px' }} />
@@ -58,7 +58,7 @@ function GestaoAlmoxarifado() {
             </div>
           </Link>
           <Link href="/almoxarifado/separacao">
-            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+            <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
               <h1 className="text-center font-bold leading-none tracking-tight">PROJETOS P/SEPARAÇÃO</h1>
               <div className="flex w-full items-center justify-center p-2">
                 <TbSeparatorVertical style={{ color: '#15599a', fontSize: '45px' }} />

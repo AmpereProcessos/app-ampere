@@ -1,16 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { TNotificationDTO } from '@/utils/schemas/notifications'
-import { BsCalendarCheck, BsCheck } from 'react-icons/bs'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import { formatDate } from '@/utils/constants'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { CalendarIcon } from 'lucide-react'
-import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/lib/utils'
-import { formatDateAsLocale } from '@/utils/methods/formatting'
-
 type TEditModal = {
   isOpen: boolean
   id: string | null
@@ -19,32 +8,7 @@ type TEditModal = {
 function Test() {
   const [date, setDate] = useState<Date | undefined>(undefined)
   console.log(date)
-  return (
-    <div className="flex grow items-center justify-center p-6">
-      <Popover>
-        <PopoverTrigger asChild className="flex flex-col border-0 hover:bg-transparent">
-          <Button variant={'outline'} className={cn('flex flex-col gap-1', !date && 'text-muted-foreground')}>
-            <div className="flex items-center gap-2">
-              <div className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-black`}>
-                {date ? <BsCheck style={{ color: 'black' }} /> : null}
-              </div>
-              <p className={'text-xs font-medium leading-none'}>{!!date ? 'ATIVIDADE CONCLUÍDA' : 'ATIVIDADE CONCLUÍDA'}</p>
-            </div>
-
-            {date ? (
-              <div className="flex min-h-[10px] items-center gap-1">
-                <BsCalendarCheck size={10} />
-                <p className={'text-[0.6rem] font-medium leading-none'}>{formatDateAsLocale(date?.toISOString())}</p>
-              </div>
-            ) : null}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-        </PopoverContent>
-      </Popover>
-    </div>
-  )
+  return <></>
   // return (
   //   <div className="grow p-6">
   //     <div className="flex h-full grow flex-col">

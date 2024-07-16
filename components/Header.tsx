@@ -35,10 +35,12 @@ function Header({ toggleSidebar }: HeaderProps) {
       <div className="flex items-center gap-x-2">
         <FaBars onClick={toggleSidebar} style={{ fontSize: '23px', color: '#15599a', cursor: 'pointer' }} />
       </div>
-      <div className="relative flex h-[58px] w-[58px] cursor-pointer items-center justify-center">
-        <Link href="/">
-          <Image fill={true} src={LogoSVG} alt="Logo" />
-        </Link>
+      <div className="flex h-[58px] cursor-pointer items-center justify-center">
+        <div className="relative h-[58px] w-[58px]">
+          <Link href="/">
+            <Image fill={true} src={LogoSVG} alt="Logo" />
+          </Link>
+        </div>
       </div>
 
       <div className="flex items-center justify-end gap-1 lg:gap-3">

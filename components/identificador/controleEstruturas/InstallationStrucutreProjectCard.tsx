@@ -1,3 +1,4 @@
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import DateInput from '@/components/inputs/Date'
 import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
 import { formatDate, formatToMoney } from '@/utils/constants'
@@ -163,19 +164,14 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
       </div>
 
       <div className="flex w-full items-center justify-end">
-        <div className="w-fit">
-          <DateInput
-            label="DATA DE EXECUÇÃO"
-            labelClassName="text-[0.6rem] tracking-tight"
-            editable={!isLoading}
-            // inputClassName="w-full rounded-md border border-gray-200 p-2 text-[0.7rem] outline-none placeholder:italic"
-            value={formatDate(project.estruturaPersonalizada.dataMontagem)}
-            handleChange={(value) => {
-              handleUpdate(formatDateInputChange(value))
-            }}
-            width="100%"
-          />
-        </div>
+        <CheckboxWithDate
+          labelFalse="EXECUTADO"
+          labelTrue="EXECUTADO"
+          editable={!isLoading}
+          showDate={!!project.estruturaPersonalizada.dataMontagem}
+          date={project.estruturaPersonalizada.dataMontagem || project.obra.saida || null}
+          handleChange={(value) => handleUpdate(formatDateInputChange(value))}
+        />
       </div>
     </div>
   )

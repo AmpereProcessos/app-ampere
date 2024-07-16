@@ -2,16 +2,19 @@ import '../styles/globals.css'
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { useContext, useEffect, useState } from 'react'
+import { useState } from 'react'
 import Header from '../components/Header'
 import Sidebar from '../components/Sidebar'
 import { useRouter } from 'next/router'
-import axios from 'axios'
-import { AppProvider } from '../context/AppContext'
+
 import { SessionProvider } from 'next-auth/react'
 import AppHead from '../components/Head/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Toaster } from 'react-hot-toast'
+import { Inter } from 'next/font/google'
+import { cn } from '../lib/utils'
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({ subsets: ['latin'] })
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const router = useRouter()
   const queryClient = new QueryClient()
@@ -28,7 +31,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         <AppHead />
         <QueryClientProvider client={queryClient}>
           <DndProvider backend={HTML5Backend}>
-            <div className="flex min-h-[100vh] w-screen max-w-full flex-col bg-[#fff] xl:min-h-[100vh]">
+            <div className={`flex min-h-[100vh] w-screen max-w-full flex-col bg-[#fff] font-[Inter] xl:min-h-[100vh] ${inter.className}`}>
               <Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
               <div className="flex min-h-[100%] grow ">
                 {sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
@@ -36,7 +39,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                   style={{
                     width: sidebarVisible ? 'calc(100vw - 250px)' : '100%',
                   }}
-                  className={`${sidebarVisible ? 'hidden md:flex md:flex-col' : 'flex flex-col'} grow`}
+                  data-expanded={!!sidebarVisible ? 'true' : 'false'}
+                  className={cn('flex grow flex-col', {
+                    'hidden lg:flex': sidebarVisible,
+                  })}
                 >
                   <Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible((prev) => !prev)} {...pageProps} />
                   <Toaster />

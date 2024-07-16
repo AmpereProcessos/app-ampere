@@ -1,108 +1,49 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { TNotificationDTO } from '@/utils/schemas/notifications'
-import { BsCheck } from 'react-icons/bs'
+import { BsCalendarCheck, BsCheck } from 'react-icons/bs'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { formatDate } from '@/utils/constants'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
 
 type TEditModal = {
   isOpen: boolean
   id: string | null
 }
 
-function renderHeader({ projectName, sender }: { projectName: string; sender: string }) {
-  if (sender == 'SISTEMA') return <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">AUTOMAÇÃO </h1>
-  return (
-    <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">
-      <strong className="text-[#15599a]">{sender.toUpperCase()}</strong> DIZ:
-    </h1>
-  )
-}
-
-const notifications = [
-  {
-    _id: '65df860e52e08050e832ef6d',
-    destinatario: '6318db05929e9f8731d8d9bb',
-    remetente: 'Lucas Fernandes',
-    remetenteId: '6318db05929e9f8731d8d9bb',
-    mensagem: 'testee21432131',
-    projetoReferencia: 1747,
-    nomeDoProjeto: 'CRISTIANO APARECIDO SIQUEIRA BORGES',
-    dataDeEnvio: new Date().toISOString(),
-    lido: false,
-    dataDeLeitura: null,
-  },
-  {
-    _id: '65f36cb5482174546faef483',
-    destinatario: '6353eb83ef4e1a367a877949',
-    nomeDoProjeto: 'TESTANDO PROJETO',
-    remetente: 'SISTEMA',
-    mensagem: 'Olá, acabo de aprovar uma solicitação de contrato do cliente Diego Rodrigues - casa. Desde já agradeço, Volts.',
-    dataDeEnvio: new Date().toISOString(),
-    lido: true,
-    dataDeLeitura: '2024-03-15T18:14:38.105Z',
-  },
-  {
-    _id: '65bbd86762c5363fc6e2bc4b',
-    destinatario: '64638b6c2071c508968bdf08',
-    remetente: 'Luis Eduardo',
-    remetenteId: '659e8961df037400d84571ac',
-    mensagem: 'TERMO ASSINADO SEGUIR COM O MESMO MATERIAL',
-    projetoReferencia: 2050,
-    nomeDoProjeto: 'ROGERIO GEROLINETO FONSECA',
-    dataDeEnvio: '2024-02-01T17:44:07.817Z',
-
-    lido: true,
-    dataDeLeitura: '2024-02-02T17:11:13.843Z',
-  },
-]
-const notificacao: TNotificationDTO = {
-  _id: '65f36cb5482174546faef483',
-  destinatario: '6353eb83ef4e1a367a877949',
-  nomeDoProjeto: 'TESTANDO PROJETO',
-  remetente: 'SISTEMA',
-  mensagem: 'Olá, acabo de aprovar uma solicitação de contrato do cliente Diego Rodrigues - casa. Desde já agradeço, Volts.',
-  dataDeEnvio: new Date().toISOString(),
-  lido: true,
-  dataDeLeitura: '2024-03-15T18:14:38.105Z',
-}
 function Test() {
-  const [date, setDate] = useState<Date | null>(null)
+  const [date, setDate] = useState<Date | undefined>(undefined)
   console.log(date)
   return (
-    <>
-      <div className="relative mt-2 flex w-full items-center justify-center">
-        <label htmlFor="date-picker" className={`flex min-h-[58px] w-full flex-col items-center justify-center`}>
-          <div className={`flex w-fit items-center gap-2 p-3`}>
-            <div
-              className={`flex h-[16px] w-[16px] cursor-pointer items-center justify-center rounded-full border border-black`}
-              onClick={() => {
-                setDate(date ? null : new Date())
-              }}
-            >
-              {date ? <BsCheck style={{ color: 'black' }} /> : null}
+    <div className="flex grow items-center justify-center p-6">
+      <Popover>
+        <PopoverTrigger asChild className="flex flex-col border-0 hover:bg-transparent">
+          <Button variant={'outline'} className={cn('flex flex-col gap-1', !date && 'text-muted-foreground')}>
+            <div className="flex items-center gap-2">
+              <div className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-black`}>
+                {date ? <BsCheck style={{ color: 'black' }} /> : null}
+              </div>
+              <p className={'text-xs font-medium leading-none'}>{!!date ? 'ATIVIDADE CONCLUÍDA' : 'ATIVIDADE CONCLUÍDA'}</p>
             </div>
-            <p
-              className={'cursor-pointer text-xs font-medium leading-none'}
-              onClick={() => {
-                setDate(date ? null : new Date())
-              }}
-            >
-              CONCLUÍDO
-            </p>
-          </div>
-        </label>
-        <input
-          value={formatDate(date)}
-          onChange={(e) => {
-            setDate(e.target.value != '' ? new Date(formatDateInputChange(e.target.value)) : null)
-          }}
-          id="date-picker"
-          type="date"
-          className="absolute h-full w-full opacity-0"
-        />
-      </div>
-    </>
+
+            {date ? (
+              <div className="flex min-h-[10px] items-center gap-1">
+                <BsCalendarCheck size={10} />
+                <p className={'text-[0.6rem] font-medium leading-none'}>{formatDateAsLocale(date?.toISOString())}</p>
+              </div>
+            ) : null}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+        </PopoverContent>
+      </Popover>
+    </div>
   )
   // return (
   //   <div className="grow p-6">

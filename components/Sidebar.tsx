@@ -36,7 +36,7 @@ function Sidebar({ sidebarVisible }: SidebarProps) {
         initial="hidden"
         animate={sidebarVisible ? 'visible' : 'hidden'}
         style={{ maxHeight: 'calc(100vh - 70px)' }}
-        className="overscroll-y sticky top-[70px] flex w-full flex-col overflow-y-auto border-r border-gray-300 bg-[#fff] py-4 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:w-[250px]"
+        className="overscroll-y sticky top-[70px] flex w-full flex-col overflow-y-auto border-r border-gray-300 bg-[#fff] py-4 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[250px]"
       >
         {session.user?.visualizacao.tipo == 'OPERACIONAL' ? (
           <GeralSidebar

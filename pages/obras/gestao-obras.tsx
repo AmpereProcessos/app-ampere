@@ -111,7 +111,7 @@ function GestaoDeObras() {
       </div>
       <div className="mt-5 flex w-full flex-wrap justify-center gap-4">
         <Link href="/obras/controle-padroes">
-          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
             <h1 className="text-center font-bold leading-none tracking-tight">CONTROLE DE PADRÕES</h1>
             <div className="flex w-full items-center justify-center p-2">
               <MdElectricMeter style={{ color: '#15599a', fontSize: '45px' }} />
@@ -120,7 +120,7 @@ function GestaoDeObras() {
           </div>
         </Link>
         <Link href="/obras/controle-estruturas">
-          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
             <h1 className="text-center font-bold leading-none tracking-tight">CONTROLE DE ESTRUTURAS</h1>
             <div className="flex w-full items-center justify-center p-2">
               <MdRoofing style={{ color: '#15599a', fontSize: '45px' }} />
@@ -129,7 +129,7 @@ function GestaoDeObras() {
           </div>
         </Link>
         <Link href="/obras/conferenciaMaterial">
-          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[45%]">
+          <div className="flex w-full cursor-pointer flex-col gap-2 rounded-md border border-gray-300 p-3 shadow-sm duration-300 ease-in-out hover:border-blue-300 hover:bg-blue-100 lg:w-[500px]">
             <h1 className="text-center font-bold leading-none tracking-tight">ENTREGAS PARA CONFERÊNCIA</h1>
             <div className="flex w-full items-center justify-center p-2">
               <FaListCheck style={{ color: '#15599a', fontSize: '45px' }} />

@@ -22,6 +22,7 @@ const EnergyPAExecutionProjection = {
   'homologacao.documentacao.dataAssinatura': 1,
   'homologacao.documentacao.dataConclusaoElaboracao': 1,
   'homologacao.status': 1,
+  'obra.saida': 1,
   padrao: 1,
   visitaTecnica: 1,
   ordensDeServico: 1,
@@ -43,6 +44,7 @@ export type TEnergyPAExecution = Pick<
   | 'segmento'
   | 'homologacao'
   | 'padrao'
+  | 'obra'
   | 'visitaTecnica'
 >
 

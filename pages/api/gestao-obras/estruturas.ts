@@ -21,6 +21,7 @@ const InstallationStructureProjection = {
   'compra.dataEntrega': 1,
   'compra.previsaoEntrega': 1,
   'compra.dataPagamento': 1,
+  'obra.saida': 1,
   estruturaPersonalizada: 1,
   'sistema.qtdeModulos': 1,
 }
@@ -33,6 +34,7 @@ export type TInstallationStructureExecution = Pick<
   | 'segmento'
   | 'telefone'
   | 'compra'
+  | 'obra'
   | 'cidade'
   | 'uf'
   | 'cep'

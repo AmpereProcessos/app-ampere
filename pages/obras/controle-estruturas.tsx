@@ -40,7 +40,7 @@ function InstallationStructureControls() {
   if (status != 'authenticated') return <LoadingPage />
   if (!isAuthorized) return <UnauthorizedPage />
   return (
-    <div className="grow bg-slate-50 p-6">
+    <div className="h-full grow bg-slate-50 p-6">
       <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">

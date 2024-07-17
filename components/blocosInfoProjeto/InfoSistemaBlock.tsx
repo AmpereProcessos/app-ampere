@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { TProjectDTO } from '@/utils/schemas/projects'
 import SelectInput from '../inputs/Select'
@@ -8,6 +8,13 @@ import CheckboxInput from '../inputs/Checkbox'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import System from '../identificador/registrosAlteracoesProjeto/secao/System'
+import ProductCard from '../identificador/produtos/ProductCard'
+import ServiceCard from '../identificador/servicos/ServiceCard'
+import { MdOutlineMiscellaneousServices } from 'react-icons/md'
+import NewProductMenu from './Utils/NewProductMenu'
+import NewServiceMenu from './Utils/NewServiceMenu'
+import ServiceItem from './Utils/ServiceItem'
+import ProductItem from './Utils/ProductItem'
 
 type InfoSistemaBlockProps = {
   editor: boolean
@@ -19,6 +26,20 @@ type InfoSistemaBlockProps = {
   showPaymentInfo: boolean
 }
 function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], showPaymentInfo = false }: InfoSistemaBlockProps) {
+  const [newCompositionItemMenu, setNewCompositionItemMenu] = useState<'product' | 'service' | null>(null)
+
+  function removeServiceFromProject(index: number) {
+    const currentServices = [...(infoHolder.servicos || [])]
+    currentServices.splice(index, 1)
+    setInfo((prev) => ({ ...prev, servicos: currentServices }))
+    setChanges((prev) => ({ ...prev, servicos: currentServices }))
+  }
+  function removeProductFromProject(index: number) {
+    const currentProductList = [...(infoHolder.produtos || [])]
+    currentProductList.splice(index, 1)
+    setInfo((prev) => ({ ...prev, produtos: currentProductList }))
+    setChanges((prev) => ({ ...prev, produtos: currentProductList }))
+  }
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O SISTEMA</span>
@@ -468,6 +489,68 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
           </div>
         </div>
       ) : null}
+      <div className="my-2 flex w-full items-center justify-end gap-4 px-2">
+        <button
+          onClick={() => setNewCompositionItemMenu('service')}
+          className={`${
+            newCompositionItemMenu == 'service' ? 'opacity-100' : 'opacity-60'
+          } flex items-center gap-1 rounded-lg border border-cyan-500 bg-cyan-50 px-2 py-1 text-xs text-cyan-500 duration-300 ease-in-out hover:border-cyan-700 hover:text-cyan-700`}
+        >
+          <MdOutlineMiscellaneousServices />
+          <p className="font-medium">NOVO SERVIÇO</p>
+        </button>
+        <button
+          onClick={() => setNewCompositionItemMenu('product')}
+          className={`${
+            newCompositionItemMenu == 'product' ? 'opacity-100' : 'opacity-60'
+          } flex items-center gap-1 rounded-lg border border-amber-500 bg-amber-50 px-2 py-1 text-xs text-amber-500 duration-300 ease-in-out hover:border-amber-700 hover:text-amber-700`}
+        >
+          <MdOutlineMiscellaneousServices />
+          <p className="font-medium">NOVO PRODUTO</p>
+        </button>
+      </div>
+      {newCompositionItemMenu == 'product' ? (
+        <NewProductMenu
+          infoHolder={infoHolder}
+          setInfo={setInfo}
+          changes={changes}
+          setChanges={setChanges}
+          closeMenu={() => setNewCompositionItemMenu(null)}
+        />
+      ) : null}
+      {newCompositionItemMenu == 'service' ? (
+        <NewServiceMenu
+          infoHolder={infoHolder}
+          setInfo={setInfo}
+          changes={changes}
+          setChanges={setChanges}
+          closeMenu={() => setNewCompositionItemMenu(null)}
+        />
+      ) : null}
+      <h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">PRODUTOS</h1>
+      <div className="flex w-full flex-wrap items-center justify-start gap-2 p-2">
+        {infoHolder.produtos && infoHolder.produtos.length > 0 ? (
+          infoHolder.produtos.map((product, index) => (
+            <div className="w-full lg:w-[400px]">
+              <ProductItem key={index} index={index} product={product} removeProduct={(index) => removeProductFromProject(index)} />
+            </div>
+          ))
+        ) : (
+          <p className="w-full text-center text-xs font-medium tracking-tight text-gray-500">Sem produtos adicionados.</p>
+        )}
+      </div>
+      <h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">SERVIÇOS</h1>
+      <div className="flex w-full flex-wrap items-center justify-start gap-2 p-2">
+        {infoHolder.servicos && infoHolder.servicos.length > 0 ? (
+          infoHolder.servicos.map((service, index) => (
+            <div className="w-full lg:w-[400px]">
+              <ServiceItem key={index} index={index} service={service} removeService={(index) => removeServiceFromProject(index)} />
+            </div>
+          ))
+        ) : (
+          <p className="w-full text-center text-xs font-medium tracking-tight text-gray-500">Sem serviços adicionados.</p>
+        )}
+      </div>
       <div className="my-4 flex w-full items-center justify-center self-center">
         <CheckboxInput
           labelFalse="INICIAR PROJETO"

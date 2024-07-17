@@ -392,6 +392,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     },
     dataNascimento: request.dataDeNascimento,
     email: request.email,
+    produtos: request.produtos || [],
+    servicos: request.servicos || [],
     logradouro: request.enderecoInstalacao,
     numeroResidencia: request.numeroResInstalacao || '',
     bairro: request.bairroInstalacao,

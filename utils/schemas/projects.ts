@@ -2,6 +2,7 @@ import z from 'zod'
 import { TActivityDTO } from './activities'
 import { ObjectId } from 'mongodb'
 import { GeneralHomologationSchema, THomologation } from './partial/homologation'
+import { ProductItemSchema, ServiceItemSchema } from './crm/kits.schema'
 
 const MaintenanceItem = z.object({
   titulo: z.string({ required_error: 'Título da manutenção não informado.', invalid_type_error: 'Tipo não válido para o título da manutenção.' }),
@@ -86,6 +87,8 @@ const GeneralProjectSchema = z.object({
   }),
   dataNascimento: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
+  produtos: z.array(ProductItemSchema).optional().nullable(),
+  servicos: z.array(ServiceItemSchema).optional().nullable(),
   estruturaPersonalizada: z.object({
     aplicavel: z
       .union([z.literal('SIM'), z.literal('NÃO')])

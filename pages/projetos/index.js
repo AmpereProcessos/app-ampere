@@ -701,7 +701,7 @@ function Projetos() {
               </motion.div>
             ))}
           </div>
-          <Link href={'/projetos/analisesTecnicas'}>
+          <Link href={'/projetos/analises-tecnicas'}>
             <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
               <p className="text-sm font-bold uppercase">Visitas técnicas</p>
             </div>

@@ -5,10 +5,9 @@ import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
 
 import { FaBars } from 'react-icons/fa'
-import { MdOutlineCheckBox } from 'react-icons/md'
+
 import { BiLogIn } from 'react-icons/bi'
 import { TbPresentationAnalytics } from 'react-icons/tb'
-import { FaUser } from 'react-icons/fa'
 
 import LogoSVG from '../utils/svgs/logo.svg'
 

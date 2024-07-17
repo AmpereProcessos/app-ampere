@@ -1,4 +1,4 @@
-import { TFileReferenceDTO } from '@/utils/schemas/crm/file-reference.schema'
+import { TFileReferenceDTO, TFileReferencesQueryParams } from '@/utils/schemas/crm/file-reference.schema'
 import axios from 'axios'
 import { useQuery } from 'react-query'
 
@@ -66,5 +66,49 @@ export function useFileReferencesByHomologationId({ homologationId }: { homologa
   return useQuery({
     queryKey: ['file-references-by-homologation', homologationId],
     queryFn: async () => await fetchFileReferencesByHomologationId({ homologationId }),
+  })
+}
+
+async function fetchFileReferencesByQuery({
+  clientId,
+  opportunityId,
+  analysisId,
+  homologationId,
+  projectId,
+  purchaseId,
+  revenueId,
+}: TFileReferencesQueryParams) {
+  try {
+    const clientParam = clientId ? `clientId=${clientId}` : null
+    const opportunityParam = opportunityId ? `opportunityId=${opportunityId}` : null
+    const analysisParam = analysisId ? `analysisId=${analysisId}` : null
+    const homologationParam = homologationId ? `homologationId=${homologationId}` : null
+    const projectParam = projectId ? `projectId=${projectId}` : null
+    const purchaseParam = purchaseId ? `purchaseId=${purchaseId}` : null
+    const revenueParam = revenueId ? `revenueId=${revenueId}` : null
+    const param = [clientParam, opportunityParam, analysisParam, homologationParam, projectParam, purchaseParam, revenueParam]
+      .filter((q) => !!q)
+      .join('&')
+    if (!param) return []
+
+    const { data } = await axios.get(`/api/crm/file-references/many?${param}`)
+    return data.data as TFileReferenceDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useFileReferences({
+  clientId,
+  opportunityId,
+  analysisId,
+  homologationId,
+  projectId,
+  purchaseId,
+  revenueId,
+}: TFileReferencesQueryParams) {
+  return useQuery({
+    queryKey: ['file-references-by-query', clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId],
+    queryFn: async () => await fetchFileReferencesByQuery({ clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }),
   })
 }

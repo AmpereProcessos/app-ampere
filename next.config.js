@@ -2,9 +2,6 @@
 
 const nextConfig = {
   reactStrictMode: true,
-  env: {
-    DISTANCE_API: process.env.DISTANCE_API,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },

@@ -15,10 +15,10 @@ function formatCnpjCpf(value) {
 }
 function termPDF({ info }) {
   return (
-    <div className="w-[21cm] h-[29.7cm] p-4">
+    <div className="h-[29.7cm] w-[21cm] p-4">
       <Link href="/oem">
         <div className="flex justify-center">
-          <Image height="70px" width="70px" src={Logo} />
+          <Image height="35px" width="35px" src={Logo} alt="Logo" />
         </div>
       </Link>
       <h1 className="mt-6 text-center font-bold">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</h1>
@@ -37,11 +37,11 @@ function termPDF({ info }) {
         <p className="mt-6 text-end">Ituiutaba, ____/____/_____</p>
         <div className="mt-32 flex flex-col">
           <hr className="border-t-2 border-black" />
-          <p className="text-center mt-4 font-raleway font-bold">TÉCNICO</p>
+          <p className="mt-4 text-center font-raleway font-bold">TÉCNICO</p>
         </div>
         <div className="mt-32 flex flex-col">
           <hr className="border-t-2 border-black" />
-          <p className="text-center mt-4 font-raleway font-bold">CLIENTE</p>
+          <p className="mt-4 text-center font-raleway font-bold">CLIENTE</p>
         </div>
         <div className="mt-72">
           <p className="text-center font-raleway">Avenida Nove, 233 - Centro, Ituiutaba-MG</p>

@@ -23,3 +23,9 @@ export function getInverterPeakPowerByProducts(products: TProductItem[] | undefi
   const power = products.filter((p) => p.categoria == 'INVERSOR').reduce((acc, current) => acc + current.qtde * (current.potencia || 0), 0)
   return power / 1000
 }
+export function getModulesAveragePower(products: TProductItem[]) {
+  const modules = products.filter((m) => m.categoria == 'MÓDULO')
+  const averagepower = modules.reduce((acc, current) => acc + (current.potencia || 0), 0) / modules.length
+  console.log(averagepower)
+  return averagepower
+}

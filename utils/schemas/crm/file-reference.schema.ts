@@ -2,10 +2,13 @@ import { ObjectId } from 'mongodb'
 import z from 'zod'
 
 const GeneralFileReferenceSchema = z.object({
-  idOportunidade: z.string().optional().nullable(),
   idCliente: z.string().optional().nullable(),
+  idOportunidade: z.string().optional().nullable(),
+  idProjeto: z.string({}).optional().nullable(),
   idAnaliseTecnica: z.string().optional().nullable(),
   idHomologacao: z.string().optional().nullable(),
+  idCompra: z.string().optional().nullable(),
+  idReceita: z.string().optional().nullable(),
   idParceiro: z.string(),
   titulo: z.string(),
   formato: z.string(),
@@ -22,6 +25,9 @@ const GeneralFileReferenceSchema = z.object({
 export const InsertFileReferenceSchema = z.object({
   idOportunidade: z.string({ invalid_type_error: 'Tipo não válido para a referência de oportunidade.' }).optional().nullable(),
   idCliente: z.string({ invalid_type_error: 'Tipo não válido para a referência de cliente.' }).optional().nullable(),
+  idProjeto: z.string({ invalid_type_error: 'Tipo não válido para a referência de projeto.' }).optional().nullable(),
+  idCompra: z.string({ invalid_type_error: 'Tipo não válido para a referência de compra.' }).optional().nullable(),
+  idReceita: z.string({ invalid_type_error: 'Tipo não válido para a referência de receita.' }).optional().nullable(),
   idParceiro: z.string({ required_error: 'Referência a parceiro não informada.', invalid_type_error: 'Tipo não válida para referência a parceiro.' }),
   idAnaliseTecnica: z
     .string({
@@ -59,10 +65,13 @@ export const InsertFileReferenceSchema = z.object({
 
 const FileReferenceEntitySchema = z.object({
   _id: z.instanceof(ObjectId),
-  idOportunidade: z.string().optional().nullable(),
   idCliente: z.string().optional().nullable(),
+  idOportunidade: z.string().optional().nullable(),
   idAnaliseTecnica: z.string().optional().nullable(),
   idHomologacao: z.string().optional().nullable(),
+  idProjeto: z.string().optional().nullable(),
+  idCompra: z.string().optional().nullable(),
+  idReceita: z.string().optional().nullable(),
   idParceiro: z.string(),
   titulo: z.string(),
   formato: z.string(),
@@ -83,3 +92,15 @@ export type TFileReferenceEntity = z.infer<typeof FileReferenceEntitySchema>
 export type TFileReferenceDTO = TFileReference & { _id: string }
 
 export type TFileHolder = { [key: string]: File | string | null }
+
+export const FileReferencesQueryParamsSchema = z.object({
+  clientId: z.string({ invalid_type_error: 'Tipo inválido para referência de cliente.' }).optional().nullable(),
+  opportunityId: z.string({ invalid_type_error: 'Tipo inválido para referência de oportunidade.' }).optional().nullable(),
+  analysisId: z.string({ invalid_type_error: 'Tipo inválido para referência de análise técnica.' }).optional().nullable(),
+  homologationId: z.string({ invalid_type_error: 'Tipo inválido para referência de homologação.' }).optional().nullable(),
+  projectId: z.string({ invalid_type_error: 'Tipo inválido para referência de projeto.' }).optional().nullable(),
+  purchaseId: z.string({ invalid_type_error: 'Tipo inválido para referência de compra.' }).optional().nullable(),
+  revenueId: z.string({ invalid_type_error: 'Tipo inválido para referência de receita.' }).optional().nullable(),
+})
+
+export type TFileReferencesQueryParams = z.infer<typeof FileReferencesQueryParamsSchema>

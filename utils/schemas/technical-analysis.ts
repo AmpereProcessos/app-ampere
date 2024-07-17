@@ -1,13 +1,5 @@
 import { z } from 'zod'
-import {
-  crmStructureTypes,
-  inverterFixationOptions,
-  roofTiles,
-  structureTypes,
-  technicalAnalysisPendencyCategories,
-  technicalAnalysisSolicitationTypes,
-  units,
-} from '../select-options'
+import { TechnicalAnalysisSolicitationTypes } from '../select-options'
 
 const EquipmentSchema = z.object({
   id: z.string({ invalid_type_error: 'Tipo não válido para ID do módulo.' }).optional().nullable(),
@@ -28,6 +20,12 @@ const EquipmentSchema = z.object({
     .nullable(),
 })
 export type TEquipment = z.infer<typeof EquipmentSchema>
+
+const TechnicalAnalysisPendencyCategoriesSchema = z.enum(['PENDÊNCIA COMERCIAL', 'PENDÊNCIA TERCEIROS', 'PENDÊNCIA CONCESSIONÁRIA', 'OUTROS'], {
+  required_error: 'Categoria de pendência não informada.',
+  invalid_type_error: 'Tipo não válido para categoria de pendência.',
+})
+export type TTechnicalAnalysisPendencyCategory = z.infer<typeof TechnicalAnalysisPendencyCategoriesSchema>
 export const GeneralTechnicalAnalysisSchema = z.object({
   idParceiro: z.string({
     required_error: 'ID de referência do parceiro não informado.',
@@ -49,10 +47,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
   arquivosAuxiliares: z.string({ invalid_type_error: 'Tipo não válido para o link de arquivos auxiliares.' }).optional().nullable(), // link de fotos do drone, por exemplo
   pendencias: z.array(
     z.object({
-      categoria: z.enum([technicalAnalysisPendencyCategories[0].value, ...technicalAnalysisPendencyCategories.slice(1).map((p) => p.value)], {
-        required_error: 'Categoria da pendência não informada.',
-        invalid_type_error: 'Tipo não válido para a categoria da pendência.',
-      }),
+      categoria: TechnicalAnalysisPendencyCategoriesSchema,
       descricao: z.string({
         required_error: 'Descrição não válida para a pendência.',
         invalid_type_error: 'Tipo não válido para a descrição da pendência.',
@@ -83,7 +78,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
     required_error: 'Anotações da análise técnica não informada.',
     invalid_type_error: 'Tipo não válido para as anotações da análise técnica.',
   }), // anotações gerais para auxilio ao analista
-  tipoSolicitacao: z.enum([technicalAnalysisSolicitationTypes[0].value, ...technicalAnalysisSolicitationTypes.slice(1).map((p) => p.value)], {
+  tipoSolicitacao: z.enum([TechnicalAnalysisSolicitationTypes[0].value, ...TechnicalAnalysisSolicitationTypes.slice(1).map((p) => p.value)], {
     required_error: 'Tipo da solicitação de análise não informada.',
     invalid_type_error: 'Tipo não válido para o tipo de solicitação da análise.',
   }),
@@ -101,7 +96,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
     .optional()
     .nullable(),
   requerente: z.object({
-    id: z.string({ invalid_type_error: 'Tipo não válido para o ID do requerente.' }).optional().nullable(),
+    id: z.string({ invalid_type_error: 'Tipo não válido para o ID do requerente.' }),
     nome: z.string({ invalid_type_error: 'Tipo não válido para o nome do requerente.' }).optional().nullable(),
     apelido: z.string({
       required_error: 'Apelido do requerente não informado.',
@@ -168,6 +163,18 @@ export const GeneralTechnicalAnalysisSchema = z.object({
       invalid_type_error: 'Tipo não válido para o número ou identificador da localização de análise.',
     }),
   }),
+  // equipamentos: z.object({
+  //   modulos: z.object({
+  //     modelo: z.string({ invalid_type_error: 'Tipo não válido para o modelo dos modulos.' }).optional().nullable(),
+  //     qtde: z.string({ invalid_type_error: 'Tipo não válido para o quantidade de modulos.' }).optional().nullable(),
+  //     potencia: z.string({ invalid_type_error: 'Tipo não válido para o potência dos modulos.' }).optional().nullable(),
+  //   }),
+  //   inversor: z.object({
+  //     modelo: z.string({ invalid_type_error: 'Tipo não válido para o modelo dos inversores.' }).optional().nullable(),
+  //     qtde: z.string({ invalid_type_error: 'Tipo não válido para o quantidade de inversores.' }).optional().nullable(),
+  //     potencia: z.string({ invalid_type_error: 'Tipo não válido para o potência dos inversores.' }).optional().nullable(),
+  //   }),
+  // }),
   equipamentosAnteriores: z.array(EquipmentSchema),
   equipamentos: z.array(EquipmentSchema),
   padrao: z.array(
@@ -253,13 +260,13 @@ export const GeneralTechnicalAnalysisSchema = z.object({
   ),
   servicosAdicionais: z.object({
     alambrado: z
-      .union([z.literal('NÃO'), z.literal('SIM - RESPONSABILIDADE CLIENTE'), z.literal('SIM - RESPONSABILIDADE DA EMPRESA')], {
+      .union([z.literal('NÃO'), z.literal('SIM - RESPONSABILIDADE DO CLIENTE'), z.literal('SIM - RESPONSABILIDADE DA EMPRESA')], {
         invalid_type_error: 'Tipo não válido para a especificação de execução de alambrado.',
       })
       .optional()
       .nullable(),
     britagem: z
-      .union([z.literal('NÃO'), z.literal('SIM - RESPONSABILIDADE CLIENTE'), z.literal('SIM - RESPONSABILIDADE DA EMPRESA')], {
+      .union([z.literal('NÃO'), z.literal('SIM - RESPONSABILIDADE DO CLIENTE'), z.literal('SIM - RESPONSABILIDADE DA EMPRESA')], {
         invalid_type_error: 'Tipo não válido para a especificação de execução de britagem.',
       })
       .optional()
@@ -316,19 +323,19 @@ export const GeneralTechnicalAnalysisSchema = z.object({
       .optional()
       .nullable(),
     tipoEstrutura: z
-      .enum([crmStructureTypes[0].value, ...crmStructureTypes.slice(1).map((p) => p.value)], {
+      .string({
         invalid_type_error: 'Tipo não válido para o tipo de estrutura.',
       })
       .optional()
       .nullable(),
     tipoTelha: z
-      .enum([roofTiles[0].value, ...roofTiles.slice(1).map((p) => p.value)], {
+      .string({
         invalid_type_error: 'Tipo não válido para o tipo de telha.',
       })
       .optional()
       .nullable(),
     fixacaoInversores: z
-      .enum([inverterFixationOptions[0].value, ...inverterFixationOptions.slice(1).map((p) => p.value)], {
+      .string({
         invalid_type_error: 'Tipo não válido para a fixação dos inversores.',
       })
       .optional()
@@ -402,10 +409,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
         required_error: 'Quantidade do item de custo não informada.',
         invalid_type_error: 'Tipo não válido para a quantidade do item de custo.',
       }),
-      grandeza: z.enum([units[0].value, ...units.slice(1).map((p) => p.value)], {
-        required_error: 'Grandeza do item de custo não informada.',
-        invalid_type_error: 'Tipo não válido para a grandeza do item de custo.',
-      }),
+      grandeza: z.string({ required_error: 'Grandeza do custo não informada.', invalid_type_error: 'Tipo não válido para a grandeza do custo.' }),
       custoUnitario: z.number({ invalid_type_error: 'Tipo não válido para o custo unitário do item de custo.' }).optional().nullable(),
       total: z.number({ invalid_type_error: 'Tipo não válido para o total do item de custo.' }).optional().nullable(),
     })
@@ -448,7 +452,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
             required_error: 'Quantidade do item de suprimentação não informada.',
             invalid_type_error: 'Tipo não válido para a quantidade do item de suprimentação.',
           }),
-          grandeza: z.enum([units[0].value, ...units.slice(1).map((p) => p.value)], {
+          grandeza: z.string({
             required_error: 'Grandeza do item de suprimentação não informada.',
             invalid_type_error: 'Tipo não válido para a grandeza do item de suprimentação.',
           }),
@@ -502,5 +506,80 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 })
 export type TTechnicalAnalysis = z.infer<typeof GeneralTechnicalAnalysisSchema>
 export type TTechnicalAnalysisDTO = TTechnicalAnalysis & { _id: string }
+
+export type TTechnicalAnalysisSimplified = Pick<
+  TTechnicalAnalysis,
+  | 'nome'
+  | 'status'
+  | 'tipoSolicitacao'
+  | 'complexidade'
+  | 'oportunidade'
+  | 'requerente'
+  | 'localizacao'
+  | 'dataEfetivacao'
+  | 'dataInsercao'
+  | 'analista'
+>
+export type TTechnicalAnalysisDTOSimplified = TTechnicalAnalysisSimplified & { _id: string }
+
+export const TechnicalAnalysisSimplifiedProjection = {
+  nome: 1,
+  status: 1,
+  tipoSolicitacao: 1,
+  complexidade: 1,
+  oportunidade: 1,
+  requerente: 1,
+  localizacao: 1,
+  analista: 1,
+  dataEfetivacao: 1,
+  dataInsercao: 1,
+}
+
+export const PersonalizedTechnicalAnalysisFiltersSchema = z.object({
+  name: z.string({ required_error: 'Filtro de nome não informado.', invalid_type_error: 'Tipo não válido para filtro de nome.' }),
+  status: z.array(z.string({ required_error: 'Status de filtro não informada.', invalid_type_error: 'Tipo não válido para status de filtro.' }), {
+    required_error: 'Lista de status de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de status de filtro.',
+  }),
+  complexity: z
+    .union([z.literal('SIMPLES'), z.literal('INTERMEDIÁRIO'), z.literal('COMPLEXO')], {
+      required_error: 'Filtro de complexidade não informado.',
+      invalid_type_error: 'Tipo não válido para filtro de complexidade.',
+    })
+    .optional()
+    .nullable(),
+  city: z.array(z.string({ required_error: 'Cidade de filtro não informada.', invalid_type_error: 'Tipo não válido para cidade de filtro.' }), {
+    required_error: 'Lista de cidades de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de cidades de filtro.',
+  }),
+  state: z.array(z.string({ required_error: 'Estado de filtro não informada.', invalid_type_error: 'Tipo não válido para estado de filtro.' }), {
+    required_error: 'Lista de estados de filtro não informada.',
+    invalid_type_error: 'Tipo não válido para lista de estados de filtro.',
+  }),
+  type: z.array(
+    z.string({
+      required_error: 'Filtro de tipo de solicitação não informado.',
+      invalid_type_error: 'Tipo não válido para filtro de tipo de solicitação.',
+    }),
+    {
+      required_error: 'Lista de filtro de tipos de solicitação não informada.',
+      invalid_type_error: 'Tipo não válido para lista de filtro de tipos de solicitação.',
+    }
+  ),
+  // concluded: z.boolean({ required_error: 'Filtro de somente concluídos não informado.', invalid_type_error: 'Filtro de somente concluídos não informado.' }),
+  pending: z.boolean({
+    required_error: 'Filtro de somente pendentes não informado.',
+    invalid_type_error: 'Filtro de somente pendentes não informado.',
+  }),
+})
+export type TPersonalizedTechnicalAnalysisFilter = z.infer<typeof PersonalizedTechnicalAnalysisFiltersSchema>
+export const PersonalizedTechnicalAnalysisQuerySchema = z.object({
+  applicants: z
+    .array(z.string({ required_error: 'Requerentes não informados ou inválidos.', invalid_type_error: 'Requerentes inválidos.' }))
+    .nullable(),
+  partners: z.array(z.string({ required_error: 'Parceiros não informados ou inválidos.', invalid_type_error: 'Parceiros inválidos.' })).nullable(),
+  analysts: z.array(z.string({ required_error: 'Analistas não informados ou inválidos.', invalid_type_error: 'Analistas inválidos.' })).nullable(),
+  filters: PersonalizedTechnicalAnalysisFiltersSchema,
+})
 
 export type StructureTypesFromAnalysis = TTechnicalAnalysis['detalhes']['tipoEstrutura']

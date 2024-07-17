@@ -46,7 +46,66 @@ export const ContractRequestPaymentOptions = [
     value: 'NÃO DEFINIDO',
   },
 ]
-
+export const TechnicalAnalysisSolicitationTypes = [
+  {
+    id: 1,
+    label: 'ANÁLISE TÉCNICA REMOTA URBANA',
+    value: 'ANÁLISE TÉCNICA REMOTA URBANA',
+    descriptions: [
+      'Requisite uma análise técnica de instalação urbana ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações e imagens relevantes à análise.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
+  },
+  {
+    id: 2,
+    label: 'ANÁLISE TÉCNICA REMOTA RURAL',
+    value: 'ANÁLISE TÉCNICA REMOTA RURAL',
+    descriptions: [
+      'Requisite uma análise técnica de instalação rural ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações e imagens relevantes à análise.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
+  },
+  {
+    id: 3,
+    label: 'ANÁLISE TÉCNICA IN LOCO',
+    value: 'ANÁLISE TÉCNICA IN LOCO',
+    descriptions: [
+      'Requisite uma análise técnica in loco ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações relevantes para a visita in loco.',
+      'A análise pode contemplar análise de geração, sombreamento, necessidades de adequação de estrutura ou padrão de energia, etc.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
+  },
+  {
+    id: 4,
+    label: 'ORÇAMENTAÇÃO',
+    value: 'ORÇAMENTAÇÃO',
+    descriptions: [
+      'Requisite um orçamento de itens específicos ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para a especificação os itens a serem orçados.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
+  },
+  {
+    id: 5,
+    label: 'DESENHO PERSONALIZADO',
+    value: 'DESENHO PERSONALIZADO',
+    descriptions: [
+      'Requisite um desenho personalizado ao nosso time de analistas.',
+      'Clicando aqui, você prosseguirá para um formulário para a coleta de informações relevantes para a execução do desenho.',
+      'O prazo de análise é de até 72 horas úteis.',
+    ],
+  },
+]
+export const TechnicalAnalysisComplexity = [
+  { id: 1, label: 'SIMPLES', value: 'SIMPLES' },
+  { id: 2, label: 'INTERMEDIÁRIO', value: 'INTERMEDIÁRIO' },
+  { id: 3, label: 'COMPLEXO', value: 'COMPLEXO' },
+]
 export const NaturalPersonMaritalStatus = [
   { id: 1, label: 'SOLTEIRO', value: 'SOLTEIRO' },
   { id: 2, label: 'CASADO', value: 'CASADO' },
@@ -739,12 +798,8 @@ export const billableCompanies = [
 export const technicalAnalysisStatus = [
   { id: 1, label: 'CONCLUIDO', value: 'CONCLUIDO' },
   { id: 2, label: 'EM ANÁLISE TÉCNICA', value: 'EM ANÁLISE TÉCNICA' },
-  {
-    id: 3,
-    label: 'PENDÊNCIA COMERCIAL',
-    value: 'PENDÊNCIA COMERCIAL',
-  },
-  { id: 4, label: 'VISITA IN LOCO', value: 'VISITA IN LOCO' },
+  { id: 3, label: 'PENDÊNCIA COMERCIAL', value: 'PENDÊNCIA COMERCIAL' },
+  { id: 4, label: 'PENDÊNCIA OPERACIONAL', value: 'PENDÊNCIA OPERACIONAL' },
   { id: 5, label: 'REJEITADA', value: 'REJEITADA' },
   { id: 6, label: 'PENDENTE', value: 'PENDENTE' },
 ]
@@ -1214,8 +1269,8 @@ export const supplyOptions = {
 }
 export const additionalServicesResponsibilityOptions = [
   { id: 1, label: 'NÃO', value: 'NÃO' },
-  { id: 2, label: 'SIM - RESPONSABILIDADE CLIENTE', value: 'SIM - RESPONSABILIDADE CLIENTE' },
-  { id: 3, label: 'SIM - RESPONSABILIDADE AMPÈRE', value: 'SIM - RESPONSABILIDADE AMPÈRE' },
+  { id: 2, label: 'SIM - RESPONSABILIDADE DO CLIENTE', value: 'SIM - RESPONSABILIDADE DO CLIENTE' },
+  { id: 3, label: 'SIM - RESPONSABILIDADE DA EMPRESA', value: 'SIM - RESPONSABILIDADE DA EMPRESA' },
 ]
 export const amperageOptions = [
   { id: 1, label: '40A', value: '40A' },

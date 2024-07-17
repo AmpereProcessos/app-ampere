@@ -19,7 +19,7 @@ function PadraoOSPDF({ order }: PadraoOSPDFProps) {
         <div className="flex items-center justify-between">
           <Link href="/obras">
             <div className="flex items-center justify-center">
-              <Image height="60px" width="60px" src={Logo} />
+              <Image height={60} width={60} src={Logo} alt="Logo" />
             </div>
           </Link>
           <div className="pl-2">
@@ -166,11 +166,11 @@ function PadraoOSPDF({ order }: PadraoOSPDFProps) {
             </div>
           </div>
         </div>
-        <div className="mt-1 grid grid-cols-2 gap-x-4">
+        <div className="mt-1 grid grid-cols-2 items-end gap-x-4">
           <div className="flex flex-col">
             <p className="text-start text-xs">Autorizado por:</p>
-            <div className="items-centertext-center flex w-[150px]  justify-center">
-              <Image src={Assinatura} />
+            <div className="relative flex h-[40px] w-[150px] items-center justify-center text-center">
+              <Image src={Assinatura} fill={true} alt="Assinatura" />
             </div>
             <hr className="border-t-2 border-black" />
             <p className="text-center text-xs">ASSINATURA DIRETOR DE ENGENHARIA</p>

@@ -243,6 +243,14 @@ function Projetos() {
                 </div>
               </div>
             </div>
+            <div className="my-2 flex w-full items-center justify-end gap-2">
+              <Link href="/projetos/analises-tecnicas">
+                <button className="rounded-md bg-[#15599a] py-1 px-4 text-sm font-bold text-white">ANÁLISES TÉCNICAS</button>
+              </Link>
+              <Link href="/projetos/homologacoes">
+                <button className="rounded-md bg-[#fead41] py-1 px-4 text-sm font-bold text-white">HOMOLOGAÇÕES AVULSAS</button>
+              </Link>
+            </div>
             <AnimatePresence>
               {dropdownMenuVisible ? (
                 <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
@@ -701,11 +709,7 @@ function Projetos() {
               </motion.div>
             ))}
           </div>
-          <Link href={'/projetos/analises-tecnicas'}>
-            <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
-              <p className="text-sm font-bold uppercase">Visitas técnicas</p>
-            </div>
-          </Link>
+
           {modalProject.isOpen && modalProject.projectId && (
             <ModalProjetos
               projectId={modalProject.projectId}

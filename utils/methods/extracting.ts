@@ -29,3 +29,8 @@ export function getModulesAveragePower(products: TProductItem[]) {
   console.log(averagepower)
   return averagepower
 }
+export function getModulesQty(products: TProductItem[] | undefined) {
+  if (!products) return 0
+  const qty = products.filter((p) => p.categoria == 'MÓDULO').reduce((acc, current) => acc + current.qtde, 0)
+  return qty
+}

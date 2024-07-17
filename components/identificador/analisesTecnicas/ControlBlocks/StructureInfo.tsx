@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { formatLongString } from '@/utils/methods'
 import { toast } from 'react-hot-toast'
-import { TTechnicalAnalysis } from '@/utils/schemas/technical-analysis.schema'
+import { TTechnicalAnalysis } from '@/utils/schemas/technical-analysis'
 import { StructureTypes } from '@/utils/select-options'
 type StructureInfoProps = {
   requestInfo: TTechnicalAnalysis

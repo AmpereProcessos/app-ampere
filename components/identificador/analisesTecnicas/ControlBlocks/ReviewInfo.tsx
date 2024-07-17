@@ -8,7 +8,7 @@ import RoofTilesImage from '../../../utils/images/roofTiles.png'
 import { stateCities } from '@/utils/estados_cidades'
 import { formatLongString, formatToCEP, formatToPhone, getCEPInfo } from '@/utils/methods'
 import { ITechnicalAnalysis } from '@/utils/models'
-import { TTechnicalAnalysis } from '@/utils/schemas/technical-analysis.schema'
+import { TTechnicalAnalysis } from '@/utils/schemas/technical-analysis'
 import { AmperageOptions, EnergyMeterBoxModels, EnergyPAConnectionTypes, EnergyPATypes, StructureTypes } from '@/utils/select-options'
 import { useMutation } from '@tanstack/react-query'
 import axios, { AxiosError } from 'axios'
@@ -506,7 +506,8 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                 <div key={index} className="flex w-full flex-col border border-gray-200 p-2 shadow-sm">
                   <div className="flex w-full items-center justify-between">
                     <h1 className="font-medium leading-none tracking-tight text-gray-500">
-                      PADRÃO <strong className="text-[#fead41]">{paInfo.ligacao} </strong> de <strong className="text-[#fead41]">{paInfo.amperagem}</strong>
+                      PADRÃO <strong className="text-[#fead41]">{paInfo.ligacao} </strong> de{' '}
+                      <strong className="text-[#fead41]">{paInfo.amperagem}</strong>
                     </h1>
                     <button
                       onClick={() => removeEnergyPA(index)}
@@ -904,7 +905,9 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                         },
                         { id: 3, label: 'NÃO', value: 'NÃO' },
                       ]}
-                      handleChange={(value) => setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, alambrado: value } }))}
+                      handleChange={(value) =>
+                        setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, alambrado: value } }))
+                      }
                       onReset={() => {
                         setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, alambrado: null } }))
                       }}
@@ -932,7 +935,9 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                         },
                         { id: 3, label: 'NÃO', value: 'NÃO' },
                       ]}
-                      handleChange={(value) => setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, britagem: value } }))}
+                      handleChange={(value) =>
+                        setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, britagem: value } }))
+                      }
                       onReset={() => {
                         setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, britagem: null } }))
                       }}
@@ -958,7 +963,9 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                         },
                         { id: 3, label: 'NÃO', value: 'NÃO' },
                       ]}
-                      handleChange={(value) => setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, barracao: value } }))}
+                      handleChange={(value) =>
+                        setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, barracao: value } }))
+                      }
                       onReset={() => {
                         setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, barracao: null } }))
                       }}
@@ -986,7 +993,9 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                         },
                         { id: 3, label: 'NÃO', value: 'NÃO' },
                       ]}
-                      handleChange={(value) => setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, roteador: value } }))}
+                      handleChange={(value) =>
+                        setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, roteador: value } }))
+                      }
                       onReset={() => {
                         setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, roteador: null } }))
                       }}
@@ -1042,7 +1051,9 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
                         },
                         { id: 3, label: 'NÃO', value: 'NÃO' },
                       ]}
-                      handleChange={(value) => setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, limpezaLocal: value } }))}
+                      handleChange={(value) =>
+                        setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, limpezaLocal: value } }))
+                      }
                       onReset={() => {
                         setRequestInfo((prev) => ({ ...prev, servicosAdicionais: { ...prev.servicosAdicionais, limpezaLocal: null } }))
                       }}

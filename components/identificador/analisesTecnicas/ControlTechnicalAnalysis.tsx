@@ -39,6 +39,7 @@ import AdditionalServicesBlock from './ControlBlocks/AdditionalServicesBlock'
 import AdditionalCostsBlock from './ControlBlocks/AdditionalCostsBlock'
 import DrawBlock from './ControlBlocks/DrawBlock'
 import ConclusionBlock from './ControlBlocks/ConclusionBlock'
+import { useTechnicalAnalysts } from '@/utils/methods/query/crm/users'
 
 type ControlTechnicalAnalysisProps = {
   analysisId: string
@@ -48,8 +49,8 @@ type ControlTechnicalAnalysisProps = {
 export default function ControlTechnicalAnalysis({ analysisId, session, closeModal }: ControlTechnicalAnalysisProps) {
   const queryClient = useQueryClient()
   const { data: analysis, isLoading, isError, isSuccess, error } = useTechnicalAnalysisById({ id: analysisId })
-  // const { data: analysts } = useTechnicalAnalysts()
-  const analysts: any[] = []
+  const { data: analysts } = useTechnicalAnalysts()
+
   const [infoHolder, setInfoHolder] = useState<TTechnicalAnalysisDTO>({
     _id: 'id-holder',
     idParceiro: '',
@@ -228,7 +229,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                         label={'ANALISTA RESPONSÁVEL'}
                         value={infoHolder.analista?.id}
                         options={analysts?.map((a) => ({ id: a._id, label: a.nome, value: a, url: a.avatar_url || undefined })) || []}
-                        handleChange={(value) => {
+                        handleChange={(value: any) => {
                           setInfoHolder((prev) => ({
                             ...prev,
                             analista: { id: value._id, nome: value.nome, apelido: value.nome, avatar_url: value.avatar_url },
@@ -419,7 +420,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-center gap-2 px-4">
                     {technicalAnalysisReportTypes.map((type) => (
-                      <Link key={type.id} href={`/operacional/analises-tecnicas/laudo/${analysisId}?type=${type.value}`}>
+                      <Link key={type.id} href={`/projetos/laudo/${analysisId}?type=${type.value}`}>
                         <p className="w-fit rounded border border-black px-2 py-1 text-center font-bold shadow-sm hover:bg-black hover:text-white">
                           {type.value}
                         </p>

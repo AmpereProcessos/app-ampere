@@ -159,7 +159,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
         insertObject = { ...insertObject, homologacao: projectHomologation, links: { ...insertObject.links, projetos: projectHomologationFiles } }
       }
       const { data } = await axios.post('/api/projects/add', insertObject)
-      const insertedProjectId = data.insertedId
+      const insertedProjectId = data.data.insertedId
 
       // Updating the contract request instance
       await editContractRequest({

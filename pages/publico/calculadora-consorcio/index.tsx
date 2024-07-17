@@ -59,22 +59,7 @@ function EnergyConsortiumCalculator() {
       setStateHolder({ status: 'error', text: msg })
     }
   }
-  function handleCalculation({ simulation }: { simulation: TSimulation }) {
-    const { expense, distributor, tariff, connection } = simulation
-    const disponibility = CONNECTIONS.find((c) => c.value == connection)?.disponibility || 30
 
-    const energyConsumption = (expense - BASE_PUBLIC_ILUMINATION_PRICE) / tariff
-
-    const acquirable = energyConsumption - disponibility
-
-    // New expenses
-    const newDistributorExpense = BASE_PUBLIC_ILUMINATION_PRICE + disponibility * 1.02 * tariff // 1.02 to fix taxes and other tariffs
-    const newConsortiumExpense = (1 - DISCOUNT) * tariff * acquirable
-    const newExpense = newDistributorExpense + newConsortiumExpense
-
-    const economy = expense - newExpense
-    return { newExpense, economy }
-  }
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-[#15599a] p-3 font-[Inter] lg:flex-row">
       <div className="flex h-full w-full flex-col justify-between lg:w-2/3">

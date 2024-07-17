@@ -2368,6 +2368,10 @@ export const fontesDeReceita = [
     label: 'SUBESTAÇÃO DE ENERGIA',
     value: 'SUBESTAÇÃO DE ENERGIA',
   },
+  {
+    label: 'PRODUTOS',
+    value: 'PRODUTOS',
+  },
   { label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
 ]
 export const tiposDePadrao = [

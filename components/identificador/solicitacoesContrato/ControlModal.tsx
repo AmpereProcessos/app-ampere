@@ -22,6 +22,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { editContractRequest } from '@/utils/methods/mutation/contract-requests'
 import { useQueryClient } from 'react-query'
 import {
+  getProjectHomologationInformation,
   getProjectInformationFromRequest,
   handleSendEmailToCobrancas,
   handleSendNotificationToCobrancas,
@@ -41,7 +42,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
   const userHasEditPermission = session.user.permissoes.comercial.editar || session.user.permissoes.rotas.includes('PPS')
   const { data: request, isLoading, isError, isSuccess } = useContractRequestById({ id: requestId })
   const [infoHolder, setInfoHolder] = useState<TContractRequestDTO>({
-    _id: 'id-holder',
+    _id: '',
     nomeVendedor: '',
     nomeDoProjeto: '',
     idParceiro: '',
@@ -151,7 +152,13 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
       // Updating the contract request instance
       await editContractRequest({ id: requestId, changes: { ...info, aprovacao: true, dataAprovacao: new Date().toISOString() } })
       // Adding a new operational projecy
-      const insertObject = getProjectInformationFromRequest({ request: info })
+      var insertObject = getProjectInformationFromRequest({ request: info })
+
+      // Getting homologation information in case idHomologacao is defined
+      if (info.idHomologacao) {
+        const { projectHomologation, projectHomologationFiles } = await getProjectHomologationInformation({ homologationId: info.idHomologacao })
+        insertObject = { ...insertObject, homologacao: projectHomologation, links: { ...insertObject.links, projetos: projectHomologationFiles } }
+      }
       await axios.post('/api/projects/add', insertObject)
       // Notifying and emailing cobrancas sector
       handleSendEmailToCobrancas({ requestId: requestId, contractName: info?.nomeDoContrato })
@@ -201,7 +208,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorComponent msg={'Houve um erro ao buscar informações do formulário de contrato.'} /> : null}
-          {isSuccess ? (
+          {isSuccess && !!infoHolder._id ? (
             <>
               <div className="flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <div className="flex w-full items-center justify-end">

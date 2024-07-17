@@ -135,6 +135,7 @@ const GeneralContractRequestSchema = z.object({
   linkDrive: z.string().optional().nullable(),
   nomeParceiro: z.string().optional().nullable(),
   idParceiro: z.string().optional().nullable(),
+  idHomologacao: z.string().optional().nullable(),
   idVisitaTecnica: z.string().optional().nullable(),
   idProjetoCRM: z.string().optional().nullable(),
   idPropostaCRM: z.string().optional().nullable(),

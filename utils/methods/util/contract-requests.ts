@@ -2,6 +2,8 @@ import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import { THomologation } from '@/utils/schemas/partial/homologation'
 import { TProject, TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
+import { fetchFileReferencesByHomologationId } from '../query/crm/file-references'
+import { fetchHomologationById } from '../query/crm/homologations'
 
 type HandleSendNotificationToCobrancasParams = {
   contractName: string
@@ -435,4 +437,39 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     },
   }
   return insertObj
+}
+
+export async function getProjectHomologationInformation({ homologationId }: { homologationId: string }) {
+  try {
+    const homologation = await fetchHomologationById({ id: homologationId })
+    const homologationFileReferences = await fetchFileReferencesByHomologationId({ homologationId })
+
+    const projectHomologation: TProject['homologacao'] = {
+      homologar: true,
+      status: homologation.status,
+      potencia: homologation.potencia,
+      distribuidora: homologation.distribuidora,
+      pendencias: homologation.pendencias,
+      oportunidade: homologation.oportunidade,
+      titular: homologation.titular,
+      equipamentos: homologation.equipamentos,
+      localizacao: homologation.localizacao,
+      instalacao: homologation.instalacao,
+      documentacao: homologation.documentacao,
+      acesso: homologation.acesso,
+      atualizacoes: homologation.atualizacoes,
+      vistoria: homologation.vistoria,
+      dataEfetivacao: homologation.dataEfetivacao,
+      dataLiberacao: homologation.dataInsercao,
+    }
+    const projectHomologationFiles: TProject['links']['projetos'] = homologationFileReferences.map((f) => ({
+      title: f.titulo.toUpperCase(),
+      format: f.formato,
+      link: f.url,
+      category: 'HOMOLOGAÇÃO',
+    }))
+    return { projectHomologation, projectHomologationFiles }
+  } catch (error) {
+    throw error
+  }
 }

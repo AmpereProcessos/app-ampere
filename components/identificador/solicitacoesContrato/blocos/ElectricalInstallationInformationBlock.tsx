@@ -39,6 +39,14 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
   return (
     <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DA INSTALAÇÃO</h1>
+      <div className="flex w-full items-center justify-center">
+        <TextInput
+          label="ID DE HOMOLOGAÇÃO AVULSA (SE HOUVER)"
+          value={infoHolder.idHomologacao || ''}
+          placeholder="Preencha aqui o ID de uma homologação avulsa se houver..."
+          handleChange={(value) => setInfoHolder((prev) => ({ ...prev, idHomologacao: value }))}
+        />
+      </div>
       <div className="flex items-center justify-center">
         <div className="w-fit">
           <CheckboxInput

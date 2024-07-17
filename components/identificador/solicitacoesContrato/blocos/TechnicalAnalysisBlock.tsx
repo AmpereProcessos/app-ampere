@@ -17,7 +17,7 @@ type TechnicalAnalysisBlockProps = {
 }
 function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermission }: TechnicalAnalysisBlockProps) {
   const queryClient = useQueryClient()
-  const [analysisIdHolder, setAnalysisIdHolder] = useState<string | null>(infoHolder.idVisitaTecnica || null)
+  const [analysisIdHolder, setAnalysisIdHolder] = useState<string | null>(infoHolder.idVisitaTecnica ? infoHolder.idVisitaTecnica : null)
 
   async function handleAnalysisVinculation(analysisId: string) {
     try {
@@ -49,6 +49,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
     queryClient: queryClient,
     affectedQueryKey: ['contract-request-by-id', infoHolder._id],
   })
+  console.log(infoHolder.idVisitaTecnica, !!infoHolder.idVisitaTecnica, analysisIdHolder)
   return (
     <div className="flex w-full flex-col gap-2">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DE ANÁLISE TÉCNICA</h1>

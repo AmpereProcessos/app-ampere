@@ -53,7 +53,7 @@ export function useFileReferencesByClientId({ clientId }: { clientId: string }) 
   })
 }
 
-async function fetchFileReferencesByHomologationId({ homologationId }: { homologationId: string }) {
+export async function fetchFileReferencesByHomologationId({ homologationId }: { homologationId: string }) {
   try {
     const { data } = await axios.get(`/api/crm/file-references?homologationId=${homologationId}`)
     return data.data as TFileReferenceDTO[]

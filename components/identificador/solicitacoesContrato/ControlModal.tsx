@@ -31,6 +31,7 @@ import axios from 'axios'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import Link from 'next/link'
 import { FaFile } from 'react-icons/fa'
+import { updateProject } from '@/utils/methods/mutation/clients'
 
 type ContractRequestControlModalProps = {
   requestId: string
@@ -149,8 +150,6 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
   })
   async function approveFormulary(info: TContractRequestDTO) {
     try {
-      // Updating the contract request instance
-      await editContractRequest({ id: requestId, changes: { ...info, aprovacao: true, dataAprovacao: new Date().toISOString() } })
       // Adding a new operational projecy
       var insertObject = getProjectInformationFromRequest({ request: info })
 
@@ -159,7 +158,14 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
         const { projectHomologation, projectHomologationFiles } = await getProjectHomologationInformation({ homologationId: info.idHomologacao })
         insertObject = { ...insertObject, homologacao: projectHomologation, links: { ...insertObject.links, projetos: projectHomologationFiles } }
       }
-      await axios.post('/api/projects/add', insertObject)
+      const { data } = await axios.post('/api/projects/add', insertObject)
+      const insertedProjectId = data.insertedId
+
+      // Updating the contract request instance
+      await editContractRequest({
+        id: requestId,
+        changes: { ...info, idProjetoApp: insertedProjectId, aprovacao: true, dataAprovacao: new Date().toISOString() },
+      })
       // Notifying and emailing cobrancas sector
       handleSendEmailToCobrancas({ requestId: requestId, contractName: info?.nomeDoContrato })
       handleSendNotificationToCobrancas({ contractName: info.nomeDoContrato })
@@ -264,9 +270,12 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                       ) : (
                         <button
                           disabled={updateLoading}
-                          onClick={() => {
+                          onClick={async () => {
                             // @ts-ignore
                             handleRequestUpdate({ id: requestId, changes: { confeccionado: true } })
+
+                            if (infoHolder.idProjetoApp)
+                              await updateProject({ id: infoHolder.idProjetoApp, changes: { 'contrato.dataLiberacao': new Date().toISOString() } })
                           }}
                           className="flex h-9 items-center gap-1 whitespace-nowrap rounded bg-cyan-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-cyan-600 enabled:hover:text-white"
                         >

@@ -139,6 +139,7 @@ const GeneralContractRequestSchema = z.object({
   idVisitaTecnica: z.string().optional().nullable(),
   idProjetoCRM: z.string().optional().nullable(),
   idPropostaCRM: z.string().optional().nullable(),
+  idProjetoApp: z.string().optional().nullable(),
   aprovacao: z.boolean().optional().nullable(),
   confeccionado: z.boolean().optional().nullable(),
   dataAprovacao: z.string().datetime().optional().nullable(),

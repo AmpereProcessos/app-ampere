@@ -8,8 +8,6 @@ import { BsPatchCheckFill } from 'react-icons/bs'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { AiOutlineSearch } from 'react-icons/ai'
 
-import ModalFormSolicitacao from '../../components/ModalFormSolicitacao'
-import TagTipoDeServico from '../../components/TagTipoDeServico'
 import LoadingPage from '../../components/utils/LoadingPage'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
 

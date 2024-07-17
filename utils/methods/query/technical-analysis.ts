@@ -130,7 +130,7 @@ export function useTechnicalAnalysis() {
   }
 }
 
-async function fetchTechnicalAnalysisById({ id }: { id: string }) {
+export async function fetchTechnicalAnalysisById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/analises-tecnicas?id=${id}`)
     return data.data as TTechnicalAnalysisDTO

@@ -6,8 +6,9 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import TechnicalAnalysis from './TechnicalAnalysis'
-import { fetchTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
+
 import { z } from 'zod'
+import { fetchTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
 
 type TechnicalAnalysisBlockProps = {
   infoHolder: TContractRequestDTO

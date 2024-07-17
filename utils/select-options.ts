@@ -274,6 +274,11 @@ export const serviceTypes = [
     label: 'SEGURO DE SISTEMA FOTOVOLTAICO',
     value: 'SEGURO DE SISTEMA FOTOVOLTAICO',
   },
+  {
+    id: 15,
+    label: 'PRODUTOS',
+    value: 'PRODUTOS',
+  },
 ]
 export const allSellers = [
   {
@@ -1370,5 +1375,6 @@ export const revenueSources = [
   { id: 9, label: 'MONTAGEM E DESMONTAGEM', value: 'MONTAGEM E DESMONTAGEM' },
   { id: 10, label: 'TROCA DE STRING BOX', value: 'TROCA DE STRING BOX' },
   { id: 11, label: 'SUBESTAÇÃO DE ENERGIA', value: 'SUBESTAÇÃO DE ENERGIA' },
-  { id: 12, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
+  { id: 12, label: 'PRODUTOS', value: 'PRODUTOS' },
+  { id: 13, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
 ]

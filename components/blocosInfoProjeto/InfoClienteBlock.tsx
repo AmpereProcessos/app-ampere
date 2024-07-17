@@ -10,7 +10,7 @@ import TextInput from '../inputs/Text'
 import { useSession } from 'next-auth/react'
 import { FaFilePdf } from 'react-icons/fa'
 import Link from 'next/link'
-import { allSellers, insiders } from '@/utils/select-options'
+import { allSellers, insiders, serviceTypes } from '@/utils/select-options'
 import toast from 'react-hot-toast'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateProject } from '@/utils/methods/mutation/clients'
@@ -161,7 +161,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             value={infoHolder.tipoDeServico}
             selectedItemLabel="NÃO DEFINIDO"
             editable={editor}
-            options={tiposDeServico.map((tipo, index) => ({ id: index + 1, label: tipo.label, value: tipo.value }))}
+            options={serviceTypes.map((tipo, index) => ({ id: index + 1, label: tipo.label, value: tipo.value }))}
             handleChange={(value) => {
               setChanges((prev) => ({ ...prev, tipoDeServico: value }))
               setInfo((prev) => ({ ...prev, tipoDeServico: value }))

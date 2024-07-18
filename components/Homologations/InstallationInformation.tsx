@@ -4,6 +4,7 @@ import SelectInput from '../inputs/Select'
 import { ElectricalInstallationGroups, EnergyDistributorsOptions } from '@/utils/select-options'
 import TextInput from '../inputs/Text'
 import { formatDecimalPlaces } from '@/utils/constants'
+import InstallationDependentsBlock from './Utils/InstallationDependentsBlock'
 
 type InstallationInformationProps = {
   infoHolder: TProjectDTOWithHomologation
@@ -87,17 +88,7 @@ function InstallationInformation({ infoHolder, setInfoHolder, changes, setChange
           />
         </div>
       </div>
-      <h1 className="font-sans text-start  font-bold text-[#353432]">DEPENDENTES</h1>
-      <div className="flex w-full flex-wrap items-center justify-start gap-3">
-        {infoHolder.homologacao.instalacao.dependentes.map((dependent, index) => (
-          <div key={index} className="flex items-center gap-2 rounded border border-gray-500 p-2 shadow-sm">
-            <h1 className="text-xs font-medium text-gray-500">INSTALAÇÃO Nº {dependent.numeroInstalacao}</h1>
-            <h1 className="rounded-lg bg-black px-2 py-1 text-[0.65rem] font-bold text-white">
-              {formatDecimalPlaces(dependent.recebimentoPercentual)} %
-            </h1>
-          </div>
-        ))}
-      </div>
+      <InstallationDependentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />
     </div>
   )
 }

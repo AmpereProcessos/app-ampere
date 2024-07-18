@@ -300,7 +300,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
         grupo: (SegmentEquivalents[request.segmento as keyof typeof SegmentEquivalents] as THomologation['instalacao']['grupo']) || 'RESIDENCIAL',
         numeroCliente: '',
         numeroInstalacao: request.numeroInstalacao || '',
-        dependentes: request?.distribuicoes?.map((d) => ({ numeroInstalacao: d.numInstalacao, recebimentoPercentual: d.excedente || 0 })),
+        dependentes: request?.distribuicoes?.map((d) => ({ numeroInstalacao: d.numInstalacao, recebimentoPercentual: d.excedente || 0 })) || [],
       },
       documentacao: {
         formaAssinatura: request.formaAssinatura == 'DIGITAL' ? 'DIGITAL' : 'FÍSICA',

@@ -58,8 +58,8 @@ function ElectricalInstallationDependentsInformationBlock({
             </div>
             <div className="w-full lg:w-1/2">
               <NumberInput
-                label="NÚMERO DA INSTALAÇÃO"
-                placeholder="Preencha o número da instalação.."
+                label="PORCENTAGEM DO EXCEDENTE P/ ENVIO"
+                placeholder="Preencha a porcentagem de envio.."
                 value={distributionHolder.excedente || null}
                 handleChange={(value) => setDistributionHolder((prev) => ({ ...prev, excedente: value }))}
                 width="100%"
@@ -79,10 +79,10 @@ function ElectricalInstallationDependentsInformationBlock({
               <div className="flex min-w-[250px] flex-col items-center gap-2 rounded-lg border border-gray-500 px-6 py-2">
                 <div className="flex w-full items-center justify-between gap-2">
                   <p className="text-xs tracking-tight text-gray-500">{dist.numInstalacao}</p>
-                  <h1 className="bg-black text-[0.6rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)}%</h1>
+                  <h1 className="bg-black px-2 py-1 text-[0.6rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)}%</h1>
                 </div>
                 <div className="flex w-full items-center justify-end">
-                  <button onClick={() => removeDistribution(index)}>
+                  <button className="text-red-500" onClick={() => removeDistribution(index)}>
                     <MdDelete />
                   </button>
                 </div>

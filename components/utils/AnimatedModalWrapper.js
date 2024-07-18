@@ -19,27 +19,6 @@ const modal = {
   },
 }
 function AnimatedModalWrapper({ children, modalIsOpen, width, height }) {
-  const MODAL_STYLES = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%,-50%)',
-    backgroundColor: '#fff',
-    // width: width ? width : "93%",
-    // height: height ? height : "98%",
-    borderRadius: '10px',
-    padding: '10px',
-    zIndex: 1000,
-  }
-  const OVERLAY_STYLES = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,.85)',
-    zIndex: 1000,
-  }
   return (
     <div id="modal-wrapper" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <div className="relative left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px]">

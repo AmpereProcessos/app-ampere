@@ -12,7 +12,7 @@ import AccessInformation from '../Homologations/AccessInformation'
 import VistoryInformation from '../Homologations/VistoryInformation'
 import PendenciesInformation from '../Homologations/PendenciesInformation'
 import CheckboxInput from '../inputs/Checkbox'
-import CheckboxWithDate from '../inputs/CheckboxWithData'
+import CheckboxWithDate from '../inputs/CheckboxWithDate'
 
 type InfoHomologacaoBlockProps = {
   session: Session
@@ -45,7 +45,7 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
             <CheckboxWithDate
               labelFalse="INICIAR PROJETO"
               labelTrue="INICIAR PROJETO"
-              date={infoHolder.homologacao.dataLiberacao || null}
+              date={infoHolder.homologacao.dataLiberacao ? new Date(infoHolder.homologacao.dataLiberacao) : null}
               handleChange={(value) => {
                 setInfo((prev) => ({ ...prev, homologacao: { ...prev.homologacao, dataLiberacao: value } }))
                 setChanges((prev) => ({ ...prev, 'homologacao.dataLiberacao': value }))

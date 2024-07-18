@@ -15,7 +15,7 @@ import { useQueryClient } from 'react-query'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import toast from 'react-hot-toast'
 import { formatDateInputChange } from '@/utils/methods/shared'
-import CheckboxWithDate from '@/components/inputs/CheckboxWithData'
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 
 type PAAdequationProjectCardProps = {
   project: TEnergyPAExecution

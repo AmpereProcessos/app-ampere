@@ -32,6 +32,7 @@ import { useSession } from 'next-auth/react'
 import { handleEngineeringUpdate } from '../utils/methods/mutation/engineering'
 import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
 import { getErrorMessage } from '../utils/methods/handlers'
+
 function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()

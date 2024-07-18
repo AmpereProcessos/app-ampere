@@ -1,4 +1,4 @@
-import CheckboxWithDate from '@/components/inputs/CheckboxWithData'
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import DateInput from '@/components/inputs/Date'
 import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
 import { formatDate, formatToMoney } from '@/utils/constants'

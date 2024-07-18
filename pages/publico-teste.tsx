@@ -1,3 +1,4 @@
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import React, { useEffect, useRef, useState } from 'react'
 
 type TEditModal = {
@@ -8,7 +9,19 @@ type TEditModal = {
 function Test() {
   const [date, setDate] = useState<Date | undefined>(undefined)
   console.log(date)
-  return <></>
+  return (
+    <div className="flex h-full w-full grow items-center justify-between gap-4 p-6">
+      <h1>TESTE</h1>
+      <CheckboxWithDate
+        labelFalse="INICIAR PROJETO"
+        labelTrue="INICIAR PROJETO"
+        date={date || null}
+        handleChange={(value) => {
+          setDate(value ? new Date(value) : undefined)
+        }}
+      />
+    </div>
+  )
   // return (
   //   <div className="grow p-6">
   //     <div className="flex h-full grow flex-col">

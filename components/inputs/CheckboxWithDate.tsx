@@ -5,7 +5,7 @@ import { Button } from '../ui/button'
 import { BsCalendarCheck, BsCheck } from 'react-icons/bs'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { Calendar } from '../ui/calendar'
-
+import { ptBR } from 'date-fns/locale'
 type CheckboxWithDateProps = {
   date: Date | string | null
   labelTrue: string
@@ -14,7 +14,7 @@ type CheckboxWithDateProps = {
   handleChange: (value: string | null | undefined) => void
   editable?: boolean
 }
-function CheckboxWithDate({ date, labelTrue, labelFalse, showDate = true, handleChange, editable }: CheckboxWithDateProps) {
+function CheckboxWithDate({ date, labelTrue, labelFalse, showDate = true, handleChange, editable = true }: CheckboxWithDateProps) {
   return (
     <Popover>
       <PopoverTrigger disabled={!editable} asChild className="flex flex-col border-0 hover:bg-transparent">
@@ -34,12 +34,14 @@ function CheckboxWithDate({ date, labelTrue, labelFalse, showDate = true, handle
           ) : null}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="z-[120] w-auto p-0" align="center">
         <Calendar
           mode="single"
           selected={date ? new Date(date) : undefined}
+          defaultMonth={date ? new Date(date) : undefined}
           onSelect={(value) => handleChange(value?.toISOString() || null)}
-          initialFocus
+          initialFocus={true}
+          locale={ptBR}
         />
       </PopoverContent>
     </Popover>

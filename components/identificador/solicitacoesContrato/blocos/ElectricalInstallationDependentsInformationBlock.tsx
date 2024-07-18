@@ -5,6 +5,7 @@ import { formatDecimalPlaces } from '@/utils/constants'
 import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import React, { useState } from 'react'
 import { MdDelete } from 'react-icons/md'
+import { VscChromeClose } from 'react-icons/vsc'
 
 type ElectricalInstallationDependentsInformationBlockProps = {
   infoHolder: TContractRequestDTO
@@ -76,16 +77,16 @@ function ElectricalInstallationDependentsInformationBlock({
           </div>
           <div className="flex w-full items-start justify-around gap-4">
             {infoHolder.distribuicoes.map((dist, index) => (
-              <div className="flex min-w-[250px] flex-col items-center gap-2 rounded-lg border border-gray-500 px-6 py-2">
-                <div className="flex w-full items-center justify-between gap-2">
-                  <p className="text-xs tracking-tight text-gray-500">{dist.numInstalacao}</p>
-                  <h1 className="bg-black px-2 py-1 text-[0.6rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)}%</h1>
-                </div>
-                <div className="flex w-full items-center justify-end">
-                  <button className="text-red-500" onClick={() => removeDistribution(index)}>
-                    <MdDelete />
-                  </button>
-                </div>
+              <div key={index} className="group flex items-center gap-2 rounded border border-gray-500 p-2 shadow-sm">
+                <h1 className="text-xs font-medium text-gray-500">INSTALAÇÃO Nº {dist.numInstalacao}</h1>
+                <h1 className="rounded-lg bg-black px-2 py-1 text-[0.65rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)} %</h1>
+                <button
+                  onClick={() => removeDistribution(index)}
+                  type="button"
+                  className="flex items-center justify-center  rounded-lg p-1 opacity-0 duration-300 ease-linear group-hover:opacity-100 hover:scale-105 hover:bg-red-200"
+                >
+                  <VscChromeClose style={{ color: 'red' }} />
+                </button>
               </div>
             ))}
           </div>

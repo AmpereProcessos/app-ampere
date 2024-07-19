@@ -18,7 +18,7 @@ function termPDF({ info }) {
     <div className="h-[29.7cm] w-[21cm] p-4">
       <Link href="/oem">
         <div className="flex justify-center">
-          <Image height="35px" width="35px" src={Logo} alt="Logo" />
+          <Image height={60} width={60} src={Logo} alt="Logo" />
         </div>
       </Link>
       <h1 className="mt-6 text-center font-bold">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</h1>

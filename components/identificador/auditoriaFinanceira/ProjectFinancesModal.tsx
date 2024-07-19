@@ -100,7 +100,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
                     <BsCode color={finances.idProjetoCRM ? 'rgb(6,182,212)' : 'black'} />
                     {finances.idProjetoCRM ? (
                       <a
-                        href={`https://crm.ampereenergias.com.br/projeto/id/${finances.idProjetoCRM}`}
+                        href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${finances.idProjetoCRM}`}
                         className="text-[0.65rem] font-medium leading-none tracking-tight text-white hover:text-cyan-500 lg:text-xs"
                       >
                         {finances.identificador}

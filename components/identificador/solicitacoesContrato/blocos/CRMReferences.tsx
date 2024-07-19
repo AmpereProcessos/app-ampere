@@ -27,7 +27,7 @@ function CRMReferencesBlock({ proposeId, opportunityId }: CRMReferencesBlockProp
               PROJETO
             </h1>
             <div className="flex w-full grow flex-col gap-1 p-4 pt-2">
-              <Link href={`https://crm.ampereenergias.com.br/projeto/id/${opportunityId}`}>
+              <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${opportunityId}`}>
                 <div className="w-full text-center text-sm font-black leading-none tracking-tight text-[#15599a] hover:text-cyan-500">
                   <strong className="text-[#fead41]">({opportunity.identificador})</strong> {opportunity?.nome}
                 </div>
@@ -56,7 +56,7 @@ function CRMReferencesBlock({ proposeId, opportunityId }: CRMReferencesBlockProp
             </h1>
             <div className="flex w-full grow flex-col gap-1 p-4 pt-2">
               <div className="flex w-full items-center justify-between gap-2">
-                <Link href={`https://crm.ampereenergias.com.br/proposta/${proposeId}`}>
+                <Link href={`https://crm.ampereenergias.com.br/comercial/proposta/${proposeId}`}>
                   <a className="text-center text-sm font-black leading-none tracking-tight text-[#15599a] hover:text-cyan-500">{propose?.nome}</a>
                 </Link>
                 <div className="flex items-center gap-2">

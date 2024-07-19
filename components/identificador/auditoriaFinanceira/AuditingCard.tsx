@@ -56,7 +56,7 @@ function AuditingCard({ info, handleClick }: AuditingCardProps) {
           <BsCode color={info.idProjetoCRM ? 'rgb(6,182,212)' : 'black'} />
           {info.idProjetoCRM ? (
             <a
-              href={`https://crm.ampereenergias.com.br/projeto/id/${info.idProjetoCRM}`}
+              href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${info.idProjetoCRM}`}
               className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 hover:text-cyan-500 lg:text-xs"
             >
               {info.identificador}

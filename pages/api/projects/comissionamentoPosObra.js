@@ -8,9 +8,7 @@ export default async function handler(req, res) {
         {
           $match: {
             'contrato.status': 'ASSINADO',
-
             'obra.statusDaObra': 'CONCLUIDA',
-
             'jornada.entregaTecnica': { $ne: true },
           },
         },
@@ -22,6 +20,7 @@ export default async function handler(req, res) {
             app: 1,
             conferencias: 1,
             cidade: 1,
+            'homologacao.vistoria': 1,
             'medidor.data': 1,
             'obra.saida': 1,
             'obra.equipeResp': 1,

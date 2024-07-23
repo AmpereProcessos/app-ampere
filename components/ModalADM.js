@@ -32,6 +32,7 @@ import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import { useSession } from 'next-auth/react'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { getErrorMessage } from '@/utils/methods/handlers'
+import InfoReceitasBlock from './blocosInfoProjeto/InfoReceitasBlock'
 
 function ModalADM({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -89,6 +90,13 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 project={project}
                 updateLogs={updateLogs || []}
+              />
+              <InfoReceitasBlock
+                session={session}
+                project={infoHolder}
+                projectId={projectId}
+                projectName={infoHolder.nomeDoContrato}
+                projectIdentificator={project.qtde}
               />
               <InfoDespesasBlock projectId={infoHolder._id} />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) ? (

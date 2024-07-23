@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ModalADM from '../../components/ModalADM'
 
 import TagTipoDeServico from '../../components/TagTipoDeServico'
-import { equipesTecnicas, formatDate, statusLiberacao } from '../../utils/constants'
+import { equipesTecnicas, formatDate, GeneralVisibleHiddenExitMotionVariants } from '../../utils/constants'
 import dayjs from 'dayjs'
 
 import { useSession } from 'next-auth/react'
@@ -24,6 +24,8 @@ import { TProjectDTO } from '@/utils/schemas/projects'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { MdPaid } from 'react-icons/md'
 import { IoDocumentTextOutline } from 'react-icons/io5'
+import CheckboxInput from '@/components/inputs/Checkbox'
+import ADMProjectCard from '@/components/identificador/adm/ADMProjectCard'
 function Administracao() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -126,8 +128,16 @@ function Administracao() {
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+            <motion.div
+              key={'editor'}
+              variants={GeneralVisibleHiddenExitMotionVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+            >
+              <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
+              <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
                 <TextInput
                   label="NOME DO CONTRATO"
                   value={filters.search}
@@ -233,58 +243,72 @@ function Administracao() {
                   />
                 </div>
               </div>
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      toCharge: !prev.toCharge,
-                    }))
-                  }
-                  className={`cursor-pointer rounded border border-[#15599a] p-1 font-bold ${
-                    filters.toCharge ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
-                  }`}
-                >
-                  COBRANÇA PENDENTE
+              <div className="flex w-full flex-col flex-wrap items-center justify-start gap-4 lg:flex-row">
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="COBRANÇA GERAL PENDENTE"
+                    labelTrue="COBRANÇA GERAL PENDENTE"
+                    checked={filters.toCharge}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, toCharge: value }))}
+                  />
                 </div>
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      chargeDone: !prev.chargeDone,
-                    }))
-                  }
-                  className={`cursor-pointer rounded border border-[#fead41] p-1 font-bold ${
-                    filters.chargeDone ? 'bg-[#fead41] text-white' : 'bg-transparent text-[#fead41]'
-                  }`}
-                >
-                  COBRANÇA FEITA
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="COBRANÇA GERAL CONCLUÍDA"
+                    labelTrue="COBRANÇA GERAL CONCLUÍDA"
+                    checked={filters.chargeDone}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, chargeDone: value }))}
+                  />
                 </div>
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      toBill: !prev.toBill,
-                    }))
-                  }
-                  className={`cursor-pointer rounded border border-[#15599a] p-1 font-bold ${
-                    filters.toBill ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
-                  }`}
-                >
-                  FATURAMENTO PENDENTE
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="FATURAMENTOS PENDENTES"
+                    labelTrue="FATURAMENTOS PENDENTES"
+                    checked={filters.toBill}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, toBill: value }))}
+                  />
                 </div>
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      billingDone: !prev.billingDone,
-                    }))
-                  }
-                  className={`cursor-pointer rounded border border-[#fead41] p-1 font-bold ${
-                    filters.billingDone ? 'bg-[#fead41] text-white' : 'bg-transparent text-[#fead41]'
-                  }`}
-                >
-                  FATURAMENTO FEITO
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="FATURAMENTOS CONCLUÍDOS"
+                    labelTrue="FATURAMENTOS CONCLUÍDOS"
+                    checked={filters.billingDone}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, billingDone: value }))}
+                  />
+                </div>
+              </div>
+              <div className="flex w-full flex-col flex-wrap items-center justify-start gap-4 lg:flex-row">
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="RECEBIMENTOS INDEFINIDOS"
+                    labelTrue="RECEBIMENTOS INDEFINIDOS"
+                    checked={filters.receiptsUndefined}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, receiptsUndefined: value }))}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="RECEBIMENTOS PARA HOJE"
+                    labelTrue="RECEBIMENTOS PARA HOJE"
+                    checked={filters.receiptToday}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, receiptToday: value }))}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="RECEBIMENTOS PARA A SEMANA"
+                    labelTrue="RECEBIMENTOS PARA A SEMANA"
+                    checked={filters.receiptThisWeek}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, receiptThisWeek: value }))}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="RECEBIMENTOS PARA O MÊS"
+                    labelTrue="RECEBIMENTOS PARA O MÊS"
+                    checked={filters.receiptThisMonth}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, receiptThisMonth: value }))}
+                  />
                 </div>
               </div>
             </motion.div>
@@ -295,76 +319,7 @@ function Administracao() {
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos.'} /> : null}
         {isSuccess
-          ? projects.map((project, index) => (
-              <motion.div
-                initial={{ opacity: 0, translateX: -50, translateY: -35 }}
-                animate={{ opacity: 1, translateX: 0, translateY: 0 }}
-                transition={{ duration: 0.3, delay: 0.01 * index }}
-                onClick={() => {
-                  handleOpenModal(project._id)
-                }}
-                key={project._id}
-                className="w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
-              >
-                <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-                <div className="flex flex-col p-2">
-                  <div className="flex items-center justify-between pb-2">
-                    <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-                    <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-                  </div>
-                  <div className="flex items-center justify-between pb-2">
-                    <div className="flex flex-col items-start gap-1">
-                      <span className="text-xxs">STATUS DE COBRANÇA</span>
-                      <p
-                        className={`rounded border p-1 text-xs font-black ${
-                          project.pagamento?.cobrancaFeita ? 'border border-green-500 text-green-500' : 'border border-red-500 text-red-500'
-                        }`}
-                      >
-                        {project.pagamento?.cobrancaFeita ? 'REALIZADA' : 'PENDENTE'}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-xxs">EMPRESA À FATURAR</span>
-                      <p className={`rounded p-1 text-sm font-bold text-gray-500 `}>
-                        {project.faturamento?.empresaFaturamento ? project.faturamento?.empresaFaturamento : 'NÃO DEFINIDO'}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="text-xxs">STATUS DE FATURAMENTO</span>
-                      <p
-                        className={`rounded border p-1 text-xs font-black ${
-                          project.faturamento?.concluido ? 'border border-green-500 text-green-500' : 'border border-red-500 text-red-500'
-                        }`}
-                      >
-                        {project.faturamento?.concluido ? 'REALIZADO' : 'PENDENTE'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between pb-2">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xxs">SAÍDA DE OBRA</span>
-                      <p className="text-xs text-yellow-500">
-                        {project.obra?.saida ? dayjs(project.obra.saida).add(4, 'hours').format('DD/MM/YYYY') : '-'}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-end text-xxs">VENDEDOR</span>
-                      <p className="text-xs text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col items-start gap-1">
-                      <p className="text-xxs">TIPO DE PAGAMENTO</p>
-                      <p className="text-xs text-gray-600">{project.pagamento?.forma && project.pagamento.forma}</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <p className="text-end text-xxs">PAGAMENTO DO KIT</p>
-                      <p className="text-end text-xs text-gray-600">{project.compra?.statusLiberacao ? project.compra.statusLiberacao : '-'}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))
+          ? projects.map((project, index) => <ADMProjectCard project={project} index={index} handleClick={(id) => handleOpenModal(id)} />)
           : null}
       </div>
       <Link href={'/comercial/solicitacoes-contrato'}>

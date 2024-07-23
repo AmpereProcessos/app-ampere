@@ -43,6 +43,7 @@ const GeneralRevenueSchema = z.object({
   }),
   fracionamento: z.array(
     z.object({
+      valor: z.number().optional().nullable(),
       porcentagem: z.number(),
       dataPrevisaoRecebimento: z.string().datetime(),
       dataRecebimento: z.string().datetime().optional().nullable(),
@@ -95,6 +96,10 @@ export const InsertRevenueSchema = z.object({
   }),
   fracionamento: z.array(
     z.object({
+      valor: z
+        .number({ required_error: 'Valor do fracionamento não informado.', invalid_type_error: 'Tipo não válido para o valor do fracionamento.' })
+        .optional()
+        .nullable(),
       porcentagem: z.number({
         required_error: 'Porcentagem do fracionamento de receita não informado.',
         invalid_type_error: 'Tipo não válido para a porcentagem do fracionamento.',
@@ -138,6 +143,7 @@ const RevenueEntitySchema = z.object({
   }),
   fracionamento: z.array(
     z.object({
+      valor: z.number().optional().nullable(),
       porcentagem: z.number(),
       dataPrevisaoRecebimento: z.string().datetime(),
       dataRecebimento: z.string().datetime().optional().nullable(),

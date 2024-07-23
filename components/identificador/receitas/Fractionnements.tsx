@@ -16,6 +16,7 @@ type FractionnementsProps = {
 }
 function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: FractionnementsProps) {
   const [newFractionnementHolder, setNewFractionnementHolder] = useState<TRevenue['fracionamento'][number]>({
+    valor: 0,
     porcentagem: missingPercentage,
     dataPrevisaoRecebimento: new Date().toISOString(),
   })
@@ -26,6 +27,11 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
 
     const currentFractionnements = [...infoHolder.fracionamento]
     currentFractionnements.push(newFractionnementHolder)
+    setInfoHolder((prev) => ({ ...prev, fracionamento: currentFractionnements }))
+  }
+  function deleteFractionnement(index: number) {
+    const currentFractionnements = [...infoHolder.fracionamento]
+    currentFractionnements.splice(index, 1)
     setInfoHolder((prev) => ({ ...prev, fracionamento: currentFractionnements }))
   }
   useEffect(() => {
@@ -40,26 +46,39 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
         <strong className="text-[#fead41]">regime de referência / regime de caixa.</strong>
       </h1>
       <div className="item-center flex w-full flex-col gap-2 lg:flex-row">
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <NumberInput
-            label="PORCENTAGEM"
-            placeholder="Preencha aqui a porcentagem do fracionamento..."
-            value={newFractionnementHolder.porcentagem}
-            handleChange={(value) => setNewFractionnementHolder((prev) => ({ ...prev, porcentagem: value }))}
+            label="VALOR"
+            labelClassName="text-sm tracking-tight"
+            placeholder="Preencha aqui o valor do fracionamento..."
+            value={newFractionnementHolder.valor || null}
+            handleChange={(value) => setNewFractionnementHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / infoHolder.total) * 100 }))}
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
+          <NumberInput
+            label="PORCENTAGEM"
+            labelClassName="text-sm tracking-tight"
+            placeholder="Preencha aqui a porcentagem do fracionamento..."
+            value={newFractionnementHolder.porcentagem}
+            handleChange={(value) => setNewFractionnementHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * infoHolder.total) / 100 }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
           <DateInput
             label="PREVISÃO DE RECEBIMENTO"
+            labelClassName="text-sm tracking-tight"
             value={newFractionnementHolder.dataPrevisaoRecebimento ? formatDate(newFractionnementHolder.dataPrevisaoRecebimento) : undefined}
             handleChange={(value) => setNewFractionnementHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value) }))}
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/4">
           <DateInput
             label="DATA DE RECEBIMENTO"
+            labelClassName="text-sm tracking-tight"
             value={newFractionnementHolder.dataRecebimento ? formatDate(newFractionnementHolder.dataRecebimento) : undefined}
             handleChange={(value) => setNewFractionnementHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value) }))}
             width="100%"
@@ -82,6 +101,7 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
             fractionnementIndex={index}
             infoHolder={infoHolder}
             setInfoHolder={setInfoHolder}
+            deleteFractionnement={() => deleteFractionnement(index)}
           />
         ))}
       </div>

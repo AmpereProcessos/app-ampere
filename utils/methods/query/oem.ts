@@ -184,3 +184,111 @@ export function useOeMProjects() {
     setFilters,
   }
 }
+
+async function getExecutionCommissioningProjects() {
+  try {
+    const { data } = await axios.get('/api/projects/comissionamentoPosObra')
+    return data as TProjectDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UseExecutionCommissioningProjectsFilters = {
+  search: string
+  city: string[]
+  responsibleTeam: string[]
+  seller: string[]
+  appPending: boolean
+  injectedEnergyPending: boolean
+  plantPowerCheckPending: boolean
+  monitoringPending: boolean
+  date: {
+    after: string | null
+    before: string | null
+    field: string | null
+  }
+}
+export function useExecutionCommissioningProjects() {
+  const [filters, setFilters] = useState<UseExecutionCommissioningProjectsFilters>({
+    search: '',
+    city: [],
+    responsibleTeam: [],
+    seller: [],
+    appPending: false,
+    injectedEnergyPending: false,
+    plantPowerCheckPending: false,
+    monitoringPending: false,
+    date: {
+      after: null,
+      before: null,
+      field: null,
+    },
+  })
+  function matchSearch(project: TProjectDTO) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(filters.search.toUpperCase())
+  }
+  function matchCity(project: TProjectDTO) {
+    if (filters.city.length == 0) return true
+    return filters.city.includes(project.cidade)
+  }
+  function matchResponsibleTeam(project: TProjectDTO) {
+    if (filters.responsibleTeam.length == 0) return true
+    return filters.responsibleTeam.includes(project.obra.equipeResp || '')
+  }
+  function matchSeller(project: TProjectDTO) {
+    if (filters.seller.length == 0) return true
+    return filters.seller.includes(project.vendedor.nome || '')
+  }
+  function matchAppPending(project: TProjectDTO) {
+    if (!filters.appPending) return true
+    return !project.app.data
+  }
+  function matchInjectedEnergyPending(project: TProjectDTO) {
+    if (!filters.injectedEnergyPending) return true
+    return !project.conferencias.energiaInjetada.data
+  }
+  function matchPlantPowerCheckPending(project: TProjectDTO) {
+    if (!filters.plantPowerCheckPending) return true
+    return !project.conferencias.usinaLigada.data
+  }
+  function matchMonitoringPending(project: TProjectDTO) {
+    if (!filters.monitoringPending) return true
+    return !project.conferencias.monitoramentoFeito.data
+  }
+  function matchDate(project: TProjectDTO) {
+    if (!filters.date.after || !filters.date.before || !filters.date.field) return true
+    const fieldValue = getProjectNestedFieldValue(project, filters.date.field)
+    return (
+      // @ts-ignore
+      fieldValue >= filters.date.after &&
+      // @ts-ignore
+      fieldValue <= filters.date.before
+    )
+  }
+  function handleModelData(data: TProjectDTO[]) {
+    var modeledData = data
+    return modeledData.filter(
+      (project) =>
+        matchSearch(project) &&
+        matchCity(project) &&
+        matchResponsibleTeam(project) &&
+        matchSeller(project) &&
+        matchAppPending(project) &&
+        matchInjectedEnergyPending(project) &&
+        matchPlantPowerCheckPending(project) &&
+        matchMonitoringPending(project) &&
+        matchDate(project)
+    )
+  }
+  return {
+    ...useQuery({
+      queryKey: ['execution-commissioning-projects'],
+      queryFn: getExecutionCommissioningProjects,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}

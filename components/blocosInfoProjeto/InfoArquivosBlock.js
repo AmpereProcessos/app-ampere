@@ -70,18 +70,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, ableToDelete = tru
             project.links[category]?.length > 0 ? (
               <div key={index} className="flex w-full flex-col">
                 <h1 className="w-full rounded-tl-md rounded-tr-md bg-cyan-700 p-1 text-center font-bold text-white">{category.toUpperCase()}</h1>
-
                 {renderLinks({ links: project.links[category], category: category })}
-                {/* {project.links[category].map((obj, index2) => (
-                    <div className="w-full lg:w-[50%]">
-                      <FileLinkBlock
-                        key={`${obj.title} - ${index2}`}
-                        obj={obj}
-                        prefix={infoHolder.nomeDoContrato}
-                        deleteFile={(obj) => deleteFile(obj, category)}
-                      />
-                    </div>
-                  ))} */}
               </div>
             ) : null
           )}

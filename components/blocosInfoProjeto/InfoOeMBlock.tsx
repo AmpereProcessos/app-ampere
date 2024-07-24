@@ -12,6 +12,7 @@ import NewMaintenanceMenu from './Utils/NewMaintenanceMenu'
 import MaintenanceCard from './Utils/MaintenanceCard'
 import toast from 'react-hot-toast'
 import { executionStatus } from '@/utils/select-options'
+import CheckboxWithDate from '../inputs/CheckboxWithDate'
 
 type InfoOeMBlockProps = {
   editor: boolean
@@ -165,7 +166,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
       </div>
       <div className="mt-2 w-full self-center lg:w-1/4">
         <SelectInput
-          label={'STATUS DA OBRA'}
+          label={'STATUS DE EXECUÇÃO'}
           value={infoHolder.obra?.statusDaObra}
           selectedItemLabel="NÃO DEFINIDO"
           editable={editor}
@@ -199,6 +200,33 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
           width="100%"
         />
       </div>
+      <div className="my-2 flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
+        <div className="w-fit">
+          <CheckboxWithDate
+            labelFalse="EXECUÇÃO INICIADA"
+            labelTrue="EXECUÇÃO INICIADA"
+            date={infoHolder.obra.entrada || null}
+            handleChange={(value) => {
+              setInfo((prev) => ({ ...prev, obra: { ...prev.obra, entrada: value } }))
+              setChanges((prev) => ({ ...prev, 'obra.entrada': value }))
+            }}
+          />
+        </div>
+        <div className="w-fit">
+          <CheckboxWithDate
+            labelFalse="EXECUÇÃO FINALIZADA"
+            labelTrue="EXECUÇÃO FINALIZADA"
+            date={infoHolder.obra.saida || null}
+            handleChange={(value) => {
+              setInfo((prev) => ({
+                ...prev,
+                obra: { ...prev.obra, saida: value, statusDaObra: value ? 'CONCLUIDA' : prev.obra.statusDaObra },
+              }))
+              setChanges((prev) => ({ ...prev, 'obra.saida': value, 'obra.statusDaObra': value ? 'CONCLUIDA' : prev['obra.statusDaObra'] }))
+            }}
+          />
+        </div>
+      </div>
       <div className="mt-2 flex w-full items-center justify-center">
         <div className="w-fit">
           <CheckboxInput
@@ -206,8 +234,23 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
             labelTrue="O&M CONCLUÍDO"
             checked={!!infoHolder.oem?.oemConcluido}
             handleChange={(value) => {
-              setInfo((prev) => ({ ...prev, oem: { ...(prev.oem || {}), oemConcluido: value } }))
-              setChanges((prev) => ({ ...prev, 'oem.oemConcluido': value }))
+              setInfo((prev) => ({
+                ...prev,
+                oem: { ...(prev.oem || {}), oemConcluido: value },
+                obra: {
+                  ...prev.obra,
+                  entrada: prev.obra.entrada ? prev.obra.entrada : !!value ? new Date().toISOString() : prev.obra.entrada,
+                  saida: prev.obra.saida ? prev.obra.saida : !!value ? new Date().toISOString() : prev.obra.saida,
+                  statusDaObra: !!value ? 'CONCLUIDA' : prev.obra.statusDaObra,
+                },
+              }))
+              setChanges((prev) => ({
+                ...prev,
+                'oem.oemConcluido': value,
+                'obra.entrada': prev['obra.entrada'] ? prev['obra.entrada'] : !!value ? new Date().toISOString() : prev['obra.entrada'],
+                'obra.saida': prev['obra.saida'] ? prev['obra.saida'] : !!value ? new Date().toISOString() : prev['obra.saida'],
+                'obra.status': !!value ? 'CONCLUIDA' : prev['obra.status'],
+              }))
             }}
           />
         </div>

@@ -272,7 +272,7 @@ function EtapaTelhado({ next, order }) {
         <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
           <p className="col-span-9 font-medium">
-            FURANTE A FIXAÇÃO DOS MÓDULOS FAZER OUTRA INSPEÇÃO VISUAL MÓDULO A MÓDULO COM O INTUITO DE RETIRAR TELHAS QUEBRADAS
+            DURANTE A FIXAÇÃO DOS MÓDULOS FAZER OUTRA INSPEÇÃO VISUAL MÓDULO A MÓDULO COM O INTUITO DE RETIRAR TELHAS QUEBRADAS
           </p>
         </div>
         <div className="grid w-full grid-cols-10 gap-2 lg:w-[60%]">

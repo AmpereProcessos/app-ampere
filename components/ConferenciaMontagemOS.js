@@ -36,14 +36,14 @@ function ConferenciaMontagemOS({ order, closeModal, queryKey }) {
     }
   }, [])
   return (
-    <div className="w-full flex flex-col items-center">
-      <h1 className="text-center font-bold text-[#15599a] text-xl">CONFERÊNCIA DE FECHAMENTO DA OS</h1>
+    <div className="flex w-full flex-col items-center">
+      <h1 className="text-center text-xl font-bold text-[#15599a]">CONFERÊNCIA DE FECHAMENTO DA OS</h1>
       {stage == 0 && <EtapaEntrada order={order} next={() => setStage((prev) => prev + 1)} />}
       {stage == 1 && <EtapaTelhado order={order} next={() => setStage((prev) => prev + 1)} />}
       {stage == 2 && <EtapaMontagemMecanica order={order} next={() => setStage((prev) => prev + 1)} />}
       {stage == 3 && <EtapaLancamentoCabosConexoes order={order} next={() => setStage((prev) => prev + 1)} />}
       {stage == 4 && <EtapaFinalizacao order={order} next={() => setStage((prev) => prev + 1)} closeModal={closeModal} queryKey={queryKey} />}
-      {msg.text && <p className={`text-center italic text-xs ${msg.color} mt-2`}>{msg.text}</p>}
+      {msg.text && <p className={`text-center text-xs italic ${msg.color} mt-2`}>{msg.text}</p>}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import React, { useContext, useState } from 'react'
 import { motion } from 'framer-motion'
-import SelectInput from './SelectInput'
+import SelectInput from './inputs/Select'
 import TextInput from './inputs/Text'
 import SaveButton from './utils/Buttons/SaveButton'
 import { ImAttachment } from 'react-icons/im'
@@ -175,7 +175,31 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
         </div>
       </div>
       <div className="flex w-full items-center gap-2 lg:flex-row">
-        <div className="w-1/3 lg:w-full">
+        <div className="w-1/4 lg:w-full">
+          <SelectInput
+            label={'DIAGNÓSTICO'}
+            value={infoHolder.oem.diagnostico}
+            options={[
+              { id: 1, label: 'MICRO/INVERSOR DESCONFIGURADO', value: 'MICRO/INVERSOR DESCONFIGURADO' },
+              { id: 2, label: 'CLIENTE SEM INTERNET', value: 'CLIENTE SEM INTERNET' },
+              { id: 3, label: 'TEMPO DE O&M VENCIDO', value: 'TEMPO DE O&M VENCIDO' },
+              { id: 4, label: 'EQUIPAMENTOS PARA GARANTIA', value: 'EQUIPAMENTOS PARA GARANTIA' },
+              { id: 5, label: 'ROTEADOR INCOMPATÍVEL', value: 'ROTEADOR INCOMPATÍVEL' },
+              { id: 6, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+            ]}
+            handleChange={(value) => {
+              setChanges((prev) => ({ ...prev, 'oem.diagnostico': value }))
+              setInfoHolder((prev) => ({ ...prev, oem: { ...prev.oem, diagnostico: value } }))
+            }}
+            onReset={() => {
+              setInfoHolder((prev) => ({ ...prev, oem: { ...prev.oem, diagnostico: null } }))
+              setChanges((prev) => ({ ...prev, 'oem.diagnostico': null }))
+            }}
+            selectedItemLabel="NÃO DEFINIDO"
+            width="100%"
+          />
+        </div>
+        <div className="w-1/4 lg:w-full">
           <DateInput
             label="DATA DE CONFIGURAÇÃO DO APP"
             value={formatDate(infoHolder.app.data)}
@@ -195,7 +219,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
             width="100%"
           />
         </div>
-        <div className="w-1/3 lg:w-full">
+        <div className="w-1/4 lg:w-full">
           <TextInput
             label={'LOGIN DO APP'}
             placeholder={'Preencha aqui o login do app do cliente.'}
@@ -216,7 +240,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
             width="100%"
           />
         </div>
-        <div className="w-1/3 lg:w-full">
+        <div className="w-1/4 lg:w-full">
           <TextInput
             label={'SENHA DO APP'}
             placeholder={'Preencha aqui a senha do app do cliente.'}
@@ -263,7 +287,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
             <CheckboxWithDate
               labelFalse="ENTREGA TÉCNICA FEITA"
               labelTrue="ENTREGA TÉCNICA FEITA"
-              date={infoHolder.conferencias.usinaLigada.data || null}
+              date={infoHolder.jornada.dataEntregaTecnicaRemota || null}
               handleChange={(value) => {
                 setChanges((prev) => ({
                   ...prev,

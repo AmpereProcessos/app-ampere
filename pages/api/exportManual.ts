@@ -9,83 +9,38 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToDatabase(process.env.DB_KEY)
-  const projectsCollection: Collection<TProject> = db.collection('dados')
+  // const db: Db = await connectToDatabase(process.env.DB_KEY)
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const lastChangedMeter = await projectsCollection
-    .find({ $or: [{ segmento: 'RURAL' }, { bairro: { $regex: 'RURAL' } }], 'contrato.status': 'ASSINADO' })
-    .toArray()
-
-  const ProjectsFormatted = lastChangedMeter.map((project) => {
-    return {
-      QTDE: project.qtde,
-      NOME: project.nomeDoContrato,
-      TELEFONE: project.telefone || 'N/A',
-      VENDEDOR: project.vendedor.nome,
-      CIDADE: project.cidade,
-      UF: project.uf,
-      'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
-      // 'DATA DE TROCA DO MEDIDOR': project.medidor.data ? formatDateAsLocale(project.medidor.data) : null,
-    }
-  })
-  console.log(ProjectsFormatted.length)
-  // const expensesCollection: Collection<TExpense> = db.collection('despesas')
-  // // const projects = await collection.find({ 'obra.saida': { $gte: '2023-11-01T00:00:00.000Z' } }, { sort: { 'obra.saida': 1 } }).toArray()
-  // const projects = await collection
-  //   .find(
-  //     { 'contrato.dataSolicitacao': { $gte: '2023-12-01T00:00:00.000Z' }, 'contrato.status': 'RESCISÃO DE CONTRATO' },
-  //     { sort: { 'contrato.dataSolicitacao': 1 } }
-  //   )
+  // const projects = await projectsCollection
+  //   .find({
+  //     'contrato.status': 'ASSINADO',
+  //   })
   //   .toArray()
-  // // const expenses = await expensesCollection.find({}).toArray()
+
   // const formatted = projects.map((project) => {
   //   return {
-  //     'NOME DO CONTRATO': project.nomeDoContrato,
-  //     'DATA DE SOLICITAÇÃO': formatDateAsLocale(project.contrato.dataSolicitacao),
-  //     'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
-  //     CIDADE: project.cidade,
+  //     QTDE: project.qtde,
+  //     NOME: project.nomeDoContrato,
+  //     TIPO: project.tipoDeServico,
+  //     TELEFONE: project.telefone || 'N/A',
   //     VENDEDOR: project.vendedor.nome,
+  //     CIDADE: project.cidade,
+  //     UF: project.uf,
+  //     POTÊNCIA: project.sistema.potPico,
+  //     'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
+  //     'STATUS DA COMPRA': project.compra.status,
+  //     'DATA DO PEDIDO': project.compra.dataPedido ? formatDateAsLocale(project.compra.dataPedido) : 'N/A',
+  //     'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'N/A',
+  //     'STATUS DA HOMOLOGAÇÃO': project.homologacao.status || 'N/A',
+  //     'DATA DE RESPOSTA DA HOMOLOGAÇÃO': project.homologacao.acesso.dataResposta
+  //       ? formatDateAsLocale(project.homologacao.acesso.dataResposta)
+  //       : 'N/A',
+  //     'STATUS DA OBRA': project.obra.statusDaObra || 'N/A',
+  //     'DATA DE TÉRMINO DA OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : 'N/A',
   //   }
-  //   // const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id.toString())
-  //   // const itens = projectExpenses.flatMap((exp) => exp.itens)
-  //   // const total = projectExpenses.reduce((acc, current) => acc + current.total, 0)
-
-  //   // return {
-  //   //   periodo: dayjs(project.obra.saida).format('MM/YYYY'),
-  //   //   nome: project.nomeDoContrato,
-  //   //   cidade: project.cidade,
-  //   //   assinatura: formatDateAsLocale(project.contrato.dataAssinatura),
-  //   //   finalizacao: formatDateAsLocale(project.obra.saida),
-  //   //   itens: itens,
-  //   //   totalGasto: total,
-  //   // }
-  //   // var obj = {
-  //   //   PERIODO: dayjs(project.contrato.dataAssinatura).format('MM/YYYY'),
-  //   //   'NOME DO CLIENTE': project.nomeDoContrato,
-  //   //   'VALOR DO CONTRATO': getContractValue({
-  //   //     projectValue: project.sistema.valorProjeto,
-  //   //     structureValue: project.estruturaPersonalizada.valor,
-  //   //     paValue: project.padrao.valor,
-  //   //   }),
-  //   //   'STATUS DO PARECER': project.homologacao.status,
-  //   //   'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
-  //   //   'DATA DE LIBERAÇÃO PARA COMPRA': formatDateAsLocale(project.compra.dataLiberacao),
-  //   //   'DATA DE COMPRA DO KIT': formatDateAsLocale(project.compra.dataPedido),
-  //   //   'DATA DE PAGAMENTO DO KIT': formatDateAsLocale(project.compra.dataPagamento),
-  //   //   'DATA DE SAIDA DE OBRA': formatDateAsLocale(project.obra.saida),
-  //   //   'VALOR DO KIT': project.compra.valorDoKit,
-  //   // }
-  //   // projectExpenses.forEach((exp) => {
-  //   //   if (project.nomeDoContrato == 'SUELENE DE SOUZA BARBOSA') console.log(obj[exp.categoria])
-  //   //   if (!obj[exp.categoria]) obj[exp.categoria] = 0
-  //   //   obj[exp.categoria] += exp.total
-  //   //   if (project.nomeDoContrato == 'SUELENE DE SOUZA BARBOSA') console.log(exp.categoria, exp.total, obj[exp.categoria])
-  //   // })
-  //   // return obj
   // })
-  // return res.json({ data: formatted })
-
-  return res.json(ProjectsFormatted)
+  return res.json('DESATIVADA')
 }
 export default apiHandler({
   GET: getExport,

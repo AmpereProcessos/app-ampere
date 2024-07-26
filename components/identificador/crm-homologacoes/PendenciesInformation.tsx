@@ -1,4 +1,5 @@
 import CheckboxInput from '@/components/inputs/Checkbox'
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import { THomologation } from '@/utils/schemas/crm/homologation.schema'
 
 type PendenciesInformationProps = {
@@ -11,66 +12,66 @@ function PendenciesInformation({ infoHolder, setInfoHolder }: PendenciesInformat
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">PENDÊNCIAS</h1>
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-fit">
-          <CheckboxInput
+          <CheckboxWithDate
             labelFalse="DIAGRAMAS FEITOS"
             labelTrue="DIAGRAMAS FEITOS"
-            checked={!!infoHolder.pendencias.diagramas}
+            date={infoHolder.pendencias.diagramas || null}
             handleChange={(value) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                pendencias: { ...prev.pendencias, diagramas: value ? new Date().toISOString() : null },
+                pendencias: { ...prev.pendencias, diagramas: value },
               }))
             }}
           />
         </div>
         <div className="w-fit">
-          <CheckboxInput
+          <CheckboxWithDate
             labelFalse="FORMULÁRIOS FEITOS"
             labelTrue="FORMULÁRIOS FEITOS"
-            checked={!!infoHolder.pendencias.formularios}
+            date={infoHolder.pendencias.formularios || null}
             handleChange={(value) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                pendencias: { ...prev.pendencias, formularios: value ? new Date().toISOString() : null },
+                pendencias: { ...prev.pendencias, formularios: value },
               }))
             }}
           />
         </div>
         <div className="w-fit">
-          <CheckboxInput
+          <CheckboxWithDate
             labelFalse="DESENHOS FEITOS"
             labelTrue="DESENHOS FEITOS"
-            checked={!!infoHolder.pendencias.desenhos}
+            date={infoHolder.pendencias.desenhos || null}
             handleChange={(value) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                pendencias: { ...prev.pendencias, desenhos: value ? new Date().toISOString() : null },
+                pendencias: { ...prev.pendencias, desenhos: value },
               }))
             }}
           />
         </div>
         <div className="w-fit">
-          <CheckboxInput
+          <CheckboxWithDate
             labelFalse="MAPAS DE MICRO"
             labelTrue="MAPAS DE MICRO"
-            checked={!!infoHolder.pendencias.mapasDeMicro}
+            date={infoHolder.pendencias.mapasDeMicro || null}
             handleChange={(value) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                pendencias: { ...prev.pendencias, mapasDeMicro: value ? new Date().toISOString() : null },
+                pendencias: { ...prev.pendencias, mapasDeMicro: value },
               }))
             }}
           />
         </div>
         <div className="w-fit">
-          <CheckboxInput
+          <CheckboxWithDate
             labelFalse="DISTRIBUIÇÃO DE CRÉDITOS FEITA"
             labelTrue="DISTRIBUIÇÃO DE CRÉDITOS FEITA"
-            checked={!!infoHolder.pendencias.distribuicoes}
+            date={infoHolder.pendencias.distribuicoes || null}
             handleChange={(value) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                pendencias: { ...prev.pendencias, distribuicoes: value ? new Date().toISOString() : null },
+                pendencias: { ...prev.pendencias, distribuicoes: value },
               }))
             }}
           />

@@ -178,7 +178,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
         <div className="w-1/4 lg:w-full">
           <SelectInput
             label={'DIAGNÓSTICO'}
-            value={infoHolder.oem.diagnostico}
+            value={infoHolder.oem?.diagnostico}
             options={[
               { id: 1, label: 'MICRO/INVERSOR DESCONFIGURADO', value: 'MICRO/INVERSOR DESCONFIGURADO' },
               { id: 2, label: 'CLIENTE SEM INTERNET', value: 'CLIENTE SEM INTERNET' },
@@ -189,10 +189,10 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
             ]}
             handleChange={(value) => {
               setChanges((prev) => ({ ...prev, 'oem.diagnostico': value }))
-              setInfoHolder((prev) => ({ ...prev, oem: { ...prev.oem, diagnostico: value } }))
+              setInfoHolder((prev) => ({ ...prev, oem: { ...(prev.oem || {}), diagnostico: value } }))
             }}
             onReset={() => {
-              setInfoHolder((prev) => ({ ...prev, oem: { ...prev.oem, diagnostico: null } }))
+              setInfoHolder((prev) => ({ ...prev, oem: { ...(prev.oem || {}), diagnostico: null } }))
               setChanges((prev) => ({ ...prev, 'oem.diagnostico': null }))
             }}
             selectedItemLabel="NÃO DEFINIDO"

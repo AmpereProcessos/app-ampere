@@ -64,7 +64,7 @@ function Comissionamento() {
   useEffect(() => {
     if (session) {
       const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('O&M') || !userRoutes.includes('Pós-Venda')) {
+      if (!userRoutes.includes('O&M') && !userRoutes.includes('Pós-Venda')) {
         router.push('/')
       }
     }

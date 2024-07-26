@@ -31,11 +31,11 @@ function ConferenciaOutrasCategorias({ order, closeModal, queryKey }) {
     }
   }
   return (
-    <div className="my-2 flex items-center justify-center mt-6">
+    <div className="my-2 mt-6 flex items-center justify-center">
       <button
         disabled={finishInProgress}
         onClick={finishOS}
-        className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+        className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
       >
         FINALIZAR OS
       </button>

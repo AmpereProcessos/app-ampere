@@ -1978,6 +1978,10 @@ export const credores = [
     value: 'SICOOB',
   },
   {
+    label: 'OUTROS',
+    value: 'OUTROS',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

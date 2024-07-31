@@ -27,8 +27,8 @@ const GoalsParams = {
     'QTDE PREMIADOS': 3,
   },
   'SEGURO DE SISTEMA FOTOVOLTAICO': {
-    'META GERAL': 150_000,
-    'OBJETIVO POR PERIODO': 25_000,
+    'META GERAL': 12_000,
+    'OBJETIVO POR PERIODO': 2_000,
     'QTDE PREMIADOS': 1,
   },
 }

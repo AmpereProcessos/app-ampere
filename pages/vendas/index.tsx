@@ -18,6 +18,12 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import SelectInput from '@/components/inputs/Select'
 import ModalDB from '@/components/ModalDB'
+import { TProjectDTO } from '@/utils/schemas/projects'
+import toast from 'react-hot-toast'
+import { getContractValue } from '@/utils/methods/util/projects'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getExcelFromJSON } from '@/lib/excel-utils'
+import { TbFileExport } from 'react-icons/tb'
 
 function Vendas() {
   const { data: session, status } = useSession({ required: true })
@@ -25,6 +31,27 @@ function Vendas() {
   const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useSellerSales()
   const [modalProject, setModalProject] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null })
 
+  async function handleExportation(projects?: TProjectDTO[]) {
+    if (!projects) return toast.error('Não foi possível realizar exportação.')
+    const formatted = projects.map((project) => ({
+      'NOME DO CONTRATO': project.nomeDoContrato,
+      'TIPO DO PROJETO': project.tipoDeServico,
+      TELEFONE: project.telefone,
+      UF: project.uf,
+      CIDADE: project.cidade,
+      TOPOLOGIA: project.sistema.topologia,
+      VALOR: getContractValue({
+        projectValue: project.sistema.valorProjeto,
+        paValue: project.padrao.valor,
+        structureValue: project.estruturaPersonalizada?.valor,
+        oemValue: project.oem?.valor,
+      }),
+      POTENCIA: project.sistema.potPico,
+      'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
+    }))
+    console.log(formatted)
+    getExcelFromJSON(formatted, `EXPORTAÇÃO DE VENDAS ${formatDateAsLocale(new Date().toISOString())}`)
+  }
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
@@ -43,6 +70,17 @@ function Vendas() {
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
+        </div>
+        <div className="flex w-full items-center justify-end">
+          <button
+            onClick={async () => {
+              handleExportation(projects)
+            }}
+            className="flex w-full items-center gap-2 rounded-md bg-gray-300 px-2 py-1 text-sm font-medium lg:w-fit"
+          >
+            <p>Exportar dados como .XLSX</p>
+            <TbFileExport />
+          </button>
         </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (

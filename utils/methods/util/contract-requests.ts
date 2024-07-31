@@ -429,6 +429,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     nps: undefined,
     idParceiro: request.idParceiro,
     nomeParceiro: request.nomeParceiro,
+    idMarketing: request.idOportunidade,
     idVisitaTecnica: request.idVisitaTecnica,
     idProjetoCRM: request.idProjetoCRM,
     idPropostaCRM: request?.idPropostaCRM,

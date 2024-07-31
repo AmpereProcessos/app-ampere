@@ -64,7 +64,7 @@ function EnergyPAInformationBlock({ infoHolder, setInfoHolder, userHasEditPermis
                 selectedItemLabel="NÃO DEFINIDO"
                 options={[
                   { id: 1, label: 'AMPERE', value: 'AMPERE' },
-                  { id: 1, label: 'CLIENTE', value: 'CLIENTE' },
+                  { id: 2, label: 'CLIENTE', value: 'CLIENTE' },
                 ]}
                 handleChange={(value) => setInfoHolder((prev) => ({ ...prev, respTrocaPadrao: value }))}
                 onReset={() => setInfoHolder((prev) => ({ ...prev, respTrocaPadrao: null }))}

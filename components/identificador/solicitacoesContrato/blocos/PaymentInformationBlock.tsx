@@ -113,9 +113,9 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
         </div>
         <div className="w-full lg:w-1/2">
           <SelectInput
-            label={'LOCAL DE ENTREGA'}
+            label={'RESTRIÇÕES DE ENTREGA'}
             editable={userHasEditPermission}
-            value={infoHolder.localEntrega}
+            value={infoHolder.restricoesEntrega}
             selectedItemLabel="NÃO DEFINIDO"
             options={[
               { id: 1, label: 'SOMENTE HORARIO COMERCIAL', value: 'SOMENTE HORARIO COMERCIAL' },
@@ -123,8 +123,8 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
               { id: 3, label: 'CASA EM CONSTRUÇÃO', value: 'CASA EM CONSTRUÇÃO' },
               { id: 4, label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL', value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL' },
             ]}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localEntrega: value }))}
-            onReset={() => setInfoHolder((prev) => ({ ...prev, localEntrega: '' }))}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, restricoesEntrega: value }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, restricoesEntrega: '' }))}
             width="100%"
           />
         </div>

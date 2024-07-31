@@ -55,9 +55,24 @@ export type TDashboardStats = {
       potencia: number
     }
   }
-  potenciaMeta: number
+  meta: TCompanyGoalsResults
   nps: number
 }
+
+type TCompanyGoalsResultsItemValue = {
+  TOTAL: number
+  RANKING: {
+    RESPONSAVEL: string
+    TOTAL: number
+  }[]
+}
+export type TCompanyGoalsResults = {
+  'SISTEMA FOTOVOLTAICO': TCompanyGoalsResultsItemValue
+  'OPERAÇÃO E MANUTENÇÃO': TCompanyGoalsResultsItemValue
+  'INSIDE SALES': TCompanyGoalsResultsItemValue
+  'SEGURO DE SISTEMA FOTOVOLTAICO': TCompanyGoalsResultsItemValue
+}
+
 export type TSaleGraphStat = {
   IDENTIFICADOR: string
   VALOR: number

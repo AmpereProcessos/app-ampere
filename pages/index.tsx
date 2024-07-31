@@ -15,49 +15,13 @@ import { useDashboardStats, useSalesGraphStats } from '@/utils/methods/query/sta
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import ClientsBirthdays from '@/components/identificador/dashboard/ClientsBirthdays'
 import { getArrOfYearsBetweenYears } from '@/utils/methods/dates'
+import ComercialCompanyGoalsTracking from '@/components/identificador/resultados/ComercialCompanyGoalsTracking'
 
 const months = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO']
 
 const currentDate = new Date()
 const currentYear = currentDate.getFullYear()
-function renderAvatarBySeller(sellerName: string) {
-  if (!sellerName) {
-    return (
-      <div className="flex h-[50px] w-[50px] items-center justify-center self-center rounded-full bg-gray-700">
-        <p className="text-center text-lg font-bold text-white">V</p>
-      </div>
-    )
-  }
-  const existingSellerWithPhoto = sellerPhotos.find((x) => x.nome == sellerName)
-  if (!existingSellerWithPhoto) {
-    const splittedName = sellerName.split(' ')
-    const firstLetter = splittedName[0][0]
-    var secondLetter
-    if (['DE', 'DA', 'DO', 'DOS', 'DAS'].includes(splittedName[1])) secondLetter = splittedName[2] ? splittedName[2][0] : ''
-    else secondLetter = splittedName[1] ? splittedName[1][0] : ''
 
-    return (
-      <div className="flex h-[50px] w-[50px] items-center justify-center self-center rounded-full bg-gray-700">
-        <p className="text-center text-lg font-bold uppercase text-white">
-          {firstLetter}
-          {secondLetter}
-        </p>
-      </div>
-    )
-  }
-  return (
-    <div className="h-[30px]  max-h-[50px] w-[30px] max-w-[50px] self-center lg:h-[50px] lg:w-[50px]">
-      <Image
-        width={30}
-        height={30}
-        src={existingSellerWithPhoto.avatar_url}
-        alt={existingSellerWithPhoto.nome}
-        style={{ borderRadius: '100%' }}
-        layout="responsive"
-      />
-    </div>
-  )
-}
 function Home() {
   const ref = useRef()
   const router = useRouter()
@@ -89,84 +53,13 @@ function Home() {
     if (isError) return <ErrorComponent msg={'Oops, houve um erro ao carregar o dashboard geral.'} />
     if (isSuccess)
       return (
-        <div className="relative grow p-6">
+        <div className="relative grow bg-[#fafafa] p-6">
           <div className="flex w-full flex-col">
-            {/* <h1 className="w-full text-center text-lg font-extrabold">META DO MÊS DE {months[new Date().getMonth()]}</h1>
-            <div className="flex h-[45px] w-full items-center justify-between self-center border border-gray-500 bg-[#a8a9aa]">
-              <div
-                // style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
-                style={{ width: `${(stats.potenciaMeta / 300) * 100}%` }}
-                className="flex h-full flex-col items-center justify-center bg-gradient-to-r from-yellow-300 to-[#fead41]"
-              >
-                <p className="bg-transparent text-xxs font-bold text-[#15599a] lg:text-sm">
-                  {formatDecimalPlaces(stats.potenciaMeta)}kWp ({formatDecimalPlaces((stats.potenciaMeta * 100) / 300)}%)
-                </p>
-              </div>
-              {stats.potenciaMeta < 300 ? (
-                <p className="grow text-center font-bold text-white">{formatDecimalPlaces(300 - stats.potenciaMeta)}kWp</p>
-              ) : null}
-            </div>
-            {stats.ranking.primeiro.potencia ? (
-              <>
-                <h1 className="w-full text-center font-raleway text-3xl font-extrabold text-[#15599a]">
-                  RANKING DE VENDAS ({months[new Date().getMonth()]})
-                </h1>
-                <div className="flex w-full justify-center gap-2">
-                  <div className="flex w-full items-center justify-center lg:w-[70%]">
-                    <div className="flex w-full items-center justify-center">
-                      <div className="mb-2 flex w-full flex-col items-center">
-                        <div className="flex h-[400px] w-full items-end justify-center gap-4 p-0 lg:h-[400px] lg:w-[1200px] lg:gap-10 lg:p-6">
-                          <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                            {renderAvatarBySeller(stats.ranking.quarto.nome)}
-                            <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quarto.nome}</h1>
-                            <p className="text-center text-lg font-medium text-green-500">{formatDecimalPlaces(stats.ranking.quarto.potencia)} kWp</p>
-                            <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
-                          </div>
-                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                            {renderAvatarBySeller(stats.ranking.segundo.nome)}
-                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.segundo.nome}</h1>
-                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                              {formatDecimalPlaces(stats.ranking.segundo.potencia)} kWp
-                            </p>
-                            <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
-                          </div>
-                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                            {renderAvatarBySeller(stats.ranking.primeiro.nome)}
-
-                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.primeiro.nome}</h1>
-                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                              {formatDecimalPlaces(stats.ranking.primeiro.potencia)} kWp
-                            </p>
-                            <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
-                          </div>
-                          <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                            {renderAvatarBySeller(stats.ranking.terceiro.nome)}
-                            <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats.ranking.terceiro.nome}</h1>
-                            <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
-                              {formatDecimalPlaces(stats.ranking.terceiro.potencia)} kWp
-                            </p>
-                            <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
-                          </div>
-                          <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                            {renderAvatarBySeller(stats.ranking.quinto.nome)}
-                            <h1 className="text-center text-sm font-bold text-gray-500">{stats.ranking.quinto.nome}</h1>
-                            <p className="text-center text-lg font-medium text-green-500">
-                              {formatDecimalPlaces(stats.ranking.quinto.potencia || 0)} kWp
-                            </p>
-                            <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            ) : null} */}
-
+            <ComercialCompanyGoalsTracking results={stats.meta} />
             <div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="w-full text-center uppercase text-gray-600">Obras finalizadas no mês</h1>
+                  <h1 className="text-center uppercase tracking-tight text-gray-600">Obras finalizadas no mês</h1>
                   {validateStatsMonth(stats.instalacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">
@@ -178,7 +71,7 @@ function Home() {
               </div>
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="w-full text-center uppercase text-gray-600">Potência Pico instalada no mês</h1>
+                  <h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico instalada no mês</h1>
                   {validateStatsMonth(stats.instalacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
@@ -190,7 +83,7 @@ function Home() {
               </div>
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="w-full text-center uppercase text-gray-600">Potência Pico homologada no mês</h1>
+                  <h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico homologada no mês</h1>
                   {validateStatsMonth(stats.homologacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
@@ -202,7 +95,7 @@ function Home() {
               </div>
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="w-full text-center uppercase text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
+                  <h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
                   {validateStatsMonth(stats.suprimentos.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
@@ -214,7 +107,7 @@ function Home() {
               </div>
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="w-full text-center uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
+                  <h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
                   {validateStatsMonth(stats.homologacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">

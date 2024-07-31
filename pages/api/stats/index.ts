@@ -27,15 +27,15 @@ const getStats: NextApiHandler<GetResponse> = async (req, res) => {
   const homologationStats = await getHomologationStats({ collection: collection, partialQuery: partialQuery })
   const supplyStats = await getSupplyStats({ collection: collection, partialQuery: partialQuery })
   const salesRanking = await getSalesRanking({ collection: collection, partialQuery: partialQuery })
-  console.log(salesRanking)
   const nps = await getNPS({ collection: collection, partialQuery: partialQuery })
   const powerSold = await getAchievedPowerSale({ collection, partialQuery: partialQuery })
+  const goals = await getCompanyGoalsStats({ collection, partialQuery: {} })
   const stats: TDashboardStats = {
     instalacao: installationStats,
     homologacao: homologationStats,
     suprimentos: supplyStats,
     ranking: salesRanking,
-    potenciaMeta: powerSold,
+    meta: goals,
     nps: nps,
   }
   res.status(200).json(stats)
@@ -398,6 +398,203 @@ async function getAchievedPowerSale({ collection, partialQuery }: GetStats) {
   return power
 }
 
+export async function getCompanyGoalsStats({ collection, partialQuery }: GetStats) {
+  const GOAL_INITIAL_DATE_PARAM = '2024-07-01T00:00:00.000Z'
+  // Define queries for all company goals
+  // 1 - Sistema Fotovoltaico + Aumento - R$ 5.000.000,00 geral /  R$ 833.333,33/mes (contando a partir de 01/07 )
+  // 2 - O&M + Montagem e Desmontagem - R$ 90.000,00 geral /  R$ 15.000,00/mes (contando a partir de 01/07 )
+  // 3 - Inside Sales (somente OUTBOUND) - R$ 500.000,00 geral / R$ 83.333,33/mes (contando a partir de 01/07)
+  // 4 - Seguro Solar - R$ 12.000,00 geral / R$ 2.000,00/mes (contando a partir de 01/07)
+  // 4 - Consórcio de Energia - R$ 150.000,00 geral / R$ 25.000,00/mes (contando a partir de 01/07)
+
+  // SISTEMA FOTOVOLTAICO
+  const solarPowerPlants = await collection
+    .aggregate([
+      {
+        $match: {
+          'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
+          tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
+        },
+      },
+      {
+        $group: {
+          _id: '$vendedor.nome',
+          valorProjeto: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorPadrao: {
+            $sum: '$padrao.valor',
+          },
+          valorEstrutura: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+        },
+      },
+    ])
+    .toArray()
+  const SISTEMA_FOTOVOLTAICO = solarPowerPlants.reduce(
+    (acc: { total: number; porVendedor: { [key: string]: number } }, current) => {
+      const currentTotal = current.valorProjeto + current.valorPadrao + current.valorEstrutura
+      const currentSeller = current._id as string
+      if (!acc.porVendedor[currentSeller]) acc.porVendedor[currentSeller] = 0
+
+      acc.porVendedor[currentSeller] += currentTotal
+      acc.total += currentTotal
+      return acc
+    },
+    { total: 0, porVendedor: {} }
+  )
+  // O&M + MONTAGEM DESMONTAGEM
+  const maintenance = await collection
+    .aggregate([
+      {
+        $match: {
+          'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
+          tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'] },
+        },
+      },
+      {
+        $group: {
+          _id: '$vendedor.nome',
+          valorProjeto: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorPadrao: {
+            $sum: '$padrao.valor',
+          },
+          valorEstrutura: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+        },
+      },
+    ])
+    .toArray()
+  const OEM_MONTAGEM_DESMONTAGEM = maintenance.reduce(
+    (acc: { total: number; porVendedor: { [key: string]: number } }, current) => {
+      const currentTotal = current.valorProjeto + current.valorPadrao + current.valorEstrutura
+      const currentSeller = current._id as string
+      if (!acc.porVendedor[currentSeller]) acc.porVendedor[currentSeller] = 0
+
+      acc.porVendedor[currentSeller] += currentTotal
+      acc.total += currentTotal
+      return acc
+    },
+    { total: 0, porVendedor: {} }
+  )
+
+  // INSIDE SALES
+  // TODO: utilizar dos responsáveis do CRM para atualizar o campo de INSIDER dos projetos
+  // TODO: utilizar do campo de idOportunidade do CRM para demarcar vendas por INBOUND marketing
+  const insideSales = await collection
+    .aggregate([
+      {
+        $match: {
+          idMarketing: null,
+          'contrato.dataAssinatura': { $gte: '2024-07-01T00:00:00.000Z' },
+          $or: [
+            { insider: { $nin: [null, 'NÃO DEFINIDO'] } },
+            { 'vendedor.nome': { $in: ['ALESSANDER IDALECIO', 'LAYANE FERNANDA', 'AMANDA SANTOS'] } },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: {
+            vendedor: '$vendedor.nome',
+            insider: '$insider',
+          },
+          valorProjeto: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorPadrao: {
+            $sum: '$padrao.valor',
+          },
+          valorEstrutura: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+        },
+      },
+    ])
+    .toArray()
+  const INSIDE_SALES = insideSales.reduce(
+    (acc: { total: number; porVendedor: { [key: string]: number } }, current) => {
+      const currentTotal = current.valorProjeto + current.valorPadrao + current.valorEstrutura
+      const currentInsider = current._id.insider as string
+      const currentSeller = current._id.vendedor as string
+      const currentReference = currentInsider || currentSeller
+      if (!acc.porVendedor[currentReference]) acc.porVendedor[currentReference] = 0
+
+      acc.porVendedor[currentReference] += currentTotal
+      acc.total += currentTotal
+      return acc
+    },
+    { total: 0, porVendedor: {} }
+  )
+
+  // SEGURO
+  const insurance = await collection
+    .aggregate([
+      {
+        $match: {
+          'contrato.dataAssinatura': { $gte: '2024-07-01T00:00:00.000Z' },
+          tipoDeServico: 'SEGURO DE SISTEMA FOTOVOLTAICO',
+        },
+      },
+      {
+        $group: {
+          _id: '$vendedor.nome',
+          valorProjeto: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorPadrao: {
+            $sum: '$padrao.valor',
+          },
+          valorEstrutura: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+        },
+      },
+    ])
+    .toArray()
+  const SEGURO_FOTOVOLTAICO = insurance.reduce(
+    (acc: { total: number; porVendedor: { [key: string]: number } }, current) => {
+      const currentTotal = current.valorProjeto + current.valorPadrao + current.valorEstrutura
+      const currentSeller = current._id as string
+      if (!acc.porVendedor[currentSeller]) acc.porVendedor[currentSeller] = 0
+
+      acc.porVendedor[currentSeller] += currentTotal
+      acc.total += currentTotal
+      return acc
+    },
+    { total: 0, porVendedor: {} }
+  )
+  return {
+    'SISTEMA FOTOVOLTAICO': {
+      TOTAL: SISTEMA_FOTOVOLTAICO.total,
+      RANKING: Object.entries(SISTEMA_FOTOVOLTAICO.porVendedor)
+        .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
+        .sort((a, b) => b.TOTAL - a.TOTAL),
+    },
+    'OPERAÇÃO E MANUTENÇÃO': {
+      TOTAL: OEM_MONTAGEM_DESMONTAGEM.total,
+      RANKING: Object.entries(OEM_MONTAGEM_DESMONTAGEM.porVendedor)
+        .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
+        .sort((a, b) => b.TOTAL - a.TOTAL),
+    },
+    'INSIDE SALES': {
+      TOTAL: INSIDE_SALES.total,
+      RANKING: Object.entries(INSIDE_SALES.porVendedor)
+        .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
+        .sort((a, b) => b.TOTAL - a.TOTAL),
+    },
+    'SEGURO DE SISTEMA FOTOVOLTAICO': {
+      TOTAL: SEGURO_FOTOVOLTAICO.total,
+      RANKING: Object.entries(SEGURO_FOTOVOLTAICO.porVendedor)
+        .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
+        .sort((a, b) => b.TOTAL - a.TOTAL),
+    },
+  }
+}
 export default apiHandler({
   GET: getStats,
 })

@@ -1503,6 +1503,36 @@ export const sellerPhotos = [
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-luciano_lopes?alt=media&token=6aa53091-06ed-4770-b0fd-4768b1e62ab8',
   },
+  {
+    nome: 'DIOGO PAULINO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-diogo_carvalho_paulino?alt=media&token=c3bf88c9-fc8b-4576-9287-5855e9fb3e3e',
+  },
+  {
+    nome: 'ALESSANDER IDALECIO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-alessander_idalecio?alt=media&token=603f5592-c278-43c5-ac1a-6a23ab0e1b29',
+  },
+  {
+    nome: 'LAYANE FERNANDA',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-layane_fernanda?alt=media&token=22c73502-4e8b-44d9-acc5-ab7776743568',
+  },
+  {
+    nome: 'AMANDA SANTOS',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-amanda_santos?alt=media&token=80262b10-651a-46ee-a4ef-bc7f88c97f6b',
+  },
+  {
+    nome: 'GABRIEL MARTINS',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-suporte_amp%C3%A8re?alt=media&token=aabf5e39-8cee-43b9-a0a3-ed2577b0c4d3',
+  },
+  {
+    nome: 'ANA BEATRIZ',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-p%C3%B3s-venda?alt=media&token=053f1d68-5044-4c32-ba71-0ec7d04a9f77',
+  },
 ]
 export const GeneralVisibleHiddenExitMotionVariants = {
   hidden: {

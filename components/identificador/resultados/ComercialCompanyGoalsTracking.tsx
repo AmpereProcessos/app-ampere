@@ -2,9 +2,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { cn } from '@/lib/utils'
 import { formatDecimalPlaces, sellerPhotos } from '@/utils/constants'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { TCompanyGoalsResults } from '@/utils/schemas/stats'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { BsCalendar } from 'react-icons/bs'
 import { FaStar } from 'react-icons/fa'
 import { FaRankingStar } from 'react-icons/fa6'
 import { GoGoal } from 'react-icons/go'
@@ -154,7 +156,13 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
   return (
     <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] shadow-sm">
       <div className="flex w-full flex-col items-center justify-between gap-2 rounded-tr-xl rounded-tl-xl bg-blue-800 p-2 px-4 lg:flex-row">
-        <h1 className="text-sm font-bold uppercase tracking-tight text-white">VISUALIZAÇÃO DA META SEMESTRAL</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-sm font-bold uppercase tracking-tight text-white">VISUALIZAÇÃO DA META SEMESTRAL</h1>
+          <div className="flex items-center gap-2 text-xs text-white">
+            <BsCalendar color="#fff" />
+            <p className="font-medium tracking-tight">01/07/2024 - 31/12/2024</p>
+          </div>
+        </div>
         <div className="flex grow flex-wrap items-center justify-center gap-2 lg:justify-end">
           {Object.keys(GoalsParams).map((key) => (
             <button

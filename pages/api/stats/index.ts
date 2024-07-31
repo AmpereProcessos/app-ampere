@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import connectToDatabase from '../../../utils/services/mongodb/projects'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { Session } from 'next-auth'
-import { Collection, Db, MatchKeysAndValues } from 'mongodb'
+import { Collection, Db, MatchKeysAndValues, ObjectId } from 'mongodb'
 import { TProject } from '@/utils/schemas/projects'
 import { getFirstDayOfMonth, getFirstDayOfYearString } from '@/utils/methods/dates'
 import { TDashboardStats } from '@/utils/schemas/stats'
@@ -449,6 +449,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
     .aggregate([
       {
         $match: {
+          _id: { $ne: new ObjectId('66981e5340f27828dd49a6cb') },
           'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
           tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM', 'PRODUTOS', 'MANUTENÇÃO CORRETIVA'] },
         },

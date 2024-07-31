@@ -450,7 +450,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
       {
         $match: {
           'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
-          tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM', 'PRODUTOS'] },
+          tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM', 'PRODUTOS', 'MANUTENÇÃO CORRETIVA'] },
         },
       },
       {

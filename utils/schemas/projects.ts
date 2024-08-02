@@ -119,6 +119,7 @@ const GeneralProjectSchema = z.object({
   nomeParceiro: z.string().optional().nullable(),
   idParceiro: z.string().optional().nullable(),
   idProjetoCRM: z.string().optional().nullable(),
+  idMarketing: z.string().optional().nullable(),
   idPropostaCRM: z.string().optional().nullable(),
   idSolicitacaoContrato: z.string().optional().nullable(),
   idVisitaTecnica: z.string().optional().nullable(),

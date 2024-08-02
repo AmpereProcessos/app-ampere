@@ -275,6 +275,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
       status: 'PENDENTE',
       potencia: request.potPico || null,
       distribuidora: EnergyDistributorEquivalent[(request.uf || '') as keyof typeof EnergyDistributorEquivalent] || 'CEMIG D',
+      observacoes: request.observacoesHomologacao || '',
       pendencias: {
         desenhos: null,
         diagramas: null,

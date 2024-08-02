@@ -13,6 +13,7 @@ import VistoryInformation from '../Homologations/VistoryInformation'
 import PendenciesInformation from '../Homologations/PendenciesInformation'
 import CheckboxInput from '../inputs/Checkbox'
 import CheckboxWithDate from '../inputs/CheckboxWithDate'
+import TextareaInput from '../inputs/TextareaInput'
 
 type InfoHomologacaoBlockProps = {
   session: Session
@@ -55,6 +56,15 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
         </div>
         {infoHolder.homologacao.homologar ? (
           <>
+            <TextareaInput
+              label="OBSERVAÇÕES SOBRE A HOMOLOGAÇÃO"
+              placeholder="Preencha aqui informações relevantes sobre a homologação."
+              value={infoHolder.homologacao.observacoes || ''}
+              handleChange={(value) => {
+                setInfo((prev) => ({ ...prev, homologacao: { ...prev.homologacao, observacoes: value } }))
+                setChanges((prev) => ({ ...prev, 'homologacao.observacoes': value }))
+              }}
+            />
             {/* <ActivitiesInformation session={session} homologation={homologation} opportunity={homologation.oportunidade} /> */}
             <UpdatesInformation session={session} infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
             <StatusInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />

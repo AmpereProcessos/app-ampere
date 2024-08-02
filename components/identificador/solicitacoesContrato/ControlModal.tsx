@@ -320,7 +320,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                         disabled={rejectLoading || approvalLoading || updateLoading}
                         onClick={() => {
                           // @ts-ignore
-                          handleRequestUpdate({ id: requestId, changes: { aprovacao: false } })
+                          handleRejectRequest(infoHolder)
                         }}
                         className="h-9 whitespace-nowrap rounded bg-red-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-red-800 enabled:hover:text-white"
                       >

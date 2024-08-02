@@ -9,6 +9,7 @@ import { formatToCEP } from '@/utils/methods/formatting'
 import { estadosECidades } from '@/utils/estados_cidades'
 import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import TextareaInput from '@/components/inputs/TextareaInput'
 type ElectricalInstallationInformationBlockProps = {
   infoHolder: TContractRequestDTO
   setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>
@@ -57,6 +58,12 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
+      <TextareaInput
+        label="OBSERVAÇÕES P/ HOMOLOGAÇÃO"
+        placeholder="Preencha aqui informações relevantes relacionadas a homologação"
+        value={infoHolder.observacoesHomologacao || ''}
+        handleChange={(value) => setInfoHolder((prev) => ({ ...prev, observacoesHomologacao: value }))}
+      />
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <TextInput

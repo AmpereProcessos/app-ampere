@@ -248,6 +248,7 @@ export const GeneralHomologationSchema = z.object({
     .number({ required_error: 'Potência de homologação não informada.', invalid_type_error: 'Tipo não válido para a potência de homologação.' })
     .optional()
     .nullable(),
+  observacoes: z.string({ invalid_type_error: 'Tipo não válido para as observações da homologação.' }).optional().nullable(),
   pendencias: HomologationPendencies,
   distribuidora: z.string({
     required_error: 'Nome da concessionária/distribuidora de energia não informada.',

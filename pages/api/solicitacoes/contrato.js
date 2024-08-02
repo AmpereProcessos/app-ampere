@@ -33,6 +33,7 @@ export default async function handler(req, res) {
             nomeVendedor: 1,
             tipoDeServico: 1,
             cidade: 1,
+            cidadeInstalacao: 1,
             confeccionado: 1,
             dataSolicitacao: 1,
             aprovacao: 1,

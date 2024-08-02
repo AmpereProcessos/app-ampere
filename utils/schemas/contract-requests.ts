@@ -162,6 +162,7 @@ export type TContractRequestPartialDTO = Pick<
   | 'nomeVendedor'
   | 'tipoDeServico'
   | 'cidade'
+  | 'cidadeInstalacao'
   | 'idVisitaTecnica'
   | 'idProjetoCRM'
   | 'idPropostaCRM'

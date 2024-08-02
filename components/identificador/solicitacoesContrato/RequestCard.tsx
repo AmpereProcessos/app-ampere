@@ -50,7 +50,7 @@ function RequestCard({ request, openModal }: RequestCardProps) {
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <FaCity />
-          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{request.cidade}</p>
+          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{request.cidadeInstalacao}</p>
         </div>
         <div className="flex items-center gap-2 text-blue-800">
           <FaUser color={'rgb(30,64,175)'} />

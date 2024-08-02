@@ -32,6 +32,7 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 import Link from 'next/link'
 import { FaFile } from 'react-icons/fa'
 import { updateProject } from '@/utils/methods/mutation/clients'
+import { updateOpportunity } from '@/utils/methods/mutation/crm/opportunities'
 
 type ContractRequestControlModalProps = {
   requestId: string
@@ -174,13 +175,32 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
       throw error
     }
   }
+  async function rejectFormulary(info: TContractRequestDTO) {
+    try {
+      const formularyId = info._id
+      const formularyOpportunityId = info.idProjetoCRM
 
+      if (formularyOpportunityId)
+        await updateOpportunity({ id: formularyOpportunityId, changes: { 'ganho.idSolicitacao': null, 'ganho.dataSolicitacao': null } })
+      await editContractRequest({ id: formularyId, changes: { aprovacao: false } })
+
+      return 'Formulário de contrato atualizado com sucesso !'
+    } catch (error) {
+      throw error
+    }
+  }
   const { mutate: handleApproveRequest, isLoading: approvalLoading } = useMutationWithFeedback({
     mutationKey: ['add-new-project', requestId],
     mutationFn: approveFormulary,
     queryClient: queryClient,
     affectedQueryKey: ['contract-requests'],
     callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['contract-request-by-id', requestId] }),
+  })
+  const { mutate: handleRejectRequest, isLoading: rejectLoading } = useMutationWithFeedback({
+    mutationKey: ['reject-contract-request', requestId],
+    mutationFn: rejectFormulary,
+    queryClient: queryClient,
+    affectedQueryKey: ['contract-requests'],
   })
   const { mutate: handleRequestUpdate, isLoading: updateLoading } = useMutationWithFeedback({
     mutationKey: ['update-contract-request', requestId],
@@ -287,7 +307,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                   ) : (
                     <>
                       <button
-                        disabled={approvalLoading}
+                        disabled={approvalLoading || updateLoading || rejectLoading}
                         onClick={() => {
                           // @ts-ignore
                           handleApproveRequest(infoHolder)
@@ -297,7 +317,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                         APROVAR FORMULÁRIO
                       </button>
                       <button
-                        disabled={updateLoading}
+                        disabled={rejectLoading || approvalLoading || updateLoading}
                         onClick={() => {
                           // @ts-ignore
                           handleRequestUpdate({ id: requestId, changes: { aprovacao: false } })
@@ -311,6 +331,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                 </div>
 
                 <button
+                  disabled={updateLoading || approvalLoading || rejectLoading}
                   onClick={() => {
                     // @ts-ignore
                     handleRequestUpdate({ id: requestId, changes: { ...infoHolder } })

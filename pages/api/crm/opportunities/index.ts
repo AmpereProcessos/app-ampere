@@ -17,7 +17,8 @@ const updateOpportunity: NextApiHandler<PutResponse> = async (req, res) => {
   const { id } = req.query
   if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
 
-  const changes = InsertOpportunitySchema.partial().parse(req.body)
+  // const changes = InsertOpportunitySchema.partial().parse(req.body)
+  const changes = req.body
 
   const db = await connectToCRMDatabase(process.env.CRM_KEY)
   const collection: Collection<TOpportunity> = db.collection('opportunities')

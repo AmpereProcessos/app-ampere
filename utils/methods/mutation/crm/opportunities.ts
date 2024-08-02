@@ -1,7 +1,7 @@
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import axios from 'axios'
 
-export async function updateOpportunity({ id, changes }: { id: string; changes: Partial<TOpportunity> }) {
+export async function updateOpportunity({ id, changes }: { id: string; changes: Partial<TOpportunity> | any }) {
   try {
     const { data } = await axios.put(`/api/crm/opportunities?id=${id}`, changes)
     if (typeof data.message != 'string') return 'Oportunidade atualizada com sucesso !'

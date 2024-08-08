@@ -1,4 +1,5 @@
 import ControlHomologation from '@/components/identificador/crm-homologacoes/ControlHomologation'
+import NewHomologation from '@/components/identificador/crm-homologacoes/NewHomologation'
 import FilterMenu from '@/components/identificador/crm-homologacoes/Utils/FilterMenu'
 import HomologationCard from '@/components/identificador/crm-homologacoes/Utils/HomologationCard'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -12,6 +13,7 @@ function HomologationsControlPage() {
   const { data: session, status } = useSession({ required: true })
   const { data: homologations, isLoading, isError, isSuccess, filters, setFilters } = useHomologations()
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
+  const [newHomologationModalIsOpen, setNewHomologationModalIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
 
   if (status != 'authenticated') return <LoadingPage />
@@ -40,6 +42,12 @@ function HomologationsControlPage() {
               </p>
             </div>
           </div>
+          <button
+            onClick={() => setNewHomologationModalIsOpen(true)}
+            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+          >
+            CRIAR HOMOLOGAÇÃO
+          </button>
         </div>
         {filterMenuIsOpen ? <FilterMenu filters={filters} setFilters={setFilters} /> : null}
       </div>
@@ -63,6 +71,9 @@ function HomologationsControlPage() {
           )
         ) : null}
       </div>
+      {newHomologationModalIsOpen ? (
+        <NewHomologation session={session} affectedQueryKey={['homologations']} closeModal={() => setNewHomologationModalIsOpen(false)} />
+      ) : null}
       {editModal.isOpen && editModal.id ? (
         <ControlHomologation session={session} homologationId={editModal.id} closeModal={() => setEditModal({ id: null, isOpen: false })} />
       ) : null}

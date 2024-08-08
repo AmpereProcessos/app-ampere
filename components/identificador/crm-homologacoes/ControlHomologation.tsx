@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Session } from 'next-auth'
 
-import { getMetadata, ref } from 'firebase/storage'
-
 import { MdCode } from 'react-icons/md'
 import { VscChromeClose } from 'react-icons/vsc'
 
@@ -16,10 +14,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import Link from 'next/link'
 import { useHomologationById } from '@/utils/methods/query/crm/homologations'
 import { useQueryClient } from 'react-query'
-import { TFileHolder, TFileReference } from '@/utils/schemas/crm/file-reference.schema'
-import { storage } from '@/utils/services/firebase/firebase-storage'
-import { fileTypes } from '@/utils/constants'
-import { uploadFile } from '@/utils/methods/firebase'
+
 import LoadingPage from '@/components/utils/LoadingPage'
 import { THomologation, THomologationDTO } from '@/utils/schemas/crm/homologation.schema'
 import { editHomologation } from '@/utils/methods/mutation/crm/homologations'

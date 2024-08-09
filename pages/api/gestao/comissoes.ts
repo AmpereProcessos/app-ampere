@@ -129,15 +129,23 @@ async function getFilteredProjects({ collection, after, before }: GetFilteredPro
             'contrato.status': 'ASSINADO',
             $or: [
               {
-                tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+                tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
                 $and: [{ 'compra.dataPagamento': { $gte: after } }, { 'compra.dataPagamento': { $lte: before } }],
               },
               {
-                tipoDeServico: {
-                  $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'],
-                },
-                $and: [{ 'pagamento.dataRecebimento': { $gte: after } }, { 'pagamento.dataRecebimento': { $lte: before } }],
+                tipoDeServico: { $nin: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
+                $and: [{ 'contrato.dataAssinatura': { $gte: after } }, { 'contrato.dataAssinatura': { $lte: before } }],
               },
+              // {
+              //   tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+              //   $and: [{ 'compra.dataPagamento': { $gte: after } }, { 'compra.dataPagamento': { $lte: before } }],
+              // },
+              // {
+              //   tipoDeServico: {
+              //     $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'],
+              //   },
+              //   $and: [{ 'pagamento.dataRecebimento': { $gte: after } }, { 'pagamento.dataRecebimento': { $lte: before } }],
+              // },
             ],
           },
         },

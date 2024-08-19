@@ -279,6 +279,11 @@ export const serviceTypes = [
     label: 'PRODUTOS',
     value: 'PRODUTOS',
   },
+  {
+    id: 16,
+    label: 'CONSÓRCIO DE ENERGIA',
+    value: 'CONSÓRCIO DE ENERGIA',
+  },
 ]
 export const allSellers = [
   {

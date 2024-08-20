@@ -9,7 +9,7 @@ import { formatToCEP, formatToCPForCNPJ } from '@/utils/methods/formatting'
 import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
 import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
 import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
-import { allSellers, customersAcquisitionChannels } from '@/utils/select-options'
+import { allSellers, customersAcquisitionChannels, serviceTypes } from '@/utils/select-options'
 import React from 'react'
 import toast from 'react-hot-toast'
 import AllCities from '@/utils/jsons/cidades.json'
@@ -87,7 +87,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
             editable={userHasEditPermission}
             value={infoHolder.tipoDeServico}
             selectedItemLabel="NÃO DEFINIDO"
-            options={tiposDeServico.map((tipo, index) => ({ id: index + 1, label: tipo.label, value: tipo.value }))}
+            options={serviceTypes.map((tipo, index) => ({ id: index + 1, label: tipo.label, value: tipo.value }))}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, tipoDeServico: value }))}
             onReset={() => setInfoHolder((prev) => ({ ...prev, tipoDeServico: '' }))}
             width="100%"

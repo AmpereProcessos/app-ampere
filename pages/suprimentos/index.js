@@ -27,6 +27,12 @@ import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { TbTruckDelivery } from 'react-icons/tb'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
+function getDateDiff(date1, date2) {
+  const diffInMs = new Date(date1) - new Date(date2)
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+  return Number(diffInDays).toFixed(0)
+}
+
 function Suprimentos() {
   const queryClient = useQueryClient()
   const router = useRouter()
@@ -415,9 +421,17 @@ function Suprimentos() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <div>
-                    <span className="text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
-                    <p className={`text-xs uppercase ${project.compra.dataPedido ? 'text-gray-600' : 'text-red-500'} text-center`}>
+                  <div className="flex w-full flex-col">
+                    <span className="text-center text-xxs">DESDE APROV.PARECER</span>
+                    <p className={`text-center text-xs uppercase text-red-500`}>
+                      {project.homologacao.acesso.dataResposta
+                        ? `${getDateDiff(new Date(), new Date(project.homologacao.acesso.dataResposta))} DIAS`
+                        : '-'}
+                    </p>
+                  </div>
+                  <div className="flex w-full flex-col">
+                    <span className="text-center text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
+                    <p className={`text-xs ${project.compra.dataPedido ? 'text-gray-600' : 'text-red-500'} text-center`}>
                       {project.compra.dataPedido
                         ? `${dayjs(dayjs(project.compra.dataPedido).add(22, 'hour')).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`
                         : `${dayjs(new Date()).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`}

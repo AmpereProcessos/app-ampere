@@ -26,6 +26,7 @@ export default async function handler(req, res) {
             tipoDeServico: 1,
             'faturamento.previsaoFaturamento': 1,
             'homologacao.status': 1,
+            'homologacao.acesso': 1,
             'sistema.potPico': 1,
             'sistema.qtdeModulos': 1,
             'pagamento.status': 1,

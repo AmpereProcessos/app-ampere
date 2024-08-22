@@ -38,6 +38,7 @@ import ProjectServiceOrderCard from '@/components/identificador/ordensDeServico/
 import { FaSignature } from 'react-icons/fa'
 import NumberInput from '@/components/inputs/Number'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 
 function Posvenda() {
   const router = useRouter()
@@ -528,6 +529,11 @@ function Posvenda() {
           ) : null}
         </AnimatePresence>
       </div>
+      <Link href={'/obras/controle-padroes'}>
+        <div className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <p className="text-sm font-bold uppercase">CONTROLE DE PADRÕES</p>
+        </div>
+      </Link>
       <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos em jornada.'} /> : null}

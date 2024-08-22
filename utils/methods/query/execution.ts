@@ -162,6 +162,7 @@ export type UsePAExecutionProjectsFilters = {
   search: string
   segments: string[]
   accessStatus: string[]
+  pending: boolean
   pendingPaid: boolean
 }
 export function usePAExecutionProjects() {
@@ -169,6 +170,7 @@ export function usePAExecutionProjects() {
     search: '',
     segments: [],
     accessStatus: [],
+    pending: false,
     pendingPaid: false,
   })
 
@@ -186,14 +188,20 @@ export function usePAExecutionProjects() {
     return filters.accessStatus.includes(project.homologacao.status)
   }
 
+  function matchPending(project: TEnergyPAExecution) {
+    if (!filters.pending) return true
+    return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao
+  }
   function matchPendingReady(project: TEnergyPAExecution) {
     if (!filters.pendingPaid) return true
-    return !project.padrao.aumentoCarga.dataEfetivacao && !!project.compra.dataPagamento
+    return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao && !!project.compra.dataPagamento
   }
 
   function handleModelData(data: TEnergyPAExecution[]) {
     var modeledData = data
-    return modeledData.filter((project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPendingReady(project))
+    return modeledData.filter(
+      (project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPending(project) && matchPendingReady(project)
+    )
   }
   return {
     ...useQuery({

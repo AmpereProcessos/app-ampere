@@ -21,6 +21,7 @@ const EnergyPAExecutionProjection = {
   segmento: 1,
   'homologacao.documentacao.dataAssinatura': 1,
   'homologacao.documentacao.dataConclusaoElaboracao': 1,
+  'homologacao.vistoria': 1,
   'homologacao.status': 1,
   'obra.saida': 1,
   padrao: 1,

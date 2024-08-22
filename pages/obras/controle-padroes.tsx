@@ -19,14 +19,18 @@ import { FaTools } from 'react-icons/fa'
 function EnergyPAControls() {
   const router = useRouter()
   const { data: session, status } = useSession({ required: true })
-  const isAuthorized = session?.user.permissoes.rotas.includes('Obras')
+  const isAuthorized = session?.user.permissoes.rotas.includes('Obras') || session?.user.permissoes.rotas.includes('Pós-Venda')
   const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = usePAExecutionProjects()
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
 
   function getStats(info: TEnergyPAExecution[]) {
-    const pending = info.reduce((acc, current) => (!current.padrao.aumentoCarga.dataEfetivacao ? acc + 1 : acc), 0)
+    const pending = info.reduce(
+      (acc, current) => (!current.padrao.aumentoCarga.dataEfetivacao && !current.homologacao.vistoria.dataEfetivacao ? acc + 1 : acc),
+      0
+    )
     const pendingPaid = info.reduce(
-      (acc, current) => (!current.padrao.aumentoCarga.dataEfetivacao && !!current.compra.dataPagamento ? acc + 1 : acc),
+      (acc, current) =>
+        !current.padrao.aumentoCarga.dataEfetivacao && !current.homologacao.vistoria.dataEfetivacao && !!current.compra.dataPagamento ? acc + 1 : acc,
       0
     )
     return {

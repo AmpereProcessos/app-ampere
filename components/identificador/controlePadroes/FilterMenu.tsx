@@ -60,6 +60,14 @@ function PAAdequationsFilterMenu({ filterMenuIsOpen, filters, setFilters }: PAAd
           <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
             <div className="w-fit">
               <CheckboxInput
+                labelFalse="PENDÊNCIAS"
+                labelTrue="PENDÊNCIAS"
+                checked={filters.pending}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, pending: value }))}
+              />
+            </div>
+            <div className="w-fit">
+              <CheckboxInput
                 labelFalse="PENDÊNCIAS APTAS PARA EXECUÇÃO"
                 labelTrue="PENDÊNCIAS APTAS PARA EXECUÇÃO"
                 checked={filters.pendingPaid}

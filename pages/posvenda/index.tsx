@@ -186,6 +186,11 @@ function Posvenda() {
             </div>
           </div>
         </div>
+        <div className="my-2 flex w-full items-center justify-end gap-2">
+          <Link href={'/obras/controle-padroes'}>
+            <button className="rounded-md bg-[#15599a] py-1 px-4 text-sm font-bold text-white">CONTROLE DE PADRÕES</button>
+          </Link>
+        </div>
         <AnimatePresence>
           {dropdownMenuVisible ? (
             <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
@@ -529,11 +534,7 @@ function Posvenda() {
           ) : null}
         </AnimatePresence>
       </div>
-      <Link href={'/obras/controle-padroes'}>
-        <div className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
-          <p className="text-sm font-bold uppercase">CONTROLE DE PADRÕES</p>
-        </div>
-      </Link>
+
       <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos em jornada.'} /> : null}

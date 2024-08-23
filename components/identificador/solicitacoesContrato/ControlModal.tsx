@@ -328,6 +328,14 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                       </button>
                     </>
                   )}
+                  {infoHolder.tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO' ? (
+                    <Link href={`/adm/contratos/pdf/${requestId}`}>
+                      <button className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400">
+                        <FaFile />
+                        <p className="text-xs font-bold tracking-tight">TEMPLATE DE CONTRATO</p>
+                      </button>
+                    </Link>
+                  ) : null}
                 </div>
 
                 <button

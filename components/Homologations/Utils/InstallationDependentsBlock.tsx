@@ -226,7 +226,7 @@ function DependenteTableItem({ index, dependent, handleRemove, handleUpdate }: D
             <h1 className="w-[45%] text-center text-xs tracking-tight">{dependent.recebimentoPercentual}%</h1>
           </div>
         </div>
-        <div className="group flex w-full flex-col items-center rounded border border-gray-800 shadow-sm">
+        <div className="group flex w-full flex-col items-center rounded border border-gray-800 shadow-sm lg:hidden">
           <h1 className="w-full bg-gray-800 p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
           <div className="flex w-full flex-col p-2">
             <div className="flex w-full items-start justify-between gap-4 p-2">

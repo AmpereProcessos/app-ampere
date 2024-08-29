@@ -36,8 +36,8 @@ function InstallationInformation({ infoHolder, setInfoHolder, changes, setChange
         </div>
         <div className="w-full lg:w-1/4">
           <TextInput
-            label="NÚMERO DA INSTALAÇÃO ELÉTRICA"
-            placeholder="Preencha o número da instalação elétrica..."
+            label="NÚMERO DA INSTALAÇÃO GERADORA"
+            placeholder="Preencha o número da instalação elétrica da GERADORA..."
             value={infoHolder.homologacao.instalacao.numeroInstalacao}
             handleChange={(value) => {
               setInfoHolder((prev) => ({

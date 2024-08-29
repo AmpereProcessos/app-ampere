@@ -215,6 +215,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
   })
 
   const isFormularyFinished = !!infoHolder.dataEfetivacao
+  const userHasOverallEditingPermission = session.user.permissoes.execucao.editar
   useEffect(() => {
     if (formulary) setInfoHolder(formulary as TNewWarehouseFormularyDTO)
   }, [formulary])
@@ -312,6 +313,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                   setFormHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TNewWarehouseFormulary>>}
                   blockTakeAway={true}
                   blockDevolution={false}
+                  allowPostFinishEditing={userHasOverallEditingPermission}
                 />
                 <h1 className="mb-2 w-full rounded-md bg-[#15599a] p-1 text-center text-sm font-bold text-white">LOCALIZAÇÃO</h1>
                 <div className="grid grid-cols-1 grid-rows-3 items-center gap-6 px-2 lg:grid-cols-3 lg:grid-rows-1">

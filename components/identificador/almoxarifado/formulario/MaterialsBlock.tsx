@@ -15,8 +15,16 @@ type MaterialsBlockProps = {
   setFormHolder: React.Dispatch<React.SetStateAction<TNewWarehouseFormulary>>
   blockTakeAway?: boolean
   blockDevolution?: boolean
+  allowPostFinishEditing?: boolean
 }
-function MaterialsBlock({ formularyId, formHolder, setFormHolder, blockTakeAway = false, blockDevolution = true }: MaterialsBlockProps) {
+function MaterialsBlock({
+  formularyId,
+  formHolder,
+  setFormHolder,
+  blockTakeAway = false,
+  blockDevolution = true,
+  allowPostFinishEditing = false,
+}: MaterialsBlockProps) {
   const queryClient = useQueryClient()
   const { data: materials, isLoading: materialsLoading, isFetching: materialsFetching } = useMaterials()
   const [materialHolder, setMaterialHolder] = useState<{ id: string | null; qtde: number | null }>({ id: null, qtde: null })
@@ -153,6 +161,8 @@ function MaterialsBlock({ formularyId, formHolder, setFormHolder, blockTakeAway 
           {formHolder.materiais.map((material, index) => (
             <MaterialListItem
               key={index}
+              formularyId={formularyId}
+              allowPostFinishEditing={allowPostFinishEditing}
               material={material}
               index={index}
               removeMaterial={({ id, index }) => removeMaterial({ id, index })}

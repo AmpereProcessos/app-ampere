@@ -292,6 +292,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
         contato: request.telefone || '',
         identificador: '',
       },
+      fastTrack: request.homologacaoFastTrack,
       equipamentos: [],
       localizacao: {
         uf: request.ufInstalacao || '',

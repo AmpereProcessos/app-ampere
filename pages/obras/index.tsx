@@ -603,6 +603,11 @@ function Obras() {
                     <h1 className="text-center font-bold text-red-500">POSSUI DESLIGAMENTO REMOTO</h1>
                   </div>
                 )}
+                {project.homologacao.fastTrack ? (
+                  <div className="flex w-full items-center justify-center">
+                    <h1 className="rounded bg-green-500 px-2 py-1 text-[0.55rem] font-bold text-white">FAST TRACK</h1>
+                  </div>
+                ) : null}
               </div>
             </motion.div>
           ))}

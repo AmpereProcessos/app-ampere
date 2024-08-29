@@ -282,6 +282,7 @@ const GeneralHomologationSchema = z.object({
   }),
   oportunidade: HomologationOpportunitySchema,
   titular: HolderSchema,
+  fastTrack: z.boolean({ invalid_type_error: 'Tipo não válido para a flag de fast track.' }).optional().nullable(),
   equipamentos: z.array(HomologationEquipmentSchema, {
     required_error: 'Lista de equipamentos não informada.',
     invalid_type_error: 'Tipo não válido para a lista de equipamentos.',
@@ -327,7 +328,7 @@ export const InsertHomologationSchema = z.object({
   }),
   oportunidade: HomologationOpportunitySchema,
   titular: HolderSchema,
-  fastTrack: z.boolean({ invalid_type_error: 'Tipo não válido para a flag de fast track.' }),
+  fastTrack: z.boolean({ invalid_type_error: 'Tipo não válido para a flag de fast track.' }).optional().nullable(),
   equipamentos: z.array(HomologationEquipmentSchema, {
     required_error: 'Lista de equipamentos não informada.',
     invalid_type_error: 'Tipo não válido para a lista de equipamentos.',

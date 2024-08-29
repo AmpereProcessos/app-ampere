@@ -3,6 +3,7 @@ import TextInput from '../inputs/Text'
 import DateInput from '../inputs/Date'
 import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import CheckboxInput from '../inputs/Checkbox'
 
 type AccessInformationProps = {
   infoHolder: TProjectDTOWithHomologation
@@ -14,6 +15,19 @@ function AccessInformation({ infoHolder, setInfoHolder, changes, setChanges }: A
   return (
     <div className="flex w-full flex-col gap-2">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PARECER DE ACESSO</h1>
+      <div className="flex w-full items-center justify-center">
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="MODALIDADE FAST-TRACK"
+            labelTrue="MODALIDADE FAST-TRACK"
+            checked={!!infoHolder.homologacao.fastTrack}
+            handleChange={(value) => {
+              setInfoHolder((prev) => ({ ...prev, homologacao: { ...prev.homologacao, fastTrack: value } }))
+              setChanges((prev) => ({ ...prev, 'homologacao.fastTrack': value }))
+            }}
+          />
+        </div>
+      </div>
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput

@@ -58,6 +58,16 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
           />
         </div>
       </div>
+      <div className="flex items-center justify-center">
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="MODALIDADE FAST-TRACK"
+            labelTrue="MODALIDADE FAST-TRACK"
+            checked={!!infoHolder.homologacaoFastTrack}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, homologacaoFastTrack: value }))}
+          />
+        </div>
+      </div>
       <TextareaInput
         label="OBSERVAÇÕES P/ HOMOLOGAÇÃO"
         placeholder="Preencha aqui informações relevantes relacionadas a homologação"

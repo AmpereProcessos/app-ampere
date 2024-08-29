@@ -133,12 +133,16 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <div className="my-2 flex flex-col items-center justify-center">
                   <h1 className="font-bold">OPORTUNIDADE</h1>
-                  <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${infoHolder.oportunidade.id}`}>
-                    <div className="flex items-center gap-1 rounded-lg bg-cyan-500 px-2 py-1 text-white">
-                      <MdCode />
-                      <p className="text-sm font-bold tracking-tight">{infoHolder.oportunidade.nome}</p>
-                    </div>
-                  </Link>
+                  {infoHolder.oportunidade.id ? (
+                    <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${infoHolder.oportunidade.id}`}>
+                      <div className="flex items-center gap-1 rounded-lg bg-cyan-500 px-2 py-1 text-white">
+                        <MdCode />
+                        <p className="text-sm font-bold tracking-tight">{infoHolder.oportunidade.nome}</p>
+                      </div>
+                    </Link>
+                  ) : (
+                    <p className="text-sm font-bold tracking-tight">SEM OPORTUNIDADE DEFINIDA</p>
+                  )}
                 </div>
 
                 <ActivitiesInformation session={session} homologation={homologation} opportunity={homologation.oportunidade} />

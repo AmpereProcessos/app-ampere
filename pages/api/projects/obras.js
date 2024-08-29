@@ -36,6 +36,7 @@ export default async function handler(req, res) {
             'sistema.qtdeModulos': 1,
             'sistema.potPico': 1,
             'sistema.topologia': 1,
+            'homologacao.fastTrack': 1,
             'homologacao.acesso.dataResposta': 1,
             'homologacao.vistoria': 1,
             'contrato.dataAssinatura': 1,

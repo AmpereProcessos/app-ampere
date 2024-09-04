@@ -2227,14 +2227,15 @@ export const equipesTecnicas = [
   { id: 19, label: 'EQUIPE 19 - LUIZ PEDRO', value: 'EQUIPE 19 - LUIZ PEDRO' },
   { id: 20, label: 'EQUIPE 20 - RAFAEL E RODRIGO', value: 'EQUIPE 20 - RAFAEL E RODRIGO' },
   { id: 21, label: 'EQUIPE 21 - LEONILDO', value: 'EQUIPE 21 - LEONILDO' },
-  { id: 22, label: 'EQUIPE OEM', value: 'EQUIPE OEM' },
-  { id: 23, label: 'EQUIPE EXTERNA - VINICIUS', value: 'EQUIPE EXTERNA - VINICIUS' },
-  { id: 24, label: 'EQUIPE EXTERNA - JEFFERSON', value: 'EQUIPE EXTERNA - JEFFERSON' },
-  { id: 25, label: 'EQUIPE EXTERNA - JAIMIRES', value: 'EQUIPE EXTERNA - JAIMIRES' },
-  { id: 26, label: 'OUTROS', value: 'OUTROS' },
-  { id: 27, label: 'TERCEIROS', value: 'TERCEIROS' },
-  { id: 28, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-  { id: 29, label: 'VAZIO', value: undefined },
+  { id: 22, label: 'EQUIPE 22 - MARCUS E LUIZ PEDRO', value: 'EQUIPE 22 - MARCUS E LUIZ PEDRO' },
+  { id: 23, label: 'EQUIPE OEM', value: 'EQUIPE OEM' },
+  { id: 24, label: 'EQUIPE EXTERNA - VINICIUS', value: 'EQUIPE EXTERNA - VINICIUS' },
+  { id: 25, label: 'EQUIPE EXTERNA - JEFFERSON', value: 'EQUIPE EXTERNA - JEFFERSON' },
+  { id: 26, label: 'EQUIPE EXTERNA - JAIMIRES', value: 'EQUIPE EXTERNA - JAIMIRES' },
+  { id: 27, label: 'OUTROS', value: 'OUTROS' },
+  { id: 28, label: 'TERCEIROS', value: 'TERCEIROS' },
+  { id: 29, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 30, label: 'VAZIO', value: undefined },
 ]
 export const centrosDeCusto = [
   {

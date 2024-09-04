@@ -1,5 +1,6 @@
 import { apiHandler } from '@/utils/api'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getGenFactorByOrientation } from '@/utils/methods/shared'
 import { getContractValue } from '@/utils/methods/util/projects'
 import { TExpense } from '@/utils/schemas/expenses'
 import { TProject } from '@/utils/schemas/projects'
@@ -13,11 +14,24 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   // const projectsCollection: Collection<TProject> = db.collection('dados')
 
   // const projects = await projectsCollection
-  //   .find({
-  //     'contrato.status': 'ASSINADO',
-  //   })
+  //   .find(
+  //     {
+  //       'contrato.status': 'ASSINADO',
+  //       $or: [{ 'obra.statusDaObra': 'CONCLUIDA' }, { 'obra.status': 'CONCLUIDA' }],
+  //     },
+  //     {
+  //       projection: { cidade: 1, uf: 1, sistema: 1 },
+  //     }
+  //   )
   //   .toArray()
 
+  // const generations = projects.map((project) => {
+  //   const genFactor = getGenFactorByOrientation({ city: project.cidade, uf: project.uf, orientation: 'NORTE' }) as number
+  //   const estimatedGen = genFactor * (project.sistema.potPico || 0)
+  //   return estimatedGen
+  // })
+  // const totalGenerationMonthly = generations.reduce((acc, current) => acc + current, 0)
+  // const totalPower = projects.reduce((acc, current) => acc + current.sistema.potPico, 0)
   // const formatted = projects.map((project) => {
   //   return {
   //     QTDE: project.qtde,

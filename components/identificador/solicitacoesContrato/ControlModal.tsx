@@ -168,8 +168,8 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
         changes: { ...info, idProjetoApp: insertedProjectId, aprovacao: true, dataAprovacao: new Date().toISOString() },
       })
       // Notifying and emailing cobrancas sector
-      handleSendEmailToCobrancas({ requestId: requestId, contractName: info?.nomeDoContrato })
-      handleSendNotificationToCobrancas({ contractName: info.nomeDoContrato })
+      if (info.tipoDeServico != 'CONSÓRCIO DE ENERGIA') await handleSendEmailToCobrancas({ requestId: requestId, contractName: info?.nomeDoContrato })
+      await handleSendNotificationToCobrancas({ contractName: info.nomeDoContrato })
       return 'Novo projeto adicionado com sucesso !'
     } catch (error) {
       throw error

@@ -33,6 +33,11 @@ const GoalsParams = {
     'OBJETIVO POR PERIODO': 2_000,
     'QTDE PREMIADOS': 1,
   },
+  'CONSÓRCIO DE ENERGIA': {
+    'META GERAL': 150_000,
+    'OBJETIVO POR PERIODO': 25_000,
+    'QTDE PREMIADOS': 1,
+  },
 }
 function renderRanking({ competitors, awardedQty }: { competitors: { RESPONSAVEL: string; TOTAL: number }[]; awardedQty: number }) {
   const podium = [

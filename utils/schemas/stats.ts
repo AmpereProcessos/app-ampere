@@ -71,6 +71,7 @@ export type TCompanyGoalsResults = {
   'OPERAÇÃO E MANUTENÇÃO': TCompanyGoalsResultsItemValue
   'INSIDE SALES': TCompanyGoalsResultsItemValue
   'SEGURO DE SISTEMA FOTOVOLTAICO': TCompanyGoalsResultsItemValue
+  'CONSÓRCIO DE ENERGIA': TCompanyGoalsResultsItemValue
 }
 
 export type TSaleGraphStat = {

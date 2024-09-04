@@ -42,7 +42,6 @@ type PostResponse = {
   }
   message: string
 }
-
 const createExpense: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 

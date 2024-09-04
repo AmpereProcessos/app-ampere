@@ -400,6 +400,7 @@ async function getAchievedPowerSale({ collection, partialQuery }: GetStats) {
 
 export async function getCompanyGoalsStats({ collection, partialQuery }: GetStats) {
   const GOAL_INITIAL_DATE_PARAM = '2024-07-01T00:00:00.000Z'
+  const GOAL_INITIAL_DATE_CONSORTIUM_PARAM = '2024-06-01T00:00:00.000Z'
   // Define queries for all company goals
   // 1 - Sistema Fotovoltaico + Aumento - R$ 5.000.000,00 geral /  R$ 833.333,33/mes (contando a partir de 01/07 )
   // 2 - O&M + Montagem e Desmontagem - R$ 90.000,00 geral /  R$ 15.000,00/mes (contando a partir de 01/07 )
@@ -569,6 +570,47 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
     },
     { total: 0, porVendedor: {} }
   )
+  // CONSÓRCIO DE ENERGIA
+  const energyConsortium = await collection
+    .aggregate([
+      {
+        $match: {
+          'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_CONSORTIUM_PARAM },
+          tipoDeServico: 'CONSÓRCIO DE ENERGIA',
+        },
+      },
+      {
+        $group: {
+          _id: '$vendedor.nome',
+          valorProjeto: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorPadrao: {
+            $sum: '$padrao.valor',
+          },
+          valorEstrutura: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+        },
+      },
+    ])
+    .toArray()
+
+  const CONSORCIO_ENERGIA = energyConsortium.reduce(
+    (acc: { total: number; porVendedor: { [key: string]: number } }, current) => {
+      const currentTotal = current.valorProjeto + current.valorPadrao + current.valorEstrutura
+      const currentSeller = current._id as string
+
+      if (!acc.porVendedor[currentSeller]) acc.porVendedor[currentSeller] = 0
+      acc.porVendedor[currentSeller] += currentTotal
+      acc.total = currentTotal
+      return acc
+    },
+    {
+      total: 0,
+      porVendedor: {},
+    }
+  )
   return {
     'SISTEMA FOTOVOLTAICO': {
       TOTAL: SISTEMA_FOTOVOLTAICO.total,
@@ -591,6 +633,12 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
     'SEGURO DE SISTEMA FOTOVOLTAICO': {
       TOTAL: SEGURO_FOTOVOLTAICO.total,
       RANKING: Object.entries(SEGURO_FOTOVOLTAICO.porVendedor)
+        .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
+        .sort((a, b) => b.TOTAL - a.TOTAL),
+    },
+    'CONSÓRCIO DE ENERGIA': {
+      TOTAL: CONSORCIO_ENERGIA.total,
+      RANKING: Object.entries(CONSORCIO_ENERGIA.porVendedor)
         .map(([seller, total]) => ({ RESPONSAVEL: seller, TOTAL: total }))
         .sort((a, b) => b.TOTAL - a.TOTAL),
     },

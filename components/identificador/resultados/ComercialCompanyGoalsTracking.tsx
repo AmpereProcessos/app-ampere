@@ -19,7 +19,7 @@ const GoalsParams = {
     'QTDE PREMIADOS': 3,
   },
   'OPERAÇÃO E MANUTENÇÃO': {
-    'META GERAL': 90_000,
+    'META GERAL': 120_000,
     'OBJETIVO POR PERIODO': 15_000,
     'QTDE PREMIADOS': 2,
   },

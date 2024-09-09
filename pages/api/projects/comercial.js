@@ -26,6 +26,7 @@ export default async function handler(req, res) {
             'estruturaPersonalizada.valor': 1,
             'sistema.potPico': 1,
             'compra.liberacao': 1,
+            'compra.dataLiberacao': 1,
             'compra.status': 1,
             'compra.dataPagamento': 1,
             'homologacao.acesso.dataResposta': 1,

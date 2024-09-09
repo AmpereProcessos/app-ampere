@@ -382,6 +382,19 @@ function Comercial() {
                     onClick={() =>
                       setFilters((prev) => ({
                         ...prev,
+                        pendingSupplyLiberation: !filters.pendingSupplyLiberation,
+                      }))
+                    }
+                    className={`${
+                      filters.pendingSupplyLiberation ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+                  >
+                    LIBERAÇÃO DE COMPRA PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
                         signaturePendency: !filters.signaturePendency,
                       }))
                     }

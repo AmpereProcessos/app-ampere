@@ -22,6 +22,7 @@ type UseComercialProjectsFilters = {
   sellerName: string[]
   insiderName: string[]
   supplyStatus: string[]
+  grantingStatus: string[]
   pendingSupplyLiberation: boolean
   signaturePendency: boolean
   noCRMVinculation: boolean
@@ -41,6 +42,7 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
     sellerName: [],
     insiderName: [],
     supplyStatus: [],
+    grantingStatus: [],
     pendingSupplyLiberation: false,
     signaturePendency: false,
     noCRMVinculation: false,
@@ -81,6 +83,10 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
     if (filters.supplyStatus.length == 0) return true
     return filters.supplyStatus.includes(project.compra.status || '')
   }
+  function matchGrantingStatus(project: TProjectDTO) {
+    if (filters.grantingStatus.length == 0) return true
+    return filters.grantingStatus.includes(project.homologacao.status || '')
+  }
   function matchPendingSupplyLiberation(project: TProjectDTO) {
     if (!filters.pendingSupplyLiberation) return true
     return !project.compra.liberacao
@@ -118,6 +124,7 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
         matchServiceType(project) &&
         matchSellerName(project) &&
         matchInsiderName(project) &&
+        matchGrantingStatus(project) &&
         matchSupplyStatus(project) &&
         matchPendingSupplyLiberation(project) &&
         matchSignaturePendency(project) &&

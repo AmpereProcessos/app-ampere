@@ -22,7 +22,16 @@ import NumberInput from '../../components/inputs/Number'
 import TextInput from '../../components/inputs/Text'
 import DateInput from '../../components/inputs/Date'
 import SelectInput from '../../components/inputs/Select'
-import { allActiveSellers, allSellers, contractStatus, insiders, sellers, serviceTypes, supplementationStatus } from '../../utils/select-options'
+import {
+  allActiveSellers,
+  allSellers,
+  contractStatus,
+  HomologationControlStatus,
+  insiders,
+  sellers,
+  serviceTypes,
+  supplementationStatus,
+} from '../../utils/select-options'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { formatDateInputChange } from '../../utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
@@ -372,6 +381,27 @@ function Comercial() {
                         setFilters((prev) => ({
                           ...prev,
                           supplyStatus: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'STATUS DO PARECER'}
+                      selected={filters.grantingStatus}
+                      options={HomologationControlStatus}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          grantingStatus: value,
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          grantingStatus: [],
                         }))
                       }
                     />

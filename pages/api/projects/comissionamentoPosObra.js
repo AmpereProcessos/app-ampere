@@ -8,6 +8,7 @@ export default async function handler(req, res) {
         {
           $match: {
             'contrato.status': 'ASSINADO',
+            tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO', 'MANUTENÇÃO PREVENTIVA', ''] },
             'obra.statusDaObra': 'CONCLUIDA',
             'jornada.entregaTecnica': { $ne: true },
           },

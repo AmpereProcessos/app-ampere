@@ -8,7 +8,6 @@ import { ImPower } from 'react-icons/im'
 import { FaIndustry, FaSolarPanel } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 
-import UseActiveProposalProducts from './Utils/UseActiveProposalProducts'
 import { THomologationEquipment } from '@/utils/schemas/partial/homologation'
 import { TInverter, TModule, TProductItem } from '@/utils/schemas/crm/kits.schema'
 import { TProjectDTOWithHomologation } from '@/utils/schemas/projects'

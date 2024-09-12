@@ -60,9 +60,10 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
           ) : null}
           {isSuccess ? (
             <div className="overscroll-y flex w-full flex-col overflow-y-auto border-r border-gray-300 p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <h1 className="text-center text-lg font-black tracking-tight">{order.descricao}</h1>
               <div className="flex items-center justify-center gap-2">
                 <MdCategory />
-                <p className="text-lg font-medium uppercase text-blue-500">{order?.categoria}</p>
+                <p className="text-xs font-medium uppercase">{order?.categoria}</p>
               </div>
               <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
                 <div className="flex items-center gap-2">

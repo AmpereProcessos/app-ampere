@@ -797,7 +797,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
             </div>
           </div>
 
-          <div className="flex w-fit flex-col items-center">
+          {/* <div className="flex w-fit flex-col items-center">
             <label className="ml-2 text-center font-bold text-[#15599a]">VÍDEO TESTE D ÁGUA</label>
             <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
               <div className="absolute">
@@ -828,7 +828,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                 accept=".png, .jpeg, .mp4"
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex w-fit flex-col items-center">
             <label className="ml-2 text-center font-bold text-[#15599a]">PRINT DA CONFIGURAÇÃO CONCLUIDA (SE NECESSÁRIA)</label>
             <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">

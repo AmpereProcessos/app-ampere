@@ -307,6 +307,22 @@ export const fileTypes: FileTypes = {
     icon: BsFiletypeCsv,
   },
 }
+
+export function isFileImage(type: string) {
+  return ['png', 'jpeg', 'tiff', 'jpg'].some((x) => type.includes(x))
+}
+export function getFileTypeTitle(type: string) {
+  return fileTypes[type]?.title || 'NÃO DEFINIDO'
+}
+export function getTitleFileType(title: string) {
+  const equivalent = Object.entries(fileTypes).find(([key, value]) => title == value.title)
+  const type = !!equivalent ? equivalent[0] : ''
+  return type
+}
+export function isFileFormatImage(format: string) {
+  return ['IMAGEM (.PNG)', 'IMAGEM(.JPEG)', 'IMAGEM(.TIFF)', 'IMAGEM(.JPG)'].includes(format)
+}
+
 export const vendedores = [
   {
     nome: 'ARTHUR CARVALHO',

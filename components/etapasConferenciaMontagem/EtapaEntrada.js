@@ -86,62 +86,62 @@ function EtapaEntrada({ next, order }) {
     }
   }
   return (
-    <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between py-2">
-        <h1 className="text-center font-bold w-full">ETAPA ENTRADA NA OBRA</h1>
-        <p className="text-[0.6rem] lg:text-xs font-bold text-gray-600 italic px-2">
+    <div className="my-2 flex w-full flex-col">
+      <div className="flex flex-col items-center justify-between bg-[#fead61] py-2 text-white">
+        <h1 className="w-full text-center font-bold">ETAPA ENTRADA NA OBRA</h1>
+        <p className="px-2 text-[0.6rem] font-bold italic text-gray-600 lg:text-xs">
           (OBS: TODAS AS FOTOS DEVEM SER TIRADAS ATRAVÉS DO APLICATIVO <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>
-      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+      <div className="my-2 flex flex-col items-center gap-y-2 border-y border-gray-200 py-2">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">DESENHO DA MONTAGEM NO TELHADO EM MÃOS</p>
+          <p className="font-medium">DESENHO DA MONTAGEM NO TELHADO EM MÃOS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill className="col-span-1" style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">DIAGRAMA UNIFILAR EM MÃOS</p>
+          <p className="font-medium">DIAGRAMA UNIFILAR EM MÃOS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">DESENHO DA MONTAGEM DO INVERSOR EM MÃOS</p>
+          <p className="font-medium">DESENHO DA MONTAGEM DO INVERSOR EM MÃOS</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">CONFERÊNCIA DAS FERRAMENTAS NECESSÁRIAS FEITA</p>
+          <p className="font-medium">CONFERÊNCIA DAS FERRAMENTAS NECESSÁRIAS FEITA</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">EM POSSE DOS EPIs</p>
+          <p className="font-medium">EM POSSE DOS EPIs</p>
         </div>
-        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+        <div className="flex w-full items-center gap-2 lg:w-[60%]">
           <BsFillSunFill style={{ color: '#fead61', fontSize: '25px' }} />
-          <p className="col-span-9 font-medium">EM POSSE DA ESCADA</p>
+          <p className="font-medium">EM POSSE DA ESCADA</p>
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input type={'checkbox'} checked={checkEnterStage} onChange={(e) => setCheckEnterStage(e.target.checked)} />
       </div>
-      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">FOTOS/FILMAGENS</h1>
+      <h1 className="mt-5  w-full text-center text-lg font-bold text-[#fead61]">FOTOS/FILMAGENS</h1>
       <div className="flex flex-wrap justify-center gap-2">
-        <div className="w-fit flex flex-col items-center">
-          <label className="ml-2 text-center text-[#15599a] font-bold">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]">
             FOTO DO CONJUNTO ESCADA (ESCADA AMARRADA, CONES, CORRENTE E PLACA DE ALERTA)
           </label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
             <div className="absolute">
               {files.fotoConjuntoEscada ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
+                  <span className="block text-center font-normal text-gray-400">
                     {files.fotoConjuntoEscada.length == 1 ? files.fotoConjuntoEscada[0].name : `${files.fotoConjuntoEscada[0].name}...`}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
@@ -161,11 +161,11 @@ function EtapaEntrada({ next, order }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center mt-4">
+      <div className="mt-4 flex items-center justify-center">
         <button
           disabled={inProgress}
           onClick={goNextStage}
-          className="border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded hover:scale-105 ease-in-out duration-500 disabled:bg-gray-500 disabled:text-white disabled:opacity-70"
+          className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
         >
           PRÓXIMO
         </button>

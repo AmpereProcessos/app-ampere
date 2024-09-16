@@ -5,7 +5,7 @@ import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletyp
 import { IconType } from 'react-icons/lib'
 //teste
 
-export const STANDARD_PROFIT_MARGIN = 0.12
+export const STANDARD_PROFIT_MARGIN = 0.15
 export const STANDARD_TAX = 0.175
 
 export const margemLucro = 0.12

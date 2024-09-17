@@ -2,7 +2,7 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import NumberInput from '@/components/inputs/Number'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
-import { credores } from '@/utils/constants'
+import { useCreditors } from '@/utils/methods/query/crm/utils'
 import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import { ContractRequestPaymentOptions } from '@/utils/select-options'
 import React from 'react'
@@ -13,6 +13,7 @@ type PaymentInformationBlockProps = {
   userHasEditPermission: boolean
 }
 function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: PaymentInformationBlockProps) {
+  const { data: creditors } = useCreditors()
   return (
     <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PAGAMENTO</h1>
@@ -163,7 +164,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
               editable={userHasEditPermission}
               value={infoHolder.credor}
               selectedItemLabel="NÃO DEFINIDO"
-              options={credores.map((c, index) => ({ id: index + 1, label: c.label, value: c.value }))}
+              options={creditors?.map((c, index) => ({ id: index + 1, label: c.valor, value: c.valor })) || []}
               handleChange={(value) => setInfoHolder((prev) => ({ ...prev, credor: value }))}
               onReset={() => setInfoHolder((prev) => ({ ...prev, credor: null }))}
               width="100%"

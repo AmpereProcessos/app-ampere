@@ -1,5 +1,5 @@
 import React from 'react'
-import { credores, formatDate } from '../../utils/constants'
+import { formatDate } from '../../utils/constants'
 
 import dayjs from 'dayjs'
 import { billableCompanies } from '../../utils/select-options'
@@ -14,6 +14,7 @@ import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import { MdVisibility } from 'react-icons/md'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import Payment from '../identificador/registrosAlteracoesProjeto/secao/Payment'
+import { useCreditors } from '@/utils/methods/query/crm/utils'
 
 type InfoPagamentoBlockProps = {
   editor: boolean
@@ -25,7 +26,8 @@ type InfoPagamentoBlockProps = {
   showADMOnly: boolean
 }
 function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], showADMOnly = false }: InfoPagamentoBlockProps) {
-  console.log('LOGS', updateLogs)
+  const { data: creditors } = useCreditors()
+
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE PAGAMENTO</span>
@@ -78,7 +80,7 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
               value={infoHolder.pagamento.credor}
               selectedItemLabel="NÃO DEFINIDO"
               editable={editor}
-              options={credores.map((credor, index) => ({ id: index + 1, label: credor.label, value: credor.value }))}
+              options={creditors?.map((credor, index) => ({ id: credor._id, label: credor.valor, value: credor.valor })) || []}
               handleChange={(value) => {
                 setChanges((prev) => ({
                   ...prev,

@@ -15,12 +15,27 @@ export default async function handler(req, res) {
             'contrato.status': 'ASSINADO',
             $or: [
               {
-                'obra.statusDaObra': 'CONCLUIDA',
+                // In case is UFV, only shw
+                $and: [
+                  { tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] } },
+                  {
+                    'obra.statusDaObra': 'CONCLUIDA',
+                  },
+                  {
+                    'oem.oemConcluido': { $ne: true },
+                  },
+                  {
+                    'oem.plano': { $nin: [null, 'NÃO SE APLICA'] },
+                  },
+                ],
               },
-              { tipoDeServico: { $in: ['OPERAÇÃO E MANUTENÇÃO', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA'] } },
+              {
+                tipoDeServico: 'OPERAÇÃO E MANUTENÇÃO',
+                'oem.oemConcluido': { $ne: true },
+                'oem.plano': { $nin: [null, 'NÃO SE APLICA'] },
+              },
+              { tipoDeServico: { $in: ['MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA'] }, 'obra.statusDaObra': { $ne: 'CONCLUIDA' } },
             ],
-            'oem.oemConcluido': { $ne: true },
-            'oem.plano': { $nin: [null, 'NÃO SE APLICA'] },
           },
         },
         {
@@ -52,7 +67,7 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
     const collection = db.collection('dados')
     console.log('FUI CHAMADO')
-    let oem = await collection
+    const oem = await collection
       .aggregate([
         {
           $sort: {

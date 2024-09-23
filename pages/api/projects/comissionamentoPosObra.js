@@ -8,7 +8,9 @@ export default async function handler(req, res) {
         {
           $match: {
             'contrato.status': 'ASSINADO',
-            tipoDeServico: { $nin: ['SEGURO DE SISTEMA FOTOVOLTAICO', 'MANUTENÇÃO PREVENTIVA', 'CONSÓRCIO DE ENERGIA', 'REFORMA DE PADRÃO'] },
+            tipoDeServico: {
+              $in: ['SISTEMA FOTOVOLTAICO', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'AUMENTO DE SISTEMA FOTOVOLTAICO', 'BOMBA SOLAR'],
+            },
             'obra.statusDaObra': 'CONCLUIDA',
             'jornada.entregaTecnica': { $ne: true },
           },

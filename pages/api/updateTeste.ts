@@ -45,31 +45,6 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
   const crmDb = await connectToCRMDatabase(process.env.DB_KEY)
 
-  const projectsCollection: Collection<TProject> = db.collection('dados')
-  const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection('opportunities')
-
-  const projects = await projectsCollection.find({ idProjetoCRM: { $ne: null } }).toArray()
-
-  const opportunities = await opportunitiesCollection.find({}).toArray()
-
-  const bulkwriteArr = projects
-    .map((project) => {
-      const correspondingOpportunity = opportunities.find((p) => p._id.toString() == project.idProjetoCRM)
-      const idMarketing = correspondingOpportunity?.idMarketing || null
-      if (!idMarketing) return null
-      return {
-        updateOne: {
-          filter: { _id: new ObjectId(project._id) },
-          update: {
-            $set: {
-              idMarketing: idMarketing,
-            },
-          },
-        },
-      }
-    })
-    .filter((b) => !!b)
-
   // const updateResponse = await usersCollection.updateMany({}, { $set: { 'permissoes.gestao.restringirProjetos': false } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
   // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
@@ -211,8 +186,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.status(200).json(bulkwriteResponse)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

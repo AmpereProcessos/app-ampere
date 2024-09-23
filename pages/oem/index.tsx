@@ -52,7 +52,7 @@ function OemPage() {
   const { data: projects, isLoading, isError, isFetching, isSuccess, filters, setFilters } = useOeMProjects()
   const [modalProject, setModalProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   function checkOeMEnding(dataMedidor: string | null | undefined, tipoDeServico: string, dataAssinatura: string | null | undefined) {
-    if (tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO') {
+    if (tipoDeServico === 'OPERAÇÃO E MANUTENÇÃO') {
       if (dayjs().diff(dayjs(dataAssinatura), 'days') > 15) {
         return { text: 'O&M VENCIDO', color: 'text-red-500' }
       } else {
@@ -124,8 +124,8 @@ function OemPage() {
     }
   }, [session])
 
-  if (status == 'loading') return <LoadingPage />
-  if (status == 'authenticated') {
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'authenticated') {
     return (
       <div className="grow p-6">
         <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
@@ -390,9 +390,8 @@ function OemPage() {
                         pendingMaintenance: !filters.pendingMaintenance,
                       }))
                     }
-                    className={`${
-                      filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'
-                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                    className={`${filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                   >
                     MANUTENÇÃO PENDENTE
                   </div>
@@ -403,9 +402,8 @@ function OemPage() {
                         overdueMaintenance: !filters.overdueMaintenance,
                       }))
                     }
-                    className={`${
-                      filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'
-                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                    className={`${filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                   >
                     MANUTENÇÃO ATRASADA
                   </div>
@@ -416,9 +414,8 @@ function OemPage() {
                         systemOffline: !filters.systemOffline,
                       }))
                     }
-                    className={`${
-                      filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'
-                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                    className={`${filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'
+                      } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
                   >
                     PENDENTE CONFERÊNCIA DE USINA LIGADA
                   </div>
@@ -457,32 +454,31 @@ function OemPage() {
                     <div className="flex flex-col items-start">
                       <span className={`text-[0.6rem] leading-none tracking-tight text-gray-500`}>STATUS DO O&M</span>
                       <p
-                        className={`text-xs font-medium tracking-tight ${
-                          checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color
-                        }`}
+                        className={`text-xs font-medium tracking-tight ${checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color
+                          }`}
                       >
                         {checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text}
                       </p>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">NÚMERO DE MÓDULOS</span>
-                      <p className={`text-xs font-medium tracking-tight`}>{project.sistema.qtdeModulos}</p>
+                      <p className={"text-xs font-medium tracking-tight"}>{project.sistema.qtdeModulos}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">EQUIPE TÉCNICA</span>
-                      <p className={`text-xs font-medium tracking-tight`}>{project.obra.equipeResp || 'NÃO DEFINIDO'}</p>
+                      <p className={"text-xs font-medium tracking-tight"}>{project.obra.equipeResp || 'NÃO DEFINIDO'}</p>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">SAÍDA DE OBRA</span>
-                      <p className={`text-xs font-medium tracking-tight`}>{formatDateAsLocale(project.obra.saida)}</p>
+                      <p className={"text-xs font-medium tracking-tight"}>{formatDateAsLocale(project.obra.saida)}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-center">
                     <div className="flex flex-col items-center">
                       <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">PLANO DE O&M</span>
-                      <p className={`text-center text-xs font-medium tracking-tight text-cyan-500`}>{project.oem.plano || 'NÃO DEFINIDO'}</p>
+                      <p className={"text-center text-xs font-medium tracking-tight text-cyan-500"}>{project.oem?.plano || 'NÃO DEFINIDO'}</p>
                     </div>
                   </div>
                 </div>

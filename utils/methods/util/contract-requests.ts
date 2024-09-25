@@ -34,6 +34,7 @@ export async function handleSendEmailToCobrancas({ requestId, contractName }: Ha
         'comercial@ampereenergias.com.br',
         // 'adm02@ampereenergias.com.br',
         // 'estagioadm@ampereenergias.com.br',
+        'estagioadmampere@outlook.com',
         'amperecontasareceber@outlook.com',
         'felipe.tadeu@ampereenergias.com.br',
       ],

@@ -237,11 +237,17 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
           {isSuccess && !!infoHolder._id ? (
             <>
               <div className="flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-                <div className="flex w-full items-center justify-end">
+                <div className="flex w-full items-center justify-end gap-2">
+                  <Link href={`/comercial/pdfProcuracao/${requestId}`}>
+                    <button className="flex items-center gap-2 rounded border border-gray-600 px-4 py-2 text-gray-600 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400">
+                      <FaFile />
+                      <p className="text-xs font-bold tracking-tight">PROCURAÇÃO EM PDF</p>
+                    </button>
+                  </Link>
                   <Link href={`/comercial/publicoFormulario/${requestId}`}>
                     <button className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400">
                       <FaFile />
-                      <p className="text-xs font-bold tracking-tight">DOCUMENTO EM PDF</p>
+                      <p className="text-xs font-bold tracking-tight">FORMULÁRIO EM PDF</p>
                     </button>
                   </Link>
                 </div>

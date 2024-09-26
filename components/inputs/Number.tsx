@@ -1,5 +1,6 @@
 import React from 'react'
 import { isEmpty } from '../../utils/methods/shared'
+import { cn } from '@/lib/utils'
 
 type NumberInputProps = {
   width?: string
@@ -12,22 +13,12 @@ type NumberInputProps = {
   placeholder: string
   handleChange: (value: number) => void
 }
-function NumberInput({
-  width,
-  label,
-  labelClassName = 'font-sans font-bold  text-[#353432]',
-  showLabel = true,
-  value,
-  min,
-  editable = true,
-  placeholder,
-  handleChange,
-}: NumberInputProps) {
+function NumberInput({ width, label, labelClassName, showLabel = true, value, min, editable = true, placeholder, handleChange }: NumberInputProps) {
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
     <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
-        <label htmlFor={inputIdentifier} className={labelClassName}>
+        <label htmlFor={inputIdentifier} className={cn('font-sans font-bold text-[#353432]', labelClassName)}>
           {label}
         </label>
       ) : null}

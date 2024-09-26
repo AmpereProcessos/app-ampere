@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { HiCheck } from 'react-icons/hi'
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io'
@@ -22,7 +23,7 @@ type SelectInputProps<T> = {
 function MultipleSelectInput<T>({
   width,
   label,
-  labelClassName = 'font-sans font-bold  text-[#353432] text-start',
+  labelClassName,
   showLabel = true,
   selected,
   options,
@@ -102,7 +103,7 @@ function MultipleSelectInput<T>({
   return (
     <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
-        <label htmlFor={inputIdentifier} className={labelClassName}>
+        <label htmlFor={inputIdentifier} className={cn('font-sans text-start  font-bold text-[#353432]', labelClassName)}>
           {label}
         </label>
       ) : null}

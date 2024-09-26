@@ -37,11 +37,21 @@ export const ContractRequestPaymentOptions = [
   },
   {
     id: 5,
+    label: '100% PARCELADO NO CARTÃO DE CRÉDITO',
+    value: '100% PARCELADO NO CARTÃO DE CRÉDITO',
+  },
+  {
+    id: 6,
+    label: '100% À VISTA NO DINHEIRO/DÉBITO/PIX',
+    value: '100% À VISTA NO DINHEIRO/DÉBITO/PIX',
+  },
+  {
+    id: 7,
     label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
     value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
   },
   {
-    id: 6,
+    id: 8,
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

@@ -30,7 +30,7 @@ function CreditCardOptions() {
             options.length > 0 ? (
               options.map((option) => <CreditCardOptionCard key={option._id} option={option} />)
             ) : (
-              <p className="w-full text-center font-medium italic text-gray-500">Nenhuma opção de simulação encontrada.</p>
+              <p className="w-full text-center font-medium italic text-gray-500">Nenhuma opção de simulação foi encontrada.</p>
             )
           ) : null}
         </div>

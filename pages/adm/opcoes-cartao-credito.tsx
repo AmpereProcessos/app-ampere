@@ -1,4 +1,5 @@
 import EditCreditCardOption from '@/components/identificador/opcoes-cartao-credito/EditCreditCardOption'
+import NewCreditCardOption from '@/components/identificador/opcoes-cartao-credito/NewCreditCardOption'
 import NumberInput from '@/components/inputs/Number'
 import SelectInput from '@/components/inputs/Select'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -13,6 +14,7 @@ import React, { useState } from 'react'
 function CreditCardOptions() {
   const { data: session } = useSession({ required: true })
   const { data: options, isLoading, isError, isSuccess, error } = useCreditCardOptions()
+  const [newCreditCardOptionModalIsOpen, setNewCreditCardOptionModalIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   return (
     <div className="grow p-6">
@@ -23,6 +25,12 @@ function CreditCardOptions() {
               <p className="text-center text-2xl font-black uppercase text-[#15599a]">SIMULAÇÕES DE CARTÃO DE CRÉDITO</p>
               <p className="text-sm tracking-tight text-gray-500">{options?.length || '...'} opções contabilizadas</p>
             </div>
+            <button
+              onClick={() => setNewCreditCardOptionModalIsOpen(true)}
+              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            >
+              NOVA OPÇÃO
+            </button>
           </div>
         </div>
         {isLoading ? <LoadingPage /> : null}
@@ -39,6 +47,7 @@ function CreditCardOptions() {
           )
         ) : null}
       </div>
+      {newCreditCardOptionModalIsOpen ? <NewCreditCardOption closeModal={() => setNewCreditCardOptionModalIsOpen(false)} /> : null}
       {editModal.id && editModal.isOpen ? (
         <EditCreditCardOption optionId={editModal.id} closeModal={() => setEditModal({ id: null, isOpen: false })} />
       ) : null}

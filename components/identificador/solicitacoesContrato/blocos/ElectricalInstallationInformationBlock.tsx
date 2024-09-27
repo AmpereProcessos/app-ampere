@@ -5,7 +5,7 @@ import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import React from 'react'
 import toast from 'react-hot-toast'
 import AllCities from '@/utils/jsons/cidades.json'
-import { formatToCEP } from '@/utils/methods/formatting'
+import { formatToCEP, formatToCPForCNPJ } from '@/utils/methods/formatting'
 import { estadosECidades } from '@/utils/estados_cidades'
 import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 import CheckboxInput from '@/components/inputs/Checkbox'
@@ -75,7 +75,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
         handleChange={(value) => setInfoHolder((prev) => ({ ...prev, observacoesHomologacao: value }))}
       />
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'NOME DO TITULAR DO PROJETO'}
             placeholder="Preencha o nome do titular do projeto..."
@@ -90,7 +90,22 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
+          <TextInput
+            label={'CPF/CNPJ DO TITULAR DO PROJETO'}
+            placeholder="Preencha o CPF/CNPJ do titular do projeto..."
+            editable={userHasEditPermission}
+            value={infoHolder.cpf_cnpjTitularProjeto || ''}
+            handleChange={(value) =>
+              setInfoHolder((prev) => ({
+                ...prev,
+                cpf_cnpjTitularProjeto: formatToCPForCNPJ(value),
+              }))
+            }
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'NÚMERO DA INSTALAÇÃO ELÉTRICA'}
             placeholder="Preencha o nome do titular do projeto..."

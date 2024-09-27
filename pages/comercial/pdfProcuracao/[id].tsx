@@ -46,7 +46,7 @@ function ProcurationPage({ requestJSON, error }: ProcurationPageProps) {
         </div>
         <div className="flex w-full items-start gap-1">
           <h1 className="w-[150px] max-w-[150px] text-[0.9rem] font-black tracking-tight">CPF/CNPJ</h1>
-          <h1 className="grow text-[0.9rem] tracking-tight">{request.cpf_cnpj}</h1>
+          <h1 className="grow text-[0.9rem] tracking-tight">{request.cpf_cnpjTitularProjeto || request.cpf_cnpj}</h1>
         </div>
         <div className="flex w-full items-start gap-1">
           <h1 className="w-[150px] max-w-[150px] text-[0.9rem] font-black tracking-tight">Endereço</h1>
@@ -84,7 +84,7 @@ function ProcurationPage({ requestJSON, error }: ProcurationPageProps) {
         <div className="h-[2px] w-[60%] self-center bg-black"></div>
         <h1 className="w-full text-center text-[0.9rem] font-black tracking-tight">{request.nomeTitularProjeto?.toUpperCase()}</h1>
         <p className="w-full text-center text-[0.9rem] tracking-tight">(Outorgante)</p>
-        <h1 className="w-full text-center text-[0.9rem] font-black tracking-tight">{request.cpf_cnpj}</h1>
+        <h1 className="w-full text-center text-[0.9rem] font-black tracking-tight">{request.cpf_cnpjTitularProjeto || request.cpf_cnpj}</h1>
       </div>
       <div className="mt-6 flex w-full flex-col gap-1">
         <h1 className="w-full text-center text-blue-300">(34) 3700-7001</h1>

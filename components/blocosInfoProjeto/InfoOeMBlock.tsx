@@ -222,7 +222,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
                 ...prev,
                 obra: { ...prev.obra, saida: value, statusDaObra: value ? 'CONCLUIDA' : prev.obra.statusDaObra },
               }))
-              setChanges((prev) => ({ ...prev, 'obra.saida': value, 'obra.statusDaObra': value ? 'CONCLUIDA' : prev['obra.statusDaObra'] }))
+              setChanges((prev) => ({ ...prev, 'obra.saida': value, 'obra.statusDaObra': value ? 'CONCLUIDA' : prev.obra.statusDaObra }))
             }}
           />
         </div>
@@ -247,9 +247,9 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
               setChanges((prev) => ({
                 ...prev,
                 'oem.oemConcluido': value,
-                'obra.entrada': prev['obra.entrada'] ? prev['obra.entrada'] : !!value ? new Date().toISOString() : prev['obra.entrada'],
-                'obra.saida': prev['obra.saida'] ? prev['obra.saida'] : !!value ? new Date().toISOString() : prev['obra.saida'],
-                'obra.status': !!value ? 'CONCLUIDA' : prev['obra.status'],
+                'obra.entrada': prev.obra.entrada ? prev.obra.entrada : !!value ? new Date().toISOString() : prev.obra.entrada,
+                'obra.saida': prev.obra.saida ? prev.obra.saida : !!value ? new Date().toISOString() : prev.obra.saida,
+                'obra.status': !!value ? 'CONCLUIDA' : prev.obra.statusDaObra,
               }))
             }}
           />

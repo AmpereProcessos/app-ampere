@@ -13,6 +13,7 @@ import { allSellers, customersAcquisitionChannels, serviceTypes } from '@/utils/
 import React from 'react'
 import toast from 'react-hot-toast'
 import AllCities from '@/utils/jsons/cidades.json'
+import TextareaInput from '@/components/inputs/TextareaInput'
 type GeneralInformationBlockProps = {
   infoHolder: TContractRequestDTO
   setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>
@@ -445,6 +446,12 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
         value={infoHolder.linkDrive || ''}
         handleChange={(value) => setInfoHolder((prev) => ({ ...prev, linkDrive: value }))}
         width="100%"
+      />
+      <TextareaInput
+        label="OBSERVAÇÕES COMERCIAIS"
+        placeholder="Preencha aqui observações relevantes sobre o projeto..."
+        value={infoHolder.obsComercial || ''}
+        handleChange={(value) => setInfoHolder((prev) => ({ ...prev, obsComercial: value }))}
       />
     </div>
   )

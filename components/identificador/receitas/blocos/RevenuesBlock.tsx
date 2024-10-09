@@ -20,12 +20,23 @@ import RevenuesFilterMenu from './RevenuesFilterMenu'
 
 type RevenuesBlockProps = {
   session: Session
+  storedRevenuesTypesFilter: string[]
 }
-function RevenuesBlock({ session }: RevenuesBlockProps) {
+function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProps) {
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
 
-  const { data: dashboardRevenues, isLoading, isSuccess, isError, error, queryParams, updateQueryParams } = useRevenueByFilters()
+  const {
+    data: dashboardRevenues,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+    queryParams,
+    updateQueryParams,
+  } = useRevenueByFilters({
+    initialQueryParams: { page: 1, search: '', status: [], types: storedRevenuesTypesFilter },
+  })
 
   const revenues = dashboardRevenues?.revenues
   const revenuesShowing = revenues ? revenues.length : 0

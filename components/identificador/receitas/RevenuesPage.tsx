@@ -8,11 +8,14 @@ import NewRevenue from './NewRevenue'
 
 type RevenuesPageProps = {
   session: Session
-  initialRevenuesTypesFilter: string[]
-  initialReceiptsTypesFilter: string[]
 }
-function RevenuesPage({ session, initialRevenuesTypesFilter, initialReceiptsTypesFilter }: RevenuesPageProps) {
+function RevenuesPage({ session }: RevenuesPageProps) {
   const [newRevenueModalIsOpen, setNewRevenueModalIsOpen] = useState<boolean>(false)
+  const storedReceiptsTypesFilterStr = localStorage.getItem('receipts-types-filter')
+  const storedReceiptsTypesFilter = storedReceiptsTypesFilterStr ? (JSON.parse(storedReceiptsTypesFilterStr) as string[]) : []
+  const storedRevenuesTypesFilterStr = localStorage.getItem('revenues-types-filter')
+  const storedRevenuesTypesFilter = storedRevenuesTypesFilterStr ? (JSON.parse(storedRevenuesTypesFilterStr) as string[]) : []
+  console.log('INITIAL RECEIPTS FILTERS', storedReceiptsTypesFilter)
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
@@ -25,10 +28,10 @@ function RevenuesPage({ session, initialRevenuesTypesFilter, initialReceiptsType
       </div>
       <div className="flex max-h-[600px] w-full flex-col gap-6 lg:flex-row">
         <div className="w-full lg:w-[40%]">
-          <ReceiptsBlock session={session} initialReceiptsTypesFilter={initialReceiptsTypesFilter} />
+          <ReceiptsBlock session={session} storedReceiptsTypesFilter={storedReceiptsTypesFilter} />
         </div>
         <div className="w-full lg:w-[60%]">
-          <RevenuesBlock session={session} />
+          <RevenuesBlock session={session} storedRevenuesTypesFilter={storedRevenuesTypesFilter} />
         </div>
       </div>
       {newRevenueModalIsOpen ? <NewRevenue session={session} closeModal={() => setNewRevenueModalIsOpen(false)} /> : null}

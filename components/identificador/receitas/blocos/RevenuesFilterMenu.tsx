@@ -51,9 +51,15 @@ function RevenuesFilterMenu({ queryParams, updateQueryParams, closeMenu }: Reven
                 label={'CATEGORIAS'}
                 selected={queryParamsHolder.types}
                 options={revenueSources}
-                handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, types: value as string[] }))}
+                handleChange={(value) => {
+                  setQueryParamsHolder((prev) => ({ ...prev, types: value as string[] }))
+                  localStorage.setItem('revenues-types-filter', JSON.stringify(value))
+                }}
                 selectedItemLabel={'NÃO DEFINIDO'}
-                onReset={() => setQueryParamsHolder((prev) => ({ ...prev, types: [] }))}
+                onReset={() => {
+                  setQueryParamsHolder((prev) => ({ ...prev, types: [] }))
+                  localStorage.setItem('revenues-types-filter', JSON.stringify([]))
+                }}
                 width="100%"
               />
             </div>

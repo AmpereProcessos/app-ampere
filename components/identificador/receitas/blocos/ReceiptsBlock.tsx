@@ -23,9 +23,9 @@ import { Session } from 'next-auth'
 
 type ReceiptsBlockProps = {
   session: Session
-  initialReceiptsTypesFilter: string[]
+  storedReceiptsTypesFilter: string[]
 }
-function ReceiptsBlock({ session, initialReceiptsTypesFilter }: ReceiptsBlockProps) {
+function ReceiptsBlock({ session, storedReceiptsTypesFilter }: ReceiptsBlockProps) {
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   const {
@@ -36,7 +36,7 @@ function ReceiptsBlock({ session, initialReceiptsTypesFilter }: ReceiptsBlockPro
     error,
     filters,
     setFilters,
-  } = usePendingReceipts({ initialFilters: { search: '', types: initialReceiptsTypesFilter } })
+  } = usePendingReceipts({ initialFilters: { search: '', types: storedReceiptsTypesFilter } })
   return (
     <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full items-center justify-between gap-2 border-b border-primary/30 pb-3">
@@ -141,7 +141,6 @@ type ReceiptsFilterMenuProps = {
   setFilters: React.Dispatch<React.SetStateAction<{ search: string; types: string[] }>>
 }
 function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
-  const [value, setValue] = useLocalStorage<string[]>('receipts-types-filter', [])
   return (
     <motion.div
       key={'editor'}
@@ -166,12 +165,12 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
         selected={filters.types}
         handleChange={(value) => {
           setFilters((prev) => ({ ...prev, types: value as string[] }))
-          setValue(value as string[])
+          localStorage.setItem('receipts-types-filter', JSON.stringify(value))
         }}
         options={revenueSources}
         onReset={() => {
           setFilters((prev) => ({ ...prev, types: [] }))
-          setValue([])
+          localStorage.setItem('receipts-types-filter', JSON.stringify([]))
         }}
         selectedItemLabel="NÃO DEFINIDO"
         width="100%"

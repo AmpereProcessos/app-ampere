@@ -120,13 +120,12 @@ async function fetchRevenueByFilters({ page, ...filters }: TRevenueQueryFilters 
     throw error
   }
 }
-export function useRevenueByFilters() {
-  const [queryParams, setQueryParams] = useState<TRevenueQueryFilters & { page: number }>({
-    page: 1,
-    search: '',
-    status: [],
-    types: [],
-  })
+
+type UseRevenueByFiltersParams = {
+  initialQueryParams: TRevenueQueryFilters & { page: number }
+}
+export function useRevenueByFilters({ initialQueryParams }: UseRevenueByFiltersParams) {
+  const [queryParams, setQueryParams] = useState<TRevenueQueryFilters & { page: number }>(initialQueryParams)
 
   function updateQueryParams(params: Partial<TRevenueQueryFilters & { page: number }>) {
     setQueryParams((prev) => ({ ...prev, ...params }))

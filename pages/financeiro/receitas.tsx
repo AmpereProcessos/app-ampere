@@ -1,26 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import dayjs from 'dayjs'
-import { AnimatePresence, motion } from 'framer-motion'
 
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { MdAttachMoney, MdOutlineAssignmentLate, MdOutlineWatchLater } from 'react-icons/md'
-
-import RevenueCard from '@/components/identificador/receitas/RevenueCard'
-import NewRevenue from '@/components/identificador/receitas/NewRevenue'
-import EditRevenue from '@/components/identificador/receitas/EditRevenue'
 import LoadingPage from '@/components/utils/LoadingPage'
-import TextInput from '@/components/inputs/Text'
 
-import ErrorComponent from '@/components/utils/ErrorComponent'
-
-import { useRevenues } from '@/utils/methods/query/revenues'
-import { TRevenueDTO } from '@/utils/schemas/revenues'
-import { formatToMoney } from '@/utils/constants'
-import { VscDiffAdded } from 'react-icons/vsc'
-import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { revenueSources } from '@/utils/select-options'
 import { useLocalStorage } from '@/lib/hooks/local-storage'
 import RevenuesPage from '@/components/identificador/receitas/RevenuesPage'
 
@@ -28,15 +11,13 @@ function Revenues() {
   const router = useRouter()
   const { data: session, status } = useSession({ required: true })
   const isAuthorized = !!session?.user.permissoes.rotas?.includes('ADM') || !!session?.user.permissoes.rotas?.includes('Pós-Venda')
-  const [revenueTypesFilter, setRevenueTypesFilter] = useLocalStorage<string[]>('revenues-types-filter', [])
-  const [receiptsTypesFilter, setReceiptsTypesFilter] = useLocalStorage<string[]>('receipts-types-filter', [])
 
   useEffect(() => {
     if (session?.user && !isAuthorized) router.push('/')
   }, [session?.user])
   if (status != 'authenticated') return <LoadingPage />
 
-  return <RevenuesPage session={session} initialReceiptsTypesFilter={revenueTypesFilter} initialRevenuesTypesFilter={receiptsTypesFilter} />
+  return <RevenuesPage session={session} />
 }
 export default Revenues
 

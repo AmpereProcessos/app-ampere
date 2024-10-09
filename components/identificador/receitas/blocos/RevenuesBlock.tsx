@@ -23,6 +23,7 @@ type RevenuesBlockProps = {
   storedRevenuesTypesFilter: string[]
 }
 function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProps) {
+  console.log('TESTE')
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
 

@@ -159,6 +159,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
         }}
         placeholder="Filtre pelo nome da receita..."
         labelClassName="text-xs font-medium tracking-tight text-black"
+        width="100%"
       />
       <MultipleSelectInput
         label="TIPO DA RECEITA"
@@ -173,6 +174,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
           setValue([])
         }}
         selectedItemLabel="NÃO DEFINIDO"
+        width="100%"
       />
     </motion.div>
   )

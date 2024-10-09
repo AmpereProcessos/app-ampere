@@ -43,7 +43,7 @@ export const InsertMaterialSchema = z.object({
   qtde: z.number({ required_error: 'Quantidade do material não fornecido.', invalid_type_error: 'Tipo não válido para o quantidade do material.' }),
   qtdeMaxima: z
     .number({
-      required_error: 'uantidade máxima do material não fornecido.',
+      required_error: 'Quantidade máxima do material não fornecido.',
       invalid_type_error: 'Tipo não válido para o quantidade máxima do material.',
     })
     .optional()

@@ -32,6 +32,7 @@ async function fetchRevenues() {
 export function useRevenues() {
   const [filters, setFilters] = useState({
     search: '',
+    types: [] as string[],
     received: false,
     notReceived: false,
     dueToday: false,
@@ -67,11 +68,20 @@ export function useRevenues() {
     const hasPendenciesOverdue = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento && isAfter(fraction.dataPrevisaoRecebimento))
     return hasPendenciesOverdue
   }
-
+  function matchTypes(revenue: TRevenueDTO) {
+    if (filters.types.length == 0) return true
+    return filters.types.includes(revenue.tipo)
+  }
   function handleModelData(data: TRevenueDTO[]) {
     var modeledData = data
     return modeledData.filter(
-      (revenue) => matchSearch(revenue) && matchReceived(revenue) && matchNotReceived(revenue) && matchDueToday(revenue) && matchOverDue(revenue)
+      (revenue) =>
+        matchSearch(revenue) &&
+        matchReceived(revenue) &&
+        matchNotReceived(revenue) &&
+        matchDueToday(revenue) &&
+        matchOverDue(revenue) &&
+        matchTypes(revenue)
     )
   }
   return {

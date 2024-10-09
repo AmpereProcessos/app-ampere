@@ -155,3 +155,22 @@ const RevenueEntitySchema = z.object({
 export type TRevenue = z.infer<typeof GeneralRevenueSchema>
 
 export type TRevenueDTO = TRevenue & { _id: string }
+
+export const RevenueQueryFilters = z.object({
+  search: z.string({ required_error: 'Filtro de pesquisa não informado.', invalid_type_error: 'Tipo não válido para o filtro de pesquisa.' }),
+  status: z.array(
+    z.enum(['RECEBIDO', 'RECEBIDO PARCIAL', 'PENDENTE'], {
+      required_error: 'Status de filtro não informado.',
+      invalid_type_error: 'Tipo não válido para status de filtro.',
+    }),
+    {
+      required_error: 'Lista de status de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para a lista de status de filtro.',
+    }
+  ),
+  types: z.array(z.string({ invalid_type_error: 'Tipo não válido para o tipo da receita.' }), {
+    required_error: 'Lista de tipos da receita não informada.',
+    invalid_type_error: 'Tipo não válido para lista de tipos da receita.',
+  }),
+})
+export type TRevenueQueryFilters = z.infer<typeof RevenueQueryFilters>

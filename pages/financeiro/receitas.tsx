@@ -19,6 +19,8 @@ import { useRevenues } from '@/utils/methods/query/revenues'
 import { TRevenueDTO } from '@/utils/schemas/revenues'
 import { formatToMoney } from '@/utils/constants'
 import { VscDiffAdded } from 'react-icons/vsc'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { revenueSources } from '@/utils/select-options'
 
 function Receitas() {
   const router = useRouter()
@@ -28,8 +30,7 @@ function Receitas() {
       router.push('/auth/signin')
     },
   })
-
-  const isAuthorized = !!session?.user.permissoes.rotas?.includes('ADM')
+  const isAuthorized = !!session?.user.permissoes.rotas?.includes('ADM') || !!session?.user.permissoes.rotas?.includes('Pós-Venda')
 
   const { data: revenues, isLoading, isError, isSuccess, filters, setFilters } = useRevenues()
 
@@ -161,6 +162,14 @@ function Receitas() {
                   value={filters.search}
                   placeholder={'Digite o nome da receita...'}
                   handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                />
+                <MultipleSelectInput
+                  label="TIPO DA RECEITA"
+                  selected={filters.types}
+                  options={revenueSources}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, types: value as string[] }))}
+                  onReset={() => setFilters((prev) => ({ ...prev, types: [] }))}
+                  selectedItemLabel="NÃO DEFINIDO"
                 />
                 <button
                   onClick={() => setFilters((prev) => ({ ...prev, received: !prev.received }))}

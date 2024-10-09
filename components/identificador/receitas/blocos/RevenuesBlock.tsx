@@ -136,7 +136,7 @@ function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
         <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">{formatToMoney(revenue.total)}</h1>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-        <div className="flex items-center gap-1">
+        <div className="flex w-fit min-w-fit items-center gap-1">
           <MdDashboard width={10} height={10} />
           <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{revenue.tipo}</h1>
         </div>

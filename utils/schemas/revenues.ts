@@ -153,9 +153,36 @@ const RevenueEntitySchema = z.object({
 })
 
 export type TRevenue = z.infer<typeof GeneralRevenueSchema>
-
+export type TRevenueSimplified = Pick<
+  TRevenue,
+  'nome' | 'projeto' | 'tipo' | 'total' | 'fracionamento' | 'efetivacao' | 'metodo' | 'autor' | 'dataInsercao'
+>
 export type TRevenueDTO = TRevenue & { _id: string }
+export type TRevenueSimplifiedDTO = TRevenueSimplified & { _id: string }
 
+export type TReceiptUnwindSimplifiedDTO = {
+  _id: string
+  nome: TRevenue['nome']
+  total: TRevenue['total']
+  metodo: TRevenue['metodo']
+  tipo: TRevenue['tipo']
+  fracionamento: TRevenue['fracionamento'][number]
+  indexFracionamento: number
+}
+
+export const RevenueSimplifiedProjection = {
+  nome: 1,
+  projeto: 1,
+  tipo: 1,
+  total: 1,
+  'fracionamento.valor': 1,
+  'fracionamento.porcentagem': 1,
+  'fracionamento.dataRecebimento': 1,
+  efetivacao: 1,
+  metodo: 1,
+  autor: 1,
+  dataInsercao: 1,
+}
 export const RevenueQueryFilters = z.object({
   search: z.string({ required_error: 'Filtro de pesquisa não informado.', invalid_type_error: 'Tipo não válido para o filtro de pesquisa.' }),
   status: z.array(

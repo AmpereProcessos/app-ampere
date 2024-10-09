@@ -1,7 +1,9 @@
-import { validateAuthenticationWithSession } from '@/utils/api'
-import { RevenueQueryFilters, TRevenue } from '@/utils/schemas/revenues'
+import { getRevenuesByFilters } from '@/repositories/revenues/queries'
+import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
+import { RevenueQueryFilters, TRevenue, TRevenueSimplified, TRevenueSimplifiedDTO } from '@/utils/schemas/revenues'
+import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
-import { Filter } from 'mongodb'
+import { Collection, Filter } from 'mongodb'
 import { NextApiHandler } from 'next'
 import { z } from 'zod'
 
@@ -9,8 +11,14 @@ const QuerySchema = z.object({
   page: z.string({ required_error: 'Parâmetro de páginação não informado.' }),
 })
 
-const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<any> = async (req, res) => {
-  const PAGE_SIZE = 200
+export type TRevenuesByFiltersResult = {
+  revenues: TRevenueSimplifiedDTO[]
+  revenuesMatched: number
+  totalPages: number
+}
+
+const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<{ data: TRevenuesByFiltersResult }> = async (req, res) => {
+  const PAGE_SIZE = 50
   const session = await validateAuthenticationWithSession(req, res)
 
   const { page } = QuerySchema.parse(req.query)
@@ -28,28 +36,28 @@ const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<any> = async (
   }
   if (filters.status.includes('RECEBIDO')) {
     orConditions.push({
-      recebimentos: {
+      fracionamento: {
         $elemMatch: {
-          efetivado: true,
+          dataRecebimento: { $ne: null },
         },
       },
     })
   }
   if (filters.status.includes('RECEBIDO PARCIAL')) {
     orConditions.push({
-      recebimentos: {
+      fracionamento: {
         $elemMatch: {
-          efetivado: false,
+          dataRecebimento: null,
         },
       },
     })
   }
   if (filters.status.includes('PENDENTE')) {
     orConditions.push({
-      recebimentos: {
+      fracionamento: {
         $not: {
           $elemMatch: {
-            efetivado: true,
+            dataRecebimento: null,
           },
         },
       },
@@ -62,7 +70,18 @@ const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<any> = async (
   }
 
   const andConditionsQuery = andConditions.reduce((acc, current) => ({ ...acc, ...current }), {})
-  const orConditionsQuery = orConditions.reduce((acc, current) => ({ ...acc, ...current }), {})
+  const orConditionsQuery = orConditions.length > 0 ? { $or: orConditions } : {}
+  const query: Filter<TRevenue> = { ...andConditionsQuery, ...orConditionsQuery }
 
-  const query: Filter<TRevenue> = {}
+  const skip = PAGE_SIZE * (Number(page) - 1)
+  const limit = PAGE_SIZE
+  const db = await connectToDatabase(process.env.MONGODB_URI, 'projetos')
+  const collection: Collection<TRevenue> = db.collection('receitas')
+
+  const { revenues, revenuesMatched } = await getRevenuesByFilters({ collection, query, skip, limit })
+  const totalPages = Math.round(revenuesMatched / PAGE_SIZE)
+
+  return res.status(200).json({ data: { revenues, revenuesMatched, totalPages } })
 }
+
+export default apiHandler({ POST: getRevenuesSearchByPersonalizedFiltersRoute })

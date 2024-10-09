@@ -1,8 +1,10 @@
-import { TRevenueDTO } from '@/utils/schemas/revenues'
+import { TRevenuesByFiltersResult } from '@/pages/api/receitas/search'
+import { TReceiptUnwindSimplifiedDTO, TRevenueDTO, TRevenueQueryFilters } from '@/utils/schemas/revenues'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { formatWithoutDiacritics } from '../formatting'
 
 // Expenses by Project
 async function fetchProjectRevenues({ projectId }: { projectId: string }) {
@@ -108,4 +110,70 @@ export function useRevenueById({ id }: { id: string }) {
     queryKey: ['revenue-by-id', id],
     queryFn: () => fetchRevenueById({ id }),
   })
+}
+
+async function fetchRevenueByFilters({ page, ...filters }: TRevenueQueryFilters & { page: number }) {
+  try {
+    const { data } = await axios.post(`/api/receitas/search?page=${page}`, filters)
+    return data.data as TRevenuesByFiltersResult
+  } catch (error) {
+    throw error
+  }
+}
+export function useRevenueByFilters() {
+  const [queryParams, setQueryParams] = useState<TRevenueQueryFilters & { page: number }>({
+    page: 1,
+    search: '',
+    status: [],
+    types: [],
+  })
+
+  function updateQueryParams(params: Partial<TRevenueQueryFilters & { page: number }>) {
+    setQueryParams((prev) => ({ ...prev, ...params }))
+  }
+
+  const query = useQuery({
+    queryKey: ['revenues-by-filters', queryParams],
+    queryFn: async () => await fetchRevenueByFilters(queryParams),
+  })
+
+  return { ...query, queryParams, updateQueryParams }
+}
+
+async function fetchPendingReceipts() {
+  try {
+    const { data } = await axios.get('/api/receitas/recebimentos')
+    return data.data as TReceiptUnwindSimplifiedDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UsePendingReceiptsParams = {
+  initialFilters: { search: string; types: string[] }
+}
+export function usePendingReceipts({ initialFilters }: UsePendingReceiptsParams) {
+  const [filters, setFilters] = useState(initialFilters)
+
+  function matchSearch(receipt: TReceiptUnwindSimplifiedDTO) {
+    if (filters.search.trim.length == 0) return true
+    return formatWithoutDiacritics(receipt.nome, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
+  function matchTypes(receipt: TReceiptUnwindSimplifiedDTO) {
+    if (filters.types.length == 0) return true
+    return filters.types.includes(receipt.tipo)
+  }
+  function handleModelData(data: TReceiptUnwindSimplifiedDTO[]) {
+    return data.filter((receipt) => matchSearch(receipt) && matchTypes(receipt))
+  }
+
+  return {
+    ...useQuery({
+      queryKey: ['receipts'],
+      queryFn: fetchPendingReceipts,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
 }

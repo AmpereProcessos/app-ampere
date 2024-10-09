@@ -23,6 +23,9 @@ import { TRevenue, TRevenueDTO } from '@/utils/schemas/revenues'
 import { formatDate } from '../../../utils/constants'
 import { BsCode } from 'react-icons/bs'
 import { FaUser } from 'react-icons/fa'
+import LoadingComponent from '@/components/utils/LoadingComponent'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import { getErrorMessage } from '@/utils/methods/handlers'
 
 function getMissingPercentage({ fractionnement }: { fractionnement: TRevenueDTO['fracionamento'] }) {
   const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
@@ -35,7 +38,7 @@ type EditRevenueProps = {
 }
 function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
   const queryClient = useQueryClient()
-  const { data: revenue } = useRevenueById({ id: revenueId })
+  const { data: revenue, isLoading, isError, isSuccess, error } = useRevenueById({ id: revenueId })
   const [infoHolder, setInfoHolder] = useState<TRevenue>({
     nome: '',
     tipo: '',
@@ -82,7 +85,7 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
     }))
   }
 
-  const { mutate: handleEditRevenue, isLoading } = useMutationWithFeedback({
+  const { mutate: handleEditRevenue, isLoading: isUpdateLoading } = useMutationWithFeedback({
     mutationKey: ['edit-revenue', revenueId],
     mutationFn: editRevenue,
     queryClient: queryClient,
@@ -106,118 +109,124 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
-            {infoHolder.projeto.id ? (
-              <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
-                <div className="flex items-center gap-2">
-                  <BsCode size={'20px'} color="rgb(31,41,55)" />
-                  <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
+          {isLoading ? <LoadingComponent /> : null}
+          {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+          {isSuccess ? (
+            <>
+              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <ProjectVinculationMenu handleLink={handleLink} handleUnlink={handleUnlink} />
+                {infoHolder.projeto.id ? (
+                  <div className="flex w-[90%] flex-col items-center justify-center gap-2 self-center rounded border border-gray-500 p-3 md:flex-row md:gap-4 lg:w-1/2">
+                    <div className="flex items-center gap-2">
+                      <BsCode size={'20px'} color="rgb(31,41,55)" />
+                      <p className="cursor-pointer font-raleway text-sm font-medium">#{infoHolder.projeto.identificador || 'N/A'}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FaUser size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="NOME DA RECEITA"
+                      placeholder="Preencha o nome da receita..."
+                      value={infoHolder.nome}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <SelectInput
+                      label="TIPO"
+                      options={revenueSources}
+                      selectedItemLabel="NÃO DEFINIDO"
+                      value={infoHolder.tipo}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, tipo: value }))}
+                      onReset={() => setInfoHolder((prev) => ({ ...prev, tipo: revenueSources[0].value }))}
+                      width="100%"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <FaUser size={'20px'} color="rgb(31,41,55)" />
-                  <p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || 'N/A'}</p>
+                <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <SelectInput
+                      label="MÉTODO DE PAGAMENTO"
+                      options={paymentMethods}
+                      selectedItemLabel="NÃO DEFINIDO"
+                      value={infoHolder.metodo}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, metodo: value }))}
+                      onReset={() => setInfoHolder((prev) => ({ ...prev, metodo: paymentMethods[0].value }))}
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <NumberInput
+                      label="VALOR"
+                      placeholder="Preencha aqui o valor da receita..."
+                      value={infoHolder.total}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, total: value }))}
+                      width="100%"
+                    />
+                  </div>
                 </div>
-              </div>
-            ) : null}
-            <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
-              <div className="w-full lg:w-1/2">
-                <TextInput
-                  label="NOME DA RECEITA"
-                  placeholder="Preencha o nome da receita..."
-                  value={infoHolder.nome}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
-                  width="100%"
+                <h1 className="font-Inter w-fit self-center rounded-md bg-gray-300 p-2 text-xs font-medium leading-none tracking-tight text-gray-700">
+                  OBS: O parâmetro de efetivação se refere a data em que a receita entra no regime de competência.
+                </h1>
+                <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
+                  <div className="flex w-full items-center justify-center lg:w-1/2">
+                    <CheckboxInput
+                      checked={!!infoHolder.efetivacao.efetivado}
+                      labelFalse={'EFETIVADO'}
+                      labelTrue={'EFETIVADO'}
+                      justify="justify-center"
+                      handleChange={(value) =>
+                        setInfoHolder((prev) => ({
+                          ...prev,
+                          efetivacao: {
+                            ...prev.efetivacao,
+                            efetivado: value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="flex w-full items-center justify-center lg:w-1/2">
+                    <DateInput
+                      label={infoHolder.efetivacao.efetivado ? 'DATA DA EFETIVAÇÃO' : 'PREVISÃO DE EFETIVAÇÃO'}
+                      labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                      value={infoHolder.efetivacao.data ? formatDate(infoHolder.efetivacao.data) : undefined}
+                      handleChange={(value) =>
+                        setInfoHolder((prev) => ({
+                          ...prev,
+                          efetivacao: {
+                            ...prev.efetivacao,
+                            data: formatDateInputChange(value),
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+                <Fractionnements
+                  infoHolder={infoHolder}
+                  setInfoHolder={setInfoHolder}
+                  missingPercentage={getMissingPercentage({ fractionnement: infoHolder.fracionamento })}
                 />
               </div>
-              <div className="w-full lg:w-1/2">
-                <SelectInput
-                  label="TIPO"
-                  options={revenueSources}
-                  selectedItemLabel="NÃO DEFINIDO"
-                  value={infoHolder.tipo}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, tipo: value }))}
-                  onReset={() => setInfoHolder((prev) => ({ ...prev, tipo: revenueSources[0].value }))}
-                  width="100%"
-                />
+              <div className="mt-2 flex w-full items-center justify-end">
+                <button
+                  disabled={isUpdateLoading}
+                  // @ts-ignore
+                  onClick={() => handleEditRevenue({ id: revenueId, changes: infoHolder })}
+                  className="w-fit rounded border border-blue-500 py-1 px-4 text-sm font-medium text-blue-500 disabled:border-gray-500 disabled:text-gray-500 hover:bg-blue-500 hover:text-white"
+                >
+                  ATUALIZAR RECEITA
+                </button>
               </div>
-            </div>
-            <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
-              <div className="w-full lg:w-1/2">
-                <SelectInput
-                  label="MÉTODO DE PAGAMENTO"
-                  options={paymentMethods}
-                  selectedItemLabel="NÃO DEFINIDO"
-                  value={infoHolder.metodo}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, metodo: value }))}
-                  onReset={() => setInfoHolder((prev) => ({ ...prev, metodo: paymentMethods[0].value }))}
-                  width="100%"
-                />
-              </div>
-              <div className="w-full lg:w-1/2">
-                <NumberInput
-                  label="VALOR"
-                  placeholder="Preencha aqui o valor da receita..."
-                  value={infoHolder.total}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, total: value }))}
-                  width="100%"
-                />
-              </div>
-            </div>
-            <h1 className="font-Inter w-fit self-center rounded-md bg-gray-300 p-2 text-xs font-medium leading-none tracking-tight text-gray-700">
-              OBS: O parâmetro de efetivação se refere a data em que a receita entra no regime de competência.
-            </h1>
-            <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
-              <div className="flex w-full items-center justify-center lg:w-1/2">
-                <CheckboxInput
-                  checked={!!infoHolder.efetivacao.efetivado}
-                  labelFalse={'EFETIVADO'}
-                  labelTrue={'EFETIVADO'}
-                  justify="justify-center"
-                  handleChange={(value) =>
-                    setInfoHolder((prev) => ({
-                      ...prev,
-                      efetivacao: {
-                        ...prev.efetivacao,
-                        efetivado: value,
-                      },
-                    }))
-                  }
-                />
-              </div>
-              <div className="flex w-full items-center justify-center lg:w-1/2">
-                <DateInput
-                  label={infoHolder.efetivacao.efetivado ? 'DATA DA EFETIVAÇÃO' : 'PREVISÃO DE EFETIVAÇÃO'}
-                  labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
-                  value={infoHolder.efetivacao.data ? formatDate(infoHolder.efetivacao.data) : undefined}
-                  handleChange={(value) =>
-                    setInfoHolder((prev) => ({
-                      ...prev,
-                      efetivacao: {
-                        ...prev.efetivacao,
-                        data: formatDateInputChange(value),
-                      },
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <Fractionnements
-              infoHolder={infoHolder}
-              setInfoHolder={setInfoHolder}
-              missingPercentage={getMissingPercentage({ fractionnement: infoHolder.fracionamento })}
-            />
-          </div>
-          <div className="mt-2 flex w-full items-center justify-end">
-            <button
-              disabled={isLoading}
-              // @ts-ignore
-              onClick={() => handleEditRevenue({ id: revenueId, changes: infoHolder })}
-              className="w-fit rounded border border-blue-500 py-1 px-4 text-sm font-medium text-blue-500 disabled:border-gray-500 disabled:text-gray-500 hover:bg-blue-500 hover:text-white"
-            >
-              ATUALIZAR RECEITA
-            </button>
-          </div>
+            </>
+          ) : null}
         </div>
       </div>
     </div>

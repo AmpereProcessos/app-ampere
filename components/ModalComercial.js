@@ -168,7 +168,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   setChanges={setChanges}
                   updateLogs={updateLogs || []}
                   showDeliveryInfoOnly={false}
-                  showMonetaryValues={true}
+                  showMonetaryValues={false}
                 />
               )}
               {/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (

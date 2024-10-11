@@ -8,7 +8,7 @@ import SelectInputVirtualized from '../inputs/SelectVirtualized'
 import AllCities from '../../utils/jsons/cidades.json'
 import TextInput from '../inputs/Text'
 import { useSession } from 'next-auth/react'
-import { FaFilePdf } from 'react-icons/fa'
+import { FaFile, FaFilePdf } from 'react-icons/fa'
 import Link from 'next/link'
 import { allSellers, insiders, serviceTypes } from '@/utils/select-options'
 import toast from 'react-hot-toast'
@@ -725,12 +725,18 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
         </div>
       )}
       {infoHolder.idSolicitacaoContrato ? (
-        <div className="flex w-full items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+          <Link href={`/comercial/pdfProcuracao/${infoHolder.idSolicitacaoContrato}`}>
+            <button className="flex items-center gap-2 rounded border border-gray-600 px-4 py-2 text-gray-600 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400">
+              <FaFile />
+              <p className="text-xs font-bold tracking-tight">TEMPLATE DE PROCURAÇÃO</p>
+            </button>
+          </Link>
           <Link href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}>
-            <div className="mt-2 flex cursor-pointer items-center rounded border border-orange-200 p-2 py-2 pl-2 duration-300 ease-in hover:scale-[1.02] hover:bg-orange-200">
-              <FaFilePdf style={{ color: '#fead41', fontSize: '20px' }} />
-              <p className="pl-3 text-sm font-medium text-gray-600">SOLICITAÇÃO DE CONTRATO</p>
-            </div>
+            <button className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400">
+              <FaFile />
+              <p className="text-xs font-bold tracking-tight">SOLICITAÇÃO DE CONTRATO</p>
+            </button>
           </Link>
         </div>
       ) : null}

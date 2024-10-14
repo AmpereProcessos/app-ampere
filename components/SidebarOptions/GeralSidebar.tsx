@@ -210,7 +210,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               </div>
             </Link>
           )}
-          {checkRoute('Suprimentos') ? (
+          {checkRoute('Suprimentos') || checkRoute('Pós-Venda') ? (
             <Link href="/suprimentos/entregas">
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <TbTruckDelivery style={{ color: '#15599a', fontSize: '20px' }} />

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { getProjectNestedFieldValue } from '../formatting'
+import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 import { TProjectDTO } from '@/utils/schemas/projects'
 
 async function fetchProjects() {
@@ -104,8 +104,28 @@ export function useProjectsInDelivery() {
     cities: [],
     ufs: [],
   })
+  function matchSearch(project: TProjectDTO) {
+    if (filters.search.trim().length == 0) return true
+    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
+  }
 
-  const query = useQuery({ queryKey: ['projects-in-delivery'], queryFn: fetchProjectsInDelivery })
+  function matchDeliveryStatus(project: TProjectDTO) {
+    if (filters.deliveryStatus.length == 0) return true
+    return filters.deliveryStatus.includes(project.compra.statusEntrega || '')
+  }
+  function matchCity(project: TProjectDTO) {
+    if (filters.cities.length == 0) return true
+    return filters.cities.includes(project.cidade)
+  }
+  function matchUf(project: TProjectDTO) {
+    if (filters.ufs.length == 0) return true
+    return filters.ufs.includes(project.uf)
+  }
+
+  function handleModelData(data: TProjectDTO[]) {
+    return data.filter((project) => matchSearch(project) && matchDeliveryStatus(project) && matchCity(project) && matchUf(project))
+  }
+  const query = useQuery({ queryKey: ['projects-in-delivery'], queryFn: fetchProjectsInDelivery, select: (data) => handleModelData(data) })
 
   return { ...query, filters, setFilters }
 }

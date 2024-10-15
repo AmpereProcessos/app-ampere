@@ -1,10 +1,12 @@
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { TProject } from '@/utils/schemas/projects'
 import connectToDatabase from '@/utils/services/mongodb/projects'
+import dayjs from 'dayjs'
 import { Db } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getProjectsInDeliveryProcessRoute: NextApiHandler<any> = async (req, res) => {
+  const afterDateWithMargin = dayjs().subtract(7, 'days').startOf('day').toISOString()
   const session = await validateAuthenticationWithSession(req, res)
 
   const db: Db = await connectToDatabase(process.env.DB_KEY)
@@ -17,8 +19,7 @@ const getProjectsInDeliveryProcessRoute: NextApiHandler<any> = async (req, res) 
         'compra.liberacao': true,
         'compra.dataLiberacao': { $ne: null },
         'compra.dataPedido': { $ne: null },
-        'compra.statusEntrega': { $ne: 'ENTREGUE' },
-        'compra.status': { $ne: 'CONCLUIDA' },
+        $or: [{ 'compra.dataEntrega': null, 'compra.status': { $ne: 'CONCLUIDA' } }, { 'compra.dataEntrega': { $gte: afterDateWithMargin } }],
       },
       {
         projection: {

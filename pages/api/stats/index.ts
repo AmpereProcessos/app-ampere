@@ -603,7 +603,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 
       if (!acc.porVendedor[currentSeller]) acc.porVendedor[currentSeller] = 0
       acc.porVendedor[currentSeller] += currentTotal
-      acc.total = currentTotal
+      acc.total += currentTotal
       return acc
     },
     {

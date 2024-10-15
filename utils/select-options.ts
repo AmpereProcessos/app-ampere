@@ -13,6 +13,7 @@ import {
   MdWest,
 } from 'react-icons/md'
 import { TbTopologyFull } from 'react-icons/tb'
+import { TPurchaseControl } from './schemas/purchases'
 
 export const ContractRequestPaymentOptions = [
   {
@@ -1505,4 +1506,27 @@ export const revenueSources = [
     value: 'CONSÓRCIO DE ENERGIA',
   },
   { id: 17, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
+]
+
+export const PurchaseControlStatus = [
+  { id: 1, label: 'INDEFINIDO', value: 'INDEFINIDO' },
+  { id: 2, label: 'AGUARDANDO LIBERAÇÃO', value: 'AGUARDANDO LIBERAÇÃO' },
+  { id: 3, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
+  { id: 4, label: 'PENDÊNCIA COMERCIAL', value: 'PENDÊNCIA COMERCIAL' },
+  { id: 5, label: 'PENDÊNCIA OPERACIONAL', value: 'PENDÊNCIA OPERACIONAL' },
+  { id: 6, label: 'PENDÊNCIA EXTERNA', value: 'PENDÊNCIA EXTERNA' },
+  { id: 7, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
+]
+export const PurchaseCompositionItemCategories = [
+  { id: 1, label: 'MÓDULO', value: 'MÓDULO', icon: FaSolarPanel as React.ComponentType },
+  { id: 2, label: 'INVERSOR', value: 'INVERSOR', icon: TbTopologyFull as React.ComponentType },
+  { id: 3, label: 'INSUMO', value: 'INSUMO', icon: MdOutlineSettingsInputComponent as React.ComponentType },
+  { id: 4, label: 'ESTRUTURA', value: 'ESTRUTURA', icon: BsFillHouseFill as React.ComponentType },
+  { id: 5, label: 'PADRÃO', value: 'PADRÃO', icon: MdElectricMeter as React.ComponentType },
+  { id: 6, label: 'OUTROS', value: 'OUTROS', icon: BsCart as React.ComponentType },
+]
+export const PurchaseDeliveryStatus: { id: number; label: string; value: TPurchaseControl['entrega']['status'] }[] = [
+  { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
+  { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
+  { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
 ]

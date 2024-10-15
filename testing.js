@@ -1,3 +1,13 @@
+const status = [
+  'INDEFINIDO',
+  'AGUARDANDO LIBERAÇÃO',
+  'AGUARDANDO PAGAMENTO',
+  'PENDÊNCIA COMERCIAL',
+  'PENDÊNCIA OPERACIONAL',
+  'PENDÊNCIA EXTERNA',
+  'CONCLUÍDA',
+]
+console.log(status.map((s, index) => ({ id: index + 1, label: s, value: s })))
 // const activeCreditors = [
 //   'BRADESCO',
 //   'CREDIPONTAL',

@@ -15,7 +15,7 @@ import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { VscChromeClose } from 'react-icons/vsc'
 import DateInput from '@/components/inputs/Date'
-import { fileTypes, formatDate, formatLongString, getFileTypeTitle, isFileImage } from '@/utils/constants'
+import { fileTypes, formatDate, formatLongString, GeneralVisibleHiddenExitMotionVariants, getFileTypeTitle, isFileImage } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import Image from 'next/image'
 import { Pencil } from 'lucide-react'
@@ -27,7 +27,13 @@ import axios from 'axios'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useQueryClient } from 'react-query'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
+import TextInput from '@/components/inputs/Text'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { deliveryStatus } from '@/utils/select-options'
+import StatesAndCities from '@/utils/jsons/estados-cidades.json'
 
+const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
+const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }))
 function DeliveriesPage() {
   const { data: session, status } = useSession({ required: true })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
@@ -56,10 +62,47 @@ function DeliveriesPage() {
       <AnimatePresence>
         {dropdownMenuVisible ? (
           <motion.div
-            initial={{ scale: 0.8, opacity: 0.6 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="mt-4 flex w-full flex-col gap-y-2"
-          ></motion.div>
+            key={'editor'}
+            variants={GeneralVisibleHiddenExitMotionVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+          >
+            <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
+            <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
+              <TextInput
+                label="NOME DO PROJETO"
+                value={filters.search}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                placeholder="Filtro pelo nome do projeto..."
+              />
+              <MultipleSelectInput
+                label="STATUS DE ENTREGA"
+                selected={filters.deliveryStatus}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, deliveryStatus: value as string[] }))}
+                options={deliveryStatus}
+                onReset={() => setFilters((prev) => ({ ...prev, deliveryStatus: [] }))}
+                selectedItemLabel="NÃO DEFINIDO"
+              />
+              <MultipleSelectInput
+                label="CIDADE"
+                selected={filters.cities}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, cities: value as string[] }))}
+                options={AllCities}
+                onReset={() => setFilters((prev) => ({ ...prev, cities: [] }))}
+                selectedItemLabel="NÃO DEFINIDO"
+              />
+              <MultipleSelectInput
+                label="ESTADOS"
+                selected={filters.ufs}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, ufs: value as string[] }))}
+                options={AllStates}
+                onReset={() => setFilters((prev) => ({ ...prev, ufs: [] }))}
+                selectedItemLabel="NÃO DEFINIDO"
+              />
+            </div>
+          </motion.div>
         ) : null}
       </AnimatePresence>
       <div className="flex w-full flex-col gap-2 py-4">

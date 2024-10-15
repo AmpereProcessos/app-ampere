@@ -1,5 +1,5 @@
 import { IconType } from 'react-icons/lib'
-import { ProductItemCategories } from '../select-options'
+import { ProductItemCategories, units } from '../select-options'
 import { TProductItem } from '../schemas/crm/kits.schema'
 import { BsCart } from 'react-icons/bs'
 import { fileTypes } from '../constants'
@@ -69,4 +69,8 @@ export function renderPagesIcons({
       {p}
     </button>
   ))
+}
+export function renderUnitLabel(str: string) {
+  const unit = units.find((u) => u.value == str)
+  return unit?.label || str
 }

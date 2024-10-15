@@ -11,6 +11,10 @@ import PurchaseControlCompositionBlock from './blocos/CompositionBlock'
 import PurchaseControlOrderInformationBlock from './blocos/OrderInformationBlock'
 import PurchaseControlTransportationInformationBlock from './blocos/TransportationInformationBlock'
 import PurchaseControlBillingInformationBlock from './blocos/BillingInformationBlock'
+import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
+import PurchaseControlDeliveryInformationBlock from './blocos/DeliveryInformationBlock'
+import PurchaseControlUpdatesInformationBlock from './blocos/UpdatesInformationBlock'
+import PurchaseControlTagsBlock from './blocos/TagsBlock'
 
 type NewPurchaseControlProps = {
   session: Session
@@ -20,7 +24,7 @@ type NewPurchaseControlProps = {
 function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurchaseControlProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
-    status: 'INDEFINIDO',
+    status: 'PENDENTE',
     titulo: '',
     anotacoes: '',
     projeto: {},
@@ -74,11 +78,25 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
             </button>
           </div>
           <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <PurchaseControlGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            {/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
             <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            <PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+          </div>
+          <div className="flex w-full items-center justify-end">
+            <LoadingButton
+              loading={isLoading}
+              onClick={() =>
+                // @ts-ignore
+                mutate(infoHolder)
+              }
+            >
+              CRIAR CONTROLE DE COMPRA
+            </LoadingButton>
           </div>
         </div>
       </Dialog.Content>

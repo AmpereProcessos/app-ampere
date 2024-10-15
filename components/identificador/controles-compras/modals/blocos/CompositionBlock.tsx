@@ -150,7 +150,7 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/2">
             <NumberInput
-              label="TOTAL PREVISTO PARA A COPRA"
+              label="TOTAL PREVISTO PARA A COMPRA"
               placeholder="Preencha o valor previsto para a compra..."
               value={infoHolder.totalPrevisto || null}
               handleChange={(value) => setInfoHolder((prev) => ({ ...prev, totalPrevisto: value }))}
@@ -159,7 +159,7 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
           </div>
           <div className="w-full lg:w-1/2">
             <NumberInput
-              label="TOTAL DA COPRA"
+              label="TOTAL DA COMPRA"
               placeholder="Preencha o valor total da compra..."
               value={infoHolder.total}
               handleChange={(value) => setInfoHolder((prev) => ({ ...prev, total: value }))}

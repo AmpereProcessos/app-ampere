@@ -1509,12 +1509,12 @@ export const revenueSources = [
 ]
 
 export const PurchaseControlStatus = [
-  { id: 1, label: 'INDEFINIDO', value: 'INDEFINIDO' },
-  { id: 2, label: 'AGUARDANDO LIBERAÇÃO', value: 'AGUARDANDO LIBERAÇÃO' },
-  { id: 3, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
-  { id: 4, label: 'PENDÊNCIA COMERCIAL', value: 'PENDÊNCIA COMERCIAL' },
-  { id: 5, label: 'PENDÊNCIA OPERACIONAL', value: 'PENDÊNCIA OPERACIONAL' },
-  { id: 6, label: 'PENDÊNCIA EXTERNA', value: 'PENDÊNCIA EXTERNA' },
+  { id: 1, label: 'PENDENTE', value: 'PENDENTE' },
+  { id: 2, label: 'EM ANÁLISE', value: 'EM ANÁLISE' },
+  { id: 3, label: 'AGUARDANDO APROVAÇÃO', value: 'AGUARDANDO APROVAÇÃO' },
+  { id: 4, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
+  { id: 5, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA' },
+  { id: 6, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
   { id: 7, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
 ]
 export const PurchaseCompositionItemCategories = [
@@ -1529,4 +1529,27 @@ export const PurchaseDeliveryStatus: { id: number; label: string; value: TPurcha
   { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
   { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
   { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
+]
+
+export const TagsColorPalette = [
+  { primaria: '#FF0000', secundaria: '#FFCCCB' },
+  { primaria: '#0000FF', secundaria: '#E6E6FF' },
+  { primaria: '#008000', secundaria: '#C1E1C1' },
+  { primaria: '#FFFF00', secundaria: '#FFFACD' },
+  { primaria: '#800080', secundaria: '#E6E6FA' },
+  { primaria: '#FFC0CB', secundaria: '#FFE4E1' },
+  { primaria: '#4B0082', secundaria: '#E6E6FA' },
+  { primaria: '#808080', secundaria: '#D3D3D3' },
+  { primaria: '#FFA500', secundaria: '#FFEFD5' },
+  { primaria: '#00FFFF', secundaria: '#E0FFFF' },
+  { primaria: '#8B4513', secundaria: '#DEB887' },
+  { primaria: '#4682B4', secundaria: '#B0E0E6' },
+  { primaria: '#2E8B57', secundaria: '#98FB98' },
+  { primaria: '#DC143C', secundaria: '#FFA07A' },
+  { primaria: '#9932CC', secundaria: '#E6E6FA' },
+  { primaria: '#FF1493', secundaria: '#FFB6C1' },
+  { primaria: '#1E90FF', secundaria: '#87CEFA' },
+  { primaria: '#FF4500', secundaria: '#FFA07A' },
+  { primaria: '#32CD32', secundaria: '#90EE90' },
+  { primaria: '#DAA520', secundaria: '#F0E68C' },
 ]

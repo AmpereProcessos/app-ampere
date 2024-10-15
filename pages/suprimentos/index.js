@@ -208,6 +208,11 @@ function Suprimentos() {
               </div>
             </div>
           </div>
+          <div className="my-2 flex w-full items-center justify-end gap-2">
+            <Link href="/suprimentos/gestao-compras">
+              <button className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">CONTROLE DE COMPRAS</button>
+            </Link>
+          </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">

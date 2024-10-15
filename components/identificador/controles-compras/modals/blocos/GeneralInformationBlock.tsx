@@ -1,16 +1,21 @@
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
+import TextareaInput from '@/components/inputs/TextareaInput'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { formatDateInputChange } from '@/utils/methods/shared'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import { PurchaseControlStatus } from '@/utils/select-options'
+import { Session } from 'next-auth'
 import React from 'react'
 import { BsCalendarCheck } from 'react-icons/bs'
 
 type PurchaseControlGeneralInformationBlockProps = {
+  session: Session
   infoHolder: TPurchaseControl
   setInfoHolder: React.Dispatch<React.SetStateAction<TPurchaseControl>>
 }
-function PurchaseControlGeneralInformationBlock({ infoHolder, setInfoHolder }: PurchaseControlGeneralInformationBlockProps) {
+function PurchaseControlGeneralInformationBlock({ session, infoHolder, setInfoHolder }: PurchaseControlGeneralInformationBlockProps) {
   function handleEffectivationUpdate(newValue: TPurchaseControl['status'], previousData: TPurchaseControl) {
     if (newValue == 'CONCLUÍDA') {
       if (previousData.status != 'CONCLUÍDA') return new Date().toISOString()
@@ -53,13 +58,38 @@ function PurchaseControlGeneralInformationBlock({ infoHolder, setInfoHolder }: P
               handleChange={(value) =>
                 setInfoHolder((prev) => ({ ...prev, status: value, dataEfetivacao: handleEffectivationUpdate(value, infoHolder) }))
               }
-              onReset={() => setInfoHolder((prev) => ({ ...prev, status: 'AGUARDANDO LIBERAÇÃO', dataEfetivacao: null }))}
+              onReset={() => setInfoHolder((prev) => ({ ...prev, status: 'PENDENTE', dataEfetivacao: null }))}
               selectedItemLabel="NÃO DEFINIDO"
               width="100%"
             />
           </div>
         </div>
       </div>
+      <div className="my-3 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+        <CheckboxWithDate
+          labelFalse="COMPRA LIBERADA"
+          labelTrue="COMPRA LIBERADA"
+          date={infoHolder.liberacao.data || null}
+          handleChange={(value) => {
+            const isPurchaseAllowed = !!infoHolder.liberacao.data
+            if (isPurchaseAllowed) return setInfoHolder((prev) => ({ ...prev, liberacao: { data: null, autor: {} } }))
+            else
+              return setInfoHolder((prev) => ({
+                ...prev,
+                liberacao: {
+                  data: formatDateInputChange(value),
+                  autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },
+                },
+              }))
+          }}
+        />
+      </div>
+      <TextareaInput
+        label="ANOTAÇÕES"
+        placeholder="Preencha aqui detalhes da compra, informações relevantes, entre outros..."
+        value={infoHolder.anotacoes}
+        handleChange={(value) => setInfoHolder((prev) => ({ ...prev, anotacoes: value }))}
+      />
     </div>
   )
 }

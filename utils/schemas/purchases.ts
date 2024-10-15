@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { AuthorSchema } from './users'
 
 const PurchaseStatus = z.enum(
-  ['INDEFINIDO', 'AGUARDANDO LIBERAÇÃO', 'AGUARDANDO PAGAMENTO', 'PENDÊNCIA COMERCIAL', 'PENDÊNCIA OPERACIONAL', 'PENDÊNCIA EXTERNA', 'CONCLUÍDA'],
+  ['PENDENTE', 'EM ANÁLISE', 'AGUARDANDO APROVAÇÃO', 'AGUARDANDO PAGAMENTO', 'AGUARDANDO ENTREGA', 'PENDÊNCIAS', 'CONCLUÍDA'],
   {
     required_error: 'Status da compra não informado.',
     invalid_type_error: 'Tipo não válido para o status da compra.',
@@ -62,6 +62,16 @@ export const GeneralPurchaseControlSchema = z.object({
     z.object({
       id: z.string({ required_error: 'ID da etiqueta inválido.', invalid_type_error: 'Tipo não válido para o ID da etiqueta.' }),
       titulo: z.string({ required_error: 'Titulo não válido para etiqueta.' }),
+      cores: z.object({
+        primaria: z.string({
+          required_error: 'Código da cor da etiqueta não fornecido.',
+          invalid_type_error: 'Tipo não válido para o código de cor da etiqueta.',
+        }),
+        secundaria: z.string({
+          required_error: 'Código da cor secundária da etiqueta não fornecido.',
+          invalid_type_error: 'Tipo não válido para o código de cor secundária da etiqueta.',
+        }),
+      }),
     })
   ),
   atualizacoes: z.array(PurchaseUpdateItemSchema, {
@@ -141,6 +151,16 @@ export type TPurchaseControlDTO = TPurchaseControl & { _id: string }
 
 export const PurchaseTagSchema = z.object({
   titulo: z.string({ required_error: 'Título da tag de compra não informado.', invalid_type_error: 'Tipo não válido para o título da tag.' }),
+  cores: z.object({
+    primaria: z.string({
+      required_error: 'Código da cor da etiqueta não fornecido.',
+      invalid_type_error: 'Tipo não válido para o código de cor da etiqueta.',
+    }),
+    secundaria: z.string({
+      required_error: 'Código da cor secundária da etiqueta não fornecido.',
+      invalid_type_error: 'Tipo não válido para o código de cor secundária da etiqueta.',
+    }),
+  }),
   dataInsercao: z.string({
     required_error: 'Data de inserção da tag não informada.',
     invalid_type_error: 'Tipo não válido para a data de inserção.',
@@ -189,6 +209,15 @@ export type TPurchaseControlKanbanSimplified = Pick<
   TPurchaseControl,
   'status' | 'titulo' | 'etiquetas' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
+  liberacao: {
+    data: TPurchaseControl['liberacao']['data']
+  }
+  fornecedor: {
+    nome: TPurchaseControl['fornecedor']['nome']
+  }
+  transporte: {
+    transportadora: { nome: TPurchaseControl['transporte']['transportadora']['nome'] }
+  }
   entrega: {
     status: TPurchaseControl['entrega']['status']
     dataPrevisao: TPurchaseControl['entrega']['dataPrevisao']
@@ -200,6 +229,9 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   status: 1,
   titulo: 1,
   etiquetas: 1,
+  'liberacao.data': 1,
+  'fornecedor.nome': 1,
+  'transporte.transportadora.nome': 1,
   'entrega.status': 1,
   'entrega.dataPrevisao': 1,
   'entrega.dataEfetivacao': 1,

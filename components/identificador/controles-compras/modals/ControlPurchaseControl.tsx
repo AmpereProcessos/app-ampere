@@ -1,0 +1,122 @@
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { createPurchaseControl, updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
+import { TPurchaseControl } from '@/utils/schemas/purchases'
+import { Session } from 'next-auth'
+import React, { useEffect, useState } from 'react'
+import { useQueryClient } from 'react-query'
+import * as Dialog from '@radix-ui/react-dialog'
+import { VscChromeClose } from 'react-icons/vsc'
+import PurchaseControlGeneralInformationBlock from './blocos/GeneralInformationBlock'
+import PurchaseControlCompositionBlock from './blocos/CompositionBlock'
+import PurchaseControlOrderInformationBlock from './blocos/OrderInformationBlock'
+import PurchaseControlTransportationInformationBlock from './blocos/TransportationInformationBlock'
+import PurchaseControlBillingInformationBlock from './blocos/BillingInformationBlock'
+import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
+import PurchaseControlDeliveryInformationBlock from './blocos/DeliveryInformationBlock'
+import PurchaseControlUpdatesInformationBlock from './blocos/UpdatesInformationBlock'
+import PurchaseControlTagsBlock from './blocos/TagsBlock'
+import { usePurchaseControlById } from '@/utils/methods/query/purchase-controls'
+import LoadingComponent from '@/components/utils/LoadingComponent'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import { getErrorMessage } from '@/utils/methods/handlers'
+
+type ControlPurchaseControlProps = {
+  session: Session
+  purchaseControlId: string
+  affectedQueryKey: any[]
+  closeModal: () => void
+}
+function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, closeModal }: ControlPurchaseControlProps) {
+  const queryClient = useQueryClient()
+  const { data: purchaseControl, isLoading, isError, isSuccess, error } = usePurchaseControlById({ id: purchaseControlId })
+  const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
+    status: 'PENDENTE',
+    titulo: '',
+    anotacoes: '',
+    projeto: {},
+    etiquetas: [],
+    atualizacoes: [],
+    totalPrevisto: 0,
+    total: 0,
+    liberacao: {
+      autor: {},
+    },
+    composicao: [],
+    entrega: {
+      status: 'AGUARDANDO COMPRA',
+      localizacao: {
+        uf: '',
+        cidade: '',
+      },
+    },
+    faturamento: {},
+    fornecedor: {},
+    transporte: {
+      transportadora: {},
+    },
+    autor: {
+      id: session.user.id,
+      nome: session.user.nome,
+      avatar_url: session.user.avatar_url,
+    },
+    dataInsercao: new Date().toISOString(),
+  })
+
+  const { mutate, isLoading: isUpdateLoading } = useMutationWithFeedback({
+    mutationKey: ['update-purchase-control', purchaseControlId],
+    mutationFn: updatePurchaseControl,
+    queryClient: queryClient,
+    affectedQueryKey: affectedQueryKey,
+  })
+  useEffect(() => {
+    if (purchaseControl) setInfoHolder(purchaseControl)
+  }, [purchaseControl])
+  return (
+    <Dialog.Root open onOpenChange={closeModal}>
+      <Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
+      <Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[80%] lg:w-[80%]">
+        <div className="flex h-full w-full flex-col">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-sm font-bold lg:text-xl">EDITAR CONTROLE DE COMPRA</h3>
+            <button
+              onClick={() => closeModal()}
+              type="button"
+              className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
+            >
+              <VscChromeClose style={{ color: 'red' }} />
+            </button>
+          </div>
+          {isLoading ? <LoadingComponent /> : null}
+          {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+          {isSuccess ? (
+            <>
+              <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                {/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
+                <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+              </div>
+              <div className="flex w-full items-center justify-end">
+                <LoadingButton
+                  loading={isUpdateLoading}
+                  onClick={() =>
+                    // @ts-ignore
+                    mutate(infoHolder)
+                  }
+                >
+                  ATUALIZAR CONTROLE DE COMPRA
+                </LoadingButton>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </Dialog.Content>
+    </Dialog.Root>
+  )
+}
+
+export default ControlPurchaseControl

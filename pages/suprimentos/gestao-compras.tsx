@@ -6,7 +6,6 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 function PurchasesManagement() {
   const { data: session, status } = useSession({ required: true })
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
 
   if (status != 'authenticated') return <LoadingPage />
   return <PurchaseControlsKanbanModePage session={session} />

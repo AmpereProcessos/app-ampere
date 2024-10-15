@@ -58,7 +58,7 @@ const createPurchaseControlRoute: NextApiHandler<PostResponse> = async (req, res
   if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao inserir controle de compra.')
   const insertedId = insertResponse.insertedId.toString()
 
-  return res.status(200).json({ data: { insertedId }, message: 'Controle de compra criado com sucesso !' })
+  return res.status(201).json({ data: { insertedId }, message: 'Controle de compra criado com sucesso !' })
 }
 
 type PutResponse = {
@@ -78,6 +78,8 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
 
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })
   if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao atualizar controle de compra.')
+
+  return res.status(201).json({ message: 'Controle de compras atualizado com sucesso !' })
 }
 
 export default apiHandler({ GET: getPurchasesControlsRoute, POST: createPurchaseControlRoute, PUT: updatePurchaseControlRoute })

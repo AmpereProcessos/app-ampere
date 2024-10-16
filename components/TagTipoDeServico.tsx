@@ -35,6 +35,7 @@ function TagTipoDeServico({ tipoDeServico }) {
     if (type == 'OPERAÇÃO E MANUTENÇÃO') return 'bg-[#8604c2] text-white'
     if (type == 'SUBESTAÇÃO DE ENERGIA') return 'bg-[#e6e6e6] text-[#15599a]'
     if (type == 'SEGURO DE SISTEMA FOTOVOLTAICO') return 'bg-[#b990e7] text-white'
+    if (type == 'MONITORAMENTO') return 'bg-[#08A89F] text-white'
     return 'bg-black text-white'
   }
   return (

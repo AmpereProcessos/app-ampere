@@ -513,6 +513,7 @@ export type TProjectDBSimplified = Pick<
   | 'telefone'
   | 'email'
   | 'codigoSVB'
+  | 'cep'
   | 'uf'
   | 'cidade'
   | 'bairro'
@@ -520,6 +521,9 @@ export type TProjectDBSimplified = Pick<
   | 'numeroResidencia'
 >
 export type TProjectDTODBSimplified = TProjectDBSimplified & { _id: string }
+
+export type TMonitoringProjectDTOSimplified = TProjectDTODBSimplified & { oem: TProject['oem']; atividades?: TActivityDTO[] }
+
 export const ProjectDBSimplifiedProjection = {
   _id: 1,
   nomeDoContrato: 1,
@@ -530,6 +534,7 @@ export const ProjectDBSimplifiedProjection = {
   telefone: 1,
   email: 1,
   codigoSVB: 1,
+  cep: 1,
   uf: 1,
   cidade: 1,
   bairro: 1,

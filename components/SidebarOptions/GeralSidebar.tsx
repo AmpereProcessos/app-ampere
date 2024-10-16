@@ -16,7 +16,7 @@ import {
 } from 'react-icons/md'
 import { BiSupport } from 'react-icons/bi'
 import { SiCashapp } from 'react-icons/si'
-import { BsFolderPlus, BsFillPatchCheckFill, BsBank2 } from 'react-icons/bs'
+import { BsFolderPlus, BsFillPatchCheckFill, BsBank2, BsSpeedometer2 } from 'react-icons/bs'
 import { IoIosCalendar } from 'react-icons/io'
 import { VscWorkspaceTrusted } from 'react-icons/vsc'
 import { ImFolderOpen, ImCheckboxChecked } from 'react-icons/im'
@@ -237,6 +237,16 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaSolarPanel style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">O&M</p>
+              </div>
+            </Link>
+          ) : (
+            false
+          )}
+          {checkRoute('O&M') ? (
+            <Link href="/oem/monitoramento">
+              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+                <BsSpeedometer2 style={{ color: '#15599a', fontSize: '20px' }} />
+                <p className="pl-3 text-xs text-gray-600">Monitoramento</p>
               </div>
             </Link>
           ) : (

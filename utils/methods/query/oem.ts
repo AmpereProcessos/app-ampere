@@ -1,4 +1,4 @@
-import { TProjectDTO } from '@/utils/schemas/projects'
+import { TMonitoringProjectDTOSimplified, TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
@@ -183,6 +183,22 @@ export function useOeMProjects() {
     filters,
     setFilters,
   }
+}
+
+async function fetchMonitoringProjects() {
+  try {
+    const { data } = await axios.get('/api/projects/monitoramento')
+    return data.data as TMonitoringProjectDTOSimplified[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useMonitoringProjects() {
+  return useQuery({
+    queryKey: ['monitoring-projects'],
+    queryFn: fetchMonitoringProjects,
+  })
 }
 
 async function getExecutionCommissioningProjects() {

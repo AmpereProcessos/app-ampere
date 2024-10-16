@@ -295,6 +295,11 @@ export const serviceTypes = [
     label: 'CONSÓRCIO DE ENERGIA',
     value: 'CONSÓRCIO DE ENERGIA',
   },
+  {
+    id: 17,
+    label: 'MONITORAMENTO',
+    value: 'MONITORAMENTO',
+  },
 ]
 export const allSellers = [
   {

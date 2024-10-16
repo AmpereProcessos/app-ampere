@@ -1,13 +1,6 @@
-const status = [
-  'INDEFINIDO',
-  'AGUARDANDO LIBERAÇÃO',
-  'AGUARDANDO PAGAMENTO',
-  'PENDÊNCIA COMERCIAL',
-  'PENDÊNCIA OPERACIONAL',
-  'PENDÊNCIA EXTERNA',
-  'CONCLUÍDA',
-]
-console.log(status.map((s, index) => ({ id: index + 1, label: s, value: s })))
+const dayjs = require('dayjs')
+
+console.log(Math.round(dayjs('2020-11-12T08:00:00.000Z').diff('2019-11-13T08:00:00.000Z', 'days') / 365))
 // const activeCreditors = [
 //   'BRADESCO',
 //   'CREDIPONTAL',
@@ -101,46 +94,3 @@ console.log(status.map((s, index) => ({ id: index + 1, label: s, value: s })))
 // const missing = activeCreditors.filter((c) => !serverCreditors.map((c) => c.valor).includes(c)).map((x) => x)
 
 // console.log(missing)
-
-const x = {
-  empresa: 'SIPAG',
-  modalidade: 'COM ANTECIPAÇÃO',
-  opcoes: [
-    {
-      descricao: 'VISA/MASTER',
-      parcelas: {
-        1: 3.41,
-        2: 4.7,
-        3: 5.59,
-        4: 6.47,
-        5: 7.37,
-        6: 8.26,
-        7: 9.5,
-        8: 10.41,
-        9: 11.32,
-        10: 12.24,
-        11: 13.16,
-        12: 14.09,
-      },
-    },
-    {
-      descricao: 'ELO',
-      parcelas: {
-        1: 3.83,
-        2: 5.13,
-        3: 6.02,
-        4: 6.91,
-        5: 7.8,
-        6: 8.71,
-        7: 9.84,
-        8: 10.75,
-        9: 11.66,
-        10: 12.59,
-        11: 13.51,
-        12: 14.44,
-      },
-    },
-  ],
-}
-
-console.log(JSON.stringify(x))

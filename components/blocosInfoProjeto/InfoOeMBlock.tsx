@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import NumberInput from '../inputs/Number'
 import SelectInput from '../inputs/Select'
-import DateInput from '../DateInput'
-import { oemPlans, statusObra } from '../../utils/constants'
+import DateInput from '../inputs/Date'
+import { formatDate, oemPlans, statusObra } from '../../utils/constants'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import CheckboxInput from '../inputs/Checkbox'
 import { VscChromeClose } from 'react-icons/vsc'
@@ -13,6 +13,8 @@ import MaintenanceCard from './Utils/MaintenanceCard'
 import toast from 'react-hot-toast'
 import { executionStatus } from '@/utils/select-options'
 import CheckboxWithDate from '../inputs/CheckboxWithDate'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import dayjs from 'dayjs'
 
 type InfoOeMBlockProps = {
   editor: boolean
@@ -54,7 +56,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
         </div>
       </div>
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/2">
           <SelectInput
             label="PLANO DE O&M"
             value={infoHolder.oem?.plano}
@@ -83,7 +85,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
+        <div className="w-full lg:w-1/2">
           <NumberInput
             label={'Nº DE MANUTENÇÕES'}
             placeholder="Preencha o número de manutenções..."
@@ -105,24 +107,51 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/3">
-          <NumberInput
-            label={'DURAÇÃO DO O&M (anos)'}
-            value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
-            placeholder="Preencha a duração do O&M em anos..."
-            editable={editor}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'oem.duracao': Number(value),
-              })
-              setInfo({
-                ...infoHolder,
-                oem: { ...infoHolder.oem, duracao: Number(value) },
-              })
-            }}
-            width="100%"
-          />
+        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="w-full lg:w-1/2">
+            <DateInput
+              label="INÍCIO DO PLANO (SE APLICÁVEL)"
+              value={formatDate(infoHolder.oem.dataInicio)}
+              handleChange={(value) => {
+                setInfo((prev) => ({
+                  ...prev,
+                  oem: {
+                    ...prev.oem,
+                    dataInicio: formatDateInputChange(value),
+                    duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                  },
+                }))
+                setChanges((prev) => ({
+                  ...prev,
+                  'oem.dataInicio': formatDateInputChange(value),
+                  duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                }))
+              }}
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-1/2">
+            <DateInput
+              label="FIM DO PLANO (SE APLICÁVEL)"
+              value={formatDate(infoHolder.oem.dataFim)}
+              handleChange={(value) => {
+                setInfo((prev) => ({
+                  ...prev,
+                  oem: {
+                    ...prev.oem,
+                    dataFim: formatDateInputChange(value),
+                    duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
+                  },
+                }))
+                setChanges((prev) => ({
+                  ...prev,
+                  'oem.dataFim': formatDateInputChange(value),
+                  duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365),
+                }))
+              }}
+              width="100%"
+            />
+          </div>
         </div>
       </div>
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">MANUTENÇÕES</h1>

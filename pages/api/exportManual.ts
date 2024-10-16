@@ -15,27 +15,19 @@ const getExport: NextApiHandler<any> = async (req, res) => {
 
   // const projects = await projectsCollection
   //   .find({
-  //     'contrato.status': 'ASSINADO',
-  //     'contrato.dataAssinatura': { $ne: null },
-  //     'oem.aplicavel': true,
-  //     'oem.duracao': { $nin: [null, 0] },
+  //     'oem.inicio': { $ne: null },
+  //     'oem.fim': { $ne: null },
   //   })
   //   .toArray()
 
   // const bulkwriteArr = projects.map((project) => {
-  //   const signatureDate = project.contrato.dataAssinatura
-  //   const oemDuration = project.oem.duracao || 0
-  //   const oemDurationDays = oemDuration * 365
-  //   const oemStart = signatureDate
-  //   const oemEnd = dayjs(oemStart).add(oemDurationDays, 'days').toISOString()
-
   //   return {
   //     updateOne: {
   //       filter: { _id: new ObjectId(project._id) },
   //       update: {
   //         $set: {
-  //           'oem.inicio': oemStart,
-  //           'oem.fim': oemEnd,
+  //           'oem.dataInicio': project.oem.inicio,
+  //           'oem.dataFim': project.oem.fim,
   //         },
   //       },
   //     },

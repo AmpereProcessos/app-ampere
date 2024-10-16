@@ -25,6 +25,7 @@ import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
 import DateInput from '../inputs/Date'
 import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
+import dayjs from 'dayjs'
 
 type InfoClientBlockProps = {
   editor: boolean
@@ -527,60 +528,130 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
           </div>
         </div>
         {!!infoHolder.oem?.aplicavel ? (
-          <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
-            <div className="w-full lg:w-1/4">
-              <SelectInput
-                label={'PLANO DE O&M'}
-                editable={editor}
-                value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
-                selectedItemLabel="NÃO DEFINIDO"
-                options={oemPlans.map((plan, index) => ({ id: index + 1, ...plan }))}
-                handleChange={(value) => {
-                  setChanges((prev) => ({ ...prev, 'oem.plano': value }))
-                  setInfo((prev) => ({
-                    ...prev,
-                    oem: {
-                      ...(prev.oem || {}),
-                      plano: value,
-                    },
-                  }))
-                }}
-                onReset={() => {
-                  setChanges((prev) => ({ ...prev, 'oem.plano': 'NÃO DEFINIDO' }))
-                  setInfo((prev) => ({
-                    ...prev,
-                    oem: {
-                      ...(prev.oem || {}),
-                      plano: 'NÃO DEFINIDO',
-                    },
-                  }))
-                }}
-                width="100%"
-              />
+          <div className="mt-2 flex w-full flex-col items-center justify-center gap-2">
+            <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+              <div className="w-full lg:w-1/3">
+                <SelectInput
+                  label={'PLANO DE O&M'}
+                  editable={editor}
+                  value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
+                  selectedItemLabel="NÃO DEFINIDO"
+                  options={oemPlans.map((plan, index) => ({ id: index + 1, ...plan }))}
+                  handleChange={(value) => {
+                    setChanges((prev) => ({ ...prev, 'oem.plano': value }))
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...(prev.oem || {}),
+                        plano: value,
+                      },
+                    }))
+                  }}
+                  onReset={() => {
+                    setChanges((prev) => ({ ...prev, 'oem.plano': 'NÃO DEFINIDO' }))
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...(prev.oem || {}),
+                        plano: 'NÃO DEFINIDO',
+                      },
+                    }))
+                  }}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full lg:w-1/3">
+                <NumberInput
+                  label={'VALOR DO O&M (ADICIONAL)'}
+                  placeholder="Preencha o valor do O&M, se adicional."
+                  value={infoHolder.oem?.valor ? infoHolder.oem?.valor : 0}
+                  editable={editor}
+                  handleChange={(value) => {
+                    setChanges((prev) => ({
+                      ...prev,
+                      'oem.valor': value,
+                    }))
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...(prev.oem || {}),
+                        valor: value,
+                      },
+                    }))
+                  }}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full lg:w-1/3">
+                <NumberInput
+                  label={'QTDE DE MANUTENÇÕES'}
+                  placeholder="Preencha a quantidade de manutenções"
+                  value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
+                  editable={editor}
+                  handleChange={(value) => {
+                    setChanges((prev) => ({
+                      ...prev,
+                      'oem.qtdeManutencoes': value,
+                    }))
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...(prev.oem || {}),
+                        qtdeManutencoes: value,
+                      },
+                    }))
+                  }}
+                  width="100%"
+                />
+              </div>
             </div>
-            <div className="w-full lg:w-1/4">
-              <NumberInput
-                label={'VALOR DO O&M (ADICIONAL)'}
-                placeholder="Preencha o valor do O&M, se adicional."
-                value={infoHolder.oem?.valor ? infoHolder.oem?.valor : 0}
-                editable={editor}
-                handleChange={(value) => {
-                  setChanges((prev) => ({
-                    ...prev,
-                    'oem.valor': value,
-                  }))
-                  setInfo((prev) => ({
-                    ...prev,
-                    oem: {
-                      ...(prev.oem || {}),
-                      valor: value,
-                    },
-                  }))
-                }}
-                width="100%"
-              />
+            <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+              <div className="w-full lg:w-1/2">
+                <DateInput
+                  label="INÍCIO DO PLANO (SE APLICÁVEL)"
+                  value={formatDate(infoHolder.oem.dataInicio)}
+                  handleChange={(value) => {
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...prev.oem,
+                        dataInicio: formatDateInputChange(value),
+                        duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                      },
+                    }))
+                    setChanges((prev) => ({
+                      ...prev,
+                      'oem.dataInicio': formatDateInputChange(value),
+                      duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                    }))
+                  }}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full lg:w-1/2">
+                <DateInput
+                  label="FIM DO PLANO (SE APLICÁVEL)"
+                  value={formatDate(infoHolder.oem.dataFim)}
+                  handleChange={(value) => {
+                    setInfo((prev) => ({
+                      ...prev,
+                      oem: {
+                        ...prev.oem,
+                        dataFim: formatDateInputChange(value),
+                        duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
+                      },
+                    }))
+                    setChanges((prev) => ({
+                      ...prev,
+                      'oem.dataFim': formatDateInputChange(value),
+                      duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365),
+                    }))
+                  }}
+                  width="100%"
+                />
+              </div>
             </div>
-            <div className="w-full lg:w-1/4">
+            {/* <div className="w-full lg:w-1/4">
               <NumberInput
                 label={'DURAÇÃO DO O&M (EM ANOS)'}
                 placeholder="Preencha a duração do O&M em anos..."
@@ -601,29 +672,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
                 }}
                 width="100%"
               />
-            </div>
-            <div className="w-full lg:w-1/4">
-              <NumberInput
-                label={'QTDE DE MANUTENÇÕES'}
-                placeholder="Preencha a quantidade de manutenções"
-                value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
-                editable={editor}
-                handleChange={(value) => {
-                  setChanges((prev) => ({
-                    ...prev,
-                    'oem.qtdeManutencoes': value,
-                  }))
-                  setInfo((prev) => ({
-                    ...prev,
-                    oem: {
-                      ...(prev.oem || {}),
-                      qtdeManutencoes: value,
-                    },
-                  }))
-                }}
-                width="100%"
-              />
-            </div>
+            </div> */}
           </div>
         ) : null}
       </div>

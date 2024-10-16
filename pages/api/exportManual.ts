@@ -13,26 +13,43 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  const projects = await projectsCollection
-    .find({
-      'contrato.status': 'ASSINADO',
-      'obra.statusDaObra': { $ne: 'CONCLUIDA' },
-      'compra.dataPedido': { $ne: null },
-      tipoDeServico: {
-        $nin: ['OPERAÇÃO E MANUTENÇÃO'],
-      },
-    })
-    .toArray()
+  // const projects = await projectsCollection
+  //   .find({
+  //     'contrato.status': 'ASSINADO',
+  //     'contrato.dataAssinatura': { $ne: null },
+  //     'oem.aplicavel': true,
+  //     'oem.duracao': { $nin: [null, 0] },
+  //   })
+  //   .toArray()
 
-  const exportation = projects.map((project) => ({
-    QTDE: project.qtde,
-    NOME: project.nomeDoContrato,
-    UF: project.uf,
-    CIDADE: project.cidade,
-    'TIPO HOMOLOGAÇÃO': project.homologacao.fastTrack ? 'FAST TRACK' : 'CONVENCIONAL',
-    'DATA PEDIDO': formatDateAsLocale(project.compra.dataPedido),
-    'DATA ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
-  }))
+  // const bulkwriteArr = projects.map((project) => {
+  //   const signatureDate = project.contrato.dataAssinatura
+  //   const oemDuration = project.oem.duracao || 0
+  //   const oemDurationDays = oemDuration * 365
+  //   const oemStart = signatureDate
+  //   const oemEnd = dayjs(oemStart).add(oemDurationDays, 'days').toISOString()
+
+  //   return {
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(project._id) },
+  //       update: {
+  //         $set: {
+  //           'oem.inicio': oemStart,
+  //           'oem.fim': oemEnd,
+  //         },
+  //       },
+  //     },
+  //   }
+  // })
+  // const exportation = projects.map((project) => ({
+  //   QTDE: project.qtde,
+  //   NOME: project.nomeDoContrato,
+  //   UF: project.uf,
+  //   CIDADE: project.cidade,
+  //   'TIPO HOMOLOGAÇÃO': project.homologacao.fastTrack ? 'FAST TRACK' : 'CONVENCIONAL',
+  //   'DATA PEDIDO': formatDateAsLocale(project.compra.dataPedido),
+  //   'DATA ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
+  // }))
   // const generations = projects.map((project) => {
   //   const genFactor = getGenFactorByOrientation({ city: project.cidade, uf: project.uf, orientation: 'NORTE' }) as number
   //   const estimatedGen = genFactor * (project.sistema.potPico || 0)
@@ -62,7 +79,8 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //     'DATA DE TÉRMINO DA OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : 'N/A',
   //   }
   // })
-  return res.json(exportation)
+  // const updateResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  return res.json('DESATIVADA')
 }
 export default apiHandler({
   GET: getExport,

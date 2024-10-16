@@ -1505,7 +1505,12 @@ export const revenueSources = [
     label: 'CONSÓRCIO DE ENERGIA',
     value: 'CONSÓRCIO DE ENERGIA',
   },
-  { id: 17, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
+  {
+    id: 18,
+    label: 'MONITORAMENTO',
+    value: 'MONITORAMENTO',
+  },
+  { id: 19, label: 'OUTRAS RECEITAS', value: 'OUTRAS RECEITAS' },
 ]
 
 export const PurchaseControlStatus = [

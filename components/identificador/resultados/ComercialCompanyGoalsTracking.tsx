@@ -24,7 +24,7 @@ const GoalsParams = {
     'QTDE PREMIADOS': 2,
   },
   'INSIDE SALES': {
-    'META GERAL': 500_000,
+    'META GERAL': 700_000,
     'OBJETIVO POR PERIODO': 83_333.33,
     'QTDE PREMIADOS': 3,
   },

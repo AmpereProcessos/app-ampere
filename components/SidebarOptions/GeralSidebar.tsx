@@ -155,14 +155,6 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               </div>
             </Link>
           ) : null}
-          {/* {checkRoute('InsideSales') ? (
-            <Link  href="/insideSales">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdAddIcCall style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Inside Sales</p>
-              </div>
-            </Link>
-          ) : null} */}
         </div>
         <div className="mt-6">
           <h2 className="text-xs text-gray-500">OUTROS</h2>
@@ -182,16 +174,6 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             </Link>
           ) : null}
 
-          {/* {userIsManager ? (
-            <Link  href="/operacoes">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <IoIosCalendar style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Operações</p>
-              </div>
-            </Link>
-          ) : (
-            false
-          )} */}
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos/solicitacoesCompra">
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -235,16 +217,6 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
                 <FaWarehouse style={{ color: '#15599a', fontSize: '20px' }} />
                 <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>
-              </div>
-            </Link>
-          ) : (
-            false
-          )}
-          {checkRoute('ADM') ? (
-            <Link href={'/adm/cobrancas'}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdOutlinePayments style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Cobranças</p>
               </div>
             </Link>
           ) : (

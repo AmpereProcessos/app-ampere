@@ -7,6 +7,7 @@ import { notifySeller, updateCRMProject } from '../crm-integration'
 import { QueryClient } from 'react-query'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import { updateOpportunity } from './crm/opportunities'
+import dayjs from 'dayjs'
 
 type HandleComercialUpdateProps = {
   previousData: TProjectDTO
@@ -15,6 +16,7 @@ type HandleComercialUpdateProps = {
   queryClient: QueryClient
 }
 export async function handleComercialUpdate({ previousData, newData, changes, queryClient }: HandleComercialUpdateProps) {
+  var updates = changes
   const projectId = previousData._id
   const idCRMProject = newData.idProjetoCRM
   const serviceType = newData.tipoDeServico
@@ -25,6 +27,7 @@ export async function handleComercialUpdate({ previousData, newData, changes, qu
 
   const newContractStatus = newData.contrato.status
   const isSigned = newContractStatus == 'ASSINADO'
+  const newSignatureDate = newData.contrato.dataAssinatura
   const isReleasedForPurchase = !!newData.compra.liberacao
 
   try {
@@ -34,6 +37,12 @@ export async function handleComercialUpdate({ previousData, newData, changes, qu
       console.log('PASSED IN SIGNING CHANGE')
       await notifyContractSigning({ projectIdentifier: newData.qtde, projectName: newData.nomeDoContrato })
       await generateContractRevenue({ data: newData, queryClient })
+      if (['OPERAÇÃO E MANUTENÇÃO', 'MONITORAMENTO'].includes(newData.tipoDeServico) && newSignatureDate)
+        updates = {
+          ...updates,
+          'oem.inicio': newSignatureDate,
+          'oem.fim': dayjs(newSignatureDate).add(365, 'days').toISOString(),
+        }
     }
 
     // Handle automations for CRM

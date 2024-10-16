@@ -404,7 +404,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
   // Define queries for all company goals
   // 1 - Sistema Fotovoltaico + Aumento - R$ 5.000.000,00 geral /  R$ 833.333,33/mes (contando a partir de 01/07 )
   // 2 - O&M + Montagem e Desmontagem - R$ 90.000,00 geral /  R$ 15.000,00/mes (contando a partir de 01/07 )
-  // 3 - Inside Sales (somente OUTBOUND) - R$ 500.000,00 geral / R$ 83.333,33/mes (contando a partir de 01/07)
+  // 3 - Inside Sales (somente OUTBOUND) - R$ 700.000,00 geral / R$ 83.333,33/mes (contando a partir de 01/07)
   // 4 - Seguro Solar - R$ 12.000,00 geral / R$ 2.000,00/mes (contando a partir de 01/07)
   // 4 - Consórcio de Energia - R$ 150.000,00 geral / R$ 25.000,00/mes (contando a partir de 01/07)
 

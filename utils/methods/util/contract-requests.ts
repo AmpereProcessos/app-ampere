@@ -4,6 +4,7 @@ import { TProject, TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { fetchFileReferencesByHomologationId } from '../query/crm/file-references'
 import { fetchHomologationById } from '../query/crm/homologations'
+import dayjs from 'dayjs'
 
 type HandleSendNotificationToCobrancasParams = {
   contractName: string
@@ -96,7 +97,14 @@ function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: st
   if (plan == 'MANUTENÇÃO SIMPLES' || plan == 'MANUTENÇÃO SIMLES')
     return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }] }
 
-  if (plan == 'PLANO SOL') return { duracao: 1, qtdeManutencoes: 1, manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }] }
+  if (plan == 'PLANO SOL')
+    return {
+      duracao: 1,
+      qtdeManutencoes: 1,
+      manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }],
+      inicio: new Date().toISOString(),
+      fim: dayjs().add(365, 'days').toISOString(),
+    }
 
   if (plan == 'PLANO SOL +')
     return {
@@ -106,6 +114,8 @@ function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: st
         { titulo: 'PRIMEIRA MANUTENÇÃO', dataEfetivacao: null },
         { titulo: 'SEGUNDA MANUTENÇÃO', dataEfetivacao: null },
       ],
+      inicio: new Date().toISOString(),
+      fim: dayjs().add(365, 'days').toISOString(),
     }
 
   return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] }
@@ -130,6 +140,7 @@ const EnergyDistributorEquivalent = {
   DF: 'ELEKTRO',
 }
 export function getProjectInformationFromRequest({ request }: HandleGetProjectInformationFromRequestParams) {
+  const OeMInfo = getOeMInformation({ applicable: request.possuiOeM == 'SIM', plan: request.planoOeM })
   const insertObj: TProject = {
     qtde: 0,
     nomeDoContrato: request.nomeDoContrato.toUpperCase(),
@@ -346,12 +357,11 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     },
     oem: {
       aplicavel: request.possuiOeM == 'SIM' ? true : false, // checar se existe campo existente na gestao
-      duracao: getOeMInformation({ applicable: request.possuiOeM == 'SIM', plan: request.planoOeM }).duracao,
-      qtdeManutencoes: getOeMInformation({
-        applicable: request.possuiOeM == 'SIM',
-        plan: request.planoOeM,
-      }).qtdeManutencoes,
+      duracao: OeMInfo.duracao,
+      qtdeManutencoes: OeMInfo.qtdeManutencoes,
       diagnostico: undefined,
+      inicio: OeMInfo.inicio,
+      fim: OeMInfo.fim,
       plano: request.planoOeM,
       valor: Number(request.valorOeMOuSeguro) || 0,
     },

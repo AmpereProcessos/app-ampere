@@ -340,6 +340,7 @@ const GeneralProjectSchema = z.object({
     valor: z.number().optional().nullable(),
     duracao: z.number().optional().nullable(),
     dataInicio: z.string().optional().nullable(),
+    dataFim: z.string().optional().nullable(),
   }),
   ondeTrabalha: z.string(),
   padrao: z.object({

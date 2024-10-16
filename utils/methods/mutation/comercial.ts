@@ -34,14 +34,19 @@ export async function handleComercialUpdate({ previousData, newData, changes, qu
     // const wasUnsigned = previousData.contrato.status != 'ASSINADO'
     // const isSigned = newData.contrato.status == 'ASSINADO'
     if (wasUnsigned && isSigned) {
-      console.log('PASSED IN SIGNING CHANGE')
       await notifyContractSigning({ projectIdentifier: newData.qtde, projectName: newData.nomeDoContrato })
       await generateContractRevenue({ data: newData, queryClient })
       if (['OPERAÇÃO E MANUTENÇÃO', 'MONITORAMENTO'].includes(newData.tipoDeServico) && newSignatureDate)
         updates = {
           ...updates,
-          'oem.inicio': newSignatureDate,
-          'oem.fim': dayjs(newSignatureDate).add(365, 'days').toISOString(),
+          'oem.dataInicio': newSignatureDate,
+          'oem.dataFim': dayjs(newSignatureDate).add(365, 'days').toISOString(),
+        }
+      if (['SEGURO DE SISTEMA FOTOVOLTAICO'].includes(newData.tipoDeServico) && newSignatureDate)
+        updates = {
+          ...updates,
+          'seguro.dataInicio': newSignatureDate,
+          'seguro.dataFim': dayjs(newSignatureDate).add(365, 'days').toISOString(),
         }
     }
 

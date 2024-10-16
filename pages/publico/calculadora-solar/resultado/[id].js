@@ -208,8 +208,8 @@ export default function Result(props) {
             sociedade.
           </h1>
           <h1 className="text-sm font-medium lg:text-lg">
-            Ao optar por nossa empresa, você está escolhendo a qualidade e a segurança que só uma marca forte, que oferece 5 anos de garantia da
-            instalação e possui mais de 1.500 clientes no portfólio como a nossa, pode oferecer.
+            Ao optar por nossa empresa, você está escolhendo a qualidade e a segurança que só uma marca forte, que oferece 1 ano de garantia da
+            instalação e possui mais de 2.000 clientes no portfólio como a nossa, pode oferecer.
           </h1>
           <h1 className="text-sm font-medium lg:text-lg">
             Aqui seu projeto passa por mais de 10 engenheiros antes de chegar até você, desde o atendimento até o suporte técnico após a instalação!

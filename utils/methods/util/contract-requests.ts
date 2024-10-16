@@ -102,8 +102,8 @@ function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: st
       duracao: 1,
       qtdeManutencoes: 1,
       manutencoes: [{ titulo: 'MANUTENÇÃO', dataEfetivacao: null }],
-      inicio: new Date().toISOString(),
-      fim: dayjs().add(365, 'days').toISOString(),
+      dataInicio: new Date().toISOString(),
+      dataFim: dayjs().add(365, 'days').toISOString(),
     }
 
   if (plan == 'PLANO SOL +')
@@ -114,8 +114,8 @@ function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: st
         { titulo: 'PRIMEIRA MANUTENÇÃO', dataEfetivacao: null },
         { titulo: 'SEGUNDA MANUTENÇÃO', dataEfetivacao: null },
       ],
-      inicio: new Date().toISOString(),
-      fim: dayjs().add(365, 'days').toISOString(),
+      dataInicio: new Date().toISOString(),
+      dataFim: dayjs().add(365, 'days').toISOString(),
     }
 
   return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] }
@@ -265,6 +265,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     satisfacao: {},
     seguro: {
       aplicavel: request.clienteSegurado == 'SIM',
+      dataInicio: new Date().toISOString(),
+      dataFim: dayjs().add(365, 'days').toISOString(),
     },
     projeto: {
       iniciar: 'NÃO DEFINIDO',
@@ -360,8 +362,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
       duracao: OeMInfo.duracao,
       qtdeManutencoes: OeMInfo.qtdeManutencoes,
       diagnostico: undefined,
-      inicio: OeMInfo.inicio,
-      fim: OeMInfo.fim,
+      dataInicio: OeMInfo.dataInicio,
+      dataFim: OeMInfo.dataFim,
       plano: request.planoOeM,
       valor: Number(request.valorOeMOuSeguro) || 0,
     },

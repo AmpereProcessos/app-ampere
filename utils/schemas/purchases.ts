@@ -171,7 +171,7 @@ export type TPurchaseControlTagDTO = TPurchaseControlTag & { _id: string }
 
 export type TPurchaseControlSimplified = Pick<
   TPurchaseControl,
-  'status' | 'titulo' | 'projeto' | 'liberacao' | 'dataPedido' | 'fornecedor' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
+  'status' | 'etiquetas' | 'titulo' | 'projeto' | 'liberacao' | 'dataPedido' | 'fornecedor' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
   faturamento: TPurchaseControl['faturamento']
   entrega: {
@@ -185,9 +185,10 @@ export type TPurchaseControlSimplified = Pick<
     qtde: TPurchaseControl['composicao'][number]['qtde']
   }[]
 }
-
+export type TPurchaseControlSimplifiedDTO = TPurchaseControlSimplified & { _id: string }
 export const PurchaseControlSimplifiedProjection = {
   status: 1,
+  etiquetas: 1,
   titulo: 1,
   projeto: 1,
   liberacao: 1,
@@ -239,3 +240,67 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   dataInsercao: 1,
   dataEfetivacao: 1,
 }
+
+export const PurchaseControlsQueryFiltersSchema = z.object({
+  title: z.string({
+    required_error: 'Filtro de pesquisa por título não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro por pesquisa.',
+  }),
+  supplier: z.string({
+    required_error: 'Filtro de pesquisa por fornecedor não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro por pesquisa.',
+  }),
+  carrier: z.string({
+    required_error: 'Filtro de pesquisa por transportadora não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro por pesquisa.',
+  }),
+  period: z.object(
+    {
+      after: z
+        .string({
+          required_error: 'Parâmetros de período não fornecidos ou inválidos.',
+          invalid_type_error: 'Parâmetros de período não fornecidos ou inválidos.',
+        })
+        .optional()
+        .nullable(),
+      before: z
+        .string({
+          required_error: 'Parâmetros de período não fornecidos ou inválidos.',
+          invalid_type_error: 'Parâmetros de período não fornecidos ou inválidos.',
+        })
+        .optional()
+        .nullable(),
+      type: z
+        .enum([
+          'dataInsercao',
+          'liberacao.data',
+          'dataPedido',
+          'faturamento.data',
+          'entrega.dataPrevisao',
+          'entrega.dataEfetivacao',
+          'dataEfetivacao',
+        ])
+        .optional()
+        .nullable(),
+    },
+    { required_error: 'Tipo da busca por período não informado.', invalid_type_error: 'Tipo não válido para o tipo da busca por período.' }
+  ),
+  tags: z.array(z.string({ invalid_type_error: 'Tipo não válido para a referência de etiqueta da compra.' }), {
+    required_error: 'Lista de etiquetas para filtro não informada.',
+    invalid_type_error: 'Tipo não válido para a lista de etiquetas para filtro.',
+  }),
+  pendingOrder: z.boolean({
+    required_error: 'Flag de filtro para apenas pendências de pedido não informado.',
+    invalid_type_error: 'Tipo não válido para a flag de filtro de apenas pendências de pedido.',
+  }),
+  pendingBilling: z.boolean({
+    required_error: 'Flag de filtro para apenas pendências de faturamento não informado.',
+    invalid_type_error: 'Tipo não válido para a flag de filtro de apenas pendências de faturamento.',
+  }),
+  pendingDelivery: z.boolean({
+    required_error: 'Flag de filtro para apenas pendências de entrega não informado.',
+    invalid_type_error: 'Tipo não válido para a flag de filtro de apenas pendências de entrega.',
+  }),
+})
+
+export type TPurchaseControlsQueryFilters = z.infer<typeof PurchaseControlsQueryFiltersSchema>

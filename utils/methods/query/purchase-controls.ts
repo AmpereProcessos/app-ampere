@@ -2,6 +2,7 @@ import {
   TPurchaseControl,
   TPurchaseControlDTO,
   TPurchaseControlKanbanSimplifiedDTO,
+  TPurchaseControlsQueryFilters,
   TPurchaseControlTag,
   TPurchaseControlTagDTO,
 } from '@/utils/schemas/purchases'
@@ -9,6 +10,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import { formatWithoutDiacritics } from '../formatting'
 import { useQuery } from 'react-query'
+import { TPurchaseControlsByFiltersResult } from '@/pages/api/controles-compras/search'
 
 async function fetchPurchasesControls() {
   try {
@@ -65,6 +67,45 @@ export function usePurchaseControls() {
   }
 }
 
+async function fetchPurchaseControlsByFilters({ page, filters }: { page: number; filters: TPurchaseControlsQueryFilters }) {
+  try {
+    const { data } = await axios.post(`/api/controles-compras/search?page=${page}`, filters)
+
+    return data.data as TPurchaseControlsByFiltersResult
+  } catch (error) {
+    throw error
+  }
+}
+
+export type TUsePurchaseControlsByFiltersFilters = { page: number } & TPurchaseControlsQueryFilters
+export function usePurchaseControlsByFilters() {
+  const [filters, setFilters] = useState<TUsePurchaseControlsByFiltersFilters>({
+    page: 1,
+    title: '',
+    supplier: '',
+    carrier: '',
+    period: {},
+    tags: [],
+    pendingOrder: false,
+    pendingBilling: false,
+    pendingDelivery: false,
+  })
+
+  function updateFilters(info: Partial<TUsePurchaseControlsByFiltersFilters>) {
+    setFilters((prev) => ({ ...prev, ...info }))
+  }
+
+  const query = useQuery({
+    queryKey: ['purchase-controls-by-filters', filters],
+    queryFn: async () => await fetchPurchaseControlsByFilters({ page: filters.page, filters }),
+  })
+
+  return {
+    ...query,
+    filters,
+    updateFilters,
+  }
+}
 async function fetchPurchaseControlById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/controles-compras?id=${id}`)

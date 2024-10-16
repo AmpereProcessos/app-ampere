@@ -13,12 +13,15 @@ import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/format
 import { BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
 import { Button } from '@/components/ui/button'
 import NewPurchaseControl from './modals/NewPurchaseControl'
-import { CheckCheck, Factory, Pencil, Truck, X } from 'lucide-react'
+import { CheckCheck, Factory, Pencil, Tag, Truck, X } from 'lucide-react'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useMutation, useQueryClient } from 'react-query'
 import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
 import toast from 'react-hot-toast'
 import ControlPurchaseControl from './modals/ControlPurchaseControl'
+import { cn } from '@/lib/utils'
+import { TPurchasesControlPageModes } from '@/pages/suprimentos/gestao-compras'
+import { FaRotate } from 'react-icons/fa6'
 
 type TPurchaseControlByStatus = {
   title: string
@@ -27,8 +30,9 @@ type TPurchaseControlByStatus = {
 
 type PurchaseControlsKanbanModePageProps = {
   session: Session
+  handleSetMode: (mode: TPurchasesControlPageModes) => void
 }
-function PurchaseControlsKanbanModePage({ session }: PurchaseControlsKanbanModePageProps) {
+function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseControlsKanbanModePageProps) {
   const queryClient = useQueryClient()
   const { data: purchaseControls, isLoading, isError, isSuccess, error } = usePurchaseControls()
   const [newPurchaseControlModalIsOpen, setNewPurchaseControlModalIsOpen] = useState<boolean>(false)
@@ -110,9 +114,23 @@ function PurchaseControlsKanbanModePage({ session }: PurchaseControlsKanbanModeP
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex w-full items-center justify-between">
-          <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
-          <Button onClick={() => setNewPurchaseControlModalIsOpen(true)}>NOVO CONTROLE</Button>
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
+          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+            <div className="flex items-center gap-1">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
+            </div>
+
+            <button
+              onClick={() => handleSetMode('card')}
+              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+            >
+              <FaRotate />
+              <h1 className="font-medium">ALTERAR MODO</h1>
+            </button>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button onClick={() => setNewPurchaseControlModalIsOpen(true)}>NOVO CONTROLE</Button>
+          </div>
         </div>
       </div>
 
@@ -217,14 +235,24 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
               <p>EDITAR</p>
             </button>
           </div>
-          <div className="flex w-full grow flex-col gap-1 px-2">
+          <div className="flex w-full grow flex-col gap-2 px-2">
             {item.etiquetas.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
                 <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
-                {item.etiquetas.map((category, index) => (
-                  <h1 key={category.id} className="rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-secondary">
-                    {category.titulo}
-                  </h1>
+                {item.etiquetas.map((tag, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      border: '1px solid',
+                      borderColor: tag.cores.primaria,
+                      color: tag.cores.primaria,
+                      backgroundColor: tag.cores.secundaria,
+                    }}
+                    className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
+                  >
+                    <Tag width={10} height={10} />
+                    <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                  </div>
                 ))}
               </div>
             ) : null}

@@ -10,21 +10,29 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToDatabase(process.env.DB_KEY)
-  // const projectsCollection: Collection<TProject> = db.collection('dados')
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  // const projects = await projectsCollection
-  //   .find(
-  //     {
-  //       'contrato.status': 'ASSINADO',
-  //       $or: [{ 'obra.statusDaObra': 'CONCLUIDA' }, { 'obra.status': 'CONCLUIDA' }],
-  //     },
-  //     {
-  //       projection: { cidade: 1, uf: 1, sistema: 1 },
-  //     }
-  //   )
-  //   .toArray()
+  const projects = await projectsCollection
+    .find({
+      'contrato.status': 'ASSINADO',
+      'obra.statusDaObra': { $ne: 'CONCLUIDA' },
+      'compra.dataPedido': { $ne: null },
+      tipoDeServico: {
+        $nin: ['OPERAÇÃO E MANUTENÇÃO'],
+      },
+    })
+    .toArray()
 
+  const exportation = projects.map((project) => ({
+    QTDE: project.qtde,
+    NOME: project.nomeDoContrato,
+    UF: project.uf,
+    CIDADE: project.cidade,
+    'TIPO HOMOLOGAÇÃO': project.homologacao.fastTrack ? 'FAST TRACK' : 'CONVENCIONAL',
+    'DATA PEDIDO': formatDateAsLocale(project.compra.dataPedido),
+    'DATA ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
+  }))
   // const generations = projects.map((project) => {
   //   const genFactor = getGenFactorByOrientation({ city: project.cidade, uf: project.uf, orientation: 'NORTE' }) as number
   //   const estimatedGen = genFactor * (project.sistema.potPico || 0)
@@ -54,7 +62,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //     'DATA DE TÉRMINO DA OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : 'N/A',
   //   }
   // })
-  return res.json('DESATIVADA')
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: getExport,

@@ -19,6 +19,8 @@ import { usePurchaseControlById } from '@/utils/methods/query/purchase-controls'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
+import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
+import { formatDateInputChange } from '@/utils/methods/shared'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -73,7 +75,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
   }, [purchaseControl])
   return (
     <Dialog.Root open onOpenChange={closeModal}>
-      <Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
+      <Dialog.Overlay className="fixed inset-0 z-[50] bg-primary/70 backdrop-blur-sm" />
       <Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[80%] lg:w-[80%]">
         <div className="flex h-full w-full flex-col">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
@@ -93,7 +95,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
               <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-                {/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
+                <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
@@ -105,7 +107,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                   loading={isUpdateLoading}
                   onClick={() =>
                     // @ts-ignore
-                    mutate(infoHolder)
+                    mutate({ id: purchaseControlId, changes: infoHolder })
                   }
                 >
                   ATUALIZAR CONTROLE DE COMPRA

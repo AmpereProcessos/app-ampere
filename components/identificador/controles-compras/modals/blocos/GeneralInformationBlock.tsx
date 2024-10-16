@@ -70,9 +70,12 @@ function PurchaseControlGeneralInformationBlock({ session, infoHolder, setInfoHo
           labelFalse="COMPRA LIBERADA"
           labelTrue="COMPRA LIBERADA"
           date={infoHolder.liberacao.data || null}
+          editable={true}
           handleChange={(value) => {
+            console.log('SELECTED VALUE FROM CHECKBOXINPUT DATE')
             const isPurchaseAllowed = !!infoHolder.liberacao.data
-            if (isPurchaseAllowed) return setInfoHolder((prev) => ({ ...prev, liberacao: { data: null, autor: {} } }))
+            if (isPurchaseAllowed && infoHolder.liberacao.data == formatDateInputChange(value))
+              return setInfoHolder((prev) => ({ ...prev, liberacao: { data: null, autor: {} } }))
             else
               return setInfoHolder((prev) => ({
                 ...prev,

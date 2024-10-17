@@ -108,7 +108,7 @@ function MultipleSelectInput<T>({
         </label>
       ) : null}
 
-      <div className="flex h-full w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
+      <div className="flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
         {selectMenuIsOpen ? (
           <input
             type="text"

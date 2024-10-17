@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { TProjectDTO } from '../schemas/projects'
 import { TLocation } from '../schemas/useful'
+import { TProductItem } from '../schemas/crm/kits.schema'
 
 export function formatNameAsInitials(name: string) {
   const splittedName = name.replace('-', '').split(' ')
@@ -69,4 +70,20 @@ export function formatLocation({ location, includeUf, includeCity }: { location:
   if (location.bairro) addressStr = addressStr + `, ${location.bairro}`
   addressStr += '.'
   return addressStr.toUpperCase()
+}
+
+export function formatProductStr(product: TProductItem, showModel?: boolean) {
+  if (showModel) return `${product.qtde}x ${product.modelo} (${product.fabricante})`
+  return `${product.qtde}x ${product.fabricante} ${product.potencia}W`
+}
+export function getProductsStr(products: TProductItem[]) {
+  var str = ''
+  for (let i = 0; i < products.length; i++) {
+    if (i < products.length - 1) {
+      str = str + `${products[i].qtde}x ${products[i].modelo} (${products[i].potencia}W) & ` // `${products[i].qtde}x PAINÉIS PROMOCIONAIS DE ${products[i].potencia}W & `
+    } else {
+      str = str + `${products[i].qtde}x ${products[i].modelo} (${products[i].potencia}W)` //  `${products[i].qtde}x PAINÉIS PROMOCIONAIS DE ${products[i].potencia}W`
+    }
+  }
+  return str
 }

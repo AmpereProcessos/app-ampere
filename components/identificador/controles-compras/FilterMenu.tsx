@@ -79,7 +79,6 @@ function PurchaseControlsFilterMenu({ filters, updateFilters, queryLoading, rese
                 { id: 1, label: 'DATA DE CRIAÇÃO', value: 'dataInsercao' },
                 { id: 2, label: 'DATA DE LIBERAÇÃO', value: 'liberacao.data' },
                 { id: 3, label: 'DATA DO PEDIDO', value: 'dataPedido' },
-                { id: 4, label: 'DATA DE FATURAMENTO', value: 'faturamento.data' },
                 { id: 5, label: 'PREVISÃO DA ENTREGA', value: 'entrega.dataPrevisao' },
                 { id: 6, label: 'DATA DE ENTREGA', value: 'entrega.dataEfetivacao' },
                 { id: 7, label: 'DATA DE CONCLUSÃO', value: 'dataEfetivacao' },
@@ -107,14 +106,6 @@ function PurchaseControlsFilterMenu({ filters, updateFilters, queryLoading, rese
                 labelTrue="PEDIDO PENDENTE"
                 checked={filtersHolder.pendingOrder}
                 handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, pendingOrder: value }))}
-              />
-            </div>
-            <div className="w-fit">
-              <CheckboxInput
-                labelFalse="FATURAMENTO PENDENTE"
-                labelTrue="FATURAMENTO PENDENTE"
-                checked={filtersHolder.pendingBilling}
-                handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, pendingBilling: value }))}
               />
             </div>
             <div className="w-fit">

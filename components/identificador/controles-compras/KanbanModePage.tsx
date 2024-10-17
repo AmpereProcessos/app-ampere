@@ -1,4 +1,4 @@
-import { usePurchaseControls } from '@/utils/methods/query/purchase-controls'
+import { usePurchaseControls, usePurchaseControlsTags } from '@/utils/methods/query/purchase-controls'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
@@ -22,6 +22,8 @@ import ControlPurchaseControl from './modals/ControlPurchaseControl'
 import { cn } from '@/lib/utils'
 import { TPurchasesControlPageModes } from '@/pages/suprimentos/gestao-compras'
 import { FaRotate } from 'react-icons/fa6'
+import SelectInput from '@/components/inputs/Select'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 
 type TPurchaseControlByStatus = {
   title: string
@@ -34,29 +36,33 @@ type PurchaseControlsKanbanModePageProps = {
 }
 function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseControlsKanbanModePageProps) {
   const queryClient = useQueryClient()
-  const { data: purchaseControls, isLoading, isError, isSuccess, error } = usePurchaseControls()
+
+  const { data: tags } = usePurchaseControlsTags()
+  const { data: purchaseControls, isLoading, isError, isSuccess, error, queryParams, updateQueryParams, filters, setFilters } = usePurchaseControls()
   const [newPurchaseControlModalIsOpen, setNewPurchaseControlModalIsOpen] = useState<boolean>(false)
   const [editPurchaseControlModal, setEditPurchaseControlModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   function getPurchaseControlsByStatus(purchaseControls: TPurchaseControlKanbanSimplifiedDTO[] | undefined): TPurchaseControlByStatus[] {
     if (!purchaseControls)
       return Object.entries({
         PENDENTE: [],
-        'EM ANÁLISE': [],
+        'EM COTAÇÃO': [],
         'AGUARDANDO APROVAÇÃO': [],
         'AGUARDANDO PAGAMENTO': [],
+        'AGUARDANDO COMPRA': [],
         'AGUARDANDO ENTREGA': [],
-        PENDÊNCIAS: [],
         CONCLUÍDA: [],
+        PENDÊNCIAS: [],
       }).map(([key, value]) => ({ title: key, items: value }))
 
     return Object.entries({
       PENDENTE: purchaseControls.filter((c) => c.status == 'PENDENTE'),
-      'EM ANÁLISE': purchaseControls.filter((c) => c.status == 'EM ANÁLISE'),
+      'EM COTAÇÃO': purchaseControls.filter((c) => c.status == 'EM COTAÇÃO'),
       'AGUARDANDO APROVAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO APROVAÇÃO'),
       'AGUARDANDO PAGAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO PAGAMENTO'),
+      'AGUARDANDO COMPRA': purchaseControls.filter((c) => c.status == 'AGUARDANDO COMPRA'),
       'AGUARDANDO ENTREGA': purchaseControls.filter((c) => c.status == 'AGUARDANDO ENTREGA'),
-      PENDÊNCIAS: purchaseControls.filter((c) => c.status == 'PENDÊNCIAS'),
       CONCLUÍDA: purchaseControls.filter((c) => c.status == 'CONCLUÍDA'),
+      PENDÊNCIAS: purchaseControls.filter((c) => c.status == 'PENDÊNCIAS'),
     }).map(([key, value]) => ({ title: key, items: value }))
   }
 
@@ -128,8 +134,24 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
               <h1 className="font-medium">ALTERAR MODO</h1>
             </button>
           </div>
-          <div className="flex items-center gap-1">
-            <Button onClick={() => setNewPurchaseControlModalIsOpen(true)}>NOVO CONTROLE</Button>
+          <div className="flex w-full flex-col items-center gap-1 lg:w-fit lg:flex-row lg:items-end">
+            <MultipleSelectInput
+              label="TAGS"
+              selected={filters.tags}
+              options={tags?.map((tag) => ({ id: tag._id, value: tag._id, label: tag.titulo })) || []}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, tags: value as string[] }))}
+              selectedItemLabel="NÃO DEFINIDO"
+              onReset={() => setFilters((prev) => ({ ...prev, tags: [] }))}
+            />
+            <button
+              onClick={() => updateQueryParams({ unfinishedOnly: !queryParams.unfinishedOnly })}
+              className={cn('min-h-[46.6px] rounded p-2 text-xs font-bold text-white', queryParams.unfinishedOnly ? 'bg-blue-600' : 'bg-gray-600')}
+            >
+              {queryParams.unfinishedOnly ? 'EM ANDAMENTO' : 'TODAS'}
+            </button>
+            <Button onClick={() => setNewPurchaseControlModalIsOpen(true)} className="min-h-[46.6px]">
+              NOVO CONTROLE
+            </Button>
           </div>
         </div>
       </div>
@@ -154,13 +176,17 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
         </div>
       </DragDropContext>
       {newPurchaseControlModalIsOpen ? (
-        <NewPurchaseControl session={session} affectedQueryKey={['purchase-controls']} closeModal={() => setNewPurchaseControlModalIsOpen(false)} />
+        <NewPurchaseControl
+          session={session}
+          affectedQueryKey={['purchase-controls', queryParams]}
+          closeModal={() => setNewPurchaseControlModalIsOpen(false)}
+        />
       ) : null}
       {editPurchaseControlModal.id && editPurchaseControlModal.isOpen ? (
         <ControlPurchaseControl
           session={session}
           purchaseControlId={editPurchaseControlModal.id}
-          affectedQueryKey={['purchase-controls']}
+          affectedQueryKey={['purchase-controls', queryParams]}
           closeModal={() => setEditPurchaseControlModal({ id: null, isOpen: false })}
         />
       ) : null}
@@ -181,7 +207,7 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
     <Droppable droppableId={title.toString()}>
       {(provided) => (
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
-          <div className="flex h-[100px] w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
+          <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">

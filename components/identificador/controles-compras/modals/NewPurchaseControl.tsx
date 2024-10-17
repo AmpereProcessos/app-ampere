@@ -43,7 +43,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
         cidade: '',
       },
     },
-    faturamento: {},
+    faturamentos: [],
     fornecedor: {},
     transporte: {
       transportadora: {},

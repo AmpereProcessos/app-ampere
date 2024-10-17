@@ -20,7 +20,7 @@ const getPurchasesControlsBySearchRoute: NextApiHandler<{ data: TPurchaseControl
 
   const { page } = QueryParamsSchema.parse(req.query)
 
-  const { title, supplier, carrier, period, tags, pendingOrder, pendingBilling, pendingDelivery } = PurchaseControlsQueryFiltersSchema.parse(req.body)
+  const { title, supplier, carrier, period, tags, pendingOrder, pendingDelivery } = PurchaseControlsQueryFiltersSchema.parse(req.body)
   const session = await validateAuthenticationWithSession(req, res)
 
   // Validating page parameter
@@ -48,9 +48,7 @@ const getPurchasesControlsBySearchRoute: NextApiHandler<{ data: TPurchaseControl
   if (pendingOrder) {
     andFiltersArr.push({ dataPedido: null })
   }
-  if (pendingBilling) {
-    andFiltersArr.push({ 'faturamento.data': null })
-  }
+
   if (pendingDelivery) {
     andFiltersArr.push({ 'entrega.dataEfetivacao': null })
   }

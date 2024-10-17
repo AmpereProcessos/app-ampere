@@ -21,6 +21,9 @@ async function fetchPurchasesControls() {
   }
 }
 
+type TPurchaseControlQueryParams = {
+  unfinishedOnly: boolean
+}
 type TPurchaseControlFilters = {
   title: string
   status: string[]
@@ -28,6 +31,9 @@ type TPurchaseControlFilters = {
   deliveryStatus: string[]
 }
 export function usePurchaseControls() {
+  const [queryParams, setQueryParams] = useState<TPurchaseControlQueryParams>({
+    unfinishedOnly: true,
+  })
   const [filters, setFilters] = useState<TPurchaseControlFilters>({
     title: '',
     status: [],
@@ -51,19 +57,23 @@ export function usePurchaseControls() {
     if (filters.deliveryStatus.length == 0) return true
     return filters.deliveryStatus.includes(control.entrega.status)
   }
-
   function handleModelData(data: TPurchaseControlKanbanSimplifiedDTO[]) {
     return data.filter((control) => matchTitle(control) && matchStatus(control) && matchTags(control) && matchDeliveryStatus(control))
   }
 
+  function updateQueryParams(params: Partial<TPurchaseControlQueryParams>) {
+    setQueryParams((prev) => ({ ...prev, ...params }))
+  }
   return {
     ...useQuery({
-      queryKey: ['purchase-controls'],
+      queryKey: ['purchase-controls', queryParams],
       queryFn: fetchPurchasesControls,
       select: (data) => handleModelData(data),
     }),
     filters,
     setFilters,
+    queryParams,
+    updateQueryParams,
   }
 }
 
@@ -87,7 +97,6 @@ export function usePurchaseControlsByFilters() {
     period: {},
     tags: [],
     pendingOrder: false,
-    pendingBilling: false,
     pendingDelivery: false,
   })
 

@@ -609,20 +609,20 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
               <div className="w-full lg:w-1/2">
                 <DateInput
                   label="INÍCIO DO PLANO (SE APLICÁVEL)"
-                  value={formatDate(infoHolder.oem.dataInicio)}
+                  value={formatDate(infoHolder.oem?.dataInicio)}
                   handleChange={(value) => {
                     setInfo((prev) => ({
                       ...prev,
                       oem: {
                         ...prev.oem,
                         dataInicio: formatDateInputChange(value),
-                        duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                        duracao: Math.round(dayjs(formatDateInputChange(prev.oem?.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
                       },
                     }))
                     setChanges((prev) => ({
                       ...prev,
                       'oem.dataInicio': formatDateInputChange(value),
-                      duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                      'oem.duracao': Math.round(dayjs(formatDateInputChange(prev.oem?.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
                     }))
                   }}
                   width="100%"
@@ -631,20 +631,20 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
               <div className="w-full lg:w-1/2">
                 <DateInput
                   label="FIM DO PLANO (SE APLICÁVEL)"
-                  value={formatDate(infoHolder.oem.dataFim)}
+                  value={formatDate(infoHolder.oem?.dataFim)}
                   handleChange={(value) => {
                     setInfo((prev) => ({
                       ...prev,
                       oem: {
                         ...prev.oem,
                         dataFim: formatDateInputChange(value),
-                        duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
+                        duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem?.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
                       },
                     }))
                     setChanges((prev) => ({
                       ...prev,
                       'oem.dataFim': formatDateInputChange(value),
-                      duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365),
+                      'oem.duracao': Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem?.dataInicio, 'days') / 365),
                     }))
                   }}
                   width="100%"

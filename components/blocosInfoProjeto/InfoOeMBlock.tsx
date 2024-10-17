@@ -118,13 +118,13 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
                   oem: {
                     ...prev.oem,
                     dataInicio: formatDateInputChange(value),
-                    duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                    duracao: Math.round(dayjs(formatDateInputChange(prev.oem?.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
                   },
                 }))
                 setChanges((prev) => ({
                   ...prev,
                   'oem.dataInicio': formatDateInputChange(value),
-                  duracao: Math.round(dayjs(formatDateInputChange(prev.oem.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
+                  'oem.duracao': Math.round(dayjs(formatDateInputChange(prev.oem?.dataFim)).diff(formatDateInputChange(value), 'days') / 365),
                 }))
               }}
               width="100%"
@@ -140,13 +140,13 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
                   oem: {
                     ...prev.oem,
                     dataFim: formatDateInputChange(value),
-                    duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
+                    duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem?.dataInicio, 'days') / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
                   },
                 }))
                 setChanges((prev) => ({
                   ...prev,
                   'oem.dataFim': formatDateInputChange(value),
-                  duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio, 'days') / 365),
+                  'oem.duracao': Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem?.dataInicio, 'days') / 365),
                 }))
               }}
               width="100%"

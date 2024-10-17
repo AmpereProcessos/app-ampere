@@ -1,9 +1,11 @@
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { QueryClient } from 'react-query'
-import { formatDateAsLocale } from '../formatting'
+import { formatDateAsLocale, getProductsStr } from '../formatting'
 import { sendEmail } from '../email'
 import { createNotification } from './notifications'
 import { updateProject } from './clients'
+import { TPurchaseControl } from '@/utils/schemas/purchases'
+import { createPurchaseControl } from './purchase-controls'
 
 type HandleEngineeringUpdateParams = {
   previousData: TProjectDTO
@@ -61,6 +63,50 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
       dataDeEnvio: new Date().toISOString(),
     }
     await createNotification({ info: notification })
+    const purchaseControl: TPurchaseControl = {
+      status: 'AGUARDANDO PAGAMENTO',
+      titulo: `COMPRA DO ${newData.nomeDoContrato}`,
+      anotacoes: newData.produtos ? `KIT COMPOSTO POR: ${getProductsStr(newData.produtos)}` : '',
+      projeto: {
+        id: newData._id,
+        nome: newData.nomeDoProjeto,
+      },
+      etiquetas: [
+        {
+          id: '671146dea74d7a14b032aff3',
+          titulo: 'KIT SOLAR',
+          cores: {
+            primaria: '#4682B4',
+            secundaria: '#B0E0E6',
+          },
+        },
+      ],
+      atualizacoes: [],
+      totalPrevisto: newData.compra.previsaoValorDoKit,
+      liberacao: {
+        data: new Date().toISOString(),
+        autor: {},
+      },
+      composicao: [],
+      fornecedor: {},
+      total: 0,
+      faturamentos: [],
+      entrega: {
+        status: 'AGUARDANDO COMPRA',
+        localizacao: {
+          uf: newData.uf,
+          cidade: newData.cidade,
+        },
+      },
+      transporte: { transportadora: {} },
+      autor: {
+        id: '',
+        nome: 'AUTOMAÇÃO',
+        avatar_url: null,
+      },
+      dataInsercao: new Date().toISOString(),
+    }
+    await createPurchaseControl(purchaseControl)
   }
   // Update project
   await updateProject({ id: projectId, changes: changes })

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { AuthorSchema } from './users'
 
 const PurchaseStatus = z.enum(
-  ['PENDENTE', 'EM ANÁLISE', 'AGUARDANDO APROVAÇÃO', 'AGUARDANDO PAGAMENTO', 'AGUARDANDO ENTREGA', 'PENDÊNCIAS', 'CONCLUÍDA'],
+  ['PENDENTE', 'EM COTAÇÃO', 'AGUARDANDO APROVAÇÃO', 'AGUARDANDO PAGAMENTO', 'AGUARDANDO COMPRA', 'AGUARDANDO ENTREGA', 'PENDÊNCIAS', 'CONCLUÍDA'],
   {
     required_error: 'Status da compra não informado.',
     invalid_type_error: 'Tipo não válido para o status da compra.',
@@ -121,10 +121,13 @@ export const GeneralPurchaseControlSchema = z.object({
     }),
     linkRastreio: z.string({ invalid_type_error: 'Tipo não válido para o link de rastreio.' }).optional().nullable(),
   }),
-  faturamento: z.object({
-    data: z.string({ invalid_type_error: 'Tipo não válido para data de faturamento.' }).optional().nullable(),
-    codigoNotaFiscal: z.string({ invalid_type_error: 'Tipo não válido para o código da nota fiscal.' }).optional().nullable(),
-  }),
+  faturamentos: z.array(
+    z.object({
+      titulo: z.string({ required_error: 'Titulo da nota fiscal não informado.' }),
+      data: z.string({ invalid_type_error: 'Tipo não válido para data de faturamento.' }),
+      codigoNotaFiscal: z.string({ invalid_type_error: 'Tipo não válido para o código da nota fiscal.' }),
+    })
+  ),
   entrega: z.object({
     status: PurchaseDeliveryStatus,
     dataPrevisao: z.string({ invalid_type_error: 'Tipo não válido para data de previsão de entrega.' }).optional().nullable(),
@@ -173,7 +176,7 @@ export type TPurchaseControlSimplified = Pick<
   TPurchaseControl,
   'status' | 'etiquetas' | 'titulo' | 'projeto' | 'liberacao' | 'dataPedido' | 'fornecedor' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
-  faturamento: TPurchaseControl['faturamento']
+  faturamentos: TPurchaseControl['faturamentos']
   entrega: {
     status: TPurchaseControl['entrega']['status']
     dataPrevisao: TPurchaseControl['entrega']['dataPrevisao']
@@ -194,7 +197,7 @@ export const PurchaseControlSimplifiedProjection = {
   liberacao: 1,
   dataPedido: 1,
   fornecedor: 1,
-  faturamento: 1,
+  faturamentos: 1,
   'entrega.status': 1,
   'entrega.dataPrevisao': 1,
   'entrega.dataEfetivacao': 1,
@@ -271,15 +274,7 @@ export const PurchaseControlsQueryFiltersSchema = z.object({
         .optional()
         .nullable(),
       type: z
-        .enum([
-          'dataInsercao',
-          'liberacao.data',
-          'dataPedido',
-          'faturamento.data',
-          'entrega.dataPrevisao',
-          'entrega.dataEfetivacao',
-          'dataEfetivacao',
-        ])
+        .enum(['dataInsercao', 'liberacao.data', 'dataPedido', 'entrega.dataPrevisao', 'entrega.dataEfetivacao', 'dataEfetivacao'])
         .optional()
         .nullable(),
     },
@@ -292,10 +287,6 @@ export const PurchaseControlsQueryFiltersSchema = z.object({
   pendingOrder: z.boolean({
     required_error: 'Flag de filtro para apenas pendências de pedido não informado.',
     invalid_type_error: 'Tipo não válido para a flag de filtro de apenas pendências de pedido.',
-  }),
-  pendingBilling: z.boolean({
-    required_error: 'Flag de filtro para apenas pendências de faturamento não informado.',
-    invalid_type_error: 'Tipo não válido para a flag de filtro de apenas pendências de faturamento.',
   }),
   pendingDelivery: z.boolean({
     required_error: 'Flag de filtro para apenas pendências de entrega não informado.',

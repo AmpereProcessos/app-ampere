@@ -8,7 +8,7 @@ import {
 } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
-import { Db, ObjectId } from 'mongodb'
+import { Db, Filter, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 type GetResponse = {
@@ -17,7 +17,7 @@ type GetResponse = {
 const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const { id } = req.query
+  const { id, unfinishedOnly } = req.query
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const collection = db.collection<TPurchaseControl>('controles-compras')
 
@@ -29,9 +29,11 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
     return res.status(200).json({ data: purchaseControl })
   }
 
+  const query: Filter<TPurchaseControl> = unfinishedOnly == 'true' ? { status: { $ne: 'CONCLUÍDA' } } : {}
+
   const purchaseControls = await collection
     .find(
-      {},
+      { ...query },
       {
         projection: PurchaseControlKanbanSimplifiedProjection,
       }

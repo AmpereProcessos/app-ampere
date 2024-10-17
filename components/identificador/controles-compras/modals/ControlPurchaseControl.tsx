@@ -51,7 +51,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
         cidade: '',
       },
     },
-    faturamento: {},
+    faturamentos: [],
     fornecedor: {},
     transporte: {
       transportadora: {},

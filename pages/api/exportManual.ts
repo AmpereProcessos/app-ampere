@@ -13,13 +13,36 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
-  // const projects = await projectsCollection
-  //   .find({
-  //     'oem.inicio': { $ne: null },
-  //     'oem.fim': { $ne: null },
-  //   })
-  //   .toArray()
+  const projects = await projectsCollection
+    .find({
+      'obra.observacoes': { $regex: 'MONTAR DE UMA VEZ SÓ,' },
+      'obra.statusDaObra': {
+        $ne: 'CONCLUIDA',
+      },
+      'contrato.status': 'ASSINADO',
+      $or: [
+        { $and: [{ tipoDeServico: { $ne: 'MONTAGEM E DESMONTAGEM' } }, { 'compra.dataPedido': { $ne: null } }] },
+        { 'obra.statusSolicitacao': 'SOLICITADA' },
+      ],
+      tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO'] },
+      'compra.statusEntrega': 'ENTREGUE',
+    })
+    .toArray()
 
+  const exportation = projects.map((project) => ({
+    QTDE: project.qtde,
+    NOME: project.nomeDoContrato,
+    VENDEDOR: project.vendedor.nome,
+    'POTÊNCIA PICO': project.sistema.potPico,
+    'NÚMERO DE MÓDULOS': project.sistema.qtdeModulos,
+    'DATA DE ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
+    'STATUS DA OBRA': project.obra.statusDaObra,
+    UF: project.uf,
+    CIDADE: project.cidade,
+    BAIRRO: project.bairro,
+    LOGRADOURO: project.logradouro,
+    'NUMERO DA RESIDENCIA': project.numeroResidencia || '',
+  }))
   // const bulkwriteArr = projects.map((project) => {
   //   return {
   //     updateOne: {
@@ -72,7 +95,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
   // const updateResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.json('DESATIVADA')
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: getExport,

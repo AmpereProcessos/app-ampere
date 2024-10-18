@@ -1,6 +1,10 @@
 const dayjs = require('dayjs')
 
-console.log(Math.round(dayjs('2020-11-12T08:00:00.000Z').diff('2019-11-13T08:00:00.000Z', 'days') / 365))
+const strSplitted = '8-HELIUS-HMF144T10-585HL'.split('-')
+console.log(strSplitted)
+const [start, ...end] = strSplitted
+console.log(start)
+console.log(end)
 // const activeCreditors = [
 //   'BRADESCO',
 //   'CREDIPONTAL',

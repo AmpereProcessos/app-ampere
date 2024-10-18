@@ -15,6 +15,10 @@ import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import PurchaseControlDeliveryInformationBlock from './blocos/DeliveryInformationBlock'
 import PurchaseControlUpdatesInformationBlock from './blocos/UpdatesInformationBlock'
 import PurchaseControlTagsBlock from './blocos/TagsBlock'
+import { usePurchaseProject } from '@/utils/methods/query/purchase-controls'
+import PurchaseControlProjectInformationBlock from './blocos/ProjectInformationBlock'
+import PurchaseControlProjectVinculation from './blocos/utils/ProjectVinculation'
+import toast from 'react-hot-toast'
 
 type NewPurchaseControlProps = {
   session: Session
@@ -56,6 +60,11 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
     dataInsercao: new Date().toISOString(),
   })
 
+  const { data: project } = usePurchaseProject({ projectId: infoHolder.projeto.id || null })
+  function addProductToComposition(product: TPurchaseControl['composicao'][number]) {
+    setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }))
+    toast.success('Produto adicionado à composição')
+  }
   const { mutate, isLoading } = useMutationWithFeedback({
     mutationKey: ['create-purchase-control'],
     mutationFn: createPurchaseControl,
@@ -79,6 +88,17 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
           </div>
           <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            {project ? (
+              <PurchaseControlProjectInformationBlock purchase={infoHolder} project={project} addProductToComposition={addProductToComposition} />
+            ) : (
+              <PurchaseControlProjectVinculation
+                purchaseControlId={undefined}
+                infoHolder={infoHolder}
+                setInfoHolder={setInfoHolder}
+                affectedQueryKey={affectedQueryKey}
+                queryClient={queryClient}
+              />
+            )}
             <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             {/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
             <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

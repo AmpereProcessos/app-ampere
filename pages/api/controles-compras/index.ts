@@ -5,6 +5,7 @@ import {
   PurchaseControlSimplifiedProjection,
   TPurchaseControl,
   TPurchaseControlDTO,
+  TPurchaseControlWithProjectDTO,
 } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
@@ -12,7 +13,7 @@ import { Db, Filter, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 type GetResponse = {
-  data: TPurchaseControl | TPurchaseControl[]
+  data: TPurchaseControlWithProjectDTO | TPurchaseControl[]
 }
 const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
@@ -24,9 +25,58 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
   if (id) {
     if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
 
-    const purchaseControl = await collection.findOne({ _id: new ObjectId(id) })
+    const addFields = { projectIdAsObjectId: { $toObjectId: '$projeto.id' } }
+    const lookup = { from: 'dados', localField: 'projectIdAsObjectId', foreignField: '_id', as: 'projetoDados' }
+    const purchaseControlArr = await collection
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $addFields: addFields },
+        { $lookup: lookup },
+        {
+          $project: {
+            status: 1,
+            titulo: 1,
+            projeto: 1,
+            etiquetas: 1,
+            atualizacoes: 1,
+            totalPrevisto: 1,
+            liberacao: 1,
+            composicao: 1,
+            dataPedido: 1,
+            fornecedor: 1,
+            total: 1,
+            transporte: 1,
+            faturamentos: 1,
+            entrega: 1,
+            autor: 1,
+            dataInsercao: 1,
+            dataEfetivacao: 1,
+            'projetoDados._id': 1,
+            'projetoDados.nomeDoContrato': 1,
+            'projetoDados.cpf_cnpj': 1,
+            'projetoDados.tipoDeServico': 1,
+            'projetoDados.telefone': 1,
+            'projetoDados.email': 1,
+            'projetoDados.cep': 1,
+            'projetoDados.uf': 1,
+            'projetoDados.cidade': 1,
+            'projetoDados.bairro': 1,
+            'projetoDados.logradouro': 1,
+            'projetoDados.numeroResidencia': 1,
+            'projetoDados.pagamento.pagador': 1,
+            'projetoDados.pagamento.contatoPagador': 1,
+            'projetoDados.pagamento.forma': 1,
+            'projetoDados.pagamento.credor': 1,
+            'projetoDados.produtos': 1,
+            'projetoDados.idVisitaTecnica': 1,
+          },
+        },
+      ])
+      .toArray()
+    const purchaseControl = purchaseControlArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0]
+    // const purchaseControl = await collection.findOne({ _id: new ObjectId(id) })
     if (!purchaseControl) throw new createHttpError.NotFound('Controle de compra não encontrado.')
-    return res.status(200).json({ data: purchaseControl })
+    return res.status(200).json({ data: purchaseControl as TPurchaseControlWithProjectDTO })
   }
 
   const query: Filter<TPurchaseControl> = unfinishedOnly == 'true' ? { status: { $ne: 'CONCLUÍDA' } } : {}

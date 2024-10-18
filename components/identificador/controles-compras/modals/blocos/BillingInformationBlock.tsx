@@ -46,7 +46,7 @@ function PurchaseControlBillingInformationBlock({ infoHolder, setInfoHolder }: P
         >
           <MdAddBox />
           <h1 className="text-xs font-medium tracking-tight">
-            {!newBillingMenuIsOpen ? 'ABRIR MENU DE NOVA ATUALIZAÇÃO' : 'FECHAR MENU DE NOVA ATUALIZAÇÃO'}
+            {!newBillingMenuIsOpen ? 'ABRIR MENU DE NOVO FATURAMENTO' : 'FECHAR MENU DE NOVO FATURAMENTO'}
           </h1>
         </button>
       </div>
@@ -64,7 +64,7 @@ function PurchaseControlBillingInformationBlock({ infoHolder, setInfoHolder }: P
               />
             ))
           ) : (
-            <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de composição da receita.</p>
+            <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de faturamento.</p>
           )}
         </div>
       </div>

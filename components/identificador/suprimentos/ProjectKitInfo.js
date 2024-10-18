@@ -15,8 +15,9 @@ function getKitInfoAsList(str) {
     var qty = null
     var desc = null
     if (arr.length > 1) {
-      qty = Number(arr[0].trim())
-      desc = arr[1]
+      const [qtyIdentifier, ...descIdentifier] = arr
+      qty = Number(qtyIdentifier.trim())
+      desc = descIdentifier.join(' ')
     } else desc = arr[0]
     if (qty || desc)
       return {

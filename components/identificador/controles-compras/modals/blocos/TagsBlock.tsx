@@ -34,7 +34,7 @@ function PurchaseControlTagsBlock({ infoHolder, setInfoHolder }: PurchaseControl
   return (
     <div className="flex w-full grow flex-col gap-4">
       <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">ETIQUETAS DA COMPRA</h1>
-      <div className="flex w-full items-center justify-center gap-2">
+      <div className="flex w-full flex-wrap items-center justify-center gap-2">
         {infoHolder.etiquetas?.map((tag, index) => (
           <div
             key={index}

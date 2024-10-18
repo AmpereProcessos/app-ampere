@@ -92,7 +92,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
       total: 0,
       faturamentos: [],
       entrega: {
-        status: 'AGUARDANDO COMPRA',
+        status: 'EM COTAÇÃO',
         localizacao: {
           uf: newData.uf,
           cidade: newData.cidade,

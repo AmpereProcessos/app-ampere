@@ -38,7 +38,7 @@ function PurchaseControlCompositionTable({ composition, updateCompositionItem, r
             />
           ))
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de composição da receita.</p>
+          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de composição da compra.</p>
         )}
       </div>
     </div>

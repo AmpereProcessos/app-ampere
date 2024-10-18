@@ -1,5 +1,5 @@
 import { TProjectsByFiltersResult } from '@/pages/api/projects/search'
-import { TPersonalizedProjectsFilter } from '@/utils/schemas/projects'
+import { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
@@ -40,4 +40,21 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
     }),
     updateFilters,
   }
+}
+
+async function fetchVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
+  try {
+    if (query.search.trim().length == 0) return []
+    const { data } = await axios.post('/api/projects/pesquisa-vinculacao', query)
+    return data.data as TProjectDTODBSimplified[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
+  return useQuery({
+    queryKey: ['projects-vinculation-search', query],
+    queryFn: async () => await fetchVinculationProjectsSearch(query),
+  })
 }

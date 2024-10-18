@@ -622,6 +622,13 @@ export const PersonalizedFiltersSchema = z.object({
 })
 export type TPersonalizedProjectsFilter = z.infer<typeof PersonalizedFiltersSchema>
 
+export const QueryVinculationProjectsFiltersSchema = z.object({
+  search: z
+    .string({ required_error: 'Filtro de pesquisa não informado.', invalid_type_error: 'Tipo não válido para o filtro de pesquisa.' })
+    .min(1, 'O filtro deve conter ao menos 1 caractere.'),
+})
+
+export type TQueryVinculationProjectsFilter = z.infer<typeof QueryVinculationProjectsFiltersSchema>
 const Comissions = z.array(
   z.object({
     comissionado: z.object({

@@ -21,6 +21,9 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import PurchaseControlProjectInformationBlock from './blocos/ProjectInformationBlock'
+import PurchaseControlProjectVinculation from './blocos/utils/ProjectVinculation'
+import toast from 'react-hot-toast'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -69,7 +72,12 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     mutationFn: updatePurchaseControl,
     queryClient: queryClient,
     affectedQueryKey: affectedQueryKey,
+    callbackFn: async () => queryClient.invalidateQueries({ queryKey: ['purchase-control-by-id', purchaseControlId] }),
   })
+  function addProductToComposition(product: TPurchaseControl['composicao'][number]) {
+    setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }))
+    toast.success('Produto adicionado à composição')
+  }
   useEffect(() => {
     if (purchaseControl) setInfoHolder(purchaseControl)
   }, [purchaseControl])
@@ -94,6 +102,21 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
             <>
               <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                {purchaseControl.projetoDados ? (
+                  <PurchaseControlProjectInformationBlock
+                    purchase={infoHolder}
+                    project={purchaseControl.projetoDados}
+                    addProductToComposition={addProductToComposition}
+                  />
+                ) : (
+                  <PurchaseControlProjectVinculation
+                    purchaseControlId={purchaseControlId}
+                    infoHolder={infoHolder}
+                    setInfoHolder={setInfoHolder}
+                    affectedQueryKey={['purchase-control-by-id', purchaseControlId]}
+                    queryClient={queryClient}
+                  />
+                )}
                 <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

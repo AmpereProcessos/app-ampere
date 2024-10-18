@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { AuthorSchema } from './users'
+import { TProject, TProjectDTO } from './projects'
 
 const PurchaseStatus = z.enum(
   ['PENDENTE', 'EM COTAÇÃO', 'AGUARDANDO APROVAÇÃO', 'AGUARDANDO PAGAMENTO', 'AGUARDANDO COMPRA', 'AGUARDANDO ENTREGA', 'PENDÊNCIAS', 'CONCLUÍDA'],
@@ -106,6 +107,7 @@ export const GeneralPurchaseControlSchema = z.object({
     required_error: 'Lista de atualizações não informada.',
     invalid_type_error: 'Tipo não válido para a lista de atualizações.',
   }),
+  dataPagamento: z.string({ invalid_type_error: 'Tipo não válido para data de pagamento.' }).optional().nullable(),
   dataPedido: z.string({ invalid_type_error: 'Tipo não válido para a data do pedido.' }).optional().nullable(),
   fornecedor: z.object({
     nome: z.string({ invalid_type_error: 'Tipo não válido para o nome do fornecedor.' }).optional().nullable(),
@@ -295,3 +297,50 @@ export const PurchaseControlsQueryFiltersSchema = z.object({
 })
 
 export type TPurchaseControlsQueryFilters = z.infer<typeof PurchaseControlsQueryFiltersSchema>
+
+export const PurchaseProjectProjection = {
+  nomeDoContrato: 1,
+  cpf_cnpj: 1,
+  tipoDeServico: 1,
+  telefone: 1,
+  email: 1,
+  cep: 1,
+  uf: 1,
+  cidade: 1,
+  bairro: 1,
+  logradouro: 1,
+  numeroResidencia: 1,
+  'pagamento.pagador': 1,
+  'pagamento.contatoPagador': 1,
+  'pagamento.forma': 1,
+  'pagamento.credor': 1,
+  produtos: 1,
+  idVisitaTecnica: 1,
+}
+
+export type TPurchaseProject = Pick<
+  TProject,
+  | 'nomeDoContrato'
+  | 'cpf_cnpj'
+  | 'tipoDeServico'
+  | 'telefone'
+  | 'email'
+  | 'cep'
+  | 'uf'
+  | 'cidade'
+  | 'bairro'
+  | 'logradouro'
+  | 'numeroResidencia'
+  | 'produtos'
+  | 'idVisitaTecnica'
+> & {
+  pagamento: {
+    forma: TProjectDTO['pagamento']['forma']
+    pagador: TProjectDTO['pagamento']['pagador']
+    contatoPagador: TProjectDTO['pagamento']['contatoPagador']
+    credor: TProjectDTO['pagamento']['credor']
+  }
+}
+export type TPurchaseProjectDTO = TPurchaseProject & { _id: string }
+
+export type TPurchaseControlWithProjectDTO = TPurchaseControlDTO & { projetoDados: TPurchaseProjectDTO | null }

@@ -5,6 +5,9 @@ import {
   TPurchaseControlsQueryFilters,
   TPurchaseControlTag,
   TPurchaseControlTagDTO,
+  TPurchaseControlWithProjectDTO,
+  TPurchaseProject,
+  TPurchaseProjectDTO,
 } from '@/utils/schemas/purchases'
 import axios from 'axios'
 import { useState } from 'react'
@@ -118,7 +121,7 @@ export function usePurchaseControlsByFilters() {
 async function fetchPurchaseControlById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/controles-compras?id=${id}`)
-    return data.data as TPurchaseControlDTO
+    return data.data as TPurchaseControlWithProjectDTO
   } catch (error) {
     throw error
   }
@@ -144,5 +147,22 @@ export function usePurchaseControlsTags() {
   return useQuery({
     queryKey: ['purchase-controls-tags'],
     queryFn: fetchPurchasesControlTags,
+  })
+}
+
+async function fetchPurchaseProject({ projectId }: { projectId: string | null }) {
+  try {
+    if (!projectId) return null
+    const { data } = await axios.get(`/api/controles-compras/project?projectId=${projectId}`)
+    return data.data as TPurchaseProjectDTO
+  } catch (error) {
+    throw error
+  }
+}
+
+export function usePurchaseProject({ projectId }: { projectId: string | null }) {
+  return useQuery({
+    queryKey: ['purchase-project', projectId],
+    queryFn: async () => fetchPurchaseProject({ projectId }),
   })
 }

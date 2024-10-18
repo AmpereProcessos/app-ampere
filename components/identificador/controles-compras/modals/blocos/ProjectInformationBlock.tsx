@@ -127,7 +127,6 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
               </div>
             </div>
           </div>
-
           <div className="flex flex-col items-center gap-1 lg:items-end">
             <p className="text-[0.65rem] font-medium text-gray-500">CREDOR</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">

@@ -16,7 +16,7 @@ function PurchasesControl({ initialMode }: PurchasesControlProps) {
 
   function handleSetMode(selected: TPurchasesControlPageModes) {
     // Setting selected mode in a cookie for futher preference use
-    handleSetCookie({ ctx: null, key: 'purchases-control-page-mode', value: selected, path: '/suprimentos/gestao-compras' })
+    handleSetCookie({ ctx: null, key: 'purchases-control-page-mode', value: selected, path: '/suprimentos/controle-compras' })
     setMode(selected)
   }
 

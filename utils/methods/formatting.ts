@@ -63,11 +63,13 @@ export function getProjectNestedFieldValue(project: TProjectDTO, path: string) {
 export function formatLocation({ location, includeUf, includeCity }: { location: TLocation; includeUf?: boolean; includeCity?: boolean }) {
   var addressStr = ''
   if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`
-  if (includeUf && location.uf) addressStr = addressStr + ` (${location.uf}), `
-  if (!location.endereco) return ''
-  addressStr = addressStr + location.endereco
+  if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`
+  if (!location.endereco && !includeUf && !includeCity) return ''
+  if (location.endereco) addressStr = addressStr + location.endereco
   if (location.numeroOuIdentificador) addressStr = addressStr + `, Nº ${location.numeroOuIdentificador}`
   if (location.bairro) addressStr = addressStr + `, ${location.bairro}`
+  if (location.latitude) addressStr = addressStr + `, LAT ${location.latitude}`
+  if (location.longitude) addressStr = addressStr + `, LONG ${location.longitude}`
   addressStr += '.'
   return addressStr.toUpperCase()
 }

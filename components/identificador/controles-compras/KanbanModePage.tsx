@@ -20,7 +20,7 @@ import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-control
 import toast from 'react-hot-toast'
 import ControlPurchaseControl from './modals/ControlPurchaseControl'
 import { cn } from '@/lib/utils'
-import { TPurchasesControlPageModes } from '@/pages/suprimentos/gestao-compras'
+import { TPurchasesControlPageModes } from '@/pages/suprimentos/controle-compras'
 import { FaRotate } from 'react-icons/fa6'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'

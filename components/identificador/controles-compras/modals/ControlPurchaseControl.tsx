@@ -24,6 +24,9 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import PurchaseControlProjectInformationBlock from './blocos/ProjectInformationBlock'
 import PurchaseControlProjectVinculation from './blocos/utils/ProjectVinculation'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -101,6 +104,16 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
           {isSuccess ? (
             <>
               <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <div className="flex w-full items-center justify-center">
+                  <Link href={`/suprimentos/controle-compras/pdf/${purchaseControlId}`}>
+                    <button
+                      className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+                    >
+                      <ExternalLink width={14} height={14} />
+                      <h1 className="text-xs font-medium tracking-tight">PÁGINA DO PEDIDO</h1>
+                    </button>
+                  </Link>
+                </div>
                 <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 {purchaseControl.projetoDados ? (
                   <PurchaseControlProjectInformationBlock

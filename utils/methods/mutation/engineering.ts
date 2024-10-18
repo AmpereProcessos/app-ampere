@@ -64,7 +64,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
     }
     await createNotification({ info: notification })
     const purchaseControl: TPurchaseControl = {
-      status: 'AGUARDANDO PAGAMENTO',
+      status: 'EM COTAÇÃO',
       titulo: `COMPRA DO ${newData.nomeDoContrato}`,
       anotacoes: newData.produtos ? `KIT COMPOSTO POR: ${getProductsStr(newData.produtos)}` : '',
       projeto: {
@@ -92,7 +92,7 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
       total: 0,
       faturamentos: [],
       entrega: {
-        status: 'EM COTAÇÃO',
+        status: 'AGUARDANDO COMPRA',
         localizacao: {
           uf: newData.uf,
           cidade: newData.cidade,

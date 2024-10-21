@@ -2,8 +2,8 @@ import React from 'react'
 import { formatDate } from '../../utils/constants'
 
 import dayjs from 'dayjs'
-import { billableCompanies } from '../../utils/select-options'
-import { formatToCPForCNPJ } from '@/utils/methods/formatting'
+import { billableCompanies, ContractRequestPaymentOptions } from '../../utils/select-options'
+import { formatToCPForCNPJ, formatToPhone } from '@/utils/methods/formatting'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import SelectInput from '../inputs/Select'
 import TextInput from '../inputs/Text'
@@ -15,6 +15,7 @@ import { MdVisibility } from 'react-icons/md'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import Payment from '../identificador/registrosAlteracoesProjeto/secao/Payment'
 import { useCreditors } from '@/utils/methods/query/crm/utils'
+import TextareaInput from '../inputs/TextareaInput'
 
 type InfoPagamentoBlockProps = {
   editor: boolean
@@ -73,8 +74,46 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
             width="100%"
           />
         </div>
-        {infoHolder.pagamento?.forma == 'FINANCIAMENTO' ? (
-          <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2">
+          <SelectInput
+            label={'MÉTODO DE PAGAMENTO'}
+            value={infoHolder.pagamento?.metodo}
+            selectedItemLabel="NÃO DEFINIDO"
+            editable={editor}
+            options={ContractRequestPaymentOptions}
+            handleChange={(value) => {
+              setChanges((prev) => ({
+                ...prev,
+                'pagamento.metodo': value,
+              }))
+              setInfo((prev) => ({
+                ...prev,
+                pagamento: {
+                  ...prev.pagamento,
+                  metodo: value,
+                },
+              }))
+            }}
+            onReset={() => {
+              setChanges((prev) => ({
+                ...prev,
+                'pagamento.metodo': undefined,
+              }))
+              setInfo((prev) => ({
+                ...prev,
+                pagamento: {
+                  ...prev.pagamento,
+                  metodo: undefined,
+                },
+              }))
+            }}
+            width="100%"
+          />
+        </div>
+      </div>
+      {infoHolder.pagamento?.forma == 'FINANCIAMENTO' ? (
+        <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
+          <div className="w-full lg:w-1/3">
             <SelectInput
               label={'CREDOR'}
               value={infoHolder.pagamento.credor}
@@ -110,10 +149,54 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
               width="100%"
             />
           </div>
-        ) : null}
-      </div>
+          <div className="w-full lg:w-1/3">
+            <TextInput
+              label={'NOME DO GERENTE'}
+              editable={editor}
+              value={infoHolder.pagamento?.credorNomeGerente || ''}
+              placeholder="Preencha o nome do gerente..."
+              handleChange={(value) => {
+                setChanges((prev) => ({
+                  ...prev,
+                  'pagamento.credorNomeGerente': formatToPhone(value),
+                }))
+                setInfo((prev) => ({
+                  ...prev,
+                  pagamento: {
+                    ...prev.pagamento,
+                    credorNomeGerente: formatToPhone(value),
+                  },
+                }))
+              }}
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-1/3">
+            <TextInput
+              label={'CONTATO DO GERENTE'}
+              editable={editor}
+              value={infoHolder.pagamento?.credorContatoGerente || ''}
+              placeholder="Preencha o contato do gerente..."
+              handleChange={(value) => {
+                setChanges((prev) => ({
+                  ...prev,
+                  'pagamento.credorContatoGerente': formatToPhone(value),
+                }))
+                setInfo((prev) => ({
+                  ...prev,
+                  pagamento: {
+                    ...prev.pagamento,
+                    credorContatoGerente: formatToPhone(value),
+                  },
+                }))
+              }}
+              width="100%"
+            />
+          </div>
+        </div>
+      ) : null}
       <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'NOME DO PAGADOR'}
             editable={editor}
@@ -135,7 +218,7 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'CONTATO DO PAGADOR'}
             editable={editor}
@@ -157,7 +240,41 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
             width="100%"
           />
         </div>
+        <div className="w-full lg:w-1/3">
+          <TextInput
+            label={'CPF/CNPJ DO PAGADOR'}
+            editable={editor}
+            value={infoHolder.pagamento?.cpf_cnpjPagador || ''}
+            placeholder="Preencha o contato do pagador..."
+            handleChange={(value) => {
+              setChanges((prev) => ({
+                ...prev,
+                'pagamento.cpf_cnpjPagador': formatToCPForCNPJ(value),
+              }))
+              setInfo((prev) => ({
+                ...prev,
+                pagamento: {
+                  ...prev.pagamento,
+                  cpf_cnpjPagador: formatToCPForCNPJ(value),
+                },
+              }))
+            }}
+            width="100%"
+          />
+        </div>
       </div>
+      <div className="mt-2 w-full px-2">
+        <TextareaInput
+          label="DESCRIÇÃO DA NEGOCIAÇÃO"
+          placeholder="Preencha aqui observações e detalhes relevantes sobre a negociação..."
+          value={infoHolder.pagamento.negociacao || ''}
+          handleChange={(value) => {
+            setInfo((prev) => ({ ...prev, pagamento: { ...prev.pagamento, negociacao: value } }))
+            setChanges((prev) => ({ ...prev, 'pagamento.negociacao': value }))
+          }}
+        />
+      </div>
+
       <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
         {showADMOnly ? (
           <div className="flex w-full items-center justify-center lg:w-1/2">
@@ -205,6 +322,71 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
         </div>
       </div>
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">FATURAMENTO</h1>
+      <div className="mt-2 flex w-full flex-wrap items-center justify-center gap-2 px-2">
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="NECESSÁRIO NF ADIANTADA"
+            labelTrue="NECESSÁRIO NF ADIANTADA"
+            checked={!!infoHolder.faturamento.necessarioNotaFiscalAdiantada}
+            handleChange={(value) => {
+              setInfo((prev) => ({
+                ...prev,
+                faturamento: {
+                  ...prev.faturamento,
+                  necessarioNotaFiscalAdiantada: value,
+                },
+              }))
+              setChanges((prev) => ({
+                ...prev,
+                'faturamento.necessarioNotaFiscalAdiantada': value,
+              }))
+            }}
+            justify="justify-center"
+          />
+        </div>
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="NECESSÁRIO INSCRIÇÃO RURAL"
+            labelTrue="NECESSÁRIO INSCRIÇÃO RURAL"
+            checked={!!infoHolder.faturamento.necessarioInscricaoRural}
+            handleChange={(value) => {
+              setInfo((prev) => ({
+                ...prev,
+                faturamento: {
+                  ...prev.faturamento,
+                  necessarioInscricaoRural: value,
+                },
+              }))
+              setChanges((prev) => ({
+                ...prev,
+                'faturamento.necessarioInscricaoRural': value,
+              }))
+            }}
+            justify="justify-center"
+          />
+        </div>
+        <div className="w-fit">
+          <CheckboxInput
+            labelFalse="NECESSÁRIO CÓDIGO FINAME"
+            labelTrue="NECESSÁRIO CÓDIGO FINAME"
+            checked={!!infoHolder.faturamento.necessarioCodigoFiname}
+            handleChange={(value) => {
+              setInfo((prev) => ({
+                ...prev,
+                faturamento: {
+                  ...prev.faturamento,
+                  necessarioCodigoFiname: value,
+                },
+              }))
+              setChanges((prev) => ({
+                ...prev,
+                'faturamento.necessarioCodigoFiname': value,
+              }))
+            }}
+            justify="justify-center"
+          />
+        </div>
+      </div>
       <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput

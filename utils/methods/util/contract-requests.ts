@@ -148,6 +148,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
     cpf_cnpj: request.cpf_cnpj,
     telefone: request.telefone,
     cidade: request.cidadeInstalacao || '',
+    longitude: request.longitude,
+    latitude: request.latitude,
     uf: request.ufInstalacao || '',
     vendedor: {
       nome: request.nomeVendedor || '',
@@ -200,14 +202,22 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
       status: 'NÃO DEFINIDO',
       forma: request.origemRecurso,
       credor: request.credor,
+      credorNomeGerente: request.nomeGerente,
+      credorContatoGerente: request.contatoGerente,
       pagador: request.nomePagador,
       contatoPagador: request.contatoPagador,
+      cpf_cnpjPagador: request.cpf_cnpjNF,
+      negociacao: request.descricaoNegociacao,
+      metodo: request.formaDePagamento,
       retorno: 0,
       cobrancaFeita: false,
     },
     faturamento: {
+      necessarioNotaFiscalAdiantada: request.necessidadeNFAdiantada == 'SIM',
+      necessarioCodigoFiname: request.necessidadeCodigoFiname == 'SIM',
+      necessarioInscricaoRural: request.necessidaInscricaoRural == 'SIM',
       previsaoFaturamento: '', // adicionar empresa e cnpj de faturamento
-      cnpjFaturamento: 0,
+      cnpjFaturamento: '',
       empresaFaturamento: null,
     },
     compra: {

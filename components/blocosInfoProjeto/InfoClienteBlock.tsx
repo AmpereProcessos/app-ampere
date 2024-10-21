@@ -81,7 +81,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DO CLIENTE</span>
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Client logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'NOME DO CONTRATO'}
             placeholder="Preencha o nome do contrato..."
@@ -100,7 +100,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'NOME DO PROJETO'}
             placeholder="Preencha o nome do projeto..."
@@ -119,7 +119,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'CÓDIGO CRM'}
             placeholder="Preencha o código SVG do projeto..."
@@ -138,7 +138,9 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+      </div>
+      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
           <TextInput
             label={'CPF/CNPJ'}
             placeholder="Preencha o CPF do titular do projeto..."
@@ -149,6 +151,22 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
               setInfo({
                 ...infoHolder,
                 cpf_cnpj: value,
+              })
+            }}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label={'INSCRIÇÃO RURAL'}
+            placeholder="Preencha a inscrição rural, se aplicável..."
+            editable={editor}
+            value={infoHolder.inscricaoRural || ''}
+            handleChange={(value) => {
+              setChanges({ ...changes, inscricaoRural: value })
+              setInfo({
+                ...infoHolder,
+                inscricaoRural: value,
               })
             }}
             width="100%"
@@ -327,6 +345,32 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
                 ...prev,
                 numeroResidencia: value,
               }))
+            }}
+            width="100%"
+          />
+        </div>
+      </div>
+      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="LONGITUDE"
+            placeholder="Preencha aqui a longitude da localização do projeto..."
+            value={infoHolder.longitude || ''}
+            handleChange={(value) => {
+              setInfo((prev) => ({ ...prev, longitude: value }))
+              setChanges((prev) => ({ ...prev, longitude: value }))
+            }}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="LATITUDE"
+            placeholder="Preencha aqui a latitude da localização do projeto..."
+            value={infoHolder.latitude || ''}
+            handleChange={(value) => {
+              setInfo((prev) => ({ ...prev, latitude: value }))
+              setChanges((prev) => ({ ...prev, latitude: value }))
             }}
             width="100%"
           />

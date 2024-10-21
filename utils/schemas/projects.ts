@@ -24,6 +24,8 @@ const GeneralProjectSchema = z.object({
   canalVenda: z.string(),
   cep: z.union([z.string(), z.number()]).optional().nullable(),
   cidade: z.string(),
+  longitude: z.string().optional().nullable(),
+  latitude: z.string().optional().nullable(),
   codigoSVB: z.union([z.string(), z.number()]),
   comissionamento: z
     .object({
@@ -79,6 +81,7 @@ const GeneralProjectSchema = z.object({
     status: z.string().optional().nullable(),
   }),
   cpf_cnpj: z.union([z.string(), z.number()]),
+  inscricaoRural: z.string().optional().nullable(),
   dadosCemig: z.object({
     distCreditos: z.union([z.literal('NÃO'), z.literal('SIM'), z.literal('NÃO DEFINIDO')]),
     numeroInstalacao: z.union([z.string(), z.number()]),
@@ -106,6 +109,9 @@ const GeneralProjectSchema = z.object({
     valor: z.number().optional().nullable(),
   }),
   faturamento: z.object({
+    necessarioNotaFiscalAdiantada: z.boolean().optional().nullable(),
+    necessarioCodigoFiname: z.boolean().optional().nullable(),
+    necessarioInscricaoRural: z.boolean().optional().nullable(),
     cnpjFaturamento: z.union([z.number(), z.string()]),
     concluido: z.boolean().optional().nullable(),
     dataFaturamento: z.string().optional().nullable(),
@@ -365,14 +371,19 @@ const GeneralProjectSchema = z.object({
     cobrancaFeita: z.boolean(),
     contatoPagador: z.string(),
     credor: z.string().optional().nullable(), // select options
+    credorNomeGerente: z.string().optional().nullable(),
+    credorContatoGerente: z.string().optional().nullable(),
     dataRecebimento: z.string().optional().nullable(),
     forma: z
       .union([z.literal('FINANCIAMENTO'), z.literal('CAPITAL PRÓPRIO')])
       .optional()
       .nullable(),
     pagador: z.string(),
+    cpf_cnpjPagador: z.string().optional().nullable(),
     retorno: z.number().optional().nullable(),
     status: z.string().optional().nullable(), // select options
+    negociacao: z.string().optional().nullable(),
+    metodo: z.string().optional().nullable(),
   }),
   parecer: z.object({
     dataParecerDeAcesso: z.string().optional().nullable(),

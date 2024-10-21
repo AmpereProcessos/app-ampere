@@ -1,48 +1,76 @@
 import { apiHandler } from '@/utils/api'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
-import { getGenFactorByOrientation } from '@/utils/methods/shared'
-import { getContractValue } from '@/utils/methods/util/projects'
-import { TExpense } from '@/utils/schemas/expenses'
+import { TContractRequest } from '@/utils/schemas/contract-requests'
+
 import { TProject } from '@/utils/schemas/projects'
 import connectToDatabase from '@/utils/services/mongodb/projects'
+import connectToSolicitacoesDatabase from '@/utils/services/mongodb/requests'
 import dayjs from 'dayjs'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
   const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const requestsDb: Db = await connectToSolicitacoesDatabase(process.env.DB_KEY)
+
   const projectsCollection: Collection<TProject> = db.collection('dados')
+  const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
-  const projects = await projectsCollection
-    .find({
-      'obra.observacoes': { $regex: 'MONTAR DE UMA VEZ SÓ,' },
-      'obra.statusDaObra': {
-        $ne: 'CONCLUIDA',
+  const contractRequests = await contractRequestsCollection.find({}).toArray()
+  const projects = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
+
+  const bulkwriteArr = projects.map((project) => {
+    const equivalent = contractRequests.find((c) => c._id.toString() == project.idSolicitacaoContrato)
+    return {
+      updateOne: {
+        filter: { _id: new ObjectId(project._id) },
+        update: {
+          $set: {
+            longitude: equivalent?.longitude,
+            latitude: equivalent?.latitude,
+            inscricaoRural: equivalent?.inscriçãoRural,
+            'faturamento.necessarioNotaFiscalAdiantada': equivalent?.necessidadeNFAdiantada == 'SIM',
+            'faturamento.necessarioCodigoFiname': equivalent?.necessidadeCodigoFiname == 'SIM',
+            'faturamento.necessarioInscricaoRural': equivalent?.necessidaInscricaoRural == 'SIM',
+            'pagamento.cpf_cnpjPagador': equivalent?.cpf_cnpjNF,
+            'pagamento.negociacao': equivalent?.descricaoNegociacao,
+            'pagamento.metodo': equivalent?.formaDePagamento,
+          },
+        },
       },
-      'contrato.status': 'ASSINADO',
-      $or: [
-        { $and: [{ tipoDeServico: { $ne: 'MONTAGEM E DESMONTAGEM' } }, { 'compra.dataPedido': { $ne: null } }] },
-        { 'obra.statusSolicitacao': 'SOLICITADA' },
-      ],
-      tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO'] },
-      'compra.statusEntrega': 'ENTREGUE',
-    })
-    .toArray()
+    }
+  })
+  const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  // const projects = await projectsCollection
+  //   .find({
+  //     'obra.observacoes': { $regex: 'MONTAR DE UMA VEZ SÓ,' },
+  //     'obra.statusDaObra': {
+  //       $ne: 'CONCLUIDA',
+  //     },
+  //     'contrato.status': 'ASSINADO',
+  //     $or: [
+  //       { $and: [{ tipoDeServico: { $ne: 'MONTAGEM E DESMONTAGEM' } }, { 'compra.dataPedido': { $ne: null } }] },
+  //       { 'obra.statusSolicitacao': 'SOLICITADA' },
+  //     ],
+  //     tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO'] },
+  //     'compra.statusEntrega': 'ENTREGUE',
+  //   })
+  //   .toArray()
 
-  const exportation = projects.map((project) => ({
-    QTDE: project.qtde,
-    NOME: project.nomeDoContrato,
-    VENDEDOR: project.vendedor.nome,
-    'POTÊNCIA PICO': project.sistema.potPico,
-    'NÚMERO DE MÓDULOS': project.sistema.qtdeModulos,
-    'DATA DE ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
-    'STATUS DA OBRA': project.obra.statusDaObra,
-    UF: project.uf,
-    CIDADE: project.cidade,
-    BAIRRO: project.bairro,
-    LOGRADOURO: project.logradouro,
-    'NUMERO DA RESIDENCIA': project.numeroResidencia || '',
-  }))
+  // const exportation = projects.map((project) => ({
+  //   QTDE: project.qtde,
+  //   NOME: project.nomeDoContrato,
+  //   VENDEDOR: project.vendedor.nome,
+  //   'POTÊNCIA PICO': project.sistema.potPico,
+  //   'NÚMERO DE MÓDULOS': project.sistema.qtdeModulos,
+  //   'DATA DE ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
+  //   'STATUS DA OBRA': project.obra.statusDaObra,
+  //   UF: project.uf,
+  //   CIDADE: project.cidade,
+  //   BAIRRO: project.bairro,
+  //   LOGRADOURO: project.logradouro,
+  //   'NUMERO DA RESIDENCIA': project.numeroResidencia || '',
+  // }))
   // const bulkwriteArr = projects.map((project) => {
   //   return {
   //     updateOne: {
@@ -95,7 +123,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
   // const updateResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.json(exportation)
+  return res.json(bulkwriteResponse)
 }
 export default apiHandler({
   GET: getExport,

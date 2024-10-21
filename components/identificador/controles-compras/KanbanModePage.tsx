@@ -157,7 +157,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
       </div>
 
       <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
-        <div className="flex w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (

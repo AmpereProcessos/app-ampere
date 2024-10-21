@@ -1,4 +1,7 @@
 import CheckboxWithDate from '@/components/inputs/CheckboxWithDate'
+import { cn } from '@/lib/utils'
+import { TagsColorPalette } from '@/utils/select-options'
+import { Tag } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
 type TEditModal = {
@@ -10,16 +13,26 @@ function Test() {
   const [date, setDate] = useState<Date | undefined>(undefined)
   console.log(date)
   return (
-    <div className="flex h-full w-full grow items-center justify-between gap-4 p-6">
-      <h1>TESTE</h1>
-      <CheckboxWithDate
-        labelFalse="INICIAR PROJETO"
-        labelTrue="INICIAR PROJETO"
-        date={date || null}
-        handleChange={(value) => {
-          setDate(value ? new Date(value) : undefined)
-        }}
-      />
+    <div className="flex h-full w-full grow flex-wrap items-center justify-between gap-4 p-6">
+      {TagsColorPalette.map((tag, index) => (
+        <div
+          key={index}
+          style={{
+            border: '1px solid',
+            borderColor: tag.primaria,
+            color: tag.primaria,
+            backgroundColor: tag.secundaria,
+          }}
+          className={cn('flex flex-col items-center gap-1 rounded px-2 py-0.5')}
+        >
+          <div className="flex w-full items-center gap-1">
+            <Tag width={10} height={10} />
+            <h1 className="text-sm font-bold tracking-tight">TESTANDO CORES</h1>
+          </div>
+          <h1 className="text-xs">{tag.primaria}</h1>
+          <h1 className="text-xs">{tag.secundaria}</h1>
+        </div>
+      ))}
     </div>
   )
   // return (

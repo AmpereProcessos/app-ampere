@@ -11,7 +11,8 @@ import { TProject } from '@/utils/schemas/projects'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import { apiHandler } from '@/utils/api'
-import { TPurchaseControl } from '@/utils/schemas/purchases'
+import { TPurchaseControl, TPurchaseControlTag } from '@/utils/schemas/purchases'
+import connectToDatabase from '@/utils/services/mongodb/auxiliaries'
 
 type TPreviousUser = {
   nome: string
@@ -43,69 +44,6 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-  const crmDb = await connectToCRMDatabase(process.env.DB_KEY)
-
-  const projectsCollection = db.collection<TProject>('dados')
-  const purchasesControlCollection = db.collection('controles-compras')
-
-  const projects = await projectsCollection
-    .find({
-      tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-      'compra.liberacao': true,
-      'compra.status': { $ne: 'CONCLUIDA' },
-      'homologacao.status': 'APROVADO',
-    })
-    .toArray()
-
-  const purchases: TPurchaseControl[] = projects.map((project) => ({
-    status: 'EM COTAÇÃO',
-    titulo: `COMPRA DO ${project.nomeDoContrato}`,
-    anotacoes: project.produtos ? `KIT COMPOSTO POR: ${getProductsStr(project.produtos)}` : '',
-    projeto: {
-      id: project._id.toString(),
-      nome: project.nomeDoProjeto,
-    },
-    etiquetas: [
-      {
-        id: '671146dea74d7a14b032aff3',
-        titulo: 'KIT SOLAR',
-        cores: {
-          primaria: '#4682B4',
-          secundaria: '#B0E0E6',
-        },
-      },
-    ],
-    atualizacoes: [],
-    totalPrevisto: project.compra.previsaoValorDoKit,
-    liberacao: {
-      data: new Date().toISOString(),
-      autor: {},
-    },
-    composicao: [],
-    fornecedor: {},
-    total: 0,
-    faturamentos: [],
-    entrega: {
-      status: 'AGUARDANDO COMPRA',
-      localizacao: {
-        uf: project.uf,
-        cidade: project.cidade,
-      },
-    },
-    transporte: { transportadora: {} },
-    autor: {
-      id: '',
-      nome: 'AUTOMAÇÃO',
-      avatar_url: null,
-    },
-    dataInsercao: new Date().toISOString(),
-  }))
-  const insertResponse = await purchasesControlCollection.insertMany(purchases)
-  // const updateResponse = await usersCollection.updateMany({}, { $set: { 'permissoes.gestao.restringirProjetos': false } })
-  // const updateResponse = await projectsCollection.updateMany({ uf: 'Mg' }, { $set: { uf: 'MG' } })
-  // const updateResponse = await projectsCollection.updateMany({ uf: 'mg' }, { $set: { uf: 'MG' } })
-
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(
@@ -243,7 +181,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
 
   // return res.status(200).json(bkResponse)
 
-  return res.status(200).json(insertResponse)
+  return res.status(200).json('DESATIVADA')
 }
 export default apiHandler({
   GET: handleUpdateTeste,

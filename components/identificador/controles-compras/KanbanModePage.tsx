@@ -272,7 +272,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                       border: '1px solid',
                       borderColor: tag.cores.primaria,
                       color: tag.cores.primaria,
-                      // backgroundColor: tag.cores.secundaria,
+                      backgroundColor: tag.cores.secundaria,
                     }}
                     className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
                   >

@@ -1,5 +1,5 @@
 import { formatDateAsLocale } from '@/utils/methods/formatting'
-import { TContractRequestPartialDTO } from '@/utils/schemas/contract-requests'
+import { TContractRequestSimplifiedDTO } from '@/utils/schemas/contract-requests'
 import React from 'react'
 import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
 import { FaCity, FaCode, FaUser } from 'react-icons/fa'
@@ -32,7 +32,7 @@ function getCardStatus({ approved, contractMade }: { approved?: boolean | null; 
   )
 }
 type RequestCardProps = {
-  request: TContractRequestPartialDTO
+  request: TContractRequestSimplifiedDTO
   openModal: (id: string) => void
 }
 function RequestCard({ request, openModal }: RequestCardProps) {

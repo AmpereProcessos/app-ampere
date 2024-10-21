@@ -85,10 +85,10 @@ function PurchaseControlsCardModePage({ session, handleSetMode }: PurchaseContro
         selectPage={(page) => updateFilters({ page })}
         totalPages={totalPages || 0}
         itemsMatchedText={
-          purchaseControlsMatched > 0 ? `${purchaseControlsMatched} compras encontradas.` : `${purchaseControlsMatched} compra encontrada.`
+          purchaseControlsMatched > 1 ? `${purchaseControlsMatched} compras encontradas.` : `${purchaseControlsMatched} compra encontrada.`
         }
         itemsShowingText={
-          purchaseControlsShowing > 0 ? `Mostrando ${purchaseControlsShowing} compras.` : `Mostrando ${purchaseControlsShowing} compra.`
+          purchaseControlsShowing > 1 ? `Mostrando ${purchaseControlsShowing} compras.` : `Mostrando ${purchaseControlsShowing} compra.`
         }
       />
       <div className="flex w-full flex-wrap items-center gap-2">

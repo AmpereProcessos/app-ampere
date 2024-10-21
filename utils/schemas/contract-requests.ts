@@ -156,10 +156,8 @@ const GeneralContractRequestSchema = z.object({
 export type TContractRequest = z.infer<typeof GeneralContractRequestSchema>
 
 export type TContractRequestDTO = TContractRequest & { _id: string }
-
-export type TContractRequestPartialDTO = Pick<
-  TContractRequestDTO,
-  | '_id'
+export type TContractRequestSimplified = Pick<
+  TContractRequest,
   | 'nomeDoContrato'
   | 'codigoSVB'
   | 'nomeVendedor'
@@ -175,3 +173,52 @@ export type TContractRequestPartialDTO = Pick<
   | 'dataSolicitacao'
   | 'dataAprovacao'
 >
+export type TContractRequestSimplifiedDTO = TContractRequestSimplified & { _id: string }
+
+export const ContractRequestSimplified = {
+  nomeDoContrato: 1,
+  codigoSVB: 1,
+  nomeVendedor: 1,
+  tipoDeServico: 1,
+  cidade: 1,
+  cidadeInstalacao: 1,
+  idVisitaTecnica: 1,
+  idProjetoCRM: 1,
+  idPropostaCRM: 1,
+  confeccionado: 1,
+  aprovacao: 1,
+  nomeParceiro: 1,
+  dataSolicitacao: 1,
+  dataAprovacao: 1,
+}
+export const ContractRequestsQueryFiltersSchema = z.object({
+  name: z.string({
+    required_error: 'Filtro de pesquisa por nome não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro de pesquisa por nome.',
+  }),
+  cpfCnpj: z.string({
+    required_error: 'Filtro de pesquisa por CPF/CNPJ não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro de pesquisa por CPF/CNPJ.',
+  }),
+  serviceTypes: z.array(z.string({ invalid_type_error: 'Tipo não válido para o filtro de tipos de serviço.' }), {
+    required_error: 'Lista de filtro por tipos de serviço não informada.',
+    invalid_type_error: 'Tipo não válido para o filtro por tipos de serviço.',
+  }),
+  ufs: z.array(z.string({ invalid_type_error: 'Tipo não válido para o filtro de estados.' }), {
+    required_error: 'Lista de filtro por estado não informada.',
+    invalid_type_error: 'Tipo não válido para o filtro por estados.',
+  }),
+  cities: z.array(z.string({ invalid_type_error: 'Tipo não válido para o filtro de cidades.' }), {
+    required_error: 'Lista de filtro por cidade não informada.',
+    invalid_type_error: 'Tipo não válido para o filtro por cidade.',
+  }),
+  pendingApproval: z.boolean({
+    required_error: 'Flag de filtro por aprovações pendentes não informado.',
+    invalid_type_error: 'Tipo não válido para a flag de filtro por aprovações pendentes.',
+  }),
+  pendingConfection: z.boolean({
+    required_error: 'Flag de filtro por confecções pendentes não informado.',
+    invalid_type_error: 'Tipo não válido para a flag de filtro por confecções pendentes.',
+  }),
+})
+export type TContractRequestsQueryFilters = z.infer<typeof ContractRequestsQueryFiltersSchema>

@@ -11,11 +11,11 @@ import { TPurchaseControl, TPurchaseProjectDTO } from '@/utils/schemas/purchases
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { AiOutlineSafety } from 'react-icons/ai'
-import { BsBank, BsPersonVcard } from 'react-icons/bs'
+import { BsBank, BsPersonVcard, BsStack } from 'react-icons/bs'
 import { FaBolt, FaIndustry, FaPhone, FaUserAlt } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdAdd } from 'react-icons/io'
-import { MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
+import { MdLandscape, MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
 import { TbReportAnalytics, TbRulerMeasure } from 'react-icons/tb'
 import { useMutation } from 'react-query'
 
@@ -90,6 +90,10 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.cpf_cnpj}</p>
               </div>
               <div className="flex items-center gap-1">
+                <MdLandscape />
+                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.inscricaoRural || 'N/A'}</p>
+              </div>
+              <div className="flex items-center gap-1">
                 <FaLocationDot />
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">
                   {formatLocation({
@@ -122,6 +126,10 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.pagador}</p>
               </div>
               <div className="flex items-center gap-1">
+                <BsPersonVcard />
+                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.cpf_cnpjPagador || 'N/A'}</p>
+              </div>
+              <div className="flex items-center gap-1">
                 <FaPhone />
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.contatoPagador}</p>
               </div>
@@ -131,13 +139,40 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
             <p className="text-[0.65rem] font-medium text-gray-500">CREDOR</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
-                <MdOutlinePayment />
+                <BsStack />
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.forma || 'NÃO DEFINIDO'}</p>
               </div>
+              <div className="flex items-center gap-1">
+                <MdOutlinePayment />
+                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.metodo || 'NÃO DEFINIDO'}</p>
+              </div>
+
               <div className="flex items-center gap-1">
                 <BsBank />
                 <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credor || 'NÃO DEFINIDO'}</p>
               </div>
+              {project!.pagamento.forma == 'FINANCIAMENTO' ? (
+                <>
+                  <div className="flex items-center gap-1">
+                    <FaUserAlt />
+                    <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credorNomeGerente}</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <FaPhone />
+                    <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credorContatoGerente}</p>
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full flex-col items-center justify-center gap-x-4 gap-y-2 lg:flex-row">
+          <div className="flex w-full flex-col lg:w-1/2">
+            <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
+              OBSERVAÇÕES GERAIS SOBRE A NEGOCIAÇÃO
+            </h1>
+            <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+              <h1 className="text-[0.6rem] font-medium">{project!.pagamento.negociacao || 'OBSERVAÇÕES DA NEGOCIAÇÃO NÃO DEFINIDAS'}</h1>
             </div>
           </div>
         </div>

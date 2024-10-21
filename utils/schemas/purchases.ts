@@ -3,7 +3,17 @@ import { AuthorSchema } from './users'
 import { TProject, TProjectDTO } from './projects'
 
 const PurchaseStatus = z.enum(
-  ['PENDENTE', 'EM COTAÇÃO', 'AGUARDANDO APROVAÇÃO', 'AGUARDANDO PAGAMENTO', 'AGUARDANDO COMPRA', 'AGUARDANDO ENTREGA', 'PENDÊNCIAS', 'CONCLUÍDA'],
+  [
+    'PENDENTE',
+    'EM COTAÇÃO',
+    'AGUARDANDO APROVAÇÃO',
+    'AGUARDANDO PAGAMENTO',
+    'AGUARDANDO COMPRA',
+    'AGUARDANDO FATURAMENTO',
+    'AGUARDANDO ENTREGA',
+    'PENDÊNCIAS',
+    'CONCLUÍDA',
+  ],
   {
     required_error: 'Status da compra não informado.',
     invalid_type_error: 'Tipo não válido para o status da compra.',
@@ -301,6 +311,7 @@ export type TPurchaseControlsQueryFilters = z.infer<typeof PurchaseControlsQuery
 export const PurchaseProjectProjection = {
   nomeDoContrato: 1,
   cpf_cnpj: 1,
+  inscricaoRural: 1,
   tipoDeServico: 1,
   telefone: 1,
   email: 1,
@@ -312,8 +323,13 @@ export const PurchaseProjectProjection = {
   numeroResidencia: 1,
   'pagamento.pagador': 1,
   'pagamento.contatoPagador': 1,
+  'pagamento.cpf_cnpjPagador': 1,
   'pagamento.forma': 1,
+  'pagamento.metodo': 1,
   'pagamento.credor': 1,
+  'pagamento.credorNomeGerente': 1,
+  'pagamento.credorContatoGerente': 1,
+  'pagamento.negociacao': 1,
   produtos: 1,
   idVisitaTecnica: 1,
 }
@@ -322,6 +338,7 @@ export type TPurchaseProject = Pick<
   TProject,
   | 'nomeDoContrato'
   | 'cpf_cnpj'
+  | 'inscricaoRural'
   | 'tipoDeServico'
   | 'telefone'
   | 'email'
@@ -336,9 +353,14 @@ export type TPurchaseProject = Pick<
 > & {
   pagamento: {
     forma: TProjectDTO['pagamento']['forma']
+    metodo: TProjectDTO['pagamento']['metodo']
     pagador: TProjectDTO['pagamento']['pagador']
     contatoPagador: TProjectDTO['pagamento']['contatoPagador']
+    cpf_cnpjPagador: TProjectDTO['pagamento']['cpf_cnpjPagador']
     credor: TProjectDTO['pagamento']['credor']
+    credorNomeGerente: TProjectDTO['pagamento']['credorNomeGerente']
+    credorContatoGerente: TProjectDTO['pagamento']['credorContatoGerente']
+    negociacao: TProjectDTO['pagamento']['negociacao']
   }
 }
 export type TPurchaseProjectDTO = TPurchaseProject & { _id: string }

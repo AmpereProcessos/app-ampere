@@ -20,7 +20,6 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
     porcentagem: missingPercentage,
     dataPrevisaoRecebimento: new Date().toISOString(),
   })
-  console.log(newFractionnementHolder)
   function addFractionnement() {
     if (newFractionnementHolder.porcentagem > missingPercentage) return toast.error('Porcentagem excede o máximo permitido.')
     if (!newFractionnementHolder.dataPrevisaoRecebimento) return toast.error('Preencha uma data de previsão de recebimento.')

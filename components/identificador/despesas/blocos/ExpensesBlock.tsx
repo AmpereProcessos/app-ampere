@@ -19,6 +19,7 @@ import EditExpense from '../EditExpense'
 import RevenuesFilterMenu from './ExpensesFilterMenu'
 import { useExpensesByFilters } from '@/utils/methods/query/expenses'
 import { TExpensesByFiltersResult } from '@/pages/api/despesas/search'
+import ExpensesFilterMenu from './ExpensesFilterMenu'
 
 type ExpensesBlockProps = {
   session: Session
@@ -91,9 +92,9 @@ function ExpensesBlock({ session, storedExpensesApportionmentsFilter, storedExpe
       {editModal.isOpen && editModal.id ? (
         <EditExpense session={session} expenseId={editModal.id} closeModal={() => setEditModal({ isOpen: false, id: null })} />
       ) : null}
-      {/* {filterMenuIsOpen ? (
-        <RevenuesFilterMenu queryParams={queryParams} updateQueryParams={updateQueryParams} closeMenu={() => setFilterMenuIsOpen(false)} />
-      ) : null} */}
+      {filterMenuIsOpen ? (
+        <ExpensesFilterMenu queryParams={queryParams} updateQueryParams={updateQueryParams} closeMenu={() => setFilterMenuIsOpen(false)} />
+      ) : null}
     </div>
   )
 }

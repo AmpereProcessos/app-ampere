@@ -24,6 +24,12 @@ import ProjectVinculationMenu from './ProjectVinculationMenu'
 import NumberInput from '@/components/inputs/Number'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import EditExpenseFinalPriceMenu from './EditExpenseFinalPriceMenu'
+import Payments from './Payments'
+
+function getMissingPercentage({ payments }: { payments: TExpenseDTO['pagamentos'] }) {
+  const currentTotal = payments.reduce((acc, current) => current.porcentagem + acc, 0)
+  return 100 - currentTotal
+}
 
 function getExpenseCategories(costApportionment: string) {
   if (!costApportionment) return []
@@ -189,7 +195,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                   />
                 </div>
               </div>
-              <div className="my-2 flex w-full flex-col justify-center gap-2 md:flex-row">
+              {/* <div className="my-2 flex w-full flex-col justify-center gap-2 md:flex-row">
                 <CheckboxInput
                   checked={infoHolder.criterioCompetencia}
                   labelFalse={'NÃO APLICÁVEL A CRITÉRIO DE COMPETÊNCIA'}
@@ -212,7 +218,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                     }))
                   }
                 />
-              </div>
+              </div> */}
               <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
                 <div className="flex w-full items-center justify-center lg:w-1/2">
                   <CheckboxInput
@@ -299,6 +305,11 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
                   />
                 ) : null}
               </div>
+              <Payments
+                infoHolder={infoHolder}
+                setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
+                missingPercentage={getMissingPercentage({ payments: infoHolder.pagamentos })}
+              />
               <div className="flex w-full items-center justify-end px-2">
                 <button
                   // @ts-ignore

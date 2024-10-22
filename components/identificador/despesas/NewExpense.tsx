@@ -244,7 +244,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
                 />
               </div>
             </div>
-            <div className="my-2 flex w-full flex-col justify-center gap-2 md:flex-row">
+            {/* <div className="my-2 flex w-full flex-col justify-center gap-2 md:flex-row">
               <CheckboxInput
                 checked={infoHolder.criterioCompetencia}
                 labelFalse={'NÃO APLICÁVEL A CRITÉRIO DE COMPETÊNCIA'}
@@ -267,7 +267,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
                   }))
                 }
               />
-            </div>
+            </div> */}
             <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
               <div className="flex w-full items-center justify-center lg:w-1/2">
                 <CheckboxInput

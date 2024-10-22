@@ -19,6 +19,7 @@ import { Session } from 'next-auth'
 import { usePendingPayments } from '@/utils/methods/query/expenses'
 import EditExpense from '../EditExpense'
 import { TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
+import { costApportionments } from '@/model'
 
 type PaymentsBlockProps = {
   session: Session
@@ -156,7 +157,7 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
           setFilters((prev) => ({ ...prev, apportionments: value as string[] }))
           localStorage.setItem('payments-apportionments-filter', JSON.stringify(value))
         }}
-        options={revenueSources}
+        options={costApportionments.map((c, index) => ({ id: index + 1, label: c.nome, value: c.nome }))}
         onReset={() => {
           setFilters((prev) => ({ ...prev, apportionments: [] }))
           localStorage.setItem('payments-apportionments-filter', JSON.stringify([]))
@@ -171,7 +172,7 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
           setFilters((prev) => ({ ...prev, categories: value as string[] }))
           localStorage.setItem('payments-categories-filter', JSON.stringify(value))
         }}
-        options={revenueSources}
+        options={costApportionments.flatMap((c) => c.categorias).map((c, index) => ({ id: index + 1, label: c.label, value: c.value }))}
         onReset={() => {
           setFilters((prev) => ({ ...prev, categories: [] }))
           localStorage.setItem('payments-categories-filter', JSON.stringify([]))

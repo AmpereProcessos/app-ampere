@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import NewExpense from './NewExpense'
 import ExpensesBlock from './blocos/ExpensesBlock'
 import PaymentsBlock from './blocos/PaymentsBlock'
+import ExpenseStats from './ExpenseStats'
 
 type ExpensesPageProps = {
   session: Session
@@ -35,7 +36,7 @@ function ExpensesPage({ session }: ExpensesPageProps) {
           <Button onClick={() => setNewExpenseModalIsOpen(true)}>NOVA DESPESA</Button>
         </div>
       </div>
-      {/* <RevenueStats /> */}
+      <ExpenseStats />
       <div className="flex max-h-[600px] w-full flex-col gap-6 lg:flex-row">
         <div className="w-full lg:w-[40%]">
           <PaymentsBlock

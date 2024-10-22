@@ -1,3 +1,4 @@
+import { TExpenseStatsResult } from '@/pages/api/despesas/estatisticas'
 import { TExpensesByFiltersResult } from '@/pages/api/despesas/search'
 import { TExpense, TExpenseDTO, TExpenseQueryFilters, TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
 import axios from 'axios'
@@ -162,4 +163,20 @@ export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams)
     filters,
     setFilters,
   }
+}
+
+async function fetchExpenseStats() {
+  try {
+    const { data } = await axios.get('/api/despesas/estatisticas')
+    return data.data as TExpenseStatsResult
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useExpenseStats() {
+  return useQuery({
+    queryKey: ['expense-stats'],
+    queryFn: fetchExpenseStats,
+  })
 }

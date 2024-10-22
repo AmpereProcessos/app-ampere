@@ -2,30 +2,6 @@ import { z } from 'zod'
 import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
 
-const ObjectItem = {
-  _id: {
-    $oid: '64e7aa7c164a5e0bd82262c6',
-  },
-  tipo: 'SISTEMA FOTOVOLTAICO',
-  autor: {
-    id: '6318db05929e9f8731d8d9bb',
-    nome: 'Lucas Fernandes',
-  },
-  projeto: {
-    id: '6353ea37e559693d01d59df9',
-    nome: 'EMERENCIANO PADUA VILELA NETO ',
-    identificador: 49,
-  },
-  total: 25000,
-  efetivacao: {
-    efetivado: true,
-    data: '2019-09-12T07:00:00.000Z',
-  },
-  dataInsercao: '2019-09-12T07:00:00.000Z',
-  criterioReferencia: false,
-  criterioCompetencia: true,
-}
-
 const GeneralRevenueSchema = z.object({
   nome: z.string(),
   tipo: z.string(),

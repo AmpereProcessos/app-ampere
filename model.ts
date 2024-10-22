@@ -808,7 +808,7 @@ export const costApportionments = [
       { label: 'IRPJ/CSLL', value: 'IRPJ/CSLL' },
     ],
   },
-] as const
+]
 interface ICosts {
   rateio: (typeof costApportionments)[number]['nome']
   categoria: (typeof costApportionments)[number]['categorias'][number]['value']

@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors'
-import { formatProjectCode } from '../../../utils/constants'
-import connectToSolicitacoesDatabase from '../../../utils/services/mongodb/requests'
+import { formatProjectCode } from '../../../../utils/constants'
+import connectToSolicitacoesDatabase from '../../../../utils/services/mongodb/requests'
 import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
   if (req.method === 'POST') {

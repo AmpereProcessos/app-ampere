@@ -8,7 +8,7 @@ import Link from 'next/link'
 import React from 'react'
 import AmpereLogo from '@/utils/images/logo-semtexto-branco.png'
 import { FaPhone, FaUserAlt } from 'react-icons/fa'
-import { MdDashboard, MdOutlinePayment, MdPhone } from 'react-icons/md'
+import { MdDashboard, MdLandscape, MdOutlinePayment, MdPhone } from 'react-icons/md'
 import { BsBank, BsPersonVcard } from 'react-icons/bs'
 import { FaLocationDot } from 'react-icons/fa6'
 import { formatLocation } from '@/utils/methods/formatting'
@@ -50,6 +50,10 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                   <BsPersonVcard />
                   <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.cpf_cnpj}</p>
                 </div>
+                <div className="flex items-center gap-1">
+                  <MdLandscape />
+                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.inscricaoRural || 'N/A'}</p>
+                </div>
               </div>
               <p className="text-[0.7rem] font-medium text-gray-500">INFORMAÇÕES DE PAGAMENTO</p>
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -60,6 +64,10 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                 <div className="flex items-center gap-1">
                   <FaPhone />
                   <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados.pagamento.contatoPagador}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <BsPersonVcard />
+                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.pagamento.cpf_cnpjPagador}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <MdOutlinePayment />
@@ -90,6 +98,12 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                 </p>
               </div>
             </div>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-[0.7rem] font-medium text-gray-500">ANOTAÇÕES</p>
+            <p className="w-[90%] rounded bg-gray-50 p-1 text-center text-[0.6rem] font-medium leading-none tracking-tight">
+              {purchaseControl.anotacoes || 'NÃO DEFINIDO'}
+            </p>
           </div>
         </div>
         <div className="flex w-full flex-col">
@@ -143,12 +157,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         $project: {
           status: 1,
           titulo: 1,
+          anotacoes: 1,
           projeto: 1,
           etiquetas: 1,
           atualizacoes: 1,
           totalPrevisto: 1,
           liberacao: 1,
           composicao: 1,
+          dataPagamento: 1,
           dataPedido: 1,
           fornecedor: 1,
           total: 1,
@@ -161,6 +177,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           'projetoDados._id': 1,
           'projetoDados.nomeDoContrato': 1,
           'projetoDados.cpf_cnpj': 1,
+          'projetoDados.inscricaoRural': 1,
           'projetoDados.tipoDeServico': 1,
           'projetoDados.telefone': 1,
           'projetoDados.email': 1,
@@ -172,8 +189,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           'projetoDados.numeroResidencia': 1,
           'projetoDados.pagamento.pagador': 1,
           'projetoDados.pagamento.contatoPagador': 1,
+          'projetoDados.pagamento.cpf_cnpjPagador': 1,
           'projetoDados.pagamento.forma': 1,
+          'projetoDados.pagamento.metodo': 1,
           'projetoDados.pagamento.credor': 1,
+          'projetoDados.pagamento.credorNomeGerente': 1,
+          'projetoDados.pagamento.credorContatoGerente': 1,
+          'projetoDados.pagamento.negociacao': 1,
           'projetoDados.produtos': 1,
           'projetoDados.idVisitaTecnica': 1,
         },

@@ -2,6 +2,7 @@ import {
   TPurchaseControl,
   TPurchaseControlDTO,
   TPurchaseControlKanbanSimplifiedDTO,
+  TPurchaseControlSimplifiedDTO,
   TPurchaseControlsQueryFilters,
   TPurchaseControlTag,
   TPurchaseControlTagDTO,
@@ -122,6 +123,21 @@ async function fetchPurchaseControlById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/controles-compras?id=${id}`)
     return data.data as TPurchaseControlWithProjectDTO
+  } catch (error) {
+    throw error
+  }
+}
+
+export function usePurchaseControlByProjectId({ projectId }: { projectId: string }) {
+  return useQuery({
+    queryKey: ['purchase-control-by-project-id', projectId],
+    queryFn: async () => await fetchPurchaseControlByProjectId({ projectId }),
+  })
+}
+async function fetchPurchaseControlByProjectId({ projectId }: { projectId: string }) {
+  try {
+    const { data } = await axios.get(`/api/controles-compras?projectId=${projectId}`)
+    return data.data as TPurchaseControlSimplifiedDTO[]
   } catch (error) {
     throw error
   }

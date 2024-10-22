@@ -65,6 +65,20 @@ export function getDifferenceBetweenTimes(timeOne: string, timeTwo: string) {
   return { hoursTotal: differenceHoursTotal, minutesTotal: differenceInMinutes, hoursFixed: differenceHours, minutesFixed: differenceMinutes }
 }
 
+export function getDayStringsBetweenDates({ initialDate, endDate, format }: { initialDate: string; endDate: string; format?: string }) {
+  let strings = []
+  let iteratingDate = dayjs(initialDate)
+  const goalDate = dayjs(endDate)
+
+  while (iteratingDate.isBefore(goalDate) || iteratingDate.isSame(goalDate, 'day')) {
+    const dayStr = iteratingDate.format(format || 'DD/MM')
+    strings.push(dayStr)
+    iteratingDate = iteratingDate.add(1, 'day')
+  }
+
+  return strings
+}
+
 export function getDifferenceBetweenDates({ start, end }: { start?: string | Date | null; end?: string | Date | null }) {
   const startDate = dayjs(start)
   const endDate = dayjs(end)

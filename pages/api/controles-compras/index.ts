@@ -18,7 +18,7 @@ type GetResponse = {
 const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const { id, unfinishedOnly } = req.query
+  const { id, projectId, unfinishedOnly } = req.query
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const collection = db.collection<TPurchaseControl>('controles-compras')
 
@@ -36,12 +36,14 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
           $project: {
             status: 1,
             titulo: 1,
+            anotacoes: 1,
             projeto: 1,
             etiquetas: 1,
             atualizacoes: 1,
             totalPrevisto: 1,
             liberacao: 1,
             composicao: 1,
+            dataPagamento: 1,
             dataPedido: 1,
             fornecedor: 1,
             total: 1,
@@ -84,7 +86,13 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
     if (!purchaseControl) throw new createHttpError.NotFound('Controle de compra não encontrado.')
     return res.status(200).json({ data: purchaseControl as TPurchaseControlWithProjectDTO })
   }
+  if (projectId) {
+    if (typeof projectId != 'string' || !ObjectId.isValid(projectId)) throw new createHttpError.BadRequest('ID do projeto inválido.')
 
+    const purchaseControls = await collection.find({ 'projeto.id': projectId }, { projection: PurchaseControlSimplifiedProjection }).toArray()
+
+    return res.status(200).json({ data: purchaseControls })
+  }
   const query: Filter<TPurchaseControl> = unfinishedOnly == 'true' ? { status: { $ne: 'CONCLUÍDA' } } : {}
 
   const purchaseControls = await collection

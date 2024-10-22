@@ -7,7 +7,7 @@ import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMate
 import SelectInputPersonalized from '../inputs/Select'
 import { deliveryStatus, supplementationStatus } from '../../utils/select-options'
 import CheckboxInput from '../inputs/Checkbox'
-import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
+import { BsCalendarCheck, BsCalendarEvent, BsCalendarFill, BsCalendarPlus, BsCheckAll } from 'react-icons/bs'
 import { FaMoon } from 'react-icons/fa'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import DateInput from '../inputs/Date'
@@ -19,6 +19,17 @@ import { TbAlertCircle } from 'react-icons/tb'
 import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import Purchase from '../identificador/registrosAlteracoesProjeto/secao/Purchase'
+import { usePurchaseControlByProjectId } from '@/utils/methods/query/purchase-controls'
+import ErrorComponent from '../utils/ErrorComponent'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { TPurchaseControl, TPurchaseControlDTO, TPurchaseControlSimplifiedDTO } from '@/utils/schemas/purchases'
+import { cn } from '@/lib/utils'
+import { Factory, Package, Tag, Truck } from 'lucide-react'
+import { formatDateAsLocale, formatNameAsInitials, getProductsStr } from '@/utils/methods/formatting'
+import Avatar from '../utils/Avatar'
+import { createPurchaseControl } from '@/utils/methods/mutation/purchase-controls'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { useQueryClient } from 'react-query'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -87,7 +98,6 @@ function InfoCompraBlock({
 }: InfoCompraBlockProps) {
   const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
   const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
-
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
@@ -575,6 +585,7 @@ function InfoCompraBlock({
           </div>
         </div>
       )}
+      <PurchaseControlsBlock project={project} />
       {!showDeliveryInfoOnly ? (
         <div className="my-4 flex w-full items-center justify-center self-center">
           <CheckboxInput
@@ -602,3 +613,186 @@ function InfoCompraBlock({
 }
 
 export default InfoCompraBlock
+
+type PurchaseControlsBlockProps = {
+  project: TProjectDTO
+}
+function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
+  const queryClient = useQueryClient()
+  const { data: purchaseControls, isLoading, isError, isSuccess, error } = usePurchaseControlByProjectId({ projectId: project._id })
+
+  async function generateContractPurchase() {
+    const purchaseControl: TPurchaseControl = {
+      status: 'EM COTAÇÃO',
+      titulo: `COMPRA DO ${project.nomeDoContrato}`,
+      anotacoes: project.produtos ? `KIT COMPOSTO POR: ${getProductsStr(project.produtos)}` : '',
+      projeto: {
+        id: project._id,
+        nome: project.nomeDoProjeto,
+      },
+      etiquetas: [
+        {
+          id: '671146dea74d7a14b032aff3',
+          titulo: 'KIT SOLAR',
+          cores: {
+            primaria: '#4682B4',
+            secundaria: '#B0E0E6',
+          },
+        },
+      ],
+      atualizacoes: [],
+      totalPrevisto: project.compra.previsaoValorDoKit,
+      liberacao: {
+        data: new Date().toISOString(),
+        autor: {},
+      },
+      composicao: [],
+      fornecedor: {},
+      total: 0,
+      faturamentos: [],
+      entrega: {
+        status: 'AGUARDANDO COMPRA',
+        localizacao: {
+          uf: project.uf,
+          cidade: project.cidade,
+        },
+      },
+      transporte: { transportadora: {} },
+      autor: {
+        id: '',
+        nome: 'AUTOMAÇÃO',
+        avatar_url: null,
+      },
+      dataInsercao: new Date().toISOString(),
+    }
+    await createPurchaseControl(purchaseControl)
+    return 'Controle de compra criado com sucesso!'
+  }
+  const { mutate: handleGenerateContractPurchase, isLoading: isMutationLoading } = useMutationWithFeedback({
+    mutationKey: ['create-purchase-control', project._id],
+    mutationFn: generateContractPurchase,
+    queryClient: queryClient,
+    affectedQueryKey: ['purchase-control-by-project-id', project._id],
+  })
+  return (
+    <div className="flex w-[90%] flex-col gap-2 self-center rounded border border-black">
+      <h1 className="w-full rounded bg-gray-800 p-1 text-center text-xs font-bold text-white">CONTROLES DE COMPRA</h1>
+      <div className="flex w-full grow flex-col gap-1 p-2">
+        <div className="flex w-full items-center justify-center lg:justify-end">
+          <button
+            disabled={isMutationLoading}
+            onClick={() => handleGenerateContractPurchase()}
+            className="rounded-md bg-green-700 py-1 px-4 text-sm font-bold text-white disabled:bg-gray-500"
+          >
+            GERAR COMPRA DO CONTRATO
+          </button>
+        </div>
+        {isLoading ? <p className="w-full animate-pulse text-center text-xs font-bold tracking-tight text-gray-500">Carregando...</p> : null}
+        {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+        {isSuccess ? (
+          purchaseControls && purchaseControls.length > 0 ? (
+            purchaseControls.map((purchaseControl) => <PurchaseControlCard key={purchaseControl._id} purchaseControl={purchaseControl} />)
+          ) : (
+            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum controle de compra encontrado.</div>
+          )
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+type PurchaseControlCardProps = {
+  purchaseControl: TPurchaseControlSimplifiedDTO
+}
+function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
+  function getDeliveryStatusTag(status: TPurchaseControlSimplifiedDTO['entrega']['status']) {
+    if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+  }
+  return (
+    <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
+          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          {purchaseControl.etiquetas.length > 0 ? (
+            purchaseControl.etiquetas.map((tag, index) => (
+              <div
+                key={index}
+                style={{
+                  border: '1px solid',
+                  borderColor: tag.cores.primaria,
+                  color: tag.cores.primaria,
+                  backgroundColor: tag.cores.secundaria,
+                }}
+                className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
+              >
+                <Tag width={10} height={10} />
+                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+              </div>
+            ))
+          ) : (
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+          )}
+        </div>
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
+          <div className="flex items-center gap-1">
+            <Factory width={13} height={13} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FORNECEDOR</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <Truck width={13} height={13} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">TRANSPORTADORA</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.transporte.transportadora.nome || 'N/A'}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <Package width={13} height={13} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(purchaseControl.entrega.status)}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendarEvent width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {formatDateAsLocale(purchaseControl.entrega.dataPrevisao) || 'N/A'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendarCheck width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EFETIVAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {formatDateAsLocale(purchaseControl.entrega.dataEfetivacao) || 'N/A'}
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1">
+            <BsCalendarPlus />
+            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataInsercao, true)}</p>
+          </div>
+          {purchaseControl.dataEfetivacao ? (
+            <div className="flex items-center gap-1">
+              <BsCalendarCheck color="#22c55e" />
+              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataEfetivacao, true)}</p>
+            </div>
+          ) : null}
+          <div className="flex items-center gap-1">
+            <Avatar
+              url={purchaseControl.autor.avatar_url || undefined}
+              width={20}
+              height={20}
+              fallback={formatNameAsInitials(purchaseControl.autor.nome)}
+            />
+            <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

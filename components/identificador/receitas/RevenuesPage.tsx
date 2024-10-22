@@ -15,7 +15,6 @@ function RevenuesPage({ session }: RevenuesPageProps) {
   const storedReceiptsTypesFilter = storedReceiptsTypesFilterStr ? (JSON.parse(storedReceiptsTypesFilterStr) as string[]) : []
   const storedRevenuesTypesFilterStr = localStorage.getItem('revenues-types-filter')
   const storedRevenuesTypesFilter = storedRevenuesTypesFilterStr ? (JSON.parse(storedRevenuesTypesFilterStr) as string[]) : []
-  console.log('INITIAL RECEIPTS FILTERS', storedReceiptsTypesFilter)
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

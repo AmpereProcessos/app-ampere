@@ -63,50 +63,6 @@ export async function handleEngineeringUpdate({ previousData, newData, changes, 
       dataDeEnvio: new Date().toISOString(),
     }
     await createNotification({ info: notification })
-    const purchaseControl: TPurchaseControl = {
-      status: 'EM COTAÇÃO',
-      titulo: `COMPRA DO ${newData.nomeDoContrato}`,
-      anotacoes: newData.produtos ? `KIT COMPOSTO POR: ${getProductsStr(newData.produtos)}` : '',
-      projeto: {
-        id: newData._id,
-        nome: newData.nomeDoProjeto,
-      },
-      etiquetas: [
-        {
-          id: '671146dea74d7a14b032aff3',
-          titulo: 'KIT SOLAR',
-          cores: {
-            primaria: '#4682B4',
-            secundaria: '#B0E0E6',
-          },
-        },
-      ],
-      atualizacoes: [],
-      totalPrevisto: newData.compra.previsaoValorDoKit,
-      liberacao: {
-        data: new Date().toISOString(),
-        autor: {},
-      },
-      composicao: [],
-      fornecedor: {},
-      total: 0,
-      faturamentos: [],
-      entrega: {
-        status: 'AGUARDANDO COMPRA',
-        localizacao: {
-          uf: newData.uf,
-          cidade: newData.cidade,
-        },
-      },
-      transporte: { transportadora: {} },
-      autor: {
-        id: '',
-        nome: 'AUTOMAÇÃO',
-        avatar_url: null,
-      },
-      dataInsercao: new Date().toISOString(),
-    }
-    await createPurchaseControl(purchaseControl)
   }
   // Update project
   await updateProject({ id: projectId, changes: changes })

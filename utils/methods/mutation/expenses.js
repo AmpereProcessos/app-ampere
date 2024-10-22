@@ -54,6 +54,8 @@ export async function insertExpensesFromMaterials({
         data: new Date().toISOString(),
       },
       criterioCompetencia: true,
+      criterioReferencia: true,
+      pagamentos: [],
       dataInsercao: new Date().toISOString(), // data de inserção do documento
     }
     await axios.post('/api/despesas', { data: costObj })
@@ -124,6 +126,7 @@ export async function insertExpensesFromPurchaseRequests({
       efetivado: true,
       data: new Date().toISOString(),
     },
+    pagamentos: [],
     criterioCompetencia: competenceCriteria,
     criterioReferencia: referenceCriteria,
     dataInsercao: new Date().toISOString(), // data de inserção do documento

@@ -27,7 +27,7 @@ import { TExpense } from '@/utils/schemas/expenses'
 import { insertExpense } from '@/utils/methods/mutation/expenses'
 import Link from 'next/link'
 
-function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormularyDTO }) {
+function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormularyDTO }): TExpense {
   const items = info.materiais.map((material) => {
     const item: TExpense['itens'][number] = {
       idMaterial: material.id,
@@ -62,6 +62,8 @@ function getExpensesFromFormulary({ session, info }: { session: Session; info: T
       data: new Date().toISOString(),
     },
     criterioCompetencia: true,
+    criterioReferencia: false,
+    pagamentos: [],
     dataInsercao: new Date().toISOString(),
   }
 }

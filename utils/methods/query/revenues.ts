@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { formatWithoutDiacritics } from '../formatting'
+import { TRevenueStatsResult } from '@/pages/api/receitas/estatisticas'
 
 // Expenses by Project
 async function fetchProjectRevenues({ projectId }: { projectId: string }) {
@@ -175,4 +176,20 @@ export function usePendingReceipts({ initialFilters }: UsePendingReceiptsParams)
     filters,
     setFilters,
   }
+}
+
+async function fetchRevenueStats() {
+  try {
+    const { data } = await axios.get('/api/receitas/estatisticas')
+    return data.data as TRevenueStatsResult
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useRevenueStats() {
+  return useQuery({
+    queryKey: ['revenue-stats'],
+    queryFn: fetchRevenueStats,
+  })
 }

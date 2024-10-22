@@ -62,6 +62,7 @@ function NewExpense({ session, closeModal }: NewExpenseProps) {
       efetivado: false,
       data: null,
     },
+    pagamentos: [],
     criterioReferencia: false,
     criterioCompetencia: false,
     dataInsercao: new Date().toISOString(),

@@ -1,4 +1,5 @@
-import { TExpense, TExpenseDTO } from '@/utils/schemas/expenses'
+import { TExpensesByFiltersResult } from '@/pages/api/despesas/search'
+import { TExpense, TExpenseDTO, TExpenseQueryFilters, TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
@@ -96,4 +97,69 @@ export function useExpenseById({ id }: { id: string }) {
     queryKey: ['expense-by-id', id],
     queryFn: async () => await fetchExpenseById({ id }),
   })
+}
+
+async function fetchExpenseByFilters({ page, ...filters }: TExpenseQueryFilters & { page: number }) {
+  try {
+    const { data } = await axios.post(`/api/despesas/search?page=${page}`, filters)
+    return data.data as TExpensesByFiltersResult
+  } catch (error) {
+    throw error
+  }
+}
+
+type UseExpensesByFiltersParams = {
+  initialQueryParams: TExpenseQueryFilters & { page: number }
+}
+export function useExpensesByFilters({ initialQueryParams }: UseExpensesByFiltersParams) {
+  const [queryParams, setQueryParams] = useState<TExpenseQueryFilters & { page: number }>(initialQueryParams)
+
+  function updateQueryParams(params: Partial<TExpenseQueryFilters & { page: number }>) {
+    setQueryParams((prev) => ({ ...prev, ...params }))
+  }
+
+  const query = useQuery({
+    queryKey: ['expenses-by-filters', queryParams],
+    queryFn: async () => await fetchExpenseByFilters(queryParams),
+  })
+
+  return { ...query, queryParams, updateQueryParams }
+}
+
+async function fetchPendingPayments() {
+  try {
+    const { data } = await axios.get('/api/despesas/pagamentos')
+    return data.data as TPaymentUnwindSimplifiedDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+type UsePendingPaymentsParams = {
+  initialFilters: { search: string; apportionments: string[]; categories: string[] }
+}
+export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams) {
+  const [filters, setFilters] = useState(initialFilters)
+
+  function matchApportionments(payment: TPaymentUnwindSimplifiedDTO) {
+    if (filters.apportionments.length == 0) return true
+    return filters.apportionments.includes(payment.rateio)
+  }
+  function matchCategories(payment: TPaymentUnwindSimplifiedDTO) {
+    if (filters.categories.length == 0) return true
+    return filters.categories.includes(payment.categoria)
+  }
+  function handleModelData(data: TPaymentUnwindSimplifiedDTO[]) {
+    return data.filter((receipt) => matchApportionments(receipt) && matchCategories(receipt))
+  }
+
+  return {
+    ...useQuery({
+      queryKey: ['payments'],
+      queryFn: fetchPendingPayments,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
 }

@@ -2,6 +2,25 @@ import { z } from 'zod'
 import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
 
+const PaymentItemSchema = z.object({
+  valor: z.number({ required_error: 'Valor do item de pagamento não informado.', invalid_type_error: 'Tipo não válido para o item de pagamento.' }),
+  porcentagem: z.number({
+    required_error: 'Porcentagem do item de pagamento não informado.',
+    invalid_type_error: 'Tipo não válido para a porcentagem do item de pagamento.',
+  }),
+  dataPrevisaoPagamento: z
+    .string({
+      required_error: 'Data de previsão de pagamento não informada.',
+      invalid_type_error: 'Tipo não válido para data de previsão de pagamento.',
+    })
+    .datetime({ message: 'Tipo não válido para data de previsão pagamento.' }),
+  dataPagamento: z
+    .string({ invalid_type_error: 'Tipo não válido para data de pagamento.' })
+    .datetime({ message: 'Tipo não válido para data de pagamento.' })
+    .optional()
+    .nullable(),
+})
+
 const ExpenseItemSchema = z.object({
   idMaterial: z.string().optional().nullable(),
   descricao: z.string({
@@ -42,6 +61,7 @@ const GeneralExpenseSchema = z.object({
   }),
   criterioReferencia: z.boolean(),
   criterioCompetencia: z.boolean(),
+  pagamentos: z.array(PaymentItemSchema),
   autor: AuthorSchema,
   dataInsercao: z.string().datetime(),
 })
@@ -74,6 +94,7 @@ const InsertExpenseSchema = z.object({
     required_error: 'Condição do critério de competência não informada.',
     invalid_type_error: 'Tipo não válido para condição do critério de competência.',
   }),
+  pagamentos: z.array(PaymentItemSchema),
   autor: AuthorSchema,
   dataInsercao: z
     .string({ required_error: 'Data de inserção não fornecida.', invalid_type_error: 'Tipo não válido para a data de inserção.' })
@@ -100,10 +121,54 @@ const ExpenseEntitySchema = z.object({
   }),
   criterioReferencia: z.boolean(),
   criterioCompetencia: z.boolean(),
+  pagamentos: z.array(PaymentItemSchema),
   autor: AuthorSchema,
   dataInsercao: z.string().datetime(),
 })
 
 export type TExpense = z.infer<typeof GeneralExpenseSchema>
-
+export type TExpenseSimplified = Pick<TExpense, 'rateio' | 'categoria' | 'total' | 'pagamentos' | 'efetivacao' | 'autor' | 'dataInsercao'>
 export type TExpenseDTO = TExpense & { _id: string }
+export type TExpenseSimplifiedDTO = TExpenseSimplified & { _id: string }
+
+export type TPaymentUnwindSimplifiedDTO = {
+  _id: string
+  rateio: TExpense['rateio']
+  categoria: TExpense['categoria']
+  total: TExpense['total']
+  pagamento: TExpense['pagamentos'][number]
+  indexPagamento: number
+}
+
+export const ExpenseSimplifiedProjection = {
+  rateio: 1,
+  categoria: 1,
+  total: 1,
+  pagamentos: 1,
+  efetivacao: 1,
+  autor: 1,
+  dataInsercao: 1,
+}
+
+export const ExpenseQueryFilters = z.object({
+  search: z.string({ required_error: 'Filtro de pesquisa não informado.', invalid_type_error: 'Tipo não válido para o filtro de pesquisa.' }),
+  status: z.array(
+    z.enum(['PAGO', 'PAGO PARCIAL', 'PENDENTE'], {
+      required_error: 'Status de filtro não informado.',
+      invalid_type_error: 'Tipo não válido para status de filtro.',
+    }),
+    {
+      required_error: 'Lista de status de filtro não informada.',
+      invalid_type_error: 'Tipo não válido para a lista de status de filtro.',
+    }
+  ),
+  apportionments: z.array(z.string({ invalid_type_error: 'Tipo não válido para o rateio da despesa.' }), {
+    required_error: 'Lista de rateios da despesa não informada.',
+    invalid_type_error: 'Tipo não válido para lista de rasteios da despesa.',
+  }),
+  categories: z.array(z.string({ invalid_type_error: 'Tipo não válido para a categoria da despesa.' }), {
+    required_error: 'Lista  a categorias da despesa não informada.',
+    invalid_type_error: 'Tipo não válido para lista de categorias da despesa.',
+  }),
+})
+export type TExpenseQueryFilters = z.infer<typeof ExpenseQueryFilters>

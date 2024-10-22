@@ -5,6 +5,7 @@ import ReceiptsBlock from './blocos/ReceiptsBlock'
 import RevenuesBlock from './blocos/RevenuesBlock'
 import { Button } from '@/components/ui/button'
 import NewRevenue from './NewRevenue'
+import RevenueStats from './RevenueStats'
 
 type RevenuesPageProps = {
   session: Session
@@ -25,6 +26,7 @@ function RevenuesPage({ session }: RevenuesPageProps) {
           <Button onClick={() => setNewRevenueModalIsOpen(true)}>NOVA RECEITA</Button>
         </div>
       </div>
+      <RevenueStats />
       <div className="flex max-h-[600px] w-full flex-col gap-6 lg:flex-row">
         <div className="w-full lg:w-[40%]">
           <ReceiptsBlock session={session} storedReceiptsTypesFilter={storedReceiptsTypesFilter} />

@@ -13,6 +13,7 @@ import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import { apiHandler } from '@/utils/api'
 import { TPurchaseControl, TPurchaseControlTag } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/auxiliaries'
+import { TExpense } from '@/utils/schemas/expenses'
 
 type TPreviousUser = {
   nome: string
@@ -44,6 +45,19 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const collection: Collection<TExpense> = db.collection('despesas')
+
+  const updateResponse = await collection.updateMany(
+    {},
+    {
+      $set: {
+        pagamentos: [],
+      },
+    }
+  )
+
+  return res.status(200).json(updateResponse)
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(

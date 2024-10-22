@@ -65,6 +65,7 @@ function ExpenseModal({ expenseId, session, closeModal }: ExpenseModalProps) {
       efetivado: false,
       data: null,
     },
+    pagamentos: [],
     criterioReferencia: false,
     criterioCompetencia: false,
     dataInsercao: new Date().toISOString(),

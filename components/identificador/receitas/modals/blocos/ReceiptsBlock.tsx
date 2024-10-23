@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MdAddBox } from 'react-icons/md'
 import RevenueReceiptsTable from './utils/ReceiptsTable'
+import TextInput from '@/components/inputs/Text'
 
 function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fracionamento'] }) {
   const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
@@ -84,6 +85,7 @@ type NewReceiptMenuProps = {
 }
 function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewReceiptMenuProps) {
   const [receiptHolder, setReceiptHolder] = useState<TRevenue['fracionamento'][number]>({
+    titulo: '',
     valor: 0,
     porcentagem: missingPercentage,
     dataPrevisaoRecebimento: new Date().toISOString(),
@@ -105,40 +107,50 @@ function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewRece
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO RECEBIMENTO</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">
-          <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-            <div className="w-full lg:w-1/4">
+          <div className="flex w-full flex-col items-center gap-2 tracking-tight lg:flex-row">
+            <div className="w-full lg:w-[30%]">
+              <TextInput
+                label="TÍTULO"
+                labelClassName="text-xs tracking-tight"
+                value={receiptHolder.titulo}
+                placeholder="Preencha aqui um titulo para o recebimento..."
+                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, titulo: value }))}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-[20%]">
               <NumberInput
                 label="VALOR"
-                labelClassName="text-sm tracking-tight"
+                labelClassName="text-xs tracking-tight"
                 placeholder="Preencha aqui o valor do fracionamento..."
                 value={receiptHolder.valor || null}
                 handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / revenueTotal) * 100 }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[10%]">
               <NumberInput
                 label="PORCENTAGEM"
-                labelClassName="text-sm tracking-tight"
+                labelClassName="text-xs tracking-tight"
                 placeholder="Preencha aqui a porcentagem do fracionamento..."
                 value={receiptHolder.porcentagem}
                 handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * revenueTotal) / 100 }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[20%]">
               <DateInput
-                label="PREVISÃO DE RECEBIMENTO"
-                labelClassName="text-sm tracking-tight"
+                label="PREV. DE RECEBIMENTO"
+                labelClassName="text-xs tracking-tight"
                 value={receiptHolder.dataPrevisaoRecebimento ? formatDate(receiptHolder.dataPrevisaoRecebimento) : undefined}
                 handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value) }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[20%]">
               <DateInput
                 label="DATA DE RECEBIMENTO"
-                labelClassName="text-sm tracking-tight"
+                labelClassName="text-xs tracking-tight"
                 value={receiptHolder.dataRecebimento ? formatDate(receiptHolder.dataRecebimento) : undefined}
                 handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value) }))}
                 width="100%"

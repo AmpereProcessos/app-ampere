@@ -5,23 +5,11 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import { VscChromeClose } from 'react-icons/vsc'
 
-import SelectInput from '../../../inputs/Select'
-import TextInput from '../../../inputs/Text'
-import NumberInput from '../../../inputs/Number'
-import DateInput from '../../../inputs/Date'
-import CheckboxInput from '@/components/inputs/Checkbox'
-import { paymentMethods, revenueSources } from '@/utils/select-options'
-
-import Fractionnements from '../Fractionnements'
-
 import { useRevenueById } from '@/utils/methods/query/revenues'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { editRevenue } from '@/utils/methods/mutation/revenues'
-import { formatDateInputChange } from '@/utils/methods/shared'
 import { TRevenue, TRevenueDTO } from '@/utils/schemas/revenues'
-import { formatDate } from '../../../../utils/constants'
-import { BsCode } from 'react-icons/bs'
-import { FaUser } from 'react-icons/fa'
+
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'

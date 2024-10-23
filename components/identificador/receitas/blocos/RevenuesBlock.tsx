@@ -145,7 +145,7 @@ function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">COMPETÊNCIA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold text-primary">
               {revenue.efetivacao.data ? formatDateAsLocale(revenue.efetivacao.data) : 'N/A'}
             </h1>
           </div>

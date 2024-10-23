@@ -20,6 +20,7 @@ import { revenueSources } from '@/utils/select-options'
 import { useLocalStorage } from '@/lib/hooks/local-storage'
 import EditRevenue from '../modals/EditRevenue'
 import { Session } from 'next-auth'
+import { MdDashboard } from 'react-icons/md'
 
 type ReceiptsBlockProps = {
   session: Session
@@ -95,7 +96,13 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
     <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{receipt.nome}</p>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-bold leading-none tracking-tight">{receipt.fracionamento.titulo}</p>
+            <div className="flex w-fit min-w-fit items-center gap-1">
+              <MdDashboard width={10} height={10} />
+              <h1 className="py-0.5 text-center text-[0.6rem] font-bold text-primary">{receipt.nome}</h1>
+            </div>
+          </div>
           <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
             <FaPercentage />
             <h1>

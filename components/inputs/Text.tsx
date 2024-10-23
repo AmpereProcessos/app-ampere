@@ -18,7 +18,7 @@ function TextInput({ width, label, labelClassName, showLabel = true, value, plac
   return (
     <div className={`flex  w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
-        <label htmlFor={inputIdentifier} className={cn('font-sans text-start  font-bold text-[#353432]', labelClassName)}>
+        <label htmlFor={inputIdentifier} className={cn('font-sans text-start font-bold text-[#353432]', labelClassName)}>
           {label}
         </label>
       ) : null}

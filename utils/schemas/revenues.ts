@@ -3,6 +3,26 @@ import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
 import { TProject, TProjectDTO } from './projects'
 
+const ReceiptItemSchema = z.object({
+  titulo: z.string({ required_error: 'Titulo do recebimento não informado.', invalid_type_error: 'Tipo não válido para o titulo do recebimento.' }),
+  valor: z
+    .number({ required_error: 'Valor do recebimento não informado.', invalid_type_error: 'Tipo não válido para o valor do recebimento.' })
+    .optional()
+    .nullable(),
+  porcentagem: z.number({
+    required_error: 'Porcentagem do recebimento não informada.',
+    invalid_type_error: 'Tipo não válido para a porcentagem do recebimento.',
+  }),
+  dataPrevisaoRecebimento: z
+    .string({ required_error: 'Previsão de recebimento não informada', invalid_type_error: 'Tipo não válido para a previsão de recebimento.' })
+    .datetime({ message: 'Tipo não válido para a previsão de recebimento.' }),
+  dataRecebimento: z
+    .string({ invalid_type_error: 'Tipo não válido para a previsão de recebimento.' })
+    .datetime({ message: 'Tipo não válido para a previsão de recebimento.' })
+    .optional()
+    .nullable(),
+})
+
 const GeneralRevenueSchema = z.object({
   nome: z.string(),
   tipo: z.string(),
@@ -18,14 +38,7 @@ const GeneralRevenueSchema = z.object({
     efetivado: z.boolean().optional().nullable(),
     data: z.string().datetime().optional().nullable(),
   }),
-  fracionamento: z.array(
-    z.object({
-      valor: z.number().optional().nullable(),
-      porcentagem: z.number(),
-      dataPrevisaoRecebimento: z.string().datetime(),
-      dataRecebimento: z.string().datetime().optional().nullable(),
-    })
-  ),
+  fracionamento: z.array(ReceiptItemSchema),
   dataInsercao: z.string().datetime(),
 })
 
@@ -71,32 +84,7 @@ export const InsertRevenueSchema = z.object({
       .optional()
       .nullable(),
   }),
-  fracionamento: z.array(
-    z.object({
-      valor: z
-        .number({ required_error: 'Valor do fracionamento não informado.', invalid_type_error: 'Tipo não válido para o valor do fracionamento.' })
-        .optional()
-        .nullable(),
-      porcentagem: z.number({
-        required_error: 'Porcentagem do fracionamento de receita não informado.',
-        invalid_type_error: 'Tipo não válido para a porcentagem do fracionamento.',
-      }),
-      dataPrevisaoRecebimento: z
-        .string({
-          required_error: 'Data de previsão de recebimento não informada.',
-          invalid_type_error: 'Tipo não válido para a previsão da data de recebimento.',
-        })
-        .datetime(),
-      dataRecebimento: z
-        .string({
-          required_error: 'Data de recebimento não informada.',
-          invalid_type_error: 'Tipo não válido para a data de recebimento.',
-        })
-        .datetime()
-        .optional()
-        .nullable(),
-    })
-  ),
+  fracionamento: z.array(ReceiptItemSchema),
   dataInsercao: z
     .string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção.' })
     .datetime(),
@@ -118,14 +106,7 @@ const RevenueEntitySchema = z.object({
     efetivado: z.boolean().optional().nullable(),
     data: z.string().datetime().optional().nullable(),
   }),
-  fracionamento: z.array(
-    z.object({
-      valor: z.number().optional().nullable(),
-      porcentagem: z.number(),
-      dataPrevisaoRecebimento: z.string().datetime(),
-      dataRecebimento: z.string().datetime().optional().nullable(),
-    })
-  ),
+  fracionamento: z.array(ReceiptItemSchema),
   dataInsercao: z.string().datetime(),
 })
 

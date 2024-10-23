@@ -1,5 +1,6 @@
 import DateInput from '@/components/inputs/Date'
 import NumberInput from '@/components/inputs/Number'
+import TextInput from '@/components/inputs/Text'
 import { formatDate, formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { formatDateInputChange } from '@/utils/methods/shared'
@@ -22,9 +23,10 @@ function RevenueReceiptsTable({ receipts, revenueTotal, updateReceipt, removeRec
   return (
     <div className="flex w-full flex-col rounded border-0 border-primary/80 lg:border">
       <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-gray-800 p-1 lg:flex">
-        <h1 className="w-[40%] text-center text-sm font-bold text-white">VALOR</h1>
-        <h1 className="w-[30%] text-center text-sm font-bold text-white">PREVISÃO DE RECEBIMENTO</h1>
-        <h1 className="w-[30%] text-center text-sm font-bold text-white">DATA DE RECEBIMENTO</h1>
+        <h1 className="w-[40%] text-center text-sm font-bold text-white">DESCRIÇÃO</h1>
+        <h1 className="w-[20%] text-center text-sm font-bold text-white">VALOR</h1>
+        <h1 className="w-[20%] text-center text-sm font-bold text-white">PREV. DE RECEBIMENTO</h1>
+        <h1 className="w-[20%] text-center text-sm font-bold text-white">DATA DE RECEBIMENTO</h1>
       </div>
       <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]">
         {receipts.length > 0 ? (
@@ -68,7 +70,7 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
           <div className="flex w-full items-center gap-2 p-1">
             <div className="flex w-[40%] items-start gap-1">
               <div className="flex flex-col">
-                <h1 className="text-xs tracking-tight">{formatToMoney(item.valor || 0)}</h1>
+                <h1 className="text-xs tracking-tight">{item.titulo}</h1>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <FaPercentage size={10} />
@@ -92,8 +94,9 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
                 <MdDelete size={10} />
               </button>
             </div>
-            <h1 className="w-[30%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPrevisaoRecebimento || undefined) || '-'}</h1>
-            <h1 className="w-[30%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataRecebimento || undefined) || '-'}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatToMoney(item.valor || 0)}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPrevisaoRecebimento || undefined) || '-'}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataRecebimento || undefined) || '-'}</h1>
           </div>
         </div>
         <div className="flex w-full flex-col rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212] lg:hidden">
@@ -102,9 +105,13 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
               <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1 text-[20px]">
                 <MdAttachMoney size={15} />
               </div>
-              <p className="text-sm font-bold leading-none tracking-tight">
-                RECEBIMENTO DE <strong className="text-[#FF9B50]">{formatDecimalPlaces(((item.valor || 0) / revenueTotal) * 100)}%</strong>
-              </p>
+              {item.titulo ? (
+                <p className="text-sm font-bold leading-none tracking-tight">{item.titulo}</p>
+              ) : (
+                <p className="text-sm font-bold leading-none tracking-tight">
+                  RECEBIMENTO DE <strong className="text-[#FF9B50]">{formatDecimalPlaces(((item.valor || 0) / revenueTotal) * 100)}%</strong>
+                </p>
+              )}
             </div>
             {!!item.valor && item.valor > 0 ? (
               <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
@@ -133,13 +140,19 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
               {item.dataRecebimento ? (
                 <div className="flex items-center gap-1">
                   <BsPatchCheck color="rgb(34,197,94)" />
-                  <p className="text-[0.6rem] text-gray-500 lg:text-xs">RECEBIDO</p>
+                  <p className="text-[0.6rem] text-primary/80 lg:text-xs">RECEBIDO</p>
                 </div>
               ) : null}
               <div className="flex items-center gap-1">
-                {item.dataRecebimento ? <BsCalendarCheck /> : <BsCalendar />}
-                <p className="text-[0.6rem] text-gray-500 lg:text-xs">{formatDateAsLocale(item.dataRecebimento || undefined)}</p>
+                <BsCalendar />
+                <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataPrevisaoRecebimento || undefined)}</p>
               </div>
+              {item.dataRecebimento ? (
+                <div className="flex items-center gap-1">
+                  <BsCalendarCheck color="#22c55e " />
+                  <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataRecebimento || undefined)}</p>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -152,39 +165,49 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
             className="flex w-full flex-col gap-1 p-3"
           >
             <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[30%]">
+                <TextInput
+                  label="TÍTULO"
+                  labelClassName="text-xs tracking-tight"
+                  value={itemHolder.titulo}
+                  placeholder="Preencha aqui um titulo para o recebimento..."
+                  handleChange={(value) => setItemHolder((prev) => ({ ...prev, titulo: value }))}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full lg:w-[20%]">
                 <NumberInput
                   label="VALOR"
-                  labelClassName="text-sm tracking-tight"
+                  labelClassName="text-xs tracking-tight"
                   placeholder="Preencha aqui o valor do fracionamento..."
                   value={itemHolder.valor || null}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / revenueTotal) * 100 }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[10%]">
                 <NumberInput
                   label="PORCENTAGEM"
-                  labelClassName="text-sm tracking-tight"
+                  labelClassName="text-xs tracking-tight"
                   placeholder="Preencha aqui a porcentagem do fracionamento..."
                   value={itemHolder.porcentagem}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * revenueTotal) / 100 }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[20%]">
                 <DateInput
-                  label="PREVISÃO DE RECEBIMENTO"
-                  labelClassName="text-sm tracking-tight"
+                  label="PREV. DE RECEBIMENTO"
+                  labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataPrevisaoRecebimento ? formatDate(itemHolder.dataPrevisaoRecebimento) : undefined}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value) }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[20%]">
                 <DateInput
                   label="DATA DE RECEBIMENTO"
-                  labelClassName="text-sm tracking-tight"
+                  labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataRecebimento ? formatDate(itemHolder.dataRecebimento) : undefined}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value) }))}
                   width="100%"

@@ -21,6 +21,7 @@ import { useLocalStorage } from '@/lib/hooks/local-storage'
 import EditRevenue from '../modals/EditRevenue'
 import { Session } from 'next-auth'
 import { MdDashboard } from 'react-icons/md'
+import { FaDiamond } from 'react-icons/fa6'
 
 type ReceiptsBlockProps = {
   session: Session
@@ -96,13 +97,8 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
     <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-bold leading-none tracking-tight">{receipt.fracionamento.titulo}</p>
-            <div className="flex w-fit min-w-fit items-center gap-1">
-              <MdDashboard width={10} height={10} />
-              <h1 className="py-0.5 text-center text-[0.6rem] font-bold text-primary">{receipt.nome}</h1>
-            </div>
-          </div>
+          <p className="text-sm font-bold leading-none tracking-tight">{receipt.fracionamento.titulo}</p>
+
           <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
             <FaPercentage />
             <h1>
@@ -120,6 +116,18 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
         <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">
           {formatToMoney(receipt.fracionamento.valor || 0)}
         </h1>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+          <div className="flex items-center gap-1">
+            <MdDashboard width={8} height={8} />
+            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{receipt.nome}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <FaDiamond width={8} height={8} />
+            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{receipt.tipo}</h1>
+          </div>
+        </div>
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row lg:justify-between">
         <div className="flex flex-wrap items-center gap-2">

@@ -20,6 +20,8 @@ import { usePendingPayments } from '@/utils/methods/query/expenses'
 import EditExpense from '../modals/EditExpense'
 import { TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
 import { costApportionments } from '@/model'
+import { MdDashboard } from 'react-icons/md'
+import { FaDiamond } from 'react-icons/fa6'
 
 type PaymentsBlockProps = {
   session: Session
@@ -97,7 +99,7 @@ function PaymentCard({ payment, handleClick }: PaymentCardProps) {
     <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{payment.rateio}</p>
+          <p className="text-sm font-bold leading-none tracking-tight">{payment.pagamento.titulo}</p>
           <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
             <FaPercentage />
             <h1>
@@ -116,6 +118,20 @@ function PaymentCard({ payment, handleClick }: PaymentCardProps) {
           {formatToMoney(payment.pagamento.valor || 0)}
         </h1>
       </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+          <div className="flex items-center gap-1">
+            <MdDashboard width={8} height={8} />
+            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{payment.rateio}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <FaDiamond width={8} height={8} />
+            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{payment.categoria}</h1>
+          </div>
+        </div>
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end"></div>
+      </div>
+
       <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row lg:justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">

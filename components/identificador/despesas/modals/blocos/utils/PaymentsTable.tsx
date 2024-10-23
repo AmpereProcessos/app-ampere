@@ -1,5 +1,6 @@
 import DateInput from '@/components/inputs/Date'
 import NumberInput from '@/components/inputs/Number'
+import TextInput from '@/components/inputs/Text'
 import { formatDate, formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { formatDateInputChange } from '@/utils/methods/shared'
@@ -22,8 +23,9 @@ function ExpensePaymentsTable({ payments, expenseTotal, updatePayment, removePay
   return (
     <div className="flex w-full flex-col rounded border-0 border-primary/80 lg:border">
       <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-gray-800 p-1 lg:flex">
+        <h1 className="w-[40%] text-center text-sm font-bold text-white">TÍTULO</h1>
         <h1 className="w-[40%] text-center text-sm font-bold text-white">VALOR</h1>
-        <h1 className="w-[30%] text-center text-sm font-bold text-white">PREVISÃO DE PAGAMENTO</h1>
+        <h1 className="w-[30%] text-center text-sm font-bold text-white">PREV. DE PAGAMENTO</h1>
         <h1 className="w-[30%] text-center text-sm font-bold text-white">DATA DE PAGAMENTO</h1>
       </div>
       <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]">
@@ -68,7 +70,7 @@ function PaymentTableItem({ item, expenseTotal, handleUpdate, handleRemove }: Pa
           <div className="flex w-full items-center gap-2 p-1">
             <div className="flex w-[40%] items-start gap-1">
               <div className="flex flex-col">
-                <h1 className="text-xs tracking-tight">{formatToMoney(item.valor || 0)}</h1>
+                <h1 className="text-xs tracking-tight">{item.titulo}</h1>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <FaPercentage size={10} />
@@ -92,8 +94,9 @@ function PaymentTableItem({ item, expenseTotal, handleUpdate, handleRemove }: Pa
                 <MdDelete size={10} />
               </button>
             </div>
-            <h1 className="w-[30%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPrevisaoPagamento || undefined) || '-'}</h1>
-            <h1 className="w-[30%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPagamento || undefined) || '-'}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatToMoney(item.valor || 0)}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPrevisaoPagamento || undefined) || '-'}</h1>
+            <h1 className="w-[20%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataPagamento || undefined) || '-'}</h1>
           </div>
         </div>
         <div className="flex w-full flex-col rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212] lg:hidden">
@@ -102,9 +105,13 @@ function PaymentTableItem({ item, expenseTotal, handleUpdate, handleRemove }: Pa
               <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1 text-[20px]">
                 <MdAttachMoney size={15} />
               </div>
-              <p className="text-sm font-bold leading-none tracking-tight">
-                PAGAMENTO DE <strong className="text-[#FF9B50]">{formatDecimalPlaces(((item.valor || 0) / expenseTotal) * 100)}%</strong>
-              </p>
+              {item.titulo ? (
+                <p className="text-sm font-bold leading-none tracking-tight">{item.titulo}</p>
+              ) : (
+                <p className="text-sm font-bold leading-none tracking-tight">
+                  PAGAMENTO DE <strong className="text-[#FF9B50]">{formatDecimalPlaces(((item.valor || 0) / expenseTotal) * 100)}%</strong>
+                </p>
+              )}
             </div>
             {!!item.valor && item.valor > 0 ? (
               <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
@@ -137,9 +144,15 @@ function PaymentTableItem({ item, expenseTotal, handleUpdate, handleRemove }: Pa
                 </div>
               ) : null}
               <div className="flex items-center gap-1">
-                {item.dataPagamento ? <BsCalendarCheck /> : <BsCalendar />}
-                <p className="text-[0.6rem] text-gray-500 lg:text-xs">{formatDateAsLocale(item.dataPagamento || undefined)}</p>
+                <BsCalendar />
+                <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataPrevisaoPagamento || undefined)}</p>
               </div>
+              {item.dataPagamento ? (
+                <div className="flex items-center gap-1">
+                  <BsCalendarCheck color="#22c55e " />
+                  <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataPagamento || undefined)}</p>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -152,39 +165,49 @@ function PaymentTableItem({ item, expenseTotal, handleUpdate, handleRemove }: Pa
             className="flex w-full flex-col gap-1 p-3"
           >
             <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[30%]">
+                <TextInput
+                  label="TÍTULO"
+                  labelClassName="text-xs tracking-tight"
+                  value={itemHolder.titulo}
+                  placeholder="Preencha aqui um titulo para o recebimento..."
+                  handleChange={(value) => setItemHolder((prev) => ({ ...prev, titulo: value }))}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full lg:w-[20%]">
                 <NumberInput
                   label="VALOR"
-                  labelClassName="text-sm tracking-tight"
-                  placeholder="Preencha aqui o valor do pagamento..."
+                  labelClassName="text-xs tracking-tight"
+                  placeholder="Preencha aqui o valor do fracionamento..."
                   value={itemHolder.valor || null}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / expenseTotal) * 100 }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[10%]">
                 <NumberInput
                   label="PORCENTAGEM"
-                  labelClassName="text-sm tracking-tight"
-                  placeholder="Preencha aqui a porcentagem do pagamento..."
+                  labelClassName="text-xs tracking-tight"
+                  placeholder="Preencha aqui a porcentagem do fracionamento..."
                   value={itemHolder.porcentagem}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * expenseTotal) / 100 }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[20%]">
                 <DateInput
                   label="PREVISÃO DE PAGAMENTO"
-                  labelClassName="text-sm tracking-tight"
+                  labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataPrevisaoPagamento ? formatDate(itemHolder.dataPrevisaoPagamento) : undefined}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataPrevisaoPagamento: formatDateInputChange(value) }))}
                   width="100%"
                 />
               </div>
-              <div className="w-full lg:w-1/4">
+              <div className="w-full lg:w-[20%]">
                 <DateInput
                   label="DATA DE PAGAMENTO"
-                  labelClassName="text-sm tracking-tight"
+                  labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataPagamento ? formatDate(itemHolder.dataPagamento) : undefined}
                   handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataPagamento: formatDateInputChange(value) }))}
                   width="100%"

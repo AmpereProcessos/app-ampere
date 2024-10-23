@@ -23,7 +23,7 @@ function RevenueReceiptsTable({ receipts, revenueTotal, updateReceipt, removeRec
   return (
     <div className="flex w-full flex-col rounded border-0 border-primary/80 lg:border">
       <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-gray-800 p-1 lg:flex">
-        <h1 className="w-[40%] text-center text-sm font-bold text-white">DESCRIÇÃO</h1>
+        <h1 className="w-[40%] text-center text-sm font-bold text-white">TÍTULO</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">VALOR</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">PREV. DE RECEBIMENTO</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">DATA DE RECEBIMENTO</h1>

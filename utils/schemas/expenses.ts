@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb'
 import { TProject, TProjectDTO } from './projects'
 
 const PaymentItemSchema = z.object({
+  titulo: z.string({ required_error: 'Titulo do pagamento não informado.', invalid_type_error: 'Tipo não válido para o titulo do recebimento.' }),
   valor: z.number({ required_error: 'Valor do item de pagamento não informado.', invalid_type_error: 'Tipo não válido para o item de pagamento.' }),
   porcentagem: z.number({
     required_error: 'Porcentagem do item de pagamento não informado.',

@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { MdAddBox } from 'react-icons/md'
 import ExpensePaymentsTable from './utils/PaymentsTable'
+import TextInput from '@/components/inputs/Text'
 
 function getMissingPercentage({ payments }: { payments: TExpense['pagamentos'] }) {
   const currentTotal = payments.reduce((acc, current) => current.porcentagem + acc, 0)
@@ -82,14 +83,15 @@ type NewPaymentMenuProps = {
   addPayment: (info: TExpense['pagamentos'][number]) => void
 }
 function NewPaymentMenu({ expenseTotal, missingPercentage, addPayment }: NewPaymentMenuProps) {
-  const [receiptHolder, setReceiptHolder] = useState<TExpense['pagamentos'][number]>({
+  const [paymentHolder, setPaymentHolder] = useState<TExpense['pagamentos'][number]>({
+    titulo: '',
     valor: 0,
     porcentagem: missingPercentage,
     dataPrevisaoPagamento: new Date().toISOString(),
   })
 
   useEffect(() => {
-    setReceiptHolder((prev) => ({ ...prev, porcentagem: missingPercentage }))
+    setPaymentHolder((prev) => ({ ...prev, porcentagem: missingPercentage }))
   }, [missingPercentage])
 
   return (
@@ -105,47 +107,57 @@ function NewPaymentMenu({ expenseTotal, missingPercentage, addPayment }: NewPaym
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO RECEBIMENTO</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">
           <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[30%]">
+              <TextInput
+                label="TÍTULO"
+                labelClassName="text-xs tracking-tight"
+                value={paymentHolder.titulo}
+                placeholder="Preencha aqui um titulo para o recebimento..."
+                handleChange={(value) => setPaymentHolder((prev) => ({ ...prev, titulo: value }))}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-[20%]">
               <NumberInput
                 label="VALOR"
-                labelClassName="text-sm tracking-tight"
+                labelClassName="text-xs tracking-tight"
                 placeholder="Preencha aqui o valor do fracionamento..."
-                value={receiptHolder.valor || null}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / expenseTotal) * 100 }))}
+                value={paymentHolder.valor || null}
+                handleChange={(value) => setPaymentHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / expenseTotal) * 100 }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[10%]">
               <NumberInput
                 label="PORCENTAGEM"
-                labelClassName="text-sm tracking-tight"
+                labelClassName="text-xs tracking-tight"
                 placeholder="Preencha aqui a porcentagem do fracionamento..."
-                value={receiptHolder.porcentagem}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * expenseTotal) / 100 }))}
+                value={paymentHolder.porcentagem}
+                handleChange={(value) => setPaymentHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * expenseTotal) / 100 }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[20%]">
               <DateInput
                 label="PREVISÃO DE PAGAMENTO"
-                labelClassName="text-sm tracking-tight"
-                value={receiptHolder.dataPrevisaoPagamento ? formatDate(receiptHolder.dataPrevisaoPagamento) : undefined}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataPrevisaoPagamento: formatDateInputChange(value) }))}
+                labelClassName="text-xs tracking-tight"
+                value={paymentHolder.dataPrevisaoPagamento ? formatDate(paymentHolder.dataPrevisaoPagamento) : undefined}
+                handleChange={(value) => setPaymentHolder((prev) => ({ ...prev, dataPrevisaoPagamento: formatDateInputChange(value) }))}
                 width="100%"
               />
             </div>
-            <div className="w-full lg:w-1/4">
+            <div className="w-full lg:w-[20%]">
               <DateInput
                 label="DATA DE PAGAMENTO"
-                labelClassName="text-sm tracking-tight"
-                value={receiptHolder.dataPagamento ? formatDate(receiptHolder.dataPagamento) : undefined}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataPagamento: formatDateInputChange(value) }))}
+                labelClassName="text-xs tracking-tight"
+                value={paymentHolder.dataPagamento ? formatDate(paymentHolder.dataPagamento) : undefined}
+                handleChange={(value) => setPaymentHolder((prev) => ({ ...prev, dataPagamento: formatDateInputChange(value) }))}
                 width="100%"
               />
             </div>
           </div>
           <div className="flex w-full items-center justify-end">
-            <Button onClick={() => addPayment(receiptHolder)} size={'xs'}>
+            <Button onClick={() => addPayment(paymentHolder)} size={'xs'}>
               ADICIONAR PAGAMENTO
             </Button>
           </div>

@@ -8,7 +8,7 @@ import { MdDelete } from 'react-icons/md'
 import MonthYearPicker from '../../inputs/MonthPicker'
 import { useInsertApportionment } from '../../../utils/methods/mutation/costApportionments'
 import { getErrorMessage } from '../../../utils/methods/handlers'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const MODAL_STYLES = {
   position: 'fixed',
@@ -123,17 +123,17 @@ function NewApportionment({ closeModal }) {
   }
   return (
     <div style={OVERLAY_STYLES}>
-      <div className="lg:w-[50%] w-[80%] lg:h-[70%] h-[90%]" style={MODAL_STYLES}>
-        <div className="flex flex-col h-full w-full">
-          <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+      <div className="h-[90%] w-[80%] lg:h-[70%] lg:w-[50%]" style={MODAL_STYLES}>
+        <div className="flex h-full w-full flex-col">
+          <div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
             <div className="flex items-center gap-x-2">
-              <h1 className="text-[#15599a] pl-6  font-bold">NOVO RATEIO DE DESPESAS</h1>
+              <h1 className="pl-6 font-bold  text-[#15599a]">NOVO RATEIO DE DESPESAS</h1>
             </div>
             <button>
               <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex flex-col py-2 px-2 w-full grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="overscroll-y flex w-full grow flex-col overflow-y-auto py-2 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <TextInput
               label={'NOME DO RATEIO'}
               labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -142,10 +142,10 @@ function NewApportionment({ closeModal }) {
               placeholder={'Preencha aqui o nome a ser dado ao novo rateio de custos.'}
               width={'100%'}
             />
-            <div className="flex flex-col w-full my-2">
-              <h1 className="w-full text-center bg-gray-500 text-white font-normal font-raleway text-sm">CATEGORIAS</h1>
-              <div className="flex items-end gap-2 w-full mt-2">
-                <div className="flex items-end gap-2 grow">
+            <div className="my-2 flex w-full flex-col">
+              <h1 className="w-full bg-gray-500 text-center font-raleway text-sm font-normal text-white">CATEGORIAS</h1>
+              <div className="mt-2 flex w-full items-end gap-2">
+                <div className="flex grow items-end gap-2">
                   <div className="w-[100%]">
                     <TextInput
                       label={'NOME DO CATEGORIA'}
@@ -159,22 +159,22 @@ function NewApportionment({ closeModal }) {
                 </div>
                 <button
                   onClick={addCategory}
-                  className="text-center border h-[46px] p-2 w-fit text-xs font-medium border-green-500 text-green-500 hover:text-white hover:bg-green-500 rounded"
+                  className="h-[46px] w-fit rounded border border-green-500 p-2 text-center text-xs font-medium text-green-500 hover:bg-green-500 hover:text-white"
                 >
                   ADICIONAR ITEM
                 </button>
               </div>
               {infoHolder.categorias.length > 0 ? (
                 <>
-                  <div className="w-full bg-gray-500 flex items-center gap-2 mt-1 rounded-md">
+                  <div className="mt-1 flex w-full items-center gap-2 rounded-md bg-gray-500">
                     <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">NOME</p>
 
                     <p className="w-full text-center font-medium text-white lg:flex-[1_1_0%]">AÇÕES</p>
                   </div>
                   {infoHolder.categorias.map((category, index) => (
-                    <div key={index} className="w-full p-2 border border-gray-300 flex items-center gap-2 my-1 rounded-md">
+                    <div key={index} className="my-1 flex w-full items-center gap-2 rounded-md border border-gray-300 p-2">
                       <p className="w-full text-center font-medium lg:flex-[4_4_0%]">{category.value}</p>
-                      <div className="w-full  flex items-center justify-center gap-2 lg:flex-[1_1_0%]">
+                      <div className="flex  w-full items-center justify-center gap-2 lg:flex-[1_1_0%]">
                         <button
                           onClick={() => {
                             var itensArr = [...infoHolder.categorias]
@@ -193,14 +193,14 @@ function NewApportionment({ closeModal }) {
                   ))}
                 </>
               ) : (
-                <p className="w-full text-center text-gray-500 italic py-4">Nenhuma categoria cadastrada</p>
+                <p className="w-full py-4 text-center italic text-gray-500">Nenhuma categoria cadastrada</p>
               )}
             </div>
 
-            <div className="w-full flex flex-col items-center">
-              <h1 className="w-full bg-gray-500 text-center text-white font-normal font-raleway text-sm">ORÇAMENTOS</h1>
-              <div className="w-full flex items-end gap-2 mt-2">
-                <div className="grow flex gap-2">
+            <div className="flex w-full flex-col items-center">
+              <h1 className="w-full bg-gray-500 text-center font-raleway text-sm font-normal text-white">ORÇAMENTOS</h1>
+              <div className="mt-2 flex w-full items-end gap-2">
+                <div className="flex grow gap-2">
                   <div className="w-[60%]">
                     <NumberInput
                       label={'VALOR'}
@@ -233,24 +233,24 @@ function NewApportionment({ closeModal }) {
                 </div>
                 <button
                   onClick={addBudget}
-                  className="add-center border h-[46px] p-2 w-fit text-xs font-medium border-green-500 text-green-500 hover:text-white hover:bg-green-500 rounded"
+                  className="add-center h-[46px] w-fit rounded border border-green-500 p-2 text-xs font-medium text-green-500 hover:bg-green-500 hover:text-white"
                 >
                   ADICIONAR ITEM
                 </button>
               </div>
               {infoHolder.orcamentos.length > 0 ? (
                 <>
-                  <div className="w-full bg-gray-500 flex items-center gap-2 mt-1 rounded-md">
+                  <div className="mt-1 flex w-full items-center gap-2 rounded-md bg-gray-500">
                     <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">VALOR</p>
                     <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">PERÍODO</p>
 
                     <p className="w-full text-center font-medium text-white lg:flex-[1_1_0%]">AÇÕES</p>
                   </div>
                   {infoHolder.orcamentos.map((budget, index) => (
-                    <div key={index} className="w-full p-2 border border-gray-300 flex items-center gap-2 my-1 rounded-md">
+                    <div key={index} className="my-1 flex w-full items-center gap-2 rounded-md border border-gray-300 p-2">
                       <p className="w-full text-center font-medium lg:flex-[4_4_0%]">{budget.valor}</p>
                       <p className="w-full text-center font-medium lg:flex-[4_4_0%]">{budget.periodo}</p>
-                      <div className="w-full  flex items-center justify-center gap-2 lg:flex-[1_1_0%]">
+                      <div className="flex  w-full items-center justify-center gap-2 lg:flex-[1_1_0%]">
                         <button
                           onClick={() => {
                             var itensArr = [...infoHolder.orcamentos]
@@ -269,15 +269,15 @@ function NewApportionment({ closeModal }) {
                   ))}
                 </>
               ) : (
-                <p className="w-full text-center text-gray-500 italic py-4">Nenhum orçamento cadastrada</p>
+                <p className="w-full py-4 text-center italic text-gray-500">Nenhum orçamento cadastrada</p>
               )}
             </div>
           </div>
-          <div className="w-full flex items-center justify-end py-2">
+          <div className="flex w-full items-center justify-end py-2">
             <button
               disabled={isLoading}
               onClick={() => handleApportionmentInsertion()}
-              className="w-fit p-2 rounded border border-green-500 text-green-500 font-medium hover:bg-green-500 hover:text-white duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white"
+              className="w-fit rounded border border-green-500 p-2 font-medium text-green-500 duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white hover:bg-green-500 hover:text-white"
             >
               CRIAR
             </button>

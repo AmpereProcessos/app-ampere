@@ -8,7 +8,7 @@ import { MdDelete } from 'react-icons/md'
 import MonthYearPicker from '../../inputs/MonthPicker'
 import { useInsertApportionment } from '../../../utils/methods/mutation/costApportionments'
 import { getErrorMessage } from '../../../utils/methods/handlers'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useInsertReceiptAccount } from '../../../utils/methods/mutation/receiptAccounts'
 
 const MODAL_STYLES = {
@@ -74,17 +74,17 @@ function NewReceiptAccount({ closeModal }) {
   }
   return (
     <div style={OVERLAY_STYLES}>
-      <div className="lg:w-[30%] w-[80%] lg:h-[30%] h-[50%]" style={MODAL_STYLES}>
-        <div className="flex flex-col h-full w-full">
-          <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+      <div className="h-[50%] w-[80%] lg:h-[30%] lg:w-[30%]" style={MODAL_STYLES}>
+        <div className="flex h-full w-full flex-col">
+          <div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
             <div className="flex items-center gap-x-2">
-              <h1 className="text-[#15599a] pl-6  font-bold">NOVO RATEIO DE DESPESAS</h1>
+              <h1 className="pl-6 font-bold  text-[#15599a]">NOVO RATEIO DE DESPESAS</h1>
             </div>
             <button>
               <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex flex-col py-2 px-2 w-full grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="overscroll-y flex w-full grow flex-col overflow-y-auto py-2 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <TextInput
               label={'NOME DA CONTA DE RECEBIMENTO'}
               labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -94,11 +94,11 @@ function NewReceiptAccount({ closeModal }) {
               width={'100%'}
             />
           </div>
-          <div className="w-full flex items-center justify-end py-2">
+          <div className="flex w-full items-center justify-end py-2">
             <button
               disabled={isLoading}
               onClick={() => handleReceiptAccountCreation()}
-              className="w-fit p-2 rounded border border-green-500 text-green-500 font-medium hover:bg-green-500 hover:text-white duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white"
+              className="w-fit rounded border border-green-500 p-2 font-medium text-green-500 duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white hover:bg-green-500 hover:text-white"
             >
               CRIAR
             </button>

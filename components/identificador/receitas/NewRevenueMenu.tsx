@@ -11,7 +11,7 @@ import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import Fractionnements from './Fractionnements'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createRevenue } from '@/utils/methods/mutation/revenues'
 
 function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fracionamento'] }) {
@@ -50,7 +50,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
     fracionamento: [],
     dataInsercao: new Date().toISOString(),
   })
-  const { mutate: handleCreateRevenue, isLoading } = useMutationWithFeedback({
+  const { mutate: handleCreateRevenue, isPending } = useMutationWithFeedback({
     mutationKey: ['create-revenue'],
     mutationFn: createRevenue,
     queryClient: queryClient,
@@ -148,7 +148,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
       </div>
       <div className="mt-2 flex w-full items-center justify-end">
         <button
-          disabled={isLoading}
+          disabled={isPending}
           // @ts-ignore
           onClick={() => handleCreateRevenue({ info: infoHolder })}
           className="w-fit rounded border border-green-500 py-1 px-4 text-sm font-medium text-green-500 disabled:border-gray-500 disabled:text-gray-500 hover:bg-green-500 hover:text-white"

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { isEmpty } from '../shared'
 import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 import { useState } from 'react'

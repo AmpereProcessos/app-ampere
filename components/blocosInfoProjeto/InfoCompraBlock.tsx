@@ -29,7 +29,7 @@ import { formatDateAsLocale, formatNameAsInitials, getProductsStr } from '@/util
 import Avatar from '../utils/Avatar'
 import { createPurchaseControl } from '@/utils/methods/mutation/purchase-controls'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -668,7 +668,7 @@ function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
     await createPurchaseControl(purchaseControl)
     return 'Controle de compra criado com sucesso!'
   }
-  const { mutate: handleGenerateContractPurchase, isLoading: isMutationLoading } = useMutationWithFeedback({
+  const { mutate: handleGenerateContractPurchase, isPending: isMutationLoading } = useMutationWithFeedback({
     mutationKey: ['create-purchase-control', project._id],
     mutationFn: generateContractPurchase,
     queryClient: queryClient,

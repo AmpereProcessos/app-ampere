@@ -26,7 +26,7 @@ import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
 
 import SaveButton from './utils/Buttons/SaveButton'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useClientById } from '../utils/methods/query/clients'
 import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'

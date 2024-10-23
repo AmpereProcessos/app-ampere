@@ -8,7 +8,7 @@ import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
 import { units } from '@/utils/select-options'
 import React, { useEffect, useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import UpdateRegistries from './UpdateRegistriesBlock'
 
 type EditMaterialProps = {
@@ -27,7 +27,7 @@ function EditMaterial({ materialId, closeModal }: EditMaterialProps) {
     dataInsercao: new Date().toISOString(),
   })
 
-  const { mutate: handleMaterialUpdate, isLoading } = useMutationWithFeedback({
+  const { mutate: handleMaterialUpdate, isPending } = useMutationWithFeedback({
     mutationKey: ['update-material', materialId],
     mutationFn: updateMaterial,
     queryClient: queryClient,
@@ -158,7 +158,7 @@ function EditMaterial({ materialId, closeModal }: EditMaterialProps) {
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               // @ts-ignore
               onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })}
               className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"

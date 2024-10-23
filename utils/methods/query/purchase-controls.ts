@@ -13,7 +13,7 @@ import {
 import axios from 'axios'
 import { useState } from 'react'
 import { formatWithoutDiacritics } from '../formatting'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { TPurchaseControlsByFiltersResult } from '@/pages/api/controles-compras/search'
 
 async function fetchPurchasesControls() {
@@ -169,7 +169,7 @@ export function usePurchaseControlsTags() {
 async function fetchPurchaseProject({ projectId }: { projectId: string | null }) {
   try {
     if (!projectId) return null
-    const { data } = await axios.get(`/api/controles-compras/project?projectId=${projectId}`)
+    const { data } = await axios.get(`/api/controles-compras/projeto?projectId=${projectId}`)
     return data.data as TPurchaseProjectDTO
   } catch (error) {
     throw error

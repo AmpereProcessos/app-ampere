@@ -8,7 +8,7 @@ import { storage } from '@/utils/services/firebase/firebase-storage'
 import { getMetadata, ref } from 'firebase/storage'
 import { Session } from 'next-auth'
 import { useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import FileReferenceCard from '../referencias-arquivos/FileReferenceCard'
 import DocumentFileInput from '@/components/inputs/DocumentFileInput'
 import TextInput from '@/components/inputs/Text'
@@ -82,7 +82,7 @@ function HomologationFiles({ session, homologationId }: HomologationFilesProps) 
       throw error
     }
   }
-  const { mutate: handleAttachFile, isLoading: mutationLoading } = useMutationWithFeedback({
+  const { mutate: handleAttachFile, isPending: mutationLoading } = useMutationWithFeedback({
     mutationKey: ['attach-homologation-file'],
     mutationFn: attachFile,
     queryClient: queryClient,

@@ -1,6 +1,6 @@
 import { TFileReferenceDTO } from '@/utils/schemas/file-reference.schema'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchFileReferencesByUserId({ id }: { id: string }) {
   try {

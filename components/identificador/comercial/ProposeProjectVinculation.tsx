@@ -6,7 +6,7 @@ import { updateCRMProject } from '../../../utils/methods/crm-integration'
 import toast from 'react-hot-toast'
 import { updateProject } from '../../../utils/methods/mutation/clients'
 import createHttpError from 'http-errors'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import { updateOpportunity } from '@/utils/methods/mutation/crm/opportunities'
 
@@ -23,7 +23,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
     projectId: '',
     proposeId: '',
   })
-  const { mutate, isLoading } = useMutationWithFeedback({
+  const { mutate, isPending } = useMutationWithFeedback({
     mutationKey: ['crm-vinculation', idProject],
     mutationFn: handleVinculation,
     affectedQueryKey: ['analytical-comercial'],
@@ -85,7 +85,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
           />
           <button
             // @ts-ignore
-            disabled={isLoading}
+            disabled={isPending}
             onClick={() => mutate()}
             className="w-full rounded-md border border-black py-2 text-sm font-medium leading-none tracking-tight duration-300 ease-in-out hover:bg-black hover:text-white"
           >

@@ -1,7 +1,7 @@
 import { TExecutionStats } from '@/pages/api/stats/sector-reports/execution'
 import { TDashboardStats, TSaleGraphStat } from '@/utils/schemas/stats'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchDashboardStats() {
   const { data } = await axios.get('/api/stats')

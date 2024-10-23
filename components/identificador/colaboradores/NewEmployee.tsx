@@ -12,7 +12,7 @@ import { Session } from 'next-auth'
 import Documents from './blocos/Documents'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createEmployee } from '@/utils/methods/mutation/employees'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import CheckboxInput from '@/components/inputs/Checkbox'
 
 type NewEmployeeProps = {
@@ -80,6 +80,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
       },
       gestao: {
         visualizarResultados: false,
+        restringirProjetos: false,
       },
       ordensDeServico: {
         criar: false,
@@ -127,7 +128,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
     dataInsercao: new Date().toISOString(),
   })
 
-  const { mutate: handleCreateEmployee, isLoading } = useMutationWithFeedback({
+  const { mutate: handleCreateEmployee, isPending } = useMutationWithFeedback({
     mutationKey: ['create-employee'],
     mutationFn: createEmployee,
     queryClient: queryClient,
@@ -234,7 +235,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               // @ts-ignore
               onClick={() => handleCreateEmployee({ info: infoHolder })}
               className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"

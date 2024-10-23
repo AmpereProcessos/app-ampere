@@ -1,6 +1,6 @@
 import { TEquipment, TEquipmentDTO } from '@/utils/schemas/crm/equipments'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchEquipment({ category }: { category?: TEquipment['categoria'] | null }) {
   try {

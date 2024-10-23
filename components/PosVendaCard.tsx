@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import SelectInput from './SelectInput'
 
@@ -73,7 +73,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
       )
     return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">PARECER NÃO APROVADO</h1>
   }
-  const { mutate: handleUpdateProject, isLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateProject, isPending } = useMutationWithFeedback({
     mutationKey: ['update-after-sales-project'],
     mutationFn: updateProject,
     affectedQueryKey: ['after-sales-projects'],
@@ -379,7 +379,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </div>
               </div>
               <button
-                disabled={isLoading}
+                disabled={isPending}
                 onClick={() => {
                   // @ts-ignore
                   handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })

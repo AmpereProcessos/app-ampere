@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
 import SelectInput from '../../inputs/Select'
@@ -31,16 +31,16 @@ function DesignationCard({ order }) {
     }
   }
   return (
-    <div className="h-full w-full flex flex-col gap-3 items-center justify-between rounded-md border border-gray-400 shadow-md p-6">
-      <div className="flex flex-col gap-1 w-full items-start">
-        <div className="w-full flex items-center justify-between">
+    <div className="flex h-full w-full flex-col items-center justify-between gap-3 rounded-md border border-gray-400 p-6 shadow-md">
+      <div className="flex w-full flex-col items-start gap-1">
+        <div className="flex w-full items-center justify-between">
           <div className="flex flex-col gap-1">
-            <h1 className="text-center text-[#15599a] text-sm font-bold leading-none tracking-tight duration-300 ease-in-out  lg:text-start">
+            <h1 className="text-center text-sm font-bold leading-none tracking-tight text-[#15599a] duration-300 ease-in-out  lg:text-start">
               {order.favorecido.nome}
             </h1>
             <div className="flex items-center gap-1">
               <AiFillTool />
-              <h1 className="text-center text-gray-500 text-xs font-medium leading-none tracking-tight duration-300 ease-in-out  lg:text-start">
+              <h1 className="text-center text-xs font-medium leading-none tracking-tight text-gray-500 duration-300 ease-in-out  lg:text-start">
                 {order.descricao}
               </h1>
             </div>
@@ -48,7 +48,7 @@ function DesignationCard({ order }) {
 
           <button
             onClick={handleSaveChanges}
-            className="p-1 rounded w-fit border border-blue-500 text-blue-500 font-medium hover:bg-blue-500 hover:text-white duration-300 ease-in-out"
+            className="w-fit rounded border border-blue-500 p-1 font-medium text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
           >
             SALVAR
           </button>
@@ -64,7 +64,7 @@ function DesignationCard({ order }) {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col lg:flex-row justify-around items-center gap-2">
+      <div className="flex w-full flex-col items-center justify-around gap-2 lg:flex-row">
         <div className="flex flex-col items-center gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xs font-medium">CATEGORIA</h1>
@@ -89,7 +89,7 @@ function DesignationCard({ order }) {
           </p>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row w-full gap-2">
+      <div className="flex w-full flex-col gap-2 lg:flex-row">
         <div className="w-full lg:w-[50%]">
           <SelectInput
             label={'TIPO DE RESPONSÁVEL'}

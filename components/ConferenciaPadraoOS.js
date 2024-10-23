@@ -7,7 +7,7 @@ import { MdOutlineAddCircle } from 'react-icons/md'
 import { VscChromeClose } from 'react-icons/vsc'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 import { getErrorMessage } from '../utils/methods/handlers'
 function ConferenciaPadraoOS({ order, closeModal, queryKey }) {

@@ -7,7 +7,7 @@ import { TMaterial } from '@/utils/schemas/materials'
 import { units } from '@/utils/select-options'
 import React, { useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type NewMaterialProps = {
   closeModal: () => void
@@ -15,7 +15,7 @@ type NewMaterialProps = {
 function NewMaterial({ closeModal }: NewMaterialProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TMaterial>({ nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() })
-  const { mutate: handleMaterialCreation, isLoading } = useMutationWithFeedback({
+  const { mutate: handleMaterialCreation, isPending } = useMutationWithFeedback({
     mutationKey: ['create-material'],
     mutationFn: createMaterial,
     queryClient: queryClient,
@@ -125,7 +125,7 @@ function NewMaterial({ closeModal }: NewMaterialProps) {
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               // @ts-ignore
               onClick={() => handleMaterialCreation({ info: infoHolder })}
               className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"

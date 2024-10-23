@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import dayjs from 'dayjs'
 import dayjsBusinessDays from 'dayjs-business-days'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { formatDate, formatDecimalPlaces } from '../../utils/constants'
 import { accessGrantingStatus, HomologationControlStatus, supplementationStatus } from '../../utils/select-options'

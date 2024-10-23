@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
 import TextInput from '../../inputs/Text'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useReceiptAccountById } from '../../../utils/methods/query/receiptAccounts'
 import LoadingPage from '../../utils/LoadingPage'
 import { BiSolidError } from 'react-icons/bi'
@@ -65,12 +65,12 @@ function EditReceiptAccount({ receiptAccountId, closeModal }) {
   }, [account])
   return (
     <div style={OVERLAY_STYLES}>
-      <div className="lg:w-[30%] w-[80%] lg:h-[30%] h-[50%]" style={MODAL_STYLES}>
-        <div className="flex flex-col h-full w-full">
-          <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+      <div className="h-[50%] w-[80%] lg:h-[30%] lg:w-[30%]" style={MODAL_STYLES}>
+        <div className="flex h-full w-full flex-col">
+          <div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
             <div className="flex flex-col">
-              <h1 className="text-[#15599a] pl-6  font-bold">EDIÇÃO DE CONTA DE RECEBIMENTO</h1>
-              <h1 className="text-xs text-gray-500 italic pl-6 font-light">#{infoHolder?._id}</h1>
+              <h1 className="pl-6 font-bold  text-[#15599a]">EDIÇÃO DE CONTA DE RECEBIMENTO</h1>
+              <h1 className="pl-6 text-xs font-light italic text-gray-500">#{infoHolder?._id}</h1>
             </div>
             <button>
               <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
@@ -82,7 +82,7 @@ function EditReceiptAccount({ receiptAccountId, closeModal }) {
             </div>
           ) : null}
           {accountSuccess && infoHolder ? (
-            <div className="flex flex-col py-2 px-2 w-full grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="overscroll-y flex w-full grow flex-col overflow-y-auto py-2 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <TextInput
                 label={'NOME DA CONTA DE RECEBIMENTO'}
                 labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -94,18 +94,18 @@ function EditReceiptAccount({ receiptAccountId, closeModal }) {
             </div>
           ) : null}
           {accountError ? (
-            <div className="flex flex-col gap-1 items-center justify-center grow text-red-500">
+            <div className="flex grow flex-col items-center justify-center gap-1 text-red-500">
               <BiSolidError color="rgb(239,68,68)" size={35} />
               <p className="text-center text-sm italic text-gray-500">Houve um erro as informações sobre essa conta de recebimento.</p>
               <p className="text-center text-sm italic text-gray-500">Confira o funcionamento da sua internet.</p>
               <p className="text-center text-sm italic text-gray-500">Em persistência do erro, comunique o setor de tecnologia.</p>
             </div>
           ) : null}
-          <div className="w-full flex items-center justify-end py-2">
+          <div className="flex w-full items-center justify-end py-2">
             <button
               disabled={editReceiptAccountLoading}
               onClick={() => handleReceiptAccountEdit()}
-              className="w-fit p-2 rounded border border-[#15599a] text-[#15599a] font-medium hover:bg-[#15599a] hover:text-white duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white"
+              className="w-fit rounded border border-[#15599a] p-2 font-medium text-[#15599a] duration-300 ease-in-out disabled:bg-gray-800 disabled:text-white hover:bg-[#15599a] hover:text-white"
             >
               SALVAR
             </button>

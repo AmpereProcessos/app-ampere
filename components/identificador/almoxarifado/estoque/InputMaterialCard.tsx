@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { FaBox } from 'react-icons/fa6'
 import { ImPriceTag } from 'react-icons/im'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 function getNewPrice({
   previousQty,
@@ -59,7 +59,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
     }
   }
 
-  const { mutate: handleUpdate, isLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdate, isPending } = useMutationWithFeedback({
     mutationKey: ['input-update-material', materialId],
     mutationFn: handleMaterialInput,
     queryClient: queryClient,
@@ -167,7 +167,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
           ) : null}
           <div className="mt-2 flex w-full items-center justify-center">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               // @ts-ignore
               onClick={() => handleUpdate({ inputMaterial: infoHolder, vinculationMaterial })}
               className="rounded bg-green-500 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-green-700"

@@ -25,7 +25,7 @@ import { uploadFile } from '@/utils/methods/firebase'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import TextInput from '@/components/inputs/Text'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
@@ -286,7 +286,7 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
       throw error
     }
   }
-  const { mutate, isLoading } = useMutationWithFeedback({
+  const { mutate, isPending } = useMutationWithFeedback({
     mutationKey: ['acknowlegde-delivery'],
     mutationFn: async () => handleAcknowledgeDelivery(infoHolder),
     queryClient: queryClient,
@@ -367,7 +367,7 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
             </div>
           </div>
           <div className="mt-2 flex w-full items-center justify-end">
-            <LoadingButton loading={isLoading} onClick={() => mutate()} type="button">
+            <LoadingButton loading={isPending} onClick={() => mutate()} type="button">
               RECONHECER ENTREGA
             </LoadingButton>
           </div>

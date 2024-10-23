@@ -3,7 +3,7 @@ import { createPurchaseControl, updatePurchaseControl } from '@/utils/methods/mu
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import { Session } from 'next-auth'
 import React, { useEffect, useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import * as Dialog from '@radix-ui/react-dialog'
 import { VscChromeClose } from 'react-icons/vsc'
 import PurchaseControlGeneralInformationBlock from './blocos/GeneralInformationBlock'
@@ -70,7 +70,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     dataInsercao: new Date().toISOString(),
   })
 
-  const { mutate, isLoading: isUpdateLoading } = useMutationWithFeedback({
+  const { mutate, isPending: isUpdateLoading } = useMutationWithFeedback({
     mutationKey: ['update-purchase-control', purchaseControlId],
     mutationFn: updatePurchaseControl,
     queryClient: queryClient,

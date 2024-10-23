@@ -8,7 +8,7 @@ import ResponsiblesMenu from './ResponsiblesMenu'
 import NumberInput from '@/components/inputs/Number'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createProperty } from '@/utils/methods/mutation/properties'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type NewPropertyProps = {
   session: Session
@@ -29,7 +29,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
     },
     dataInsercao: new Date().toISOString(),
   })
-  const { mutate: handleCreateProperty, isLoading } = useMutationWithFeedback({
+  const { mutate: handleCreateProperty, isPending } = useMutationWithFeedback({
     mutationKey: ['create-property'],
     mutationFn: createProperty,
     queryClient: queryClient,
@@ -90,7 +90,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               onClick={() => {
                 const info = {
                   nome: infoHolder.nome.toUpperCase(),

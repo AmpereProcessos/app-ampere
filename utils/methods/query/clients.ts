@@ -2,7 +2,7 @@ import { TProject, TProjectDTO } from '@/utils/schemas/projects'
 import { TBirthdayRecord } from '@/utils/schemas/stats'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 
 export async function fetchClients() {

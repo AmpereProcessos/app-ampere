@@ -6,7 +6,7 @@ import { TActivityDTO } from '@/utils/schemas/activities'
 import React from 'react'
 import { BsCalendar4Event, BsCalendarCheck, BsCalendarPlus, BsCheck } from 'react-icons/bs'
 import { MdDashboard } from 'react-icons/md'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 type ResponsibleActivityCardProps = {
   userId: string | null
   activity: TActivityDTO

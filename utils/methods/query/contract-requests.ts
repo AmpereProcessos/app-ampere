@@ -2,7 +2,7 @@ import { TContractRequestsByFiltersResult } from '@/pages/api/solicitacoes/contr
 import { TContractRequestDTO, TContractRequestSimplifiedDTO, TContractRequestsQueryFilters } from '@/utils/schemas/contract-requests'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchRequests() {
   try {

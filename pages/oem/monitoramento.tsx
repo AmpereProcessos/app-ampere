@@ -15,7 +15,7 @@ import { FaExpandArrowsAlt, FaPhone, FaUser } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { MdEmail, MdOutlineCheckBox } from 'react-icons/md'
 import { VscDiffAdded } from 'react-icons/vsc'
-import { QueryClient, useQueryClient } from 'react-query'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 
 function Monitoring() {
   const queryClient = useQueryClient()

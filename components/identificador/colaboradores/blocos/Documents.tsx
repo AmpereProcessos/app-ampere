@@ -7,7 +7,7 @@ import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCloudUploadFill } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import EmployeeFiles from '../EmployeeFiles'
 
 type DocumentsProps = {
@@ -51,7 +51,7 @@ function Documents({ employeeId, session }: DocumentsProps) {
       throw error
     }
   }
-  const { mutate, isLoading } = useMutationWithFeedback({
+  const { mutate, isPending } = useMutationWithFeedback({
     mutationKey: ['create-file-reference'],
     mutationFn: handleFileReferenceCreation,
     affectedQueryKey: ['file-references-by-user-id', employeeId],
@@ -100,7 +100,7 @@ function Documents({ employeeId, session }: DocumentsProps) {
       <div className="flex w-full items-center justify-end">
         <button
           // @ts-ignore
-          disabled={isLoading}
+          disabled={isPending}
           onClick={() => mutate()}
           className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
         >

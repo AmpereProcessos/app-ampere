@@ -1,6 +1,6 @@
 import { TPartnerSimplifiedDTO } from '@/utils/schemas/crm/partner.schema'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchPartners() {
   try {

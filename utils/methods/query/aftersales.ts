@@ -2,7 +2,7 @@ import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getProjectNestedFieldValue } from '../formatting'
 
 function getNestedFieldValue(project: TProjectDTO, path: string) {

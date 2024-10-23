@@ -15,7 +15,7 @@ import TakeMaterialsBlock from './TakeMaterialsBlock'
 import AvailableMaterialsBlock from './AvailableMaterialsBlock'
 
 import { equipesTecnicas, serviceOrdersCategories, tiposDeEstruturas, tiposDePadrao, tiposDeTelha } from '../../../utils/constants'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { Session } from 'next-auth'
 import { TServiceOrder, TServiceOrderDTO } from '@/utils/schemas/service-order'

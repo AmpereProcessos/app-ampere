@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { FaSave } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'

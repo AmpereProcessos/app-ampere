@@ -12,7 +12,7 @@ import { Session } from 'next-auth'
 
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createEmployee, updateEmployee } from '@/utils/methods/mutation/employees'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import SystemAccess from '../colaboradores/blocos/SystemAccess'
 import { useEmployeeById, useUserById } from '@/utils/methods/query/users'
 import LoadingPage from '@/components/utils/LoadingPage'
@@ -100,7 +100,7 @@ function EditUser({ userId, session, closeModal }: EditUserProps) {
   })
   const { data: employee, isLoading, isSuccess, isError } = useUserById({ id: userId })
 
-  const { mutate: handleUpdateEmployee, isLoading: updateLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateEmployee, isPending: updateLoading } = useMutationWithFeedback({
     mutationKey: ['update-employee'],
     mutationFn: updateEmployee,
     queryClient: queryClient,

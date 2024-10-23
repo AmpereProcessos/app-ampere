@@ -17,7 +17,7 @@ import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdAdd } from 'react-icons/io'
 import { MdLandscape, MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
 import { TbReportAnalytics, TbRulerMeasure } from 'react-icons/tb'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 type PurchaseControlProjectInformationBlockProps = {
   purchase: TPurchaseControl
@@ -42,9 +42,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
         'compra.statusEntrega': purchase.entrega.status,
         'compra.kitInfo': purchase.composicao.map((c) => `${c.qtde}-${c.descricao}`).join('\n'),
       }
-      console.log('CHEGUEI AQUI 1')
       await updateProject({ id: project._id, changes })
-      console.log('CHEGUEI AQUI 2')
       return 'Dados sincronizados com sucesso !'
     } catch (error) {
       console.log('ERROR', error)

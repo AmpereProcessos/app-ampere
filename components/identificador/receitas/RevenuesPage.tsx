@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ReceiptsBlock from './blocos/ReceiptsBlock'
 import RevenuesBlock from './blocos/RevenuesBlock'
 import { Button } from '@/components/ui/button'
-import NewRevenue from './NewRevenue'
+import NewRevenue from './modals/NewRevenue'
 import RevenueStats from './RevenueStats'
 
 type RevenuesPageProps = {

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
+import { TProject, TProjectDTO } from './projects'
 
 const GeneralRevenueSchema = z.object({
   nome: z.string(),
@@ -177,3 +178,62 @@ export const RevenueQueryFilters = z.object({
   }),
 })
 export type TRevenueQueryFilters = z.infer<typeof RevenueQueryFilters>
+
+export const RevenueProjectProjection = {
+  nomeDoContrato: 1,
+  cpf_cnpj: 1,
+  inscricaoRural: 1,
+  tipoDeServico: 1,
+  telefone: 1,
+  email: 1,
+  cep: 1,
+  uf: 1,
+  cidade: 1,
+  bairro: 1,
+  logradouro: 1,
+  numeroResidencia: 1,
+  'pagamento.pagador': 1,
+  'pagamento.contatoPagador': 1,
+  'pagamento.cpf_cnpjPagador': 1,
+  'pagamento.forma': 1,
+  'pagamento.metodo': 1,
+  'pagamento.credor': 1,
+  'pagamento.credorNomeGerente': 1,
+  'pagamento.credorContatoGerente': 1,
+  'pagamento.negociacao': 1,
+  produtos: 1,
+  servicos: 1,
+}
+export type TRevenueProject = Pick<
+  TProject,
+  | 'nomeDoContrato'
+  | 'cpf_cnpj'
+  | 'inscricaoRural'
+  | 'tipoDeServico'
+  | 'telefone'
+  | 'email'
+  | 'cep'
+  | 'uf'
+  | 'cidade'
+  | 'bairro'
+  | 'logradouro'
+  | 'numeroResidencia'
+  | 'produtos'
+  | 'servicos'
+> & {
+  pagamento: {
+    forma: TProjectDTO['pagamento']['forma']
+    metodo: TProjectDTO['pagamento']['metodo']
+    pagador: TProjectDTO['pagamento']['pagador']
+    contatoPagador: TProjectDTO['pagamento']['contatoPagador']
+    cpf_cnpjPagador: TProjectDTO['pagamento']['cpf_cnpjPagador']
+    credor: TProjectDTO['pagamento']['credor']
+    credorNomeGerente: TProjectDTO['pagamento']['credorNomeGerente']
+    credorContatoGerente: TProjectDTO['pagamento']['credorContatoGerente']
+    negociacao: TProjectDTO['pagamento']['negociacao']
+  }
+}
+
+export type TRevenueProjectDTO = TRevenueProject & { _id: string }
+
+export type TRevenueWithProjectDTO = TRevenueDTO & { projetoDados: TRevenueProjectDTO | null }

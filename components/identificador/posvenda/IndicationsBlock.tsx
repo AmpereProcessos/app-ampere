@@ -7,7 +7,7 @@ import { createIndication } from '@/utils/methods/mutation/indications'
 import { useIndicationsByIndicatorId } from '@/utils/methods/query/indications'
 
 import React, { useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type IndicationsBlockProps = {
   projectId: string
@@ -18,7 +18,7 @@ function IndicationsBlock({ projectId, projectName }: IndicationsBlockProps) {
   const [indication, setIndication] = useState({ nome: '', telefone: '' })
 
   const { data: indications, isLoading, isError, isSuccess } = useIndicationsByIndicatorId({ projectId })
-  const { mutate: handleCreateIndication, isLoading: creationLoading } = useMutationWithFeedback({
+  const { mutate: handleCreateIndication, isPending: creationLoading } = useMutationWithFeedback({
     mutationKey: ['create-indication'],
     mutationFn: createIndication,
     queryClient: queryClient,

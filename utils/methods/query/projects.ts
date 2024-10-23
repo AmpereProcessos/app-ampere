@@ -2,7 +2,7 @@ import { TProjectsByFiltersResult } from '@/pages/api/projects/search'
 import { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchProjectsByPersonalizedFilters({ page, filters }: { page: number; filters: TPersonalizedProjectsFilter }) {
   try {

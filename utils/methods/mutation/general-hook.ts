@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast'
-import { QueryClient, useMutation } from 'react-query'
+import { QueryClient, useMutation } from '@tanstack/react-query'
 import { getErrorMessage } from '../handlers'
 
 type UseMutationWithFeedbackParams = {

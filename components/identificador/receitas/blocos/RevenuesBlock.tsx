@@ -15,7 +15,7 @@ import { MdDashboard } from 'react-icons/md'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import Avatar from '@/components/utils/Avatar'
 import { Session } from 'next-auth'
-import EditRevenue from '../EditRevenue'
+import EditRevenue from '../modals/EditRevenue'
 import RevenuesFilterMenu from './RevenuesFilterMenu'
 
 type RevenuesBlockProps = {

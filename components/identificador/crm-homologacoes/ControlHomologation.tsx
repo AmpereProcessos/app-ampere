@@ -13,7 +13,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 
 import Link from 'next/link'
 import { useHomologationById } from '@/utils/methods/query/crm/homologations'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import LoadingPage from '@/components/utils/LoadingPage'
 import { THomologation, THomologationDTO } from '@/utils/schemas/crm/homologation.schema'
@@ -99,7 +99,7 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
     dataInsercao: new Date().toISOString(),
   })
 
-  const { mutate: handleUpdateHomologation, isLoading: mutationLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateHomologation, isPending: mutationLoading } = useMutationWithFeedback({
     mutationKey: ['edit-homologation', homologationId],
     mutationFn: editHomologation,
     queryClient: queryClient,

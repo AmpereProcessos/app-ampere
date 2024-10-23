@@ -1,6 +1,6 @@
 import { TIndicationProject } from '@/pages/api/publico/indicacoes'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchIndicationsByIndicatorId({ projectId }: { projectId: string }) {
   try {

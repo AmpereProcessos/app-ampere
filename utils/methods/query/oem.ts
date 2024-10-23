@@ -1,7 +1,7 @@
 import { TMonitoringProjectDTOSimplified, TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 import dayjs from 'dayjs'
 

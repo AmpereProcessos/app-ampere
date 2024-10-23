@@ -2,7 +2,7 @@ import { TEnergyPAExecution } from '@/pages/api/gestao-obras/padroes'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics } from '../formatting'
 import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
 

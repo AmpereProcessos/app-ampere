@@ -17,7 +17,7 @@ import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { revenueSources } from '@/utils/select-options'
 import { Session } from 'next-auth'
 import { usePendingPayments } from '@/utils/methods/query/expenses'
-import EditExpense from '../EditExpense'
+import EditExpense from '../modals/EditExpense'
 import { TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
 import { costApportionments } from '@/model'
 

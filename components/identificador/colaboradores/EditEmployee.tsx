@@ -13,7 +13,7 @@ import Documents from './blocos/Documents'
 import { useEmployeeById } from '@/utils/methods/query/users'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { updateEmployee } from '@/utils/methods/mutation/employees'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import CheckboxInput from '@/components/inputs/Checkbox'
@@ -134,7 +134,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
   })
   const { data: employee, isLoading, isSuccess, isError } = useEmployeeById({ id: userId })
 
-  const { mutate: handleUpdateEmployee, isLoading: updateLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateEmployee, isPending: updateLoading } = useMutationWithFeedback({
     mutationKey: ['create-employee'],
     mutationFn: updateEmployee,
     queryClient: queryClient,

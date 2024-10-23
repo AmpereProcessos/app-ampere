@@ -1,5 +1,5 @@
 import connectToDatabase from '../../../utils/services/mongodb/projects'
-import { InsertRevenueSchema, TRevenue } from '../../../utils/schemas/revenues'
+import { InsertRevenueSchema, TRevenue, TRevenueWithProjectDTO } from '../../../utils/schemas/revenues'
 import { NextApiHandler } from 'next'
 import { apiHandler, validateAuthenticationWithSession } from '../../../utils/api'
 import createHttpError from 'http-errors'
@@ -19,18 +19,63 @@ const getRevenues: NextApiHandler<GetResponse> = async (req, res) => {
   // Query for a specific revenue
   if (id) {
     if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
-    const revenue = await collection.findOne({ _id: new ObjectId(id) })
+
+    const addFields = { projectIdAsObjectId: { $toObjectId: '$projeto.id' } }
+    const lookup = { from: 'dados', localField: 'projectIdAsObjectId', foreignField: '_id', as: 'projetoDados' }
+    const revenueArr = await collection
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $addFields: addFields },
+        { $lookup: lookup },
+        {
+          $project: {
+            nome: 1,
+            tipo: 1,
+            autor: 1,
+            projeto: 1,
+            total: 1,
+            metodo: 1,
+            efetivacao: 1,
+            fracionamento: 1,
+            dataInsercao: 1,
+            'projetoDados._id': 1,
+            'projetoDados.nomeDoContrato': 1,
+            'projetoDados.cpf_cnpj': 1,
+            'projetoDados.inscricaoRural': 1,
+            'projetoDados.tipoDeServico': 1,
+            'projetoDados.telefone': 1,
+            'projetoDados.email': 1,
+            'projetoDados.cep': 1,
+            'projetoDados.uf': 1,
+            'projetoDados.cidade': 1,
+            'projetoDados.bairro': 1,
+            'projetoDados.logradouro': 1,
+            'projetoDados.numeroResidencia': 1,
+            'projetoDados.pagamento.pagador': 1,
+            'projetoDados.pagamento.contatoPagador': 1,
+            'projetoDados.pagamento.cpf_cnpjPagador': 1,
+            'projetoDados.pagamento.forma': 1,
+            'projetoDados.pagamento.metodo': 1,
+            'projetoDados.pagamento.credor': 1,
+            'projetoDados.pagamento.credorNomeGerente': 1,
+            'projetoDados.pagamento.credorContatoGerente': 1,
+            'projetoDados.pagamento.negociacao': 1,
+            'projetoDados.produtos': 1,
+            'projetoDados.servicos': 1,
+          },
+        },
+      ])
+      .toArray()
+    const revenue = revenueArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0]
     if (!revenue) throw new createHttpError.NotFound('Receita não encontrada.')
-    return res.status(200).json({ data: revenue })
+    return res.status(200).json({ data: revenue as TRevenueWithProjectDTO })
   }
   // Query for a given project revenues
   if (projectId) {
     if (typeof projectId != 'string') throw new createHttpError.BadRequest('ID de projeto inválido.')
-    console.log('PROJETO ID', projectId)
     const revenues = await collection.find({ 'projeto.id': projectId }, { sort: { 'efetivacao.data': -1, dataInsercao: 1 } }).toArray()
     return res.status(200).json({ data: revenues })
   }
-  console.log('CHEGOU AQUI')
   // Query for all revenues
   const revenues = await collection.find({}, { sort: { 'efetivacao.data': -1, dataInsercao: 1 } }).toArray()
   return res.status(200).json({ data: revenues })

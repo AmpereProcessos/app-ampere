@@ -7,7 +7,7 @@ import MaterialListItem from './MaterialListItem'
 import toast from 'react-hot-toast'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type MaterialsBlockProps = {
   formularyId?: string

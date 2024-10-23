@@ -17,14 +17,14 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import { createWarehouseFormulary, deleteWarehouseFormulary, updateWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { isError, useQueryClient } from 'react-query'
+import { isError, useQueryClient } from '@tanstack/react-query'
 import { useWarehouseFormById } from '@/utils/methods/query/warehouse-forms'
 import { FaUser } from 'react-icons/fa'
 import { BsCode } from 'react-icons/bs'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { TExpense } from '@/utils/schemas/expenses'
-import { insertExpense } from '@/utils/methods/mutation/expenses'
+import { createExpense } from '@/utils/methods/mutation/expenses'
 import Link from 'next/link'
 
 function getExpensesFromFormulary({ session, info }: { session: Session; info: TNewWarehouseFormularyDTO }): TExpense {
@@ -150,7 +150,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
       // Calling method for stock quantities update
       const updateResponse = await updateManyMaterials({ formularyId, project, updates })
       // Calling method to generate a expense from formulary
-      const expenseResponse = await insertExpense({ ...expense })
+      const expenseResponse = await createExpense({ ...expense })
       // Calling method for the update of the formulary itself
       const formularyResponse = await updateWarehouseFormulary({
         id: formularyId,
@@ -191,21 +191,21 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
       throw error
     }
   }
-  const { mutate: handleConclusion, isLoading: loadingConclusion } = useMutationWithFeedback({
+  const { mutate: handleConclusion, isPending: loadingConclusion } = useMutationWithFeedback({
     mutationKey: ['conclude-warehouse-formulary', formularyId],
     mutationFn: handleFormularyConclusion,
     queryClient: queryClient,
     affectedQueryKey: ['warehouse-form-by-id', formularyId],
     callbackFn: () => invalidateQuery(),
   })
-  const { mutate: handleUpdate, isLoading: loadingUpdate } = useMutationWithFeedback({
+  const { mutate: handleUpdate, isPending: loadingUpdate } = useMutationWithFeedback({
     mutationKey: ['edit-warehouse-formulary', formularyId],
     mutationFn: updateWarehouseFormulary,
     queryClient: queryClient,
     affectedQueryKey: ['warehouse-form-by-id', formularyId],
     callbackFn: () => invalidateQuery(),
   })
-  const { mutate: handleDelete, isLoading: loadingDelete } = useMutationWithFeedback({
+  const { mutate: handleDelete, isPending: loadingDelete } = useMutationWithFeedback({
     mutationKey: ['delete-warehouse-formulary', formularyId],
     mutationFn: handleFormularyDelete,
     queryClient: queryClient,

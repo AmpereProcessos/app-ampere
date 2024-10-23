@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useCreditCardOptionById } from '@/utils/methods/query/credit-card-options'
 import { updateCreditCardOption } from '@/utils/methods/mutation/credit-card-options'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
@@ -26,7 +26,7 @@ function EditCreditCardOption({ optionId, closeModal }: EditCreditCardOptionProp
     opcoes: [],
   })
 
-  const { mutate: handleUpdate, isLoading: updateLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdate, isPending: updateLoading } = useMutationWithFeedback({
     mutationKey: ['update-credit-card-option'],
     mutationFn: updateCreditCardOption,
     queryClient: queryClient,

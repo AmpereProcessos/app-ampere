@@ -1,10 +1,17 @@
 import { TExpenseStatsResult } from '@/pages/api/despesas/estatisticas'
 import { TExpensesByFiltersResult } from '@/pages/api/despesas/search'
-import { TExpense, TExpenseDTO, TExpenseQueryFilters, TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
+import {
+  TExpense,
+  TExpenseDTO,
+  TExpenseProjectDTO,
+  TExpenseQueryFilters,
+  TExpenseWithProjectDTO,
+  TPaymentUnwindSimplifiedDTO,
+} from '@/utils/schemas/expenses'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 // Expenses by Project
 async function fetchProjectExpenses(projectId: string) {
@@ -87,7 +94,7 @@ export function useExpenses() {
 async function fetchExpenseById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/despesas?id=${id}`)
-    return data.data as TExpenseDTO
+    return data.data as TExpenseWithProjectDTO
   } catch (error) {
     throw error
   }
@@ -178,5 +185,22 @@ export function useExpenseStats() {
   return useQuery({
     queryKey: ['expense-stats'],
     queryFn: fetchExpenseStats,
+  })
+}
+
+async function fetchExpenseProject({ projectId }: { projectId: string | null }) {
+  try {
+    if (!projectId) return null
+    const { data } = await axios.get(`/api/despesas/projeto?projectId=${projectId}`)
+    return data.data as TExpenseProjectDTO
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useExpenseProject({ projectId }: { projectId: string | null }) {
+  return useQuery({
+    queryKey: ['expense-project', projectId],
+    queryFn: async () => fetchExpenseProject({ projectId }),
   })
 }

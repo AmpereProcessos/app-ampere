@@ -1,6 +1,6 @@
 import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchProjectUpdateLogs({ projectId }: { projectId: string }) {
   try {

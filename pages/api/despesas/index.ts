@@ -2,7 +2,7 @@ import createHttpError from 'http-errors'
 import connectToDatabase from '../../../utils/services/mongodb/projects'
 import { errorHandler } from '../../../utils/methods/handlers'
 import { Collection, Db, ObjectId } from 'mongodb'
-import { TExpense } from '@/utils/schemas/expenses'
+import { TExpense, TExpenseWithProjectDTO } from '@/utils/schemas/expenses'
 import { NextApiHandler } from 'next'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 
@@ -20,9 +20,62 @@ const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
   // Query for specific expense
   if (id) {
     if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
-    const expense = await collection.findOne({ _id: new ObjectId(id) })
+
+    const addFields = { projectIdAsObjectId: { $toObjectId: '$projeto.id' } }
+    const lookup = { from: 'dados', localField: 'projectIdAsObjectId', foreignField: '_id', as: 'projetoDados' }
+
+    const expenseArr = await collection
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $addFields: addFields },
+        { $lookup: lookup },
+        {
+          $project: {
+            rateio: 1,
+            categoria: 1,
+            descricao: 1,
+            projeto: 1,
+            idFormularioAlmoxarifado: 1,
+            itens: 1,
+            total: 1,
+            efetivacao: 1,
+            criterioReferencia: 1,
+            criterioCompetencia: 1,
+            pagamentos: 1,
+            autor: 1,
+            dataInsercao: 1,
+            'projetoDados._id': 1,
+            'projetoDados.nomeDoContrato': 1,
+            'projetoDados.cpf_cnpj': 1,
+            'projetoDados.inscricaoRural': 1,
+            'projetoDados.tipoDeServico': 1,
+            'projetoDados.telefone': 1,
+            'projetoDados.email': 1,
+            'projetoDados.cep': 1,
+            'projetoDados.uf': 1,
+            'projetoDados.cidade': 1,
+            'projetoDados.bairro': 1,
+            'projetoDados.logradouro': 1,
+            'projetoDados.numeroResidencia': 1,
+            'projetoDados.pagamento.pagador': 1,
+            'projetoDados.pagamento.contatoPagador': 1,
+            'projetoDados.pagamento.cpf_cnpjPagador': 1,
+            'projetoDados.pagamento.forma': 1,
+            'projetoDados.pagamento.metodo': 1,
+            'projetoDados.pagamento.credor': 1,
+            'projetoDados.pagamento.credorNomeGerente': 1,
+            'projetoDados.pagamento.credorContatoGerente': 1,
+            'projetoDados.pagamento.negociacao': 1,
+            'projetoDados.produtos': 1,
+            'projetoDados.servicos': 1,
+          },
+        },
+      ])
+      .toArray()
+    const expense = expenseArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0]
+
     if (!expense) throw new createHttpError.NotFound('Despesa não encontrada.')
-    return res.status(200).json({ data: expense })
+    return res.status(200).json({ data: expense as TExpenseWithProjectDTO })
   }
 
   // Query for a given project expenses

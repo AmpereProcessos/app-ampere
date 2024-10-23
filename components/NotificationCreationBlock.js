@@ -16,7 +16,7 @@ import { formatNameAsInitials } from '../utils/methods/formatting'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createNotification } from '../utils/methods/mutation/notifications'
 const variants = {
   hidden: {

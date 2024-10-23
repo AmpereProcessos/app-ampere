@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { storage } from '../../utils/services/firebase/firebase-storage'
 import AnexoArquivo from '../AnexoArquivo'
 import FileLinkBlock from '../utils/FileLinkBlock'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
 

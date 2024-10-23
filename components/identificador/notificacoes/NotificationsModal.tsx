@@ -8,7 +8,7 @@ import { BsCalendarCheck, BsCalendarPlus, BsCheck, BsCheckAll, BsCode } from 're
 import { IoIosSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
 import { VscChromeClose } from 'react-icons/vsc'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 
 function renderHeader({ projectName, sender }: { projectName: string; sender: string }) {

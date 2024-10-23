@@ -1,7 +1,7 @@
 import { TPersonalizedTechnicalAnalysisFilter, TTechnicalAnalysis, TTechnicalAnalysisDTO } from '@/utils/schemas/technical-analysis'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics } from '../formatting'
 import { TTechnicalAnalysisByFiltersResult } from '@/pages/api/analises-tecnicas/search'
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import Select from 'react-select'
 import { useSession } from 'next-auth/react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { AiOutlineSearch } from 'react-icons/ai'

@@ -1,7 +1,7 @@
 import { THomologationDTO } from '@/utils/schemas/crm/homologation.schema'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics } from '../../formatting'
 
 async function fetchOpportunityHomologations({ opportunityId }: { opportunityId: string }) {

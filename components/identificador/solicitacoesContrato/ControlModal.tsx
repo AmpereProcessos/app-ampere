@@ -20,7 +20,7 @@ import TechnicalAnalysisBlock from './blocos/TechnicalAnalysisBlock'
 import FilesBlock from './blocos/FilesBlock'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { editContractRequest } from '@/utils/methods/mutation/contract-requests'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   getProjectHomologationInformation,
   getProjectInformationFromRequest,
@@ -189,20 +189,20 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
       throw error
     }
   }
-  const { mutate: handleApproveRequest, isLoading: approvalLoading } = useMutationWithFeedback({
+  const { mutate: handleApproveRequest, isPending: approvalLoading } = useMutationWithFeedback({
     mutationKey: ['add-new-project', requestId],
     mutationFn: approveFormulary,
     queryClient: queryClient,
     affectedQueryKey: ['contract-requests'],
     callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ['contract-request-by-id', requestId] }),
   })
-  const { mutate: handleRejectRequest, isLoading: rejectLoading } = useMutationWithFeedback({
+  const { mutate: handleRejectRequest, isPending: rejectLoading } = useMutationWithFeedback({
     mutationKey: ['reject-contract-request', requestId],
     mutationFn: rejectFormulary,
     queryClient: queryClient,
     affectedQueryKey: ['contract-requests'],
   })
-  const { mutate: handleRequestUpdate, isLoading: updateLoading } = useMutationWithFeedback({
+  const { mutate: handleRequestUpdate, isPending: updateLoading } = useMutationWithFeedback({
     mutationKey: ['update-contract-request', requestId],
     mutationFn: editContractRequest,
     queryClient: queryClient,

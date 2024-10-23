@@ -6,7 +6,7 @@ import { TPurchaseControl } from '@/utils/schemas/purchases'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaLink } from 'react-icons/fa'
-import { QueryClient, useMutation } from 'react-query'
+import { QueryClient, useMutation } from '@tanstack/react-query'
 
 type ProjectVinculationProps = {
   purchaseControlId?: string

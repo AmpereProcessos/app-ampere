@@ -1,7 +1,7 @@
 import { TProjectFinances } from '@/pages/api/stats/financial-auditing'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchFinancialAuditingData({ after, before, field }: { after: string; before: string; field: string }) {
   try {

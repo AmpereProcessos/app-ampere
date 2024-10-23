@@ -138,7 +138,7 @@ export async function insertExpensesFromPurchaseRequests({
     throw error
   }
 }
-export async function insertExpense(info) {
+export async function createExpense(info) {
   try {
     await axios.post('/api/despesas', { data: info })
     return 'Despesa adicionada com sucesso !'
@@ -146,9 +146,9 @@ export async function insertExpense(info) {
     throw error
   }
 }
-export async function updateExpense({ expenseId, changes }) {
+export async function updateExpense({ id, changes }) {
   try {
-    const response = await axios.put(`/api/despesas?id=${expenseId}`, {
+    const response = await axios.put(`/api/despesas?id=${id}`, {
       changes,
     })
 

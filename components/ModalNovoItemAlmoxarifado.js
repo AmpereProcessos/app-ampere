@@ -8,7 +8,7 @@ import { units } from '../utils/constants'
 import TextFloatingInput from './TextFloatingInput'
 import NumberFloatingInput from './NumberFloatingInput'
 import SelectFoatingInput from './SelectFloatingInput'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const MODAL_STYLES = {
   position: 'fixed',
@@ -96,10 +96,10 @@ function Novoitem({ closeModal }) {
   return (
     <>
       <div style={OVERLAY_STYLES}>
-        <div className="w-[90%] lg:w-[50%] h-[90%] lg:h-[80%]" style={MODAL_STYLES}>
-          <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200 min-h-[30px]">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">NOVO ITEM</h1>
+        <div className="h-[90%] w-[90%] lg:h-[80%] lg:w-[50%]" style={MODAL_STYLES}>
+          <div className="flex h-full flex-col">
+            <div className="flex min-h-[30px] justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+              <h1 className="pl-6 font-bold uppercase text-[#15599a]">NOVO ITEM</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -109,8 +109,8 @@ function Novoitem({ closeModal }) {
                 />
               </button>
             </div>
-            <div className="grow py-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-              <div className="flex flex-col w-full h-full px-4">
+            <div className="grow overflow-y-auto overscroll-y-auto py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="flex h-full w-full flex-col px-4">
                 <TextFloatingInput label={'NOME DO ITEM'} editable={true} value={nome} handleChange={(value) => setNome(value)} width={'100%'} />
                 <NumberFloatingInput
                   label={'QUANTIDADE'}
@@ -150,20 +150,20 @@ function Novoitem({ closeModal }) {
                   handleChange={(value) => setLocalizacao(value)}
                   width={'100%'}
                 />
-                <div className="flex flex-col w-full gap-1">
-                  <h1 className="text-gray-500 font-medium text-xs w-full text-center">ANOTAÇÕES</h1>
+                <div className="flex w-full flex-col gap-1">
+                  <h1 className="w-full text-center text-xs font-medium text-gray-500">ANOTAÇÕES</h1>
                   <textarea
                     value={anotacoes}
                     onChange={(e) => setAnotacoes(e.target.value)}
                     placeholder="Deixe aqui anotações sobre o item em questão..."
-                    className="w-full h-[80px] p-1 text-sm text-center resize-none outline-blue-200 bg-gray-100 border border-gray-200"
+                    className="h-[80px] w-full resize-none border border-gray-200 bg-gray-100 p-1 text-center text-sm outline-blue-200"
                   />
                 </div>
                 {msg.text && <p className={`text-center italic ${msg.color}`}>{msg.text}</p>}
                 <div className="mt-4 flex justify-center">
                   <button
                     onClick={addItem}
-                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-2 text-white font-bold rounded text-sm"
+                    className="flex items-center gap-x-2 rounded bg-[#15599a] p-2 text-sm font-bold text-white hover:bg-blue-500"
                   >
                     <p>ADICIONAR</p>
                     <FaSave />

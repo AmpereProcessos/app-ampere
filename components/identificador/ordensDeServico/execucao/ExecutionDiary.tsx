@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { RxTimer } from 'react-icons/rx'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import ExecutionDiaryRecord from './ExecutionDiaryRecord'
 import TextInput from '@/components/inputs/Text'
 type ExecutionDiaryProps = {

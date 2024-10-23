@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const variants = {
   hidden: {

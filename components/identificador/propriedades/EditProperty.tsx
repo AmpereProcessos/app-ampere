@@ -8,7 +8,7 @@ import ResponsiblesMenu from './ResponsiblesMenu'
 import NumberInput from '@/components/inputs/Number'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createProperty, updateProperty } from '@/utils/methods/mutation/properties'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { usePropertyById } from '@/utils/methods/query/properties'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -35,7 +35,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
     dataInsercao: new Date().toISOString(),
   })
   const { data: property, isLoading, isError, isSuccess } = usePropertyById({ id: propertyId })
-  const { mutate: handleUpdateProperty, isLoading: updateLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateProperty, isPending: updateLoading } = useMutationWithFeedback({
     mutationKey: ['update-property', propertyId],
     mutationFn: updateProperty,
     queryClient: queryClient,

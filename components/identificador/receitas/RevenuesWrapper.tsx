@@ -7,10 +7,9 @@ import { formatToMoney } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import RevenueCard from './RevenueCard'
 import { useRevenues } from '../../../utils/methods/query/revenues'
-import { isError } from 'react-query'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { TRevenueDTO } from '@/utils/schemas/revenues'
-import EditRevenue from './EditRevenue'
+import EditRevenue from './modals/EditRevenue'
 import { Session } from 'next-auth'
 
 type RevenuesWrapperProps = {

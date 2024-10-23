@@ -20,7 +20,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { useNewWarehouseForms, useWarehouseForms } from '@/utils/methods/query/warehouse-forms'
 import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
 import { getFirstDayOfMonth, getLastDayOfMonth, getPeriodDateParamsByReferenceDate } from '@/utils/methods/dates'
 

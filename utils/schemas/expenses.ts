@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
+import { TProject, TProjectDTO } from './projects'
 
 const PaymentItemSchema = z.object({
   valor: z.number({ required_error: 'Valor do item de pagamento não informado.', invalid_type_error: 'Tipo não válido para o item de pagamento.' }),
@@ -172,3 +173,62 @@ export const ExpenseQueryFilters = z.object({
   }),
 })
 export type TExpenseQueryFilters = z.infer<typeof ExpenseQueryFilters>
+
+export const ExpenseProjectProjection = {
+  nomeDoContrato: 1,
+  cpf_cnpj: 1,
+  inscricaoRural: 1,
+  tipoDeServico: 1,
+  telefone: 1,
+  email: 1,
+  cep: 1,
+  uf: 1,
+  cidade: 1,
+  bairro: 1,
+  logradouro: 1,
+  numeroResidencia: 1,
+  'pagamento.pagador': 1,
+  'pagamento.contatoPagador': 1,
+  'pagamento.cpf_cnpjPagador': 1,
+  'pagamento.forma': 1,
+  'pagamento.metodo': 1,
+  'pagamento.credor': 1,
+  'pagamento.credorNomeGerente': 1,
+  'pagamento.credorContatoGerente': 1,
+  'pagamento.negociacao': 1,
+  produtos: 1,
+  servicos: 1,
+}
+export type TExpenseProject = Pick<
+  TProject,
+  | 'nomeDoContrato'
+  | 'cpf_cnpj'
+  | 'inscricaoRural'
+  | 'tipoDeServico'
+  | 'telefone'
+  | 'email'
+  | 'cep'
+  | 'uf'
+  | 'cidade'
+  | 'bairro'
+  | 'logradouro'
+  | 'numeroResidencia'
+  | 'produtos'
+  | 'servicos'
+> & {
+  pagamento: {
+    forma: TProjectDTO['pagamento']['forma']
+    metodo: TProjectDTO['pagamento']['metodo']
+    pagador: TProjectDTO['pagamento']['pagador']
+    contatoPagador: TProjectDTO['pagamento']['contatoPagador']
+    cpf_cnpjPagador: TProjectDTO['pagamento']['cpf_cnpjPagador']
+    credor: TProjectDTO['pagamento']['credor']
+    credorNomeGerente: TProjectDTO['pagamento']['credorNomeGerente']
+    credorContatoGerente: TProjectDTO['pagamento']['credorContatoGerente']
+    negociacao: TProjectDTO['pagamento']['negociacao']
+  }
+}
+
+export type TExpenseProjectDTO = TExpenseProject & { _id: string }
+
+export type TExpenseWithProjectDTO = TExpenseDTO & { projetoDados: TExpenseProjectDTO | null }

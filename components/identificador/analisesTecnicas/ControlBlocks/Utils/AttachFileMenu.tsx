@@ -10,7 +10,7 @@ import { storage } from '@/utils/services/firebase/firebase-storage'
 import { getMetadata, ref } from 'firebase/storage'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type AttachFileMenuProps = {
   analysisId: string
@@ -79,7 +79,7 @@ function AttachFileMenu({ analysisId, session }: AttachFileMenuProps) {
       throw error
     }
   }
-  const { mutate: handleAttachFile, isLoading } = useMutationWithFeedback({
+  const { mutate: handleAttachFile, isPending } = useMutationWithFeedback({
     mutationKey: ['attach-homologation-file'],
     mutationFn: attachFile,
     queryClient: queryClient,

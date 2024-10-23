@@ -1,6 +1,6 @@
 import { TNotification, TNotificationDTO } from '@/utils/schemas/notifications'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchNotifications(id: string) {
   try {

@@ -13,7 +13,7 @@ import { BsBank2, BsPatchCheckFill } from 'react-icons/bs'
 import { FaSolarPanel, FaTruck } from 'react-icons/fa'
 import { FaDiamond, FaLocationDot } from 'react-icons/fa6'
 import { MdOutlineAttachMoney } from 'react-icons/md'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 function getStatusTag(isExecuted: boolean) {
   if (!isExecuted)
@@ -86,7 +86,7 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
       throw error
     }
   }
-  const { mutate: handleUpdate, isLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdate, isPending } = useMutationWithFeedback({
     mutationKey: ['update-project', project._id],
     mutationFn: updateStructureAdequationExecutionDate,
     affectedQueryKey: ['structure-execution-projects'],

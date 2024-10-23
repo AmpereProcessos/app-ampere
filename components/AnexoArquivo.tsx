@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 

@@ -7,7 +7,7 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, UploadResult } from 'fi
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCloudUploadFill } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type TFileHolder = { title: string; files: FileList | null }
 type FilesBlockProps = {

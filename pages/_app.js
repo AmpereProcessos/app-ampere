@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 import { SessionProvider } from 'next-auth/react'
 import AppHead from '../components/Head/index'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { Inter } from 'next/font/google'
 import { cn } from '../lib/utils'

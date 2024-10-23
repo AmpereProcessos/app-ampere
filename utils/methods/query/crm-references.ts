@@ -1,7 +1,7 @@
 import { TOpportunity, TOpportunityDTO } from '@/utils/schemas/crm-project'
 import { TSolarSystemPropose, TSolarSystemProposeDTO } from '@/utils/schemas/proposes/solar-system.schema'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export type TCRMReferences = {
   opportunity: TOpportunityDTO | null

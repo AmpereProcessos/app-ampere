@@ -50,38 +50,39 @@ const getExpenseStatsRoute: NextApiHandler<{ data: TExpenseStatsResult }> = asyn
     }, {}),
   }
   const stats = expenses.reduce((acc: TExpenseStatsReduced, current) => {
-    const revenueTotal = current.total
+    const expenseTotal = current.total
 
     const billingDate = current.efetivacao.data ? new Date(current.efetivacao.data) : null
 
     const wasBilledWithinPeriod = !!billingDate && billingDate >= periodStartDate && billingDate <= periodEndDate
 
-    if (wasBilledWithinPeriod) acc.totalFaturado += revenueTotal
+    if (wasBilledWithinPeriod) acc.totalFaturado += expenseTotal
 
     current.pagamentos.forEach((fraction) => {
+      console.log(fraction)
       const fractionValue = fraction.valor || 0
 
       const fractionPreviewDate = new Date(fraction.dataPrevisaoPagamento)
       const fractionPreviewDay = dayjs(fractionPreviewDate).format('DD/MM')
       const fractionDate = fraction.dataPagamento ? new Date(fraction.dataPagamento) : null
-      const fractionReceiptDay = dayjs(fractionDate).format('DD/MM')
+      const fractionPaymentDay = dayjs(fractionDate).format('DD/MM')
 
       const wasPaidWithinCurrentPeriod = fractionDate && fractionDate >= periodStartDate && fractionDate <= periodEndDate
 
       if (wasPaidWithinCurrentPeriod) {
         acc.totalPago += fractionValue
-        if (acc.diario[fractionReceiptDay]) acc.diario[fractionReceiptDay].efetivado += fractionValue
+        if (acc.diario[fractionPaymentDay]) acc.diario[fractionPaymentDay].efetivado += fractionValue
       } else {
         acc.totalAPagar += fractionValue
 
         const paymentIsExpectedWithinCurrentPeriod =
           fractionPreviewDate && fractionPreviewDate >= periodStartDate && fractionPreviewDate <= periodEndDate
-        const paymentIsForToday = fractionReceiptDay && dayjs(fractionReceiptDay).isSame(new Date(), 'day')
-        const paymentIsOverdue = fractionReceiptDay && dayjs(fractionReceiptDay).isBefore(new Date())
+        const paymentIsForToday = fractionPaymentDay && dayjs(fractionPaymentDay).isSame(new Date(), 'day')
+        const paymentIsOverdue = fractionPaymentDay && dayjs(fractionPaymentDay).isBefore(new Date())
 
-        // In case the flag paymentIsForToday is true (for payments due to today), updating the totalToReceiveToday
+        // In case the flag paymentIsForToday is true (for payments due to today), updating the totalToPayToday
         if (paymentIsForToday) acc.totalAPagarHoje += fractionValue
-        // In case the flag paymentIsOverdue is true (for overdue payments), updating the totalToReceiveDue
+        // In case the flag paymentIsOverdue is true (for overdue payments), updating the totalToPayDue
         if (paymentIsOverdue) acc.totalAPagarEmAtraso += fractionValue
         // In case the flag receiptIsWithinCurrentPeriod is true (for payments within the period of filter), updating the corresponding
         // day previsto field
@@ -131,8 +132,8 @@ async function getExpenses({ collection, after, before }: GetExpensesParams) {
               {
                 'pagamentos.0': { $exists: true },
                 $or: [
-                  { 'pagamentos.dataPrevisaoRecebimento': { $gte: after, $lte: before } },
-                  { 'pagamentos.dataRecebimento': { $gte: after, $lte: before } },
+                  { 'pagamentos.dataPrevisaoPagamento': { $gte: after, $lte: before } },
+                  { 'pagamentos.dataPagamento': { $gte: after, $lte: before } },
                 ],
               },
             ],
@@ -143,8 +144,8 @@ async function getExpenses({ collection, after, before }: GetExpensesParams) {
             total: 1,
             efetivacao: 1,
             'pagamentos.valor': 1,
-            'pagamentos.dataPrevisaoRecebimento': 1,
-            'pagamentos.dataRecebimento': 1,
+            'pagamentos.dataPrevisaoPagamento': 1,
+            'pagamentos.dataPagamento': 1,
           },
         },
       ])

@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { AiFillDelete } from 'react-icons/ai'
 import { RxTimer } from 'react-icons/rx'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type ExecutionDiaryRecordProps = {
   orderId: string
@@ -70,36 +70,36 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
     }
   }
   return (
-    <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
-      <div className="w-full flex items-center justify-between">
+    <div className="flex w-full flex-col rounded-md border border-gray-300 p-3 shadow-sm">
+      <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <RxTimer />
-          <p className="font-thin tracking-tight leading-none text-sm lg:text-base">
-            <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
-            <strong className="text-[#fead41] font-bold">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
+          <p className="text-sm font-thin leading-none tracking-tight lg:text-base">
+            <strong className="font-bold text-[#fead41]">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
+            <strong className="font-bold text-[#fead41]">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
           </p>
         </div>
-        <button onClick={() => handleRecordDelete(itemIndex)} className="text-red-400 hover:text-red-500 duration-300 ease-in-out">
+        <button onClick={() => handleRecordDelete(itemIndex)} className="text-red-400 duration-300 ease-in-out hover:text-red-500">
           <AiFillDelete />
         </button>
       </div>
 
       {!item.saida ? (
-        <div className="flex flex-col w-full lg:mt-2 mt-4">
-          <h1 className="font-sans font-bold tracking-tight leading-none text-[#353432]">ANOTAÇÕES</h1>
+        <div className="mt-4 flex w-full flex-col lg:mt-2">
+          <h1 className="font-sans font-bold leading-none tracking-tight text-[#353432]">ANOTAÇÕES</h1>
           <textarea
             value={infoHolder.anotacoes}
             placeholder="Preencha aqui anotações sobre o período de execução..."
             onChange={(e) => setInfoHolder((prev) => ({ ...prev, anotacoes: e.target.value }))}
-            className="min-h-[50px] p-3 w-full resize-none outline-none text-center text-sm text-gray-800 bg-gray-100 rounded border border-gray-300 shadow-sm mt-2"
+            className="mt-2 min-h-[50px] w-full resize-none rounded border border-gray-300 bg-gray-100 p-3 text-center text-sm text-gray-800 shadow-sm outline-none"
           />
         </div>
       ) : (
-        <h1 className="my-1 w-full py-3 bg-gray-100 text-center text-gray-500 text-sm rounded-md tracking-tight leading-none">{item.anotacoes}</h1>
+        <h1 className="my-1 w-full rounded-md bg-gray-100 py-3 text-center text-sm leading-none tracking-tight text-gray-500">{item.anotacoes}</h1>
       )}
 
       {!item.saida ? (
-        <div className="w-full flex flex-col lg:flex-row items-center lg:items-end justify-end gap-2 mt-2">
+        <div className="mt-2 flex w-full flex-col items-center justify-end gap-2 lg:flex-row lg:items-end">
           <DatetimeInput
             label="CHECK-OUT"
             labelClassName="text-xs font-sans font-bold  text-[#353432]"
@@ -108,7 +108,7 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
           />
           <button
             onClick={() => handleRecordUpdate()}
-            className="py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out mb-2"
+            className="mb-2 rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
           >
             REALIZAR CHECK-OUT
           </button>

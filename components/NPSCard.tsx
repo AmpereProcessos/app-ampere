@@ -7,7 +7,7 @@ import { FaCity, FaSave, FaUserAlt } from 'react-icons/fa'
 import { formatDateAsLocale } from '../utils/methods/formatting'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { isNumber } from '../utils/methods/validating'
 import { TProjectDTO } from '@/utils/schemas/projects'
 

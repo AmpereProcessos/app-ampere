@@ -16,7 +16,7 @@ import { TOpportunityDTOWithClient } from '@/utils/schemas/crm/opportunity.schem
 import { THomologation } from '@/utils/schemas/crm/homologation.schema'
 import { TFileHolder, TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import { storage } from '@/utils/services/firebase/firebase-storage'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { uploadFile } from '@/utils/methods/firebase'
 import { createHomologation } from '@/utils/methods/mutation/crm/homologations'
 import { createManyFileReferences } from '@/utils/methods/mutation/crm/file-references'
@@ -176,7 +176,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
 
   const {
     mutate: handleCreateHomologation,
-    isLoading,
+    isPending,
     isError,
     isSuccess,
     error,
@@ -201,7 +201,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          {isLoading ? <LoadingPage /> : null}
+          {isPending ? <LoadingPage /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
             <div className="flex w-full grow flex-col items-center justify-center gap-2 text-green-500">
@@ -209,7 +209,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
               <p className="text-lg font-medium tracking-tight text-gray-500">Homologação requisitada com sucesso !</p>
             </div>
           ) : null}
-          {!isLoading && !isError && !isSuccess ? (
+          {!isPending && !isError && !isSuccess ? (
             <>
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 {/* <OpportunityInformationBlock
@@ -226,7 +226,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
               </div>
               <div className="flex w-full items-center justify-end p-2">
                 <button
-                  disabled={isLoading}
+                  disabled={isPending}
                   // @ts-ignore
                   onClick={() => handleCreateHomologation({ info: infoHolder, files: files })}
                   className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"

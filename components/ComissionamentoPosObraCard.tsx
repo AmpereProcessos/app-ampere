@@ -22,7 +22,7 @@ import { formatDate } from '../utils/constants'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateProject } from '@/utils/methods/mutation/clients'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 function getStatusTag(meterChange: string | null) {
   const diff = dayjs().diff(meterChange, 'day')
   if (diff > 3) {
@@ -63,7 +63,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
     )
   }
 
-  const { mutate: handleUpdateProject, isLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdateProject, isPending } = useMutationWithFeedback({
     mutationKey: ['edit-execution-commissioning-projects', project._id],
     mutationFn: updateProject,
     queryClient: queryClient,
@@ -306,7 +306,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
             />
           </div>
           <button
-            disabled={isLoading}
+            disabled={isPending}
             onClick={() => {
               // @ts-ignore
               handleUpdateProject({ id: project._id, changes: changes })

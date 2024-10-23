@@ -1,7 +1,7 @@
 import { TActivityDTO } from '@/utils/schemas/activities'
 import axios from 'axios'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchActivitiesByProjectId({ id }: { id: string }) {
   try {

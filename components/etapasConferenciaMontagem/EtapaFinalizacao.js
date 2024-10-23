@@ -9,7 +9,7 @@ import { storage } from '../../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
 import { updateServiceOrder } from '../../utils/methods/mutation/serviceOrders'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { estadosECidades } from '../../utils/estados_cidades'
 function EtapaFinalizacao({ closeModal, order, queryKey }) {
   const queryClient = useQueryClient()

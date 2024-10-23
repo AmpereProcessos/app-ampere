@@ -3,7 +3,7 @@ import { TPersonalizedServiceOrderFilter, TServiceOrderDTO } from '@/utils/schem
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 type FetchServiceOrdersParams = {
   after: string

@@ -5,7 +5,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TActivityDTO } from '@/utils/schemas/crm/activities.schema'
 import React from 'react'
 import { BsCalendar4Event, BsCalendarCheck, BsCalendarPlus, BsCheck } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type TechnicalAnalysisActivityProps = {
   technicalAnalysisId: string

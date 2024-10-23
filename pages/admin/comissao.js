@@ -25,7 +25,7 @@ import { FaPercentage } from 'react-icons/fa'
 import { BiStats } from 'react-icons/bi'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const currentDate = new Date()
 

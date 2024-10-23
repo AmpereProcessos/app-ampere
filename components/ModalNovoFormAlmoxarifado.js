@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import createHttpError from 'http-errors'
 import { toast } from 'react-hot-toast'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Select from 'react-select'
 import { useSession } from 'next-auth/react'
 

@@ -75,7 +75,6 @@ function RevenueStats() {
         </div>
         <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-[60%]">
           <div className="flex items-center justify-start gap-2">
-            <ChartNoAxesColumnIncreasing />
             <ChartNoAxesColumnIncreasing size={12} />
             <h1 className="text-xs font-medium leading-none tracking-tight">FLUXO DE RECEBIMENTOS</h1>
           </div>

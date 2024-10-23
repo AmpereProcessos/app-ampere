@@ -3,7 +3,7 @@ import { createPurchaseControl } from '@/utils/methods/mutation/purchase-control
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import * as Dialog from '@radix-ui/react-dialog'
 import { VscChromeClose } from 'react-icons/vsc'
 import PurchaseControlGeneralInformationBlock from './blocos/GeneralInformationBlock'
@@ -65,7 +65,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
     setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }))
     toast.success('Produto adicionado à composição')
   }
-  const { mutate, isLoading } = useMutationWithFeedback({
+  const { mutate, isPending } = useMutationWithFeedback({
     mutationKey: ['create-purchase-control'],
     mutationFn: createPurchaseControl,
     queryClient: queryClient,
@@ -109,7 +109,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
           </div>
           <div className="flex w-full items-center justify-end">
             <LoadingButton
-              loading={isLoading}
+              loading={isPending}
               onClick={() =>
                 // @ts-ignore
                 mutate(infoHolder)

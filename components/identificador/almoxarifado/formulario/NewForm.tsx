@@ -17,7 +17,7 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import { createWarehouseFormulary } from '@/utils/methods/mutation/warehouse-forms'
 import { updateManyMaterials } from '@/utils/methods/mutation/materials'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 type NewFormProps = {
   session: Session
   closeModal: () => void
@@ -136,7 +136,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
       throw error
     }
   }
-  const { mutate: handleCreation, isLoading } = useMutationWithFeedback({
+  const { mutate: handleCreation, isPending } = useMutationWithFeedback({
     mutationKey: ['create-stock-formulary'],
     mutationFn: handleFormularyCreation,
     queryClient: queryClient,
@@ -359,7 +359,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
           </div>
           <div className="my-1 flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               onClick={() => handleCreation()}
               className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
             >

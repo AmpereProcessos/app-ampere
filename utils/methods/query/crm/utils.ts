@@ -1,6 +1,6 @@
 import { TCreditorDTO } from '@/utils/schemas/crm/utils'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchCreditors() {
   try {

@@ -4,7 +4,7 @@ import { fileTypes } from '../utils/constants'
 import { storage } from '../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { getErrorMessage } from '../utils/methods/handlers'
 function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {

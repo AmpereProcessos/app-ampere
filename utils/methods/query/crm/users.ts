@@ -1,6 +1,6 @@
 import { TUserDTO, TUserDTOSimplified, TUserDTOWithSaleGoals } from '@/utils/schemas/crm/users.schema'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 async function fetchUsers() {
   try {

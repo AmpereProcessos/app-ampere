@@ -12,7 +12,7 @@ import { Tag, Tags, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createPurchaseControlTag } from '@/utils/methods/mutation/purchase-controls'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 
@@ -99,7 +99,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
 
   const filteredTags = getFilteredTags(tags || [])
 
-  const { mutate: handleCreatePurchaseControlTag, isLoading: isUpdateLoading } = useMutationWithFeedback({
+  const { mutate: handleCreatePurchaseControlTag, isPending: isUpdateLoading } = useMutationWithFeedback({
     mutationKey: ['create-purchase-control-tag'],
     mutationFn: createPurchaseControlTag,
     queryClient,

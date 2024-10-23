@@ -9,7 +9,7 @@ import { TMaterialDTO } from '@/utils/schemas/materials'
 import { units } from '@/utils/select-options'
 import React, { useState } from 'react'
 import { BsCalendarPlus } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 function renderStatus({ qty, minQty, maxQty }: { qty: number; minQty: number; maxQty: number }) {
   if (qty < minQty)

@@ -1,7 +1,7 @@
 import { TNewWarehouseFormularyDTO, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
 import axios from 'axios'
 import { useState } from 'react'
-import { useInfiniteQuery, useQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
 export async function fetchWarehouseForms({ after, before }: { after: string; before: string }) {
   try {

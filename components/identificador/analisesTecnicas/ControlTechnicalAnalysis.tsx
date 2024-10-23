@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react'
 import { BsCalendarCheckFill, BsCalendarFill, BsCode } from 'react-icons/bs'
 import { FaUser } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import PendencyBlock from './ControlBlocks/PendencyBlock'
 import LocationBlock from './ControlBlocks/LocationBlock'
 import EquipmentBlock from './ControlBlocks/EquipmentBlock'
@@ -163,7 +163,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
     dataInsercao: new Date().toISOString(),
   })
   const [changes, setChanges] = useState<{ [key: string]: any }>({})
-  const { mutate: handleEditTechnicalAnalysis, isLoading: isLoadingMutation } = useMutationWithFeedback({
+  const { mutate: handleEditTechnicalAnalysis, isPending: isLoadingMutation } = useMutationWithFeedback({
     mutationKey: ['edit-technical-analysis', analysisId],
     mutationFn: editTechnicalAnalysis,
     queryClient: queryClient,

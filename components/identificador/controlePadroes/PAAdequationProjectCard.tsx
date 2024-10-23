@@ -11,7 +11,7 @@ import { BsCalendarCheck, BsCode, BsPatchCheck } from 'react-icons/bs'
 import { FaCircle, FaPiggyBank } from 'react-icons/fa'
 import { FaLocationDot, FaLocationPin } from 'react-icons/fa6'
 import { MdAssistantPhoto, MdAttachMoney, MdElectricMeter, MdSettingsInputComponent } from 'react-icons/md'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import toast from 'react-hot-toast'
 import { formatDateInputChange } from '@/utils/methods/shared'
@@ -40,7 +40,7 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
       throw error
     }
   }
-  const { mutate: handleUpdate, isLoading } = useMutationWithFeedback({
+  const { mutate: handleUpdate, isPending } = useMutationWithFeedback({
     mutationKey: ['update-project', project._id],
     mutationFn: updatePAAdequationExecutionDate,
     affectedQueryKey: ['pa-execution-projects'],
@@ -126,7 +126,7 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
         <CheckboxWithDate
           labelFalse="EXECUTADO"
           labelTrue="EXECUTADO"
-          editable={!isLoading}
+          editable={!isPending}
           showDate={!!project.padrao.aumentoCarga.dataEfetivacao}
           date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
           handleChange={(value) => handleUpdate(formatDateInputChange(value))}
@@ -135,7 +135,7 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
           <DateInput
             label="DATA DE EXECUÇÃO"
             labelClassName="text-[0.6rem] tracking-tight"
-            editable={!isLoading}
+            editable={!isPending}
             // inputClassName="w-full rounded-md border border-gray-200 p-2 text-[0.7rem] outline-none placeholder:italic"
             value={formatDate(project.padrao.aumentoCarga.dataEfetivacao)}
             handleChange={(value) => {

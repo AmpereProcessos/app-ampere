@@ -18,7 +18,7 @@ import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { revenueSources } from '@/utils/select-options'
 import { useLocalStorage } from '@/lib/hooks/local-storage'
-import EditRevenue from '../EditRevenue'
+import EditRevenue from '../modals/EditRevenue'
 import { Session } from 'next-auth'
 
 type ReceiptsBlockProps = {

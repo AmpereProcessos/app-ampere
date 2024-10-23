@@ -1,6 +1,6 @@
 import { TFileReferenceDTO, TFileReferencesQueryParams } from '@/utils/schemas/crm/file-reference.schema'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 type UseFileReferencesByOpportunityIdParams = {
   opportunityId: string

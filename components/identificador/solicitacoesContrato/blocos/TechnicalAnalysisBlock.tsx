@@ -4,7 +4,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import TechnicalAnalysis from './TechnicalAnalysis'
 
 import { z } from 'zod'
@@ -41,7 +41,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
   }
   const {
     mutate: handleVinculate,
-    isLoading,
+    isPending,
     isError,
   } = useMutationWithFeedback({
     mutationKey: ['vinculate-technical-analysis'],
@@ -63,7 +63,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
         />
         <div className="flex w-full items-center justify-end">
           <button
-            disabled={isLoading}
+            disabled={isPending}
             onClick={() => {
               // @ts-ignore
               handleVinculate(analysisIdHolder)

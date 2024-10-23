@@ -6,7 +6,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCheck2All, BsCloudUploadFill } from 'react-icons/bs'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type AvatarAttachmentProps = {
   userId: string
@@ -45,7 +45,7 @@ function AvatarAttachment({ userId, userName, avatar_url }: AvatarAttachmentProp
       throw error
     }
   }
-  const { mutate: attachAvatar, isLoading } = useMutationWithFeedback({
+  const { mutate: attachAvatar, isPending } = useMutationWithFeedback({
     mutationKey: ['attach-user-avatar', userId],
     mutationFn: handleAttachAvatar,
     queryClient: queryClient,
@@ -86,7 +86,7 @@ function AvatarAttachment({ userId, userName, avatar_url }: AvatarAttachmentProp
       </div>
       <div className="flex w-full items-center justify-end">
         <button
-          disabled={!file || isLoading}
+          disabled={!file || isPending}
           // @ts-ignore
           onClick={() => attachAvatar(file)}
           className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"

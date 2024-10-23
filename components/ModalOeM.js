@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { FaSave } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'

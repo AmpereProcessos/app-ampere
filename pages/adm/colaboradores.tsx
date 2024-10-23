@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
 
 import NewEmployee from '@/components/identificador/colaboradores/NewEmployee'

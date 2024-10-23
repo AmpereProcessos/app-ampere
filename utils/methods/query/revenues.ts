@@ -1,9 +1,16 @@
 import { TRevenuesByFiltersResult } from '@/pages/api/receitas/search'
-import { TReceiptUnwindSimplifiedDTO, TRevenueDTO, TRevenueQueryFilters } from '@/utils/schemas/revenues'
+import {
+  TReceiptUnwindSimplifiedDTO,
+  TRevenueDTO,
+  TRevenueProject,
+  TRevenueProjectDTO,
+  TRevenueQueryFilters,
+  TRevenueWithProjectDTO,
+} from '@/utils/schemas/revenues'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics } from '../formatting'
 import { TRevenueStatsResult } from '@/pages/api/receitas/estatisticas'
 
@@ -101,7 +108,7 @@ export function useRevenues() {
 async function fetchRevenueById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/receitas?id=${id}`)
-    return data.data as TRevenueDTO
+    return data.data as TRevenueWithProjectDTO
   } catch (error) {
     throw error
   }
@@ -191,5 +198,22 @@ export function useRevenueStats() {
   return useQuery({
     queryKey: ['revenue-stats'],
     queryFn: fetchRevenueStats,
+  })
+}
+
+async function fetchRevenueProject({ projectId }: { projectId: string | null }) {
+  try {
+    if (!projectId) return null
+    const { data } = await axios.get(`/api/receitas/projeto?projectId=${projectId}`)
+    return data.data as TRevenueProjectDTO
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useRevenueProject({ projectId }: { projectId: string | null }) {
+  return useQuery({
+    queryKey: ['revenue-project', projectId],
+    queryFn: async () => fetchRevenueProject({ projectId }),
   })
 }

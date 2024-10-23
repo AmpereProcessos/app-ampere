@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { BsCode } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
 import { TbRulerMeasure } from 'react-icons/tb'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type MaterialListItem = {
   formularyId?: string
@@ -65,7 +65,7 @@ function MaterialListItem({
       throw error
     }
   }
-  const { mutate, isLoading } = useMutationWithFeedback({
+  const { mutate, isPending } = useMutationWithFeedback({
     mutationKey: ['update-material', formularyId],
     mutationFn: handleUpdateMaterial,
     queryClient: queryClient,
@@ -177,7 +177,7 @@ function MaterialListItem({
           </div>
           <div className="flex w-full items-center justify-end">
             <button
-              disabled={isLoading}
+              disabled={isPending}
               // @ts-ignore
               onClick={() => mutate(editMaterialHolder)}
               className="rounded bg-blue-600 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-blue-500"

@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import LoadingPage from '../utils/LoadingPage'
 import ErrorComponent from '../utils/ErrorComponent'
 import RevenueCard from '../identificador/receitas/RevenueCard'
-import EditRevenue from '../identificador/receitas/EditRevenue'
+import EditRevenue from '../identificador/receitas/modals/EditRevenue'
 import { Session } from 'next-auth'
 import NewRevenueMenu from '../identificador/receitas/NewRevenueMenu'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { generateContractRevenue } from '@/utils/methods/mutation/comercial'
-import { useQueryClient } from 'react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 type InfoReceitasBlockProps = {
   session: Session

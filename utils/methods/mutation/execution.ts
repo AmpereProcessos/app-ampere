@@ -1,5 +1,5 @@
 import { TProjectDTO } from '@/utils/schemas/projects'
-import { QueryClient } from 'react-query'
+import { QueryClient } from '@tanstack/react-query'
 import { sendEmail } from '../email'
 import { updateProject } from './clients'
 

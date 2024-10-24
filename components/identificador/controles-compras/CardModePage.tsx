@@ -9,10 +9,10 @@ import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/format
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { usePurchaseControlsByFilters } from '@/utils/methods/query/purchase-controls'
 import { TPurchaseControlSimplifiedDTO } from '@/utils/schemas/purchases'
-import { CheckCheck, Factory, ListFilter, Package, Pencil, Tag, Truck, X } from 'lucide-react'
+import { CheckCheck, Factory, ListFilter, Package, Pencil, ScrollText, Tag, Truck, X } from 'lucide-react'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
-import { BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
+import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
 import { FaRotate } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { useQueryClient } from '@tanstack/react-query'
@@ -173,6 +173,18 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
             <Truck width={13} height={13} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">TRANSPORTADORA</h1>
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.transporte.transportadora.nome || 'N/A'}</h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <ScrollText width={13} height={13} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURAMENTOS</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              FATURAMENTOS {purchaseControl.faturamentos.filter((f) => !!f.data).length}/{purchaseControl.faturamentos.length}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendar width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(purchaseControl.dataPedido) || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <Package width={13} height={13} />

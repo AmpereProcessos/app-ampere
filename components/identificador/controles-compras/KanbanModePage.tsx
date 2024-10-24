@@ -308,7 +308,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
               <div className="flex items-center gap-1">
                 <BsCalendar width={10} height={10} />
                 <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
-                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.entrega.dataPrevisao) || 'N/A'}</h1>
+                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
               </div>
               <div className="flex items-center gap-1">
                 <BsCalendarEvent width={10} height={10} />

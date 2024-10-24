@@ -223,7 +223,7 @@ export const PurchaseControlSimplifiedProjection = {
 
 export type TPurchaseControlKanbanSimplified = Pick<
   TPurchaseControl,
-  'status' | 'titulo' | 'etiquetas' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
+  'status' | 'titulo' | 'etiquetas' | 'dataPedido' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
   liberacao: {
     data: TPurchaseControl['liberacao']['data']
@@ -249,6 +249,7 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   status: 1,
   titulo: 1,
   etiquetas: 1,
+  dataPedido: 1,
   'liberacao.data': 1,
   'fornecedor.nome': 1,
   'faturamentos.codigoNotaFiscal': 1,

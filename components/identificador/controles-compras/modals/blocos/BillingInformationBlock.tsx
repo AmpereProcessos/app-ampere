@@ -148,18 +148,22 @@ function BillingCard({ billing, handleUpdate, handleRemove }: BillingCardProps) 
       <AnimatePresence>
         <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
           <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-2">
               <h1 className="text-sm font-bold leading-none tracking-tight">{billing.titulo}</h1>
-              <div className="flex items-center gap-1">
-                <Barcode width={12} height={12} />
-                <p className="text-[0.65rem] font-medium text-primary/80">{billing.codigoNotaFiscal}</p>
+              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                <div className="flex items-center gap-1">
+                  <Barcode width={10} height={10} />
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">CÓDIGO</h1>
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{billing.codigoNotaFiscal}</h1>
+                </div>
+                <div className="flex items-center gap-1">
+                  <BsCalendarCheck width={10} height={10} />
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURADO EM: </h1>
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(billing.data) || 'N/A'}</h1>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <BsCalendarCheck width={12} height={12} />
-                <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(billing.data)}</p>
-              </div>
               <button
                 onClick={() => setEditMenuIsOpen((prev) => !prev)}
                 className="flex items-center justify-center rounded border border-orange-500 bg-orange-50 p-1 text-orange-500 duration-300 ease-in-out hover:border-orange-700 hover:text-orange-700"

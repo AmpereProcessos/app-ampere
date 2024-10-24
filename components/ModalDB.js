@@ -54,7 +54,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
     'ADM',
     'RH',
   ].every((el) => session?.user.permissoes.rotas.includes(el))
-  const userHasOeMAccess = session?.user.permissoes.rotas.includes('O&M')
+  const userHasOeMAccess = !!session?.user.permissoes.suporte.visualizar
   const userHasRestrictionPermission = session.user.permissoes.gestao.restringirProjetos
 
   const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })

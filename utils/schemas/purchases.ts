@@ -136,7 +136,7 @@ export const GeneralPurchaseControlSchema = z.object({
   faturamentos: z.array(
     z.object({
       titulo: z.string({ required_error: 'Titulo da nota fiscal não informado.' }),
-      data: z.string({ invalid_type_error: 'Tipo não válido para data de faturamento.' }),
+      data: z.string({ invalid_type_error: 'Tipo não válido para data de faturamento.' }).optional().nullable(),
       codigoNotaFiscal: z.string({ invalid_type_error: 'Tipo não válido para o código da nota fiscal.' }),
     })
   ),
@@ -231,6 +231,10 @@ export type TPurchaseControlKanbanSimplified = Pick<
   fornecedor: {
     nome: TPurchaseControl['fornecedor']['nome']
   }
+  faturamentos: {
+    codigoNotaFiscal: TPurchaseControl['faturamentos'][number]['codigoNotaFiscal']
+    data: TPurchaseControl['faturamentos'][number]['data']
+  }[]
   transporte: {
     transportadora: { nome: TPurchaseControl['transporte']['transportadora']['nome'] }
   }
@@ -247,6 +251,8 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   etiquetas: 1,
   'liberacao.data': 1,
   'fornecedor.nome': 1,
+  'faturamentos.codigoNotaFiscal': 1,
+  'faturamentos.data': 1,
   'transporte.transportadora.nome': 1,
   'entrega.status': 1,
   'entrega.dataPrevisao': 1,

@@ -62,8 +62,8 @@ function Administracao() {
 
   useEffect(() => {
     if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes?.includes('ADM')) {
+      const isAuthorized = session?.user.permissoes.administrativo.visualizar
+      if (!isAuthorized) {
         router.push('/')
       }
     }

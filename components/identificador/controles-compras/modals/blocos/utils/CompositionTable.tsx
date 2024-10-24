@@ -88,10 +88,10 @@ function PurchaseControlCompositionTableItem({ item, handleUpdate, handleRemove 
           <div className="flex w-full flex-col items-start justify-between gap-2">
             <div className="flex w-full items-center justify-between gap-2">
               <div className="flex items-center gap-1">
-                <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1 text-[20px]">
+                <div className="flex h-[20x] w-[20x] items-center justify-center rounded-full border border-black p-1 text-[15px]">
                   {renderProductCategoryIcon(item.categoria, 15)}
                 </div>
-                <p className="text-sm font-bold leading-none tracking-tight">
+                <p className="text-xs font-bold leading-none tracking-tight lg:text-sm">
                   <strong className="text-[#FF9B50]">{item.qtde}</strong> x {item.descricao}
                 </p>
               </div>

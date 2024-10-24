@@ -48,15 +48,9 @@ function Recontagem() {
     }
   }
   useEffect(() => {
-    // console
-    // if (session?.user.permissoes.rotas.includes("Almoxarifado")) {
     if (!materials) {
       getMateriais()
     }
-    //   }
-    // } else {
-    //   if (session?.user) router.push("/");
-    // }
   }, [])
 
   console.log(materials)

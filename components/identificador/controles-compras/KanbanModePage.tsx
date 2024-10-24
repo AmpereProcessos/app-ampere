@@ -10,10 +10,10 @@ import { TPurchaseControlDTO, TPurchaseControlKanbanSimplified, TPurchaseControl
 import { MdDashboard } from 'react-icons/md'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
-import { BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
+import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
 import { Button } from '@/components/ui/button'
 import NewPurchaseControl from './modals/NewPurchaseControl'
-import { CheckCheck, Factory, Pencil, Tag, Truck, X } from 'lucide-react'
+import { CheckCheck, Factory, Pencil, ScrollText, Tag, Truck, X } from 'lucide-react'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
@@ -288,7 +288,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
               {item.liberacao.data ? <CheckCheck color="#22c55e" height={13} width={13} /> : <X color="#ef4444" height={13} width={13} />}
               <h1 className="text-[0.6rem] text-primary/80">{item.liberacao.data ? 'LIBERADO' : 'NÃO LIBERADO'}</h1>
             </div>
-            <div className="flex w-full items-center justify-around gap-2">
+            <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">
                 <Factory height={13} width={13} />
                 <h1 className="text-[0.6rem] font-medium text-primary/80">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
@@ -297,8 +297,19 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                 <Truck height={13} width={13} />
                 <h1 className="text-[0.6rem] font-medium text-primary/80">{item.transporte.transportadora.nome || 'TRANSPORTADORA INDEFINIDO'}</h1>
               </div>
+              <div className="flex items-center gap-1">
+                <ScrollText height={13} width={13} />
+                <h1 className="text-[0.6rem] font-medium text-primary/80">
+                  FATURAMENTOS {item.faturamentos.filter((f) => !!f.data).length}/{item.faturamentos.length}
+                </h1>
+              </div>
             </div>
             <div className="flex w-full flex-wrap items-center justify-center gap-2">
+              <div className="flex items-center gap-1">
+                <BsCalendar width={10} height={10} />
+                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
+                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.entrega.dataPrevisao) || 'N/A'}</h1>
+              </div>
               <div className="flex items-center gap-1">
                 <BsCalendarEvent width={10} height={10} />
                 <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>

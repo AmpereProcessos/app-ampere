@@ -156,7 +156,7 @@ function ChamadosADM() {
     }
   }
   useEffect(() => {
-    if (session?.user.permissoes.rotas.includes('ADM')) {
+    if (!!session?.user.permissoes.administrativo.visualizar) {
       if (!inProgress) {
         getCalls()
       }

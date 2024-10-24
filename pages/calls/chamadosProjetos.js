@@ -182,7 +182,7 @@ function ChamadosProjetos() {
       })
   }
   useEffect(() => {
-    if (session?.user.permissoes.rotas.includes('Projetos')) {
+    if (!!session?.user.permissoes.engenharia.visualizar) {
       if (!openCalls) {
         getCalls()
       }

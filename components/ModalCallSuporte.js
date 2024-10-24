@@ -10,27 +10,7 @@ import SaveButton from './utils/Buttons/SaveButton'
 import { FaSave } from 'react-icons/fa'
 import OSCreationBlock from './OSCreationBlock'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  minWidth: '40%',
-  height: '87%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
+
 const statusStyles = {
   ABERTO: {
     textColor: 'text-yellow-500',
@@ -184,7 +164,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
               : `${dayjs().diff(dayjs(info.abertura), 'hours')} horas em aberto`}
           </p>
           <div className="overscroll-y overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            {session?.permissoes.rotas.includes('Pós-Venda') && info.fechamento ? (
+            {!!session?.user.permissoes.posVenda.visualizar && info.fechamento ? (
               <div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
                 <span className="text-center font-raleway font-bold">COLETA DE FEEDBACK</span>
                 <input

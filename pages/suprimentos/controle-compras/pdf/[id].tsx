@@ -37,7 +37,7 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
           {purchaseControl.projetoDados ? (
             <div className="flex flex-col items-center gap-1">
               <p className="text-[0.7rem] font-medium text-gray-500">INFORMAÇÕES DE PROJETO</p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4 px-2">
                 <div className="flex items-center gap-1">
                   <FaUserAlt />
                   <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados!.nomeDoContrato}</p>
@@ -56,7 +56,7 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                 </div>
               </div>
               <p className="text-[0.7rem] font-medium text-gray-500">INFORMAÇÕES DE PAGAMENTO</p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-4 px-2">
                 <div className="flex items-center gap-1">
                   <FaUserAlt />
                   <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados.pagamento.pagador}</p>
@@ -94,6 +94,7 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                     location: purchaseControl.entrega.localizacao,
                     includeCity: true,
                     includeUf: true,
+                    includeCEP: true,
                   })}
                 </p>
               </div>

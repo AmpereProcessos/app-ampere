@@ -113,7 +113,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
           <h1 className="text-[0.65rem] font-bold tracking-tight">+ TAGS</h1>
         </Button>
       </Popover.Trigger>
-      <Popover.Content className="z-[120] flex h-[250px] w-80 flex-col gap-2 rounded border border-gray-500 bg-white p-3 shadow-sm">
+      <Popover.Content className="z-[120] flex min-h-[250px] w-80 flex-col gap-2 rounded border border-gray-500 bg-white p-3 shadow-sm">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
           <h3 className="text-sm font-bold">MENU DE ETIQUETAS</h3>
         </div>

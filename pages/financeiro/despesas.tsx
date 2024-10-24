@@ -9,8 +9,8 @@ import ExpensesPage from '@/components/identificador/despesas/ExpensesPage'
 function Despesas() {
   const router = useRouter()
   const { data: session, status } = useSession({ required: true })
-  const isAuthorized = !!session?.user?.permissoes.rotas?.includes('ADM')
-
+  const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar
+  const testAuth = !!session?.user.permissoes.engenharia.visualizar
   useEffect(() => {
     if (session?.user && !isAuthorized) router.push('/')
   }, [session?.user])

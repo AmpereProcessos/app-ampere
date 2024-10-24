@@ -124,7 +124,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             label={'CÓDIGO CRM'}
             placeholder="Preencha o código SVG do projeto..."
             value={infoHolder.codigoSVB ? infoHolder.codigoSVB.toString() : ''}
-            editable={session?.user.permissoes.rotas.includes('PPS')}
+            editable={session?.user.permissoes.comercial.visualizar}
             handleChange={(value) => {
               setChanges({
                 ...changes,

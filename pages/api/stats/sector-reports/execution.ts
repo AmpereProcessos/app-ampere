@@ -27,7 +27,7 @@ type GetResponse = {
 
 const getExecutionSectorStatsRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  const isAuthorized = session?.user.permissoes.rotas.includes('Obras')
+  const isAuthorized = !!session?.user.permissoes.execucao.visualizar
   if (!isAuthorized) throw new createHttpError.Unauthorized('Oops, seu usuário não possui acesso a esse módulo.')
 
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')

@@ -60,8 +60,19 @@ export function getProjectNestedFieldValue(project: TProjectDTO, path: string) {
   return path.split('.').reduce((acc, part) => acc && acc[part as keyof TProjectDTO], project)
 }
 
-export function formatLocation({ location, includeUf, includeCity }: { location: TLocation; includeUf?: boolean; includeCity?: boolean }) {
+export function formatLocation({
+  location,
+  includeUf,
+  includeCity,
+  includeCEP,
+}: {
+  location: TLocation
+  includeUf?: boolean
+  includeCity?: boolean
+  includeCEP?: boolean
+}) {
   var addressStr = ''
+  if (includeCEP && location.cep) addressStr + `${location.cep}`
   if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`
   if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`
   if (!location.endereco && !includeUf && !includeCity) return ''

@@ -10,7 +10,7 @@ import RevenuesPage from '@/components/identificador/receitas/RevenuesPage'
 function Revenues() {
   const router = useRouter()
   const { data: session, status } = useSession({ required: true })
-  const isAuthorized = !!session?.user.permissoes.rotas?.includes('ADM') || !!session?.user.permissoes.rotas?.includes('Pós-Venda')
+  const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar
 
   useEffect(() => {
     if (session?.user && !isAuthorized) router.push('/')

@@ -39,7 +39,7 @@ function ComissaoPage() {
     },
   })
   const isManager = !!session?.user.permissoes.financeiro.editar
-  const isADM = !!session?.user?.permissoes.rotas.includes('ADM')
+  const isADM = !!session?.user.permissoes.administrativo.visualizar
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 

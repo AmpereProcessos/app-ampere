@@ -300,6 +300,11 @@ export const serviceTypes = [
     label: 'MONITORAMENTO',
     value: 'MONITORAMENTO',
   },
+  {
+    id: 18,
+    label: 'PRODUTOS E SERVIÇOS AVULSOS',
+    value: 'PRODUTOS E SERVIÇOS AVULSOS',
+  },
 ]
 export const allSellers = [
   {
@@ -1567,13 +1572,14 @@ export const TagsColorPalette = [
 ]
 
 export const FileReferenceCategories = [
-  { id: 1, label: 'DOCUMENTOS', value: 'DOCUMENTOS' },
-  { id: 2, label: 'ANÁLISES TÉCNICAS', value: 'ANÁLISES TÉCNICAS' },
-  { id: 3, label: 'CONTRATOS', value: 'CONTRATOS' },
-  { id: 4, label: 'HOMOLOGAÇÕES', value: 'HOMOLOGAÇÕES' },
-  { id: 5, label: 'PROJETOS', value: 'PROJETOS' },
-  { id: 6, label: 'COMPRAS', value: 'COMPRAS' },
-  { id: 7, label: 'FINANCEIRO', value: 'FINANCEIRO' },
-  { id: 8, label: 'SERVIÇOS', value: 'SERVIÇOS' },
-  { id: 9, label: 'MANUTENÇÕES', value: 'MANUTENÇÕES' },
+  { id: 1, label: 'DOCUMENTOS', value: 'DOCUMENTOS', restrict: false },
+  { id: 2, label: 'ANÁLISES TÉCNICAS', value: 'ANÁLISES TÉCNICAS', restrict: false },
+  { id: 3, label: 'CONTRATOS', value: 'CONTRATOS', restrict: false },
+  { id: 4, label: 'HOMOLOGAÇÕES', value: 'HOMOLOGAÇÕES', restrict: false },
+  { id: 5, label: 'PROJETOS', value: 'PROJETOS', restrict: false },
+  { id: 6, label: 'COMPRAS', value: 'COMPRAS', restrict: false },
+  { id: 7, label: 'FINANCEIRO', value: 'FINANCEIRO', restrict: true },
+  { id: 8, label: 'SERVIÇOS', value: 'SERVIÇOS', restrict: false },
+  { id: 9, label: 'MANUTENÇÕES', value: 'MANUTENÇÕES', restrict: false },
+  { id: 10, label: 'OUTROS', value: 'OUTROS', restrict: false },
 ]

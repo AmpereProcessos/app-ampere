@@ -7,7 +7,9 @@ import { fileTypes } from '../../utils/constants'
 import { storage } from '../../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
-function EtapaMontagemMecanica({ next, order }) {
+import { createManyFileReferences } from '../../utils/methods/mutation/crm/file-references'
+
+function EtapaMontagemMecanica({ session, next, order }) {
   const [checkMountStage, setCheckMountStage] = useState(false)
   const [inProgress, setInProgress] = useState(false)
   const [files, setFiles] = useState({})
@@ -21,11 +23,13 @@ function EtapaMontagemMecanica({ next, order }) {
           let file = files.fotoFixacaoQDG.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/fotoFixacaoQDG${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO FIXAÇÃO DO QDG (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -34,11 +38,14 @@ function EtapaMontagemMecanica({ next, order }) {
           let file = files.fotoInfraEletrica.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/fotoInfraEletrica${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO/FILMAGEM INFRA ELÉTRICA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -47,11 +54,14 @@ function EtapaMontagemMecanica({ next, order }) {
           let file = files.fotoPlacaGeracaoDistribuida.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/fotoPlacaGeracaoDistribuida${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO PLACA DE GERAÇÃO DISTRIBUÍDA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -63,27 +73,7 @@ function EtapaMontagemMecanica({ next, order }) {
       throw error
     }
   }
-  async function updateUser({ links, projectId }) {
-    if (links.length >= 1) {
-      try {
-        let { data } = await axios.put(`/api/projects/update/${projectId}`, {
-          operation: {
-            $push: {
-              'links.montagem': {
-                $each: links,
-              },
-            },
-          },
-        })
-        if (data) return 'Arquivos vinculados ao projeto com sucesso !'
-      } catch (error) {
-        toast.dismiss()
-        const msg = getErrorMessage(error)
-        toast.error(msg)
-        return
-      }
-    }
-  }
+
   // Field and files insert validation
   function validateStage() {
     if (!checkMountStage) {
@@ -117,7 +107,20 @@ function EtapaMontagemMecanica({ next, order }) {
       const loadingToastId = toast.loading('Processando...')
       try {
         let links = await uploadFiles()
-        if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['SERVIÇOS'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
         toast.dismiss(loadingToastId)
         toast.success('Arquivos enviados com sucesso !')
         setCookie(null, `STAGE-${order._id}`, '2')

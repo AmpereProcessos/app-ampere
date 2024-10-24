@@ -223,8 +223,8 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 updateLogs={updateLogs || []}
               />
-              {/* <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} /> */}
-              <InfoArquivosBlock
+              <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
+              {/* <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
                 categories={[
@@ -237,7 +237,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                   { label: 'PROJETOS', value: 'links.projetos' },
                   { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
                 ]}
-              />
+              /> */}
               {/* <ESigningBlock
                 projectId={infoHolder._id}
                 contractName={infoHolder.nomeDoContrato}

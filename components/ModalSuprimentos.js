@@ -28,6 +28,7 @@ import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import { useSession } from 'next-auth/react'
 import { getErrorMessage } from '../utils/methods/handlers'
+import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
@@ -73,7 +74,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
-          {isSuccess && infoHolder ? (
+          {isSuccess && infoHolder && session ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
@@ -137,7 +138,8 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 setChanges={setChanges}
                 updateLogs={updateLogs || []}
               />
-              <InfoArquivosBlock
+              <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
+              {/* <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
                 categories={[
@@ -147,7 +149,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                   { label: 'OBRAS', value: 'links.obras' },
                 ]}
                 handleUpdates={handleUpdates}
-              />
+              /> */}
             </div>
           ) : null}
         </div>

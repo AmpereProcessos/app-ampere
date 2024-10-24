@@ -30,6 +30,7 @@ import { useSession } from 'next-auth/react'
 import { handleExecutionUpdate } from '@/utils/methods/mutation/execution'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { getErrorMessage } from '@/utils/methods/handlers'
+import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -81,7 +82,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
-          {isSuccess && infoHolder ? (
+          {isSuccess && infoHolder && session ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
@@ -164,7 +165,8 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 updateLogs={updateLogs || []}
                 showCircuitBreakers={true}
               />
-              <InfoArquivosBlock
+              <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
+              {/* <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
                 categories={[
@@ -176,7 +178,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                   { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
                 ]}
                 handleUpdates={handleUpdates}
-              />
+              /> */}
             </div>
           ) : null}
         </div>

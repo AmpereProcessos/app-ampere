@@ -3,6 +3,7 @@ import { getFileReferencesByQuery } from '@/repositories/crm-file-references/que
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { FileReferencesQueryParamsSchema, InsertFileReferenceSchema, TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
 import { Collection, Filter } from 'mongodb'
 import { NextApiHandler } from 'next'
@@ -31,9 +32,10 @@ const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req
   const orQuery = { $or: nonEmptyQueries }
   const query = { ...orQuery }
 
-  console.log(query)
   const db = await connectToCRMDatabase(process.env.DB_KEY)
   const collection: Collection<TFileReference> = db.collection('file-references')
+  // const db = await connectToDatabase(process.env.DB_KEY)
+  // const collection: Collection<TFileReference> = db.collection('referencias-arquivos')
 
   const fileReferences = await getFileReferencesByQuery({ collection, query })
   return res.status(200).json({ data: fileReferences })

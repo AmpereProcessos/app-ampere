@@ -94,11 +94,7 @@ function HomologationFiles({ session, homologationId }: HomologationFilesProps) 
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">ARQUIVOS</h1>
       <div className="mt-2 flex w-full flex-wrap justify-around gap-2">
         {references && references.length > 0 ? (
-          references.map((file, index) => (
-            <div key={index} className="w-full lg:w-[400px]">
-              <FileReferenceCard info={file} />
-            </div>
-          ))
+          references.map((file, index) => <FileReferenceCard info={file} />)
         ) : (
           <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
         )}

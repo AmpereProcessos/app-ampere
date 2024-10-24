@@ -36,6 +36,7 @@ import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { useSession } from 'next-auth/react'
 import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 import { getErrorMessage } from '@/utils/methods/handlers'
+import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
   const { data: session } = useSession()
   const queryClient = useQueryClient()
@@ -85,7 +86,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
-          {isSuccess && infoHolder?._id ? (
+          {isSuccess && infoHolder?._id && session ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
@@ -200,7 +201,8 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                 updateLogs={updateLogs || []}
                 project={project}
               />
-              <InfoArquivosBlock
+              <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
+              {/* <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
                 categories={[
@@ -216,7 +218,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
                     value: 'links.manutencaoCorretiva',
                   },
                 ]}
-              />
+              /> */}
             </div>
           ) : null}
         </div>

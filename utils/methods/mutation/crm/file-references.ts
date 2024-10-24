@@ -13,7 +13,7 @@ export async function createFileReference({ info }: { info: TFileReference }) {
 
 export async function createManyFileReferences({ info }: { info: TFileReference[] }) {
   try {
-    if (info.length == 0) return
+    if (info.length == 0) return 'Nenhum arquivo anexado.'
     const { data } = await axios.post('/api/crm/file-references/many', info)
     if (typeof data.data != 'string') return 'Arquivos anexados com sucesso !'
     return data.data as string

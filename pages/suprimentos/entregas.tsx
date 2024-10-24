@@ -31,6 +31,9 @@ import TextInput from '@/components/inputs/Text'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { deliveryStatus } from '@/utils/select-options'
 import StatesAndCities from '@/utils/jsons/estados-cidades.json'
+import { updateProject } from '@/utils/methods/mutation/clients'
+import { createManyFileReferences } from '@/utils/methods/mutation/crm/file-references'
+import { Session } from 'next-auth'
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }))
@@ -124,6 +127,7 @@ function DeliveriesPage() {
       </div>
       {menuIsOpen.id && menuIsOpen.isOpen && menuIsOpen.name ? (
         <AcknowledgeDeliveryMenu
+          session={session}
           projectId={menuIsOpen.id}
           projectName={menuIsOpen.name}
           closeModal={() => setMenuIsOpen({ id: null, name: null, isOpen: false })}
@@ -215,6 +219,7 @@ function ProjectCard({ project, handleClick }: ProjectCardProps) {
 }
 
 type AcknowledgeDeliveryMenuProps = {
+  session: Session
   projectId: string
   projectName: string
   closeModal: () => void
@@ -228,7 +233,7 @@ type TAcknowlegdeDeliveryInfo = {
   }[]
 }
 
-function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: AcknowledgeDeliveryMenuProps) {
+function AcknowledgeDeliveryMenu({ session, projectId, projectName, closeModal }: AcknowledgeDeliveryMenuProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TAcknowlegdeDeliveryInfo>({
     deliveryDate: null,
@@ -236,7 +241,7 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
   })
 
   async function handleUploads(files: TAcknowlegdeDeliveryInfo['files']) {
-    var links: { title: string; link: string; category: string; format: string }[] = []
+    var links: { title: string; link: string; category: string; size: number; format: string }[] = []
     const uploadPromises = files.map(async (file, index) => {
       const datetime = new Date().toISOString()
       const storageStr =
@@ -246,6 +251,8 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
       var fileRef = ref(storage, storageStr)
       const uploadResponse = await uploadBytes(fileRef, file.file)
       const url = await getDownloadURL(ref(storage, uploadResponse.metadata.fullPath))
+      const size = uploadResponse.metadata.size
+
       const format =
         uploadResponse.metadata.contentType && fileTypes[uploadResponse.metadata.contentType]
           ? fileTypes[uploadResponse.metadata.contentType].title
@@ -255,6 +262,7 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
         link: url,
         category: 'links.equipamentos',
         format: format,
+        size,
       })
     })
 
@@ -265,22 +273,27 @@ function AcknowledgeDeliveryMenu({ projectId, projectName, closeModal }: Acknowl
   async function handleAcknowledgeDelivery(info: TAcknowlegdeDeliveryInfo) {
     try {
       if (!info.deliveryDate) throw new Error('Preencha a data de entrega.')
-      const links = await handleUploads(info.files)
-
-      // Updating project files
-      await axios.put(`/api/projects/update/${projectId}`, {
-        operation: {
-          $push: {
-            [`links.equipamentos`]: {
-              $each: links,
-            },
-          },
-          $set: {
-            'compra.statusEntrega': 'ENTREGUE',
-            'compra.dataEntrega': info.deliveryDate,
-          },
+      await updateProject({
+        id: projectId,
+        changes: {
+          'compra.statusEntrega': 'ENTREGUE',
+          'compra.dataEntrega': info.deliveryDate,
         },
       })
+      const links = await handleUploads(info.files)
+
+      const fileReferences = links.map((l) => ({
+        titulo: l.title,
+        categorias: ['COMPRAS'],
+        formato: l.format,
+        url: l.link,
+        tamanho: l.size,
+        idProjeto: projectId,
+        autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },
+        dataInsercao: new Date().toISOString(),
+      }))
+      await createManyFileReferences({ info: fileReferences })
+
       return 'Reconhecimento de entrega feito com sucesso !'
     } catch (error) {
       throw error

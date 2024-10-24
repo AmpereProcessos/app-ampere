@@ -10,7 +10,9 @@ import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
 import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 import { getErrorMessage } from '../utils/methods/handlers'
-function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
+import { createManyFileReferences } from '../utils/methods/mutation/crm/file-references'
+
+function ConferenciaPadraoOS({ session, order, closeModal, queryKey }) {
   const queryClient = useQueryClient()
   const [finishInProgress, setFinishInProgress] = useState(false)
   const [infoHolder, setInfo] = useState({
@@ -55,31 +57,38 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
       if (images.padraoMontado) {
         var imageRef = ref(storage, `clientes/${order.favorecido.nome}/padraoMontado`)
         let res = await uploadBytes(imageRef, images.padraoMontado)
+        const size = res.metadata.size
         let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
         links.push({
           title: 'PADRÃO MONTADO',
           link: url,
           format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          size,
         })
       }
       if (images.ligacoesFeitas) {
         var imageRef = ref(storage, `clientes/${order.favorecido.nome}/ligacoesFeitas`)
         let res = await uploadBytes(imageRef, images.ligacoesFeitas)
+        const size = res.metadata.size
+
         let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
         links.push({
           title: 'LIGAÇÕES FEITAS',
           link: url,
           format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          size,
         })
       }
       if (images.disjuntor) {
         var imageRef = ref(storage, `clientes/${order.favorecido.nome}/disjuntorPadrao`)
         let res = await uploadBytes(imageRef, images.disjuntor)
+        const size = res.metadata.size
         let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
         links.push({
           title: 'DISJUNTOR DO PADRÃO',
           link: url,
           format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          size,
         })
       }
       return links
@@ -90,22 +99,7 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
       throw error
     }
   }
-  async function updateProject({ links, projectId }) {
-    try {
-      await axios.put(`/api/projects/update/${projectId}`, {
-        operation: {
-          $push: {
-            'links.padrao': {
-              $each: links,
-            },
-          },
-        },
-      })
-      return
-    } catch (error) {
-      throw error
-    }
-  }
+
   async function finishOS() {
     setFinishInProgress(true)
     if (validateOSClosing()) {
@@ -120,7 +114,20 @@ function ConferenciaPadraoOS({ order, closeModal, queryKey }) {
           orderId: order._id,
           queryClient: queryClient,
         })
-        if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['MANUTENÇÕES'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
         toast.dismiss(loadingToastId)
         toast.success('Ordem de Serviço finalizada com sucesso !')
         closeModal()

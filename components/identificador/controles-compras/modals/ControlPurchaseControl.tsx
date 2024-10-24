@@ -27,6 +27,7 @@ import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import PurchaseControlFileReferences from './blocos/AttachmentsBlock'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -130,6 +131,12 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                     queryClient={queryClient}
                   />
                 )}
+                <PurchaseControlFileReferences
+                  session={session}
+                  attachmentPrefix={infoHolder.titulo}
+                  purchaseId={purchaseControlId}
+                  projectId={infoHolder.projeto.id || undefined}
+                />
                 <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

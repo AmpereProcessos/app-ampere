@@ -2102,6 +2102,22 @@ export const tiposDeServico = [
     value: 'SEGURO DE SISTEMA FOTOVOLTAICO',
   },
   {
+    label: 'PRODUTOS',
+    value: 'PRODUTOS',
+  },
+  {
+    label: 'CONSÓRCIO DE ENERGIA',
+    value: 'CONSÓRCIO DE ENERGIA',
+  },
+  {
+    label: 'MONITORAMENTO',
+    value: 'MONITORAMENTO',
+  },
+  {
+    label: 'PRODUTOS E SERVIÇOS AVULSOS',
+    value: 'PRODUTOS E SERVIÇOS AVULSOS',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

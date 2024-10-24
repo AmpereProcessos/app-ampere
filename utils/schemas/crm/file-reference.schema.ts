@@ -9,7 +9,9 @@ const GeneralFileReferenceSchema = z.object({
   idHomologacao: z.string().optional().nullable(),
   idCompra: z.string().optional().nullable(),
   idReceita: z.string().optional().nullable(),
-  idParceiro: z.string(),
+  idDespesa: z.string().optional().nullable(),
+  idOrdemServico: z.string().optional().nullable(),
+  idParceiro: z.string().optional().nullable(),
   titulo: z.string(),
   categorias: z.array(z.string()).optional().nullable(),
   formato: z.string(),
@@ -29,7 +31,12 @@ export const InsertFileReferenceSchema = z.object({
   idProjeto: z.string({ invalid_type_error: 'Tipo não válido para a referência de projeto.' }).optional().nullable(),
   idCompra: z.string({ invalid_type_error: 'Tipo não válido para a referência de compra.' }).optional().nullable(),
   idReceita: z.string({ invalid_type_error: 'Tipo não válido para a referência de receita.' }).optional().nullable(),
-  idParceiro: z.string({ required_error: 'Referência a parceiro não informada.', invalid_type_error: 'Tipo não válida para referência a parceiro.' }),
+  idDespesa: z.string({ invalid_type_error: 'Tipo não válido para a referência de despesa.' }).optional().nullable(),
+  idOrdemServico: z.string({ invalid_type_error: 'Tipo não válido para a referência da ordem de serviço.' }).optional().nullable(),
+  idParceiro: z
+    .string({ required_error: 'Referência a parceiro não informada.', invalid_type_error: 'Tipo não válida para referência a parceiro.' })
+    .optional()
+    .nullable(),
   idAnaliseTecnica: z
     .string({
       required_error: 'Referência de análise técnica não informada.',
@@ -78,7 +85,9 @@ const FileReferenceEntitySchema = z.object({
   idProjeto: z.string().optional().nullable(),
   idCompra: z.string().optional().nullable(),
   idReceita: z.string().optional().nullable(),
-  idParceiro: z.string(),
+  idDespesa: z.string().optional().nullable(),
+  idOrdemServico: z.string().optional().nullable(),
+  idParceiro: z.string().optional().nullable(),
   titulo: z.string(),
   categorias: z
     .array(z.string({ invalid_type_error: 'Tipo não válido para a categoria.' }))

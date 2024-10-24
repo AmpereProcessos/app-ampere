@@ -11,7 +11,9 @@ import { getErrorMessage } from '../../utils/methods/handlers'
 import { updateServiceOrder } from '../../utils/methods/mutation/serviceOrders'
 import { useQueryClient } from '@tanstack/react-query'
 import { estadosECidades } from '../../utils/estados_cidades'
-function EtapaFinalizacao({ closeModal, order, queryKey }) {
+import { createManyFileReferences } from '../../utils/methods/mutation/crm/file-references'
+
+function EtapaFinalizacao({ session, closeModal, order, queryKey }) {
   const queryClient = useQueryClient()
   const [checkFinishingStage, setCheckFinishingStage] = useState(false)
   const [files, setFiles] = useState({})
@@ -70,11 +72,14 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.filmagemTesteAguaDoTelhado.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/filmagemTesteAguaDoTelhado${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FILMAGEM TESTE DA ÁGUA (VISTO DO TELHADO) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -83,11 +88,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.filmagemPosTesteAguaNaLaje.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/filmagemPosTesteAguaNaLaje${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FILMAGEM PÓS TESTE DA ÁGUA (VISTO Da LAJE) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -96,11 +103,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.fotoDataloggerPosConfig.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoDataloggerPosConfig${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO/FILMAGEM DO DATALOGGER PÓS-CONFIG (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -109,11 +118,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.fotoMedicoesStrings.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoMedicoesStrings${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTOS MEDIÇÕES DE TENSÃO E CORRENTE - STRING (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -122,11 +133,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.fotoMedicoesCAEntrada.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoMedicoesCAEntrada${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTOS MEDIÇÕES TENSÃO CA FASE E LINHA (ENTRADA) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -135,11 +148,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.fotoMedicoesCADisjuntorAntes.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoMedicoesCADisjuntorAntes${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTOS MEDIÇÕES TENSÃO CA FASE E LINHA (ANTES DO DISJUNTOR) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -148,11 +163,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           let file = files.fotoMedicoesCADisjuntorDepois.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoMedicoesCADisjuntorDepois${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTOS MEDIÇÕES TENSÃO CA FASE E LINHA (DEPOIS DO DISJUNTOR) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -164,9 +181,13 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
       throw error
     }
   }
-  async function updateUser({ links, projectId }) {
-    if (links.length >= 1) {
+
+  async function finishOS() {
+    if (validateStage()) {
+      const loadingToastId = toast.loading('Processando...')
+      setFinishInProgress(true)
       try {
+        let links = await uploadFiles()
         const currentDateTime = new Date().toISOString()
         await updateServiceOrder({
           info: { dataEfetivacao: currentDateTime },
@@ -174,31 +195,22 @@ function EtapaFinalizacao({ closeModal, order, queryKey }) {
           orderId: order._id,
           queryClient: queryClient,
         })
-        if (order.projeto?.id)
-          await axios.put(`/api/projects/update/${projectId}`, {
-            operation: {
-              $push: {
-                'links.montagem': {
-                  $each: links,
-                },
-              },
-            },
-          })
-      } catch (error) {
-        toast.dismiss()
-        const msg = getErrorMessage(error)
-        toast.error(msg)
-        return
-      }
-    }
-  }
-  async function finishOS() {
-    if (validateStage()) {
-      const loadingToastId = toast.loading('Processando...')
-      setFinishInProgress(true)
-      try {
-        let links = await uploadFiles()
-        await updateUser({ links: links, projectId: order.projeto?.id })
+
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['SERVIÇOS'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // await updateUser({ links: links, projectId: order.projeto?.id })
         toast.dismiss(loadingToastId)
         toast.success('Ordem de Serviço finalizada com sucesso !')
         destroyCookie(null, `STAGE-${order._id}`)

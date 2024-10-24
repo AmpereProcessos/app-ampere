@@ -13,6 +13,8 @@ import Image from 'next/image'
 import { storage } from '../utils/services/firebase/firebase-storage'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import axios from 'axios'
+import { createManyFileReferences } from '../utils/methods/mutation/crm/file-references'
+
 function renderInputText(files) {
   if (!files)
     return (
@@ -27,7 +29,7 @@ function renderInputText(files) {
   }
   return <p className="mb-2 text-sm text-primary/80">{filesAsArr[0]?.name}</p>
 }
-function ConferenciaOutrasCategorias({ order, closeModal, queryKey }) {
+function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
   const [finishInProgress, setFinishInProgress] = useState(false)
   const [notes, setNotes] = useState('')
   const [fileHolder, setFileHolder] = useState({
@@ -65,22 +67,7 @@ function ConferenciaOutrasCategorias({ order, closeModal, queryKey }) {
   function handleRemoveFile(index) {
     setFiles((prev) => prev.filter((_, i) => i != index))
   }
-  async function updateProject({ links, projectId }) {
-    try {
-      await axios.put(`/api/projects/update/${projectId}`, {
-        operation: {
-          $push: {
-            'links.manutencaoCorretiva': {
-              $each: links,
-            },
-          },
-        },
-      })
-      return
-    } catch (error) {
-      throw error
-    }
-  }
+
   async function uploadFiles(files) {
     var links = []
     const uploadPromises = files
@@ -90,11 +77,13 @@ function ConferenciaOutrasCategorias({ order, closeModal, queryKey }) {
         const fileRef = ref(storage, `clientes/${order.favorecido.nome}/${uploadFileName}`)
         let uploadResponse = await uploadBytes(fileRef, f.file)
         let uploadResponseUrl = await getDownloadURL(ref(storage, uploadResponse.metadata.fullPath))
+        const size = uploadResponse.metadata.size
 
         links.push({
           title: f.title,
           link: uploadResponseUrl,
           format: fileTypes[uploadResponse.metadata.contentType] ? fileTypes[uploadResponse.metadata.contentType].title : 'INDEFINIDO',
+          size,
         })
       })
 
@@ -114,7 +103,20 @@ function ConferenciaOutrasCategorias({ order, closeModal, queryKey }) {
         orderId: order._id,
         queryClient: queryClient,
       })
-      if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
+      const fileReferences = links.map((l) => ({
+        titulo: l.title,
+        categorias: ['SERVIÇOS'],
+        formato: l.format,
+        url: l.link,
+        tamanho: l.size,
+        idProjeto: order.projeto?.id,
+        idOrdemServico: order._id,
+        autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+        dataInsercao: new Date().toISOString(),
+      }))
+      await createManyFileReferences({ info: fileReferences })
+
+      // if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
       toast.dismiss(loadingToastId)
       toast.success('Ordem de Serviço finalizada com sucesso !')
       closeModal()

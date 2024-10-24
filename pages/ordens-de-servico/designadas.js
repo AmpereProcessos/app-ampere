@@ -105,6 +105,7 @@ function AssignedServiceOrdersPage({ session }) {
       ) : null}
       {modalInfo.isOpen && modalInfo.orderId ? (
         <ModalOS
+          session={session}
           orderId={modalInfo.orderId}
           closeModal={() => setModalInfo({ isOpen: false, orderId: null })}
           modalIsOpen={modalInfo.isOpen}

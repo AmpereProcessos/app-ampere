@@ -6,8 +6,10 @@ import { setCookie } from 'nookies'
 import { fileTypes } from '../../utils/constants'
 import { storage } from '../../utils/services/firebase/firebase-storage'
 import { getErrorMessage } from '../../utils/methods/handlers'
+import { createManyFileReferences } from '../../utils/methods/mutation/crm/file-references'
+
 import toast from 'react-hot-toast'
-function EtapaTelhado({ next, order }) {
+function EtapaTelhado({ session, next, order }) {
   const [checkRoofStage, setCheckRoofStage] = useState(false)
   const [inProgress, setInProgress] = useState(false)
   const [files, setFiles] = useState({})
@@ -72,11 +74,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotoEtiquetaModulos.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoEtiquetaModulos${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO ETIQUETA DO MÓDULO (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -85,11 +90,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotoEtiquetaInversores.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoEtiquetaInversores${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO ETIQUETA DO INVERSOR (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -98,11 +106,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.filmagemTelhadoPorCima.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/filmagemTelhadoPorCima${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FILMAGEM DO TELHADO (POR CIMA) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -111,11 +122,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.filmagemTelhadoPorBaixo.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/filmagemTelhadoPorBaixo${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FILMAGEM DO TELHADO (POR BAIXO) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -124,11 +138,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotosTrilhosMontados.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotosTrilhosMontados${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO DOS TRILHOS MONTADOS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -137,11 +154,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotosInversoresAlocados.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotosInversoresAlocados${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO DOS MICROS/INVERSORES FIXADOS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -150,11 +170,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotosConexoesMicros.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotosConexoesMicros${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO DAS CONEXÕES DOS MICROS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -163,11 +186,14 @@ function EtapaTelhado({ next, order }) {
           let file = files.fotosPaineisInstalados.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotosPaineisInstalados${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
+
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO DOS PAINÉIS INSTALADOS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -179,31 +205,27 @@ function EtapaTelhado({ next, order }) {
       throw error
     }
   }
-  async function updateUser({ links, projectId }) {
-    if (links.length >= 1) {
-      try {
-        let { data } = await axios.put(`/api/projects/update/${projectId}`, {
-          operation: {
-            $push: {
-              'links.montagem': {
-                $each: links,
-              },
-            },
-          },
-        })
-        return 'Arquivos vinculados ao projeto com sucesso !'
-      } catch (error) {
-        throw error
-      }
-    }
-  }
+
   async function goNextStage() {
     if (validateStage()) {
       setInProgress(true)
       const loadingToastId = toast.loading('Processando...')
       try {
         let links = await uploadFiles()
-        if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['SERVIÇOS'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
         setCookie(null, `STAGE-${order._id}`, '1')
         toast.dismiss(loadingToastId)
         toast.success('Arquivos enviados com sucesso !')

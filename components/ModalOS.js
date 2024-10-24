@@ -21,7 +21,7 @@ import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import { useServiceOrderById } from '../utils/methods/query/service-orders'
 import LoadingPage from './utils/LoadingPage'
 
-function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
+function ModalOS({ session, orderId, modalIsOpen, closeModal, queryKey }) {
   const { data: order, isSuccess, isError, isLoading } = useServiceOrderById({ id: orderId, enabled: !!orderId })
   // async function saveChanges(changes) {
   //   try {
@@ -220,11 +220,13 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                 history={order.periodo.historico}
               />
               <div className="my-2 h-[5px] w-full bg-black"></div>
-              {order.categoria == 'PADRÃO' && <ConferenciaPadraoOS order={order} closeModal={closeModal} queryKey={queryKey} />}
-              {order.categoria == 'MANUTENÇÃO PREVENTIVA' && <ConferenciaManPreventivaOS order={order} closeModal={closeModal} queryKey={queryKey} />}
-              {order.categoria == 'MONTAGEM' && <ConferenciaMontagemOS order={order} closeModal={closeModal} queryKey={queryKey} />}
+              {order.categoria == 'PADRÃO' && <ConferenciaPadraoOS session={session} order={order} closeModal={closeModal} queryKey={queryKey} />}
+              {order.categoria == 'MANUTENÇÃO PREVENTIVA' && (
+                <ConferenciaManPreventivaOS session={session} order={order} closeModal={closeModal} queryKey={queryKey} />
+              )}
+              {order.categoria == 'MONTAGEM' && <ConferenciaMontagemOS session={session} order={order} closeModal={closeModal} queryKey={queryKey} />}
               {!['MONTAGEM', 'MANUTENÇÃO PREVENTIVA', 'PADRÃO'].includes(order.categoria) ? (
-                <ConferenciaOutrasCategorias order={order} closeModal={closeModal} queryKey={queryKey} />
+                <ConferenciaOutrasCategorias session={session} order={order} closeModal={closeModal} queryKey={queryKey} />
               ) : null}
             </div>
           ) : null}

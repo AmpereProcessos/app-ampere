@@ -7,7 +7,8 @@ import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { getErrorMessage } from '../utils/methods/handlers'
-function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
+import { createManyFileReferences } from '../utils/methods/mutation/crm/file-references'
+function ConferenciaManPreventivaOS({ session, order, closeModal, queryKey }) {
   const queryClient = useQueryClient()
   const [finishInProgress, setFinishInProgress] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -92,11 +93,14 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.paineisPreLimpeza.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/paineisPreLimpeza${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+
           links.push({
             title: `PAINÉIS PRÉ-LIMPEZA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -105,11 +109,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.irregularidades.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/irregularidades${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `IRREGULARIDADES (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -118,11 +124,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.paineisPosLimpeza.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/paineisPosLimpeza${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `PAINÉIS PÓS-LIMPEZA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -131,11 +139,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.irregularidadesCorrigidas.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/irregularidadesCorrigidas${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `IRREGULARIDADES CORRIGIDAS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -144,11 +154,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.kitInversor.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/kitInversor${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `KIT INVERSOR (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -157,11 +169,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.infraEletromecanica.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/infraEletromecanica${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `INFRAELETROMECÂNICA LIMPA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -170,11 +184,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.testesTensaoCAeCC.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testesTensaoCAeCC${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `TESTES DE TENSÃO CA E CC (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -183,11 +199,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.sistemaLigado.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/sistemaLigado${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `SISTEMA LIGADO (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -196,11 +214,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.ordemServicoAssinada.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/ordemServicoAssinada${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `OS ASSINADA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -209,11 +229,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.conferenciaCabosSolares.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaCabosSolares${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `CONFERÊNCIA DOS CABOS SOLARES (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -222,11 +244,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.conferenciaCabosCA.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaCabosCA${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `CONFERÊNCIA CABOS CA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -235,11 +259,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.conferenciaConectores.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaConectores${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `CONFERÊNCIA CONECTORES (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -248,11 +274,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.reapertoGrampos.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/reapertoGrampos${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `REAPERTO DOS GRAMPOS (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -261,11 +289,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.conferenciaMadeiramento.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaMadeiramento${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `CONFERÊNCIA DO MADEIRAMENTO (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -274,11 +304,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.medidorConsumida.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/medidorConsumida${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `MEDIDOR (03) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -287,11 +319,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.medidorInjetada.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/medidorInjetada${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `MEDIDOR (103) (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -300,11 +334,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.testeDAgua.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testeDAgua${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `TESTE D'ÁGUA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -313,11 +349,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.configuracaoConcluida.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/configuracaoConcluida${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `CONFIGURAÇÃO CONCLUIDA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -326,11 +364,13 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let file = images.termoAssinado.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido.nome}/termoAssinado${i + 1}`)
           let res = await uploadBytes(imageRef, file)
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          const size = res.metadata.size
+          const url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `TERMO ASSINADO (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -342,22 +382,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
       throw error
     }
   }
-  async function updateProject({ links, projectId }) {
-    try {
-      await axios.put(`/api/projects/update/${projectId}`, {
-        operation: {
-          $push: {
-            'links.manutencaoPreventiva': {
-              $each: links,
-            },
-          },
-        },
-      })
-      return
-    } catch (error) {
-      throw error
-    }
-  }
+
   async function finishOS() {
     setFinishInProgress(true)
     if (validateOSClosing()) {
@@ -371,7 +396,22 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           orderId: order._id,
           queryClient: queryClient,
         })
-        if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['MANUTENÇÕES'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // if (order.projeto?.id) await updateProject({ links: links, projectId: order.projeto.id })
+
         toast.dismiss(loadingToastId)
         toast.success('Ordem de Serviço finalizada com sucesso !')
         closeModal()

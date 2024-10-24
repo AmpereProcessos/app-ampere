@@ -33,6 +33,7 @@ import { useSession } from 'next-auth/react'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import InfoReceitasBlock from './blocosInfoProjeto/InfoReceitasBlock'
+import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
 
 function ModalADM({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -78,7 +79,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
-          {isSuccess && infoHolder ? (
+          {isSuccess && infoHolder && session ? (
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
@@ -183,7 +184,8 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 setChanges={setChanges}
                 updateLogs={updateLogs || []}
               />
-              <InfoArquivosBlock
+              <InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
+              {/* <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
                 categories={[
@@ -193,7 +195,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                   { label: 'PROJETOS', value: 'links.projetos' },
                 ]}
                 handleUpdates={() => console.log()}
-              />
+              /> */}
             </div>
           ) : null}
         </div>

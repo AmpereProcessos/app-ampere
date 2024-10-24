@@ -1,6 +1,8 @@
 import { TFileReferenceDTO, TFileReferencesQueryParams } from '@/utils/schemas/crm/file-reference.schema'
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { formatWithoutDiacritics } from '../../formatting'
 
 type UseFileReferencesByOpportunityIdParams = {
   opportunityId: string
@@ -98,6 +100,10 @@ async function fetchFileReferencesByQuery({
   }
 }
 
+export type TUseFileReferencesFilters = {
+  title: string
+  categories: string[]
+}
 export function useFileReferences({
   clientId,
   opportunityId,
@@ -107,8 +113,30 @@ export function useFileReferences({
   purchaseId,
   revenueId,
 }: TFileReferencesQueryParams) {
-  return useQuery({
-    queryKey: ['file-references-by-query', { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }],
-    queryFn: async () => await fetchFileReferencesByQuery({ clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }),
+  const [filters, setFilters] = useState<TUseFileReferencesFilters>({
+    title: '',
+    categories: [],
   })
+
+  function matchTitle(fileReference: TFileReferenceDTO) {
+    if (filters.title.trim().length == 0) return true
+    return formatWithoutDiacritics(fileReference.titulo, true).includes(formatWithoutDiacritics(filters.title, true))
+  }
+  function matchCategories(fileReference: TFileReferenceDTO) {
+    if (filters.categories.length == 0) return true
+    return fileReference.categorias?.some((c) => filters.categories.includes(c))
+  }
+  function handleModelData(data: TFileReferenceDTO[]) {
+    return data.filter((fileReference) => matchTitle(fileReference) && matchCategories(fileReference))
+  }
+  return {
+    ...useQuery({
+      queryKey: ['file-references-by-query', { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }],
+      queryFn: async () =>
+        await fetchFileReferencesByQuery({ clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }),
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
 }

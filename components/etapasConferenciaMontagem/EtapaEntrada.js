@@ -7,7 +7,9 @@ import { fileTypes } from '../../utils/constants'
 import { storage } from '../../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
-function EtapaEntrada({ next, order }) {
+import { createManyFileReferences } from '../../utils/methods/mutation/crm/file-references'
+
+function EtapaEntrada({ session, next, order }) {
   const [checkEnterStage, setCheckEnterStage] = useState(false)
   const [files, setFiles] = useState({})
   const [inProgress, setInProgress] = useState(false)
@@ -22,24 +24,7 @@ function EtapaEntrada({ next, order }) {
     }
     return true
   }
-  async function updateUser({ links, projectId }) {
-    if (links.length >= 1) {
-      try {
-        let { data } = await axios.put(`/api/projects/update/${projectId}`, {
-          operation: {
-            $push: {
-              'links.montagem': {
-                $each: links,
-              },
-            },
-          },
-        })
-        return 'Arquivos vinculados ao projeto com sucesso !'
-      } catch (error) {
-        throw error
-      }
-    }
-  }
+
   async function uploadFiles() {
     var holder
     var links = []
@@ -49,11 +34,13 @@ function EtapaEntrada({ next, order }) {
           let file = files.fotoConjuntoEscada.item(i)
           var imageRef = ref(storage, `clientes/${order.favorecido?.nome}/fotoConjuntoEscada${i + 1}`)
           let res = await uploadBytes(imageRef, file)
+          const size = res.metadata.size
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `FOTO CONJUNTO ESCADA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            size,
           })
         }
       }
@@ -71,7 +58,21 @@ function EtapaEntrada({ next, order }) {
       const loadingToastId = toast.loading('Processando...')
       try {
         let links = await uploadFiles()
-        if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
+
+        const fileReferences = links.map((l) => ({
+          titulo: l.title,
+          categorias: ['SERVIÇOS'],
+          formato: l.format,
+          url: l.link,
+          tamanho: l.size,
+          idProjeto: order.projeto?.id,
+          idOrdemServico: order._id,
+          autor: { id: session?.user.id, nome: session?.user.nome, avatar_url: session?.user.avatar_url },
+          dataInsercao: new Date().toISOString(),
+        }))
+        await createManyFileReferences({ info: fileReferences })
+
+        // if (order.projeto?.id) await updateUser({ links: links, projectId: order.projeto.id })
         toast.dismiss(loadingToastId)
         toast.success('Arquivos enviados com sucesso !')
         setCookie(null, `STAGE-${order._id}`, '1')

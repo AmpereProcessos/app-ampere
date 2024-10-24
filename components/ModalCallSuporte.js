@@ -30,6 +30,7 @@ const statusStyles = {
   },
 }
 function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, modalIsOpen }) {
+  console.log('SESSÃO', session)
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes ? info.ultAlteracoes?.anotAlteracoes.usuario : '',
@@ -51,13 +52,13 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 
   function saveCallChanges() {
     if (info.statusChamado != infoHolder.statusChamado) {
-      ultAlteracoes.statusAlteracoes.usuario = session?.id
+      ultAlteracoes.statusAlteracoes.usuario = session?.user.id
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado
       ultAlteracoes.statusAlteracoes.depois = infoHolder.statusChamado
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON()
     }
     if (info.anotacoes != infoHolder.anotacoes) {
-      ultAlteracoes.anotAlteracoes.usuario = session?.id
+      ultAlteracoes.anotAlteracoes.usuario = session?.user.id
       ultAlteracoes.anotAlteracoes.antes = info.anotacoes
       ultAlteracoes.anotAlteracoes.depois = infoHolder.anotacoes
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON()
@@ -75,7 +76,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
   function closeCall() {
     if (info.anotacoes?.trim().length > 0) {
       if (info.statusChamado != 'RESOLVIDO') {
-        ultAlteracoes.statusAlteracoes.usuario = session?.id
+        ultAlteracoes.statusAlteracoes.usuario = session?.user.id
         ultAlteracoes.statusAlteracoes.antes = info.statusChamado
         ultAlteracoes.statusAlteracoes.depois = 'RESOLVIDO'
         ultAlteracoes.statusAlteracoes.data = new Date().toJSON()
@@ -99,7 +100,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
   }
   function reopenCall() {
     if (info.statusChamado != 'ABERTO') {
-      ultAlteracoes.statusAlteracoes.usuario = session?.id
+      ultAlteracoes.statusAlteracoes.usuario = session?.user.id
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado
       ultAlteracoes.statusAlteracoes.depois = 'ABERTO'
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON()

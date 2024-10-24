@@ -108,7 +108,7 @@ export function useFileReferences({
   revenueId,
 }: TFileReferencesQueryParams) {
   return useQuery({
-    queryKey: ['file-references-by-query', clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId],
+    queryKey: ['file-references-by-query', { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }],
     queryFn: async () => await fetchFileReferencesByQuery({ clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId }),
   })
 }

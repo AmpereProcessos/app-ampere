@@ -1565,3 +1565,15 @@ export const TagsColorPalette = [
   { primaria: '#058A05', secundaria: '#B7FDB7' },
   { primaria: '#ECAA02', secundaria: '#F3F0D3' },
 ]
+
+export const FileReferenceCategories = [
+  { id: 1, label: 'DOCUMENTOS', value: 'DOCUMENTOS' },
+  { id: 2, label: 'ANÁLISES TÉCNICAS', value: 'ANÁLISES TÉCNICAS' },
+  { id: 3, label: 'CONTRATOS', value: 'CONTRATOS' },
+  { id: 4, label: 'HOMOLOGAÇÕES', value: 'HOMOLOGAÇÕES' },
+  { id: 5, label: 'PROJETOS', value: 'PROJETOS' },
+  { id: 6, label: 'COMPRAS', value: 'COMPRAS' },
+  { id: 7, label: 'FINANCEIRO', value: 'FINANCEIRO' },
+  { id: 8, label: 'SERVIÇOS', value: 'SERVIÇOS' },
+  { id: 9, label: 'MANUTENÇÕES', value: 'MANUTENÇÕES' },
+]

@@ -9,3 +9,10 @@ export type TLocation = {
   latitude?: string | null
   longitude?: string | null
 }
+
+export type TAttachmentHolder = {
+  title: string
+  file: File | null
+  previewUrl: string | null
+  type: string | null
+}

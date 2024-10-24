@@ -636,7 +636,7 @@ function ChamadosSuporte() {
         {modalIsOpen && (
           <ModalCallSuporte
             modalIsOpen={modalIsOpen}
-            session={session?.user}
+            session={session}
             updateModalInfo={updateModalInfo}
             setModalIsOpen={setModalIsOpen}
             info={modalCall}

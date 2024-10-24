@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import z from 'zod'
-
+const r = ['DOCUMENTOS', 'CONTRATOS', 'PROJETOS', 'EQUIPAMENTOS', 'ANÁLISE TÉCNICA', 'HOMOLOGAÇÃO', 'EXECUÇÃO']
 const GeneralFileReferenceSchema = z.object({
   idCliente: z.string().optional().nullable(),
   idOportunidade: z.string().optional().nullable(),
@@ -11,6 +11,7 @@ const GeneralFileReferenceSchema = z.object({
   idReceita: z.string().optional().nullable(),
   idParceiro: z.string(),
   titulo: z.string(),
+  categorias: z.array(z.string()).optional().nullable(),
   formato: z.string(),
   url: z.string(),
   tamanho: z.number().optional().nullable(),
@@ -46,6 +47,11 @@ export const InsertFileReferenceSchema = z.object({
   titulo: z
     .string({ required_error: 'Titulo do arquivo não informado.', invalid_type_error: 'Tipo não válido para titulo do arquivo.' })
     .min(2, 'É necessário que o titulo do arquivo tenha ao menos 2 caracteres.'),
+  categorias: z
+    .array(z.string({ invalid_type_error: 'Tipo não válido para a categoria.' }))
+    .optional()
+    .nullable(),
+
   formato: z.string({ required_error: 'Formato do arquivo não informado.', invalid_type_error: 'Tipo não válido para o formato do arquivo.' }),
   url: z.string({ required_error: 'URL do arquivo não informada.', invalid_type_error: 'Tipo válido para a URL do arquivo.' }),
   tamanho: z.number().optional().nullable(),
@@ -74,6 +80,10 @@ const FileReferenceEntitySchema = z.object({
   idReceita: z.string().optional().nullable(),
   idParceiro: z.string(),
   titulo: z.string(),
+  categorias: z
+    .array(z.string({ invalid_type_error: 'Tipo não válido para a categoria.' }))
+    .optional()
+    .nullable(),
   formato: z.string(),
   url: z.string(),
   tamanho: z.number().optional().nullable(),

@@ -23,6 +23,7 @@ import NewAttachmentMenu from './Utils/NewAttachmentMenu'
 import { Input } from '../ui/input'
 import { ListFilter } from 'lucide-react'
 import { getAllowedCategories } from '@/utils/methods/util/file-references'
+import { useQueryClient } from '@tanstack/react-query'
 
 type InfoAnexosBlockProps = {
   projectId: string
@@ -30,11 +31,23 @@ type InfoAnexosBlockProps = {
   session: Session
 }
 function InfoAnexosBlock({ projectId, project, session }: InfoAnexosBlockProps) {
+  const queryClient = useQueryClient()
   const [newAttachmentMenuIsOpen, setNewAttachmentMenuIsOpen] = useState<boolean>(false)
 
   const allowedCategories = getAllowedCategories({ session })
   const queryParam: TFileReferencesQueryParams = { projectId: projectId }
   const { data: fileReferences, isLoading, isError, isSuccess, error, filters, setFilters } = useFileReferences(queryParam)
+
+  async function handleOnMutate() {
+    await queryClient.cancelQueries({
+      queryKey: ['file-references-by-query', queryParam],
+    })
+  }
+  async function handleOnSettled() {
+    await queryClient.invalidateQueries({
+      queryKey: ['file-references-by-query', queryParam],
+    })
+  }
   return (
     <div className="flex w-full flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ARQUIVOS DO PROJETO</span>
@@ -63,6 +76,10 @@ function InfoAnexosBlock({ projectId, project, session }: InfoAnexosBlockProps) 
             allowedCategories={allowedCategories}
             session={session}
             closeMenu={() => setNewAttachmentMenuIsOpen(false)}
+            callbacks={{
+              onMutate: async () => await handleOnMutate(),
+              onSettled: async () => await handleOnSettled(),
+            }}
           />
         ) : null}
         <div className="flex w-full flex-wrap gap-3 gap-y-1">

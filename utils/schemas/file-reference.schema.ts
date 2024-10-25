@@ -13,6 +13,8 @@ const GeneralFileReferenceSchema = z.object({
     avatar_url: z.string().optional().nullable(),
   }),
   tamanho: z.number().optional().nullable(),
+  dataExclusao: z.string().datetime().optional().nullable(),
+  autorIdExclusao: z.string().optional().nullable(),
   dataInsercao: z.string().datetime(),
 })
 
@@ -36,6 +38,13 @@ export const InsertFileReferenceSchema = z.object({
     avatar_url: z.string().optional().nullable(),
   }),
   tamanho: z.number({ invalid_type_error: 'Tipo não válido para o tamanho do arquivo.' }).optional().nullable(),
+  dataExclusao: z
+    .string({ invalid_type_error: 'Tipo não válido para data de exclusão.' })
+    .datetime({ message: 'Tipo não válido para data de exclusão.' })
+    .optional()
+    .nullable(),
+  autorIdExclusao: z.string({ invalid_type_error: 'Tipo não válido para o autor da exclusão.' }).optional().nullable(),
+
   dataInsercao: z.string().datetime(),
 })
 
@@ -52,6 +61,9 @@ const FileReferenceEntitySchema = z.object({
     avatar_url: z.string().optional().nullable(),
   }),
   tamanho: z.number().optional().nullable(),
+  dataExclusao: z.string().datetime().optional().nullable(),
+  autorIdExclusao: z.string().optional().nullable(),
+
   dataInsercao: z.string().datetime(),
 })
 

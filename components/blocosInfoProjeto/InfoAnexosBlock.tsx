@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import { BsCalendarPlus, BsCloudUploadFill } from 'react-icons/bs'
-import { MdAttachFile } from 'react-icons/md'
+import { MdAttachFile, MdDelete } from 'react-icons/md'
 import { FileReferenceCategories } from '@/utils/select-options'
 
 import { getErrorMessage } from '@/utils/methods/handlers'
@@ -24,6 +24,7 @@ import { Input } from '../ui/input'
 import { ListFilter } from 'lucide-react'
 import { getAllowedCategories } from '@/utils/methods/util/file-references'
 import { useQueryClient } from '@tanstack/react-query'
+import FileReferenceCard from '../identificador/referencias-arquivos/FileReferenceCard'
 
 type InfoAnexosBlockProps = {
   projectId: string
@@ -87,86 +88,14 @@ function InfoAnexosBlock({ projectId, project, session }: InfoAnexosBlockProps) 
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess
             ? fileReferences.map((fileReference) => (
-                <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
-                  <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row">
-                    <div className="flex items-center gap-2">
-                      {handleRenderFileIcon(fileReference.formato)}
-                      <a
-                        href={fileReference.url}
-                        className="cursor-pointer text-sm font-bold leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500"
-                      >
-                        {fileReference.titulo}
-                      </a>
-                      <h1 className="rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
-                        {fileReference.formato}
-                      </h1>
-                    </div>
-                    <div className="hidden items-center justify-end gap-2 md:flex">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex items-center gap-1">
-                          <BsCalendarPlus />
-                          <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(fileReference.dataInsercao, true)}</p>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Avatar
-                            url={fileReference.autor.avatar_url || undefined}
-                            width={20}
-                            height={20}
-                            fallback={formatNameAsInitials(fileReference.autor.nome || '')}
-                          />
-
-                          <p className="text-[0.65rem] font-medium text-primary/80">{fileReference.autor.nome}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleDownload({ fileName: fileReference.titulo, fileUrl: fileReference.url })}
-                          className="flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-[0.6rem] text-white hover:bg-blue-500"
-                        >
-                          <TbDownload width={10} height={10} />
-                          <p>BAIXAR</p>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {!!fileReference.categorias && fileReference.categorias.length > 0 ? (
-                    <div className="flex w-full flex-wrap items-center gap-2">
-                      <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">CATEGORIAS</h1>
-                      {fileReference.categorias.map((category, index) => (
-                        <h1 key={index} className="rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-secondary">
-                          {category}
-                        </h1>
-                      ))}
-                    </div>
-                  ) : null}
-                  <div className="flex flex-col items-center gap-2 md:hidden">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <BsCalendarPlus />
-                        <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(fileReference.dataInsercao, true)}</p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Avatar
-                          url={fileReference.autor.avatar_url || undefined}
-                          width={20}
-                          height={20}
-                          fallback={formatNameAsInitials(fileReference.autor.nome || '')}
-                        />
-
-                        <p className="text-[0.65rem] font-medium text-primary/80">{fileReference.autor.nome}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleDownload({ fileName: fileReference.titulo, fileUrl: fileReference.url })}
-                        className="flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-[0.6rem] text-white hover:bg-blue-500"
-                      >
-                        <TbDownload width={10} height={10} />
-                        <p>BAIXAR</p>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <FileReferenceCard
+                  key={fileReference._id}
+                  info={fileReference}
+                  onDeleteCallbacks={{
+                    onMutate: async () => await handleOnMutate(),
+                    onSettled: async () => await handleOnSettled(),
+                  }}
+                />
               ))
             : null}
         </div>

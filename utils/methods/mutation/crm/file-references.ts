@@ -21,3 +21,14 @@ export async function createManyFileReferences({ info }: { info: TFileReference[
     throw error
   }
 }
+
+export async function deleteFileReference({ id }: { id: string }) {
+  try {
+    const { data } = await axios.delete(`/api/crm/file-references?id=${id}`)
+
+    if (typeof data.message != 'string') return 'Arquivo deletado com sucesso !'
+    return data.message as string
+  } catch (error) {
+    throw error
+  }
+}

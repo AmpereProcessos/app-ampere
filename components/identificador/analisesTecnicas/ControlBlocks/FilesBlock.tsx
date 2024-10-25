@@ -33,11 +33,7 @@ function FilesBlock({ auxiliarFilesLink, analysisId, session }: FilesBlockProps)
       </div>
       <div className="mt-2 flex w-full flex-wrap justify-around gap-2">
         {fileReferences && fileReferences.length > 0 ? (
-          fileReferences.map((file, index) => (
-            <div key={index} className="w-full lg:w-[400px]">
-              <FileReferenceCard info={file} />
-            </div>
-          ))
+          fileReferences.map((file, index) => <FileReferenceCard info={file} />)
         ) : (
           <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
         )}

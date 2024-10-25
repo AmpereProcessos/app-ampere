@@ -17,12 +17,12 @@ const getFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
 
   if (projectId) {
     if (typeof projectId != 'string' || !ObjectId.isValid(projectId)) throw new createHttpError.BadRequest('ID de projeto inválido.')
-    const references = await referencesCollection.find({ idProjeto: projectId }).toArray()
+    const references = await referencesCollection.find({ idProjeto: projectId, dataExclusao: null }).toArray()
     return res.status(200).json({ data: references })
   }
   if (userId) {
     if (typeof userId != 'string' || !ObjectId.isValid(userId)) throw new createHttpError.BadRequest('ID de colaborador inválido.')
-    const references = await referencesCollection.find({ idColaborador: userId }).toArray()
+    const references = await referencesCollection.find({ idColaborador: userId, dataExclusao: null }).toArray()
     return res.status(200).json({ data: references })
   }
 

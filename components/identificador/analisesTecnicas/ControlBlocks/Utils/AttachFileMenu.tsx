@@ -36,6 +36,7 @@ function AttachFileMenu({ analysisId, session }: AttachFileMenuProps) {
           idParceiro: '65454ba15cf3e3ecf534b308',
           idAnaliseTecnica: analysisId,
           titulo: info.titulo.toUpperCase(),
+          categorias: ['ANÁLISES TÉCNICAS'],
           formato: format,
           url: file,
           tamanho: metaData.size,

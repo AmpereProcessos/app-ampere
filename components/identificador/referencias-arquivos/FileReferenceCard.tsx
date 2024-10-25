@@ -10,21 +10,40 @@ import { TFileReferenceDTO } from '@/utils/schemas/crm/file-reference.schema'
 import { BsCalendarPlus } from 'react-icons/bs'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
-function handleRenderIcon(format: string) {
-  //   useKey('Escape', () => setSelectMenuIsOpen(false))
-  const extensionInfo = Object.values(fileTypes).find((f) => f.title == format)
-  if (!extensionInfo)
-    return (
-      <div className="text-lg text-black">
-        <AiFillFile />
-      </div>
-    )
-  return <div className="text-lg text-black">{renderIcon(extensionInfo.icon)}</div>
-}
+import { MdDelete } from 'react-icons/md'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { deleteFileReference } from '@/utils/methods/mutation/crm/file-references'
+import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
+import { getErrorMessage } from '@/utils/methods/handlers'
+
 type FileReferenceCardProps = {
   info: TFileReferenceDTO
+  onDeleteCallbacks?: {
+    onMutate?: () => void
+    onSuccess?: () => void
+    onSettled?: () => void
+  }
 }
-function FileReferenceCard({ info }: FileReferenceCardProps) {
+function FileReferenceCard({ info, onDeleteCallbacks }: FileReferenceCardProps) {
+  const { mutate: handleDeleteFileReference, isPending } = useMutation({
+    mutationKey: ['create-new-file-references'],
+    mutationFn: deleteFileReference,
+    onMutate: async () => {
+      if (!!onDeleteCallbacks?.onMutate) onDeleteCallbacks.onMutate()
+    },
+    onSuccess: async (data) => {
+      if (!!onDeleteCallbacks?.onSuccess) onDeleteCallbacks.onSuccess()
+      return toast.success(data)
+    },
+    onSettled: async () => {
+      if (!!onDeleteCallbacks?.onSettled) onDeleteCallbacks.onSettled()
+    },
+    onError: (error) => {
+      const msg = getErrorMessage(error)
+      return toast.error(msg)
+    },
+  })
   return (
     <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row">
@@ -48,6 +67,14 @@ function FileReferenceCard({ info }: FileReferenceCardProps) {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              disabled={isPending}
+              onClick={() => handleDeleteFileReference({ id: info._id })}
+              className="flex items-center gap-1 rounded-lg bg-red-600 px-2 py-1 text-[0.6rem] text-white disabled:bg-gray-500 enabled:hover:bg-red-500"
+            >
+              <MdDelete width={10} height={10} />
+              <p>DELETAR</p>
+            </button>
             <button
               onClick={() => handleDownload({ fileName: info.titulo, fileUrl: info.url })}
               className="flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-[0.6rem] text-white hover:bg-blue-500"

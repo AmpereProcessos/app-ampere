@@ -80,7 +80,31 @@ const getFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
   }
   return res.status(200).json({ data: [] })
 }
+
+type DeleteResponse = {
+  message: string
+}
+const deleteFileReferenceRoute: NextApiHandler<DeleteResponse> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+
+  const { id } = req.query
+
+  if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
+
+  const db = await connectToCRMDatabase(process.env.DB_KEY)
+  const collection: Collection<TFileReference> = db.collection('file-references')
+
+  const deleteResponse = await collection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { dataExclusao: new Date().toISOString(), autorIdExclusao: session.user.id } }
+  )
+  if (!deleteResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao deletar o arquivo.')
+  if (deleteResponse.matchedCount == 0) throw new createHttpError.NotFound('Arquivo não encontrado.')
+
+  return res.status(200).json({ message: 'Arquivo deletado com sucesso !' })
+}
 export default apiHandler({
   GET: getFileReferences,
   POST: createFileReference,
+  DELETE: deleteFileReferenceRoute,
 })

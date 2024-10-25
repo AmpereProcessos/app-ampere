@@ -8,7 +8,7 @@ type GetFileReferenceByQueryParams = {
 
 export async function getFileReferencesByQuery({ collection, query }: GetFileReferenceByQueryParams) {
   try {
-    const references = await collection.find({ ...query }).toArray()
+    const references = await collection.find({ ...query, dataExclusao: null }).toArray()
     return references
   } catch (error) {
     throw error
@@ -22,7 +22,7 @@ type GetFileReferenceByOpportunityParams = {
 
 export async function getFileReferencesByOpportunityId({ collection, opportunityId, query }: GetFileReferenceByOpportunityParams) {
   try {
-    const references = await collection.find({ idOportunidade: opportunityId }).toArray()
+    const references = await collection.find({ idOportunidade: opportunityId, dataExclusao: null }).toArray()
     return references
   } catch (error) {
     throw error
@@ -36,7 +36,7 @@ type GetFileReferenceByAnalysisParams = {
 
 export async function getFileReferencesByAnalysisId({ collection, analysisId }: GetFileReferenceByAnalysisParams) {
   try {
-    const references = await collection.find({ idAnaliseTecnica: analysisId }).toArray()
+    const references = await collection.find({ idAnaliseTecnica: analysisId, dataExclusao: null }).toArray()
     return references
   } catch (error) {
     throw error
@@ -49,7 +49,7 @@ type GetFileReferenceByClientParams = {
 
 export async function getFileReferencesByClientId({ collection, clientId }: GetFileReferenceByClientParams) {
   try {
-    const references = await collection.find({ idCliente: clientId }).toArray()
+    const references = await collection.find({ idCliente: clientId, dataExclusao: null }).toArray()
     return references
   } catch (error) {
     throw error
@@ -62,7 +62,7 @@ type GetFileReferenceByHomologationParams = {
 
 export async function getFileReferencesByHomologationId({ collection, homologationId }: GetFileReferenceByHomologationParams) {
   try {
-    const references = await collection.find({ idHomologacao: homologationId }).toArray()
+    const references = await collection.find({ idHomologacao: homologationId, dataExclusao: null }).toArray()
     return references
   } catch (error) {
     throw error

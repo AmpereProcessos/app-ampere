@@ -33,6 +33,8 @@ import Link from 'next/link'
 import { FaFile } from 'react-icons/fa'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import { updateOpportunity } from '@/utils/methods/mutation/crm/opportunities'
+import { TFileReference } from '@/utils/schemas/file-reference.schema'
+import { createManyFileReferences } from '@/utils/methods/mutation/crm/file-references'
 
 type ContractRequestControlModalProps = {
   requestId: string
@@ -162,6 +164,17 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
       const { data } = await axios.post('/api/projects/add', insertObject)
       const insertedProjectId = data.data.insertedId
 
+      const fileReferences: TFileReference[] =
+        insertObject.links.documentos?.map((file) => ({
+          titulo: file.title,
+          url: file.link,
+          formato: file.format,
+          idProjeto: insertedProjectId,
+          categorias: ['DOCUMENTOS'],
+          autor: { id: 'holder', nome: 'MIGRAÇÃO' },
+          dataInsercao: new Date().toISOString(),
+        })) || []
+      if (fileReferences.length > 0) await createManyFileReferences({ info: fileReferences })
       // Updating the contract request instance
       await editContractRequest({
         id: requestId,

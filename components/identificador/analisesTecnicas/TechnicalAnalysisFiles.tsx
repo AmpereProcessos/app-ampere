@@ -17,11 +17,7 @@ function TechnicalAnalysisFiles({ analysisId }: TechnicalAnalysisFilesProps) {
         {isError ? <ErrorComponent msg={'Erro ao buscar arquivos da análise técnica.'} /> : null}
         {isSuccess ? (
           fileReferences.length > 0 ? (
-            fileReferences.map((reference) => (
-              <div className="w-full lg:w-[450px]">
-                <FileReferenceCard key={reference._id} info={reference} />
-              </div>
-            ))
+            fileReferences.map((reference) => <FileReferenceCard key={reference._id} info={reference} />)
           ) : (
             <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
           )

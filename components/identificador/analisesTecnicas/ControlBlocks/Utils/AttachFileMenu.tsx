@@ -104,7 +104,7 @@ function AttachFileMenu({ analysisId, session }: AttachFileMenuProps) {
         />
       </div>
       <button
-        disabled={isLoading}
+        disabled={isPending}
         // @ts-ignore
         onClick={() => handleAttachFile(personalizedFile)}
         className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"

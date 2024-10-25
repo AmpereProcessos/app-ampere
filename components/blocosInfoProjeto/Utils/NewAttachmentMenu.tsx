@@ -87,7 +87,7 @@ function NewAttachmentMenu({
         idOportunidade: null,
         idAnaliseTecnica: null,
         idHomologacao: null,
-        idProjeto: null,
+        idProjeto: projectId,
         idCompra: null,
         idReceita: null,
         autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },

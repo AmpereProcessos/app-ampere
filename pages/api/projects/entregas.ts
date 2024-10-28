@@ -16,10 +16,11 @@ const getProjectsInDeliveryProcessRoute: NextApiHandler<any> = async (req, res) 
     .find(
       {
         'contrato.status': 'ASSINADO',
-        'compra.liberacao': true,
-        'compra.dataLiberacao': { $ne: null },
-        'compra.dataPedido': { $ne: null },
-        $or: [{ 'compra.dataEntrega': null, 'compra.status': { $ne: 'CONCLUIDA' } }, { 'compra.dataEntrega': { $gte: afterDateWithMargin } }],
+        'compra.statusEntrega': 'EM ROTA',
+        // 'compra.liberacao': true,
+        // 'compra.dataLiberacao': { $ne: null },
+        // // 'compra.dataPedido': { $ne: null },
+        // $or: [{ 'compra.dataEntrega': null, 'compra.status': { $ne: 'CONCLUIDA' } }, { 'compra.dataEntrega': { $gte: afterDateWithMargin } }],
       },
       {
         projection: {

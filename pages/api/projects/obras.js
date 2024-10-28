@@ -14,6 +14,7 @@ export default async function handler(req, res) {
             $or: [
               { $and: [{ tipoDeServico: { $ne: 'MONTAGEM E DESMONTAGEM' } }, { 'compra.dataPedido': { $ne: null } }] },
               { 'obra.statusSolicitacao': 'SOLICITADA' },
+              { 'compra.statusEntrega': 'ENTREGUE' },
             ],
             tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO'] },
           },

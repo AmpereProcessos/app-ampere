@@ -10,6 +10,7 @@ import { TProject } from '@/utils/schemas/projects'
 import { TUser } from '@/utils/schemas/crm/user.schema'
 import { z } from 'zod'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
+import dayjs from 'dayjs'
 
 const DateQuerySchema = z.object({
   after: z
@@ -24,6 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method == 'GET') {
     try {
       const { after, before } = DateQuerySchema.parse(req.query)
+      const afterFixed = dayjs(after).subtract(3, 'hour').toISOString()
+      const beforeFixed = dayjs(before).subtract(3, 'hour').toISOString()
       const appDb: Db = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
       const appProjectsCollection: Collection<TProject> = appDb.collection('dados')
 
@@ -34,13 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const crmUsers = await crmUsersCollection.find({}).toArray()
 
       const crmProjects = await crmProjectsCollection.find({ 'ganho.data': { $ne: null } }).toArray()
-      const projects = await getFilteredProjects({ collection: appProjectsCollection, after, before })
+      const projects = await getFilteredProjects({ collection: appProjectsCollection, after: afterFixed, before: beforeFixed })
       const commissionInfo = projects.map((project) => {
         const crmOpportunity = crmProjects.find((crmProject) => crmProject._id.toString() == project.idProjetoCRM)
         const crmOpportunityResponsibles = crmOpportunity?.responsaveis || []
         const crmSeller = crmOpportunityResponsibles.find((r) => r.papel == 'VENDEDOR')
         const crmSDR = crmOpportunityResponsibles.find((r) => r.papel == 'SDR')
-        console.log(crmSeller, crmSDR)
         const sellerUserInfo = crmUsers.find((user) => crmSeller?.id == user._id.toString())
         const sdrUserInfo = crmUsers.find((user) => crmSDR?.id == user._id.toString())
 
@@ -105,7 +107,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const appProjectsCollection = appDb.collection('dados')
       const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
       const crmProjectsCollection = crmDb.collection('projects')
-      console.log('CHANGES', changes)
       await updateAppProjectsComission({ collection: appProjectsCollection, changes })
 
       res.status(200).json('Atualizações feitas com sucesso !')

@@ -643,7 +643,7 @@ function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
       atualizacoes: [],
       totalPrevisto: project.compra.previsaoValorDoKit,
       liberacao: {
-        data: new Date().toISOString(),
+        data: project.compra.dataLiberacao,
         autor: {},
       },
       composicao: [],

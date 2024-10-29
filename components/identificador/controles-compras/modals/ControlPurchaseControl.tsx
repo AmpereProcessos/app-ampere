@@ -28,6 +28,7 @@ import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import PurchaseControlFileReferences from './blocos/AttachmentsBlock'
+import { updateProject } from '@/utils/methods/mutation/clients'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -71,9 +72,31 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     dataInsercao: new Date().toISOString(),
   })
 
+  async function handleUpdatePurchaseControl({ id, changes }: { id: string; changes: Partial<TPurchaseControl> }) {
+    try {
+      await updatePurchaseControl({ id, changes })
+      if (purchaseControl?.projeto.id)
+        await updateProject({
+          id: purchaseControl.projeto.id,
+          changes: {
+            'compra.liberacao': !!infoHolder.liberacao.data,
+            'compra.dataLiberacao': infoHolder.liberacao.data,
+            'compra.fornecedor': infoHolder.fornecedor.nome,
+            'compra.dataPedido': infoHolder.dataPedido,
+            'compra.valorDoKit': infoHolder.total,
+            'compra.rastreio': infoHolder.transporte.linkRastreio,
+            'compra.dataPagamentoEquipamentos': infoHolder.dataPagamento,
+            'compra.previsaoEntrega': infoHolder.entrega.dataPrevisao,
+            'compra.dataEntrega': infoHolder.entrega.dataEfetivacao,
+            'compra.statusEntrega': infoHolder.entrega.status,
+            'compra.kitInfo': infoHolder.composicao.map((c) => `${c.qtde}-${c.descricao}`).join('\n'),
+          },
+        })
+    } catch (error) {}
+  }
   const { mutate, isPending: isUpdateLoading } = useMutationWithFeedback({
     mutationKey: ['update-purchase-control', purchaseControlId],
-    mutationFn: updatePurchaseControl,
+    mutationFn: handleUpdatePurchaseControl,
     queryClient: queryClient,
     affectedQueryKey: affectedQueryKey,
     callbackFn: async () => queryClient.invalidateQueries({ queryKey: ['purchase-control-by-id', purchaseControlId] }),

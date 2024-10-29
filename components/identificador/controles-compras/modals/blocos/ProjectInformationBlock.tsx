@@ -49,7 +49,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
       throw error
     }
   }
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ['sync-project-data', project._id],
     mutationFn: handleUpdateProject,
     onSuccess: () => toast.success('Dados sincronizados no projeto.'),
@@ -59,7 +59,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
       <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO PROJETO</h1>
       <div className="flex w-full items-center justify-center">
         <button
-          disabled={isLoading}
+          disabled={isPending}
           onClick={() => mutate()}
           className={cn(
             'flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-white duration-300 ease-in-out  disabled:bg-gray-500 hover:bg-blue-700 disabled:hover:bg-gray-500'

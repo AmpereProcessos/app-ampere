@@ -594,6 +594,8 @@ export const PersonalizedFiltersSchema = z.object({
     required_error: 'Lista de cidades de filtro não informada.',
     invalid_type_error: 'Tipo não válido para lista de cidades de filtro.',
   }),
+  neighborhood: z.string({ required_error: 'Filtro por bairro não informado.', invalid_type_error: 'Tipo não válido para filtro por bairro.' }),
+  address: z.string({ required_error: 'Filtro por endereço não informado.', invalid_type_error: 'Tipo não válido para filtro por endereço.' }),
   serviceType: z.array(
     z.string({ required_error: 'Tipo de serviço de filtro não informada.', invalid_type_error: 'Tipo não válido para tipo de serviço de filtro.' }),
     {

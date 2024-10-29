@@ -24,6 +24,8 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
     },
     state: [],
     city: [],
+    address: '',
+    neighborhood: '',
     serviceType: [],
     seller: [],
     insider: [],

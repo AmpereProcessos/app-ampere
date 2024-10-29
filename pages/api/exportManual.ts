@@ -1,5 +1,5 @@
 import { apiHandler } from '@/utils/api'
-import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { formatDateAsLocale, getProductsStr } from '@/utils/methods/formatting'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
 
 import { TProject } from '@/utils/schemas/projects'
@@ -14,48 +14,59 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const requestsDb: Db = await connectToSolicitacoesDatabase(process.env.DB_KEY)
 
   const projectsCollection: Collection<TProject> = db.collection('dados')
-  const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
-  const contractRequests = await contractRequestsCollection.find({}).toArray()
-  const projects = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
+  const projects = await projectsCollection
+    .find({
+      tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+      'compra.liberacao': true,
+      'compra.status': { $ne: 'CONCLUIDA' },
+      'compra.dataPedido': null,
+    })
+    .toArray()
 
-  const bulkwriteArr = projects.map((project) => {
-    const equivalent = contractRequests.find((c) => c._id.toString() == project.idSolicitacaoContrato)
-    return {
-      updateOne: {
-        filter: { _id: new ObjectId(project._id) },
-        update: {
-          $set: {
-            longitude: equivalent?.longitude,
-            latitude: equivalent?.latitude,
-            inscricaoRural: equivalent?.inscriçãoRural,
-            'faturamento.necessarioNotaFiscalAdiantada': equivalent?.necessidadeNFAdiantada == 'SIM',
-            'faturamento.necessarioCodigoFiname': equivalent?.necessidadeCodigoFiname == 'SIM',
-            'faturamento.necessarioInscricaoRural': equivalent?.necessidaInscricaoRural == 'SIM',
-            'pagamento.cpf_cnpjPagador': equivalent?.cpf_cnpjNF,
-            'pagamento.negociacao': equivalent?.descricaoNegociacao,
-            'pagamento.metodo': equivalent?.formaDePagamento,
-          },
-        },
-      },
-    }
-  })
-  const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  // const projects = await projectsCollection
-  //   .find({
-  //     'obra.observacoes': { $regex: 'MONTAR DE UMA VEZ SÓ,' },
-  //     'obra.statusDaObra': {
-  //       $ne: 'CONCLUIDA',
+  const exportation = projects.map((project) => ({
+    QTDE: project.qtde,
+    NOME: project.nomeDoContrato,
+    VENDEDOR: project.vendedor.nome,
+    'TIPO DE SERVIÇO': project.tipoDeServico,
+    UF: project.uf,
+    CIDADE: project.cidade,
+    BAIRRO: project.bairro,
+    LOGRADOURO: project.logradouro,
+    'Nº DA RESIDÊNCIA': project.numeroResidencia,
+    LONGITUDE: project.longitude,
+    LATITUDE: project.latitude,
+    'ASSINATURA DO CONTRATO': formatDateAsLocale(project.contrato.dataAssinatura),
+    'LIBERAÇÃO DA COMPRA': project.compra.dataLiberacao ? formatDateAsLocale(project.compra.dataLiberacao) : null,
+    PRODUTOS: getProductsStr(project.produtos || []),
+  }))
+  // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
+
+  // const contractRequests = await contractRequestsCollection.find({}).toArray()
+  // const projects = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
+
+  // const bulkwriteArr = projects.map((project) => {
+  //   const equivalent = contractRequests.find((c) => c._id.toString() == project.idSolicitacaoContrato)
+  //   return {
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(project._id) },
+  //       update: {
+  //         $set: {
+  //           longitude: equivalent?.longitude,
+  //           latitude: equivalent?.latitude,
+  //           inscricaoRural: equivalent?.inscriçãoRural,
+  //           'faturamento.necessarioNotaFiscalAdiantada': equivalent?.necessidadeNFAdiantada == 'SIM',
+  //           'faturamento.necessarioCodigoFiname': equivalent?.necessidadeCodigoFiname == 'SIM',
+  //           'faturamento.necessarioInscricaoRural': equivalent?.necessidaInscricaoRural == 'SIM',
+  //           'pagamento.cpf_cnpjPagador': equivalent?.cpf_cnpjNF,
+  //           'pagamento.negociacao': equivalent?.descricaoNegociacao,
+  //           'pagamento.metodo': equivalent?.formaDePagamento,
+  //         },
+  //       },
   //     },
-  //     'contrato.status': 'ASSINADO',
-  //     $or: [
-  //       { $and: [{ tipoDeServico: { $ne: 'MONTAGEM E DESMONTAGEM' } }, { 'compra.dataPedido': { $ne: null } }] },
-  //       { 'obra.statusSolicitacao': 'SOLICITADA' },
-  //     ],
-  //     tipoDeServico: { $nin: ['OPERAÇÃO E MANUTENÇÃO'] },
-  //     'compra.statusEntrega': 'ENTREGUE',
-  //   })
-  //   .toArray()
+  //   }
+  // })
+  // const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
 
   // const exportation = projects.map((project) => ({
   //   QTDE: project.qtde,
@@ -84,46 +95,8 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //     },
   //   }
   // })
-  // const exportation = projects.map((project) => ({
-  //   QTDE: project.qtde,
-  //   NOME: project.nomeDoContrato,
-  //   UF: project.uf,
-  //   CIDADE: project.cidade,
-  //   'TIPO HOMOLOGAÇÃO': project.homologacao.fastTrack ? 'FAST TRACK' : 'CONVENCIONAL',
-  //   'DATA PEDIDO': formatDateAsLocale(project.compra.dataPedido),
-  //   'DATA ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
-  // }))
-  // const generations = projects.map((project) => {
-  //   const genFactor = getGenFactorByOrientation({ city: project.cidade, uf: project.uf, orientation: 'NORTE' }) as number
-  //   const estimatedGen = genFactor * (project.sistema.potPico || 0)
-  //   return estimatedGen
-  // })
-  // const totalGenerationMonthly = generations.reduce((acc, current) => acc + current, 0)
-  // const totalPower = projects.reduce((acc, current) => acc + current.sistema.potPico, 0)
-  // const formatted = projects.map((project) => {
-  //   return {
-  //     QTDE: project.qtde,
-  //     NOME: project.nomeDoContrato,
-  //     TIPO: project.tipoDeServico,
-  //     TELEFONE: project.telefone || 'N/A',
-  //     VENDEDOR: project.vendedor.nome,
-  //     CIDADE: project.cidade,
-  //     UF: project.uf,
-  //     POTÊNCIA: project.sistema.potPico,
-  //     'DATA DE ASSINATURA': project.contrato.dataAssinatura ? formatDateAsLocale(project.contrato.dataAssinatura) : 'N/A',
-  //     'STATUS DA COMPRA': project.compra.status,
-  //     'DATA DO PEDIDO': project.compra.dataPedido ? formatDateAsLocale(project.compra.dataPedido) : 'N/A',
-  //     'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'N/A',
-  //     'STATUS DA HOMOLOGAÇÃO': project.homologacao.status || 'N/A',
-  //     'DATA DE RESPOSTA DA HOMOLOGAÇÃO': project.homologacao.acesso.dataResposta
-  //       ? formatDateAsLocale(project.homologacao.acesso.dataResposta)
-  //       : 'N/A',
-  //     'STATUS DA OBRA': project.obra.statusDaObra || 'N/A',
-  //     'DATA DE TÉRMINO DA OBRA': project.obra.saida ? formatDateAsLocale(project.obra.saida) : 'N/A',
-  //   }
-  // })
-  // const updateResponse = await projectsCollection.bulkWrite(bulkwriteArr)
-  return res.json(bulkwriteResponse)
+
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: getExport,

@@ -30,41 +30,49 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   if (!page || isNaN(Number(page))) throw new createHttpError.BadRequest('Parâmetro de paginação inválido ou não informado.')
 
   // Defining the queries
-  const nameQuery: Filter<TProject> =
-    filters.name.trim().length > 0 ? { $or: [{ nomeDoContrato: { $regex: filters.name, $options: 'i' } }, { nomeDoContrato: filters.name }] } : {}
-  const dateQuery: Filter<TProject> =
+  const nameQuery: Filter<TProject> | null =
+    filters.name.trim().length > 0 ? { $or: [{ nomeDoContrato: { $regex: filters.name, $options: 'i' } }, { nomeDoContrato: filters.name }] } : null
+  const dateQuery: Filter<TProject> | null =
     filters.period.after && filters.period.before && filters.period.field
       ? {
-          $and: [
-            { [filters.period.field]: { $gte: formatDateQuery(filters.period.after, 'start') } },
-            { [filters.period.field]: { $lte: formatDateQuery(filters.period.before, 'end') } },
-          ],
+          [filters.period.field]: { $gte: formatDateQuery(filters.period.after, 'start'), $lte: formatDateQuery(filters.period.before, 'end') },
         }
-      : {}
-  const stateQuery: Filter<TProject> = filters.state.length > 0 ? { uf: { $in: filters.state } } : {}
-  const cityQuery: Filter<TProject> = filters.city.length > 0 ? { cidade: { $in: filters.city } } : {}
-  const serviceTypeQuery: Filter<TProject> = filters.serviceType.length > 0 ? { tipoDeServico: { $in: filters.serviceType } } : {}
-  const sellerQuery: Filter<TProject> = filters.seller.length > 0 ? { 'vendedor.nome': { $in: filters.seller } } : {}
-  const insiderQuery: Filter<TProject> = filters.insider.length > 0 ? { insider: { $in: filters.insider } } : {}
-  const technicalTeamQuery: Filter<TProject> = filters.technicalTeam.length > 0 ? { 'obra.equipeResp': { $in: filters.technicalTeam } } : {}
-  const acquisitionChannelQuery: Filter<TProject> = filters.acquisitionChannel.length > 0 ? { canalVenda: { $in: filters.acquisitionChannel } } : {}
-  const modulesQtyQuery: Filter<TProject> =
+      : null
+  const stateQuery: Filter<TProject> | null = filters.state.length > 0 ? { uf: { $in: filters.state } } : null
+  const cityQuery: Filter<TProject> | null = filters.city.length > 0 ? { cidade: { $in: filters.city } } : null
+  const neighborhoodQuery: Filter<TProject> | null =
+    filters.neighborhood.trim().length > 0
+      ? { $or: [{ bairro: { $regex: filters.neighborhood, $options: 'i' } }, { bairro: filters.neighborhood }] }
+      : null
+  const addressQuery: Filter<TProject> | null =
+    filters.address.trim().length > 0 ? { $or: [{ logradouro: { $regex: filters.address, $options: 'i' } }, { logradouro: filters.address }] } : null
+  const serviceTypeQuery: Filter<TProject> | null = filters.serviceType.length > 0 ? { tipoDeServico: { $in: filters.serviceType } } : null
+  const sellerQuery: Filter<TProject> | null = filters.seller.length > 0 ? { 'vendedor.nome': { $in: filters.seller } } : null
+  const insiderQuery: Filter<TProject> | null = filters.insider.length > 0 ? { insider: { $in: filters.insider } } : null
+  const technicalTeamQuery: Filter<TProject> | null = filters.technicalTeam.length > 0 ? { 'obra.equipeResp': { $in: filters.technicalTeam } } : null
+  const acquisitionChannelQuery: Filter<TProject> | null =
+    filters.acquisitionChannel.length > 0 ? { canalVenda: { $in: filters.acquisitionChannel } } : null
+  const modulesQtyQuery: Filter<TProject> | null =
     filters.modulesQty.greater != null && filters.modulesQty.less != null
-      ? { $and: [{ 'sistema.qtdeModulos': { $gte: filters.modulesQty.greater } }, { 'sistema.qtdeModulos': { $lte: filters.modulesQty.less } }] }
-      : {}
-  const query = {
-    ...nameQuery,
-    ...dateQuery,
-    ...stateQuery,
-    ...cityQuery,
-    ...serviceTypeQuery,
-    ...sellerQuery,
-    ...insiderQuery,
-    ...technicalTeamQuery,
-    ...acquisitionChannelQuery,
-    ...modulesQtyQuery,
-  }
-  console.log(query)
+      ? { 'sistema.qtdeModulos': { $gte: filters.modulesQty.greater, $lte: filters.modulesQty.less } }
+      : null
+
+  const andQuery = [
+    nameQuery,
+    dateQuery,
+    stateQuery,
+    cityQuery,
+    neighborhoodQuery,
+    addressQuery,
+    serviceTypeQuery,
+    sellerQuery,
+    insiderQuery,
+    technicalTeamQuery,
+    acquisitionChannelQuery,
+    modulesQtyQuery,
+  ].filter((q) => !!q)
+
+  const query = andQuery.length > 0 ? { $and: andQuery } : {}
   const skip = PAGE_SIZE * (Number(page) - 1)
   const limit = PAGE_SIZE
 

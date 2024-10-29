@@ -7,10 +7,13 @@ import { TPersonalizedProjectsFilter } from '@/utils/schemas/projects'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 import AllCities from '@/utils/jsons/cidades.json'
+import StatesAndCities from '@/utils/jsons/estados-cidades.json'
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { allSellers, customersAcquisitionChannels, insiders, serviceTypes } from '@/utils/select-options'
 import NumberInput from '@/components/inputs/Number'
+
+const AllStates = StatesAndCities.map((s, index) => ({ id: index + 1, label: s.sigla, value: s.sigla }))
 type FilterMenuProps = {
   updateFilters: (filters: TPersonalizedProjectsFilter) => void
   queryLoading: boolean
@@ -26,6 +29,8 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
     },
     state: [],
     city: [],
+    neighborhood: '',
+    address: '',
     serviceType: [],
     seller: [],
     insider: [],
@@ -119,6 +124,28 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
           </div>
           <div className="w-full lg:w-[200px]">
             <MultipleSelectInputVirtualized
+              label="ESTADO"
+              selected={filtersHolder.state}
+              options={AllStates}
+              selectedItemLabel="NÃO DEFINIDO"
+              handleChange={(value) => {
+                setFiltersHolder((prev) => ({
+                  ...prev,
+                  state: value as string[],
+                }))
+              }}
+              onReset={() => {
+                setFiltersHolder((prev) => ({
+                  ...prev,
+                  state: [],
+                }))
+              }}
+              width="100%"
+              labelClassName="text-xs font-medium tracking-tight text-black"
+            />
+          </div>
+          <div className="w-full lg:w-[200px]">
+            <MultipleSelectInputVirtualized
               label="CIDADE"
               selected={filtersHolder.city}
               options={AllCities.map((c, index) => ({ id: index + 1, value: c, label: c }))}
@@ -137,6 +164,24 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
               }}
               width="100%"
               labelClassName="text-xs font-medium tracking-tight text-black"
+            />
+          </div>
+          <div className="w-full lg:w-[300px]">
+            <TextInput
+              label="BAIRRO"
+              value={filtersHolder.neighborhood}
+              handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, neighborhood: value }))}
+              placeholder="Filtre pelo bairro de endereço do projeto..."
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-[300px]">
+            <TextInput
+              label="LOGRADOURO"
+              value={filtersHolder.address}
+              handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, address: value }))}
+              placeholder="Filtre pelo logradouro de endereço do projeto..."
+              width="100%"
             />
           </div>
           <div className="w-full lg:w-[200px]">

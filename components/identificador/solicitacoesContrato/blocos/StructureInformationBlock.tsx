@@ -14,7 +14,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
     <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DA ESTRUTURA DE INSTALAÇÃO</h1>
       <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/2">
           <SelectInput
             label={'TIPO DA ESTRUTURA'}
             value={infoHolder.tipoEstrutura}
@@ -31,7 +31,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/2">
           <SelectInput
             label={'MATERIAL DA ESTRUTURA'}
             value={infoHolder.materialEstrutura}
@@ -46,9 +46,11 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+      </div>
+      <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
+        <div className="w-full lg:w-1/2">
           <SelectInput
-            label={'NECESSÁRIO ADEQUAÇÃO'}
+            label={'INCLUSO VENDA DE NOVA OU ADEQUAÇÃO DE ESTRUTURA'}
             value={infoHolder.estruturaAmpere}
             editable={userHasEditPermission}
             selectedItemLabel="NÃO DEFINIDO"
@@ -61,7 +63,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/4">
+        <div className="w-full lg:w-1/2">
           <SelectInput
             label={'RESPONSÁVEL PELA ADEQUAÇÃO'}
             value={infoHolder.responsavelEstrutura}

@@ -78,8 +78,8 @@ function InfoEstruturaBlock({
       </div>
       <div className="my-2 flex w-full items-center justify-center self-center">
         <CheckboxInput
-          labelFalse="NECESSÁRIO ADEQUAÇÃO DE ESTRUTURA"
-          labelTrue="NECESSÁRIO ADEQUAÇÃO DE ESTRUTURA"
+          labelFalse="APLICÁVEL NOVA (OU ADEQUAÇÃO) DE ESTRUTURA"
+          labelTrue="APLICÁVEL NOVA (OU ADEQUAÇÃO) DE ESTRUTURA"
           checked={infoHolder.estruturaPersonalizada.aplicavel == 'SIM'}
           handleChange={(value) => {
             setInfo((prev) => ({

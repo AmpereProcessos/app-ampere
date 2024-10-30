@@ -199,7 +199,7 @@ export const FieldsFormattings: { [key: string]: { label: string; getFormattedVa
     getFormattedValue: (value: any) => value || 'NÃO DEFINIDO',
   },
   'estruturaPersonalizada.aplicavel': {
-    label: 'NECESSÁRIO ADEQUAÇÃO DE ESTRUTURA',
+    label: 'APLICÁVEL NOVA (OU ADEQUAÇÃO) DE ESTRUTURA',
     getFormattedValue: (value: any) => value,
   },
   'estruturaPersonalizada.status': {

@@ -36,6 +36,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
         'compra.dataPedido': purchase.dataPedido,
         'compra.valorDoKit': purchase.total,
         'compra.rastreio': purchase.transporte.linkRastreio,
+        'compra.dataPagamento': purchase.dataLiberacaoPagamento,
         'compra.dataPagamentoEquipamentos': purchase.dataPagamento,
         'compra.previsaoEntrega': purchase.entrega.dataPrevisao,
         'compra.dataEntrega': purchase.entrega.dataEfetivacao,

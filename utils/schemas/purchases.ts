@@ -118,6 +118,10 @@ export const GeneralPurchaseControlSchema = z.object({
     required_error: 'Lista de atualizações não informada.',
     invalid_type_error: 'Tipo não válido para a lista de atualizações.',
   }),
+  dataLiberacaoPagamento: z
+    .string({ invalid_type_error: 'Tipo não válido para data recebimento do pagamento ou liberação para pagamento.' })
+    .optional()
+    .nullable(),
   dataPagamento: z.string({ invalid_type_error: 'Tipo não válido para data de pagamento.' }).optional().nullable(),
   dataPedido: z.string({ invalid_type_error: 'Tipo não válido para a data do pedido.' }).optional().nullable(),
   fornecedor: z.object({

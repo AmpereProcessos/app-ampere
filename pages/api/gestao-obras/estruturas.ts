@@ -18,6 +18,7 @@ const InstallationStructureProjection = {
   numeroResidencia: 1,
   'homologacao.documentacao.dataAssinatura': 1,
   'compra.statusEntrega': 1,
+  'compra.dataPedido': 1,
   'compra.dataEntrega': 1,
   'compra.previsaoEntrega': 1,
   'compra.dataPagamento': 1,

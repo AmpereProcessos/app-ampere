@@ -260,7 +260,8 @@ export function useInstallationStructureExecutionProjects() {
     return (
       !project.estruturaPersonalizada.dataMontagem &&
       project.estruturaPersonalizada.status != 'PRONTA' &&
-      !!project.estruturaPersonalizada.dataEntrega
+      !!project.compra.dataPedido &&
+      !project.estruturaPersonalizada.dataEntrega
     )
   }
   function matchPendingReady(project: TInstallationStructureExecution) {

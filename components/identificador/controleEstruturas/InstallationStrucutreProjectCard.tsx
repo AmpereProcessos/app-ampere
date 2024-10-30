@@ -167,7 +167,7 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
         <CheckboxWithDate
           labelFalse="EXECUTADO"
           labelTrue="EXECUTADO"
-          editable={!isLoading}
+          editable={!isPending}
           showDate={!!project.estruturaPersonalizada.dataMontagem}
           date={project.estruturaPersonalizada.dataMontagem || project.obra.saida || null}
           handleChange={(value) => handleUpdate(formatDateInputChange(value))}

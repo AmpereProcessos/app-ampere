@@ -14,6 +14,7 @@ import { apiHandler } from '@/utils/api'
 import { TPurchaseControl, TPurchaseControlTag } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/auxiliaries'
 import { TExpense } from '@/utils/schemas/expenses'
+import { TContractRequest } from '@/utils/schemas/contract-requests'
 
 type TPreviousUser = {
   nome: string
@@ -45,19 +46,45 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const collection: Collection<TExpense> = db.collection('despesas')
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
 
-  const updateResponse = await collection.updateMany(
-    {},
-    {
-      $set: {
-        pagamentos: [],
-      },
-    }
-  )
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
+  // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
-  return res.status(200).json(updateResponse)
+  // const projectsWithContractRequest = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
+  // const contractRequests = await contractRequestsCollection.find({}).toArray()
+
+  // const bulkwrite = projectsWithContractRequest
+  //   .map((project) => {
+  //     const equivalentRequest = contractRequests.find((c) => c._id.toString() == project.idSolicitacaoContrato)
+  //     if (!equivalentRequest) return null
+
+  //     const isStructureAdequationApplicable = project.estruturaPersonalizada.aplicavel == 'SIM'
+  //     if (!isStructureAdequationApplicable && ['CARPORT', 'SOLO', 'ESTRUTURA PERSONALIZADA'].includes(equivalentRequest.tipoEstrutura || ''))
+  //       return {
+  //         updateOne: {
+  //           filter: { _id: new ObjectId(project._id) },
+  //           update: {
+  //             $set: {
+  //               'estruturaPersonalizada.aplicavel': 'SIM',
+  //             },
+  //           },
+  //         },
+  //       }
+  //     // return {
+  //     //   updateOne: {
+  //     //     filter: { _id: new ObjectId(project._id) },
+  //     //     update: {
+  //     //       $set: {},
+  //     //     },
+  //     //   },
+  //     // }
+  //   })
+  //   .filter((s) => !!s)
+
+  // const bkResponse = await projectsCollection.bulkWrite(bulkwrite)
+  return res.status(200).json('DESATIVADA')
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(

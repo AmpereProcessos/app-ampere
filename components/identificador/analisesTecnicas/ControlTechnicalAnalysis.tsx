@@ -350,7 +350,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                       <div className="flex items-center gap-2">
                         <BsCode size={'20px'} color="rgb(31,41,55)" />
                         {analysis.oportunidade.id ? (
-                          <Link href={`/comercial/oportunidades/id/${analysis.oportunidade.id}`}>
+                          <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${analysis.oportunidade.id}`}>
                             <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                               #{analysis.oportunidade.identificador || 'N/A'}
                             </p>

@@ -32,6 +32,10 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   // Defining the queries
   const nameQuery: Filter<TProject> | null =
     filters.name.trim().length > 0 ? { $or: [{ nomeDoContrato: { $regex: filters.name, $options: 'i' } }, { nomeDoContrato: filters.name }] } : null
+  const payerNameQuery: Filter<TProject> | null =
+    filters.payerName.trim().length > 0
+      ? { $or: [{ 'pagamento.pagador': { $regex: filters.payerName, $options: 'i' } }, { 'pagamento.pagador': filters.payerName }] }
+      : null
   const dateQuery: Filter<TProject> | null =
     filters.period.after && filters.period.before && filters.period.field
       ? {
@@ -59,6 +63,7 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
 
   const andQuery = [
     nameQuery,
+    payerNameQuery,
     dateQuery,
     stateQuery,
     cityQuery,

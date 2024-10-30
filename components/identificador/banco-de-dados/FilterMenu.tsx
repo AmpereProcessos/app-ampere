@@ -22,6 +22,7 @@ type FilterMenuProps = {
 function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMenuProps) {
   const [filtersHolder, setFiltersHolder] = useState<TPersonalizedProjectsFilter>({
     name: '',
+    payerName: '',
     period: { after: null, before: null, field: null },
     modulesQty: {
       greater: null,
@@ -50,12 +51,21 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
         <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
         <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
           <TextInput
-            label="PESQUISA"
+            label="PESQUISA PELO NOME DO CONTRATO"
             value={filtersHolder.name}
             handleChange={(value) => {
               setFiltersHolder((prev) => ({ ...prev, name: value }))
             }}
             placeholder="Filtre pelo nome do cliente..."
+            labelClassName="text-xs font-medium tracking-tight text-black"
+          />
+          <TextInput
+            label="PESQUISA PELO NOME DO PAGADOR"
+            value={filtersHolder.payerName}
+            handleChange={(value) => {
+              setFiltersHolder((prev) => ({ ...prev, payerName: value }))
+            }}
+            placeholder="Filtre pelo nome do pagador..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
           <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">

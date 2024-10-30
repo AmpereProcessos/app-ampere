@@ -575,6 +575,10 @@ export const PersonalizedFiltersSchema = z.object({
     required_error: 'Filtro do nome do contrato não informado.',
     invalid_type_error: 'Tipo não válido para o filtro de nome do contrato.',
   }),
+  payerName: z.string({
+    required_error: 'Filtro do nome do contrato não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro de nome do contrato.',
+  }),
   period: z.object({
     after: z
       .string({ required_error: 'Filtro de depois de não informado.', invalid_type_error: 'Tipo não válido para o filtro de depois de.' })

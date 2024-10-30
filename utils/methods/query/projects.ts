@@ -17,6 +17,7 @@ async function fetchProjectsByPersonalizedFilters({ page, filters }: { page: num
 export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
   const [filters, setFilters] = useState<TPersonalizedProjectsFilter>({
     name: '',
+    payerName: '',
     period: { after: null, before: null, field: null },
     modulesQty: {
       greater: null,

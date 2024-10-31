@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useState } from 'react'
 import { formatDate, formatToMoney, fornecedores, statusLiberacao } from '../../utils/constants'
 
 import ProjectKitInfo from '../identificador/suprimentos/ProjectKitInfo'
@@ -25,11 +25,13 @@ import { getErrorMessage } from '@/utils/methods/handlers'
 import { TPurchaseControl, TPurchaseControlDTO, TPurchaseControlSimplifiedDTO } from '@/utils/schemas/purchases'
 import { cn } from '@/lib/utils'
 import { Factory, Package, Tag, Truck } from 'lucide-react'
-import { formatDateAsLocale, formatNameAsInitials, getProductsStr } from '@/utils/methods/formatting'
+import { formatDateAsLocale, formatNameAsInitials, formatToCEP, getProductsStr } from '@/utils/methods/formatting'
 import Avatar from '../utils/Avatar'
 import { createPurchaseControl } from '@/utils/methods/mutation/purchase-controls'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useQueryClient } from '@tanstack/react-query'
+import { FaLocationDot } from 'react-icons/fa6'
+import { estadosECidades } from '@/utils/estados_cidades'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -96,6 +98,7 @@ function InfoCompraBlock({
   showMonetaryValues = false,
   showDeliveryInfoOnly = false,
 }: InfoCompraBlockProps) {
+  const [showLocationInformation, setShowLocationInformation] = useState<boolean>(false)
   const isContractAttached = project.links?.contratos?.map((c) => c.title.toUpperCase()).includes('CONTRATO ASSINADO')
   const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
   return (
@@ -105,6 +108,7 @@ function InfoCompraBlock({
       <div className="relative mt-2 mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
         {getAccessGrantingStatus({ status: infoHolder.homologacao.status })}
+
         <div className="flex flex-col items-center">
           <CheckboxInput
             labelFalse={'LIBERADO PARA SUPRIMENTOS'}
@@ -169,6 +173,196 @@ function InfoCompraBlock({
           }}
         />
       </div>
+      <div className="flex w-full items-center justify-end">
+        <button
+          onClick={() => setShowLocationInformation((prev) => !prev)}
+          className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
+            'bg-gray-300  hover:bg-red-300': showLocationInformation,
+            'bg-green-300  hover:bg-green-400': !showLocationInformation,
+          })}
+        >
+          <FaLocationDot />
+          <h1 className="text-xs font-medium tracking-tight">
+            {!showLocationInformation ? 'MOSTRAR LOCALIZAÇÃO DE ENTREGA' : 'FECHAR DADOS DE LOCALIZAÇÃO DE ENTREGA'}
+          </h1>
+        </button>
+      </div>
+      {showLocationInformation ? (
+        <>
+          <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+            <div className="w-full lg:w-1/3">
+              <TextInput
+                label="CEP"
+                value={infoHolder.compra.localizacaoEntrega?.cep || ''}
+                placeholder="Preencha aqui o CEP da instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), cep: formatToCEP(value) } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.cep': formatToCEP(value) }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/3">
+              <SelectInput
+                label="ESTADO"
+                value={infoHolder.compra.localizacaoEntrega?.uf}
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), uf: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.uf': value }))
+                }}
+                selectedItemLabel="NÃO DEFINIDO"
+                onReset={() => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), uf: null } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.uf': null }))
+                }}
+                options={Object.keys(estadosECidades).map((state, index) => ({
+                  id: index + 1,
+                  label: state,
+                  value: state,
+                }))}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/3">
+              <SelectInput
+                label="CIDADE"
+                value={infoHolder.compra.localizacaoEntrega?.cidade}
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), cidade: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.cidade': value }))
+                }}
+                options={
+                  infoHolder.compra.localizacaoEntrega?.uf
+                    ? estadosECidades[infoHolder.compra.localizacaoEntrega?.uf as keyof typeof estadosECidades].map((city, index) => ({
+                        id: index + 1,
+                        value: city,
+                        label: city,
+                      }))
+                    : null
+                }
+                selectedItemLabel="NÃO DEFINIDO"
+                onReset={() => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), cidade: null } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.cidade': null }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="BAIRRO"
+                value={infoHolder.compra.localizacaoEntrega?.bairro || ''}
+                placeholder="Preencha aqui o bairro do instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), bairro: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.bairro': value }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="LOGRADOURO/RUA"
+                value={infoHolder.compra.localizacaoEntrega?.endereco || ''}
+                placeholder="Preencha aqui o logradouro da instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), endereco: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.endereco': value }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="NÚMERO/IDENTIFICADOR"
+                value={infoHolder.compra.localizacaoEntrega?.numeroOuIdentificador || ''}
+                placeholder="Preencha aqui o número ou identificador da residência da instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), numeroOuIdentificador: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.numeroOuIdentificador': value }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="PONTO DE REFERÊNCIA"
+                value={infoHolder.compra.localizacaoEntrega?.complemento || ''}
+                placeholder="Preencha aqui algum complemento do endereço..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), complemento: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.complemento': value }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="LATITUDE"
+                value={infoHolder.compra.localizacaoEntrega?.latitude || ''}
+                placeholder="Preencha aqui a latitude da instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), latitude: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.latitude': value }))
+                }}
+                width="100%"
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <TextInput
+                label="LONGITUDE"
+                value={infoHolder.compra.localizacaoEntrega?.longitude || ''}
+                placeholder="Preencha aqui a longitude da instalação..."
+                handleChange={(value) => {
+                  setInfo((prev) => ({
+                    ...prev,
+                    compra: { ...prev.compra, localizacaoEntrega: { ...(prev.compra.localizacaoEntrega || {}), longitude: value } },
+                  }))
+                  setChanges((prev) => ({ ...prev, 'compra.localizacaoEntrega.longitude': value }))
+                }}
+                width="100%"
+              />
+            </div>
+          </div>
+        </>
+      ) : null}
+
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput
@@ -652,10 +846,16 @@ function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
       faturamentos: [],
       entrega: {
         status: 'AGUARDANDO COMPRA',
-        localizacao: {
-          uf: project.uf,
-          cidade: project.cidade,
-        },
+        localizacao: project.compra.localizacaoEntrega
+          ? {
+              ...project.compra.localizacaoEntrega,
+              uf: project.compra.localizacaoEntrega.uf || '',
+              cidade: project.compra.localizacaoEntrega.cidade || '',
+            }
+          : {
+              uf: project.uf,
+              cidade: project.cidade,
+            },
       },
       transporte: { transportadora: {} },
       autor: {

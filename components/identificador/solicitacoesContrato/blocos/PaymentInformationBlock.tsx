@@ -2,6 +2,8 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import NumberInput from '@/components/inputs/Number'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
+import { estadosECidades } from '@/utils/estados_cidades'
+import { formatToCEP } from '@/utils/methods/formatting'
 import { useCreditors } from '@/utils/methods/query/crm/utils'
 import { TContractRequestDTO } from '@/utils/schemas/contract-requests'
 import { ContractRequestPaymentOptions } from '@/utils/select-options'
@@ -87,49 +89,150 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           />
         </div>
       ) : null}
-      <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
-        <div className="w-full lg:w-1/2">
-          <SelectInput
-            label={'LOCAL DE ENTREGA'}
-            editable={userHasEditPermission}
-            value={infoHolder.localEntrega}
-            selectedItemLabel="NÃO DEFINIDO"
-            options={[
-              { id: 1, label: 'MESMO DO PROJETO', value: 'MESMO DO PROJETO' },
-              {
-                id: 2,
-                label: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
-                value: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
-              },
-              {
-                id: 3,
-                label: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
-                value: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
-              },
-            ]}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localEntrega: value }))}
-            onReset={() => setInfoHolder((prev) => ({ ...prev, localEntrega: '' }))}
+      <h1 className="w-full py-2 text-center font-bold text-[#fead61]">SOBRE A ENTREGA</h1>
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-1/3">
+          <TextInput
+            label="CEP"
+            value={infoHolder.cepEntrega || ''}
+            placeholder="Preencha aqui o CEP da instalação..."
+            handleChange={(value) => {
+              setInfoHolder((prev) => ({ ...prev, cepEntrega: formatToCEP(value) }))
+            }}
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
           <SelectInput
-            label={'RESTRIÇÕES DE ENTREGA'}
-            editable={userHasEditPermission}
-            value={infoHolder.restricoesEntrega}
+            label="ESTADO"
+            value={infoHolder.ufEntrega}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, ufEntrega: value }))}
             selectedItemLabel="NÃO DEFINIDO"
-            options={[
-              { id: 1, label: 'SOMENTE HORARIO COMERCIAL', value: 'SOMENTE HORARIO COMERCIAL' },
-              { id: 2, label: 'NÃO HÁ RESTRIÇÕES', value: 'NÃO HÁ RESTRIÇÕES' },
-              { id: 3, label: 'CASA EM CONSTRUÇÃO', value: 'CASA EM CONSTRUÇÃO' },
-              { id: 4, label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL', value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL' },
-            ]}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, restricoesEntrega: value }))}
-            onReset={() => setInfoHolder((prev) => ({ ...prev, restricoesEntrega: '' }))}
+            onReset={() => setInfoHolder((prev) => ({ ...prev, ufEntrega: null }))}
+            options={Object.keys(estadosECidades).map((state, index) => ({
+              id: index + 1,
+              label: state,
+              value: state,
+            }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/3">
+          <SelectInput
+            label="CIDADE"
+            value={infoHolder.cidadeEntrega}
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, cidadeEntrega: value }))}
+            options={
+              infoHolder.ufEntrega
+                ? estadosECidades[infoHolder.ufEntrega as keyof typeof estadosECidades].map((city, index) => ({
+                    id: index + 1,
+                    value: city,
+                    label: city,
+                  }))
+                : null
+            }
+            selectedItemLabel="NÃO DEFINIDO"
+            onReset={() => setInfoHolder((prev) => ({ ...prev, cidadeEntrega: null }))}
             width="100%"
           />
         </div>
       </div>
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="BAIRRO"
+            value={infoHolder.bairroEntrega || ''}
+            placeholder="Preencha aqui o bairro do instalação..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, bairroEntrega: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="LOGRADOURO/RUA"
+            value={infoHolder.enderecoEntrega || ''}
+            placeholder="Preencha aqui o logradouro da instalação..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, enderecoEntrega: value }))}
+            width="100%"
+          />
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="NÚMERO/IDENTIFICADOR"
+            value={infoHolder.numeroResEntrega || ''}
+            placeholder="Preencha aqui o número ou identificador da residência da instalação..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, numeroResEntrega: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="PONTO DE REFERÊNCIA"
+            value={infoHolder.pontoDeReferenciaEntrega || ''}
+            placeholder="Preencha aqui algum complemento do endereço..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, pontoDeReferenciaEntrega: value }))}
+            width="100%"
+          />
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="LATITUDE"
+            value={infoHolder.latitudeEntrega || ''}
+            placeholder="Preencha aqui a latitude da instalação..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, latitudeEntrega: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <TextInput
+            label="LONGITUDE"
+            value={infoHolder.longitudeEntrega || ''}
+            placeholder="Preencha aqui a longitude da instalação..."
+            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, longitudeEntrega: value }))}
+            width="100%"
+          />
+        </div>
+      </div>
+      <SelectInput
+        width={'100%'}
+        label={'HÁ RESTRIÇÕES PARA ENTREGA?'}
+        editable={true}
+        value={infoHolder.restricoesEntrega}
+        handleChange={(value) => setInfoHolder({ ...infoHolder, restricoesEntrega: value })}
+        options={[
+          {
+            id: 1,
+            label: 'SOMENTE HORARIO COMERCIAL',
+            value: 'SOMENTE HORARIO COMERCIAL',
+          },
+          {
+            id: 2,
+            label: 'NÃO HÁ RESTRIÇÕES',
+            value: 'NÃO HÁ RESTRIÇÕES',
+          },
+          {
+            id: 3,
+            label: 'CASA EM CONSTRUÇÃO',
+            value: 'CASA EM CONSTRUÇÃO',
+          },
+          {
+            id: 4,
+            label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
+            value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
+          },
+        ]}
+        selectedItemLabel="NÃO DEFINIDO"
+        onReset={() => {
+          setInfoHolder((prev) => ({
+            ...prev,
+            restricoesEntrega: null,
+          }))
+        }}
+      />
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <NumberInput

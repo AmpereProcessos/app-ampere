@@ -45,6 +45,21 @@ const GeneralProjectSchema = z.object({
     .optional()
     .nullable(),
   compra: z.object({
+    localizacaoEntrega: z
+      .object({
+        cep: z.string().optional().nullable(),
+        uf: z.string().optional().nullable(),
+        cidade: z.string().optional().nullable(),
+        bairro: z.string().optional().nullable(),
+        endereco: z.string().optional().nullable(),
+        numeroOuIdentificador: z.string().optional().nullable(),
+        distancia: z.number().optional().nullable(),
+        complemento: z.string().optional().nullable(),
+        latitude: z.string().optional().nullable(),
+        longitude: z.string().optional().nullable(),
+      })
+      .optional()
+      .nullable(),
     dataEntrega: z.string().optional().nullable(),
     dataLiberacao: z.string().optional().nullable(),
     dataMaxPagamento: z.string().optional().nullable(),

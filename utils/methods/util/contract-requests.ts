@@ -221,6 +221,17 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
       empresaFaturamento: null,
     },
     compra: {
+      localizacaoEntrega: {
+        cep: request.cepEntrega || '',
+        uf: request.ufEntrega || '',
+        cidade: request.cidadeEntrega || '',
+        bairro: request.bairroEntrega || '',
+        endereco: request.enderecoEntrega || '',
+        numeroOuIdentificador: request.numeroResEntrega || '',
+        complemento: request.pontoDeReferenciaEntrega,
+        latitude: request.latitudeEntrega,
+        longitude: request.longitudeEntrega,
+      },
       status: 'NÃO DEFINIDO',
       statusLiberacao: 'NÃO DEFINIDO',
       dataLiberacao: undefined, // formatar como data

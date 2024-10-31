@@ -160,6 +160,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) && (
                 <InfoCompraBlock
                   editor={true}
+                  session={session}
                   project={project}
                   comercialEditionOnly={true}
                   infoHolder={infoHolder}

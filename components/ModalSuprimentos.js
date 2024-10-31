@@ -120,6 +120,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 )}
               <InfoCompraBlock
                 editor={true}
+                session={session}
                 project={project}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

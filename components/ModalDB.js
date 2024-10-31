@@ -170,6 +170,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(infoHolder.tipoDeServico) && (
                 <InfoCompraBlock
                   editor={userHasOverallAccess}
+                  session={session}
                   project={project}
                   comercialEditionOnly={false}
                   infoHolder={infoHolder}

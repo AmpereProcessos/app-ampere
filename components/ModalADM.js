@@ -148,6 +148,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
               {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
                 <InfoCompraBlock
                   editor={true}
+                  session={session}
                   infoHolder={infoHolder}
                   project={project}
                   setInfo={setInfo}

@@ -259,6 +259,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
               {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
                 <InfoCompraBlock
                   editor={true}
+                  session={session}
                   project={project}
                   comercialEditionOnly={true}
                   infoHolder={infoHolder}

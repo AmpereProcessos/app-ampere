@@ -32,6 +32,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useQueryClient } from '@tanstack/react-query'
 import { FaLocationDot } from 'react-icons/fa6'
 import { estadosECidades } from '@/utils/estados_cidades'
+import { Session } from 'next-auth'
 
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
@@ -76,6 +77,7 @@ function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao'
 
 type InfoCompraBlockProps = {
   editor: boolean
+  session: Session
   comercialEditionOnly: boolean
   project: TProjectDTO
   infoHolder: TProjectDTO
@@ -88,6 +90,7 @@ type InfoCompraBlockProps = {
 }
 function InfoCompraBlock({
   editor,
+  session,
   comercialEditionOnly,
   project,
   infoHolder,
@@ -779,7 +782,7 @@ function InfoCompraBlock({
           </div>
         </div>
       )}
-      <PurchaseControlsBlock project={project} />
+      <PurchaseControlsBlock session={session} project={project} />
       {!showDeliveryInfoOnly ? (
         <div className="my-4 flex w-full items-center justify-center self-center">
           <CheckboxInput
@@ -809,9 +812,10 @@ function InfoCompraBlock({
 export default InfoCompraBlock
 
 type PurchaseControlsBlockProps = {
+  session: Session
   project: TProjectDTO
 }
-function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
+function PurchaseControlsBlock({ session, project }: PurchaseControlsBlockProps) {
   const queryClient = useQueryClient()
   const { data: purchaseControls, isLoading, isError, isSuccess, error } = usePurchaseControlByProjectId({ projectId: project._id })
 
@@ -859,9 +863,9 @@ function PurchaseControlsBlock({ project }: PurchaseControlsBlockProps) {
       },
       transporte: { transportadora: {} },
       autor: {
-        id: '',
-        nome: 'AUTOMAÇÃO',
-        avatar_url: null,
+        id: session.user.id,
+        nome: session.user.nome,
+        avatar_url: session.user.avatar_url,
       },
       dataInsercao: new Date().toISOString(),
     }

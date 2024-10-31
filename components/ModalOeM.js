@@ -151,6 +151,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
               {!['MONTAGEM E DESMONTAGEM', 'OPERAÇÃO E MANUTENÇÃO'].includes(project.tipoDeServico) ? (
                 <InfoCompraBlock
                   editor={false}
+                  session={session}
                   infoHolder={infoHolder}
                   project={project}
                   setInfo={setInfo}

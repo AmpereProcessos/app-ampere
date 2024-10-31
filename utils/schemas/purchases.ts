@@ -7,6 +7,7 @@ const PurchaseStatus = z.enum(
     'PENDENTE',
     'EM COTAÇÃO',
     'AGUARDANDO APROVAÇÃO',
+    'AGUARDANDO NOTA FUTURA',
     'AGUARDANDO PAGAMENTO',
     'AGUARDANDO COMPRA',
     'AGUARDANDO FATURAMENTO',

@@ -47,6 +47,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
         PENDENTE: [],
         'EM COTAÇÃO': [],
         'AGUARDANDO APROVAÇÃO': [],
+        'AGUARDANDO NOTA FUTURA': [],
         'AGUARDANDO PAGAMENTO': [],
         'AGUARDANDO COMPRA': [],
         'AGUARDANDO FATURAMENTO': [],
@@ -60,6 +61,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
       PENDENTE: purchaseControls.filter((c) => c.status == 'PENDENTE'),
       'EM COTAÇÃO': purchaseControls.filter((c) => c.status == 'EM COTAÇÃO'),
       'AGUARDANDO APROVAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO APROVAÇÃO'),
+      'AGUARDANDO NOTA FUTURA': purchaseControls.filter((c) => c.status == 'AGUARDANDO NOTA FUTURA'),
       'AGUARDANDO PAGAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO PAGAMENTO'),
       'AGUARDANDO COMPRA': purchaseControls.filter((c) => c.status == 'AGUARDANDO COMPRA'),
       'AGUARDANDO FATURAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO FATURAMENTO'),
@@ -129,7 +131,6 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
             <div className="flex items-center gap-1">
               <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
             </div>
-
             <button
               onClick={() => handleSetMode('card')}
               className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"

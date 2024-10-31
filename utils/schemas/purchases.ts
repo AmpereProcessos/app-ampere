@@ -268,6 +268,18 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   dataEfetivacao: 1,
 }
 
+export type TPurchaseControlDeliveryTracking = Pick<
+  TPurchaseControl,
+  'titulo' | 'dataPedido' | 'entrega' | 'fornecedor' | 'transporte' | 'dataInsercao'
+> & {
+  projetoDados?: {
+    _id: string
+    nomeDoContrato: TProject['nomeDoContrato']
+    telefone: TProject['telefone']
+    vendedor: TProject['vendedor']
+  }
+}
+export type TPurchaseControlDeliveryTrackingDTO = TPurchaseControlDeliveryTracking & { _id: string }
 export const PurchaseControlsQueryFiltersSchema = z.object({
   title: z.string({
     required_error: 'Filtro de pesquisa por título não informado.',

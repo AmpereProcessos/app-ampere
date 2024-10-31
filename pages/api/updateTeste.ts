@@ -2,7 +2,7 @@ import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
 import connectToWarehouseDatabase from '../../utils/services/mongodb/warehouse'
 import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import { calculateStringSimilarity, equipesTecnicas, formatDate } from '../../utils/constants'
-import { formatDateAsLocale, getProductsStr } from '../../utils/methods/formatting'
+import { formatDateAsLocale, formatWithoutDiacritics, getProductsStr } from '../../utils/methods/formatting'
 import { Collection, Db, ObjectId } from 'mongodb'
 import dayjs from 'dayjs'
 import { getContractValue } from '../../utils/methods/util/projects'
@@ -15,6 +15,7 @@ import { TPurchaseControl, TPurchaseControlTag } from '@/utils/schemas/purchases
 import connectToDatabase from '@/utils/services/mongodb/auxiliaries'
 import { TExpense } from '@/utils/schemas/expenses'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
+import { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 
 type TPreviousUser = {
   nome: string
@@ -46,10 +47,32 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
   // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
 
-  // const projectsCollection: Collection<TProject> = db.collection('dados')
+  const projectsCollection: Collection<TProject> = db.collection('dados')
+  const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')
+  const fileReferencesCollection: Collection<TFileReference> = crmDb.collection('file-references')
+
+  const projects = await projectsCollection.find({}, { projection: { nomeDoContrato: 1, compra: 1 } }).toArray()
+  const purchaseControls = await purchaseControlsCollection.find({}).toArray()
+  const fileReferences = await fileReferencesCollection.find({}).toArray()
+
+  const pendingDeliveryInProject = projects
+    .map((project) => {
+      const equivalentPurchaseControl = purchaseControls.find((purchaseControl) => purchaseControl.projeto.id == project._id.toString())
+
+      if (!equivalentPurchaseControl) return null
+      const isDeliveredInProject = !!project.compra.dataEntrega
+      const isDeliveredInPurchaseControl = !!equivalentPurchaseControl.entrega.dataEfetivacao
+      const projectFileReferences = fileReferences.filter((f) => f.idProjeto == project._id.toString())
+      const purchaseDeliveryRelatedFileReferences = projectFileReferences.find((f) => formatWithoutDiacritics(f.titulo, true).includes('ENTREGA'))
+      if (!!purchaseDeliveryRelatedFileReferences) return null
+      if (isDeliveredInProject || isDeliveredInPurchaseControl) return { projectId: project._id, projectName: project.nomeDoContrato }
+      return null
+    })
+    .filter((p) => !!p)
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
   // const projectsWithContractRequest = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
@@ -84,7 +107,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   //   .filter((s) => !!s)
 
   // const bkResponse = await projectsCollection.bulkWrite(bulkwrite)
-  return res.status(200).json('DESATIVADA')
+  return res.status(200).json({ pendingDeliveryInProject })
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { formatWithoutDiacritics, getProjectNestedFieldValue } from '../formatting'
 import { TProjectDTO } from '@/utils/schemas/projects'
+import { TPurchaseControlDeliveryTrackingDTO } from '@/utils/schemas/purchases'
 
 async function fetchProjects() {
   try {
@@ -85,7 +86,7 @@ export function useSupplyProjects({ enabled }: { enabled: boolean }) {
 async function fetchProjectsInDelivery() {
   try {
     const { data } = await axios.get('/api/projects/entregas')
-    return data.data as TProjectDTO[]
+    return data.data as TPurchaseControlDeliveryTrackingDTO[]
   } catch (error) {
     throw error
   }
@@ -104,25 +105,25 @@ export function useProjectsInDelivery() {
     cities: [],
     ufs: [],
   })
-  function matchSearch(project: TProjectDTO) {
+  function matchSearch(project: TPurchaseControlDeliveryTrackingDTO) {
     if (filters.search.trim().length == 0) return true
-    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
+    return formatWithoutDiacritics(project.titulo, true).includes(formatWithoutDiacritics(filters.search, true))
   }
 
-  function matchDeliveryStatus(project: TProjectDTO) {
+  function matchDeliveryStatus(project: TPurchaseControlDeliveryTrackingDTO) {
     if (filters.deliveryStatus.length == 0) return true
-    return filters.deliveryStatus.includes(project.compra.statusEntrega || '')
+    return filters.deliveryStatus.includes(project.entrega.status || '')
   }
-  function matchCity(project: TProjectDTO) {
+  function matchCity(project: TPurchaseControlDeliveryTrackingDTO) {
     if (filters.cities.length == 0) return true
-    return filters.cities.includes(project.cidade)
+    return filters.cities.includes(project.entrega.localizacao.cidade)
   }
-  function matchUf(project: TProjectDTO) {
+  function matchUf(project: TPurchaseControlDeliveryTrackingDTO) {
     if (filters.ufs.length == 0) return true
-    return filters.ufs.includes(project.uf)
+    return filters.ufs.includes(project.entrega.localizacao.uf)
   }
 
-  function handleModelData(data: TProjectDTO[]) {
+  function handleModelData(data: TPurchaseControlDeliveryTrackingDTO[]) {
     return data.filter((project) => matchSearch(project) && matchDeliveryStatus(project) && matchCity(project) && matchUf(project))
   }
   const query = useQuery({ queryKey: ['projects-in-delivery'], queryFn: fetchProjectsInDelivery, select: (data) => handleModelData(data) })

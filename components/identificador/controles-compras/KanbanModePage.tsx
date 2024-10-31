@@ -1,6 +1,6 @@
 import { usePurchaseControls, usePurchaseControlsTags } from '@/utils/methods/query/purchase-controls'
 import { Session } from 'next-auth'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import LoadingComponent from '@/components/utils/LoadingComponent'
@@ -24,6 +24,7 @@ import { TPurchasesControlPageModes } from '@/pages/suprimentos/controle-compras
 import { FaRotate } from 'react-icons/fa6'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { FaExpand } from 'react-icons/fa'
 
 type TPurchaseControlByStatus = {
   title: string
@@ -208,12 +209,30 @@ type FunnelListProps = {
   handleItemClick: (id: string) => void
 }
 function FunnelList({ session, title, items, handleItemClick }: FunnelListProps) {
+  const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(true)
   return (
     <Droppable droppableId={title.toString()}>
       {(provided) => (
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
-            <h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
+            <div className="flex w-full items-center gap-2">
+              <button
+                onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
+                className={cn(
+                  'flex items-center rounded-full p-1 text-xs text-white',
+                  funnelListItemsExpandedModeActive ? 'bg-gray-500' : 'bg-transparent'
+                )}
+              >
+                <FaExpand />
+              </button>
+              <h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
+              <button
+                onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
+                className={cn('hidden items-center rounded p-1 text-white', funnelListItemsExpandedModeActive ? 'bg-gray-50' : 'bg-transparent')}
+              >
+                <FaExpand />
+              </button>
+            </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
                 <p>
@@ -225,7 +244,13 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
           </div>
           <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2 ">
             {items.map((item, index) => (
-              <FunnelListItem key={item._id} item={item} index={index} handleClick={handleItemClick} />
+              <FunnelListItem
+                key={item._id}
+                funnelListItemsExpandedModeActive={funnelListItemsExpandedModeActive}
+                item={item}
+                index={index}
+                handleClick={handleItemClick}
+              />
             ))}
             {provided.placeholder}
           </div>
@@ -236,17 +261,22 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
 }
 
 type FunnelListItemProps = {
+  funnelListItemsExpandedModeActive: boolean
   item: TPurchaseControlKanbanSimplifiedDTO
   index: number
   handleClick: (id: string) => void
 }
-function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
+function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handleClick }: FunnelListItemProps) {
+  const [itemExpandedModeActive, setItemExpandedModeActive] = useState(funnelListItemsExpandedModeActive)
   function getDeliveryStatusTag(status: TPurchaseControlKanbanSimplifiedDTO['entrega']['status']) {
     if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
     if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
     if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
   }
 
+  useEffect(() => {
+    setItemExpandedModeActive(funnelListItemsExpandedModeActive)
+  }, [funnelListItemsExpandedModeActive])
   return (
     <Draggable draggableId={item._id.toString()} index={index}>
       {(provided) => (
@@ -287,50 +317,58 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                 ))}
               </div>
             ) : null}
-            <div className="flex w-full items-center justify-center">
-              {item.liberacao.data ? <CheckCheck color="#22c55e" height={13} width={13} /> : <X color="#ef4444" height={13} width={13} />}
-              <h1 className="text-[0.6rem] text-primary/80">{item.liberacao.data ? 'LIBERADO' : 'NÃO LIBERADO'}</h1>
-            </div>
-            <div className="flex w-full flex-wrap items-center justify-around gap-2">
-              <div className="flex items-center gap-1">
-                <Factory height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
-              </div>
-              <div className="flex items-center gap-1">
-                <Truck height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.transporte.transportadora.nome || 'TRANSPORTADORA INDEFINIDO'}</h1>
-              </div>
-              <div className="flex items-center gap-1">
-                <ScrollText height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">
-                  FATURAMENTOS {item.faturamentos.filter((f) => !!f.data).length}/{item.faturamentos.length}
-                </h1>
-              </div>
-            </div>
-            <div className="flex w-full flex-wrap items-center justify-center gap-2">
-              <div className="flex items-center gap-1">
-                <BsCalendar width={10} height={10} />
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
-                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
-              </div>
-              <div className="flex items-center gap-1">
-                <BsCalendarEvent width={10} height={10} />
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
-                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.entrega.dataPrevisao) || 'N/A'}</h1>
-              </div>
-              <div className="flex items-center gap-1">
-                <BsCalendarCheck width={10} height={10} />
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
-                <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
-                  {formatDateAsLocale(item.entrega.dataEfetivacao) || 'N/A'}
-                </h1>
-              </div>
-            </div>
-            <div className="flex w-full items-center justify-center gap-1">
-              <BsCalendarCheck width={10} height={10} />
-              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">STATUS DE ENTREGA</h1>
-              <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(item.entrega.status)}</h1>
-            </div>
+            {itemExpandedModeActive ? (
+              <>
+                <div className="flex w-full items-center justify-center">
+                  {item.liberacao.data ? <CheckCheck color="#22c55e" height={13} width={13} /> : <X color="#ef4444" height={13} width={13} />}
+                  <h1 className="text-[0.6rem] text-primary/80">{item.liberacao.data ? 'LIBERADO' : 'NÃO LIBERADO'}</h1>
+                </div>
+                <div className="flex w-full flex-wrap items-center justify-around gap-2">
+                  <div className="flex items-center gap-1">
+                    <Factory height={13} width={13} />
+                    <h1 className="text-[0.6rem] font-medium text-primary/80">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Truck height={13} width={13} />
+                    <h1 className="text-[0.6rem] font-medium text-primary/80">
+                      {item.transporte.transportadora.nome || 'TRANSPORTADORA INDEFINIDO'}
+                    </h1>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <ScrollText height={13} width={13} />
+                    <h1 className="text-[0.6rem] font-medium text-primary/80">
+                      FATURAMENTOS {item.faturamentos.filter((f) => !!f.data).length}/{item.faturamentos.length}
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex w-full flex-wrap items-center justify-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <BsCalendar width={10} height={10} />
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <BsCalendarEvent width={10} height={10} />
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+                      {formatDateAsLocale(item.entrega.dataPrevisao) || 'N/A'}
+                    </h1>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <BsCalendarCheck width={10} height={10} />
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+                      {formatDateAsLocale(item.entrega.dataEfetivacao) || 'N/A'}
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex w-full items-center justify-center gap-1">
+                  <BsCalendarCheck width={10} height={10} />
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">STATUS DE ENTREGA</h1>
+                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(item.entrega.status)}</h1>
+                </div>
+              </>
+            ) : null}
           </div>
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex grow flex-wrap items-center gap-2">

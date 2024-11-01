@@ -34,3 +34,8 @@ export function getModulesQty(products: TProductItem[] | undefined) {
   const qty = products.filter((p) => p.categoria == 'MÓDULO').reduce((acc, current) => acc + current.qtde, 0)
   return qty
 }
+
+export function getTextBetweenParentheses(text: string): string | null {
+  const match = text.match(/\((.*?)\)/)
+  return match ? match[1] : null
+}

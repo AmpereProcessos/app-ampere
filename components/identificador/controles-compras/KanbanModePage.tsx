@@ -1,7 +1,7 @@
 import { usePurchaseControls, usePurchaseControlsTags } from '@/utils/methods/query/purchase-controls'
 import { Session } from 'next-auth'
 import React, { useEffect, useState } from 'react'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle, IoMdContract, IoMdExpand } from 'react-icons/io'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -9,7 +9,7 @@ import { getErrorMessage } from '@/utils/methods/handlers'
 import { TPurchaseControlDTO, TPurchaseControlKanbanSimplified, TPurchaseControlKanbanSimplifiedDTO } from '@/utils/schemas/purchases'
 import { MdDashboard } from 'react-icons/md'
 import Avatar from '@/components/utils/Avatar'
-import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
+import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from '@/utils/methods/formatting'
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
 import { Button } from '@/components/ui/button'
 import NewPurchaseControl from './modals/NewPurchaseControl'
@@ -20,11 +20,12 @@ import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-control
 import toast from 'react-hot-toast'
 import ControlPurchaseControl from './modals/ControlPurchaseControl'
 import { cn } from '@/lib/utils'
-import { TPurchasesControlPageModes } from '@/pages/suprimentos/controle-compras'
+import { TPurchaseControlKanbanListExpandedModes, TPurchasesControlPageModes } from '@/pages/suprimentos/controle-compras'
 import { FaRotate } from 'react-icons/fa6'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { FaExpand } from 'react-icons/fa'
+import { handleSetCookie } from '@/utils/methods/cookies'
 
 type TPurchaseControlByStatus = {
   title: string
@@ -34,8 +35,9 @@ type TPurchaseControlByStatus = {
 type PurchaseControlsKanbanModePageProps = {
   session: Session
   handleSetMode: (mode: TPurchasesControlPageModes) => void
+  initialKanbanListExpandedModeOptions: TPurchaseControlKanbanListExpandedModes
 }
-function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseControlsKanbanModePageProps) {
+function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanListExpandedModeOptions }: PurchaseControlsKanbanModePageProps) {
   const queryClient = useQueryClient()
 
   const { data: tags } = usePurchaseControlsTags()
@@ -174,6 +176,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode }: PurchaseCont
                   session={session}
                   title={controlsByStatus.title}
                   items={controlsByStatus.items}
+                  initialKanbanListExpandedModeOptions={initialKanbanListExpandedModeOptions}
                   handleItemClick={(id) => setEditPurchaseControlModal({ id, isOpen: true })}
                 />
               ))}
@@ -206,10 +209,15 @@ type FunnelListProps = {
   session: Session
   title: string
   items: TPurchaseControlKanbanSimplifiedDTO[]
+  initialKanbanListExpandedModeOptions: TPurchaseControlKanbanListExpandedModes
   handleItemClick: (id: string) => void
 }
-function FunnelList({ session, title, items, handleItemClick }: FunnelListProps) {
-  const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(true)
+function FunnelList({ session, title, items, initialKanbanListExpandedModeOptions, handleItemClick }: FunnelListProps) {
+  const initialKanbanListExpandedMode = initialKanbanListExpandedModeOptions[title] || null
+  const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(
+    initialKanbanListExpandedMode == 'inactive' ? false : true
+  )
+
   return (
     <Droppable droppableId={title.toString()}>
       {(provided) => (
@@ -217,20 +225,38 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
               <button
-                onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
+                onClick={() => {
+                  if (!funnelListItemsExpandedModeActive) {
+                    handleSetCookie({
+                      ctx: null,
+                      key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
+                      value: 'active',
+                      path: '/suprimentos/controle-compras',
+                    })
+                  } else {
+                    handleSetCookie({
+                      ctx: null,
+                      key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
+                      value: 'inactive',
+                      path: '/suprimentos/controle-compras',
+                    })
+                  }
+
+                  setFunnelListItemsExpandedModeActive((prev) => !prev)
+                }}
                 className={cn(
                   'flex items-center rounded-full p-1 text-xs text-white',
-                  funnelListItemsExpandedModeActive ? 'bg-gray-500' : 'bg-transparent'
+                  funnelListItemsExpandedModeActive ? 'bg-slate-400' : 'bg-transparent'
                 )}
               >
-                <FaExpand />
+                {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button>
               <h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
               <button
                 onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
                 className={cn('hidden items-center rounded p-1 text-white', funnelListItemsExpandedModeActive ? 'bg-gray-50' : 'bg-transparent')}
               >
-                <FaExpand />
+                {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button>
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
@@ -287,7 +313,15 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
           className="relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm"
         >
           <div className="flex w-full items-center justify-between gap-2">
-            <h1 className="text-sm font-bold leading-none tracking-tight">{item.titulo}</h1>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setItemExpandedModeActive((prev) => !prev)}
+                className={cn('flex items-center rounded-full p-1 text-xs text-black', itemExpandedModeActive ? 'bg-slate-400' : 'bg-transparent')}
+              >
+                {itemExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
+              </button>
+              <h1 className="text-sm font-bold leading-none tracking-tight">{item.titulo}</h1>
+            </div>
             <button
               onClick={() => handleClick(item._id)}
               className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"

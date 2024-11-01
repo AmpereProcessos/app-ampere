@@ -9,8 +9,9 @@ import { handleSetCookie } from '@/utils/methods/cookies'
 import PurchaseControlsCardModePage from '@/components/identificador/controles-compras/CardModePage'
 import { getTextBetweenParentheses } from '@/utils/methods/extracting'
 import { formatWithoutDiacritics } from '@/utils/methods/formatting'
+import PurchaseControlsGroupedModePage from '@/components/identificador/controles-compras/GroupedModePage'
 
-export type TPurchasesControlPageModes = 'card' | 'kanban'
+export type TPurchasesControlPageModes = 'card' | 'kanban' | 'grouped'
 export type TPurchaseControlKanbanListExpandedModes = {
   [key: string]: 'active' | 'inactive' | null
 }
@@ -29,13 +30,17 @@ function PurchasesControl({ initialMode, kanbanListExpandedModeOptions }: Purcha
   }
 
   if (status != 'authenticated') return <LoadingPage />
+  if (mode == 'kanban')
+    return (
+      <PurchaseControlsKanbanModePage
+        initialKanbanListExpandedModeOptions={kanbanListExpandedModeOptions}
+        session={session}
+        handleSetMode={handleSetMode}
+      />
+    )
   if (mode == 'card') return <PurchaseControlsCardModePage session={session} handleSetMode={handleSetMode} />
   return (
-    <PurchaseControlsKanbanModePage
-      initialKanbanListExpandedModeOptions={kanbanListExpandedModeOptions}
-      session={session}
-      handleSetMode={handleSetMode}
-    />
+    <PurchaseControlsGroupedModePage initialListExpandedModeOptions={kanbanListExpandedModeOptions} session={session} handleSetMode={handleSetMode} />
   )
 }
 

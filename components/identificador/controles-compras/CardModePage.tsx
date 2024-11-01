@@ -55,7 +55,7 @@ function PurchaseControlsCardModePage({ session, handleSetMode }: PurchaseContro
             </div>
 
             <button
-              onClick={() => handleSetMode('kanban')}
+              onClick={() => handleSetMode('grouped')}
               className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
             >
               <FaRotate />

@@ -160,36 +160,17 @@ export const ppsCallStatus = [
   },
 ]
 export const supplementationStatus = [
-  {
-    id: 1,
-    label: 'NÃO DEFINIDO',
-    value: 'NÃO DEFINIDO',
-  },
-  {
-    id: 2,
-    label: 'CONCLUIDA',
-    value: 'CONCLUIDA',
-  },
-  {
-    id: 3,
-    label: 'COMPRA REALIZADA',
-    value: 'COMPRA REALIZADA',
-  },
-  {
-    id: 4,
-    label: 'AGUARDANDO PARECER DE ACESSO',
-    value: 'AGUARDANDO PARECER DE ACESSO',
-  },
-  {
-    id: 5,
-    label: 'AGUARDANDO PAGAMENTO',
-    value: 'AGUARDANDO PAGAMENTO',
-  },
-  {
-    id: 6,
-    label: 'PREDEFINIÇÃO DE EQUIPAMENTOS',
-    value: 'PREDEFINIÇÃO DE EQUIPAMENTOS',
-  },
+  { id: 1, label: 'PENDENTE', value: 'PENDENTE' },
+  { id: 2, label: 'EM COTAÇÃO', value: 'EM COTAÇÃO' },
+  { id: 3, label: 'AGUARDANDO APROVAÇÃO', value: 'AGUARDANDO APROVAÇÃO' },
+  { id: 4, label: 'AGUARDANDO NOTA FUTURA', value: 'AGUARDANDO NOTA FUTURA' },
+  { id: 5, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
+  { id: 6, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
+  { id: 7, label: 'AGUARDANDO FATURAMENTO', value: 'AGUARDANDO FATURAMENTO' },
+  { id: 8, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE' },
+  { id: 9, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA' },
+  { id: 10, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
+  { id: 11, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
 ]
 export const contractStatus = [
   {

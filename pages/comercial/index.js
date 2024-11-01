@@ -24,13 +24,11 @@ import DateInput from '../../components/inputs/Date'
 import SelectInput from '../../components/inputs/Select'
 import {
   allActiveSellers,
-  allSellers,
   contractStatus,
   HomologationControlStatus,
   insiders,
-  sellers,
+  PurchaseControlStatus,
   serviceTypes,
-  supplementationStatus,
 } from '../../utils/select-options'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { formatDateInputChange } from '../../utils/methods/shared'
@@ -369,7 +367,7 @@ function Comercial() {
                       width={'100%'}
                       label={'STATUS DE SUPLEMENTAÇÃO'}
                       selected={filters.supplyStatus}
-                      options={supplementationStatus}
+                      options={PurchaseControlStatus}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
                         setFilters((prev) => ({

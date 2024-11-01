@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { formatDate, formatDecimalPlaces } from '../../utils/constants'
-import { accessGrantingStatus, HomologationControlStatus, supplementationStatus } from '../../utils/select-options'
+import { accessGrantingStatus, HomologationControlStatus, PurchaseControlStatus } from '../../utils/select-options'
 import { useSupplyProjects } from '../../utils/methods/query/supply'
 import { formatDateInputChange } from '../../utils/methods/shared'
 
@@ -298,7 +298,7 @@ function Suprimentos() {
                   <MultipleSelectInput
                     label={'STATUS DE SUPLEMENTAÇÃO'}
                     selected={filters.supplyStatus}
-                    options={supplementationStatus}
+                    options={PurchaseControlStatus}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

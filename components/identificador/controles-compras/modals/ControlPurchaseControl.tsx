@@ -79,6 +79,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
         await updateProject({
           id: purchaseControl.projeto.id,
           changes: {
+            'compra.status': infoHolder.status,
             'compra.liberacao': !!infoHolder.liberacao.data,
             'compra.dataLiberacao': infoHolder.liberacao.data,
             'compra.fornecedor': infoHolder.fornecedor.nome,

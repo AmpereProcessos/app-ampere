@@ -47,67 +47,40 @@ const UFEquivalent = {
 }
 
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
+  // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
   // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
 
-  const projectsCollection: Collection<TProject> = db.collection('dados')
-  const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')
-  const fileReferencesCollection: Collection<TFileReference> = crmDb.collection('file-references')
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
+  // const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')
 
-  const projects = await projectsCollection.find({}, { projection: { nomeDoContrato: 1, compra: 1 } }).toArray()
-  const purchaseControls = await purchaseControlsCollection.find({}).toArray()
-  const fileReferences = await fileReferencesCollection.find({}).toArray()
+  // const projects = await projectsCollection
+  //   .find({
+  //     tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+  //     'compra.liberacao': true,
+  //     'compra.status': { $ne: 'CONCLUIDA' },
+  //   })
+  //   .toArray()
+  // const purchaseControls = await purchaseControlsCollection.find({}).toArray()
 
-  const pendingDeliveryInProject = projects
-    .map((project) => {
-      const equivalentPurchaseControl = purchaseControls.find((purchaseControl) => purchaseControl.projeto.id == project._id.toString())
-
-      if (!equivalentPurchaseControl) return null
-      const isDeliveredInProject = !!project.compra.dataEntrega
-      const isDeliveredInPurchaseControl = !!equivalentPurchaseControl.entrega.dataEfetivacao
-      const projectFileReferences = fileReferences.filter((f) => f.idProjeto == project._id.toString())
-      const purchaseDeliveryRelatedFileReferences = projectFileReferences.find((f) => formatWithoutDiacritics(f.titulo, true).includes('ENTREGA'))
-      if (!!purchaseDeliveryRelatedFileReferences) return null
-      if (isDeliveredInProject || isDeliveredInPurchaseControl) return { projectId: project._id, projectName: project.nomeDoContrato }
-      return null
-    })
-    .filter((p) => !!p)
-  // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
-
-  // const projectsWithContractRequest = await projectsCollection.find({ idSolicitacaoContrato: { $ne: null } }).toArray()
-  // const contractRequests = await contractRequestsCollection.find({}).toArray()
-
-  // const bulkwrite = projectsWithContractRequest
+  // const bulkwriteArr = projects
   //   .map((project) => {
-  //     const equivalentRequest = contractRequests.find((c) => c._id.toString() == project.idSolicitacaoContrato)
-  //     if (!equivalentRequest) return null
-
-  //     const isStructureAdequationApplicable = project.estruturaPersonalizada.aplicavel == 'SIM'
-  //     if (!isStructureAdequationApplicable && ['CARPORT', 'SOLO', 'ESTRUTURA PERSONALIZADA'].includes(equivalentRequest.tipoEstrutura || ''))
-  //       return {
-  //         updateOne: {
-  //           filter: { _id: new ObjectId(project._id) },
-  //           update: {
-  //             $set: {
-  //               'estruturaPersonalizada.aplicavel': 'SIM',
-  //             },
+  //     const purchaseControl = purchaseControls.find((p) => p.projeto.id == project._id.toString())
+  //     if (!purchaseControl) return null
+  //     return {
+  //       updateOne: {
+  //         filter: { _id: new ObjectId(project._id) },
+  //         update: {
+  //           $set: {
+  //             'compra.status': purchaseControl.status,
   //           },
   //         },
-  //       }
-  //     // return {
-  //     //   updateOne: {
-  //     //     filter: { _id: new ObjectId(project._id) },
-  //     //     update: {
-  //     //       $set: {},
-  //     //     },
-  //     //   },
-  //     // }
+  //       },
+  //     }
   //   })
-  //   .filter((s) => !!s)
-
-  // const bkResponse = await projectsCollection.bulkWrite(bulkwrite)
-  return res.status(200).json({ pendingDeliveryInProject })
+  //   .filter((r) => !!r)
+  // const bkResponse = await projectsCollection.bulkWrite(bulkwriteArr)
+  return res.status(200).json('DESATIVADA')
   // const contractRequestsCollection = db.collection('contrato')
 
   // const updateManyResponse = await contractRequestsCollection.updateMany(

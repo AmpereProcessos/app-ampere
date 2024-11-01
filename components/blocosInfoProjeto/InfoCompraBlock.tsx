@@ -5,7 +5,7 @@ import { formatDate, formatToMoney, fornecedores, statusLiberacao } from '../../
 import ProjectKitInfo from '../identificador/suprimentos/ProjectKitInfo'
 import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMaterialInfo'
 import SelectInputPersonalized from '../inputs/Select'
-import { deliveryStatus, supplementationStatus } from '../../utils/select-options'
+import { deliveryStatus, PurchaseControlStatus } from '../../utils/select-options'
 import CheckboxInput from '../inputs/Checkbox'
 import { BsCalendarCheck, BsCalendarEvent, BsCalendarFill, BsCalendarPlus, BsCheckAll } from 'react-icons/bs'
 import { FaMoon } from 'react-icons/fa'
@@ -164,7 +164,7 @@ function InfoCompraBlock({
           label="STATUS DA SUPLEMENTAÇÃO"
           labelClassName="uppercase font-bold font-raleway text-center text-sm"
           selectedItemLabel={'INDEFINIDO'}
-          options={supplementationStatus}
+          options={PurchaseControlStatus}
           value={infoHolder.compra.status}
           handleChange={(value) => {
             setChanges((prev) => ({ ...prev, 'compra.status': value }))

@@ -72,7 +72,7 @@ export function formatLocation({
   includeCEP?: boolean
 }) {
   var addressStr = ''
-  if (includeCEP && location.cep) addressStr + `${location.cep}`
+  console.log('INCLUDE CEP', includeCEP, 'CEP', location.cep)
   if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`
   if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`
   if (!location.endereco && !includeUf && !includeCity) return ''
@@ -81,6 +81,8 @@ export function formatLocation({
   if (location.bairro) addressStr = addressStr + `, ${location.bairro}`
   if (location.latitude) addressStr = addressStr + `, LAT ${location.latitude}`
   if (location.longitude) addressStr = addressStr + `, LONG ${location.longitude}`
+  if (includeCEP && location.cep) addressStr = addressStr + `, CEP:${location.cep}`
+
   addressStr += '.'
   return addressStr.toUpperCase()
 }

@@ -19,6 +19,8 @@ type PurchaseControlPageProps = {
 }
 function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPageProps) {
   const purchaseControl: TPurchaseControlWithProjectDTO = JSON.parse(purchaseControlJSON)
+  console.log(purchaseControl)
+
   if (!!error) return <ErrorComponent msg={error} />
 
   return (

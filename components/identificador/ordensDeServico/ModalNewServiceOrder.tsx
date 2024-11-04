@@ -82,12 +82,12 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }: Moda
     },
     descricao: '', // servico executado
     localizacao: {
-      cep: project.cep.toString(),
+      cep: project.cep?.toString() || '',
       uf: project.uf,
       cidade: project.cidade,
       bairro: project.bairro,
       endereco: project.logradouro,
-      numeroOuIdentificador: project.numeroResidencia.toString() || '',
+      numeroOuIdentificador: project.numeroResidencia?.toString() || '',
     },
     responsavel: {
       nome: project.obra?.equipeResp || '',

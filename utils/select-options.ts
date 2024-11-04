@@ -1527,8 +1527,9 @@ export const PurchaseCompositionItemCategories = [
 ]
 export const PurchaseDeliveryStatus: { id: number; label: string; value: TPurchaseControl['entrega']['status'] }[] = [
   { id: 1, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
-  { id: 2, label: 'EM ROTA', value: 'EM ROTA' },
-  { id: 3, label: 'ENTREGUE', value: 'ENTREGUE' },
+  { id: 2, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE' },
+  { id: 3, label: 'EM ROTA', value: 'EM ROTA' },
+  { id: 4, label: 'ENTREGUE', value: 'ENTREGUE' },
 ]
 
 export const TagsColorPalette = [

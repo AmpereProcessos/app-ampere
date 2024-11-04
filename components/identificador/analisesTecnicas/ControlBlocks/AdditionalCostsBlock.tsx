@@ -89,6 +89,10 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
     toast.success('Custo removido!')
   }
   function saveChanges({ index }: { index: number }) {
+    if (!costHolder.custoUnitario || costHolder.custoUnitario <= 0) {
+      toast.error('Preencha o custo unitário do item de custo.')
+      return
+    }
     const costsList = [...infoHolder.custos]
     const cost = {
       //
@@ -98,6 +102,8 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
       qtde: costHolder.qtde,
       custoUnitario: costHolder.custoUnitario,
       total: costHolder.qtde * (costHolder.custoUnitario || 0),
+      totalVendaSimples: getSaleValue(costHolder.qtde * costHolder.custoUnitario, false),
+      totalVendaFaturavel: getSaleValue(costHolder.qtde * costHolder.custoUnitario, true),
     }
     costsList[index] = cost
     setInfoHolder((prev) => ({ ...prev, custos: costsList }))

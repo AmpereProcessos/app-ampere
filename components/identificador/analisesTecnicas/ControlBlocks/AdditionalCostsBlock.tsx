@@ -65,8 +65,12 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
       qtde: costHolder.qtde,
       custoUnitario: costHolder.custoUnitario,
       total: costHolder.qtde * costHolder.custoUnitario,
-      totalVendaSimples: getSaleValue(costHolder.qtde * costHolder.custoUnitario, false),
-      totalVendaFaturavel: getSaleValue(costHolder.qtde * costHolder.custoUnitario, true),
+      totalVendaSimples: costHolder.totalVendaSimples
+        ? costHolder.totalVendaSimples
+        : getSaleValue(costHolder.qtde * costHolder.custoUnitario, false),
+      totalVendaFaturavel: costHolder.totalVendaFaturavel
+        ? costHolder.totalVendaFaturavel
+        : getSaleValue(costHolder.qtde * costHolder.custoUnitario, true),
     }
     costsList.push(newCost)
     setInfoHolder((prev) => ({ ...prev, custos: costsList }))
@@ -102,8 +106,12 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
       qtde: costHolder.qtde,
       custoUnitario: costHolder.custoUnitario,
       total: costHolder.qtde * (costHolder.custoUnitario || 0),
-      totalVendaSimples: getSaleValue(costHolder.qtde * costHolder.custoUnitario, false),
-      totalVendaFaturavel: getSaleValue(costHolder.qtde * costHolder.custoUnitario, true),
+      totalVendaSimples: costHolder.totalVendaSimples
+        ? costHolder.totalVendaSimples
+        : getSaleValue(costHolder.qtde * costHolder.custoUnitario, false),
+      totalVendaFaturavel: costHolder.totalVendaFaturavel
+        ? costHolder.totalVendaFaturavel
+        : getSaleValue(costHolder.qtde * costHolder.custoUnitario, true),
     }
     costsList[index] = cost
     setInfoHolder((prev) => ({ ...prev, custos: costsList }))
@@ -278,7 +286,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
                       </p>
                     </div>
                     <div className="flex items-center gap-2 text-green-500">
-                      <ImPriceTag color="rgb(34,197,94)" />
+                      <MdAttachMoney color="rgb(34,197,94)" />
                       <p className="text-sm font-medium text-gray-500">
                         {cost.custoUnitario ? formatToMoney(cost.custoUnitario) : 'R$ 0,00'} / {cost.grandeza}
                       </p>

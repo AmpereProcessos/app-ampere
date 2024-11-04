@@ -30,3 +30,14 @@ export async function createPurchaseControlTag(info: TPurchaseControlTag) {
     throw error
   }
 }
+
+export async function deletePurchaseControl({ id }: { id: string }) {
+  try {
+    const { data } = await axios.delete(`/api/controles-compras?id=${id}`)
+
+    if (typeof data.message != 'string') return 'Controle de compra excluída com sucesso !'
+    return data.message as string
+  } catch (error) {
+    throw error
+  }
+}

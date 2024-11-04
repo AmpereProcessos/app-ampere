@@ -149,4 +149,26 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
   return res.status(201).json({ message: 'Controle de compras atualizado com sucesso !' })
 }
 
-export default apiHandler({ GET: getPurchasesControlsRoute, POST: createPurchaseControlRoute, PUT: updatePurchaseControlRoute })
+const deletePurchaseControlRoute: NextApiHandler<any> = async (req, res) => {
+  const session = await validateAuthenticationWithSession(req, res)
+
+  const { id } = req.query
+  console.log('ID PARA DELETE', id)
+  if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
+
+  const db: Db = await connectToDatabase(process.env.DB_KEY)
+  const collection = db.collection<TPurchaseControl>('controles-compras')
+
+  const deleteResponse = await collection.deleteOne({ _id: new ObjectId(id) })
+  if (!deleteResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao excluir o controle de compra.')
+  if (deleteResponse.deletedCount == 0) throw new createHttpError.NotFound('Controle de compra não encontrado.')
+
+  return res.status(201).json({ data: 'Controle de compra excluído com sucesso !', message: 'Controle de compra excluído com sucesso !' })
+}
+
+export default apiHandler({
+  GET: getPurchasesControlsRoute,
+  POST: createPurchaseControlRoute,
+  PUT: updatePurchaseControlRoute,
+  DELETE: deletePurchaseControlRoute,
+})

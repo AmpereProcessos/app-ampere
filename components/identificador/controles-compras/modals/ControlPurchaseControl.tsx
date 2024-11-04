@@ -1,5 +1,5 @@
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { createPurchaseControl, updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
+import { createPurchaseControl, deletePurchaseControl, updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import { Session } from 'next-auth'
 import React, { useEffect, useState } from 'react'
@@ -102,6 +102,13 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     affectedQueryKey: affectedQueryKey,
     callbackFn: async () => queryClient.invalidateQueries({ queryKey: ['purchase-control-by-id', purchaseControlId] }),
   })
+  const { mutate: deleteMutation, isPending: isDeleteLoading } = useMutationWithFeedback({
+    mutationKey: ['delete-purchase-control', purchaseControlId],
+    mutationFn: deletePurchaseControl,
+    queryClient: queryClient,
+    affectedQueryKey: affectedQueryKey,
+    callbackFn: () => closeModal(),
+  })
   function addProductToComposition(product: TPurchaseControl['composicao'][number]) {
     setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }))
     toast.success('Produto adicionado à composição')
@@ -169,9 +176,17 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                 <PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               </div>
-              <div className="flex w-full items-center justify-end">
+              <div className="flex w-full flex-wrap items-center justify-between gap-2">
                 <LoadingButton
-                  loading={isUpdateLoading}
+                  loading={isDeleteLoading || isUpdateLoading}
+                  // @ts-ignore
+                  onClick={() => deleteMutation({ id: purchaseControlId })}
+                  variant={'destructive'}
+                >
+                  EXCLUIR CONTROLE DE COMPRA
+                </LoadingButton>
+                <LoadingButton
+                  loading={isUpdateLoading || isDeleteLoading}
                   onClick={() =>
                     // @ts-ignore
                     mutate({ id: purchaseControlId, changes: infoHolder })

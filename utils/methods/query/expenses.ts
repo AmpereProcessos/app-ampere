@@ -144,7 +144,7 @@ async function fetchPendingPayments() {
 }
 
 type UsePendingPaymentsParams = {
-  initialFilters: { search: string; apportionments: string[]; categories: string[] }
+  initialFilters: { search: string; apportionments: string[]; categories: string[]; previewPeriod: { after?: string | null; before?: string | null } }
 }
 export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams) {
   const [filters, setFilters] = useState(initialFilters)
@@ -157,8 +157,19 @@ export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams)
     if (filters.categories.length == 0) return true
     return filters.categories.includes(payment.categoria)
   }
+  function matchPaymentPreviewDate(payment: TPaymentUnwindSimplifiedDTO) {
+    const afterFilterDate = filters.previewPeriod.after ? new Date(filters.previewPeriod.after) : null
+    const beforeFilterDate = filters.previewPeriod.before ? new Date(filters.previewPeriod.before) : null
+    const paymentPreviewDate = new Date(payment.pagamento.dataPrevisaoPagamento)
+    if (!afterFilterDate && !beforeFilterDate) return true
+    if (afterFilterDate && !beforeFilterDate) return paymentPreviewDate >= afterFilterDate
+    if (!afterFilterDate && beforeFilterDate) return paymentPreviewDate <= beforeFilterDate
+    if (!!afterFilterDate && !!beforeFilterDate) return paymentPreviewDate >= afterFilterDate && paymentPreviewDate <= beforeFilterDate
+    return false
+  }
+
   function handleModelData(data: TPaymentUnwindSimplifiedDTO[]) {
-    return data.filter((receipt) => matchApportionments(receipt) && matchCategories(receipt))
+    return data.filter((payment) => matchApportionments(payment) && matchCategories(payment) && matchPaymentPreviewDate(payment))
   }
 
   return {

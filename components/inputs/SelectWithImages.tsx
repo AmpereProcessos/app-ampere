@@ -1,24 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { HiCheck } from 'react-icons/hi'
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io'
-import { VariableSizeList } from 'react-window'
+
 import { Drawer, DrawerContent } from '../ui/drawer'
 import { cn } from '@/lib/utils'
 import { useMediaQuery } from '@/lib/hooks/media-query'
+import { formatNameAsInitials } from '@/utils/methods/formatting'
+import Avatar from '../utils/Avatar'
 
 type SelectOption<T> = {
   id: string | number
-  value: any
+  value: T
   label: string
+  url?: string
 }
-type SelectInputVirtualizedProps<T> = {
+type SelectWithImagesProps<T> = {
   width?: string
   label: string
   labelClassName?: string
   holderClassName?: string
   showLabel?: boolean
-  value: T | null
+  value: any | null
   editable?: boolean
   selectedItemLabel: string
   options: SelectOption<T>[] | null
@@ -26,7 +28,7 @@ type SelectInputVirtualizedProps<T> = {
   onReset: () => void
 }
 
-function SelectInputVirtualized<T>({
+function SelectWithImages<T>({
   width,
   label,
   labelClassName,
@@ -38,12 +40,12 @@ function SelectInputVirtualized<T>({
   selectedItemLabel,
   handleChange,
   onReset,
-}: SelectInputVirtualizedProps<T>) {
+}: SelectWithImagesProps<T>) {
   function getValueID(value: T | null) {
     if (options && value) {
       // console.log("OPTIONS", options);
       // console.log("VALUE", value);
-      const filteredOption = options?.find((option) => option.value === value)
+      const filteredOption = options?.find((option) => option.value === value || option.id === value)
       if (filteredOption) return filteredOption.id
       else return null
     } else return null
@@ -54,9 +56,9 @@ function SelectInputVirtualized<T>({
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const [selectMenuIsOpen, setSelectMenuIsOpen] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | string | null>(getValueID(value))
-  const [searchFilter, setSearchFilter] = useState<string>('')
   const [dropdownDirection, setDropdownDirection] = useState<'up' | 'down'>('down')
 
+  const [searchFilter, setSearchFilter] = useState<string>('')
   const inputIdentifier = label.toLowerCase().replace(' ', '_')
   function handleSelect(id: string | number, item: T) {
     handleChange(item)
@@ -99,6 +101,7 @@ function SelectInputVirtualized<T>({
       document.removeEventListener('click', (e) => handleClickOutside(e), true)
     }
   }, [onClickOutside])
+
   useEffect(() => {
     if (selectMenuIsOpen && ref.current) {
       const rect = ref.current.getBoundingClientRect()
@@ -112,27 +115,6 @@ function SelectInputVirtualized<T>({
       }
     }
   }, [selectMenuIsOpen])
-  const List = ({ height, width, list }: { height: number | string; width: number | string; list: SelectOption<T>[] }) => (
-    <VariableSizeList
-      height={height}
-      width={width}
-      itemCount={list ? list.length : 0}
-      itemSize={(index) => 30} // Adjust the item height as needed
-    >
-      {({ index, style }) => (
-        <div
-          style={style}
-          onClick={() => handleSelect(list[index]?.id || 0, list[index]?.value)}
-          className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${
-            selectedId === list[index]?.id ? 'bg-primary/20' : ''
-          }`}
-        >
-          <p className="grow text-sm font-medium text-primary">{list[index]?.label}</p>
-          {selectedId === list[index]?.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
-        </div>
-      )}
-    </VariableSizeList>
-  )
 
   if (isDesktop)
     return (
@@ -156,17 +138,34 @@ function SelectInputVirtualized<T>({
               value={searchFilter}
               onChange={(e) => handleFilter(e.target.value)}
               placeholder="Filtre o item desejado..."
-              className="h-full w-full text-sm italic outline-none"
+              className="h-full w-full italic outline-none"
             />
           ) : (
-            <p
-              onClick={() => {
-                if (editable) setSelectMenuIsOpen((prev) => !prev)
-              }}
-              className="grow cursor-pointer text-primary"
-            >
-              {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : selectedItemLabel}
-            </p>
+            <div className="flex grow items-center gap-2">
+              {selectedId && options ? (
+                <>
+                  <Avatar url={options.find((item) => item.id == selectedId)?.url} fallback="O" height={20} width={20} />
+
+                  <p
+                    onClick={() => {
+                      if (editable) setSelectMenuIsOpen((prev) => !prev)
+                    }}
+                    className="grow cursor-pointer text-primary"
+                  >
+                    {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : 'NÃO DEFINIDO'}
+                  </p>
+                </>
+              ) : (
+                <p
+                  onClick={() => {
+                    if (editable) setSelectMenuIsOpen((prev) => !prev)
+                  }}
+                  className="grow cursor-pointer text-primary"
+                >
+                  NÃO DEFINIDO
+                </p>
+              )}
+            </div>
           )}
           {selectMenuIsOpen ? (
             <IoMdArrowDropup
@@ -184,12 +183,11 @@ function SelectInputVirtualized<T>({
             />
           )}
         </div>
-        {/** overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300*/}
         {selectMenuIsOpen ? (
           <div
             className={`absolute ${
               dropdownDirection === 'down' ? 'top-[75px]' : 'bottom-[75px]'
-            } z-[100] flex h-[250px] max-h-[250px] w-full flex-col self-center overflow-y-auto overscroll-y-auto rounded-md border border-primary/20 bg-[#fff] p-2 py-1 shadow-sm scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:bg-[#121212]`}
+            } z-[100] flex h-[250px] max-h-[250px] w-full flex-col gap-1 self-center overflow-y-auto overscroll-y-auto rounded-md border border-primary/20 bg-[#fff] p-2 py-1 shadow-sm scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:bg-[#121212]`}
           >
             <div
               onClick={() => resetState()}
@@ -199,13 +197,23 @@ function SelectInputVirtualized<T>({
               {!selectedId ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
             </div>
             <div className="my-2 h-[1px] w-full bg-gray-200"></div>
-            <div className="flex w-full flex-col gap-y-1">
-              {items ? (
-                <List height={180} width={'100%'} list={items} />
-              ) : (
-                <p className="w-full text-center text-sm italic text-primary">Sem opções disponíveis.</p>
-              )}
-            </div>
+            {items ? (
+              items.map((item, index) => (
+                <div
+                  onClick={() => handleSelect(item.id, item.value)}
+                  key={item.id ? item.id : index}
+                  className={`flex w-full cursor-pointer items-center rounded p-2 px-2 hover:bg-primary/20 ${
+                    selectedId == item.id ? 'bg-primary/20' : ''
+                  }`}
+                >
+                  <Avatar url={item.url} height={20} width={20} fallback={formatNameAsInitials(item.label)} />
+                  <p className="grow pl-2 text-sm font-medium text-primary">{item.label}</p>
+                  {selectedId == item.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
+                </div>
+              ))
+            ) : (
+              <p className="w-full text-center text-sm italic text-primary">Sem opções disponíveis.</p>
+            )}
           </div>
         ) : (
           false
@@ -216,26 +224,39 @@ function SelectInputVirtualized<T>({
     <Drawer open={selectMenuIsOpen} onOpenChange={setSelectMenuIsOpen}>
       <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
         {showLabel ? (
-          <label htmlFor={inputIdentifier} className={cn('text-start text-sm font-medium tracking-tight text-primary/80', labelClassName)}>
+          <label htmlFor={inputIdentifier} className={labelClassName}>
             {label}
           </label>
         ) : null}
         <div
-          className={cn(
-            'flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border bg-[#fff] p-3 text-sm shadow-sm duration-500 ease-in-out dark:bg-[#121212]',
-            selectMenuIsOpen ? 'border-primary' : 'border-primary/20',
-            holderClassName
-          )}
+          className={`flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border duration-500 ease-in-out ${
+            selectMenuIsOpen ? 'border-primary' : 'border-primary/20'
+          } bg-[#fff] p-3 text-sm shadow-sm dark:bg-[#121212]`}
         >
-          <p
-            onClick={() => {
-              if (editable) setSelectMenuIsOpen((prev) => !prev)
-            }}
-            className="grow cursor-pointer text-primary"
-          >
-            {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : selectedItemLabel}
-          </p>
-
+          <div className="flex grow items-center gap-2">
+            {selectedId && options ? (
+              <>
+                <Avatar url={options.find((item) => item.id == selectedId)?.url} fallback="O" height={20} width={20} />
+                <p
+                  onClick={() => {
+                    if (editable) setSelectMenuIsOpen((prev) => !prev)
+                  }}
+                  className="grow cursor-pointer text-primary"
+                >
+                  {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : 'NÃO DEFINIDO'}
+                </p>
+              </>
+            ) : (
+              <p
+                onClick={() => {
+                  if (editable) setSelectMenuIsOpen((prev) => !prev)
+                }}
+                className="grow cursor-pointer text-primary"
+              >
+                NÃO DEFINIDO
+              </p>
+            )}
+          </div>
           <IoMdArrowDropdown
             style={{ cursor: 'pointer' }}
             onClick={() => {
@@ -262,7 +283,20 @@ function SelectInputVirtualized<T>({
           <div className="my-2 h-[1px] w-full bg-gray-200"></div>
           <div className="flex h-[200px] min-h-[200px] flex-col gap-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:h-[350px] lg:max-h-[350px]">
             {items ? (
-              <List height={180} width={'100%'} list={items} />
+              items.map((item, index) => (
+                <div
+                  onClick={() => handleSelect(item.id, item.value)}
+                  key={item.id ? item.id : index}
+                  className={`flex w-full cursor-pointer items-center rounded p-2 px-2 hover:bg-primary/20 ${
+                    selectedId == item.id ? 'bg-primary/20' : ''
+                  }`}
+                >
+                  <Avatar url={item.url} height={20} width={20} fallback={formatNameAsInitials(item.label)} />
+
+                  <p className="grow pl-2 text-sm font-medium text-primary">{item.label}</p>
+                  {selectedId == item.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
+                </div>
+              ))
             ) : (
               <p className="w-full text-center text-sm italic text-primary">Sem opções disponíveis.</p>
             )}
@@ -273,4 +307,4 @@ function SelectInputVirtualized<T>({
   )
 }
 
-export default SelectInputVirtualized
+export default SelectWithImages

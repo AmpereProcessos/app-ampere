@@ -357,8 +357,8 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
               <button
                 onClick={() => setShowReceipts((prev) => !prev)}
                 className={cn(
-                  'rounded bg-gray-100 py-0.5 px-2 text-[0.5rem] font-bold text-primary/80 duration-300 ease-in-out',
-                  showReceipts ? 'bg-gray-300' : ''
+                  'rounded bg-blue-100 py-0.5 px-2 text-[0.5rem] font-bold text-primary/80 duration-300 ease-in-out',
+                  showReceipts ? 'bg-blue-300' : ''
                 )}
               >
                 MOSTRAR RECEBIMENTOS {receiptStatus.fractionationStr}
@@ -368,9 +368,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           {!!project.receita?._id ? (
             <button
               onClick={() => onRevenueEditClick(project.receita?._id || '')}
-              className="flex items-center justify-center gap-2 rounded border border-orange-500 bg-orange-50 px-2 py-0.5 text-orange-500 duration-300 ease-in-out hover:border-orange-700 hover:text-orange-700"
+              className="flex items-center justify-center gap-2 rounded border border-gray-800 bg-gray-600 px-2 py-0.5 text-white duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-500"
             >
-              <p className="text-[0.5rem]">EDITAR RECEITA</p>
+              <p className="text-[0.5rem] font-medium">EDITAR RECEITA</p>
               <MdEdit size={10} />
             </button>
           ) : null}

@@ -7,7 +7,7 @@ import { Pencil } from 'lucide-react'
 import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
-import { formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
+import { formatDate, formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -22,6 +22,8 @@ import { TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
 import { costApportionments } from '@/model'
 import { MdDashboard } from 'react-icons/md'
 import { FaDiamond } from 'react-icons/fa6'
+import DateInput from '@/components/inputs/Date'
+import { formatDateInputChange } from '@/utils/methods/shared'
 
 type PaymentsBlockProps = {
   session: Session
@@ -40,7 +42,7 @@ function PaymentsBlock({ session, storedPaymentsApportionmentsFilter, storedPaym
     filters,
     setFilters,
   } = usePendingPayments({
-    initialFilters: { search: '', apportionments: storedPaymentsApportionmentsFilter, categories: storedPaymentsCategoriesFilter },
+    initialFilters: { search: '', apportionments: storedPaymentsApportionmentsFilter, categories: storedPaymentsCategoriesFilter, previewPeriod: {} },
   })
   return (
     <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
@@ -153,8 +155,15 @@ function PaymentCard({ payment, handleClick }: PaymentCardProps) {
 }
 
 type PaymentsFilterMenuProps = {
-  filters: { search: string; apportionments: string[]; categories: string[] }
-  setFilters: React.Dispatch<React.SetStateAction<{ search: string; apportionments: string[]; categories: string[] }>>
+  filters: { search: string; apportionments: string[]; categories: string[]; previewPeriod: { after?: string | null; before?: string | null } }
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      search: string
+      apportionments: string[]
+      categories: string[]
+      previewPeriod: { after?: string | null; before?: string | null }
+    }>
+  >
 }
 function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
   return (
@@ -168,6 +177,8 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
     >
       <MultipleSelectInput
         label="RATEIOS"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
         selected={filters.apportionments}
         handleChange={(value) => {
           setFilters((prev) => ({ ...prev, apportionments: value as string[] }))
@@ -183,6 +194,8 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
       />
       <MultipleSelectInput
         label="CATEGORIAS"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
         selected={filters.categories}
         handleChange={(value) => {
           setFilters((prev) => ({ ...prev, categories: value as string[] }))
@@ -194,6 +207,22 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
           localStorage.setItem('payments-categories-filter', JSON.stringify([]))
         }}
         selectedItemLabel="NÃO DEFINIDO"
+        width="100%"
+      />
+      <DateInput
+        label="PREVISTO PARA DEPOIS DE:"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
+        value={formatDate(filters.previewPeriod.after)}
+        handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, after: formatDateInputChange(value) } }))}
+        width="100%"
+      />
+      <DateInput
+        label="PREVISTO PARA ANTES DE:"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
+        value={formatDate(filters.previewPeriod.before)}
+        handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, before: formatDateInputChange(value) } }))}
         width="100%"
       />
     </motion.div>

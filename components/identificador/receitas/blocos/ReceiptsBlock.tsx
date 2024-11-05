@@ -9,7 +9,7 @@ import LoadingPage from '@/components/utils/LoadingPage'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { TReceiptUnwindSimplifiedDTO } from '@/utils/schemas/revenues'
-import { formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
+import { formatDate, formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -22,6 +22,8 @@ import EditRevenue from '../modals/EditRevenue'
 import { Session } from 'next-auth'
 import { MdDashboard } from 'react-icons/md'
 import { FaDiamond } from 'react-icons/fa6'
+import DateInput from '@/components/inputs/Date'
+import { formatDateInputChange } from '@/utils/methods/shared'
 
 type ReceiptsBlockProps = {
   session: Session
@@ -38,7 +40,7 @@ function ReceiptsBlock({ session, storedReceiptsTypesFilter }: ReceiptsBlockProp
     error,
     filters,
     setFilters,
-  } = usePendingReceipts({ initialFilters: { search: '', types: storedReceiptsTypesFilter } })
+  } = usePendingReceipts({ initialFilters: { search: '', types: storedReceiptsTypesFilter, previewPeriod: {} } })
   return (
     <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
       <div className="flex w-full items-center justify-between gap-2 border-b border-primary/30 pb-3">
@@ -151,8 +153,10 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
 }
 
 type ReceiptsFilterMenuProps = {
-  filters: { search: string; types: string[] }
-  setFilters: React.Dispatch<React.SetStateAction<{ search: string; types: string[] }>>
+  filters: { search: string; types: string[]; previewPeriod: { after?: string | null; before?: string | null } }
+  setFilters: React.Dispatch<
+    React.SetStateAction<{ search: string; types: string[]; previewPeriod: { after?: string | null; before?: string | null } }>
+  >
 }
 function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
   return (
@@ -166,16 +170,19 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
     >
       <TextInput
         label="PESQUISA"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
         value={filters.search}
         handleChange={(value) => {
           setFilters((prev) => ({ ...prev, search: value }))
         }}
         placeholder="Filtre pelo nome da receita..."
-        labelClassName="text-xs font-medium tracking-tight text-black"
         width="100%"
       />
       <MultipleSelectInput
         label="TIPO DA RECEITA"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
         selected={filters.types}
         handleChange={(value) => {
           setFilters((prev) => ({ ...prev, types: value as string[] }))
@@ -187,6 +194,22 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
           localStorage.setItem('receipts-types-filter', JSON.stringify([]))
         }}
         selectedItemLabel="NÃO DEFINIDO"
+        width="100%"
+      />
+      <DateInput
+        label="PREVISTO PARA DEPOIS DE:"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
+        value={formatDate(filters.previewPeriod.after)}
+        handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, after: formatDateInputChange(value) } }))}
+        width="100%"
+      />
+      <DateInput
+        label="PREVISTO PARA ANTES DE:"
+        labelClassName="text-[0.6rem]"
+        holderClassName="text-xs p-2 min-h-[34px]"
+        value={formatDate(filters.previewPeriod.before)}
+        handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, before: formatDateInputChange(value) } }))}
         width="100%"
       />
     </motion.div>

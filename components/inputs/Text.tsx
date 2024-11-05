@@ -1,11 +1,10 @@
-import React from 'react'
-import { isEmpty } from '../../utils/methods/shared'
 import { cn } from '@/lib/utils'
-
+import React from 'react'
 type TextInputProps = {
   width?: string
   label: string
   labelClassName?: string
+  holderClassName?: string
   showLabel?: boolean
   value: string
   placeholder: string
@@ -13,24 +12,42 @@ type TextInputProps = {
   handleChange: (value: string) => void
   handleOnBlur?: () => void
 }
-function TextInput({ width, label, labelClassName, showLabel = true, value, placeholder, editable = true, handleChange }: TextInputProps) {
-  const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
+function TextInput({
+  width,
+  label,
+  labelClassName,
+  holderClassName,
+  showLabel = true,
+  value,
+  placeholder,
+  editable = true,
+  handleChange,
+  handleOnBlur,
+}: TextInputProps) {
+  const inputIdentifier = label.toLowerCase().replace(' ', '_')
   return (
-    <div className={`flex  w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
+    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
-        <label htmlFor={inputIdentifier} className={cn('font-sans text-start font-bold text-[#353432]', labelClassName)}>
+        <label htmlFor={inputIdentifier} className={cn('text-sm font-medium tracking-tight text-primary/80', labelClassName)}>
           {label}
         </label>
       ) : null}
 
       <input
-        value={!isEmpty(value) ? value : ''}
+        value={value}
         onChange={(e) => handleChange(e.target.value)}
         id={inputIdentifier}
+        onBlur={() => {
+          if (handleOnBlur) handleOnBlur()
+          else return
+        }}
         readOnly={!editable}
         type="text"
         placeholder={placeholder}
-        className="h-[47px] w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className={cn(
+          'w-full rounded-md border border-primary/20 p-3 text-sm shadow-sm outline-none duration-500 ease-in-out placeholder:italic focus:border-primary',
+          holderClassName
+        )}
       />
     </div>
   )

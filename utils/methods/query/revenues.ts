@@ -157,7 +157,7 @@ async function fetchPendingReceipts() {
 }
 
 type UsePendingReceiptsParams = {
-  initialFilters: { search: string; types: string[] }
+  initialFilters: { search: string; types: string[]; previewPeriod: { after?: string | null; before?: string | null } }
 }
 export function usePendingReceipts({ initialFilters }: UsePendingReceiptsParams) {
   const [filters, setFilters] = useState(initialFilters)
@@ -170,8 +170,18 @@ export function usePendingReceipts({ initialFilters }: UsePendingReceiptsParams)
     if (filters.types.length == 0) return true
     return filters.types.includes(receipt.tipo)
   }
+  function matchReceiptPreviewDate(receipt: TReceiptUnwindSimplifiedDTO) {
+    const afterFilterDate = filters.previewPeriod.after ? new Date(filters.previewPeriod.after) : null
+    const beforeFilterDate = filters.previewPeriod.before ? new Date(filters.previewPeriod.before) : null
+    const receiptPreviewDate = new Date(receipt.fracionamento.dataPrevisaoRecebimento)
+    if (!afterFilterDate && !beforeFilterDate) return true
+    if (afterFilterDate && !beforeFilterDate) return receiptPreviewDate >= afterFilterDate
+    if (!afterFilterDate && beforeFilterDate) return receiptPreviewDate <= beforeFilterDate
+    if (!!afterFilterDate && !!beforeFilterDate) return receiptPreviewDate >= afterFilterDate && receiptPreviewDate <= beforeFilterDate
+    return false
+  }
   function handleModelData(data: TReceiptUnwindSimplifiedDTO[]) {
-    return data.filter((receipt) => matchSearch(receipt) && matchTypes(receipt))
+    return data.filter((receipt) => matchSearch(receipt) && matchTypes(receipt) && matchReceiptPreviewDate(receipt))
   }
 
   return {

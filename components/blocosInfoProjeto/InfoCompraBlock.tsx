@@ -917,7 +917,26 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
   return (
     <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-        <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
+        <div className="flex items-center gap-2">
+          <h1
+            className={cn('rounded-lg px-2 py-0.5 text-[0.65rem] font-medium text-white', {
+              'bg-red-600': purchaseControl.status == 'PENDENTE',
+              'bg-gray-700': purchaseControl.status === 'EM COTAÇÃO',
+              'bg-teal-600': purchaseControl.status === 'AGUARDANDO APROVAÇÃO',
+              'bg-sky-500': purchaseControl.status === 'AGUARDANDO NOTA FUTURA',
+              'bg-orange-600': purchaseControl.status === 'AGUARDANDO PAGAMENTO',
+              'bg-blue-600': purchaseControl.status === 'AGUARDANDO COMPRA',
+              'bg-violet-600': purchaseControl.status === 'AGUARDANDO FATURAMENTO',
+              'bg-lime-600': purchaseControl.status === 'AGUARDANDO DESPACHE',
+              'bg-green-800': purchaseControl.status === 'AGUARDANDO ENTREGA',
+              'bg-green-500': purchaseControl.status === 'CONCLUÍDA',
+              'bg-red-800': purchaseControl.status === 'PENDÊNCIAS',
+            })}
+          >
+            {purchaseControl.status}
+          </h1>
+          <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
+        </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">

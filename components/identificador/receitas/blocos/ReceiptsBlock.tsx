@@ -98,7 +98,6 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-sm font-bold leading-none tracking-tight">{receipt.fracionamento.titulo}</p>
-
           <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
             <FaPercentage />
             <h1>

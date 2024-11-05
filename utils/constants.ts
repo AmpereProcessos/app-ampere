@@ -27,12 +27,14 @@ export const routes = [
 ]
 
 export const ProjectTypesCollors = {
-  'SISTEMA FOTOVOLTAICO': 'bg-[#15599a]',
-  'SISTEMA FOTOVOLTAICO (OFF GRID)': 'bg-[#fead61]',
-  'AUMENTO DE SISTEMA FOTOVOLTAICO': 'bg-green-500',
-  'BOMBA SOLAR': 'bg-[#000066]',
-  'OPERAÇÃO E MANUTENÇÃO': 'bg-[#8604c2]',
+  'SISTEMA FOTOVOLTAICO': 'bg-[#15599a] text-[#fead61]',
+  'SISTEMA FOTOVOLTAICO (OFF GRID)': 'bg-[#fead61] text-[#15599a]',
+  'AUMENTO DE SISTEMA FOTOVOLTAICO': 'bg-green-500 text-white',
+  'BOMBA SOLAR': 'bg-[#000066] text-white',
+  'OPERAÇÃO E MANUTENÇÃO': 'bg-[#8604c2] text-white',
   'SUBESTAÇÃO DE ENERGIA': 'bg-[#e6e6e6] text-[#15599a]',
+  'SEGURO DE SISTEMA FOTOVOLTAICO': 'bg-[#b990e7] text-white',
+  MONITORAMENTO: 'bg-[#08A89F] text-white',
 }
 export const tiposDeTelha = [
   { label: 'PORTUGUESA', value: 'PORTUGUESA' },

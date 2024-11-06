@@ -201,7 +201,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
               </div>
             </div>
-            <div className="mt-3 flex w-full flex-wrap items-center justify-around gap-3 border border-cyan-500 p-2">
+            <div className="mt-3 flex w-full flex-col items-center justify-around gap-3 border border-cyan-500 p-2">
               <div className="flex w-full items-center justify-between gap-2">
                 <h1 className="text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
                 <div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
@@ -210,140 +210,167 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                   </Link>
                 </div>
               </div>
-
-              <CheckboxInput
-                labelFalse={'BOAS VINDAS'}
-                labelTrue={'BOAS VINDAS'}
-                checked={!!infoHolder.jornada.boasVindas}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.boasVindas': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, boasVindas: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'ASSINATURA DAS DOCUMENTAÇÕES'}
-                labelTrue={'ASSINATURA DAS DOCUMENTAÇÕES'}
-                checked={!!infoHolder.jornada.assDocumentacoes}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.assDocumentacoes': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, assDocumentacoes: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'COMPRA DO KIT'}
-                labelTrue={'COMPRA DO KIT'}
-                checked={!!infoHolder.jornada.compraDoKit}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.compraDoKit': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, compraDoKit: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'NF FATURADA'}
-                labelTrue={'NF FATURADA'}
-                checked={!!infoHolder.jornada.nfFaturada}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.nfFaturada': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, nfFaturada: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'PREVISÃO DE ENTREGA'}
-                labelTrue={'PREVISÃO DE ENTREGA'}
-                checked={!!infoHolder.jornada.prevChegada}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.prevChegada': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, prevChegada: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'RESPOSTA DA CONCESSIONÁRIA'}
-                labelTrue={'RESPOSTA DA CONCESSIONÁRIA'}
-                checked={!!infoHolder.jornada.respConcessionaria}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.respConcessionaria': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, respConcessionaria: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'KIT ENTREGUE'}
-                labelTrue={'KIT ENTREGUE'}
-                checked={!!infoHolder.jornada.entregaDoKit}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.entregaDoKit': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaDoKit: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'INSTALAÇÃO AGENDADA'}
-                labelTrue={'INSTALAÇÃO AGENDADA'}
-                checked={!!infoHolder.jornada.instalacaoAgendada}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.instalacaoAgendada': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoAgendada: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'INSTALAÇÃO REALIZADA'}
-                labelTrue={'INSTALAÇÃO REALIZADA'}
-                checked={!!infoHolder.jornada.instalacaoRealizada}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.instalacaoRealizada': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoRealizada: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'VISTORIA DA CONCESSIONÁRIA'}
-                labelTrue={'VISTORIA DA CONCESSIONÁRIA'}
-                checked={!!infoHolder.jornada.vistoriaConcessionaria}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.vistoriaConcessionaria': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, vistoriaConcessionaria: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'SISTEMA LIGADO'}
-                labelTrue={'SISTEMA LIGADO'}
-                checked={!!infoHolder.jornada.sistemaLigado}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.sistemaLigado': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, sistemaLigado: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'ENTREGA TÉCNICA'}
-                labelTrue={'ENTREGA TÉCNICA'}
-                checked={!!infoHolder.jornada.entregaTecnica}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({ id: projectId, changes: { 'jornada.entregaTecnica': value } })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaTecnica: value } }))
-                }}
-              />
-              <CheckboxInput
-                labelFalse={'JORNADA CONCLUIDA'}
-                labelTrue={'JORNADA CONCLUIDA'}
-                checked={!!infoHolder.jornada.jornadaConcluida}
-                handleChange={(value) => {
-                  // @ts-ignore
-                  handleUpdateProject({
-                    id: projectId,
-                    changes: { 'jornada.jornadaConcluida': value, 'jornada.dataConclusao': new Date().toISOString() },
-                  })
-                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, jornadaConcluida: value, dataConclusao: new Date().toISOString() } }))
-                }}
-              />
+              <div className="flex w-full flex-wrap justify-around gap-3">
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'BOAS VINDAS'}
+                    labelTrue={'BOAS VINDAS'}
+                    checked={!!infoHolder.jornada.boasVindas}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.boasVindas': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, boasVindas: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'ASSINATURA DAS DOCUMENTAÇÕES'}
+                    labelTrue={'ASSINATURA DAS DOCUMENTAÇÕES'}
+                    checked={!!infoHolder.jornada.assDocumentacoes}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.assDocumentacoes': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, assDocumentacoes: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'COMPRA DO KIT'}
+                    labelTrue={'COMPRA DO KIT'}
+                    checked={!!infoHolder.jornada.compraDoKit}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.compraDoKit': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, compraDoKit: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'NF FATURADA'}
+                    labelTrue={'NF FATURADA'}
+                    checked={!!infoHolder.jornada.nfFaturada}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.nfFaturada': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, nfFaturada: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'PREVISÃO DE ENTREGA'}
+                    labelTrue={'PREVISÃO DE ENTREGA'}
+                    checked={!!infoHolder.jornada.prevChegada}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.prevChegada': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, prevChegada: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'RESPOSTA DA CONCESSIONÁRIA'}
+                    labelTrue={'RESPOSTA DA CONCESSIONÁRIA'}
+                    checked={!!infoHolder.jornada.respConcessionaria}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.respConcessionaria': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, respConcessionaria: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'KIT ENTREGUE'}
+                    labelTrue={'KIT ENTREGUE'}
+                    checked={!!infoHolder.jornada.entregaDoKit}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.entregaDoKit': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaDoKit: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'INSTALAÇÃO AGENDADA'}
+                    labelTrue={'INSTALAÇÃO AGENDADA'}
+                    checked={!!infoHolder.jornada.instalacaoAgendada}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.instalacaoAgendada': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoAgendada: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'INSTALAÇÃO REALIZADA'}
+                    labelTrue={'INSTALAÇÃO REALIZADA'}
+                    checked={!!infoHolder.jornada.instalacaoRealizada}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.instalacaoRealizada': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoRealizada: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'VISTORIA DA CONCESSIONÁRIA'}
+                    labelTrue={'VISTORIA DA CONCESSIONÁRIA'}
+                    checked={!!infoHolder.jornada.vistoriaConcessionaria}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.vistoriaConcessionaria': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, vistoriaConcessionaria: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'SISTEMA LIGADO'}
+                    labelTrue={'SISTEMA LIGADO'}
+                    checked={!!infoHolder.jornada.sistemaLigado}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.sistemaLigado': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, sistemaLigado: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'ENTREGA TÉCNICA'}
+                    labelTrue={'ENTREGA TÉCNICA'}
+                    checked={!!infoHolder.jornada.entregaTecnica}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({ id: projectId, changes: { 'jornada.entregaTecnica': value } })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaTecnica: value } }))
+                    }}
+                  />
+                </div>
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse={'JORNADA CONCLUIDA'}
+                    labelTrue={'JORNADA CONCLUIDA'}
+                    checked={!!infoHolder.jornada.jornadaConcluida}
+                    handleChange={(value) => {
+                      // @ts-ignore
+                      handleUpdateProject({
+                        id: projectId,
+                        changes: { 'jornada.jornadaConcluida': value, 'jornada.dataConclusao': new Date().toISOString() },
+                      })
+                      setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, jornadaConcluida: value, dataConclusao: new Date().toISOString() } }))
+                    }}
+                  />
+                </div>
+              </div>
             </div>
             <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">ANOTAÇÕES</h1>
             <textarea

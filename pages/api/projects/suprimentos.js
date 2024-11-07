@@ -14,7 +14,7 @@ export default async function handler(req, res) {
           $match: {
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
             'compra.liberacao': true,
-            'compra.status': { $ne: 'CONCLUIDA' },
+            'compra.status': { $ne: 'CONCLUÍDA' },
           },
         },
         {

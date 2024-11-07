@@ -17,8 +17,8 @@ type GetResponse = {
 }
 const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-
-  const { id, projectId, unfinishedOnly } = req.query
+  console.log(req.query)
+  const { id, projectId, queryTags, queryPendingConclusion } = req.query
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const collection = db.collection<TPurchaseControl>('controles-compras')
 
@@ -94,11 +94,17 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
 
     return res.status(200).json({ data: purchaseControls })
   }
-  const query: Filter<TPurchaseControl> = unfinishedOnly == 'true' ? { status: { $ne: 'CONCLUÍDA' } } : {}
 
+  const queryTagsIds = typeof queryTags == 'string' ? queryTags.split(',').filter((q) => !!ObjectId.isValid(q)) : []
+  const queryPendingConclusionValue = queryPendingConclusion == 'true' ? true : false
+
+  const queryTagsQuery: Filter<TPurchaseControl> = queryTagsIds.length > 0 ? { 'etiquetas.id': { $in: queryTagsIds } } : {}
+  const queryPendingConclusionQuery: Filter<TPurchaseControl> = queryPendingConclusionValue ? { dataEfetivacao: null } : {}
+  console.log(queryTagsQuery)
+  console.log(queryPendingConclusionQuery)
   const purchaseControls = await collection
     .find(
-      { ...query },
+      { ...queryTagsQuery, ...queryPendingConclusionQuery },
       {
         projection: PurchaseControlKanbanSimplifiedProjection,
       }

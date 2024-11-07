@@ -1,12 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import {
-  GeneralPurchaseControlSchema,
-  PurchaseControlKanbanSimplifiedProjection,
-  PurchaseControlSimplifiedProjection,
-  PurchaseTagSchema,
-  TPurchaseControlTag,
-  TPurchaseControlTagDTO,
-} from '@/utils/schemas/purchases'
+import { PurchaseTagSchema, TPurchaseControlTag } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/auxiliaries'
 import createHttpError from 'http-errors'
 import { Db, ObjectId } from 'mongodb'

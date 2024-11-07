@@ -194,17 +194,24 @@ export type TPurchaseControlSimplified = Pick<
   TPurchaseControl,
   'status' | 'etiquetas' | 'titulo' | 'projeto' | 'liberacao' | 'dataPedido' | 'fornecedor' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
-  faturamentos: TPurchaseControl['faturamentos']
+  liberacao: {
+    data: TPurchaseControl['liberacao']['data']
+  }
+  fornecedor: {
+    nome: TPurchaseControl['fornecedor']['nome']
+  }
+  faturamentos: {
+    codigoNotaFiscal: TPurchaseControl['faturamentos'][number]['codigoNotaFiscal']
+    data: TPurchaseControl['faturamentos'][number]['data']
+  }[]
+  transporte: {
+    transportadora: { nome: TPurchaseControl['transporte']['transportadora']['nome'] }
+  }
   entrega: {
     status: TPurchaseControl['entrega']['status']
     dataPrevisao: TPurchaseControl['entrega']['dataPrevisao']
     dataEfetivacao: TPurchaseControl['entrega']['dataEfetivacao']
   }
-  transporte: TPurchaseControl['transporte']
-  composicao: {
-    descricao: TPurchaseControl['composicao'][number]['descricao']
-    qtde: TPurchaseControl['composicao'][number]['qtde']
-  }[]
 }
 export type TPurchaseControlSimplifiedDTO = TPurchaseControlSimplified & { _id: string }
 export const PurchaseControlSimplifiedProjection = {
@@ -212,16 +219,15 @@ export const PurchaseControlSimplifiedProjection = {
   etiquetas: 1,
   titulo: 1,
   projeto: 1,
-  liberacao: 1,
+  'liberacao.data': 1,
   dataPedido: 1,
-  fornecedor: 1,
-  faturamentos: 1,
+  'fornecedor.nome': 1,
+  'faturamentos.codigoNotaFiscal': 1,
+  'faturamentos.data': 1,
+  'transporte.transportadora.nome': 1,
   'entrega.status': 1,
   'entrega.dataPrevisao': 1,
   'entrega.dataEfetivacao': 1,
-  transporte: 1,
-  'composicao.descricao': 1,
-  'composicao.qtde': 1,
   autor: 1,
   dataInsercao: 1,
   dataEfetivacao: 1,
@@ -253,10 +259,11 @@ export type TPurchaseControlKanbanSimplified = Pick<
 export type TPurchaseControlKanbanSimplifiedDTO = TPurchaseControlKanbanSimplified & { _id: string }
 export const PurchaseControlKanbanSimplifiedProjection = {
   status: 1,
-  titulo: 1,
   etiquetas: 1,
-  dataPedido: 1,
+  titulo: 1,
+  projeto: 1,
   'liberacao.data': 1,
+  dataPedido: 1,
   'fornecedor.nome': 1,
   'faturamentos.codigoNotaFiscal': 1,
   'faturamentos.data': 1,

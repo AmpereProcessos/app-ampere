@@ -145,17 +145,20 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
           <div className="flex w-full flex-col items-center gap-1 lg:w-fit lg:flex-row lg:items-end">
             <MultipleSelectInput
               label="TAGS"
-              selected={filters.tags}
+              selected={queryParams.queryTags}
               options={tags?.map((tag) => ({ id: tag._id, value: tag._id, label: tag.titulo })) || []}
-              handleChange={(value) => setFilters((prev) => ({ ...prev, tags: value as string[] }))}
+              handleChange={(value) => updateQueryParams({ queryTags: value as string[] })}
               selectedItemLabel="NÃO DEFINIDO"
-              onReset={() => setFilters((prev) => ({ ...prev, tags: [] }))}
+              onReset={() => updateQueryParams({ queryTags: [] })}
             />
             <button
-              onClick={() => updateQueryParams({ unfinishedOnly: !queryParams.unfinishedOnly })}
-              className={cn('min-h-[46.6px] rounded p-2 text-xs font-bold text-white', queryParams.unfinishedOnly ? 'bg-blue-600' : 'bg-gray-600')}
+              onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
+              className={cn(
+                'min-h-[46.6px] rounded p-2 text-xs font-bold text-white',
+                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-gray-600'
+              )}
             >
-              {queryParams.unfinishedOnly ? 'EM ANDAMENTO' : 'TODAS'}
+              {queryParams.queryPendingConclusion ? 'EM ANDAMENTO' : 'TODAS'}
             </button>
             <Button onClick={() => setNewPurchaseControlModalIsOpen(true)} className="min-h-[46.6px]">
               NOVO CONTROLE

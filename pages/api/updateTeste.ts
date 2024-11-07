@@ -52,6 +52,7 @@ const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
 
   // const projectsCollection: Collection<TProject> = db.collection('dados')
+
   // const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')
 
   // const projects = await projectsCollection

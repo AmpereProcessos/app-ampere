@@ -16,9 +16,9 @@ import { formatWithoutDiacritics } from '../formatting'
 import { useQuery } from '@tanstack/react-query'
 import { TPurchaseControlsByFiltersResult } from '@/pages/api/controles-compras/search'
 
-async function fetchPurchasesControls() {
+async function fetchPurchasesControls({ queryTags, queryPendingConclusion }: TPurchaseControlQueryParams) {
   try {
-    const { data } = await axios.get('/api/controles-compras')
+    const { data } = await axios.get(`/api/controles-compras?queryTags=${queryTags}&queryPendingConclusion=${queryPendingConclusion}`)
     return data.data as TPurchaseControlKanbanSimplifiedDTO[]
   } catch (error) {
     throw error
@@ -26,7 +26,8 @@ async function fetchPurchasesControls() {
 }
 
 type TPurchaseControlQueryParams = {
-  unfinishedOnly: boolean
+  queryTags: string[]
+  queryPendingConclusion: boolean
 }
 type TPurchaseControlFilters = {
   title: string
@@ -36,7 +37,8 @@ type TPurchaseControlFilters = {
 }
 export function usePurchaseControls() {
   const [queryParams, setQueryParams] = useState<TPurchaseControlQueryParams>({
-    unfinishedOnly: true,
+    queryTags: [],
+    queryPendingConclusion: true,
   })
   const [filters, setFilters] = useState<TPurchaseControlFilters>({
     title: '',
@@ -71,7 +73,7 @@ export function usePurchaseControls() {
   return {
     ...useQuery({
       queryKey: ['purchase-controls', queryParams],
-      queryFn: fetchPurchasesControls,
+      queryFn: async () => await fetchPurchasesControls(queryParams),
       select: (data) => handleModelData(data),
     }),
     filters,

@@ -131,6 +131,13 @@ export const GeneralTechnicalAnalysisSchema = z.object({
       .optional()
       .nullable(),
   }),
+  projeto: z
+    .object({
+      id: z.string({ invalid_type_error: 'Tipo não válido para o ID do projeto.' }).optional().nullable(),
+      nome: z.string({ invalid_type_error: 'Tipo não válido para o nome do projeto.' }).optional().nullable(),
+    })
+    .optional()
+    .nullable(),
   localizacao: z.object({
     cep: z.string({
       required_error: 'CEP da localização de análise não informada.',

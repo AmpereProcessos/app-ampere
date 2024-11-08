@@ -21,7 +21,7 @@ function CheckboxInput({
   padding = '0.75rem',
 }: CheckboxInputProps) {
   return (
-    <div className={`flex w-full items-center ${justify} gap-2 ${padding ? `p-[${padding}]` : 'p-3'}`}>
+    <div className={`flex w-fit items-center ${justify} gap-2 ${padding ? `p-[${padding}]` : 'p-3'}`}>
       <div
         className={`flex h-[16px] min-h-[16px] w-[16px] min-w-[16px] items-center justify-center rounded-full border border-primary text-primary ${
           editable ? 'cursor-pointer' : ''

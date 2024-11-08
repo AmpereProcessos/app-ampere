@@ -36,19 +36,21 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
       {showMenu ? (
         <>
           <div className="flex w-full items-center justify-center">
-            <CheckboxInput
-              checked={infoHolder.acessoAtivo}
-              handleChange={(value) =>
-                setInfoHolder((prev) => ({
-                  ...prev,
-                  acessoAtivo: value,
-                  visualizacao: { ...prev.visualizacao, tipo: !prev.visualizacao.tipo ? 'OPERACIONAL' : prev.visualizacao.tipo },
-                }))
-              }
-              labelFalse="ACESSO ATIVO"
-              labelTrue="ACESSO ATIVO"
-              justify="justify-center"
-            />
+            <div className="w-fit">
+              <CheckboxInput
+                checked={infoHolder.acessoAtivo}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    acessoAtivo: value,
+                    visualizacao: { ...prev.visualizacao, tipo: !prev.visualizacao.tipo ? 'OPERACIONAL' : prev.visualizacao.tipo },
+                  }))
+                }
+                labelFalse="ACESSO ATIVO"
+                labelTrue="ACESSO ATIVO"
+                justify="justify-center"
+              />
+            </div>
           </div>
           <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-1/2">

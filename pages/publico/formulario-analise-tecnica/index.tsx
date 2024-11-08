@@ -250,7 +250,7 @@ function TechnicalAnalysis({ projectJSON, sessionJSON, error }: TechnicalAnalysi
       {!isPending && !isError && !isSuccess ? (
         <>
           <div className="flex w-full items-center justify-center border-b border-gray-500 bg-black p-2">
-            <h1 className="text-sm font-bold tracking-tight text-white">SOLICITAÇÃO DE ANÁLISE TÉCNICA P/ {project.nomeDoContrato}</h1>
+            <h1 className="text-center text-sm font-bold tracking-tight text-white">SOLICITAÇÃO DE ANÁLISE TÉCNICA P/ {project.nomeDoContrato}</h1>
           </div>
           <div className="flex w-full grow flex-col p-3">
             {!infoHolder.tipoSolicitacao ? (

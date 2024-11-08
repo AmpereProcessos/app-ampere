@@ -833,6 +833,11 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
           </Link>
         </div>
       ) : null}
+      <div className="flex w-full items-center justify-end gap-2 p-2">
+        <Link href={`/publico/formulario-analise-tecnica?projectId=${infoHolder._id}`}>
+          <button className="rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white">ANÁLISE TÉCNICA (REQUISIÇÃO PÚBLICA)</button>
+        </Link>
+      </div>
     </div>
   )
 }

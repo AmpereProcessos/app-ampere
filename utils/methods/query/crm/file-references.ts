@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { formatWithoutDiacritics } from '../../formatting'
 
 type UseFileReferencesByOpportunityIdParams = {
-  opportunityId: string
+  opportunityId: string | null
 }
 async function fetchFileReferencesByOpportunityId({ opportunityId }: UseFileReferencesByOpportunityIdParams) {
   try {
+    if (!opportunityId) return []
     const { data } = await axios.get(`/api/crm/file-references?opportunityId=${opportunityId}`)
     return data.data as TFileReferenceDTO[]
   } catch (error) {

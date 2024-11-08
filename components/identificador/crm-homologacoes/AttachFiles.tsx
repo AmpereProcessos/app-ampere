@@ -7,12 +7,12 @@ import toast from 'react-hot-toast'
 import { AiFillFile } from 'react-icons/ai'
 
 type AttachFilesProps = {
-  opportunityId: string
+  opportunityId: string | null
   files: TFileHolder
   setFiles: React.Dispatch<React.SetStateAction<TFileHolder>>
 }
 function AttachFiles({ opportunityId, files, setFiles }: AttachFilesProps) {
-  const { data: fileReferences } = useFileReferencesByOpportunityId({ opportunityId })
+  const { data: fileReferences } = useFileReferencesByOpportunityId({ opportunityId: opportunityId || null })
   const [personalizedFile, setPersonalizedFile] = useState<{ titulo: string; arquivo: File | string | null }>({
     titulo: '',
     arquivo: null,
@@ -33,7 +33,7 @@ function AttachFiles({ opportunityId, files, setFiles }: AttachFilesProps) {
             label="ARQUIVO"
             value={personalizedFile.arquivo}
             handleChange={(value) => setPersonalizedFile((prev) => ({ ...prev, arquivo: value }))}
-            fileReferences={fileReferences}
+            fileReferences={fileReferences || []}
           />
         </div>
         <div className="w-full lg:w-1/2">

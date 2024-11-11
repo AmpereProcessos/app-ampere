@@ -1512,10 +1512,11 @@ export const PurchaseControlStatus = [
   { id: 5, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
   { id: 6, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
   { id: 7, label: 'AGUARDANDO FATURAMENTO', value: 'AGUARDANDO FATURAMENTO' },
-  { id: 8, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE' },
-  { id: 9, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA' },
-  { id: 10, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
-  { id: 11, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
+  { id: 8, label: 'AGUARDANDO NF COR', value: 'AGUARDANDO NF COR' },
+  { id: 9, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE' },
+  { id: 10, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA' },
+  { id: 11, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
+  { id: 12, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
 ]
 export const PurchaseCompositionItemCategories = [
   { id: 1, label: 'MÓDULO', value: 'MÓDULO', icon: FaSolarPanel as React.ComponentType },

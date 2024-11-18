@@ -70,6 +70,10 @@ function ProcurationPage({ requestJSON, error }: ProcurationPageProps) {
           2) POLLIANA CRISTINA DE REZENDE, engenheira eletricista, brasileira, solteira, portador do RG MG 15600702 e CPF: 099.112.586-02. Com
           registro geral CREA nº <strong>MG0000221297D</strong>, residente e domiciliado em Ituiutaba-MG.
         </h1>
+        <h1 className="w-full text-start text-[0.9rem] tracking-tight">
+          3) ANDREW BORGES ALEXANDER, engenheiro eletricista, brasileiro, casado, portador do RG MG17182240 e CPF: 127.026.976-31. Com registro geral
+          CREA nº <strong>MG0000382412</strong>, residente e domiciliado na Rua das Orquídeas, 337, Cidade Jardim, Ituiutaba-MG, CEP 38.307-854.
+        </h1>
       </div>
       <h1 className="mt-6 w-full text-start text-[0.9rem] tracking-tight">
         Com PODERES junto à distribuidora de energia e ao CREA/CFT para assinar documentos, solicitar Liberação de Carga, Cadastros e Projetos, firmar

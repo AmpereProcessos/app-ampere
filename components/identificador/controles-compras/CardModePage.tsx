@@ -13,7 +13,7 @@ import { CheckCheck, Factory, ListFilter, Package, Pencil, ScrollText, Tag, Truc
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
-import { FaRotate } from 'react-icons/fa6'
+import { FaLocationDot, FaRotate } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { useQueryClient } from '@tanstack/react-query'
 import PurchaseControlsFilterMenu from './FilterMenu'
@@ -130,11 +130,6 @@ type PurchaseControlCardProps = {
   handleClick: (id: string) => void
 }
 function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCardProps) {
-  function getDeliveryStatusTag(status: TPurchaseControlSimplifiedDTO['entrega']['status']) {
-    if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-  }
   return (
     <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
@@ -170,11 +165,6 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
-            <Truck width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">TRANSPORTADORA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.transporte.transportadora.nome || 'N/A'}</h1>
-          </div>
-          <div className="flex items-center gap-1">
             <ScrollText width={13} height={13} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURAMENTOS</h1>
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
@@ -187,9 +177,11 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(purchaseControl.dataPedido) || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
-            <Package width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(purchaseControl.entrega.status)}</h1>
+            <FaLocationDot width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {purchaseControl.entrega.localizacao.cidade} ({purchaseControl.entrega.localizacao.uf})
+            </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarEvent width={10} height={10} />

@@ -25,6 +25,18 @@ function PurchaseControlGeneralInformationBlock({ session, infoHolder, setInfoHo
       return previousData.dataEfetivacao
     }
   }
+  function handleStatusLogs(newValue: TPurchaseControl['status'], previousData: TPurchaseControl) {
+    const previousStatus = previousData.status
+    const newStatus = newValue
+    if (previousStatus == newStatus) return previousData.registrosStatus || {}
+    const previousStatusLog = previousData.registrosStatus?.[previousStatus] || {}
+    const newStatusLog = previousData.registrosStatus?.[newStatus] || {}
+    return {
+      ...(previousData.registrosStatus || {}),
+      [previousStatus]: { ...previousStatusLog, saida: new Date().toISOString() },
+      [newStatus]: { ...newStatusLog, entrada: new Date().toISOString() },
+    }
+  }
   return (
     <div className="flex w-full grow flex-col gap-4">
       <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES GERAIS</h1>
@@ -56,9 +68,14 @@ function PurchaseControlGeneralInformationBlock({ session, infoHolder, setInfoHo
               value={infoHolder.status}
               options={PurchaseControlStatus}
               handleChange={(value) =>
-                setInfoHolder((prev) => ({ ...prev, status: value, dataEfetivacao: handleEffectivationUpdate(value, infoHolder) }))
+                setInfoHolder((prev) => ({
+                  ...prev,
+                  status: value,
+                  registrosStatus: handleStatusLogs(value, infoHolder),
+                  dataEfetivacao: handleEffectivationUpdate(value, infoHolder),
+                }))
               }
-              onReset={() => setInfoHolder((prev) => ({ ...prev, status: 'PENDENTE', dataEfetivacao: null }))}
+              onReset={() => setInfoHolder((prev) => ({ ...prev, status: 'PENDENTE', registrosStatus: {}, dataEfetivacao: null }))}
               selectedItemLabel="NÃO DEFINIDO"
               width="100%"
             />

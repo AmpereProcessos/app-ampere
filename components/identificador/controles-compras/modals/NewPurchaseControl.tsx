@@ -19,6 +19,7 @@ import { usePurchaseProject } from '@/utils/methods/query/purchase-controls'
 import PurchaseControlProjectInformationBlock from './blocos/ProjectInformationBlock'
 import PurchaseControlProjectVinculation from './blocos/utils/ProjectVinculation'
 import toast from 'react-hot-toast'
+import PurchaseControlPaymentInformationBlock from './blocos/PaymentInformationBlock'
 
 type NewPurchaseControlProps = {
   session: Session
@@ -29,6 +30,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
     status: 'PENDENTE',
+    registrosStatus: {},
     titulo: '',
     anotacoes: '',
     projeto: {},
@@ -102,6 +104,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
             <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             {/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
             <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+            <PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

@@ -25,7 +25,7 @@ import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
-import { FaRotate } from 'react-icons/fa6'
+import { FaLocationDot, FaRotate } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { MdDashboard } from 'react-icons/md'
 import NewPurchaseControl from './modals/NewPurchaseControl'
@@ -106,10 +106,13 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
               onReset={() => setFilters((prev) => ({ ...prev, tags: [] }))}
             />
             <button
-              onClick={() => updateQueryParams({ unfinishedOnly: !queryParams.unfinishedOnly })}
-              className={cn('min-h-[46.6px] rounded p-2 text-xs font-bold text-white', queryParams.unfinishedOnly ? 'bg-blue-600' : 'bg-gray-600')}
+              onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
+              className={cn(
+                'min-h-[46.6px] rounded p-2 text-xs font-bold text-white',
+                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-gray-600'
+              )}
             >
-              {queryParams.unfinishedOnly ? 'EM ANDAMENTO' : 'TODAS'}
+              {queryParams.queryPendingConclusion ? 'EM ANDAMENTO' : 'TODAS'}
             </button>
             <Button onClick={() => setNewPurchaseControlModalIsOpen(true)} className="min-h-[46.6px]">
               NOVO CONTROLE
@@ -244,11 +247,6 @@ type PurchaseControlCardProps = {
 }
 function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }: PurchaseControlCardProps) {
   const queryClient = useQueryClient()
-  function getDeliveryStatusTag(status: TPurchaseControlKanbanSimplifiedDTO['entrega']['status']) {
-    if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-  }
 
   return (
     <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
@@ -292,11 +290,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FORNECEDOR</h1>
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
           </div>
-          <div className="flex items-center gap-1">
-            <Truck width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">TRANSPORTADORA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.transporte.transportadora.nome || 'N/A'}</h1>
-          </div>
+
           <div className="flex items-center gap-1">
             <ScrollText width={13} height={13} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURAMENTOS</h1>
@@ -310,9 +304,11 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(purchaseControl.dataPedido) || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
-            <Package width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(purchaseControl.entrega.status)}</h1>
+            <FaLocationDot width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {purchaseControl.entrega.localizacao.cidade} ({purchaseControl.entrega.localizacao.uf})
+            </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarEvent width={10} height={10} />

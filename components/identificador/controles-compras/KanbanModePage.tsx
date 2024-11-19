@@ -6,14 +6,19 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
-import { TPurchaseControlDTO, TPurchaseControlKanbanSimplified, TPurchaseControlKanbanSimplifiedDTO } from '@/utils/schemas/purchases'
+import {
+  TPurchaseControl,
+  TPurchaseControlDTO,
+  TPurchaseControlKanbanSimplified,
+  TPurchaseControlKanbanSimplifiedDTO,
+} from '@/utils/schemas/purchases'
 import { MdDashboard } from 'react-icons/md'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from '@/utils/methods/formatting'
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
 import { Button } from '@/components/ui/button'
 import NewPurchaseControl from './modals/NewPurchaseControl'
-import { CheckCheck, Factory, Pencil, ScrollText, Tag, Truck, X } from 'lucide-react'
+import { CheckCheck, Factory, Pencil, ScrollText, Tag, Target, Truck, X } from 'lucide-react'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
@@ -21,11 +26,14 @@ import toast from 'react-hot-toast'
 import ControlPurchaseControl from './modals/ControlPurchaseControl'
 import { cn } from '@/lib/utils'
 import { TPurchaseControlKanbanListExpandedModes, TPurchasesControlPageModes } from '@/pages/suprimentos/controle-compras'
-import { FaRotate } from 'react-icons/fa6'
+import { FaLocationDot, FaRotate } from 'react-icons/fa6'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { FaExpand } from 'react-icons/fa'
 import { handleSetCookie } from '@/utils/methods/cookies'
+import { PurchaseControlStatus } from '@/utils/select-options'
+import dayjs from 'dayjs'
+import { TbUrgent } from 'react-icons/tb'
 
 type TPurchaseControlByStatus = {
   title: string
@@ -52,7 +60,9 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
         'AGUARDANDO APROVAÇÃO': [],
         'AGUARDANDO NOTA FUTURA': [],
         'AGUARDANDO PAGAMENTO': [],
+        'AGUARDANDO NOTA FINAL': [],
         'AGUARDANDO COMPRA': [],
+        'AGUARDANDO SEPARAÇÃO': [],
         'AGUARDANDO FATURAMENTO': [],
         'AGUARDANDO NF COR': [],
         'AGUARDANDO DESPACHE': [],
@@ -67,7 +77,9 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
       'AGUARDANDO APROVAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO APROVAÇÃO'),
       'AGUARDANDO NOTA FUTURA': purchaseControls.filter((c) => c.status == 'AGUARDANDO NOTA FUTURA'),
       'AGUARDANDO PAGAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO PAGAMENTO'),
+      'AGUARDANDO NOTA FINAL': purchaseControls.filter((c) => c.status == 'AGUARDANDO NOTA FINAL'),
       'AGUARDANDO COMPRA': purchaseControls.filter((c) => c.status == 'AGUARDANDO COMPRA'),
+      'AGUARDANDO SEPARAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO SEPARAÇÃO'),
       'AGUARDANDO FATURAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO FATURAMENTO'),
       'AGUARDANDO NF COR': purchaseControls.filter((c) => c.status == 'AGUARDANDO NF COR'),
       'AGUARDANDO DESPACHE': purchaseControls.filter((c) => c.status == 'AGUARDANDO DESPACHE'),
@@ -87,7 +99,18 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
         return previousData.dataEfetivacao
       }
     }
-
+    function handleStatusLogs(newValue: TPurchaseControl['status'], previousData: TPurchaseControlKanbanSimplifiedDTO) {
+      const previousStatus = previousData.status
+      const newStatus = newValue
+      if (previousStatus == newStatus) return previousData.registrosStatus || {}
+      const previousStatusLog = previousData.registrosStatus?.[previousStatus] || {}
+      const newStatusLog = previousData.registrosStatus?.[newStatus] || {}
+      return {
+        ...(previousData.registrosStatus || {}),
+        [previousStatus]: { ...previousStatusLog, saida: new Date().toISOString() },
+        [newStatus]: { ...newStatusLog, entrada: new Date().toISOString() },
+      }
+    }
     const { source, destination, draggableId } = dragEndResult
 
     if (!destination) return
@@ -100,6 +123,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
       changes: {
         status: destination.droppableId as TPurchaseControlKanbanSimplifiedDTO['status'],
         dataEfetivacao: handleEffectivationUpdate(destination.droppableId as TPurchaseControlKanbanSimplifiedDTO['status'], purchaseControl),
+        registrosStatus: handleStatusLogs(destination.droppableId as TPurchaseControlKanbanSimplifiedDTO['status'], purchaseControl),
       },
     })
   }
@@ -218,11 +242,15 @@ type FunnelListProps = {
   handleItemClick: (id: string) => void
 }
 function FunnelList({ session, title, items, initialKanbanListExpandedModeOptions, handleItemClick }: FunnelListProps) {
+  function getFunnelListStatusDeadlineDays(status: TPurchaseControlKanbanSimplifiedDTO['status']) {
+    const statusOption = PurchaseControlStatus.find((s) => s.value == status)
+    return statusOption?.deadlineDays
+  }
   const initialKanbanListExpandedMode = initialKanbanListExpandedModeOptions[title] || null
   const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(
     initialKanbanListExpandedMode == 'inactive' ? false : true
   )
-
+  const deadlineDays = getFunnelListStatusDeadlineDays(title as TPurchaseControlKanbanSimplifiedDTO['status'])
   return (
     <Droppable droppableId={title.toString()}>
       {(provided) => (
@@ -265,11 +293,18 @@ function FunnelList({ session, title, items, initialKanbanListExpandedModeOption
               </button>
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
+              <div className="w-full lg:w-1/3" />
               <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
-                <p>
-                  <MdDashboard />
-                </p>
+                <MdDashboard />
                 <p>{items.length}</p>
+              </div>
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+                {deadlineDays ? (
+                  <>
+                    <Target size={12} />
+                    <p>{deadlineDays} DIAS</p>
+                  </>
+                ) : null}
               </div>
             </div>
           </div>
@@ -299,12 +334,31 @@ type FunnelListItemProps = {
 }
 function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handleClick }: FunnelListItemProps) {
   const [itemExpandedModeActive, setItemExpandedModeActive] = useState(funnelListItemsExpandedModeActive)
-  function getDeliveryStatusTag(status: TPurchaseControlKanbanSimplifiedDTO['entrega']['status']) {
-    if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-    if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
-  }
 
+  function getItemDeadlineStatus(item: TPurchaseControlKanbanSimplifiedDTO) {
+    const statusDeadlineDays = PurchaseControlStatus.find((s) => s.value == item.status)?.deadlineDays
+    if (!statusDeadlineDays) return null
+    const itemStatusLogStart = item.registrosStatus?.[item.status]?.entrada
+    if (!itemStatusLogStart) return null
+    const itemStatusLogStartDate = new Date(itemStatusLogStart)
+    const diffInDays = dayjs().diff(dayjs(itemStatusLogStartDate), 'day')
+    console.log(diffInDays)
+    if (diffInDays > statusDeadlineDays)
+      return (
+        <div className="flex min-w-fit items-center gap-1 self-center rounded-lg bg-red-600 px-2 py-0.5 text-white">
+          <TbUrgent size={12} />
+          <h1 className="text-[0.5rem]">ATRASADO</h1>
+        </div>
+      )
+    if (diffInDays + 1 >= statusDeadlineDays)
+      return (
+        <div className="flex min-w-fit items-center gap-1 self-center rounded-lg bg-yellow-600 px-2 py-0.5 text-white">
+          <TbUrgent size={12} />
+          <h1 className="text-[0.5rem]">VENCENDO</h1>
+        </div>
+      )
+    return null
+  }
   useEffect(() => {
     setItemExpandedModeActive(funnelListItemsExpandedModeActive)
   }, [funnelListItemsExpandedModeActive])
@@ -336,6 +390,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
             </button>
           </div>
           <div className="flex w-full grow flex-col gap-2 px-2">
+            {getItemDeadlineStatus(item)}
             {item.etiquetas.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
                 <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
@@ -358,20 +413,10 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
             ) : null}
             {itemExpandedModeActive ? (
               <>
-                <div className="flex w-full items-center justify-center">
-                  {item.liberacao.data ? <CheckCheck color="#22c55e" height={13} width={13} /> : <X color="#ef4444" height={13} width={13} />}
-                  <h1 className="text-[0.6rem] text-primary/80">{item.liberacao.data ? 'LIBERADO' : 'NÃO LIBERADO'}</h1>
-                </div>
                 <div className="flex w-full flex-wrap items-center justify-around gap-2">
                   <div className="flex items-center gap-1">
                     <Factory height={13} width={13} />
                     <h1 className="text-[0.6rem] font-medium text-primary/80">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Truck height={13} width={13} />
-                    <h1 className="text-[0.6rem] font-medium text-primary/80">
-                      {item.transporte.transportadora.nome || 'TRANSPORTADORA INDEFINIDO'}
-                    </h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <ScrollText height={13} width={13} />
@@ -387,6 +432,13 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                     <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
                   </div>
                   <div className="flex items-center gap-1">
+                    <FaLocationDot width={10} height={10} />
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+                      {item.entrega.localizacao.cidade} ({item.entrega.localizacao.uf})
+                    </h1>
+                  </div>
+                  <div className="flex items-center gap-1">
                     <BsCalendarEvent width={10} height={10} />
                     <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
                     <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
@@ -400,11 +452,6 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                       {formatDateAsLocale(item.entrega.dataEfetivacao) || 'N/A'}
                     </h1>
                   </div>
-                </div>
-                <div className="flex w-full items-center justify-center gap-1">
-                  <BsCalendarCheck width={10} height={10} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">STATUS DE ENTREGA</h1>
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{getDeliveryStatusTag(item.entrega.status)}</h1>
                 </div>
               </>
             ) : null}

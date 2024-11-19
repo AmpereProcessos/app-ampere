@@ -127,7 +127,11 @@ const createPurchaseControlRoute: NextApiHandler<PostResponse> = async (req, res
   const db: Db = await connectToDatabase(process.env.DB_KEY)
   const collection = db.collection<TPurchaseControl>('controles-compras')
 
-  const insertResponse = await collection.insertOne(purchaseControl)
+  const purchaseControlWithRegistrosStatus = {
+    ...purchaseControl,
+    registrosStatus: { [purchaseControl.status]: { entrada: new Date().toISOString() } },
+  }
+  const insertResponse = await collection.insertOne(purchaseControlWithRegistrosStatus)
   if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido ao inserir controle de compra.')
   const insertedId = insertResponse.insertedId.toString()
 

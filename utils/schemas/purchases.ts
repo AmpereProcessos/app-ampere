@@ -9,7 +9,9 @@ const PurchaseStatus = z.enum(
     'AGUARDANDO APROVAÇÃO',
     'AGUARDANDO NOTA FUTURA',
     'AGUARDANDO PAGAMENTO',
+    'AGUARDANDO NOTA FINAL',
     'AGUARDANDO COMPRA',
+    'AGUARDANDO SEPARAÇÃO',
     'AGUARDANDO FATURAMENTO',
     'AGUARDANDO NF COR',
     'AGUARDANDO DESPACHE',
@@ -69,6 +71,24 @@ const PurchaseUpdateItemSchema = z.object({
 
 export const GeneralPurchaseControlSchema = z.object({
   status: PurchaseStatus,
+  registrosStatus: z
+    .record(
+      z.string(),
+      z.object({
+        entrada: z
+          .string({ invalid_type_error: 'Tipo não válido para a data de entrada no status.' })
+          .datetime({ message: 'Formato inválido para a data de entrada no status.' })
+          .optional()
+          .nullable(),
+        saida: z
+          .string({ invalid_type_error: 'Tipo não válido para a data de saída no status.' })
+          .datetime({ message: 'Formato inválido para a data de saída no status.' })
+          .optional()
+          .nullable(),
+      })
+    )
+    .optional()
+    .nullable(),
   titulo: z.string({ required_error: 'Título do registro de compra não informado.', invalid_type_error: 'Tipo não válido para o título da compra.' }),
   anotacoes: z.string({ required_error: 'Anotações da compra não informadas.', invalid_type_error: 'Tipo não válido para anotações da compra.' }),
   projeto: PurchaseProject,
@@ -120,10 +140,8 @@ export const GeneralPurchaseControlSchema = z.object({
     required_error: 'Lista de atualizações não informada.',
     invalid_type_error: 'Tipo não válido para a lista de atualizações.',
   }),
-  dataLiberacaoPagamento: z
-    .string({ invalid_type_error: 'Tipo não válido para data recebimento do pagamento ou liberação para pagamento.' })
-    .optional()
-    .nullable(),
+  dataRequisicaoPagamento: z.string({ invalid_type_error: 'Tipo não válido para data de requisição do pagamento.' }).optional().nullable(),
+  dataLiberacaoPagamento: z.string({ invalid_type_error: 'Tipo não válido para data de liberação para pagamento.' }).optional().nullable(),
   dataPagamento: z.string({ invalid_type_error: 'Tipo não válido para data de pagamento.' }).optional().nullable(),
   dataPedido: z.string({ invalid_type_error: 'Tipo não válido para a data do pedido.' }).optional().nullable(),
   fornecedor: z.object({
@@ -165,6 +183,7 @@ export const GeneralPurchaseControlSchema = z.object({
     }),
   }),
   autor: AuthorSchema,
+
   dataInsercao: z.string({ invalid_type_error: 'Tipo não válido para data de inserção do controle de compra.' }),
   dataEfetivacao: z.string({ invalid_type_error: 'Tipo não válido para data de conclusão do controle de compra.' }).optional().nullable(),
 })
@@ -193,7 +212,17 @@ export type TPurchaseControlTagDTO = TPurchaseControlTag & { _id: string }
 
 export type TPurchaseControlSimplified = Pick<
   TPurchaseControl,
-  'status' | 'etiquetas' | 'titulo' | 'projeto' | 'liberacao' | 'dataPedido' | 'fornecedor' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
+  | 'status'
+  | 'registrosStatus'
+  | 'etiquetas'
+  | 'titulo'
+  | 'projeto'
+  | 'liberacao'
+  | 'dataPedido'
+  | 'fornecedor'
+  | 'autor'
+  | 'dataInsercao'
+  | 'dataEfetivacao'
 > & {
   liberacao: {
     data: TPurchaseControl['liberacao']['data']
@@ -205,11 +234,11 @@ export type TPurchaseControlSimplified = Pick<
     codigoNotaFiscal: TPurchaseControl['faturamentos'][number]['codigoNotaFiscal']
     data: TPurchaseControl['faturamentos'][number]['data']
   }[]
-  transporte: {
-    transportadora: { nome: TPurchaseControl['transporte']['transportadora']['nome'] }
-  }
   entrega: {
-    status: TPurchaseControl['entrega']['status']
+    localizacao: {
+      uf: TPurchaseControl['entrega']['localizacao']['uf']
+      cidade: TPurchaseControl['entrega']['localizacao']['cidade']
+    }
     dataPrevisao: TPurchaseControl['entrega']['dataPrevisao']
     dataEfetivacao: TPurchaseControl['entrega']['dataEfetivacao']
   }
@@ -217,6 +246,7 @@ export type TPurchaseControlSimplified = Pick<
 export type TPurchaseControlSimplifiedDTO = TPurchaseControlSimplified & { _id: string }
 export const PurchaseControlSimplifiedProjection = {
   status: 1,
+  registrosStatus: 1,
   etiquetas: 1,
   titulo: 1,
   projeto: 1,
@@ -225,8 +255,8 @@ export const PurchaseControlSimplifiedProjection = {
   'fornecedor.nome': 1,
   'faturamentos.codigoNotaFiscal': 1,
   'faturamentos.data': 1,
-  'transporte.transportadora.nome': 1,
-  'entrega.status': 1,
+  'entrega.localizacao.uf': 1,
+  'entrega.localizacao.cidade': 1,
   'entrega.dataPrevisao': 1,
   'entrega.dataEfetivacao': 1,
   autor: 1,
@@ -236,7 +266,7 @@ export const PurchaseControlSimplifiedProjection = {
 
 export type TPurchaseControlKanbanSimplified = Pick<
   TPurchaseControl,
-  'status' | 'titulo' | 'etiquetas' | 'dataPedido' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
+  'status' | 'registrosStatus' | 'titulo' | 'etiquetas' | 'dataPedido' | 'autor' | 'dataInsercao' | 'dataEfetivacao'
 > & {
   liberacao: {
     data: TPurchaseControl['liberacao']['data']
@@ -248,11 +278,11 @@ export type TPurchaseControlKanbanSimplified = Pick<
     codigoNotaFiscal: TPurchaseControl['faturamentos'][number]['codigoNotaFiscal']
     data: TPurchaseControl['faturamentos'][number]['data']
   }[]
-  transporte: {
-    transportadora: { nome: TPurchaseControl['transporte']['transportadora']['nome'] }
-  }
   entrega: {
-    status: TPurchaseControl['entrega']['status']
+    localizacao: {
+      uf: TPurchaseControl['entrega']['localizacao']['uf']
+      cidade: TPurchaseControl['entrega']['localizacao']['cidade']
+    }
     dataPrevisao: TPurchaseControl['entrega']['dataPrevisao']
     dataEfetivacao: TPurchaseControl['entrega']['dataEfetivacao']
   }
@@ -260,6 +290,7 @@ export type TPurchaseControlKanbanSimplified = Pick<
 export type TPurchaseControlKanbanSimplifiedDTO = TPurchaseControlKanbanSimplified & { _id: string }
 export const PurchaseControlKanbanSimplifiedProjection = {
   status: 1,
+  registrosStatus: 1,
   etiquetas: 1,
   titulo: 1,
   projeto: 1,
@@ -268,8 +299,8 @@ export const PurchaseControlKanbanSimplifiedProjection = {
   'fornecedor.nome': 1,
   'faturamentos.codigoNotaFiscal': 1,
   'faturamentos.data': 1,
-  'transporte.transportadora.nome': 1,
-  'entrega.status': 1,
+  'entrega.localizacao.uf': 1,
+  'entrega.localizacao.cidade': 1,
   'entrega.dataPrevisao': 1,
   'entrega.dataEfetivacao': 1,
   autor: 1,

@@ -1505,18 +1505,20 @@ export const revenueSources = [
 ]
 
 export const PurchaseControlStatus = [
-  { id: 1, label: 'PENDENTE', value: 'PENDENTE' },
-  { id: 2, label: 'EM COTAÇÃO', value: 'EM COTAÇÃO' },
-  { id: 3, label: 'AGUARDANDO APROVAÇÃO', value: 'AGUARDANDO APROVAÇÃO' },
-  { id: 4, label: 'AGUARDANDO NOTA FUTURA', value: 'AGUARDANDO NOTA FUTURA' },
-  { id: 5, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO' },
-  { id: 6, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA' },
-  { id: 7, label: 'AGUARDANDO FATURAMENTO', value: 'AGUARDANDO FATURAMENTO' },
-  { id: 8, label: 'AGUARDANDO NF COR', value: 'AGUARDANDO NF COR' },
-  { id: 9, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE' },
-  { id: 10, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA' },
-  { id: 11, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
-  { id: 12, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
+  { id: 1, label: 'PENDENTE', value: 'PENDENTE', deadlineDays: null },
+  { id: 2, label: 'EM COTAÇÃO', value: 'EM COTAÇÃO', deadlineDays: 2 },
+  { id: 3, label: 'AGUARDANDO APROVAÇÃO', value: 'AGUARDANDO APROVAÇÃO', deadlineDays: null },
+  { id: 4, label: 'AGUARDANDO NOTA FUTURA', value: 'AGUARDANDO NOTA FUTURA', deadlineDays: 2 },
+  { id: 5, label: 'AGUARDANDO PAGAMENTO', value: 'AGUARDANDO PAGAMENTO', deadlineDays: 3 },
+  { id: 6, label: 'AGUARDANDO NOTA FINAL', value: 'AGUARDANDO NOTA FINAL', deadlineDays: 7 },
+  { id: 7, label: 'AGUARDANDO COMPRA', value: 'AGUARDANDO COMPRA', deadlineDays: 2 },
+  { id: 8, label: 'AGUARDANDO SEPARAÇÃO', value: 'AGUARDANDO SEPARAÇÃO', deadlineDays: 7 },
+  { id: 9, label: 'AGUARDANDO FATURAMENTO', value: 'AGUARDANDO FATURAMENTO', deadlineDays: null },
+  { id: 10, label: 'AGUARDANDO NF COR', value: 'AGUARDANDO NF COR', deadlineDays: null },
+  { id: 11, label: 'AGUARDANDO DESPACHE', value: 'AGUARDANDO DESPACHE', deadlineDays: 7 },
+  { id: 12, label: 'AGUARDANDO ENTREGA', value: 'AGUARDANDO ENTREGA', deadlineDays: 7 },
+  { id: 13, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS', deadlineDays: null },
+  { id: 14, label: 'CONCLUÍDA', value: 'CONCLUÍDA', deadlineDays: null },
 ]
 export const PurchaseCompositionItemCategories = [
   { id: 1, label: 'MÓDULO', value: 'MÓDULO', icon: FaSolarPanel as React.ComponentType },

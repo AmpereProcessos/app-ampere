@@ -29,6 +29,7 @@ import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import PurchaseControlFileReferences from './blocos/AttachmentsBlock'
 import { updateProject } from '@/utils/methods/mutation/clients'
+import PurchaseControlPaymentInformationBlock from './blocos/PaymentInformationBlock'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -41,6 +42,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
   const { data: purchaseControl, isLoading, isError, isSuccess, error } = usePurchaseControlById({ id: purchaseControlId })
   const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
     status: 'PENDENTE',
+    registrosStatus: {},
     titulo: '',
     anotacoes: '',
     projeto: {},
@@ -171,6 +173,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                 <PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

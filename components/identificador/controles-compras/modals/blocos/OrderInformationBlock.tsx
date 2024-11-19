@@ -15,24 +15,6 @@ function PurchaseControlOrderInformationBlock({ infoHolder, setInfoHolder }: Pur
       <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO PEDIDO</h1>
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-          <div className="w-full lg:w-1/2">
-            <DateInput
-              label="DATA DE PAGAMENTO (RECURSOS)"
-              value={formatDate(infoHolder.dataLiberacaoPagamento)}
-              handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataLiberacaoPagamento: formatDateInputChange(value) as string }))}
-              width="100%"
-            />
-          </div>
-          <div className="w-full lg:w-1/2">
-            <DateInput
-              label="DATA DE PAGAMENTO (COMPRA)"
-              value={formatDate(infoHolder.dataPagamento)}
-              handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataPagamento: formatDateInputChange(value) as string }))}
-              width="100%"
-            />
-          </div>
-        </div>
-        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <DateInput
               label="DATA DO PEDIDO"

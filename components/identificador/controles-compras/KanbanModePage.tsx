@@ -424,19 +424,18 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                       FATURAMENTOS {item.faturamentos.filter((f) => !!f.data).length}/{item.faturamentos.length}
                     </h1>
                   </div>
+                  <div className="flex items-center gap-1">
+                    <FaLocationDot height={13} width={13} />
+                    <h1 className="text-[0.6rem] font-medium text-primary/80">
+                      {item.entrega.localizacao.cidade} ({item.entrega.localizacao.uf})
+                    </h1>
+                  </div>
                 </div>
                 <div className="flex w-full flex-wrap items-center justify-center gap-2">
                   <div className="flex items-center gap-1">
                     <BsCalendar width={10} height={10} />
                     <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
                     <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaLocationDot width={10} height={10} />
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
-                      {item.entrega.localizacao.cidade} ({item.entrega.localizacao.uf})
-                    </h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <BsCalendarEvent width={10} height={10} />

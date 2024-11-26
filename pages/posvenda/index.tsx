@@ -30,6 +30,7 @@ import {
   HomologationControlStatus,
   inspectionStatus,
   journeyPendings,
+  PurchaseDeliveryStatus,
 } from '@/utils/select-options'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { VscDiffAdded } from 'react-icons/vsc'
@@ -413,7 +414,7 @@ function Posvenda() {
                     width={'100%'}
                     label={'STATUS DE ENTREGA'}
                     selected={filters.deliveryStatus}
-                    options={deliveryStatus}
+                    options={PurchaseDeliveryStatus}
                     selectedItemLabel={'SEM FILTRO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

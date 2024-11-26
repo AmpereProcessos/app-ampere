@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { formatDate, formatDecimalPlaces } from '../../utils/constants'
-import { accessGrantingStatus, HomologationControlStatus, PurchaseControlStatus } from '../../utils/select-options'
+import { accessGrantingStatus, HomologationControlStatus, PurchaseControlStatus, PurchaseDeliveryStatus } from '../../utils/select-options'
 import { useSupplyProjects } from '../../utils/methods/query/supply'
 import { formatDateInputChange } from '../../utils/methods/shared'
 
@@ -317,12 +317,7 @@ function Suprimentos() {
                   <MultipleSelectInput
                     label={'STATUS DE ENTREGA'}
                     selected={filters.deliveryStatus}
-                    options={[
-                      { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
-                      { id: 2, value: 'AGUARDANDO COMPRA', label: 'AGUARDANDO COMPRA' },
-                      { id: 3, value: 'ENTREGUE', label: 'ENTREGUE' },
-                      { id: 4, value: 'CANCELADO', label: 'CANCELADO' },
-                    ]}
+                    options={PurchaseDeliveryStatus}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

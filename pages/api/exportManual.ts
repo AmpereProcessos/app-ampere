@@ -16,12 +16,16 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const projectsCollection: Collection<TProject> = db.collection('dados')
 
   const projects = await projectsCollection
-    .find({
-      tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-      'compra.liberacao': true,
-      'compra.status': { $ne: 'CONCLUIDA' },
-      'compra.dataPedido': null,
-    })
+    .find(
+      {
+        'contrato.status': 'ASSINADO',
+      },
+      {
+        sort: {
+          qtde: 1,
+        },
+      }
+    )
     .toArray()
 
   const exportation = projects.map((project) => ({
@@ -31,14 +35,19 @@ const getExport: NextApiHandler<any> = async (req, res) => {
     'TIPO DE SERVIÇO': project.tipoDeServico,
     UF: project.uf,
     CIDADE: project.cidade,
-    BAIRRO: project.bairro,
-    LOGRADOURO: project.logradouro,
-    'Nº DA RESIDÊNCIA': project.numeroResidencia,
-    LONGITUDE: project.longitude,
-    LATITUDE: project.latitude,
     'ASSINATURA DO CONTRATO': formatDateAsLocale(project.contrato.dataAssinatura),
     'LIBERAÇÃO DA COMPRA': project.compra.dataLiberacao ? formatDateAsLocale(project.compra.dataLiberacao) : null,
-    PRODUTOS: getProductsStr(project.produtos || []),
+    'DATA DE SOLICITAÇÃO DA HOMOLOGACAO': formatDateAsLocale(project.homologacao.acesso.dataSolicitacao),
+    'DATA DE RESPOSTA DA HOMOLOGACAO': formatDateAsLocale(project.homologacao.acesso.dataResposta),
+    'DATA DO PEDIDO': formatDateAsLocale(project.compra.dataPedido),
+    'DATA DE PAG.CLIENTE': formatDateAsLocale(project.compra.dataPagamento),
+    'DATA DE PAG.FORNECEDOR': formatDateAsLocale(project.compra.dataPagamentoEquipamentos),
+    'DATA DE ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
+    'STATUS DA OBRA': project.obra.statusDaObra,
+    'DATA DE ENTRADA NA OBRA': formatDateAsLocale(project.obra.entrada),
+    'DATA DE FINALIZAÇÃO DA OBRA': formatDateAsLocale(project.obra.saida),
+    'DATA DE SOLICITAÇÃO DA VISTORIA': formatDateAsLocale(project.homologacao.vistoria.dataSolicitacao),
+    'DATA DE REALIZAÇÃO DA VISTORIA': formatDateAsLocale(project.homologacao.vistoria.dataEfetivacao),
   }))
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 

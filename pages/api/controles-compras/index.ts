@@ -43,6 +43,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
             totalPrevisto: 1,
             liberacao: 1,
             composicao: 1,
+            dataRequisicaoPagamento: 1,
             dataLiberacaoPagamento: 1,
             dataPagamento: 1,
             dataPedido: 1,

@@ -177,12 +177,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                   {project.compra.dataPagamento ? formatDateAsLocale(project.compra.dataPagamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
-              <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">COBRANÇA DO KIT</h1>
-                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
-                  {project.compra.dataRequisicaoPagamento ? formatDateAsLocale(project.compra.dataRequisicaoPagamento) : 'NÃO DEFINIDO'}
-                </h1>
-              </div>
+
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
@@ -190,9 +185,15 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">DATA DE ENTREGA</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                  {project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'NÃO DEFINIDO'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
-                  {project.compra.status ? formatDateAsLocale(project.compra.status) : 'NÃO DEFINIDO'}
+                  {project.compra.statusEntrega ? project.compra.statusEntrega : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">

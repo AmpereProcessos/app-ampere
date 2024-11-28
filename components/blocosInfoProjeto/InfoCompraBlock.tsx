@@ -561,7 +561,7 @@ function InfoCompraBlock({
       </div>
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">PAGAMENTO E FATURAMENTO</h1>
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
           <DateInput
             label={'DATA MÁX P/ PAGAMENTO'}
             editable={editor}
@@ -582,7 +582,28 @@ function InfoCompraBlock({
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
+          <DateInput
+            label={'DATA DE COBRANÇA (CLIENTE)'}
+            editable={editor}
+            value={infoHolder.compra.dataRequisicaoPagamento ? formatDate(infoHolder.compra.dataRequisicaoPagamento) : undefined}
+            handleChange={(value) => {
+              setChanges((prev) => ({
+                ...prev,
+                'compra.dataRequisicaoPagamento': formatDateInputChange(value),
+              }))
+              setInfo((prev) => ({
+                ...prev,
+                compra: {
+                  ...prev.compra,
+                  dataRequisicaoPagamento: formatDateInputChange(value),
+                },
+              }))
+            }}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/4">
           <DateInput
             label={'DATA DE PAG. (CLIENTE)'}
             editable={editor}
@@ -603,7 +624,7 @@ function InfoCompraBlock({
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/4">
           <DateInput
             label={'DATA DE PAG. (FORNECEDOR)'}
             editable={editor}
@@ -624,7 +645,9 @@ function InfoCompraBlock({
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+      </div>
+      <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+        <div className="w-full lg:w-1/2">
           <TextInput
             label={'INFORMAÇÕES DE FATURAMENTO'}
             editable={editor}
@@ -646,7 +669,7 @@ function InfoCompraBlock({
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/5">
+        <div className="w-full lg:w-1/2">
           <DateInput
             label={'DATA DE FATURAMENTO'}
             editable={editor}

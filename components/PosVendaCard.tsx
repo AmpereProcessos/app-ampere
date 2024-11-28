@@ -166,13 +166,31 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">COBRANÇA DO KIT</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                  {project.compra.dataRequisicaoPagamento ? formatDateAsLocale(project.compra.dataRequisicaoPagamento) : 'NÃO DEFINIDO'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-center rounded p-1 lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PAGAMENTO DO KIT (CLIENTE)</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                  {project.compra.dataPagamento ? formatDateAsLocale(project.compra.dataPagamento) : 'NÃO DEFINIDO'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-center rounded p-1 lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">COBRANÇA DO KIT</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                  {project.compra.dataRequisicaoPagamento ? formatDateAsLocale(project.compra.dataRequisicaoPagamento) : 'NÃO DEFINIDO'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.status ? formatDateAsLocale(project.compra.status) : 'NÃO DEFINIDO'}
                 </h1>

@@ -65,6 +65,7 @@ const GeneralProjectSchema = z.object({
     dataEntrega: z.string().optional().nullable(),
     dataLiberacao: z.string().optional().nullable(),
     dataMaxPagamento: z.string().optional().nullable(),
+    dataRequisicaoPagamento: z.string().optional().nullable(), // Payment request was sent to client
     dataPagamento: z.string().optional().nullable(), // Money received from client
     dataPagamentoEquipamentos: z.string().optional().nullable(), // Payment to supplier
     dataPedido: z.string().optional().nullable(),

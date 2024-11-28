@@ -57,6 +57,7 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
           'compra.previsaoEntrega': 1,
           'compra.dataPedido': 1,
           'compra.dataEntrega': 1,
+          'compra.dataRequisicaoPagamento': 1,
           'compra.dataPagamento': 1,
           'compra.fornecedor': 1,
           'obra.entrada': 1,

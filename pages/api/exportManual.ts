@@ -3,6 +3,7 @@ import { formatDateAsLocale, getProductsStr } from '@/utils/methods/formatting'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
 
 import { TProject } from '@/utils/schemas/projects'
+import { TPurchaseControl } from '@/utils/schemas/purchases'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import connectToSolicitacoesDatabase from '@/utils/services/mongodb/requests'
 import dayjs from 'dayjs'
@@ -10,45 +11,6 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
-  const db: Db = await connectToDatabase(process.env.DB_KEY)
-  const requestsDb: Db = await connectToSolicitacoesDatabase(process.env.DB_KEY)
-
-  const projectsCollection: Collection<TProject> = db.collection('dados')
-
-  const projects = await projectsCollection
-    .find(
-      {
-        'contrato.status': 'ASSINADO',
-      },
-      {
-        sort: {
-          qtde: 1,
-        },
-      }
-    )
-    .toArray()
-
-  const exportation = projects.map((project) => ({
-    QTDE: project.qtde,
-    NOME: project.nomeDoContrato,
-    VENDEDOR: project.vendedor.nome,
-    'TIPO DE SERVIÇO': project.tipoDeServico,
-    UF: project.uf,
-    CIDADE: project.cidade,
-    'ASSINATURA DO CONTRATO': formatDateAsLocale(project.contrato.dataAssinatura),
-    'LIBERAÇÃO DA COMPRA': project.compra.dataLiberacao ? formatDateAsLocale(project.compra.dataLiberacao) : null,
-    'DATA DE SOLICITAÇÃO DA HOMOLOGACAO': formatDateAsLocale(project.homologacao.acesso.dataSolicitacao),
-    'DATA DE RESPOSTA DA HOMOLOGACAO': formatDateAsLocale(project.homologacao.acesso.dataResposta),
-    'DATA DO PEDIDO': formatDateAsLocale(project.compra.dataPedido),
-    'DATA DE PAG.CLIENTE': formatDateAsLocale(project.compra.dataPagamento),
-    'DATA DE PAG.FORNECEDOR': formatDateAsLocale(project.compra.dataPagamentoEquipamentos),
-    'DATA DE ENTREGA': formatDateAsLocale(project.compra.dataEntrega),
-    'STATUS DA OBRA': project.obra.statusDaObra,
-    'DATA DE ENTRADA NA OBRA': formatDateAsLocale(project.obra.entrada),
-    'DATA DE FINALIZAÇÃO DA OBRA': formatDateAsLocale(project.obra.saida),
-    'DATA DE SOLICITAÇÃO DA VISTORIA': formatDateAsLocale(project.homologacao.vistoria.dataSolicitacao),
-    'DATA DE REALIZAÇÃO DA VISTORIA': formatDateAsLocale(project.homologacao.vistoria.dataEfetivacao),
-  }))
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
   // const contractRequests = await contractRequestsCollection.find({}).toArray()
@@ -105,7 +67,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
 
-  return res.json(exportation)
+  return res.json('DESATIVADO')
 }
 export default apiHandler({
   GET: getExport,

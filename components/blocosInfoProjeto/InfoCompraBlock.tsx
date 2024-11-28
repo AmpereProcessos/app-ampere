@@ -783,7 +783,7 @@ function InfoCompraBlock({
         </div>
       )}
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">ATUALIZAÇÕES</h1>
-      <div className="flex w-full flex-col items-center gap-2 py-2">
+      <div className="flex w-full flex-col items-center gap-2 py-2 px-2">
         {infoHolder.compra.atualizacoes && infoHolder.compra.atualizacoes.length > 0 ? (
           infoHolder.compra.atualizacoes.map((item, index) => <UpdateCard key={index} update={item} />)
         ) : (

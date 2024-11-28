@@ -172,6 +172,12 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
+                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
+                  {project.compra.status ? formatDateAsLocale(project.compra.status) : 'NÃO DEFINIDO'}
+                </h1>
+              </div>
+              <div className="flex flex-col items-center rounded p-1 lg:items-start">
                 <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">FORNECEDOR</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.fornecedor || 'NÃO DEFINIDO'}</h1>
               </div>

@@ -18,7 +18,7 @@ type ProjectVinculationProps = {
 function PurchaseControlProjectVinculation({ purchaseControlId, queryClient, affectedQueryKey, infoHolder, setInfoHolder }: ProjectVinculationProps) {
   const [vinculationModalIsOpen, setVinculationModalIsOpen] = useState<boolean>(false)
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ['update-purchase-project', purchaseControlId],
     mutationFn: handleVinculate,
     onMutate: async () => {

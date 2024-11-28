@@ -3,6 +3,7 @@ import { TActivityDTO } from './activities'
 import { ObjectId } from 'mongodb'
 import { GeneralHomologationSchema, THomologation } from './partial/homologation'
 import { ProductItemSchema, ServiceItemSchema } from './crm/kits.schema'
+import { PurchaseUpdateItemSchema } from './purchases'
 
 const MaintenanceItem = z.object({
   titulo: z.string({ required_error: 'Título da manutenção não informado.', invalid_type_error: 'Tipo não válido para o título da manutenção.' }),
@@ -60,6 +61,7 @@ const GeneralProjectSchema = z.object({
       })
       .optional()
       .nullable(),
+    atualizacoes: z.array(PurchaseUpdateItemSchema).optional().nullable(),
     dataEntrega: z.string().optional().nullable(),
     dataLiberacao: z.string().optional().nullable(),
     dataMaxPagamento: z.string().optional().nullable(),

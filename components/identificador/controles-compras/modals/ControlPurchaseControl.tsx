@@ -82,6 +82,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
           id: purchaseControl.projeto.id,
           changes: {
             'compra.status': infoHolder.status,
+            'compra.atualizacoes': infoHolder.atualizacoes,
             'compra.liberacao': !!infoHolder.liberacao.data,
             'compra.dataLiberacao': infoHolder.liberacao.data,
             'compra.fornecedor': infoHolder.fornecedor.nome,

@@ -58,7 +58,7 @@ const PurchaseCompositionItemSchema = z.object({
   }),
 })
 
-const PurchaseUpdateItemSchema = z.object({
+export const PurchaseUpdateItemSchema = z.object({
   data: z
     .string({ required_error: 'Data da atualização não informada.', invalid_type_error: 'Tipo inválido para a data de atualização.' })
     .datetime({ message: 'Formato inválido para a data da atualização.' }),

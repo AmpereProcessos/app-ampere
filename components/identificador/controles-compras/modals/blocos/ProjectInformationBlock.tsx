@@ -31,6 +31,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
     try {
       const changes = {
         'compra.liberacao': !!purchase.liberacao.data,
+        'compra.atualizacoes': purchase.atualizacoes,
         'compra.dataLiberacao': purchase.liberacao.data,
         'compra.fornecedor': purchase.fornecedor.nome,
         'compra.dataPedido': purchase.dataPedido,

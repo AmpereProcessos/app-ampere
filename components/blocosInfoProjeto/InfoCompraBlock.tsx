@@ -782,7 +782,16 @@ function InfoCompraBlock({
           </div>
         </div>
       )}
+      <h1 className="mt-2 w-full text-center font-black text-[#fead41]">ATUALIZAÇÕES</h1>
+      <div className="flex w-full flex-col items-center gap-2 py-2">
+        {infoHolder.compra.atualizacoes && infoHolder.compra.atualizacoes.length > 0 ? (
+          infoHolder.compra.atualizacoes.map((item, index) => <UpdateCard key={index} update={item} />)
+        ) : (
+          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não atualização definida.</p>
+        )}
+      </div>
       <PurchaseControlsBlock session={session} project={project} />
+
       {!showDeliveryInfoOnly ? (
         <div className="my-4 flex w-full items-center justify-center self-center">
           <CheckboxInput
@@ -1008,6 +1017,27 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function UpdateCard({ update }: { update: TPurchaseControl['atualizacoes'][number] }) {
+  return (
+    <div className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+      <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <p className="text-[0.65rem] font-medium text-primary/80">ATUALIZAÇÃO POR:</p>
+            <Avatar url={update.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(update.autor.nome)} />
+            <p className="text-[0.65rem] font-medium text-primary/80">{update.autor.nome}</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendarPlus />
+            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(update.data, true)}</p>
+          </div>
+        </div>
+      </div>
+      <p className="rounded-lg bg-primary/10 p-2 text-center text-xs text-primary">{update.descricao}</p>
     </div>
   )
 }

@@ -15,7 +15,7 @@ import {
 import { MdDashboard } from 'react-icons/md'
 import Avatar from '@/components/utils/Avatar'
 import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from '@/utils/methods/formatting'
-import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from 'react-icons/bs'
+import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus, BsFillFunnelFill, BsFunnel, BsFunnelFill } from 'react-icons/bs'
 import { Button } from '@/components/ui/button'
 import NewPurchaseControl from './modals/NewPurchaseControl'
 import { CheckCheck, Factory, Pencil, ScrollText, Tag, Target, Truck, X } from 'lucide-react'
@@ -71,21 +71,51 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
         PENDÊNCIAS: [],
       }).map(([key, value]) => ({ title: key, items: value }))
 
+    function handleSortByStatusLog(
+      status: TPurchaseControlKanbanSimplifiedDTO['status'],
+      itemA: TPurchaseControlKanbanSimplifiedDTO,
+      itemB: TPurchaseControlKanbanSimplifiedDTO
+    ) {
+      const dateAAddedInStatus = itemA.registrosStatus?.[status]?.entrada
+      const dateBAddedInStatus = itemB.registrosStatus?.[status]?.entrada
+      if (!dateAAddedInStatus || !dateBAddedInStatus) return 0
+      return new Date(dateAAddedInStatus).getTime() - new Date(dateBAddedInStatus).getTime()
+    }
     return Object.entries({
       PENDENTE: purchaseControls.filter((c) => c.status == 'PENDENTE'),
-      'EM COTAÇÃO': purchaseControls.filter((c) => c.status == 'EM COTAÇÃO'),
-      'AGUARDANDO APROVAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO APROVAÇÃO'),
-      'AGUARDANDO NOTA FUTURA': purchaseControls.filter((c) => c.status == 'AGUARDANDO NOTA FUTURA'),
-      'AGUARDANDO PAGAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO PAGAMENTO'),
-      'AGUARDANDO NOTA FINAL': purchaseControls.filter((c) => c.status == 'AGUARDANDO NOTA FINAL'),
-      'AGUARDANDO COMPRA': purchaseControls.filter((c) => c.status == 'AGUARDANDO COMPRA'),
-      'AGUARDANDO SEPARAÇÃO': purchaseControls.filter((c) => c.status == 'AGUARDANDO SEPARAÇÃO'),
-      'AGUARDANDO FATURAMENTO': purchaseControls.filter((c) => c.status == 'AGUARDANDO FATURAMENTO'),
-      'AGUARDANDO NF COR': purchaseControls.filter((c) => c.status == 'AGUARDANDO NF COR'),
-      'AGUARDANDO DESPACHE': purchaseControls.filter((c) => c.status == 'AGUARDANDO DESPACHE'),
-      'AGUARDANDO ENTREGA': purchaseControls.filter((c) => c.status == 'AGUARDANDO ENTREGA'),
-      CONCLUÍDA: purchaseControls.filter((c) => c.status == 'CONCLUÍDA'),
-      PENDÊNCIAS: purchaseControls.filter((c) => c.status == 'PENDÊNCIAS'),
+      'EM COTAÇÃO': purchaseControls.filter((c) => c.status == 'EM COTAÇÃO').sort((a, b) => handleSortByStatusLog('EM COTAÇÃO', a, b)),
+      'AGUARDANDO APROVAÇÃO': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO APROVAÇÃO')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO APROVAÇÃO', a, b)),
+      'AGUARDANDO NOTA FUTURA': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO NOTA FUTURA')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO NOTA FUTURA', a, b)),
+      'AGUARDANDO PAGAMENTO': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO PAGAMENTO')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO PAGAMENTO', a, b)),
+      'AGUARDANDO NOTA FINAL': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO NOTA FINAL')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO NOTA FINAL', a, b)),
+      'AGUARDANDO COMPRA': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO COMPRA')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO COMPRA', a, b)),
+      'AGUARDANDO SEPARAÇÃO': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO SEPARAÇÃO')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO SEPARAÇÃO', a, b)),
+      'AGUARDANDO FATURAMENTO': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO FATURAMENTO')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO FATURAMENTO', a, b)),
+      'AGUARDANDO NF COR': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO NF COR')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO NF COR', a, b)),
+      'AGUARDANDO DESPACHE': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO DESPACHE')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO DESPACHE', a, b)),
+      'AGUARDANDO ENTREGA': purchaseControls
+        .filter((c) => c.status == 'AGUARDANDO ENTREGA')
+        .sort((a, b) => handleSortByStatusLog('AGUARDANDO ENTREGA', a, b)),
+      CONCLUÍDA: purchaseControls.filter((c) => c.status == 'CONCLUÍDA').sort((a, b) => handleSortByStatusLog('CONCLUÍDA', a, b)),
+      PENDÊNCIAS: purchaseControls.filter((c) => c.status == 'PENDÊNCIAS').sort((a, b) => handleSortByStatusLog('PENDÊNCIAS', a, b)),
     }).map(([key, value]) => ({ title: key, items: value }))
   }
 
@@ -391,6 +421,12 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
           </div>
           <div className="flex w-full grow flex-col gap-2 px-2">
             {getItemDeadlineStatus(item)}
+            {item.registrosStatus?.[item.status]?.entrada ? (
+              <div className="flex w-fit items-center gap-1 self-center">
+                <BsFunnel />
+                <p className={`text-[0.65rem] font-medium text-gray-500`}>{formatDateAsLocale(item.registrosStatus?.[item.status]?.entrada, true)}</p>
+              </div>
+            ) : null}
             {item.etiquetas.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
                 <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
@@ -467,6 +503,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                 <BsCalendarPlus />
                 <p className={`text-[0.65rem] font-medium text-gray-500`}>{formatDateAsLocale(item.dataInsercao, true)}</p>
               </div>
+
               {item.dataEfetivacao ? (
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck color="#22c55e" />

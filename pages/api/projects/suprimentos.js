@@ -13,6 +13,7 @@ export default async function handler(req, res) {
         {
           $match: {
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             'compra.liberacao': true,
             'compra.status': { $ne: 'CONCLUÍDA' },
           },

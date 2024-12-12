@@ -18,13 +18,20 @@ import { IoMdAdd } from 'react-icons/io'
 import { MdLandscape, MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
 import { TbReportAnalytics, TbRulerMeasure } from 'react-icons/tb'
 import { useMutation } from '@tanstack/react-query'
+import CheckboxInput from '@/components/inputs/Checkbox'
 
 type PurchaseControlProjectInformationBlockProps = {
   purchase: TPurchaseControl
+  updatePurchase: (changes: Partial<TPurchaseControl>) => void
   project: TPurchaseProjectDTO
   addProductToComposition: (product: TPurchaseControl['composicao'][number]) => void
 }
-function PurchaseControlProjectInformationBlock({ purchase, project, addProductToComposition }: PurchaseControlProjectInformationBlockProps) {
+function PurchaseControlProjectInformationBlock({
+  purchase,
+  updatePurchase,
+  project,
+  addProductToComposition,
+}: PurchaseControlProjectInformationBlockProps) {
   const [technicalAnalysisBlockIsOpen, setTechnicalAnalysisBlockIsOpen] = useState<boolean>(false)
 
   async function handleUpdateProject() {
@@ -44,6 +51,7 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
         'compra.dataEntrega': purchase.entrega.dataEfetivacao,
         'compra.statusEntrega': purchase.entrega.status,
         'compra.kitInfo': purchase.composicao.map((c) => `${c.qtde}-${c.descricao}`).join('\n'),
+        'obra.pendencias': purchase.metadata?.pendenciasExecucao,
       }
       await updateProject({ id: project._id, changes })
       return 'Dados sincronizados com sucesso !'
@@ -252,6 +260,17 @@ function PurchaseControlProjectInformationBlock({ purchase, project, addProductT
           ) : (
             <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum produto adicionado</div>
           )}
+        </div>
+        <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">OUTROS</h1>
+        <div className="flex items-center justify-center">
+          <div className="w-fit">
+            <CheckboxInput
+              labelFalse="LEVAR ESTRUTURA NA MONTAGEM"
+              labelTrue="LEVAR ESTRUTURA NA MONTAGEM"
+              checked={purchase.metadata?.pendenciasExecucao == 'LEVAR ESTRUTURA NA MONTAGEM'}
+              handleChange={(value) => updatePurchase({ metadata: { pendenciasExecucao: value ? 'LEVAR ESTRUTURA NA MONTAGEM' : null } })}
+            />
+          </div>
         </div>
         {project.idVisitaTecnica ? (
           <div className="flex w-full flex-col gap-2">

@@ -183,7 +183,12 @@ export const GeneralPurchaseControlSchema = z.object({
     }),
   }),
   autor: AuthorSchema,
-
+  metadata: z
+    .object({
+      pendenciasExecucao: z.string().optional().nullable(),
+    })
+    .optional()
+    .nullable(),
   dataInsercao: z.string({ invalid_type_error: 'Tipo não válido para data de inserção do controle de compra.' }),
   dataEfetivacao: z.string({ invalid_type_error: 'Tipo não válido para data de conclusão do controle de compra.' }).optional().nullable(),
 })

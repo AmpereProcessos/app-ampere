@@ -608,6 +608,11 @@ function Obras() {
                     <h1 className="rounded bg-green-500 px-2 py-1 text-[0.55rem] font-bold text-white">FAST TRACK</h1>
                   </div>
                 ) : null}
+                {project.obra.pendencias ? (
+                  <div className="flex w-full items-center justify-center">
+                    <h1 className="rounded bg-amber-900 px-2 py-1 text-[0.55rem] font-bold text-white">{project.obra.pendencias}</h1>
+                  </div>
+                ) : null}
               </div>
             </motion.div>
           ))}

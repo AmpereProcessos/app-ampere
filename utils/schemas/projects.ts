@@ -345,6 +345,7 @@ const GeneralProjectSchema = z.object({
     saida: z.string().optional().nullable(),
     statusDaObra: z.string().optional().nullable(), // select-options
     statusSolicitacao: z.string().optional().nullable(),
+    pendencias: z.string().optional().nullable(),
     trafo: z.string().optional().nullable(),
   }),
   obsComercial: z.string().optional().nullable(),

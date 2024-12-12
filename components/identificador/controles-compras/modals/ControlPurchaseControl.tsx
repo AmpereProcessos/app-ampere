@@ -96,6 +96,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
             'compra.dataEntrega': infoHolder.entrega.dataEfetivacao,
             'compra.statusEntrega': infoHolder.entrega.status,
             'compra.kitInfo': infoHolder.composicao.map((c) => `${c.qtde}-${c.descricao}`).join('\n'),
+            'obra.pendencias': infoHolder.metadata?.pendenciasExecucao,
           },
         })
     } catch (error) {}
@@ -155,6 +156,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                 {purchaseControl.projetoDados ? (
                   <PurchaseControlProjectInformationBlock
                     purchase={infoHolder}
+                    updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
                     project={purchaseControl.projetoDados}
                     addProductToComposition={addProductToComposition}
                   />

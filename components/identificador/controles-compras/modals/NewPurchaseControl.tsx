@@ -91,7 +91,12 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
           <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             {project ? (
-              <PurchaseControlProjectInformationBlock purchase={infoHolder} project={project} addProductToComposition={addProductToComposition} />
+              <PurchaseControlProjectInformationBlock
+                purchase={infoHolder}
+                updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
+                project={project}
+                addProductToComposition={addProductToComposition}
+              />
             ) : (
               <PurchaseControlProjectVinculation
                 purchaseControlId={undefined}

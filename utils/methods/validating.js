@@ -6,3 +6,6 @@ export function isNumber(value) {
   if (isNaNCheck) return false
   return true
 }
+export function isValidNumber(value) {
+  return typeof value === 'number' && !isNaN(value) && value !== null && value !== undefined
+}

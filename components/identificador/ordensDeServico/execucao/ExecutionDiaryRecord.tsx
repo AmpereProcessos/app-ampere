@@ -2,7 +2,7 @@ import DatetimeInput from '@/components/inputs/Datetime'
 
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { updateServiceOrder } from '@/utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '@/utils/methods/mutation/service-orders'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -39,10 +39,8 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
       const historyCopy = [...history]
       historyCopy[itemIndex] = infoHolder
       await updateServiceOrder({
-        orderId: orderId,
-        info: { 'periodo.historico': historyCopy },
-        queryClient: queryClient,
-        invalidateKey: ['service-order', orderId],
+        changes: { 'periodo.historico': historyCopy },
+        id: orderId,
       })
       toast.dismiss(loadingToastId)
       toast.success('Registro atualizado com sucesso !')
@@ -57,10 +55,8 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
     const loadingToastId = toast.loading('Processando...')
     try {
       await updateServiceOrder({
-        orderId: orderId,
-        info: { 'periodo.historico': historyCopy },
-        queryClient: queryClient,
-        invalidateKey: ['service-order', orderId],
+        changes: { 'periodo.historico': historyCopy },
+        id: orderId,
       })
       toast.dismiss(loadingToastId)
       toast.success('Registro excluído com sucesso !')

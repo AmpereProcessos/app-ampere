@@ -1,81 +1,288 @@
 import connectToDatabase from '../../../utils/services/mongodb/projects'
+import connectToAuxiliariesDatabase from '../../../utils/services/mongodb/auxiliaries'
 import { Collection, Db, Filter, ObjectId } from 'mongodb'
-import { errorHandler } from '../../../utils/methods/handlers'
 import createHttpError from 'http-errors'
 import { NextApiHandler } from 'next'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { validateAuthorization } from '@/utils/constants'
-import { TServiceOrder } from '@/utils/schemas/service-order'
+import {
+  ServiceOrderSchema,
+  ServiceOrderSimplifiedProjection,
+  TServiceOrder,
+  TServiceOrderSimplified,
+  TServiceOrderWithProjectDTO,
+} from '@/utils/schemas/service-order'
+import { TCalendar } from '@/utils/schemas/calendars'
+import { getConfiguredGoogleOAuth2Client } from '@/utils/services/google/oauth'
+import { calendar_v3, google as googleApis } from 'googleapis'
+import { formatLocation } from '@/utils/methods/formatting'
 
-const createServiceOrderRoute: NextApiHandler<string> = async (req, res) => {
+type PostResponse = {
+  data: { insertedId: string }
+  message: string
+}
+const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
   if (!session.user.permissoes.ordensDeServico.criar) throw new createHttpError.Unauthorized('Nível de permissão insuficiente.')
   const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const auxiliariesDb: Db = await connectToAuxiliariesDatabase(process.env.DB_KEY)
+
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
-  const info = req.body
-  if (!info) throw new createHttpError.BadRequest('Nenhuma informações provida.')
-  const dbResponse = await insertServiceOrder({ collection, info })
-  res.status(201).json(dbResponse.insertedId.toString())
+  const callendarsCollection: Collection<TCalendar> = auxiliariesDb.collection('calendarios')
+  const serviceOrder = ServiceOrderSchema.parse(req.body)
+
+  if (!serviceOrder) throw new createHttpError.BadRequest('Nenhuma informações provida.')
+
+  var googleCalendarEventId: string | null = null
+  if (
+    serviceOrder.calendarioId &&
+    ((serviceOrder.agendamento?.inicio && serviceOrder.agendamento?.fim) || (serviceOrder.periodo.inicio && serviceOrder.periodo.fim))
+  ) {
+    // In case the service order has a calendar and a period defined, we need to integrate with the calendar
+    const calendar = await callendarsCollection.findOne({ _id: new ObjectId(serviceOrder.calendarioId) })
+    if (!calendar) throw new createHttpError.NotFound('Calendário não encontrado.')
+
+    const googleOAuth2Client = getConfiguredGoogleOAuth2Client(calendar.googleRefreshToken)
+    const googleCalendar = googleApis.calendar({ version: 'v3', auth: googleOAuth2Client })
+
+    const googleCalendarEventResponsiblesStr = serviceOrder.responsavel.nome
+
+    const googleCalendarEventInstructionsStr =
+      serviceOrder.observacoes.length > 0 ? serviceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join('\n') : 'Sem instruções'
+
+    const googleCalendarEventLocationStr = formatLocation({
+      location: {
+        cep: serviceOrder.localizacao.cep,
+        uf: serviceOrder.localizacao.uf || '',
+        cidade: serviceOrder.localizacao.cidade || '',
+        bairro: serviceOrder.localizacao.bairro || '',
+        endereco: serviceOrder.localizacao.endereco || '',
+        numeroOuIdentificador: serviceOrder.localizacao.numeroOuIdentificador || '',
+        complemento: serviceOrder.localizacao.complemento || '',
+        latitude: serviceOrder.localizacao.latitude,
+        longitude: serviceOrder.localizacao.longitude,
+      },
+      includeCEP: true,
+      includeCity: true,
+      includeUf: true,
+    })
+    const googleCalendarEventDescription = `Responsáveis: ${googleCalendarEventResponsiblesStr} \n Instruções: \n ${googleCalendarEventInstructionsStr} \n Localização: ${googleCalendarEventLocationStr}`
+
+    const eventStart = serviceOrder.periodo.inicio || serviceOrder.agendamento?.inicio
+    const eventEnd = serviceOrder.periodo.fim || serviceOrder.agendamento?.fim
+    const eventParams: calendar_v3.Params$Resource$Events$Insert = {
+      calendarId: calendar.googleCalendarId,
+      requestBody: {
+        summary: `${serviceOrder.descricao} - ${serviceOrder.favorecido.nome}`,
+        description: googleCalendarEventDescription,
+        start: {
+          dateTime: eventStart || '',
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
+        end: {
+          dateTime: eventEnd || '',
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
+      },
+    }
+    const googleCalendarEvent = await googleCalendar.events.insert(eventParams)
+    googleCalendarEventId = googleCalendarEvent.data.id || null
+  }
+  // CREATE GOOGLE CALENDAR INTEGRATION
+  const dbResponse = await insertServiceOrder({ collection, info: { ...serviceOrder, googleCalendarEventId } })
+  if (!dbResponse.acknowledged) throw new createHttpError.BadRequest('Oops, houve um erro desconhecido ao criar ordem de serviço.')
+  const insertedId = dbResponse.insertedId.toString()
+  res.status(201).json({ data: { insertedId }, message: 'Ordem de serviço criada com sucesso !' })
 }
-type GetResponse = TServiceOrder | TServiceOrder[]
+
+type GetResponse = {
+  data: TServiceOrderWithProjectDTO | TServiceOrderSimplified[]
+}
+
 const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
   const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
   const collection = db.collection('ordensDeServico')
 
-  const after = req.query.after
-  const before = req.query.before
-  const simplified = req.query.simplified == 'false' ? false : true
-  const id = req.query.id
-  const projectId = req.query.projectId
-  const status = req.query.status
-  const responsibleName = req.query.responsibleName
+  const { id, projectId, responsibleName, queryTags, queryPendingConclusion } = req.query
 
-  if (!!projectId && projectId != 'undefined' && typeof projectId == 'string') {
-    const orders = await getServiceOrdersByProject({ collection, projectId, simplified })
-    return res.status(200).json(orders)
-  }
-  if (!!id && id != 'undefined' && typeof id == 'string') {
+  if (id) {
+    if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
     const order = await getServiceOrderById({ collection, id })
-    if (!order) throw new createHttpError.NotFound('Ordem de serviço não encontrada.')
-    return res.json(order)
+    return res.json({ data: order as TServiceOrderWithProjectDTO })
+  }
+  if (projectId) {
+    if (typeof projectId != 'string' || !ObjectId.isValid(projectId)) throw new createHttpError.BadRequest('ID do projeto inválido.')
+    const orders = await getServiceOrdersByProject({ collection, projectId })
+    return res.json({ data: orders })
   }
 
-  const periodQuery: Filter<TServiceOrder> =
-    after != 'null' && before != 'null' ? { $and: [{ dataInsercao: { $gte: after as string } }, { dataInsercao: { $lte: before as string } }] } : {}
-  const responsibleQuery: Filter<TServiceOrder> = responsibleName != 'undefined' ? { 'responsavel.nome': responsibleName as string } : {}
-  const openOnlyQuery: Filter<TServiceOrder> = status == 'EM ABERTO' ? { dataEfetivacao: null } : {}
+  const queryTagsIds = typeof queryTags == 'string' ? queryTags.split(',').filter((q) => !!ObjectId.isValid(q)) : []
+  const queryPendingConclusionValue = queryPendingConclusion == 'true' ? true : false
 
-  const query = { ...periodQuery, ...responsibleQuery, ...openOnlyQuery }
-  const orders = await getServiceOrders({ collection, query, simplified })
-  return res.json(orders)
+  const queryTagsQuery: Filter<TServiceOrder> = queryTagsIds.length > 0 ? { 'etiquetas.id': { $in: queryTagsIds } } : {}
+  const queryPendingConclusionQuery: Filter<TServiceOrder> = queryPendingConclusionValue ? { dataEfetivacao: null } : {}
+
+  if (responsibleName) {
+    if (typeof responsibleName != 'string') throw new createHttpError.BadRequest('Nome do responsável inválido.')
+
+    const orders = await getServiceOrdersByResponsibleName({ collection, responsibleName })
+    return res.json({ data: orders })
+  }
+
+  // Else, we need to get all service orders with the given tags and pending conclusion status
+
+  const serviceOrders = await collection
+    .find({ ...queryTagsQuery, ...queryPendingConclusionQuery }, { projection: ServiceOrderSimplifiedProjection })
+    .toArray()
+
+  return res.json({ data: serviceOrders as TServiceOrderSimplified[] })
 }
 
 type PutResponse = any
 const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-  const collection = db.collection('ordensDeServico')
+
+  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
+  const auxiliariesDb: Db = await connectToAuxiliariesDatabase(process.env.DB_KEY)
+  const callendarsCollection: Collection<TCalendar> = auxiliariesDb.collection('calendarios')
+
   const { id } = req.query
   const changes = req.body
+
+  delete changes._id
+  // Validating the request
   if (!id || typeof id != 'string') throw new createHttpError.BadRequest('ID não fornecido ou inválido.')
   if (!changes) throw new createHttpError.BadRequest('Mudanças não fornecidas.')
-  delete changes._id
-  var newObj = await collection.findOneAndUpdate(
-    {
-      _id: new ObjectId(id),
-    },
-    {
-      $set: {
-        ...changes,
-      },
-    },
-    {
-      returnDocument: 'after',
-    }
-  )
 
-  return res.status(201).json(newObj)
+  // Updating the service order
+  const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })
+  if (!updateResponse.acknowledged) throw new createHttpError.BadRequest('Oops, houve um erro desconhecido ao atualizar ordem de serviço.')
+
+  // In case the service order has no calendar, we can return the response
+  const updatedServiceOrder = await collection.findOne({ _id: new ObjectId(id) })
+  if (!updatedServiceOrder?.calendarioId) return res.status(201).json({ message: 'Ordem de serviço atualizada com sucesso !' })
+  // Else, we gotta handle the integration with Google Calendar
+  if (updatedServiceOrder?.googleCalendarEventId && updatedServiceOrder?.googleCalendarId) {
+    const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) })
+    if (!calendar) throw new createHttpError.NotFound('Calendário não encontrado.')
+    const googleOAuth2Client = getConfiguredGoogleOAuth2Client(calendar.googleRefreshToken)
+    const googleCalendar = googleApis.calendar({ version: 'v3', auth: googleOAuth2Client })
+
+    const eventStart = updatedServiceOrder.agendamento?.inicio || updatedServiceOrder.periodo.inicio
+    const eventEnd = updatedServiceOrder.agendamento?.fim || updatedServiceOrder.periodo.fim
+    if (eventStart && eventEnd) {
+      // In case the service order has a calendar and calendar event defined, we need to update the event with the new information
+
+      const googleCalendarEventResponsiblesStr =
+        updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : 'Sem responsáveis'
+      const googleCalendarEventInstructionsStr =
+        updatedServiceOrder.observacoes.length > 0
+          ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join('\n')
+          : 'Sem instruções'
+      const googleCalendarEventLocationStr = formatLocation({
+        location: {
+          cep: updatedServiceOrder.localizacao.cep,
+          uf: updatedServiceOrder.localizacao.uf || '',
+          cidade: updatedServiceOrder.localizacao.cidade || '',
+          bairro: updatedServiceOrder.localizacao.bairro || '',
+          endereco: updatedServiceOrder.localizacao.endereco || '',
+          numeroOuIdentificador: updatedServiceOrder.localizacao.numeroOuIdentificador || '',
+          complemento: updatedServiceOrder.localizacao.complemento || '',
+          latitude: updatedServiceOrder.localizacao.latitude,
+          longitude: updatedServiceOrder.localizacao.longitude,
+        },
+        includeCEP: true,
+        includeCity: true,
+        includeUf: true,
+      })
+      const googleCalendarEventDescription = `Responsáveis: ${googleCalendarEventResponsiblesStr} \n Instruções: \n ${googleCalendarEventInstructionsStr} \n Localização: ${googleCalendarEventLocationStr}`
+
+      const googleCalendarEventParams: calendar_v3.Params$Resource$Events$Update = {
+        calendarId: calendar.googleCalendarId,
+        eventId: updatedServiceOrder.googleCalendarEventId,
+        requestBody: {
+          summary: `${updatedServiceOrder.descricao} - ${updatedServiceOrder.favorecido.nome}`,
+          description: googleCalendarEventDescription,
+          start: {
+            dateTime: eventStart,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+          end: {
+            dateTime: eventEnd,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+        },
+      }
+      await googleCalendar.events.update(googleCalendarEventParams)
+    } else {
+      // In case the service order has a calendar but no calendar event defined, we need to delete the event
+      await googleCalendar.events.delete({
+        calendarId: updatedServiceOrder.googleCalendarId,
+        eventId: updatedServiceOrder.googleCalendarEventId,
+      })
+    }
+  } else {
+    if (
+      updatedServiceOrder?.googleCalendarId &&
+      ((updatedServiceOrder.agendamento?.inicio && updatedServiceOrder.agendamento?.fim) ||
+        (updatedServiceOrder.periodo.inicio && updatedServiceOrder.periodo.fim))
+    ) {
+      // In case the service order has a defined calendar id and a period defined but calendar event is not defined, we need to create the event
+      const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) })
+      if (!calendar) throw new createHttpError.NotFound('Calendário não encontrado.')
+      const googleOAuth2Client = getConfiguredGoogleOAuth2Client(calendar.googleRefreshToken)
+      const googleCalendar = googleApis.calendar({ version: 'v3', auth: googleOAuth2Client })
+
+      const eventStart = updatedServiceOrder.agendamento?.inicio || updatedServiceOrder.periodo.inicio
+      const eventEnd = updatedServiceOrder.agendamento?.fim || updatedServiceOrder.periodo.fim
+
+      const googleCalendarEventResponsiblesStr =
+        updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : 'Sem responsáveis'
+      const googleCalendarEventInstructionsStr =
+        updatedServiceOrder.observacoes.length > 0
+          ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join('\n')
+          : 'Sem instruções'
+      const googleCalendarEventLocationStr = formatLocation({
+        location: {
+          cep: updatedServiceOrder.localizacao.cep,
+          uf: updatedServiceOrder.localizacao.uf || '',
+          cidade: updatedServiceOrder.localizacao.cidade || '',
+          bairro: updatedServiceOrder.localizacao.bairro || '',
+          endereco: updatedServiceOrder.localizacao.endereco || '',
+          numeroOuIdentificador: updatedServiceOrder.localizacao.numeroOuIdentificador || '',
+          complemento: updatedServiceOrder.localizacao.complemento || '',
+          latitude: updatedServiceOrder.localizacao.latitude,
+          longitude: updatedServiceOrder.localizacao.longitude,
+        },
+        includeCEP: true,
+        includeCity: true,
+        includeUf: true,
+      })
+      const googleCalendarEventDescription = `Responsáveis: ${googleCalendarEventResponsiblesStr} \n Instruções: \n ${googleCalendarEventInstructionsStr} \n Localização: ${googleCalendarEventLocationStr}`
+      const eventParams: calendar_v3.Params$Resource$Events$Insert = {
+        calendarId: calendar.googleCalendarId,
+        requestBody: {
+          summary: `${updatedServiceOrder.descricao} - ${updatedServiceOrder.favorecido.nome}`,
+          description: googleCalendarEventDescription,
+          start: {
+            dateTime: eventStart,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+          end: {
+            dateTime: eventEnd,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+        },
+      }
+      const googleCalendarEvent = await googleCalendar.events.insert(eventParams)
+
+      await collection.updateOne({ _id: new ObjectId(id) }, { $set: { googleCalendarEventId: googleCalendarEvent.data.id } })
+    }
+  }
+  if (!updatedServiceOrder) throw new createHttpError.NotFound('Ordem de serviço não encontrada.')
+
+  return res.status(201).json(updatedServiceOrder)
 }
 
 type DeleteResponse = {
@@ -100,59 +307,28 @@ const deleteServiceOrderRoute: NextApiHandler<DeleteResponse> = async (req, res)
 
 export default apiHandler({ GET: getServiceOrdersRoute, POST: createServiceOrderRoute, PUT: editServiceOrderRoute, DELETE: deleteServiceOrderRoute })
 
-type GetServiceOrdersParams = {
+type GetServiceOrdersByProjectParams = {
   collection: Collection<TServiceOrder>
-  simplified: boolean
-  query: Filter<TServiceOrder>
+  projectId: string
 }
-async function getServiceOrders({ collection, simplified, query }: GetServiceOrdersParams) {
-  const projection = simplified
-    ? {
-        categoria: 1,
-        urgencia: 1,
-        'favorecido.nome': 1,
-        'projeto.identificador': 1,
-        periodo: 1,
-        localizacao: 1,
-        responsavel: 1,
-        autor: 1,
-        observacoes: 1,
-        dataInsercao: 1,
-        dataEfetivacao: 1,
-      }
-    : undefined
+async function getServiceOrdersByProject({ collection, projectId }: GetServiceOrdersByProjectParams) {
   try {
-    const orders = await collection.find({ ...query }, { projection: projection }).toArray()
-    return orders
+    const orders = await collection.find({ 'projeto.id': projectId }, { projection: ServiceOrderSimplifiedProjection }).toArray()
+    return orders as TServiceOrderSimplified[]
   } catch (error) {
     throw error
   }
 }
-
-type GetServiceOrdersByProjectParams = {
+type GetServiceOrdersByResponsibleNameParams = {
   collection: Collection<TServiceOrder>
-  simplified: boolean
-  projectId: string
+  responsibleName: string
 }
-async function getServiceOrdersByProject({ collection, simplified, projectId }: GetServiceOrdersByProjectParams) {
-  const projection = simplified
-    ? {
-        categoria: 1,
-        descricao: 1,
-        urgencia: 1,
-        'favorecido.nome': 1,
-        'projeto.identificador': 1,
-        localizacao: 1,
-        responsavel: 1,
-        autor: 1,
-        observacoes: 1,
-        dataInsercao: 1,
-        dataEfetivacao: 1,
-      }
-    : undefined
+async function getServiceOrdersByResponsibleName({ collection, responsibleName }: GetServiceOrdersByResponsibleNameParams) {
   try {
-    const orders = await collection.find({ 'projeto.id': projectId }, { projection: projection }).toArray()
-    return orders
+    const orders = await collection
+      .find({ 'responsavel.nome': responsibleName, dataEfetivacao: null }, { projection: ServiceOrderSimplifiedProjection })
+      .toArray()
+    return orders as TServiceOrderSimplified[]
   } catch (error) {
     throw error
   }
@@ -164,8 +340,65 @@ type GetServiceOrderByIdParams = {
 }
 async function getServiceOrderById({ collection, id }: GetServiceOrderByIdParams) {
   try {
-    const order = await collection.findOne({ _id: new ObjectId(id) })
-    return order
+    const addFields = { projectIdAsObjectId: { $toObjectId: '$projeto.id' } }
+    const lookup = { from: 'dados', localField: 'projectIdAsObjectId', foreignField: '_id', as: 'projetoDados' }
+    const serviceOrderArr = await collection
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $addFields: addFields },
+        { $lookup: lookup },
+        {
+          $project: {
+            status: 1,
+            categoria: 1,
+            favorecido: 1,
+            projeto: 1,
+            etiquetas: 1,
+            descricao: 1,
+            localizacao: 1,
+            responsavel: 1,
+            urgencia: 1,
+            anotacoes: 1,
+            detalhes: 1,
+            autor: 1,
+            cobranca: 1,
+            pagamento: 1,
+            observacoes: 1,
+            equipamentos: 1,
+            agendamento: 1,
+            periodo: 1,
+            calendarioId: 1,
+            googleCalendarId: 1,
+            googleCalendarEventId: 1,
+            dataEfetivacao: 1,
+            dataInsercao: 1,
+            'projetoDados._id': 1,
+            'projetoDados.nomeDoContrato': 1,
+            'projetoDados.cpf_cnpj': 1,
+            'projetoDados.tipoDeServico': 1,
+            'projetoDados.cep': 1,
+            'projetoDados.uf': 1,
+            'projetoDados.cidade': 1,
+            'projetoDados.bairro': 1,
+            'projetoDados.logradouro': 1,
+            'projetoDados.numeroResidencia': 1,
+            'projetoDados.produtos': 1,
+            'projetoDados.servicos': 1,
+            'projetoDados.obra.entrada': 1,
+            'projetoDados.obra.saida': 1,
+            'projetoDados.obra.statusDaObra': 1,
+            'projetoDados.obra.equipeResp': 1,
+            'projetoDados.obra.observacoes': 1,
+            'projetoDados.obra.pendencias': 1,
+            'projetoDados.idVisitaTecnica': 1,
+          },
+        },
+      ])
+      .toArray()
+    const serviceOrder = serviceOrderArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0]
+    if (!serviceOrder) throw new createHttpError.NotFound('Ordem de serviço não encontrada.')
+
+    return serviceOrder as TServiceOrderWithProjectDTO
   } catch (error) {
     throw error
   }

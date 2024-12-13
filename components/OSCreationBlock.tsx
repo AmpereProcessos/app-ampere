@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSession } from 'next-auth/react'
-import ModalNewServiceOrder from './identificador/ordensDeServico/ModalNewServiceOrder'
+import ModalNewServiceOrder from './identificador/ordensDeServico/modals/ModalNewProjectServiceOrder'
 import { TProjectDTO } from '@/utils/schemas/projects'
 
 type OSCreationBlockProps = {
@@ -20,9 +20,7 @@ function OSCreationBlock({ project, categories }: OSCreationBlockProps) {
         <h1 className="text-center font-bold text-white">ABRIR PAINEL DE CRIAÇÃO DE ORDEM DE SERVIÇO</h1>
       </div>
 
-      {dropdownMenuVisible ? (
-        <ModalNewServiceOrder project={project} categories={categories} closeModal={() => setDropdownMenuVisible(false)} session={session} />
-      ) : null}
+      {dropdownMenuVisible ? <ModalNewServiceOrder project={project} closeModal={() => setDropdownMenuVisible(false)} session={session} /> : null}
     </div>
   )
 }

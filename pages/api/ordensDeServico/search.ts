@@ -81,7 +81,7 @@ type GetServiceOrdersByFilterParams = {
 async function getServiceOrdersByFilter({ collection, query, skip, limit }: GetServiceOrdersByFilterParams) {
   try {
     const serviceOrdersMatched = await collection.countDocuments({ ...query })
-    const sort = { qtde: -1 }
+    const sort = { _id: -1 }
     const match = { ...query }
     const serviceOrders = (await collection
       .aggregate([{ $sort: sort }, { $match: match }, { $skip: skip }, { $project: ServiceOrderSimplifiedProjection }, { $limit: limit }])

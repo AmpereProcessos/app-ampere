@@ -12,7 +12,7 @@ import { IoMdAlert } from 'react-icons/io'
 import { FaCity } from 'react-icons/fa'
 import { AiFillTool } from 'react-icons/ai'
 import { getErrorMessage } from '../../../utils/methods/handlers'
-import { updateServiceOrder } from '../../../utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '../../../utils/methods/mutation/service-orders'
 import { equipesTecnicas } from '../../../utils/constants'
 
 function DesignationCard({ order }) {
@@ -21,7 +21,7 @@ function DesignationCard({ order }) {
   async function handleSaveChanges() {
     const loadingToastId = toast.loading('Carregando...')
     try {
-      const msg = await updateServiceOrder({ info: infoHolder, invalidateKey: ['service-orders'], orderId: order._id, queryClient: queryClient })
+      const msg = await updateServiceOrder({ changes: infoHolder, id: order._id })
       toast.dismiss(loadingToastId)
       toast.success(msg)
     } catch (error) {

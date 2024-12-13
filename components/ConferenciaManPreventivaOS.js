@@ -3,7 +3,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { fileTypes } from '../utils/constants'
 import { storage } from '../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
-import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '../utils/methods/mutation/service-orders'
 import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { getErrorMessage } from '../utils/methods/handlers'
@@ -391,10 +391,8 @@ function ConferenciaManPreventivaOS({ session, order, closeModal, queryKey }) {
         let links = await uploadFiles()
         const currentDateTime = new Date().toISOString()
         await updateServiceOrder({
-          info: { dataEfetivacao: currentDateTime, anotacoes: infoHolder.anotacoes },
-          invalidateKey: queryKey,
-          orderId: order._id,
-          queryClient: queryClient,
+          changes: { dataEfetivacao: currentDateTime, anotacoes: infoHolder.anotacoes },
+          id: order._id,
         })
         const fileReferences = links.map((l) => ({
           titulo: l.title,

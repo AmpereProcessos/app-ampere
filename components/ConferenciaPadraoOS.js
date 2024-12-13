@@ -8,7 +8,7 @@ import { VscChromeClose } from 'react-icons/vsc'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
-import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '../utils/methods/mutation/service-orders'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { createManyFileReferences } from '../utils/methods/mutation/crm/file-references'
 
@@ -109,10 +109,8 @@ function ConferenciaPadraoOS({ session, order, closeModal, queryKey }) {
         let links = await uploadFiles()
         const currentDateTime = new Date().toISOString()
         await updateServiceOrder({
-          info: { dataEfetivacao: currentDateTime, anotacoes: infoHolder.anotacoes },
-          invalidateKey: queryKey,
-          orderId: order._id,
-          queryClient: queryClient,
+          changes: { dataEfetivacao: currentDateTime, anotacoes: infoHolder.anotacoes },
+          id: order._id,
         })
         const fileReferences = links.map((l) => ({
           titulo: l.title,

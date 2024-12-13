@@ -24,6 +24,7 @@ import { TProjectDTO } from '../../utils/schemas/projects'
 import { TbTextPlus, TbTruckDelivery } from 'react-icons/tb'
 import { GrStorage } from 'react-icons/gr'
 import { BsPatchCheckFill } from 'react-icons/bs'
+import Link from 'next/link'
 
 function Obras() {
   const router = useRouter()
@@ -182,6 +183,11 @@ function Obras() {
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).obsPendente}</div>
               </div>
             </div>
+          </div>
+          <div className="my-2 flex w-full items-center justify-end gap-2">
+            <Link href="/ordens-de-servico">
+              <button className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">ORDENS DE SERVIÇO</button>
+            </Link>
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (

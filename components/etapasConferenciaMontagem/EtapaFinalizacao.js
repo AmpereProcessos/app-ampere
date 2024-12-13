@@ -8,7 +8,7 @@ import { fileTypes, cidadesGoias } from '../../utils/constants'
 import { storage } from '../../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
-import { updateServiceOrder } from '../../utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '../../utils/methods/mutation/service-orders'
 import { useQueryClient } from '@tanstack/react-query'
 import { estadosECidades } from '../../utils/estados_cidades'
 import { createManyFileReferences } from '../../utils/methods/mutation/crm/file-references'
@@ -190,10 +190,8 @@ function EtapaFinalizacao({ session, closeModal, order, queryKey }) {
         let links = await uploadFiles()
         const currentDateTime = new Date().toISOString()
         await updateServiceOrder({
-          info: { dataEfetivacao: currentDateTime },
-          invalidateKey: queryKey,
-          orderId: order._id,
-          queryClient: queryClient,
+          changes: { dataEfetivacao: currentDateTime },
+          id: order._id,
         })
 
         const fileReferences = links.map((l) => ({

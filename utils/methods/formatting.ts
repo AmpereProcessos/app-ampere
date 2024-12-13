@@ -3,6 +3,12 @@ import { TProjectDTO } from '../schemas/projects'
 import { TLocation } from '../schemas/useful'
 import { TProductItem } from '../schemas/crm/kits.schema'
 
+export function formatDateTimeForInput(value: any) {
+  if (!value) return undefined
+  if (isNaN(new Date(value).getMilliseconds())) return undefined
+  return dayjs(value).format('YYYY-MM-DDTHH:mm')
+}
+
 export function formatNameAsInitials(name: string) {
   const splittedName = name.replace('-', '').split(' ')
   const firstLetter = splittedName[0][0]

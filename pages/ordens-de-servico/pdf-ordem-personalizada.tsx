@@ -19,7 +19,7 @@ import { estadosECidades } from '@/utils/estados_cidades'
 import SelectVirtualizedInput from '@/components/inputs/SelectVirtualized'
 import Logo from '@/utils/images/logo-texto-azul-vertical.png'
 import Image from 'next/image'
-import ObservationModalBlock from '@/components/identificador/ordensDeServico/ObservationModalBlock'
+import ObservationModalBlock from '@/components/identificador/ordensDeServico/modals/blocos/utils/Observations'
 function OrdemServicoEmBranco() {
   const [infoHolder, setInfoHolder] = useState<TServiceOrder>({
     categoria: 'MONTAGEM',

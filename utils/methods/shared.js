@@ -133,9 +133,15 @@ export async function getCEPInfo(cep) {
 export function isEmpty(value) {
   return value == null || (typeof value === 'string' && value.trim().length === 0)
 }
-export function formatDateInputChange(value) {
-  if (!value || new Date(value) == 'Invalid Date') return value
-  return new Date(value).toISOString()
+
+export function formatDateInputChange(value, returnType, normalizeHours = true) {
+  if (isNaN(new Date(value).getMilliseconds())) return null
+  if (!returnType || returnType === 'string') {
+    if (!normalizeHours) return new Date(value).toISOString()
+    return dayjs(new Date(value)).add(3, 'hours').toISOString()
+  }
+  if (!normalizeHours) return new Date(value)
+  return dayjs(new Date(value)).add(3, 'hours').toDate()
 }
 export function pushToAuthPage(router) {
   router.push('/auth/signin')

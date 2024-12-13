@@ -19,7 +19,7 @@ const getProjectsVinculationsBySearch: NextApiHandler<PostResponse> = async (req
   const query: Filter<TProject> = {
     $or: [{ nomeDoContrato: search }, { nomeDoContrato: { $regex: search, $options: 'i' } }],
   }
-  const projects = await collection.find(query, { projection: ProjectDBSimplifiedProjection }).toArray()
+  const projects = await collection.find(query, { projection: ProjectDBSimplifiedProjection, sort: { qtde: -1 } }).toArray()
 
   return res.status(200).json({ data: projects })
 }

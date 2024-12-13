@@ -10,25 +10,15 @@ import React, { useState } from 'react'
 import AllCities from '@/utils/jsons/cidades.json'
 import CheckboxInput from '@/components/inputs/Checkbox'
 type ServiceOrdersFilterMenuProps = {
+  filters: TPersonalizedServiceOrderFilter
   updateFilters: (filters: TPersonalizedServiceOrderFilter) => void
   queryLoading: boolean
   resetSelectedPage: () => void
 }
 
-function ServiceOrdersFilterMenu({ updateFilters, queryLoading, resetSelectedPage }: ServiceOrdersFilterMenuProps) {
-  const [filtersHolder, setFiltersHolder] = useState<TPersonalizedServiceOrderFilter>({
-    name: '',
-    state: [],
-    city: [],
-    category: [],
-    urgency: [],
-    period: {
-      after: null,
-      before: null,
-      field: null,
-    },
-    pending: true,
-  })
+function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSelectedPage }: ServiceOrdersFilterMenuProps) {
+  const [filtersHolder, setFiltersHolder] = useState<TPersonalizedServiceOrderFilter>(filters)
+
   return (
     <AnimatePresence>
       <motion.div

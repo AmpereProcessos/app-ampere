@@ -1146,6 +1146,19 @@ export const serviceOrdersCategories = [
     value: 'OUTROS',
   },
 ]
+export const serviceOrderUrgencyOptions = [
+  {
+    id: 1,
+    label: 'POUCO URGENTE',
+    value: 'POUCO URGENTE',
+    textColor: 'text-blue-800',
+    backgroundColor: 'bg-blue-300',
+    borderColor: 'border-blue-800',
+  },
+  { id: 2, label: 'URGENTE', value: 'URGENTE', textColor: 'text-orange-600', backgroundColor: 'bg-orange-300', borderColor: 'border-orange-600' },
+  { id: 3, label: 'EMERGÊNCIA', value: 'EMERGÊNCIA', textColor: 'text-red-600', backgroundColor: 'bg-red-300', borderColor: 'border-red-600' },
+]
+
 export const expenseCategories = [
   { id: 1, label: 'MONTAGEM', value: 'MONTAGEM' },
   { id: 2, label: 'PADRÃO', value: 'PADRÃO' },

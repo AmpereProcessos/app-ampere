@@ -54,6 +54,7 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
                   <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
                     <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
                       <div className="flex flex-wrap items-center gap-2">
+                        <h1 className="rounded-lg bg-[#fead41] px-2 py-0.5 text-[0.6rem] font-bold text-white">{project.qtde}</h1>
                         <p className="text-sm font-bold leading-none tracking-tight">{project.nomeDoContrato}</p>
                       </div>
                       <button

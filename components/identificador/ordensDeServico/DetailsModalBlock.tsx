@@ -129,7 +129,7 @@ function DetailsModalBlock({ infoHolder, setInfoHolder }: DetailsModalBlockProps
                       labelFalse={'POSSUI TRAFO'}
                       labelTrue={'POSSUI TRAFO'}
                       labelClassName="font-sans font-bold  text-[#353432]"
-                      checked={infoHolder.detalhes.possuiTrafo}
+                      checked={!!infoHolder.detalhes.possuiTrafo}
                       handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, possuiTrafo: value } }))}
                     />
                   </div>

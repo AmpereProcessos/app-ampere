@@ -10,7 +10,7 @@ import { MdEngineering } from 'react-icons/md'
 import { IoMdAlert } from 'react-icons/io'
 
 import FavoredModalBlock from './identificador/ordensDeServico/FavoredModalBlock'
-import ObservationModalBlock from './identificador/ordensDeServico/ObservationModalBlock'
+import ObservationModalBlock from './identificador/ordensDeServico/modals/blocos/utils/Observations'
 import EquipmentModalBlock from './identificador/ordensDeServico/EquipmentModalBlock'
 import DetailsModalBlock from './identificador/ordensDeServico/DetailsModalBlock'
 import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
@@ -23,7 +23,7 @@ import Avatar from './utils/Avatar'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
 import { useServiceOrderById } from '../utils/methods/query/service-orders'
-import { deleteServiceOrder, updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+import { deleteServiceOrder, updateServiceOrder } from '../utils/methods/mutation/service-orders'
 
 import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
 
@@ -127,10 +127,8 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
     console.log('CHANGES', changesObject)
     try {
       const msg = await updateServiceOrder({
-        info: changesObject,
-        invalidateKey: ['service-order', orderId],
-        orderId: orderId,
-        queryClient: queryClient,
+        changes: changesObject,
+        id: orderId,
       })
       toast.dismiss(loadingToastId)
       toast.success(msg || 'Ordem atualizada com sucesso !')

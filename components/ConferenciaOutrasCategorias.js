@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { destroyCookie } from 'nookies'
-import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '../utils/methods/mutation/service-orders'
 import { useQueryClient } from '@tanstack/react-query'
 import { FaFile } from 'react-icons/fa'
 import TextInput from '../components/inputs/Text'
@@ -98,10 +98,8 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
       let links = await uploadFiles(files)
       const currentDateTime = new Date().toISOString()
       await updateServiceOrder({
-        info: { dataEfetivacao: currentDateTime, anotacoes: notes },
-        invalidateKey: queryKey,
-        orderId: order._id,
-        queryClient: queryClient,
+        changes: { dataEfetivacao: currentDateTime, anotacoes: notes },
+        id: order._id,
       })
       const fileReferences = links.map((l) => ({
         titulo: l.title,

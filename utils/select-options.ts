@@ -1586,3 +1586,14 @@ export const FileReferenceCategories = [
   { id: 9, label: 'MANUTENÇÕES', value: 'MANUTENÇÕES', restrict: false },
   { id: 10, label: 'OUTROS', value: 'OUTROS', restrict: false },
 ]
+
+export const ServiceOrderStatus = [
+  { id: 1, label: 'PENDENTE', value: 'PENDENTE' },
+  { id: 2, label: 'EM PLANEJAMENTO', value: 'EM PLANEJAMENTO' },
+  { id: 3, label: 'AGENDADA', value: 'AGENDADA' },
+  { id: 4, label: 'EM EXECUÇÃO', value: 'EM EXECUÇÃO' },
+  { id: 5, label: 'CONCLUÍDA PARCIAL', value: 'CONCLUÍDA PARCIAL' },
+  { id: 6, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
+  { id: 7, label: 'CANCELADA', value: 'CANCELADA' },
+  { id: 8, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
+]

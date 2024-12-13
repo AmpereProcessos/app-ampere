@@ -1,7 +1,7 @@
 import Datetime from '@/components/inputs/Datetime'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
-import { updateServiceOrder } from '@/utils/methods/mutation/serviceOrders'
+import { updateServiceOrder } from '@/utils/methods/mutation/service-orders'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
@@ -39,10 +39,8 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
     const loadingToastID = toast.loading('Iniciando ordem de serviço...')
     try {
       await updateServiceOrder({
-        orderId: orderId,
-        info: { 'periodo.inicio': new Date().toISOString() },
-        queryClient: queryClient,
-        invalidateKey: ['service-order', orderId],
+        changes: { 'periodo.inicio': new Date().toISOString() },
+        id: orderId,
       })
       toast.dismiss(loadingToastID)
       return toast.success('Ordem de serviço iniciada com sucesso !')
@@ -56,10 +54,8 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
     const loadingToastID = toast.loading('Finalizando ordem de serviço...')
     try {
       await updateServiceOrder({
-        orderId: orderId,
-        info: { 'periodo.fim': new Date().toISOString() },
-        queryClient: queryClient,
-        invalidateKey: ['service-order', orderId],
+        changes: { 'periodo.fim': new Date().toISOString() },
+        id: orderId,
       })
       toast.dismiss(loadingToastID)
       return toast.success('Ordem de serviço finalizada com sucesso !')
@@ -88,10 +84,8 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
       // Create update object
       var updateObj: any = { 'periodo.historico': historyCopy, 'periodo.inicio': earliestDate }
       await updateServiceOrder({
-        orderId: orderId,
-        info: updateObj,
-        queryClient: queryClient,
-        invalidateKey: ['service-order', orderId],
+        changes: updateObj,
+        id: orderId,
       })
       toast.dismiss(loadingToastID)
       return toast.success('Registro aberto com sucesso !')

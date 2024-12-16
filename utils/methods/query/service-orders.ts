@@ -56,7 +56,7 @@ export function useServiceOrders() {
 async function fetchServiceOrdersByProject({ projectId }: { projectId: string }) {
   try {
     const { data } = await axios.get(`/api/ordensDeServico?projectId=${projectId}`)
-    return data
+    return data.data as TServiceOrderSimplifiedDTO[]
   } catch (error) {
     throw error
   }

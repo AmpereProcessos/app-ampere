@@ -49,6 +49,10 @@ const UFEquivalent = {
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
   // const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
+
+  // const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')
+  // const fileReferencesCollection: Collection<TFileReference> = crmDb.collection('file-references')
+
   // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
 
   // const projectsCollection: Collection<TProject> = db.collection('dados')

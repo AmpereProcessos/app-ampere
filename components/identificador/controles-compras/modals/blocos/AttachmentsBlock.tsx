@@ -82,7 +82,7 @@ function PurchaseControlFileReferences({ attachmentPrefix, session, projectId, p
           vinculationId={projectId ? projectId : purchaseId}
           prefix={attachmentPrefix}
           session={session}
-          vinculations={{ purchaseId: { blocked: true, value: purchaseId }, projectId: projectId ? { blocked: false, value: projectId } : undefined }}
+          vinculations={{ purchaseId: { blocked: true, value: purchaseId }, projectId: projectId ? { blocked: true, value: projectId } : undefined }}
           callbacks={{ onMutate: createMutateCallback, onSettled: createSettledCallback }}
           closeMenu={() => setNewFileReferencesMenuIsOpen(false)}
         />

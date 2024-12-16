@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { Session } from 'next-auth'
 import { TServiceOrder, TServiceOrderDTO } from '@/utils/schemas/service-order'
-import { getServiceObservationsFromObras } from '@/utils/methods/util/service-order'
+import { getAvailableProjectMaterials, getMissingProjectMaterials, getServiceObservationsFromObras } from '@/utils/methods/util/service-order'
 import ServiceOrderObservationsBlock from './blocos/utils/Observations'
 import CheckboxInput from '@/components/inputs/Checkbox'
 import ServiceOrderGeneralInformationBlock from './blocos/GeneralInformationBlock'
@@ -160,6 +160,23 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
     setOsInfo(initialState)
   }
   const { data: project } = useServiceOrderProject({ projectId: osInfo.projeto.id || null })
+  function useProjectInLocoEquipmentsInformation() {
+    const availableMaterials = getAvailableProjectMaterials(project?.compra?.kitInfo || '')
+    if (availableMaterials.length == 0) return toast.error('Não há materiais disponíveis definidos para o projeto.')
+    setOsInfo((prev) => ({
+      ...prev,
+      equipamentos: { ...prev.equipamentos, disponivel: availableMaterials },
+    }))
+  }
+  function useProjectToTakeEquipmentsInformation() {
+    const missingMaterials = getMissingProjectMaterials(project?.material?.materialFaltante || '')
+    if (missingMaterials.length == 0) return toast.error('Não há materiais de retirada definidos para o projeto.')
+    setOsInfo((prev) => ({
+      ...prev,
+      equipamentos: { ...prev.equipamentos, retirada: missingMaterials },
+    }))
+  }
+
   const { mutate: handleCreateServiceOrder, isPending } = useMutation({
     mutationKey: ['create-project-service-order'],
     mutationFn: createServiceOrder,
@@ -216,12 +233,20 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
             )}
             <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-            <ServiceOrderObservationsBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
-            <ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
+            <ServiceOrderEquipmentsInformationBlock
+              infoHolder={osInfo}
+              updateInfoHolder={updateInfoHolder}
+              useProjectInLocoEquipmentsInformation={project ? useProjectInLocoEquipmentsInformation : undefined}
+              useProjectToTakeEquipmentsInformation={project ? useProjectToTakeEquipmentsInformation : undefined}
+            />
             <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
-            <ServiceOrderExecutionInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
+            <ServiceOrderExecutionInformationBlock
+              infoHolder={osInfo}
+              updateInfoHolder={updateInfoHolder}
+              projectObservations={project?.obra?.observacoes || undefined}
+            />
           </div>
           <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
             <LoadingButton

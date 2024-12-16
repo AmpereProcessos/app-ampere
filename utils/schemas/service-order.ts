@@ -24,8 +24,10 @@ export type TServiceOrderTagDTO = TServiceOrderTag & { _id: string }
 
 export const ServiceOrderStatusEnum = z.enum([
   'PENDENTE',
-  'EM PLANEJAMENTO',
-  'AGENDADA',
+  'AGUARDANDO PLANEJAMENTO',
+  'AGUARDANDO LIBERAÇÃO',
+  'AGUARDANDO AGENDAMENTO',
+  'AGUARDANDO EXECUÇÃO',
   'EM EXECUÇÃO',
   'CONCLUÍDA PARCIAL',
   'CONCLUÍDA',
@@ -284,6 +286,8 @@ export const ServiceOrderProjectProjection = {
   numeroResidencia: 1,
   produtos: 1,
   servicos: 1,
+  'compra.kitInfo': 1,
+  'material.materialFaltante': 1,
   'obra.entrada': 1,
   'obra.saida': 1,
   'obra.statusDaObra': 1,
@@ -309,6 +313,12 @@ export type TServiceOrderProject = Pick<
   | 'servicos'
   | 'idVisitaTecnica'
 > & {
+  compra: {
+    kitInfo: TProject['compra']['kitInfo']
+  }
+  material: {
+    materialFaltante: TProject['material']['materialFaltante']
+  }
   obra: {
     entrada: TProject['obra']['entrada']
     saida: TProject['obra']['saida']

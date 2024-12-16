@@ -64,7 +64,7 @@ function ServiceOrderEquipmentsInformationBlock({
         <ModulesInformation infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
         <InvertersInformation infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-          <div className="w-full lg:w-1/2">
+          <div className="h-full w-full lg:w-1/2">
             <TakeEquipmentBlock
               equipmentsToTake={infoHolder.equipamentos.retirada}
               addEquipmentToTake={(info) => addEquipment(info, 'take')}
@@ -72,7 +72,7 @@ function ServiceOrderEquipmentsInformationBlock({
               useProjectToTakeEquipmentsInformation={useProjectToTakeEquipmentsInformation}
             />
           </div>
-          <div className="w-full lg:w-1/2">
+          <div className="h-full w-full lg:w-1/2">
             <InLocoEquipmentBlock
               equipmentsInLoco={infoHolder.equipamentos.disponivel}
               addEquipmentInLoco={(info) => addEquipment(info, 'in-loco')}
@@ -235,7 +235,7 @@ function TakeEquipmentBlock({
     return addEquipmentToTake(info)
   }
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+    <div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
       <div className="flex w-full flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Box size={15} />
@@ -344,7 +344,7 @@ function InLocoEquipmentBlock({
     return addEquipmentInLoco(info)
   }
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+    <div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
       <div className="flex w-full flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <CircleDot size={15} />

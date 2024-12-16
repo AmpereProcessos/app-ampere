@@ -1588,12 +1588,14 @@ export const FileReferenceCategories = [
 ]
 
 export const ServiceOrderStatus = [
-  { id: 1, label: 'PENDENTE', value: 'PENDENTE' },
-  { id: 2, label: 'EM PLANEJAMENTO', value: 'EM PLANEJAMENTO' },
-  { id: 3, label: 'AGENDADA', value: 'AGENDADA' },
-  { id: 4, label: 'EM EXECUÇÃO', value: 'EM EXECUÇÃO' },
-  { id: 5, label: 'CONCLUÍDA PARCIAL', value: 'CONCLUÍDA PARCIAL' },
-  { id: 6, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
-  { id: 7, label: 'CANCELADA', value: 'CANCELADA' },
-  { id: 8, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
+  { id: 1, label: 'PENDENTE', value: 'PENDENTE' }, // add aguardando liberação
+  { id: 2, label: 'AGUARDANDO PLANEJAMENTO', value: 'AGUARDANDO PLANEJAMENTO' },
+  { id: 3, label: 'AGUARDANDO LIBERAÇÃO', value: 'AGUARDANDO LIBERAÇÃO' },
+  { id: 4, label: 'AGUARDANDO AGENDAMENTO', value: 'AGUARDANDO AGENDAMENTO' },
+  { id: 5, label: 'AGUARDANDO EXECUÇÃO', value: 'AGUARDANDO EXECUÇÃO' },
+  { id: 6, label: 'EM EXECUÇÃO', value: 'EM EXECUÇÃO' },
+  { id: 7, label: 'CONCLUÍDA PARCIAL', value: 'CONCLUÍDA PARCIAL' },
+  { id: 8, label: 'CONCLUÍDA', value: 'CONCLUÍDA' },
+  { id: 9, label: 'CANCELADA', value: 'CANCELADA' },
+  { id: 10, label: 'PENDÊNCIAS', value: 'PENDÊNCIAS' },
 ]

@@ -27,6 +27,9 @@ import ServiceOrderProjectVinculation from './blocos/utils/ProjectVinculation'
 import ServiceOrderProjectInformationBlock from './blocos/ProjectInformationBlock'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { ExternalLink } from 'lucide-react'
 
 type ModalControlServiceOrderProps = {
   serviceOrderId: string
@@ -169,6 +172,26 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
           {isSuccess ? (
             <>
               <div className="flex h-full w-full flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <div className="flex w-full flex-wrap items-center justify-center gap-2">
+                  <Link href={`/ordens-de-servico/pdf/${serviceOrderId}`}>
+                    <button
+                      className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+                    >
+                      <ExternalLink width={14} height={14} />
+                      <h1 className="text-xs font-medium tracking-tight">PÁGINA DO ORDEM DE SERVIÇO</h1>
+                    </button>
+                  </Link>
+                  {serviceOrder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
+                    <Link href={`/oem/pdfTermo/${serviceOrderId}`}>
+                      <button
+                        className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+                      >
+                        <ExternalLink width={14} height={14} />
+                        <h1 className="text-xs font-medium tracking-tight">PÁGINA DO TERMO DE SERVIÇO</h1>
+                      </button>
+                    </Link>
+                  ) : null}
+                </div>
                 <ServiceOrderGeneralInformationBlock
                   infoHolder={osInfo as TServiceOrderDTO}
                   predefinedCategories={[]}
@@ -187,12 +210,15 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                 )}
                 <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-                <ServiceOrderObservationsBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
-                <ServiceOrderExecutionInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
+                <ServiceOrderExecutionInformationBlock
+                  infoHolder={osInfo}
+                  updateInfoHolder={updateInfoHolder}
+                  projectObservations={serviceOrder?.projetoDados?.obra?.observacoes || undefined}
+                />
               </div>
               <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
                 <LoadingButton

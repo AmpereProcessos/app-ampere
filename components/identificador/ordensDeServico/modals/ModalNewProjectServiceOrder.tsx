@@ -188,7 +188,6 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
             />
             <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-            <ServiceOrderObservationsBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderEquipmentsInformationBlock
               infoHolder={osInfo}
               updateInfoHolder={updateInfoHolder}

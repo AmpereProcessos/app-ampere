@@ -384,6 +384,8 @@ async function getServiceOrderById({ collection, id }: GetServiceOrderByIdParams
             'projetoDados.numeroResidencia': 1,
             'projetoDados.produtos': 1,
             'projetoDados.servicos': 1,
+            'projetoDados.compra.kitInfo': 1,
+            'projetoDados.material.materialFaltante': 1,
             'projetoDados.obra.entrada': 1,
             'projetoDados.obra.saida': 1,
             'projetoDados.obra.statusDaObra': 1,

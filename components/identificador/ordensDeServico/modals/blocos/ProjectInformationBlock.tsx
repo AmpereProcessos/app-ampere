@@ -227,7 +227,7 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
               OBSERVAÇÕES GERAIS SOBRE A OBRA
             </h1>
             <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-              <h1 className="text-[0.6rem] font-medium">{project!.obra.observacoes || 'OBSERVAÇÕES DA OBRA NÃO DEFINIDAS'}</h1>
+              <h1 className="whitespace-pre-wrap text-[0.6rem] font-medium">{project!.obra.observacoes || 'OBSERVAÇÕES DA OBRA NÃO DEFINIDAS'}</h1>
             </div>
           </div>
         </div>

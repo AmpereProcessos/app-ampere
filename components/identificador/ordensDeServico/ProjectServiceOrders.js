@@ -19,32 +19,32 @@ function ProjectServiceOrders({ projectId }) {
         <LoadingPage />
       </div>
     )
-  if (isSuccess && orders) 7
-  return (
-    <div className="my-2 flex w-full flex-col gap-2">
-      {orders.length > 0 ? (
-        orders.map((order, index) => (
-          <ProjectServiceOrderCard
-            key={index}
-            order={order}
-            projectId={projectId}
-            handleClick={(id) => setEditServiceOrder({ id: id, isOpen: true })}
+  if (isSuccess && orders)
+    return (
+      <div className="my-2 flex w-full flex-col gap-2">
+        {orders.length > 0 ? (
+          orders.map((order, index) => (
+            <ProjectServiceOrderCard
+              key={index}
+              order={order}
+              projectId={projectId}
+              handleClick={(id) => setEditServiceOrder({ id: id, isOpen: true })}
+            />
+          ))
+        ) : (
+          <div className="flex h-[60px] items-center justify-center">
+            <p className="text-center italic text-gray-500 ">Não há ordens de serviço vinculadas a esse projeto...</p>
+          </div>
+        )}
+        {editServiceOrder.id && editServiceOrder.isOpen ? (
+          <ModalOrdemServico
+            orderId={editServiceOrder.id}
+            modalIsOpen={editServiceOrder.isOpen}
+            closeModal={() => setEditServiceOrder({ id: null, isOpen: false })}
           />
-        ))
-      ) : (
-        <div className="flex h-[60px] items-center justify-center">
-          <p className="text-center italic text-gray-500 ">Não há ordens de serviço vinculadas a esse projeto...</p>
-        </div>
-      )}
-      {editServiceOrder.id && editServiceOrder.isOpen ? (
-        <ModalOrdemServico
-          orderId={editServiceOrder.id}
-          modalIsOpen={editServiceOrder.isOpen}
-          closeModal={() => setEditServiceOrder({ id: null, isOpen: false })}
-        />
-      ) : null}
-    </div>
-  )
+        ) : null}
+      </div>
+    )
 }
 
 export default ProjectServiceOrders

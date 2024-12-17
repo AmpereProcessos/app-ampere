@@ -3,7 +3,7 @@ import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import { cn } from '@/lib/utils'
-import { formatLocation } from '@/utils/methods/formatting'
+import { formatDateAsLocale, formatLocation, formatNameAsInitials } from '@/utils/methods/formatting'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import { useTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
 import { renderProductCategoryIcon } from '@/utils/methods/rendering'
@@ -11,22 +11,33 @@ import { TPurchaseControl, TPurchaseProjectDTO } from '@/utils/schemas/purchases
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { AiOutlineSafety } from 'react-icons/ai'
-import { BsBank, BsPersonVcard, BsStack } from 'react-icons/bs'
+import { BsBank, BsCalendar, BsCalendarCheck, BsCalendarPlus, BsPersonVcard, BsStack } from 'react-icons/bs'
 import { FaBolt, FaIndustry, FaPhone, FaUserAlt } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdAdd } from 'react-icons/io'
-import { MdLandscape, MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
+import { MdDashboard, MdDesignServices, MdLandscape, MdOutlinePayment, MdPhone, MdSync } from 'react-icons/md'
 import { TbReportAnalytics, TbRulerMeasure } from 'react-icons/tb'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import { useProjectServiceOrders } from '@/utils/methods/query/service-orders'
+import { TServiceOrder, TServiceOrderSimplifiedDTO } from '@/utils/schemas/service-order'
+import { Pencil, Tag, UserRound } from 'lucide-react'
+import ModalControlServiceOrder from '@/components/identificador/ordensDeServico/modals/ModalControlServiceOrder'
+import { Session } from 'next-auth'
+import { fetchProjectById } from '@/utils/methods/query/clients'
+import { TProjectDTO } from '@/utils/schemas/projects'
+import { createServiceOrder } from '@/utils/methods/mutation/service-orders'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 
 type PurchaseControlProjectInformationBlockProps = {
+  session: Session
   purchase: TPurchaseControl
   updatePurchase: (changes: Partial<TPurchaseControl>) => void
   project: TPurchaseProjectDTO
   addProductToComposition: (product: TPurchaseControl['composicao'][number]) => void
 }
 function PurchaseControlProjectInformationBlock({
+  session,
   purchase,
   updatePurchase,
   project,
@@ -261,6 +272,7 @@ function PurchaseControlProjectInformationBlock({
             <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum produto adicionado</div>
           )}
         </div>
+        <ProjectServiceOrderBlock session={session} projectId={project._id} />
         <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">OUTROS</h1>
         <div className="flex items-center justify-center">
           <div className="w-fit">
@@ -386,6 +398,306 @@ function TechnicalAnalysisBlock({ analysisId, addProductToComposition }: Technic
           <TechnicalAnalysisFiles analysisId={analysisId} />
         </div>
       ) : null}
+    </div>
+  )
+}
+
+type ProjectServiceOrderBlockProps = {
+  session: Session
+  projectId: string
+}
+function ProjectServiceOrderBlock({ session, projectId }: ProjectServiceOrderBlockProps) {
+  const queryClient = useQueryClient()
+  const { data: serviceOrders, isLoading, isError, isSuccess } = useProjectServiceOrders({ projectId })
+  const [editServiceOrderModal, setEditServiceOrderModal] = useState<{ id: string; isOpen: boolean }>({ id: '', isOpen: false })
+
+  async function handleCreateProjectServiceOrder() {
+    function getInverterMetadata(project: TProjectDTO) {
+      const inverterQty = project.produtos?.filter((p) => p.categoria === 'INVERSOR').reduce((acc, curr) => acc + curr.qtde, 0)
+      const inverterModel = project.produtos
+        ?.filter((p) => p.categoria === 'INVERSOR')
+        .map((p) => `${p.qtde}x ${p.modelo}`)
+        .join(', ')
+      const inverterPower = project.produtos
+        ?.filter((p) => p.categoria === 'INVERSOR')
+        .map((p) => `${p.qtde}x ${p.potencia}`)
+        .join(', ')
+      return {
+        qtde: inverterQty,
+        modelo: inverterModel,
+        potencia: inverterPower,
+      }
+    }
+    function getModulesMetadata(project: TProjectDTO) {
+      const modulosQty = project.produtos?.filter((p) => p.categoria === 'MÓDULO').reduce((acc, curr) => acc + curr.qtde, 0)
+      const modulosModel = project.produtos
+        ?.filter((p) => p.categoria === 'MÓDULO')
+        .map((p) => `${p.qtde}x ${p.modelo}`)
+        .join(', ')
+      const modulosPower = project.produtos
+        ?.filter((p) => p.categoria === 'MÓDULO')
+        .map((p) => `${p.qtde}x ${p.potencia}`)
+        .join(', ')
+      return {
+        qtde: modulosQty,
+        modelo: modulosModel,
+        potencia: modulosPower,
+      }
+    }
+    try {
+      const project = await fetchProjectById({ id: projectId })
+      const serviceOrder: TServiceOrder = {
+        categoria: 'MONTAGEM',
+        favorecido: {
+          nome: project.nomeDoContrato || '',
+          contato: project.telefone || '',
+        },
+        anotacoes: '',
+        projeto: {
+          id: project._id || null, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+          nome: project.nomeDoContrato || null, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+          identificador: project.qtde || null, // identificador QTDE do projeto no banco de projetos
+          tipo: project.tipoDeServico || null, // tipo do projeto
+        },
+        descricao: `SERVIÇO DO PROJETO ${project.nomeDoContrato}`, // servico executado
+        localizacao: {
+          cep: project.cep?.toString() || '',
+          uf: project.uf,
+          cidade: project.cidade,
+          bairro: project.bairro,
+          endereco: project.logradouro,
+          numeroOuIdentificador: project.numeroResidencia?.toString() || '',
+        },
+        responsavel: {
+          nome: project.obra?.equipeResp || '',
+          tipo: project.obra?.equipeResp ? 'INTERNO' : 'EXTERNO',
+        },
+        // configurar: false,
+        urgencia: 'POUCO URGENTE',
+        periodo: {
+          inicio: null,
+          fim: null,
+        },
+        pagamento: {
+          recebedor: null,
+          valor: null,
+        },
+        cobranca: {
+          pagador: null,
+          valor: null,
+        },
+        autor: {
+          id: session?.user.id,
+          nome: session.user.nome,
+          avatar_url: session?.user.avatar_url,
+        },
+        equipamentos: {
+          modulos: getModulesMetadata(project),
+          inversor: getInverterMetadata(project),
+          disponivel: null,
+          retirada: null,
+        },
+        detalhes: {
+          pontoAgua: '',
+          senhaWifi: '',
+          configuracaoMonitoramento: false,
+          possuiTrafo: false,
+          tipoEstrutura: project.estruturaPersonalizada?.tipo || null,
+          tipoTelha: project.visitaTecnica?.tipoDaTelha || null,
+          tipoPadrao: project.padrao?.tipo || null,
+          tipoSaidaPadrao: project.visitaTecnica?.saidaDoCliente || null,
+          amperagemPadrao: project.visitaTecnica?.amperagem || null,
+          responsabilidadePadrao: project.padrao?.respInstalacao,
+          topologia: project.sistema?.topologia,
+        },
+        observacoes: [],
+        dataInsercao: new Date().toISOString(),
+      }
+      const response = await createServiceOrder({ info: serviceOrder })
+
+      return response
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const { mutate, isPending } = useMutationWithFeedback({
+    mutationKey: ['create-service-order'],
+    mutationFn: handleCreateProjectServiceOrder,
+    affectedQueryKey: ['project-service-orders', projectId],
+    queryClient: queryClient,
+  })
+  const handleMutate = async () => queryClient.cancelQueries({ queryKey: ['project-service-orders', projectId] })
+  const handleSettled = async () => await queryClient.invalidateQueries({ queryKey: ['project-service-orders', projectId] })
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">ORDENS DE SERVIÇOS</h1>
+      <div className="flex w-full items-center justify-end">
+        <button
+          onClick={() => mutate()}
+          disabled={isPending}
+          className={cn(
+            'flex items-center gap-1 rounded-lg bg-blue-500 px-2 py-1 text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-gray-300 enabled:hover:bg-blue-600'
+          )}
+        >
+          <MdDesignServices />
+          <h1 className="text-xs font-medium tracking-tight">GERAR ORDEM DE SERVIÇO DO PROJETO</h1>
+        </button>
+      </div>
+      {isLoading ? <LoadingComponent /> : null}
+      {isError ? <ErrorComponent msg={'Erro ao buscar informações das ordens de serviço.'} /> : null}
+      {isSuccess ? (
+        serviceOrders.length > 0 ? (
+          serviceOrders.map((serviceOrder) => (
+            <ServiceOrderCard
+              key={serviceOrder._id}
+              serviceOrder={serviceOrder}
+              handleClick={(id) => setEditServiceOrderModal({ id, isOpen: true })}
+            />
+          ))
+        ) : (
+          <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma ordem de serviço encontrada.</div>
+        )
+      ) : null}
+      {editServiceOrderModal.isOpen && editServiceOrderModal.id ? (
+        <ModalControlServiceOrder
+          serviceOrderId={editServiceOrderModal.id}
+          session={session}
+          closeModal={() => setEditServiceOrderModal({ id: '', isOpen: false })}
+          callbacks={{
+            onMutate: handleMutate,
+            onSettled: handleSettled,
+          }}
+        />
+      ) : null}
+    </div>
+  )
+}
+type ServiceOrderCardProps = {
+  serviceOrder: TServiceOrderSimplifiedDTO
+
+  handleClick: (id: string) => void
+}
+function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) {
+  function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
+    if (serviceOrder.status === 'PENDENTE')
+      return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
+    if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
+      return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGUARDANDO PLANEJAMENTO</div>
+    if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
+      return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
+    if (serviceOrder.status === 'EM EXECUÇÃO')
+      return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>
+    if (serviceOrder.status === 'CONCLUÍDA PARCIAL')
+      return <div className="rounded-full bg-purple-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">CONCLUÍDA PARCIAL</div>
+    if (serviceOrder.status === 'CONCLUÍDA')
+      return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">CONCLUÍDA</h1>
+    if (serviceOrder.status === 'CANCELADA')
+      return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">CANCELADA</h1>
+
+    return <h1 className="min-w-fit rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-white">NÃO DEFINIDO</h1>
+  }
+  return (
+    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-sm font-bold leading-none tracking-tight">{serviceOrder.descricao}</p>
+          {getStatusTag(serviceOrder)}
+        </div>
+        <div className="flex items-center gap-1">
+          <UserRound size={12} />
+          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.responsavel.nome}</h1>
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+          <div className="flex items-center gap-1">
+            <MdDashboard size={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.categoria}</h1>
+          </div>
+          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          {serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
+            serviceOrder.etiquetas.map((tag, index) => (
+              <div
+                key={index}
+                style={{
+                  border: '1px solid',
+                  borderColor: tag.cores.primaria,
+                  color: tag.cores.primaria,
+                  backgroundColor: tag.cores.secundaria,
+                }}
+                className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
+              >
+                <Tag width={10} height={10} />
+                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+              </div>
+            ))
+          ) : (
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+          )}
+        </div>
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
+          <div className="flex items-center gap-1">
+            <FaLocationDot width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendar width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">AGENDAMENTO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.agendamento
+                ? `${formatDateAsLocale(serviceOrder.agendamento.inicio, true)} - ${
+                    serviceOrder.agendamento.fim ? formatDateAsLocale(serviceOrder.agendamento.fim, true) : 'N/A'
+                  }`
+                : 'N/A'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCalendarCheck width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EXECUÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.periodo.inicio
+                ? `${formatDateAsLocale(serviceOrder.periodo.inicio, true)} - ${
+                    serviceOrder.periodo.fim ? formatDateAsLocale(serviceOrder.periodo.fim, true) : 'N/A'
+                  }`
+                : 'N/A'}
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1">
+            <BsCalendarPlus />
+            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
+          </div>
+          {serviceOrder.dataEfetivacao ? (
+            <div className="flex items-center gap-1">
+              <BsCalendarCheck color="#22c55e" />
+              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
+            </div>
+          ) : null}
+          <div className="flex items-center gap-1">
+            <Avatar
+              url={serviceOrder.autor?.avatar_url || undefined}
+              width={20}
+              height={20}
+              fallback={formatNameAsInitials(serviceOrder.autor?.nome || '')}
+            />
+            <p className="text-[0.65rem] font-medium text-primary/80">{serviceOrder.autor?.nome || ''}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => handleClick(serviceOrder._id)}
+          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+        >
+          <Pencil width={10} height={10} />
+          <p>EDITAR</p>
+        </button>
+      </div>
     </div>
   )
 }

@@ -92,6 +92,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
             <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             {project ? (
               <PurchaseControlProjectInformationBlock
+                session={session}
                 purchase={infoHolder}
                 updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
                 project={project}

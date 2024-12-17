@@ -332,6 +332,21 @@ function NewManyFileReferencesMenu({ vinculationId, prefix, session, vinculation
                   />
                 </div>
               ) : null}
+              {vinculations?.serviceOrderId ? (
+                <div className="w-fit">
+                  <CheckboxInput
+                    labelFalse="VINCULAR À ORDEM DE SERVIÇO"
+                    labelTrue="VINCULAR À ORDEM DE SERVIÇO"
+                    checked={!!infoHolder.fileReference.idOrdemServico}
+                    editable={!vinculations.serviceOrderId.blocked}
+                    handleChange={(value) =>
+                      updateReference({
+                        idOrdemServico: value ? vinculations.serviceOrderId?.value : undefined,
+                      })
+                    }
+                  />
+                </div>
+              ) : null}
             </div>
             <div className="flex w-full flex-wrap items-start justify-center gap-4">
               {infoHolder.attachments

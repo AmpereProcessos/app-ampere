@@ -379,6 +379,7 @@ export type TPurchaseControlsQueryFilters = z.infer<typeof PurchaseControlsQuery
 
 export const PurchaseProjectProjection = {
   nomeDoContrato: 1,
+  qtde: 1,
   cpf_cnpj: 1,
   inscricaoRural: 1,
   tipoDeServico: 1,
@@ -406,6 +407,7 @@ export const PurchaseProjectProjection = {
 export type TPurchaseProject = Pick<
   TProject,
   | 'nomeDoContrato'
+  | 'qtde'
   | 'cpf_cnpj'
   | 'inscricaoRural'
   | 'tipoDeServico'

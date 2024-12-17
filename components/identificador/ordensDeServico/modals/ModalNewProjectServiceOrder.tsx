@@ -23,6 +23,7 @@ import ServiceOrderScheduling from './blocos/SchedulingInformationBlock'
 import ServiceOrderExecutionInformationBlock from './blocos/ExecutionInformationBlock'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import ServiceOrderPendenciesBlock from './blocos/PendenciesBlock'
 function getEquipmentList({ str, category }: { str: string; category: string }) {
   if (category != 'MONTAGEM') return null
   if (typeof str != 'string') return null
@@ -186,6 +187,7 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
               predefinedCategories={[]}
               updateInfoHolder={updateInfoHolder}
             />
+            <ServiceOrderPendenciesBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderEquipmentsInformationBlock

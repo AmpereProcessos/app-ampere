@@ -30,6 +30,8 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { ExternalLink } from 'lucide-react'
+import ServiceOrderFileReferences from './blocos/AttachmentsBlock'
+import ServiceOrderPendenciesBlock from './blocos/PendenciesBlock'
 
 type ModalControlServiceOrderProps = {
   serviceOrderId: string
@@ -197,6 +199,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   predefinedCategories={[]}
                   updateInfoHolder={updateInfoHolder}
                 />
+                <ServiceOrderPendenciesBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 {serviceOrder?.projetoDados ? (
                   <ServiceOrderProjectInformationBlock project={serviceOrder.projetoDados} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 ) : (
@@ -208,6 +211,12 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                     updateInfoHolder={updateInfoHolder}
                   />
                 )}
+                <ServiceOrderFileReferences
+                  session={session}
+                  attachmentPrefix={osInfo.descricao}
+                  serviceOrderId={serviceOrderId}
+                  projectId={osInfo.projeto.id || undefined}
+                />
                 <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

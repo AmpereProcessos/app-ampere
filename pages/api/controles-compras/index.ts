@@ -57,6 +57,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
             dataEfetivacao: 1,
             'projetoDados._id': 1,
             'projetoDados.nomeDoContrato': 1,
+            'projetoDados.qtde': 1,
             'projetoDados.cpf_cnpj': 1,
             'projetoDados.inscricaoRural': 1,
             'projetoDados.tipoDeServico': 1,

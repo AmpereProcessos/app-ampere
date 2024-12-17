@@ -134,9 +134,9 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
   function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
     if (serviceOrder.status === 'PENDENTE')
       return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
-    if (serviceOrder.status === 'EM PLANEJAMENTO')
+    if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
       return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM PLANEJAMENTO</div>
-    if (serviceOrder.status === 'AGENDADA')
+    if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
       return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
     if (serviceOrder.status === 'EM EXECUÇÃO')
       return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>

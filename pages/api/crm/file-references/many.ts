@@ -3,7 +3,6 @@ import { getFileReferencesByQuery } from '@/repositories/crm-file-references/que
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { FileReferencesQueryParamsSchema, InsertFileReferenceSchema, TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
-import connectToDatabase from '@/utils/services/mongodb/projects'
 import createHttpError from 'http-errors'
 import { Collection, Filter } from 'mongodb'
 import { NextApiHandler } from 'next'
@@ -16,8 +15,10 @@ type GetResponse = {
 const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId } = FileReferencesQueryParamsSchema.parse(req.query)
+  const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId, serviceOrderId } =
+    FileReferencesQueryParamsSchema.parse(req.query)
 
+  console.log(req.query)
   const clientQuery: Filter<TFileReference> = clientId ? { idCliente: clientId } : {}
   const opportunityQuery: Filter<TFileReference> = opportunityId ? { idOportunidade: opportunityId } : {}
   const analysisQuery: Filter<TFileReference> = analysisId ? { idAnaliseTecnica: analysisId } : {}
@@ -25,10 +26,20 @@ const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req
   const projectQuery: Filter<TFileReference> = projectId ? { idProjeto: projectId } : {}
   const purchaseQuery: Filter<TFileReference> = purchaseId ? { idCompra: purchaseId } : {}
   const revenueQuery: Filter<TFileReference> = revenueId ? { idReceita: revenueId } : {}
+  const serviceOrderQuery: Filter<TFileReference> = serviceOrderId ? { idOrdemServico: serviceOrderId } : {}
 
-  const nonEmptyQueries = [clientQuery, opportunityQuery, analysisQuery, homologationQuery, projectQuery, purchaseQuery, revenueQuery].filter(
-    (r) => Object.keys(r).length > 0
-  )
+  const nonEmptyQueries = [
+    clientQuery,
+    opportunityQuery,
+    analysisQuery,
+    homologationQuery,
+    projectQuery,
+    purchaseQuery,
+    revenueQuery,
+    serviceOrderQuery,
+  ].filter((r) => Object.keys(r).length > 0)
+
+  console.log(nonEmptyQueries)
   const orQuery = { $or: nonEmptyQueries }
   const query = { ...orQuery }
 

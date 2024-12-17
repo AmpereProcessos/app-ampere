@@ -36,11 +36,36 @@ export const ServiceOrderStatusEnum = z.enum([
 ])
 export type TServiceOrderStatus = z.infer<typeof ServiceOrderStatusEnum>
 
+export const ServiceOrderPendencies = z.object({
+  diagramas: z
+    .string({
+      required_error: 'Conclusão da pendência de diagramas não informada.',
+      invalid_type_error: 'Tipo não válido para a conclusão da pendência de diagramas.',
+    })
+    .optional()
+    .nullable(),
+  desenhos: z
+    .string({
+      required_error: 'Conclusão da pendência de desenhos não informada.',
+      invalid_type_error: 'Tipo não válido para a conclusão da pendência de desenhos.',
+    })
+    .optional()
+    .nullable(),
+  mapasDeMicro: z
+    .string({
+      required_error: 'Conclusão da pendência de mapa de micro não informada.',
+      invalid_type_error: 'Tipo não válido para a conclusão da pendência de mapa de micro.',
+    })
+    .optional()
+    .nullable(),
+})
+
 const ServiceOrderCategories = z.enum(['MONTAGEM', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA', 'PADRÃO', 'ESTRUTURA', 'OUTROS']) // etc
 
 export const ServiceOrderSchema = z.object({
   categoria: ServiceOrderCategories,
   status: ServiceOrderStatusEnum.optional().nullable(),
+  pendencias: ServiceOrderPendencies.optional().nullable(),
   favorecido: z.object({
     nome: z.string({ required_error: 'Nome do favorecido não informado.', invalid_type_error: 'Tipo não válido para o nome do favorecido.' }),
     contato: z.string({

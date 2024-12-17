@@ -66,7 +66,6 @@ export function useProjectServiceOrders({ projectId }: { projectId: string }) {
   return useQuery({
     queryKey: ['project-service-orders', projectId],
     queryFn: async () => await fetchServiceOrdersByProject({ projectId }),
-
     refetchOnWindowFocus: false,
   })
 }

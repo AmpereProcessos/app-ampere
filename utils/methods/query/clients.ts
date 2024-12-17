@@ -20,7 +20,7 @@ export function useClients(enabled: boolean) {
     enabled: !!enabled,
   })
 }
-async function fetchClientById({ id }: { id: string }) {
+export async function fetchProjectById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/projects/fetchDoc/${id}`)
     return data
@@ -31,7 +31,7 @@ async function fetchClientById({ id }: { id: string }) {
 export function useClientById({ enabled, id }: { enabled: boolean; id: string }) {
   return useQuery({
     queryKey: ['project-by-id', id],
-    queryFn: async () => await fetchClientById({ id }),
+    queryFn: async () => await fetchProjectById({ id }),
     enabled: !!enabled,
     refetchOnWindowFocus: false,
     retry: 1,

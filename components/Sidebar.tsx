@@ -48,7 +48,7 @@ function Sidebar({ sidebarVisible }: SidebarProps) {
         ) : null}
         {session.user?.visualizacao.tipo == 'VENDAS' ? (
           <VendedorSidebar
-            userAccessibleRoutes={session.user?.permissoes.rotas}
+            userAccessibleRoutes={session.user?.permissoes.rotas || []}
             userVisualization={session.user?.visualizacao}
             sellerName={session.user?.visualizacao.referencia}
           />

@@ -133,6 +133,7 @@ export const FileReferencesQueryParamsSchema = z.object({
   projectId: z.string({ invalid_type_error: 'Tipo inválido para referência de projeto.' }).optional().nullable(),
   purchaseId: z.string({ invalid_type_error: 'Tipo inválido para referência de compra.' }).optional().nullable(),
   revenueId: z.string({ invalid_type_error: 'Tipo inválido para referência de receita.' }).optional().nullable(),
+  serviceOrderId: z.string({ invalid_type_error: 'Tipo inválido para referência de ordem de serviço.' }).optional().nullable(),
 })
 
 export type TFileReferencesQueryParams = z.infer<typeof FileReferencesQueryParamsSchema>

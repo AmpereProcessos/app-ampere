@@ -155,6 +155,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                 <PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 {purchaseControl.projetoDados ? (
                   <PurchaseControlProjectInformationBlock
+                    session={session}
                     purchase={infoHolder}
                     updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
                     project={purchaseControl.projetoDados}

@@ -257,6 +257,7 @@ function MaterialList({
         </div>
         <input
           type="text"
+          disabled={!!vinculatedMaterialId}
           value={materialDescription}
           onChange={(e) => updateMaterialDescription(e.target.value)}
           placeholder="Filtre o item desejado..."
@@ -337,6 +338,7 @@ function NewMaterialMenu({ initialName }: NewMaterialMenuProps) {
   return (
     <div className="flex w-full grow flex-col items-center justify-center gap-1">
       <h1 className="w-full text-center text-xs font-medium tracking-tight text-primary/80">Adicione um novo material ao estoque.</h1>
+      <h1 className="rounded-lg bg-primary px-2 py-1 text-[0.65rem] text-primary-foreground">{initialName}</h1>
       <div className="flex items-center">
         <SelectInput
           label="GRANDEZA"

@@ -119,6 +119,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }))
     toast.success('Produto adicionado à composição')
   }
+  console.log(infoHolder)
   useEffect(() => {
     if (purchaseControl) setInfoHolder(purchaseControl)
   }, [purchaseControl])

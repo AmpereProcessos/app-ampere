@@ -42,6 +42,7 @@ const PurchaseCompositionItemSchema = z.object({
   materialId: z.string({ invalid_type_error: 'Tipo não válido para o ID do material.' }).optional().nullable(),
   alocadorOrigemId: z.string({ invalid_type_error: 'Tipo não válido para o ID do alocador de origem.' }).optional().nullable(),
   alocadorDestinoId: z.string({ invalid_type_error: 'Tipo não válido para o ID do alocador de destino.' }).optional().nullable(),
+  dataAlocacao: z.string({ invalid_type_error: 'Tipo não válido para a data de alocação.' }).optional().nullable(),
   categoria: PurchaseCompositionItemCategory,
   descricao: z.string({
     required_error: 'Descrição do item de composição da compra não informada.',

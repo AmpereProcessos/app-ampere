@@ -7,12 +7,17 @@ import PurchaseControlCompositionBlockTable from './utils/CompositionTable'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import toast from 'react-hot-toast'
 import { PurchaseCompositionItemCategories, units } from '@/utils/select-options'
+import { BsCart } from 'react-icons/bs'
+import { cn } from '@/lib/utils'
+import { AnimatePresence } from 'framer-motion'
+import PurchaseNewCompositionItem from './utils/NewCompositionItem'
 
 type PurchaseControlCompositionBlockProps = {
   infoHolder: TPurchaseControl
   setInfoHolder: React.Dispatch<React.SetStateAction<TPurchaseControl>>
 }
 function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
+  const [newCompositionItemMenuIsOpen, setNewCompositionItemMenuIsOpen] = useState<boolean>(false)
   const [compositionItemHolder, setCompositionItemHolder] = useState<TPurchaseControl['composicao'][number]>({
     categoria: 'OUTROS',
     descricao: '',
@@ -49,6 +54,20 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
     <div className="flex w-full grow flex-col gap-4">
       <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">COMPOSIÇÃO DA COMPRA</h1>
       <div className="flex w-full grow flex-col gap-2">
+        <div className="flex w-full items-center justify-end">
+          <button
+            onClick={() => setNewCompositionItemMenuIsOpen((prev) => !prev)}
+            className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
+              'bg-gray-300  hover:bg-red-300': newCompositionItemMenuIsOpen,
+              'bg-green-300  hover:bg-green-400': !newCompositionItemMenuIsOpen,
+            })}
+          >
+            <BsCart />
+            <h1 className="text-xs font-medium tracking-tight">
+              {!newCompositionItemMenuIsOpen ? 'ABRIR MENU DE NOVO ITEM' : 'FECHAR MENU DE NOVO ITEM'}
+            </h1>
+          </button>
+        </div>
         <div className="flex w-full flex-col gap-2">
           <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-[25%]">
@@ -137,6 +156,10 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
             </Button>
           </div>
         </div>
+        <AnimatePresence>
+          {newCompositionItemMenuIsOpen ? <PurchaseNewCompositionItem addCompositionItem={addCompositionItem} /> : null}
+        </AnimatePresence>
+
         <PurchaseControlCompositionBlockTable
           composition={infoHolder.composicao}
           removeCompositionItem={removeCompositionItem}

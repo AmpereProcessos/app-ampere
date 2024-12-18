@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import { z } from 'zod'
 
 const GeneralMaterialSchema = z.object({
+  alocadorId: z.string().optional().nullable(),
   nome: z.string(),
   nomeTecnico: z.string().optional().nullable(),
   preco: z.number(),
@@ -32,6 +33,10 @@ const GeneralMaterialSchema = z.object({
 })
 
 export const InsertMaterialSchema = z.object({
+  alocadorId: z
+    .string({ required_error: 'Alocador do material não fornecido.', invalid_type_error: 'Tipo não válido para o alocador do material.' })
+    .optional()
+    .nullable(),
   nome: z
     .string({ required_error: 'Nome do material não fornecido.', invalid_type_error: 'Tipo não válido para o nome do material.' })
     .min(3, 'Nome do material deve conter ao menos 3 caracteres.'),
@@ -100,6 +105,23 @@ export const InputMaterialUpdateSchema = z.object({
 
 export type TInputMaterialData = z.infer<typeof InputMaterialUpdateSchema>
 export type TMaterial = z.infer<typeof GeneralMaterialSchema>
-
 export type TMaterialDTO = TMaterial & { _id: string }
-type TMaterialEntity = TMaterial & { _id: ObjectId }
+
+export const MaterialSimplifiedProjection = {
+  nome: 1,
+  alocadorId: 1,
+  qtde: 1,
+  codigo: 1,
+  preco: 1,
+  grandeza: 1,
+}
+export type TMaterialSimplified = Pick<TMaterial, 'nome' | 'alocadorId' | 'qtde' | 'codigo' | 'preco' | 'grandeza'>
+export type TMaterialSimplifiedDTO = TMaterialSimplified & { _id: string }
+
+export type TMaterialSimplifiedWithAlocator = TMaterialSimplified & { alocadorDados?: { _id: string; nome: string } }
+export type TMaterialSimplifiedWithAlocatorDTO = TMaterialSimplifiedWithAlocator & { _id: string }
+
+export const QueryVinculationMaterialsFiltersSchema = z.object({
+  search: z.string({ required_error: 'Filtro de pesquisa não informado.', invalid_type_error: 'Tipo não válido para o filtro de pesquisa.' }),
+})
+export type TQueryVinculationMaterialsFilter = z.infer<typeof QueryVinculationMaterialsFiltersSchema>

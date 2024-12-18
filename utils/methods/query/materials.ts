@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { isEmpty } from '../shared'
-import { TMaterial, TMaterialDTO } from '@/utils/schemas/materials'
+import { TMaterial, TMaterialDTO, TMaterialSimplifiedWithAlocatorDTO, TQueryVinculationMaterialsFilter } from '@/utils/schemas/materials'
 import { useState } from 'react'
 import { TMaterialUpdateRegistryDTO } from '@/utils/schemas/material-updates-registry'
 import { formatWithoutDiacritics } from '../formatting'
@@ -151,5 +151,22 @@ export function useMaterialLogsByType({ type }: { type: string }) {
     queryKey: ['materials-logs-by-type', type],
     queryFn: async () => await fetchMaterialLogsBy({ type }),
     refetchOnWindowFocus: false,
+  })
+}
+
+async function fetchVinculationMaterialsBySearch(query: TQueryVinculationMaterialsFilter) {
+  try {
+    if (query.search.trim().length == 0) return []
+    const { data } = await axios.post('/api/almoxarifado/materiais/pesquisa-vinculacao', query)
+    return data.data as TMaterialSimplifiedWithAlocatorDTO[]
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useVinculationMaterialsBySearch(query: TQueryVinculationMaterialsFilter) {
+  return useQuery({
+    queryKey: ['materials-vinculation-search', query],
+    queryFn: async () => await fetchVinculationMaterialsBySearch(query),
   })
 }

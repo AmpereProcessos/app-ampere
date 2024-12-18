@@ -46,8 +46,68 @@ const UFEquivalent = {
   Mg: 'MG',
 }
 
+function getModulesInformation({ qty, power }: { qty: number | string; power: number | string }) {
+  let splitQtde = qty.toString().split('/')
+  let splitPot = power.toString().split('/')
+  let totalModulesPower = 0
+  for (let i = 0; i < splitQtde.length; i++) {
+    let iQty = Number(splitQtde[i]) || 0
+    let iPower = Number(splitPot[i]) || 0
+    totalModulesPower = totalModulesPower + (iQty * iPower) / 1000
+  }
+  let totalModulesQty = splitQtde.reduce((partialSum, a) => Number(partialSum) + Number(a), 0)
+  return { totalModulesPower, totalModulesQty }
+}
+function getInverterInformation({ model, qty, power }: { model: number | string; qty: number | string; power: number | string }) {
+  let splitMarca = model.toString().split('/')
+  let splitQtde = qty.toString().split('/')
+  let splitPot = power.toString().split('/')
+  let holder = []
+  for (let i = 0; i < splitMarca.length; i++) {
+    let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`
+    holder.push(str)
+  }
+  return holder.join(' - ')
+}
 const handleUpdateTeste: NextApiHandler<any> = async (req, res) => {
   // const db: Db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const requestsDb: Db = await connectToRequestsDatabase(process.env.DB_KEY)
+
+  // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
+  // const projectsCollection: Collection<TProject> = db.collection('dados')
+
+  // const requests = await contractRequestsCollection
+  //   .find({ _id: { $in: [new ObjectId('6761c244acd62162be68249d'), new ObjectId('6761c3e0acd62162be68249e')] } })
+  //   .toArray()
+
+  // const projectBulkwriteArr = requests
+  //   .map((request) => {
+  //     if (!request.idProjetoApp) return null
+  //     return {
+  //       updateOne: {
+  //         filter: { _id: new ObjectId(request.idProjetoApp) },
+  //         update: {
+  //           $set: {
+  //             'sistema.valorProjeto': request.valorContrato,
+  //             'sistema.qtdeModulos': getModulesInformation({ qty: request.qtdeModulos, power: request.potModulos }).totalModulesQty,
+  //             'sistema.potModulos': request.potModulos,
+  //             'sistema.potPico': getModulesInformation({ qty: request.qtdeModulos, power: request.potModulos }).totalModulesPower,
+  //             'sistema.inversor': getInverterInformation({ model: request.marcaInversor, qty: request.qtdeInversor, power: request.potInversor }),
+  //             'pagamento.negociacao': request.descricaoNegociacao,
+  //             obsComercial: request.obsComercial,
+  //           },
+  //         },
+  //       },
+  //     }
+  //   })
+  //   .filter((r) => !!r)
+
+  // const bkResponse = await projectsCollection.bulkWrite(projectBulkwriteArr)
+
+  // return res.status(200).json({
+  //   projectBulkwriteArr: projectBulkwriteArr,
+  //   bkResponse: bkResponse,
+  // })
   // const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
 
   // const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection('controles-compras')

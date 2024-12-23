@@ -43,8 +43,6 @@ type PostResponse = {
 }
 
 const createHomologation: NextApiHandler<PostResponse> = async (req, res) => {
-  const session = await validateAuthenticationWithSession(req, res)
-
   const homologation = InsertHomologationSchema.parse(req.body)
 
   const db = await connectToCRMDatabase(process.env.DB_KEY)

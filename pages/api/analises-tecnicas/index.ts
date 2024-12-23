@@ -52,7 +52,6 @@ type PostResponse = {
 }
 
 const createTechnicalAnalysis: NextApiHandler<PostResponse> = async (req, res) => {
-  const session = await validateAuthenticationWithSession(req, res)
   const partnerId = '65454ba15cf3e3ecf534b308'
 
   const analysis = GeneralTechnicalAnalysisSchema.parse(req.body)

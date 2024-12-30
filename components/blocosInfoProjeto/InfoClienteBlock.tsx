@@ -140,7 +140,7 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
         </div>
       </div>
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'CPF/CNPJ'}
             placeholder="Preencha o CPF do titular do projeto..."
@@ -156,7 +156,21 @@ function InfoClientBlock({ editor, infoHolder, setInfo, changes, setChanges, upd
             width="100%"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/3">
+          <DateInput
+            label="DATA DE NASCIMENTO"
+            value={formatDate(infoHolder.dataNascimento)}
+            handleChange={(value) => {
+              setInfo((prev) => ({
+                ...prev,
+                dataNascimento: formatDateInputChange(value),
+              }))
+              setChanges((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))
+            }}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-1/3">
           <TextInput
             label={'INSCRIÇÃO RURAL'}
             placeholder="Preencha a inscrição rural, se aplicável..."

@@ -72,7 +72,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
             options={[
               { id: 1, label: 'AMPERE', value: 'AMPERE' },
               { id: 2, label: 'CLIENTE', value: 'CLIENTE' },
-              { id: 2, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
+              { id: 3, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
             ]}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavelEstrutura: value }))}
             onReset={() => setInfoHolder((prev) => ({ ...prev, responsavelEstrutura: 'NÃO SE APLICA' }))}

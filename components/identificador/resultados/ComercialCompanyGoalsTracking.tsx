@@ -10,7 +10,8 @@ import { BsCalendar } from 'react-icons/bs'
 import { FaStar } from 'react-icons/fa'
 import { FaRankingStar } from 'react-icons/fa6'
 import { GoGoal } from 'react-icons/go'
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+
+import confetti from 'canvas-confetti'
 
 const GoalsParams = {
   'SISTEMA FOTOVOLTAICO': {
@@ -33,11 +34,11 @@ const GoalsParams = {
     'OBJETIVO POR PERIODO': 2_000,
     'QTDE PREMIADOS': 1,
   },
-  'CONSÓRCIO DE ENERGIA': {
-    'META GERAL': 150_000,
-    'OBJETIVO POR PERIODO': 25_000,
-    'QTDE PREMIADOS': 2,
-  },
+  // 'CONSÓRCIO DE ENERGIA': {
+  //   'META GERAL': 150_000,
+  //   'OBJETIVO POR PERIODO': 25_000,
+  //   'QTDE PREMIADOS': 2,
+  // },
 }
 function renderRanking({ competitors, awardedQty }: { competitors: { RESPONSAVEL: string; TOTAL: number }[]; awardedQty: number }) {
   const podium = [
@@ -141,8 +142,15 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
   const [activeGoal, setActiveGoal] = useState<keyof TCompanyGoalsResults>('SISTEMA FOTOVOLTAICO')
 
   const activeGoalResults = results[activeGoal]
+  // @ts-ignore
   const activeGoalParams = GoalsParams[activeGoal]
 
+  const isEveryGoalAchieved = Object.entries(results).every(([key, result]) => {
+    // @ts-ignore
+    const goalParam = GoalsParams[key as keyof TCompanyGoalsResults]
+    if (!goalParam) return true
+    return result.TOTAL / goalParam['META GERAL'] >= 1
+  })
   useEffect(() => {
     const updateString = () => {
       const params = Object.keys(GoalsParams)
@@ -184,6 +192,7 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
         </div>
       </div>
       <div className="flex w-full flex-col gap-6 py-6 px-6 lg:px-24">
+        {isEveryGoalAchieved ? <GoalsAchievedRender /> : null}
         <div className="flex w-full flex-col gap-2">
           <div className="flex w-full items-center justify-center gap-2">
             <GoGoal />
@@ -192,7 +201,10 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
           <div className="flex h-[40px] w-full items-center justify-between self-center overflow-hidden rounded-sm border border-gray-500 bg-[#a8a9aa] p-0.5">
             <div
               style={{ width: `${(activeGoalResults.TOTAL / activeGoalParams['META GERAL']) * 100}%` }}
-              className="flex h-full flex-col items-center justify-center rounded-sm bg-gradient-to-r from-yellow-300 to-[#fead41]"
+              className={cn('flex h-full flex-col items-center justify-center rounded-sm bg-gradient-to-r', {
+                'bg-gradient-to-r from-yellow-300 to-[#fead41]': activeGoalResults.TOTAL / activeGoalParams['META GERAL'] < 1,
+                'bg-gradient-to-tl from-lime-400 to-green-600': activeGoalResults.TOTAL / activeGoalParams['META GERAL'] >= 1,
+              })}
             >
               <p className="bg-transparent text-xxs font-bold tracking-tight text-[#15599a] lg:text-sm">
                 {formatDecimalPlaces((activeGoalResults.TOTAL * 100) / activeGoalParams['META GERAL'])}%
@@ -248,3 +260,42 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
 }
 
 export default ComercialCompanyGoalsTracking
+
+function GoalsAchievedRender() {
+  const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1']
+
+  useEffect(() => {
+    function runConfetti() {
+      confetti({
+        particleCount: 25,
+        angle: 60,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 0, y: 0.5 },
+        colors: colors,
+      })
+      confetti({
+        particleCount: 25,
+        angle: 120,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 1, y: 0.5 },
+        colors: colors,
+      })
+    }
+
+    // Run immediately on mount
+    runConfetti()
+
+    // Set up interval to run every 5 seconds
+    const intervalId = setInterval(runConfetti, 1000)
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId)
+  }, []) // Empty dependency array since we don't have any dependencies
+  return (
+    <div className="flex w-full items-center justify-center">
+      <h1 className="self-center text-4xl font-black uppercase leading-[5rem] tracking-[-0.02em] text-green-500">META ALCANÇADA !!!</h1>
+    </div>
+  )
+}

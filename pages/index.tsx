@@ -55,7 +55,7 @@ function Home() {
       return (
         <div className="relative grow bg-[#fafafa] p-6">
           <div className="flex w-full flex-col">
-            {/* <ComercialCompanyGoalsTracking results={stats.meta} /> */}
+            <ComercialCompanyGoalsTracking results={stats.meta} />
             <div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
               <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
                 <div className="flex justify-between">

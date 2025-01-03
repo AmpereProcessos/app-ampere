@@ -24,6 +24,7 @@ import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import {
   accessGrantingStatus,
+  allSellers,
   contractStatus,
   deliveryStatus,
   executionStatus,
@@ -263,7 +264,9 @@ function Posvenda() {
                         width={'100%'}
                         label={'DEPOIS DE'}
                         value={filters.date.after ? formatDate(filters.date.after) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value, 'string') as string } }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
@@ -271,7 +274,9 @@ function Posvenda() {
                         width={'100%'}
                         label={'ANTES DE'}
                         value={filters.date.before ? formatDate(filters.date.before) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value, 'string') as string } }))
+                        }
                       />
                     </div>
                   </div>
@@ -393,7 +398,7 @@ function Posvenda() {
                     width={'100%'}
                     label={'VENDEDOR'}
                     selected={filters.sellerName}
-                    options={vendedores.map((seller, index) => ({ id: index + 1, label: seller.nome || '', value: seller.nome || '' }))}
+                    options={allSellers.map((seller, index) => ({ id: index + 1, label: seller.label || '', value: seller.value || '' }))}
                     selectedItemLabel={'SEM FILTRO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({

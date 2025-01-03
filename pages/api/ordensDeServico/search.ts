@@ -37,10 +37,15 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
   if (!page || isNaN(Number(page))) throw new createHttpError.BadRequest('Parâmetro de paginação inválido ou não informado.')
 
   // Defining the queries
-  const nameQuery: Filter<TServiceOrder> =
-    filters.name.trim().length > 0
-      ? { $or: [{ 'favorecido.nome': { $regex: filters.name, $options: 'i' } }, { 'favorecido.nome': filters.name }] }
-      : {}
+  const nameOrQuery: Filter<TServiceOrder>[] =
+    filters.name.trim().length > 0 ? [{ 'favorecido.nome': { $regex: filters.name, $options: 'i' } }, { 'favorecido.nome': filters.name }] : []
+  const responsibleOrQuery: Filter<TServiceOrder>[] =
+    filters.responsible.trim().length > 0
+      ? [{ 'responsavel.nome': { $regex: filters.responsible, $options: 'i' } }, { 'responsavel.nome': filters.responsible }]
+      : []
+
+  const orQueries = [...nameOrQuery, ...responsibleOrQuery]
+
   const dateQuery: Filter<TServiceOrder> =
     filters.period.after && filters.period.before && filters.period.field
       ? {
@@ -57,7 +62,15 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
   const urgencyQuery: Filter<TServiceOrder> = filters.urgency.length > 0 ? { urgencia: { $in: filters.urgency as TServiceOrder['urgencia'][] } } : {}
   const pendingQuery: Filter<TServiceOrder> = !!filters.pending ? { dataEfetivacao: null } : {}
 
-  const query = { ...nameQuery, ...dateQuery, ...stateQuery, ...cityQuery, ...categoryQuery, ...urgencyQuery, ...pendingQuery }
+  const query = {
+    ...(orQueries.length > 0 ? { $or: orQueries } : {}),
+    ...dateQuery,
+    ...stateQuery,
+    ...cityQuery,
+    ...categoryQuery,
+    ...urgencyQuery,
+    ...pendingQuery,
+  }
 
   const skip = PAGE_SIZE * (Number(page) - 1)
   const limit = PAGE_SIZE

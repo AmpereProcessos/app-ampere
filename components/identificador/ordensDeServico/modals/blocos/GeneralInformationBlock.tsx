@@ -17,6 +17,15 @@ type ServiceOrderGeneralInformationBlockProps = {
   updateInfoHolder: (changes: Partial<TServiceOrder>) => void
 }
 function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, predefinedCategories }: ServiceOrderGeneralInformationBlockProps) {
+  function handleEffectivationUpdate(newValue: TServiceOrder['status'], previousData: TServiceOrder) {
+    if (newValue == 'CONCLUÍDA') {
+      if (previousData.status != 'CONCLUÍDA') return new Date().toISOString()
+      return previousData.dataEfetivacao
+    } else {
+      if (previousData.status == 'CONCLUÍDA') return null
+      return previousData.dataEfetivacao
+    }
+  }
   return (
     <div className="flex w-full flex-col items-center gap-4">
       <div className="flex w-full flex-wrap items-center justify-center gap-2">
@@ -58,7 +67,7 @@ function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, pre
               label="STATUS DO SERVIÇO"
               value={infoHolder.status}
               options={ServiceOrderStatus}
-              handleChange={(value) => updateInfoHolder({ status: value })}
+              handleChange={(value) => updateInfoHolder({ status: value, dataEfetivacao: handleEffectivationUpdate(value, infoHolder) })}
               width="100%"
               selectedItemLabel="NÃO DEFINIDO"
               onReset={() => updateInfoHolder({ status: 'PENDENTE' })}

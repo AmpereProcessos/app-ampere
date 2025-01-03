@@ -40,6 +40,15 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
             placeholder="Filtre pelo nome do favorecido..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+          <TextInput
+            label="EQUIPE RESPONSÁVEL"
+            value={filtersHolder.responsible}
+            handleChange={(value) => {
+              setFiltersHolder((prev) => ({ ...prev, responsible: value }))
+            }}
+            placeholder="Filtre pelo nome da equipe responsável..."
+            labelClassName="text-xs font-medium tracking-tight text-black"
+          />
           <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
             <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
               <div className="flex items-center justify-center gap-x-2">
@@ -49,7 +58,7 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
                     label={'DEPOIS DE'}
                     value={filtersHolder.period.after ? formatDate(filtersHolder.period.after) : undefined}
                     handleChange={(value) =>
-                      setFiltersHolder((prev) => ({ ...prev, period: { ...prev.period, after: formatDateInputChange(value) } }))
+                      setFiltersHolder((prev) => ({ ...prev, period: { ...prev.period, after: formatDateInputChange(value, 'string') as string } }))
                     }
                     labelClassName="text-xs font-medium tracking-tight text-black"
                   />
@@ -60,7 +69,7 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
                     label={'ANTES DE'}
                     value={filtersHolder.period.before ? formatDate(filtersHolder.period.before) : undefined}
                     handleChange={(value) =>
-                      setFiltersHolder((prev) => ({ ...prev, period: { ...prev.period, before: formatDateInputChange(value) } }))
+                      setFiltersHolder((prev) => ({ ...prev, period: { ...prev.period, before: formatDateInputChange(value, 'string') as string } }))
                     }
                   />
                 </div>

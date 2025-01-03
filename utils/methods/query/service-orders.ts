@@ -100,6 +100,7 @@ export function useServiceOrdersByPersonalizedFilters() {
   const [filters, setFilters] = useState<TPersonalizedServiceOrderFilter>({
     page: 1,
     name: '',
+    responsible: '',
     state: [],
     city: [],
     category: [],

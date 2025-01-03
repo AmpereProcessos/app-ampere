@@ -229,7 +229,26 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   projectObservations={serviceOrder?.projetoDados?.obra?.observacoes || undefined}
                 />
               </div>
-              <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
+              <div className="mt-2 flex w-full items-center justify-between border-t border-gray-200 py-1 px-4">
+                {!osInfo.dataEfetivacao ? (
+                  <LoadingButton
+                    loading={isPending}
+                    onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: new Date().toISOString() } })}
+                    type="button"
+                    className="bg-green-500 hover:bg-green-600"
+                  >
+                    CONCLUIR ORDEM DE SERVIÇO
+                  </LoadingButton>
+                ) : (
+                  <LoadingButton
+                    loading={isPending}
+                    onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })}
+                    type="button"
+                    className="bg-gray-500 hover:bg-gray-600"
+                  >
+                    REABRIR ORDEM DE SERVIÇO
+                  </LoadingButton>
+                )}
                 <LoadingButton
                   // @ts-ignore
                   onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: osInfo })}

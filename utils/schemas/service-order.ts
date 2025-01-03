@@ -259,6 +259,10 @@ export const PersonalizedFiltersSchema = z.object({
     required_error: 'Filtro de nome da ordem de serviço não informado.',
     invalid_type_error: 'Tipo não válido para o filtro de nome da ordem de serviço.',
   }),
+  responsible: z.string({
+    required_error: 'Filtro de responsável não informado.',
+    invalid_type_error: 'Tipo não válido para o filtro de responsável.',
+  }),
   state: z.array(z.string({ required_error: 'Estado de filtro não informada.', invalid_type_error: 'Tipo não válido para estado de filtro.' }), {
     required_error: 'Lista de estados de filtro não informada.',
     invalid_type_error: 'Tipo não válido para lista de estados de filtro.',

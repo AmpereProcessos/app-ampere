@@ -1,16 +1,81 @@
 import { apiHandler } from '@/utils/api'
 import { formatDateAsLocale, getProductsStr } from '@/utils/methods/formatting'
 import { TContractRequest } from '@/utils/schemas/contract-requests'
+import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 
 import { TProject } from '@/utils/schemas/projects'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
-import connectToDatabase from '@/utils/services/mongodb/projects'
+import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import connectToProjectsDatabase from '@/utils/services/mongodb/projects'
 import connectToSolicitacoesDatabase from '@/utils/services/mongodb/requests'
 import dayjs from 'dayjs'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
+  const appDb: Db = await connectToProjectsDatabase(process.env.DB_KEY)
+  const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
+
+  const projectsCollection = appDb.collection<TProject>('dados')
+  const opportunitiesCollection = crmDb.collection<TOpportunity>('opportunities')
+
+  const sellerProjects = await projectsCollection
+    .find(
+      {
+        'contrato.dataAssinatura': {
+          $gte: '2024-07-01T00:00:00.000Z',
+          $lte: '2024-12-31T23:59:59.999Z',
+        },
+        tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
+        'vendedor.nome': 'DEVISSON LIMA',
+      },
+      {
+        projection: {
+          nomeDoContrato: 1,
+          idProjetoCRM: 1,
+          'sistema.valorProjeto': 1,
+          'padrao.valor': 1,
+          'estruturaPersonalizada.valor': 1,
+        },
+      }
+    )
+    .toArray()
+
+  const sellerOpportunities = await opportunitiesCollection
+    .aggregate([
+      {
+        $match: {
+          'tipo.id': '6615785ddcb7a6e66ede9785',
+          'ganho.data': {
+            $gte: '2024-07-01T00:00:00.000Z',
+            $lte: '2024-12-31T23:59:59.999Z',
+          },
+          'responsaveis.id': '6463d7484a8f5e909a4dae19',
+        },
+      },
+      {
+        $addFields: { wonProposeObjectId: { $toObjectId: '$ganho.idProposta' } },
+      },
+      {
+        $lookup: { from: 'proposals', localField: 'wonProposeObjectId', foreignField: '_id', as: 'proposta' },
+      },
+      {
+        $project: {
+          nome: 1,
+          ganho: 1,
+          'proposta.nome': 1,
+          'proposta.valor': 1,
+        },
+      },
+    ])
+    .toArray()
+
+  const linkedItems = linkProjectsAndOpportunities(sellerProjects, sellerOpportunities)
+
+  const totalProjectValue = linkedItems.reduce((acc, item) => acc + (item.project?.valor || 0), 0)
+  const totalOpportunityValue = linkedItems.reduce((acc, item) => acc + (item.opportunity?.valor || 0), 0)
+  console.log('PROJECTS TOTAL ', totalProjectValue)
+  console.log('OPPORTUNITIES TOTAL', totalOpportunityValue)
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
   // const contractRequests = await contractRequestsCollection.find({}).toArray()
@@ -67,11 +132,66 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
 
-  return res.json('DESATIVADO')
+  return res.json(linkedItems)
 }
 export default apiHandler({
   GET: getExport,
 })
+
+interface SellerOpportunity {
+  ganho: {
+    idProjeto: string
+  }
+  // ... other properties
+}
+
+interface LinkedItem {
+  project: any | null
+  opportunity: any | null
+}
+function linkProjectsAndOpportunities(sellerProjects: any[], sellerOpportunities: any[]): LinkedItem[] {
+  const linked: LinkedItem[] = []
+  const usedOpportunities = new Set<string>()
+
+  // First, go through all projects and find their matching opportunities
+  sellerProjects.forEach((project) => {
+    const matchingOpportunity = sellerOpportunities.find((opp) => opp.ganho.idProjeto === project._id.toString())
+    const opportunityProposal = matchingOpportunity?.proposta[0]
+    const proposalValue = opportunityProposal?.valor || 0
+    if (matchingOpportunity) {
+      usedOpportunities.add(matchingOpportunity.ganho.idProjeto)
+    }
+
+    linked.push({
+      project: {
+        id: project._id.toString(),
+        nome: project.nomeDoContrato,
+        valor: project.sistema.valorProjeto + project.padrao.valor + project.estruturaPersonalizada.valor,
+      },
+      opportunity: {
+        id: matchingOpportunity._id,
+        nome: matchingOpportunity.nome,
+        valor: proposalValue,
+      },
+    })
+  })
+
+  // Then, add opportunities that don't have matching projects
+  sellerOpportunities.forEach((opportunity) => {
+    if (!usedOpportunities.has(opportunity.ganho.idProjeto)) {
+      linked.push({
+        project: null,
+        opportunity: {
+          id: opportunity._id,
+          nome: opportunity.nome,
+          valor: opportunity.proposta[0].valor,
+        },
+      })
+    }
+  })
+
+  return linked
+}
 /*  
   // let annualGenFactor = cidadesAtendidas.map(async (cidade) => {
   //   return {

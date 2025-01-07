@@ -413,7 +413,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
     .aggregate([
       {
         $match: {
-          'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
+          'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM, $lte: '2024-12-31T23:59:59.999Z' },
           tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
         },
       },
@@ -453,7 +453,14 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
           _id: { $ne: new ObjectId('66981e5340f27828dd49a6cb') },
           'contrato.dataAssinatura': { $gte: GOAL_INITIAL_DATE_PARAM },
           tipoDeServico: {
-            $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM', 'PRODUTOS', 'MANUTENÇÃO CORRETIVA', 'PRODUTOS E SERVIÇOS AVULSOS', 'MONITORAMENTO'],
+            $in: [
+              'OPERAÇÃO E MANUTENÇÃO',
+              'MONTAGEM E DESMONTAGEM',
+              'PRODUTOS',
+              'MANUTENÇÃO CORRETIVA',
+              'PRODUTOS E SERVIÇOS AVULSOS',
+              'MONITORAMENTO',
+            ],
           },
         },
       },

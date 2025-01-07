@@ -173,7 +173,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
                 )}
                 <PurchaseControlFileReferences
                   session={session}
-                  attachmentPrefix={infoHolder.titulo}
+                  attachmentPrefix={`clientes/${infoHolder.titulo}`}
                   purchaseId={purchaseControlId}
                   projectId={infoHolder.projeto.id || undefined}
                 />

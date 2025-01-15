@@ -93,7 +93,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
       <SelectVirtualizedInput
         label="MATERIAL DE VINCULAÇÃO"
         value={materialId}
-        options={materials.map((mat) => ({ id: mat._id, label: mat.nome, value: mat._id }))}
+        options={materials.map((mat) => ({ id: mat._id, label: `${mat.codigo ? `(${mat.codigo}) ` : ''}${mat.nome}`, value: mat._id }))}
         handleChange={(value) => setMaterialId(value)}
         selectedItemLabel="NÃO DEFINIDO"
         onReset={() => setMaterialId(null)}

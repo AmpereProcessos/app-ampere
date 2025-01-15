@@ -23,6 +23,7 @@ import { formatDecimalPlaces, formatToMoney } from '@/utils/constants'
 import EditMaterial from '@/components/identificador/estoque/EditMaterial'
 import { BsCalendarPlus } from 'react-icons/bs'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { Barcode } from 'lucide-react'
 function Estoque() {
   const router = useRouter()
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
@@ -141,14 +142,21 @@ function Estoque() {
         {isSuccess ? (
           <div className="my-2 flex w-full flex-col flex-wrap items-center justify-around gap-3 lg:flex-row">
             {materials.map((material) => (
-              <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[450px]">
+              <div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[600px]">
                 <div className="flex w-full items-center justify-between gap-2">
-                  <h1
-                    onClick={() => setEditMaterialModal({ id: material._id, isOpen: true })}
-                    className="cursor-pointer text-xs font-black leading-none tracking-tight hover:text-cyan-500 lg:text-sm"
-                  >
-                    {material.nome || 'NÃO DEFINIDO'}
-                  </h1>
+                  <div className="flex items-center gap-2">
+                    <h1
+                      onClick={() => setEditMaterialModal({ id: material._id, isOpen: true })}
+                      className="cursor-pointer text-xs font-black leading-none tracking-tight hover:text-cyan-500 lg:text-sm"
+                    >
+                      {material.nome || 'NÃO DEFINIDO'}
+                    </h1>
+                    <div className="flex items-center gap-2">
+                      <Barcode size={12} />
+                      <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500">{material.codigo || 'N/A'}</p>
+                    </div>
+                  </div>
+
                   <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
                     <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">
                       {formatDecimalPlaces(material.qtde)} {material.grandeza || 'UN'}

@@ -12,7 +12,7 @@ type HandleSendNotificationToCobrancasParams = {
 export async function handleSendNotificationToCobrancas({ contractName }: HandleSendNotificationToCobrancasParams) {
   try {
     let data = await axios.post('/api/notificacoes/1', {
-      destinatario: '6353eb83ef4e1a367a877949',
+      destinatario: '678560fb2ec7aa25e918151e',
       remetente: 'SISTEMA',
       mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Desde já agradeço, Volts.`,
     })

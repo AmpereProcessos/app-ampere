@@ -118,10 +118,6 @@ function ChamadoExternoPPS() {
       }
     }
     if (infoHolder.tipoSolicitacao == 'PROPOSTA COMERCIAL (ON GRID)') {
-      if (!infoHolder.projeto.id) {
-        toast.error('Vincule um projeto do CRM para requisitar uma proposta comercial.')
-        return false
-      }
       if (!infoHolder.premissas.geracao || infoHolder.premissas.geracao <= 0) {
         toast.error('Preencha uma geração válida para requisitar uma proposta comercial.')
         return false

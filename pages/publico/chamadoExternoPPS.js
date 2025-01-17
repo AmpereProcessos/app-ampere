@@ -275,7 +275,7 @@ function ChamadoExternoPPS() {
             label="VENDEDOR"
             labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
             value={infoHolder.requerente.apelido}
-            options={allActiveSellers.map((seller) => ({ id: seller._id, label: seller.nome, value: seller.nome }))}
+            options={allActiveSellers.map((seller) => ({ id: seller.id, label: seller.label, value: seller.value }))}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, requerente: { ...prev.requerente, apelido: value } }))}
             selectedItemLabel="NÃO DEFINIDO"
             onReset={() => setInfoHolder((prev) => ({ ...prev, requerente: { ...prev.requerente, apelido: null } }))}

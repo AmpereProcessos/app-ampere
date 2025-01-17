@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import Logo from '../../utils//images/logo-texto-azul-vertical.png'
 import { fileTypes, formatCPFCpnj, formatToPhone, ppsTiposSolicitacao, tiposDeEstruturas, tiposEstruturaCRM, vendedores } from '../../utils/constants'
+import { allActiveSellers } from '../../utils/select-options'
 import { estadosECidades } from '../../utils/estados_cidades'
 import SelectInput from '../../components/inputs/Select'
 import NumberInput from '../../components/inputs/Number'
@@ -274,7 +275,7 @@ function ChamadoExternoPPS() {
             label="VENDEDOR"
             labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
             value={infoHolder.requerente.apelido}
-            options={vendedores.map((seller, index) => ({ id: index + 1, label: seller.nome, value: seller.nome }))}
+            options={allActiveSellers.map((seller) => ({ id: seller._id, label: seller.nome, value: seller.nome }))}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, requerente: { ...prev.requerente, apelido: value } }))}
             selectedItemLabel="NÃO DEFINIDO"
             onReset={() => setInfoHolder((prev) => ({ ...prev, requerente: { ...prev.requerente, apelido: null } }))}

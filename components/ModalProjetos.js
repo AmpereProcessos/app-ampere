@@ -10,15 +10,14 @@ import { useKey } from '../utils/hooks'
 // TESTING
 import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 // TESTING
+import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
-import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
-import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessionariaBlock'
-import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
-import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
+
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
 import SaveButton from './utils/Buttons/SaveButton'
@@ -34,6 +33,8 @@ import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs
 import { getErrorMessage } from '../utils/methods/handlers'
 import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
 
+import { handleUpdateClientPersonalized } from '../utils/methods/mutation/crm/clients'
+
 function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
   const { data: session } = useSession()
@@ -42,6 +43,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
+  const [clientChanges, setClientChanges] = useState({})
 
   function getParecerWarning(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime())
@@ -68,7 +70,11 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 
   const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: handleEngineeringUpdate,
+    mutationFn: async (info) => {
+      await handleEngineeringUpdate(info)
+      await handleUpdateClientPersonalized({ id: project.idClienteCRM, changes: clientChanges })
+      return 'Atualizações feitas com sucesso !'
+    },
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
     callbackFn: async () => {
@@ -117,6 +123,13 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
+                editable={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                clientChanges={clientChanges}
+                setClientChanges={setClientChanges}
+              />
+              <InfoVendaBlock
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

@@ -12,6 +12,7 @@ import ErrorPage from './utils/ErrorPage'
 import NotificationCreationBlock from './NotificationCreationBlock'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
@@ -37,6 +38,7 @@ import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 import RestrictionBlock from './blocosInfoProjeto/RestrictionBlock'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
+import { handleUpdateClientPersonalized } from '../utils/methods/mutation/crm/clients'
 
 function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
   const queryClient = useQueryClient()
@@ -63,9 +65,15 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
+  const [clientChanges, setClientChanges] = useState({})
+
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: updateProject,
+    mutationFn: async (info) => {
+      await updateProject(info)
+      if (project.idClienteCRM) await handleUpdateClientPersonalized({ id: project.idClienteCRM, changes: clientChanges })
+      return 'Atualizações feitas com sucesso !'
+    },
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
   })
@@ -99,6 +107,13 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
+                editable={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                clientChanges={clientChanges}
+                setClientChanges={setClientChanges}
+              />
+              <InfoVendaBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

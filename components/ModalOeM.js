@@ -15,7 +15,7 @@ import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
-import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
 import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessionariaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
@@ -90,7 +90,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
-              <InfoClienteBlock
+              <InfoVendaBlock
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

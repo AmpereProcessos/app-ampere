@@ -11,7 +11,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import InfoContratoBlock from './blocosInfoProjeto/InfoContratoBlock'
-import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
@@ -83,7 +83,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
             <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
-              <InfoClienteBlock
+              <InfoVendaBlock
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

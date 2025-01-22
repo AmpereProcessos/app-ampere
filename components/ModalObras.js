@@ -9,12 +9,13 @@ import NotificationCreationBlock from './NotificationCreationBlock'
 import OSCreationBlock from './OSCreationBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import SaveButton from './utils/Buttons/SaveButton'
+import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
-import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
@@ -31,6 +32,7 @@ import { handleExecutionUpdate } from '@/utils/methods/mutation/execution'
 import { useProjectUpdateLogs } from '@/utils/methods/query/project-update-logs'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
+import { handleUpdateClientPersonalized } from '../utils/methods/mutation/crm/clients'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -39,10 +41,15 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   const { data: project, isSuccess, isLoading, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
+  const [clientChanges, setClientChanges] = useState({})
 
   const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: handleExecutionUpdate,
+    mutationFn: async (info) => {
+      await handleExecutionUpdate(info)
+      if (project.idClienteCRM) await handleUpdateClientPersonalized({ id: project.idClienteCRM, changes: clientChanges })
+      return 'Atualizações feitas com sucesso !'
+    },
     affectedQueryKey: ['project-by-id', projectId], // ['execution-projects'],
     queryClient: queryClient,
     callbackFn: async () => {
@@ -87,6 +94,13 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
+                editable={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                clientChanges={clientChanges}
+                setClientChanges={setClientChanges}
+              />
+              <InfoVendaBlock
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

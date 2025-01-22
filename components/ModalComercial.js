@@ -1,40 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { useKey } from '../utils/hooks'
 
 import { FaSave } from 'react-icons/fa'
-
 import { VscChromeClose } from 'react-icons/vsc'
 
+import SaveButton from './utils/Buttons/SaveButton'
 import NotificationCreationBlock from './NotificationCreationBlock'
+import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
+import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoContratoBlock from './blocosInfoProjeto/InfoContratoBlock'
-import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
-import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessionariaBlock'
+import InfoVendaBlock from './blocosInfoProjeto/InfoVendaBlock'
 import InfoReceitasBlock from './blocosInfoProjeto/InfoReceitasBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
-import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
-import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
 import InfoAnexosBlock from './blocosInfoProjeto/InfoAnexosBlock'
-import SaveButton from './utils/Buttons/SaveButton'
-import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
-import { useQueryClient } from '@tanstack/react-query'
-import { useClientById } from '../utils/methods/query/clients'
 import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
-import { useEffect } from 'react'
+
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { useClientById } from '../utils/methods/query/clients'
+
 import { handleComercialUpdate } from '../utils/methods/mutation/comercial'
-import { useSession } from 'next-auth/react'
+import { handleUpdateClientPersonalized } from '../utils/methods/mutation/crm/clients'
 import { useProjectUpdateLogs } from '../utils/methods/query/project-update-logs'
-import InfoHomologacaoBlock from './blocosInfoProjeto/InfoHomologacaoBlock'
 import { getErrorMessage } from '../utils/methods/handlers'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
@@ -45,12 +44,15 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId })
   const { data: updateLogs } = useProjectUpdateLogs({ projectId })
   const [infoHolder, setInfo] = useState(project)
-
   const [changes, setChanges] = useState({})
-
+  const [clientChanges, setClientChanges] = useState({})
   const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: handleComercialUpdate,
+    mutationFn: async (info) => {
+      await handleComercialUpdate(info)
+      if (project.idClienteCRM) await handleUpdateClientPersonalized({ id: project.idClienteCRM, changes: clientChanges })
+      return 'Atualizações feitas com sucesso !'
+    },
     affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
     callbackFn: async () => {
@@ -90,6 +92,13 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
+                editable={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                clientChanges={clientChanges}
+                setClientChanges={setClientChanges}
+              />
+              <InfoVendaBlock
                 editor={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

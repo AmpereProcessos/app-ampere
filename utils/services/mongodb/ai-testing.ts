@@ -1,4 +1,3 @@
-import createHttpError from 'http-errors'
 import { Db, MongoClient } from 'mongodb'
 import clientPromise from './mongo-client'
 

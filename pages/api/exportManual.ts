@@ -13,69 +13,30 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
-  const appDb: Db = await connectToProjectsDatabase(process.env.DB_KEY)
-  const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY)
+  const appDb: Db = await connectToProjectsDatabase()
 
   const projectsCollection = appDb.collection<TProject>('dados')
-  const opportunitiesCollection = crmDb.collection<TOpportunity>('opportunities')
 
-  const sellerProjects = await projectsCollection
-    .find(
-      {
-        'contrato.dataAssinatura': {
-          $gte: '2024-07-01T00:00:00.000Z',
-          $lte: '2024-12-31T23:59:59.999Z',
-        },
-        tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
-        'vendedor.nome': 'DEVISSON LIMA',
-      },
-      {
-        projection: {
-          nomeDoContrato: 1,
-          idProjetoCRM: 1,
-          'sistema.valorProjeto': 1,
-          'padrao.valor': 1,
-          'estruturaPersonalizada.valor': 1,
-        },
-      }
-    )
+  const projects = await projectsCollection
+    .find({
+      $or: [{ 'compra.dataEntrega': { $ne: null } }, { 'compra.previsaoEntrega': { $ne: null } }],
+      'obra.statusDaObra': { $nin: ['CONCLUIDA', 'CONCLUIDA PARCIAL'] },
+    })
     .toArray()
 
-  const sellerOpportunities = await opportunitiesCollection
-    .aggregate([
-      {
-        $match: {
-          'tipo.id': '6615785ddcb7a6e66ede9785',
-          'ganho.data': {
-            $gte: '2024-07-01T00:00:00.000Z',
-            $lte: '2024-12-31T23:59:59.999Z',
-          },
-          'responsaveis.id': '6463d7484a8f5e909a4dae19',
-        },
-      },
-      {
-        $addFields: { wonProposeObjectId: { $toObjectId: '$ganho.idProposta' } },
-      },
-      {
-        $lookup: { from: 'proposals', localField: 'wonProposeObjectId', foreignField: '_id', as: 'proposta' },
-      },
-      {
-        $project: {
-          nome: 1,
-          ganho: 1,
-          'proposta.nome': 1,
-          'proposta.valor': 1,
-        },
-      },
-    ])
-    .toArray()
+  const exportation = projects.map((project) => ({
+    QTDE: project.qtde,
+    NOME: project.nomeDoContrato,
+    UF: project.uf,
+    CIDADE: project.cidade,
+    'TIPO DE SERVIÇO': project.tipoDeServico,
+    CREDOR: project.pagamento.credor,
+    'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
+    'DATA DE PAGAMENTO': project.compra.dataPagamento ? formatDateAsLocale(project.compra.dataPagamento) : null,
+    'DATA DE PREVISÃO DE ENTREGA': project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : null,
+    'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : null,
+  }))
 
-  const linkedItems = linkProjectsAndOpportunities(sellerProjects, sellerOpportunities)
-
-  const totalProjectValue = linkedItems.reduce((acc, item) => acc + (item.project?.valor || 0), 0)
-  const totalOpportunityValue = linkedItems.reduce((acc, item) => acc + (item.opportunity?.valor || 0), 0)
-  console.log('PROJECTS TOTAL ', totalProjectValue)
-  console.log('OPPORTUNITIES TOTAL', totalOpportunityValue)
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')
 
   // const contractRequests = await contractRequestsCollection.find({}).toArray()
@@ -132,7 +93,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   //   }
   // })
 
-  return res.json(linkedItems)
+  return res.json(exportation)
 }
 export default apiHandler({
   GET: getExport,

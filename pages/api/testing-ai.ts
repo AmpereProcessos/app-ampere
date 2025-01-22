@@ -12,60 +12,60 @@ const OpenAIClient = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 })
 const handleAITesting: NextApiHandler<any> = async (req, res) => {
-  // const aiDb = await connectToAITestingDatabase()
+  const aiDb = await connectToAITestingDatabase()
 
-  // const projectsCollection = aiDb.collection<TProject>('projetos')
+  const projectsCollection = aiDb.collection<TProject>('projetos')
   // const materialsCollection = aiDb.collection<TMaterial>('materiais')
 
-  // const projects = await projectsCollection.find({ qtde: { $gt: 100 } }).toArray()
+  const projects = await projectsCollection.find({ qtde: { $gt: 100 } }).toArray()
 
-  // const bulkwriteArr = await Promise.all(
-  //   projects.map(async (project) => {
-  //     const projectCode = project.qtde
-  //     const projectName = project.nomeDoContrato
-  //     const projectType = project.tipoDeServico
-  //     const projectUf = project.uf
-  //     const projectCity = project.cidade
-  //     const projectLocationStr = formatLocation({
-  //       location: {
-  //         cep: formatToCEP(project.cep?.toString() || ''),
-  //         uf: project.uf,
-  //         cidade: project.cidade,
-  //         bairro: project.bairro,
-  //         endereco: project.logradouro,
-  //         numeroOuIdentificador: project.numeroResidencia?.toString(),
-  //         latitude: project.latitude,
-  //         longitude: project.longitude,
-  //       },
-  //       includeCEP: true,
-  //     })
+  const bulkwriteArr = await Promise.all(
+    projects.map(async (project) => {
+      const projectCode = project.qtde
+      const projectName = project.nomeDoContrato
+      const projectType = project.tipoDeServico
+      const projectUf = project.uf
+      const projectCity = project.cidade
+      const projectLocationStr = formatLocation({
+        location: {
+          cep: formatToCEP(project.cep?.toString() || ''),
+          uf: project.uf,
+          cidade: project.cidade,
+          bairro: project.bairro,
+          endereco: project.logradouro,
+          numeroOuIdentificador: project.numeroResidencia?.toString(),
+          latitude: project.latitude,
+          longitude: project.longitude,
+        },
+        includeCEP: true,
+      })
 
-  //     const projectDescription = `PROJETO DE CÓDIGO (OU NÚMERO) ${projectCode} DO CLIENTE ${projectName}, COM O TIPO DE SERVIÇO ${projectType}, A SER EXECUTADO NA CIDADE ${projectCity},ESTADO ${projectUf} E A LOCAÇÃO ${projectLocationStr}`
+      const projectDescription = `PROJETO DE CÓDIGO (OU NÚMERO) ${projectCode} DO CLIENTE ${projectName}, COM O TIPO DE SERVIÇO ${projectType}, A SER EXECUTADO NA CIDADE ${projectCity},ESTADO ${projectUf} E A LOCAÇÃO ${projectLocationStr}`
 
-  //     // const OpenAiDescriptionEmbedding = await OpenAIClient.embeddings.create({
-  //     //   model: 'text-embedding-ada-002',
-  //     //   input: projectDescription,
-  //     // })
-  //     const OpenAiNameEmbedding = await OpenAIClient.embeddings.create({
-  //       model: 'text-embedding-ada-002',
-  //       input: projectName,
-  //     })
-  //     // const OpenAiDescriptionEmbeddingResult = OpenAiDescriptionEmbedding.data[0].embedding
-  //     const OpenAiNameEmbeddingResult = OpenAiNameEmbedding.data[0].embedding
+      // const OpenAiDescriptionEmbedding = await OpenAIClient.embeddings.create({
+      //   model: 'text-embedding-ada-002',
+      //   input: projectDescription,
+      // })
+      const OpenAiNameEmbedding = await OpenAIClient.embeddings.create({
+        model: 'text-embedding-3-small',
+        input: projectName,
+      })
+      // const OpenAiDescriptionEmbeddingResult = OpenAiDescriptionEmbedding.data[0].embedding
+      const OpenAiNameEmbeddingResult = OpenAiNameEmbedding.data[0].embedding
 
-  //     return {
-  //       updateOne: {
-  //         filter: { _id: new ObjectId(project._id) },
-  //         update: {
-  //           $set: {
-  //             // description_embedding: OpenAiDescriptionEmbeddingResult,
-  //             name_embedding: OpenAiNameEmbeddingResult,
-  //           },
-  //         },
-  //       },
-  //     }
-  //   })
-  // )
+      return {
+        updateOne: {
+          filter: { _id: new ObjectId(project._id) },
+          update: {
+            $set: {
+              // description_embedding: OpenAiDescriptionEmbeddingResult,
+              name_embedding: OpenAiNameEmbeddingResult,
+            },
+          },
+        },
+      }
+    })
+  )
 
   // const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr)
 

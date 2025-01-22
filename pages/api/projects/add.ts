@@ -6,6 +6,9 @@ import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { TProject } from '@/utils/schemas/projects'
 import { RiCollageLine } from 'react-icons/ri'
 import createHttpError from 'http-errors'
+import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import { TClient } from '@/utils/schemas/crm/client.schema'
+import { TOpportunity } from '@/utils/schemas/crm-project'
 
 type PostResponse = {
   data: { insertedId: string }
@@ -15,8 +18,13 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
   const session = await validateAuthenticationWithSession(req, res)
 
   const project: TProject = req.body
-  const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+
+  const crmDb = await connectToCRMDatabase()
+  const db = await connectToDatabase()
+
   const collection: Collection<TProject> = db.collection('dados')
+
+  const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection('opportunities')
 
   const latestInserted = await collection
     .aggregate([
@@ -35,7 +43,13 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 
   const newIndexer = lastIndexer + 1
 
-  const insertResponse = await collection.insertOne({ ...project, qtde: newIndexer })
+  var clientCrmId: string | null = null
+
+  if (project.idProjetoCRM) {
+    const opportunity = await opportunitiesCollection.findOne({ _id: new ObjectId(project.idProjetoCRM) })
+    if (opportunity) clientCrmId = opportunity.clienteId
+  }
+  const insertResponse = await collection.insertOne({ ...project, qtde: newIndexer, idClienteCRM: clientCrmId })
   if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido na criação do projeto.')
 
   const insertedId = insertResponse.insertedId.toString()

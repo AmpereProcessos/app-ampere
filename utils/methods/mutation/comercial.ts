@@ -83,6 +83,13 @@ async function notifyContractSigning({ projectName, projectIdentifier }: NotifyC
       projetoReferencia: projectIdentifier,
       nomeDoProjeto: projectName,
     },
+    {
+      destinatario: '678560fb2ec7aa25e918151e',
+      remetente: 'SISTEMA',
+      mensagem: `Contrato atualizado para ASSINADO.`,
+      projetoReferencia: projectIdentifier,
+      nomeDoProjeto: projectName,
+    },
   ]
   // Dealing with all the promises
   const notifyPromises = usersToNotifyArr.map(async (obj) => {

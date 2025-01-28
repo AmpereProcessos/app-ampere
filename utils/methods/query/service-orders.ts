@@ -111,6 +111,7 @@ export function useServiceOrdersByPersonalizedFilters() {
       field: null,
     },
     pending: true,
+    released: false,
   })
 
   function updateFilters(info: Partial<TPersonalizedServiceOrderFilter>) {

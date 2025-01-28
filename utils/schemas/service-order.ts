@@ -258,7 +258,7 @@ export const ServiceOrderSimplifiedProjection = {
   dataInsercao: 1,
 }
 
-const PersonalizedFieldFilters = z.enum(['dataInsercao', 'dataEfetivacao'], {
+const PersonalizedFieldFilters = z.enum(['dataInsercao', 'dataPrevisaoLiberacao', 'dataLiberacao', 'dataEfetivacao'], {
   required_error: 'Tipo não válido para o campo de filtro de período.',
   invalid_type_error: 'Tipo não válido para o campo de filtro de período.',
 })
@@ -308,6 +308,10 @@ export const PersonalizedFiltersSchema = z.object({
   pending: z.boolean({
     required_error: 'Filtro de somente pendentes não informado.',
     invalid_type_error: 'Tipo não válido para filtro de somente pendentes.',
+  }),
+  released: z.boolean({
+    required_error: 'Filtro de somente liberados não informado.',
+    invalid_type_error: 'Tipo não válido para filtro de somente liberados.',
   }),
 })
 export type TPersonalizedServiceOrderFilter = z.infer<typeof PersonalizedFiltersSchema>

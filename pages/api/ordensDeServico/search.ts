@@ -61,6 +61,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
     filters.category.length > 0 ? { categoria: { $in: filters.category as TServiceOrder['categoria'][] } } : {}
   const urgencyQuery: Filter<TServiceOrder> = filters.urgency.length > 0 ? { urgencia: { $in: filters.urgency as TServiceOrder['urgencia'][] } } : {}
   const pendingQuery: Filter<TServiceOrder> = !!filters.pending ? { dataEfetivacao: null } : {}
+  const releasedQuery: Filter<TServiceOrder> = !!filters.released ? { dataLiberacao: { $ne: null } } : {}
 
   const query = {
     ...(orQueries.length > 0 ? { $or: orQueries } : {}),
@@ -70,12 +71,13 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
     ...categoryQuery,
     ...urgencyQuery,
     ...pendingQuery,
+    ...releasedQuery,
   }
 
   const skip = PAGE_SIZE * (Number(page) - 1)
   const limit = PAGE_SIZE
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
 
   const { serviceOrders, serviceOrdersMatched } = await getServiceOrdersByFilter({ collection, query, skip, limit })

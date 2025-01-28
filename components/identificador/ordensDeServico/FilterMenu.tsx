@@ -80,8 +80,10 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
                   label={'CAMPO DE FILTRO'}
                   value={filtersHolder.period.field}
                   options={[
-                    { id: 1, label: 'DATA CRIAÇÃO', value: 'dataInsercao' },
-                    { id: 2, label: 'DATA DE FINALIZAÇÃO', value: 'dataEfetivacao' },
+                    { id: 1, label: 'DATA DE CRIAÇÃO', value: 'dataInsercao' },
+                    { id: 2, label: 'DATA PREVISÃO DE LIBERAÇÃO', value: 'dataPrevisaoLiberacao' },
+                    { id: 3, label: 'DATA DE LIBERAÇÃO', value: 'dataLiberacao' },
+                    { id: 4, label: 'DATA DE FINALIZAÇÃO', value: 'dataEfetivacao' },
                   ]}
                   selectedItemLabel={'SEM FILTRO'}
                   handleChange={(value) =>
@@ -185,6 +187,14 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
                 labelTrue="SOMENTE PENDENTES"
                 checked={filtersHolder.pending}
                 handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, pending: value }))}
+              />
+            </div>
+            <div className="w-fit">
+              <CheckboxInput
+                labelFalse="SOMENTE LIBERADOS"
+                labelTrue="SOMENTE LIBERADOS"
+                checked={filtersHolder.released}
+                handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, released: value }))}
               />
             </div>
           </div>

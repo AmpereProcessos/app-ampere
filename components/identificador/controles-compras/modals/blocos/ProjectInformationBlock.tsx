@@ -11,7 +11,7 @@ import { TPurchaseControl, TPurchaseProjectDTO } from '@/utils/schemas/purchases
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { AiOutlineSafety } from 'react-icons/ai'
-import { BsBank, BsCalendar, BsCalendarCheck, BsCalendarPlus, BsPersonVcard, BsStack } from 'react-icons/bs'
+import { BsBank, BsCalendar, BsCalendarCheck, BsCalendarPlus, BsCheck2, BsCheck2All, BsPersonVcard, BsStack } from 'react-icons/bs'
 import { FaBolt, FaIndustry, FaPhone, FaUserAlt } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdAdd } from 'react-icons/io'
@@ -511,6 +511,8 @@ function ProjectServiceOrderBlock({ session, projectId }: ProjectServiceOrderBlo
           topologia: project.sistema?.topologia,
         },
         observacoes: [],
+        dataPrevisaoLiberacao: project.compra.previsaoEntrega,
+        dataLiberacao: project.compra.dataEntrega,
         dataInsercao: new Date().toISOString(),
       }
       const response = await createServiceOrder({ info: serviceOrder })
@@ -602,6 +604,12 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-sm font-bold leading-none tracking-tight">{serviceOrder.descricao}</p>
+          {serviceOrder.projeto.nome ? (
+            <div className="flex items-center gap-1">
+              <MdDashboard size={10} />
+              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.projeto.nome}</h1>
+            </div>
+          ) : null}
           {getStatusTag(serviceOrder)}
         </div>
         <div className="flex items-center gap-1">
@@ -612,7 +620,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
-            <MdDashboard size={10} />
+            <Tag size={10} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.categoria}</h1>
           </div>
           <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
@@ -642,6 +650,20 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCheck2 width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO DE LIBERAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.dataPrevisaoLiberacao ? formatDateAsLocale(serviceOrder.dataPrevisaoLiberacao) : 'N/A'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCheck2All width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LIBERAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.dataLiberacao ? formatDateAsLocale(serviceOrder.dataLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">

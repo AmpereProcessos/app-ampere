@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { AuthorSchema } from './users'
 import { TProject, TProjectDTO } from './projects'
+import { PurchaseDeliveryStatus } from './purchases'
 
 export const ServiceOrderTagSchema = z.object({
   titulo: z.string({ required_error: 'Título da tag de compra não informado.', invalid_type_error: 'Tipo não válido para o título da tag.' }),
@@ -63,6 +64,7 @@ export const ServiceOrderPendencies = z.object({
 const ServiceOrderCategories = z.enum(['MONTAGEM', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA', 'PADRÃO', 'ESTRUTURA', 'OUTROS']) // etc
 
 export const ServiceOrderSchema = z.object({
+  descricao: z.string({ required_error: 'Descrição do serviço não informada.', invalid_type_error: 'Tipo não válido para a descrição do serviço.' }),
   categoria: ServiceOrderCategories,
   status: ServiceOrderStatusEnum.optional().nullable(),
   pendencias: ServiceOrderPendencies.optional().nullable(),
@@ -98,7 +100,6 @@ export const ServiceOrderSchema = z.object({
     )
     .optional()
     .nullable(),
-  descricao: z.string({ required_error: 'Descrição não informada.', invalid_type_error: 'Tipo não válido para a descrição.' }),
   localizacao: z.object({
     cep: z.string({ required_error: 'CEP não foi informado.' }),
     uf: z.string({ required_error: 'UF não foi informada.' }),
@@ -183,8 +184,8 @@ export const ServiceOrderSchema = z.object({
     .optional()
     .nullable(),
   periodo: z.object({
-    inicio: z.string({ invalid_type_error: 'Tipo não válido para o início do período.' }).optional().nullable(),
-    fim: z.string({ invalid_type_error: 'Tipo não válido para o fim do período.' }).optional().nullable(),
+    inicio: z.string({ invalid_type_error: 'Tipo não válido para o início do período de execução.' }).optional().nullable(),
+    fim: z.string({ invalid_type_error: 'Tipo não válido para o fim do período de execução.' }).optional().nullable(),
     historico: z
       .array(
         z.object({
@@ -199,6 +200,10 @@ export const ServiceOrderSchema = z.object({
   calendarioId: z.string({ invalid_type_error: 'Tipo não válido para o ID do calendário.' }).optional().nullable(),
   googleCalendarId: z.string({ invalid_type_error: 'Tipo não válido para o ID do calendário no Google.' }).optional().nullable(),
   googleCalendarEventId: z.string({ invalid_type_error: 'Tipo não válido para o ID do evento no Google.' }).optional().nullable(),
+  // Field I will generally use for tracking the expected delivery date of the project (if applicable) purchase
+  dataPrevisaoLiberacao: z.string({ invalid_type_error: 'Tipo não válido para a data previsão de liberação.' }).optional().nullable(),
+  // Field I will generally use for tracking the efective delivery date of the project (if applicable) purchase
+  dataLiberacao: z.string({ invalid_type_error: 'Tipo não válido para a data de liberação.' }).optional().nullable(),
   dataEfetivacao: z.string({ invalid_type_error: 'Tipo não válido para a data de efetivação.' }).datetime().optional().nullable(),
   dataInsercao: z.string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção.' }), // fix undefined
 })
@@ -220,6 +225,8 @@ export type TServiceOrderSimplified = Pick<
   | 'googleCalendarEventId'
   | 'agendamento'
   | 'autor'
+  | 'dataPrevisaoLiberacao'
+  | 'dataLiberacao'
   | 'dataEfetivacao'
   | 'dataInsercao'
 > & {
@@ -245,6 +252,8 @@ export const ServiceOrderSimplifiedProjection = {
   'periodo.inicio': 1,
   'periodo.fim': 1,
   autor: 1,
+  dataPrevisaoLiberacao: 1,
+  dataLiberacao: 1,
   dataEfetivacao: 1,
   dataInsercao: 1,
 }

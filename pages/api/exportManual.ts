@@ -11,6 +11,7 @@ import connectToSolicitacoesDatabase from '@/utils/services/mongodb/requests'
 import dayjs from 'dayjs'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { NextApiHandler } from 'next'
+import { getContractValue } from '../../utils/methods/util/projects'
 
 const getExport: NextApiHandler<any> = async (req, res) => {
   const appDb: Db = await connectToProjectsDatabase()
@@ -18,10 +19,14 @@ const getExport: NextApiHandler<any> = async (req, res) => {
   const projectsCollection = appDb.collection<TProject>('dados')
 
   const projects = await projectsCollection
-    .find({
-      $or: [{ 'compra.dataEntrega': { $ne: null } }, { 'compra.previsaoEntrega': { $ne: null } }],
-      'obra.statusDaObra': { $nin: ['CONCLUIDA', 'CONCLUIDA PARCIAL'] },
-    })
+    .find(
+      {
+        'contrato.dataAssinatura': { $gte: '2024-06-01T00:00:00.000Z' },
+      },
+      {
+        sort: { qtde: 1 },
+      }
+    )
     .toArray()
 
   const exportation = projects.map((project) => ({
@@ -29,12 +34,17 @@ const getExport: NextApiHandler<any> = async (req, res) => {
     NOME: project.nomeDoContrato,
     UF: project.uf,
     CIDADE: project.cidade,
+    TELEFONE: project.telefone,
     'TIPO DE SERVIÇO': project.tipoDeServico,
-    CREDOR: project.pagamento.credor,
+    'VALOR DO CONTRATO': getContractValue({
+      projectValue: project.sistema?.valorProjeto || 0,
+      paValue: project.padrao?.valor || 0,
+      structureValue: project.estruturaPersonalizada?.valor || 0,
+      oemValue: project.oem?.valor || 0,
+      insuranceValue: project.seguro?.valor || 0,
+    }),
+    VENDEDOR: project.vendedor.nome,
     'DATA DE ASSINATURA': formatDateAsLocale(project.contrato.dataAssinatura),
-    'DATA DE PAGAMENTO': project.compra.dataPagamento ? formatDateAsLocale(project.compra.dataPagamento) : null,
-    'DATA DE PREVISÃO DE ENTREGA': project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : null,
-    'DATA DE ENTREGA': project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : null,
   }))
 
   // const contractRequestsCollection: Collection<TContractRequest> = requestsDb.collection('contrato')

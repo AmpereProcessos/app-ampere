@@ -15,7 +15,7 @@ import { getErrorMessage } from '@/utils/methods/handlers'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { TServiceOrder, TServiceOrderSimplifiedDTO } from '@/utils/schemas/service-order'
 import { cn } from '@/lib/utils'
-import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
+import { BsCalendarCheck, BsCalendarPlus, BsCheck2, BsCheck2All } from 'react-icons/bs'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import { BsCalendar } from 'react-icons/bs'
 import { MdDashboard } from 'react-icons/md'
@@ -154,6 +154,13 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-sm font-bold leading-none tracking-tight">{serviceOrder.descricao}</p>
+          {serviceOrder.projeto.nome ? (
+            <div className="flex items-center gap-1">
+              <MdDashboard size={10} />
+              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.projeto.nome}</h1>
+            </div>
+          ) : null}
+
           {getStatusTag(serviceOrder)}
         </div>
         <div className="flex items-center gap-1">
@@ -164,7 +171,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
-            <MdDashboard size={10} />
+            <Tag size={12} />
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.categoria}</h1>
           </div>
           <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
@@ -194,6 +201,20 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
             <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
             <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCheck2 width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO DE LIBERAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.dataPrevisaoLiberacao ? formatDateAsLocale(serviceOrder.dataPrevisaoLiberacao) : 'N/A'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCheck2All width={10} height={10} />
+            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LIBERAÇÃO</h1>
+            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+              {serviceOrder.dataLiberacao ? formatDateAsLocale(serviceOrder.dataLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">

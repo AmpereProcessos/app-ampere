@@ -24,7 +24,7 @@ const PurchaseStatus = z.enum(
     invalid_type_error: 'Tipo não válido para o status da compra.',
   }
 )
-const PurchaseDeliveryStatus = z.enum(['AGUARDANDO COMPRA', 'AGUARDANDO DESPACHE', 'EM ROTA', 'ENTREGUE'], {
+export const PurchaseDeliveryStatus = z.enum(['AGUARDANDO COMPRA', 'AGUARDANDO DESPACHE', 'EM ROTA', 'ENTREGUE'], {
   required_error: 'Status da entrega não informado.',
   invalid_type_error: 'Tipo não válido para o status de entrega.',
 })

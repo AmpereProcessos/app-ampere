@@ -23,7 +23,7 @@ export function useClients(enabled: boolean) {
 export async function fetchProjectById({ id }: { id: string }) {
   try {
     const { data } = await axios.get(`/api/projects/fetchDoc/${id}`)
-    return data
+    return data as TProjectDTO
   } catch (error) {
     throw error
   }

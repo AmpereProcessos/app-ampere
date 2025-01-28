@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import PurchaseControlFileReferences from './blocos/AttachmentsBlock'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import PurchaseControlPaymentInformationBlock from './blocos/PaymentInformationBlock'
+import { updateManyServiceOrdersByProjectId } from '@/utils/methods/mutation/service-orders'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -77,9 +78,10 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
   async function handleUpdatePurchaseControl({ id, changes }: { id: string; changes: Partial<TPurchaseControl> }) {
     try {
       await updatePurchaseControl({ id, changes })
-      if (purchaseControl?.projeto.id)
+      const projectId = purchaseControl?.projeto.id
+      if (projectId) {
         await updateProject({
-          id: purchaseControl.projeto.id,
+          id: projectId,
           changes: {
             'compra.status': infoHolder.status,
             'compra.atualizacoes': infoHolder.atualizacoes,
@@ -99,6 +101,12 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
             'obra.pendencias': infoHolder.metadata?.pendenciasExecucao,
           },
         })
+        await updateManyServiceOrdersByProjectId({
+          projectId: projectId,
+          filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
+          changes: { dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao, dataLiberacao: infoHolder.entrega.dataEfetivacao },
+        })
+      }
     } catch (error) {}
   }
   const { mutate, isPending: isUpdateLoading } = useMutationWithFeedback({

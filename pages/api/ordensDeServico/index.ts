@@ -22,8 +22,9 @@ type PostResponse = {
 }
 const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  if (!session.user.permissoes.ordensDeServico.criar) throw new createHttpError.Unauthorized('Nível de permissão insuficiente.')
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  if (!session.user.permissoes.ordensDeServico.criar)
+    throw new createHttpError.Unauthorized('Usuário não possui permissão para criar ordens de serviço.')
+  const db: Db = await connectToDatabase()
   const auxiliariesDb: Db = await connectToAuxiliariesDatabase(process.env.DB_KEY)
 
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
@@ -100,8 +101,8 @@ type GetResponse = {
 
 const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
-  const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-  const collection = db.collection('ordensDeServico')
+  const db = await connectToDatabase()
+  const collection = db.collection<TServiceOrder>('ordensDeServico')
 
   const { id, projectId, responsibleName, queryTags, queryPendingConclusion } = req.query
 
@@ -142,7 +143,7 @@ type PutResponse = any
 const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
   const auxiliariesDb: Db = await connectToAuxiliariesDatabase(process.env.DB_KEY)
   const callendarsCollection: Collection<TCalendar> = auxiliariesDb.collection('calendarios')
@@ -296,7 +297,7 @@ const deleteServiceOrderRoute: NextApiHandler<DeleteResponse> = async (req, res)
   const { id } = req.query
   if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
 
-  const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db = await connectToDatabase()
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
 
   const deleteResponse = await collection.deleteOne({ _id: new ObjectId(id) })

@@ -28,6 +28,17 @@ export async function updateServiceOrder({ changes, id }: UpdateServiceOrderPara
   }
 }
 
+type UpdateManyServiceOrdersByProjectIdParams = { projectId: string; filters: Record<string, any>; changes: Partial<TServiceOrder> }
+export async function updateManyServiceOrdersByProjectId({ projectId, filters, changes }: UpdateManyServiceOrdersByProjectIdParams) {
+  try {
+    const { data } = await axios.put(`/api/ordensDeServico/many?projectId=${projectId}`, { filters, changes })
+    if (typeof data.message != 'string') return 'Ordem atualizada com sucesso !'
+    return data.message as string
+  } catch (error) {
+    throw error
+  }
+}
+
 export type DeleteServiceOrderParams = {
   id: string
 }

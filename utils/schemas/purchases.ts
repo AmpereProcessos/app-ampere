@@ -395,6 +395,9 @@ export const PurchaseProjectProjection = {
   bairro: 1,
   logradouro: 1,
   numeroResidencia: 1,
+  'homologacao.status': 1,
+  'homologacao.potencia': 1,
+  'homologacao.fastTrack': 1,
   'pagamento.pagador': 1,
   'pagamento.contatoPagador': 1,
   'pagamento.cpf_cnpjPagador': 1,
@@ -426,6 +429,11 @@ export type TPurchaseProject = Pick<
   | 'produtos'
   | 'idVisitaTecnica'
 > & {
+  homologacao: {
+    status: TProjectDTO['homologacao']['status']
+    potencia: TProjectDTO['homologacao']['potencia']
+    fastTrack: TProjectDTO['homologacao']['fastTrack']
+  }
   pagamento: {
     forma: TProjectDTO['pagamento']['forma']
     metodo: TProjectDTO['pagamento']['metodo']

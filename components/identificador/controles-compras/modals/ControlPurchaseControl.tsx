@@ -1,6 +1,6 @@
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { createPurchaseControl, deletePurchaseControl, updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
-import { TPurchaseControl } from '@/utils/schemas/purchases'
+import { TPurchaseControl, TPurchaseProjectDTO } from '@/utils/schemas/purchases'
 import { Session } from 'next-auth'
 import React, { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -31,6 +31,7 @@ import PurchaseControlFileReferences from './blocos/AttachmentsBlock'
 import { updateProject } from '@/utils/methods/mutation/clients'
 import PurchaseControlPaymentInformationBlock from './blocos/PaymentInformationBlock'
 import { updateManyServiceOrdersByProjectId } from '@/utils/methods/mutation/service-orders'
+import { TServiceOrder } from '@/utils/schemas/service-order'
 
 type ControlPurchaseControlProps = {
   session: Session
@@ -75,6 +76,40 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
     dataInsercao: new Date().toISOString(),
   })
 
+  function getServiceOrderTags({ project, purchase }: { project: TPurchaseProjectDTO; purchase: TPurchaseControl }) {
+    const tags: Exclude<TServiceOrder['etiquetas'], undefined | null> = []
+    if (project.homologacao.fastTrack) {
+      tags.push({
+        id: '6798eb1b19ad4c2b679bd2e1',
+        titulo: 'FAST TRACK',
+        cores: {
+          primaria: '#058A05',
+          secundaria: '#B7FDB7',
+        },
+      })
+    }
+    if (project.pagamento.credor == 'SOL FÁCIL') {
+      tags.push({
+        id: '6798eb2bd422f4f93779dd0d',
+        titulo: 'DESLIGAMENTO REMOTO',
+        cores: {
+          primaria: '#FF0000',
+          secundaria: '#FFCCCB',
+        },
+      })
+    }
+    if (purchase.metadata?.pendenciasExecucao == 'LEVAR ESTRUTURA NA MONTAGEM') {
+      tags.push({
+        id: '6798eb4e38fd2c093589ee7f',
+        titulo: 'TRANSPORTAR ESTRUTURA',
+        cores: {
+          primaria: '#8B4513',
+          secundaria: '#DFD0BC',
+        },
+      })
+    }
+    return tags
+  }
   async function handleUpdatePurchaseControl({ id, changes }: { id: string; changes: Partial<TPurchaseControl> }) {
     try {
       await updatePurchaseControl({ id, changes })
@@ -104,7 +139,11 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
         await updateManyServiceOrdersByProjectId({
           projectId: projectId,
           filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
-          changes: { dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao, dataLiberacao: infoHolder.entrega.dataEfetivacao },
+          changes: {
+            etiquetas: getServiceOrderTags({ project: purchaseControl.projetoDados as TPurchaseProjectDTO, purchase: infoHolder }),
+            dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao,
+            dataLiberacao: infoHolder.entrega.dataEfetivacao,
+          },
         })
       }
     } catch (error) {}

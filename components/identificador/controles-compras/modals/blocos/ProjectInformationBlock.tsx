@@ -20,13 +20,13 @@ import { TbReportAnalytics, TbRulerMeasure } from 'react-icons/tb'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import CheckboxInput from '@/components/inputs/Checkbox'
 import { useProjectServiceOrders } from '@/utils/methods/query/service-orders'
-import { TServiceOrder, TServiceOrderSimplifiedDTO } from '@/utils/schemas/service-order'
+import { TServiceOrder, TServiceOrderSimplifiedDTO, TServiceOrderTag, TServiceOrderTagDTO } from '@/utils/schemas/service-order'
 import { Pencil, Tag, UserRound } from 'lucide-react'
 import ModalControlServiceOrder from '@/components/identificador/ordensDeServico/modals/ModalControlServiceOrder'
 import { Session } from 'next-auth'
 import { fetchProjectById } from '@/utils/methods/query/clients'
 import { TProjectDTO } from '@/utils/schemas/projects'
-import { createServiceOrder } from '@/utils/methods/mutation/service-orders'
+import { createServiceOrder, updateManyServiceOrdersByProjectId } from '@/utils/methods/mutation/service-orders'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 
 type PurchaseControlProjectInformationBlockProps = {
@@ -46,6 +46,40 @@ function PurchaseControlProjectInformationBlock({
   const [technicalAnalysisBlockIsOpen, setTechnicalAnalysisBlockIsOpen] = useState<boolean>(false)
 
   async function handleUpdateProject() {
+    function getServiceOrderTags({ project, purchase }: { project: TPurchaseProjectDTO; purchase: TPurchaseControl }) {
+      const tags: Exclude<TServiceOrder['etiquetas'], undefined | null> = []
+      if (project.homologacao.fastTrack) {
+        tags.push({
+          id: '6798eb1b19ad4c2b679bd2e1',
+          titulo: 'FAST TRACK',
+          cores: {
+            primaria: '#058A05',
+            secundaria: '#B7FDB7',
+          },
+        })
+      }
+      if (project.pagamento.credor == 'SOL FÁCIL') {
+        tags.push({
+          id: '6798eb2bd422f4f93779dd0d',
+          titulo: 'DESLIGAMENTO REMOTO',
+          cores: {
+            primaria: '#FF0000',
+            secundaria: '#FFCCCB',
+          },
+        })
+      }
+      if (purchase.metadata?.pendenciasExecucao == 'LEVAR ESTRUTURA NA MONTAGEM') {
+        tags.push({
+          id: '6798eb4e38fd2c093589ee7f',
+          titulo: 'TRANSPORTAR ESTRUTURA',
+          cores: {
+            primaria: '#8B4513',
+            secundaria: '#DFD0BC',
+          },
+        })
+      }
+      return tags
+    }
     try {
       const changes = {
         'compra.liberacao': !!purchase.liberacao.data,
@@ -65,6 +99,17 @@ function PurchaseControlProjectInformationBlock({
         'obra.pendencias': purchase.metadata?.pendenciasExecucao,
       }
       await updateProject({ id: project._id, changes })
+
+      await updateManyServiceOrdersByProjectId({
+        projectId: project._id,
+        filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
+        changes: {
+          etiquetas: getServiceOrderTags({ project, purchase }),
+          dataPrevisaoLiberacao: purchase.entrega.dataPrevisao,
+          dataLiberacao: purchase.entrega.dataEfetivacao,
+        },
+      })
+
       return 'Dados sincronizados com sucesso !'
     } catch (error) {
       console.log('ERROR', error)
@@ -444,10 +489,45 @@ function ProjectServiceOrderBlock({ session, projectId }: ProjectServiceOrderBlo
         potencia: modulosPower,
       }
     }
+    function getTags(project: TProjectDTO) {
+      const tags: Exclude<TServiceOrder['etiquetas'], undefined | null> = []
+      if (project.homologacao.fastTrack) {
+        tags.push({
+          id: '6798eb1b19ad4c2b679bd2e1',
+          titulo: 'FAST TRACK',
+          cores: {
+            primaria: '#058A05',
+            secundaria: '#B7FDB7',
+          },
+        })
+      }
+      if (project.pagamento.credor == 'SOL FÁCIL') {
+        tags.push({
+          id: '6798eb2bd422f4f93779dd0d',
+          titulo: 'DESLIGAMENTO REMOTO',
+          cores: {
+            primaria: '#FF0000',
+            secundaria: '#FFCCCB',
+          },
+        })
+      }
+      if (project.obra.pendencias == 'LEVAR ESTRUTURA NA MONTAGEM') {
+        tags.push({
+          id: '6798eb4e38fd2c093589ee7f',
+          titulo: 'TRANSPORTAR ESTRUTURA',
+          cores: {
+            primaria: '#8B4513',
+            secundaria: '#DFD0BC',
+          },
+        })
+      }
+      return tags
+    }
     try {
       const project = await fetchProjectById({ id: projectId })
       const serviceOrder: TServiceOrder = {
         categoria: 'MONTAGEM',
+        etiquetas: getTags(project),
         favorecido: {
           nome: project.nomeDoContrato || '',
           contato: project.telefone || '',

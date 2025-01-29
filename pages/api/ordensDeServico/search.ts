@@ -81,7 +81,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
   const collection: Collection<TServiceOrder> = db.collection('ordensDeServico')
 
   const { serviceOrders, serviceOrdersMatched } = await getServiceOrdersByFilter({ collection, query, skip, limit })
-  const totalPages = Math.round(serviceOrdersMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(serviceOrdersMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { serviceOrders, serviceOrdersMatched, totalPages } })
 }

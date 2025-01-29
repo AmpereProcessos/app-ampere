@@ -18,9 +18,12 @@ const MaintenanceItem = z.object({
 })
 const GeneralProjectSchema = z.object({
   app: z.object({
-    data: z.string({invalid_type_error: 'Tipo não válido para a data de configuração do app do cliente.'}).optional().nullable(),
-    login: z.string({invalid_type_error: 'Tipo não válido para o login do app do cliente.'}).optional().nullable(),
-    senha: z.union([z.string({invalid_type_error: 'Tipo não válido para a senha do app do cliente.'}), z.number()]).optional().nullable(),
+    data: z.string({ invalid_type_error: 'Tipo não válido para a data de configuração do app do cliente.' }).optional().nullable(),
+    login: z.string({ invalid_type_error: 'Tipo não válido para o login do app do cliente.' }).optional().nullable(),
+    senha: z
+      .union([z.string({ invalid_type_error: 'Tipo não válido para a senha do app do cliente.' }), z.number()])
+      .optional()
+      .nullable(),
   }),
   bairro: z.string(),
   canalVenda: z.string(),
@@ -531,7 +534,7 @@ const GeneralProjectSchema = z.object({
 })
 
 export type TProject = z.infer<typeof GeneralProjectSchema>
-export type TProjectWithClient  = TProject & {cliente?: TClientDTO}
+export type TProjectWithClient = TProject & { cliente?: TClientDTO }
 export type TProjectEntity = TProject & { _id: ObjectId }
 export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }
 export type TProjectWithClientDTO = TProjectDTO & { cliente?: TClientDTO }

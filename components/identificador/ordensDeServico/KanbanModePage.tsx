@@ -16,8 +16,8 @@ import { FaLocationDot, FaRotate } from 'react-icons/fa6'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { formatWithoutDiacritics } from '@/utils/methods/formatting'
 import LoadingComponent from '@/components/utils/LoadingComponent'
-import { MdDashboard } from 'react-icons/md'
-import { BsCalendarPlus, BsCalendarCheck, BsCalendar } from 'react-icons/bs'
+import { MdDashboard, MdRoofing } from 'react-icons/md'
+import { BsCalendarPlus, BsCalendarCheck, BsCalendar, BsPatchCheckFill } from 'react-icons/bs'
 import { formatNameAsInitials, formatDateAsLocale } from '@/utils/methods/formatting'
 import { Tag, Tags, UserRound, X } from 'lucide-react'
 import Avatar from '@/components/utils/Avatar'
@@ -27,6 +27,11 @@ import * as Popover from '@radix-ui/react-popover'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import { FaRegHourglass, FaSolarPanel } from 'react-icons/fa'
+import { getServiceTypeTagColor } from '@/components/TagTipoDeServico'
+import { getFormattedTextFromHoursAmount, getHoursDiff } from '@/utils/methods/dates'
+import { TbUrgent } from 'react-icons/tb'
+import dayjs from 'dayjs'
 type TServiceOrderByStatus = {
   title: string
   items: TServiceOrderSimplifiedDTO[]
@@ -442,6 +447,26 @@ type FunnelListItemProps = {
   handleClick: (id: string) => void
 }
 function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
+  function getHomologationAccessTag(acessResponseData: string) {
+    const daysSinceResponse = dayjs().diff(dayjs(acessResponseData), 'day')
+
+    const daysTillExpiration = 120 - daysSinceResponse
+    if (daysSinceResponse > 110)
+      return (
+        <div
+          className={cn('flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1', {
+            'bg-red-600 text-white': daysSinceResponse > 110,
+            'bg-orange-500 text-white': daysSinceResponse <= 110 && daysSinceResponse > 100,
+            'bg-green-500 text-white': daysSinceResponse <= 100 && daysSinceResponse > 0,
+          })}
+        >
+          <TbUrgent size={12} />
+          <h1 className="text-[0.5rem] font-medium">
+            {daysTillExpiration < 0 ? 'PARECER VENCIDO' : `${daysTillExpiration} DIAS ATÉ O VENCIMENTO DO PARECER`}
+          </h1>
+        </div>
+      )
+  }
   return (
     <Draggable draggableId={item._id.toString()} index={index}>
       {(provided) => (
@@ -490,6 +515,53 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                 ))}
               </div>
             ) : null}
+            {item.projeto.id ? (
+              <>
+                <div
+                  className={cn('flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1', getServiceTypeTagColor(item.projeto.tipo || ''))}
+                >
+                  <MdDashboard size={12} />
+                  <h1 className="text-[0.5rem] font-medium">{item.projeto.tipo}</h1>
+                </div>
+                {item.categoria == 'MONTAGEM' && item.projeto.homologacaoAcessoDataResposta
+                  ? getHomologationAccessTag(item.projeto.homologacaoAcessoDataResposta)
+                  : null}
+                {item.categoria == 'MONTAGEM' && item.projeto.homologacaoVistoriaDataEfetivacao ? (
+                  <div className="flex w-fit items-center gap-1 self-center">
+                    <BsPatchCheckFill height={13} width={13} color="#22c55e " />
+                    <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">VISTORIA FEITA</h1>
+                  </div>
+                ) : null}
+                {item.categoria == 'MONTAGEM' ? (
+                  <div className="flex w-full flex-wrap items-center justify-around gap-2">
+                    <div className="flex items-center gap-1">
+                      <FaRegHourglass height={13} width={13} />
+                      <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                        {item.projeto.contratoDataAssinatura
+                          ? `${getFormattedTextFromHoursAmount({
+                              hours: getHoursDiff({ start: item.projeto.contratoDataAssinatura, finish: new Date() }),
+                              reference: 'auto',
+                              onlyComplete: false,
+                            })} DESDE ASSINATURA`
+                          : 'NÃO ASSINADO'}
+                      </h1>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <FaRegHourglass height={13} width={13} />
+                      <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                        {item.projeto.compraEntregaDataEfetivacao
+                          ? `${getFormattedTextFromHoursAmount({
+                              hours: getHoursDiff({ start: item.projeto.compraEntregaDataEfetivacao, finish: new Date() }),
+                              reference: 'auto',
+                              onlyComplete: false,
+                            })} DESDE ENTREGA`
+                          : 'NÃO ENTREGUE'}
+                      </h1>
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            ) : null}
             <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">
                 <FaLocationDot height={13} width={13} />
@@ -500,6 +572,16 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
               <div className="flex items-center gap-1">
                 <UserRound size={12} />
                 <h1 className="text-[0.6rem] font-medium text-primary/80">{item.responsavel.nome}</h1>
+              </div>
+            </div>
+            <div className="flex w-full flex-wrap items-center justify-around gap-2">
+              <div className="flex items-center gap-1">
+                <FaSolarPanel height={13} width={13} />
+                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.equipamentos.modulos.qtde || 0} MÓDULOS</h1>
+              </div>
+              <div className="flex items-center gap-1">
+                <MdRoofing height={13} width={13} />
+                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.detalhes.tipoTelha ? `TELHA ${item.detalhes.tipoTelha}` : 'N/A'}</h1>
               </div>
             </div>
             <div className="flex w-full flex-wrap items-center justify-around gap-2">

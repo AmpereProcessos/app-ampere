@@ -13,16 +13,16 @@ const handleUpdateTest: NextApiHandler<any> = async (req, res) => {
 
   const serviceOrdersBulkwriteArr = projects
     .map((project) => {
-      const deliveryDateExpectation = project.compra.previsaoEntrega
-      const deliveryDateEffectivation = project.compra.dataEntrega
-      if (!deliveryDateExpectation && !deliveryDateEffectivation) return null
       return {
         updateMany: {
-          filter: { categoria: 'MONTAGEM', 'projeto.id': project._id.toString() },
+          filter: { 'projeto.id': project._id.toString() },
           update: {
             $set: {
-              dataPrevisaoLiberacao: deliveryDateExpectation,
-              dataLiberacao: deliveryDateEffectivation,
+              'projeto.contratoDataAssinatura': project.contrato?.dataAssinatura,
+              'projeto.compraEntregaDataPrevisao': project.compra?.previsaoEntrega,
+              'projeto.compraEntregaDataEfetivacao': project.compra?.dataEntrega,
+              'projeto.homologacaoAcessoDataResposta': project.homologacao?.acesso.dataResposta,
+              'projeto.homologacaoVistoriaDataEfetivacao': project.homologacao?.vistoria.dataEfetivacao,
             },
           },
         },

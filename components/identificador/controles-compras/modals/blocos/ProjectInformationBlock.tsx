@@ -100,15 +100,15 @@ function PurchaseControlProjectInformationBlock({
       }
       await updateProject({ id: project._id, changes })
 
-      await updateManyServiceOrdersByProjectId({
-        projectId: project._id,
-        filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
-        changes: {
-          etiquetas: getServiceOrderTags({ project, purchase }),
-          dataPrevisaoLiberacao: purchase.entrega.dataPrevisao,
-          dataLiberacao: purchase.entrega.dataEfetivacao,
-        },
-      })
+      // await updateManyServiceOrdersByProjectId({
+      //   projectId: project._id,
+      //   filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
+      //   changes: {
+      //     etiquetas: getServiceOrderTags({ project, purchase }),
+      //     dataPrevisaoLiberacao: purchase.entrega.dataPrevisao,
+      //     dataLiberacao: purchase.entrega.dataEfetivacao,
+      //   },
+      // })
 
       return 'Dados sincronizados com sucesso !'
     } catch (error) {

@@ -26,43 +26,6 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { useServiceOrderProject } from '@/utils/methods/query/service-orders'
 import ServiceOrderProjectVinculation from './blocos/utils/ProjectVinculation'
 import ServiceOrderProjectInformationBlock from './blocos/ProjectInformationBlock'
-function getEquipmentList({ str, category }: { str: string; category: string }) {
-  if (category != 'MONTAGEM') return null
-  if (typeof str != 'string') return null
-  const spllited = str.split('\n')
-  const formattedSpllited = spllited.map((i) => {
-    const arr = i.split('-')
-    console.log(i, arr)
-    var qty = null
-    var desc = null
-    if (arr.length > 1) {
-      qty = Number(arr[0].trim())
-      desc = arr[1]
-    } else desc = arr[0]
-    if (qty || desc)
-      return {
-        qtde: qty,
-        descricao: desc,
-      }
-  })
-  return formattedSpllited.filter((x) => !!x)
-}
-function getInverterInfoByStr(str: string) {
-  const regexInverterQty = /^(\d{1,3})x/i
-  const regexInverterModel = /x([^()]+)/
-  const regexInverterPower = /\((\d+)W\)/
-  const x = regexInverterQty.exec(str)
-  const inverterQty = regexInverterQty.exec(str) ? (regexInverterQty.exec(str) as RegExpExecArray)[0]?.slice(0, -1) : null
-  const inverterModel = regexInverterModel.exec(str) ? (regexInverterModel.exec(str) as RegExpExecArray)[0].substring(1) : null
-  const inverterPower = regexInverterPower.exec(str)
-    ? (regexInverterPower.exec(str) as RegExpExecArray)[0].replace('(', '').replace(')', '').replace('W', '')
-    : null
-  return {
-    modelo: inverterModel,
-    qtde: Number(inverterQty) || 0,
-    potencia: inverterPower,
-  }
-}
 
 type ModalNewServiceOrderProps = {
   session: Session

@@ -63,7 +63,7 @@ const getContractRequestsBySearchRoute: NextApiHandler<{ data: TContractRequests
     skip,
     limit,
   })
-  const totalPages = Math.round(contractRequestsMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(contractRequestsMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { contractRequests, contractRequestsMatched, totalPages } })
 }

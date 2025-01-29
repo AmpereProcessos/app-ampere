@@ -1,7 +1,8 @@
+import { TProject } from '@/utils/schemas/projects'
 import { cn } from '../lib/utils'
 import React from 'react'
-export function getServiceTypeTagColor(type) {
-  var obj = {
+export function getServiceTypeTagColor(type: TProject['tipoDeServico']) {
+  const obj = {
     'SISTEMA FOTOVOLTAICO': {
       combination: 'bg-[#15599a] text-[#fead61]',
     },
@@ -27,9 +28,9 @@ export function getServiceTypeTagColor(type) {
       combination: 'bg-[#08A89F] text-white',
     },
   }
-  return obj[type] ? obj[type].combination : 'bg-black text-white'
+  return obj[type as keyof typeof obj] ? obj[type as keyof typeof obj].combination : 'bg-black text-white'
 }
-function TagTipoDeServico({ tipoDeServico }) {
+function TagTipoDeServico({ tipoDeServico }: { tipoDeServico: TProject['tipoDeServico'] }) {
   function getCombination(type: string) {
     if (type == 'SISTEMA FOTOVOLTAICO') return 'bg-[#15599a] text-[#fead61]'
     if (type == 'SISTEMA FOTOVOLTAICO (OFF GRID)') return 'bg-[#fead61] text-[#15599a]'

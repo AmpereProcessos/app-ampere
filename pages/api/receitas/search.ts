@@ -79,7 +79,7 @@ const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<{ data: TReven
   const collection: Collection<TRevenue> = db.collection('receitas')
 
   const { revenues, revenuesMatched } = await getRevenuesByFilters({ collection, query, skip, limit })
-  const totalPages = Math.round(revenuesMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(revenuesMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { revenues, revenuesMatched, totalPages } })
 }

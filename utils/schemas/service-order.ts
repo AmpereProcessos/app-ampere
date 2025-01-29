@@ -80,6 +80,24 @@ export const ServiceOrderSchema = z.object({
     identificador: z.union([z.string(), z.number()]).optional().nullable(),
     nome: z.string({ invalid_type_error: 'Tipo não válido para o nome do projeto.' }).optional().nullable(),
     tipo: z.string({ invalid_type_error: 'Tipo não válido para o tipo do projeto.' }).optional().nullable(),
+    // Important tracking fields
+    contratoDataAssinatura: z.string({ invalid_type_error: 'Tipo não válido para a data de assinatura do contrato.' }).optional().nullable(),
+    compraEntregaDataPrevisao: z
+      .string({ invalid_type_error: 'Tipo não válido para a data de previsão de entrega da compra.' })
+      .optional()
+      .nullable(),
+    compraEntregaDataEfetivacao: z
+      .string({ invalid_type_error: 'Tipo não válido para a data de efetivação de entrega da compra.' })
+      .optional()
+      .nullable(),
+    homologacaoAcessoDataResposta: z
+      .string({ invalid_type_error: 'Tipo não válido para a data de resposta da homologação de acesso.' })
+      .optional()
+      .nullable(),
+    homologacaoVistoriaDataEfetivacao: z
+      .string({ invalid_type_error: 'Tipo não válido para a data de efetivação da vistoria.' })
+      .optional()
+      .nullable(),
   }),
   etiquetas: z
     .array(
@@ -234,6 +252,13 @@ export type TServiceOrderSimplified = Pick<
     fim: TServiceOrder['periodo']['fim']
     inicio: TServiceOrder['periodo']['inicio']
   }
+  detalhes: {
+    tipoTelha: TServiceOrder['detalhes']['tipoTelha']
+  }
+  equipamentos: {
+    inversor: TServiceOrder['equipamentos']['inversor']
+    modulos: TServiceOrder['equipamentos']['modulos']
+  }
 }
 export type TServiceOrderSimplifiedDTO = TServiceOrderSimplified & { _id: string }
 export const ServiceOrderSimplifiedProjection = {
@@ -251,6 +276,9 @@ export const ServiceOrderSimplifiedProjection = {
   etiquetas: 1,
   'periodo.inicio': 1,
   'periodo.fim': 1,
+  'detalhes.tipoTelha': 1,
+  'equipamentos.inversor': 1,
+  'equipamentos.modulos': 1,
   autor: 1,
   dataPrevisaoLiberacao: 1,
   dataLiberacao: 1,

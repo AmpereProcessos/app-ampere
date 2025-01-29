@@ -85,7 +85,7 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   const collection: Collection<TProject> = db.collection('dados')
 
   const { projects, projectsMatched } = await getProjectsByFilter({ collection, query, skip, limit })
-  const totalPages = Math.round(projectsMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(projectsMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { projects, projectsMatched, totalPages } })
 }

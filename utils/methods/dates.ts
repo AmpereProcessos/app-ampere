@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { formatDecimalPlaces } from '../constants'
 
 export function getFirstDayOfYearString({ year, resetHour = true }: { year?: number; resetHour?: boolean }) {
   var currentDate = dayjs()
@@ -113,4 +114,84 @@ export function getPeriodDateParamsByReferenceDate({ reference, type = 'month', 
   if (!!resetStart) start = start.subtract(3, 'hour')
   if (!!resetEnd) end = end.startOf('day').subtract(3, 'hour')
   return { start: start.toDate(), end: end.toDate() }
+}
+
+export function getMetadataFromHoursAmount(hours: number, reference: 'months' | 'days' | 'hours' | 'auto') {
+  if (reference === 'months') {
+    const totalDays = Math.floor(hours / 24)
+    const months = Math.floor(totalDays / 30) // Using 30 as average month length
+    const remainingDays = totalDays % 30
+    return {
+      complete: months,
+      remaining: remainingDays,
+      unit: 'months' as const,
+      remainingUnit: 'days' as const,
+    }
+  }
+
+  if (reference === 'days') {
+    const days = Math.floor(hours / 24)
+    const remainingHours = hours % 24
+    return {
+      complete: days,
+      remaining: remainingHours,
+      unit: 'days' as const,
+      remainingUnit: 'hours' as const,
+    }
+  }
+
+  if (reference === 'hours') {
+    const completeHours = Math.floor(hours)
+    const remainingMinutes = Math.round((hours - completeHours) * 60)
+    return {
+      complete: completeHours,
+      remaining: remainingMinutes,
+      unit: 'hours' as const,
+      remainingUnit: 'minutes' as const,
+    }
+  }
+
+  // reference === 'auto'
+  const completeHours = Math.floor(hours)
+  if (completeHours > 720) return getMetadataFromHoursAmount(hours, 'months')
+  if (completeHours > 24) return getMetadataFromHoursAmount(hours, 'days')
+  return getMetadataFromHoursAmount(hours, 'hours')
+}
+
+export function getFormattedTextFromHoursAmount({
+  hours,
+  reference,
+  onlyComplete,
+}: {
+  hours: number
+  reference: 'months' | 'days' | 'hours' | 'auto'
+  onlyComplete: boolean
+}) {
+  const metadata = getMetadataFromHoursAmount(hours, reference)
+  const referenceMap = {
+    months: {
+      singular: 'mês',
+      plural: 'meses',
+    },
+    days: {
+      singular: 'dia',
+      plural: 'dias',
+    },
+    hours: {
+      singular: 'hora',
+      plural: 'horas',
+    },
+    minutes: {
+      singular: 'minuto',
+      plural: 'minutos',
+    },
+  }
+
+  const completeUnitFormatted = referenceMap[metadata.unit]
+  const remainingUnitFormatted = referenceMap[metadata.remainingUnit]
+
+  if (onlyComplete) return `${metadata.complete} ${metadata.complete > 1 ? completeUnitFormatted.plural : completeUnitFormatted.singular}`
+  return `${metadata.complete} ${metadata.complete > 1 ? completeUnitFormatted.plural : completeUnitFormatted.singular} e ${formatDecimalPlaces(
+    metadata.remaining
+  )} ${metadata.remaining > 1 ? remainingUnitFormatted.plural : remainingUnitFormatted.singular}`
 }

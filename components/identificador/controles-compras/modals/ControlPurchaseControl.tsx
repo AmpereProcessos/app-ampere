@@ -136,15 +136,15 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
             'obra.pendencias': infoHolder.metadata?.pendenciasExecucao,
           },
         })
-        await updateManyServiceOrdersByProjectId({
-          projectId: projectId,
-          filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
-          changes: {
-            etiquetas: getServiceOrderTags({ project: purchaseControl.projetoDados as TPurchaseProjectDTO, purchase: infoHolder }),
-            dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao,
-            dataLiberacao: infoHolder.entrega.dataEfetivacao,
-          },
-        })
+        // await updateManyServiceOrdersByProjectId({
+        //   projectId: projectId,
+        //   filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
+        //   changes: {
+        //     etiquetas: getServiceOrderTags({ project: purchaseControl.projetoDados as TPurchaseProjectDTO, purchase: infoHolder }),
+        //     dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao,
+        //     dataLiberacao: infoHolder.entrega.dataEfetivacao,
+        //   },
+        // })
       }
     } catch (error) {}
   }

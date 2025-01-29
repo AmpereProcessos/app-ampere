@@ -65,7 +65,7 @@ const getPurchasesControlsBySearchRoute: NextApiHandler<{ data: TPurchaseControl
   const collection = db.collection<TPurchaseControl>('controles-compras')
 
   const { purchaseControls, purchaseControlsMatched } = await getPurchaseControlsByFilter({ collection, query: queryFilters, skip, limit })
-  const totalPages = Math.round(purchaseControlsMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(purchaseControlsMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { purchaseControls, purchaseControlsMatched, totalPages } })
 }

@@ -72,7 +72,7 @@ const getTechnicalAnalysisByPersonalizedFilters: NextApiHandler<PostResponse> = 
   const collection: Collection<TTechnicalAnalysis> = db.collection('technical-analysis')
 
   const { analysis, analysisMatched } = await getTechnicalAnalysisByFilter({ collection, query, skip, limit })
-  const totalPages = Math.round(analysisMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(analysisMatched / PAGE_SIZE)
   return res.status(200).json({ data: { analysis, analysisMatched, totalPages } })
 }
 

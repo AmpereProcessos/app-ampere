@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import toast from 'react-hot-toast'
 import { createServiceOrder } from '../../../../utils/methods/mutation/service-orders'
-import { getErrorMessage } from '../../../../utils/methods/handlers'
 import { VscChromeClose } from 'react-icons/vsc'
 
-import { equipesTecnicas } from '../../../../utils/constants'
 import { useQueryClient } from '@tanstack/react-query'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { Session } from 'next-auth'
 import { TServiceOrder, TServiceOrderDTO } from '@/utils/schemas/service-order'
-import { getServiceObservationsFromObras } from '@/utils/methods/util/service-order'
-import ServiceOrderObservationsBlock from './blocos/utils/Observations'
-import CheckboxInput from '@/components/inputs/Checkbox'
+
 import ServiceOrderGeneralInformationBlock from './blocos/GeneralInformationBlock'
 import ServiceOrderLocationInformationBlock from './blocos/LocationInformationBlock'
 import ServiceOrderEquipmentsInformationBlock from './blocos/EquipmentsInformationBlock'
@@ -199,7 +194,11 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
             <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
-            <ServiceOrderExecutionInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
+            <ServiceOrderExecutionInformationBlock
+              infoHolder={osInfo}
+              updateInfoHolder={updateInfoHolder}
+              projectObservations={project.obra.observacoes || undefined}
+            />
           </div>
           <div className="mt-2 flex w-full items-center justify-end border-t border-gray-200 py-1 px-4">
             <LoadingButton

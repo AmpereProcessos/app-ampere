@@ -81,7 +81,7 @@ const getExpensesSearchByPersonalizedFiltersRoute: NextApiHandler<{ data: TExpen
   const collection: Collection<TExpense> = db.collection('despesas')
 
   const { expenses, expensesMatched } = await getExpensesByFilters({ collection, query, skip, limit })
-  const totalPages = Math.round(expensesMatched / PAGE_SIZE)
+  const totalPages = Math.ceil(expensesMatched / PAGE_SIZE)
 
   return res.status(200).json({ data: { expenses, expensesMatched, totalPages } })
 }

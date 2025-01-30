@@ -247,12 +247,10 @@ function LaudoIntermediarioUrbano({ analysis }: LaudoIntermediarioUrbanoProps) {
                   <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">{cost.qtde}</p>
                   <p className="col-span-1 border-r border-black p-1 text-center text-xs font-bold">{cost.grandeza}</p>
                   <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
-                    {formatToMoney((cost.custoUnitario || 0) / (1 - STANDARD_PROFIT_MARGIN))}
+                    {formatToMoney((cost.totalVendaSimples || 0) / cost.qtde)}
                   </p>
                   <p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
-                    {cost.total
-                      ? formatToMoney(cost.total / (1 - STANDARD_PROFIT_MARGIN))
-                      : formatToMoney((cost.qtde * (cost.custoUnitario || 0)) / (1 - STANDARD_PROFIT_MARGIN))}
+                    {cost.total ? formatToMoney(cost.totalVendaSimples || 0) : formatToMoney(cost.totalVendaSimples || 0)}
                   </p>
                 </div>
               ))

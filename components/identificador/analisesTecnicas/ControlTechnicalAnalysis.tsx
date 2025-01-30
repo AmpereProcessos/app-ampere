@@ -420,7 +420,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-center gap-2 px-4">
                     {technicalAnalysisReportTypes.map((type) => (
-                      <Link key={type.id} href={`/projetos/laudo/${analysisId}?type=${type.value}`}>
+                      <Link key={type.id} href={`/projetos/laudo-pdf/${analysisId}?type=${type.value}`}>
                         <p className="w-fit rounded border border-black px-2 py-1 text-center font-bold shadow-sm hover:bg-black hover:text-white">
                           {type.value}
                         </p>

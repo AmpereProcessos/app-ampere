@@ -68,10 +68,10 @@ export async function createSaleFromRevenue({ revenue, accessToken }: { revenue:
 type UpdateSaleInstallmentParams = {
   saleId: string
   saleInstallmentIndex: number
-  saleInstallmentPaid: boolean
+  saleInstallmentPaymentDate?: string
   accessToken: string
 }
-export async function updateSaleInstallment({ saleId, saleInstallmentIndex, saleInstallmentPaid, accessToken }: UpdateSaleInstallmentParams) {
+export async function updateSaleInstallment({ saleId, saleInstallmentIndex, saleInstallmentPaymentDate, accessToken }: UpdateSaleInstallmentParams) {
   try {
     const url = `https://api.contaazul.com/v1/sales/${saleId}/installments/${saleInstallmentIndex}`
     const headers = {
@@ -79,7 +79,11 @@ export async function updateSaleInstallment({ saleId, saleInstallmentIndex, sale
       'Content-Type': 'application/json',
     }
 
-    const { data } = await axios.put(url, { status: saleInstallmentPaid ? 'ACQUITTED' : 'PENDING' }, { headers })
+    const { data } = await axios.put(
+      url,
+      { status: !!saleInstallmentPaymentDate ? 'ACQUITTED' : 'PENDING', due_date: saleInstallmentPaymentDate },
+      { headers }
+    )
     console.log('CONTA AZUL UPDATE INSTALLMENT RESPONSE', data)
     return { data: 'Recebimento atualizado.' }
   } catch (error) {

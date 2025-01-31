@@ -7,6 +7,9 @@ import { Collection, Db, ObjectId } from 'mongodb'
 import { TIntegration } from '@/utils/schemas/integrations'
 import { getContaAzulAccessToken } from '@/repositories/integrations/conta-azul/queries'
 import { createSaleFromRevenue } from '@/lib/integrations/conta-azul'
+import { TClient } from '@/utils/schemas/crm/client.schema'
+import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import { TProject } from '@/utils/schemas/projects'
 type GetResponse = {
   data: TRevenue | TRevenue[]
 }
@@ -97,15 +100,24 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const revenue = InsertRevenueSchema.parse(req.body)
   const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
   const db: Db = await connectToDatabase()
+  const crmDb = await connectToCRMDatabase()
+
+  const projectsCollection: Collection<TProject> = db.collection('dados')
   const revenuesCollection: Collection<TRevenue> = db.collection('receitas')
   const integrationsCollection: Collection<TIntegration> = db.collection('integracoes')
+  const clientsCollection: Collection<TClient> = crmDb.collection('clients')
 
-  const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
+  // const revenueProjectId = revenue.projeto.id
+  // var project: TProject | null = null
+  // if (revenueProjectId) {
+  //   const client = await projectsCollection.findOne({ _id: new Object(revenue.projeto.id) })
+  // }
+  // const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
 
-  const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
+  // const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
   const insertResponse = await revenuesCollection.insertOne({
     ...revenue,
-    idContaAzulVenda: contaAzulSaleId,
+    // idContaAzulVenda: contaAzulSaleId,
     autor: author,
     dataInsercao: new Date().toISOString(),
   })

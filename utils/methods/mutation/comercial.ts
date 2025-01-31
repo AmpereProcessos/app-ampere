@@ -8,6 +8,8 @@ import { QueryClient } from '@tanstack/react-query'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import { updateOpportunity } from './crm/opportunities'
 import dayjs from 'dayjs'
+import { ContractRequestPaymentOptions } from '@/utils/select-options'
+import { TRevenue } from '@/utils/schemas/revenues'
 
 type HandleComercialUpdateProps = {
   previousData: TProjectDTO
@@ -105,7 +107,13 @@ type GenerateContractRevenueParams = {
 }
 export async function generateContractRevenue({ data, queryClient }: GenerateContractRevenueParams) {
   try {
-    const revenue = {
+    const contractValue = getContractValue({
+      projectValue: data.sistema.valorProjeto,
+      structureValue: data.estruturaPersonalizada.valor,
+      paValue: data.padrao.valor,
+    })
+    const paymentFractionnements = ContractRequestPaymentOptions.find((c) => c.value == data.pagamento.metodo)?.fractionnements
+    const revenue: TRevenue = {
       nome: `CONTRATO DE ${data.nomeDoContrato}`,
       tipo: data.tipoDeServico,
       autor: {
@@ -118,17 +126,27 @@ export async function generateContractRevenue({ data, queryClient }: GenerateCon
         nome: data.nomeDoContrato,
         identificador: data.qtde,
       },
-      total: getContractValue({
-        projectValue: data.sistema.valorProjeto,
-        structureValue: data.estruturaPersonalizada.valor,
-        paValue: data.padrao.valor,
-      }),
+      total: contractValue,
       metodo: data.pagamento.forma == 'FINANCIAMENTO' ? 'FINANCIAMENTO' : 'À VISTA (GERAL)',
       efetivacao: {
         efetivado: true,
         data: data.contrato.dataAssinatura,
       },
-      fracionamento: [],
+      fracionamento: paymentFractionnements
+        ? paymentFractionnements.map((c) => ({
+            titulo: c.title,
+            porcentagem: c.percentage,
+            dataPrevisaoRecebimento: new Date().toISOString(),
+            valor: contractValue * (c.percentage / 100),
+          }))
+        : [
+            {
+              titulo: 'RECEBIMENTO TOTAL',
+              porcentagem: 100,
+              dataPrevisaoRecebimento: new Date().toISOString(),
+              valor: contractValue,
+            },
+          ],
       dataInsercao: new Date().toISOString(),
     }
     await createRevenue({ info: revenue })

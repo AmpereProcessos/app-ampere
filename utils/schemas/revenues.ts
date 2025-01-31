@@ -23,27 +23,7 @@ export const RevenueReceiptItemSchema = z.object({
     .nullable(),
 })
 
-const GeneralRevenueSchema = z.object({
-  nome: z.string(),
-  tipo: z.string(),
-  autor: AuthorSchema,
-  projeto: z.object({
-    id: z.string().optional().nullable(),
-    nome: z.string().optional().nullable(),
-    identificador: z.union([z.string(), z.number()]).optional().nullable(),
-  }),
-  total: z.number(),
-  metodo: z.string(),
-  efetivacao: z.object({
-    efetivado: z.boolean().optional().nullable(),
-    data: z.string().datetime().optional().nullable(),
-  }),
-  fracionamento: z.array(RevenueReceiptItemSchema),
-  idContaAzulVenda: z.string({ invalid_type_error: 'Tipo não válido para ID de referência da venda em Conta Azul.' }).optional().nullable(),
-  dataInsercao: z.string().datetime(),
-})
-
-export const InsertRevenueSchema = z.object({
+export const GeneralRevenueSchema = z.object({
   nome: z
     .string({ required_error: 'Nome da receita não informada.', invalid_type_error: 'Tipo não o nome da receita.' })
     .min(5, 'Preencha um nome de ao menos 5 caracteres.'),
@@ -87,29 +67,22 @@ export const InsertRevenueSchema = z.object({
   }),
   fracionamento: z.array(RevenueReceiptItemSchema),
   idContaAzulVenda: z.string({ invalid_type_error: 'Tipo não válido para ID de referência da venda em Conta Azul.' }).optional().nullable(),
+  dataUltimaAtualizacaoContaAzul: z
+    .string({ invalid_type_error: 'Tipo não válido para data da última sincronização com a Conta Azul.' })
+    .datetime({
+      message: 'Data da última sincronização com a Conta Azul inválida.',
+    })
+    .optional()
+    .nullable(),
+  dataEfetivacao: z
+    .string({
+      invalid_type_error: 'Tipo não válido para a data de efetivação/conclusão da receita.',
+    })
+    .optional()
+    .nullable(),
   dataInsercao: z
     .string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção.' })
     .datetime(),
-})
-
-const RevenueEntitySchema = z.object({
-  _id: z.instanceof(ObjectId),
-  nome: z.string(),
-  tipo: z.string(),
-  autor: AuthorSchema,
-  projeto: z.object({
-    id: z.string().optional().nullable(),
-    nome: z.string().optional().nullable(),
-    identificador: z.union([z.string(), z.number()]).optional().nullable(),
-  }),
-  total: z.number(),
-  metodo: z.string(),
-  efetivacao: z.object({
-    efetivado: z.boolean().optional().nullable(),
-    data: z.string().datetime().optional().nullable(),
-  }),
-  fracionamento: z.array(RevenueReceiptItemSchema),
-  dataInsercao: z.string().datetime(),
 })
 
 export type TRevenue = z.infer<typeof GeneralRevenueSchema>

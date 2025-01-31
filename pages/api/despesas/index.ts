@@ -121,10 +121,9 @@ const editExpense: NextApiHandler<PutResponse> = async (req, res) => {
   const { changes } = req.body
   const { id } = req.query
   if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
-  // const changes = InsertRevenueSchema.partial().parse(req.body)
 
   delete changes._id
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TExpense> = db.collection('despesas')
 
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })

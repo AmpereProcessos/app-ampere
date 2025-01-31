@@ -1,3 +1,4 @@
+import { TClient } from '@/utils/schemas/crm/client.schema'
 import { TRevenue } from '@/utils/schemas/revenues'
 import axios from 'axios'
 
@@ -12,32 +13,70 @@ export const CONTA_AZUL_PRODUCTS_AND_SERVICES = [
     label: 'AUMENTO',
     serviceTypeEquivalent: 'AUMENTO DE SISTEMA FOTOVOLTAICO',
   },
+  {
+    id: '1e53d9aa-e737-4010-8536-833796fc69b4',
+    label: 'MONITORAMENTO',
+    serviceTypeEquivalent: 'OPERAÇÃO E MANUTENÇÃO',
+  },
+  {
+    id: '1e53d9aa-e737-4010-8536-833796fc69b4',
+    label: 'MONITORAMENTO',
+    serviceTypeEquivalent: 'MONITORAMENTO',
+  },
 ]
 
 function getContaAzulProductsAndServicesFromRevenueType(revenueType: string) {
   const equivalent = CONTA_AZUL_PRODUCTS_AND_SERVICES.find((p) => p.serviceTypeEquivalent == revenueType)
-  return equivalent
+  return equivalent || CONTA_AZUL_PRODUCTS_AND_SERVICES[0]
 }
 
-export async function createSaleFromRevenue({ revenue, accessToken }: { revenue: TRevenue; accessToken: string }) {
+type CreateSaleFromRevenueParams = {
+  revenue: TRevenue
+  client: TClient
+  accessToken: string
+}
+export async function createSaleFromRevenue({ revenue, client, accessToken }: CreateSaleFromRevenueParams) {
   try {
     const url = `https://api.contaazul.com/v1/sales`
+    const newClientUrl = `https://api.contaazul.com/v1/customers`
+
     const headers = {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     }
 
+    var contaAzulCustomerId = client.idContaAzulCliente
+    if (!contaAzulCustomerId) {
+      const contaAzulCustomer = {
+        name: client.nome,
+        email: client.email,
+        mobile_phone: client.telefonePrimario,
+        person_type: client.cpfCnpj ? (client.cpfCnpj.length > 14 ? 'LEGAL' : 'NATURAL') : 'NATURAL',
+        document: client.cpfCnpj ? client.cpfCnpj.replaceAll('.', '').replaceAll('-', '') : undefined,
+        address: {
+          zip_code: client.cep || undefined,
+          street: client.endereco || undefined,
+          number: client.numeroOuIdentificador || undefined,
+          neighborhood: client.bairro || undefined,
+        },
+      }
+      const { data: clientResponse } = await axios.post(newClientUrl, contaAzulCustomer, { headers })
+      console.log('CONTA AZUL CREATE CLIENT RESPONSE', clientResponse)
+
+      contaAzulCustomerId = clientResponse.id as string
+    }
     const contaAzulProductsAndServices = getContaAzulProductsAndServicesFromRevenueType(revenue.tipo)
     const contaAzulSale = {
-      emission: '2025-01-30T12:45:28.179Z',
+      emission: revenue.efetivacao.data || new Date().toISOString(),
       status: 'PENDING',
+      customer_id: contaAzulCustomerId,
       payment: {
         type: 'TIMES',
         installments: revenue.fracionamento.map((revenueFraction, revenueFractionIndex) => ({
           number: revenueFractionIndex + 1,
           value: revenueFraction.valor || revenueFraction.porcentagem * revenue.total,
           due_date: revenueFraction.dataRecebimento || revenueFraction.dataPrevisaoRecebimento,
-          status: revenueFraction.dataRecebimento ? 'ACQUITTED' : 'PENDING',
+          status: 'PENDING',
           note: revenueFraction.titulo,
           hasBillet: false,
         })),
@@ -54,11 +93,12 @@ export async function createSaleFromRevenue({ revenue, accessToken }: { revenue:
         : undefined,
       notes: revenue.projeto.id ? `Venda do Projeto ${revenue.projeto.nome}, do tipo ${revenue.tipo}.` : '',
     }
+    console.log('CONTA AZUL SALE TO CREATE', contaAzulSale)
     const { data } = await axios.post(url, contaAzulSale, { headers })
     console.log('CONTA AZUL CREATE SALE RESPONSE', data)
-    const contaAzulSaleId = data.id
+    const contaAzulSaleId = data.id as string
     if (!contaAzulSaleId) throw new Error('Ocorreu um erro ao criar a venda no Conta Azul.')
-    return { contaAzulSaleId }
+    return { contaAzulSaleId, contaAzulCustomerId }
   } catch (error) {
     console.log('ERROR', error)
     throw error

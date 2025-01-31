@@ -1,9 +1,9 @@
 import connectToDatabase from '../../../utils/services/mongodb/projects'
-import { InsertRevenueSchema, TRevenue, TRevenueWithProjectDTO } from '../../../utils/schemas/revenues'
+import { GeneralRevenueSchema, TRevenue, TRevenueWithProjectDTO } from '../../../utils/schemas/revenues'
 import { NextApiHandler } from 'next'
 import { apiHandler, validateAuthenticationWithSession } from '../../../utils/api'
 import createHttpError from 'http-errors'
-import { Collection, Db, ObjectId } from 'mongodb'
+import { Collection, Db, ObjectId, WithId } from 'mongodb'
 import { TIntegration } from '@/utils/schemas/integrations'
 import { getContaAzulAccessToken } from '@/repositories/integrations/conta-azul/queries'
 import { createSaleFromRevenue } from '@/lib/integrations/conta-azul'
@@ -97,28 +97,51 @@ type PostResponse = {
 const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const revenue = InsertRevenueSchema.parse(req.body)
+  const revenue = GeneralRevenueSchema.parse(req.body)
   const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
   const db: Db = await connectToDatabase()
   const crmDb = await connectToCRMDatabase()
 
+  console.log('REVENUE', revenue)
   const projectsCollection: Collection<TProject> = db.collection('dados')
   const revenuesCollection: Collection<TRevenue> = db.collection('receitas')
   const integrationsCollection: Collection<TIntegration> = db.collection('integracoes')
   const clientsCollection: Collection<TClient> = crmDb.collection('clients')
 
-  // const revenueProjectId = revenue.projeto.id
-  // var project: TProject | null = null
-  // if (revenueProjectId) {
-  //   const client = await projectsCollection.findOne({ _id: new Object(revenue.projeto.id) })
-  // }
-  // const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
+  const revenueProjectId = revenue.projeto.id
+  var project: WithId<TProject> | null = null
+  var client: WithId<TClient> | null = null
+  if (revenueProjectId) {
+    console.log('CAME THIS PATH', revenueProjectId)
+    const projectResponse = await projectsCollection.findOne({ _id: new ObjectId(revenueProjectId) })
+    console.log('FOUND PROJECT', projectResponse?.nomeDoContrato)
+    project = projectResponse
+    if (projectResponse && projectResponse.idClienteCRM) {
+      const clientResponse = await clientsCollection.findOne({ _id: new ObjectId(projectResponse.idClienteCRM) })
+      console.log('FOUND CLIENT', clientResponse?.nome)
+      client = clientResponse
+    }
+  }
+  const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
 
-  // const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
+  var contaAzulSaleId: string | null = null
+
+  if (client) {
+    const contaAzulResponse = await createSaleFromRevenue({
+      revenue,
+      client: client,
+      accessToken: contaAzulAccessToken,
+    })
+    contaAzulSaleId = contaAzulResponse.contaAzulSaleId
+    await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulResponse.contaAzulCustomerId } })
+  }
+
+  const revenueReceivedCompletely = revenue.fracionamento.length > 0 ? revenue.fracionamento.every((f) => !!f.dataRecebimento) : false
   const insertResponse = await revenuesCollection.insertOne({
     ...revenue,
-    // idContaAzulVenda: contaAzulSaleId,
+    idContaAzulVenda: contaAzulSaleId,
     autor: author,
+    dataEfetivacao: revenueReceivedCompletely ? new Date().toISOString() : null,
     dataInsercao: new Date().toISOString(),
   })
 
@@ -137,15 +160,23 @@ const editRevenue: NextApiHandler<PutResponse> = async (req, res) => {
 
   const { id } = req.query
   if (typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
-  const changes = InsertRevenueSchema.partial().parse(req.body)
+  const changes = GeneralRevenueSchema.partial().parse(req.body)
 
   console.log(changes)
   const db: Db = await connectToDatabase()
   const collection: Collection<TRevenue> = db.collection('receitas')
 
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })
-
   if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro ao atualizar receita.')
+
+  const revenueUpdated = await collection.findOne({ _id: new ObjectId(id) })
+  if (!revenueUpdated) throw new createHttpError.NotFound('Receita não encontrada.')
+
+  // Updating revenue effectivation date on complete receipt of the revenue
+  const revenueReceivedCompletely = revenueUpdated.fracionamento.length > 0 ? revenueUpdated.fracionamento.every((f) => !!f.dataRecebimento) : false
+  if (revenueReceivedCompletely) {
+    await collection.updateOne({ _id: new ObjectId(id) }, { $set: { dataEfetivacao: new Date().toISOString() } })
+  }
 
   return res.status(201).json({ data: 'Receita atualizada com sucesso!', message: 'Receita atualizada com sucesso!' })
 }

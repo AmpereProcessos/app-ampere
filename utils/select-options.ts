@@ -20,41 +20,59 @@ export const ContractRequestPaymentOptions = [
     id: 1,
     label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
     value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
+    fractionnements: [
+      { title: 'RECEBIMENTO DE 70% DE ENTRADA', percentage: 70 },
+      { title: 'RECEBIMENTO DE 30% PÓS INSTALAÇÃO', percentage: 30 },
+    ],
   },
   {
     id: 2,
     label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
     value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+    fractionnements: [
+      { title: 'RECEBIMENTO DE 70% DE ENTRADA', percentage: 70 },
+      { title: 'RECEBIMENTO DE 15% PÓS INSTALAÇÃO', percentage: 15 },
+      { title: 'RECEBIMENTO DE 15% PÓS TROCA DO MEDIDOR', percentage: 15 },
+    ],
   },
   {
     id: 3,
     label: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
     value: '80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO',
+    fractionnements: [
+      { title: 'RECEBIMENTO DE 80% DE ENTRADA', percentage: 80 },
+      { title: 'RECEBIMENTO DE 20% PÓS INSTALAÇÃO', percentage: 20 },
+    ],
   },
   {
     id: 4,
     label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
     value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+    fractionnements: [{ title: 'RECEBIMENTO DE 100%', percentage: 100 }],
   },
   {
     id: 5,
     label: '100% PARCELADO NO CARTÃO DE CRÉDITO',
     value: '100% PARCELADO NO CARTÃO DE CRÉDITO',
+    fractionnements: [{ title: 'RECEBIMENTO DE 100%', percentage: 100 }],
   },
   {
     id: 6,
     label: '100% À VISTA NO DINHEIRO/DÉBITO/PIX',
     value: '100% À VISTA NO DINHEIRO/DÉBITO/PIX',
+    fractionnements: [{ title: 'RECEBIMENTO DE 100%', percentage: 100 }],
   },
   {
     id: 7,
     label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
     value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+    fractionnements: null,
   },
   {
     id: 8,
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
+    fractionnements: null,
   },
 ]
 export const TechnicalAnalysisSolicitationTypes = [

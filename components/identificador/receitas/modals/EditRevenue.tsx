@@ -95,7 +95,7 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
                     queryClient={queryClient}
                   />
                 )}
-                <RevenueReceiptsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+                <RevenueReceiptsBlock revenueId={revenueId} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               </div>
               <div className="mt-2 flex w-full items-center justify-end">
                 <LoadingButton

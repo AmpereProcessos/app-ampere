@@ -3,8 +3,10 @@ import NumberInput from '@/components/inputs/Number'
 import TextInput from '@/components/inputs/Text'
 import { formatDate, formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { updateRevenueReceipt } from '@/utils/methods/mutation/revenues'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { TRevenue } from '@/utils/schemas/revenues'
+import { useMutation } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 import { BsCalendar, BsCalendarCheck, BsPatchCheck } from 'react-icons/bs'
@@ -12,12 +14,13 @@ import { FaPercentage } from 'react-icons/fa'
 import { MdAttachMoney, MdDelete, MdEdit } from 'react-icons/md'
 
 type RevenueReceiptsTableProps = {
-  receipts: TRevenue['fracionamento']
+  revenueId?: string
   revenueTotal: number
+  receipts: TRevenue['fracionamento']
   updateReceipt: (info: { index: number; item: Partial<TRevenue['fracionamento'][number]> }) => void
   removeReceipt: (index: number) => void
 }
-function RevenueReceiptsTable({ receipts, revenueTotal, updateReceipt, removeReceipt }: RevenueReceiptsTableProps) {
+function RevenueReceiptsTable({ revenueId, revenueTotal, receipts, updateReceipt, removeReceipt }: RevenueReceiptsTableProps) {
   const receiptsTotal = receipts.reduce((acc, current) => acc + (current.valor || 0), 0)
 
   return (
@@ -34,6 +37,8 @@ function RevenueReceiptsTable({ receipts, revenueTotal, updateReceipt, removeRec
             <ReceiptTableItem
               key={index}
               item={item}
+              itemIndex={index}
+              revenueId={revenueId}
               revenueTotal={revenueTotal}
               handleRemove={() => removeReceipt(index)}
               handleUpdate={(info) => updateReceipt({ index, item: info })}
@@ -55,14 +60,25 @@ function RevenueReceiptsTable({ receipts, revenueTotal, updateReceipt, removeRec
 export default RevenueReceiptsTable
 
 type ReceiptTableItemProps = {
+  revenueId?: string
   item: TRevenue['fracionamento'][number]
+  itemIndex: number
   revenueTotal: number
   handleUpdate: (item: TRevenue['fracionamento'][number]) => void
   handleRemove: () => void
 }
-function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: ReceiptTableItemProps) {
+function ReceiptTableItem({ revenueId, item, itemIndex, revenueTotal, handleUpdate, handleRemove }: ReceiptTableItemProps) {
   const [editMenuIsOpen, setEditMenuIsOpen] = useState<boolean>(false)
   const [itemHolder, setItemHolder] = useState<TRevenue['fracionamento'][number]>(item)
+
+  const { mutate: handleUpdateReceipt, isPending } = useMutation({
+    mutationKey: ['update-revenue-receipt'],
+    mutationFn: async (receiptInfo: TRevenue['fracionamento'][number]) => {
+      if (revenueId) await updateRevenueReceipt({ receiptRevenueId: revenueId, receiptIndex: itemIndex, receiptChanges: receiptInfo })
+      handleUpdate(receiptInfo)
+      return 'Recebimento atualizado com sucesso !'
+    },
+  })
   return (
     <>
       <AnimatePresence>
@@ -200,7 +216,9 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
                   label="PREV. DE RECEBIMENTO"
                   labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataPrevisaoRecebimento ? formatDate(itemHolder.dataPrevisaoRecebimento) : undefined}
-                  handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value) }))}
+                  handleChange={(value) =>
+                    setItemHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value, 'string') as string }))
+                  }
                   width="100%"
                 />
               </div>
@@ -209,7 +227,7 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
                   label="DATA DE RECEBIMENTO"
                   labelClassName="text-xs tracking-tight"
                   value={itemHolder.dataRecebimento ? formatDate(itemHolder.dataRecebimento) : undefined}
-                  handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value) }))}
+                  handleChange={(value) => setItemHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value, 'string') as string }))}
                   width="100%"
                 />
               </div>
@@ -224,10 +242,8 @@ function ReceiptTableItem({ item, revenueTotal, handleUpdate, handleRemove }: Re
                 FECHAR
               </button>
               <button
-                onClick={() => {
-                  handleUpdate(itemHolder)
-                  setEditMenuIsOpen(false)
-                }}
+                disabled={isPending}
+                onClick={() => handleUpdateReceipt(itemHolder)}
                 className="rounded bg-blue-800 p-1 px-4 text-[0.6rem] font-medium text-white duration-300 ease-in-out hover:bg-blue-700"
               >
                 ATUALIZAR ITEM

@@ -88,6 +88,8 @@ const GeneralProjectSchema = z.object({
     valorDoKit: z.number().optional().nullable(),
   }),
   conferencias: z.object({
+    status: z.enum(['CONCLUÍDO', 'PENDÊNCIAS']).optional().nullable(),
+    observacoes: z.string({ invalid_type_error: 'Tipo não válido para as observações da conferência.' }).optional().nullable(),
     energiaInjetada: z.object({ data: z.string().optional().nullable(), status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]) }),
     monitoramentoFeito: z.object({
       data: z.string().optional().nullable(),

@@ -4,6 +4,9 @@ import { NextApiHandler } from 'next'
 import { apiHandler, validateAuthenticationWithSession } from '../../../utils/api'
 import createHttpError from 'http-errors'
 import { Collection, Db, ObjectId } from 'mongodb'
+import { TIntegration } from '@/utils/schemas/integrations'
+import { getContaAzulAccessToken } from '@/repositories/integrations/conta-azul/queries'
+import { createSaleFromRevenue } from '@/lib/integrations/conta-azul'
 type GetResponse = {
   data: TRevenue | TRevenue[]
 }
@@ -13,7 +16,7 @@ const getRevenues: NextApiHandler<GetResponse> = async (req, res) => {
 
   const { id, projectId } = req.query
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TRevenue> = db.collection('receitas')
 
   // Query for a specific revenue
@@ -93,10 +96,19 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 
   const revenue = InsertRevenueSchema.parse(req.body)
   const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url }
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-  const collection: Collection<TRevenue> = db.collection('receitas')
+  const db: Db = await connectToDatabase()
+  const revenuesCollection: Collection<TRevenue> = db.collection('receitas')
+  const integrationsCollection: Collection<TIntegration> = db.collection('integracoes')
 
-  const insertResponse = await collection.insertOne({ ...revenue, autor: author, dataInsercao: new Date().toISOString() })
+  // const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
+
+  // const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
+  const insertResponse = await revenuesCollection.insertOne({
+    ...revenue,
+    // idContaAzulVenda: contaAzulSaleId,
+    autor: author,
+    dataInsercao: new Date().toISOString(),
+  })
 
   if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError('Oops, houve um erro na criação da receita.')
 
@@ -116,7 +128,7 @@ const editRevenue: NextApiHandler<PutResponse> = async (req, res) => {
   const changes = InsertRevenueSchema.partial().parse(req.body)
 
   console.log(changes)
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TRevenue> = db.collection('receitas')
 
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })

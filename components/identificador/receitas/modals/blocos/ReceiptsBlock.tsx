@@ -17,10 +17,11 @@ function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fr
   return 100 - currentTotal
 }
 type RevenueReceiptsBlockProps = {
+  revenueId?: string
   infoHolder: TRevenue
   setInfoHolder: React.Dispatch<React.SetStateAction<TRevenue>>
 }
-function RevenueReceiptsBlock({ infoHolder, setInfoHolder }: RevenueReceiptsBlockProps) {
+function RevenueReceiptsBlock({ revenueId, infoHolder, setInfoHolder }: RevenueReceiptsBlockProps) {
   const [newReceiptMenuIsOpen, setNewReceiptMenuIsOpen] = useState<boolean>(false)
 
   const missingPercentage = getMissingPercentage({ fractionnement: infoHolder.fracionamento })
@@ -67,6 +68,7 @@ function RevenueReceiptsBlock({ infoHolder, setInfoHolder }: RevenueReceiptsBloc
         ) : null}
         <RevenueReceiptsTable
           receipts={infoHolder.fracionamento}
+          revenueId={revenueId}
           revenueTotal={infoHolder.total}
           updateReceipt={updateReceipt}
           removeReceipt={removeReceipt}
@@ -143,7 +145,9 @@ function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewRece
                 label="PREV. DE RECEBIMENTO"
                 labelClassName="text-xs tracking-tight"
                 value={receiptHolder.dataPrevisaoRecebimento ? formatDate(receiptHolder.dataPrevisaoRecebimento) : undefined}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value) }))}
+                handleChange={(value) =>
+                  setReceiptHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value, 'string') as string }))
+                }
                 width="100%"
               />
             </div>
@@ -152,7 +156,7 @@ function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewRece
                 label="DATA DE RECEBIMENTO"
                 labelClassName="text-xs tracking-tight"
                 value={receiptHolder.dataRecebimento ? formatDate(receiptHolder.dataRecebimento) : undefined}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value) }))}
+                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value, 'string') as string }))}
                 width="100%"
               />
             </div>

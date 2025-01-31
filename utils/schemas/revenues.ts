@@ -3,7 +3,7 @@ import { AuthorSchema } from './users'
 import { ObjectId } from 'mongodb'
 import { TProject, TProjectDTO } from './projects'
 
-const ReceiptItemSchema = z.object({
+export const RevenueReceiptItemSchema = z.object({
   titulo: z.string({ required_error: 'Titulo do recebimento não informado.', invalid_type_error: 'Tipo não válido para o titulo do recebimento.' }),
   valor: z
     .number({ required_error: 'Valor do recebimento não informado.', invalid_type_error: 'Tipo não válido para o valor do recebimento.' })
@@ -38,7 +38,8 @@ const GeneralRevenueSchema = z.object({
     efetivado: z.boolean().optional().nullable(),
     data: z.string().datetime().optional().nullable(),
   }),
-  fracionamento: z.array(ReceiptItemSchema),
+  fracionamento: z.array(RevenueReceiptItemSchema),
+  idContaAzulVenda: z.string({ invalid_type_error: 'Tipo não válido para ID de referência da venda em Conta Azul.' }).optional().nullable(),
   dataInsercao: z.string().datetime(),
 })
 
@@ -84,7 +85,8 @@ export const InsertRevenueSchema = z.object({
       .optional()
       .nullable(),
   }),
-  fracionamento: z.array(ReceiptItemSchema),
+  fracionamento: z.array(RevenueReceiptItemSchema),
+  idContaAzulVenda: z.string({ invalid_type_error: 'Tipo não válido para ID de referência da venda em Conta Azul.' }).optional().nullable(),
   dataInsercao: z
     .string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção.' })
     .datetime(),
@@ -106,7 +108,7 @@ const RevenueEntitySchema = z.object({
     efetivado: z.boolean().optional().nullable(),
     data: z.string().datetime().optional().nullable(),
   }),
-  fracionamento: z.array(ReceiptItemSchema),
+  fracionamento: z.array(RevenueReceiptItemSchema),
   dataInsercao: z.string().datetime(),
 })
 

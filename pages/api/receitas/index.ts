@@ -100,12 +100,12 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const revenuesCollection: Collection<TRevenue> = db.collection('receitas')
   const integrationsCollection: Collection<TIntegration> = db.collection('integracoes')
 
-  // const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
+  const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
 
-  // const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
+  const { contaAzulSaleId } = await createSaleFromRevenue({ revenue, accessToken: contaAzulAccessToken })
   const insertResponse = await revenuesCollection.insertOne({
     ...revenue,
-    // idContaAzulVenda: contaAzulSaleId,
+    idContaAzulVenda: contaAzulSaleId,
     autor: author,
     dataInsercao: new Date().toISOString(),
   })

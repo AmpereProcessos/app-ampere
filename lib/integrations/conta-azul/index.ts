@@ -32,7 +32,7 @@ export async function createSaleFromRevenue({ revenue, accessToken }: { revenue:
       emission: '2025-01-30T12:45:28.179Z',
       status: 'PENDING',
       payment: {
-        type: revenue.fracionamento.length > 1 ? 'TIMES' : 'CASH',
+        type: 'TIMES',
         installments: revenue.fracionamento.map((revenueFraction, revenueFractionIndex) => ({
           number: revenueFractionIndex + 1,
           value: revenueFraction.valor || revenueFraction.porcentagem * revenue.total,
@@ -79,8 +79,8 @@ export async function updateSaleInstallment({ saleId, saleInstallmentIndex, sale
       'Content-Type': 'application/json',
     }
 
-    const {} = await axios.put(url, { status: saleInstallmentPaid ? 'ACQUITTED' : 'PENDING' }, { headers })
-
+    const { data } = await axios.put(url, { status: saleInstallmentPaid ? 'ACQUITTED' : 'PENDING' }, { headers })
+    console.log('CONTA AZUL UPDATE INSTALLMENT RESPONSE', data)
     return { data: 'Recebimento atualizado.' }
   } catch (error) {
     throw error

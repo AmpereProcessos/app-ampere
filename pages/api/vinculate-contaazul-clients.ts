@@ -1,5 +1,4 @@
 import { NextApiHandler } from 'next'
-import ContaAzulClients from 'conta-azul-clients.json'
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
 import { TClient } from '@/utils/schemas/crm/client.schema'
@@ -15,7 +14,7 @@ const handleContaAzulClientVinculation: NextApiHandler<any> = async (req, res) =
 
   const clientsWithCA = clients
     .map((client) => {
-      const equivalentCAClient = ContaAzulClients.find(
+      const equivalentCAClient = [].find(
         (c) =>
           (!!c.document && formatToCPForCNPJ(c.document) == client.cpfCnpj) ||
           formatWithoutDiacritics(c.name, true) == formatWithoutDiacritics(client.nome, true)

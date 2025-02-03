@@ -9,16 +9,13 @@ import { RiCollageLine } from "react-icons/ri";
 import createHttpError from "http-errors";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import { TClient } from "@/utils/schemas/crm/client.schema";
-import type { TOpportunity } from "@/utils/schemas/crm-project";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 
 type PostResponse = {
 	data: { insertedId: string };
 	message: string;
 };
-const createNewProjectRoute: NextApiHandler<PostResponse> = async (
-	req,
-	res,
-) => {
+const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
 	const project: TProject = req.body;
@@ -28,8 +25,7 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (
 
 	const collection: Collection<TProject> = db.collection("dados");
 
-	const opportunitiesCollection: Collection<TOpportunity> =
-		crmDb.collection("opportunities");
+	const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection("opportunities");
 
 	const latestInserted = await collection
 		.aggregate([
@@ -51,26 +47,23 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (
 	let clientCrmId: string | null = null;
 
 	if (project.idProjetoCRM) {
+		console.log("PASSEI POR AQUI");
 		const opportunity = await opportunitiesCollection.findOne({
 			_id: new ObjectId(project.idProjetoCRM),
 		});
-		if (opportunity) clientCrmId = opportunity.clienteId;
+		console.log("OPPORTUNIDADE");
+		if (opportunity) clientCrmId = opportunity.idCliente;
 	}
 	const insertResponse = await collection.insertOne({
 		...project,
 		qtde: newIndexer,
 		idClienteCRM: clientCrmId,
 	});
-	if (!insertResponse.acknowledged)
-		throw new createHttpError.InternalServerError(
-			"Oops, houve um erro desconhecido na criação do projeto.",
-		);
+	if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido na criação do projeto.");
 
 	const insertedId = insertResponse.insertedId.toString();
 
-	return res
-		.status(201)
-		.json({ data: { insertedId }, message: "Projeto criado com sucesso !" });
+	return res.status(201).json({ data: { insertedId }, message: "Projeto criado com sucesso !" });
 };
 
 export default apiHandler({ POST: createNewProjectRoute });

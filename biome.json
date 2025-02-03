@@ -1,0 +1,18 @@
+{
+	"linter": {
+		"rules": {
+			"complexity": {
+				"noUselessCatch": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	},
+	"formatter": {
+		"indentStyle": "tab",
+		"indentWidth": 1,
+		"lineWidth": 180,
+		"lineEnding": "lf"
+	}
+}

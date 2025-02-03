@@ -125,7 +125,7 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
   const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection })
 
   var contaAzulSaleId: string | null = null
-
+  var contaAzulClientId: string | null = null
   if (client) {
     const contaAzulResponse = await createSaleFromRevenue({
       revenue,
@@ -133,13 +133,21 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
       accessToken: contaAzulAccessToken,
     })
     contaAzulSaleId = contaAzulResponse.contaAzulSaleId
-    await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulResponse.contaAzulCustomerId } })
+    contaAzulClientId = contaAzulResponse.contaAzulCustomerId
+    await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulClientId } })
   }
 
+  if (project) {
+    await projectsCollection.updateOne(
+      { _id: new ObjectId(project._id) },
+      { $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } }
+    )
+  }
   const revenueReceivedCompletely = revenue.fracionamento.length > 0 ? revenue.fracionamento.every((f) => !!f.dataRecebimento) : false
   const insertResponse = await revenuesCollection.insertOne({
     ...revenue,
     idContaAzulVenda: contaAzulSaleId,
+    idContaAzulCliente: contaAzulClientId,
     autor: author,
     dataEfetivacao: revenueReceivedCompletely ? new Date().toISOString() : null,
     dataInsercao: new Date().toISOString(),
@@ -181,31 +189,3 @@ const editRevenue: NextApiHandler<PutResponse> = async (req, res) => {
   return res.status(201).json({ data: 'Receita atualizada com sucesso!', message: 'Receita atualizada com sucesso!' })
 }
 export default apiHandler({ GET: getRevenues, POST: createRevenue, PUT: editRevenue })
-// async function handler(req, res) {
-//   if (req.method == 'GET') {
-//     const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-//     const collection = db.collection('receitas')
-//     const { projectId } = req.query
-//     try {
-//       if (projectId && typeof projectId == 'string') {
-//         // Project related revenues
-//         const revenues = await collection
-//           .aggregate([
-//             {
-//               $match: {
-//                 'projeto.id': projectId,
-//               },
-//             },
-//           ])
-//           .toArray()
-//         res.status(200).json(revenues)
-//       } else {
-//         // All revenues
-//         const revenues = await collection.aggregate([{ $sort: { dataInsercao: -1 } }]).toArray()
-//         res.status(200).json(revenues)
-//       }
-//     } catch (error) {
-//       errorHandler(error, res)
-//     }
-//   }
-// }

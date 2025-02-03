@@ -14,7 +14,7 @@ const handleSyncRevenuesWithContaAzul: NextApiHandler<any> = async (req, res) =>
 	const integrationsCollection = db.collection<TIntegration>("integracoes");
 
 	// Getting revenues with _id and idContaAzulVenda only for query performance
-	const revenues = await revenuesCollection.find({ idContaAzulVenda: { $ne: null } }, { projection: { _id: 1, idContaAzulVenda: 1 } }).toArray();
+	const revenues = await revenuesCollection.find({ idContaAzulVenda: { $ne: null } }, { projection: { _id: 1, idContaAzulVenda: 1, total: 1 } }).toArray();
 
 	// Getting ContaAzul sales
 	const accessToken = await getContaAzulAccessToken({ collection: integrationsCollection });
@@ -28,6 +28,7 @@ const handleSyncRevenuesWithContaAzul: NextApiHandler<any> = async (req, res) =>
 			const contaAzulInstallments = contaAzulSale.payment.installments;
 			const revenueFractionments: TRevenue["fracionamento"] = contaAzulInstallments.map((installment: any) => {
 				const percentage = (installment.value || 0) / revenue.total;
+				console.log("PERCENTAGE", percentage, `INSTALLMENT VALUE ${installment.value} - REVENUE TOTAL ${revenue.total}`);
 				return {
 					titulo: `RECEBIMENTO DE ${formatDecimalPlaces(percentage * 100)}%`,
 					valor: installment.value || 0,

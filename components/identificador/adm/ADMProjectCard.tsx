@@ -17,6 +17,7 @@ function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO[
         <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">SEM FRACIONAMENTOS</p>
       </div>
     )
+
   const hasPendency = fractionnement.some((fraction) => !fraction.dataRecebimento)
   if (!hasPendency)
     return (
@@ -25,6 +26,7 @@ function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO[
         <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">TOTALMENTE RECEBIDO</p>
       </div>
     )
+
   return (
     <div className="flex items-center gap-2">
       <MdOutlineAssignmentLate color="#ffbd00" />

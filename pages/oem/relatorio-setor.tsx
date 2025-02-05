@@ -163,31 +163,31 @@ function RelatorioSetor() {
         {isSuccess ? (
           <div className="flex w-full flex-col gap-4">
             {/* <div className="flex w-full items-center justify-center py-2">
-              <button onClick={() => setShowClientsNames((prev) => !prev)} className={`jgap-2 flex items-center rounded p-1 font-medium`}>
-                <p>MOSTRAR CLIENTES</p>
-                {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
-              </button>
+            <button onClick={() => setShowClientsNames((prev) => !prev)} className={`jgap-2 flex items-center rounded p-1 font-medium`}>
+              <p>MOSTRAR CLIENTES</p>
+              {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
+            </button>
             </div>
             <AnimatePresence>
-              {showClientsNames ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%] gap-4"
-                >
-                  {filteredDataByMaxDateParamSecondScenario.map((client, index) => (
-                    <div key={index} className="flex w-full items-center justify-between gap-2 py-1 font-medium">
-                      <div className="flex items-center gap-2">
-                        <FaUserAlt style={{ color: '#15599a' }} />
-                        <h1>{client.nomeDoContrato}</h1>
-                      </div>
-                      <h1>
-                        VENCIDO EM <strong className="text-red-500">{dayjs(client.medidor.data).add(1, 'year').format('DD/MM/YYYY')}</strong>
-                      </h1>
+            {showClientsNames ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-200 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%] gap-4"
+              >
+                {filteredDataByMaxDateParamSecondScenario.map((client, index) => (
+                  <div key={index} className="flex w-full items-center justify-between gap-2 py-1 font-medium">
+                    <div className="flex items-center gap-2">
+                      <FaUserAlt style={{ color: '#15599a' }} />
+                      <h1>{client.nomeDoContrato}</h1>
                     </div>
-                  ))}
-                </motion.div>
-              ) : null}
+                    <h1>
+                      VENCIDO EM <strong className="text-red-500">{dayjs(client.medidor.data).add(1, 'year').format('DD/MM/YYYY')}</strong>
+                    </h1>
+                  </div>
+                ))}
+              </motion.div>
+            ) : null}
             </AnimatePresence> */}
             {/** FIRST SCENARIO*/}
             <div className="flex w-full flex-col gap-4">

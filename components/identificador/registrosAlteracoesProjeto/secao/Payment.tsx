@@ -14,6 +14,7 @@ const RelatedFields = [
   'faturamento.cnpjFaturamento',
   'faturamento.concluido',
 ]
+
 function getRelatedLogs(logs: TProjectUpdateLogDTO[]) {
   return logs.filter((log) => Object.keys(log.alteracoes).some((a) => RelatedFields.includes(a)))
 }

@@ -90,8 +90,10 @@ type PaymentCardProps = {
 function PaymentCard({ payment, handleClick }: PaymentCardProps) {
   function getStatusTag(payment: TPaymentUnwindSimplifiedDTO) {
     if (!!payment.pagamento.dataPagamento) return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">RECEBIDO</h1>
+
     const isForToday = dayjs().isSame(payment.pagamento.dataPrevisaoPagamento)
     if (isForToday) return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">RECEBER HOJE</h1>
+
     const isOverDue = dayjs(new Date()).isAfter(payment.pagamento.dataPrevisaoPagamento)
     if (isOverDue) return <h1 className="min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-[0.5rem] text-white">EM ATRASO</h1>
 
@@ -192,6 +194,7 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
         selectedItemLabel="NÃO DEFINIDO"
         width="100%"
       />
+
       <MultipleSelectInput
         label="CATEGORIAS"
         labelClassName="text-[0.6rem]"
@@ -209,6 +212,7 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
         selectedItemLabel="NÃO DEFINIDO"
         width="100%"
       />
+
       <DateInput
         label="PREVISTO PARA DEPOIS DE:"
         labelClassName="text-[0.6rem]"
@@ -217,6 +221,7 @@ function PaymentsFilterMenu({ filters, setFilters }: PaymentsFilterMenuProps) {
         handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, after: formatDateInputChange(value) } }))}
         width="100%"
       />
+
       <DateInput
         label="PREVISTO PARA ANTES DE:"
         labelClassName="text-[0.6rem]"

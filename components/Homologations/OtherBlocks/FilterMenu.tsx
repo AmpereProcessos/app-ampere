@@ -32,6 +32,7 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
             placeholder="Filtre pelo nome do kit..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <div className="w-full lg:w-[200px]">
             <MultipleSelectInput
               label="STATUS"

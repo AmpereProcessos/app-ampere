@@ -302,6 +302,7 @@ function OrdemServicoEmBranco() {
             infoHolder={infoHolder as TServiceOrderDTO}
             setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TServiceOrderDTO>>}
           />
+
           <div className="flex w-full items-center justify-center">
             <div className="w-full lg:w-1/2">
               <SelectInput
@@ -567,12 +568,12 @@ function OrdemServicoEmBranco() {
         {/**@ts-ignore */}
         {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={infoHolder} />}
         {/* {infoHolder.categoria == 'ESTRUTURA' && (
-          <EstruturaOS
-            info={osInfo}
-            observacoesOS={osInfo.ordensDeServico[index].observacoes}
-            servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-          />
-        )} */}
+            <EstruturaOS
+              info={osInfo}
+              observacoesOS={osInfo.ordensDeServico[index].observacoes}
+              servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+            />
+           )} */}
         {/**@ts-ignore */}
         {(infoHolder.categoria == 'MANUTENÇÃO CORRETIVA' || infoHolder.categoria == 'OUTROS') && <OSCorretiva order={data} />}
       </>

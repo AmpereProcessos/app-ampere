@@ -19,6 +19,7 @@ function AllocatorGeneral({ data, updateAllocator }: AllocatorGeneralProps) {
           handleChange={(value) => updateAllocator({ nome: value })}
           width="100%"
         />
+
         <TextareaInput
           label="DESCRIÇÃO DO ALOCADOR"
           placeholder="Preencha aqui a descrição do alocador..."

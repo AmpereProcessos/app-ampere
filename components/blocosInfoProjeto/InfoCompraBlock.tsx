@@ -41,12 +41,14 @@ function getPrevisionStatus({ forecast, final }: { forecast?: number | null; fin
         PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
       </h1>
     )
+
   if (final < (forecast || 0))
     return (
       <h1 className="relative right-0 top-0 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:right-10">
         PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
       </h1>
     )
+
   return (
     <h1 className="relative right-0 top-0 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500 lg:absolute lg:right-10">
       PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
@@ -61,6 +63,7 @@ function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao'
         <h1>{status}</h1>
       </div>
     )
+
   if (status == 'APROVADO NOTURNO')
     return (
       <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
@@ -68,6 +71,7 @@ function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao'
         <h1>{status}</h1>
       </div>
     )
+
   return (
     <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
       <h1>{status}</h1>
@@ -122,12 +126,13 @@ function InfoCompraBlock({
               setInfo((prev) => ({ ...prev, compra: { ...prev.compra, liberacao: value, status: 'PREDEFINIÇÃO DE EQUIPAMENTOS' } }))
             }}
           />
+
           {/* {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (
-            <div className="flex items-center gap-2 text-gray-500">
-              <BsCalendarFill />
-              <p className="text-xs font-medium">{dayjs(infoHolder.compra.dataLiberacao).add(3, 'hour').format('DD/MM/YYYY')}</p>
-            </div>
-          ) : null} */}
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <BsCalendarFill />
+                    <p className="text-xs font-medium">{dayjs(infoHolder.compra.dataLiberacao).add(3, 'hour').format('DD/MM/YYYY')}</p>
+                  </div>
+                 ) : null} */}
         </div>
         <DateInput
           label={'DATA DE LIBERAÇÃO P/ COMPRA'}
@@ -870,6 +875,7 @@ function PurchaseControlsBlock({ session, project }: PurchaseControlsBlockProps)
           },
         },
       ],
+
       atualizacoes: [],
       totalPrevisto: project.compra.previsaoValorDoKit,
       liberacao: {
@@ -1036,6 +1042,7 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
               height={20}
               fallback={formatNameAsInitials(purchaseControl.autor.nome)}
             />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
           </div>
         </div>
@@ -1052,6 +1059,7 @@ function UpdateCard({ update }: { update: TPurchaseControl['atualizacoes'][numbe
           <div className="flex items-center gap-1">
             <p className="text-[0.65rem] font-medium text-primary/80">ATUALIZAÇÃO POR:</p>
             <Avatar url={update.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(update.autor.nome)} />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{update.autor.nome}</p>
           </div>
           <div className="flex items-center gap-1">

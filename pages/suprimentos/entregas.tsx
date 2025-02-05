@@ -86,6 +86,7 @@ function DeliveriesPage() {
                 handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                 placeholder="Filtro pelo nome do projeto..."
               />
+
               <MultipleSelectInput
                 label="STATUS DE ENTREGA"
                 selected={filters.deliveryStatus}
@@ -94,6 +95,7 @@ function DeliveriesPage() {
                 onReset={() => setFilters((prev) => ({ ...prev, deliveryStatus: [] }))}
                 selectedItemLabel="NÃO DEFINIDO"
               />
+
               <MultipleSelectInput
                 label="CIDADE"
                 selected={filters.cities}
@@ -102,6 +104,7 @@ function DeliveriesPage() {
                 onReset={() => setFilters((prev) => ({ ...prev, cities: [] }))}
                 selectedItemLabel="NÃO DEFINIDO"
               />
+
               <MultipleSelectInput
                 label="ESTADOS"
                 selected={filters.ufs}
@@ -147,9 +150,13 @@ type ProjectCardProps = {
 function ProjectCard({ project, handleClick }: ProjectCardProps) {
   function getDeliveryStatusTag(status: TPurchaseControlDeliveryTrackingDTO['entrega']['status']) {
     if (status == 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+
     if (status == 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+
     if (status == 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+
     if (status == 'CANCELADO') return <h1 className="min-w-fit rounded-lg bg-red-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+
     return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">NÃO DEFINIDO</h1>
   }
   return (
@@ -465,6 +472,7 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal }: Ack
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, deliveryDate: formatDateInputChange(value) }))}
                   width="100%"
                 />
+
                 <h1 className="text-center text-sm tracking-tight">ARQUIVOS</h1>
                 <div className="flex w-full flex-col gap-2">
                   <div className="relative flex w-full items-center justify-center">

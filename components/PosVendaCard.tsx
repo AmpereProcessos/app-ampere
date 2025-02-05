@@ -54,6 +54,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: deliveredAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
+
     if (expectedAt)
       return (
         <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
@@ -61,6 +62,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: expectedAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
+
     return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">ENTREGA INDEFINIDA</h1>
   }
   function renderAccessInfo({ approvedAt }: { approvedAt?: string | null }) {
@@ -71,6 +73,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: approvedAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
+
     return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">PARECER NÃO APROVADO</h1>
   }
   const { mutate: handleUpdateProject, isPending } = useMutationWithFeedback({
@@ -404,6 +407,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
               onChange={(e) => setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, obsJornada: e.target.value } }))}
               className="mt-2 min-h-[50px] w-full resize-none rounded border border-gray-300 bg-gray-100 p-3 text-center text-sm text-gray-800 shadow-sm outline-none"
             />
+
             <div className="mt-1 flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <button
@@ -464,6 +468,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
         ) : null}
       </div>
     )
+
   if (mode == 'SIMPLIFIED')
     return (
       <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
@@ -475,10 +480,10 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             </h1>
             <div className="mt-2 flex items-center gap-3 lg:mt-0">
               {/* <div className="flex items-center gap-2 text-gray-500">
-                <TbTruckDelivery />
-                <p className="text-sm font-medium">
-                  {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
-                </p>
+              <TbTruckDelivery />
+              <p className="text-sm font-medium">
+               {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
+              </p>
               </div> */}
               <div className="flex items-center gap-2 text-gray-500">
                 <BsCalendarFill />
@@ -514,10 +519,10 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
               <TbTruckDelivery />
               {renderDeliveryInfo({ deliveredAt: project.compra.dataEntrega, expectedAt: project.compra.previsaoEntrega })}
               {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
-                {project.compra.dataEntrega
-                  ? `ENTREGUE EM: ${formatDateAsLocale(project.compra.dataEntrega)} (HÁ 
-                ${getDifferenceBetweenDates({ start: project.compra.dataEntrega, end: new Date() })} DIAS)`
-                  : `PREVISTO PARA: ${project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}`}
+              {project.compra.dataEntrega
+               ? `ENTREGUE EM: ${formatDateAsLocale(project.compra.dataEntrega)} (HÁ 
+              ${getDifferenceBetweenDates({ start: project.compra.dataEntrega, end: new Date() })} DIAS)`
+               : `PREVISTO PARA: ${project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}`}
               </h1> */}
             </div>
             <div className="flex items-center gap-1">

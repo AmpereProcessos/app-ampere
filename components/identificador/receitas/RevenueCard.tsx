@@ -32,6 +32,7 @@ function renderStatusTag({ total, realization }: { total: number; realization: T
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(total)}</h1>
       </div>
     )
+
   const currentDate = dayjs()
   const currentDateObj = {
     day: currentDate.date(),
@@ -70,6 +71,7 @@ function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO[
         <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">SEM FRACIONAMENTOS</p>
       </div>
     )
+
   const hasPendency = fractionnement.some((fraction) => !fraction.dataRecebimento)
   if (!hasPendency)
     return (
@@ -78,6 +80,7 @@ function renderPendencyStatus({ fractionnement }: { fractionnement: TRevenueDTO[
         <p className="text-[0.65rem] font-medium text-gray-500  lg:text-xs">TOTALMENTE RECEBIDO</p>
       </div>
     )
+
   return (
     <div className="flex items-center gap-2">
       <MdOutlineAssignmentLate color="#ffbd00" />

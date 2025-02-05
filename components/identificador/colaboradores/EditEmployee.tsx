@@ -239,6 +239,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
                 </div>
                 <SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
+
                 <Documents employeeId={userId} session={session} />
               </div>
               <div className="my-1 flex w-full items-center justify-end">

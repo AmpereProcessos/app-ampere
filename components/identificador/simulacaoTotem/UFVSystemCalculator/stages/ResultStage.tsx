@@ -43,13 +43,13 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           com {props.numModulos} placas de {props.potModulos} Wp.
         </p>
         {/* <div className="flex flex-col items-center">
-            <div>
-              <FaSolarPanel size={"50px"} color="#fead41" />
-            </div>
-            <p className="font-black text-[#15599a]">
-              {props.numModulos} placas de 550 Wp
-            </p>
-          </div> */}
+               <div>
+                 <FaSolarPanel size={"50px"} color="#fead41" />
+               </div>
+               <p className="font-black text-[#15599a]">
+                 {props.numModulos} placas de 550 Wp
+               </p>
+             </div> */}
         <p className="text-lg font-medium">
           O investimento aproximado para esse projeto é de {props.valorInvestido ? formatToMoney(props.valorInvestido) : ''}.
         </p>
@@ -194,19 +194,19 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           </div>
         </div>
         {/* <div className="w-full flex items-center justify-center gap-3">
-          <div className="flex items-center gap-1 text-white">
-            <AiFillInstagram size="35px" />
-            <p>@ampereenergias</p>
-          </div>
-          <div className="flex items-center gap-1 text-white">
-            <AiFillPhone size="35px" />
-            <p>(34) 3700-7001</p>
-          </div>
-          <div className="flex items-center gap-1 text-white">
-            <TbWorld size="35px" />
-            <p>ampereenergias.com.br</p>
-          </div>
-        </div> */}
+             <div className="flex items-center gap-1 text-white">
+               <AiFillInstagram size="35px" />
+               <p>@ampereenergias</p>
+             </div>
+             <div className="flex items-center gap-1 text-white">
+               <AiFillPhone size="35px" />
+               <p>(34) 3700-7001</p>
+             </div>
+             <div className="flex items-center gap-1 text-white">
+               <TbWorld size="35px" />
+               <p>ampereenergias.com.br</p>
+             </div>
+            </div> */}
       </div>
     </div>
   )

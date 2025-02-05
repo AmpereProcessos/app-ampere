@@ -93,6 +93,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
       </div>
     </div>
   )
+
   // return (
   //   <div className="h-[29.7cm] w-[21cm]  p-4 px-4">
   //     <h1 className="mb-6 text-center text-xl font-bold">REQUISIÇÃO DE SAÍDA DE MATERIAIS</h1>

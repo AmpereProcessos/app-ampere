@@ -143,6 +143,7 @@ function Analise() {
               placeholder={'Digite o nome do contrato...'}
               handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
             />
+
             <div className="w-full lg:w-[250px]">
               <MultipleSelectInput
                 width={'100%'}

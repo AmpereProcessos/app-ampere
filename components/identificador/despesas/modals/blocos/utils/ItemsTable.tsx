@@ -271,6 +271,7 @@ function ExpenseTotalMenu({ expenseTotal, handleUpdate }: ExpenseTotalMenuProps)
               handleChange={(value) => setTotalHolder(value)}
               width="100%"
             />
+
             <div className="flex items-center justify-end gap-2">
               <button
                 onClick={() => {

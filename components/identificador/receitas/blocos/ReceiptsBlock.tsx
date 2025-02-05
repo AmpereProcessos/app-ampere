@@ -88,8 +88,10 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
   function getStatusTag(receipt: TReceiptUnwindSimplifiedDTO) {
     if (!!receipt.fracionamento.dataRecebimento)
       return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">RECEBIDO</h1>
+
     const isForToday = dayjs().isSame(receipt.fracionamento.dataPrevisaoRecebimento)
     if (isForToday) return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">RECEBER HOJE</h1>
+
     const isOverDue = dayjs(new Date()).isAfter(receipt.fracionamento.dataPrevisaoRecebimento)
     if (isOverDue) return <h1 className="min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-[0.5rem] text-white">EM ATRASO</h1>
 
@@ -179,6 +181,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
         placeholder="Filtre pelo nome da receita..."
         width="100%"
       />
+
       <MultipleSelectInput
         label="TIPO DA RECEITA"
         labelClassName="text-[0.6rem]"
@@ -196,6 +199,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
         selectedItemLabel="NÃO DEFINIDO"
         width="100%"
       />
+
       <DateInput
         label="PREVISTO PARA DEPOIS DE:"
         labelClassName="text-[0.6rem]"
@@ -204,6 +208,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
         handleChange={(value) => setFilters((prev) => ({ ...prev, previewPeriod: { ...prev.previewPeriod, after: formatDateInputChange(value) } }))}
         width="100%"
       />
+
       <DateInput
         label="PREVISTO PARA ANTES DE:"
         labelClassName="text-[0.6rem]"

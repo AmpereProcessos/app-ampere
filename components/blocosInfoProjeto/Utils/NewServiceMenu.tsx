@@ -81,6 +81,7 @@ function NewServiceMenu({ infoHolder, setInfo, changes, setChanges, closeMenu }:
           handleChange={(value) => setServiceHolder((prev) => ({ ...prev, observacoes: value }))}
           placeholder="Preencha aqui uma descrição acerca do serviço..."
         />
+
         <div className="flex items-center justify-end">
           <button
             className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"

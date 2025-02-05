@@ -40,6 +40,7 @@ function RevenuesFilterMenu({ queryParams, updateQueryParams, closeMenu }: Reven
                 onReset={() => setQueryParamsHolder((prev) => ({ ...prev, status: [] }))}
                 width="100%"
               />
+
               <TextInput
                 label="TÍTULO"
                 value={queryParamsHolder.search}
@@ -47,6 +48,7 @@ function RevenuesFilterMenu({ queryParams, updateQueryParams, closeMenu }: Reven
                 handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, search: value }))}
                 width={'100%'}
               />
+
               <MultipleSelectInputVirtualized
                 label={'CATEGORIAS'}
                 selected={queryParamsHolder.types}

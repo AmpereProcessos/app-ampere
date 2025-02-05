@@ -217,6 +217,7 @@ function MultipleSelectInput<T>({
         )}
       </div>
     )
+
   return (
     <Drawer open={selectMenuIsOpen} onOpenChange={setSelectMenuIsOpen}>
       <div ref={ref} draggable={false} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
@@ -271,6 +272,7 @@ function MultipleSelectInput<T>({
             placeholder="Filtre o item desejado..."
             className="w-full bg-transparent p-2 text-sm italic outline-none"
           />
+
           <div
             onClick={() => resetState()}
             className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${!selectedIds ? 'bg-primary/20' : ''}`}

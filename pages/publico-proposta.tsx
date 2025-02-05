@@ -47,6 +47,7 @@ function ProposePage() {
         ],
       },
     ],
+
     responsabilidades: [
       { descricao: 'Fornecer liberação da área para execução dos serviços.', responsavel: 'CONTRATANTE' },
       { descricao: 'Fornecer documentação necessária para aprovação execução dos serviços.', responsavel: 'CONTRATANTE' },
@@ -56,10 +57,12 @@ function ProposePage() {
         responsavel: 'CONTRATANTE',
       },
     ],
+
     condicoesPagamento: [
       'Todos os materiais serão faturados diretamente para o CONTRATANTE.',
       '- Saldo em 10 dias após o termino da execução dos serviços',
     ],
+
     incluso: [
       '- Fornecimento de materiais listados no ANEXO I',
       '- Mão de obra direta ou subcontratada especializada para execução dos serviços',
@@ -68,10 +71,12 @@ function ProposePage() {
       '- Anotação de ART para os serviços executados',
       '- Todos os serviços propostos serão executados conforme projeto aprovado enviado para elaboração desta proposta (Anexo II).',
     ],
+
     excluso: [
       'Todo e qualquer serviço ou item não mencionado claramente como parte desta proposta será de inteira responsabilidade do cliente.',
       'Os mesmos, se aprovados sua execução, serão considerados como aditivos a esta proposta de orçamento.',
     ],
+
     previsaoExecucao: 15,
     validade: 10,
     valor: 48000,
@@ -133,9 +138,9 @@ function ProposePage() {
             <h1 className="w-full text-center text-[0.75rem] font-bold text-white">ESCOPO DE SERVIÇOS</h1>
           </div>
           {/* <div className="flex w-full items-center">
-            <h1 className="w-[75%] text-center font-bold">SERVIÇO</h1>
-            <h1 className="w-[25%] text-center font-bold">VALOR</h1>
-          </div> */}
+              <h1 className="w-[75%] text-center font-bold">SERVIÇO</h1>
+              <h1 className="w-[25%] text-center font-bold">VALOR</h1>
+             </div> */}
           {info.servicos.map((service, index) => (
             <div className="flex w-full flex-col border-b border-gray-500 p-2">
               <div className="flex w-full items-center gap-2">

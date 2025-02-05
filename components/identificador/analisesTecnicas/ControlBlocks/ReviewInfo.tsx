@@ -46,6 +46,7 @@ type ReviewInfoProps = {
       | undefined
     >
   >
+
   projectId?: string
 }
 function getJoinedSystemInfo({ brand, qty, power }: { brand: string; qty: string; power: string }) {
@@ -1114,12 +1115,12 @@ function ReviewInfo({ requestInfo, setRequestInfo, requireFiles = true, files, s
         </div>
         <div className="mt-2 flex w-full flex-wrap justify-end  gap-2">
           {/* <button
-            onClick={() => {
-              goToPreviousStage();
-            }}
-            className="rounded p-2 font-bold text-gray-500 duration-300 hover:scale-105"
+          onClick={() => {
+          goToPreviousStage();
+          }}
+          className="rounded p-2 font-bold text-gray-500 duration-300 hover:scale-105"
           >
-            Voltar
+          Voltar
           </button> */}
           <button
             disabled={isLoading || isSuccess || uploadingFiles}

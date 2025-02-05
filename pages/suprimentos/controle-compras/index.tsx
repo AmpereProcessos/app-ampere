@@ -38,6 +38,7 @@ function PurchasesControl({ initialMode, kanbanListExpandedModeOptions }: Purcha
         handleSetMode={handleSetMode}
       />
     )
+
   if (mode == 'card') return <PurchaseControlsCardModePage session={session} handleSetMode={handleSetMode} />
   return (
     <PurchaseControlsGroupedModePage initialListExpandedModeOptions={kanbanListExpandedModeOptions} session={session} handleSetMode={handleSetMode} />

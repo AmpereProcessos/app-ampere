@@ -58,6 +58,7 @@ function InfoAtividadesBlock({ projectId, projectName, projectIdentifier, sessio
         </div>
       </div>
       <NewProjectActivityMenu projectId={projectId} projectName={projectName} projectIdentifier={projectIdentifier} session={session} />
+
       <div className="flex w-full flex-col gap-2 px-2">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao carregar atividades do projeto'} /> : null}

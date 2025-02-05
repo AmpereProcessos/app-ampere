@@ -54,7 +54,6 @@ const getMonitoringProjectsRoute: NextApiHandler<GetResponse> = async (req, res)
       },
       { $project: MonitoringProjectProjection },
     ])
-
     .toArray()
 
   const projectsFormatted = projects.map((p) => ({ ...p, _id: p._id.toString() })) as TMonitoringProjectDTOSimplified[]

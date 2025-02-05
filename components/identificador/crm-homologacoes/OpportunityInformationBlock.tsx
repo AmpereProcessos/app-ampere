@@ -37,15 +37,15 @@ function OpportunityInformationBlock({ infoHolder, setInfoHolder }: OpportunityI
         </div>
       </div>
       {/* <AnimatePresence>
-        {vinculationMenuIsOpen ? (
-          <OpportunityVinculationMenu
-            vinculatedId={infoHolder.oportunidade.id}
-            infoHolder={infoHolder}
-            setInfoHolder={setInfoHolder}
-            closeMenu={() => setVinculationMenuIsOpen(false)}
-          />
-        ) : null}
-      </AnimatePresence> */}
+             {vinculationMenuIsOpen ? (
+               <OpportunityVinculationMenu
+                 vinculatedId={infoHolder.oportunidade.id}
+                 infoHolder={infoHolder}
+                 setInfoHolder={setInfoHolder}
+                 closeMenu={() => setVinculationMenuIsOpen(false)}
+               />
+             ) : null}
+            </AnimatePresence> */}
     </div>
   )
 }

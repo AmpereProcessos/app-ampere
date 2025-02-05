@@ -293,6 +293,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
           onChange={(e) => setHolder((prev) => ({ ...prev, title: e.target.value }))}
           placeholder="Filtre pelo título da tag..."
         />
+
         <div className="flex w-full grow flex-col gap-2">
           {isLoading ? (
             <div className="flex w-full grow items-center justify-center">
@@ -386,38 +387,37 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
               {/* <button
-                onClick={() => {
-                  if (!funnelListItemsExpandedModeActive) {
-                    handleSetCookie({
-                      ctx: null,
-                      key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
-                      value: 'active',
-                      path: '/suprimentos/controle-compras',
-                    })
-                  } else {
-                    handleSetCookie({
-                      ctx: null,
-                      key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
-                      value: 'inactive',
-                      path: '/suprimentos/controle-compras',
-                    })
-                  }
-
-                  setFunnelListItemsExpandedModeActive((prev) => !prev)
-                }}
-                className={cn(
-                  'flex items-center rounded-full p-1 text-xs text-white',
-                  funnelListItemsExpandedModeActive ? 'bg-slate-400' : 'bg-transparent'
-                )}
+              onClick={() => {
+              if (!funnelListItemsExpandedModeActive) {
+               handleSetCookie({
+                 ctx: null,
+                 key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
+                 value: 'active',
+                 path: '/suprimentos/controle-compras',
+               })
+              } else {
+               handleSetCookie({
+                 ctx: null,
+                 key: `puchases-control-kanban-(${formatWithoutDiacritics(title)})-list-expanded`,
+                 value: 'inactive',
+                 path: '/suprimentos/controle-compras',
+               })
+              }
+               setFunnelListItemsExpandedModeActive((prev) => !prev)
+              }}
+              className={cn(
+              'flex items-center rounded-full p-1 text-xs text-white',
+              funnelListItemsExpandedModeActive ? 'bg-slate-400' : 'bg-transparent'
+              )}
               >
-                {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
+              {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button> */}
               <h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
               {/* <button
-                onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
-                className={cn('hidden items-center rounded p-1 text-white', funnelListItemsExpandedModeActive ? 'bg-gray-50' : 'bg-transparent')}
+              onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
+              className={cn('hidden items-center rounded p-1 text-white', funnelListItemsExpandedModeActive ? 'bg-gray-50' : 'bg-transparent')}
               >
-                {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
+              {funnelListItemsExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button> */}
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
@@ -479,10 +479,10 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
               {/* <button
-                onClick={() => setItemExpandedModeActive((prev) => !prev)}
-                className={cn('flex items-center rounded-full p-1 text-xs text-black', itemExpandedModeActive ? 'bg-slate-400' : 'bg-transparent')}
+              onClick={() => setItemExpandedModeActive((prev) => !prev)}
+              className={cn('flex items-center rounded-full p-1 text-xs text-black', itemExpandedModeActive ? 'bg-slate-400' : 'bg-transparent')}
               >
-                {itemExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
+              {itemExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button> */}
               <h1 className="text-sm font-bold leading-none tracking-tight">{item.favorecido.nome}</h1>
             </div>
@@ -602,6 +602,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             <div className="flex grow flex-wrap items-center gap-2">
               <div className="flex items-center gap-1">
                 <Avatar url={item.autor?.avatar_url || undefined} fallback={formatNameAsInitials(item.autor?.nome || '')} height={18} width={18} />
+
                 <p className="text-[0.65rem] font-light text-gray-400">{item.autor?.nome || ''}</p>
               </div>
             </div>

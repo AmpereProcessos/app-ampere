@@ -242,27 +242,27 @@ function PurchaseControlProjectInformationBlock({
           </div>
         </div>
         {/* <div className="flex w-full flex-col items-center justify-center gap-x-4 gap-y-2 lg:flex-row">
-          <div className="flex w-full flex-col lg:w-1/2">
-            <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
-              OBSERVAÇÕES GERAIS SOBRE O PAGAMENTO
-            </h1>
-            <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-              <h1 className="text-[0.6rem] font-medium">{project!.pagamentoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}</h1>
-            </div>
-          </div>
-          {project!.pagamentoCreditoAplicavel ? (
-            <div className="flex w-full flex-col lg:w-1/2">
-              <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-end">
-                OBSERVAÇÕES GERAIS SOBRE CRÉDITO
-              </h1>
-              <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-                <h1 className="text-[0.6rem] font-medium">
-                  {project!.pagamentoCreditoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}
-                </h1>
-              </div>
-            </div>
-          ) : null}
-        </div> */}
+               <div className="flex w-full flex-col lg:w-1/2">
+                 <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
+                   OBSERVAÇÕES GERAIS SOBRE O PAGAMENTO
+                 </h1>
+                 <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+                   <h1 className="text-[0.6rem] font-medium">{project!.pagamentoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}</h1>
+                 </div>
+               </div>
+               {project!.pagamentoCreditoAplicavel ? (
+                 <div className="flex w-full flex-col lg:w-1/2">
+                   <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-end">
+                     OBSERVAÇÕES GERAIS SOBRE CRÉDITO
+                   </h1>
+                   <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+                     <h1 className="text-[0.6rem] font-medium">
+                       {project!.pagamentoCreditoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}
+                     </h1>
+                   </div>
+                 </div>
+               ) : null}
+              </div> */}
         <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">PRODUTOS</h1>
         <div className="flex w-full flex-wrap items-center gap-2">
           {project!.produtos && project!.produtos.length > 0 ? (
@@ -664,16 +664,22 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
   function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
     if (serviceOrder.status === 'PENDENTE')
       return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
+
     if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
       return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGUARDANDO PLANEJAMENTO</div>
+
     if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
       return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
+
     if (serviceOrder.status === 'EM EXECUÇÃO')
       return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>
+
     if (serviceOrder.status === 'CONCLUÍDA PARCIAL')
       return <div className="rounded-full bg-purple-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">CONCLUÍDA PARCIAL</div>
+
     if (serviceOrder.status === 'CONCLUÍDA')
       return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">CONCLUÍDA</h1>
+
     if (serviceOrder.status === 'CANCELADA')
       return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">CANCELADA</h1>
 
@@ -789,6 +795,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
               height={20}
               fallback={formatNameAsInitials(serviceOrder.autor?.nome || '')}
             />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{serviceOrder.autor?.nome || ''}</p>
           </div>
         </div>

@@ -61,6 +61,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
   }
   if (stage == 4)
     return <ResultStage nome={infoHolder.nome} valorReferencia={infoHolder.premissas.valorReferencia || 0} resetSimulation={resetSimulation} />
+
   return (
     <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
       <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white`}>
@@ -124,6 +125,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
                           transition={{ duration: 0.3 }}
                           className="absolute inset-0 w-[30px] rounded-full bg-[rgba(21,89,154,1)]"
                         />
+
                         <p className="absolute inset-x-0 top-[20%] bottom-[20%] m-0 inline h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">2</p>
                       </>
                     ) : (

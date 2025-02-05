@@ -59,6 +59,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
                 fontSize: '20px',
               }}
             />
+
             <p className="pl-3 text-xs text-gray-600">Em andamento</p>
           </div>
         </Link>
@@ -71,6 +72,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
                 fontSize: '20px',
               }}
             />
+
             <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
           </div>
         </Link>
@@ -263,18 +265,18 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             false
           )}
           {/* {userIsManager ? (
-            <Link  href={`/vendas/leads`}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdAddIcCall
-                  style={{
-                    color: '#15599a',
-                    fontSize: '20px',
-                  }}
-                />
-                <p className="pl-3 text-xs text-gray-600">Leads</p>
-              </div>
-            </Link>
-          ) : null} */}
+               <Link  href={`/vendas/leads`}>
+                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+                   <MdAddIcCall
+                     style={{
+                       color: '#15599a',
+                       fontSize: '20px',
+                     }}
+                   />
+                   <p className="pl-3 text-xs text-gray-600">Leads</p>
+                 </div>
+               </Link>
+              ) : null} */}
           {checkRoute('Obras') ? (
             <Link href="/obras/gestao-obras">
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -286,15 +288,15 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
             false
           )}
           {/* {userIsManager ? (
-            <Link  href="/admin/gestaoTimeVendas">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <TbDashboard style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Gestão - Time de Vendas</p>
-              </div>
-            </Link>
-          ) : (
-            false
-          )} */}
+               <Link  href="/admin/gestaoTimeVendas">
+                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+                   <TbDashboard style={{ color: '#15599a', fontSize: '20px' }} />
+                   <p className="pl-3 text-xs text-gray-600">Gestão - Time de Vendas</p>
+                 </div>
+               </Link>
+              ) : (
+               false
+              )} */}
           {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda/nps">
               <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">

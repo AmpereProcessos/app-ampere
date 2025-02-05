@@ -124,27 +124,27 @@ function ExpenseProjectInformationBlock({ expense, project }: ExpenseProjectInfo
           </div>
         </div>
         {/* <div className="flex w-full flex-col items-center justify-center gap-x-4 gap-y-2 lg:flex-row">
-              <div className="flex w-full flex-col lg:w-1/2">
-                <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
-                  OBSERVAÇÕES GERAIS SOBRE O PAGAMENTO
-                </h1>
-                <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-                  <h1 className="text-[0.6rem] font-medium">{project!.pagamentoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}</h1>
-                </div>
-              </div>
-              {project!.pagamentoCreditoAplicavel ? (
-                <div className="flex w-full flex-col lg:w-1/2">
-                  <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-end">
-                    OBSERVAÇÕES GERAIS SOBRE CRÉDITO
-                  </h1>
-                  <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-                    <h1 className="text-[0.6rem] font-medium">
-                      {project!.pagamentoCreditoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}
-                    </h1>
-                  </div>
-                </div>
-              ) : null}
-            </div> */}
+                   <div className="flex w-full flex-col lg:w-1/2">
+                     <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
+                       OBSERVAÇÕES GERAIS SOBRE O PAGAMENTO
+                     </h1>
+                     <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+                       <h1 className="text-[0.6rem] font-medium">{project!.pagamentoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}</h1>
+                     </div>
+                   </div>
+                   {project!.pagamentoCreditoAplicavel ? (
+                     <div className="flex w-full flex-col lg:w-1/2">
+                       <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-end">
+                         OBSERVAÇÕES GERAIS SOBRE CRÉDITO
+                       </h1>
+                       <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+                         <h1 className="text-[0.6rem] font-medium">
+                           {project!.pagamentoCreditoObservacoes || 'OBSERVAÇÕES GERAIS DE PAGAMENTO NÃO DEFINIDAS'}
+                         </h1>
+                       </div>
+                     </div>
+                   ) : null}
+                 </div> */}
         <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">PRODUTOS</h1>
         <div className="flex w-full flex-wrap items-center gap-2">
           {project!.produtos && project!.produtos.length > 0 ? (

@@ -76,6 +76,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
             handleChange={(value) => setCRMInformation((prev) => ({ ...prev, projectId: value }))}
             width={'100%'}
           />
+
           <TextInput
             label={'ID DA PROPOSTA NO CRM'}
             value={CRMInformation.proposeId}
@@ -83,6 +84,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
             handleChange={(value) => setCRMInformation((prev) => ({ ...prev, proposeId: value }))}
             width={'100%'}
           />
+
           <button
             // @ts-ignore
             disabled={isPending}

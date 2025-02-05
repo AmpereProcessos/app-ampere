@@ -39,16 +39,16 @@ function TotemNumberInput({ width, label, showLabel, showTag = true, value, edit
 
         <div className="grow rounded-md bg-transparent text-end text-sm">{value}</div>
         {/* <input
-          readOnly={!editable}
-          autoFocus={true}
-          value={!isEmpty(value) ? value?.toString() : undefined}
-          onChange={(e) => handleChange(Number(e.target.value))}
-          id={inputIdentifier}
-          type="number"
-          placeholder={placeholder}
-          onFocus={() => setIsFocused(true)}
-          className="grow rounded-md text-sm outline-none placeholder:italic text-end bg-transparent"
-        /> */}
+             readOnly={!editable}
+             autoFocus={true}
+             value={!isEmpty(value) ? value?.toString() : undefined}
+             onChange={(e) => handleChange(Number(e.target.value))}
+             id={inputIdentifier}
+             type="number"
+             placeholder={placeholder}
+             onFocus={() => setIsFocused(true)}
+             className="grow rounded-md text-sm outline-none placeholder:italic text-end bg-transparent"
+            /> */}
       </div>
       {isFocused ? (
         <KeyboardModal closeModal={() => setIsFocused(false)} handleClick={(x) => handleAjust(x)} dropLastNumber={dropLastNumber} />

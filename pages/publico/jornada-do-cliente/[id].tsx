@@ -79,6 +79,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             date={project.contrato.dataAssinatura}
             icon={IoMdPower}
           />
+
           <JourneyItem
             active={!!project.jornada.assDocumentacoes}
             title="Assinatura das documentações"
@@ -87,6 +88,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             date={project.homologacao.documentacao.dataAssinatura}
             icon={FaSignature}
           />
+
           <JourneyItem
             active={!!project.jornada.respConcessionaria}
             title="Liberação do parecer de acesso"
@@ -95,6 +97,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             date={project.homologacao.acesso.dataResposta}
             icon={MdFeedback}
           />
+
           <JourneyItem
             active={!!project.jornada.compraDoKit}
             title="Compra dos equipamentos"
@@ -130,6 +133,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             date={project.obra.saida}
             icon={BsCalendarCheckFill}
           />
+
           <JourneyItem
             active={!!project.jornada.vistoriaConcessionaria}
             title="Vistoria da concessionária"
@@ -138,6 +142,7 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
             date={project.homologacao.vistoria.dataEfetivacao}
             icon={BsCalendarCheckFill}
           />
+
           <JourneyItem
             active={!!project.jornada.jornadaConcluida}
             title="Conclusão da jornada"
@@ -149,26 +154,26 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
         </div>
 
         {/* <div className="flex justify-center">
-          <div className="w-full max-w-3xl">
-            <div className="relative flex h-[200px] items-center">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t-2 border-orange-500 dark:border-orange-400" />
-              </div>
-              <div className="z-10 flex-1">
-                <div className="h-6 w-6 rounded-full bg-orange-500 dark:bg-orange-400" />
-              </div>
-              <div className="z-10 flex-1">
-                <div className="h-6 w-6 rounded-full bg-green-500 dark:bg-green-400" />
-              </div>
-              <div className="z-10 flex-1">
-                <div className="h-6 w-6 rounded-full bg-purple-500 dark:bg-purple-400" />
-              </div>
-              <div className="z-10 flex-1">
-                <div className="h-6 w-6 rounded-full bg-blue-500 dark:bg-blue-400" />
+            <div className="w-full max-w-3xl">
+              <div className="relative flex h-[200px] items-center">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t-2 border-orange-500 dark:border-orange-400" />
+                </div>
+                <div className="z-10 flex-1">
+                  <div className="h-6 w-6 rounded-full bg-orange-500 dark:bg-orange-400" />
+                </div>
+                <div className="z-10 flex-1">
+                  <div className="h-6 w-6 rounded-full bg-green-500 dark:bg-green-400" />
+                </div>
+                <div className="z-10 flex-1">
+                  <div className="h-6 w-6 rounded-full bg-purple-500 dark:bg-purple-400" />
+                </div>
+                <div className="z-10 flex-1">
+                  <div className="h-6 w-6 rounded-full bg-blue-500 dark:bg-blue-400" />
+                </div>
               </div>
             </div>
-          </div>
-        </div> */}
+           </div> */}
         {/* </section> */}
       </div>
     </div>

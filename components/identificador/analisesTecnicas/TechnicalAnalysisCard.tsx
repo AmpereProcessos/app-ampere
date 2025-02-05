@@ -90,6 +90,7 @@ function TechnicalAnalysisCard({ analysis, handleClick, userHasEditPermission }:
                 width={20}
                 height={20}
               />
+
               <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
                 REQUERIDO POR <strong className="text-cyan-500">{analysis.requerente.nome?.toUpperCase() || 'NÃO DEFINIDO'}</strong>
               </p>
@@ -103,15 +104,15 @@ function TechnicalAnalysisCard({ analysis, handleClick, userHasEditPermission }:
           </div>
 
           {/* <div className="mt-1 flex w-full items-center justify-start gap-2">
-            <Avatar fallback={'R'} url={analysis.requerente?.avatar_url || undefined} height={20} width={20} />
-            <p className="text-xs font-medium text-gray-500">{analysis.requerente.nome || analysis.requerente.apelido}</p>
-          </div>
-          <div className="mt-2 flex w-full items-center justify-center gap-2">
-            {analysis.oportunidade.identificador ? (
-              <p className="text-xs font-bold leading-none tracking-tight text-[#fead41]">({analysis.oportunidade.identificador})</p>
-            ) : null}
-            <p className="text-xs font-semibold leading-none tracking-tight text-gray-500">{analysis.oportunidade.nome || 'NÃO DEFINIDO'}</p>
-          </div> */}
+                 <Avatar fallback={'R'} url={analysis.requerente?.avatar_url || undefined} height={20} width={20} />
+                 <p className="text-xs font-medium text-gray-500">{analysis.requerente.nome || analysis.requerente.apelido}</p>
+                </div>
+                <div className="mt-2 flex w-full items-center justify-center gap-2">
+                 {analysis.oportunidade.identificador ? (
+                   <p className="text-xs font-bold leading-none tracking-tight text-[#fead41]">({analysis.oportunidade.identificador})</p>
+                 ) : null}
+                 <p className="text-xs font-semibold leading-none tracking-tight text-gray-500">{analysis.oportunidade.nome || 'NÃO DEFINIDO'}</p>
+                </div> */}
         </div>
         <div className="lg:0 mt-2 flex w-full flex-col-reverse items-center justify-between gap-1 lg:flex-row lg:gap-2">
           <div className="flex items-center gap-2">

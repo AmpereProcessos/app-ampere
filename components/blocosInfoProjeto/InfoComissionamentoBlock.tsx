@@ -38,6 +38,7 @@ function InfoComissionamentoBlock({ editor, infoHolder, setInfo, changes, setCha
           }}
           width="100%"
         />
+
         <TextareaInput
           label="OBSERVAÇÕES SOBRE O COMISSIONAMENTO"
           placeholder="Preencha aqui detalhes, pendências e qualquer outra observação em relação ao comissionamento pós-obra do projeto."

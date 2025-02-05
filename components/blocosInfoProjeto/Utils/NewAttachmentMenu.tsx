@@ -193,7 +193,9 @@ function NewAttachmentMenu({
                 handleChange={(value) => setInfoHolder((prev) => ({ ...prev, fileReference: { ...prev.fileReference, titulo: value } }))}
                 width="100%"
               />
+
               <CategoriesMenu allowedCategories={allowedCategories} data={infoHolder} addCategory={addCategory} removeCategory={removeCategory} />
+
               <div className="flex w-full flex-col gap-1">
                 <h1 className="text-xs font-medium tracking-tight text-primary/60">ARQUIVOS ANEXADOS</h1>
                 <div className="flex w-full flex-wrap items-start justify-start gap-4">

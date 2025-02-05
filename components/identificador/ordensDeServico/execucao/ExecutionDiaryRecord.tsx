@@ -102,6 +102,7 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
             value={infoHolder.saida}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, saida: formatDateInputChange(value) }))}
           />
+
           <button
             onClick={() => handleRecordUpdate()}
             className="mb-2 rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"

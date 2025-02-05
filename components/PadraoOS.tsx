@@ -32,15 +32,15 @@ function PadraoOSPDF({ order }: PadraoOSPDFProps) {
             <p className="pr-2 text-center text-xs">{order.dataInsercao ? new Date(order.dataInsercao).toLocaleDateString('pt-br') : null}</p>
           </div>
           {/*<div className="flex justify-between border-black border-b">
-            <p className="text-xs text-end pr-2">GRAU DE URGÊNCIA</p>
-            <p className="text-xs text-center pr-2">{urgency}</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="text-xs text-end pr-2">REALIZAR COBRANÇA</p>
-            <p className="text-xs text-center pr-2">
-              {realizarCobranca ? "SIM" : "NÃO"}
-  </p>
-          </div>*/}
+               <p className="text-xs text-end pr-2">GRAU DE URGÊNCIA</p>
+               <p className="text-xs text-center pr-2">{urgency}</p>
+              </div>
+              <div className="flex justify-between">
+               <p className="text-xs text-end pr-2">REALIZAR COBRANÇA</p>
+               <p className="text-xs text-center pr-2">
+                 {realizarCobranca ? "SIM" : "NÃO"}
+              </p>
+              </div>*/}
         </div>
       </div>
       <div className="mt-4 border border-black">

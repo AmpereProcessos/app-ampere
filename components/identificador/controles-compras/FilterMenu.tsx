@@ -37,6 +37,7 @@ function PurchaseControlsFilterMenu({ filters, updateFilters, queryLoading, rese
             handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, title: value }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <TextInput
             label="NOME DO FORNECEDOR"
             placeholder="Filtre pelo nome do fornecedor..."
@@ -44,6 +45,7 @@ function PurchaseControlsFilterMenu({ filters, updateFilters, queryLoading, rese
             handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, supplier: value }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <TextInput
             label="TRANSPORTADORA"
             placeholder="Filtre pelo nome da transportadora..."
@@ -51,6 +53,7 @@ function PurchaseControlsFilterMenu({ filters, updateFilters, queryLoading, rese
             handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, carrier: value }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <div className="flex w-full flex-col items-center gap-2 lg:w-fit lg:flex-row">
             <div className="w-full lg:w-[180px]">
               <DateInput

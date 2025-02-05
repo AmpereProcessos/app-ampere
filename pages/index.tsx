@@ -188,6 +188,7 @@ function Home() {
                           : 2000,
                       ]}
                     />
+
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Area type="monotone" dataKey="VALOR" stroke="#15599a" fillOpacity={1} fill="url(#colorTotal)" />

@@ -213,6 +213,7 @@ function MultipleSelectInputVirtualized<T>({
         )}
       </div>
     )
+
   return (
     <Drawer open={selectMenuIsOpen} onOpenChange={setSelectMenuIsOpen}>
       <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>

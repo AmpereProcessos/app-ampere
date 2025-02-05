@@ -100,12 +100,14 @@ function NewObservationMenu({ addObservation, closeMenu }: NewObservationMenuPro
           handleChange={(value) => setObservationHolder((prev) => ({ ...prev, topico: value }))}
           width="100%"
         />
+
         <TextareaInput
           label="DESCRIÇÃO"
           value={observationHolder.descricao}
           placeholder="Preencha aqui o conteúdo da observação..."
           handleChange={(value) => setObservationHolder((prev) => ({ ...prev, descricao: value }))}
         />
+
         <div className="mt-2 flex w-full items-center justify-end gap-2">
           <Button
             onClick={() => {

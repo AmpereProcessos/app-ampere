@@ -42,6 +42,7 @@ function ExpenseRevenueListItem({ finance, tag, initialShowItems = false }: Expe
         : null}
     </div>
   )
+
   return (
     <div className="flex w-full flex-col">
       <div className="flex w-full items-center justify-between gap-2">

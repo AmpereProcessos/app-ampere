@@ -183,6 +183,7 @@ function GeneralInfo({ goToNextStage, resetSolicitationType, infoHolder, setInfo
           value={files['COMPROVANTE DE LOCALIZAÇÃO']}
           handleChange={(value) => setFiles((prev) => ({ ...prev, ['COMPROVANTE DE LOCALIZAÇÃO']: value }))}
         />
+
         <div className="flex w-full flex-col gap-1 rounded border border-orange-700 p-2">
           <p className="my-2 w-full text-center text-sm leading-none tracking-tight text-gray-500">
             Deseja utilizar uma <strong className="text-orange-700">análise técnica existente de referência</strong>, para alterações ou afins ?

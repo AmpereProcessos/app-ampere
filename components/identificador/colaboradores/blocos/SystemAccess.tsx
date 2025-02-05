@@ -119,12 +119,12 @@ function SystemAccess({ infoHolder, setInfoHolder, initialMode }: SystemAccessPr
                 />
               ) : null}
               {/* <TextInput
-                label="REFERÊNCIA DA VISUALIZAÇÃO"
-                editable={infoHolder.visualizacao.tipo != 'OPERACIONAL'}
-                placeholder="Preencha aqui a referência do visualização..."
-                value={infoHolder.visualizacao.tipo == 'OPERACIONAL' ? 'NÃO APLICÁVEL' : infoHolder.visualizacao.referencia || ''}
-                handleChange={(value) => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev.visualizacao, referencia: value } }))}
-                width="100%"
+              label="REFERÊNCIA DA VISUALIZAÇÃO"
+              editable={infoHolder.visualizacao.tipo != 'OPERACIONAL'}
+              placeholder="Preencha aqui a referência do visualização..."
+              value={infoHolder.visualizacao.tipo == 'OPERACIONAL' ? 'NÃO APLICÁVEL' : infoHolder.visualizacao.referencia || ''}
+              handleChange={(value) => setInfoHolder((prev) => ({ ...prev, visualizacao: { ...prev.visualizacao, referencia: value } }))}
+              width="100%"
               /> */}
             </div>
           </div>

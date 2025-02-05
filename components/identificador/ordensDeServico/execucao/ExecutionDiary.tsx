@@ -142,8 +142,11 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
       {history ? (
         <div className="mt-2 flex w-full flex-col gap-1">
           <h1 className="font-bold leading-none tracking-tight">HISTÓRICO</h1>
-          {history.map((item, index) => (
-            <ExecutionDiaryRecord orderId={orderId} item={item} itemIndex={index} history={history} />
+          {history.map(
+            (item, index) => (
+              <ExecutionDiaryRecord orderId={orderId} item={item} itemIndex={index} history={history} />
+            )
+
             // <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
             //   <div className="flex items-center gap-2">
             //     <RxTimer />
@@ -156,7 +159,7 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
             //     {item.anotacoes}
             //   </h1>
             // </div>
-          ))}
+          )}
         </div>
       ) : null}
     </div>

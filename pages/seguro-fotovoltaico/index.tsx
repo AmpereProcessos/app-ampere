@@ -100,6 +100,7 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
           handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
           labelClassName="text-xs font-medium tracking-tight text-black"
         />
+
         <MultipleSelectInputVirtualized
           label="CIDADE"
           selected={filters.cities}
@@ -119,6 +120,7 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
           }}
           labelClassName="text-xs font-medium tracking-tight text-black"
         />
+
         <MultipleSelectInputVirtualized
           label="ESTADOS"
           selected={filters.ufs}
@@ -185,6 +187,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">{status}</h1>
         </div>
       )
+
     if (['SOLICITADO'].includes(status || ''))
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-blue-600 px-2 py-0.5 text-white">
@@ -192,6 +195,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">{status}</h1>
         </div>
       )
+
     if (status === 'NÃO ASSINADO')
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-orange-600 px-2 py-0.5 text-white">
@@ -199,6 +203,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">{status}</h1>
         </div>
       )
+
     if (status === 'ASSINADO')
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-green-500 px-2 py-0.5 text-white">
@@ -206,6 +211,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">{status}</h1>
         </div>
       )
+
     if (status === 'RESCISÃO DE CONTRATO')
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-red-500 px-2 py-0.5 text-white">
@@ -213,6 +219,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">{status}</h1>7
         </div>
       )
+
     return (
       <div className="flex min-w-fit items-center gap-1 rounded-lg bg-gray-500 px-2 py-0.5 text-white">
         <Signature size={12} />
@@ -229,6 +236,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
             <h1 className="text-[0.5rem]">NÃO DEFINIDO</h1>
           </div>
         ),
+
         fractionationStr: null,
       }
 
@@ -245,6 +253,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
             <h1 className="text-[0.5rem]">RECEBIDO</h1>
           </div>
         ),
+
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
@@ -256,6 +265,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
             <h1 className="text-[0.5rem]">RECEBIDO PARCIAL</h1>
           </div>
         ),
+
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
@@ -266,13 +276,16 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           <h1 className="text-[0.5rem]">PENDENTE</h1>
         </div>
       ),
+
       fractionationStr: `${partionsReceived}/${receipts.length}`,
     }
   }
   function getReceiptStatus(receipt: TRevenue['fracionamento'][number]) {
     if (!!receipt.dataRecebimento) return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">RECEBIDO</h1>
+
     const isForToday = dayjs().isSame(receipt.dataPrevisaoRecebimento)
     if (isForToday) return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">RECEBER HOJE</h1>
+
     const isOverDue = dayjs(new Date()).isAfter(receipt.dataPrevisaoRecebimento)
     if (isOverDue) return <h1 className="min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-[0.5rem] text-white">EM ATRASO</h1>
 

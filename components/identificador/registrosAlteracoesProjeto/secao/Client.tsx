@@ -33,6 +33,7 @@ const RelatedFields = [
   'obsComercial',
   'idSolicitacaoContrato',
 ]
+
 function getRelatedLogs(logs: TProjectUpdateLogDTO[]) {
   return logs.filter((log) => Object.keys(log.alteracoes).some((a) => RelatedFields.includes(a)))
 }

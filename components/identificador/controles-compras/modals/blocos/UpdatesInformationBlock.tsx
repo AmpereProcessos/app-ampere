@@ -92,6 +92,7 @@ function NewUpdateMenu({ session, addUpdate, closeMenu }: NewUpdateMenuProps) {
             handleChange={(value) => setUpdateHolder((prev) => ({ ...prev, descricao: value }))}
             placeholder="Preencha aqui o conteúdo da atualização..."
           />
+
           <div className="mt-2 flex w-full items-center justify-end gap-2">
             <Button onClick={() => addUpdate(updateHolder)} type="button" size={'xs'}>
               ADICIONAR ATUALIZAÇÃO
@@ -116,6 +117,7 @@ function UpdateCard({ update, removeUpdate }: UpdateCardProps) {
           <div className="flex items-center gap-1">
             <p className="text-[0.65rem] font-medium text-primary/80">ATUALIZAÇÃO POR:</p>
             <Avatar url={update.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(update.autor.nome)} />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{update.autor.nome}</p>
           </div>
           <div className="flex items-center gap-1">

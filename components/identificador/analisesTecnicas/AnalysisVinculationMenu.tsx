@@ -83,6 +83,7 @@ function TechnicalAnalysisVinculationCard({ analysis, selectedId, handleClick }:
               height={25}
               width={25}
             />
+
             <p className="text-xs font-medium">{analysis.requerente.nome || analysis.requerente.apelido}</p>
             <div className={`flex items-center gap-2`}>
               <BsCalendarPlus />

@@ -38,6 +38,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.norte': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.norte
                 ? (
@@ -70,6 +71,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.nordeste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.nordeste
                 ? (
@@ -102,6 +104,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.leste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.leste
                 ? (
@@ -137,6 +140,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sudeste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.sudeste
                 ? (
@@ -172,6 +176,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sul': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.sul
                 ? (
@@ -207,6 +212,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sudoeste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.sudoeste
                 ? (
@@ -242,6 +248,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.oeste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.oeste
                 ? (
@@ -277,6 +284,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.noroeste': Number(e.target.value) }))
               }}
             />
+
             <p className="text-center text-xs font-bold text-gray-700 lg:text-base">
               {infoHolder.alocacaoModulos.noroeste
                 ? (

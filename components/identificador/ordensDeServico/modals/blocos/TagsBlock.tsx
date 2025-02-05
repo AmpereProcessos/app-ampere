@@ -109,6 +109,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
           onChange={(e) => setHolder((prev) => ({ ...prev, title: e.target.value }))}
           placeholder="Filtre pelo título da tag..."
         />
+
         <div className="flex w-full grow flex-col gap-2">
           {isLoading ? (
             <div className="flex w-full grow items-center justify-center">

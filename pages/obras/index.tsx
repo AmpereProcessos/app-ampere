@@ -199,12 +199,14 @@ function Obras() {
                     placeholder={'Digite o nome do contrato...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
+
                   <TextInput
                     label={'TIPO DE TELHA'}
                     value={filters.roofTileType}
                     placeholder={'Digite o tipo de telha...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, roofTileType: value }))}
                   />
+
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
                       width={'100%'}

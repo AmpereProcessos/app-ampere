@@ -136,19 +136,20 @@ function AuditingCard({ info, handleClick }: AuditingCardProps) {
         </div>
       </div>
       {/* <div className="mt-1 flex w-full flex-col gap-0.5">
-        {Object.entries(info.despesas).filter(([key, value]) => value != 0).length > 0 ? (
-          Object.entries(info.despesas).map(([key, value]) => (
-            <div className="flex w-full items-center justify-between">
-              <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-600">{key}</p>
-              <p className="text-[0.65rem] font-bold text-[#ed174c]">{formatToMoney(value)}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-600">SEM DESPESAS ASSOCIADAS</p>
-        )}
-      </div> */}
+             {Object.entries(info.despesas).filter(([key, value]) => value != 0).length > 0 ? (
+               Object.entries(info.despesas).map(([key, value]) => (
+                 <div className="flex w-full items-center justify-between">
+                   <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-600">{key}</p>
+                   <p className="text-[0.65rem] font-bold text-[#ed174c]">{formatToMoney(value)}</p>
+                 </div>
+               ))
+             ) : (
+               <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-600">SEM DESPESAS ASSOCIADAS</p>
+             )}
+            </div> */}
     </div>
   )
+
   return (
     <div className="flex w-full gap-2 rounded-md border border-gray-300 shadow-sm lg:w-[550px]">
       <div className={`h-full w-[7px] ${getBarColor(margem)} rounded-tl-md rounded-bl-md`}></div>

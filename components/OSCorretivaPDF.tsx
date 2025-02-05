@@ -110,15 +110,15 @@ function OSCorretivaPDF({ order }: OSCorretivaPDFProps) {
         <div className="grid grid-cols-2 pb-2">
           <div className="grid grid-rows-2">
             {/** 
-             *             <div className="flex gap-x-2">
-              <div className="w-4 h-4 border rounded-md border-black"></div>
-              <p className="text-xs">TROCA DO RAMAL FEITA ?</p>
-            </div>
-            <div className="flex gap-x-2 mt-2">
-              <div className="w-4 h-4 border rounded-md border-black"></div>
-              <p className="text-xs">RELIGAÇÃO DA ENERGIA FEITA ?</p>
-            </div>
-            */}
+                *             <div className="flex gap-x-2">
+                 <div className="w-4 h-4 border rounded-md border-black"></div>
+                 <p className="text-xs">TROCA DO RAMAL FEITA ?</p>
+                </div>
+                <div className="flex gap-x-2 mt-2">
+                 <div className="w-4 h-4 border rounded-md border-black"></div>
+                 <p className="text-xs">RELIGAÇÃO DA ENERGIA FEITA ?</p>
+                </div>
+                */}
           </div>
           <div className="grid grid-rows-2">
             <div className="mt-2 flex items-center gap-x-2 uppercase">

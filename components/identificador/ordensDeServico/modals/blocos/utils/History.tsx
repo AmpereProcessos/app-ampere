@@ -93,6 +93,7 @@ function NewHistoryMenu({ addHistory, closeMenu }: NewHistoryMenuProps) {
           placeholder="Preencha aqui o conteúdo da observação..."
           handleChange={(value) => setHistoryHolder((prev) => ({ ...prev, anotacoes: value }))}
         />
+
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/2">
             <DateTimeInput

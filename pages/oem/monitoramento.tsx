@@ -41,298 +41,298 @@ function Monitoring() {
             <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS DE MONITORAMENTO</p>
           </div>
           {/* {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-              <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
-            </div>
-          ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
-              <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
-            </div>
-          )} */}
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+              </div>
+             ) : (
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+              </div>
+             )} */}
         </div>
         {/* <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
-              <VscDiffAdded />
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                <VscDiffAdded />
+              </div>
+              <div className="mt-2 flex w-full flex-col">
+                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
+                <p className="text-xs text-gray-500">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
+              </div>
             </div>
-            <div className="mt-2 flex w-full flex-col">
-              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-              <p className="text-xs text-gray-500">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-sm font-medium uppercase tracking-tight">QUANTIDADE DE MÓDULOS</h1>
+                <FaSolarPanel />
+              </div>
+              <div className="mt-2 flex w-full flex-col">
+                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
+              </div>
             </div>
-          </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">QUANTIDADE DE MÓDULOS</h1>
-              <FaSolarPanel />
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES PENDENTES</h1>
+                <FaList />
+              </div>
+              <div className="mt-2 flex w-full flex-col">
+                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
+              </div>
             </div>
-            <div className="mt-2 flex w-full flex-col">
-              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES ATRASADAS</h1>
+                <MdError />
+              </div>
+              <div className="mt-2 flex w-full flex-col">
+                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesAtrasadas} </div>
+              </div>
             </div>
-          </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES PENDENTES</h1>
-              <FaList />
-            </div>
-            <div className="mt-2 flex w-full flex-col">
-              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
-            </div>
-          </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES ATRASADAS</h1>
-              <MdError />
-            </div>
-            <div className="mt-2 flex w-full flex-col">
-              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesAtrasadas} </div>
-            </div>
-          </div>
-        </div> */}
+           </div> */}
         {/* <AnimatePresence>
-          {dropdownMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                <TextInput
-                  label={'NOME DO PROJETO'}
-                  value={filters.search}
-                  placeholder={'Digite o nome do projeto...'}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-                />
-                <TextInput
-                  label={'BAIRRO'}
-                  value={filters.neighborhoodSearch}
-                  placeholder={'Digite o bairro do projeto...'}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, neighborhoodSearch: value }))}
-                />
-                <NumberInput
-                  label="NÚMERO DE MÓDULOS MAIOR QUE"
-                  placeholder="Preencha um filtro para o número de módulos..."
-                  value={filters.modulesQtyGte}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyGte: value }))}
-                />
-                <NumberInput
-                  label="NÚMERO DE MÓDULOS MENOR QUE"
-                  placeholder="Preencha um filtro para o número de módulos..."
-                  value={filters.modulesQtyLte}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyLte: value }))}
-                />
-                <div className="w-full lg:w-[300px]">
-                  <MultipleSelectInput
-                    width={'100%'}
-                    label={'TIPO DE SERVIÇO'}
-                    selected={filters.serviceType}
-                    options={serviceTypes}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        serviceType: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        serviceType: [],
-                      }))
-                    }
+            {dropdownMenuVisible ? (
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                  <TextInput
+                    label={'NOME DO PROJETO'}
+                    value={filters.search}
+                    placeholder={'Digite o nome do projeto...'}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
-                </div>
-                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
-                  <div className="flex items-center justify-center gap-x-2">
-                    <div className="w-full lg:w-[300px]">
-                      <DateInput
-                        width={'100%'}
-                        label={'DEPOIS DE'}
-                        value={filters.date.after ? formatDate(filters.date.after) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
-                      />
-                    </div>
-                    <div className="w-full lg:w-[300px]">
-                      <DateInput
-                        width={'100%'}
-                        label={'ANTES DE'}
-                        value={filters.date.before ? formatDate(filters.date.before) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
-                      />
-                    </div>
-                  </div>
+                  <TextInput
+                    label={'BAIRRO'}
+                    value={filters.neighborhoodSearch}
+                    placeholder={'Digite o bairro do projeto...'}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, neighborhoodSearch: value }))}
+                  />
+                  <NumberInput
+                    label="NÚMERO DE MÓDULOS MAIOR QUE"
+                    placeholder="Preencha um filtro para o número de módulos..."
+                    value={filters.modulesQtyGte}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyGte: value }))}
+                  />
+                  <NumberInput
+                    label="NÚMERO DE MÓDULOS MENOR QUE"
+                    placeholder="Preencha um filtro para o número de módulos..."
+                    value={filters.modulesQtyLte}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyLte: value }))}
+                  />
                   <div className="w-full lg:w-[300px]">
-                    <SelectInput
+                    <MultipleSelectInput
                       width={'100%'}
-                      label={'CAMPO DE FILTRO'}
-                      value={filters.date.field || null}
-                      options={[
-                        {
-                          id: 1,
-                          label: 'SAÍDA DE OBRA',
-                          value: 'obra.saida',
-                        },
-                        {
-                          id: 2,
-                          label: 'TROCA DE MEDIDOR',
-                          value: 'medidor.data',
-                        },
-                        {
-                          id: 3,
-                          label: 'EXECUÇÃO DA MANUTENÇÃO',
-                          value: 'manutencoes.dataEfetivacao',
-                        },
-                      ]}
+                      label={'TIPO DE SERVIÇO'}
+                      selected={filters.serviceType}
+                      options={serviceTypes}
                       selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value: string) =>
+                      handleChange={(value) =>
                         setFilters((prev) => ({
                           ...prev,
-                          date: {
-                            ...prev.date,
-                            field: value,
-                          },
+                          serviceType: value as string[],
                         }))
                       }
                       onReset={() =>
                         setFilters((prev) => ({
                           ...prev,
-                          date: {
-                            after: null,
-                            before: null,
-                            field: null,
+                          serviceType: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
+                      <div className="w-full lg:w-[300px]">
+                        <DateInput
+                          width={'100%'}
+                          label={'DEPOIS DE'}
+                          value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                          handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
+                        />
+                      </div>
+                      <div className="w-full lg:w-[300px]">
+                        <DateInput
+                          width={'100%'}
+                          label={'ANTES DE'}
+                          value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                          handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full lg:w-[300px]">
+                      <SelectInput
+                        width={'100%'}
+                        label={'CAMPO DE FILTRO'}
+                        value={filters.date.field || null}
+                        options={[
+                          {
+                            id: 1,
+                            label: 'SAÍDA DE OBRA',
+                            value: 'obra.saida',
                           },
+                          {
+                            id: 2,
+                            label: 'TROCA DE MEDIDOR',
+                            value: 'medidor.data',
+                          },
+                          {
+                            id: 3,
+                            label: 'EXECUÇÃO DA MANUTENÇÃO',
+                            value: 'manutencoes.dataEfetivacao',
+                          },
+                        ]}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value: string) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            date: {
+                              ...prev.date,
+                              field: value,
+                            },
+                          }))
+                        }
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            date: {
+                              after: null,
+                              before: null,
+                              field: null,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                  <div className="w-full lg:w-[300px]">
+                    <MultipleSelectInputVirtualized
+                      width={'100%'}
+                      label={'CIDADE'}
+                      selected={filters.city}
+                      options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          city: value as string[],
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          city: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[300px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'EQUIPE RESPONSÁVEL'}
+                      selected={filters.technicalTeam}
+                      options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          technicalTeam: value as string[],
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          technicalTeam: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[300px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'STATUS DA OBRA'}
+                      selected={filters.executionStatus}
+                      options={executionStatus}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          executionStatus: value as string[],
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          executionStatus: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[300px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'PLANO DE O&M'}
+                      selected={filters.oemPlan}
+                      options={oemPlans.map((plan, index) => ({ id: index + 1, label: plan.label, value: plan.value }))}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          oemPlan: value as string[],
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          oemPlan: [],
                         }))
                       }
                     />
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-[300px]">
-                  <MultipleSelectInputVirtualized
-                    width={'100%'}
-                    label={'CIDADE'}
-                    selected={filters.city}
-                    options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                  <div
+                    onClick={() =>
                       setFilters((prev) => ({
                         ...prev,
-                        city: value as string[],
+                        pendingMaintenance: !filters.pendingMaintenance,
                       }))
                     }
-                    onReset={() =>
+                    className={`${
+                      filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                  >
+                    MANUTENÇÃO PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
                       setFilters((prev) => ({
                         ...prev,
-                        city: [],
+                        overdueMaintenance: !filters.overdueMaintenance,
                       }))
                     }
-                  />
+                    className={`${
+                      filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                  >
+                    MANUTENÇÃO ATRASADA
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        systemOffline: !filters.systemOffline,
+                      }))
+                    }
+                    className={`${
+                      filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'
+                    } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                  >
+                    PENDENTE CONFERÊNCIA DE USINA LIGADA
+                  </div>
                 </div>
-                <div className="w-full lg:w-[300px]">
-                  <MultipleSelectInput
-                    width={'100%'}
-                    label={'EQUIPE RESPONSÁVEL'}
-                    selected={filters.technicalTeam}
-                    options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        technicalTeam: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        technicalTeam: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[300px]">
-                  <MultipleSelectInput
-                    width={'100%'}
-                    label={'STATUS DA OBRA'}
-                    selected={filters.executionStatus}
-                    options={executionStatus}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        executionStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        executionStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[300px]">
-                  <MultipleSelectInput
-                    width={'100%'}
-                    label={'PLANO DE O&M'}
-                    selected={filters.oemPlan}
-                    options={oemPlans.map((plan, index) => ({ id: index + 1, label: plan.label, value: plan.value }))}
-                    selectedItemLabel={'SEM FILTRO'}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        oemPlan: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        oemPlan: [],
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      pendingMaintenance: !filters.pendingMaintenance,
-                    }))
-                  }
-                  className={`${
-                    filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'
-                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                >
-                  MANUTENÇÃO PENDENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      overdueMaintenance: !filters.overdueMaintenance,
-                    }))
-                  }
-                  className={`${
-                    filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'
-                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                >
-                  MANUTENÇÃO ATRASADA
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      systemOffline: !filters.systemOffline,
-                    }))
-                  }
-                  className={`${
-                    filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'
-                  } flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                >
-                  PENDENTE CONFERÊNCIA DE USINA LIGADA
-                </div>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence> */}
+              </motion.div>
+            ) : null}
+           </AnimatePresence> */}
       </div>
       <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingComponent /> : null}
@@ -446,15 +446,15 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
           </div>
         </div>
         {/* <button
-          disabled={isLoading}
-          onClick={() => {
-            // @ts-ignore
-            handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })
-          }}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
-        >
-          SALVAR ANOTAÇÕES
-        </button> */}
+            disabled={isLoading}
+            onClick={() => {
+              // @ts-ignore
+              handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })
+            }}
+            className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+           >
+            SALVAR ANOTAÇÕES
+           </button> */}
       </div>
       {activitiesMenuIsOpen ? (
         project.atividades && project.atividades.length > 0 ? (

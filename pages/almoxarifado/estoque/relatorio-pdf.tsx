@@ -46,19 +46,22 @@ function RelatorioEstoque() {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorComponent msg={'Erro ao buscar materiais.'} /> : null}
           {isSuccess
-            ? materials.map((material, index) => (
-                <div className="flex items-center gap-2 border-x border-b border-black p-2">
-                  <h1 className="w-[10%] text-center text-xs font-medium text-black">{index + 1}</h1>
-                  <div className="flex w-[50%] flex-col">
-                    <h1 className="w-full text-start text-xs font-medium text-black">{material.nome}</h1>
-                    <div className="flex w-full items-center gap-1">
-                      <BsCode />
-                      <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.codigo || 'CÓDIGO NÃO DEFINIDO'}</h1>
+            ? materials.map(
+                (material, index) => (
+                  <div className="flex items-center gap-2 border-x border-b border-black p-2">
+                    <h1 className="w-[10%] text-center text-xs font-medium text-black">{index + 1}</h1>
+                    <div className="flex w-[50%] flex-col">
+                      <h1 className="w-full text-start text-xs font-medium text-black">{material.nome}</h1>
+                      <div className="flex w-full items-center gap-1">
+                        <BsCode />
+                        <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.codigo || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                      </div>
                     </div>
+                    <h1 className="w-[20%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtde)}</h1>
+                    <h1 className="w-[20%] text-center text-xs font-medium text-black">{formatToMoney(material.preco)}</h1>
                   </div>
-                  <h1 className="w-[20%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtde)}</h1>
-                  <h1 className="w-[20%] text-center text-xs font-medium text-black">{formatToMoney(material.preco)}</h1>
-                </div>
+                )
+
                 // <div
                 //   key={index}
                 //   // prettier-ignore
@@ -79,7 +82,7 @@ function RelatorioEstoque() {
                 //     {material.preco && material.preco > 0 ? formatDecimalPlaces(material.preco) : '-'}
                 //   </div>
                 // </div>
-              ))
+              )
             : null}
         </div>
       </div>

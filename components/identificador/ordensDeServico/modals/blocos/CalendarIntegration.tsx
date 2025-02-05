@@ -37,6 +37,7 @@ function ServiceOrderCalendarIntegration({ infoHolder, updateInfoHolder }: Servi
           editable={!infoHolder.googleCalendarEventId}
           width="100%"
         />
+
         {infoHolder.googleCalendarEventId ? (
           <div className="flex w-fit items-center gap-4 self-center rounded border border-green-500 bg-green-200 px-2 py-1">
             <div className="flex items-center gap-1">

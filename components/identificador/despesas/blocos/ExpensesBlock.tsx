@@ -78,6 +78,7 @@ function ExpensesBlock({ session, storedExpensesApportionmentsFilter, storedExpe
         itemsMatchedText={expensesMatched > 0 ? `${expensesMatched} despesas encontradas.` : `${expensesMatched} despesa encontrada.`}
         itemsShowingText={expensesShowing > 0 ? `Mostrando ${expensesShowing} despesas.` : `Mostrando ${expensesShowing} despesa.`}
       />
+
       <div className="flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -120,17 +121,20 @@ function ExpenseCard({ expense, handleClick }: ExpenseCardProps) {
     if (totalReceived == expenseTotal)
       return {
         tag: <h1 className="rounded-lg bg-green-500 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PAGO</h1>,
+
         fractionationStr: `${partionsReceived}/${payments.length}`,
       }
 
     if (totalReceived > 0)
       return {
         tag: <h1 className="rounded-lg bg-orange-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PAGO PARCIAL</h1>,
+
         fractionationStr: `${partionsReceived}/${payments.length}`,
       }
 
     return {
       tag: <h1 className="rounded-lg bg-red-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PENDENTE</h1>,
+
       fractionationStr: `${partionsReceived}/${payments.length}`,
     }
   }

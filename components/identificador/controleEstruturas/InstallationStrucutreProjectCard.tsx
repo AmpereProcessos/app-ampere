@@ -22,6 +22,7 @@ function getStatusTag(isExecuted: boolean) {
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">PENDENTE</h1>
       </div>
     )
+
   return (
     <div className="flex min-w-fit items-center gap-2 rounded-full bg-green-600 px-2 py-1 ">
       <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">CONCLUÍDO</h1>
@@ -32,6 +33,7 @@ function getDeliveryText({ status, deliveryDate }: { status: string; deliveryDat
   const isDelivered = status == 'ENTREGUE' || !!deliveryDate
   if (isDelivered) {
     if (!deliveryDate) return <h1 className="text-[0.6rem] tracking-tight text-green-500">ENTREGUE</h1>
+
     return (
       <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
         ENTREGUE <strong className="text-green-500">EM {formatDateAsLocale(deliveryDate)}</strong>

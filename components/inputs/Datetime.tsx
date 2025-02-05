@@ -1,4 +1,4 @@
-import dayjs from 'dayjs' 
+import dayjs from 'dayjs'
 import React from 'react'
 type DatetimeProps = {
   width?: string

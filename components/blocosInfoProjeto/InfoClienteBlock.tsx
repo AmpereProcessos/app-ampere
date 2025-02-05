@@ -286,6 +286,7 @@ function ClientEditBlock({ client, updateClient, clientChanges, updateClientChan
           }}
           width="100%"
         />
+
         <SelectInput
           label="ESTADO"
           value={client.uf}
@@ -301,6 +302,7 @@ function ClientEditBlock({ client, updateClient, clientChanges, updateClientChan
           }}
           width="100%"
         />
+
         <SelectInput
           label="CIDADE"
           value={client.cidade}
@@ -332,6 +334,7 @@ function ClientEditBlock({ client, updateClient, clientChanges, updateClientChan
           }}
           width="100%"
         />
+
         <TextInput
           label="LOGRADOURO/RUA"
           value={client.endereco || ''}
@@ -354,6 +357,7 @@ function ClientEditBlock({ client, updateClient, clientChanges, updateClientChan
           }}
           width="100%"
         />
+
         <TextInput
           label="COMPLEMENTO"
           value={client.complemento || ''}

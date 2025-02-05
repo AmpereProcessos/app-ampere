@@ -76,6 +76,7 @@ function TechnicalAnalysisPage({ session }: TechnicalAnalysisPageProps) {
         analysisMatched={analysisMatched}
         analysisShowing={analysis?.length}
       />
+
       <div className="flex flex-wrap justify-between gap-2 py-2">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar análises técnicas.'} /> : null}

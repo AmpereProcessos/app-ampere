@@ -82,8 +82,8 @@ function SolicitationTypeSelection({ selectType }: SolicitationTypeSelectionProp
           <h1 className="text-center text-lg font-bold">DESENHO PERSONALIZADO</h1>
           <p className="text-center text-sm text-gray-500">Requisite ao nosso time de engenharia um desenho personalizado.</p>
           {/* <TbRulerMeasure
-            style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
-          /> */}
+                  style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
+                 /> */}
           <Image src={DrawIcon} alt="DESENHO TÉCNICO" height={50} />
 
           <p className="text-center text-sm text-gray-500">Uma vez requisitado, um resultado será informado em um prazo de 72 horas úteis.</p>
@@ -110,8 +110,8 @@ function SolicitationTypeSelection({ selectType }: SolicitationTypeSelectionProp
             Requisite ao nosso time de engenharia uma análise com base em uma alteração/alternativa referente à uma análise prévia.
           </p>
           {/* <TbRulerMeasure
-            style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
-          /> */}
+                  style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
+                 /> */}
           <FaEdit style={{ color: '#57375D', fontSize: '50px' }} />
 
           <p className="text-center text-sm text-gray-500">Uma vez requisitado, um resultado será informado em um prazo de 72 horas úteis.</p>
@@ -124,8 +124,8 @@ function SolicitationTypeSelection({ selectType }: SolicitationTypeSelectionProp
           <h1 className="text-center text-lg font-bold">AUMENTO DE SISTEMA</h1>
           <p className="text-center text-sm text-gray-500">Requisite ao nosso time de engenharia a análise de um aumento de projeto.</p>
           {/* <TbRulerMeasure
-            style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
-          /> */}
+                  style={{ color: "rgb(34,197,94)", fontSize: "50px" }}
+                 /> */}
           <FaExpandArrowsAlt style={{ color: '#57375D', fontSize: '50px' }} />
 
           <p className="text-center text-sm text-gray-500">Uma vez requisitado, um resultado será informado em um prazo de 72 horas úteis.</p>

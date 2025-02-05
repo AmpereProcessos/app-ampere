@@ -64,6 +64,7 @@ function Properties() {
                     placeholder={'Digite o nome do item...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
+
                   <div className="w-full lg:w-[350px]">
                     <MultipleSelectInput
                       width={'100%'}

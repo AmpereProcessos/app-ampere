@@ -205,6 +205,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
               selectedItemLabel="NÃO DEFINIDO"
               onReset={() => updateQueryParams({ queryTags: [] })}
             />
+
             <button
               onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
               className={cn(
@@ -378,6 +379,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
           <h1 className="text-[0.5rem]">ATRASADO</h1>
         </div>
       )
+
     if (diffInDays + 1 >= statusDeadlineDays)
       return (
         <div className="flex min-w-fit items-center gap-1 self-center rounded-lg bg-yellow-600 px-2 py-0.5 text-white">
@@ -385,6 +387,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
           <h1 className="text-[0.5rem]">VENCENDO</h1>
         </div>
       )
+
     return null
   }
   useEffect(() => {
@@ -493,6 +496,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
             <div className="flex grow flex-wrap items-center gap-2">
               <div className="flex items-center gap-1">
                 <Avatar url={item.autor.avatar_url || undefined} fallback={formatNameAsInitials(item.autor.nome)} height={18} width={18} />
+
                 <p className="text-[0.65rem] font-light text-gray-400">{item.autor.nome}</p>
               </div>
             </div>

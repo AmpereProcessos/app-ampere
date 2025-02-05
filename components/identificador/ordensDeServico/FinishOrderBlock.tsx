@@ -21,6 +21,7 @@ function FinishOrderBlock({ infoHolder, setInfoHolder }: FinishOrderBlockProps) 
             value={infoHolder.dataEfetivacao ? formatDate(infoHolder.dataEfetivacao) : undefined}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataEfetivacao: formatDateInputChange(value) }))}
           />
+
           <button
             onClick={() => setMenuIsOpen(false)}
             type="button"

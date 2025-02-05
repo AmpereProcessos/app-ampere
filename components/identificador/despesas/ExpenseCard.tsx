@@ -32,6 +32,7 @@ function renderPendencyStatus({ expense }: { expense: TExpenseDTO }) {
         <p className="text-[0.65rem] font-medium text-gray-500 lg:text-xs">PAGAR HOJE</p>
       </div>
     )
+
   const isOverdue = dayjs().isAfter(dayjs(expense.efetivacao.data).add(3, 'hour'), 'day')
   if (isOverdue)
     return (
@@ -40,6 +41,7 @@ function renderPendencyStatus({ expense }: { expense: TExpenseDTO }) {
         <p className="text-[0.65rem] font-medium text-gray-500 lg:text-xs">ATRASADO</p>
       </div>
     )
+
   return (
     <div className="flex items-center gap-2">
       <MdOutlineAssignmentLate color="#ffbd00" />
@@ -99,6 +101,7 @@ function ExpenseCard({ expense, openModal }: ExpenseCardProps) {
       </div>
     </div>
   )
+
   // return (
   //   <div
   //     onClick={() => openModal(expense)}

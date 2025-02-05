@@ -30,6 +30,7 @@ function PendencyBlock({ session, technicalAnalysisId, opportunity, infoHolder, 
         technicalAnalysisId={technicalAnalysisId}
         affectedQueryKey={['technical-analysis-activities', technicalAnalysisId]}
       />
+
       <div className="mt-2 flex w-full flex-col gap-1">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg="Houve um erro ao buscar atividades da análise técnica." /> : null}

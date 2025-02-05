@@ -62,8 +62,8 @@ function ObservationsBlock({ infoHolder, setInfo, changes, setChanges }: Observa
             <MdOutlineAddCircle style={{ fontSize: '25px' }} />
           </button>
           {/* <button onClick={() => addObservation(observationHolder)} className="flex items-center justify-center text-green-500">
-            <IoIosAdd />
-          </button> */}
+                 <IoIosAdd />
+                </button> */}
         </div>
       </div>
       <div className="overscroll-y mt-2 flex w-full grow flex-col overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">

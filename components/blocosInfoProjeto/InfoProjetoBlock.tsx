@@ -66,6 +66,7 @@ function InfoProjetoBlock({
             }))
           }}
         />
+
         <CheckboxInput
           labelFalse="REALIZAR HOMOLOGAÇÃO"
           labelTrue="REALIZAR HOMOLOGAÇÃO"
@@ -667,6 +668,7 @@ function InfoProjetoBlock({
                   },
                 ]}
               />
+
               <ProjectServiceOrders projectId={project._id} />
             </div>
           )}

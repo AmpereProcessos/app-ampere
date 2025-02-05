@@ -21,6 +21,7 @@ function renderInputText(files: FileList | null) {
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
+
   const filesAsArr = Array.from(files)
   if (filesAsArr.length > 1) {
     const str = filesAsArr.map((file) => formatLongString(file.name, 15)).join(', ')

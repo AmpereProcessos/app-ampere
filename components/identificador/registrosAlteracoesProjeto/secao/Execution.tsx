@@ -12,6 +12,7 @@ const RelatedFields = [
   'obra.statusDaObra',
   'obra.observacoes',
 ]
+
 function getRelatedLogs(logs: TProjectUpdateLogDTO[]) {
   return logs.filter((log) => Object.keys(log.alteracoes).some((a) => RelatedFields.includes(a)))
 }

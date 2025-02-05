@@ -14,10 +14,13 @@ import { useQueryClient } from '@tanstack/react-query'
 function renderStatus({ qty, minQty, maxQty }: { qty: number; minQty: number; maxQty: number }) {
   if (qty < minQty)
     return <h1 className="min-w-fit rounded-full bg-red-600 px-2 py-1 text-[0.58rem] font-medium text-white lg:text-xs">ABAIXO DO MÍNIMO</h1>
+
   if (maxQty && qty > maxQty)
     return <h1 className="min-w-fit rounded-full bg-red-600 px-2 py-1 text-[0.58rem] font-medium text-white lg:text-xs">ACIMA DO MÁXIMO</h1>
+
   if (qty < 10)
     return <h1 className="min-w-fit rounded-full bg-orange-600 px-2 py-1 text-[0.58rem] font-medium text-white lg:text-xs">BAIXA QUANTIDADE</h1>
+
   return null
 }
 type MaterialBlockProps = {
@@ -146,6 +149,7 @@ function MaterialBlock({ material }: MaterialBlockProps) {
                 height={25}
                 fallback={formatNameAsInitials(material.alteracao.nome)}
               />
+
               <p className="text-xs font-medium text-gray-500">Atualizado por: {material.alteracao.nome}</p>
             </div>
           </div>

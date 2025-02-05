@@ -9,39 +9,51 @@ const IconHeaders = [
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#fead41]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#003049]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#d62828]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#ff5400]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#fcbf49]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#eae2b7]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#03045e]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#0077b6]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#00b4d8]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#90e0ef]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#390099]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#9e0059]  text-white`}>{renderIcon(icon)}</div>
   ),
+
   (icon: React.ComponentType | IconType) => (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-[#ff0054]  text-white`}>{renderIcon(icon)}</div>
   ),
@@ -54,11 +66,13 @@ function renderJourneyIcon({ active, icon, index }: { active: boolean; icon: Rea
         <FaLock color="white" />
       </div>
     )
+
   return (
     <div className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-b from-[#15599a] to-blue-500  text-white`}>
       {renderIcon(icon)}
     </div>
   )
+
   // return IconHeaders[index](icon)
 }
 

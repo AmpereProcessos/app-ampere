@@ -316,6 +316,7 @@ function SystemInfo({ requestInfo, setRequestInfo, requireFiles = true, goToNext
                 }))
               }}
             />
+
             <MultipleSelectInput
               label="TOPOLOGIA"
               selected={filters.topology.length > 0 ? filters.topology.map((supplier) => supplier) : null}
@@ -341,6 +342,7 @@ function SystemInfo({ requestInfo, setRequestInfo, requireFiles = true, goToNext
                 }))
               }}
             />
+
             <button
               onClick={() => handleOptionFilters()}
               className="flex h-[46px] w-full items-center justify-center rounded border border-[#fead61] p-3 text-[#fead61] hover:bg-[#fead61] hover:text-black lg:w-fit"

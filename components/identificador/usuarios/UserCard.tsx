@@ -14,6 +14,7 @@ function getPosition(positions: TEmployeeDTO['cargos']) {
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">CARGO INDEFINIDO</h1>
       </div>
     )
+
   return (
     <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
       <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{current}</h1>

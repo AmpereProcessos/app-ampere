@@ -79,14 +79,17 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
               <h1 className="w-[40%] text-center text-sm font-bold text-white">NÚMERO DA INSTALAÇÃO</h1>
               <h1 className="w-[40%] text-center text-sm font-bold text-white">PORCENTAGEM DE RECEBIMENTO</h1>
             </div>
-            {infoHolder.homologacao.instalacao.dependentes.map((dependent, index) => (
-              <DependenteTableItem
-                key={index}
-                index={index}
-                dependent={dependent}
-                handleRemove={() => removeDependent(index)}
-                handleUpdate={(item) => updateDependent({ item, index })}
-              />
+            {infoHolder.homologacao.instalacao.dependentes.map(
+              (dependent, index) => (
+                <DependenteTableItem
+                  key={index}
+                  index={index}
+                  dependent={dependent}
+                  handleRemove={() => removeDependent(index)}
+                  handleUpdate={(item) => updateDependent({ item, index })}
+                />
+              )
+
               // <div key={index} className="group flex w-full flex-col items-center rounded border border-gray-800 shadow-sm">
               //   <h1 className="w-full bg-gray-800 p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
               //   <div className="flex w-full flex-col p-2">
@@ -128,7 +131,7 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
               //     <VscChromeClose style={{ color: 'red' }} />
               //   </button> */}
               // </div>
-            ))}
+            )}
           </div>
         </div>
       ) : (

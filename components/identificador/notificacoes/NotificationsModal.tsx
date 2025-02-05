@@ -13,6 +13,7 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 
 function renderHeader({ projectName, sender }: { projectName: string; sender: string }) {
   if (sender == 'SISTEMA') return <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">AUTOMAÇÃO</h1>
+
   return (
     <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">
       <strong className="text-[#15599a]">{sender.toUpperCase()}</strong> DIZ:
@@ -138,34 +139,37 @@ function NotificationsModal({ session, notifications, closeModal }: Notification
                       <MdEmail style={{ fontSize: '20px', color: '#15599a' }} />{' '}
                     </button>
                   )}
-                  {notificacao.lido ? (
-                    <button
-                      onClick={() => {
-                        // @ts-ignore
-                        handleUpdate({
-                          id: notificacao._id,
-                          changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
-                        })
-                      }}
-                      className="flex items-center gap-1 rounded-full bg-green-500 px-2 py-1 text-white"
-                    >
-                      <BsCheckAll />
-                      <p className="text-[0.60rem] font-bold">LIDO</p>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        // @ts-ignore
-                        handleUpdate({
-                          id: notificacao._id,
-                          changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
-                        })
-                      }}
-                      className="flex items-center gap-1 rounded-full bg-gray-500 px-2 py-1 text-white duration-300 ease-in-out hover:scale-[1.05] hover:bg-green-500"
-                    >
-                      <BsCheck />
-                      <p className="text-[0.60rem] font-bold">NÃO LIDO</p>
-                    </button>
+                  {
+                    notificacao.lido ? (
+                      <button
+                        onClick={() => {
+                          // @ts-ignore
+                          handleUpdate({
+                            id: notificacao._id,
+                            changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
+                          })
+                        }}
+                        className="flex items-center gap-1 rounded-full bg-green-500 px-2 py-1 text-white"
+                      >
+                        <BsCheckAll />
+                        <p className="text-[0.60rem] font-bold">LIDO</p>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          // @ts-ignore
+                          handleUpdate({
+                            id: notificacao._id,
+                            changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
+                          })
+                        }}
+                        className="flex items-center gap-1 rounded-full bg-gray-500 px-2 py-1 text-white duration-300 ease-in-out hover:scale-[1.05] hover:bg-green-500"
+                      >
+                        <BsCheck />
+                        <p className="text-[0.60rem] font-bold">NÃO LIDO</p>
+                      </button>
+                    )
+
                     // <button
                     //   onClick={() => {
                     //     // @ts-ignore
@@ -178,44 +182,43 @@ function NotificationsModal({ session, notifications, closeModal }: Notification
                     // >
 
                     // </button>
-                  )}
+                  }
                 </div>
               </div>
               {/* <div className="mt-1 flex items-center justify-between gap-2 pr-2">
-          <div>
+            <div>
             <p className="text-xs text-gray-500">{formatDateAsLocale(notificacao.dataDeEnvio)}</p>
-          </div>
-          <div className="flex items-center gap-2">
+            </div>
+            <div className="flex items-center gap-2">
             {notificacao.remetenteId && (
-              <button onClick={() => {}} className="outline-none transition duration-300 ease-in-out hover:scale-125">
-                <MdEmail style={{ fontSize: '20px', color: '#15599a' }} />{' '}
-              </button>
+            <button onClick={() => {}} className="outline-none transition duration-300 ease-in-out hover:scale-125">
+            <MdEmail style={{ fontSize: '20px', color: '#15599a' }} />{' '}
+            </button>
             )}
-
             {notificacao.lido ? (
-              <BsCheckAll style={{ fontSize: '20px', color: 'green' }} />
+            <BsCheckAll style={{ fontSize: '20px', color: 'green' }} />
             ) : (
-              <button
-                onClick={() => {
-                  // @ts-ignore
-                  handleUpdate({
-                    id: notificacao._id,
-                    changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
-                  })
-                }}
-                className="outline-none transition duration-300 ease-in-out hover:scale-150"
-              >
-                <BsCheck
-                  style={{
-                    fontSize: '20px',
-                    color: 'gray',
-                    cursor: 'pointer',
-                  }}
-                />
-              </button>
+            <button
+            onClick={() => {
+            // @ts-ignore
+            handleUpdate({
+            id: notificacao._id,
+            changes: { lido: !notificacao.lido, dataDeLeitura: !!notificacao.dataDeLeitura ? null : new Date() },
+            })
+            }}
+            className="outline-none transition duration-300 ease-in-out hover:scale-150"
+            >
+            <BsCheck
+            style={{
+            fontSize: '20px',
+            color: 'gray',
+            cursor: 'pointer',
+            }}
+            />
+            </button>
             )}
-          </div>
-        </div> */}
+            </div>
+            </div> */}
             </div>
           ))
         ) : (

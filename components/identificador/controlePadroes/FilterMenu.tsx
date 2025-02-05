@@ -33,6 +33,7 @@ function PAAdequationsFilterMenu({ filterMenuIsOpen, filters, setFilters }: PAAd
               handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
               width="100%"
             />
+
             <MultipleSelectInput
               label="CATEGORIA"
               labelClassName="text-xs font-medium tracking-tight text-black"
@@ -47,6 +48,7 @@ function PAAdequationsFilterMenu({ filterMenuIsOpen, filters, setFilters }: PAAd
               selectedItemLabel="NÃO DEFINIDO"
               onReset={() => setFilters((prev) => ({ ...prev, segments: [] }))}
             />
+
             <MultipleSelectInput
               label="STATUS DO PARECER DE ACESSO"
               labelClassName="text-xs font-medium tracking-tight text-black"

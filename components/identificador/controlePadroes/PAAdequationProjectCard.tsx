@@ -131,19 +131,20 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
           date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
           handleChange={(value) => handleUpdate(formatDateInputChange(value))}
         />
+
         {/* <div className="w-fit">
-          <DateInput
-            label="DATA DE EXECUÇÃO"
-            labelClassName="text-[0.6rem] tracking-tight"
-            editable={!isPending}
-            // inputClassName="w-full rounded-md border border-gray-200 p-2 text-[0.7rem] outline-none placeholder:italic"
-            value={formatDate(project.padrao.aumentoCarga.dataEfetivacao)}
-            handleChange={(value) => {
-              handleUpdate(formatDateInputChange(value))
-            }}
-            width="100%"
-          />
-        </div> */}
+               <DateInput
+                 label="DATA DE EXECUÇÃO"
+                 labelClassName="text-[0.6rem] tracking-tight"
+                 editable={!isPending}
+                 // inputClassName="w-full rounded-md border border-gray-200 p-2 text-[0.7rem] outline-none placeholder:italic"
+                 value={formatDate(project.padrao.aumentoCarga.dataEfetivacao)}
+                 handleChange={(value) => {
+                   handleUpdate(formatDateInputChange(value))
+                 }}
+                 width="100%"
+               />
+              </div> */}
       </div>
     </div>
   )

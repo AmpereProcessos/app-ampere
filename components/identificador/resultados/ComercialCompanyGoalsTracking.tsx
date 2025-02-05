@@ -83,6 +83,7 @@ function renderRanking({ competitors, awardedQty }: { competitors: { RESPONSAVEL
       awarded: awardedQty >= 5,
     },
   ]
+
   return podium.map((podiumPosition, index) => (
     <div key={index} className={cn('h-full w-1/3 flex-col justify-end gap-2 lg:w-1/5', podiumPosition.positionValue > 3 ? 'hidden lg:flex' : 'flex')}>
       {renderAvatarBySeller(podiumPosition.competitor || 'N/A')}
@@ -224,30 +225,30 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
                   <div className="flex h-fit w-full items-end justify-center gap-4 p-0 lg:h-[425px] lg:w-[1200px] lg:gap-10 lg:p-6">
                     {renderRanking({ competitors: activeGoalResults.RANKING, awardedQty: activeGoalParams['QTDE PREMIADOS'] })}
                     {/* <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                      {renderAvatarBySeller(activeGoalResults.RANKING[3]?.RESPONSAVEL || 'N/A')}
-                      <h1 className="text-center text-sm font-bold text-gray-500">{activeGoalResults.RANKING[3]?.RESPONSAVEL}</h1>
-                      <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
-                    </div>
-                    <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                      {renderAvatarBySeller(activeGoalResults.RANKING[1]?.RESPONSAVEL || 'N/A')}
-                      <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[1]?.RESPONSAVEL || 'N/A'}</h1>
-                      <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
-                    </div>
-                    <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                      {renderAvatarBySeller(activeGoalResults.RANKING[0]?.RESPONSAVEL || 'N/A')}
-                      <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[0]?.RESPONSAVEL || 'N/A'}</h1>
-                      <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
-                    </div>
-                    <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-                      {renderAvatarBySeller(activeGoalResults.RANKING[2]?.RESPONSAVEL || 'N/A')}
-                      <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[2]?.RESPONSAVEL || 'N/A'}</h1>
-                      <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
-                    </div>
-                    <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-                      {renderAvatarBySeller(activeGoalResults.RANKING[4]?.RESPONSAVEL || 'N/A')}
-                      <h1 className="text-center text-sm font-bold text-gray-500">{activeGoalResults.RANKING[4]?.RESPONSAVEL || 'N/A'}</h1>
-                      <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
-                    </div> */}
+                         {renderAvatarBySeller(activeGoalResults.RANKING[3]?.RESPONSAVEL || 'N/A')}
+                         <h1 className="text-center text-sm font-bold text-gray-500">{activeGoalResults.RANKING[3]?.RESPONSAVEL}</h1>
+                         <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
+                        </div>
+                        <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                         {renderAvatarBySeller(activeGoalResults.RANKING[1]?.RESPONSAVEL || 'N/A')}
+                         <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[1]?.RESPONSAVEL || 'N/A'}</h1>
+                         <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
+                        </div>
+                        <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                         {renderAvatarBySeller(activeGoalResults.RANKING[0]?.RESPONSAVEL || 'N/A')}
+                         <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[0]?.RESPONSAVEL || 'N/A'}</h1>
+                         <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
+                        </div>
+                        <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                         {renderAvatarBySeller(activeGoalResults.RANKING[2]?.RESPONSAVEL || 'N/A')}
+                         <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{activeGoalResults.RANKING[2]?.RESPONSAVEL || 'N/A'}</h1>
+                         <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
+                        </div>
+                        <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
+                         {renderAvatarBySeller(activeGoalResults.RANKING[4]?.RESPONSAVEL || 'N/A')}
+                         <h1 className="text-center text-sm font-bold text-gray-500">{activeGoalResults.RANKING[4]?.RESPONSAVEL || 'N/A'}</h1>
+                         <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
+                        </div> */}
                   </div>
                 </div>
               </div>

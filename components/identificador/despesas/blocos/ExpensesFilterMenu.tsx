@@ -55,6 +55,7 @@ function ExpensesFilterMenu({ queryParams, updateQueryParams, closeMenu }: Expen
                 selectedItemLabel="NÃO DEFINIDO"
                 width="100%"
               />
+
               <MultipleSelectInput
                 label="CATEGORIAS"
                 selected={queryParamsHolder.categories}

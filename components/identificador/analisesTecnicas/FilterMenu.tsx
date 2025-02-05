@@ -66,6 +66,7 @@ function FilterMenu({
             handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, name: value }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <MultipleSelectInput
             label={'STATUS'}
             selectedItemLabel={'NÃO DEFINIDO'}
@@ -75,6 +76,7 @@ function FilterMenu({
             onReset={() => setFiltersHolder((prev) => ({ ...prev, status: [] }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <div className="w-full lg:w-[200px]">
             <MultipleSelectInputVirtualized
               label="CIDADE"
@@ -128,6 +130,7 @@ function FilterMenu({
             onReset={() => setFiltersHolder((prev) => ({ ...prev, type: [] }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <SelectInput
             label={'COMPLEXIDADE'}
             selectedItemLabel={'NÃO DEFINIDO'}
@@ -137,6 +140,7 @@ function FilterMenu({
             onReset={() => setFiltersHolder((prev) => ({ ...prev, complexity: null }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <MultipleSelectInput
             label="ANALISTA"
             selected={selectedAnalysts}
@@ -146,15 +150,16 @@ function FilterMenu({
             onReset={() => setAnalysts(null)}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           {/* <MultipleSelectInput
-            label="REQUERENTE"
-            selected={selectedApplicants}
-            options={applicantSelectableOptions?.map((a) => ({ id: a._id, label: a.nome, value: a._id, url: a.avatar_url || undefined })) || []}
-            selectedItemLabel="NÃO DEFINIDO"
-            handleChange={(value) => setApplicants(value as string[])}
-            onReset={() => setApplicants(null)}
-            labelClassName="text-xs font-medium tracking-tight text-black"
-          /> */}
+                 label="REQUERENTE"
+                 selected={selectedApplicants}
+                 options={applicantSelectableOptions?.map((a) => ({ id: a._id, label: a.nome, value: a._id, url: a.avatar_url || undefined })) || []}
+                 selectedItemLabel="NÃO DEFINIDO"
+                 handleChange={(value) => setApplicants(value as string[])}
+                 onReset={() => setApplicants(null)}
+                 labelClassName="text-xs font-medium tracking-tight text-black"
+                /> */}
         </div>
         <div className="flex w-full flex-col flex-wrap items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-wrap items-center gap-2">

@@ -95,6 +95,7 @@ function ServiceOrdersCardModePage({ session, handleSetMode }: ServiceOrdersCard
           serviceOrdersShowing > 1 ? `Mostrando ${serviceOrdersShowing} ordens de serviço.` : `Mostrando ${serviceOrdersShowing} ordem de serviço.`
         }
       />
+
       <div className="flex w-full flex-col items-center gap-2">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -134,16 +135,22 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
   function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
     if (serviceOrder.status === 'PENDENTE')
       return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
+
     if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
       return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM PLANEJAMENTO</div>
+
     if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
       return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
+
     if (serviceOrder.status === 'EM EXECUÇÃO')
       return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>
+
     if (serviceOrder.status === 'CONCLUÍDA PARCIAL')
       return <div className="rounded-full bg-purple-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">CONCLUÍDA PARCIAL</div>
+
     if (serviceOrder.status === 'CONCLUÍDA')
       return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">CONCLUÍDA</h1>
+
     if (serviceOrder.status === 'CANCELADA')
       return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">CANCELADA</h1>
 
@@ -260,6 +267,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
               height={20}
               fallback={formatNameAsInitials(serviceOrder.autor?.nome || '')}
             />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{serviceOrder.autor?.nome || ''}</p>
           </div>
         </div>

@@ -141,56 +141,56 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
         </div>
       </div>
       {/* {avg && avg > 7 ? (
-        <div className="flex w-full flex-col gap-2">
-          <p className="my-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
-            Gostou dos nossos serviços ? Indique um conhecido para começar já a economizar na conta de luz.
-          </p>
-          {indications.map((indication, index) => (
-            <div key={index} className="flex w-full items-center gap-2">
-              <div className="w-full lg:w-1/2">
-                <TextInput
-                  label="NOME DO INDICADO"
-                  showLabel={false}
-                  value={indication.nome}
-                  placeholder="Preencha o nome do indicado..."
-                  handleChange={(value) =>
-                    setIndications((prev) => {
-                      const ind = [...prev]
-                      ind[index].nome = value
-                      return ind
-                    })
-                  }
-                  width="100%"
-                />
-              </div>
-              <div className="w-full lg:w-1/2">
-                <TextInput
-                  label="TELEFONE DO INDICADO"
-                  showLabel={false}
-                  value={indication.telefone}
-                  placeholder="Preencha o telefone do indicado..."
-                  handleChange={(value) =>
-                    setIndications((prev) => {
-                      const ind = [...prev]
-                      ind[index].telefone = formatToPhone(value)
-                      return ind
-                    })
-                  }
-                  width="100%"
-                />
+            <div className="flex w-full flex-col gap-2">
+              <p className="my-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
+                Gostou dos nossos serviços ? Indique um conhecido para começar já a economizar na conta de luz.
+              </p>
+              {indications.map((indication, index) => (
+                <div key={index} className="flex w-full items-center gap-2">
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="NOME DO INDICADO"
+                      showLabel={false}
+                      value={indication.nome}
+                      placeholder="Preencha o nome do indicado..."
+                      handleChange={(value) =>
+                        setIndications((prev) => {
+                          const ind = [...prev]
+                          ind[index].nome = value
+                          return ind
+                        })
+                      }
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="TELEFONE DO INDICADO"
+                      showLabel={false}
+                      value={indication.telefone}
+                      placeholder="Preencha o telefone do indicado..."
+                      handleChange={(value) =>
+                        setIndications((prev) => {
+                          const ind = [...prev]
+                          ind[index].telefone = formatToPhone(value)
+                          return ind
+                        })
+                      }
+                      width="100%"
+                    />
+                  </div>
+                </div>
+              ))}
+              <div className="mt-1 flex w-full items-center justify-end">
+                <button
+                  onClick={() => setIndications((prev) => [...prev, { nome: '', telefone: '' }])}
+                  className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                >
+                  ADICIONAR INDICAÇÃO
+                </button>
               </div>
             </div>
-          ))}
-          <div className="mt-1 flex w-full items-center justify-end">
-            <button
-              onClick={() => setIndications((prev) => [...prev, { nome: '', telefone: '' }])}
-              className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
-            >
-              ADICIONAR INDICAÇÃO
-            </button>
-          </div>
-        </div>
-      ) : null} */}
+           ) : null} */}
       <div className="mt-4 flex w-full items-center justify-center">
         <button
           onClick={() => handleSurverAnswer()}

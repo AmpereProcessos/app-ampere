@@ -167,6 +167,7 @@ function ExpenseModal({ expenseId, session, closeModal, callbacks }: ExpenseModa
                   infoHolder={infoHolder}
                   setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
                 />
+
                 {expense.projetoDados ? (
                   <ExpenseProjectInformationBlock expense={infoHolder} project={expense.projetoDados} />
                 ) : (
@@ -182,6 +183,7 @@ function ExpenseModal({ expenseId, session, closeModal, callbacks }: ExpenseModa
                   infoHolder={infoHolder}
                   setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
                 />
+
                 <ExpensePaymentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
               </div>
               <div className="mt-2 flex w-full items-center justify-end">

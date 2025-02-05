@@ -59,6 +59,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
             placeholder="Filtre pelo nome do cliente..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <TextInput
             label="PESQUISA PELO NOME DO PAGADOR"
             value={filtersHolder.payerName}
@@ -68,6 +69,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
             placeholder="Filtre pelo nome do pagador..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
             <div className="flex items-center justify-center gap-x-2">
               <div className="w-full lg:w-[250px]">

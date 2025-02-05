@@ -57,18 +57,18 @@ function PurchaseControlTagsBlock({ infoHolder, setInfoHolder }: PurchaseControl
           </div>
         ))}
         {/* <Button onClick={() => setTagsMenuIsOpen(true)} variant="secondary" className="flex items-center gap-1" size={'xs'}>
-          <Tags height={13} width={13} />
-          <h1 className="text-[0.65rem] font-bold tracking-tight">+ TAGS</h1>
-        </Button> */}
+               <Tags height={13} width={13} />
+               <h1 className="text-[0.65rem] font-bold tracking-tight">+ TAGS</h1>
+              </Button> */}
         {/* {infoHolder.etiquetas.map((tag) => (
-          <div key={tag.id} className="group flex items-center gap-1 rounded border border-primary bg-secondary text-primary">
-            <Tag height={12} width={12} />
-            <p className="text-[0.6rem] tracking-tight">{tag.titulo}</p>
-            <button className="hidden items-center justify-center rounded p-1 duration-300 ease-in-out group-hover:flex hover:bg-gray-100">
-              <X />
-            </button>
-          </div>
-        ))}*/}
+               <div key={tag.id} className="group flex items-center gap-1 rounded border border-primary bg-secondary text-primary">
+                 <Tag height={12} width={12} />
+                 <p className="text-[0.6rem] tracking-tight">{tag.titulo}</p>
+                 <button className="hidden items-center justify-center rounded p-1 duration-300 ease-in-out group-hover:flex hover:bg-gray-100">
+                   <X />
+                 </button>
+               </div>
+              ))}*/}
         <TagsMenu currentApplicableTags={infoHolder.etiquetas.map((c) => c.id)} handleClick={(tag) => handleAddTag(tag)} />
       </div>
     </div>
@@ -123,6 +123,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
           onChange={(e) => setHolder((prev) => ({ ...prev, title: e.target.value }))}
           placeholder="Filtre pelo título da tag..."
         />
+
         <div className="flex w-full grow flex-col gap-2">
           {isLoading ? (
             <div className="flex w-full grow items-center justify-center">

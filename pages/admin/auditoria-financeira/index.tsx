@@ -123,6 +123,7 @@ function FinancesAuditing() {
               handleChange={(value) => setDateFilter((prev) => ({ ...prev, field: value }))}
               onReset={() => setDateFilter((prev) => ({ ...prev, field: 'contrato.dataAssinatura' }))}
             />
+
             <div className="mt-2 w-full lg:mt-0 lg:w-[250px]">
               <DateInput
                 width={'100%'}

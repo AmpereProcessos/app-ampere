@@ -43,6 +43,7 @@ function ContractRequestsFilterMenu({ filters, updateFilters, queryLoading, rese
             handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, name: value }))}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <TextInput
             label="CPF/CNPJ DO TITULAR"
             placeholder="Filtre pelo CPF/CNPJ do titular..."
@@ -60,6 +61,7 @@ function ContractRequestsFilterMenu({ filters, updateFilters, queryLoading, rese
             onReset={() => setFiltersHolder((prev) => ({ ...prev, serviceTypes: [] }))}
             selectedItemLabel="NÃO DEFINIDO"
           />
+
           <MultipleSelectInput
             label="TIPOS DE SERVIÇO"
             labelClassName="text-xs font-medium tracking-tight text-black"
@@ -69,6 +71,7 @@ function ContractRequestsFilterMenu({ filters, updateFilters, queryLoading, rese
             onReset={() => setFiltersHolder((prev) => ({ ...prev, serviceTypes: [] }))}
             selectedItemLabel="NÃO DEFINIDO"
           />
+
           <MultipleSelectInputVirtualized
             label="CIDADE"
             selected={filtersHolder.cities}
@@ -88,6 +91,7 @@ function ContractRequestsFilterMenu({ filters, updateFilters, queryLoading, rese
             }}
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <MultipleSelectInputVirtualized
             label="ESTADOS"
             selected={filtersHolder.ufs}

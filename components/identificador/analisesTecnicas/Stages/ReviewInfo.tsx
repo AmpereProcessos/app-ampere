@@ -601,31 +601,31 @@ function ReviewInfo({
           </div>
         </div>
         {/* <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
-          Deseja utilizar os equipamentos de um kit específico ? Abra o menu e{' '}
-          <strong className="text-cyan-500">Escolha uma das opções de kit.</strong>
-        </p>
-        <div className="my-2 flex w-full items-center justify-center">
-          {showKits ? (
-            <button onClick={() => setShowKits(false)} className="rounded-md bg-red-500 px-2 py-1 text-sm font-bold text-white">
-              FECHAR MENU DE KITS
-            </button>
-          ) : (
-            <button onClick={() => setShowKits(true)} className="rounded-md bg-cyan-500 px-2 py-1 text-sm font-bold text-white">
-              MOSTRAR MENU KITS
-            </button>
-          )}
-        </div>
-        {showKits ? (
-          <KitsSelectionMenu
-            session={session}
-            selectedKitId={selectedKitId}
-            handleSelect={(kit) => {
-              addEquipmentFromKit(kit)
-              setSelectedKitId(kit._id)
-            }}
-            closeMenu={() => setShowKits(false)}
-          />
-        ) : null} */}
+               Deseja utilizar os equipamentos de um kit específico ? Abra o menu e{' '}
+               <strong className="text-cyan-500">Escolha uma das opções de kit.</strong>
+              </p>
+              <div className="my-2 flex w-full items-center justify-center">
+               {showKits ? (
+                 <button onClick={() => setShowKits(false)} className="rounded-md bg-red-500 px-2 py-1 text-sm font-bold text-white">
+                   FECHAR MENU DE KITS
+                 </button>
+               ) : (
+                 <button onClick={() => setShowKits(true)} className="rounded-md bg-cyan-500 px-2 py-1 text-sm font-bold text-white">
+                   MOSTRAR MENU KITS
+                 </button>
+               )}
+              </div>
+              {showKits ? (
+               <KitsSelectionMenu
+                 session={session}
+                 selectedKitId={selectedKitId}
+                 handleSelect={(kit) => {
+                   addEquipmentFromKit(kit)
+                   setSelectedKitId(kit._id)
+                 }}
+                 closeMenu={() => setShowKits(false)}
+               />
+              ) : null} */}
         <h1 className="font-sans mt-2 w-full text-start  font-bold text-cyan-500">EQUIPAMENTOS ESCOLHIDOS</h1>
         <div className="flex w-full flex-col flex-wrap justify-around gap-2 lg:flex-row">
           {infoHolder.equipamentos.length > 0 ? (

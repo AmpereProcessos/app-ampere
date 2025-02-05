@@ -30,6 +30,7 @@ function MaterialItem({ material, formHolder, setFormHolder, index, removeItem }
             })
           }}
         />
+
         <input
           type={'number'}
           disabled={!!formHolder.efetivado}
@@ -65,6 +66,7 @@ function MaterialItem({ material, formHolder, setFormHolder, index, removeItem }
             }
           }}
         />
+
         {formHolder.efetivado != true && (
           <div className="flex justify-center">
             <button

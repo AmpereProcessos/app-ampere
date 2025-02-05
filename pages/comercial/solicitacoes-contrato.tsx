@@ -85,6 +85,7 @@ function ContractRequestFormsPage() {
           contractRequestsShowing > 1 ? `Mostrando ${contractRequestsShowing} solicitações.` : `Mostrando ${contractRequestsShowing} solicitação.`
         }
       />
+
       <div className="flex w-full flex-wrap items-center justify-between gap-2">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}

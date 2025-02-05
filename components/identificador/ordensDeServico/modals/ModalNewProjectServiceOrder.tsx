@@ -182,6 +182,7 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
               predefinedCategories={[]}
               updateInfoHolder={updateInfoHolder}
             />
+
             <ServiceOrderPendenciesBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
@@ -191,6 +192,7 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
               useProjectInLocoEquipmentsInformation={useProjectInLocoEquipmentsInformation}
               useProjectToTakeEquipmentsInformation={useProjectToTakeEquipmentsInformation}
             />
+
             <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

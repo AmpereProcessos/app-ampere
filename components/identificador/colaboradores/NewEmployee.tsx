@@ -228,6 +228,7 @@ function NewEmployee({ session, closeModal }: NewEmployeeProps) {
               infoHolder={infoHolder as TEmployeeDTO}
               setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>}
             />
+
             <CorporativeInformation
               infoHolder={infoHolder as TEmployeeDTO}
               setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>}

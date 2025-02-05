@@ -73,6 +73,7 @@ function MaintenanceCard({ maintenance, handleRemove, handleUpdate }: Maintenanc
               handleChange={(value) => setItemHolder((prev) => ({ ...prev, titulo: value }))}
               width="100%"
             />
+
             <DateInput
               label="DATA"
               value={itemHolder.dataEfetivacao ? formatDate(itemHolder.dataEfetivacao) : undefined}
@@ -81,6 +82,7 @@ function MaintenanceCard({ maintenance, handleRemove, handleUpdate }: Maintenanc
               }}
               width="100%"
             />
+
             <button
               onClick={() => {
                 handleUpdate(itemHolder)

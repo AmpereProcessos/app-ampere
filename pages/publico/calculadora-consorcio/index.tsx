@@ -20,6 +20,7 @@ const CONNECTIONS = [
   { id: 2, label: 'BIFÁSICO', value: 'BIFÁSICO', disponibility: 50 },
   { id: 3, label: 'TRIFÁSICO', value: 'TRIFÁSICO', disponibility: 100 },
 ]
+
 const ENERGY_TARIFFS = [
   { id: 1, distributor: 'CEMIG', tariff: 0.93 },
   { id: 2, distributor: 'EQUATORIAL', tariff: 0.8 },
@@ -228,15 +229,15 @@ function EnergyConsortiumCalculator() {
             </div>
           ) : null}
           {/* <div className="flex w-full flex-col gap-4 self-center lg:w-[70%]">
-            <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
-            <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
-              <h1 className="text-3xl font-black tracking-tight">{formatToMoney(handleCalculation({ simulation }).economy)} / MÊS</h1>
-              <div className="h-[1px] w-full bg-black lg:h-full lg:w-[1px]"></div>
-              <h1 className="text-3xl font-black tracking-tight">
-                <strong className="text-[#04e762]">{formatToMoney(handleCalculation({ simulation }).economy * 12)}</strong> / ANO
-              </h1>
-            </div>
-          </div> */}
+              <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
+              <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
+                <h1 className="text-3xl font-black tracking-tight">{formatToMoney(handleCalculation({ simulation }).economy)} / MÊS</h1>
+                <div className="h-[1px] w-full bg-black lg:h-full lg:w-[1px]"></div>
+                <h1 className="text-3xl font-black tracking-tight">
+                  <strong className="text-[#04e762]">{formatToMoney(handleCalculation({ simulation }).economy * 12)}</strong> / ANO
+                </h1>
+              </div>
+             </div> */}
         </div>
         <div className="flex w-full items-center justify-end gap-4 p-6">
           <Image src={LogoAmpere} height={50} width={150} alt="Logo Ampère" />
@@ -245,6 +246,7 @@ function EnergyConsortiumCalculator() {
       </div>
     </div>
   )
+
   // return (
   //   <div className="flex h-full w-full flex-col items-center justify-center bg-[#fff] p-3 font-[Inter] lg:flex-row">
   //     <div className="flex h-full w-full flex-col justify-between lg:w-2/3">

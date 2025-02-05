@@ -252,6 +252,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                   handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titulo: value }))}
                   width="100%"
                 />
+
                 {infoHolder.projeto ? (
                   <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
                     <div className="flex items-center gap-2">
@@ -317,6 +318,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                   blockDevolution={false}
                   allowPostFinishEditing={userHasOverallEditingPermission}
                 />
+
                 <h1 className="mb-2 w-full rounded-md bg-[#15599a] p-1 text-center text-sm font-bold text-white">LOCALIZAÇÃO</h1>
                 <div className="grid grid-cols-1 grid-rows-3 items-center gap-6 px-2 lg:grid-cols-3 lg:grid-rows-1">
                   <TextInput
@@ -337,6 +339,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     }}
                     width="100%"
                   />
+
                   <SelectInput
                     label="ESTADO"
                     value={infoHolder.localizacao.uf}
@@ -355,6 +358,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     }))}
                     width="100%"
                   />
+
                   <SelectInput
                     label="CIDADE"
                     value={infoHolder.localizacao.cidade}
@@ -381,6 +385,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, bairro: value } }))}
                     width="100%"
                   />
+
                   <TextInput
                     label="LOGRADOURO/RUA"
                     value={infoHolder.localizacao.endereco || ''}
@@ -405,6 +410,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     }
                     width="100%"
                   />
+
                   <TextInput
                     label="COMPLEMENTO"
                     value={infoHolder.localizacao.complemento || ''}

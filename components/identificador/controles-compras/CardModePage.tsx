@@ -91,6 +91,7 @@ function PurchaseControlsCardModePage({ session, handleSetMode }: PurchaseContro
           purchaseControlsShowing > 1 ? `Mostrando ${purchaseControlsShowing} compras.` : `Mostrando ${purchaseControlsShowing} compra.`
         }
       />
+
       <div className="flex w-full flex-wrap items-center gap-2">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -218,6 +219,7 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
               height={20}
               fallback={formatNameAsInitials(purchaseControl.autor.nome)}
             />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
           </div>
         </div>

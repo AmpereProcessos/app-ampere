@@ -165,34 +165,34 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }: EquipmentModalBlockP
               </div>
             </div>
             {/* <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-start mt-2">
-              {infoHolder.equipamentos?.disponivel ? (
-                <div className="flex flex-col gap-1 border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
-                  <h1 className="tracking-tight text-center font-medium">DISPONÍVEIS</h1>
-                  {infoHolder.equipamentos.disponivel.map((equip, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <BsSuitDiamondFill />
-                      <p className="text-xs text-gray-500 tracking-tight">
-                        {equip.qtde ? `${equip.qtde}x ` : ''}
-                        {equip.descricao}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-              {infoHolder.equipamentos?.retirada ? (
-                <div className="flex flex-col gap-1  border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
-                  <h1 className="tracking-tight text-center font-medium">RETIRADA</h1>
-                  {infoHolder.equipamentos.retirada.map((equip, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <BsSuitDiamondFill />
-                      <p className="text-xs text-gray-500 tracking-tight">
-                        {equip.qtde ? `${equip.qtde}x ` : ''}
-                        {equip.descricao}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+            {infoHolder.equipamentos?.disponivel ? (
+            <div className="flex flex-col gap-1 border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
+             <h1 className="tracking-tight text-center font-medium">DISPONÍVEIS</h1>
+             {infoHolder.equipamentos.disponivel.map((equip, index) => (
+               <div key={index} className="flex items-center gap-2">
+                 <BsSuitDiamondFill />
+                 <p className="text-xs text-gray-500 tracking-tight">
+                   {equip.qtde ? `${equip.qtde}x ` : ''}
+                   {equip.descricao}
+                 </p>
+               </div>
+             ))}
+            </div>
+            ) : null}
+            {infoHolder.equipamentos?.retirada ? (
+            <div className="flex flex-col gap-1  border border-cyan-500 p-3 rounded-lg w-full lg:w-fit">
+             <h1 className="tracking-tight text-center font-medium">RETIRADA</h1>
+             {infoHolder.equipamentos.retirada.map((equip, index) => (
+               <div key={index} className="flex items-center gap-2">
+                 <BsSuitDiamondFill />
+                 <p className="text-xs text-gray-500 tracking-tight">
+                   {equip.qtde ? `${equip.qtde}x ` : ''}
+                   {equip.descricao}
+                 </p>
+               </div>
+             ))}
+            </div>
+            ) : null}
             </div> */}
           </motion.div>
         )}

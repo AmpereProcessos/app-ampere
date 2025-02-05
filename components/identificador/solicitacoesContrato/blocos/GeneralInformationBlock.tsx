@@ -408,6 +408,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
                 }
                 width="100%"
               />
+
               <TextInput
                 label={'TELEFONE DO INDICADOR'}
                 placeholder="Preencha o telefone do indicador..."
@@ -447,6 +448,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
         handleChange={(value) => setInfoHolder((prev) => ({ ...prev, linkDrive: value }))}
         width="100%"
       />
+
       <TextareaInput
         label="OBSERVAÇÕES COMERCIAIS"
         placeholder="Preencha aqui observações relevantes sobre o projeto..."

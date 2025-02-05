@@ -53,14 +53,21 @@ type TechnicalAnalysisPaginationProps = {
   selectPage: (page: number) => void
   queryLoading: boolean
 }
-function TechnicalAnalysisPagination({ totalPages, activePage, selectPage, analysisMatched, analysisShowing, queryLoading }: TechnicalAnalysisPaginationProps) {
+function TechnicalAnalysisPagination({
+  totalPages,
+  activePage,
+  selectPage,
+  analysisMatched,
+  analysisShowing,
+  queryLoading,
+}: TechnicalAnalysisPaginationProps) {
   return (
     <div className="my-2 flex w-full flex-col items-center gap-1 ">
       {totalPages > 1 ? (
         <>
           <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
-            Um número grande de análises foi encontrado, separamos em páginas para facilitar a visualização. Clique na página desejada para visualizar os demais
-            análises.
+            Um número grande de análises foi encontrado, separamos em páginas para facilitar a visualização. Clique na página desejada para visualizar
+            os demais análises.
           </p>
           <div className="flex flex-col items-center justify-center gap-1 lg:flex-row lg:gap-4">
             <button

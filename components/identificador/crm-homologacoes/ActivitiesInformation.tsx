@@ -34,6 +34,7 @@ function ActivitiesInformation({ homologation, session, opportunity }: Activitie
         project={undefined}
         affectedQueryKey={['homologation-activities', homologation._id]}
       />
+
       <div className="mt-2 flex w-full flex-col gap-1">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg="Houve um erro ao buscar atividades da homologação." /> : null}

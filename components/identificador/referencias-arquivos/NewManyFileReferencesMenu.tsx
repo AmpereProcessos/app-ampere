@@ -239,6 +239,7 @@ function NewManyFileReferencesMenu({ vinculationId, prefix, session, vinculation
               handleChange={(value) => updateReference({ titulo: value })}
               width="100%"
             />
+
             <CategoriesMenu allowedCategories={allowedCategories} data={infoHolder} addCategory={addCategory} removeCategory={removeCategory} />
 
             <div className="mt-4 flex w-full flex-wrap items-center justify-center gap-2">

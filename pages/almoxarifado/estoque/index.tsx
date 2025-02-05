@@ -70,6 +70,7 @@ function Estoque() {
                     placeholder={'Digite o nome do material...'}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
+
                   <div className="w-full lg:w-[250px]">
                     <NumberInput
                       label="MENOS QUE"
@@ -210,14 +211,14 @@ function Estoque() {
           </div>
         ) : null}
         {/* <div className="mt-4 flex w-full grow flex-wrap justify-around gap-3">
-          {materials ? (
-            materials.map((material) => (
-              <MaterialCard key={material._id} material={material} handleClick={() => setEditModal({ isOpen: true, info: material })} />
-            ))
-          ) : (
-            <LoadingPage />
-          )}
-        </div> */}
+            {materials ? (
+              materials.map((material) => (
+                <MaterialCard key={material._id} material={material} handleClick={() => setEditModal({ isOpen: true, info: material })} />
+              ))
+            ) : (
+              <LoadingPage />
+            )}
+           </div> */}
         <div
           onClick={() => setNewMaterialModalIsOpen(true)}
           className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"

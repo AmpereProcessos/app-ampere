@@ -25,6 +25,7 @@ export function handleRenderFileIcon(format: string, size?: number) {
         <AiFillFile />
       </div>
     )
+
   return <div className="text-lg text-black">{renderIcon(extensionInfo.icon)}</div>
 }
 export function renderPagesIcons({

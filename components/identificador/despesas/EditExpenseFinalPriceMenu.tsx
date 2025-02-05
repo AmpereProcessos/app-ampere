@@ -62,6 +62,7 @@ function EditExpenseFinalPriceMenu({ infoHolder, setInfoHolder }: EditExpenseFin
               value={finalValueHolder}
               handleChange={(value) => setFinalValueHolder(value)}
             />
+
             <p className="w-full text-center text-xs tracking-tight text-gray-500">
               Preencha o valor final desejado para despesa e clique em <strong className="text-green-600">CONFIRMAR</strong>
             </p>

@@ -13,6 +13,7 @@ function renderInputText(file: File | null) {
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
+
   return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{file.name}</p>
 }
 

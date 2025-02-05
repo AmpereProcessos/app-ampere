@@ -124,9 +124,9 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
           </div>
         </div>
         {/* <div className="flex">
-          <div className="w-[20%] bg-gray-200 font-bold text-xxs text-center border-r border-black">OBSERVAÇÕES VISITA</div>
-          <div className="w-[80%] text-xxs text-center border-r border-black">{analysis.conclusao.observacoes}</div>
-        </div> */}
+               <div className="w-[20%] bg-gray-200 font-bold text-xxs text-center border-r border-black">OBSERVAÇÕES VISITA</div>
+               <div className="w-[80%] text-xxs text-center border-r border-black">{analysis.conclusao.observacoes}</div>
+              </div> */}
         <div className="flex flex-col">
           <div className="flex flex-col">
             <h1 className="border border-black bg-[#15599a] text-center text-sm font-bold text-white">ESTRUTURA DE MONTAGEM</h1>
@@ -230,52 +230,52 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
                 </div>
               ))}
               {/* 
-              <div className="flex">
-                <div className="w-[50%] grid grid-rows-5">
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PADRÃO ESTÁ</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">AMPERAGEM</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">Nº DO MEDIDOR</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PENDÊNCIA</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">RAMAL DE ENTRADA</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                </div>
-                <div className="w-[50%] grid grid-rows-5">
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">CONCESSIONÁRIA</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">{analysis.detalhes.concessionaria}</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">TIPO DO DISJUNTOR</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">MODELO DA CAIXA</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">NºPOSTE(GOIÁS)</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                  <div className="grid grid-cols-2 border-b border-black">
-                    <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">RAMAL DE SAÍDA</p>
-                    <p className="text-center font-bold border-r border-black text-xxs">-</p>
-                  </div>
-                </div>
-              </div> */}
+                    <div className="flex">
+                     <div className="w-[50%] grid grid-rows-5">
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PADRÃO ESTÁ</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">AMPERAGEM</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">Nº DO MEDIDOR</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">PENDÊNCIA</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">RAMAL DE ENTRADA</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                     </div>
+                     <div className="w-[50%] grid grid-rows-5">
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">CONCESSIONÁRIA</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">{analysis.detalhes.concessionaria}</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">TIPO DO DISJUNTOR</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">MODELO DA CAIXA</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">NºPOSTE(GOIÁS)</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                       <div className="grid grid-cols-2 border-b border-black">
+                         <p className="bg-gray-200 text-center font-bold border-r border-black text-xxs">RAMAL DE SAÍDA</p>
+                         <p className="text-center font-bold border-r border-black text-xxs">-</p>
+                       </div>
+                     </div>
+                    </div> */}
             </div>
           </div>
           <div className="flex flex-col">

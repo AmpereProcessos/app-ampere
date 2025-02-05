@@ -54,6 +54,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
               name="visitaTecnica"
               id="visitaTecnica"
             />
+
             <label className="ml-2" htmlFor="visitaTecnica">
               REALIZADA ?
             </label>
@@ -77,6 +78,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
               })
             }}
           />
+
           <TextInput
             label={'Tipo da telha'}
             editable={editor}
@@ -109,6 +111,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
         changes={changes}
         setChanges={setChanges}
       />
+
       // <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
       //   <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">
       //     INFORMAÇÕES SOBRE A ANÁLISE TÉCNICA

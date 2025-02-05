@@ -76,6 +76,7 @@ function HomologationActivity({ homologationId, activity }: HomologationActivity
           <h1 className="mr-2 text-xs font-medium tracking-tight text-gray-500">{formatDateAsLocale(activity.dataInsercao, true)}</h1>
           <h1 className="hidden text-sm leading-none tracking-tight text-gray-500 lg:flex">CRIADO POR</h1>
           <Avatar width={20} height={20} url={activity.autor.avatar_url || ''} fallback={formatNameAsInitials(activity.autor.nome)} />
+
           <h1 className="text-xs font-medium tracking-tight text-gray-500">{activity.autor.nome}</h1>
         </div>
       </div>

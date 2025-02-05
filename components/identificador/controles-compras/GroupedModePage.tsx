@@ -105,6 +105,7 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
               selectedItemLabel="NÃO DEFINIDO"
               onReset={() => setFilters((prev) => ({ ...prev, tags: [] }))}
             />
+
             <button
               onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
               className={cn(
@@ -258,6 +259,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
               onSettled: async () => await queryClient.invalidateQueries({ queryKey: affectedQueryKey }),
             }}
           />
+
           <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
         </div>
       </div>
@@ -345,6 +347,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
               height={20}
               fallback={formatNameAsInitials(purchaseControl.autor.nome)}
             />
+
             <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
           </div>
         </div>
@@ -365,11 +368,7 @@ function PurchaseControlStatusController({
   updateCallbacks,
 }: {
   purchaseControl: TPurchaseControlKanbanSimplifiedDTO
-  updateCallbacks?: {
-    onMutate?: (data: { id: string; updates: any }) => void
-    onSuccess?: () => void
-    onSettled?: () => void
-  }
+  updateCallbacks?: { onMutate?: (data: { id: string; updates: any }) => void; onSuccess?: () => void; onSettled?: () => void }
 }) {
   const { mutate, isPending } = useMutation({
     mutationKey: ['update-purchase-control-status', purchaseControl._id],
@@ -448,49 +447,48 @@ function PurchaseControlStatusController({
               </button>
             ))}
             {/* <button
-              className="w-full"
-              disabled={isPending}
-              onClick={() => mutate({ activityId: activity.id, activity: { status: 'PENDENTE', dataConclusao: null }, responsibles: [] })}
-            >
-              <DropdownMenuItem className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="min-h-4 min-w-4 h-4 w-4 rounded-full border border-primary"></div>
-                  <h1>PENDENTE</h1>
-                </div>
-                {activity.status === 'PENDENTE' ? <Check size={15} /> : null}
-              </DropdownMenuItem>
-            </button>
-
-            <button
-              className="w-full"
-              disabled={isLoading}
-              onClick={() => mutate({ activityId: activity.id, activity: { status: 'EM ANDAMENTO', dataConclusao: null }, responsibles: [] })}
-            >
-              <DropdownMenuItem className="flex cursor-pointer items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-blue-500 text-white">
-                    <CircleDot size={12} />
-                  </div>
-                  <h1>EM ANDAMENTO</h1>
-                </div>
-                {activity.status === 'EM ANDAMENTO' ? <Check size={15} /> : null}
-              </DropdownMenuItem>
-            </button>
-            <button
-              className="w-full"
-              disabled={isLoading}
-              onClick={() => mutate({ activityId: activity.id, activity: { status: 'CONCLUÍDO', dataConclusao: new Date() }, responsibles: [] })}
-            >
-              <DropdownMenuItem className="flex cursor-pointer items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <div className="min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-green-500 text-white">
-                    <Check size={12} />
-                  </div>
-                  <h1>CONCLUÍDO</h1>
-                </div>
-                {activity.status === 'CONCLUÍDO' ? <Check size={15} /> : null}
-              </DropdownMenuItem>
-            </button> */}
+                   className="w-full"
+                   disabled={isPending}
+                   onClick={() => mutate({ activityId: activity.id, activity: { status: 'PENDENTE', dataConclusao: null }, responsibles: [] })}
+                  >
+                   <DropdownMenuItem className="flex items-center justify-between">
+                     <div className="flex items-center gap-1">
+                       <div className="min-h-4 min-w-4 h-4 w-4 rounded-full border border-primary"></div>
+                       <h1>PENDENTE</h1>
+                     </div>
+                     {activity.status === 'PENDENTE' ? <Check size={15} /> : null}
+                   </DropdownMenuItem>
+                  </button>
+                   <button
+                   className="w-full"
+                   disabled={isLoading}
+                   onClick={() => mutate({ activityId: activity.id, activity: { status: 'EM ANDAMENTO', dataConclusao: null }, responsibles: [] })}
+                  >
+                   <DropdownMenuItem className="flex cursor-pointer items-center justify-between">
+                     <div className="flex items-center gap-1">
+                       <div className="min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-blue-500 text-white">
+                         <CircleDot size={12} />
+                       </div>
+                       <h1>EM ANDAMENTO</h1>
+                     </div>
+                     {activity.status === 'EM ANDAMENTO' ? <Check size={15} /> : null}
+                   </DropdownMenuItem>
+                  </button>
+                  <button
+                   className="w-full"
+                   disabled={isLoading}
+                   onClick={() => mutate({ activityId: activity.id, activity: { status: 'CONCLUÍDO', dataConclusao: new Date() }, responsibles: [] })}
+                  >
+                   <DropdownMenuItem className="flex cursor-pointer items-center justify-between">
+                     <div className="flex items-center gap-1">
+                       <div className="min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-green-500 text-white">
+                         <Check size={12} />
+                       </div>
+                       <h1>CONCLUÍDO</h1>
+                     </div>
+                     {activity.status === 'CONCLUÍDO' ? <Check size={15} /> : null}
+                   </DropdownMenuItem>
+                  </button> */}
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

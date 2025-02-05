@@ -71,8 +71,10 @@ function CorporativeInformation({ infoHolder, setInfoHolder }: CorporativeInform
       <PositionsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
       <h1 className="w-full pt-2 text-center text-sm font-medium">HORÁRIOS DE TRABALHO</h1>
       <WorkingHoursMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
+
       <h1 className="w-full pt-2 text-center text-sm font-medium">CONTATOS AUXILIARES</h1>
       <AuxiliarContactsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
+
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <SelectInput

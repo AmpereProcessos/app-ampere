@@ -13,18 +13,21 @@ function getCardStatus({ approved, contractMade }: { approved?: boolean | null; 
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">FINALIZADO</h1>
       </div>
     )
+
   if (approved)
     return (
       <div className="flex min-w-fit items-center gap-2 rounded-full bg-blue-500 px-2 py-1 ">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">APROVADO</h1>
       </div>
     )
+
   if (approved == false)
     return (
       <div className="flex min-w-fit items-center gap-2 rounded-full bg-red-500 px-2 py-1 ">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">REPROVADO</h1>
       </div>
     )
+
   return (
     <div className="flex min-w-fit items-center gap-2 rounded-full bg-orange-500 px-2 py-1 ">
       <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">PENDENTE</h1>

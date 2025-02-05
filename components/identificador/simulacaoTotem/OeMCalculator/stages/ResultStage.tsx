@@ -90,6 +90,7 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
       ],
     },
   ]
+
   const potencialProblems = [
     'Redução do desempenho de geração.',
     'Degradação de componentes e redução da vida útil dos equipamentos.',
@@ -97,6 +98,7 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
     'Risco de segurança por falhas elétricas ou mecânicas.',
     'Perda de garantia dos equipamentos junto aos fornecedores.',
   ]
+
   const benefits = [
     'Maximização os rendimentos da sua usina fotovoltaica.',
     'Prolongação da vida útil dos equipamentos.',
@@ -104,6 +106,7 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
     'Tenha a segurança de ter seu sistema operado com as melhores práticas por profissionais capacitados.',
     'Adquirindo nossos planos, tenha acesso direto à uma equipe de profissionais especializados pronta pra atender você.',
   ]
+
   function getEstimatedPossibleLoss({ moduleQty, peakPower }: { moduleQty: number; peakPower: number | null }) {
     const STANDARD_MODULE_POWER = 450
     const STANDARD_EFFICIENCE = 90

@@ -69,6 +69,7 @@ function InfoObrasBlock({
             }))
           }}
         />
+
         <CheckboxInput
           labelFalse="CHECKLIST DE OBRA PRONTO"
           labelTrue="CHECKLIST DE OBRA PRONTO"
@@ -209,50 +210,50 @@ function InfoObrasBlock({
       </div>
 
       {/* <div className="mt-2 flex w-full  flex-col items-center self-center lg:w-[450px]">
-        <span className="text-center font-raleway text-sm font-bold uppercase">OBSERVAÇÕES</span>
-        <textarea
-          readOnly={!editor}
-          value={infoHolder.obra.observacoes ? infoHolder.obra.observacoes : ''}
-          placeholder={'Observações da obra aqui...'}
-          onChange={(e) => {
-            setChanges({
-              ...changes,
-              'obra.observacoes': e.target.value,
-            })
-            setInfo({
-              ...infoHolder,
-              obra: {
-                ...infoHolder.obra,
-                observacoes: e.target.value,
-              },
-            })
-          }}
-          className="h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
-        />
-      </div> */}
+              <span className="text-center font-raleway text-sm font-bold uppercase">OBSERVAÇÕES</span>
+              <textarea
+                readOnly={!editor}
+                value={infoHolder.obra.observacoes ? infoHolder.obra.observacoes : ''}
+                placeholder={'Observações da obra aqui...'}
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    'obra.observacoes': e.target.value,
+                  })
+                  setInfo({
+                    ...infoHolder,
+                    obra: {
+                      ...infoHolder.obra,
+                      observacoes: e.target.value,
+                    },
+                  })
+                }}
+                className="h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+              />
+             </div> */}
       {/* <SelectInput
-          label={'Laudo'}
-          value={infoHolder.obra?.laudo ? infoHolder.obra?.laudo : 'NÃO DEFINIDO'}
-          editable={editor}
-          options={[
-            { label: 'EM ESTUDO', value: 'EM ESTUDO' },
-            { label: 'EMITIDO', value: 'EMITIDO' },
-            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-          ]}
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'obra.laudo': value,
-            })
-            setInfo({
-              ...infoHolder,
-              obra: {
-                ...infoHolder.obra,
-                laudo: value,
-              },
-            })
-          }}
-        /> */}
+                label={'Laudo'}
+                value={infoHolder.obra?.laudo ? infoHolder.obra?.laudo : 'NÃO DEFINIDO'}
+                editable={editor}
+                options={[
+                  { label: 'EM ESTUDO', value: 'EM ESTUDO' },
+                  { label: 'EMITIDO', value: 'EMITIDO' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+                ]}
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    'obra.laudo': value,
+                  })
+                  setInfo({
+                    ...infoHolder,
+                    obra: {
+                      ...infoHolder.obra,
+                      laudo: value,
+                    },
+                  })
+                }}
+              /> */}
 
       {showDeliveryInfo ? (
         <>

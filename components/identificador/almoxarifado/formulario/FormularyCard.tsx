@@ -18,6 +18,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
           <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">FINALIZADO</h1>
         </div>
       )
+
     return (
       <div className="flex min-w-fit items-center gap-2 rounded-full bg-blue-600 px-2 py-1 ">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">EM ABERTO</h1>

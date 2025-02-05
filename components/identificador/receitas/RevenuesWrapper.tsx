@@ -126,8 +126,8 @@ function RevenuesWrapper({ session }: RevenuesWrapperProps) {
           <EditRevenue session={session} revenueId={modalRevenue.id} closeModal={() => setModalRevenue({ isOpen: false, id: null })} />
         ) : null}
         {/* {modalRevenue && modalIsOpen ? (
-          <ExpenseModal expense={modalRevenue} closeModal={handleCloseModal} />
-        ) : null} */}
+              <ExpenseModal expense={modalRevenue} closeModal={handleCloseModal} />
+             ) : null} */}
       </div>
     </div>
   )

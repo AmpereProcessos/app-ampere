@@ -285,83 +285,83 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
         </div>
       </div>
       {/* <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-        <DateInput
-          label={'MANUTENÇÃO PREVENTIVA'}
-          editable={editor}
-          value={
-            infoHolder.manutencaoPreventiva?.data != undefined && infoHolder.manutencaoPreventiva.data != '-'
-              ? new Date(infoHolder.manutencaoPreventiva.data).toISOString().slice(0, 10)
-              : 0
-          }
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'manutencaoPreventiva.data': isNaN(value) ? new Date(value).toISOString() : null,
-              'manutencaoPreventiva.status': isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
-            })
-            setInfo({
-              ...infoHolder,
-              manutencaoPreventiva: {
-                ...infoHolder.manutencaoPreventiva,
-                data: isNaN(value) ? new Date(value).toISOString() : null,
-                status: isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
-              },
-            })
-          }}
-        />
-        <div className="flex w-[350px] flex-col items-center">
-          <span className="text-center font-raleway text-sm font-bold uppercase">O&M CONCLUÍDO ?</span>
-          <div className="flex">
-            <input
-              disabled={!editor}
-              checked={infoHolder.oem?.oemConcluido == true ? true : false}
-              onChange={(e) => {
-                setChanges({
-                  ...changes,
-                  'oem.oemConcluido': e.target.checked,
-                  'obra.statusDaObra': 'CONCLUIDA',
-                })
-                setInfo({
-                  ...infoHolder,
-                  obra: {
-                    ...infoHolder.obra,
-                    statusDaObra: 'CONCLUIDA',
-                  },
-                  oem: {
-                    ...infoHolder.oem,
-                    oemConcluido: e.target.checked,
-                  },
-                })
-              }}
-              type="checkbox"
-              name="oemConcluido"
-              id="oemConcluido"
-            />
-            <label className="ml-2" htmlFor="oemConcluido">
-              {infoHolder.oem?.oemConcluido ? 'SIM' : 'NÃO'}
-            </label>
-          </div>
-        </div>
-        <SelectInput
-          label={'STATUS DA OBRA'}
-          value={infoHolder.obra?.statusDaObra ? infoHolder.obra?.statusDaObra : 'NÃO DEFINIDO'}
-          editable={editor}
-          options={statusObra.map((status) => status)}
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'obra.statusDaObra': value,
-            })
-            setInfo({
-              ...infoHolder,
-              obra: {
-                ...infoHolder.obra,
-                statusDaObra: value,
-              },
-            })
-          }}
-        />
-      </div> */}
+              <DateInput
+                label={'MANUTENÇÃO PREVENTIVA'}
+                editable={editor}
+                value={
+                  infoHolder.manutencaoPreventiva?.data != undefined && infoHolder.manutencaoPreventiva.data != '-'
+                    ? new Date(infoHolder.manutencaoPreventiva.data).toISOString().slice(0, 10)
+                    : 0
+                }
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    'manutencaoPreventiva.data': isNaN(value) ? new Date(value).toISOString() : null,
+                    'manutencaoPreventiva.status': isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
+                  })
+                  setInfo({
+                    ...infoHolder,
+                    manutencaoPreventiva: {
+                      ...infoHolder.manutencaoPreventiva,
+                      data: isNaN(value) ? new Date(value).toISOString() : null,
+                      status: isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
+                    },
+                  })
+                }}
+              />
+              <div className="flex w-[350px] flex-col items-center">
+                <span className="text-center font-raleway text-sm font-bold uppercase">O&M CONCLUÍDO ?</span>
+                <div className="flex">
+                  <input
+                    disabled={!editor}
+                    checked={infoHolder.oem?.oemConcluido == true ? true : false}
+                    onChange={(e) => {
+                      setChanges({
+                        ...changes,
+                        'oem.oemConcluido': e.target.checked,
+                        'obra.statusDaObra': 'CONCLUIDA',
+                      })
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          statusDaObra: 'CONCLUIDA',
+                        },
+                        oem: {
+                          ...infoHolder.oem,
+                          oemConcluido: e.target.checked,
+                        },
+                      })
+                    }}
+                    type="checkbox"
+                    name="oemConcluido"
+                    id="oemConcluido"
+                  />
+                  <label className="ml-2" htmlFor="oemConcluido">
+                    {infoHolder.oem?.oemConcluido ? 'SIM' : 'NÃO'}
+                  </label>
+                </div>
+              </div>
+              <SelectInput
+                label={'STATUS DA OBRA'}
+                value={infoHolder.obra?.statusDaObra ? infoHolder.obra?.statusDaObra : 'NÃO DEFINIDO'}
+                editable={editor}
+                options={statusObra.map((status) => status)}
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    'obra.statusDaObra': value,
+                  })
+                  setInfo({
+                    ...infoHolder,
+                    obra: {
+                      ...infoHolder.obra,
+                      statusDaObra: value,
+                    },
+                  })
+                }}
+              />
+             </div> */}
     </div>
   )
 }

@@ -163,6 +163,7 @@ function NewActivityMenu({ session, opportunity, project, homologationId, techni
                   // @ts-ignore
                   width={undefined}
                 />
+
                 <button
                   onClick={() => vinculateResponsible({ id: newResponsibleHolder, users: users || [] })}
                   className="min-h-[46.6px]  rounded border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 shadow hover:bg-orange-500 hover:text-white"

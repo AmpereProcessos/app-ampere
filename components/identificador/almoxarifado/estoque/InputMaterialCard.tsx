@@ -99,6 +99,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
         onReset={() => setMaterialId(null)}
         width="100%"
       />
+
       <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className={`flex w-full flex-col gap-1 lg:w-1/2`}>
           <label htmlFor={'qty-price'} className={'font-sans text-[0.6rem] font-bold  tracking-tight text-[#353432]'}>

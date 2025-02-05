@@ -92,6 +92,7 @@ function Vendas() {
                   placeholder={'Digite o nome do contrato...'}
                   handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                 />
+
                 <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
                   <div className="flex items-center justify-center gap-x-2">
                     <div className="w-full lg:w-[250px]">

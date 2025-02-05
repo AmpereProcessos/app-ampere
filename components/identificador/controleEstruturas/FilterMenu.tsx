@@ -33,6 +33,7 @@ function StructuresAdequationsFilterMenu({ filterMenuIsOpen, filters, setFilters
               handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
               width="100%"
             />
+
             <MultipleSelectInput
               label="CATEGORIA"
               labelClassName="text-xs font-medium tracking-tight text-black"

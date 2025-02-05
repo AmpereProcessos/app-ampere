@@ -183,6 +183,7 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
               predefinedCategories={[]}
               updateInfoHolder={updateInfoHolder}
             />
+
             {project ? (
               <ServiceOrderProjectInformationBlock project={project} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             ) : (
@@ -202,6 +203,7 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
               useProjectInLocoEquipmentsInformation={project ? useProjectInLocoEquipmentsInformation : undefined}
               useProjectToTakeEquipmentsInformation={project ? useProjectToTakeEquipmentsInformation : undefined}
             />
+
             <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

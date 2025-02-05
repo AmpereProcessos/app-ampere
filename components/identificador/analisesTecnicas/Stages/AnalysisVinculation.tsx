@@ -93,6 +93,7 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
               handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
               width="100%"
             />
+
             {technicalAnalysis.length > 0 ? (
               technicalAnalysis.map((analysis, index) => (
                 <div key={`${analysis.nome}-${index}`} className="flex w-full items-center rounded-md border border-gray-200">
@@ -149,15 +150,15 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
             Voltar
           </button>
           {/* <button
-            onClick={() => {
-              if (validateFields()) {
-                goToNextStage()
-              }
-            }}
-            className="rounded p-2 font-bold hover:bg-black hover:text-white"
-          >
-            Prosseguir
-          </button> */}
+                 onClick={() => {
+                   if (validateFields()) {
+                     goToNextStage()
+                   }
+                 }}
+                 className="rounded p-2 font-bold hover:bg-black hover:text-white"
+                >
+                 Prosseguir
+                </button> */}
         </div>
       </div>
     </div>

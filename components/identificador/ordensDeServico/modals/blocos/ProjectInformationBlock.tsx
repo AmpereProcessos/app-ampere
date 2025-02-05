@@ -133,20 +133,20 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
                 </div>
                 <div className="flex w-full items-center justify-end">
                   {/* <button
-                    onClick={() =>
-                      addProductToComposition({
-                        categoria: product.categoria,
-                        descricao: `${product.fabricante} - ${product.modelo}`,
-                        qtde: product.qtde,
-                        unidade: 'UN',
-                        valor: 0,
-                      })
-                    }
-                    className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2  py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black"
-                  >
-                    <IoMdAdd width={10} height={10} />
-                    <p>ADICIONAR À COMPOSIÇÃO</p>
-                  </button> */}
+                onClick={() =>
+                addProductToComposition({
+                categoria: product.categoria,
+                descricao: `${product.fabricante} - ${product.modelo}`,
+                qtde: product.qtde,
+                unidade: 'UN',
+                valor: 0,
+                })
+                }
+                className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2  py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black"
+                >
+                <IoMdAdd width={10} height={10} />
+                <p>ADICIONAR À COMPOSIÇÃO</p>
+                </button> */}
                 </div>
               </div>
             ))

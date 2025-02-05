@@ -177,15 +177,15 @@ function AnaliseBlock({ project }: AnaliseBlockProps) {
 
                       {renderLinks({ links: project.links[category], category: category })}
                       {/* {project.links[category].map((obj, index2) => (
-                    <div className="w-full lg:w-[50%]">
-                      <FileLinkBlock
-                        key={`${obj.title} - ${index2}`}
-                        obj={obj}
-                        prefix={infoHolder.nomeDoContrato}
-                        deleteFile={(obj) => deleteFile(obj, category)}
-                      />
-                    </div>
-                  ))} */}
+                <div className="w-full lg:w-[50%]">
+                <FileLinkBlock
+                key={`${obj.title} - ${index2}`}
+                obj={obj}
+                prefix={infoHolder.nomeDoContrato}
+                deleteFile={(obj) => deleteFile(obj, category)}
+                />
+                </div>
+                ))} */}
                     </div>
                   ) : null
                 )}
@@ -196,6 +196,7 @@ function AnaliseBlock({ project }: AnaliseBlockProps) {
       </div>
     </div>
   )
+
   // return (
   //   <div className="flex w-full flex-col border border-gray-200 p-1">
   //     <div className="grid w-full grid-cols-8 items-center">

@@ -148,16 +148,23 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
                 <ActivitiesInformation session={session} homologation={homologation} opportunity={homologation.oportunidade} />
                 <UpdatesInformation session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <PendenciesInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <StatusInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <ApplicantBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <HolderInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <HomologationFiles session={session} homologationId={homologationId} />
                 <InstallationInformation
                   infoHolder={infoHolder}
                   setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>}
                 />
+
                 <LocationInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <EquipmentsComposition infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>} />
+
                 <DocumentationInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <AccessInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <VistoryInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

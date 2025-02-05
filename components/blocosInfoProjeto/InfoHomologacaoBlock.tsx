@@ -65,8 +65,10 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
                 setChanges((prev) => ({ ...prev, 'homologacao.observacoes': value }))
               }}
             />
+
             {/* <ActivitiesInformation session={session} homologation={homologation} opportunity={homologation.oportunidade} /> */}
             <UpdatesInformation session={session} infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
+
             <StatusInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
             {/* <ApplicantBlock infoHolder={infoHolder} setInfoHolder={setInfo } /> */}
             <HolderInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />

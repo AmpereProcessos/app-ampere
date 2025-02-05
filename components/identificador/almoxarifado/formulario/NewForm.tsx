@@ -275,6 +275,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
                 }}
                 width="100%"
               />
+
               <SelectInput
                 label="ESTADO"
                 value={infoHolder.localizacao.uf}
@@ -293,6 +294,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
                 }))}
                 width="100%"
               />
+
               <SelectInput
                 label="CIDADE"
                 value={infoHolder.localizacao.cidade}
@@ -319,6 +321,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
                 handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, bairro: value } }))}
                 width="100%"
               />
+
               <TextInput
                 label="LOGRADOURO/RUA"
                 value={infoHolder.localizacao.endereco || ''}
@@ -343,6 +346,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
                 }
                 width="100%"
               />
+
               <TextInput
                 label="COMPLEMENTO"
                 value={infoHolder.localizacao.complemento || ''}

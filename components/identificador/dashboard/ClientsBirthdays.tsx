@@ -11,7 +11,7 @@ function ClientsBirthdays() {
   return (
     <div className="mt-4 flex grow flex-col border  border-gray-200 bg-[#fff] p-4 shadow-xl">
       <div className="flex w-full flex-col items-center justify-between lg:flex-row">
-        <h1 className="uppercase text-gray-600">ANIVERSARIANTES DO MÊS</h1>
+        <h1 className="uppercase text-gray-600 text-[18px]">ANIVERSARIANTES DO MÊS</h1>
         <div className="flex flex-wrap items-center gap-2">
           <div className="w-full lg:w-[250px]">
             <TextInput
@@ -41,10 +41,10 @@ function ClientsBirthdays() {
           ? birthdays.map((birthday, index) => (
               <div
                 key={index}
-                className="flex w-full flex-col gap-2 rounded-md border border-gray-200 bg-[#fff] p-3 text-center text-xs shadow-sm lg:w-[450px]"
+                className="flex w-full gap-2 rounded-md border border-gray-200 bg-[#fff] p-3 text-center text-xs shadow-sm lg:w-[450px]"
               >
                 <div className="flex w-full items-center justify-between">
-                  <h1 className="font-bold leading-none tracking-tight">{birthday.nome}</h1>
+                  <h1 className="font-bold leading-none tracking-tight h-[fit-content]">{birthday.nome}</h1>
                   {new Date(birthday.dataNascimento).getDate() == new Date().getDate() ? <FaBirthdayCake color="DA0C81" size={20} /> : null}
                 </div>
                 <div className="flex items-center justify-center gap-2 ">

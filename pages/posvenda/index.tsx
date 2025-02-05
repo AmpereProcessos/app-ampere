@@ -201,27 +201,27 @@ function Posvenda() {
           {dropdownMenuVisible ? (
             <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
               {/* <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <button
-                  onClick={() => setCardMode(!cardMode)}
-                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                >
-                  {cardMode ? <GoCreditCard /> : <MdOutlineFormatListBulleted />}
-                  {cardMode ? 'MODO CARD' : 'MODO LISTA'}
-                </button>
-                <button
-                  onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
-                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                >
-                  <BiTime />
-                  SEM CONTATO RECENTE
-                </button>
-                <button
-                  onClick={ordenate}
-                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black rounded"
-                >
-                  <TbArrowsDownUp />
-                  ORDERNAR
-                </button>
+              <button
+                onClick={() => setCardMode(!cardMode)}
+                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+              >
+                {cardMode ? <GoCreditCard /> : <MdOutlineFormatListBulleted />}
+                {cardMode ? 'MODO CARD' : 'MODO LISTA'}
+              </button>
+              <button
+                onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
+                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+              >
+                <BiTime />
+                SEM CONTATO RECENTE
+              </button>
+              <button
+                onClick={ordenate}
+                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black rounded"
+              >
+                <TbArrowsDownUp />
+                ORDERNAR
+              </button>
               </div> */}
               <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <TextInput
@@ -230,12 +230,14 @@ function Posvenda() {
                   value={filters.search}
                   handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                 />
+
                 <NumberInput
                   label="NÚMERO DE MÓDULOS"
                   value={filters.moduleQty}
                   handleChange={(value) => setFilters((prev) => ({ ...prev, moduleQty: value }))}
                   placeholder="Digite o número de módulos..."
                 />
+
                 <div className="w-full lg:w-[350px]">
                   <MultipleSelectInput
                     width={'100%'}

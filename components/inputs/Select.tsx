@@ -205,6 +205,7 @@ function SelectInput<T>({
         )}
       </div>
     )
+
   return (
     <Drawer open={selectMenuIsOpen} onOpenChange={setSelectMenuIsOpen}>
       <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
@@ -247,6 +248,7 @@ function SelectInput<T>({
             placeholder="Filtre o item desejado..."
             className="w-full bg-transparent p-2 text-sm italic outline-none"
           />
+
           <div
             onClick={() => resetState()}
             className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${!selectedId ? 'bg-primary/20' : ''}`}

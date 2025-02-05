@@ -33,6 +33,7 @@ function TagsMenu({ propertyHolder, setPropertyHolder }: TagsMenuProps) {
         handleChange={(value) => setTagHolder(value)}
         width="100%"
       />
+
       <div className="mt-1 flex w-full items-center justify-end">
         <button
           onClick={() => addProperty(tagHolder)}

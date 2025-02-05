@@ -167,7 +167,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                   <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                     <div className="flex items-center gap-1">
                       {/* <div className="flex h-[25px] min-h-[25px] w-[25px] min-w-[25px] items-center justify-center rounded-full border-2 border-blue-600 p-1 text-blue-600 lg:h-[40px] lg:min-h-[40px] lg:w-[40px] lg:min-w-[40px]">
-                        <FaSolarPanel size={25} />
+                      <FaSolarPanel size={25} />
                       </div> */}
                       <div className="flex items-center justify-center gap-2 rounded-full border-2 border-blue-600 p-1 text-blue-600">
                         <MdReportProblem size={25} />
@@ -195,7 +195,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                   <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
                     <div className="flex items-center gap-1">
                       {/* <div className="flex h-[35px] min-h-[35px] w-[35px] min-w-[35px] items-center justify-center rounded-full border-2 border-orange-600 p-1 text-orange-600 lg:h-[40px] lg:min-h-[40px] lg:w-[40px] lg:min-w-[40px]">
-                        <FaSolarPanel size={25} />
+                      <FaSolarPanel size={25} />
                       </div>
                       <p className="font-bold">{key}</p> */}
                       <div className="flex items-center justify-center gap-2 rounded-full border-2 border-orange-600 p-1 text-orange-600">

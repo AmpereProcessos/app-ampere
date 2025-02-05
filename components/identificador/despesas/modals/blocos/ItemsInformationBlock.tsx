@@ -74,6 +74,7 @@ function ExpenseItemsInformationBlock({ infoHolder, setInfoHolder }: ExpenseItem
           removeCompositionItem={removeCompositionItem}
           updateExpenseTotal={updateExpenseTotal}
         />
+
         {compositionItemsTotal > infoHolder.total ? (
           <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs italic tracking-tight text-orange-400">
             Por favor, ajuste os valores dos itens da composição. A somatória dos itens atuais excede o valor total estabelecido para a despesa.

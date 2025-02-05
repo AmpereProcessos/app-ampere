@@ -199,6 +199,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   predefinedCategories={[]}
                   updateInfoHolder={updateInfoHolder}
                 />
+
                 <ServiceOrderPendenciesBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 {serviceOrder?.projetoDados ? (
                   <ServiceOrderProjectInformationBlock project={serviceOrder.projetoDados} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
@@ -217,8 +218,10 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   serviceOrderId={serviceOrderId}
                   projectId={osInfo.projeto.id || undefined}
                 />
+
                 <ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
+
                 <ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

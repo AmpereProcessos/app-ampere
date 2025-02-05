@@ -88,6 +88,7 @@ function NewPaymentOptionMenu({ addPaymentOption }: NewPaymentOptionMenuProps) {
           handleChange={(value) => setPaymentOption((prev) => ({ ...prev, descricao: value }))}
           width="100%"
         />
+
         <div className="grid w-full grid-cols-1 items-center gap-2 lg:grid-cols-2">
           {Object.entries(paymentOption.parcelas).map(([key, value]) => (
             <div className={`flex  w-full flex-col gap-1`}>
@@ -184,6 +185,7 @@ function PaymentOptionCard({ option, updatePaymentOption, removePaymentOption }:
                 handleChange={(value) => setPaymentOptionInfo((prev) => ({ ...prev, descricao: value }))}
                 width="100%"
               />
+
               <div className="grid w-full grid-cols-1 items-center gap-2 lg:grid-cols-2">
                 {Object.entries(paymentOptionInfo.parcelas).map(([key, value]) => (
                   <div className={`flex  w-full flex-col gap-1`}>

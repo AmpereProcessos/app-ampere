@@ -95,6 +95,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
                 propertyHolder={infoHolder as TPropertyDTO}
                 setPropertyHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TPropertyDTO>>}
               />
+
               <ResponsiblesMenu
                 propertyHolder={infoHolder as TPropertyDTO}
                 setPropertyHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TPropertyDTO>>}

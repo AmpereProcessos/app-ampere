@@ -233,6 +233,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
           }))
         }}
       />
+
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <NumberInput
@@ -325,6 +326,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
         onReset={() => setInfoHolder((prev) => ({ ...prev, formaDePagamento: null }))}
         width="100%"
       />
+
       <div className="mt-2 flex w-full flex-col items-center self-center px-2">
         <span className="text-center font-raleway text-sm font-bold uppercase">DESCRIÇÃO DA NEGOCIAÇÃO</span>
         <textarea

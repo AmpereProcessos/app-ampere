@@ -61,6 +61,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
           handleChange={(value) => setAnalysisIdHolder(value)}
           width="100%"
         />
+
         <div className="flex w-full items-center justify-end">
           <button
             disabled={isPending}

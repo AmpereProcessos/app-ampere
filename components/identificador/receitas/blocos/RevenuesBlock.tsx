@@ -69,6 +69,7 @@ function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProp
         itemsMatchedText={revenuesMatched > 0 ? `${revenuesMatched} receitas encontradas.` : `${revenuesMatched} receita encontrada.`}
         itemsShowingText={revenuesShowing > 0 ? `Mostrando ${revenuesShowing} receitas.` : `Mostrando ${revenuesShowing} receita.`}
       />
+
       <div className="flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -111,17 +112,20 @@ function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
     if (totalReceived == revenueTotal)
       return {
         tag: <h1 className="rounded-lg bg-green-500 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">RECEBIDO</h1>,
+
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
     if (totalReceived > 0)
       return {
         tag: <h1 className="rounded-lg bg-orange-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">RECEBIDO PARCIAL</h1>,
+
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
     return {
       tag: <h1 className="rounded-lg bg-red-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PENDENTE</h1>,
+
       fractionationStr: `${partionsReceived}/${receipts.length}`,
     }
   }

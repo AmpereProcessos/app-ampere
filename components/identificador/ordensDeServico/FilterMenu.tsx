@@ -40,6 +40,7 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
             placeholder="Filtre pelo nome do favorecido..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <TextInput
             label="EQUIPE RESPONSÁVEL"
             value={filtersHolder.responsible}
@@ -49,6 +50,7 @@ function ServiceOrdersFilterMenu({ filters, updateFilters, queryLoading, resetSe
             placeholder="Filtre pelo nome da equipe responsável..."
             labelClassName="text-xs font-medium tracking-tight text-black"
           />
+
           <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
             <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
               <div className="flex items-center justify-center gap-x-2">

@@ -213,8 +213,8 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
             <>
               <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
                 {/* <OpportunityInformationBlock
-                  infoHolder={infoHolder}
-                  setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>}
+                infoHolder={infoHolder}
+                setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>}
                 /> */}
 
                 <ApplicantBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
@@ -222,6 +222,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
                 <InstallationInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <LocationInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 <EquipmentsComposition infoHolder={infoHolder} setInfoHolder={setInfoHolder} activeProposalId={opportunity?.idPropostaAtiva} />
+
                 <AttachFiles opportunityId={opportunity?._id || ''} files={files} setFiles={setFiles} />
               </div>
               <div className="flex w-full items-center justify-end p-2">

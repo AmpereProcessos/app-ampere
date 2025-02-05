@@ -102,7 +102,7 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	const db: Db = await connectToDatabase();
 	const crmDb = await connectToCRMDatabase();
 
-	console.log("REVENUE", revenue);
+	console.log("REVENUE PAYLOAD", revenue);
 	const projectsCollection: Collection<TProject> = db.collection("dados");
 	const revenuesCollection: Collection<TRevenue> = db.collection("receitas");
 	const integrationsCollection: Collection<TIntegration> = db.collection("integracoes");

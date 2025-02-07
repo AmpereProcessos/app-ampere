@@ -21,7 +21,7 @@ import SelectInput from "../../components/inputs/Select";
 import MultipleSelectInput from "../../components/inputs/MultipleSelect";
 import MultipleSelectInputVirtualized from "../../components/inputs/MultipleSelectInputVirtualized";
 import { executionStatus, serviceTypes, structureTypes } from "../../utils/select-options";
-import { TProjectDTO } from "../../utils/schemas/projects";
+import type { TProjectDTO } from "../../utils/schemas/projects";
 import { TbTextPlus, TbTruckDelivery } from "react-icons/tb";
 import { GrStorage } from "react-icons/gr";
 import { BsPatchCheckFill } from "react-icons/bs";
@@ -49,19 +49,21 @@ function Obras() {
 	function getBorderColorByParecer(date1: string, date2: string, statusObra: string) {
 		const Date1AsDate = new Date(date1);
 		const Date2AsDate = new Date(date2);
-		var timeDiff = Math.abs(Date2AsDate.getTime() - Date1AsDate.getTime());
-		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-		if (statusObra == "CASA EM CONSTRUÇÃO") {
+		const timeDiff = Math.abs(Date2AsDate.getTime() - Date1AsDate.getTime());
+		const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+		if (statusObra === "CASA EM CONSTRUÇÃO") {
 			return "border-2 border-yellow-500";
-		} else if (diffDays > 110) {
-			return "border-2 border-red-600";
-		} else if (diffDays > 100) {
-			return "border-2 border-blue-500";
-		} else if (diffDays > 90) {
-			return "border-2 border-green-500";
-		} else {
-			return "border border-gray-200";
 		}
+		if (diffDays > 110) {
+			return "border-2 border-red-600";
+		}
+		if (diffDays > 100) {
+			return "border-2 border-blue-500";
+		}
+		if (diffDays > 90) {
+			return "border-2 border-green-500";
+		}
+		return "border border-gray-200";
 	}
 	function handleOpenModal(id: string) {
 		setModalProject({ isOpen: true, projectId: id });
@@ -84,24 +86,24 @@ function Obras() {
 			return acc + currentPower;
 		}, 0);
 		const delivered = info.reduce((acc, current) => {
-			const isDelivered = current.compra.statusEntrega == "ENTREGUE";
+			const isDelivered = current.compra.statusEntrega === "ENTREGUE";
 			if (isDelivered) return acc + 1;
-			else return acc;
+			return acc;
 		}, 0);
 		const onDeliveryRoute = info.reduce((acc, current) => {
-			const onRoute = current.compra?.statusEntrega == "EM ROTA";
+			const onRoute = current.compra?.statusEntrega === "EM ROTA";
 			if (onRoute) return acc + 1;
-			else return acc;
+			return acc;
 		}, 0);
 		const equipmentsPaid = info.reduce((acc, current) => {
 			const isPaid = !!current.compra.dataPagamento;
 			if (isPaid) return acc + 1;
-			else return acc;
+			return acc;
 		}, 0);
 		const missingObservations = info.reduce((acc, current) => {
 			const isMissingObservations = !current.obra.observacoes || current.obra.observacoes?.trim().length <= 2;
 			if (isMissingObservations) return acc + 1;
-			else return acc;
+			return acc;
 		}, 0);
 		return {
 			projetos: projectsQty,
@@ -526,7 +528,7 @@ function Obras() {
 							animate={{ opacity: 1, translateX: 0, translateY: 0 }}
 							transition={{ duration: 0.3, delay: 0.01 * index }}
 							className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-								project.homologacao.acesso.dataResposta != undefined && !project.homologacao.vistoria.dataEfetivacao
+								project.homologacao.acesso.dataResposta && !project.homologacao.vistoria.dataEfetivacao
 									? getBorderColorByParecer(project.homologacao.acesso.dataResposta, new Date().toISOString(), project.obra.statusDaObra || "")
 									: "border border-gray-200"
 							}  hover:bg-blue-100`}
@@ -545,8 +547,8 @@ function Obras() {
 									<div className="flex w-1/3 flex-col items-center">
 										<span className="text-xxs">VISTORIA</span>
 										<div className="flex items-center gap-1 text-green-600">
-											{!!project.homologacao.vistoria.dataEfetivacao ? <BsPatchCheckFill color="rgb(22,163,74)" /> : null}
-											<p className="text-xs text-gray-600">{!!project.homologacao.vistoria.dataEfetivacao ? "FEITA" : "PENDENTE"}</p>
+											{project.homologacao.vistoria.dataEfetivacao ? <BsPatchCheckFill color="rgb(22,163,74)" /> : null}
+											<p className="text-xs text-gray-600">{project.homologacao.vistoria.dataEfetivacao ? "FEITA" : "PENDENTE"}</p>
 										</div>
 									</div>
 									<div className="flex w-1/3 flex-col items-end">
@@ -602,7 +604,7 @@ function Obras() {
 									<div>
 										<span className="text-xxs">DESDE DE ENTREGA</span>
 										<p className="text-center text-xs uppercase text-[#15599a]">
-											{project.compra.statusEntrega == "ENTREGUE"
+											{project.compra.statusEntrega === "ENTREGUE"
 												? project.compra.dataEntrega
 													? `${dayjs(new Date()).diff(project.compra.dataEntrega, "days")} dias`
 													: `${dayjs(new Date()).diff(project.compra.previsaoEntrega, "days")} dias`
@@ -610,7 +612,7 @@ function Obras() {
 										</p>
 									</div>
 								</div>
-								{project.pagamento.credor == "SOL FÁCIL" && (
+								{project.pagamento.credor === "SOL FÁCIL" && (
 									<div className="flex items-center justify-center">
 										<h1 className="text-center font-bold text-red-500">POSSUI DESLIGAMENTO REMOTO</h1>
 									</div>

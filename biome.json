@@ -6,6 +6,9 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "off"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "warn"
 			}
 		}
 	},

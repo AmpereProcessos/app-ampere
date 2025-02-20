@@ -56,7 +56,7 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 				address: {
 					zip_code: client.cep || undefined,
 					street: client.endereco || undefined,
-					number: client.numeroOuIdentificador || undefined,
+					number: client.numeroOuIdentificador && client.numeroOuIdentificador.length < 10 ? client.numeroOuIdentificador.substring(0, 10) : undefined,
 					neighborhood: client.bairro || undefined,
 				},
 			};

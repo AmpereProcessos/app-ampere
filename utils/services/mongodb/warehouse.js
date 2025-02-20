@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb'
 import clientPromise from './mongo-client'
 
 let cachedDb = null
-export default async function connectToDatabase(uri) {
+export default async function connectToDatabase() {
   if (cachedDb) {
     return cachedDb
   }

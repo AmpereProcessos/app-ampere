@@ -1492,6 +1492,10 @@ export const sellerPhotos = [
 		nome: "ANA BEATRIZ",
 		avatar_url: "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-p%C3%B3s-venda?alt=media&token=053f1d68-5044-4c32-ba71-0ec7d04a9f77",
 	},
+	{
+		nome: "ADRIANA FRANÇOISE",
+		avatar_url: "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-adriana?alt=media&token=128ac6cf-56af-4194-8703-dad0d8ccc7d6",
+	},
 ];
 export const GeneralVisibleHiddenExitMotionVariants = {
 	hidden: {

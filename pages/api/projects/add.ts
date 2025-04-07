@@ -10,6 +10,7 @@ import createHttpError from "http-errors";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
 
 type PostResponse = {
 	data: { insertedId: string };
@@ -26,7 +27,7 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 	const collection: Collection<TProject> = db.collection("dados");
 
 	const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection("opportunities");
-
+	const crmUsersCollection: Collection<TCRMUser> = crmDb.collection("users");
 	const latestInserted = await collection
 		.aggregate([
 			{
@@ -46,6 +47,17 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 
 	let clientCrmId: string | null = null;
 
+	let seller: TProject["vendedor"] = project.vendedor;
+
+	const sellerInCrm = await crmUsersCollection.findOne({ nome: seller.nome });
+	if (sellerInCrm) {
+		seller = {
+			nome: sellerInCrm.nome,
+			idCRM: sellerInCrm._id.toString(),
+			avatar: sellerInCrm.avatar_url,
+		};
+	}
+
 	if (project.idProjetoCRM) {
 		console.log("PASSEI POR AQUI");
 		const opportunity = await opportunitiesCollection.findOne({
@@ -57,6 +69,7 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 	const insertResponse = await collection.insertOne({
 		...project,
 		qtde: newIndexer,
+		vendedor: seller,
 		idClienteCRM: clientCrmId,
 	});
 	if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido na criação do projeto.");

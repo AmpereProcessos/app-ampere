@@ -339,6 +339,8 @@ const GeneralProjectSchema = z.object({
 		posVenda: z.number().optional().nullable(),
 	}),
 	numeroResidencia: z.union([z.string(), z.number()]).optional().nullable(),
+	// Define a principal ordem de serviço do projeto (ou seja, aquela que define o serviço principal do projeto, ex: Montagem do Sistema Fotovoltaico p/ projetos de SISTEMA FOTOVOLTAICO)
+	idOrdemServico: z.string({ invalid_type_error: "Tipo não válido para o ID da ordem de serviço." }).optional().nullable(),
 	obra: z.object({
 		checklist: z
 			.union([z.literal("SIM"), z.literal("NÃO")])

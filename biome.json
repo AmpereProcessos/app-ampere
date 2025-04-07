@@ -9,6 +9,9 @@
 			},
 			"correctness": {
 				"useExhaustiveDependencies": "warn"
+			},
+			"performance": {
+				"noDelete": "off"
 			}
 		}
 	},

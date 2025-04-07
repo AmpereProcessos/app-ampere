@@ -74,6 +74,7 @@ export const ServiceOrderSchema = z.object({
 			invalid_type_error: "Tipo não válido para o contato do favorecido.",
 		}),
 	}),
+	idAnaliseTecnica: z.string({ invalid_type_error: "Tipo não válido para o ID da análise técnica." }).optional().nullable(),
 	projeto: z.object({
 		id: z.string({ invalid_type_error: "Tipo não válido para o ID do projeto." }).optional().nullable(),
 		identificador: z.union([z.string(), z.number()]).optional().nullable(),

@@ -431,7 +431,7 @@ export const vendedores = [
 		ativo: false,
 	},
 	{
-		nome: "DIONISIO JUNIOR",
+		nome: "DIONISIO CARVALHO",
 		cod: 36,
 		cargo: "EXTERNO",
 		qualificacao: "PLENO",
@@ -1386,7 +1386,7 @@ export const sellers = [
 	"RODRIGO DE MORAIS",
 	"ROMES ALVES",
 	"RONIVALDO MARTINS",
-	"DIONISIO JUNIOR",
+	"DIONISIO CARVALHO",
 	"WILLIAM MENEZES",
 	"MARIANA DE SOUZA",
 	"CÉLIO JUNIOR",

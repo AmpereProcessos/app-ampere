@@ -443,8 +443,8 @@ export const allSellers = [
 	{
 		id: 19,
 		active: true,
-		label: "DIONISIO JUNIOR",
-		value: "DIONISIO JUNIOR",
+		label: "DIONISIO CARVALHO",
+		value: "DIONISIO CARVALHO",
 		qualification: "PLENO",
 		comissionAsActive: 5,
 		comissionWithInside: 4,

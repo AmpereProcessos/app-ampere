@@ -126,6 +126,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 			.optional()
 			.nullable(),
 	}),
+	idOrdemServico: z.string({ invalid_type_error: "Tipo não válido para o ID da ordem de serviço." }).optional().nullable(),
 	// [APPLICANT INPUT] the project of the analysis from our internal ERP
 	projeto: z
 		.object({

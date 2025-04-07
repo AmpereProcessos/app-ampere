@@ -101,7 +101,7 @@ const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
 	const db = await connectToDatabase();
 	const collection = db.collection<TServiceOrder>("ordensDeServico");
 
-	const { id, projectId, responsibleName, queryTags, queryPendingConclusion } = req.query;
+	const { id, projectId, technicalAnalysisId, responsibleName, queryTags, queryPendingConclusion } = req.query;
 
 	if (id) {
 		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
@@ -114,6 +114,11 @@ const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
 		return res.json({ data: orders });
 	}
 
+	if (technicalAnalysisId) {
+		if (typeof technicalAnalysisId !== "string" || !ObjectId.isValid(technicalAnalysisId)) throw new createHttpError.BadRequest("ID da análise técnica inválido.");
+		const orders = await getServiceOrdersByTechnicalAnalysis({ collection, technicalAnalysisId });
+		return res.json({ data: orders });
+	}
 	const queryTagsIds = typeof queryTags === "string" ? queryTags.split(",").filter((q) => !!ObjectId.isValid(q)) : [];
 	const queryPendingConclusionValue = queryPendingConclusion === "true";
 
@@ -331,6 +336,20 @@ async function getServiceOrdersByProject({ collection, projectId }: GetServiceOr
 		throw error;
 	}
 }
+
+type GetServiceOrdersByTechnicalAnalysisParams = {
+	collection: Collection<TServiceOrder>;
+	technicalAnalysisId: string;
+};
+export async function getServiceOrdersByTechnicalAnalysis({ collection, technicalAnalysisId }: GetServiceOrdersByTechnicalAnalysisParams) {
+	try {
+		const orders = await collection.find({ idAnaliseTecnica: technicalAnalysisId }, { projection: ServiceOrderSimplifiedProjection }).toArray();
+		return orders as TServiceOrderSimplified[];
+	} catch (error) {
+		throw error;
+	}
+}
+
 type GetServiceOrdersByResponsibleNameParams = {
 	collection: Collection<TServiceOrder>;
 	responsibleName: string;

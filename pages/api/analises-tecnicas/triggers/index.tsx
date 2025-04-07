@@ -2,6 +2,7 @@ import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import type { TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
 import { type Collection, ObjectId, type WithId } from "mongodb";
@@ -22,10 +23,12 @@ const handleTechnicalAnalysisTrigger: NextApiHandler<PostResponse> = async (req,
 	const session = await validateAuthenticationWithSession(req, res);
 	const { technicalAnalysisId, triggerType } = HandleTriggerPayload.parse(req.body);
 
+	console.log("ID DA ANÁLISE TÉCNICA", technicalAnalysisId);
 	const db = await connectToDatabase();
+	const crmDb = await connectToCRMDatabase();
 	const projectsCollection: Collection<TProject> = db.collection("dados");
-	const technicalAnalysesCollection: Collection<TTechnicalAnalysis> = db.collection("analisesTecnicas");
-	const serviceOrdersCollection: Collection<TServiceOrder> = db.collection("ordensServico");
+	const technicalAnalysesCollection: Collection<TTechnicalAnalysis> = crmDb.collection("technical-analysis");
+	const serviceOrdersCollection: Collection<TServiceOrder> = db.collection("ordensDeServico");
 	const technicalAnalysis = await technicalAnalysesCollection.findOne({
 		_id: new ObjectId(technicalAnalysisId),
 	});
@@ -126,6 +129,7 @@ const handleTechnicalAnalysisTrigger: NextApiHandler<PostResponse> = async (req,
 		const insertServiceOrderResponse = await serviceOrdersCollection.insertOne(serviceOrder);
 		const insertedServiceOrderId = insertServiceOrderResponse.insertedId.toString();
 
+		await serviceOrdersCollection.updateOne({ _id: new ObjectId(insertedServiceOrderId) }, { $set: { idAnaliseTecnica: technicalAnalysisId } });
 		return res.status(200).json({
 			data: { insertedId: insertedServiceOrderId },
 			message: "Ordem de serviço criada com sucesso.",

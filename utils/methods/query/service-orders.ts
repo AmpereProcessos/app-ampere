@@ -178,3 +178,19 @@ export function useServiceOrdersByResponsible({ responsibleName }: { responsible
 		queryFn: async () => fetchServiceOrdersByResponsible({ responsibleName }),
 	});
 }
+
+async function fetchServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { technicalAnalysisId: string }) {
+	try {
+		const { data } = await axios.get(`/api/ordensDeServico?technicalAnalysisId=${technicalAnalysisId}`);
+		return data.data as TServiceOrderSimplifiedDTO[];
+	} catch (error) {
+		throw error;
+	}
+}
+
+export function useServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { technicalAnalysisId: string }) {
+	return useQuery({
+		queryKey: ["service-orders-by-technical-analysis", technicalAnalysisId],
+		queryFn: async () => fetchServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }),
+	});
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { createServiceOrder } from "../../../../utils/methods/mutation/service-orders";
@@ -29,6 +29,7 @@ import ServiceOrderProjectInformationBlock from "./blocos/ProjectInformationBloc
 
 type ModalNewServiceOrderProps = {
 	session: Session;
+	projectId?: string;
 	closeModal: () => void;
 	callbacks?: {
 		onMutate?: () => void;
@@ -36,7 +37,7 @@ type ModalNewServiceOrderProps = {
 		onSettled?: () => void;
 	};
 };
-function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServiceOrderProps) {
+function ModalNewServiceOrder({ session, closeModal, callbacks, projectId }: ModalNewServiceOrderProps) {
 	const queryClient = useQueryClient();
 
 	const initialState: TServiceOrder = {
@@ -47,7 +48,7 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
 		},
 		anotacoes: "",
 		projeto: {
-			id: null,
+			id: projectId,
 			nome: null,
 			identificador: null,
 			tipo: null,
@@ -159,6 +160,11 @@ function ModalNewServiceOrder({ session, closeModal, callbacks }: ModalNewServic
 			return toast.error(msg);
 		},
 	});
+	useEffect(() => {
+		if (project) {
+			setOsInfo((prev) => ({ ...prev, projeto: { id: projectId, nome: project?.nomeDoContrato, identificador: project?.qtde, tipo: project?.tipoDeServico } }));
+		}
+	}, [project]);
 	return (
 		<div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
 			<motion.div

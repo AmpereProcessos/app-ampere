@@ -326,6 +326,7 @@ export type TPersonalizedServiceOrderFilter = z.infer<typeof PersonalizedFilters
 
 export const ServiceOrderProjectProjection = {
 	nomeDoContrato: 1,
+	qtde: 1,
 	cpf_cnpj: 1,
 	tipoDeServico: 1,
 	cep: 1,
@@ -349,7 +350,20 @@ export const ServiceOrderProjectProjection = {
 
 export type TServiceOrderProject = Pick<
 	TProjectDTO,
-	"_id" | "nomeDoContrato" | "cpf_cnpj" | "tipoDeServico" | "cep" | "uf" | "cidade" | "bairro" | "logradouro" | "numeroResidencia" | "produtos" | "servicos" | "idVisitaTecnica"
+	| "_id"
+	| "qtde"
+	| "nomeDoContrato"
+	| "cpf_cnpj"
+	| "tipoDeServico"
+	| "cep"
+	| "uf"
+	| "cidade"
+	| "bairro"
+	| "logradouro"
+	| "numeroResidencia"
+	| "produtos"
+	| "servicos"
+	| "idVisitaTecnica"
 > & {
 	compra: {
 		kitInfo: TProject["compra"]["kitInfo"];

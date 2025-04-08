@@ -2,7 +2,7 @@ import { usePurchaseControls, usePurchaseControlsTags } from "@/utils/methods/qu
 import type { Session } from "next-auth";
 import React, { useEffect, useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle, IoMdContract, IoMdExpand } from "react-icons/io";
-import type { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
@@ -71,37 +71,36 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 			return new Date(dateAAddedInStatus).getTime() - new Date(dateBAddedInStatus).getTime();
 		}
 		return Object.entries({
-			PENDENTE: purchaseControls.filter((c) => c.status == "PENDENTE"),
-			"EM COTAÇÃO": purchaseControls.filter((c) => c.status == "EM COTAÇÃO").sort((a, b) => handleSortByStatusLog("EM COTAÇÃO", a, b)),
-			"AGUARDANDO APROVAÇÃO": purchaseControls.filter((c) => c.status == "AGUARDANDO APROVAÇÃO").sort((a, b) => handleSortByStatusLog("AGUARDANDO APROVAÇÃO", a, b)),
-			"AGUARDANDO NOTA FUTURA": purchaseControls.filter((c) => c.status == "AGUARDANDO NOTA FUTURA").sort((a, b) => handleSortByStatusLog("AGUARDANDO NOTA FUTURA", a, b)),
-			"AGUARDANDO PAGAMENTO": purchaseControls.filter((c) => c.status == "AGUARDANDO PAGAMENTO").sort((a, b) => handleSortByStatusLog("AGUARDANDO PAGAMENTO", a, b)),
-			"AGUARDANDO NOTA FINAL": purchaseControls.filter((c) => c.status == "AGUARDANDO NOTA FINAL").sort((a, b) => handleSortByStatusLog("AGUARDANDO NOTA FINAL", a, b)),
-			"AGUARDANDO COMPRA": purchaseControls.filter((c) => c.status == "AGUARDANDO COMPRA").sort((a, b) => handleSortByStatusLog("AGUARDANDO COMPRA", a, b)),
-			"AGUARDANDO SEPARAÇÃO": purchaseControls.filter((c) => c.status == "AGUARDANDO SEPARAÇÃO").sort((a, b) => handleSortByStatusLog("AGUARDANDO SEPARAÇÃO", a, b)),
-			"AGUARDANDO FATURAMENTO": purchaseControls.filter((c) => c.status == "AGUARDANDO FATURAMENTO").sort((a, b) => handleSortByStatusLog("AGUARDANDO FATURAMENTO", a, b)),
-			"AGUARDANDO NF COR": purchaseControls.filter((c) => c.status == "AGUARDANDO NF COR").sort((a, b) => handleSortByStatusLog("AGUARDANDO NF COR", a, b)),
-			"AGUARDANDO DESPACHE": purchaseControls.filter((c) => c.status == "AGUARDANDO DESPACHE").sort((a, b) => handleSortByStatusLog("AGUARDANDO DESPACHE", a, b)),
-			"AGUARDANDO ENTREGA": purchaseControls.filter((c) => c.status == "AGUARDANDO ENTREGA").sort((a, b) => handleSortByStatusLog("AGUARDANDO ENTREGA", a, b)),
-			CONCLUÍDA: purchaseControls.filter((c) => c.status == "CONCLUÍDA").sort((a, b) => handleSortByStatusLog("CONCLUÍDA", a, b)),
-			PENDÊNCIAS: purchaseControls.filter((c) => c.status == "PENDÊNCIAS").sort((a, b) => handleSortByStatusLog("PENDÊNCIAS", a, b)),
+			PENDENTE: purchaseControls.filter((c) => c.status === "PENDENTE"),
+			"EM COTAÇÃO": purchaseControls.filter((c) => c.status === "EM COTAÇÃO").sort((a, b) => handleSortByStatusLog("EM COTAÇÃO", a, b)),
+			"AGUARDANDO APROVAÇÃO": purchaseControls.filter((c) => c.status === "AGUARDANDO APROVAÇÃO").sort((a, b) => handleSortByStatusLog("AGUARDANDO APROVAÇÃO", a, b)),
+			"AGUARDANDO NOTA FUTURA": purchaseControls.filter((c) => c.status === "AGUARDANDO NOTA FUTURA").sort((a, b) => handleSortByStatusLog("AGUARDANDO NOTA FUTURA", a, b)),
+			"AGUARDANDO PAGAMENTO": purchaseControls.filter((c) => c.status === "AGUARDANDO PAGAMENTO").sort((a, b) => handleSortByStatusLog("AGUARDANDO PAGAMENTO", a, b)),
+			"AGUARDANDO NOTA FINAL": purchaseControls.filter((c) => c.status === "AGUARDANDO NOTA FINAL").sort((a, b) => handleSortByStatusLog("AGUARDANDO NOTA FINAL", a, b)),
+			"AGUARDANDO COMPRA": purchaseControls.filter((c) => c.status === "AGUARDANDO COMPRA").sort((a, b) => handleSortByStatusLog("AGUARDANDO COMPRA", a, b)),
+			"AGUARDANDO SEPARAÇÃO": purchaseControls.filter((c) => c.status === "AGUARDANDO SEPARAÇÃO").sort((a, b) => handleSortByStatusLog("AGUARDANDO SEPARAÇÃO", a, b)),
+			"AGUARDANDO FATURAMENTO": purchaseControls.filter((c) => c.status === "AGUARDANDO FATURAMENTO").sort((a, b) => handleSortByStatusLog("AGUARDANDO FATURAMENTO", a, b)),
+			"AGUARDANDO NF COR": purchaseControls.filter((c) => c.status === "AGUARDANDO NF COR").sort((a, b) => handleSortByStatusLog("AGUARDANDO NF COR", a, b)),
+			"AGUARDANDO DESPACHE": purchaseControls.filter((c) => c.status === "AGUARDANDO DESPACHE").sort((a, b) => handleSortByStatusLog("AGUARDANDO DESPACHE", a, b)),
+			"AGUARDANDO ENTREGA": purchaseControls.filter((c) => c.status === "AGUARDANDO ENTREGA").sort((a, b) => handleSortByStatusLog("AGUARDANDO ENTREGA", a, b)),
+			CONCLUÍDA: purchaseControls.filter((c) => c.status === "CONCLUÍDA").sort((a, b) => handleSortByStatusLog("CONCLUÍDA", a, b)),
+			PENDÊNCIAS: purchaseControls.filter((c) => c.status === "PENDÊNCIAS").sort((a, b) => handleSortByStatusLog("PENDÊNCIAS", a, b)),
 		}).map(([key, value]) => ({ title: key, items: value }));
 	}
 
 	function onDragEnd(dragEndResult: DropResult) {
 		function handleEffectivationUpdate(newValue: TPurchaseControlKanbanSimplifiedDTO["status"], previousData: TPurchaseControlKanbanSimplifiedDTO) {
-			if (newValue == "CONCLUÍDA") {
-				if (previousData.status != "CONCLUÍDA") return new Date().toISOString();
-				return previousData.dataEfetivacao;
-			} else {
-				if (previousData.status == "CONCLUÍDA") return null;
+			if (newValue === "CONCLUÍDA") {
+				if (previousData.status !== "CONCLUÍDA") return new Date().toISOString();
 				return previousData.dataEfetivacao;
 			}
+			if (previousData.status === "CONCLUÍDA") return null;
+			return previousData.dataEfetivacao;
 		}
 		function handleStatusLogs(newValue: TPurchaseControl["status"], previousData: TPurchaseControlKanbanSimplifiedDTO) {
 			const previousStatus = previousData.status;
 			const newStatus = newValue;
-			if (previousStatus == newStatus) return previousData.registrosStatus || {};
+			if (previousStatus === newStatus) return previousData.registrosStatus || {};
 			const previousStatusLog = previousData.registrosStatus?.[previousStatus] || {};
 			const newStatusLog = previousData.registrosStatus?.[newStatus] || {};
 			return {
@@ -113,9 +112,9 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 		const { source, destination, draggableId } = dragEndResult;
 
 		if (!destination) return;
-		if (destination.droppableId == source.droppableId) return;
+		if (destination.droppableId === source.droppableId) return;
 
-		const purchaseControl = purchaseControls?.find((p) => p._id == draggableId);
+		const purchaseControl = purchaseControls?.find((p) => p._id === draggableId);
 		if (!purchaseControl) return;
 		handleUpdatePurchaseControlStatus({
 			id: draggableId,
@@ -135,7 +134,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 			const querySnapshot = queryClient.getQueryData(["purchase-controls"]) as TPurchaseControlKanbanSimplifiedDTO[] | undefined;
 
 			if (!querySnapshot) return { querySnapshot };
-			const update = querySnapshot.map((prev) => (prev._id == variables.id ? { ...prev, status: variables.changes.status || "INDEFINIDO" } : prev));
+			const update = querySnapshot.map((prev) => (prev._id === variables.id ? { ...prev, status: variables.changes.status || "INDEFINIDO" } : prev));
 			queryClient.setQueryData(["purchase-controls"], update);
 
 			return { querySnapshot };
@@ -159,7 +158,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 						<div className="flex items-center gap-1">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
 						</div>
-						<button onClick={() => handleSetMode("card")} className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800">
+						<button type="button" onClick={() => handleSetMode("card")} className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800">
 							<FaRotate />
 							<h1 className="font-medium">ALTERAR MODO</h1>
 						</button>
@@ -175,6 +174,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 						/>
 
 						<button
+							type="button"
 							onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
 							className={cn("min-h-[46.6px] rounded p-2 text-xs font-bold text-white", queryParams.queryPendingConclusion ? "bg-blue-600" : "bg-gray-600")}
 						>
@@ -233,11 +233,11 @@ type FunnelListProps = {
 };
 function FunnelList({ session, title, items, initialKanbanListExpandedModeOptions, handleItemClick }: FunnelListProps) {
 	function getFunnelListStatusDeadlineDays(status: TPurchaseControlKanbanSimplifiedDTO["status"]) {
-		const statusOption = PurchaseControlStatus.find((s) => s.value == status);
+		const statusOption = PurchaseControlStatus.find((s) => s.value === status);
 		return statusOption?.deadlineDays;
 	}
 	const initialKanbanListExpandedMode = initialKanbanListExpandedModeOptions[title] || null;
-	const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(initialKanbanListExpandedMode == "inactive" ? false : true);
+	const [funnelListItemsExpandedModeActive, setFunnelListItemsExpandedModeActive] = useState<boolean>(!(initialKanbanListExpandedMode === "inactive"));
 	const deadlineDays = getFunnelListStatusDeadlineDays(title as TPurchaseControlKanbanSimplifiedDTO["status"]);
 	return (
 		<Droppable droppableId={title.toString()}>
@@ -246,6 +246,7 @@ function FunnelList({ session, title, items, initialKanbanListExpandedModeOption
 					<div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
 						<div className="flex w-full items-center gap-2">
 							<button
+								type="button"
 								onClick={() => {
 									if (!funnelListItemsExpandedModeActive) {
 										handleSetCookie({
@@ -271,6 +272,7 @@ function FunnelList({ session, title, items, initialKanbanListExpandedModeOption
 							</button>
 							<h1 className="w-full rounded p-1 text-center font-medium text-white">{title}</h1>
 							<button
+								type="button"
 								onClick={() => setFunnelListItemsExpandedModeActive((prev) => !prev)}
 								className={cn("hidden items-center rounded p-1 text-white", funnelListItemsExpandedModeActive ? "bg-gray-50" : "bg-transparent")}
 							>
@@ -315,7 +317,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 	const [itemExpandedModeActive, setItemExpandedModeActive] = useState(funnelListItemsExpandedModeActive);
 
 	function getItemDeadlineStatus(item: TPurchaseControlKanbanSimplifiedDTO) {
-		const statusDeadlineDays = PurchaseControlStatus.find((s) => s.value == item.status)?.deadlineDays;
+		const statusDeadlineDays = PurchaseControlStatus.find((s) => s.value === item.status)?.deadlineDays;
 		if (!statusDeadlineDays) return null;
 		const itemStatusLogStart = item.registrosStatus?.[item.status]?.entrada;
 		if (!itemStatusLogStart) return null;
@@ -355,6 +357,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 					<div className="flex w-full items-center justify-between gap-2">
 						<div className="flex items-center gap-1">
 							<button
+								type="button"
 								onClick={() => setItemExpandedModeActive((prev) => !prev)}
 								className={cn("flex items-center rounded-full p-1 text-xs text-black", itemExpandedModeActive ? "bg-slate-400" : "bg-transparent")}
 							>
@@ -362,7 +365,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 							</button>
 							<h1 className="text-sm font-bold leading-none tracking-tight">{item.titulo}</h1>
 						</div>
-						<button onClick={() => handleClick(item._id)} className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
+						<button type="button" onClick={() => handleClick(item._id)} className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
 							<Pencil width={10} height={10} />
 							<p>EDITAR</p>
 						</button>
@@ -372,7 +375,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 						{item.registrosStatus?.[item.status]?.entrada ? (
 							<div className="flex w-fit items-center gap-1 self-center">
 								<BsFunnel />
-								<p className={`text-[0.65rem] font-medium text-gray-500`}>{formatDateAsLocale(item.registrosStatus?.[item.status]?.entrada, true)}</p>
+								<p className={"text-[0.65rem] font-medium text-gray-500"}>{formatDateAsLocale(item.registrosStatus?.[item.status]?.entrada, true)}</p>
 							</div>
 						) : null}
 						{item.etiquetas.length > 0 ? (
@@ -380,7 +383,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 								<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
 								{item.etiquetas.map((tag, index) => (
 									<div
-										key={index}
+										key={`${tag.id}-${index}`}
 										style={{
 											border: "1px solid",
 											borderColor: tag.cores.primaria,
@@ -446,7 +449,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
 						<div className="flex items-center gap-2">
 							<div className="flex min-w-fit items-center gap-1">
 								<BsCalendarPlus />
-								<p className={`text-[0.65rem] font-medium text-gray-500`}>{formatDateAsLocale(item.dataInsercao, true)}</p>
+								<p className={"text-[0.65rem] font-medium text-gray-500"}>{formatDateAsLocale(item.dataInsercao, true)}</p>
 							</div>
 
 							{item.dataEfetivacao ? (

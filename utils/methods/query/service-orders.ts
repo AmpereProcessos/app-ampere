@@ -12,6 +12,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import type { TServiceOrderStatsInput, TServiceOrderStatsOutput } from "@/pages/api/ordensDeServico/stats";
 
 type FetchServiceOrdersParams = {
 	after: string;
@@ -96,23 +97,30 @@ async function fetchServiceOrdersByPersonalizedFilters({ page, filters }: { page
 	}
 }
 
-export function useServiceOrdersByPersonalizedFilters() {
+type UseServiceOrdersByPersonalizedFiltersParams = {
+	initialFilters: Partial<TPersonalizedServiceOrderFilter>;
+};
+export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseServiceOrdersByPersonalizedFiltersParams) {
 	const [filters, setFilters] = useState<TPersonalizedServiceOrderFilter>({
-		page: 1,
-		name: "",
-		responsible: "",
-		state: [],
-		city: [],
-		category: [],
-		urgency: [],
-		authors: [],
+		page: initialFilters.page || 1,
+		name: initialFilters.name || "",
+		responsible: initialFilters.responsible || "",
+		state: initialFilters.state || [],
+		city: initialFilters.city || [],
+		category: initialFilters.category || [],
+		urgency: initialFilters.urgency || [],
+		authors: initialFilters.authors || [],
 		period: {
-			after: null,
-			before: null,
-			field: null,
+			after: initialFilters.period?.after || null,
+			before: initialFilters.period?.before || null,
+			field: initialFilters.period?.field || null,
 		},
-		pending: true,
-		released: false,
+		topologies: initialFilters.topologies || [],
+		roofTypes: initialFilters.roofTypes || [],
+		pending: initialFilters.pending || true,
+		released: initialFilters.released || false,
+		projectEquipmentDelivered: initialFilters.projectEquipmentDelivered || false,
+		projectEquipmentNotDelivered: initialFilters.projectEquipmentNotDelivered || false,
 	});
 
 	function updateFilters(info: Partial<TPersonalizedServiceOrderFilter>) {
@@ -193,4 +201,35 @@ export function useServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { t
 		queryKey: ["service-orders-by-technical-analysis", technicalAnalysisId],
 		queryFn: async () => fetchServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }),
 	});
+}
+
+async function fetchServiceOrdersStats(input: TServiceOrderStatsInput) {
+	try {
+		const { data }: { data: TServiceOrderStatsOutput } = await axios.post("/api/ordensDeServico/stats", input);
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export function useServiceOrdersStats() {
+	const initialPeriodStart = dayjs().startOf("month").toISOString();
+	const initialPeriodEnd = dayjs().endOf("month").toISOString();
+	const [filters, setFilters] = useState<TServiceOrderStatsInput>({
+		period: {
+			after: initialPeriodStart,
+			before: initialPeriodEnd,
+		},
+	});
+	function updateFilters(info: Partial<TServiceOrderStatsInput>) {
+		setFilters((prev) => ({ ...prev, ...info }));
+	}
+	return {
+		...useQuery({
+			queryKey: ["service-orders-stats", filters],
+			queryFn: async () => await fetchServiceOrdersStats(filters),
+		}),
+		filters,
+		updateFilters,
+	};
 }

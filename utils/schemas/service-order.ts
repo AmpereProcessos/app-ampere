@@ -81,6 +81,7 @@ export const ServiceOrderSchema = z.object({
 		nome: z.string({ invalid_type_error: "Tipo não válido para o nome do projeto." }).optional().nullable(),
 		tipo: z.string({ invalid_type_error: "Tipo não válido para o tipo do projeto." }).optional().nullable(),
 		// Important tracking fields
+		vendedorNome: z.string({ invalid_type_error: "Tipo não válido para o nome do vendedor." }).optional().nullable(),
 		contratoDataAssinatura: z.string({ invalid_type_error: "Tipo não válido para a data de assinatura do contrato." }).optional().nullable(),
 		compraEntregaDataPrevisao: z.string({ invalid_type_error: "Tipo não válido para a data de previsão de entrega da compra." }).optional().nullable(),
 		compraEntregaDataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a data de efetivação de entrega da compra." }).optional().nullable(),
@@ -274,10 +275,23 @@ export const ServiceOrderSimplifiedProjection = {
 	dataInsercao: 1,
 };
 
-const PersonalizedFieldFilters = z.enum(["dataInsercao", "dataPrevisaoLiberacao", "dataLiberacao", "dataEfetivacao"], {
-	required_error: "Tipo não válido para o campo de filtro de período.",
-	invalid_type_error: "Tipo não válido para o campo de filtro de período.",
-});
+const PersonalizedFieldFilters = z.enum(
+	[
+		"dataInsercao",
+		"dataPrevisaoLiberacao",
+		"dataLiberacao",
+		"dataEfetivacao",
+		"projeto.contratoDataAssinatura",
+		"projeto.compraEntregaDataPrevisao",
+		"projeto.compraEntregaDataEfetivacao",
+		"projeto.homologacaoAcessoDataResposta",
+		"projeto.homologacaoVistoriaDataEfetivacao",
+	],
+	{
+		required_error: "Tipo não válido para o campo de filtro de período.",
+		invalid_type_error: "Tipo não válido para o campo de filtro de período.",
+	},
+);
 export const PersonalizedFiltersSchema = z.object({
 	page: z.number({ required_error: "Página não informada.", invalid_type_error: "Tipo não válido para a página." }),
 	name: z.string({
@@ -308,10 +322,20 @@ export const PersonalizedFiltersSchema = z.object({
 		required_error: "Lista de autores de filtro não informada.",
 		invalid_type_error: "Tipo não válido para lista de autores de filtro.",
 	}),
+	topologies: z.array(z.string({ required_error: "Topologia de filtro não informada.", invalid_type_error: "Tipo não válido para topologia de filtro." })),
+	roofTypes: z.array(z.string({ required_error: "Tipo de telha de filtro não informada.", invalid_type_error: "Tipo não válido para tipo de telha de filtro." })),
 	period: z.object({
 		after: z.string({ required_error: "Filtro de depois de não informado.", invalid_type_error: "Tipo não válido para o filtro de depois de." }).optional().nullable(),
 		before: z.string({ required_error: "Filtro de antes de não informado.", invalid_type_error: "Tipo não válido para o filtro de antes de." }).optional().nullable(),
 		field: PersonalizedFieldFilters.optional().nullable(),
+	}),
+	projectEquipmentDelivered: z.boolean({
+		required_error: "Filtro de equipamentos entregues não informado.",
+		invalid_type_error: "Tipo não válido para filtro de equipamentos entregues.",
+	}),
+	projectEquipmentNotDelivered: z.boolean({
+		required_error: "Filtro de equipamentos não entregues não informado.",
+		invalid_type_error: "Tipo não válido para filtro de equipamentos não entregues.",
 	}),
 	pending: z.boolean({
 		required_error: "Filtro de somente pendentes não informado.",
@@ -346,6 +370,7 @@ export const ServiceOrderProjectProjection = {
 	"obra.observacoes": 1,
 	"obra.pendencias": 1,
 	idVisitaTecnica: 1,
+	idOrdemServico: 1,
 };
 
 export type TServiceOrderProject = Pick<
@@ -364,6 +389,7 @@ export type TServiceOrderProject = Pick<
 	| "produtos"
 	| "servicos"
 	| "idVisitaTecnica"
+	| "idOrdemServico"
 > & {
 	compra: {
 		kitInfo: TProject["compra"]["kitInfo"];

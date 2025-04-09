@@ -54,6 +54,11 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const authorsQuery: Filter<TServiceOrder> = filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
 	const pendingQuery: Filter<TServiceOrder> = filters.pending ? { dataEfetivacao: null } : {};
 	const releasedQuery: Filter<TServiceOrder> = filters.released ? { dataLiberacao: { $ne: null } } : {};
+	const topologiesQuery: Filter<TServiceOrder> =
+		filters.topologies.length > 0 ? { "detalhes.topologia": { $in: filters.topologies as TServiceOrder["detalhes"]["topologia"][] } } : {};
+	const roofTypesQuery: Filter<TServiceOrder> = filters.roofTypes.length > 0 ? { "detalhes.tipoTelha": { $in: filters.roofTypes as TServiceOrder["detalhes"]["tipoTelha"][] } } : {};
+	const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered ? { "projeto.compraEntregaDataEfetivacao": { $ne: null } } : {};
+	const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered ? { "projeto.compraEntregaDataEfetivacao": null } : {};
 
 	const query = {
 		...(orQueries.length > 0 ? { $or: orQueries } : {}),
@@ -65,6 +70,10 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 		...authorsQuery,
 		...pendingQuery,
 		...releasedQuery,
+		...topologiesQuery,
+		...roofTypesQuery,
+		...projectEquipmentDeliveredQuery,
+		...projectEquipmentNotDeliveredQuery,
 	};
 
 	const skip = PAGE_SIZE * (Number(page) - 1);

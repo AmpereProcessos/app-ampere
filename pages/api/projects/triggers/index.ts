@@ -46,6 +46,12 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				nome: project.nomeDoContrato || null, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
 				identificador: project.qtde || null, // identificador QTDE do projeto no banco de projetos
 				tipo: project.tipoDeServico || null, // tipo do projeto
+				vendedorNome: project.vendedor?.nome || null,
+				contratoDataAssinatura: project.contrato?.dataAssinatura,
+				compraEntregaDataPrevisao: project.compra?.previsaoEntrega,
+				compraEntregaDataEfetivacao: project.compra?.dataEntrega,
+				homologacaoAcessoDataResposta: project.homologacao?.acesso.dataResposta,
+				homologacaoVistoriaDataEfetivacao: project.homologacao?.vistoria.dataEfetivacao,
 			},
 			descricao: `SERVIÇO DO PROJETO ${project.nomeDoContrato}`, // servico executado
 			localizacao: {
@@ -100,7 +106,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			},
 			observacoes: [],
 			dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-			dataLiberacao: project.compra.dataEntrega,
+			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
 			dataInsercao: new Date().toISOString(),
 		};
 

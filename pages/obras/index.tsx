@@ -27,620 +27,629 @@ import { GrStorage } from "react-icons/gr";
 import { BsPatchCheckFill } from "react-icons/bs";
 import Link from "next/link";
 import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+import ExecutionPage from "@/components/identificador/obras/ExecutionPage";
 
-const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
-const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
-function Obras() {
-	const router = useRouter();
+export default function Obras() {
 	const { data: session, status } = useSession({
 		required: true,
-		onUnauthenticated() {
-			router.push("/auth/signin");
-		},
 	});
-	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+	if (status !== "authenticated") return <LoadingPage />;
 
-	const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useExecutionProjects();
-	const [modalProject, setModalProject] = useState<{ isOpen: boolean; projectId: string | null }>({
-		isOpen: false,
-		projectId: null,
-	});
-
-	function getBorderColorByParecer(date1: string, date2: string, statusObra: string) {
-		const Date1AsDate = new Date(date1);
-		const Date2AsDate = new Date(date2);
-		const timeDiff = Math.abs(Date2AsDate.getTime() - Date1AsDate.getTime());
-		const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-		if (statusObra === "CASA EM CONSTRUÇÃO") {
-			return "border-2 border-yellow-500";
-		}
-		if (diffDays > 110) {
-			return "border-2 border-red-600";
-		}
-		if (diffDays > 100) {
-			return "border-2 border-blue-500";
-		}
-		if (diffDays > 90) {
-			return "border-2 border-green-500";
-		}
-		return "border border-gray-200";
-	}
-	function handleOpenModal(id: string) {
-		setModalProject({ isOpen: true, projectId: id });
-	}
-	function getStats({ info }: { info: TProjectDTO[] }) {
-		if (!info) {
-			return {
-				projetos: 0,
-				potencia: 0,
-				entregues: 0,
-				emRota: 0,
-				pagos: 0,
-				obsPendente: 0,
-			};
-		}
-
-		const projectsQty = info.length;
-		const totalPower = info.reduce((acc, current) => {
-			const currentPower = current.sistema?.potPico || 0;
-			return acc + currentPower;
-		}, 0);
-		const delivered = info.reduce((acc, current) => {
-			const isDelivered = current.compra.statusEntrega === "ENTREGUE";
-			if (isDelivered) return acc + 1;
-			return acc;
-		}, 0);
-		const onDeliveryRoute = info.reduce((acc, current) => {
-			const onRoute = current.compra?.statusEntrega === "EM ROTA";
-			if (onRoute) return acc + 1;
-			return acc;
-		}, 0);
-		const equipmentsPaid = info.reduce((acc, current) => {
-			const isPaid = !!current.compra.dataPagamento;
-			if (isPaid) return acc + 1;
-			return acc;
-		}, 0);
-		const missingObservations = info.reduce((acc, current) => {
-			const isMissingObservations = !current.obra.observacoes || current.obra.observacoes?.trim().length <= 2;
-			if (isMissingObservations) return acc + 1;
-			return acc;
-		}, 0);
-		return {
-			projetos: projectsQty,
-			potencia: formatDecimalPlaces(totalPower, 2),
-			entregues: delivered,
-			emRota: onDeliveryRoute,
-			pagos: equipmentsPaid,
-			obsPendente: missingObservations,
-		};
-	}
-	useEffect(() => {
-		if (session) {
-			// @ts-ignore
-			const userRoutes = session?.user?.permissoes.rotas;
-			if (!!userRoutes && !userRoutes.includes("Obras") && !userRoutes.includes("Projetos")) {
-				router.push("/");
-			}
-		}
-	}, [session]);
-	console.log(filters);
-	if (isSuccess && projects)
-		return (
-			<div className="grow p-6">
-				<div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
-					<div className="flex w-full items-center justify-between">
-						<div className="flex flex-col items-center gap-2 lg:flex-row">
-							<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de execução</p>
-						</div>
-						{dropdownMenuVisible ? (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(false)} />
-							</div>
-						) : (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(true)} />
-							</div>
-						)}
-					</div>
-					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-							<div className="flex items-center justify-between">
-								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
-								<VscDiffAdded />
-							</div>
-							<div className="mt-2 flex w-full flex-col">
-								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-								<p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
-							</div>
-						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
-							<div className="flex items-center justify-between">
-								<h1 className="text-sm font-medium uppercase tracking-tight">ENTREGUE</h1>
-								<GrStorage />
-							</div>
-							<div className="mt-2 flex w-full flex-col">
-								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).entregues}</div>
-							</div>
-						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
-							<div className="flex items-center justify-between">
-								<h1 className="text-sm font-medium uppercase tracking-tight">EM ROTA</h1>
-								<TbTruckDelivery />
-							</div>
-							<div className="mt-2 flex w-full flex-col">
-								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).emRota}</div>
-							</div>
-						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-							<div className="flex items-center justify-between">
-								<h1 className="text-sm font-medium uppercase tracking-tight">EQUIPAMENTOS PAGOS</h1>
-								<MdPaid />
-							</div>
-							<div className="mt-2 flex w-full flex-col">
-								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pagos}</div>
-							</div>
-						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-							<div className="flex items-center justify-between">
-								<h1 className="text-sm font-medium uppercase tracking-tight">SEM OBSERVAÇÕES</h1>
-								<TbTextPlus />
-							</div>
-							<div className="mt-2 flex w-full flex-col">
-								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).obsPendente}</div>
-							</div>
-						</div>
-					</div>
-					<div className="my-2 flex w-full items-center justify-end gap-2">
-						<Link href="/ordens-de-servico">
-							<button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
-								ORDENS DE SERVIÇO
-							</button>
-						</Link>
-					</div>
-					<AnimatePresence>
-						{dropdownMenuVisible ? (
-							<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-									<TextInput
-										label={"NOME DO CONTRATO"}
-										value={filters.search}
-										placeholder={"Digite o nome do contrato..."}
-										handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-									/>
-
-									<TextInput
-										label={"TIPO DE TELHA"}
-										value={filters.roofTileType}
-										placeholder={"Digite o tipo de telha..."}
-										handleChange={(value) => setFilters((prev) => ({ ...prev, roofTileType: value }))}
-									/>
-
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"TIPO DE SERVIÇO"}
-											selected={filters.serviceType}
-											options={serviceTypes}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													serviceType: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													serviceType: [],
-												}))
-											}
-										/>
-									</div>
-								</div>
-								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInputVirtualized
-											width={"100%"}
-											label={"CIDADE"}
-											selected={filters.city}
-											options={AllCities.map((city, index) => ({ id: index + 1, label: city.label, value: city.value }))}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													city: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													city: [],
-												}))
-											}
-										/>
-									</div>
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"EQUIPE RESPONSÁVEL"}
-											selected={filters.technicalTeam}
-											options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													technicalTeam: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													technicalTeam: [],
-												}))
-											}
-										/>
-									</div>
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"STATUS DE ENTREGA"}
-											selected={filters.deliveryStatus}
-											options={[
-												{ id: 1, value: "EM ROTA", label: "EM ROTA" },
-												{
-													id: 2,
-													value: "AGUARDANDO COMPRA",
-													label: "AGUARDANDO COMPRA",
-												},
-												{
-													id: 3,
-													value: "ENTREGUE",
-													label: "ENTREGUE",
-												},
-												{ id: 4, value: "CANCELADO", label: "CANCELADO" },
-											]}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													deliveryStatus: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													deliveryStatus: [],
-												}))
-											}
-										/>
-									</div>
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"STATUS DA ESTRUTURA"}
-											selected={filters.personalizedStructureStatus}
-											options={[
-												{
-													id: 1,
-													label: "PRONTA",
-													value: "PRONTA",
-												},
-												{
-													id: 2,
-													label: "PENDÊNCIA",
-													value: "PENDÊNCIA",
-												},
-												{
-													id: 3,
-													label: "N/A",
-													value: "N/A",
-												},
-												{
-													id: 4,
-													label: "NÃO DEFINDO",
-													value: "NÃO DEFINDO",
-												},
-											]}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													personalizedStructureStatus: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													personalizedStructureStatus: [],
-												}))
-											}
-										/>
-									</div>
-
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"STATUS DA OBRA"}
-											selected={filters.executionStatus}
-											options={executionStatus}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													executionStatus: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													executionStatus: [],
-												}))
-											}
-										/>
-									</div>
-									<div className="w-full lg:w-[250px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"TOPOLOGIA"}
-											selected={filters.topology}
-											options={[
-												{ id: 1, label: "INVERSOR", value: "INVERSOR" },
-												{ id: 2, label: "MICRO", value: "MICRO" },
-												{ id: 3, label: "OUTROS SERV.", value: "OUTROS SERV." },
-												{ id: 4, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-											]}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													topology: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													topology: [],
-												}))
-											}
-										/>
-									</div>
-								</div>
-								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												partialExecutionPending: !filters.partialExecutionPending,
-											})
-										}
-										className={`${
-											filters.partialExecutionPending ? "bg-[#fead41]" : "bg-orange-300"
-										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										MONTAGEM PARCIAL PENDENTE
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												personalizedStructureApplied: !filters.personalizedStructureApplied,
-											})
-										}
-										className={`${
-											filters.personalizedStructureApplied ? "bg-[#15599a]" : "bg-blue-300"
-										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										COM ESTRUTURA PERSONALIZADA
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												personalizedStructureApplied: !filters.personalizedStructureApplied,
-											})
-										}
-										className={`${
-											filters.personalizedStructureApplied ? "bg-[#15599a]" : "bg-blue-300"
-										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										COM ESTRUTURA PERSONALIZADA
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												paAlterationApplied: !filters.paAlterationApplied,
-											})
-										}
-										className={`${filters.paAlterationApplied ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										COM TROCA DE PADRÃO
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												paAlterationPending: !filters.paAlterationPending,
-											})
-										}
-										className={`${
-											filters.paAlterationPending ? "bg-orange-500" : "bg-orange-300"
-										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										TROCA DE PADRÃO PENDENTE
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												partialPaymentDone: !filters.partialPaymentDone,
-											})
-										}
-										className={`${filters.partialPaymentDone ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										KIT PAGO
-									</button>
-									<button
-										type="button"
-										onClick={() =>
-											setFilters({
-												...filters,
-												missingObservations: !filters.missingObservations,
-											})
-										}
-										className={`${filters.missingObservations ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
-									>
-										SEM OBSERVAÇÕES
-									</button>
-									<button
-										type="button"
-										onClick={() => {
-											setFilters((prev) => ({
-												...prev,
-												outsideMatrix: !prev.outsideMatrix,
-											}));
-										}}
-										className={`${
-											filters.outsideMatrix ? "bg-[#15599a]" : "bg-blue-300"
-										} flex h-[36px] cursor-pointer items-center justify-center rounded bg-[#15599a] px-2 font-bold text-white`}
-									>
-										FORA DE ITUIUTABA
-									</button>
-								</div>
-							</motion.div>
-						) : null}
-					</AnimatePresence>
-				</div>
-				<div className="mt-4  flex flex-wrap justify-around gap-3">
-					{projects.map((project, index) => (
-						<motion.div
-							onClick={() => {
-								handleOpenModal(project._id);
-							}}
-							key={project._id}
-							initial={{ opacity: 0, translateX: -50, translateY: -35 }}
-							animate={{ opacity: 1, translateX: 0, translateY: 0 }}
-							transition={{ duration: 0.3, delay: 0.01 * index }}
-							className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-								project.homologacao.acesso.dataResposta && !project.homologacao.vistoria.dataEfetivacao
-									? getBorderColorByParecer(project.homologacao.acesso.dataResposta, new Date().toISOString(), project.obra.statusDaObra || "")
-									: "border border-gray-200"
-							}  hover:bg-blue-100`}
-						>
-							<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-							<div className="flex flex-col p-2">
-								<div className="flex items-center justify-between">
-									<p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-									<p className="text-xs text-[#15599a]">#{project.qtde}</p>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex w-1/3 flex-col items-start">
-										<span className="text-xxs">STATUS</span>
-										<p className="text-xs text-gray-600">{project.obra.statusDaObra ? project.obra.statusDaObra : "-"}</p>
-									</div>
-									<div className="flex w-1/3 flex-col items-center">
-										<span className="text-xxs">VISTORIA</span>
-										<div className="flex items-center gap-1 text-green-600">
-											{project.homologacao.vistoria.dataEfetivacao ? <BsPatchCheckFill color="rgb(22,163,74)" /> : null}
-											<p className="text-xs text-gray-600">{project.homologacao.vistoria.dataEfetivacao ? "FEITA" : "PENDENTE"}</p>
-										</div>
-									</div>
-									<div className="flex w-1/3 flex-col items-end">
-										<span className="text-xxs">LAUDO</span>
-										<p className="text-center text-xs text-gray-600">{project.obra.laudo ? project.obra.laudo : "-"}</p>
-									</div>
-								</div>
-								<div className="flex items-center justify-between">
-									<div>
-										<span className="text-xxs">STATUS KIT</span>
-										<p className="text-xs text-yellow-500">{project.compra.statusEntrega ? project.compra.statusEntrega : "-"}</p>
-									</div>
-									<div className="hidden lg:block">
-										<span className="text-xxs">PREVISÃO DE ENTREGA</span>
-										<p className="text-center text-xs text-gray-600">{project.compra.previsaoEntrega ? new Date(project.compra.previsaoEntrega).toLocaleDateString() : "-"}</p>
-									</div>
-									<div>
-										<span className="text-xxs">TÉCNICO RESPONSÁVEL</span>
-										<p className="text-center text-xs text-gray-600">{project.visitaTecnica.tecnico ? project.visitaTecnica.tecnico : "-"}</p>
-									</div>
-								</div>
-								<div className="grid grid-cols-3 gap-1">
-									<div className="item-start flex flex-col gap-1">
-										<span className="text-xxs">CIDADE</span>
-										<p className="text-xs text-[#15599a]">{project.cidade ? project.cidade : "-"}</p>
-									</div>
-									<div className="item-center flex flex-col gap-1">
-										<span className="text-center text-xxs">TELHA</span>
-										<p className="text-center text-xs uppercase text-[#15599a]">{project.visitaTecnica.tipoDaTelha ? project.visitaTecnica.tipoDaTelha : "-"}</p>
-									</div>
-									<div className="item-end flex flex-col gap-1">
-										<span className="text-end text-xxs">NºMÓDULOS</span>
-										<p className="text-end text-xs text-[#15599a]">{project.sistema?.qtdeModulos ? project.sistema?.qtdeModulos : "-"}</p>
-									</div>
-								</div>
-								<div className="flex items-center justify-between">
-									<div>
-										<span className="text-xxs">FIM DO PARECER EM</span>
-										<p className="text-center text-xs uppercase text-[#15599a]">
-											{project.homologacao.acesso.dataResposta
-												? 120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, "days") > 0
-													? `${120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, "days")} dias`
-													: "VENCIDO"
-												: "-"}
-										</p>
-									</div>
-									<div>
-										<span className="text-xxs">DESDE DO CONTRATO</span>
-										<p className="text-center text-xs uppercase text-[#15599a]">
-											{project.contrato.dataAssinatura ? `${dayjs(new Date()).diff(project.contrato.dataAssinatura, "days")} dias` : "-"}
-										</p>
-									</div>
-									<div>
-										<span className="text-xxs">DESDE DE ENTREGA</span>
-										<p className="text-center text-xs uppercase text-[#15599a]">
-											{project.compra.statusEntrega === "ENTREGUE"
-												? project.compra.dataEntrega
-													? `${dayjs(new Date()).diff(project.compra.dataEntrega, "days")} dias`
-													: `${dayjs(new Date()).diff(project.compra.previsaoEntrega, "days")} dias`
-												: "-"}
-										</p>
-									</div>
-								</div>
-								{project.pagamento.credor === "SOL FÁCIL" && (
-									<div className="flex items-center justify-center">
-										<h1 className="text-center font-bold text-red-500">POSSUI DESLIGAMENTO REMOTO</h1>
-									</div>
-								)}
-								{project.homologacao.fastTrack ? (
-									<div className="flex w-full items-center justify-center">
-										<h1 className="rounded bg-green-500 px-2 py-1 text-[0.55rem] font-bold text-white">FAST TRACK</h1>
-									</div>
-								) : null}
-								{project.obra.pendencias ? (
-									<div className="flex w-full items-center justify-center">
-										<h1 className="rounded bg-amber-900 px-2 py-1 text-[0.55rem] font-bold text-white">{project.obra.pendencias}</h1>
-									</div>
-								) : null}
-							</div>
-						</motion.div>
-					))}
-				</div>
-				{modalProject.isOpen && modalProject.projectId ? (
-					<ModalObras
-						modalIsOpen={modalProject.isOpen}
-						handleUpdates={() => console.log()}
-						projectId={modalProject.projectId}
-						closeModal={() => setModalProject({ isOpen: false, projectId: null })}
-					/>
-				) : null}
-			</div>
-		);
+	return <ExecutionPage session={session} />;
 }
+// const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
+// const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
+// function Obras() {
+// 	const router = useRouter();
+// 	const { data: session, status } = useSession({
+// 		required: true,
+// 		onUnauthenticated() {
+// 			router.push("/auth/signin");
+// 		},
+// 	});
+// 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-export default Obras;
+// 	const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useExecutionProjects();
+// 	const [modalProject, setModalProject] = useState<{ isOpen: boolean; projectId: string | null }>({
+// 		isOpen: false,
+// 		projectId: null,
+// 	});
+
+// 	function getBorderColorByParecer(date1: string, date2: string, statusObra: string) {
+// 		const Date1AsDate = new Date(date1);
+// 		const Date2AsDate = new Date(date2);
+// 		const timeDiff = Math.abs(Date2AsDate.getTime() - Date1AsDate.getTime());
+// 		const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+// 		if (statusObra === "CASA EM CONSTRUÇÃO") {
+// 			return "border-2 border-yellow-500";
+// 		}
+// 		if (diffDays > 110) {
+// 			return "border-2 border-red-600";
+// 		}
+// 		if (diffDays > 100) {
+// 			return "border-2 border-blue-500";
+// 		}
+// 		if (diffDays > 90) {
+// 			return "border-2 border-green-500";
+// 		}
+// 		return "border border-gray-200";
+// 	}
+// 	function handleOpenModal(id: string) {
+// 		setModalProject({ isOpen: true, projectId: id });
+// 	}
+// 	function getStats({ info }: { info: TProjectDTO[] }) {
+// 		if (!info) {
+// 			return {
+// 				projetos: 0,
+// 				potencia: 0,
+// 				entregues: 0,
+// 				emRota: 0,
+// 				pagos: 0,
+// 				obsPendente: 0,
+// 			};
+// 		}
+
+// 		const projectsQty = info.length;
+// 		const totalPower = info.reduce((acc, current) => {
+// 			const currentPower = current.sistema?.potPico || 0;
+// 			return acc + currentPower;
+// 		}, 0);
+// 		const delivered = info.reduce((acc, current) => {
+// 			const isDelivered = current.compra.statusEntrega === "ENTREGUE";
+// 			if (isDelivered) return acc + 1;
+// 			return acc;
+// 		}, 0);
+// 		const onDeliveryRoute = info.reduce((acc, current) => {
+// 			const onRoute = current.compra?.statusEntrega === "EM ROTA";
+// 			if (onRoute) return acc + 1;
+// 			return acc;
+// 		}, 0);
+// 		const equipmentsPaid = info.reduce((acc, current) => {
+// 			const isPaid = !!current.compra.dataPagamento;
+// 			if (isPaid) return acc + 1;
+// 			return acc;
+// 		}, 0);
+// 		const missingObservations = info.reduce((acc, current) => {
+// 			const isMissingObservations = !current.obra.observacoes || current.obra.observacoes?.trim().length <= 2;
+// 			if (isMissingObservations) return acc + 1;
+// 			return acc;
+// 		}, 0);
+// 		return {
+// 			projetos: projectsQty,
+// 			potencia: formatDecimalPlaces(totalPower, 2),
+// 			entregues: delivered,
+// 			emRota: onDeliveryRoute,
+// 			pagos: equipmentsPaid,
+// 			obsPendente: missingObservations,
+// 		};
+// 	}
+// 	useEffect(() => {
+// 		if (session) {
+// 			// @ts-ignore
+// 			const userRoutes = session?.user?.permissoes.rotas;
+// 			if (!!userRoutes && !userRoutes.includes("Obras") && !userRoutes.includes("Projetos")) {
+// 				router.push("/");
+// 			}
+// 		}
+// 	}, [session]);
+// 	console.log(filters);
+// 	if (isSuccess && projects)
+// 		return (
+// 			<div className="grow p-6">
+// 				<div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
+// 					<div className="flex w-full items-center justify-between">
+// 						<div className="flex flex-col items-center gap-2 lg:flex-row">
+// 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de execução</p>
+// 						</div>
+// 						{dropdownMenuVisible ? (
+// 							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
+// 								<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(false)} />
+// 							</div>
+// 						) : (
+// 							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
+// 								<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(true)} />
+// 							</div>
+// 						)}
+// 					</div>
+// 					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
+// 						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+// 							<div className="flex items-center justify-between">
+// 								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+// 								<VscDiffAdded />
+// 							</div>
+// 							<div className="mt-2 flex w-full flex-col">
+// 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
+// 								<p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
+// 							</div>
+// 						</div>
+// 						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+// 							<div className="flex items-center justify-between">
+// 								<h1 className="text-sm font-medium uppercase tracking-tight">ENTREGUE</h1>
+// 								<GrStorage />
+// 							</div>
+// 							<div className="mt-2 flex w-full flex-col">
+// 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).entregues}</div>
+// 							</div>
+// 						</div>
+// 						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+// 							<div className="flex items-center justify-between">
+// 								<h1 className="text-sm font-medium uppercase tracking-tight">EM ROTA</h1>
+// 								<TbTruckDelivery />
+// 							</div>
+// 							<div className="mt-2 flex w-full flex-col">
+// 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).emRota}</div>
+// 							</div>
+// 						</div>
+// 						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+// 							<div className="flex items-center justify-between">
+// 								<h1 className="text-sm font-medium uppercase tracking-tight">EQUIPAMENTOS PAGOS</h1>
+// 								<MdPaid />
+// 							</div>
+// 							<div className="mt-2 flex w-full flex-col">
+// 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pagos}</div>
+// 							</div>
+// 						</div>
+// 						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+// 							<div className="flex items-center justify-between">
+// 								<h1 className="text-sm font-medium uppercase tracking-tight">SEM OBSERVAÇÕES</h1>
+// 								<TbTextPlus />
+// 							</div>
+// 							<div className="mt-2 flex w-full flex-col">
+// 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).obsPendente}</div>
+// 							</div>
+// 						</div>
+// 					</div>
+// 					<div className="my-2 flex w-full items-center justify-end gap-2">
+// 						<Link href="/ordens-de-servico">
+// 							<button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+// 								ORDENS DE SERVIÇO
+// 							</button>
+// 						</Link>
+// 					</div>
+// 					<AnimatePresence>
+// 						{dropdownMenuVisible ? (
+// 							<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+// 								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+// 									<TextInput
+// 										label={"NOME DO CONTRATO"}
+// 										value={filters.search}
+// 										placeholder={"Digite o nome do contrato..."}
+// 										handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+// 									/>
+
+// 									<TextInput
+// 										label={"TIPO DE TELHA"}
+// 										value={filters.roofTileType}
+// 										placeholder={"Digite o tipo de telha..."}
+// 										handleChange={(value) => setFilters((prev) => ({ ...prev, roofTileType: value }))}
+// 									/>
+
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"TIPO DE SERVIÇO"}
+// 											selected={filters.serviceType}
+// 											options={serviceTypes}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													serviceType: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													serviceType: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 								</div>
+// 								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInputVirtualized
+// 											width={"100%"}
+// 											label={"CIDADE"}
+// 											selected={filters.city}
+// 											options={AllCities.map((city, index) => ({ id: index + 1, label: city.label, value: city.value }))}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													city: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													city: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"EQUIPE RESPONSÁVEL"}
+// 											selected={filters.technicalTeam}
+// 											options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													technicalTeam: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													technicalTeam: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"STATUS DE ENTREGA"}
+// 											selected={filters.deliveryStatus}
+// 											options={[
+// 												{ id: 1, value: "EM ROTA", label: "EM ROTA" },
+// 												{
+// 													id: 2,
+// 													value: "AGUARDANDO COMPRA",
+// 													label: "AGUARDANDO COMPRA",
+// 												},
+// 												{
+// 													id: 3,
+// 													value: "ENTREGUE",
+// 													label: "ENTREGUE",
+// 												},
+// 												{ id: 4, value: "CANCELADO", label: "CANCELADO" },
+// 											]}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													deliveryStatus: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													deliveryStatus: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"STATUS DA ESTRUTURA"}
+// 											selected={filters.personalizedStructureStatus}
+// 											options={[
+// 												{
+// 													id: 1,
+// 													label: "PRONTA",
+// 													value: "PRONTA",
+// 												},
+// 												{
+// 													id: 2,
+// 													label: "PENDÊNCIA",
+// 													value: "PENDÊNCIA",
+// 												},
+// 												{
+// 													id: 3,
+// 													label: "N/A",
+// 													value: "N/A",
+// 												},
+// 												{
+// 													id: 4,
+// 													label: "NÃO DEFINDO",
+// 													value: "NÃO DEFINDO",
+// 												},
+// 											]}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													personalizedStructureStatus: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													personalizedStructureStatus: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"STATUS DA OBRA"}
+// 											selected={filters.executionStatus}
+// 											options={executionStatus}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													executionStatus: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													executionStatus: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 									<div className="w-full lg:w-[250px]">
+// 										<MultipleSelectInput
+// 											width={"100%"}
+// 											label={"TOPOLOGIA"}
+// 											selected={filters.topology}
+// 											options={[
+// 												{ id: 1, label: "INVERSOR", value: "INVERSOR" },
+// 												{ id: 2, label: "MICRO", value: "MICRO" },
+// 												{ id: 3, label: "OUTROS SERV.", value: "OUTROS SERV." },
+// 												{ id: 4, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+// 											]}
+// 											selectedItemLabel={"SEM FILTRO"}
+// 											handleChange={(value) =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													topology: value as string[],
+// 												}))
+// 											}
+// 											onReset={() =>
+// 												setFilters((prev) => ({
+// 													...prev,
+// 													topology: [],
+// 												}))
+// 											}
+// 										/>
+// 									</div>
+// 								</div>
+// 								<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												partialExecutionPending: !filters.partialExecutionPending,
+// 											})
+// 										}
+// 										className={`${
+// 											filters.partialExecutionPending ? "bg-[#fead41]" : "bg-orange-300"
+// 										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										MONTAGEM PARCIAL PENDENTE
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												personalizedStructureApplied: !filters.personalizedStructureApplied,
+// 											})
+// 										}
+// 										className={`${
+// 											filters.personalizedStructureApplied ? "bg-[#15599a]" : "bg-blue-300"
+// 										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										COM ESTRUTURA PERSONALIZADA
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												personalizedStructureApplied: !filters.personalizedStructureApplied,
+// 											})
+// 										}
+// 										className={`${
+// 											filters.personalizedStructureApplied ? "bg-[#15599a]" : "bg-blue-300"
+// 										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										COM ESTRUTURA PERSONALIZADA
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												paAlterationApplied: !filters.paAlterationApplied,
+// 											})
+// 										}
+// 										className={`${filters.paAlterationApplied ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										COM TROCA DE PADRÃO
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												paAlterationPending: !filters.paAlterationPending,
+// 											})
+// 										}
+// 										className={`${
+// 											filters.paAlterationPending ? "bg-orange-500" : "bg-orange-300"
+// 										} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										TROCA DE PADRÃO PENDENTE
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												partialPaymentDone: !filters.partialPaymentDone,
+// 											})
+// 										}
+// 										className={`${filters.partialPaymentDone ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										KIT PAGO
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() =>
+// 											setFilters({
+// 												...filters,
+// 												missingObservations: !filters.missingObservations,
+// 											})
+// 										}
+// 										className={`${filters.missingObservations ? "bg-[#15599a]" : "bg-blue-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
+// 									>
+// 										SEM OBSERVAÇÕES
+// 									</button>
+// 									<button
+// 										type="button"
+// 										onClick={() => {
+// 											setFilters((prev) => ({
+// 												...prev,
+// 												outsideMatrix: !prev.outsideMatrix,
+// 											}));
+// 										}}
+// 										className={`${
+// 											filters.outsideMatrix ? "bg-[#15599a]" : "bg-blue-300"
+// 										} flex h-[36px] cursor-pointer items-center justify-center rounded bg-[#15599a] px-2 font-bold text-white`}
+// 									>
+// 										FORA DE ITUIUTABA
+// 									</button>
+// 								</div>
+// 							</motion.div>
+// 						) : null}
+// 					</AnimatePresence>
+// 				</div>
+// 				<div className="mt-4  flex flex-wrap justify-around gap-3">
+// 					{projects.map((project, index) => (
+// 						<motion.div
+// 							onClick={() => {
+// 								handleOpenModal(project._id);
+// 							}}
+// 							key={project._id}
+// 							initial={{ opacity: 0, translateX: -50, translateY: -35 }}
+// 							animate={{ opacity: 1, translateX: 0, translateY: 0 }}
+// 							transition={{ duration: 0.3, delay: 0.01 * index }}
+// 							className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
+// 								project.homologacao.acesso.dataResposta && !project.homologacao.vistoria.dataEfetivacao
+// 									? getBorderColorByParecer(project.homologacao.acesso.dataResposta, new Date().toISOString(), project.obra.statusDaObra || "")
+// 									: "border border-gray-200"
+// 							}  hover:bg-blue-100`}
+// 						>
+// 							<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+// 							<div className="flex flex-col p-2">
+// 								<div className="flex items-center justify-between">
+// 									<p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
+// 									<p className="text-xs text-[#15599a]">#{project.qtde}</p>
+// 								</div>
+// 								<div className="flex items-center justify-between">
+// 									<div className="flex w-1/3 flex-col items-start">
+// 										<span className="text-xxs">STATUS</span>
+// 										<p className="text-xs text-gray-600">{project.obra.statusDaObra ? project.obra.statusDaObra : "-"}</p>
+// 									</div>
+// 									<div className="flex w-1/3 flex-col items-center">
+// 										<span className="text-xxs">VISTORIA</span>
+// 										<div className="flex items-center gap-1 text-green-600">
+// 											{project.homologacao.vistoria.dataEfetivacao ? <BsPatchCheckFill color="rgb(22,163,74)" /> : null}
+// 											<p className="text-xs text-gray-600">{project.homologacao.vistoria.dataEfetivacao ? "FEITA" : "PENDENTE"}</p>
+// 										</div>
+// 									</div>
+// 									<div className="flex w-1/3 flex-col items-end">
+// 										<span className="text-xxs">LAUDO</span>
+// 										<p className="text-center text-xs text-gray-600">{project.obra.laudo ? project.obra.laudo : "-"}</p>
+// 									</div>
+// 								</div>
+// 								<div className="flex items-center justify-between">
+// 									<div>
+// 										<span className="text-xxs">STATUS KIT</span>
+// 										<p className="text-xs text-yellow-500">{project.compra.statusEntrega ? project.compra.statusEntrega : "-"}</p>
+// 									</div>
+// 									<div className="hidden lg:block">
+// 										<span className="text-xxs">PREVISÃO DE ENTREGA</span>
+// 										<p className="text-center text-xs text-gray-600">{project.compra.previsaoEntrega ? new Date(project.compra.previsaoEntrega).toLocaleDateString() : "-"}</p>
+// 									</div>
+// 									<div>
+// 										<span className="text-xxs">TÉCNICO RESPONSÁVEL</span>
+// 										<p className="text-center text-xs text-gray-600">{project.visitaTecnica.tecnico ? project.visitaTecnica.tecnico : "-"}</p>
+// 									</div>
+// 								</div>
+// 								<div className="grid grid-cols-3 gap-1">
+// 									<div className="item-start flex flex-col gap-1">
+// 										<span className="text-xxs">CIDADE</span>
+// 										<p className="text-xs text-[#15599a]">{project.cidade ? project.cidade : "-"}</p>
+// 									</div>
+// 									<div className="item-center flex flex-col gap-1">
+// 										<span className="text-center text-xxs">TELHA</span>
+// 										<p className="text-center text-xs uppercase text-[#15599a]">{project.visitaTecnica.tipoDaTelha ? project.visitaTecnica.tipoDaTelha : "-"}</p>
+// 									</div>
+// 									<div className="item-end flex flex-col gap-1">
+// 										<span className="text-end text-xxs">NºMÓDULOS</span>
+// 										<p className="text-end text-xs text-[#15599a]">{project.sistema?.qtdeModulos ? project.sistema?.qtdeModulos : "-"}</p>
+// 									</div>
+// 								</div>
+// 								<div className="flex items-center justify-between">
+// 									<div>
+// 										<span className="text-xxs">FIM DO PARECER EM</span>
+// 										<p className="text-center text-xs uppercase text-[#15599a]">
+// 											{project.homologacao.acesso.dataResposta
+// 												? 120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, "days") > 0
+// 													? `${120 - dayjs(new Date()).diff(project.homologacao.acesso.dataResposta, "days")} dias`
+// 													: "VENCIDO"
+// 												: "-"}
+// 										</p>
+// 									</div>
+// 									<div>
+// 										<span className="text-xxs">DESDE DO CONTRATO</span>
+// 										<p className="text-center text-xs uppercase text-[#15599a]">
+// 											{project.contrato.dataAssinatura ? `${dayjs(new Date()).diff(project.contrato.dataAssinatura, "days")} dias` : "-"}
+// 										</p>
+// 									</div>
+// 									<div>
+// 										<span className="text-xxs">DESDE DE ENTREGA</span>
+// 										<p className="text-center text-xs uppercase text-[#15599a]">
+// 											{project.compra.statusEntrega === "ENTREGUE"
+// 												? project.compra.dataEntrega
+// 													? `${dayjs(new Date()).diff(project.compra.dataEntrega, "days")} dias`
+// 													: `${dayjs(new Date()).diff(project.compra.previsaoEntrega, "days")} dias`
+// 												: "-"}
+// 										</p>
+// 									</div>
+// 								</div>
+// 								{project.pagamento.credor === "SOL FÁCIL" && (
+// 									<div className="flex items-center justify-center">
+// 										<h1 className="text-center font-bold text-red-500">POSSUI DESLIGAMENTO REMOTO</h1>
+// 									</div>
+// 								)}
+// 								{project.homologacao.fastTrack ? (
+// 									<div className="flex w-full items-center justify-center">
+// 										<h1 className="rounded bg-green-500 px-2 py-1 text-[0.55rem] font-bold text-white">FAST TRACK</h1>
+// 									</div>
+// 								) : null}
+// 								{project.obra.pendencias ? (
+// 									<div className="flex w-full items-center justify-center">
+// 										<h1 className="rounded bg-amber-900 px-2 py-1 text-[0.55rem] font-bold text-white">{project.obra.pendencias}</h1>
+// 									</div>
+// 								) : null}
+// 							</div>
+// 						</motion.div>
+// 					))}
+// 				</div>
+// 				{modalProject.isOpen && modalProject.projectId ? (
+// 					<ModalObras
+// 						modalIsOpen={modalProject.isOpen}
+// 						handleUpdates={() => console.log()}
+// 						projectId={modalProject.projectId}
+// 						closeModal={() => setModalProject({ isOpen: false, projectId: null })}
+// 					/>
+// 				) : null}
+// 			</div>
+// 		);
+// }
+
+// export default Obras;

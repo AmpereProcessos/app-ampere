@@ -4,6 +4,11 @@ import { MdEast, MdElectricMeter, MdNorth, MdNorthEast, MdNorthWest, MdOutlineSe
 import { TbTopologyFull } from "react-icons/tb";
 import type { TPurchaseControl } from "./schemas/purchases";
 
+export const SystemTopologiesTypes = [
+	{ id: 1, label: "INVERSOR", value: "INVERSOR" },
+	{ id: 2, label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
+];
+
 export const ContractRequestPaymentOptions = [
 	{
 		id: 1,

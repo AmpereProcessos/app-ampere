@@ -34,7 +34,17 @@ function ServiceOrdersCardModePage({ session, handleSetMode }: ServiceOrdersCard
 
 	const [newServiceOrderModalIsOpen, setNewServiceOrderModalIsOpen] = useState<boolean>(false);
 	const [editServiceOrderModal, setEditServiceOrderModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
-	const { data: serviceOrdersByFiltersResult, isLoading, isError, isSuccess, error, filters, updateFilters } = useServiceOrdersByPersonalizedFilters();
+	const {
+		data: serviceOrdersByFiltersResult,
+		isLoading,
+		isError,
+		isSuccess,
+		error,
+		filters,
+		updateFilters,
+	} = useServiceOrdersByPersonalizedFilters({
+		initialFilters: {},
+	});
 
 	const serviceOrders = serviceOrdersByFiltersResult?.serviceOrders;
 	const serviceOrdersMatched = serviceOrdersByFiltersResult?.serviceOrdersMatched || 0;

@@ -1,18 +1,19 @@
 import NumberInput from "@/components/inputs/Number";
 
-import { GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
+import { formatToMoney, GeneralVisibleHiddenExitMotionVariants, SlideMotionVariants } from "@/utils/constants";
 import type { TTechnicalAnalysisDTO } from "@/utils/schemas/technical-analysis";
 import { supplyOptions } from "@/utils/select-options";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
 
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { TbRulerMeasure } from "react-icons/tb";
 import MaterialSelector from "../../almoxarifado/estoque/MaterialVinculatorSelector";
 import { Button } from "@/components/ui/button";
 import { BsCart } from "react-icons/bs";
 import { cn } from "@/lib/utils";
+import { BadgeDollarSign, DollarSign, Package, Pencil } from "lucide-react";
 
 type SupplyBlockProps = {
 	infoHolder: TTechnicalAnalysisDTO;
@@ -34,16 +35,21 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyB
 		return toast.success("Item adicionado com sucesso.");
 	}
 	function removeSupplyItem(index: number) {
-		const itemsList = infoHolder.suprimentos?.itens ? [...infoHolder.suprimentos.itens] : [];
-		itemsList.splice(index, 1);
+		const newItemsList = infoHolder.suprimentos?.itens ? infoHolder.suprimentos.itens.filter((_, i) => i !== index) : [];
 		setInfoHolder((prev) => ({
 			...prev,
-			suprimentos: prev.suprimentos ? { ...prev.suprimentos, itens: itemsList } : { observacoes: "", itens: itemsList },
+			suprimentos: prev.suprimentos ? { ...prev.suprimentos, itens: newItemsList } : { observacoes: "", itens: newItemsList },
 		}));
-		setChanges((prev) => ({ ...prev, "suprimentos.itens": itemsList }));
+		setChanges((prev) => ({ ...prev, "suprimentos.itens": newItemsList }));
 		return toast.success("Item removido com sucesso.");
 	}
-
+	function updateSupplyItem(index: number, item: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number]) {
+		const newItemsList = infoHolder.suprimentos?.itens ? infoHolder.suprimentos.itens.map((_, i) => (i === index ? item : _)) : [];
+		setInfoHolder((prev) => ({
+			...prev,
+			suprimentos: prev.suprimentos ? { ...prev.suprimentos, itens: newItemsList } : { observacoes: "", itens: newItemsList },
+		}));
+	}
 	return (
 		<div className="mt-4 flex w-full flex-col">
 			<div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
@@ -79,29 +85,22 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyB
 					</button>
 				</div>
 				<AnimatePresence>{newSupplyItemMenuIsOpen && <NewSupplyItemMenu addSupplyItem={addSupplyItem} />}</AnimatePresence>
-				<div className="flex w-full flex-wrap items-center justify-around gap-2">
-					{infoHolder.suprimentos?.itens?.map((item, index) => (
-						<div key={`${item.idMaterial}-${index}`} className="flex w-full  items-center justify-between rounded-md border border-cyan-500 p-2 shadow-sm lg:w-[350px]">
-							<div className="flex flex-col">
-								<h1 className="text-sm font-medium text-gray-500">
-									<strong>{item.qtde}</strong> x {item.descricao} <strong className="text-[#fead41]">({item.tipo})</strong>
-								</h1>
-								<div className="flex items-center gap-1">
-									<TbRulerMeasure />
-									<p className="text-xs italic text-gray-500">{item.grandeza}</p>
-								</div>
-							</div>
-							<div className="flex items-center justify-end gap-1">
-								<button
-									type="button"
-									onClick={() => removeSupplyItem(index)}
-									className="w-fit cursor-pointer text-[20px] text-red-500 opacity-40 duration-300 ease-in hover:scale-110 hover:text-red-500 hover:opacity-100"
-								>
-									<MdDelete />
-								</button>
-							</div>
-						</div>
-					)) || <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum item adicionado.</p>}
+				<div className="flex w-full flex-col gap-2">
+					{!!infoHolder.suprimentos?.itens && infoHolder.suprimentos?.itens.length > 0 ? (
+						infoHolder.suprimentos?.itens.map((item, index) => (
+							<SupplyItemCard
+								key={`${item.idMaterial}-${index}`}
+								item={item}
+								handleUpdate={(newItem) => {
+									updateSupplyItem(index, newItem);
+									console.log("ATUALIZANDO", newItem);
+								}}
+								handleRemove={() => removeSupplyItem(index)}
+							/>
+						))
+					) : (
+						<p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum item adicionado.</p>
+					)}
 				</div>
 			</div>
 		</div>
@@ -177,6 +176,118 @@ function NewSupplyItemMenu({ addSupplyItem }: NewSupplyItemMenuProps) {
 	);
 }
 
-// function SupplyItemCard({ item }: { item: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number] }) {
-// 	return <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]"></div>;
-// }
+type SupplyItemCardProps = {
+	item: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number];
+	handleUpdate: (info: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number]) => void;
+	handleRemove: () => void;
+};
+function SupplyItemCard({ item, handleUpdate, handleRemove }: SupplyItemCardProps) {
+	const [itemHolder, setItemHolder] = useState<Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number]>(item);
+	console.log("SUPPLY ITEM", itemHolder);
+	const [editMenuIsOpen, setEditMenuIsOpen] = useState(false);
+	return (
+		<>
+			<AnimatePresence>
+				<div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+					<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+						<p className="text-sm font-bold leading-none tracking-tight">
+							{item.descricao}
+							{item.tipo ? `(${item.tipo})` : null}
+						</p>
+						<div className="flex items-center gap-1">
+							<BadgeDollarSign className="w-4 h-4 min-w-4 min-h-4" />
+							<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{formatToMoney(item.qtde * (item.preco || 0))}</h1>
+						</div>
+					</div>
+					<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+						<div className="flex flex-wrap items-center gap-2">
+							<div className="flex items-center gap-1">
+								<Package className="w-4 h-4 min-w-4 min-h-4" />
+								<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+									{item.qtde} ({item.grandeza})
+								</h1>
+							</div>
+							<div className="flex items-center gap-1">
+								<DollarSign className="w-4 h-4 min-w-4 min-h-4" />
+								<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+									{formatToMoney(item.preco || 0)}/{item.grandeza}
+								</h1>
+							</div>
+						</div>
+						<div className="flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => setEditMenuIsOpen((prev) => !prev)}
+								className="flex items-center gap-1 rounded-lg bg-orange-600 px-2 py-1 text-[0.6rem] text-white hover:bg-orange-500"
+							>
+								<MdEdit width={10} height={10} />
+								<p>EDITAR</p>
+							</button>
+							<button type="button" onClick={() => handleRemove()} className="flex items-center gap-1 rounded-lg bg-red-600 px-2 py-1 text-[0.6rem] text-white hover:bg-red-500">
+								<MdDelete width={10} height={10} />
+								<p>REMOVER</p>
+							</button>
+						</div>
+					</div>
+				</div>
+				{editMenuIsOpen ? (
+					<motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="flex w-full flex-col gap-1 p-3">
+						<div className="flex w-full flex-col items-center gap-2">
+							<MaterialSelector
+								initialMaterialState={{ materialId: itemHolder.idMaterial || null, materialName: itemHolder.descricao }}
+								vinculateMaterial={(material) =>
+									setItemHolder((prev) => ({
+										...prev,
+										idMaterial: material._id,
+										descricao: material.nome,
+										grandeza: material.grandeza || "UN",
+										preco: material.preco,
+									}))
+								}
+								unvinculateMaterial={() =>
+									setItemHolder((prev) => ({
+										...prev,
+										idMaterial: null,
+										descricao: "",
+										grandeza: "UN",
+										preco: null,
+									}))
+								}
+							/>
+							<NumberInput
+								label="QUANTIDADE"
+								placeholder="Preencha aqui a quantidade de itens..."
+								labelClassName="text-[0.6rem]"
+								holderClassName="text-xs p-2 min-h-[34px]"
+								value={itemHolder.qtde}
+								handleChange={(value) => setItemHolder((prev) => ({ ...prev, qtde: value }))}
+								width="100%"
+							/>
+						</div>
+						<div className="flex items-center justify-end gap-2">
+							<button
+								type="button"
+								onClick={() => {
+									setEditMenuIsOpen(false);
+								}}
+								className="rounded bg-red-800 p-1 px-4 text-[0.6rem] font-medium text-white duration-300 ease-in-out hover:bg-red-700"
+							>
+								FECHAR
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									handleUpdate(itemHolder);
+									setEditMenuIsOpen(false);
+								}}
+								className="rounded bg-blue-800 p-1 px-4 text-[0.6rem] font-medium text-white duration-300 ease-in-out hover:bg-blue-700"
+							>
+								ATUALIZAR ITEM
+							</button>
+						</div>
+					</motion.div>
+				) : null}
+			</AnimatePresence>
+		</>
+	);
+}

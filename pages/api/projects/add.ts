@@ -1,16 +1,14 @@
 import type { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/services/mongodb/projects";
-import connectToISDatabase from "../../../utils/services/mongodb/inside-sales";
 import type { NextApiHandler } from "next";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TProject } from "@/utils/schemas/projects";
-import { RiCollageLine } from "react-icons/ri";
 import createHttpError from "http-errors";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
-import { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
+import type { TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
 
 type PostResponse = {
 	data: { insertedId: string };
@@ -22,13 +20,16 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 	const project: TProject = req.body;
 
 	const crmDb = await connectToCRMDatabase();
-	const db = await connectToDatabase();
+	const appDb = await connectToDatabase();
 
-	const collection: Collection<TProject> = db.collection("dados");
+	const projectsCollection: Collection<TProject> = appDb.collection("dados");
 
 	const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection("opportunities");
 	const crmUsersCollection: Collection<TCRMUser> = crmDb.collection("users");
-	const latestInserted = await collection
+	const technicalAnalysisCollection: Collection<TTechnicalAnalysis> = crmDb.collection("technical-analysis");
+
+	// Getting the latest inserted project
+	const latestInserted = await projectsCollection
 		.aggregate([
 			{
 				$sort: {
@@ -41,12 +42,11 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 		])
 		.toArray();
 
+	// Defining the indexer for the new project
 	const lastIndexer = latestInserted[0].qtde;
-
 	const newIndexer = lastIndexer + 1;
 
-	let clientCrmId: string | null = null;
-
+	// Getting the seller from the CRM
 	let seller: TProject["vendedor"] = project.vendedor;
 
 	const sellerInCrm = await crmUsersCollection.findOne({ nome: seller.nome });
@@ -58,6 +58,8 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 		};
 	}
 
+	// Getting the client ID from the CRM
+	let clientCrmId: string | null = null;
 	if (project.idProjetoCRM) {
 		console.log("PASSEI POR AQUI");
 		const opportunity = await opportunitiesCollection.findOne({
@@ -66,8 +68,31 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 		console.log("OPPORTUNIDADE");
 		if (opportunity) clientCrmId = opportunity.idCliente;
 	}
-	const insertResponse = await collection.insertOne({
+
+	let allocations: TProject["alocacoes"] = [];
+	if (project.idVisitaTecnica) {
+		const technicalAnalysis = await technicalAnalysisCollection.findOne({
+			_id: new ObjectId(project.idVisitaTecnica),
+		});
+		if (technicalAnalysis) {
+			allocations =
+				technicalAnalysis.suprimentos?.itens
+					.filter((i) => !!i.idMaterial)
+					.map((item) => ({
+						idMaterial: item.idMaterial as string,
+						nome: item.descricao,
+						quantidade: 0, // non allocated yet
+						quantidadePrevista: item.qtde,
+						unidade: item.grandeza,
+						precoUnitario: item.preco || 0,
+						movimentacoes: [],
+					})) || [];
+		}
+	}
+
+	const insertResponse = await projectsCollection.insertOne({
 		...project,
+		alocacoes: allocations,
 		qtde: newIndexer,
 		vendedor: seller,
 		idClienteCRM: clientCrmId,

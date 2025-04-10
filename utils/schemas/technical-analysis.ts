@@ -457,6 +457,13 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 			// [ANALISTS INPUT] a list of items necessary for the execution of the project
 			itens: z.array(
 				z.object({
+					idMaterial: z
+						.string({
+							required_error: "ID do material não informado.",
+							invalid_type_error: "Tipo não válido para o ID do material.",
+						})
+						.optional()
+						.nullable(),
 					descricao: z.string({
 						required_error: "Descrição do item de suprimentação não informada.",
 						invalid_type_error: "Tipo não válido para a descrição do item de suprimentação.",
@@ -473,6 +480,13 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 						required_error: "Grandeza do item de suprimentação não informada.",
 						invalid_type_error: "Tipo não válido para a grandeza do item de suprimentação.",
 					}),
+					preco: z
+						.number({
+							required_error: "Preço do item de suprimentação não informado.",
+							invalid_type_error: "Tipo não válido para o preço do item de suprimentação.",
+						})
+						.optional()
+						.nullable(),
 				}),
 			),
 		})

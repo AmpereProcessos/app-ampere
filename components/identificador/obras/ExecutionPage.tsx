@@ -132,7 +132,24 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
 	}
 	return (
 		<div className="w-full lg:w-[450px] flex flex-col border border-primary/20 p-3 gap-3">
-			<h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{serviceOrder.favorecido.nome}</h1>
+			<div className="w-full flex items-center justify-between">
+				<h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{serviceOrder.favorecido.nome}</h1>
+				<h1
+					className={cn("rounded-lg px-2 py-0.5 text-center text-[0.5rem] font-medium text-primary-foreground bg-primary min-w-fit", {
+						"bg-red-500": serviceOrder.status === "PENDENTE", // Vermelho claro
+						"bg-[#757575]": serviceOrder.status === "AGUARDANDO PLANEJAMENTO", // Cinza médio
+						"bg-[#42A5F5]": serviceOrder.status === "AGUARDANDO LIBERAÇÃO", // Azul suave
+						"bg-[#1E90FF]": serviceOrder.status === "AGUARDANDO AGENDAMENTO", // Azul médio
+						"bg-[#FF8C00]": serviceOrder.status === "AGUARDANDO EXECUÇÃO", // Laranja
+						"bg-[#7B68EE]": serviceOrder.status === "EM EXECUÇÃO", // Roxo médio
+						"bg-[#8BC34A]": serviceOrder.status === "CONCLUÍDA PARCIAL", // Verde claro
+						"bg-green-500": serviceOrder.status === "CONCLUÍDA", // Verde vibrante
+						"bg-[#D32F2F]": serviceOrder.status === "PENDÊNCIAS", // Vermelho escuro
+					})}
+				>
+					{serviceOrder.status || "NÃO DEFINIDO"}
+				</h1>
+			</div>
 			<div className="w-full flex flex-col grow gap-2">
 				{serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
 					<div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">

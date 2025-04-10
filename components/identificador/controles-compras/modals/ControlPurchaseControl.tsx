@@ -1,7 +1,7 @@
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { createPurchaseControl, deletePurchaseControl, updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
-import { TPurchaseControl, TPurchaseProjectDTO } from "@/utils/schemas/purchases";
-import { Session } from "next-auth";
+import { deletePurchaseControl, updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
+import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { Session } from "next-auth";
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -30,8 +30,7 @@ import { cn } from "@/lib/utils";
 import PurchaseControlFileReferences from "./blocos/AttachmentsBlock";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import PurchaseControlPaymentInformationBlock from "./blocos/PaymentInformationBlock";
-import { updateManyServiceOrdersByProjectId } from "@/utils/methods/mutation/service-orders";
-import { TServiceOrder } from "@/utils/schemas/service-order";
+import { handleProjectPurchaseControlTrigger } from "@/utils/methods/mutation/triggers";
 
 type ControlPurchaseControlProps = {
 	session: Session;
@@ -81,27 +80,27 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 			await updatePurchaseControl({ id, changes });
 			const projectId = purchaseControl?.projeto.id;
 			if (projectId) {
-				await updateProject({
-					id: projectId,
-					changes: {
-						"compra.status": infoHolder.status,
-						"compra.atualizacoes": infoHolder.atualizacoes,
-						"compra.liberacao": !!infoHolder.liberacao.data,
-						"compra.dataLiberacao": infoHolder.liberacao.data,
-						"compra.fornecedor": infoHolder.fornecedor.nome,
-						"compra.dataPedido": infoHolder.dataPedido,
-						"compra.valorDoKit": infoHolder.total,
-						"compra.rastreio": infoHolder.transporte.linkRastreio,
-						"compra.dataRequisicaoPagamento": infoHolder.dataRequisicaoPagamento,
-						"compra.dataPagamento": infoHolder.dataLiberacaoPagamento,
-						"compra.dataPagamentoEquipamentos": infoHolder.dataPagamento,
-						"compra.previsaoEntrega": infoHolder.entrega.dataPrevisao,
-						"compra.dataEntrega": infoHolder.entrega.dataEfetivacao,
-						"compra.statusEntrega": infoHolder.entrega.status,
-						"compra.kitInfo": infoHolder.composicao.map((c) => `${c.qtde}-${c.descricao}`).join("\n"),
-						"obra.pendencias": infoHolder.metadata?.pendenciasExecucao,
-					},
-				});
+				// await updateProject({
+				// 	id: projectId,
+				// 	changes: {
+				// 		"compra.status": infoHolder.status,
+				// 		"compra.atualizacoes": infoHolder.atualizacoes,
+				// 		"compra.liberacao": !!infoHolder.liberacao.data,
+				// 		"compra.dataLiberacao": infoHolder.liberacao.data,
+				// 		"compra.fornecedor": infoHolder.fornecedor.nome,
+				// 		"compra.dataPedido": infoHolder.dataPedido,
+				// 		"compra.valorDoKit": infoHolder.total,
+				// 		"compra.rastreio": infoHolder.transporte.linkRastreio,
+				// 		"compra.dataRequisicaoPagamento": infoHolder.dataRequisicaoPagamento,
+				// 		"compra.dataPagamento": infoHolder.dataLiberacaoPagamento,
+				// 		"compra.dataPagamentoEquipamentos": infoHolder.dataPagamento,
+				// 		"compra.previsaoEntrega": infoHolder.entrega.dataPrevisao,
+				// 		"compra.dataEntrega": infoHolder.entrega.dataEfetivacao,
+				// 		"compra.statusEntrega": infoHolder.entrega.status,
+				// 		"compra.kitInfo": infoHolder.composicao.map((c) => `${c.qtde}-${c.descricao}`).join("\n"),
+				// 		"obra.pendencias": infoHolder.metadata?.pendenciasExecucao,
+				// 	},
+				// });
 				// await updateManyServiceOrdersByProjectId({
 				//   projectId: projectId,
 				//   filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
@@ -111,8 +110,14 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 				//     dataLiberacao: infoHolder.entrega.dataEfetivacao,
 				//   },
 				// })
+				await handleProjectPurchaseControlTrigger({ projectId });
 			}
-		} catch (error) {}
+
+			return "Controle de compra atualizado com sucesso.";
+		} catch (error) {
+			console.log("Error running handleUpdatePurchaseControl", error);
+			throw error;
+		}
 	}
 	const { mutate, isPending: isUpdateLoading } = useMutationWithFeedback({
 		mutationKey: ["update-purchase-control", purchaseControlId],
@@ -154,7 +159,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 							<div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 								<div className="flex w-full items-center justify-center">
 									<Link href={`/suprimentos/controle-compras/pdf/${purchaseControlId}`}>
-										<button className={cn("flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800")}>
+										<button type="button" className={cn("flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800")}>
 											<ExternalLink width={14} height={14} />
 											<h1 className="text-xs font-medium tracking-tight">PÁGINA DO PEDIDO</h1>
 										</button>

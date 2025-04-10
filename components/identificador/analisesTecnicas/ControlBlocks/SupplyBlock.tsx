@@ -93,7 +93,6 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyB
 								item={item}
 								handleUpdate={(newItem) => {
 									updateSupplyItem(index, newItem);
-									console.log("ATUALIZANDO", newItem);
 								}}
 								handleRemove={() => removeSupplyItem(index)}
 							/>
@@ -183,7 +182,6 @@ type SupplyItemCardProps = {
 };
 function SupplyItemCard({ item, handleUpdate, handleRemove }: SupplyItemCardProps) {
 	const [itemHolder, setItemHolder] = useState<Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number]>(item);
-	console.log("SUPPLY ITEM", itemHolder);
 	const [editMenuIsOpen, setEditMenuIsOpen] = useState(false);
 	return (
 		<>

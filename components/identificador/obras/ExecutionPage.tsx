@@ -112,23 +112,24 @@ type ServiceOrderExecutionCardProps = {
 	handleClick: (id: string) => void;
 };
 function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderExecutionCardProps) {
-	function getHomologationAccessTag(acessResponseData: string) {
-		const daysSinceResponse = dayjs().diff(dayjs(acessResponseData), "day");
-
-		const daysTillExpiration = 120 - daysSinceResponse;
-		if (daysSinceResponse > 110)
-			return (
-				<div
-					className={cn("flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1", {
-						"bg-red-600 text-white": daysSinceResponse > 110,
-						"bg-orange-500 text-white": daysSinceResponse <= 110 && daysSinceResponse > 100,
-						"bg-green-500 text-white": daysSinceResponse <= 100 && daysSinceResponse > 0,
-					})}
-				>
-					<TbUrgent size={12} />
-					<h1 className="text-[0.5rem] font-medium">{daysTillExpiration < 0 ? "PARECER VENCIDO" : `${daysTillExpiration} DIAS ATÉ O VENCIMENTO DO PARECER`}</h1>
-				</div>
-			);
+	const maxAccessLiberationExecutionDate = serviceOrder.projeto.homologacaoAcessoDataResposta ? dayjs(serviceOrder.projeto.homologacaoAcessoDataResposta).add(120, "day") : null;
+	const daysTillMaxAccessLiberationExecution = maxAccessLiberationExecutionDate ? maxAccessLiberationExecutionDate.diff(dayjs(), "day") : null;
+	function getHomologationAccessTag() {
+		if (!daysTillMaxAccessLiberationExecution) return null;
+		return (
+			<div
+				className={cn("flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1", {
+					"bg-red-600 text-white": daysTillMaxAccessLiberationExecution < 10,
+					"bg-orange-500 text-white": daysTillMaxAccessLiberationExecution >= 10 && daysTillMaxAccessLiberationExecution < 20,
+					// "bg-green-500 text-white": daysTillMaxAccessLiberationExecution >= 20,
+				})}
+			>
+				<TbUrgent size={12} />
+				<h1 className="text-[0.5rem] font-medium">
+					{daysTillMaxAccessLiberationExecution < 0 ? "PARECER VENCIDO" : `${daysTillMaxAccessLiberationExecution} DIAS ATÉ O VENCIMENTO DO PARECER`}
+				</h1>
+			</div>
+		);
 	}
 	return (
 		<div className="w-full lg:w-[450px] flex flex-col border border-primary/20 p-3 gap-3">
@@ -177,9 +178,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
 							<MdDashboard size={12} />
 							<h1 className="text-[0.5rem] font-medium">{serviceOrder.projeto.tipo}</h1>
 						</div>
-						{serviceOrder.categoria === "MONTAGEM" && serviceOrder.projeto.homologacaoAcessoDataResposta
-							? getHomologationAccessTag(serviceOrder.projeto.homologacaoAcessoDataResposta)
-							: null}
+						{serviceOrder.categoria === "MONTAGEM" && serviceOrder.projeto.homologacaoAcessoDataResposta ? getHomologationAccessTag() : null}
 						{serviceOrder.categoria === "MONTAGEM" && serviceOrder.projeto.homologacaoVistoriaDataEfetivacao ? (
 							<div className="flex w-fit items-center gap-1 self-center">
 								<BsPatchCheckFill height={13} width={13} color="#22c55e " />

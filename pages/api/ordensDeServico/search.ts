@@ -60,6 +60,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered ? { "projeto.compraEntregaDataEfetivacao": { $ne: null } } : {};
 	const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered ? { "projeto.compraEntregaDataEfetivacao": null } : {};
 
+	const orderByParam = filters.orderBy.field ? { [filters.orderBy.field]: filters.orderBy.direction === "asc" ? 1 : -1 } : { _id: -1 };
 	const query = {
 		...(orQueries.length > 0 ? { $or: orQueries } : {}),
 		...dateQuery,
@@ -82,7 +83,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const db: Db = await connectToDatabase();
 	const collection: Collection<TServiceOrder> = db.collection("ordensDeServico");
 
-	const { serviceOrders, serviceOrdersMatched } = await getServiceOrdersByFilter({ collection, query, skip, limit });
+	const { serviceOrders, serviceOrdersMatched } = await getServiceOrdersByFilter({ collection, query, skip, limit, orderByParam });
 	const totalPages = Math.ceil(serviceOrdersMatched / PAGE_SIZE);
 
 	return res.status(200).json({ data: { serviceOrders, serviceOrdersMatched, totalPages } });
@@ -94,15 +95,26 @@ type GetServiceOrdersByFilterParams = {
 	query: Filter<TServiceOrder>;
 	skip: number;
 	limit: number;
+	orderByParam: { [key: string]: number };
 };
-async function getServiceOrdersByFilter({ collection, query, skip, limit }: GetServiceOrdersByFilterParams) {
+async function getServiceOrdersByFilter({ collection, query, skip, limit, orderByParam }: GetServiceOrdersByFilterParams) {
 	try {
 		const serviceOrdersMatched = await collection.countDocuments({ ...query });
-		const sort = { _id: -1 };
+		const sort = orderByParam;
 		const match = { ...query };
+
+		// Add a default value for missing fields before sorting
 		const serviceOrders = (await collection
-			.aggregate([{ $sort: sort }, { $match: match }, { $skip: skip }, { $project: ServiceOrderSimplifiedProjection }, { $limit: limit }])
+			.aggregate([
+				{ $addFields: { sortField: { $ifNull: [`$${Object.keys(orderByParam)[0]}`, new Date(0)] } } }, // Use a default date for missing fields
+				{ $sort: { sortField: sort[Object.keys(orderByParam)[0]], _id: -1 } }, // Sort by the new field and then by _id
+				{ $match: match },
+				{ $skip: skip },
+				{ $project: ServiceOrderSimplifiedProjection },
+				{ $limit: limit },
+			])
 			.toArray()) as TServiceOrderSimplifiedDTO[];
+
 		return { serviceOrders, serviceOrdersMatched } as { serviceOrders: TServiceOrderSimplifiedDTO[]; serviceOrdersMatched: number };
 	} catch (error) {
 		throw error;

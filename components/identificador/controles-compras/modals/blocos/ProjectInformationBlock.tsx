@@ -380,6 +380,7 @@ function TechnicalAnalysisBlock({ analysisId, addProductToComposition }: Technic
 										type="button"
 										onClick={() =>
 											addProductToComposition({
+												materialId: item.idMaterial,
 												categoria: "OUTROS",
 												qtde: item.qtde,
 												descricao: `${item.descricao} ${item.tipo}`,

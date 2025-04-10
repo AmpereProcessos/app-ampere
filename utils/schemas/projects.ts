@@ -6,6 +6,36 @@ import { PurchaseUpdateItemSchema } from "./purchases";
 import type { TClientDTO } from "./crm/client.schema";
 import { GeneralHomologationSchema } from "./partial/homologation";
 
+export const ResourceItemSchema = z.object({
+	idMaterial: z.string({ required_error: "ID do material não informado.", invalid_type_error: "Tipo não válido para o ID do material." }),
+	nome: z.string({ required_error: "Nome do material não informado.", invalid_type_error: "Tipo não válido para o nome do material." }),
+	qtde: z.number({ required_error: "Quantidade do material não informada.", invalid_type_error: "Tipo não válido para a quantidade do material." }),
+	unidade: z.string({ required_error: "Unidade do material não informada.", invalid_type_error: "Tipo não válido para a unidade do material." }),
+	preco: z.number({ required_error: "Preço do material não informado.", invalid_type_error: "Tipo não válido para o preço do material." }),
+	dataAquisicao: z.string({ required_error: "Data de aquisição do material não informada.", invalid_type_error: "Tipo não válido para a data de aquisição do material." }),
+	dataAlocacao: z.string({ required_error: "Data de alocação do material não informada.", invalid_type_error: "Tipo não válido para a data de alocação do material." }),
+	analiseTecnica: z
+		.object({
+			id: z.string({ required_error: "ID da análise técnica não informado.", invalid_type_error: "Tipo não válido para o ID da análise técnica." }),
+			nome: z.string({ required_error: "Nome da análise técnica não informado.", invalid_type_error: "Tipo não válido para o nome da análise técnica." }),
+		})
+		.optional()
+		.nullable(),
+	compra: z
+		.object({
+			id: z.string({ required_error: "ID da compra não informado.", invalid_type_error: "Tipo não válido para o ID da compra." }),
+			nome: z.string({ required_error: "Nome da compra não informado.", invalid_type_error: "Tipo não válido para o nome da compra." }),
+		})
+		.optional()
+		.nullable(),
+	formularioSaida: z
+		.object({
+			id: z.string({ required_error: "ID do formulário de saída não informado.", invalid_type_error: "Tipo não válido para o ID do formulário de saída." }),
+			nome: z.string({ required_error: "Nome do formulário de saída não informado.", invalid_type_error: "Tipo não válido para o nome do formulário de saída." }),
+		})
+		.optional()
+		.nullable(),
+});
 const MaintenanceItem = z.object({
 	titulo: z.string({ required_error: "Título da manutenção não informado.", invalid_type_error: "Tipo não válido para o título da manutenção." }),
 	dataEfetivacao: z
@@ -87,6 +117,7 @@ const GeneralProjectSchema = z.object({
 		tipoDoKit: z.string().optional().nullable(), // select-options,
 		valorDoKit: z.number().optional().nullable(),
 	}),
+	recursos: z.array(ResourceItemSchema).optional().nullable(),
 	conferencias: z.object({
 		status: z.enum(["CONCLUÍDO", "PENDÊNCIAS"]).optional().nullable(),
 		observacoes: z.string({ invalid_type_error: "Tipo não válido para as observações da conferência." }).optional().nullable(),

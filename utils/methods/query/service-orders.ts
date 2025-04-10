@@ -121,6 +121,10 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
 		released: initialFilters.released || false,
 		projectEquipmentDelivered: initialFilters.projectEquipmentDelivered || false,
 		projectEquipmentNotDelivered: initialFilters.projectEquipmentNotDelivered || false,
+		orderBy: {
+			direction: initialFilters.orderBy?.direction || "desc",
+			field: initialFilters.orderBy?.field || "dataInsercao",
+		},
 	});
 
 	function updateFilters(info: Partial<TPersonalizedServiceOrderFilter>) {

@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 import ServiceOrderFileReferences from "./blocos/AttachmentsBlock";
 import ServiceOrderPendenciesBlock from "./blocos/PendenciesBlock";
+import { updateProject } from "@/utils/methods/mutation/clients";
 
 type ModalControlServiceOrderProps = {
 	serviceOrderId: string;
@@ -128,9 +129,31 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 		setOsInfo((prev) => ({ ...prev, ...changes }));
 	}
 
-	const { mutate: handleUpdateServiceOrder, isPending } = useMutation({
+	async function handleUpdateServiceOrder({ id, changes }: { id: string; changes: Partial<TServiceOrder> }) {
+		try {
+			await updateServiceOrder({ id, changes });
+			const projectId = serviceOrder?.projeto?.id;
+			if (projectId) {
+				await updateProject({
+					id: projectId,
+					changes: {
+						"obra.entrada": osInfo.periodo.inicio,
+						"obra.saida": osInfo.periodo.fim,
+						"obra.statusDaObra": osInfo.status,
+						"obra.equipeResp": osInfo.responsavel.nome,
+						"obra.observacoes": osInfo.observacoes.join("/"),
+					},
+				});
+			}
+			return "Ordem de serviço atualizada com sucesso !";
+		} catch (error) {
+			const msg = getErrorMessage(error);
+			return toast.error(msg);
+		}
+	}
+	const { mutate, isPending } = useMutation({
 		mutationKey: ["update-project-service-order"],
-		mutationFn: updateServiceOrder,
+		mutationFn: handleUpdateServiceOrder,
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: ["service-order", serviceOrderId] });
 			if (callbacks?.onMutate) callbacks.onMutate();
@@ -212,7 +235,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								{!osInfo.dataEfetivacao ? (
 									<LoadingButton
 										loading={isPending}
-										onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: new Date().toISOString() } })}
+										onClick={() => mutate({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: new Date().toISOString() } })}
 										type="button"
 										className="bg-green-500 hover:bg-green-600"
 									>
@@ -221,7 +244,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								) : (
 									<LoadingButton
 										loading={isPending}
-										onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })}
+										onClick={() => mutate({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })}
 										type="button"
 										className="bg-gray-500 hover:bg-gray-600"
 									>
@@ -230,7 +253,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								)}
 								<LoadingButton
 									// @ts-ignore
-									onClick={() => handleUpdateServiceOrder({ id: serviceOrderId, changes: osInfo })}
+									onClick={() => mutate({ id: serviceOrderId, changes: osInfo })}
 									loading={isPending}
 								>
 									ATUALIZAR ORDEM DE SERVIÇO

@@ -1,32 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
-import { AiOutlineSearch } from "react-icons/ai";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AnimatePresence, motion } from "framer-motion";
-import ModalObras from "../../components/ModalObras";
-import ObrasSkeleton from "../../components/skeletons/ObrasSkeleton";
-import { cidadesAtendidas, equipesTecnicas, formatDecimalPlaces, statusLiberacao, statusObra, tiposDeServico } from "../../utils/constants";
-import dayjs from "dayjs";
-import TagTipoDeServico from "../../components/TagTipoDeServico";
-import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
-import { useExecutionProjects } from "../../utils/methods/query/execution";
-import { VscDiffAdded } from "react-icons/vsc";
-import { MdAttachMoney, MdCreate, MdPaid } from "react-icons/md";
-import { FaSignature } from "react-icons/fa";
-import TextInput from "../../components/inputs/Text";
-import SelectInput from "../../components/inputs/Select";
-import MultipleSelectInput from "../../components/inputs/MultipleSelect";
-import MultipleSelectInputVirtualized from "../../components/inputs/MultipleSelectInputVirtualized";
-import { executionStatus, serviceTypes, structureTypes } from "../../utils/select-options";
-import type { TProjectDTO } from "../../utils/schemas/projects";
-import { TbTextPlus, TbTruckDelivery } from "react-icons/tb";
-import { GrStorage } from "react-icons/gr";
-import { BsPatchCheckFill } from "react-icons/bs";
-import Link from "next/link";
-import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+
 import ExecutionPage from "@/components/identificador/obras/ExecutionPage";
 
 export default function Obras() {

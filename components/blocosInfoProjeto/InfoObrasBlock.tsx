@@ -6,7 +6,7 @@ import CheckboxInput from "../inputs/Checkbox";
 import DateInput from "../inputs/Date";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import SelectInput from "../inputs/Select";
-import { executionStatus } from "@/utils/select-options";
+import { ServiceOrderStatus } from "@/utils/select-options";
 import ProjectKitInfo from "../identificador/suprimentos/ProjectKitInfo";
 import ProjectMissingMaterialInfo from "../identificador/suprimentos/MissingMaterialInfo";
 import ObservationsBlock from "../identificador/obras/ObservationsBlock";
@@ -162,7 +162,7 @@ function InfoObrasBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 						value={infoHolder.obra?.statusDaObra}
 						selectedItemLabel="NÃO DEFINIDO"
 						editable={editor}
-						options={executionStatus}
+						options={ServiceOrderStatus}
 						handleChange={(value) => {
 							setChanges((prev) => ({
 								...prev,

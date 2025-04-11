@@ -22,7 +22,7 @@ import SelectInput from "../../components/inputs/Select";
 import DateInput from "../../components/inputs/Date";
 import MultipleSelectInput from "../../components/inputs/MultipleSelect";
 import MultipleSelectInputVirtualized from "../../components/inputs/MultipleSelectInputVirtualized";
-import { accessGrantingStatus, executionStatus, HomologationControlStatus, inspectionStatus, reliabilityAnalysts, serviceTypes } from "../../utils/select-options";
+import { accessGrantingStatus, ServiceOrderStatus, HomologationControlStatus, inspectionStatus, reliabilityAnalysts, serviceTypes } from "../../utils/select-options";
 import { useEngineeringProjects } from "../../utils/methods/query/engineering";
 import { formatDateInputChange } from "../../utils/methods/shared";
 import { cidadesAtendidas, vendedores, formatDecimalPlaces, formatDate } from "../../utils/constants";
@@ -393,7 +393,7 @@ function Projetos() {
 												width={"100%"}
 												label={"STATUS DA OBRA"}
 												selected={filters.executionStatus}
-												options={executionStatus}
+												options={ServiceOrderStatus}
 												selectedItemLabel={"SEM FILTRO"}
 												handleChange={(value) =>
 													setFilters((prev) => ({

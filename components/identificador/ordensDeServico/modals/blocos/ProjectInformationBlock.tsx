@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { MdOutlineMiscellaneousServices, MdSync } from "react-icons/md";
 import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
 import { FaBolt, FaIndustry, FaUserAlt } from "react-icons/fa";
-import { BsCalendar, BsPersonVcard } from "react-icons/bs";
+import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsPersonVcard } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { AiOutlineSafety } from "react-icons/ai";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
@@ -99,6 +99,42 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 										includeCity: true,
 										includeUf: true,
 									})}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+					<div className="flex flex-col items-center gap-1 lg:items-start">
+						<p className="text-[0.65rem] font-medium text-gray-500">COMPRA</p>
+						<div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+							<div className="flex items-center gap-1">
+								<BsCalendarEvent />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
+									{project.compra.previsaoEntrega ? `ENTREGA PREVISTA P/ ${formatDateAsLocale(project.compra.previsaoEntrega)}` : "ENTREGA SEM PREVISÃO DEFINIDA"}
+								</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<BsCalendarCheck />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
+									{project.compra.dataEntrega ? `ENTREGA REALIZADA EM: ${formatDateAsLocale(project.compra.dataEntrega)}` : "ENTREGA NÃO REALIZADA"}
+								</p>
+							</div>
+						</div>
+					</div>
+					<div className="flex flex-col items-center gap-1 lg:items-start">
+						<p className="text-[0.65rem] font-medium text-gray-500">HOMOLOGAÇÃO</p>
+						<div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+							<div className="flex items-center gap-1">
+								<BsCalendar />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
+									{project.homologacao?.acesso?.dataResposta ? `PARECER LIBERADO EM: ${formatDateAsLocale(project.homologacao.acesso.dataResposta)}` : "SEM PARECER DE ACESSO"}
+								</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<BsCalendar />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
+									{project.homologacao?.vistoria?.dataEfetivacao ? `VISTORIA REALIZADA EM: ${formatDateAsLocale(project.homologacao.vistoria.dataEfetivacao)}` : "VISTORIA NÃO REALIZADA"}
 								</p>
 							</div>
 						</div>

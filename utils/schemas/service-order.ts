@@ -366,6 +366,8 @@ export const ServiceOrderProjectProjection = {
 	produtos: 1,
 	servicos: 1,
 	"compra.kitInfo": 1,
+	"homologacao.acesso.dataResposta": 1,
+	"homologacao.vistoria.dataEfetivacao": 1,
 	"material.materialFaltante": 1,
 	"obra.entrada": 1,
 	"obra.saida": 1,
@@ -397,6 +399,16 @@ export type TServiceOrderProject = Pick<
 > & {
 	compra: {
 		kitInfo: TProject["compra"]["kitInfo"];
+		previsaoEntrega: TProject["compra"]["previsaoEntrega"];
+		dataEntrega: TProject["compra"]["dataEntrega"];
+	};
+	homologacao: {
+		acesso: {
+			dataResposta: TProject["homologacao"]["acesso"]["dataResposta"];
+		};
+		vistoria: {
+			dataEfetivacao: TProject["homologacao"]["vistoria"]["dataEfetivacao"];
+		};
 	};
 	material: {
 		materialFaltante: TProject["material"]["materialFaltante"];

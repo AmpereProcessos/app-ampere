@@ -3,7 +3,7 @@ import { insertTechnicalAnalysis, updateTechnicalAnalysis } from "@/repositories
 import { getTechnicalAnalysis, getTechnicalAnalysisById, getTechnicalAnalysisByOpportunityId } from "@/repositories/technical-analysis/queries";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TNotification } from "@/utils/schemas/crm/notification.schema";
-import type { GeneralTechnicalAnalysisSchema, TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
+import { GeneralTechnicalAnalysisSchema, type TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
 
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import createHttpError from "http-errors";
@@ -19,19 +19,19 @@ const getPartnerTechnicalAnalysis: NextApiHandler<GetResponse> = async (req, res
 
 	const { id, opportunityId, concludedOnly } = req.query;
 
-	const concludedQuery: Filter<TTechnicalAnalysis> = concludedOnly == "true" ? { dataEfetivacao: { $ne: null } } : {};
+	const concludedQuery: Filter<TTechnicalAnalysis> = concludedOnly === "true" ? { dataEfetivacao: { $ne: null } } : {};
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TTechnicalAnalysis> = db.collection("technical-analysis");
 
 	if (id) {
-		if (typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 		const analysis = await getTechnicalAnalysisById({ collection: collection, analysisId: id, query: {} });
 		if (!analysis) throw new createHttpError.NotFound("Análise técnica não encontrada.");
 		return res.status(200).json({ data: analysis });
 	}
 	if (opportunityId) {
-		if (typeof opportunityId != "string" || !ObjectId.isValid(opportunityId)) throw new createHttpError.BadRequest("ID de oportunidade inválido.");
+		if (typeof opportunityId !== "string" || !ObjectId.isValid(opportunityId)) throw new createHttpError.BadRequest("ID de oportunidade inválido.");
 
 		const opportunityAnalysis = await getTechnicalAnalysisByOpportunityId({
 			collection: collection,
@@ -55,7 +55,7 @@ const createTechnicalAnalysis: NextApiHandler<PostResponse> = async (req, res) =
 	const partnerId = "65454ba15cf3e3ecf534b308";
 
 	const analysis = GeneralTechnicalAnalysisSchema.parse(req.body);
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TTechnicalAnalysis> = db.collection("technical-analysis");
 
 	const insertResponse = await insertTechnicalAnalysis({ collection: collection, info: analysis, partnerId: partnerId || "" });
@@ -74,20 +74,20 @@ const editTechnicalAnalysis: NextApiHandler<PutResponse> = async (req, res) => {
 	const partnerId = "65454ba15cf3e3ecf534b308";
 
 	const { id } = req.query;
-	if (!id || typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+	if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
 	const changes = req.body;
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TTechnicalAnalysis> = db.collection("technical-analysis");
 	const notificationsCollection: Collection<TNotification> = db.collection("notifications");
 
 	const updateResponse = await updateTechnicalAnalysis({ collection: collection, info: changes, analysisId: id, query: {} });
 	if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao atualizar análise técnica.");
-	if (updateResponse.matchedCount == 0) throw new createHttpError.NotFound("Análise técnica não encontrada.");
+	if (updateResponse.matchedCount === 0) throw new createHttpError.NotFound("Análise técnica não encontrada.");
 
 	// Validating need to generate an notification on technical analysis conclusion
-	if (!!changes.dataEfetivacao || changes.status == "CONCLUIDO") {
+	if (!!changes.dataEfetivacao || changes.status === "CONCLUIDO") {
 		const analysis = await getTechnicalAnalysisById({ analysisId: id, collection: collection, query: {} });
 		if (!analysis) throw new createHttpError.NotFound("Análise técnica não encontrada.");
 		// Creating notification to the applicant of the analysis

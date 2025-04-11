@@ -222,7 +222,6 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 
 								<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-
 								<ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

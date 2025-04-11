@@ -20,6 +20,8 @@ import { getDifferenceBetweenDates } from "@/utils/methods/dates";
 import Link from "next/link";
 import dayjs from "dayjs";
 import type { Session } from "next-auth";
+import { handleOpportunityOnJourneyEndTrigger } from "@/utils/methods/mutation/triggers";
+import { LoadingButton } from "./utils/Buttons/LoadingButton";
 
 type PosVendaCardProps = {
 	session: Session;
@@ -77,7 +79,11 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 	}
 	const { mutate: handleUpdateProject, isPending } = useMutationWithFeedback({
 		mutationKey: ["update-after-sales-project"],
-		mutationFn: updateProject,
+		mutationFn: async ({ id, changes }: { id: string; changes: { [key: string]: any } }) => {
+			await updateProject({ id, changes });
+			if (changes["jornada.dataConclusao"]) await handleOpportunityOnJourneyEndTrigger({ projectId: id });
+			return "Projeto atualizado com sucesso !";
+		},
 		affectedQueryKey: ["after-sales-projects"],
 		queryClient: queryClient,
 		callbackFn: () => console.log(),
@@ -229,6 +235,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 							<div className="flex w-full flex-wrap justify-around gap-3">
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"BOAS VINDAS"}
 										labelTrue={"BOAS VINDAS"}
 										checked={!!infoHolder.jornada.boasVindas}
@@ -241,6 +248,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"ASSINATURA DAS DOCUMENTAÇÕES"}
 										labelTrue={"ASSINATURA DAS DOCUMENTAÇÕES"}
 										checked={!!infoHolder.jornada.assDocumentacoes}
@@ -253,6 +261,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"COMPRA DO KIT"}
 										labelTrue={"COMPRA DO KIT"}
 										checked={!!infoHolder.jornada.compraDoKit}
@@ -265,6 +274,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"NF FATURADA"}
 										labelTrue={"NF FATURADA"}
 										checked={!!infoHolder.jornada.nfFaturada}
@@ -277,6 +287,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"PREVISÃO DE ENTREGA"}
 										labelTrue={"PREVISÃO DE ENTREGA"}
 										checked={!!infoHolder.jornada.prevChegada}
@@ -289,6 +300,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"RESPOSTA DA CONCESSIONÁRIA"}
 										labelTrue={"RESPOSTA DA CONCESSIONÁRIA"}
 										checked={!!infoHolder.jornada.respConcessionaria}
@@ -301,6 +313,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"KIT ENTREGUE"}
 										labelTrue={"KIT ENTREGUE"}
 										checked={!!infoHolder.jornada.entregaDoKit}
@@ -313,6 +326,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"INSTALAÇÃO AGENDADA"}
 										labelTrue={"INSTALAÇÃO AGENDADA"}
 										checked={!!infoHolder.jornada.instalacaoAgendada}
@@ -325,6 +339,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"INSTALAÇÃO REALIZADA"}
 										labelTrue={"INSTALAÇÃO REALIZADA"}
 										checked={!!infoHolder.jornada.instalacaoRealizada}
@@ -337,6 +352,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"VISTORIA DA CONCESSIONÁRIA"}
 										labelTrue={"VISTORIA DA CONCESSIONÁRIA"}
 										checked={!!infoHolder.jornada.vistoriaConcessionaria}
@@ -349,6 +365,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"SISTEMA LIGADO"}
 										labelTrue={"SISTEMA LIGADO"}
 										checked={!!infoHolder.jornada.sistemaLigado}
@@ -361,6 +378,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"ENTREGA TÉCNICA"}
 										labelTrue={"ENTREGA TÉCNICA"}
 										checked={!!infoHolder.jornada.entregaTecnica}
@@ -373,6 +391,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								</div>
 								<div className="w-fit">
 									<CheckboxInput
+										editable={!isPending}
 										labelFalse={"JORNADA CONCLUIDA"}
 										labelTrue={"JORNADA CONCLUIDA"}
 										checked={!!infoHolder.jornada.jornadaConcluida}
@@ -449,9 +468,9 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 									</button>
 								</div>
 							</div>
-							<button
+							<LoadingButton
 								type="button"
-								disabled={isPending}
+								loading={isPending}
 								onClick={() => {
 									// @ts-ignore
 									handleUpdateProject({ id: projectId, changes: { "jornada.obsJornada": infoHolder.jornada.obsJornada } });
@@ -459,7 +478,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 								className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
 							>
 								SALVAR ANOTAÇÕES
-							</button>
+							</LoadingButton>
 						</div>
 						{activitiesMenuIsOpen ? (
 							project.atividades && project.atividades.length > 0 ? (

@@ -11,6 +11,9 @@ import type { TPurchaseControl } from "@/utils/schemas/purchases";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 import type { TUser } from "@/utils/schemas/crm/user.schema";
+import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
+import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
+import { insertFunnelReference } from "@/repositories/crm-funnel-references/mutations";
 
 type PostResponse = {
 	data: { insertedId?: string; updatedId?: string };
@@ -255,20 +258,24 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 		});
 	}
 	if (triggerType === "create-opportunity-on-project-journey-end") {
+		console.log("WENT THIS WAY");
 		const projectCRMClientId = project.idClienteCRM;
 		if (!projectCRMClientId) throw new createHttpError.BadRequest("Oops, parece que o projeto não possui vinculação com o CRM. Não é possível prosseguir com a automação.");
 		const crmDb = await connectToCRMDatabase();
 		const usersCollection = crmDb.collection<TUser>("users");
 		const opportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
-
+		const funnelReferencesCollection = crmDb.collection<TFunnelReference>("funnel-references");
 		const user = await usersCollection.findOne({
 			_id: new ObjectId("67101db881376cb5c51d45af"),
-		}); // fixing automation into a unique user for now
-		if (!user) throw new createHttpError.InternalServerError("Usuário vinculado à automação não encontrado. Consultar setor responsável.");
+		});
+		if (!user)
+			// fixing automation into a unique user for now
+			throw new createHttpError.InternalServerError("Usuário vinculado à automação não encontrado. Consultar setor responsável.");
 
+		const partnerId = "65454ba15cf3e3ecf534b308";
 		const newOpportunity: TOpportunity = {
 			nome: project.nomeDoContrato,
-			idParceiro: "65454ba15cf3e3ecf534b308", // fixing this partner for now ( only matrix partner )
+			idParceiro: partnerId, // fixing this partner for now ( only matrix partner )
 			tipo: {
 				id: "661ec8dae03128a48f94b4e0", // fixing the opportunity type for now
 				titulo: "MONITORAMENTO",
@@ -287,7 +294,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				},
 			],
 			segmento: "RESIDENCIAL",
-			idCliente: "",
+			idCliente: projectCRMClientId,
 			cliente: {
 				nome: project.nomeDoContrato,
 				cpfCnpj: project.cpf_cnpj?.toString(),
@@ -326,8 +333,43 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				nome: user.nome,
 				avatar_url: user.avatar_url,
 			},
+			interacoesConfiguracao: {
+				taxaMedida: "DIAS",
+				taxaValor: 15,
+			},
 			dataInsercao: new Date().toISOString(),
 		};
+		const insertOpportunityResponse = await insertOpportunity({ collection: opportunitiesCollection, info: newOpportunity, partnerId: newOpportunity.idParceiro });
+
+		if (!insertOpportunityResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
+		const insertedOpportunityId = insertOpportunityResponse.insertedId.toString();
+
+		const newFunnelReference: TFunnelReference = {
+			idParceiro: partnerId,
+			idFunil: "67f97583e21e0e11bc36559d",
+			idEstagioFunil: "1",
+			idOportunidade: insertedOpportunityId,
+			estagios: {
+				"1": {
+					entrada: new Date().toISOString(),
+				},
+			},
+			dataInsercao: new Date().toISOString(),
+		};
+		const insertFunnelReferenceResponse = await insertFunnelReference({
+			collection: funnelReferencesCollection,
+			info: newFunnelReference,
+			partnerId: partnerId || "",
+		});
+		if (!insertFunnelReferenceResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
+		const insertedFunnelReferenceId = insertFunnelReferenceResponse.insertedId.toString();
+
+		return res.status(201).json({
+			data: {
+				insertedId: insertedOpportunityId,
+			},
+			message: "Oportunidade criada com sucesso !",
+		});
 	}
 };
 

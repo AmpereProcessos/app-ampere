@@ -14,6 +14,19 @@ export async function handleProjectServiceOrderTrigger({ projectId }: { projectI
 	}
 }
 
+export async function handleOpportunityOnJourneyEndTrigger({ projectId }: { projectId: string }) {
+	try {
+		const { data } = await axios.post("/api/projects/triggers", {
+			projectId,
+			triggerType: "create-opportunity-on-project-journey-end",
+		});
+		if (typeof data.message !== "string") throw new Error("Oops, um erro desconhecido ocorreu.");
+		return data.message as string;
+	} catch (error) {
+		console.log("Error running handleOpportunityOnJourneyEndTrigger", error);
+		throw error;
+	}
+}
 export async function handleTechnicalAnalysisServiceOrderTrigger({ technicalAnalysisId }: { technicalAnalysisId: string }) {
 	try {
 		const { data } = await axios.post("/api/analises-tecnicas/triggers", {

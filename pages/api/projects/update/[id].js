@@ -48,22 +48,24 @@ export default async function handler(req, res) {
 			].some((x) => updateKeys.includes(x))
 		) {
 			const project = await collection.findOne({ _id: ObjectId(req.query.id) });
-			await serviceOrdersCollection.updateMany(
-				{
-					"projeto.id": project._id.toString(),
-				},
-				{
-					$set: {
-						etiquetas: getServiceOrderTags({ project }),
-						"projeto.vendedorNome": project.vendedor.nome,
-						"projeto.contratoDataAssinatura": project.contrato?.dataAssinatura,
-						"projeto.compraEntregaDataPrevisao": project.compra?.previsaoEntrega,
-						"projeto.compraEntregaDataEfetivacao": project.compra?.dataEntrega,
-						"projeto.homologacaoAcessoDataResposta": project.homologacao?.acesso.dataResposta,
-						"projeto.homologacaoVistoriaDataEfetivacao": project.homologacao?.vistoria.dataEfetivacao,
+			if (project.idOrdemServico) {
+				await serviceOrdersCollection.updateMany(
+					{
+						_id: new ObjectId(project.idOrdemServico),
 					},
-				},
-			);
+					{
+						$set: {
+							etiquetas: getServiceOrderTags({ project }),
+							"projeto.vendedorNome": project.vendedor.nome,
+							"projeto.contratoDataAssinatura": project.contrato?.dataAssinatura,
+							"projeto.compraEntregaDataPrevisao": project.compra?.previsaoEntrega,
+							"projeto.compraEntregaDataEfetivacao": project.compra?.dataEntrega,
+							"projeto.homologacaoAcessoDataResposta": project.homologacao?.acesso.dataResposta,
+							"projeto.homologacaoVistoriaDataEfetivacao": project.homologacao?.vistoria.dataEfetivacao,
+						},
+					},
+				);
+			}
 		}
 		return res.json(newObj);
 	} else if (req.method == "PUT") {

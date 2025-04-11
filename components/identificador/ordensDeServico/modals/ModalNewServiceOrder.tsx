@@ -26,6 +26,7 @@ import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { useServiceOrderProject } from "@/utils/methods/query/service-orders";
 import ServiceOrderProjectVinculation from "./blocos/utils/ProjectVinculation";
 import ServiceOrderProjectInformationBlock from "./blocos/ProjectInformationBlock";
+import ServiceOrderTechnicalAnalysisInformationBlock from "./blocos/TechnicalAnalysisBlock";
 
 type ModalNewServiceOrderProps = {
 	session: Session;
@@ -181,12 +182,12 @@ function ModalNewServiceOrder({ session, closeModal, callbacks, projectId }: Mod
 					</div>
 					<div className="flex h-full w-full flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 						<ServiceOrderGeneralInformationBlock infoHolder={osInfo as TServiceOrderDTO} predefinedCategories={[]} updateInfoHolder={updateInfoHolder} />
-
 						{project ? (
 							<ServiceOrderProjectInformationBlock project={project} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 						) : (
 							<ServiceOrderProjectVinculation serviceOrderId={undefined} queryClient={queryClient} affectedQueryKey={[]} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 						)}
+						<ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
 						<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 						<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 						<ServiceOrderEquipmentsInformationBlock

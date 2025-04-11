@@ -8,12 +8,21 @@ import createHttpError from "http-errors";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import { getServiceOrderInverterMetadataFromProject, getServiceOrderModulesMetadataFromProject, getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import type { TUser } from "@/utils/schemas/crm/user.schema";
 
 type PostResponse = {
 	data: { insertedId?: string; updatedId?: string };
 	message: string;
 };
-const TriggerType = z.enum(["create-project-main-service-order", "create-project-main-purchase-control", "create-project-main-revenue", "sync-project-with-purchase"]);
+const TriggerType = z.enum([
+	"create-project-main-service-order",
+	"create-project-main-purchase-control",
+	"create-project-main-revenue",
+	"sync-project-with-purchase",
+	"create-opportunity-on-project-journey-end",
+]);
 
 const HandleTriggerPayload = z.object({
 	projectId: z.string({ required_error: "ID do projeto não informado.", invalid_type_error: "Tipo não válido para o ID do projeto." }),
@@ -43,6 +52,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				nome: project.nomeDoContrato || "",
 				contato: project.telefone || "",
 			},
+			idAnaliseTecnica: project.idVisitaTecnica,
 			anotacoes: "",
 			projeto: {
 				id: project._id.toString() || null, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
@@ -222,10 +232,102 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			},
 		);
 
+		if (project.idOrdemServico) {
+			await serviceOrdersCollection.updateOne(
+				{
+					_id: new ObjectId(project.idOrdemServico),
+				},
+				{
+					$set: {
+						etiquetas: getServiceOrderTagsFromProject(project),
+						"projeto.compraEntregaDataPrevisao": purchaseControl.entrega.dataPrevisao,
+						"projeto.compraEntregaDataEfetivacao": purchaseControl.entrega.dataEfetivacao,
+						dataPrevisaoLiberacao: purchaseControl.entrega.dataPrevisao,
+						dataLiberacao: purchaseControl.entrega.dataEfetivacao,
+						alocacoes: projectAllocations,
+					},
+				},
+			);
+		}
 		return res.status(201).json({
 			data: { updatedId: projectId },
 			message: "Projeto atualizado com sucesso.",
 		});
+	}
+	if (triggerType === "create-opportunity-on-project-journey-end") {
+		const projectCRMClientId = project.idClienteCRM;
+		if (!projectCRMClientId) throw new createHttpError.BadRequest("Oops, parece que o projeto não possui vinculação com o CRM. Não é possível prosseguir com a automação.");
+		const crmDb = await connectToCRMDatabase();
+		const usersCollection = crmDb.collection<TUser>("users");
+		const opportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
+
+		const user = await usersCollection.findOne({
+			_id: new ObjectId("67101db881376cb5c51d45af"),
+		}); // fixing automation into a unique user for now
+		if (!user) throw new createHttpError.InternalServerError("Usuário vinculado à automação não encontrado. Consultar setor responsável.");
+
+		const newOpportunity: TOpportunity = {
+			nome: project.nomeDoContrato,
+			idParceiro: "65454ba15cf3e3ecf534b308", // fixing this partner for now ( only matrix partner )
+			tipo: {
+				id: "661ec8dae03128a48f94b4e0", // fixing the opportunity type for now
+				titulo: "MONITORAMENTO",
+			},
+			categoriaVenda: "PLANO",
+			descricao: "",
+			identificador: "",
+			responsaveis: [
+				{
+					id: user._id.toString(),
+					nome: user.nome,
+					papel: "VENDEDOR",
+					avatar_url: user.avatar_url,
+					telefone: user.telefone,
+					dataInsercao: new Date().toISOString(),
+				},
+			],
+			segmento: "RESIDENCIAL",
+			idCliente: "",
+			cliente: {
+				nome: project.nomeDoContrato,
+				cpfCnpj: project.cpf_cnpj?.toString(),
+				telefonePrimario: project.telefone || "",
+				email: project.email,
+				canalAquisicao: project.canalVenda,
+			},
+			localizacao: {
+				cep: project.cep?.toString() || "",
+				uf: project.uf,
+				cidade: project.cidade,
+				bairro: project.bairro,
+				endereco: project.logradouro,
+				numeroOuIdentificador: project.numeroResidencia?.toString() || "",
+				complemento: null,
+			},
+			perda: {
+				idMotivo: undefined,
+				descricaoMotivo: undefined,
+				data: undefined,
+			},
+			ganho: {
+				idProjeto: undefined,
+				data: undefined,
+			},
+			instalacao: {
+				concessionaria: null,
+				numero: undefined,
+				grupo: undefined,
+				tipoLigacao: undefined,
+				tipoTitular: undefined,
+				nomeTitular: undefined,
+			},
+			autor: {
+				id: user._id.toString(),
+				nome: user.nome,
+				avatar_url: user.avatar_url,
+			},
+			dataInsercao: new Date().toISOString(),
+		};
 	}
 };
 

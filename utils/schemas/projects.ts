@@ -588,7 +588,21 @@ export type TProjectWithClientDTO = TProjectDTO & { cliente?: TClientDTO };
 export type TProjectDTOWithHomologation = TProject & { homologacao: THomologation };
 export type TProjectDBSimplified = Pick<
 	TProject,
-	"nomeDoContrato" | "tipoDeServico" | "contrato" | "qtde" | "vendedor" | "telefone" | "email" | "codigoSVB" | "cep" | "uf" | "cidade" | "bairro" | "logradouro" | "numeroResidencia"
+	| "nomeDoContrato"
+	| "tipoDeServico"
+	| "contrato"
+	| "qtde"
+	| "vendedor"
+	| "telefone"
+	| "email"
+	| "codigoSVB"
+	| "cep"
+	| "uf"
+	| "cidade"
+	| "bairro"
+	| "logradouro"
+	| "numeroResidencia"
+	| "idVisitaTecnica"
 >;
 export type TProjectDTODBSimplified = TProjectDBSimplified & { _id: string };
 
@@ -610,6 +624,7 @@ export const ProjectDBSimplifiedProjection = {
 	bairro: 1,
 	logradouro: 1,
 	numeroResidencia: 1,
+	idVisitaTecnica: 1,
 };
 
 const PersonalizedFieldFilters = z.enum(

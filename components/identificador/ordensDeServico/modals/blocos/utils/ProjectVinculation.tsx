@@ -43,7 +43,7 @@ function ServiceOrderProjectVinculation({ serviceOrderId, queryClient, affectedQ
 		if (serviceOrderId) {
 			const msg = await updateServiceOrder({
 				id: serviceOrderId,
-				changes: { ...infoHolder, projeto: { id: projectSimplified._id, nome: projectSimplified.nomeDoContrato } },
+				changes: { ...infoHolder, projeto: { id: projectSimplified._id, nome: projectSimplified.nomeDoContrato }, idAnaliseTecnica: projectSimplified.idVisitaTecnica },
 			});
 			return msg;
 		}

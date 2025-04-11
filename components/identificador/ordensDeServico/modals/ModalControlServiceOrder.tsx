@@ -33,6 +33,7 @@ import { ExternalLink } from "lucide-react";
 import ServiceOrderFileReferences from "./blocos/AttachmentsBlock";
 import ServiceOrderPendenciesBlock from "./blocos/PendenciesBlock";
 import { updateProject } from "@/utils/methods/mutation/clients";
+import ServiceOrderTechnicalAnalysisInformationBlock from "./blocos/TechnicalAnalysisBlock";
 
 type ModalControlServiceOrderProps = {
 	serviceOrderId: string;
@@ -216,6 +217,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								) : (
 									<ServiceOrderProjectVinculation serviceOrderId={serviceOrderId} queryClient={queryClient} affectedQueryKey={[]} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 								)}
+								<ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
 								<ServiceOrderFileReferences session={session} attachmentPrefix={osInfo.descricao} serviceOrderId={serviceOrderId} projectId={osInfo.projeto.id || undefined} />
 
 								<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />

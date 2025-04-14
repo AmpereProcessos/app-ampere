@@ -345,6 +345,10 @@ export const PersonalizedFiltersSchema = z.object({
 		required_error: "Filtro de somente pendentes não informado.",
 		invalid_type_error: "Tipo não válido para filtro de somente pendentes.",
 	}),
+	notReleased: z.boolean({
+		required_error: "Filtro de somente não liberados não informado.",
+		invalid_type_error: "Tipo não válido para filtro de somente não liberados.",
+	}),
 	released: z.boolean({
 		required_error: "Filtro de somente liberados não informado.",
 		invalid_type_error: "Tipo não válido para filtro de somente liberados.",

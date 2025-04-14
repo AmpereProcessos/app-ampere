@@ -119,6 +119,7 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
 		roofTypes: initialFilters.roofTypes || [],
 		pending: initialFilters.pending || true,
 		released: initialFilters.released || false,
+		notReleased: initialFilters.notReleased || false,
 		projectEquipmentDelivered: initialFilters.projectEquipmentDelivered || false,
 		projectEquipmentNotDelivered: initialFilters.projectEquipmentNotDelivered || false,
 		orderBy: {

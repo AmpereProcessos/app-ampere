@@ -54,6 +54,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const authorsQuery: Filter<TServiceOrder> = filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
 	const pendingQuery: Filter<TServiceOrder> = filters.pending ? { dataEfetivacao: null } : {};
 	const releasedQuery: Filter<TServiceOrder> = filters.released ? { dataLiberacao: { $ne: null } } : {};
+	const notReleasedQuery: Filter<TServiceOrder> = filters.notReleased ? { dataLiberacao: null } : {};
 	const topologiesQuery: Filter<TServiceOrder> =
 		filters.topologies.length > 0 ? { "detalhes.topologia": { $in: filters.topologies as TServiceOrder["detalhes"]["topologia"][] } } : {};
 	const roofTypesQuery: Filter<TServiceOrder> = filters.roofTypes.length > 0 ? { "detalhes.tipoTelha": { $in: filters.roofTypes as TServiceOrder["detalhes"]["tipoTelha"][] } } : {};
@@ -71,6 +72,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 		...authorsQuery,
 		...pendingQuery,
 		...releasedQuery,
+		...notReleasedQuery,
 		...topologiesQuery,
 		...roofTypesQuery,
 		...projectEquipmentDeliveredQuery,

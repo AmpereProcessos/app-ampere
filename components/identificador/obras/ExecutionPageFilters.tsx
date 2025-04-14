@@ -250,7 +250,7 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 									handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, released: value }))}
 								/>
 							</div>
-							<div className="w-fit self-center">
+							{/* <div className="w-fit self-center">
 								<CheckboxInput
 									labelTrue="EQUIPAMENTOS ENTREGUES"
 									labelFalse="EQUIPAMENTOS ENTREGUES"
@@ -265,7 +265,7 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 									checked={queryParamsHolder.projectEquipmentNotDelivered}
 									handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, projectEquipmentNotDelivered: value }))}
 								/>
-							</div>
+							</div> */}
 						</div>
 						<Button
 							onClick={() => {

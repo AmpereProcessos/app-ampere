@@ -53,7 +53,7 @@ const getProjectsInDeliveryProcessRoute: NextApiHandler<any> = async (req, res) 
 	//       // 'compra.liberacao': true,
 	//       // 'compra.dataLiberacao': { $ne: null },
 	//       // // 'compra.dataPedido': { $ne: null },
-	//       // $or: [{ 'compra.dataEntrega': null, 'compra.status': { $ne: 'CONCLUIDA' } }, { 'compra.dataEntrega': { $gte: afterDateWithMargin } }],
+	//       // $or: [{ 'compra.dataEntrega': null, 'compra.status': { $ne: 'CONCLUÍDA' } }, { 'compra.dataEntrega': { $gte: afterDateWithMargin } }],
 	//     },
 	//     {
 	//       projection: {

@@ -7,6 +7,7 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import { createOpportunityInteraction, updateOpportunityFunnelReference } from "@/utils/methods/mutation/crm/opportunities";
 import { useFunnelById } from "@/utils/methods/query/crm/funnels";
 import { useNutritionOpportunities } from "@/utils/methods/query/crm/opportunities";
+import type { TFunnelDTO } from "@/utils/schemas/crm/funnels.schema";
 import type { TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels } from "@/utils/schemas/crm/opportunity.schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Share2 } from "lucide-react";
@@ -14,6 +15,7 @@ import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { BsCalendar, BsCalendarPlus, BsFillMegaphoneFill } from "react-icons/bs";
+import { MdDashboard } from "react-icons/md";
 
 function MainNutritionPage() {
 	const { data: session, status } = useSession();
@@ -30,9 +32,7 @@ type NutritionPageProps = {
 function NutritionPage({ session }: NutritionPageProps) {
 	const { data: funnel } = useFunnelById({ id: "67f97583e21e0e11bc36559d" });
 	const { data: opportunities, isLoading, isError, isSuccess, error } = useNutritionOpportunities();
-	function getOpportunitiesInStage({ stageId, opportunities }: { stageId: string | number; opportunities: TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels[] }) {
-		return opportunities.filter((opportunity) => opportunity.funil.idEstagio.toString() === stageId.toString());
-	}
+
 	return (
 		<div className="grow p-6 flex flex-col w-full">
 			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
@@ -44,18 +44,38 @@ function NutritionPage({ session }: NutritionPageProps) {
 			</div>
 			<div className="1.5xl:max-h- mt-2 flex w-full overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:max-h-[500px] lg:max-h-[600px]  2.25xl:max-h-[800px]">
 				{funnel?.etapas.map((stage) => (
-					<div key={stage.id} className="flex w-full min-w-[375px] flex-col p-2 px-4 lg:w-[375px]">
-						<div className="flex h-[100px] w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
-							<h1 className="w-full rounded p-1 text-center font-bold text-white">{stage.nome}</h1>
-						</div>
-						<div className="my-1 flex flex-col gap-2">
-							{getOpportunitiesInStage({ stageId: stage.id, opportunities: (opportunities || []) as TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels[] }).map(
-								(opportunity) => (
-									<OpportunityCard key={opportunity._id} session={session} opportunity={opportunity} stageTitle={stage.nome} />
-								),
-							)}
-						</div>
-					</div>
+					<StageBlock key={stage.id} session={session} stage={stage} opportunities={opportunities || []} />
+				))}
+			</div>
+		</div>
+	);
+}
+
+type StageBlockProps = {
+	session: Session; //
+	stage: TFunnelDTO["etapas"][number];
+	opportunities: TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels[];
+};
+function StageBlock({ session, stage, opportunities }: StageBlockProps) {
+	function getOpportunitiesInStage({ stageId, opportunities }: { stageId: string | number; opportunities: TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels[] }) {
+		return opportunities.filter((opportunity) => opportunity.funil.idEstagio.toString() === stageId.toString());
+	}
+	const opportunitiesInStage = getOpportunitiesInStage({
+		stageId: stage.id,
+		opportunities: (opportunities || []) as TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels[],
+	});
+	return (
+		<div className="flex w-full min-w-[375px] flex-col p-2 px-4 lg:w-[375px]">
+			<div className="flex h-[100px] w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px] lg:min-h-[60px]">
+				<h1 className="w-full rounded p-1 text-center font-bold text-white">{stage.nome}</h1>
+				<div className="w-full flex items-center justify-center gap-1 text-white">
+					<MdDashboard />
+					<h3 className="text-[0.65rem] font-medium">{opportunitiesInStage.length}</h3>
+				</div>
+			</div>
+			<div className="my-1 flex flex-col gap-2">
+				{opportunitiesInStage.map((opportunity) => (
+					<OpportunityCard key={opportunity._id} session={session} opportunity={opportunity} stageTitle={stage.nome} />
 				))}
 			</div>
 		</div>

@@ -5,7 +5,7 @@ export const OpportunityInteractionTypesEnum = z.enum(["MENSAGEM", "EMAIL", "REU
 	invalid_type_error: "Tipo não válido para o tipo de interação.",
 });
 export type TOpportunityInteractionTypeEnum = z.infer<typeof OpportunityInteractionTypesEnum>;
-const GeneralOpportunityInteraction = z.object({
+export const GeneralOpportunityInteraction = z.object({
 	oportunidade: z.object({
 		id: z.string({ required_error: "ID da oportunidade não vinculado.", invalid_type_error: "Tipo não válido para o ID da oportunidade." }),
 		nome: z.string({ required_error: "Nome da oportunidade não vinculado.", invalid_type_error: "Tipo não válido para o nome da oportunidade." }),

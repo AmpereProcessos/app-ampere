@@ -600,7 +600,19 @@ export const OpportunityWithClientSchema = z.object({
 export type TOpportunity = z.infer<typeof GeneralOpportunitySchema>;
 export type TOpportunitySimplified = Pick<
 	TOpportunity,
-	"nome" | "idParceiro" | "identificador" | "tipo" | "idMarketing" | "idIndicacao" | "responsaveis" | "cliente" | "ganho" | "perda" | "dataInsercao"
+	| "nome"
+	| "idParceiro"
+	| "identificador"
+	| "tipo"
+	| "idMarketing"
+	| "idIndicacao"
+	| "responsaveis"
+	| "cliente"
+	| "ganho"
+	| "perda"
+	| "dataInsercao"
+	| "ultimaInteracao"
+	| "proximaInteracao"
 >;
 export const SimplifiedOpportunityProjection = {
 	_id: 1,
@@ -615,6 +627,8 @@ export const SimplifiedOpportunityProjection = {
 	ganho: 1,
 	perda: 1,
 	dataInsercao: 1,
+	ultimaInteracao: 1,
+	proximaInteracao: 1,
 };
 
 export type TOpportunitySimplifiedWithProposalAndActivitiesAndFunnels = TOpportunitySimplified & {
@@ -669,6 +683,7 @@ export const SimplifiedOpportunityWithProposalProjection = {
 	nome: 1,
 	identificador: 1,
 	tipo: 1,
+	idParceiro: 1,
 	responsaveis: 1,
 	idMarketing: 1,
 	idIndicacao: 1,
@@ -677,6 +692,8 @@ export const SimplifiedOpportunityWithProposalProjection = {
 	"proposta.nome": 1,
 	"proposta.valor": 1,
 	"proposta.potenciaPico": 1,
+	ultimaInteracao: 1,
+	proximaInteracao: 1,
 	dataInsercao: 1,
 };
 

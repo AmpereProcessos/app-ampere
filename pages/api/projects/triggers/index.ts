@@ -14,6 +14,7 @@ import type { TUser } from "@/utils/schemas/crm/user.schema";
 import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
 import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
 import { insertFunnelReference } from "@/repositories/crm-funnel-references/mutations";
+import dayjs from "dayjs";
 
 type PostResponse = {
 	data: { insertedId?: string; updatedId?: string };
@@ -337,6 +338,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				taxaMedida: "DIAS",
 				taxaValor: 15,
 			},
+			proximaInteracao: dayjs().toISOString(),
 			dataInsercao: new Date().toISOString(),
 		};
 		const insertOpportunityResponse = await insertOpportunity({ collection: opportunitiesCollection, info: newOpportunity, partnerId: newOpportunity.idParceiro });

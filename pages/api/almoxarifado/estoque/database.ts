@@ -97,7 +97,7 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 	const limit = PAGE_SIZE;
 
 	const materialsMatched = await materialsCollection.countDocuments(query);
-	const materials = await materialsCollection.find(query).skip(skip).limit(limit).toArray();
+	const materials = await materialsCollection.find(query).skip(skip).limit(limit).sort({ nome: 1 }).toArray();
 	const totalPages = Math.ceil(materialsMatched / PAGE_SIZE);
 
 	res.status(200).json({ data: { materials: materials.map((m) => ({ ...m, _id: m._id.toString() })), materialsMatched, totalPages } });

@@ -21,7 +21,7 @@ import { formatDecimalPlaces, formatToMoney, SlideMotionVariants } from "@/utils
 import EditMaterial from "@/components/identificador/estoque/EditMaterial";
 import { BsCalendarPlus } from "react-icons/bs";
 import { formatDateAsLocale, formatDateTimeForInput } from "@/utils/methods/formatting";
-import { Barcode, Box, DollarSign, Edit, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus } from "lucide-react";
+import { Barcode, Box, ChartColumn, DollarSign, Edit, FileText, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
@@ -61,7 +61,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 	const totalPages = materialsResult?.totalPages || 0;
 	return (
 		<div className="flex grow flex-col p-6 gap-2">
-			<div className="flex flex-col items-center justify-between border-b border-primary/20 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-primary/20 p-1 gap-2">
 				<div className="flex w-full items-center justify-between">
 					<p className="text-center text-2xl font-black uppercase text-[#15599a]">ESTOQUE</p>
 					<div className="flex items-center gap-2">
@@ -76,6 +76,20 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 						)}
 						<Button onClick={() => setNewMaterialModalIsOpen((prev) => !prev)}>NOVO MATERIAL</Button>
 					</div>
+				</div>
+				<div className="w-full flex items-center justify-center flex-wrap lg:justify-end gap-6 gap-y-1">
+					<Link href={"/almoxarifado/estoque/relatorio-pdf"} className="flex items-center gap-1 hover:text-cyan-500 transition-colors">
+						<FileText className="h-4 w-4" />
+						<p className="text-xs">RELATÓRIO EM PDF</p>
+					</Link>
+					<Link href={"/almoxarifado/estoque/analitico"} className="flex items-center gap-1 hover:text-cyan-500 transition-colors">
+						<ChartColumn className="h-4 w-4" />
+						<p className="text-xs">ANÁLITICO</p>
+					</Link>
+					<Link href={"/almoxarifado/estoque/entrada"} className="flex items-center gap-1 hover:text-cyan-500 transition-colors">
+						<Plus className="h-4 w-4" />
+						<p className="text-xs">ENTRADA DE MATERIAIS</p>
+					</Link>
 				</div>
 			</div>
 			<AnimatePresence>{filterMenuIsOpens ? <FiltersMenu filters={filters} updateFilters={updateFilters} closeMenu={() => setFilterMenuIsOpen(false)} /> : null}</AnimatePresence>

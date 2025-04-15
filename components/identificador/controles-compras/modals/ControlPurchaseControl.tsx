@@ -189,7 +189,6 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 									purchaseId={purchaseControlId}
 									projectId={infoHolder.projeto.id || undefined}
 								/>
-
 								<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 								<PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 								<PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

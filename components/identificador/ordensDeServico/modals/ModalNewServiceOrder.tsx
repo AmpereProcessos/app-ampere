@@ -181,7 +181,7 @@ function ModalNewServiceOrder({ session, closeModal, callbacks, projectId }: Mod
 						</button>
 					</div>
 					<div className="flex h-full w-full flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-						<ServiceOrderGeneralInformationBlock infoHolder={osInfo as TServiceOrderDTO} predefinedCategories={[]} updateInfoHolder={updateInfoHolder} />
+						<ServiceOrderGeneralInformationBlock infoHolder={osInfo as TServiceOrderDTO} project={project || undefined} predefinedCategories={[]} updateInfoHolder={updateInfoHolder} />
 						{project ? (
 							<ServiceOrderProjectInformationBlock project={project} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 						) : (
@@ -189,9 +189,10 @@ function ModalNewServiceOrder({ session, closeModal, callbacks, projectId }: Mod
 						)}
 						<ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
 						<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-						<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
+						<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} project={project || undefined} updateInfoHolder={updateInfoHolder} />
 						<ServiceOrderEquipmentsInformationBlock
 							infoHolder={osInfo}
+							project={project || undefined}
 							updateInfoHolder={updateInfoHolder}
 							useProjectInLocoEquipmentsInformation={project ? useProjectInLocoEquipmentsInformation : undefined}
 							useProjectToTakeEquipmentsInformation={project ? useProjectToTakeEquipmentsInformation : undefined}

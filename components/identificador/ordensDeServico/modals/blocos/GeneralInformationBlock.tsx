@@ -7,18 +7,21 @@ import { cn } from "@/lib/utils";
 import { equipesTecnicas, formatDate, serviceOrdersCategories, serviceOrderUrgencyOptions } from "@/utils/constants";
 import { formatDateAsLocale, formatToPhone } from "@/utils/methods/formatting";
 import { formatDateInputChange } from "@/utils/methods/shared";
-import type { TServiceOrder } from "@/utils/schemas/service-order";
+import type { TServiceOrder, TServiceOrderProject } from "@/utils/schemas/service-order";
 import { ServiceOrderStatus } from "@/utils/select-options";
 import React from "react";
+import toast from "react-hot-toast";
 import { BsCalendarPlus } from "react-icons/bs";
+import { MdContentCopy } from "react-icons/md";
 import { TbUrgent } from "react-icons/tb";
 
 type ServiceOrderGeneralInformationBlockProps = {
 	predefinedCategories?: { id: number; label: string; value: string }[];
 	infoHolder: TServiceOrder;
 	updateInfoHolder: (changes: Partial<TServiceOrder>) => void;
+	project?: TServiceOrderProject;
 };
-function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, predefinedCategories }: ServiceOrderGeneralInformationBlockProps) {
+function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, predefinedCategories, project }: ServiceOrderGeneralInformationBlockProps) {
 	function handleEffectivationUpdate(newValue: TServiceOrder["status"], previousData: TServiceOrder) {
 		if (newValue === "CONCLUÍDA") {
 			if (previousData.status !== "CONCLUÍDA") return new Date().toISOString();
@@ -27,6 +30,26 @@ function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, pre
 		if (previousData.status === "CONCLUÍDA") return null;
 		return previousData.dataEfetivacao;
 	}
+	function handleUseProjectInformation(project: TServiceOrderProject | undefined) {
+		if (!project) return toast.error("Dados do projeto não encontrados.");
+		updateInfoHolder({
+			descricao: `${project?.tipoDeServico} DO(A) ${project?.nomeDoContrato}`,
+			favorecido: {
+				nome: project?.nomeDoContrato,
+				contato: project?.telefone?.toString() || "",
+			},
+			responsavel: {
+				nome: project?.obra?.equipeResp || "",
+				tipo: project?.obra?.equipeResp ? "INTERNO" : "EXTERNO",
+			},
+		});
+	}
+	const isServiceOrderInformationEqualToProject = Object.values({
+		description: project ? infoHolder.descricao === `${project?.tipoDeServico} DO(A) ${project?.nomeDoContrato}` : false,
+		favoredName: project ? infoHolder.favorecido?.nome === project?.nomeDoContrato : false,
+		favoredPhone: project ? infoHolder.favorecido?.contato === project?.telefone : false,
+		responsibleName: project ? infoHolder.responsavel?.nome === project?.obra?.equipeResp : false,
+	}).every((r) => r);
 	return (
 		<div className="flex w-full flex-col items-center gap-4">
 			<div className="flex w-full flex-wrap items-center justify-center gap-2">
@@ -41,6 +64,18 @@ function ServiceOrderGeneralInformationBlock({ infoHolder, updateInfoHolder, pre
 				</div>
 			</div>
 			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES GERAIS</h1>
+			<div className="flex w-full items-center justify-end">
+				{project && !isServiceOrderInformationEqualToProject ? (
+					<button
+						type="button"
+						onClick={() => handleUseProjectInformation(project)}
+						className={cn("flex items-center gap-1 rounded-lg bg-cyan-300 px-2 py-1 text-black duration-300 ease-in-out hover:bg-cyan-400")}
+					>
+						<MdContentCopy size={12} />
+						<h1 className="text-[0.65rem] font-medium tracking-tight">UTILIZAR DADOS DO PROJETO</h1>
+					</button>
+				) : null}
+			</div>
 			<div className="flex w-full flex-col gap-2">
 				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 					<div className="w-full lg:w-1/2">

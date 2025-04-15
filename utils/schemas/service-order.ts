@@ -360,6 +360,7 @@ export const ServiceOrderProjectProjection = {
 	nomeDoContrato: 1,
 	qtde: 1,
 	cpf_cnpj: 1,
+	telefone: 1,
 	tipoDeServico: 1,
 	cep: 1,
 	uf: 1,
@@ -389,6 +390,7 @@ export type TServiceOrderProject = Pick<
 	| "qtde"
 	| "nomeDoContrato"
 	| "cpf_cnpj"
+	| "telefone"
 	| "tipoDeServico"
 	| "cep"
 	| "uf"

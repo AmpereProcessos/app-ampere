@@ -210,7 +210,12 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 										</Link>
 									) : null}
 								</div>
-								<ServiceOrderGeneralInformationBlock infoHolder={osInfo as TServiceOrderDTO} predefinedCategories={[]} updateInfoHolder={updateInfoHolder} />
+								<ServiceOrderGeneralInformationBlock
+									infoHolder={osInfo as TServiceOrderDTO}
+									project={serviceOrder?.projetoDados || undefined}
+									predefinedCategories={[]}
+									updateInfoHolder={updateInfoHolder}
+								/>
 								<ServiceOrderPendenciesBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 								{serviceOrder?.projetoDados ? (
 									<ServiceOrderProjectInformationBlock project={serviceOrder.projetoDados} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
@@ -221,8 +226,8 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								<ServiceOrderFileReferences session={session} attachmentPrefix={osInfo.descricao} serviceOrderId={serviceOrderId} projectId={osInfo.projeto.id || undefined} />
 
 								<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-								<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
-								<ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
+								<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} project={serviceOrder?.projetoDados || undefined} updateInfoHolder={updateInfoHolder} />
+								<ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} project={serviceOrder?.projetoDados || undefined} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

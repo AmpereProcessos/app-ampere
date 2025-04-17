@@ -2,6 +2,7 @@ import axios from "axios";
 import createHttpError from "http-errors";
 import { deleteWarehouseFormulary } from "./warehouse-forms";
 import { TInputMaterialData, TMaterial, TMaterialDTO } from "@/utils/schemas/materials";
+import { TMaterialEntranceInput } from "@/pages/api/almoxarifado/estoque";
 
 type UpdateManyMaterialsParams = {
 	formularyId?: string;
@@ -19,18 +20,18 @@ export async function updateManyMaterials({ formularyId, project, updates }: Upd
 }
 
 type InputMaterialParams = {
-	materialId: string;
-	changes: TInputMaterialData;
+	input: TMaterialEntranceInput;
 };
-export async function inputMaterialUpdate({ materialId, changes }: InputMaterialParams) {
+export async function handleMultipleMaterialEntrance({ input }: InputMaterialParams) {
 	try {
-		const { data } = await axios.patch(`/api/almoxarifado/estoque?id=${materialId}`, changes);
-		if (typeof data.message != "string") return "Entrada de material feita com sucesso !";
-		return data.message;
+		const { data } = await axios.patch("/api/almoxarifado/estoque", input);
+		if (typeof data.message !== "string") return "Entrada de material feita com sucesso !";
+		return data.message as string;
 	} catch (error) {
 		throw error;
 	}
 }
+
 export async function debitMaterials({ formId, projectId, identifier, changes, tag }) {
 	console.log("ID DO FORMULÁRIO", formId);
 	console.log("MATERIAIS DEBITADOS", changes);

@@ -28,8 +28,14 @@ type MaterialSelectorProps = {
 	initialMaterialState?: TMaterialState;
 	vinculateMaterial: (info: TMaterialSimplifiedWithAlocatorDTO) => void;
 	unvinculateMaterial: () => void;
+	renderSelectedMaterial?: (props: {
+		selectedMaterial: TMaterialSimplifiedWithAlocatorDTO;
+		handleMaterialUnvinculation: () => void;
+	}) => React.ReactNode;
+	renderUnselectedMaterial?: (props: { setOpen: (value: boolean) => void }) => React.ReactNode;
 };
-function MaterialSelector({ initialMaterialState, vinculateMaterial, unvinculateMaterial }: MaterialSelectorProps) {
+function MaterialSelector({ initialMaterialState, vinculateMaterial, unvinculateMaterial, renderSelectedMaterial, renderUnselectedMaterial }: MaterialSelectorProps) {
+	console.log("renderUnselectedMaterial:", renderUnselectedMaterial);
 	const [stateHolder, setStateHolder] = useState<TMaterialState>(initialMaterialState || { materialId: null, materialName: "" });
 
 	const debouncedQueryParams = useDebounce({ search: stateHolder?.materialName }, 350);
@@ -67,25 +73,31 @@ function MaterialSelector({ initialMaterialState, vinculateMaterial, unvinculate
 			<Dialog open={open} onOpenChange={setOpen}>
 				{isSuccess ? (
 					selectedMaterial ? (
-						<div className="flex w-fit items-center gap-2 self-center rounded-lg bg-green-100 px-2 py-1 dark:bg-green-800">
-							<h1 className="text-sm font-medium tracking-tight text-primary">{selectedMaterial.nome}</h1>
-							<div className="flex items-center gap-1">
-								<Ruler width={15} height={15} />
-								<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{selectedMaterial.grandeza}</h1>
+						renderSelectedMaterial && typeof renderSelectedMaterial === "function" ? (
+							renderSelectedMaterial({ selectedMaterial, handleMaterialUnvinculation })
+						) : (
+							<div className="flex w-fit items-center gap-2 self-center rounded-lg bg-green-100 px-2 py-1 dark:bg-green-800">
+								<h1 className="text-sm font-medium tracking-tight text-primary">{selectedMaterial.nome}</h1>
+								<div className="flex items-center gap-1">
+									<Ruler width={15} height={15} />
+									<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{selectedMaterial.grandeza}</h1>
+								</div>
+								<button
+									type="button"
+									onClick={() => handleMaterialUnvinculation()}
+									className={cn("group flex items-center justify-center rounded-full bg-green-600 p-1 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-500")}
+								>
+									<div className="block duration-300 animate-out group-hover:hidden">
+										<Link size={12} />
+									</div>
+									<div className="hidden duration-300 animate-in group-hover:block">
+										<X size={12} />
+									</div>
+								</button>
 							</div>
-							<button
-								type="button"
-								onClick={() => handleMaterialUnvinculation()}
-								className={cn("group flex items-center justify-center rounded-full bg-green-600 p-1 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-500")}
-							>
-								<div className="block duration-300 animate-out group-hover:hidden">
-									<Link size={12} />
-								</div>
-								<div className="hidden duration-300 animate-in group-hover:block">
-									<X size={12} />
-								</div>
-							</button>
-						</div>
+						)
+					) : renderUnselectedMaterial && typeof renderUnselectedMaterial === "function" ? (
+						renderUnselectedMaterial({ setOpen })
 					) : (
 						<button type="button" onClick={() => setOpen(true)} className="flex w-fit items-center gap-1 self-center rounded bg-cyan-500 px-4 py-1.5 text-white hover:bg-cyan-700">
 							<Link size={12} />

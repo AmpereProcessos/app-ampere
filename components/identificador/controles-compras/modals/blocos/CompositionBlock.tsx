@@ -4,19 +4,26 @@ import TextInput from "@/components/inputs/Text";
 import { Button } from "@/components/ui/button";
 import React, { type Dispatch, useState, type SetStateAction } from "react";
 import PurchaseControlCompositionBlockTable from "./utils/CompositionTable";
-import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { TPurchaseControl, TPurchaseControlCompositionKitDTO } from "@/utils/schemas/purchases";
 import toast from "react-hot-toast";
 import { PurchaseCompositionItemCategories, units } from "@/utils/select-options";
 import { BsCart } from "react-icons/bs";
 import { cn } from "@/lib/utils";
 import { AnimatePresence } from "framer-motion";
 import PurchaseNewCompositionItem from "./utils/NewCompositionItem";
+import { usePurchaseControlCompositionKits } from "@/utils/methods/query/purchase-controls";
+import { Package } from "lucide-react";
+import NewPurchaseControlCompositionKit from "../../kits-composicao/NewPurchaseControlCompositionKit";
+import type { Session } from "next-auth";
 
 type PurchaseControlCompositionBlockProps = {
+	session: Session;
 	infoHolder: TPurchaseControl;
 	setInfoHolder: Dispatch<SetStateAction<TPurchaseControl>>;
 };
-function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
+function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
+	const { data: purchaseControlCompositionKits } = usePurchaseControlCompositionKits();
+	const [newCompositionKitModalIsOpen, setNewCompositionKitModalIsOpen] = useState<boolean>(false);
 	const [newCompositionItemMenuIsOpen, setNewCompositionItemMenuIsOpen] = useState<boolean>(false);
 	const [compositionItemHolder, setCompositionItemHolder] = useState<TPurchaseControl["composicao"][number]>({
 		categoria: "OUTROS",
@@ -48,13 +55,46 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
 		addCompositionItem(info);
 	}
 
+	function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
+		const newItems: TPurchaseControl["composicao"] = itens.map((item) => ({
+			categoria: item.categoria,
+			descricao: item.descricao,
+			qtde: item.qtde,
+			unidade: item.unidade,
+			valor: 0,
+		}));
+		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, ...newItems] }));
+		toast.success("Itens do kit adicionados à composição da compra.");
+	}
 	const compositionItemsTotal = infoHolder.composicao.reduce((acc, current) => acc + current.qtde * current.valor, 0);
 
 	return (
 		<div className="flex w-full grow flex-col gap-4">
 			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">COMPOSIÇÃO DA COMPRA</h1>
 			<div className="flex w-full grow flex-col gap-2">
-				<div className="flex w-full items-center justify-end">
+				<div className="flex w-full items-center justify-end flex-wrap gap-2">
+					{purchaseControlCompositionKits?.map((compositionKit) => (
+						<button
+							key={compositionKit._id}
+							type="button"
+							onClick={() => handleAddItemsFromKit(compositionKit.itens)}
+							className={cn("flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out bg-cyan-300 hover:bg-cyan-400")}
+						>
+							<Package className="w-4 h-4" />
+							<h1 className="text-xs font-medium tracking-tight">+ {compositionKit.titulo}</h1>
+						</button>
+					))}
+					<button
+						type="button"
+						onClick={() => setNewCompositionKitModalIsOpen((prev) => !prev)}
+						className={cn("flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out", {
+							"bg-gray-300  hover:bg-red-300": newCompositionKitModalIsOpen,
+							"bg-green-300  hover:bg-green-400": !newCompositionKitModalIsOpen,
+						})}
+					>
+						<Package className="w-4 h-4" />
+						<h1 className="text-xs font-medium tracking-tight">{!newCompositionKitModalIsOpen ? "ABRIR MENU DE NOVO KIT" : "FECHAR MENU DE NOVO KIT"}</h1>
+					</button>
 					<button
 						type="button"
 						onClick={() => setNewCompositionItemMenuIsOpen((prev) => !prev)}
@@ -185,6 +225,9 @@ function PurchaseControlCompositionBlock({ infoHolder, setInfoHolder }: Purchase
 					</div>
 				</div>
 			</div>
+			{newCompositionKitModalIsOpen ? (
+				<NewPurchaseControlCompositionKit session={session} affectedQueryKey={["purchase-control-composition-kits"]} closeModal={() => setNewCompositionKitModalIsOpen(false)} />
+			) : null}
 		</div>
 	);
 }

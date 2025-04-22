@@ -89,6 +89,8 @@ export const PurchaseControlCompositionKitSchema = z.object({
 		invalid_type_error: "Tipo não válido para a data de inserção do kit de composição de compra.",
 	}),
 });
+export type TPurchaseControlCompositionKit = z.infer<typeof PurchaseControlCompositionKitSchema>;
+export type TPurchaseControlCompositionKitDTO = TPurchaseControlCompositionKit & { _id: string };
 
 export const GeneralPurchaseControlSchema = z.object({
 	status: PurchaseStatus,
@@ -292,6 +294,7 @@ export type TPurchaseControlKanbanSimplified = Pick<
 		data: TPurchaseControl["faturamentos"][number]["data"];
 	}[];
 	entrega: {
+		status: TPurchaseControl["entrega"]["status"];
 		localizacao: {
 			uf: TPurchaseControl["entrega"]["localizacao"]["uf"];
 			cidade: TPurchaseControl["entrega"]["localizacao"]["cidade"];
@@ -312,6 +315,7 @@ export const PurchaseControlKanbanSimplifiedProjection = {
 	"fornecedor.nome": 1,
 	"faturamentos.codigoNotaFiscal": 1,
 	"faturamentos.data": 1,
+	"entrega.status": 1,
 	"entrega.localizacao.uf": 1,
 	"entrega.localizacao.cidade": 1,
 	"entrega.dataPrevisao": 1,

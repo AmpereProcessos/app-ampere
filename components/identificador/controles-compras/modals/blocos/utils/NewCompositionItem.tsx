@@ -1,29 +1,16 @@
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
 import { useAllocators } from "@/utils/methods/query/allocators";
-import { TMaterial, TMaterialSimplifiedWithAlocatorDTO } from "@/utils/schemas/materials";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
-import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { PurchaseCompositionItemCategories, units } from "@/utils/select-options";
 import { motion } from "framer-motion";
-import { createMaterial } from "@/utils/methods/mutation/materials";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { Box, Link, Ruler } from "lucide-react";
-import { Warehouse } from "lucide-react";
-import { cn } from "@/lib/utils";
 
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useVinculationMaterialsBySearch } from "@/utils/methods/query/materials";
-import { useDebounce } from "@/lib/hooks/debounce";
-import { useMediaQuery } from "@/lib/hooks/media-query";
 import { Button } from "@/components/ui/button";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import { getErrorMessage } from "@/utils/methods/handlers";
+
 import MaterialSelector from "@/components/identificador/almoxarifado/estoque/MaterialVinculatorSelector";
 type PurchaseNewCompositionItemProps = {
 	addCompositionItem: (item: TPurchaseControl["composicao"][number]) => void;
@@ -70,9 +57,8 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 					}
 					unvinculateMaterial={() => updateCompositionItemHolder({ materialId: null, descricao: "", valor: 0 })}
 				/>
-
 				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-					<div className="lg:w-1/2 w-full">
+					<div className="lg:w-1/3 w-full">
 						<SelectInput
 							label="CATEGORIA"
 							selectedItemLabel="NÃO DEFINIDO"
@@ -91,7 +77,7 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 							width="100%"
 						/>
 					</div>
-					<div className="lg:w-1/2 w-full">
+					<div className="lg:w-1/3 w-full">
 						<NumberInput
 							value={compositionItemHolder.qtde}
 							handleChange={(value) => updateCompositionItemHolder({ qtde: value })}
@@ -100,7 +86,7 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 							width={"100%"}
 						/>
 					</div>
-					<div className="lg:w-1/2 w-full">
+					<div className="lg:w-1/3 w-full">
 						<NumberInput
 							value={compositionItemHolder.valor}
 							handleChange={(value) => updateCompositionItemHolder({ valor: value })}
@@ -109,17 +95,6 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 							width={"100%"}
 						/>
 					</div>
-					{/* <div className="lg:1/3 w-full">
-            <SelectInput
-              value={compositionItemHolder.alocadorDestinoId}
-              handleChange={(value) => updateCompositionItemHolder({ alocadorDestinoId: value })}
-              label="ALOCADOR DESTINO"
-              options={allocators?.map((allocator) => ({ id: allocator._id, label: allocator.nome, value: allocator._id })) || []}
-              selectedItemLabel={'ALOCADOR DO PROJETO'}
-              onReset={() => updateCompositionItemHolder({ alocadorDestinoId: null })}
-              width={'100%'}
-            />
-          </div> */}
 				</div>
 				<div className="flex items-center justify-end">
 					<Button onClick={handleAddCompositionItem} size={"sm"} type="button">

@@ -1,10 +1,10 @@
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { deletePurchaseControl, updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
-import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { TPurchaseControl, TPurchaseControlDTO, TPurchaseControlWithProjectDTO } from "@/utils/schemas/purchases";
 import type { Session } from "next-auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import * as Dialog from "@radix-ui/react-dialog";
+// import * as Dialog from "@radix-ui/react-dialog";
 import { VscChromeClose } from "react-icons/vsc";
 import PurchaseControlGeneralInformationBlock from "./blocos/GeneralInformationBlock";
 import PurchaseControlCompositionBlock from "./blocos/CompositionBlock";
@@ -31,6 +31,11 @@ import PurchaseControlFileReferences from "./blocos/AttachmentsBlock";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import PurchaseControlPaymentInformationBlock from "./blocos/PaymentInformationBlock";
 import { handleProjectPurchaseControlTrigger } from "@/utils/methods/mutation/triggers";
+import { useMediaQuery } from "@/lib/hooks/media-query";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 type ControlPurchaseControlProps = {
 	session: Session;
@@ -40,6 +45,8 @@ type ControlPurchaseControlProps = {
 };
 function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, closeModal }: ControlPurchaseControlProps) {
 	const queryClient = useQueryClient();
+	const isDesktop = useMediaQuery("(min-width: 768px)");
+
 	const { data: purchaseControl, isLoading, isError, isSuccess, error } = usePurchaseControlById({ id: purchaseControlId });
 	const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
 		status: "PENDENTE",
@@ -79,39 +86,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 		try {
 			await updatePurchaseControl({ id, changes });
 			const projectId = purchaseControl?.projeto.id;
-			if (projectId) {
-				// await updateProject({
-				// 	id: projectId,
-				// 	changes: {
-				// 		"compra.status": infoHolder.status,
-				// 		"compra.atualizacoes": infoHolder.atualizacoes,
-				// 		"compra.liberacao": !!infoHolder.liberacao.data,
-				// 		"compra.dataLiberacao": infoHolder.liberacao.data,
-				// 		"compra.fornecedor": infoHolder.fornecedor.nome,
-				// 		"compra.dataPedido": infoHolder.dataPedido,
-				// 		"compra.valorDoKit": infoHolder.total,
-				// 		"compra.rastreio": infoHolder.transporte.linkRastreio,
-				// 		"compra.dataRequisicaoPagamento": infoHolder.dataRequisicaoPagamento,
-				// 		"compra.dataPagamento": infoHolder.dataLiberacaoPagamento,
-				// 		"compra.dataPagamentoEquipamentos": infoHolder.dataPagamento,
-				// 		"compra.previsaoEntrega": infoHolder.entrega.dataPrevisao,
-				// 		"compra.dataEntrega": infoHolder.entrega.dataEfetivacao,
-				// 		"compra.statusEntrega": infoHolder.entrega.status,
-				// 		"compra.kitInfo": infoHolder.composicao.map((c) => `${c.qtde}-${c.descricao}`).join("\n"),
-				// 		"obra.pendencias": infoHolder.metadata?.pendenciasExecucao,
-				// 	},
-				// });
-				// await updateManyServiceOrdersByProjectId({
-				//   projectId: projectId,
-				//   filters: { categoria: 'MONTAGEM', dataEfetivacao: null },
-				//   changes: {
-				//     etiquetas: getServiceOrderTags({ project: purchaseControl.projetoDados as TPurchaseProjectDTO, purchase: infoHolder }),
-				//     dataPrevisaoLiberacao: infoHolder.entrega.dataPrevisao,
-				//     dataLiberacao: infoHolder.entrega.dataEfetivacao,
-				//   },
-				// })
-				await handleProjectPurchaseControlTrigger({ projectId });
-			}
+			if (projectId) await handleProjectPurchaseControlTrigger({ projectId });
 
 			return "Controle de compra atualizado com sucesso.";
 		} catch (error) {
@@ -137,92 +112,144 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
 		toast.success("Produto adicionado à composição");
 	}
-	console.log(infoHolder);
+	const TITLE = "EDITAR CONTROLE DE COMPRA";
+	const DESCRIPTION = "Atualize os dados do Controle de Compra.";
+	const BUTTON_TEXT = "ATUALIZAR KIT";
+	const DELETE_BUTTON_TEXT = "EXCLUIR KIT";
 	useEffect(() => {
 		if (purchaseControl) setInfoHolder(purchaseControl);
 	}, [purchaseControl]);
-	return (
-		<Dialog.Root open onOpenChange={closeModal}>
-			<Dialog.Overlay className="fixed inset-0 z-[50] bg-primary/70 backdrop-blur-sm" />
-			<Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[80%] lg:w-[80%]">
-				<div className="flex h-full w-full flex-col">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-sm font-bold lg:text-xl">EDITAR CONTROLE DE COMPRA</h3>
-						<button onClick={() => closeModal()} type="button" className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200">
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
+	if (isDesktop)
+		return (
+			<Dialog open={true} onOpenChange={closeModal}>
+				<DialogContent className="min-w-[80%] w-[80%]">
+					<DialogHeader>
+						<DialogTitle>{TITLE}</DialogTitle>
+						<DialogDescription>{DESCRIPTION}</DialogDescription>
+					</DialogHeader>
 					{isLoading ? <LoadingComponent /> : null}
 					{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 					{isSuccess ? (
 						<>
-							<div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-								<div className="flex w-full items-center justify-center">
-									<Link href={`/suprimentos/controle-compras/pdf/${purchaseControlId}`}>
-										<button type="button" className={cn("flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800")}>
-											<ExternalLink width={14} height={14} />
-											<h1 className="text-xs font-medium tracking-tight">PÁGINA DO PEDIDO</h1>
-										</button>
-									</Link>
-								</div>
-								<PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								{purchaseControl.projetoDados ? (
-									<PurchaseControlProjectInformationBlock
-										session={session}
-										purchase={infoHolder}
-										updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
-										project={purchaseControl.projetoDados}
-										addProductToComposition={addProductToComposition}
-									/>
-								) : (
-									<PurchaseControlProjectVinculation
-										purchaseControlId={purchaseControlId}
-										infoHolder={infoHolder}
-										setInfoHolder={setInfoHolder}
-										affectedQueryKey={["purchase-control-by-id", purchaseControlId]}
-										queryClient={queryClient}
-									/>
-								)}
-								<PurchaseControlFileReferences
+							<ScrollArea className="w-full flex flex-col grow max-h-[500px] px-2">
+								<PurchaseControlDataBlock
+									queryClient={queryClient}
+									purchaseControlId={purchaseControlId}
+									purchaseControl={purchaseControl}
+									infoHolder={infoHolder}
+									setInfoHolder={setInfoHolder}
 									session={session}
-									attachmentPrefix={`clientes/${infoHolder.titulo}`}
-									purchaseId={purchaseControlId}
-									projectId={infoHolder.projeto.id || undefined}
 								/>
-								<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlCompositionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-							</div>
-							<div className="flex w-full flex-wrap items-center justify-between gap-2">
-								<LoadingButton
-									loading={isDeleteLoading || isUpdateLoading}
-									// @ts-ignore
-									onClick={() => deleteMutation({ id: purchaseControlId })}
-									variant={"destructive"}
-								>
-									EXCLUIR CONTROLE DE COMPRA
+							</ScrollArea>
+							<DialogFooter>
+								<DialogClose asChild>
+									<Button variant="outline">FECHAR</Button>
+								</DialogClose>
+								<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
+									{BUTTON_TEXT}
 								</LoadingButton>
-								<LoadingButton
-									loading={isUpdateLoading || isDeleteLoading}
-									onClick={() =>
-										// @ts-ignore
-										mutate({ id: purchaseControlId, changes: infoHolder })
-									}
-								>
-									ATUALIZAR CONTROLE DE COMPRA
-								</LoadingButton>
-							</div>
+							</DialogFooter>
 						</>
 					) : null}
-				</div>
-			</Dialog.Content>
-		</Dialog.Root>
+				</DialogContent>
+			</Dialog>
+		);
+	return (
+		<Drawer open={true} onOpenChange={closeModal}>
+			<DrawerContent className="h-[85vh] flex flex-col">
+				<DrawerHeader>
+					<DrawerTitle>{TITLE}</DrawerTitle>
+					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
+				</DrawerHeader>
+				{isLoading ? <LoadingComponent /> : null}
+				{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+				{isSuccess ? (
+					<>
+						<div className="flex-1 overflow-hidden px-4">
+							<ScrollArea className="h-full">
+								<PurchaseControlDataBlock
+									queryClient={queryClient}
+									purchaseControlId={purchaseControlId}
+									purchaseControl={purchaseControl}
+									infoHolder={infoHolder}
+									setInfoHolder={setInfoHolder}
+									session={session}
+								/>
+							</ScrollArea>
+						</div>
+
+						<DrawerFooter>
+							<DrawerClose asChild>
+								<Button variant="outline">FECHAR</Button>
+							</DrawerClose>
+							<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
+								{BUTTON_TEXT}
+							</LoadingButton>
+						</DrawerFooter>
+					</>
+				) : null}
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
 export default ControlPurchaseControl;
+
+type PurchaseControlDataBlockProps = {
+	queryClient: any;
+	purchaseControlId: string;
+	purchaseControl: TPurchaseControlWithProjectDTO;
+	infoHolder: TPurchaseControl;
+	setInfoHolder: Dispatch<SetStateAction<TPurchaseControl>>;
+	session: Session;
+};
+function PurchaseControlDataBlock({ queryClient, purchaseControlId, purchaseControl, infoHolder, setInfoHolder, session }: PurchaseControlDataBlockProps) {
+	function addProductToComposition(product: TPurchaseControl["composicao"][number]) {
+		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
+		toast.success("Produto adicionado à composição");
+	}
+	return (
+		<div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+			<div className="flex w-full items-center justify-center">
+				<Link href={`/suprimentos/controle-compras/pdf/${purchaseControlId}`}>
+					<button type="button" className={cn("flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800")}>
+						<ExternalLink width={14} height={14} />
+						<h1 className="text-xs font-medium tracking-tight">PÁGINA DO PEDIDO</h1>
+					</button>
+				</Link>
+			</div>
+			<PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			{purchaseControl.projetoDados ? (
+				<PurchaseControlProjectInformationBlock
+					session={session}
+					purchase={infoHolder}
+					updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
+					project={purchaseControl.projetoDados}
+					addProductToComposition={addProductToComposition}
+				/>
+			) : (
+				<PurchaseControlProjectVinculation
+					purchaseControlId={purchaseControlId}
+					infoHolder={infoHolder}
+					setInfoHolder={setInfoHolder}
+					affectedQueryKey={["purchase-control-by-id", purchaseControlId]}
+					queryClient={queryClient}
+				/>
+			)}
+			<PurchaseControlFileReferences
+				session={session}
+				attachmentPrefix={`clientes/${infoHolder.titulo}`}
+				purchaseId={purchaseControlId}
+				projectId={infoHolder.projeto.id || undefined}
+			/>
+			<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlCompositionBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+		</div>
+	);
+}

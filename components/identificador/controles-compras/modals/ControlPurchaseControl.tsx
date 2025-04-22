@@ -19,8 +19,7 @@ import { usePurchaseControlById } from "@/utils/methods/query/purchase-controls"
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
-import { formatDateInputChange } from "@/utils/methods/shared";
+
 import PurchaseControlProjectInformationBlock from "./blocos/ProjectInformationBlock";
 import PurchaseControlProjectVinculation from "./blocos/utils/ProjectVinculation";
 import toast from "react-hot-toast";
@@ -28,7 +27,6 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PurchaseControlFileReferences from "./blocos/AttachmentsBlock";
-import { updateProject } from "@/utils/methods/mutation/clients";
 import PurchaseControlPaymentInformationBlock from "./blocos/PaymentInformationBlock";
 import { handleProjectPurchaseControlTrigger } from "@/utils/methods/mutation/triggers";
 import { useMediaQuery } from "@/lib/hooks/media-query";
@@ -122,7 +120,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 	if (isDesktop)
 		return (
 			<Dialog open={true} onOpenChange={closeModal}>
-				<DialogContent className="min-w-[80%] w-[80%]">
+				<DialogContent className="min-w-[80%] w-[80%] h-[85vh]">
 					<DialogHeader>
 						<DialogTitle>{TITLE}</DialogTitle>
 						<DialogDescription>{DESCRIPTION}</DialogDescription>
@@ -131,20 +129,26 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 					{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 					{isSuccess ? (
 						<>
-							<ScrollArea className="w-full flex flex-col grow max-h-[500px] px-2">
-								<PurchaseControlDataBlock
-									queryClient={queryClient}
-									purchaseControlId={purchaseControlId}
-									purchaseControl={purchaseControl}
-									infoHolder={infoHolder}
-									setInfoHolder={setInfoHolder}
-									session={session}
-								/>
-							</ScrollArea>
+							<div className="flex-1 overflow-hidden px-4">
+								<ScrollArea className="h-full">
+									<PurchaseControlDataBlock
+										queryClient={queryClient}
+										purchaseControlId={purchaseControlId}
+										purchaseControl={purchaseControl}
+										infoHolder={infoHolder}
+										setInfoHolder={setInfoHolder}
+										session={session}
+									/>
+								</ScrollArea>
+							</div>
+
 							<DialogFooter>
 								<DialogClose asChild>
 									<Button variant="outline">FECHAR</Button>
 								</DialogClose>
+								<LoadingButton variant={"destructive"} onClick={() => deleteMutation({ id: purchaseControlId })} loading={isDeleteLoading}>
+									{DELETE_BUTTON_TEXT}
+								</LoadingButton>
 								<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
 									{BUTTON_TEXT}
 								</LoadingButton>
@@ -182,6 +186,9 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 							<DrawerClose asChild>
 								<Button variant="outline">FECHAR</Button>
 							</DrawerClose>
+							<LoadingButton variant={"destructive"} onClick={() => deleteMutation({ id: purchaseControlId })} loading={isDeleteLoading}>
+								{DELETE_BUTTON_TEXT}
+							</LoadingButton>
 							<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
 								{BUTTON_TEXT}
 							</LoadingButton>

@@ -2,7 +2,7 @@ import NumberInput from "@/components/inputs/Number";
 
 import { formatToMoney, GeneralVisibleHiddenExitMotionVariants, SlideMotionVariants } from "@/utils/constants";
 import type { TTechnicalAnalysisDTO } from "@/utils/schemas/technical-analysis";
-import { supplyOptions } from "@/utils/select-options";
+import { PurchaseCompositionItemCategories, supplyOptions } from "@/utils/select-options";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { BsCart } from "react-icons/bs";
 import { cn } from "@/lib/utils";
 import { BadgeDollarSign, DollarSign, Package, Pencil } from "lucide-react";
+import { usePurchaseControlCompositionKits } from "@/utils/methods/query/purchase-controls";
+import SelectInput from "@/components/inputs/Select";
+import type { TPurchaseControlCompositionKitDTO } from "@/utils/schemas/purchases";
 
 type SupplyBlockProps = {
 	infoHolder: TTechnicalAnalysisDTO;
@@ -22,8 +25,28 @@ type SupplyBlockProps = {
 	setChanges: Dispatch<SetStateAction<object>>;
 };
 function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyBlockProps) {
-	const firstOption = Object.keys(supplyOptions)[0];
+	const { data: purchaseControlCompositionKits } = usePurchaseControlCompositionKits();
+
 	const [newSupplyItemMenuIsOpen, setNewSupplyItemMenuIsOpen] = useState(false);
+
+	function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
+		const newItems: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"] = itens.map((item) => ({
+			idMaterial: item.materialId,
+			descricao: item.descricao,
+			qtde: item.qtde,
+			tipo: "",
+			grandeza: item.unidade || "UN",
+			preco: 0,
+			categoria: item.categoria,
+		}));
+		const newItemsList = infoHolder.suprimentos?.itens ? [...infoHolder.suprimentos.itens, ...newItems] : [...newItems];
+		setInfoHolder((prev) => ({
+			...prev,
+			suprimentos: prev.suprimentos ? { ...prev.suprimentos, itens: newItemsList } : { observacoes: "", itens: newItemsList },
+		}));
+		setChanges((prev) => ({ ...prev, "suprimentos.itens": newItemsList }));
+		return toast.success("Itens do kit adicionados aos suprimentos.");
+	}
 	function addSupplyItem(newItem: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"][number]) {
 		const newItemsList = infoHolder.suprimentos?.itens ? [...infoHolder.suprimentos.itens, newItem] : [newItem];
 		setInfoHolder((prev) => ({
@@ -71,7 +94,18 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyB
 						className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
 					/>
 				</div>
-				<div className="flex w-full items-center justify-end">
+				<div className="flex w-full items-center justify-end flex-wrap gap-2">
+					{purchaseControlCompositionKits?.map((compositionKit) => (
+						<button
+							key={compositionKit._id}
+							type="button"
+							onClick={() => handleAddItemsFromKit(compositionKit.itens)}
+							className={cn("flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out bg-cyan-300 hover:bg-cyan-400")}
+						>
+							<Package className="w-4 h-4" />
+							<h1 className="text-xs font-medium tracking-tight">+ {compositionKit.titulo}</h1>
+						</button>
+					))}
 					<button
 						type="button"
 						onClick={() => setNewSupplyItemMenuIsOpen((prev) => !prev)}
@@ -158,13 +192,38 @@ function NewSupplyItemMenu({ addSupplyItem }: NewSupplyItemMenuProps) {
 						}))
 					}
 				/>
-				<NumberInput
-					label="QUANTIDADE"
-					placeholder="Preencha aqui a quantidade de itens..."
-					value={itemHolder.qtde}
-					handleChange={(value) => setItemHolder((prev) => ({ ...prev, qtde: value }))}
-					width="100%"
-				/>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/2">
+						<SelectInput
+							label="CATEGORIA"
+							selectedItemLabel="NÃO DEFINIDO"
+							options={PurchaseCompositionItemCategories}
+							value={itemHolder.categoria}
+							handleChange={(value) =>
+								setItemHolder((prev) => ({
+									...prev,
+									categoria: value,
+								}))
+							}
+							onReset={() => {
+								setItemHolder((prev) => ({
+									...prev,
+									categoria: "OUTROS",
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<NumberInput
+							label="QUANTIDADE"
+							placeholder="Preencha aqui a quantidade de itens..."
+							value={itemHolder.qtde}
+							handleChange={(value) => setItemHolder((prev) => ({ ...prev, qtde: value }))}
+							width="100%"
+						/>
+					</div>
+				</div>
 				<div className="flex items-center justify-end">
 					<Button onClick={() => handleAddNewSupplyItem(itemHolder)} size={"sm"} type="button">
 						ADICIONAR ITEM

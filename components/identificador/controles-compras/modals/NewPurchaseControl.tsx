@@ -2,9 +2,8 @@ import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { createPurchaseControl } from "@/utils/methods/mutation/purchase-controls";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
 import type { Session } from "next-auth";
-import React, { useState } from "react";
+import React, { useState, type Dispatch, type SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import * as Dialog from "@radix-ui/react-dialog";
 import { VscChromeClose } from "react-icons/vsc";
 import PurchaseControlGeneralInformationBlock from "./blocos/GeneralInformationBlock";
 import PurchaseControlCompositionBlock from "./blocos/CompositionBlock";
@@ -20,7 +19,11 @@ import PurchaseControlProjectInformationBlock from "./blocos/ProjectInformationB
 import PurchaseControlProjectVinculation from "./blocos/utils/ProjectVinculation";
 import toast from "react-hot-toast";
 import PurchaseControlPaymentInformationBlock from "./blocos/PaymentInformationBlock";
-
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/lib/hooks/media-query";
 type NewPurchaseControlProps = {
 	session: Session;
 	affectedQueryKey: any[];
@@ -28,6 +31,8 @@ type NewPurchaseControlProps = {
 };
 function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurchaseControlProps) {
 	const queryClient = useQueryClient();
+	const isDesktop = useMediaQuery("(min-width: 768px)");
+
 	const [infoHolder, setInfoHolder] = useState<TPurchaseControl>({
 		status: "PENDENTE",
 		registrosStatus: {},
@@ -62,71 +67,110 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
 		dataInsercao: new Date().toISOString(),
 	});
 
-	const { data: project } = usePurchaseProject({ projectId: infoHolder.projeto.id || null });
-	function addProductToComposition(product: TPurchaseControl["composicao"][number]) {
-		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
-		toast.success("Produto adicionado à composição");
-	}
 	const { mutate, isPending } = useMutationWithFeedback({
 		mutationKey: ["create-purchase-control"],
 		mutationFn: createPurchaseControl,
 		queryClient: queryClient,
 		affectedQueryKey: affectedQueryKey,
 	});
-	return (
-		<Dialog.Root open onOpenChange={closeModal}>
-			<Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
-			<Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[80%] lg:w-[80%]">
-				<div className="flex h-full w-full flex-col">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-sm font-bold lg:text-xl">NOVO CONTROLE DE COMPRA</h3>
-						<button onClick={() => closeModal()} type="button" className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200">
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					<div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-						<PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						{project ? (
-							<PurchaseControlProjectInformationBlock
-								session={session}
-								purchase={infoHolder}
-								updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
-								project={project}
-								addProductToComposition={addProductToComposition}
-							/>
-						) : (
-							<PurchaseControlProjectVinculation
-								purchaseControlId={undefined}
-								infoHolder={infoHolder}
-								setInfoHolder={setInfoHolder}
-								affectedQueryKey={affectedQueryKey}
-								queryClient={queryClient}
-							/>
-						)}
-						<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						{/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
-						<PurchaseControlCompositionBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-					</div>
-					<div className="flex w-full items-center justify-end">
-						<LoadingButton
-							loading={isPending}
-							onClick={() =>
-								// @ts-ignore
-								mutate(infoHolder)
-							}
-						>
-							CRIAR CONTROLE DE COMPRA
-						</LoadingButton>
-					</div>
+
+	const TITLE = "ADICIONAR CONTROLE DE COMPRA";
+	const DESCRIPTION = "Preencha os dados do Controle de Compra.";
+	const BUTTON_TEXT = "ADICIONAR KIT";
+
+	return isDesktop ? (
+		<Dialog open={true} onOpenChange={closeModal}>
+			<DialogContent className="min-w-[80%] w-[80%] h-[85vh]">
+				<DialogHeader>
+					<DialogTitle>{TITLE}</DialogTitle>
+					<DialogDescription>{DESCRIPTION}</DialogDescription>
+				</DialogHeader>
+				<div className="flex-1 overflow-hidden px-4">
+					<ScrollArea className="h-full">
+						<PurchaseControlDataBlock queryClient={queryClient} infoHolder={infoHolder} setInfoHolder={setInfoHolder} session={session} affectedQueryKey={affectedQueryKey} />
+					</ScrollArea>
 				</div>
-			</Dialog.Content>
-		</Dialog.Root>
+				<DialogFooter>
+					<DialogClose asChild>
+						<Button variant="outline">FECHAR</Button>
+					</DialogClose>
+					<LoadingButton onClick={() => mutate(infoHolder)} loading={isPending}>
+						{BUTTON_TEXT}
+					</LoadingButton>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	) : (
+		<Drawer open={true} onOpenChange={closeModal}>
+			<DrawerContent className="h-[85vh] flex flex-col">
+				<DrawerHeader>
+					<DrawerTitle>{TITLE}</DrawerTitle>
+					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
+				</DrawerHeader>
+				<div className="flex-1 overflow-hidden px-4">
+					<ScrollArea className="h-full">
+						<PurchaseControlDataBlock queryClient={queryClient} infoHolder={infoHolder} setInfoHolder={setInfoHolder} session={session} affectedQueryKey={affectedQueryKey} />
+					</ScrollArea>
+				</div>
+				<DrawerFooter>
+					<DrawerClose asChild>
+						<Button variant="outline">FECHAR</Button>
+					</DrawerClose>
+
+					<LoadingButton onClick={() => mutate(infoHolder)} loading={isPending}>
+						{BUTTON_TEXT}
+					</LoadingButton>
+				</DrawerFooter>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
 export default NewPurchaseControl;
+
+type PurchaseControlDataBlockProps = {
+	queryClient: any;
+	infoHolder: TPurchaseControl;
+	setInfoHolder: Dispatch<SetStateAction<TPurchaseControl>>;
+	session: Session;
+	affectedQueryKey: any[];
+};
+function PurchaseControlDataBlock({ queryClient, infoHolder, setInfoHolder, session, affectedQueryKey }: PurchaseControlDataBlockProps) {
+	const { data: project } = usePurchaseProject({ projectId: infoHolder.projeto.id || null });
+
+	function addProductToComposition(product: TPurchaseControl["composicao"][number]) {
+		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
+		toast.success("Produto adicionado à composição");
+	}
+
+	return (
+		<div className="flex h-full flex-col gap-y-2">
+			<PurchaseControlGeneralInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			{project ? (
+				<PurchaseControlProjectInformationBlock
+					session={session}
+					purchase={infoHolder}
+					updatePurchase={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))}
+					project={project}
+					addProductToComposition={addProductToComposition}
+				/>
+			) : (
+				<PurchaseControlProjectVinculation
+					purchaseControlId={undefined}
+					infoHolder={infoHolder}
+					setInfoHolder={setInfoHolder}
+					affectedQueryKey={affectedQueryKey}
+					queryClient={queryClient}
+				/>
+			)}
+			<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			{/* <PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
+			<PurchaseControlCompositionBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlBillingInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlDeliveryInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+		</div>
+	);
+}

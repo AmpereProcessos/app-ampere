@@ -92,11 +92,8 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 						<h1 className="text-xs font-medium tracking-tight">{!newCompositionItemMenuIsOpen ? "ABRIR MENU DE NOVO ITEM" : "FECHAR MENU DE NOVO ITEM"}</h1>
 					</button>
 				</div>
-
 				<AnimatePresence>{newCompositionItemMenuIsOpen ? <PurchaseNewCompositionItem addCompositionItem={addCompositionItem} /> : null}</AnimatePresence>
-
 				<PurchaseControlCompositionBlockTable composition={infoHolder.composicao} removeCompositionItem={removeCompositionItem} updateCompositionItem={updateCompositionItem} />
-
 				{compositionItemsTotal > infoHolder.total ? (
 					<p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs italic tracking-tight text-orange-400">
 						Por favor, ajuste os valores dos itens da composição. A somatória dos itens atuais excede o valor total estabelecido para a compra.

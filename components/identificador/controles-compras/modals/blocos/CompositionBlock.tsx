@@ -25,13 +25,6 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 	const { data: purchaseControlCompositionKits } = usePurchaseControlCompositionKits();
 	const [newCompositionKitModalIsOpen, setNewCompositionKitModalIsOpen] = useState<boolean>(false);
 	const [newCompositionItemMenuIsOpen, setNewCompositionItemMenuIsOpen] = useState<boolean>(false);
-	const [compositionItemHolder, setCompositionItemHolder] = useState<TPurchaseControl["composicao"][number]>({
-		categoria: "OUTROS",
-		descricao: "",
-		qtde: 1,
-		unidade: "UN",
-		valor: 0,
-	});
 
 	function addCompositionItem(item: TPurchaseControl["composicao"][number]) {
 		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, item] }));
@@ -45,14 +38,6 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 			...prev,
 			composicao: prev.composicao.map((cItem, cIndex) => (cIndex !== info.index ? cItem : { ...cItem, ...info.item })),
 		}));
-	}
-
-	function handleAddCompositionItem(info: TPurchaseControl["composicao"][number]) {
-		if (info.descricao.trim().length <= 2) return toast.error("Preencha uma descrição de ao menos 2 caracteres para o item.");
-		if (info.qtde <= 0) return toast.error("A quantidade deve ser maior que zero.");
-		if (info.valor < 0) return toast.error("O valor não pode ser negativo.");
-
-		addCompositionItem(info);
 	}
 
 	function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
@@ -107,94 +92,7 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 						<h1 className="text-xs font-medium tracking-tight">{!newCompositionItemMenuIsOpen ? "ABRIR MENU DE NOVO ITEM" : "FECHAR MENU DE NOVO ITEM"}</h1>
 					</button>
 				</div>
-				<div className="flex w-full flex-col gap-2">
-					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-						<div className="w-full lg:w-[25%]">
-							<SelectInput
-								label="CATEGORIA"
-								selectedItemLabel="NÃO DEFINIDO"
-								options={PurchaseCompositionItemCategories}
-								value={compositionItemHolder.categoria}
-								handleChange={(value) =>
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										categoria: value,
-									}))
-								}
-								onReset={() => {
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										categoria: "INSUMO",
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-[25%]">
-							<TextInput
-								label="DESCRIÇÃO"
-								placeholder="Preencha a descrição do item..."
-								value={compositionItemHolder.descricao}
-								handleChange={(value) => setCompositionItemHolder((prev) => ({ ...prev, descricao: value }))}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-[15%]">
-							<SelectInput
-								label="UNIDADE"
-								selectedItemLabel="NÃO DEFINIDO"
-								options={units}
-								value={compositionItemHolder.unidade}
-								handleChange={(value) =>
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										unidade: value,
-									}))
-								}
-								onReset={() => {
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										unidade: "UN",
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-[15%]">
-							<NumberInput
-								label="QTDE"
-								value={compositionItemHolder.qtde}
-								handleChange={(value) =>
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										qtde: value,
-									}))
-								}
-								placeholder="Preencha a quantidade do item..."
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-[20%]">
-							<NumberInput
-								label="VALOR UNITÁRIO"
-								value={compositionItemHolder.valor}
-								handleChange={(value) =>
-									setCompositionItemHolder((prev) => ({
-										...prev,
-										valor: value,
-									}))
-								}
-								placeholder="Preencha o valor do item..."
-								width="100%"
-							/>
-						</div>
-					</div>
-					<div className="flex items-center justify-end">
-						<Button onClick={() => handleAddCompositionItem(compositionItemHolder)} size={"sm"} type="button">
-							ADICIONAR ITEM
-						</Button>
-					</div>
-				</div>
+
 				<AnimatePresence>{newCompositionItemMenuIsOpen ? <PurchaseNewCompositionItem addCompositionItem={addCompositionItem} /> : null}</AnimatePresence>
 
 				<PurchaseControlCompositionBlockTable composition={infoHolder.composicao} removeCompositionItem={removeCompositionItem} updateCompositionItem={updateCompositionItem} />

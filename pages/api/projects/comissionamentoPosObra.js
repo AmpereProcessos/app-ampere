@@ -1,47 +1,47 @@
-import connectToDatabase from '../../../utils/services/mongodb/projects'
+import connectToDatabase from "../../../utils/services/mongodb/projects";
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-    const collection = db.collection('dados')
-    let arr = await collection
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': 'ASSINADO',
-            tipoDeServico: {
-              $in: ['SISTEMA FOTOVOLTAICO', 'SISTEMA FOTOVOLTAICO (OFF GRID)', 'AUMENTO DE SISTEMA FOTOVOLTAICO', 'BOMBA SOLAR'],
-            },
-            'obra.statusDaObra': 'CONCLUIDA',
-            'jornada.entregaTecnica': { $ne: true },
-          },
-        },
-        {
-          $project: {
-            nomeDoContrato: 1,
-            qtde: 1,
-            codigoSVB: 1,
-            app: 1,
-            conferencias: 1,
-            cidade: 1,
-            'homologacao.vistoria': 1,
-            'medidor.data': 1,
-            'obra.saida': 1,
-            'obra.equipeResp': 1,
-            'jornada.entregaTecnica': 1,
-            'jornada.tipoEntregaTecnica': 1,
-            'vendedor.nome': 1,
-            'oem.diagnostico': 1,
-            links: 1,
-          },
-        },
-        {
-          $sort: {
-            'medidor.data': 1,
-            'obra.saida': 1,
-          },
-        },
-      ])
-      .toArray()
-    res.json(arr)
-  }
+	if (req.method === "GET") {
+		const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+		const collection = db.collection("dados");
+		const arr = await collection
+			.aggregate([
+				{
+					$match: {
+						"contrato.status": "ASSINADO",
+						tipoDeServico: {
+							$in: ["SISTEMA FOTOVOLTAICO", "SISTEMA FOTOVOLTAICO (OFF GRID)", "AUMENTO DE SISTEMA FOTOVOLTAICO", "BOMBA SOLAR"],
+						},
+						"obra.statusDaObra": "CONCLUÍDA",
+						"jornada.entregaTecnica": { $ne: true },
+					},
+				},
+				{
+					$project: {
+						nomeDoContrato: 1,
+						qtde: 1,
+						codigoSVB: 1,
+						app: 1,
+						conferencias: 1,
+						cidade: 1,
+						"homologacao.vistoria": 1,
+						"medidor.data": 1,
+						"obra.saida": 1,
+						"obra.equipeResp": 1,
+						"jornada.entregaTecnica": 1,
+						"jornada.tipoEntregaTecnica": 1,
+						"vendedor.nome": 1,
+						"oem.diagnostico": 1,
+						links: 1,
+					},
+				},
+				{
+					$sort: {
+						"medidor.data": 1,
+						"obra.saida": 1,
+					},
+				},
+			])
+			.toArray();
+		res.json(arr);
+	}
 }

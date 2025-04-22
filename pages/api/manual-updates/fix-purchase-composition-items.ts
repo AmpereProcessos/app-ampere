@@ -40,7 +40,7 @@ const MostUsedItems = [
 	{
 		NOME: "PARAF. CAB.T TRAVAM CRUZADO M8X20 ESP CAB 23",
 		VEZES_UTILIZADO: "228",
-		MATERIAL_EQUIVALENTE: "CRIAR ",
+		MATERIAL_EQUIVALENTE: "PARAF. CAB.T TRAVAM CRUZADO M8X20 ESP CAB 23",
 		"": "",
 	},
 	{
@@ -64,13 +64,13 @@ const MostUsedItems = [
 	{
 		NOME: "GRAMPO FINAL",
 		VEZES_UTILIZADO: "31",
-		MATERIAL_EQUIVALENTE: "GRAMPO FINAL UNIVERSAL ",
+		MATERIAL_EQUIVALENTE: "GRAMPO FINAL UNIVERSAL - SOLAR",
 		"": "",
 	},
 	{
 		NOME: "GRAMPO INTERMEDIÁRIO",
 		VEZES_UTILIZADO: "30",
-		MATERIAL_EQUIVALENTE: "VERIFICAR COM ALEX ",
+		MATERIAL_EQUIVALENTE: "GRAMPO INTERMEDIARIO TRILHO LATERAL",
 		"": "",
 	},
 	{
@@ -172,7 +172,7 @@ const MostUsedItems = [
 	{
 		NOME: "HANERSUN - HANERSUN- DHM660HNS.BF",
 		VEZES_UTILIZADO: "2",
-		MATERIAL_EQUIVALENTE: "MESMO NOME",
+		MATERIAL_EQUIVALENTE: "DHM660HNS.BF (HANERSUN)",
 		"": "",
 	},
 	{
@@ -190,7 +190,13 @@ const MostUsedItems = [
 	{
 		NOME: "PARAF. CAB.T TRAVAM CRUZADO M8X20 ESP CAB23",
 		VEZES_UTILIZADO: "2",
-		MATERIAL_EQUIVALENTE: "DUPLICADO",
+		MATERIAL_EQUIVALENTE: "PARAF. CAB.T TRAVAM CRUZADO M8X20 ESP CAB 23",
+		"": "",
+	},
+	{
+		NOME: "Ilhos simples 4mm",
+		VEZES_UTILIZADO: "2",
+		MATERIAL_EQUIVALENTE: "TERMINAL ILHOS SIMPLES CINZA 4MM",
 		"": "",
 	},
 ];
@@ -204,26 +210,7 @@ const handleFixPurchaseCompositionItems: NextApiHandler<any> = async (req, res) 
 	const purchaseControls = await purchaseControlsCollection.find({}).toArray();
 	const materials = await materialsCollection.find({}).toArray();
 
-	// const bulkwriteUpdatePurchaseControls: AnyBulkWriteOperation<TPurchaseControl>[] = purchaseControls.map((purchaseControl) => {
-	// 	const formattedCompositionItems: TPurchaseControl["composicao"] = purchaseControl.composicao.map((compositionItem) => {
-	// 		const equivalentMaterialName = MostUsedItems.find((m) => m.NOME === compositionItem.descricao)?.MATERIAL_EQUIVALENTE;
-	// 		const equivalentMaterial = materials.find((m) => m.nome === equivalentMaterialName);
-
-	// 		return { ...compositionItem, materialId: equivalentMaterial?._id.toString() };
-	// 	});
-	// 	return {
-	// 		updateOne: {
-	// 			filter: { _id: new ObjectId(purchaseControl._id) },
-	// 			update: {
-	// 				$set: {
-	// 					composicao: formattedCompositionItems,
-	// 				},
-	// 			},
-	// 		},
-	// 	};
-	// });
-
-	const formattedPurchaseControls: TPurchaseControl[] = purchaseControls.map((purchaseControl) => {
+	const bulkwriteUpdatePurchaseControls: AnyBulkWriteOperation<TPurchaseControl>[] = purchaseControls.map((purchaseControl) => {
 		const formattedCompositionItems: TPurchaseControl["composicao"] = purchaseControl.composicao.map((compositionItem) => {
 			const equivalentMaterialName = MostUsedItems.find((m) => m.NOME === compositionItem.descricao)?.MATERIAL_EQUIVALENTE;
 			const equivalentMaterial = materials.find((m) => m.nome === equivalentMaterialName);
@@ -231,13 +218,34 @@ const handleFixPurchaseCompositionItems: NextApiHandler<any> = async (req, res) 
 			return { ...compositionItem, materialId: equivalentMaterial?._id.toString() };
 		});
 		return {
-			...purchaseControl,
-			composicao: formattedCompositionItems,
+			updateOne: {
+				filter: { _id: new ObjectId(purchaseControl._id) },
+				update: {
+					$set: {
+						composicao: formattedCompositionItems,
+					},
+				},
+			},
 		};
 	});
 
-	// const bulkwriteResponse = await purchaseControlsCollection.bulkWrite(bulkwriteUpdatePurchaseControls);
-	return res.status(200).json("DESATIVADA");
+	// const formattedPurchaseControls: TPurchaseControl[] = purchaseControls.map((purchaseControl) => {
+	// 	const formattedCompositionItems: TPurchaseControl["composicao"] = purchaseControl.composicao.map((compositionItem) => {
+	// 		const equivalentMaterialName = MostUsedItems.find((m) => m.NOME === compositionItem.descricao)?.MATERIAL_EQUIVALENTE;
+	// 		const equivalentMaterial = materials.find((m) => m.nome === equivalentMaterialName);
+
+	// 		return { ...compositionItem, materialId: equivalentMaterial?._id.toString() };
+	// 	});
+	// 	return {
+	// 		...purchaseControl,
+	// 		composicao: formattedCompositionItems,
+	// 	};
+	// });
+
+	// const compositionItemsWithMaterial = formattedPurchaseControls.flatMap((p) => p.composicao.map((c) => c)).filter((c) => !!c.materialId);
+	// const compositionItemsWithoutMaterial = formattedPurchaseControls.flatMap((p) => p.composicao.map((c) => c)).filter((c) => !c.materialId);
+	const bulkwriteResponse = await purchaseControlsCollection.bulkWrite(bulkwriteUpdatePurchaseControls);
+	return res.status(200).json(bulkwriteResponse);
 };
 
 export default apiHandler({

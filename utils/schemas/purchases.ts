@@ -73,6 +73,23 @@ export const PurchaseUpdateItemSchema = z.object({
 	autor: AuthorSchema,
 });
 
+export const PurchaseControlCompositionKitSchema = z.object({
+	titulo: z.string({ required_error: "Título do kit de composição de compra não informado.", invalid_type_error: "Tipo do título do kit de composição não informado." }),
+	itens: z.array(
+		PurchaseCompositionItemSchema.pick({
+			categoria: true,
+			materialId: true,
+			descricao: true,
+			unidade: true,
+			qtde: true,
+		}),
+	),
+	dataInsercao: z.string({
+		required_error: "Data de inserção do kit de composição de compra não informado.",
+		invalid_type_error: "Tipo não válido para a data de inserção do kit de composição de compra.",
+	}),
+});
+
 export const GeneralPurchaseControlSchema = z.object({
 	status: PurchaseStatus,
 	registrosStatus: z

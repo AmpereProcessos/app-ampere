@@ -312,7 +312,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
                       setChanges({
                         ...changes,
                         'oem.oemConcluido': e.target.checked,
-                        'obra.statusDaObra': 'CONCLUIDA',
+                        'obra.statusDaObra': 'CONCLUÍDA',
                       })
                       setInfo({
                         ...infoHolder,

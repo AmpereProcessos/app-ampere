@@ -3,7 +3,7 @@ export default async function handler(req, res) {
 	if (req.method === "GET") {
 		const db = await connectToDatabase(process.env.DB_KEY, "projetos");
 		const collection = db.collection("dados");
-		let oem = await collection
+		const oem = await collection
 			.aggregate([
 				{
 					$sort: {
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 								$and: [
 									{ tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] } },
 									{
-										"obra.statusDaObra": "CONCLUIDA",
+										"obra.statusDaObra": "CONCLUÍDA",
 									},
 									{
 										"oem.oemConcluido": { $ne: true },
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
 		const db = await connectToDatabase(process.env.DB_KEY, "projetos");
 
 		const collection = db.collection("dados");
-		var arr;
+		let arr;
 		switch (req.body.filtrarPor) {
 			case "REGIONAL":
 				arr = await collection
@@ -131,7 +131,7 @@ export default async function handler(req, res) {
 					])
 					.toArray();
 				break;
-			case "VENDEDOR":
+			case "VENDEDOR": {
 				arr = await collection
 					.aggregate([
 						{
@@ -144,6 +144,8 @@ export default async function handler(req, res) {
 						},
 					])
 					.toArray();
+				break;
+			}
 			default:
 				arr = await collection
 					.aggregate([

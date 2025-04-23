@@ -1,16 +1,16 @@
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 import connectToDatabase from "../../../utils/services/mongodb/projects";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { Collection, Db } from "mongodb";
-import { TProject, TProjectDTO } from "@/utils/schemas/projects";
-import { TRevenue } from "@/utils/schemas/revenues";
+import type { Collection, Db } from "mongodb";
+import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
+import type { TRevenue } from "@/utils/schemas/revenues";
 
 export type TProjectADMSimplifiedWithRevenue = TProjectDTO & {
 	receita?: { total: TRevenue["total"]; metodo: TRevenue["metodo"]; fracionamento: TRevenue["fracionamento"] };
 };
 const getADMProjectsRoute: NextApiHandler<any> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 
 	const match = {

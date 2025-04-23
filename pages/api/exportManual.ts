@@ -18,129 +18,31 @@ import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
 import { allActiveSellers, allSellers } from "@/utils/select-options";
 const getExport: NextApiHandler<any> = async (req, res) => {
 	const db = await connectToProjectsDatabase();
-	const crmdb = await connectToCRMDatabase();
+	const projectsCollection = db.collection<TProject>("dados");
 
-	const crmUsersCollection: Collection<TCRMUser> = crmdb.collection("users");
+	const uberlandiaProjects = await projectsCollection
+		.find({
+			"contrato.dataAssinatura": { $ne: null },
+			cidade: "PRATA",
+		})
+		.toArray();
 
-	const crmUsers = await crmUsersCollection.find({}).toArray();
-
-	const nonRegisteredUsers = allSellers.filter((crmUser) => {
-		const isDefined = crmUsers.find((seller) => seller.nome === crmUser.value);
-		return !isDefined;
-	});
-
-	const newCrmUsers: TCRMUser[] = nonRegisteredUsers.map((u) => {
+	const exportation = uberlandiaProjects.map((project) => {
 		return {
-			ativo: false,
-			nome: u.value,
-			administrador: false,
-			telefone: "",
-			email: `${u.value}@inativo.com`,
-			senha: "",
-			idParceiro: "",
-			idGrupo: "",
-			permissoes: {
-				usuarios: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				comissoes: {
-					visualizar: false,
-					editar: false,
-				},
-				kits: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				produtos: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				servicos: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				propostas: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				planos: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				oportunidades: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				analisesTecnicas: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				homologacoes: {
-					visualizar: false,
-					editar: false,
-					criar: false,
-				},
-				clientes: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				projetos: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				parceiros: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				precos: {
-					visualizar: false,
-					criar: false,
-					editar: false,
-				},
-				integracoes: {
-					receberLeads: false,
-					visualizar: false,
-					editar: false,
-				},
-				resultados: {
-					visualizar: false,
-					visualizarComercial: false,
-					visualizarOperacional: false,
-				},
-				configuracoes: {
-					parceiro: false,
-					precificacao: false,
-					metodosPagamento: false,
-					tiposProjeto: false,
-					funis: false,
-					gruposUsuarios: false,
-				},
-			},
-			comissionamento: {
-				aplicavel: false,
-				resultados: [],
-			},
-			comissoes: {
-				semSDR: u.comissionAsActive,
-				comSDR: u.comissionWithInside,
-			},
+			"NOME DO CLIENTE": project.nomeDoContrato,
+			TELEFONE: project.telefone,
+			ESTADO: project.uf,
+			CIDADE: project.cidade,
+			BAIRRO: project.bairro,
+			LOGRADOURO: project.logradouro,
+			"NÚMERO DA RESIDÊNCIA": project.numeroResidencia,
+			"DATA DE ASSINATURA": formatDateAsLocale(project.contrato.dataAssinatura),
+			"POTÊNCIA INSTALADA": formatDecimalPlaces(project.sistema.potPico),
+			"STATUS DA OBRA": project.obra.statusDaObra,
+			"DATA DE INÍCIO DA OBRA": formatDateAsLocale(project.obra.entrada),
+			"DATA DE CONCLUSÃO DA OBRAS": formatDateAsLocale(project.obra.saida),
 		};
 	});
-
-	const insertResponse = await crmUsersCollection.insertMany(newCrmUsers);
-	console.log(nonRegisteredUsers.length);
 	// const projectsCollection = db.collection<TProject>("dados");
 	// const fenescDateStart = "2024-04-01T00:00:00.000Z";
 	// const fenescDateEnd = "2024-05-31T23:59:59.999Z";
@@ -282,7 +184,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
 	// 	},
 	// });
 
-	return res.json(insertResponse);
+	return res.json(exportation);
 };
 export default apiHandler({
 	GET: getExport,

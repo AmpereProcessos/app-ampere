@@ -1,16 +1,10 @@
 import { useMediaQuery } from "@/lib/hooks/media-query";
 import type { Session } from "next-auth";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { TPurchaseControlCompositionKit } from "@/utils/schemas/purchases";
 import TextInput from "@/components/inputs/Text";
-import MaterialSelector from "../../almoxarifado/estoque/MaterialVinculatorSelector";
-import SelectInput from "@/components/inputs/Select";
-import { PurchaseCompositionItemCategories } from "@/utils/select-options";
-import NumberInput from "@/components/inputs/Number";
-import toast from "react-hot-toast";
 import PurchaseControlCompositionKitItemBlock from "./ItensBlock";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";

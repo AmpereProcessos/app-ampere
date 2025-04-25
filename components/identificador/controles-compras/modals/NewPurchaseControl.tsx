@@ -76,7 +76,7 @@ function NewPurchaseControl({ session, affectedQueryKey, closeModal }: NewPurcha
 
 	const TITLE = "ADICIONAR CONTROLE DE COMPRA";
 	const DESCRIPTION = "Preencha os dados do Controle de Compra.";
-	const BUTTON_TEXT = "ADICIONAR KIT";
+	const BUTTON_TEXT = "ADICIONAR CONTROLE DE COMPRA";
 
 	return isDesktop ? (
 		<Dialog open={true} onOpenChange={closeModal}>

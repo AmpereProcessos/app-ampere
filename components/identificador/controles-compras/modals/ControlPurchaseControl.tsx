@@ -112,8 +112,8 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 	}
 	const TITLE = "EDITAR CONTROLE DE COMPRA";
 	const DESCRIPTION = "Atualize os dados do Controle de Compra.";
-	const BUTTON_TEXT = "ATUALIZAR KIT";
-	const DELETE_BUTTON_TEXT = "EXCLUIR KIT";
+	const BUTTON_TEXT = "ATUALIZAR CONTROLE DE COMPRA";
+	const DELETE_BUTTON_TEXT = "EXCLUIR CONTROLE DE COMPRA";
 	useEffect(() => {
 		if (purchaseControl) setInfoHolder(purchaseControl);
 	}, [purchaseControl]);
@@ -149,7 +149,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 								<LoadingButton variant={"destructive"} onClick={() => deleteMutation({ id: purchaseControlId })} loading={isDeleteLoading}>
 									{DELETE_BUTTON_TEXT}
 								</LoadingButton>
-								<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
+								<LoadingButton onClick={() => mutate({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
 									{BUTTON_TEXT}
 								</LoadingButton>
 							</DialogFooter>
@@ -189,7 +189,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 							<LoadingButton variant={"destructive"} onClick={() => deleteMutation({ id: purchaseControlId })} loading={isDeleteLoading}>
 								{DELETE_BUTTON_TEXT}
 							</LoadingButton>
-							<LoadingButton onClick={() => handleUpdatePurchaseControl({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
+							<LoadingButton onClick={() => mutate({ id: purchaseControlId, changes: infoHolder })} loading={isUpdateLoading}>
 								{BUTTON_TEXT}
 							</LoadingButton>
 						</DrawerFooter>

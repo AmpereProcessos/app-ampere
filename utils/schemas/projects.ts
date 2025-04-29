@@ -50,6 +50,7 @@ const GeneralProjectSchema = z.object({
 	longitude: z.string().optional().nullable(),
 	latitude: z.string().optional().nullable(),
 	codigoSVB: z.union([z.string(), z.number()]),
+	dataValidacaoComercial: z.string({ invalid_type_error: "Tipo não válido para a data de validação comercial." }).optional().nullable(),
 	comissionamento: z
 		.object({
 			comercial: z.boolean().optional().nullable(),

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 				{
 					$match: {
 						"contrato.status": { $ne: "RESCISÃO DE CONTRATO" },
-						"obra.statusDaObra": { $ne: "CONCLUÍDA" },
+						dataValidacaoComercial: null,
 					},
 				},
 				{

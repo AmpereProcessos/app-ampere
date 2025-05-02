@@ -16,17 +16,56 @@ import type { TUser } from "@/utils/schemas/crm/user.schema";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
 import { allActiveSellers, allSellers } from "@/utils/select-options";
+import { getProjectExportFormatted, ProjectExportablesSchema, type TProjectExportables } from "@/lib/data-exports";
+import { z } from "zod";
 const getExport: NextApiHandler<any> = async (req, res) => {
-	// const db = await connectToProjectsDatabase();
-	// const projectsCollection = db.collection<TProject>("dados");
+	const db = await connectToProjectsDatabase();
+	const projectsCollection = db.collection<TProject>("dados");
 
-	// const projects = await projectsCollection
-	// 	.find({
-	// 		"contrato.status": "ASSINADO",
-	// 		"obra.statusDaObra": "CONCLUÍDA",
-	// 	})
-	// 	.toArray();
+	const projects = await projectsCollection.find({}).toArray();
 
+	const exportablesDefinition: TProjectExportables = {
+		qtde: true,
+		nomeDoContrato: true,
+		cpf_cnpj: true,
+		inscricaoRural: false,
+		tipoDeServico: true,
+		telefone: true,
+		email: false,
+		dataNascimento: false,
+		canalVenda: false,
+		codigoSVB: false,
+		"vendedor.nome": true,
+		insider: false,
+		nps: false,
+		cep: false,
+		uf: true,
+		cidade: true,
+		bairro: false,
+		logradouro: false,
+		numeroResidencia: false,
+		latitude: false,
+		longitude: false,
+		"contrato.status": false,
+		"sistema.potPico": false,
+		"contrato.dataAssinatura": false,
+		"homologacao.status": false,
+		"homologacao.acesso.dataResposta": false,
+		"homologacao.vistoria.dataEfetivacao": false,
+		"compra.dataLiberacao": false,
+		"compra.dataPedido": false,
+		"compra.dataEntrega": false,
+		"compra.dataPagamento": false,
+		"compra.dataPagamentoEquipamentos": false,
+		"obra.statusDaObra": false,
+		"obra.equipeResp": false,
+		"obra.entrada": false,
+		"obra.saida": false,
+	};
+	const formattedExport = getProjectExportFormatted({
+		projects,
+		exportablesDefinition: exportablesDefinition,
+	});
 	// console.log(`Número de projetos encontrados: ${projects.length}`);
 
 	// const analysis = projects.map((project) => {
@@ -84,7 +123,7 @@ const getExport: NextApiHandler<any> = async (req, res) => {
 	// 		return acc;
 	// 	}, {}),
 	// });
-	return res.json("DESATIVADO");
+	return res.json(formattedExport);
 };
 export default apiHandler({
 	GET: getExport,

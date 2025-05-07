@@ -60,6 +60,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const roofTypesQuery: Filter<TServiceOrder> = filters.roofTypes.length > 0 ? { "detalhes.tipoTelha": { $in: filters.roofTypes as TServiceOrder["detalhes"]["tipoTelha"][] } } : {};
 	const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered ? { "projeto.compraEntregaDataEfetivacao": { $ne: null } } : {};
 	const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered ? { "projeto.compraEntregaDataEfetivacao": null } : {};
+	const missingObservationsQuery: Filter<TServiceOrder> = filters.missingObservations ? { "observacoes.descricao": { $exists: false } } : {};
 
 	const orderByParam = filters.orderBy.field ? { [filters.orderBy.field]: filters.orderBy.direction === "asc" ? 1 : -1 } : { _id: -1 };
 	const query = {
@@ -77,6 +78,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 		...roofTypesQuery,
 		...projectEquipmentDeliveredQuery,
 		...projectEquipmentNotDeliveredQuery,
+		...missingObservationsQuery,
 	};
 
 	const skip = PAGE_SIZE * (Number(page) - 1);

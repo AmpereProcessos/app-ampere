@@ -126,6 +126,7 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
 			direction: initialFilters.orderBy?.direction || "desc",
 			field: initialFilters.orderBy?.field || "dataInsercao",
 		},
+		missingObservations: initialFilters.missingObservations || false,
 	});
 
 	function updateFilters(info: Partial<TPersonalizedServiceOrderFilter>) {

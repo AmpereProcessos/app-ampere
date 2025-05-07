@@ -250,6 +250,14 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 									handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, released: value }))}
 								/>
 							</div>
+							<div className="w-fit self-center">
+								<CheckboxInput
+									labelTrue="SOMENTE COM OBSERVAÇÕES AUSENTES"
+									labelFalse="SOMENTE COM OBSERVAÇÕES AUSENTES"
+									checked={queryParamsHolder.missingObservations}
+									handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, missingObservations: value }))}
+								/>
+							</div>
 							{/* <div className="w-fit self-center">
 								<CheckboxInput
 									labelTrue="EQUIPAMENTOS ENTREGUES"

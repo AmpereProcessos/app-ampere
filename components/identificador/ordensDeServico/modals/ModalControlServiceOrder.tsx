@@ -142,7 +142,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 						"obra.saida": osInfo.periodo.fim,
 						"obra.statusDaObra": osInfo.status,
 						"obra.equipeResp": osInfo.responsavel.nome,
-						"obra.observacoes": osInfo.observacoes.join("/"),
+						"obra.observacoes": osInfo.observacoes.map((obs) => `${obs.topico}: ${obs.descricao}`).join("/ \n"),
 					},
 				});
 			}

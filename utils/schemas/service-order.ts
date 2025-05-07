@@ -353,6 +353,10 @@ export const PersonalizedFiltersSchema = z.object({
 		required_error: "Filtro de somente liberados não informado.",
 		invalid_type_error: "Tipo não válido para filtro de somente liberados.",
 	}),
+	missingObservations: z.boolean({
+		required_error: "Filtro de somente observações ausentes não informado.",
+		invalid_type_error: "Tipo não válido para filtro de somente observações ausentes.",
+	}),
 });
 export type TPersonalizedServiceOrderFilter = z.infer<typeof PersonalizedFiltersSchema>;
 

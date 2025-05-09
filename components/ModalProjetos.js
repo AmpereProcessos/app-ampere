@@ -34,6 +34,7 @@ import { getErrorMessage } from "../utils/methods/handlers";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 
 function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 	useKey("Escape", () => closeModal());
@@ -120,16 +121,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 							<InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
 							<InfoClienteBlock editable={false} infoHolder={infoHolder} setInfo={setInfo} clientChanges={clientChanges} setClientChanges={setClientChanges} />
 							<InfoVendaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} updateLogs={updateLogs || []} />
-							{/* {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-                <InfoDadosConcessionariaBlock
-                  editor={true}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  updateLogs={updateLogs || []}
-                />
-              )} */}
+							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
 							<InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
 							<div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
 								<span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>

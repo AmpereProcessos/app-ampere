@@ -4,12 +4,12 @@ import { TContractRequest } from "@/utils/schemas/contract-requests";
 import { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 
 import type { TProject } from "@/utils/schemas/projects";
-import { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { TPurchaseControl, TPurchaseControlTag } from "@/utils/schemas/purchases";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToProjectsDatabase from "@/utils/services/mongodb/projects";
 import connectToSolicitacoesDatabase from "@/utils/services/mongodb/requests";
 import dayjs from "dayjs";
-import { type AnyBulkWriteOperation, type Collection, type Db, ObjectId } from "mongodb";
+import { type AnyBulkWriteOperation, type Collection, type Db, ObjectId, WithId } from "mongodb";
 import type { NextApiHandler } from "next";
 import { getContractValue } from "../../utils/methods/util/projects";
 import type { TUser } from "@/utils/schemas/crm/user.schema";
@@ -18,56 +18,64 @@ import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
 import { allActiveSellers, allSellers } from "@/utils/select-options";
 import { getProjectExportFormatted, ProjectExportablesSchema, type TProjectExportables } from "@/lib/data-exports";
 import { z } from "zod";
+import connectToAuxiliariesDatabase from "@/utils/services/mongodb/auxiliaries";
+import type { TTag } from "@/utils/schemas/tags";
+import type { TServiceOrderTag } from "@/utils/schemas/service-order";
+import createHttpError from "http-errors";
 const getExport: NextApiHandler<any> = async (req, res) => {
-	const db = await connectToProjectsDatabase();
-	const projectsCollection = db.collection<TProject>("dados");
+	const auxiliariesDb: Db = await connectToAuxiliariesDatabase();
+	const tagsCollection = auxiliariesDb.collection<TTag>("etiquetas");
 
-	const projects = await projectsCollection.find({}).toArray();
+	const purchaseTagsCollection = auxiliariesDb.collection<TPurchaseControlTag>("etiquetas-compras");
+	const serviceOrderTagsCollection = auxiliariesDb.collection<TServiceOrderTag>("tiquetas-ordens-servico");
 
-	const exportablesDefinition: TProjectExportables = {
-		qtde: true,
-		nomeDoContrato: true,
-		cpf_cnpj: true,
-		inscricaoRural: false,
-		tipoDeServico: true,
-		telefone: true,
-		email: false,
-		dataNascimento: false,
-		canalVenda: false,
-		codigoSVB: false,
-		"vendedor.nome": true,
-		insider: false,
-		nps: false,
-		cep: false,
-		uf: true,
-		cidade: true,
-		bairro: false,
-		logradouro: false,
-		numeroResidencia: false,
-		latitude: false,
-		longitude: false,
-		"contrato.status": false,
-		"sistema.potPico": false,
-		"contrato.dataAssinatura": false,
-		"homologacao.status": false,
-		"homologacao.acesso.dataResposta": false,
-		"homologacao.vistoria.dataEfetivacao": false,
-		"compra.dataLiberacao": false,
-		"compra.dataPedido": false,
-		"compra.dataEntrega": false,
-		"compra.dataPagamento": false,
-		"compra.dataPagamentoEquipamentos": false,
-		"obra.statusDaObra": false,
-		"obra.equipeResp": false,
-		"obra.entrada": false,
-		"obra.saida": false,
-	};
-	const formattedExport = getProjectExportFormatted({
-		projects,
-		exportablesDefinition: exportablesDefinition,
+	const purchaseTags = await purchaseTagsCollection.find({}).toArray();
+	const serviceOrderTags = await serviceOrderTagsCollection.find({}).toArray();
+
+	const newTags: WithId<TTag>[] = [
+		...purchaseTags.map((p) => ({
+			_id: p._id,
+			titulo: p.titulo.toUpperCase(),
+			cores: {
+				primaria: p.cores.primaria,
+				secundaria: p.cores.secundaria,
+			},
+			entidades: {
+				compras: true,
+			},
+			autor: {
+				id: "6463ccaa8c5e3e227af54d89",
+				nome: "Lucas Fernandes",
+				avatar_url: "https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4",
+			},
+			dataInsercao: p.dataInsercao,
+		})),
+		...serviceOrderTags.map((s) => ({
+			_id: s._id,
+			titulo: s.titulo.toUpperCase(),
+			cores: {
+				primaria: s.cores.primaria,
+				secundaria: s.cores.secundaria,
+			},
+			entidades: {
+				ordensServico: true,
+			},
+			autor: {
+				id: "6463ccaa8c5e3e227af54d89",
+				nome: "Lucas Fernandes",
+				avatar_url: "https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4",
+			},
+			dataInsercao: s.dataInsercao,
+		})),
+	];
+
+	const insertManyResponse = await tagsCollection.insertMany(newTags);
+
+	if (!insertManyResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar as etiquetas.");
+
+	return res.json({
+		insertedCount: insertManyResponse.insertedCount,
 	});
-	// console.log(`Número de projetos encontrados: ${projects.length}`);
-
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {
@@ -123,7 +131,6 @@ const getExport: NextApiHandler<any> = async (req, res) => {
 	// 		return acc;
 	// 	}, {}),
 	// });
-	return res.json(formattedExport);
 };
 export default apiHandler({
 	GET: getExport,

@@ -24,6 +24,25 @@ export const ResourceItemSchema = z.object({
 		}),
 	),
 });
+
+export const ProjectTagSchema = z.object({
+	id: z.string({ required_error: "ID da etiqueta inválido.", invalid_type_error: "Tipo não válido para o ID da etiqueta." }),
+	titulo: z.string({ required_error: "Título da tag de compra não informado.", invalid_type_error: "Tipo não válido para o título da tag." }),
+	cores: z.object({
+		primaria: z.string({
+			required_error: "Código da cor da etiqueta não fornecido.",
+			invalid_type_error: "Tipo não válido para o código de cor da etiqueta.",
+		}),
+		secundaria: z.string({
+			required_error: "Código da cor secundária da etiqueta não fornecido.",
+			invalid_type_error: "Tipo não válido para o código de cor secundária da etiqueta.",
+		}),
+	}),
+	dataInsercao: z.string({
+		required_error: "Data de inserção da tag não informada.",
+		invalid_type_error: "Tipo não válido para a data de inserção.",
+	}),
+});
 const MaintenanceItem = z.object({
 	titulo: z.string({ required_error: "Título da manutenção não informado.", invalid_type_error: "Tipo não válido para o título da manutenção." }),
 	dataEfetivacao: z
@@ -50,6 +69,7 @@ const GeneralProjectSchema = z.object({
 	longitude: z.string().optional().nullable(),
 	latitude: z.string().optional().nullable(),
 	codigoSVB: z.union([z.string(), z.number()]),
+	etiquetas: z.array(ProjectTagSchema).optional().nullable(),
 	dataValidacaoComercial: z.string({ invalid_type_error: "Tipo não válido para a data de validação comercial." }).optional().nullable(),
 	comissionamento: z
 		.object({

@@ -225,7 +225,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 								<ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
 								<ServiceOrderFileReferences session={session} attachmentPrefix={osInfo.descricao} serviceOrderId={serviceOrderId} projectId={osInfo.projeto.id || undefined} />
 
-								<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
+								<ServiceOrderTagsBlock session={session} infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} project={serviceOrder?.projetoDados || undefined} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderEquipmentsInformationBlock infoHolder={osInfo} project={serviceOrder?.projetoDados || undefined} updateInfoHolder={updateInfoHolder} />
 								<ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />

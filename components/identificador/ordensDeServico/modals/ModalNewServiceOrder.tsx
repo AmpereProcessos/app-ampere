@@ -188,7 +188,7 @@ function ModalNewServiceOrder({ session, closeModal, callbacks, projectId }: Mod
 							<ServiceOrderProjectVinculation serviceOrderId={undefined} queryClient={queryClient} affectedQueryKey={[]} infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
 						)}
 						<ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
-						<ServiceOrderTagsBlock infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
+						<ServiceOrderTagsBlock session={session} infoHolder={osInfo as TServiceOrderDTO} updateInfoHolder={updateInfoHolder} />
 						<ServiceOrderLocationInformationBlock infoHolder={osInfo as TServiceOrderDTO} project={project || undefined} updateInfoHolder={updateInfoHolder} />
 						<ServiceOrderEquipmentsInformationBlock
 							infoHolder={osInfo}

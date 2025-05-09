@@ -35,6 +35,7 @@ import { useSession } from "next-auth/react";
 import InfoHomologacaoBlock from "./blocosInfoProjeto/InfoHomologacaoBlock";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 function ModalOeM({ projectId, closeModal, modalIsOpen }) {
 	const { data: session } = useSession();
 	const queryClient = useQueryClient();
@@ -89,6 +90,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
 							<NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
 							<InfoVendaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} updateLogs={updateLogs || []} />
+							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
 							<ExecutionCommissioningBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
 							<OeMBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
 							<ProjectServiceOrders projectId={project._id} session={session} projectMainServiceOrderId={infoHolder.idOrdemServico} />

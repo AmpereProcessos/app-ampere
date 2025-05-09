@@ -39,7 +39,7 @@ import RestrictionBlock from "./blocosInfoProjeto/RestrictionBlock";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
-
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 	const queryClient = useQueryClient();
 
@@ -105,6 +105,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 								updateLogs={updateLogs || []}
 								project={project}
 							/>
+							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
 							<InfoVisitaTecnicaBlock
 								editor={userHasOverallAccess}
 								infoHolder={infoHolder}

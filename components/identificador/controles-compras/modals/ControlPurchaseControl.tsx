@@ -250,7 +250,7 @@ function PurchaseControlDataBlock({ queryClient, purchaseControlId, purchaseCont
 				projectId={infoHolder.projeto.id || undefined}
 			/>
 			<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-			<PurchaseControlTagsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlTagsBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlCompositionBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

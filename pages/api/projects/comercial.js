@@ -21,6 +21,7 @@ export default async function handler(req, res) {
 						vendedor: 1,
 						pagamento: 1,
 						tipoDeServico: 1,
+						etiquetas: 1,
 						"sistema.valorProjeto": 1,
 						"padrao.valor": 1,
 						"estruturaPersonalizada.valor": 1,

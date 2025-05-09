@@ -45,6 +45,7 @@ export default async function handler(req, res) {
 						nomeDoContrato: 1,
 						bairro: 1,
 						cidade: 1,
+						etiquetas: 1,
 						"contrato.dataAssinatura": 1,
 						"projeto.topologia": 1,
 						"obra.equipeResp": 1,

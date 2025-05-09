@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 import type { Session } from "next-auth";
 import { handleOpportunityOnJourneyEndTrigger } from "@/utils/methods/mutation/triggers";
 import { LoadingButton } from "./utils/Buttons/LoadingButton";
+import ProjectCardsTags from "./utils/ProjectCardsTags";
 
 type PosVendaCardProps = {
 	session: Session;
@@ -96,9 +97,15 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 				<div className={`h-full w-[7px] ${getBarColor(infoHolder.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
 				<div className="flex w-full grow flex-col p-3">
 					<div className="flex w-full flex-col items-start justify-between lg:flex-row lg:items-center">
-						<h1 className="font-bold leading-none tracking-tight">
-							<strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
-						</h1>
+						<div className="flex items-center gap-2 flex-wrap min-w-fit">
+							<h1 className="font-bold leading-none tracking-tight">
+								<strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
+							</h1>
+							<div className="w-fit">
+								<ProjectCardsTags projectTags={project.etiquetas} />
+							</div>
+						</div>
+
 						<div className="mt-2 flex w-full items-center justify-center gap-2 lg:mt-0 lg:w-fit lg:justify-end">
 							<div className="flex items-center gap-2 text-gray-500">
 								<BsCalendarFill />
@@ -508,9 +515,15 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 				<div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
 				<div className="flex w-full grow flex-col p-3">
 					<div className="flex w-full items-center justify-between gap-2">
-						<h1 className="font-bold leading-none tracking-tight">
-							<strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
-						</h1>
+						<div className="flex items-center gap-2 flex-wrap">
+							<h1 className="font-bold leading-none tracking-tight">
+								<strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
+							</h1>
+							<div className="w-fit">
+								<ProjectCardsTags projectTags={project.etiquetas} />
+							</div>
+						</div>
+
 						<div className="mt-2 flex items-center gap-3 lg:mt-0">
 							{/* <div className="flex items-center gap-2 text-gray-500">
               <TbTruckDelivery />

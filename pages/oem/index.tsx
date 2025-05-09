@@ -30,6 +30,7 @@ import { TbAlertOctagonFilled } from "react-icons/tb";
 import { MdError } from "react-icons/md";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { getDifferenceBetweenDates } from "@/utils/methods/dates";
+import ProjectCardsTags from "@/components/utils/ProjectCardsTags";
 const statusStyles = {
 	REALIZADO: {
 		textColor: "text-green-500",
@@ -440,6 +441,8 @@ function OemPage() {
 										<p className="text-xs font-bold text-gray-700">{project.nomeDoContrato}</p>
 										<p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
 									</div>
+									<ProjectCardsTags projectTags={project.etiquetas} />
+
 									<div className="mt-2 flex items-center justify-between">
 										<div className="flex flex-col items-start">
 											<span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CIDADE</span>

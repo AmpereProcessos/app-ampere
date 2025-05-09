@@ -29,6 +29,7 @@ import { cidadesAtendidas, vendedores, formatDecimalPlaces, formatDate } from ".
 import CheckboxInput from "../../components/inputs/Checkbox";
 import { MdAddAlert } from "react-icons/md";
 import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
@@ -630,6 +631,7 @@ function Projetos() {
 										<p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
 										<p className="text-xs text-[#15599a]">#{project.qtde}</p>
 									</div>
+									<ProjectCardsTags projectTags={project.etiquetas} />
 									<div className="flex items-center justify-between">
 										<div>
 											<span className="text-xxs">PARECER DE ACESSO</span>

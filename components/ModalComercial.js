@@ -35,7 +35,7 @@ import { handleComercialUpdate } from "../utils/methods/mutation/comercial";
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
 import { useProjectUpdateLogs } from "../utils/methods/query/project-update-logs";
 import { getErrorMessage } from "../utils/methods/handlers";
-
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
 	useKey("Escape", () => closeModal(false));
 	const { data: session } = useSession();
@@ -93,6 +93,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
 							<InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
 							<InfoClienteBlock editable={true} infoHolder={infoHolder} setInfo={setInfo} clientChanges={clientChanges} setClientChanges={setClientChanges} />
 							<InfoVendaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} updateLogs={updateLogs || []} project={project} />
+							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
 							<InfoVisitaTecnicaBlock
 								editor={false}
 								infoHolder={infoHolder}

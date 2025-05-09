@@ -33,6 +33,7 @@ import { useProjectUpdateLogs } from "@/utils/methods/query/project-update-logs"
 import { getErrorMessage } from "@/utils/methods/handlers";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
 	useKey("Escape", () => closeModal());
@@ -95,6 +96,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
 							<InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
 							<InfoClienteBlock editable={false} infoHolder={infoHolder} setInfo={setInfo} clientChanges={clientChanges} setClientChanges={setClientChanges} />
 							<InfoVendaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} updateLogs={updateLogs || []} />
+							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
 							<InfoObrasBlock
 								editor={true}
 								infoHolder={infoHolder}

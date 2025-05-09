@@ -127,9 +127,10 @@ export function getServiceOrderModulesMetadataFromProject(project: TProject) {
 	};
 }
 export function getServiceOrderTagsFromProject(project: TProject) {
-	const tags: Exclude<TServiceOrder["etiquetas"], undefined | null> = [];
+	const serviceOrdertags: Exclude<TServiceOrder["etiquetas"], undefined | null> = [];
+	const projectTags = project.etiquetas || [];
 	if (project.homologacao.fastTrack) {
-		tags.push({
+		serviceOrdertags.push({
 			id: "6798eb1b19ad4c2b679bd2e1",
 			titulo: "FAST TRACK",
 			cores: {
@@ -139,7 +140,7 @@ export function getServiceOrderTagsFromProject(project: TProject) {
 		});
 	}
 	if (project.pagamento.credor === "SOL FÁCIL") {
-		tags.push({
+		serviceOrdertags.push({
 			id: "6798eb2bd422f4f93779dd0d",
 			titulo: "DESLIGAMENTO REMOTO",
 			cores: {
@@ -149,7 +150,7 @@ export function getServiceOrderTagsFromProject(project: TProject) {
 		});
 	}
 	if (project.obra.pendencias === "LEVAR ESTRUTURA NA MONTAGEM") {
-		tags.push({
+		serviceOrdertags.push({
 			id: "6798eb4e38fd2c093589ee7f",
 			titulo: "TRANSPORTAR ESTRUTURA",
 			cores: {
@@ -158,5 +159,5 @@ export function getServiceOrderTagsFromProject(project: TProject) {
 			},
 		});
 	}
-	return tags;
+	return [...projectTags, ...serviceOrdertags];
 }

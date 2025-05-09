@@ -44,6 +44,7 @@ const getADMProjectsRoute: NextApiHandler<any> = async (req, res) => {
 		qtde: 1,
 		nomeDoContrato: 1,
 		tipoDeServico: 1,
+		etiquetas: 1,
 		"vendedor.nome": 1,
 		"pagamento.forma": 1,
 		"pagamento.status": 1,

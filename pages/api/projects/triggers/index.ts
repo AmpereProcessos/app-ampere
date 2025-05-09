@@ -15,6 +15,8 @@ import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
 import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
 import { insertFunnelReference } from "@/repositories/crm-funnel-references/mutations";
 import dayjs from "dayjs";
+import { getProductsStr } from "@/utils/methods/formatting";
+import { getPurchaseControlTagsFromProject } from "@/utils/methods/util/purchase-controls";
 
 type PostResponse = {
 	data: { insertedId?: string; updatedId?: string };
@@ -137,6 +139,55 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 		return res.status(200).json({
 			data: { insertedId: insertedServiceOrderId },
 			message: "Ordem de serviço criada com sucesso.",
+		});
+	}
+	if (triggerType === "create-project-main-purchase-control") {
+		const purchaseControl: TPurchaseControl = {
+			status: "EM COTAÇÃO",
+			titulo: `COMPRA DO ${project.nomeDoContrato}`,
+			anotacoes: project.produtos ? `KIT COMPOSTO POR: ${getProductsStr(project.produtos)}` : "",
+			projeto: {
+				id: project._id.toString(),
+				nome: project.nomeDoProjeto,
+			},
+			etiquetas: getPurchaseControlTagsFromProject(project),
+			atualizacoes: [],
+			totalPrevisto: project.compra.previsaoValorDoKit,
+			liberacao: {
+				data: project.compra.dataLiberacao,
+				autor: {},
+			},
+			composicao: [],
+			fornecedor: {},
+			total: 0,
+			faturamentos: [],
+			entrega: {
+				status: "AGUARDANDO COMPRA",
+				localizacao: project.compra.localizacaoEntrega
+					? {
+							...project.compra.localizacaoEntrega,
+							uf: project.compra.localizacaoEntrega.uf || "",
+							cidade: project.compra.localizacaoEntrega.cidade || "",
+						}
+					: {
+							uf: project.uf,
+							cidade: project.cidade,
+						},
+			},
+			transporte: { transportadora: {} },
+			autor: {
+				id: session.user.id,
+				nome: session.user.nome,
+				avatar_url: session.user.avatar_url,
+			},
+			dataInsercao: new Date().toISOString(),
+		};
+		const insertPurchaseControlResponse = await purchaseControlsCollection.insertOne(purchaseControl);
+		const insertedPurchaseControlId = insertPurchaseControlResponse.insertedId.toString();
+		await projectscollection.updateOne({ _id: new ObjectId(projectId) }, { $set: { idCompra: insertedPurchaseControlId } });
+		return res.status(200).json({
+			data: { insertedId: insertedPurchaseControlId },
+			message: "Controle de compra criado com sucesso.",
 		});
 	}
 	if (triggerType === "sync-project-with-purchase") {

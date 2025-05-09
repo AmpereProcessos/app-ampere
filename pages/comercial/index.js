@@ -29,6 +29,7 @@ import { VscDiffAdded } from "react-icons/vsc";
 import { FaCode, FaSignature } from "react-icons/fa";
 import { MdAttachMoney, MdCreate, MdOutlineAttachMoney } from "react-icons/md";
 import { getContractValue } from "../../utils/methods/util/projects";
+import { useTags } from "../../utils/methods/query/tags";
 import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
 const statusStyles = {
 	ASSINADO: {
@@ -48,11 +49,11 @@ function getContractTagColor(status) {
 }
 
 function Comercial() {
-	const queryClient = useQueryClient();
 	const router = useRouter();
 	const { data: session, status } = useSession({ required: true });
 
 	const { data: projects, isSuccess: projectsSuccess, filters, setFilters } = useComercialProjects({ enabled: !!session?.user });
+	const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
 	const [modalProject, setModalProject] = useState({
@@ -115,11 +116,6 @@ function Comercial() {
 		};
 	}
 
-	function getDateDiff(date1, date2) {
-		const diffInMs = new Date(date1) - new Date(date2);
-		const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-		return Number(diffInDays).toFixed(0);
-	}
 	function handleOpenModal(id) {
 		console.log("ID ESCOLHIDO", id);
 		setModalProject({ projectId: id, isOpen: true });
@@ -130,6 +126,7 @@ function Comercial() {
 			if (!userRoutes.includes("PPS")) return router.push("/");
 		}
 	}, [session]);
+	console.log(filters.tagIds);
 	if (status !== "authenticated") return <LoadingPage />;
 	if (projectsSuccess && projects) {
 		return (
@@ -286,6 +283,27 @@ function Comercial() {
 												setFilters((prev) => ({
 													...prev,
 													serviceType: [],
+												}))
+											}
+										/>
+									</div>
+									<div className="w-full lg:w-[250px]">
+										<MultipleSelectInput
+											width={"100%"}
+											label={"ETIQUETAS"}
+											selected={filters.tagIds}
+											options={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) || []}
+											selectedItemLabel={"SEM FILTRO"}
+											handleChange={(value) =>
+												setFilters((prev) => ({
+													...prev,
+													tagIds: value,
+												}))
+											}
+											onReset={() =>
+												setFilters((prev) => ({
+													...prev,
+													tagIds: [],
 												}))
 											}
 										/>

@@ -27,6 +27,7 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import CheckboxInput from "@/components/inputs/Checkbox";
 import ADMProjectCard from "@/components/identificador/adm/ADMProjectCard";
 import { useUsers } from "@/utils/methods/query/crm/users";
+import { useTags } from "@/utils/methods/query/tags";
 function Administracao() {
 	const router = useRouter();
 	const { data: session, status } = useSession({
@@ -39,6 +40,7 @@ function Administracao() {
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
 	const { data: projects, filters, setFilters, isLoading, isSuccess, isError } = useADMProjects();
+
 	const [modalProject, setModalProject] = useState<{ isOpen: boolean; projectId: string | null }>({ isOpen: false, projectId: null });
 
 	function getStats({ info }: { info: TProjectDTO[] | undefined }) {
@@ -159,6 +161,7 @@ type ADMProjectFiltersProps = {
 
 function ADMProjectFilters({ filters, setFilters }: ADMProjectFiltersProps) {
 	const { data: crmUsers } = useUsers({ includeDeleted: true });
+	const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
 
 	return (
 		<motion.div
@@ -177,7 +180,27 @@ function ADMProjectFilters({ filters, setFilters }: ADMProjectFiltersProps) {
 					placeholder="Digite o nome do contrato..."
 					handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
 				/>
-
+				<div className="w-full lg:w-[250px]">
+					<MultipleSelectInput
+						width={"100%"}
+						label={"ETIQUETAS"}
+						selected={filters.tagIds}
+						options={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) || []}
+						selectedItemLabel={"SEM FILTRO"}
+						handleChange={(value) =>
+							setFilters((prev) => ({
+								...prev,
+								tagIds: value as string[],
+							}))
+						}
+						onReset={() =>
+							setFilters((prev) => ({
+								...prev,
+								tagIds: [],
+							}))
+						}
+					/>
+				</div>
 				<div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
 					<div className="flex items-center justify-center gap-x-2">
 						<div className="w-full lg:w-[250px]">

@@ -14,6 +14,20 @@ export async function handleProjectServiceOrderTrigger({ projectId }: { projectI
 	}
 }
 
+export async function handleCreateProjectPurchaseControlTrigger({ projectId }: { projectId: string }) {
+	try {
+		const { data } = await axios.post("/api/projects/triggers", {
+			projectId,
+			triggerType: "create-project-main-purchase-control",
+		});
+		if (typeof data.message !== "string") throw new Error("Oops, um erro desconhecido ocorreu.");
+		return data.message as string;
+	} catch (error) {
+		console.log("Error running handleProjectPurchaseControlTrigger", error);
+		throw error;
+	}
+}
+
 export async function handleOpportunityOnJourneyEndTrigger({ projectId }: { projectId: string }) {
 	try {
 		const { data } = await axios.post("/api/projects/triggers", {

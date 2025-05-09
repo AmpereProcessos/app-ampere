@@ -17,6 +17,7 @@ async function fetchProjects() {
 export type TUseADMProjectsFilters = {
 	search: string;
 	contractStatus: string[];
+	tagIds: string[];
 	technicalTeam: string[];
 	billingCompany: string[];
 	inspectionStatus: string[];
@@ -39,6 +40,7 @@ export function useADMProjects() {
 	const [filters, setFilters] = useState<TUseADMProjectsFilters>({
 		search: "",
 		contractStatus: [],
+		tagIds: [],
 		technicalTeam: [],
 		billingCompany: [],
 		inspectionStatus: [],
@@ -82,7 +84,11 @@ export function useADMProjects() {
 		if (filters.sellers.length === 0) return true;
 		return filters.sellers.includes(project.vendedor.nome);
 	}
-
+	function matchTagIds(project: TProjectADMSimplifiedWithRevenue) {
+		if (filters.tagIds.length === 0) return true;
+		const projectTagIds = (project.etiquetas ?? []).map((e) => e.id);
+		return filters.tagIds.some((t) => projectTagIds.includes(t));
+	}
 	function matchToCharge(project: TProjectADMSimplifiedWithRevenue) {
 		if (!filters.toCharge) return true;
 		return !project.pagamento.cobrancaFeita;
@@ -147,6 +153,7 @@ export function useADMProjects() {
 			(project) =>
 				matchSearch(project) &&
 				matchContractStatus(project) &&
+				matchTagIds(project) &&
 				matchTechnicalTeam(project) &&
 				matchBillingCompany(project) &&
 				matchInspectionStatus(project) &&

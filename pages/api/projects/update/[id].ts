@@ -3,15 +3,23 @@ import connectToDatabase from "../../../../utils/services/mongodb/projects";
 import { getSession } from "next-auth/react";
 import { errorHandler } from "../../../../utils/methods/handlers";
 import { apiHandler, validateAuthenticationWithSession } from "../../../../utils/api";
-export default async function handler(req, res) {
+
+import { getServiceOrderTagsFromProject } from "../../../../utils/methods/util/service-order";
+import type { NextApiRequest, NextApiResponse } from "next";
+import type { TProject } from "@/utils/schemas/projects";
+import type { TServiceOrder } from "@/utils/schemas/service-order";
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method === "POST") {
 		const session = await validateAuthenticationWithSession(req, res);
-		const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-		const collection = db.collection("dados");
-		const serviceOrdersCollection = db.collection("ordensDeServico");
+		const db = await connectToDatabase();
+		const collection = db.collection<TProject>("dados");
+		const serviceOrdersCollection = db.collection<TServiceOrder>("ordensDeServico");
 		const logCollection = db.collection("logAlteracoes");
 		delete req.body._id;
 
+		const { id } = req.query;
+		if (!id || typeof id !== "string" || !ObjectId.isValid(id)) return res.status(400).json({ message: "ID do projeto inválido" });
 		// logging changes in changes collections
 		const logObject = {
 			autor: {
@@ -27,7 +35,7 @@ export default async function handler(req, res) {
 
 		const updateKeys = Object.keys(req.body);
 
-		var newObj = await collection.updateOne({ _id: ObjectId(req.query.id) }, { $set: { ...req.body } });
+		const newObj = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...req.body } });
 
 		// Validating for non empty update objects
 		if (session && updateKeys.length > 0) {
@@ -37,6 +45,7 @@ export default async function handler(req, res) {
 		if (
 			[
 				"vendedor.nome",
+				"etiquetas",
 				"contrato.dataAssinatura",
 				"homologacao.fastTrack",
 				"homologacao.acesso.dataResposta",
@@ -47,15 +56,17 @@ export default async function handler(req, res) {
 				"obra.pendencias",
 			].some((x) => updateKeys.includes(x))
 		) {
-			const project = await collection.findOne({ _id: ObjectId(req.query.id) });
+			const project = await collection.findOne({ _id: new ObjectId(id) });
+			if (!project) return res.status(404).json({ message: "Projeto não encontrado" });
 			if (project.idOrdemServico) {
+				console.log("Updating project service order...");
 				await serviceOrdersCollection.updateMany(
 					{
 						_id: new ObjectId(project.idOrdemServico),
 					},
 					{
 						$set: {
-							etiquetas: getServiceOrderTags({ project }),
+							etiquetas: getServiceOrderTagsFromProject(project),
 							"projeto.vendedorNome": project.vendedor.nome,
 							"projeto.contratoDataAssinatura": project.contrato?.dataAssinatura,
 							"projeto.compraEntregaDataPrevisao": project.compra?.previsaoEntrega,
@@ -68,18 +79,18 @@ export default async function handler(req, res) {
 			}
 		}
 		return res.json(newObj);
-	} else if (req.method == "PUT") {
+	}
+	if (req.method === "PUT") {
 		try {
-			const db = await connectToDatabase(process.env.DB_KEY, "projetos").catch((err) => {
-				throw err;
-			});
-			const collection = db.collection("dados");
+			const db = await connectToDatabase();
+			const collection = db.collection<TProject>("dados");
 			const id = req.query.id;
+			if (!id || typeof id !== "string" || !ObjectId.isValid(id)) return res.status(400).json({ message: "ID do projeto inválido" });
 			const operation = req.body.operation;
 			console.log(operation);
-			var newObj = await collection.updateOne(
+			const newObj = await collection.updateOne(
 				{
-					_id: ObjectId(id),
+					_id: new ObjectId(id),
 				},
 				{ ...operation },
 			);
@@ -88,39 +99,5 @@ export default async function handler(req, res) {
 			errorHandler(error, res);
 		}
 	}
-}
-
-function getServiceOrderTags({ project }) {
-	const tags = [];
-	if (project.homologacao.fastTrack) {
-		tags.push({
-			id: "6798eb1b19ad4c2b679bd2e1",
-			titulo: "FAST TRACK",
-			cores: {
-				primaria: "#058A05",
-				secundaria: "#B7FDB7",
-			},
-		});
-	}
-	if (project.pagamento.credor == "SOL FÁCIL") {
-		tags.push({
-			id: "6798eb2bd422f4f93779dd0d",
-			titulo: "DESLIGAMENTO REMOTO",
-			cores: {
-				primaria: "#FF0000",
-				secundaria: "#FFCCCB",
-			},
-		});
-	}
-	if (project.obras?.pendencias == "LEVAR ESTRUTURA NA MONTAGEM") {
-		tags.push({
-			id: "6798eb4e38fd2c093589ee7f",
-			titulo: "TRANSPORTAR ESTRUTURA",
-			cores: {
-				primaria: "#8B4513",
-				secundaria: "#DFD0BC",
-			},
-		});
-	}
-	return tags;
+	return res.status(405).json({ message: "Method not allowed" });
 }

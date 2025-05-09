@@ -1,6 +1,6 @@
 import { apiHandler } from "@/utils/api";
 import { formatDateAsLocale, getProductsStr } from "@/utils/methods/formatting";
-import { TContractRequest } from "@/utils/schemas/contract-requests";
+import type { TContractRequest } from "@/utils/schemas/contract-requests";
 import { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 
 import type { TProject } from "@/utils/schemas/projects";
@@ -23,59 +23,47 @@ import type { TTag } from "@/utils/schemas/tags";
 import type { TServiceOrderTag } from "@/utils/schemas/service-order";
 import createHttpError from "http-errors";
 const getExport: NextApiHandler<any> = async (req, res) => {
-	const auxiliariesDb: Db = await connectToAuxiliariesDatabase();
-	const tagsCollection = auxiliariesDb.collection<TTag>("etiquetas");
+	// const projectsDb = await connectToProjectsDatabase();
+	// const requestsDb: Db = await connectToSolicitacoesDatabase();
 
-	const purchaseTagsCollection = auxiliariesDb.collection<TPurchaseControlTag>("etiquetas-compras");
-	const serviceOrderTagsCollection = auxiliariesDb.collection<TServiceOrderTag>("tiquetas-ordens-servico");
+	// const projectsCollection = projectsDb.collection<TProject>("dados");
+	// const requestsCollection = requestsDb.collection<TContractRequest>("contrato");
 
-	const purchaseTags = await purchaseTagsCollection.find({}).toArray();
-	const serviceOrderTags = await serviceOrderTagsCollection.find({}).toArray();
+	// const startDate = dayjs().subtract(1, "month").startOf("month").subtract(3, "hour").toDate();
+	// const endDate = dayjs().subtract(1, "month").endOf("month").subtract(3, "hour").toDate();
+	// console.log(startDate, endDate);
+	// const projects = await projectsCollection
+	// 	.find({
+	// 		tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
+	// 		"contrato.dataAssinatura": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
+	// 	})
+	// 	.toArray();
+	// const requests = await requestsCollection.find({}).toArray();
 
-	const newTags: WithId<TTag>[] = [
-		...purchaseTags.map((p) => ({
-			_id: p._id,
-			titulo: p.titulo.toUpperCase(),
-			cores: {
-				primaria: p.cores.primaria,
-				secundaria: p.cores.secundaria,
-			},
-			entidades: {
-				compras: true,
-			},
-			autor: {
-				id: "6463ccaa8c5e3e227af54d89",
-				nome: "Lucas Fernandes",
-				avatar_url: "https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4",
-			},
-			dataInsercao: p.dataInsercao,
-		})),
-		...serviceOrderTags.map((s) => ({
-			_id: s._id,
-			titulo: s.titulo.toUpperCase(),
-			cores: {
-				primaria: s.cores.primaria,
-				secundaria: s.cores.secundaria,
-			},
-			entidades: {
-				ordensServico: true,
-			},
-			autor: {
-				id: "6463ccaa8c5e3e227af54d89",
-				nome: "Lucas Fernandes",
-				avatar_url: "https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4",
-			},
-			dataInsercao: s.dataInsercao,
-		})),
-	];
+	// const formatted = projects
+	// 	.map((project) => {
+	// 		const projectRequest = requests.find((request) => request._id.toString() === project.idSolicitacaoContrato);
 
-	const insertManyResponse = await tagsCollection.insertMany(newTags);
+	// 		if (!projectRequest) return null;
 
-	if (!insertManyResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar as etiquetas.");
+	// 		const paymentForm = projectRequest.formaDePagamento;
+	// 		if (!paymentForm) return null;
+	// 		if (["100% À VISTA NO DINHEIRO/DÉBITO/PIX", "100% À VISTA NO DÉBITO/PIX", "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO"].includes(paymentForm)) {
+	// 			return {
+	// 				qtde: project.qtde,
+	// 				nome: project.nomeDoContrato,
+	// 				formaDePagamento: paymentForm,
+	// 				credor: project.pagamento.credor,
+	// 				dataAssinatura: formatDateAsLocale(project.contrato.dataAssinatura),
+	// 			};
+	// 		}
+	// 	})
+	// 	.filter((project) => !!project);
 
-	return res.json({
-		insertedCount: insertManyResponse.insertedCount,
-	});
+	// return res.json({
+	// 	formatted: formatted.map((f) => `${f.qtde} ${f.nome}`).join(","),
+	// });
+	return res.send("DESATIVADA");
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

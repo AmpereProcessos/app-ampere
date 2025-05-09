@@ -617,6 +617,7 @@ export type TProjectDBSimplified = Pick<
 	| "telefone"
 	| "email"
 	| "codigoSVB"
+	| "etiquetas"
 	| "cep"
 	| "uf"
 	| "cidade"
@@ -639,6 +640,7 @@ export const ProjectDBSimplifiedProjection = {
 	telefone: 1,
 	email: 1,
 	codigoSVB: 1,
+	etiquetas: 1,
 	cep: 1,
 	uf: 1,
 	cidade: 1,
@@ -686,6 +688,10 @@ export const PersonalizedFiltersSchema = z.object({
 	city: z.array(z.string({ required_error: "Cidade de filtro não informada.", invalid_type_error: "Tipo não válido para cidade de filtro." }), {
 		required_error: "Lista de cidades de filtro não informada.",
 		invalid_type_error: "Tipo não válido para lista de cidades de filtro.",
+	}),
+	tagIds: z.array(z.string({ required_error: "ID da tag não informado.", invalid_type_error: "Tipo não válido para ID da tag." }), {
+		required_error: "Lista de IDs de tags não informada.",
+		invalid_type_error: "Tipo não válido para lista de IDs de tags.",
 	}),
 	neighborhood: z.string({ required_error: "Filtro por bairro não informado.", invalid_type_error: "Tipo não válido para filtro por bairro." }),
 	address: z.string({ required_error: "Filtro por endereço não informado.", invalid_type_error: "Tipo não válido para filtro por endereço." }),

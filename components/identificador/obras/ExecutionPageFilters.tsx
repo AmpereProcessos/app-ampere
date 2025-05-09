@@ -17,6 +17,7 @@ import { roofTiles, SystemTopologiesTypes } from "@/utils/select-options";
 import { ArrowDownNarrowWide } from "lucide-react";
 import { ArrowUpNarrowWide } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTags } from "@/utils/methods/query/tags";
 
 const AllStates = StatesAndCities.map((s) => s.sigla).map((c, index) => ({ id: index + 1, value: c, label: c }));
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, value: c, label: c }));
@@ -29,6 +30,7 @@ type ExecutionPageFiltersProps = {
 export default function ExecutionPageFilters({ filters, updateFilters, closeMenu }: ExecutionPageFiltersProps) {
 	const [queryParamsHolder, setQueryParamsHolder] = useState<TPersonalizedServiceOrderFilter>(filters);
 	const { data: users } = useUsers();
+	const { data: tags } = useTags({ initialFilters: { applicableToServiceOrders: "true" } });
 	const PeriodRelatedField = [
 		{
 			id: 1,
@@ -97,6 +99,15 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 							value={queryParamsHolder.responsible}
 							handleChange={(value) => setQueryParamsHolder({ ...queryParamsHolder, responsible: value })}
 							placeholder="Preencha aqui o nome do responsável.."
+							width={"100%"}
+						/>
+						<MultipleSelectInputVirtualized
+							label="ETIQUETAS"
+							selected={queryParamsHolder.tags}
+							selectedItemLabel={"NÃO DEFINIDO"}
+							options={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) || []}
+							handleChange={(value) => setQueryParamsHolder({ ...queryParamsHolder, tags: value as string[] })}
+							onReset={() => setQueryParamsHolder({ ...queryParamsHolder, tags: [] })}
 							width={"100%"}
 						/>
 						<MultipleSelectInputVirtualized

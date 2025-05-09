@@ -107,6 +107,7 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
 		responsible: initialFilters.responsible || "",
 		state: initialFilters.state || [],
 		city: initialFilters.city || [],
+		tags: initialFilters.tags || [],
 		category: initialFilters.category || [],
 		urgency: initialFilters.urgency || [],
 		authors: initialFilters.authors || [],

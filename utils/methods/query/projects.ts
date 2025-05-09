@@ -1,9 +1,9 @@
-import { TProjectsByFiltersResult } from "@/pages/api/projects/search";
-import { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from "@/utils/schemas/projects";
+import type { TProjectsByFiltersResult } from "@/pages/api/projects/search";
+import type { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from "@/utils/schemas/projects";
 import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
+import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
 
 async function fetchProjectsByPersonalizedFilters({ page, filters }: { page: number; filters: TPersonalizedProjectsFilter }) {
 	try {
@@ -26,6 +26,7 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
 		},
 		state: [],
 		city: [],
+		tagIds: [],
 		address: "",
 		neighborhood: "",
 		serviceType: [],
@@ -48,7 +49,7 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
 
 async function fetchVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
 	try {
-		if (query.search.trim().length == 0) return [];
+		if (query.search.trim().length === 0) return [];
 		const { data } = await axios.post("/api/projects/pesquisa-vinculacao", query);
 		return data.data as TProjectDTODBSimplified[];
 	} catch (error) {

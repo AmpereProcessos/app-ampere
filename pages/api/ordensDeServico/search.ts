@@ -52,6 +52,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const categoryQuery: Filter<TServiceOrder> = filters.category.length > 0 ? { categoria: { $in: filters.category as TServiceOrder["categoria"][] } } : {};
 	const urgencyQuery: Filter<TServiceOrder> = filters.urgency.length > 0 ? { urgencia: { $in: filters.urgency as TServiceOrder["urgencia"][] } } : {};
 	const authorsQuery: Filter<TServiceOrder> = filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
+	const tagsQuery: Filter<TServiceOrder> = filters.tags.length > 0 ? { "etiquetas.id": { $in: filters.tags } } : {};
 	const pendingQuery: Filter<TServiceOrder> = filters.pending ? { dataEfetivacao: null } : {};
 	const releasedQuery: Filter<TServiceOrder> = filters.released ? { dataLiberacao: { $ne: null } } : {};
 	const notReleasedQuery: Filter<TServiceOrder> = filters.notReleased ? { dataLiberacao: null } : {};
@@ -68,6 +69,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 		...dateQuery,
 		...stateQuery,
 		...cityQuery,
+		...tagsQuery,
 		...categoryQuery,
 		...urgencyQuery,
 		...authorsQuery,

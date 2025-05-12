@@ -37,7 +37,7 @@ const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: i
 function Projetos() {
 	const router = useRouter();
 	const { data: session, status } = useSession({ required: true });
-	const { data: tags } = useTags();
+	const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
 	const {
@@ -241,6 +241,11 @@ function Projetos() {
 						</div>
 					</div>
 					<div className="my-2 flex w-full items-center justify-end gap-2">
+						<Link href="/projetos/igreen-analises-tecnicas">
+							<button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+								ANÁLISES TÉCNICAS IGREEN
+							</button>
+						</Link>
 						<Link href="/projetos/analises-tecnicas">
 							<button type="button" className="rounded-md bg-[#15599a] py-1 px-4 text-sm font-bold text-white">
 								ANÁLISES TÉCNICAS

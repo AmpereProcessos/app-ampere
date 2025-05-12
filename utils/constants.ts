@@ -5,6 +5,7 @@ import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletyp
 import { IconType } from "react-icons/lib";
 //teste
 
+export const IGREEN_DATABASE_PREFIX = "project_manager";
 export const CRM_APP_URL = "https://crm.ampereenergias.com.br";
 export const STANDARD_PROFIT_MARGIN = 0.15;
 export const STANDARD_TAX = 0.175;

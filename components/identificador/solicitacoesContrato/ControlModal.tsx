@@ -19,7 +19,7 @@ import ElectricalInstallationDependentsInformationBlock from "./blocos/Electrica
 import TechnicalAnalysisBlock from "./blocos/TechnicalAnalysisBlock";
 import FilesBlock from "./blocos/FilesBlock";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { editContractRequest } from "@/utils/methods/mutation/contract-requests";
+import { editContractRequest, generateContract } from "@/utils/methods/mutation/contract-requests";
 import { useQueryClient } from "@tanstack/react-query";
 import {
 	getProjectHomologationInformation,
@@ -35,6 +35,7 @@ import { updateProject } from "@/utils/methods/mutation/clients";
 import { updateOpportunity } from "@/utils/methods/mutation/crm/opportunities";
 import type { TFileReference } from "@/utils/schemas/file-reference.schema";
 import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
 type ContractRequestControlModalProps = {
 	requestId: string;
@@ -254,6 +255,12 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 				queryKey: ["contract-request-by-id", requestId],
 			}),
 	});
+	const { mutate: handleGetContractPDF, isPending: isGeneratingContractPDF } = useMutationWithFeedback({
+		mutationKey: ["generate-contract-pdf", requestId],
+		mutationFn: generateContract,
+		queryClient: queryClient,
+		affectedQueryKey: ["contract-requests"],
+	});
 	useEffect(() => {
 		if (request) setInfoHolder(request);
 	}, [request]);
@@ -332,6 +339,19 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 									}
 									vinculationPending={updateLoading}
 								/>
+								<div className="w-full flex items-center justify-center">
+									<LoadingButton
+										onClick={() =>
+											handleGetContractPDF({
+												requestId: requestId,
+												contractName: infoHolder.nomeDoContrato,
+											})
+										}
+										loading={isGeneratingContractPDF}
+									>
+										GERAR CONTRATO EM PDF
+									</LoadingButton>
+								</div>
 							</div>
 							<div className="flex w-full items-center justify-between gap-2">
 								<div className="flex items-center gap-2">

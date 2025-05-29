@@ -11,7 +11,6 @@ import { technicalAnalysisResultAvaliationsLabelEnum } from "./enums";
 import { fileReferences } from "./file-references";
 import { sales } from "./sales";
 import type { TTechnicalAnalysisConditionMetadata, TTechnicalAnalysisMetadata } from "@/utils/schemas/igreen/technical-analysis";
-
 export const technicalAnalysis = pgTable(
 	"technical_analysis",
 	{

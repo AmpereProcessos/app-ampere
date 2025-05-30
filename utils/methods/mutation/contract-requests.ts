@@ -1,4 +1,4 @@
-import { TContractRequest } from "@/utils/schemas/contract-requests";
+import type { TContractRequest } from "@/utils/schemas/contract-requests";
 import axios from "axios";
 import { formatWithoutDiacritics } from "../formatting";
 
@@ -11,16 +11,16 @@ export async function editContractRequest({ id, changes }: { id: string; changes
 	}
 }
 
-export async function generateContract({ requestId, contractName }: { requestId: string; contractName: string }) {
+export async function generateContract({ requestId, contractName, contractFormat }: { requestId: string; contractName: string; contractFormat: "pdf" | "docx" }) {
 	try {
-		const response = await fetch(`/api/integracao/contrato?contractRequestId=${requestId}`, {
+		const response = await fetch(`/api/integracao/contrato?contractRequestId=${requestId}&contractFormat=${contractFormat}`, {
 			method: "GET",
 		});
 		const blob = await response.blob();
 		const url = window.URL.createObjectURL(blob);
 		const a = document.createElement("a");
 		a.href = url;
-		a.download = `CONTRATO ${formatWithoutDiacritics(contractName)}.pdf`;
+		a.download = `CONTRATO ${formatWithoutDiacritics(contractName)}.${contractFormat}`;
 		document.body.appendChild(a);
 		a.click();
 		a.remove();

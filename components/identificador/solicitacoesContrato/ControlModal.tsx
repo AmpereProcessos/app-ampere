@@ -255,7 +255,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 				queryKey: ["contract-request-by-id", requestId],
 			}),
 	});
-	const { mutate: handleGetContractPDF, isPending: isGeneratingContractPDF } = useMutationWithFeedback({
+	const { mutate: handleGetContractDcoument, isPending: isGeneratingContractDocument } = useMutationWithFeedback({
 		mutationKey: ["generate-contract-pdf", requestId],
 		mutationFn: generateContract,
 		queryClient: queryClient,
@@ -339,15 +339,28 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 									}
 									vinculationPending={updateLoading}
 								/>
-								<div className="w-full flex items-center justify-center">
+								<div className="w-full flex items-center justify-center gap-2 flex-wrap">
 									<LoadingButton
 										onClick={() =>
-											handleGetContractPDF({
+											handleGetContractDcoument({
 												requestId: requestId,
 												contractName: infoHolder.nomeDoContrato,
+												contractFormat: "docx",
 											})
 										}
-										loading={isGeneratingContractPDF}
+										loading={isGeneratingContractDocument}
+									>
+										GERAR CONTRATO EM DOCX
+									</LoadingButton>
+									<LoadingButton
+										onClick={() =>
+											handleGetContractDcoument({
+												requestId: requestId,
+												contractName: infoHolder.nomeDoContrato,
+												contractFormat: "pdf",
+											})
+										}
+										loading={isGeneratingContractDocument}
 									>
 										GERAR CONTRATO EM PDF
 									</LoadingButton>

@@ -222,7 +222,7 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 	if (!isUserAllowed) {
 		throw new createHttpError.Forbidden("Usuário não tem permissão para gerar contratos");
 	}
-	const { contractRequestId } = req.query;
+	const { contractRequestId, contractFormat } = req.query;
 	if (!contractRequestId || typeof contractRequestId !== "string" || !ObjectId.isValid(contractRequestId)) {
 		throw new createHttpError.BadRequest("ID do contrato inválido");
 	}
@@ -236,24 +236,47 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 
 	const contractData = getContractData({ projectContractRequest: contractRequest });
 
-	const response = await axios.post("https://contract-generation-api-496303969093.southamerica-east1.run.app/generate-contract-pdf", contractData, {
-		headers: {
-			"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
-		},
-		responseType: "arraybuffer", // <- ESSENCIAL!
-	});
+	// In here, split in two cases:
+	// 1. contractFormat is "pdf"
+	// 2. contractFormat is "docx"
+	if (contractFormat === "pdf") {
+		const response = await axios.post("https://contract-generation-api-496303969093.southamerica-east1.run.app/generate-contract-pdf", contractData, {
+			headers: {
+				"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
+			},
+			responseType: "arraybuffer", // <- ESSENCIAL!
+		});
 
-	// Pega o nome sugerido do arquivo, se vier no header
-	const disposition = response.headers["content-disposition"];
-	let filename = `CONTRATO ${formatWithoutDiacritics(contractData.contratanteDados.nome)}.pdf`;
-	if (disposition || disposition.includes("filename=")) {
-		filename = disposition.split("filename=")[1].replace(/"/g, "");
+		// Pega o nome sugerido do arquivo, se vier no header
+		const disposition = response.headers["content-disposition"];
+		let filename = `CONTRATO ${formatWithoutDiacritics(contractData.contratanteDados.nome)}.pdf`;
+		if (disposition || disposition.includes("filename=")) {
+			filename = disposition.split("filename=")[1].replace(/"/g, "");
+		}
+
+		// Seta os headers para download
+		res.setHeader("Content-Type", "application/pdf");
+		res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+		return res.status(200).send(Buffer.from(response.data, "binary"));
 	}
-
-	// Seta os headers para download
-	res.setHeader("Content-Type", "application/pdf");
-	res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-	return res.status(200).send(Buffer.from(response.data, "binary"));
+	if (contractFormat === "docx") {
+		const response = await axios.post("https://contract-generation-api-496303969093.southamerica-east1.run.app/generate-contract", contractData, {
+			headers: {
+				"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
+			},
+			responseType: "arraybuffer",
+		});
+		// Pega o nome sugerido do arquivo, se vier no header
+		const disposition = response.headers["content-disposition"];
+		let filename = `CONTRATO ${formatWithoutDiacritics(contractData.contratanteDados.nome)}.docx`;
+		if (disposition || disposition.includes("filename=")) {
+			filename = disposition.split("filename=")[1].replace(/"/g, "");
+		}
+		// Seta os headers para download
+		res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+		res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+		return res.status(200).send(Buffer.from(response.data, "binary"));
+	}
 };
 
 export default apiHandler({

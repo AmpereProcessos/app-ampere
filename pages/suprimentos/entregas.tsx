@@ -39,6 +39,7 @@ import { usePurchaseControlById } from "@/utils/methods/query/purchase-controls"
 import { MdLandscape, MdPhone } from "react-icons/md";
 import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
 import { updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
+import { handleProjectServiceOrderTrigger } from "@/utils/methods/mutation/triggers";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
@@ -297,6 +298,9 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal }: Ack
 						"compra.statusEntrega": "ENTREGUE",
 						"compra.dataEntrega": info.deliveryDate,
 					},
+				});
+				await handleProjectServiceOrderTrigger({
+					projectId: purchaseControl.projeto.id,
 				});
 			}
 

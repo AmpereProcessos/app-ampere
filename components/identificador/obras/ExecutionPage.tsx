@@ -6,7 +6,7 @@ import { useServiceOrdersByPersonalizedFilters } from "@/utils/methods/query/ser
 import { useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import type { TServiceOrdersByFiltersResult } from "@/pages/api/ordensDeServico/search";
-import { Pencil, Tag, UserRound } from "lucide-react";
+import { Code, Pencil, Tag, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getHoursDiff } from "@/utils/methods/dates";
 import { getFormattedTextFromHoursAmount } from "@/utils/methods/dates";
@@ -134,7 +134,13 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
 	return (
 		<div className="w-full lg:w-[450px] flex flex-col border border-primary/20 p-3 gap-3">
 			<div className="w-full flex items-center justify-between">
-				<h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{serviceOrder.favorecido.nome}</h1>
+				<div className="flex items-center gap-1">
+					<div className="rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.6rem] font-bold italic text-primary/80 flex items-center gap-1 self-center">
+						<Code className="w-4 h-4 min-w-4 min-h-4" />
+						<p>{serviceOrder.projeto.identificador}</p>
+					</div>
+					<h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{serviceOrder.favorecido.nome}</h1>
+				</div>
 				<h1
 					className={cn("rounded-lg px-2 py-0.5 text-center text-[0.5rem] font-medium text-primary-foreground bg-primary min-w-fit", {
 						"bg-red-500": serviceOrder.status === "PENDENTE", // Vermelho claro

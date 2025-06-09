@@ -6,6 +6,7 @@ import type { TNotification } from "@/utils/schemas/crm/notification.schema";
 import { GeneralTechnicalAnalysisSchema, type TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
 
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import axios from "axios";
 import createHttpError from "http-errors";
 import { type Collection, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
@@ -90,22 +91,21 @@ const editTechnicalAnalysis: NextApiHandler<PutResponse> = async (req, res) => {
 	if (!!changes.dataEfetivacao || changes.status === "CONCLUIDO") {
 		const analysis = await getTechnicalAnalysisById({ analysisId: id, collection: collection, query: {} });
 		if (!analysis) throw new createHttpError.NotFound("Análise técnica não encontrada.");
-		// Creating notification to the applicant of the analysis
-		const applicant = analysis.requerente;
-		const newNotification: TNotification = {
-			remetente: { id: null, nome: "SISTEMA" },
-			idParceiro: analysis.idParceiro,
-			destinatarios: [{ id: applicant.id, nome: applicant.nome || "", avatar_url: applicant.avatar_url }],
-			oportunidade: {
-				id: analysis.oportunidade.id,
-				nome: analysis.oportunidade.nome,
-				identificador: analysis.oportunidade.identificador,
+
+		await axios.post(`https://crm.ampereenergias.com.br/api/notifications?apiKey=${process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN}`, {
+			tipo: "TECHNICAL_ANALYSIS_CONCLUDED",
+			payload: {
+				autor: {
+					nome: session.user.nome,
+					avatar_url: session.user.avatar_url,
+				},
+				oportunidade: {
+					id: analysis.oportunidade.id,
+					nome: analysis.oportunidade.nome,
+					identificador: analysis.oportunidade.identificador,
+				},
 			},
-			mensagem: `Sua solicitação de análise técnica do tipo ${analysis.tipoSolicitacao} da oportunidade ${analysis.oportunidade.nome} foi concluída.`,
-			recebimentos: [],
-			dataInsercao: new Date().toISOString(),
-		};
-		await insertNotification({ collection: notificationsCollection, info: newNotification, partnerId: partnerId || "" });
+		});
 	}
 	return res.status(201).json({ data: "Análise técnica atualizada com sucesso !", message: "Análise técnica atualizada com sucesso !" });
 };

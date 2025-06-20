@@ -12,6 +12,9 @@
 			},
 			"performance": {
 				"noDelete": "off"
+			},
+			"style": {
+				"useTemplate": "off"
 			}
 		}
 	},

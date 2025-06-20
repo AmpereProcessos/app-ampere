@@ -10,6 +10,9 @@ import type { NextApiHandler } from "next";
 import numeroPorExtenso from "numero-por-extenso";
 import createHttpError from "http-errors";
 import axios from "axios";
+import { getContractModelData } from "@/lib/contract-generation";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import type { TProposal } from "@/utils/schemas/crm/proposal.schema";
 
 const obj = {
 	contratanteTexto: "**CONTRATANTE: CENTRO DE FORMAÇÃO DE CONDUTORES PILOTAR LTDA**",
@@ -70,7 +73,7 @@ const obj = {
 	},
 };
 
-type TContractModel = {
+export type TContractModel = {
 	contratanteTexto: string;
 	contratanteDados: {
 		nome: string;
@@ -147,7 +150,7 @@ function getContractData({ projectContractRequest }: getContractDataParams): TCo
 		},
 	};
 	const contratataTexto =
-		"**CONTRATADA: AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICALTDA**, com nome fantasia de AMPÈRE ENERGIAS, inscrita no CNPJ/MF n.º **27.901.968/0001-45**, com sede na **Avenida Nove**, **n.º 233**, **Centro**, **CEP 38.300-150**, município de **Ituiutaba/MG**, por seu representante legal, Diogo Paulino Carvalho, brasileiro, solteiro, empresário, titular do RG **MG-14372057** e do CPF/MF **072.427.186-43**, residente e domiciliada na **Rua Vinte e Quatro**, n.º **75**, **Bairro Centro** **CEP 38.300-078**, **Ituiutaba/MG**, integrada à **DAP CONSULTORIA INTEGRADA LTDA**, nome fantasia **IZAIRA SERVIÇOS**, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob nº **43.830.044/0001-51**, com sede na **Avenida Nove**, n.º **233**, sala 02, **Centro**, **Ituiutaba/MG**, CEP **38.300-150**.";
+		"**CONTRATADA: AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA**, com nome fantasia de AMPÈRE ENERGIAS, inscrita no CNPJ/MF n.º **27.901.968/0001-45**, com sede na **Avenida Nove**, **n.º 233**, **Centro**, **CEP 38.300-150**, município de **Ituiutaba/MG**, por seu representante legal, Diogo Paulino Carvalho, brasileiro, solteiro, empresário, titular do RG **MG-14372057** e do CPF/MF **072.427.186-43**, residente e domiciliada na **Rua Vinte e Quatro**, n.º **75**, **Bairro Centro** **CEP 38.300-078**, **Ituiutaba/MG**, integrada à **DAP CONSULTORIA INTEGRADA LTDA**, nome fantasia **IZAIRA SERVIÇOS**, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob nº **43.830.044/0001-51**, com sede na **Avenida Nove**, n.º **233**, sala 02, **Centro**, **Ituiutaba/MG**, CEP **38.300-150**.";
 	const contratadaDados: TContractModel["contratadaDados"] = {
 		nome: "AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA",
 		cpfCnpj: "27.901.968/0001-45",
@@ -227,14 +230,73 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 		throw new createHttpError.BadRequest("ID do contrato inválido");
 	}
 	const db: Db = await connectToRequestsDatabase();
+	const crbDm = await connectToCRMDatabase();
 	const projectsCollection: Collection<TContractRequest> = db.collection("contrato");
-
+	const proposalsCollection: Collection<TProposal> = crbDm.collection("proposals");
 	const contractRequest = await projectsCollection.findOne({ _id: new ObjectId(contractRequestId) });
 	if (!contractRequest) {
 		throw new createHttpError.NotFound("Solicitação de contrato não encontrada");
 	}
+	const salesProposalId = contractRequest.idPropostaCRM;
+	if (!salesProposalId) {
+		throw new createHttpError.BadRequest("Proposta não encontrada");
+	}
 
-	const contractData = getContractData({ projectContractRequest: contractRequest });
+	const proposal = await proposalsCollection.findOne({ _id: new ObjectId(salesProposalId) });
+
+	const totalPower = (proposal?.produtos || []).filter((p) => p.categoria === "MÓDULO").reduce((acc, p) => acc + p.qtde * (p.potencia || 0), 0) / 1000;
+	const contractData = getContractModelData({
+		customer: {
+			name: contractRequest.nomeDoContrato,
+			phone: contractRequest.telefone,
+			email: contractRequest.email,
+			documents: {
+				cpfCnpj: contractRequest.cpf_cnpj?.toString() || "",
+				rg: contractRequest.rg?.toString() || "",
+			},
+			location: {
+				address: contractRequest.enderecoCobranca,
+				number: contractRequest.numeroResCobranca,
+				complement: "",
+				neighborhood: contractRequest.bairro,
+				cep: contractRequest.cep,
+				city: contractRequest.cidade || "",
+				state: contractRequest.uf || "",
+			},
+		},
+		system: {
+			equipments:
+				proposal?.produtos
+					.filter((p) => ["MÓDULO", "INVERSOR"].includes(p.categoria))
+					.map((p) => ({
+						model: p.modelo,
+						power: p.potencia || 0,
+						quantity: p.qtde,
+						warranty: p.garantia || 0,
+						type: p.categoria as "MÓDULO" | "INVERSOR",
+					})) || [],
+			installationLocation: {
+				address: contractRequest.enderecoInstalacao,
+				number: contractRequest.numeroInstalacao?.toString() || "",
+				complement: "",
+				neighborhood: contractRequest.bairroInstalacao,
+				cep: contractRequest.cepInstalacao,
+				city: contractRequest.cidadeInstalacao || "",
+				state: contractRequest.ufInstalacao || "",
+			},
+			totalPower: totalPower,
+		},
+		additionalServices: {
+			serviceEntranceAdequacy: contractRequest.aumentoDeCarga === "SIM",
+			operationAndMaintenance: contractRequest.planoOeM && contractRequest.planoOeM !== "NÃO SE APLICA",
+			structureAdequacy: contractRequest.estruturaAmpere === "SIM",
+		},
+		payment: {
+			negotiation: contractRequest.formaDePagamento === "80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO" ? "80-20" : "100%",
+			value: getContractFinalValue(contractRequest),
+			resourceSource: contractRequest.origemRecurso === "CAPITAL PRÓPRIO" ? "OWN" : "BANK FINANCING",
+		},
+	});
 
 	// In here, split in two cases:
 	// 1. contractFormat is "pdf"

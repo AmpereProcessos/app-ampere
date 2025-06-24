@@ -1,230 +1,305 @@
-import connectToAppDatabase from '../../../utils/services/mongodb/projects'
-import { calculateStringSimilarity } from '../../../utils/constants'
-import connectToCRMDatabase from '../../../utils/services/mongodb/crm/main'
-import { errorHandler } from '../../../utils/methods/handlers'
-import { getContractValue } from '../../../utils/methods/util/projects'
-import createHttpError from 'http-errors'
-import { Collection, Db, ObjectId, WithId } from 'mongodb'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { TProject } from '@/utils/schemas/projects'
-import { TUser } from '@/utils/schemas/crm/user.schema'
-import { z } from 'zod'
-import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
-import dayjs from 'dayjs'
+import connectToAppDatabase from "../../../utils/services/mongodb/projects";
+import { calculateStringSimilarity } from "../../../utils/constants";
+import connectToCRMDatabase from "../../../utils/services/mongodb/crm/main";
+import { errorHandler } from "../../../utils/methods/handlers";
+import { getContractValue } from "../../../utils/methods/util/projects";
+import createHttpError from "http-errors";
+import { type Collection, type Db, type Filter, ObjectId, type WithId } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { ProjectComissionSimplifiedProjection, type TProjectComissionSimplified, type TProject } from "@/utils/schemas/projects";
+import type { TUser } from "@/utils/schemas/crm/user.schema";
+import { z } from "zod";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import dayjs from "dayjs";
+import { apiHandler, UnwrapNextResponse, validateAuthenticationWithSession } from "@/utils/api";
 
-const DateQuerySchema = z.object({
-  after: z
-    .string({ required_error: 'Parâmetros de período inválidos.', invalid_type_error: 'Parâmetros de período inválidos.' })
-    .datetime({ message: 'Parâmetros de período inválidos.' }),
-  before: z
-    .string({ required_error: 'Parâmetros de período inválidos.', invalid_type_error: 'Parâmetros de período inválidos.' })
-    .datetime({ message: 'Parâmetros de período inválidos.' }),
-})
+const QueryParamsSchema = z.object({
+	after: z
+		.string({ required_error: "Parâmetros de período inválidos.", invalid_type_error: "Parâmetros de período inválidos." })
+		.datetime({ message: "Parâmetros de período inválidos." }),
+	before: z
+		.string({ required_error: "Parâmetros de período inválidos.", invalid_type_error: "Parâmetros de período inválidos." })
+		.datetime({ message: "Parâmetros de período inválidos." }),
+	sellers: z.string({ invalid_type_error: "Tipo não válido para os vendedores." }).optional().nullable(),
+	insiders: z.string({ invalid_type_error: "Tipo não válido para os insiders." }).optional().nullable(),
+	serviceTypes: z.string({ invalid_type_error: "Tipo não válido para os tipos de serviço." }).optional().nullable(),
+});
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method == 'GET') {
-    try {
-      const { after, before } = DateQuerySchema.parse(req.query)
-      const afterFixed = dayjs(after).subtract(3, 'hour').toISOString()
-      const beforeFixed = dayjs(before).subtract(3, 'hour').toISOString()
-      const appDb: Db = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
-      const appProjectsCollection: Collection<TProject> = appDb.collection('dados')
+async function getComissionData(params: z.infer<typeof QueryParamsSchema>) {
+	console.log(params);
+	const { after, before, sellers, insiders, serviceTypes } = params;
 
-      const crmDb = await connectToCRMDatabase(process.env.DB_KEY)
-      const crmUsersCollection: Collection<TUser> = crmDb.collection('users')
-      const crmProjectsCollection: Collection<TOpportunity> = crmDb.collection('opportunities')
+	// Ajusting the filters
+	const afterFixed = dayjs(after).subtract(3, "hour").toISOString();
+	const beforeFixed = dayjs(before).subtract(3, "hour").toISOString();
+	const sellersArr = sellers?.split(",").filter((s) => !!s) || [];
+	const insidersArr = insiders?.split(",").filter((s) => !!s) || [];
+	const serviceTypesArr = serviceTypes?.split(",").filter((s) => !!s) || [];
 
-      const crmUsers = await crmUsersCollection.find({}).toArray()
+	const appDb = await connectToAppDatabase();
+	const appProjectsCollection = appDb.collection<TProject>("dados");
 
-      const crmProjects = await crmProjectsCollection.find({ 'ganho.data': { $ne: null } }).toArray()
-      const projects = await getFilteredProjects({ collection: appProjectsCollection, after: afterFixed, before: beforeFixed })
-      const commissionInfo = projects.map((project) => {
-        const crmOpportunity = crmProjects.find((crmProject) => crmProject._id.toString() == project.idProjetoCRM)
-        const crmOpportunityResponsibles = crmOpportunity?.responsaveis || []
-        const crmSeller = crmOpportunityResponsibles.find((r) => r.papel == 'VENDEDOR')
-        const crmSDR = crmOpportunityResponsibles.find((r) => r.papel == 'SDR')
-        const sellerUserInfo = crmUsers.find((user) => crmSeller?.id == user._id.toString())
-        const sdrUserInfo = crmUsers.find((user) => crmSDR?.id == user._id.toString())
+	const crmDb = await connectToCRMDatabase();
+	const crmUsersCollection = crmDb.collection<TUser>("users");
+	const crmOpportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
 
-        // Defining commission values
-        var commission = {
-          seller: 0,
-          insider: 0,
-        }
-        const comissionPaid = !!project.comissoes?.pagamentoRealizado
-        const comissionDefined = !!project.comissoes?.efetivado
-        const definedSellerCommission = project.comissoes?.porcentagemVendedor
-        const definedInsiderCommission = project.comissoes?.porcentagemInsider
-        // In case one of the commission values is already defined, use them
-        if (typeof definedSellerCommission == 'number' && typeof definedInsiderCommission == 'number') {
-          commission.seller = definedSellerCommission || 0
-          commission.insider = definedInsiderCommission || 0
-        } else {
-          // Else, use commission values defined in CRM for the responsible and representative
-          commission = getCRMCommissionValues({ sellerUserInfo, sdrUserInfo })
-        }
-        return {
-          id: project._id,
-          idProjetoCRM: project.idProjetoCRM,
-          nome: project.nomeDoContrato,
-          tipoServico: project.tipoDeServico,
-          identificador: project.qtde,
-          identificadorCRM: project.codigoSVB,
-          cidade: project.cidade,
-          vendedor: project.vendedor.nome,
-          insider: project.insider,
-          dataAssinatura: project.contrato?.dataAssinatura,
-          dataRecebimentoParcial: project.compra?.dataPagamento,
-          potenciaPico: project.sistema?.potPico,
-          valorProjeto: project.sistema?.valorProjeto,
-          valorPadrao: project.padrao?.valor,
-          valorContrato: getContractValue({
-            projectValue: project.sistema?.valorProjeto,
-            paValue: project.padrao?.valor,
-            structureValue: 0,
-          }),
-          comissoes: {
-            efetivado: comissionDefined,
-            pagamentoRealizado: comissionPaid,
-            vendedor: commission.seller,
-            insider: commission.insider,
-          },
-        }
-      })
-      res.status(200).json(commissionInfo)
-    } catch (error) {
-      console.log(error)
-      errorHandler(error, res)
-    }
-  }
-  if (req.method == 'POST') {
-    try {
-      const { changes } = req.body
-      if (!changes || typeof changes != 'object' || !Array.isArray(changes))
-        throw new createHttpError.BadRequest('Formato das alterações não é compatível.')
+	const crmUsers = await crmUsersCollection.find({}).toArray();
+	const projects = await getProjectsForComission({
+		collection: appProjectsCollection,
+		after: afterFixed,
+		before: beforeFixed,
+		sellers: sellersArr,
+		insiders: insidersArr,
+		serviceTypes: serviceTypesArr,
+	});
+	const opportunities = await getOpportunitiesForComission({ collection: crmOpportunitiesCollection, after: afterFixed, before: beforeFixed });
 
-      const appDb = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
-      const appProjectsCollection = appDb.collection('dados')
-      const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
-      const crmProjectsCollection = crmDb.collection('projects')
-      await updateAppProjectsComission({ collection: appProjectsCollection, changes })
+	const comissionInformation = projects
+		.map((project) => {
+			// Getting the equivalent crm opportunity
+			const crmOpportunity = opportunities.find((opportunity) => opportunity._id.toString() === project.idProjetoCRM);
 
-      res.status(200).json('Atualizações feitas com sucesso !')
-    } catch (error) {
-      errorHandler(error, res)
-    }
-  }
+			if (!crmOpportunity) return null;
+
+			const crmOpportunityResponsibles = crmOpportunity.responsaveis || [];
+			const crmSeller = crmOpportunityResponsibles.find((r) => r.papel === "VENDEDOR");
+			const crmSDR = crmOpportunityResponsibles.find((r) => r.papel === "SDR");
+			const crmSellerUserInfo = crmUsers.find((user) => crmSeller?.id === user._id.toString());
+			const crmSDRUserInfo = crmUsers.find((user) => crmSDR?.id === user._id.toString());
+
+			// Defining commission values
+			const commissionPercentageValues = {
+				seller: 0,
+				insider: 0,
+			};
+			const isComissionPaid = !!project.comissoes?.pagamentoRealizado;
+			const isComissionDefined = !!project.comissoes?.efetivado;
+
+			const definedSellerComissionPercentage = project.comissoes?.porcentagemVendedor;
+			const definedInsiderComissionPercentage = project.comissoes?.porcentagemInsider;
+
+			// If the commission values are already defined, use them
+			if (typeof definedSellerComissionPercentage === "number" && typeof definedInsiderComissionPercentage === "number") {
+				commissionPercentageValues.seller = definedSellerComissionPercentage;
+				commissionPercentageValues.insider = definedInsiderComissionPercentage;
+			} else {
+				// Else, use commission values defined in CRM for the responsible and representative
+				const { seller, insider } = getCRMCommissionValues({ sellerUserInfo: crmSellerUserInfo, sdrUserInfo: crmSDRUserInfo });
+				commissionPercentageValues.seller = seller;
+				commissionPercentageValues.insider = insider;
+			}
+
+			const comissianableItems = project.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
+			return {
+				_id: project._id.toString(),
+				nome: project.nomeDoContrato,
+				tipo: project.tipoDeServico,
+				identificadorApp: project.qtde,
+				identificadorCrm: project.codigoSVB,
+				uf: project.uf,
+				cidade: project.cidade,
+				vendedorApp: project.vendedor.nome,
+				insiderApp: project.insider,
+				dataAssinatura: project.contrato?.dataAssinatura,
+				dataRecebimentoParcial: project.compra?.dataPagamento,
+				potenciaPico: project.sistema?.potPico,
+				valorProjeto: project.sistema?.valorProjeto,
+				valorPadrao: project.padrao?.valor,
+				valorEstruturaPersonalizada: project.estruturaPersonalizada?.valor,
+				valorOem: project.oem?.valor,
+				valorSeguro: project.seguro?.valor,
+				valorContrato: getContractValue({
+					projectValue: project.sistema?.valorProjeto,
+					paValue: project.padrao?.valor,
+					structureValue: 0,
+				}),
+				comissoes: {
+					efetivado: isComissionDefined,
+					pagamentoRealizado: isComissionPaid,
+					itensComissionaveis: comissianableItems,
+					valorComissionavel: getContractValue({
+						projectValue: comissianableItems.includes("SISTEMA") ? project.sistema?.valorProjeto : 0,
+						paValue: comissianableItems.includes("PADRÃO") ? project.padrao?.valor : 0,
+						structureValue: comissianableItems.includes("ESTRUTURA PERSONALIZADA") ? project.estruturaPersonalizada?.valor : 0,
+						oemValue: comissianableItems.includes("OEM") ? project.oem?.valor : 0,
+						insuranceValue: comissianableItems.includes("SEGURO") ? project.seguro?.valor : 0,
+					}),
+					porcentagemVendedor: commissionPercentageValues.seller,
+					porcentagemInsider: commissionPercentageValues.insider,
+					dataValidacaoVendedor: project.comissoes?.dataValidacaoVendedor,
+					dataValidacaoInsider: project.comissoes?.dataValidacaoInsider,
+				},
+			};
+		})
+		.filter((project) => project !== null);
+
+	return comissionInformation;
 }
 
-type GetFilteredProjectsParams = {
-  collection: Collection<TProject>
-  after: string
-  before: string
+export type TComissionData = Awaited<ReturnType<typeof getComissionData>>;
+async function getComissionDataHandler(req: NextApiRequest, res: NextApiResponse) {
+	const session = await validateAuthenticationWithSession(req, res);
+	const userHasAdministrativeViewPermission = !!session?.user.permissoes.administrativo.visualizar;
+	const userHasFinancesViewPermission = !!session?.user.permissoes.financeiro.visualizar;
+	if (!userHasAdministrativeViewPermission && !userHasFinancesViewPermission) throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
+
+	const params = QueryParamsSchema.parse(req.query);
+	const comissionData = await getComissionData(params);
+
+	return res.status(200).json({ data: comissionData });
 }
-async function getFilteredProjects({ collection, after, before }: GetFilteredProjectsParams) {
-  try {
-    const projects = await collection
-      .aggregate([
-        {
-          $match: {
-            'contrato.status': 'ASSINADO',
-            $or: [
-              {
-                tipoDeServico: { $in: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
-                $and: [{ 'compra.dataPagamento': { $gte: after } }, { 'compra.dataPagamento': { $lte: before } }],
-              },
-              {
-                tipoDeServico: { $nin: ['SISTEMA FOTOVOLTAICO', 'AUMENTO DE SISTEMA FOTOVOLTAICO'] },
-                $and: [{ 'contrato.dataAssinatura': { $gte: after } }, { 'contrato.dataAssinatura': { $lte: before } }],
-              },
-              // {
-              //   tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-              //   $and: [{ 'compra.dataPagamento': { $gte: after } }, { 'compra.dataPagamento': { $lte: before } }],
-              // },
-              // {
-              //   tipoDeServico: {
-              //     $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'],
-              //   },
-              //   $and: [{ 'pagamento.dataRecebimento': { $gte: after } }, { 'pagamento.dataRecebimento': { $lte: before } }],
-              // },
-            ],
-          },
-        },
-        {
-          $project: {
-            qtde: 1,
-            nomeDoContrato: 1,
-            codigoSVB: 1,
-            cidade: 1,
-            vendedor: 1,
-            tipoDeServico: 1,
-            'contrato.dataAssinatura': 1,
-            comissoes: 1,
-            'pagamento.dataRecebimento': 1,
-            'sistema.potPico': 1,
-            'sistema.valorProjeto': 1,
-            'padrao.valor': 1,
-            'estruturaPersonalizada.valor': 1,
-            'oem.valor': 1,
-            'compra.dataPagamento': 1,
-            canalVenda: 1,
-            insider: 1,
-            idProjetoCRM: 1,
-          },
-        },
-      ])
-      .toArray()
-    return projects as WithId<TProject>[]
-  } catch (error) {
-    throw error
-  }
+
+const UpdateComissionDataSchema = z.object({
+	changes: z.array(
+		z.object({
+			crmProjectId: z.string({
+				required_error: "ID do projeto CRM é obrigatório.",
+				invalid_type_error: "ID do projeto CRM é obrigatório.",
+			}),
+			appProjectId: z.string({
+				required_error: "ID do projeto App é obrigatório.",
+				invalid_type_error: "ID do projeto App é obrigatório.",
+			}),
+			sellerCommission: z.number({
+				required_error: "Porcentagem de comissão do vendedor é obrigatória.",
+				invalid_type_error: "Porcentagem de comissão do vendedor é obrigatória.",
+			}),
+			insiderCommission: z.number({
+				required_error: "Porcentagem de comissão do insider é obrigatória.",
+				invalid_type_error: "Porcentagem de comissão do insider é obrigatória.",
+			}),
+			validateComissionValues: z.boolean({
+				required_error: "Validação de comissões é obrigatória.",
+				invalid_type_error: "Validação de comissões é obrigatória.",
+			}),
+		}),
+	),
+});
+export type TUpdateComissionDataInput = z.infer<typeof UpdateComissionDataSchema>;
+async function updateComissionDataHandler(req: NextApiRequest, res: NextApiResponse) {
+	const session = await validateAuthenticationWithSession(req, res);
+	const userHasAdministrativeEditPermission = !!session?.user.permissoes.administrativo.editar;
+	const userHasFinancesEditPermission = !!session?.user.permissoes.financeiro.editar;
+	if (!userHasAdministrativeEditPermission || !userHasFinancesEditPermission) throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
+
+	const params = UpdateComissionDataSchema.parse(req.body);
+
+	const { changes } = params;
+
+	const appDb = await connectToAppDatabase();
+	const appProjectsCollection = appDb.collection<TProject>("dados");
+
+	const crmDb = await connectToCRMDatabase();
+	const crmOpportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
+
+	await updateAppProjectsComission({ collection: appProjectsCollection, changes });
+
+	return res.status(201).json({
+		message: "Atualizações feitas com sucesso !",
+	});
+}
+
+export default apiHandler({
+	GET: getComissionDataHandler,
+	POST: updateComissionDataHandler,
+});
+type GetProjectsForComissionParams = {
+	collection: Collection<TProject>;
+	after: string;
+	before: string;
+	sellers: string[];
+	insiders: string[];
+	serviceTypes: string[];
+};
+async function getProjectsForComission({ collection, after, before, sellers, insiders, serviceTypes }: GetProjectsForComissionParams) {
+	const signedQueryFilter: Filter<TProject> = {
+		"contrato.status": "ASSINADO",
+	};
+	const photovoltaicQueryFilter: Filter<TProject> = {
+		tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
+		$and: [{ "compra.dataPagamento": { $gte: after } }, { "compra.dataPagamento": { $lte: before } }],
+	};
+	const nonPhotovoltaicQueryFilter: Filter<TProject> = {
+		tipoDeServico: { $nin: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
+		$and: [{ "contrato.dataAssinatura": { $gte: after } }, { "contrato.dataAssinatura": { $lte: before } }],
+	};
+	const sellersQueryFilter: Filter<TProject> = sellers.length > 0 ? { "vendedor.nome": { $in: sellers } } : {};
+	const insidersQueryFilter: Filter<TProject> = insiders.length > 0 ? { "insider.nome": { $in: insiders } } : {};
+	const serviceTypesQueryFilter: Filter<TProject> = serviceTypes.length > 0 ? { tipoDeServico: { $in: serviceTypes } } : {};
+
+	const projectsQueryFilter: Filter<TProject> = {
+		...signedQueryFilter,
+		...photovoltaicQueryFilter,
+		...nonPhotovoltaicQueryFilter,
+		...sellersQueryFilter,
+		...insidersQueryFilter,
+		...serviceTypesQueryFilter,
+	};
+	const projects = await collection.find(projectsQueryFilter, { projection: ProjectComissionSimplifiedProjection }).toArray();
+
+	return projects as WithId<TProjectComissionSimplified>[];
+}
+type GetOpportunitiesForComissionParams = {
+	collection: Collection<TOpportunity>;
+	after: string;
+	before: string;
+};
+async function getOpportunitiesForComission({ collection, after, before }: GetOpportunitiesForComissionParams) {
+	const opportunitiesQueryFilter: Filter<TOpportunity> = {
+		"ganho.data": { $gte: after, $lte: before },
+	};
+	const opportunities = await collection.find(opportunitiesQueryFilter).toArray();
+	return opportunities as WithId<TOpportunity>[];
 }
 
 type GetCRMCommissionValuesParams = {
-  sellerUserInfo: TUser | undefined
-  sdrUserInfo: TUser | undefined
-}
+	sellerUserInfo: TUser | undefined;
+	sdrUserInfo: TUser | undefined;
+};
 function getCRMCommissionValues({ sellerUserInfo, sdrUserInfo }: GetCRMCommissionValuesParams) {
-  var commission = {
-    seller: 0,
-    insider: 0,
-  }
-  if (!sellerUserInfo && !sdrUserInfo) return commission
-  // In case there is information about an SDR, than, it is a sale with Representante
-  if (!!sdrUserInfo) {
-    // console.log(representative?.nome, responsible?.nome)
-    commission.seller = sellerUserInfo?.comissoes.comSDR || 0
-    commission.insider = sdrUserInfo?.comissoes?.semSDR || 0
-  } else {
-    commission.seller = sellerUserInfo?.comissoes?.semSDR || 0
-  }
+	const commission = {
+		seller: 0,
+		insider: 0,
+	};
+	if (!sellerUserInfo && !sdrUserInfo) return commission;
+	// In case there is information about an SDR, than, it is a sale with Representante
+	if (sdrUserInfo) {
+		commission.seller = sellerUserInfo?.comissoes.comSDR || 0;
+		commission.insider = sdrUserInfo?.comissoes?.semSDR || 0;
+	} else {
+		commission.seller = sellerUserInfo?.comissoes?.semSDR || 0;
+	}
 
-  return commission
+	return commission;
 }
 
-async function updateAppProjectsComission({ collection, changes }) {
-  try {
-    const bulkwriteAppUpdate = changes.map((project) => {
-      const { crmProjectId, appProjectId, sellerCommission, insiderCommission } = project
-      return {
-        updateOne: {
-          filter: { _id: new ObjectId(appProjectId) },
-          update: {
-            $set: {
-              'comissoes.porcentagemVendedor': sellerCommission,
-              'comissoes.porcentagemInsider': insiderCommission,
-              'comissoes.pagamentoRealizado': true,
-            },
-          },
-        },
-      }
-    })
-    if (bulkwriteAppUpdate.length > 0) {
-      await collection.bulkWrite(bulkwriteAppUpdate)
-      return
-    }
-    return
-  } catch (error) {
-    throw error
-  }
+type updateAppProjectsComissionProps = {
+	collection: Collection<TProject>;
+	changes: TUpdateComissionDataInput["changes"];
+};
+async function updateAppProjectsComission({ collection, changes }: updateAppProjectsComissionProps) {
+	try {
+		const bulkwriteAppUpdate = changes.map((project) => {
+			const { crmProjectId, appProjectId, sellerCommission, insiderCommission } = project;
+			return {
+				updateOne: {
+					filter: { _id: new ObjectId(appProjectId) },
+					update: {
+						$set: {
+							"comissoes.porcentagemVendedor": sellerCommission,
+							"comissoes.porcentagemInsider": insiderCommission,
+							"comissoes.pagamentoRealizado": true,
+						},
+					},
+				},
+			};
+		});
+		if (bulkwriteAppUpdate.length > 0) {
+			await collection.bulkWrite(bulkwriteAppUpdate);
+			return;
+		}
+		return;
+	} catch (error) {
+		throw error;
+	}
 }

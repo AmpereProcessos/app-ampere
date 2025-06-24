@@ -81,10 +81,36 @@ const GeneralProjectSchema = z.object({
 		.nullable(),
 	comissoes: z
 		.object({
-			efetivado: z.boolean().optional().nullable(),
-			pagamentoRealizado: z.boolean().optional().nullable(),
-			porcentagemVendedor: z.number().optional().nullable(),
-			porcentagemInsider: z.number().optional().nullable(),
+			efetivado: z
+				.boolean({
+					invalid_type_error: "Tipo não válido para a efetivação da comissão.",
+				})
+				.optional()
+				.nullable(),
+			pagamentoRealizado: z
+				.boolean({
+					invalid_type_error: "Tipo não válido para o pagamento realizado da comissão.",
+				})
+				.optional()
+				.nullable(),
+			porcentagemVendedor: z
+				.number({
+					invalid_type_error: "Tipo não válido para a porcentagem do vendedor da comissão.",
+				})
+				.optional()
+				.nullable(),
+			porcentagemInsider: z
+				.number({
+					invalid_type_error: "Tipo não válido para a porcentagem do insider da comissão.",
+				})
+				.optional()
+				.nullable(),
+			itensComissionaveis: z
+				.array(z.enum(["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"]))
+				.optional()
+				.nullable(),
+			dataValidacaoVendedor: z.string({ invalid_type_error: "Tipo não válido para a data de validação do vendedor." }).optional().nullable(),
+			dataValidacaoInsider: z.string({ invalid_type_error: "Tipo não válido para a data de validação do insider." }).optional().nullable(),
 		})
 		.optional()
 		.nullable(),
@@ -648,6 +674,58 @@ export const ProjectDBSimplifiedProjection = {
 	logradouro: 1,
 	numeroResidencia: 1,
 	idVisitaTecnica: 1,
+};
+
+export type TProjectComissionSimplified = Pick<
+	TProject,
+	"qtde" | "nomeDoContrato" | "codigoSVB" | "uf" | "cidade" | "vendedor" | "tipoDeServico" | "comissoes" | "canalVenda" | "insider" | "idProjetoCRM"
+> & {
+	contrato: {
+		dataAssinatura: TProject["contrato"]["dataAssinatura"];
+	};
+	pagamento: {
+		dataRecebimento: TProject["pagamento"]["dataRecebimento"];
+	};
+	sistema: {
+		potPico: TProject["sistema"]["potPico"];
+		valorProjeto: TProject["sistema"]["valorProjeto"];
+	};
+	padrao: {
+		valor: TProject["padrao"]["valor"];
+	};
+	estruturaPersonalizada: {
+		valor: TProject["estruturaPersonalizada"]["valor"];
+	};
+	oem: {
+		valor: TProject["oem"]["valor"];
+	};
+	seguro: {
+		valor: TProject["seguro"]["valor"];
+	};
+	compra: {
+		dataPagamento: TProject["compra"]["dataPagamento"];
+	};
+};
+export const ProjectComissionSimplifiedProjection = {
+	qtde: 1,
+	nomeDoContrato: 1,
+	codigoSVB: 1,
+	uf: 1,
+	cidade: 1,
+	vendedor: 1,
+	tipoDeServico: 1,
+	"contrato.dataAssinatura": 1,
+	comissoes: 1,
+	"pagamento.dataRecebimento": 1,
+	"sistema.potPico": 1,
+	"sistema.valorProjeto": 1,
+	"padrao.valor": 1,
+	"estruturaPersonalizada.valor": 1,
+	"oem.valor": 1,
+	"compra.dataPagamento": 1,
+	canalVenda: 1,
+	insider: 1,
+	idProjetoCRM: 1,
 };
 
 const PersonalizedFieldFilters = z.enum(

@@ -70,8 +70,8 @@ export function getContractModelData({ customer, system, additionalServices, pay
 	const firstContractSection =
 		"**CLÁUSULA PRIMEIRA -- DO OBJETO E FORMA DE EXECUÇÃO**\n\n" +
 		`Constitui objeto deste contrato o fornecimento de projeto, mão-de-obra, materiais e instalação de sistema de geração de energia fotovoltaica com potência instalada de **${formatDecimalPlaces(system.totalPower || 0)}kWp**.\n\n` +
-		"1.1.1.1. O objeto contratado será executado nas seguintes especificações: haverá interligação com rede de baixa tensão da concessionária de energia elétrica local\n\n" +
-		`instalada na **${system.installationLocation.address},Nº${system.installationLocation.number}, BAIRRO ${system.installationLocation.neighborhood},CEP ${system.installationLocation.cep}**, no Município de **${system.installationLocation.city}/${system.installationLocation.state}.**\n\n` +
+		"1.1.1.1. O objeto contratado será executado nas seguintes especificações: haverá interligação com rede de baixa tensão da concessionária de energia elétrica local instalada na \n\n" +
+		`**${system.installationLocation.address},Nº${system.installationLocation.number}, BAIRRO ${system.installationLocation.neighborhood},CEP ${system.installationLocation.cep}**, no Município de **${system.installationLocation.city}/${system.installationLocation.state}.**\n\n` +
 		"1.2. O sistema contratado é composto por:\n\n" +
 		"A) Fornecimento dos materiais necessários para a instalação do sistema, e seu perfeito e cabal funcionamento, a saber:\n\n" +
 		"   **A.1. Módulos fotovoltaicos**\n" +

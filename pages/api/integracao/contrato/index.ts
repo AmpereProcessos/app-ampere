@@ -277,7 +277,7 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 					})) || [],
 			installationLocation: {
 				address: contractRequest.enderecoInstalacao,
-				number: contractRequest.numeroInstalacao?.toString() || "",
+				number: contractRequest.numeroResInstalacao?.toString() || "",
 				complement: "",
 				neighborhood: contractRequest.bairroInstalacao,
 				cep: contractRequest.cepInstalacao,

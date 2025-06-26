@@ -3,14 +3,92 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useDebounce, useDebounceMemo } from "@/lib/hooks/debounce";
-import type { TComissionData } from "@/pages/api/gestao/comissoes";
+import { z } from "zod";
+// import type { TComissionData, TComissionDataByProjectId, TComissionDataGeneral } from "@/pages/api/gestao/comissoes";
+
+export const ComissionDataGeneralQueryParamsInputSchema = z.object({
+	after: z
+		.string({ required_error: "Parâmetros de período inválidos.", invalid_type_error: "Parâmetros de período inválidos." })
+		.datetime({ message: "Parâmetros de período inválidos." }),
+	before: z
+		.string({ required_error: "Parâmetros de período inválidos.", invalid_type_error: "Parâmetros de período inválidos." })
+		.datetime({ message: "Parâmetros de período inválidos." }),
+	sellers: z.string({ invalid_type_error: "Tipo não válido para os vendedores." }).optional().nullable(),
+	insiders: z.string({ invalid_type_error: "Tipo não válido para os insiders." }).optional().nullable(),
+	serviceTypes: z.string({ invalid_type_error: "Tipo não válido para os tipos de serviço." }).optional().nullable(),
+});
+
+export const ComissionDataByProjectIdQueryParamsInputSchema = z.object({
+	projectId: z.string({ required_error: "ID do projeto é obrigatório.", invalid_type_error: "ID do projeto é obrigatório." }),
+});
+
+export const ComissionDataQueryParamsInputSchema = z.union([ComissionDataGeneralQueryParamsInputSchema, ComissionDataByProjectIdQueryParamsInputSchema]);
+
+export const GeneralComissionDataOutputSchema = z.object({
+	_id: z.string(),
+	nome: z.string(),
+	tipo: z.string(),
+	identificadorApp: z.number(),
+	identificadorCrm: z.union([z.string(), z.number()]).optional().nullable(),
+	uf: z.string().optional().nullable(),
+	cidade: z.string().optional().nullable(),
+	vendedorApp: z.string(),
+	insiderApp: z.string().optional().nullable(),
+	vendedor: z.object({
+		id: z.string(),
+		nome: z.string(),
+		avatar_url: z.string().optional().nullable(),
+		comissao: z.number(),
+	}),
+	insider: z.object({
+		id: z.string().optional().nullable(),
+		nome: z.string().optional().nullable(),
+		avatar_url: z.string().optional().nullable(),
+		comissao: z.number().optional().nullable(),
+	}),
+
+	dataAssinatura: z.string().optional().nullable(),
+	dataRecebimentoParcial: z.string().optional().nullable(),
+	potenciaPico: z.number().optional().nullable(),
+	valorProjeto: z.number().optional().nullable(),
+	valorPadrao: z.number().optional().nullable(),
+	valorEstruturaPersonalizada: z.number().optional().nullable(),
+	valorOem: z.number().optional().nullable(),
+	valorSeguro: z.number().optional().nullable(),
+	valorContrato: z.number(),
+	comissoes: z.object({
+		efetivado: z.boolean(),
+		pagamentoRealizado: z.boolean(),
+		itensComissionaveis: z.array(z.enum(["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"])),
+		valorComissionavel: z.number(),
+		valorComissionavelSugerido: z.number(),
+		porcentagemVendedor: z.number(),
+		porcentagemInsider: z.number(),
+		dataValidacaoVendedor: z.string().optional().nullable(),
+		dataValidacaoInsider: z.string().optional().nullable(),
+	}),
+});
+
+export type TComissionDataGeneral = z.infer<typeof GeneralComissionDataOutputSchema>;
+
+export const ComissionDataByProjectIdOutputSchema = z.object({});
+async function fetchComissionDataByProjectId({ projectId }: { projectId: string }) {
+	try {
+		const { data }: { data: any } = await axios.get(`/api/gestao/comissoes?projectId=${projectId}`);
+		if (!data.data.byProjectId) throw new Error("Não foi possível obter os dados das comissões.");
+		return data.data.byProjectId;
+	} catch (error) {
+		throw error;
+	}
+}
 
 async function fetchComissionData({ filters }: { filters: ComissionDataFilters }) {
 	try {
-		const { data } = await axios.get(
+		const { data }: { data: any } = await axios.get(
 			`/api/gestao/comissoes?after=${filters.period.after}&before=${filters.period.before}&sellers=${filters.sellerName.join(",")}&insiders=${filters.insiderName.join(",")}&serviceTypes=${filters.serviceType.join(",")}`,
 		);
-		return data.data as TComissionData;
+		if (!data.data.default) throw new Error("Não foi possível obter os dados das comissões.");
+		return data.data.default;
 	} catch (error) {
 		throw error;
 	}
@@ -56,4 +134,11 @@ export function useComissionData({ initialFilters }: UseComissionDataParams) {
 		filters,
 		updateFilters,
 	};
+}
+
+export function useComissionDataByProjectId({ projectId }: { projectId: string }) {
+	return useQuery({
+		queryKey: ["comissions-by-project-id", projectId],
+		queryFn: async () => await fetchComissionDataByProjectId({ projectId }),
+	});
 }

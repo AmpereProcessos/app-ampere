@@ -19,21 +19,21 @@ import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from "..
 import { formatDate, formatDecimalPlaces, formatToMoney } from "../../utils/constants";
 import { allSellers, serviceTypes } from "../../utils/select-options";
 import { useComissionData } from "../../utils/methods/query/comissions";
-import { updateAppProjectsComission } from "../../utils/methods/mutation/comission";
+// import { bulkUpdateProjectsComission, updateAppProjectsComission } from "../../utils/methods/mutation/comission";
 import { MdAttachMoney, MdDashboard, MdElectricMeter, MdOutlineRoofing } from "react-icons/md";
 import { FaPercentage, FaSolarPanel } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
-import { useQueryClient } from "@tanstack/react-query";
-import type { TComissionData } from "../api/gestao/comissoes";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+// import type { TComissionData, any } from "../api/gestao/comissoes";
 import { FaDiamond, FaShieldHalved } from "react-icons/fa6";
 import { BadgeDollarSign, Pencil, Users } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
-import ControlProjectComission from "@/components/identificador/comissoes/ControlProjectComission";
+// import ControlProjectComission from "@/components/identificador/comissoes/ControlProjectComission";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
-const currentDate = new Date();
 const comissionableItemsIconsMap = {
 	SISTEMA: FaSolarPanel,
 	PADRÃO: MdElectricMeter,
@@ -53,7 +53,7 @@ function CommissionMain() {
 	const [editComissionProject, setEditComissionProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
 	const { data: projects, isSuccess, isLoading, isError, filters, updateFilters } = useComissionData({});
 
-	function getStats({ info }: { info: TComissionData }) {
+	function getStats({ info }: { info: any }) {
 		if (!info)
 			return {
 				totalVendido: 0,
@@ -139,28 +139,47 @@ function CommissionMain() {
 
 		link.click();
 	}
-	async function handleRegisterPayments(info: TComissionData) {
-		if (!info) return;
-		const bulkwriteAppUpdate = info.map((project) => {
-			const projectId = project.identificadorApp;
-			const crmProjectId = project.identificadorCrm;
-			const sellerCommission = project.comissoes?.porcentagemVendedor;
-			const insiderCommission = project.comissoes.porcentagemInsider;
-			return {
-				crmProjectId: crmProjectId,
-				appProjectId: projectId,
-				sellerCommission: sellerCommission,
-				insiderCommission: insiderCommission,
-			};
-		});
-		try {
-			await updateAppProjectsComission({ changes: bulkwriteAppUpdate });
-			await queryClient.invalidateQueries({ queryKey: ["comissions"] });
-			return toast.success("Pagamentos registrados com sucesso !");
-		} catch (error) {
-			return toast.error("Erro ao registrar pagamentos.");
-		}
-	}
+	// async function handleRegisterPayments(info: any) {
+	// 	if (!info) return;
+	// 	const bulkwriteAppUpdate = info.map((project) => {
+	// 		const projectId = project.identificadorApp;
+	// 		const crmProjectId = project.identificadorCrm;
+	// 		const sellerCommission = project.comissoes?.porcentagemVendedor;
+	// 		const insiderCommission = project.comissoes.porcentagemInsider;
+	// 		return {
+	// 			crmProjectId: crmProjectId,
+	// 			appProjectId: projectId,
+	// 			sellerCommission: sellerCommission,
+	// 			insiderCommission: insiderCommission,
+	// 		};
+	// 	});
+	// 	try {
+	// 		await updateAppProjectsComission({ changes: bulkwriteAppUpdate });
+	// 		await queryClient.invalidateQueries({ queryKey: ["comissions"] });
+	// 		return toast.success("Pagamentos registrados com sucesso !");
+	// 	} catch (error) {
+	// 		return toast.error("Erro ao registrar pagamentos.");
+	// 	}
+	// }
+
+	// async function bulkUpdateEffectivationWithSugestedValues(info: any) {
+	// 	const input = info.map((project) => ({
+	// 		projectId: project._id,
+	// 		comissionableValue: project.comissoes.valorComissionavelSugerido,
+	// 		sellerComissionPercentage: project.vendedor.comissao,
+	// 		insiderComissionPercentage: project.insider.comissao,
+	// 		comissionableItems: project.comissoes.itensComissionaveis,
+	// 		comissionDefined: project.comissoes.efetivado,
+	// 		comissionPaid: project.comissoes.pagamentoRealizado,
+	// 	}));
+
+	// 	return await bulkUpdateProjectsComission(input);
+	// }
+
+	// const { mutate: bulkUpdateEffectivationWithSugestedValuesMutation, isPending: isBulkUpdateEffectivationWithSugestedValuesPending } = useMutation({
+	// 	mutationKey: ["bulk-update-effectivation-with-sugested-values"],
+	// 	mutationFn: bulkUpdateEffectivationWithSugestedValues,
+	// });
 
 	const stats = getStats({ info: projects ?? [] });
 	useEffect(() => {
@@ -290,12 +309,17 @@ function CommissionMain() {
 					) : null}
 				</AnimatePresence>
 			</div>
+			{/* <div className="w-full flex items-center justify-end">
+				<LoadingButton variant="ghost" loading={isBulkUpdateEffectivationWithSugestedValuesPending} onClick={() => bulkUpdateEffectivationWithSugestedValuesMutation(projects ?? [])}>
+					EFETIVAR COMISSÕES COM VALORES SUGERIDOS
+				</LoadingButton>
+			</div> */}
 			{isLoading ? <LoadingPage /> : null}
 			{isError ? <ErrorComponent msg={"Erro ao carregar informações da análise. Tente novamente."} /> : null}
 			{isSuccess && projects ? (
 				projects.length > 0 ? (
 					<div className="flex w-full flex-col gap-2 py-2">
-						<div className="flex w-full items-center justify-center">
+						{/* <div className="flex w-full items-center justify-center">
 							<button
 								type="button"
 								disabled={isLoading}
@@ -304,7 +328,7 @@ function CommissionMain() {
 							>
 								REGISTRAR PAGAMENTOS
 							</button>
-						</div>
+						</div> */}
 
 						{projects.map((project) => (
 							<ProjectComissionCard key={project.identificadorApp} project={project} handleClick={(id) => setEditComissionProject({ id, isOpen: true })} />
@@ -316,9 +340,9 @@ function CommissionMain() {
 					</div>
 				)
 			) : null}
-			{editComissionProject.isOpen && editComissionProject.id ? (
+			{/* {editComissionProject.isOpen && editComissionProject.id ? (
 				<ControlProjectComission projectId={editComissionProject.id} session={session.user} closeModal={() => setEditComissionProject({ id: null, isOpen: false })} />
-			) : null}
+			) : null} */}
 		</div>
 	);
 }
@@ -326,7 +350,7 @@ function CommissionMain() {
 export default CommissionMain;
 
 type ProjectComissionCardProps = {
-	project: TComissionData[number];
+	project: any[number];
 	handleClick: (id: string) => void;
 };
 function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProps) {
@@ -341,7 +365,7 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 		OEM: project.valorOem,
 		SEGURO: project.valorSeguro,
 	};
-	function getComissionByItemList(project: TComissionData[number]) {
+	function getComissionByItemList(project: any[number]) {
 		const comissionableItems = project.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
 
 		const comissionableItemsList = comissionableItems.map((item) => {

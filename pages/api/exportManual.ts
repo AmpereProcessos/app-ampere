@@ -23,11 +23,86 @@ import type { TTag } from "@/utils/schemas/tags";
 import type { TServiceOrderTag } from "@/utils/schemas/service-order";
 import createHttpError from "http-errors";
 const getExport: NextApiHandler<any> = async (req, res) => {
-	// const projectsDb = await connectToProjectsDatabase();
+	const projectsDb = await connectToProjectsDatabase();
 	// const requestsDb: Db = await connectToSolicitacoesDatabase();
 
 	// const projectsCollection = projectsDb.collection<TProject>("dados");
 	// const requestsCollection = requestsDb.collection<TContractRequest>("contrato");
+
+	// Defining the second semester of 2024
+	const firstPeriodStart = "2024-06-01T00:00:00.000Z";
+	const firstPeriodEnd = "2024-12-31T23:59:59.999Z";
+	// Defining the first semester of 2025
+	const secondPeriodStart = "2025-01-01T00:00:00.000Z";
+	const secondPeriodEnd = "2025-06-30T23:59:59.999Z";
+
+	const projectsInFirstPeriod = await projectsDb
+		.collection<TProject>("dados")
+		.find({
+			"contrato.dataAssinatura": { $gte: firstPeriodStart, $lte: firstPeriodEnd },
+		})
+		.toArray();
+
+	const firstPeriodExport = projectsInFirstPeriod.map((project) => {
+		return {
+			QTDE: project.qtde,
+			NOME: project.nomeDoContrato,
+			CIDADE: project.cidade,
+			UF: project.uf,
+			"TIPO DE SERVIÇO": project.tipoDeServico,
+			"DATA DE ASSINATURA": formatDateAsLocale(project.contrato.dataAssinatura),
+			"VALOR DO CONTRATO": formatToMoney(
+				getContractValue({
+					projectValue: project.sistema.valorProjeto,
+					insuranceValue: project.seguro?.valor,
+					oemValue: project.oem?.valor,
+					paValue: project.padrao?.valor,
+					structureValue: project.estruturaPersonalizada?.valor,
+				}),
+			),
+			MODULOS: getProductsStr(project.produtos?.filter((product) => product.categoria === "MÓDULO") || []),
+			INVERSORES: getProductsStr(project.produtos?.filter((product) => product.categoria === "INVERSOR") || []),
+			"DATA DE PAGAMENTO (RECURSOS)": formatDateAsLocale(project.compra?.dataPagamento) || "N/A",
+			"DATA DE PAGAMENTO (COMPRA)": formatDateAsLocale(project.compra?.dataPagamentoEquipamentos) || "N/A",
+			"FATURAMENTO CONCLUÍDO": project.faturamento?.concluido ? "SIM" : "NÃO",
+			"DATA DE FATURAMENTO": formatDateAsLocale(project.faturamento?.dataFaturamento) || "N/A",
+			"OBSERVAÇÕES DO FATURAMENTO": project.faturamento?.observacoes,
+		};
+	});
+
+	const projectsInSecondPeriod = await projectsDb
+		.collection<TProject>("dados")
+		.find({
+			"contrato.dataAssinatura": { $gte: secondPeriodStart, $lte: secondPeriodEnd },
+		})
+		.toArray();
+
+	const secondPeriodExport = projectsInSecondPeriod.map((project) => {
+		return {
+			QTDE: project.qtde,
+			NOME: project.nomeDoContrato,
+			CIDADE: project.cidade,
+			UF: project.uf,
+			"TIPO DE SERVIÇO": project.tipoDeServico,
+			"DATA DE ASSINATURA": formatDateAsLocale(project.contrato.dataAssinatura),
+			"VALOR DO CONTRATO": formatToMoney(
+				getContractValue({
+					projectValue: project.sistema.valorProjeto,
+					insuranceValue: project.seguro?.valor,
+					oemValue: project.oem?.valor,
+					paValue: project.padrao?.valor,
+					structureValue: project.estruturaPersonalizada?.valor,
+				}),
+			),
+			MODULOS: getProductsStr(project.produtos?.filter((product) => product.categoria === "MÓDULO") || []),
+			INVERSORES: getProductsStr(project.produtos?.filter((product) => product.categoria === "INVERSOR") || []),
+			"DATA DE PAGAMENTO (RECURSOS)": formatDateAsLocale(project.compra?.dataPagamento) || "N/A",
+			"DATA DE PAGAMENTO (COMPRA)": formatDateAsLocale(project.compra?.dataPagamentoEquipamentos) || "N/A",
+			"FATURAMENTO CONCLUÍDO": project.faturamento?.concluido ? "SIM" : "NÃO",
+			"DATA DE FATURAMENTO": formatDateAsLocale(project.faturamento?.dataFaturamento) || "N/A",
+			"OBSERVAÇÕES DO FATURAMENTO": project.faturamento?.observacoes,
+		};
+	});
 
 	// const startDate = dayjs().subtract(1, "month").startOf("month").subtract(3, "hour").toDate();
 	// const endDate = dayjs().subtract(1, "month").endOf("month").subtract(3, "hour").toDate();
@@ -63,7 +138,10 @@ const getExport: NextApiHandler<any> = async (req, res) => {
 	// return res.json({
 	// 	formatted: formatted.map((f) => `${f.qtde} ${f.nome}`).join(","),
 	// });
-	return res.send("DESATIVADA");
+	return res.send({
+		firstPeriodExport,
+		secondPeriodExport,
+	});
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

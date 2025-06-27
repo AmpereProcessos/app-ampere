@@ -16,7 +16,7 @@ import DateInput from "../../components/inputs/Date";
 import MultipleSelectInput from "../../components/inputs/MultipleSelect";
 
 import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from "../../utils/methods/shared";
-import { formatDate, formatDecimalPlaces, formatToMoney } from "../../utils/constants";
+import { formatDate, formatDecimalPlaces, formatToMoney, getProjectTypeCollors } from "../../utils/constants";
 import { allSellers, serviceTypes } from "../../utils/select-options";
 import { useComissionData } from "../../utils/methods/query/comissions";
 // import { bulkUpdateProjectsComission, updateAppProjectsComission } from "../../utils/methods/mutation/comission";
@@ -184,7 +184,18 @@ function CommissionMain() {
 
 		return await bulkUpdateProjectsComission(input);
 	}
-
+	async function bulkFixComissions(info: TGetComissionDataOutputDefault) {
+		const input = info.map((project) => ({
+			projectId: project._id,
+			comissionableValue: project.comissoes.valorComissionavelSugerido,
+			sellerComissionPercentage: project.vendedor.comissao,
+			insiderComissionPercentage: project.insider.comissao,
+			comissionableItems: project.comissoes.itensComissionaveis,
+			comissionDefined: false,
+			comissionPaid: false,
+		}));
+		return await bulkUpdateProjectsComission(input);
+	}
 	const { mutate: bulkUpdateMissingComissionDefinitionsMutation, isPending: isBulkUpdateMissingComissionDefinitionsPending } = useMutation({
 		mutationKey: ["bulk-update-effectivation-with-sugested-values"],
 		mutationFn: bulkUpdateMissingComissionDefinitions,
@@ -460,7 +471,9 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 							<p>{project.identificadorCrm}</p>
 						</div>
 					</Link>
-					<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", getProjectTypeCollors(project.tipo))}
+					>
 						<FaDiamond size={12} />
 						<p>{project.tipo}</p>
 					</div>
@@ -716,7 +729,12 @@ function ComissionsReportViewSeller({
 										</div>
 									</Link>
 
-									<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+									<div
+										className={cn(
+											"flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80",
+											getProjectTypeCollors(project.tipo),
+										)}
+									>
 										<FaDiamond size={12} />
 										<p>{project.tipo}</p>
 									</div>

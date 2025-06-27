@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useDebounce, useDebounceMemo } from "@/lib/hooks/debounce";
 import { z } from "zod";
+import type { TGetComissionDataOutput } from "@/app/api/comissoes/route";
 // import type { TComissionData, TComissionDataByProjectId, TComissionDataGeneral } from "@/pages/api/gestao/comissoes";
 
 export const ComissionDataGeneralQueryParamsInputSchema = z.object({
@@ -74,7 +75,7 @@ export type TComissionDataGeneral = z.infer<typeof GeneralComissionDataOutputSch
 export const ComissionDataByProjectIdOutputSchema = z.object({});
 async function fetchComissionDataByProjectId({ projectId }: { projectId: string }) {
 	try {
-		const { data }: { data: any } = await axios.get(`/api/gestao/comissoes?projectId=${projectId}`);
+		const { data }: { data: TGetComissionDataOutput } = await axios.get(`/api/comissoes?projectId=${projectId}`);
 		if (!data.data.byProjectId) throw new Error("Não foi possível obter os dados das comissões.");
 		return data.data.byProjectId;
 	} catch (error) {
@@ -84,8 +85,8 @@ async function fetchComissionDataByProjectId({ projectId }: { projectId: string 
 
 async function fetchComissionData({ filters }: { filters: ComissionDataFilters }) {
 	try {
-		const { data }: { data: any } = await axios.get(
-			`/api/gestao/comissoes?after=${filters.period.after}&before=${filters.period.before}&sellers=${filters.sellerName.join(",")}&insiders=${filters.insiderName.join(",")}&serviceTypes=${filters.serviceType.join(",")}`,
+		const { data }: { data: TGetComissionDataOutput } = await axios.get(
+			`/api/comissoes?after=${filters.period.after}&before=${filters.period.before}&sellers=${filters.sellerName.join(",")}&insiders=${filters.insiderName.join(",")}&serviceTypes=${filters.serviceType.join(",")}`,
 		);
 		if (!data.data.default) throw new Error("Não foi possível obter os dados das comissões.");
 		return data.data.default;

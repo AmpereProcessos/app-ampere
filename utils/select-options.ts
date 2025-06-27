@@ -4,6 +4,9 @@ import { MdEast, MdElectricMeter, MdNorth, MdNorthEast, MdNorthWest, MdOutlineSe
 import { TbTopologyFull } from "react-icons/tb";
 import type { TPurchaseControl } from "./schemas/purchases";
 
+export const ComissionableItems = ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
+export type TComissionableItemsEnum = "SISTEMA" | "PADRÃO" | "ESTRUTURA PERSONALIZADA" | "OEM" | "SEGURO";
+
 export const SystemTopologiesTypes = [
 	{ id: 1, label: "INVERSOR", value: "INVERSOR" },
 	{ id: 2, label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },

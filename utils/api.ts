@@ -57,6 +57,6 @@ export function apiHandler(handler: ApiMethodHandlers) {
 export async function validateAuthenticationWithSession(req: NextApiRequest, res: NextApiResponse) {
 	// @ts-ignore
 	const session = await getServerSession(req, res, authOptions);
-	if (!session) throw new createHttpError.Unauthorized(`Recurso não acessível a usuários não autenticados.`);
+	if (!session) throw new createHttpError.Unauthorized("Recurso não acessível a usuários não autenticados.");
 	return session;
 }

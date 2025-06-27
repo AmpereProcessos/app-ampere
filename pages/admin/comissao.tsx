@@ -28,17 +28,23 @@ import dayjs from "dayjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 // import type { TComissionData, any } from "../api/gestao/comissoes";
 import { FaDiamond, FaShieldHalved } from "react-icons/fa6";
-import { BadgeDollarSign, Pencil, Users } from "lucide-react";
+import { BadgeCheck, BadgeDollarSign, Calendar, ChevronDown, ChevronUp, Pencil, Users, Wrench, Percent } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
-// import ControlProjectComission from "@/components/identificador/comissoes/ControlProjectComission";
+import ControlProjectComission from "@/components/identificador/comissoes/ControlProjectComission";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import type { TGetComissionDataOutputDefault } from "@/app/api/comissoes/route";
+import { bulkUpdateProjectsComission } from "@/utils/methods/mutation/comission";
+import { cn } from "@/lib/utils";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 
 const comissionableItemsIconsMap = {
 	SISTEMA: FaSolarPanel,
 	PADRÃO: MdElectricMeter,
 	"ESTRUTURA PERSONALIZADA": MdOutlineRoofing,
-	OEM: FaSolarPanel,
+	OEM: Wrench,
 	SEGURO: FaShieldHalved,
 };
 function CommissionMain() {
@@ -53,7 +59,7 @@ function CommissionMain() {
 	const [editComissionProject, setEditComissionProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
 	const { data: projects, isSuccess, isLoading, isError, filters, updateFilters } = useComissionData({});
 
-	function getStats({ info }: { info: any }) {
+	function getStats({ info }: { info: TGetComissionDataOutputDefault }) {
 		if (!info)
 			return {
 				totalVendido: 0,
@@ -139,6 +145,7 @@ function CommissionMain() {
 
 		link.click();
 	}
+
 	// async function handleRegisterPayments(info: any) {
 	// 	if (!info) return;
 	// 	const bulkwriteAppUpdate = info.map((project) => {
@@ -162,26 +169,74 @@ function CommissionMain() {
 	// 	}
 	// }
 
-	// async function bulkUpdateEffectivationWithSugestedValues(info: any) {
-	// 	const input = info.map((project) => ({
-	// 		projectId: project._id,
-	// 		comissionableValue: project.comissoes.valorComissionavelSugerido,
-	// 		sellerComissionPercentage: project.vendedor.comissao,
-	// 		insiderComissionPercentage: project.insider.comissao,
-	// 		comissionableItems: project.comissoes.itensComissionaveis,
-	// 		comissionDefined: project.comissoes.efetivado,
-	// 		comissionPaid: project.comissoes.pagamentoRealizado,
-	// 	}));
+	async function bulkUpdateMissingComissionPayments(info: TGetComissionDataOutputDefault) {
+		const missingComissionPayments = info.filter((project) => !project.comissoes.pagamentoRealizado);
+		const input = missingComissionPayments.map((project) => ({
+			projectId: project._id,
+			comissionableValue: project.comissoes.valorComissionavelSugerido,
+			sellerComissionPercentage: project.comissoes.porcentagemVendedor, // using the defined comission percentage
+			insiderComissionPercentage: project.comissoes.porcentagemInsider, // using the defined comission percentage
+			comissionableItems: project.comissoes.itensComissionaveis,
+			comissionDefined: project.comissoes.efetivado,
+			comissionPaid: true,
+		}));
 
-	// 	return await bulkUpdateProjectsComission(input);
-	// }
+		return await bulkUpdateProjectsComission(input);
+	}
 
-	// const { mutate: bulkUpdateEffectivationWithSugestedValuesMutation, isPending: isBulkUpdateEffectivationWithSugestedValuesPending } = useMutation({
-	// 	mutationKey: ["bulk-update-effectivation-with-sugested-values"],
-	// 	mutationFn: bulkUpdateEffectivationWithSugestedValues,
-	// });
+	async function bulkUpdateMissingComissionDefinitions(info: TGetComissionDataOutputDefault) {
+		const missingComissionDefinitions = info.filter((project) => !project.comissoes.efetivado);
+		const input = missingComissionDefinitions.map((project) => ({
+			projectId: project._id,
+			comissionableValue: project.comissoes.valorComissionavelSugerido,
+			sellerComissionPercentage: project.vendedor.comissao,
+			insiderComissionPercentage: project.insider.comissao,
+			comissionableItems: project.comissoes.itensComissionaveis,
+			comissionDefined: true,
+			comissionPaid: project.comissoes.pagamentoRealizado,
+		}));
+
+		return await bulkUpdateProjectsComission(input);
+	}
+
+	const { mutate: bulkUpdateMissingComissionDefinitionsMutation, isPending: isBulkUpdateMissingComissionDefinitionsPending } = useMutation({
+		mutationKey: ["bulk-update-effectivation-with-sugested-values"],
+		mutationFn: bulkUpdateMissingComissionDefinitions,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ["comissions", filters] });
+		},
+		onSuccess: async (data) => {
+			toast.success(data);
+		},
+		onError: async (error) => {
+			toast.error("Erro ao efetivar comissões com valores sugeridos.");
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["comissions", filters] });
+		},
+	});
+	const { mutate: bulkUpdateMissingComissionPaymentsMutation, isPending: isBulkUpdateMissingComissionPaymentsPending } = useMutation({
+		mutationKey: ["bulk-update-missing-comission-payments"],
+		mutationFn: bulkUpdateMissingComissionPayments,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ["comissions", filters] });
+		},
+		onSuccess: async (data) => {
+			toast.success(data);
+		},
+		onError: async (error) => {
+			toast.error("Erro ao efetivar comissões com valores sugeridos.");
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["comissions", filters] });
+		},
+	});
 
 	const stats = getStats({ info: projects ?? [] });
+
+	const areMissingComissionDefinitions = projects?.some((project) => !project.comissoes.efetivado);
+	const areMissingComissionPayments = projects?.some((project) => !project.comissoes.pagamentoRealizado);
+
 	useEffect(() => {
 		if (session) {
 			if (!userHasFinancesEditPermission && !userHasAdministrativeEditPermission) router.push("/");
@@ -309,48 +364,64 @@ function CommissionMain() {
 					) : null}
 				</AnimatePresence>
 			</div>
-			{/* <div className="w-full flex items-center justify-end">
-				<LoadingButton variant="ghost" loading={isBulkUpdateEffectivationWithSugestedValuesPending} onClick={() => bulkUpdateEffectivationWithSugestedValuesMutation(projects ?? [])}>
-					EFETIVAR COMISSÕES COM VALORES SUGERIDOS
-				</LoadingButton>
-			</div> */}
+			<div className="w-full flex items-center justify-end mt-4 flex-col lg:flex-row">
+				{areMissingComissionDefinitions ? (
+					<LoadingButton variant="ghost" loading={isBulkUpdateMissingComissionDefinitionsPending} onClick={() => bulkUpdateMissingComissionDefinitionsMutation(projects ?? [])}>
+						EFETIVAR COMISSÕES FALTANTES COM VALORES SUGERIDOS
+					</LoadingButton>
+				) : null}
+				{areMissingComissionPayments ? (
+					<LoadingButton variant="ghost" loading={isBulkUpdateMissingComissionPaymentsPending} onClick={() => bulkUpdateMissingComissionPaymentsMutation(projects ?? [])}>
+						REGISTRAR PAGAMENTOS DE COMISSÕES FALTANTES
+					</LoadingButton>
+				) : null}
+			</div>
+
 			{isLoading ? <LoadingPage /> : null}
 			{isError ? <ErrorComponent msg={"Erro ao carregar informações da análise. Tente novamente."} /> : null}
 			{isSuccess && projects ? (
-				projects.length > 0 ? (
-					<div className="flex w-full flex-col gap-2 py-2">
-						{/* <div className="flex w-full items-center justify-center">
-							<button
-								type="button"
-								disabled={isLoading}
-								onClick={() => handleRegisterPayments(projects)}
-								className="rounded border border-green-500 px-2 py-1 font-medium text-green-500 duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white enabled:hover:bg-green-500 enabled:hover:text-white"
-							>
-								REGISTRAR PAGAMENTOS
-							</button>
-						</div> */}
-
-						{projects.map((project) => (
-							<ProjectComissionCard key={project.identificadorApp} project={project} handleClick={(id) => setEditComissionProject({ id, isOpen: true })} />
-						))}
-					</div>
-				) : (
-					<div className="flex grow items-center justify-center">
-						<h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
-					</div>
-				)
+				<Tabs defaultValue="database">
+					<TabsList>
+						<TabsTrigger value="database">Lista</TabsTrigger>
+						<TabsTrigger value="report">Relatório</TabsTrigger>
+					</TabsList>
+					<TabsContent value="database">
+						<ComissionsDatabaseView projects={projects} handleClick={() => setEditComissionProject({ id: null, isOpen: true })} />
+					</TabsContent>
+					<TabsContent value="report">
+						<ComissionsReportView projects={projects} />
+					</TabsContent>
+				</Tabs>
 			) : null}
-			{/* {editComissionProject.isOpen && editComissionProject.id ? (
+			{editComissionProject.isOpen && editComissionProject.id ? (
 				<ControlProjectComission projectId={editComissionProject.id} session={session.user} closeModal={() => setEditComissionProject({ id: null, isOpen: false })} />
-			) : null} */}
+			) : null}
 		</div>
 	);
 }
 
 export default CommissionMain;
 
+type ComissionsDatabaseViewProps = {
+	projects: TGetComissionDataOutputDefault;
+	handleClick: (id: string) => void;
+};
+function ComissionsDatabaseView({ projects, handleClick }: ComissionsDatabaseViewProps) {
+	return (
+		<div className="w-full flex flex-col gap-2">
+			{projects.length > 0 ? (
+				projects.map((project) => <ProjectComissionCard key={project.identificadorApp} project={project} handleClick={(id) => handleClick(id)} />)
+			) : (
+				<div className="flex grow items-center justify-center">
+					<h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
+				</div>
+			)}
+		</div>
+	);
+}
+
 type ProjectComissionCardProps = {
-	project: any[number];
+	project: TGetComissionDataOutputDefault[number];
 	handleClick: (id: string) => void;
 };
 function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProps) {
@@ -365,7 +436,7 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 		OEM: project.valorOem,
 		SEGURO: project.valorSeguro,
 	};
-	function getComissionByItemList(project: any[number]) {
+	function getComissionByItemList(project: TGetComissionDataOutputDefault[number]) {
 		const comissionableItems = project.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
 
 		const comissionableItemsList = comissionableItems.map((item) => {
@@ -376,16 +447,22 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 				valor: value,
 				comissaoVendedor: sellerCommissionPercentage * value,
 				comissaoInsider: insiderCommissionPercentage * value,
-				comissaoTotal: value * (totalComissionPercentage / 100),
+				comissaoTotal: value * totalComissionPercentage,
 			};
 		});
 		return comissionableItemsList;
+	}
+	function getDateParams(project: TGetComissionDataOutputDefault[number]) {
+		if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipo)) {
+			return project.dataRecebimentoParcial;
+		}
+		return project.dataAssinatura;
 	}
 	const comissionByItemList = getComissionByItemList(project);
 	return (
 		<div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 flex-wrap">
 					<div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
 						<MdDashboard size={12} />
 						<p className="text-xs">{project.identificadorApp}</p>
@@ -400,6 +477,26 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 						<FaDiamond size={12} />
 						<p>{project.tipo}</p>
 					</div>
+					<HoverCard>
+						<HoverCardTrigger asChild>
+							<div className="flex items-center gap-1  text-center text-[0.57rem] font-bold italic text-primary/80">
+								<Calendar className="w-3.5 h-3.5 min-w-3.5 min-h-3.5" />
+								<p>{formatDateAsLocale(getDateParams(project))}</p>
+							</div>
+						</HoverCardTrigger>
+						<HoverCardContent className="min-w-80 w-fit">
+							<div className="space-y-1">
+								<div className="w-full flex items-center justify-between gap-2">
+									<p className="text-sm font-semibold text-primary/80">DATA DE ASSINATURA:</p>
+									<p className="text-sm font-semibold text-primary/80">{formatDateAsLocale(project.dataAssinatura) || "N/A"}</p>
+								</div>
+								<div className="w-full flex items-center justify-between gap-2">
+									<p className="text-sm font-semibold text-primary/80">DATA DE PAGAMENTO PARCIAL: </p>
+									<p className="text-sm font-semibold text-primary/80">{formatDateAsLocale(project.dataRecebimentoParcial) || "N/A"}</p>
+								</div>
+							</div>
+						</HoverCardContent>
+					</HoverCard>
 				</div>
 				<Button variant={"ghost"} className="flex items-center gap-1 px-2 py-1" size={"fit"} onClick={() => handleClick(project._id)}>
 					<Pencil className="h-4 w-4 min-h-4 min-w-4" />
@@ -408,8 +505,26 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 			</div>
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
 				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": !project.comissoes.efetivado,
+							"bg-green-100 text-green-700": project.comissoes.efetivado,
+						})}
+					>
+						<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.57rem]")}>{project.comissoes.efetivado ? "COMISSÕES EFETIVADAS" : "VALORES NÃO EFETIVADOS"}</p>
+					</div>
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": !project.comissoes.pagamentoRealizado,
+							"bg-green-100 text-green-700": project.comissoes.pagamentoRealizado,
+						})}
+					>
+						<BadgeDollarSign className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.57rem]")}>{project.comissoes.pagamentoRealizado ? "PAGAMENTO DE COMISSÕES REALIZADO" : "PAGAMENTO DE COMISSÕES NÃO REALIZADO"}</p>
+					</div>
 					<div className="flex items-center gap-1">
-						<Users size={12} />
+						<Users className={cn("w-3 h-3 min-w-3 min-h-3")} />
 						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
 							<p>VENDEDOR</p>
 							<p className="text-[#15599a] font-black text-[0.57rem]">{project.vendedorApp}</p>
@@ -428,8 +543,8 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 					</div>
 				</div>
 			</div>
-			<div className="w-full flex items-center justify-between gap-2">
-				<div className="flex items-center gap-2">
+			<div className="w-full flex items-center justify-between gap-2 flex-col lg:flex-row">
+				<div className="flex justify-center lg:justify-start items-center gap-2 flex-wrap">
 					{comissionByItemList.map((item) => (
 						<HoverCard key={item.item}>
 							<HoverCardTrigger asChild>
@@ -493,5 +608,144 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 				</HoverCard>
 			</div>
 		</div>
+	);
+}
+
+type ComissionReportBySeller = {
+	seller: {
+		id: TGetComissionDataOutputDefault[number]["vendedor"]["id"];
+		name: TGetComissionDataOutputDefault[number]["vendedor"]["nome"];
+		avatar_url: TGetComissionDataOutputDefault[number]["vendedor"]["avatar_url"];
+	};
+	projects: TGetComissionDataOutputDefault[number][];
+};
+type ComissionsReportViewProps = {
+	projects: TGetComissionDataOutputDefault;
+};
+function ComissionsReportView({ projects }: ComissionsReportViewProps) {
+	const comissionsGroupedBySeller = projects.reduce(
+		(acc: Record<string, ComissionReportBySeller>, project) => {
+			const seller = project.vendedorApp;
+			const insider = project.insiderApp;
+			if (!acc[seller]) acc[seller] = { seller: { id: project.vendedor.id, name: project.vendedor.nome, avatar_url: project.vendedor.avatar_url }, projects: [] };
+			if (insider) {
+				if (!acc[insider])
+					acc[insider] = { seller: { id: project.insider.id as string, name: project.insider.nome as string, avatar_url: project.insider.avatar_url as string }, projects: [] };
+			}
+			acc[seller].projects.push(project);
+			if (insider) acc[insider].projects.push(project);
+			return acc;
+		},
+		{} as Record<string, ComissionReportBySeller>,
+	);
+
+	const comissionsGroupedBySellerSorted = Object.entries(comissionsGroupedBySeller).sort((a, b) => {
+		return a[0].localeCompare(b[0]);
+	});
+	console.log({ comissionsGroupedBySellerSorted });
+	return (
+		<div className="w-full flex flex-col gap-2">
+			{comissionsGroupedBySellerSorted.map(([seller, data]) => (
+				<ComissionsReportViewSeller key={seller} sellerKey={seller} seller={data.seller} projects={data.projects} />
+			))}
+		</div>
+	);
+}
+function ComissionsReportViewSeller({
+	sellerKey,
+	seller,
+	projects,
+}: { sellerKey: string; seller: ComissionReportBySeller["seller"]; projects: ComissionReportBySeller["projects"] }) {
+	const [showProjects, setShowProjects] = useState(false);
+
+	const totalComissionValue = projects.reduce((acc, project) => {
+		const iteratingSellerIsProjectSeller = project.vendedorApp === sellerKey;
+		const iteratingSellerIsProjectInsider = project.insiderApp === sellerKey;
+		let comissionValue = 0;
+		if (iteratingSellerIsProjectSeller) {
+			comissionValue += project.comissoes.valorComissionavel * (project.comissoes.porcentagemVendedor / 100);
+		}
+		if (iteratingSellerIsProjectInsider) {
+			comissionValue += project.comissoes.valorComissionavel * (project.comissoes.porcentagemInsider / 100);
+		}
+		return acc + comissionValue;
+	}, 0);
+	return (
+		<AnimatePresence>
+			<div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+				<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+					<div className="flex items-center gap-2 flex-wrap">
+						<div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
+							<Avatar className="h-5 w-5 min-h-5 min-w-5">
+								<AvatarImage src={seller.avatar_url || undefined} alt={seller.name} />
+								<AvatarFallback>{formatNameAsInitials(seller.name || "NA")}</AvatarFallback>
+							</Avatar>
+							<p className="text-xs">{sellerKey}</p>
+						</div>
+					</div>
+					<div className="flex items-center gap-2 min-w-fit">
+						<Button variant={"ghost"} onClick={() => setShowProjects((prev) => !prev)} className={cn("flex items-center gap-2 px-2 py-1")} size={"fit"}>
+							<p>MOSTRAR PROJETOS</p>
+							{!showProjects ? <ChevronDown width={14} height={14} /> : <ChevronUp width={14} height={14} />}
+						</Button>
+						<div className="flex items-center gap-1 px-2 py-1">
+							<BadgeDollarSign className="h-4 w-4 min-h-4 min-w-4" />
+							<p className="text-sm font-semibold text-primary/80">{formatToMoney(totalComissionValue)}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{showProjects
+				? projects.map((project, index: number) => {
+						const iteratingSellerIsProjectSeller = project.vendedorApp === sellerKey;
+						const iteratingSellerIsProjectInsider = project.insiderApp === sellerKey;
+						const comissionPercentage = iteratingSellerIsProjectSeller
+							? project.comissoes.porcentagemVendedor
+							: iteratingSellerIsProjectInsider
+								? project.comissoes.porcentagemInsider
+								: 0;
+						const comissionValue = project.comissoes.valorComissionavel * (comissionPercentage / 100);
+						return (
+							<motion.div
+								key={project._id}
+								initial={{ opacity: 0, y: 10 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{
+									duration: 0.3,
+									delay: index * 0.1, // Each item is delayed by 0.1s * its index
+								}}
+								className="flex items-center justify-between flex-col lg:flex-row px-2"
+							>
+								<div className="flex items-center gap-2 flex-wrap">
+									<div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
+										<MdDashboard size={12} />
+										<p className="text-xs">{project.identificadorApp}</p>
+									</div>
+									<p className="text-sm font-bold leading-none tracking-tight">{project.nome}</p>
+
+									<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+										<BsFunnel size={12} />
+										<p>{project.identificadorCrm}</p>
+									</div>
+									<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+										<FaDiamond size={12} />
+										<p>{project.tipo}</p>
+									</div>
+								</div>
+								<div className="flex items-center gap-2">
+									<div className="flex items-center gap-1 px-2 py-1">
+										<Percent className="h-4 w-4 min-h-4 min-w-4" />
+										<p className="text-sm font-semibold text-primary/80">{formatDecimalPlaces(comissionPercentage)}%</p>
+									</div>
+									<div className="flex items-center gap-1 px-2 py-1">
+										<BadgeDollarSign className="h-4 w-4 min-h-4 min-w-4" />
+										<p className="text-sm font-semibold text-primary/80">{formatToMoney(comissionValue)}</p>
+									</div>
+								</div>
+							</motion.div>
+						);
+					})
+				: null}
+		</AnimatePresence>
 	);
 }

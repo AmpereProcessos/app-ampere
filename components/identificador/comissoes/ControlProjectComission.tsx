@@ -23,16 +23,20 @@ import toast from "react-hot-toast";
 import { formatToMoney } from "@/utils/constants";
 import { getContractValue } from "@/utils/methods/util/projects";
 import { useComissionDataByProjectId } from "@/utils/methods/query/comissions";
-import { ComissionableItems, type TComissionableItemsEnum, type TComissionDataByProjectId } from "@/pages/api/gestao/comissoes";
 import { cn } from "@/lib/utils";
+import type { TGetComissionDataOutputByProjectId } from "@/app/api/comissoes/route";
+import { ComissionableItems, type TComissionableItemsEnum } from "@/utils/select-options";
+import CheckboxInput from "@/components/inputs/Checkbox";
 
 type ComissionInfoHolder = {
 	comissionableValue: number;
-	comissionableItems: TComissionDataByProjectId["comissoes"]["itensComissionaveis"];
+	comissionableItems: TGetComissionDataOutputByProjectId["comissoes"]["itensComissionaveis"];
 	sellerComissionPercentage: number;
 	insiderComissionPercentage: number;
 	sellerComissionValue: number;
 	insiderComissionValue: number;
+	comissionDefined: boolean;
+	comissionPaid: boolean;
 };
 
 type ControlProjectComissionProps = {
@@ -59,6 +63,8 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 		sellerComissionValue: (project?.comissoes?.valorComissionavel || 0) * ((project?.comissoes?.porcentagemVendedor || 0) / 100) || 0,
 		insiderComissionPercentage: project?.comissoes?.porcentagemInsider || 0,
 		insiderComissionValue: (project?.comissoes?.valorComissionavel || 0) * ((project?.comissoes?.porcentagemInsider || 0) / 100) || 0,
+		comissionDefined: project?.comissoes?.efetivado || false,
+		comissionPaid: project?.comissoes?.pagamentoRealizado || false,
 	});
 	function updateInfoHolder(changes: Partial<ComissionInfoHolder>) {
 		setInfoHolder((prev) => ({ ...prev, ...changes }));
@@ -96,7 +102,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 				{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 				{isSuccess ? (
 					<>
-						<div className="flex-1 overflow-auto">
+						<div className="flex-1 overflow-auto px-4">
 							<ProjectComissionDataBlock project={project} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 						</div>
 						<DialogFooter>
@@ -110,6 +116,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 										changes: {
 											"comissoes.porcentagemVendedor": infoHolder.sellerComissionPercentage,
 											"comissoes.porcentagemInsider": infoHolder.insiderComissionPercentage,
+											"comissoes.efetivado": infoHolder.comissionDefined,
 										},
 									})
 								}
@@ -134,7 +141,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 				{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 				{isSuccess ? (
 					<>
-						<div className="flex-1 overflow-auto">
+						<div className="flex-1 overflow-auto px-4">
 							<ProjectComissionDataBlock project={project} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 						</div>
 						<DrawerFooter>
@@ -148,6 +155,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 										changes: {
 											"comissoes.porcentagemVendedor": infoHolder.sellerComissionPercentage,
 											"comissoes.porcentagemInsider": infoHolder.insiderComissionPercentage,
+											"comissoes.efetivado": infoHolder.comissionDefined,
 										},
 									})
 								}
@@ -169,8 +177,21 @@ function ProjectComissionDataBlock({
 	project,
 	infoHolder,
 	updateInfoHolder,
-}: { project: TComissionDataByProjectId; infoHolder: ComissionInfoHolder; updateInfoHolder: (changes: Partial<ComissionInfoHolder>) => void }) {
-	const comissionableItems = project.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
+}: { project: TGetComissionDataOutputByProjectId; infoHolder: ComissionInfoHolder; updateInfoHolder: (changes: Partial<ComissionInfoHolder>) => void }) {
+	function updateComissionableItems(item: TComissionableItemsEnum) {
+		const itemIsInComissionableItems = infoHolder.comissionableItems.includes(item);
+		const newComissionableItems = itemIsInComissionableItems ? infoHolder.comissionableItems.filter((i) => i !== item) : [...infoHolder.comissionableItems, item];
+		updateInfoHolder({
+			comissionableItems: newComissionableItems,
+			comissionableValue: getContractValue({
+				projectValue: newComissionableItems.includes("SISTEMA") ? project.valorProjeto : 0,
+				paValue: newComissionableItems.includes("PADRÃO") ? project.valorPadrao : 0,
+				structureValue: newComissionableItems.includes("ESTRUTURA PERSONALIZADA") ? project.valorEstruturaPersonalizada : 0,
+				oemValue: newComissionableItems.includes("OEM") ? project.valorOem : 0,
+				insuranceValue: newComissionableItems.includes("SEGURO") ? project.valorSeguro : 0,
+			}),
+		});
+	}
 	return (
 		<div className="w-full h-full flex flex-col gap-6">
 			<div className="w-full flex flex-col gap-1.5">
@@ -277,19 +298,26 @@ function ProjectComissionDataBlock({
 					labelClassName="text-[0.6rem]"
 					holderClassName="text-xs p-2 min-h-[34px]"
 				/>
+				<h1 className="text-[0.6rem] font-medium tracking-tight text-primary/80">ITENS COMISSIONÁVEIS</h1>
 				<div className="w-full flex items-center flex-wrap gap-1.5">
-					{ComissionableItems.map((item) => (
-						<Button
-							key={item}
-							className={cn("flex items-center gap-1.5 px-2 py-1", {
-								"bg-green-500 text-white": infoHolder.comissionableItems.includes(item as TComissionableItemsEnum),
-							})}
-							variant={"outline"}
-							size={"fit"}
-						>
-							<h3 className="text-sm font-semibold tracking-tighter text-primary/80">{item}</h3>
-						</Button>
-					))}
+					{ComissionableItems.map((item) => {
+						const itemIsInComissionableItems = infoHolder.comissionableItems.includes(item as TComissionableItemsEnum);
+						return (
+							<Button
+								key={item}
+								className={cn("flex items-center gap-1.5 px-2 py-1", {
+									"bg-green-500 text-white": itemIsInComissionableItems,
+								})}
+								variant={"outline"}
+								size={"fit"}
+								onClick={() => {
+									updateComissionableItems(item as TComissionableItemsEnum);
+								}}
+							>
+								<h3 className="text-xs font-semibold tracking-tighter">{item}</h3>
+							</Button>
+						);
+					})}
 				</div>
 				<div className="w-full flex flex-col gap-1.5">
 					<h1 className="text-sm font-bold leading-none tracking-tight">COMISSIONADOS</h1>
@@ -374,6 +402,16 @@ function ProjectComissionDataBlock({
 							</div>
 						</div>
 					) : null}
+				</div>
+				<div className="w-full flex items-center justify-center">
+					<div className="w-fit">
+						<CheckboxInput
+							labelTrue="COMISSÃO EFETIVADA"
+							labelFalse="COMISSÃO EFETIVADA"
+							checked={infoHolder.comissionDefined}
+							handleChange={(v) => updateInfoHolder({ comissionDefined: v })}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -39,6 +39,8 @@ import { cn } from "@/lib/utils";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
+import { getExcelFromJSON } from "@/lib/excel-utils";
 
 const comissionableItemsIconsMap = {
 	SISTEMA: FaSolarPanel,
@@ -114,7 +116,7 @@ function CommissionMain() {
 			comissaoTimeSDR: comissionByTeams.insider,
 		};
 	}
-	function exportData() {
+	async function exportData() {
 		if (!projects) return toast.error("Opps, parece que os dados não estão disponíveis para exportação.");
 		const formattedJSON = projects.map((project) => {
 			return {
@@ -123,51 +125,35 @@ function CommissionMain() {
 				"TIPO DO SERVIÇO": project.tipo,
 				"IDENTIFICADOR APP": project.identificadorApp,
 				"IDENTIFICADOR CRM": project.identificadorCrm,
+				"LINK DA OPORTUNIDADE": `https://crm.ampereenergias.com.br/comercial/oportunidades/id/${project.idOportunidadeCRM}`,
 				CIDADE: project.cidade,
 				VENDEDOR: project.vendedorApp,
 				INSIDER: project.insiderApp,
-				"DATA DE ASSINATURA": project.dataAssinatura ? dayjs(project.dataAssinatura).add(3, "hour").format("DD/MM/YYYY") : null,
-				"DATA RECEBIMENTO PARCIAL": project.dataRecebimentoParcial ? dayjs(project.dataRecebimentoParcial).add(3, "hour").format("DD/MM/YYYY") : null,
+				"DATA DE ASSINATURA": formatDateAsLocale(project.dataAssinatura) || null,
+				"DATA RECEBIMENTO PARCIAL": formatDateAsLocale(project.dataRecebimentoParcial) || null,
 				"POTÊNCIA PICO": project.potenciaPico,
 				"VALOR DO PROJETO": project.valorProjeto || 0,
 				"VALOR DO PADRÃO": project.valorPadrao || 0,
-				"VALOR TOTAL": project.valorContrato || 0,
+				"VALOR DO ESTRUTURA": project.valorEstruturaPersonalizada || 0,
+				"VALOR DO O&M": project.valorOem || 0,
+				"VALOR DO SEGURO": project.valorSeguro || 0,
+				"VALOR DO CONTRATO": project.valorContrato || 0,
+				"VALOR COMISSIONÁVEL": project.comissoes.valorComissionavel || 0,
+				"VALOR COMISSIONÁVEL SUGERIDO": project.comissoes.valorComissionavelSugerido || 0,
+				"COMISSÃO VENDEDOR SUGERIDA (%)": formatDecimalPlaces(project.vendedor.comissao || 0),
+				"COMISSÃO INSIDER SUGERIDA (%)": formatDecimalPlaces(project.insider.comissao || 0),
 				"COMISSÃO DEFINIDA": project.comissoes.efetivado ? "SIM" : "NÃO",
 				"COMISSÃO PAGA": project.comissoes.pagamentoRealizado ? "SIM" : "NÃO",
-				"COMISSÃO - VENDEDOR": formatDecimalPlaces((project.comissoes.porcentagemVendedor || 0) * 100),
-				"COMISSÃO INSIDER": formatDecimalPlaces((project.comissoes.porcentagemInsider || 0) * 100),
+				"COMISSÃO EFETIVADA - VENDEDOR (%)": formatDecimalPlaces(project.comissoes.porcentagemVendedor || 0),
+				"COMISSÃO EFETIVADA - INSIDER (%)": formatDecimalPlaces(project.comissoes.porcentagemInsider || 0),
 			};
 		});
-		const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(formattedJSON))}`;
-		const link = document.createElement("a");
-		link.href = jsonString;
-		link.download = "data.json";
-
-		link.click();
+		const periodStart = formatDateAsLocale(filters.period.after)?.replaceAll("/", "-") || "";
+		const periodEnd = formatDateAsLocale(filters.period.before)?.replaceAll("/", "-") || "";
+		const periodString = periodStart && periodEnd ? ` ${periodStart} - ${periodEnd}` : "";
+		await getExcelFromJSON(formattedJSON, `COMISSÕES DE PROJETOS${periodString}`);
+		return toast.success("Dados exportados com sucesso !");
 	}
-
-	// async function handleRegisterPayments(info: any) {
-	// 	if (!info) return;
-	// 	const bulkwriteAppUpdate = info.map((project) => {
-	// 		const projectId = project.identificadorApp;
-	// 		const crmProjectId = project.identificadorCrm;
-	// 		const sellerCommission = project.comissoes?.porcentagemVendedor;
-	// 		const insiderCommission = project.comissoes.porcentagemInsider;
-	// 		return {
-	// 			crmProjectId: crmProjectId,
-	// 			appProjectId: projectId,
-	// 			sellerCommission: sellerCommission,
-	// 			insiderCommission: insiderCommission,
-	// 		};
-	// 	});
-	// 	try {
-	// 		await updateAppProjectsComission({ changes: bulkwriteAppUpdate });
-	// 		await queryClient.invalidateQueries({ queryKey: ["comissions"] });
-	// 		return toast.success("Pagamentos registrados com sucesso !");
-	// 	} catch (error) {
-	// 		return toast.error("Erro ao registrar pagamentos.");
-	// 	}
-	// }
 
 	async function bulkUpdateMissingComissionPayments(info: TGetComissionDataOutputDefault) {
 		const missingComissionPayments = info.filter((project) => !project.comissoes.pagamentoRealizado);
@@ -386,7 +372,7 @@ function CommissionMain() {
 						<TabsTrigger value="report">Relatório</TabsTrigger>
 					</TabsList>
 					<TabsContent value="database">
-						<ComissionsDatabaseView projects={projects} handleClick={() => setEditComissionProject({ id: null, isOpen: true })} />
+						<ComissionsDatabaseView projects={projects} handleClick={(id) => setEditComissionProject({ id, isOpen: true })} />
 					</TabsContent>
 					<TabsContent value="report">
 						<ComissionsReportView projects={projects} />
@@ -468,11 +454,12 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 						<p className="text-xs">{project.identificadorApp}</p>
 					</div>
 					<p className="text-sm font-bold leading-none tracking-tight">{project.nome}</p>
-
-					<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
-						<BsFunnel size={12} />
-						<p>{project.identificadorCrm}</p>
-					</div>
+					<Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${project.idOportunidadeCRM}`} target="_blank" rel="noreferrer">
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+							<BsFunnel size={12} />
+							<p>{project.identificadorCrm}</p>
+						</div>
+					</Link>
 					<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
 						<FaDiamond size={12} />
 						<p>{project.tipo}</p>
@@ -722,11 +709,13 @@ function ComissionsReportViewSeller({
 										<p className="text-xs">{project.identificadorApp}</p>
 									</div>
 									<p className="text-sm font-bold leading-none tracking-tight">{project.nome}</p>
+									<Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${project.idOportunidadeCRM}`} target="_blank" rel="noreferrer">
+										<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+											<BsFunnel size={12} />
+											<p>{project.identificadorCrm}</p>
+										</div>
+									</Link>
 
-									<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
-										<BsFunnel size={12} />
-										<p>{project.identificadorCrm}</p>
-									</div>
 									<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
 										<FaDiamond size={12} />
 										<p>{project.tipo}</p>

@@ -76,6 +76,7 @@ async function getComissionData(request: NextRequest) {
 					default: undefined,
 					byProjectId: {
 						_id: appProject._id.toString(),
+						idOportunidadeCRM: crmOpportunity._id.toString(),
 						nome: appProject.nomeDoContrato,
 						tipo: appProject.tipoDeServico,
 						identificadorApp: appProject.qtde,
@@ -200,6 +201,7 @@ async function getComissionData(request: NextRequest) {
 			const comissianableItems = project.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
 			return {
 				_id: project._id.toString(),
+				idOportunidadeCRM: crmOpportunity._id.toString(),
 				nome: project.nomeDoContrato,
 				tipo: project.tipoDeServico,
 				identificadorApp: project.qtde,

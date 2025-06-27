@@ -403,7 +403,7 @@ function ProjectComissionDataBlock({
 						</div>
 					) : null}
 				</div>
-				<div className="w-full flex items-center justify-center">
+				<div className="w-full flex items-center justify-center gap-2 flex-wrap">
 					<div className="w-fit">
 						<CheckboxInput
 							labelTrue="COMISSÃO EFETIVADA"
@@ -411,6 +411,9 @@ function ProjectComissionDataBlock({
 							checked={infoHolder.comissionDefined}
 							handleChange={(v) => updateInfoHolder({ comissionDefined: v })}
 						/>
+					</div>
+					<div className="w-fit">
+						<CheckboxInput labelTrue="COMISSÃO PAGA" labelFalse="COMISSÃO PAGA" checked={infoHolder.comissionPaid} handleChange={(v) => updateInfoHolder({ comissionPaid: v })} />
 					</div>
 				</div>
 			</div>

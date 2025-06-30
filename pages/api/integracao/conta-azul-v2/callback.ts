@@ -8,9 +8,9 @@ const handleContaAzulAuthCallback: NextApiHandler<any> = async (req, res) => {
 
 	if (!code || !state) return res.status(400).json({ error: "Parâmetros inválidos." });
 
-	const redirect_uri = "https://app.ampereenergias.com.br/api/integracao/conta-azul/callback";
+	const redirect_uri = "https://app.ampereenergias.com.br/api/integracao/conta-azul-v2/callback";
 	const headers = {
-		Authorization: `Basic ${Buffer.from(`${process.env.CONTAAZUL_CLIENT_ID}:${process.env.CONTAAZUL_CLIENT_SECRET}`).toString("base64")}`,
+		Authorization: `Basic ${Buffer.from(`${process.env.CONTAAZULV2_CLIENT_ID}:${process.env.CONTAAZULV2_CLIENT_SECRET}`).toString("base64")}`,
 	};
 	try {
 		const response = await axios.post(`https://api.contaazul.com/oauth2/token?grant_type=authorization_code&redirect_uri=${redirect_uri}&code=${code}`, {}, { headers });

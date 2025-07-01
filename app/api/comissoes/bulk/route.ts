@@ -1,6 +1,6 @@
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { appRouterApiHandler, type UnwrapAppRouterNextResponse } from "@/utils/api-app-router";
-import type { TProject } from "@/utils/schemas/projects";
+import { ProjectComissionedUserSchema, type TProject } from "@/utils/schemas/projects";
 import { ComissionableItems, type TComissionableItemsEnum } from "@/utils/select-options";
 import connectToAppProjectsDatabase from "@/utils/services/mongodb/projects";
 import { type AnyBulkWriteOperation, ObjectId } from "mongodb";
@@ -16,21 +16,7 @@ const BulkUpdateProjectsComissionSchema = z.array(
 			invalid_type_error: "Valor comissionável é obrigatório.",
 		}),
 		comissionableItems: z.array(z.enum(ComissionableItems as [TComissionableItemsEnum, ...TComissionableItemsEnum[]])),
-		sellerComissionPercentage: z.number({
-			required_error: "Porcentagem de comissão do vendedor é obrigatória.",
-			invalid_type_error: "Porcentagem de comissão do vendedor é obrigatória.",
-		}),
-		insiderComissionPercentage: z.number({
-			required_error: "Porcentagem de comissão do insider é obrigatória.",
-		}),
-		comissionDefined: z.boolean({
-			required_error: "Definição de comissão é obrigatória.",
-			invalid_type_error: "Definição de comissão é obrigatória.",
-		}),
-		comissionPaid: z.boolean({
-			required_error: "Pagamento de comissão é obrigatório.",
-			invalid_type_error: "Pagamento de comissão é obrigatório.",
-		}),
+		comissioned: z.array(ProjectComissionedUserSchema),
 	}),
 );
 
@@ -54,11 +40,8 @@ async function handleBulkUpdateProjectsComission(request: NextRequest) {
 				update: {
 					$set: {
 						"comissoes.valorComissionavel": item.comissionableValue,
-						"comissoes.porcentagemVendedor": item.sellerComissionPercentage,
-						"comissoes.porcentagemInsider": item.insiderComissionPercentage,
+						"comissoes.comissionados": item.comissioned,
 						"comissoes.itensComissionaveis": item.comissionableItems,
-						"comissoes.efetivado": item.comissionDefined,
-						"comissoes.pagamentoRealizado": item.comissionPaid,
 					},
 				},
 			},

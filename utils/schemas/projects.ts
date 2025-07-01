@@ -53,6 +53,18 @@ const MaintenanceItem = z.object({
 		.optional()
 		.nullable(),
 });
+export const ProjectComissionedUserSchema = z.object({
+	idCrm: z.string({ invalid_type_error: "Tipo não válido para o ID do comissionado." }).optional().nullable(),
+	nome: z.string({ invalid_type_error: "Tipo não válido para o nome do comissionado." }),
+	papel: z.enum(["VENDEDOR", "INSIDER", "INDICADOR"]),
+	porcentagem: z.number({ invalid_type_error: "Tipo não válido para a porcentagem do comissionado." }),
+	avatar_url: z.string({ invalid_type_error: "Tipo não válido para o avatar do comissionado." }).optional().nullable(),
+	dataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a efetivação do comissionado." }).optional().nullable(),
+	dataPagamento: z.string({ invalid_type_error: "Tipo não válido para o pagamento realizado do comissionado." }).optional().nullable(),
+	dataValidacao: z.string({ invalid_type_error: "Tipo não válido para a data de validação do comissionado." }).optional().nullable(),
+});
+export type TProjectComissionedUser = z.infer<typeof ProjectComissionedUserSchema>;
+
 const GeneralProjectSchema = z.object({
 	app: z.object({
 		data: z.string({ invalid_type_error: "Tipo não válido para a data de configuração do app do cliente." }).optional().nullable(),
@@ -81,6 +93,8 @@ const GeneralProjectSchema = z.object({
 		.nullable(),
 	comissoes: z
 		.object({
+			dataReferencia: z.string({ invalid_type_error: "Tipo não válido para a data de referência da comissão." }).optional().nullable(),
+			comissionados: z.array(ProjectComissionedUserSchema).optional().nullable(),
 			efetivado: z
 				.boolean({
 					invalid_type_error: "Tipo não válido para a efetivação da comissão.",

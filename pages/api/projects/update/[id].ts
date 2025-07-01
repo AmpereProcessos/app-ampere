@@ -56,10 +56,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				"obra.pendencias",
 			].some((x) => updateKeys.includes(x))
 		) {
+			console.log("[INFO] [PROJECT UPDATE] Update in service order trackable fields. Handling service order update...");
 			const project = await collection.findOne({ _id: new ObjectId(id) });
 			if (!project) return res.status(404).json({ message: "Projeto não encontrado" });
 			if (project.idOrdemServico) {
-				console.log("Updating project service order...");
 				await serviceOrdersCollection.updateMany(
 					{
 						_id: new ObjectId(project.idOrdemServico),
@@ -76,6 +76,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						},
 					},
 				);
+			}
+		}
+		// Checking for possible comission related fields updates
+		if (["contrato.dataAssinatura", "compra.dataPagamento"].some((x) => updateKeys.includes(x))) {
+			console.log("[INFO] [PROJECT UPDATE] Update in comission related fields. Handling comission update...");
+			const project = await collection.findOne({ _id: new ObjectId(id) });
+			if (!project) return res.status(404).json({ message: "Projeto não encontrado" });
+			const projectType = project.tipoDeServico;
+			const isSolarUFVSale = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(projectType);
+
+			// If its a solar UFV sale, the comission date reference is the payment date
+			if (isSolarUFVSale && updateKeys.includes("compra.dataPagamento")) {
+				console.log("[INFO] [PROJECT UPDATE] Solar UFV sale project. Handling comission update...");
+				const comissionDateReference = req.body["compra.dataPagamento"];
+				await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "comissoes.dataReferencia": comissionDateReference } });
+			}
+			// If its not a solar UFV sale, the comission date reference is the contract signature date
+			if (!isSolarUFVSale && updateKeys.includes("contrato.dataAssinatura")) {
+				console.log("[INFO] [PROJECT UPDATE] Non-solar UFV sale project. Handling comission update...");
+				const comissionDateReference = req.body["contrato.dataAssinatura"];
+				await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "comissoes.dataReferencia": comissionDateReference } });
 			}
 		}
 		return res.json(newObj);

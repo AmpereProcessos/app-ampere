@@ -69,52 +69,74 @@ function CommissionMain() {
 				comissaoTotal: 0,
 				comissaoProjeto: 0,
 				comissaoPadrao: 0,
+				comissaoEstrutura: 0,
+				comissaoOem: 0,
+				comissaoSeguro: 0,
 				comissaoTimeVendas: 0,
 				comissaoTimeSDR: 0,
 			};
-		const sold = info.reduce((acc, current) => {
-			const contractValue = current.valorContrato;
-			return acc + contractValue;
-		}, 0);
-		const power = info.reduce((acc, current) => {
-			const peakPower = current.potenciaPico;
-			return acc + peakPower;
-		}, 0);
-		const comissionByTeams = info.reduce(
+
+		const stats = info.reduce(
 			(acc, current) => {
-				const contractValue = current.valorContrato;
-				const sellerComissionPercentage = current.comissoes.porcentagemVendedor || 0;
-				const insiderComissionPercentage = current.comissoes.porcentagemInsider || 0;
-				acc.seller += contractValue * sellerComissionPercentage;
-				acc.insider += contractValue * insiderComissionPercentage;
+				const comissionableValue = current.comissoes.valorComissionavel;
+				acc.totalVendido += current.valorContrato;
+				acc.potenciaVendida += current.potenciaPico;
+				acc.comissaoTotal += current.comissoes.comissionados.reduce((acc, comissionedCurrent) => {
+					return acc + (comissionedCurrent.porcentagem * comissionableValue) / 100;
+				}, 0);
+				const comissionsByItem = current.comissoes.comissionados.reduce(
+					(acc, comissionedCurrent) => {
+						acc.project += (comissionedCurrent.porcentagem * current.valorProjeto) / 100;
+						acc.energyPa += (comissionedCurrent.porcentagem * (current.valorPadrao || 0)) / 100;
+						acc.structure += (comissionedCurrent.porcentagem * (current.valorEstruturaPersonalizada || 0)) / 100;
+						acc.oem += (comissionedCurrent.porcentagem * (current.valorOem || 0)) / 100;
+						acc.insurance += (comissionedCurrent.porcentagem * (current.valorSeguro || 0)) / 100;
+						return acc;
+					},
+					{
+						project: 0,
+						energyPa: 0,
+						structure: 0,
+						oem: 0,
+						insurance: 0,
+					},
+				);
+				acc.comissaoProjeto += comissionsByItem.project;
+				acc.comissaoPadrao += comissionsByItem.energyPa;
+				acc.comissaoEstrutura += comissionsByItem.structure;
+				acc.comissaoOem += comissionsByItem.oem;
+				acc.comissaoSeguro += comissionsByItem.insurance;
+
+				const comissionByTeams = current.comissoes.comissionados.reduce(
+					(acc, comissionedCurrent) => {
+						if (comissionedCurrent.papel === "VENDEDOR") {
+							acc.seller += (comissionedCurrent.porcentagem * comissionableValue) / 100;
+						} else if (comissionedCurrent.papel === "INSIDER") {
+							acc.insider += (comissionedCurrent.porcentagem * comissionableValue) / 100;
+						}
+						return acc;
+					},
+					{ seller: 0, insider: 0 },
+				);
+				acc.comissaoTimeVendas += comissionByTeams.seller;
+				acc.comissaoTimeSDR += comissionByTeams.insider;
 				return acc;
 			},
-			{ seller: 0, insider: 0 },
-		);
-		const comissionByItem = info.reduce(
-			(acc, current) => {
-				const contractValue = current.valorContrato;
-				const projectValue = current.valorProjeto || 0;
-				const energyPaValue = current.valorPadrao || 0;
-				const sellerComissionPercentage = current.comissoes.porcentagemVendedor || 0;
-				const insiderComissionPercentage = current.comissoes.porcentagemInsider || 0;
-				const totalComissionPercentage = (sellerComissionPercentage + insiderComissionPercentage) / 100;
-				acc.total += contractValue * totalComissionPercentage;
-				acc.project += projectValue * totalComissionPercentage;
-				acc.energyPa += energyPaValue * totalComissionPercentage;
-				return acc;
+			{
+				totalVendido: 0,
+				potenciaVendida: 0,
+				comissaoTotal: 0,
+				comissaoProjeto: 0,
+				comissaoPadrao: 0,
+				comissaoEstrutura: 0,
+				comissaoOem: 0,
+				comissaoSeguro: 0,
+				comissaoTimeVendas: 0,
+				comissaoTimeSDR: 0,
 			},
-			{ total: 0, project: 0, energyPa: 0 },
 		);
-		return {
-			totalVendido: sold,
-			potenciaVendida: power,
-			comissaoTotal: comissionByItem.total,
-			comissaoProjeto: comissionByItem.project,
-			comissaoPadrao: comissionByItem.energyPa,
-			comissaoTimeVendas: comissionByTeams.seller,
-			comissaoTimeSDR: comissionByTeams.insider,
-		};
+
+		return stats;
 	}
 	async function exportData() {
 		if (!projects) return toast.error("Opps, parece que os dados não estão disponíveis para exportação.");
@@ -140,8 +162,6 @@ function CommissionMain() {
 				"VALOR DO CONTRATO": project.valorContrato || 0,
 				"VALOR COMISSIONÁVEL": project.comissoes.valorComissionavel || 0,
 				"VALOR COMISSIONÁVEL SUGERIDO": project.comissoes.valorComissionavelSugerido || 0,
-				"COMISSÃO VENDEDOR SUGERIDA (%)": formatDecimalPlaces(project.vendedor.comissao || 0),
-				"COMISSÃO INSIDER SUGERIDA (%)": formatDecimalPlaces(project.insider.comissao || 0),
 				"COMISSÃO DEFINIDA": project.comissoes.efetivado ? "SIM" : "NÃO",
 				"COMISSÃO PAGA": project.comissoes.pagamentoRealizado ? "SIM" : "NÃO",
 				"COMISSÃO EFETIVADA - VENDEDOR (%)": formatDecimalPlaces(project.comissoes.porcentagemVendedor || 0),
@@ -160,11 +180,8 @@ function CommissionMain() {
 		const input = missingComissionPayments.map((project) => ({
 			projectId: project._id,
 			comissionableValue: project.comissoes.valorComissionavelSugerido,
-			sellerComissionPercentage: project.comissoes.porcentagemVendedor, // using the defined comission percentage
-			insiderComissionPercentage: project.comissoes.porcentagemInsider, // using the defined comission percentage
 			comissionableItems: project.comissoes.itensComissionaveis,
-			comissionDefined: project.comissoes.efetivado,
-			comissionPaid: true,
+			comissioned: project.comissoes.comissionados,
 		}));
 
 		return await bulkUpdateProjectsComission(input);
@@ -175,11 +192,8 @@ function CommissionMain() {
 		const input = missingComissionDefinitions.map((project) => ({
 			projectId: project._id,
 			comissionableValue: project.comissoes.valorComissionavelSugerido,
-			sellerComissionPercentage: project.vendedor.comissao,
-			insiderComissionPercentage: project.insider.comissao,
 			comissionableItems: project.comissoes.itensComissionaveis,
-			comissionDefined: true,
-			comissionPaid: project.comissoes.pagamentoRealizado,
+			comissioned: project.comissoes.comissionados,
 		}));
 
 		return await bulkUpdateProjectsComission(input);
@@ -188,11 +202,8 @@ function CommissionMain() {
 		const input = info.map((project) => ({
 			projectId: project._id,
 			comissionableValue: project.comissoes.valorComissionavelSugerido,
-			sellerComissionPercentage: project.vendedor.comissao,
-			insiderComissionPercentage: project.insider.comissao,
 			comissionableItems: project.comissoes.itensComissionaveis,
-			comissionDefined: false,
-			comissionPaid: false,
+			comissioned: project.comissoes.comissionados,
 		}));
 		return await bulkUpdateProjectsComission(input);
 	}
@@ -422,9 +433,7 @@ type ProjectComissionCardProps = {
 	handleClick: (id: string) => void;
 };
 function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProps) {
-	const sellerCommissionPercentage = project.comissoes.porcentagemVendedor / 100;
-	const insiderCommissionPercentage = project.comissoes.porcentagemInsider / 100;
-	const totalComissionPercentage = sellerCommissionPercentage + insiderCommissionPercentage;
+	const totalComissionPercentage = project.comissoes.comissionados.reduce((acc, comissionado) => acc + comissionado.porcentagem, 0) / 100;
 	const totalComissionValue = project.comissoes.valorComissionavel * totalComissionPercentage;
 	const comissionValueMap = {
 		SISTEMA: project.valorProjeto,
@@ -442,8 +451,12 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 				item,
 				icon: comissionableItemsIconsMap[item as keyof typeof comissionableItemsIconsMap],
 				valor: value,
-				comissaoVendedor: sellerCommissionPercentage * value,
-				comissaoInsider: insiderCommissionPercentage * value,
+				comissionados: project.comissoes.comissionados.map((comissionado) => ({
+					nome: comissionado.nome,
+					avatar_url: comissionado.avatar_url,
+					porcentagem: comissionado.porcentagem,
+					comissao: (comissionado.porcentagem * value) / 100,
+				})),
 				comissaoTotal: value * totalComissionPercentage,
 			};
 		});
@@ -523,23 +536,23 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 						<BadgeDollarSign className={cn("w-3 h-3 min-w-3 min-h-3")} />
 						<p className={cn("font-medium text-[0.57rem]")}>{project.comissoes.pagamentoRealizado ? "PAGAMENTO DE COMISSÕES REALIZADO" : "PAGAMENTO DE COMISSÕES NÃO REALIZADO"}</p>
 					</div>
-					<div className="flex items-center gap-1">
+					<div className="flex items-center gap-1 flex-wrap">
 						<Users className={cn("w-3 h-3 min-w-3 min-h-3")} />
-						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
-							<p>VENDEDOR</p>
-							<p className="text-[#15599a] font-black text-[0.57rem]">{project.vendedorApp}</p>
-							<p className="text-green-700 font-black text-[0.57rem]">{project.comissoes.porcentagemVendedor}%</p>
-						</div>
-
-						{project.insiderApp ? (
-							<>
-								<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
-									<p>INSIDER</p>
-									<p className="text-[#15599a] font-black text-[0.57rem]">{project.insiderApp}</p>
-									<p className="text-green-700 font-black text-[0.57rem]">{project.comissoes.porcentagemInsider}%</p>
-								</div>
-							</>
-						) : null}
+						<p className="text-[0.5rem] font-bold italic text-primary/80">COMISSIONADOS</p>
+						{project.comissoes.comissionados.map((comissionado, index) => (
+							<div
+								key={`${comissionado.nome}-${index}`}
+								className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80"
+							>
+								<Avatar className="h-5 w-5 min-h-5 min-w-5">
+									<AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
+									<AvatarFallback>{formatNameAsInitials(comissionado.nome || "NA")}</AvatarFallback>
+								</Avatar>
+								<p className="text-[#15599a] font-black text-[0.57rem]">{comissionado.nome}</p>
+								<p className="text-green-700 font-black text-[0.57rem]">{comissionado.porcentagem}%</p>
+								{comissionado.dataValidacao ? <BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3 text-green-700")} /> : null}
+							</div>
+						))}
 					</div>
 				</div>
 			</div>
@@ -559,14 +572,19 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 										<p className="text-sm font-semibold text-primary/80">VALOR COMISSIONÁVEL DO ITEM</p>
 										<p className="text-sm font-semibold text-primary/80">{formatToMoney(item.valor)}</p>
 									</div>
-									<div className="w-full flex items-center justify-between gap-2">
-										<p className="text-sm font-semibold text-primary/80">COMISSÃO DO VENDEDOR</p>
-										<p className="text-sm font-semibold text-primary/80">{formatToMoney(item.comissaoVendedor)}</p>
-									</div>
-									<div className="w-full flex items-center justify-between gap-2">
-										<p className="text-sm font-semibold text-primary/80">COMISSÃO DO INSIDER</p>
-										<p className="text-sm font-semibold text-primary/80">{formatToMoney(item.comissaoInsider)}</p>
-									</div>
+									{item.comissionados.map((comissionado, index) => (
+										<div key={`${comissionado.nome}-${index}`} className="w-full flex items-center justify-between gap-2">
+											<div className="flex items-center gap-1">
+												<Avatar className="h-5 w-5 min-h-5 min-w-3">
+													<AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
+													<AvatarFallback>{formatNameAsInitials(comissionado.nome || "NA")}</AvatarFallback>
+												</Avatar>
+												<p className="text-sm font-semibold text-primary/80">{comissionado.nome}</p>
+											</div>
+
+											<p className="text-sm font-semibold text-primary/80">{formatToMoney(comissionado.comissao)}</p>
+										</div>
+									))}
 								</div>
 								<div className="w-full h-[1px] rounded bg-primary my-2" />
 								<div className="w-full flex items-center justify-between gap-2">
@@ -590,14 +608,18 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 								<p className="text-sm font-semibold text-primary/80">VALOR COMISSIONÁVEL TOTAL</p>
 								<p className="text-sm font-semibold text-primary/80">{formatToMoney(project.comissoes.valorComissionavel)}</p>
 							</div>
-							<div className="w-full flex items-center justify-between gap-2">
-								<p className="text-sm font-semibold text-primary/80">COMISSÃO DO VENDEDOR</p>
-								<p className="text-sm font-semibold text-primary/80">{formatToMoney(sellerCommissionPercentage * project.comissoes.valorComissionavel)}</p>
-							</div>
-							<div className="w-full flex items-center justify-between gap-2">
-								<p className="text-sm font-semibold text-primary/80">COMISSÃO DO INSIDER</p>
-								<p className="text-sm font-semibold text-primary/80">{formatToMoney(insiderCommissionPercentage * project.comissoes.valorComissionavel)}</p>
-							</div>
+							{project.comissoes.comissionados.map((comissionado, index) => (
+								<div key={`${comissionado.nome}-${index}`} className="w-full flex items-center justify-between gap-2">
+									<div className="flex items-center gap-1">
+										<Avatar className="h-5 w-5 min-h-5 min-w-3">
+											<AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
+											<AvatarFallback>{formatNameAsInitials(comissionado.nome || "NA")}</AvatarFallback>
+										</Avatar>
+										<p className="text-sm font-semibold text-primary/80">{comissionado.nome}</p>
+									</div>
+									<p className="text-sm font-semibold text-primary/80">{formatToMoney((comissionado.porcentagem / 100) * project.comissoes.valorComissionavel)}</p>
+								</div>
+							))}
 						</div>
 						<div className="w-full h-[1px] rounded bg-primary my-2" />
 						<div className="w-full flex items-center justify-between gap-2">
@@ -613,9 +635,9 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 
 type ComissionReportBySeller = {
 	seller: {
-		id: TGetComissionDataOutputDefault[number]["vendedor"]["id"];
-		name: TGetComissionDataOutputDefault[number]["vendedor"]["nome"];
-		avatar_url: TGetComissionDataOutputDefault[number]["vendedor"]["avatar_url"];
+		id: TGetComissionDataOutputDefault[number]["comissoes"]["comissionados"][number]["idCrm"];
+		name: TGetComissionDataOutputDefault[number]["comissoes"]["comissionados"][number]["nome"];
+		avatar_url: TGetComissionDataOutputDefault[number]["comissoes"]["comissionados"][number]["avatar_url"];
 	};
 	projects: TGetComissionDataOutputDefault[number][];
 };
@@ -625,15 +647,10 @@ type ComissionsReportViewProps = {
 function ComissionsReportView({ projects }: ComissionsReportViewProps) {
 	const comissionsGroupedBySeller = projects.reduce(
 		(acc: Record<string, ComissionReportBySeller>, project) => {
-			const seller = project.vendedorApp;
-			const insider = project.insiderApp;
-			if (!acc[seller]) acc[seller] = { seller: { id: project.vendedor.id, name: project.vendedor.nome, avatar_url: project.vendedor.avatar_url }, projects: [] };
-			if (insider) {
-				if (!acc[insider])
-					acc[insider] = { seller: { id: project.insider.id as string, name: project.insider.nome as string, avatar_url: project.insider.avatar_url as string }, projects: [] };
+			for (const comissioned of project.comissoes.comissionados) {
+				if (!acc[comissioned.nome]) acc[comissioned.nome] = { seller: { id: comissioned.idCrm, name: comissioned.nome, avatar_url: comissioned.avatar_url }, projects: [] };
+				acc[comissioned.nome].projects.push(project);
 			}
-			acc[seller].projects.push(project);
-			if (insider) acc[insider].projects.push(project);
 			return acc;
 		},
 		{} as Record<string, ComissionReportBySeller>,
@@ -659,15 +676,9 @@ function ComissionsReportViewSeller({
 	const [showProjects, setShowProjects] = useState(false);
 
 	const totalComissionValue = projects.reduce((acc, project) => {
-		const iteratingSellerIsProjectSeller = project.vendedorApp === sellerKey;
-		const iteratingSellerIsProjectInsider = project.insiderApp === sellerKey;
-		let comissionValue = 0;
-		if (iteratingSellerIsProjectSeller) {
-			comissionValue += project.comissoes.valorComissionavel * (project.comissoes.porcentagemVendedor / 100);
-		}
-		if (iteratingSellerIsProjectInsider) {
-			comissionValue += project.comissoes.valorComissionavel * (project.comissoes.porcentagemInsider / 100);
-		}
+		const comissioned = project.comissoes.comissionados.find((comissionado) => comissionado.nome === sellerKey);
+		if (!comissioned) return acc;
+		const comissionValue = project.comissoes.valorComissionavel * (comissioned.porcentagem / 100);
 		return acc + comissionValue;
 	}, 0);
 	return (
@@ -697,14 +708,9 @@ function ComissionsReportViewSeller({
 			</div>
 			{showProjects
 				? projects.map((project, index: number) => {
-						const iteratingSellerIsProjectSeller = project.vendedorApp === sellerKey;
-						const iteratingSellerIsProjectInsider = project.insiderApp === sellerKey;
-						const comissionPercentage = iteratingSellerIsProjectSeller
-							? project.comissoes.porcentagemVendedor
-							: iteratingSellerIsProjectInsider
-								? project.comissoes.porcentagemInsider
-								: 0;
-						const comissionValue = project.comissoes.valorComissionavel * (comissionPercentage / 100);
+						const comissioned = project.comissoes.comissionados.find((comissionado) => comissionado.nome === sellerKey);
+						if (!comissioned) return null;
+						const comissionValue = project.comissoes.valorComissionavel * (comissioned.porcentagem / 100);
 						return (
 							<motion.div
 								key={project._id}
@@ -742,7 +748,7 @@ function ComissionsReportViewSeller({
 								<div className="flex items-center gap-2">
 									<div className="flex items-center gap-1 px-2 py-1">
 										<Percent className="h-4 w-4 min-h-4 min-w-4" />
-										<p className="text-sm font-semibold text-primary/80">{formatDecimalPlaces(comissionPercentage)}%</p>
+										<p className="text-sm font-semibold text-primary/80">{formatDecimalPlaces(comissioned.porcentagem)}%</p>
 									</div>
 									<div className="flex items-center gap-1 px-2 py-1">
 										<BadgeDollarSign className="h-4 w-4 min-h-4 min-w-4" />

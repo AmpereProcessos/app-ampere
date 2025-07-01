@@ -1,264 +1,8 @@
+import { TProject } from "@/utils/schemas/projects";
+import connectToDatabase from "@/utils/services/mongodb/projects";
 import axios from "axios";
 import { Document, Paragraph, TextRun, AlignmentType, HeadingLevel, Packer } from "docx";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-class ContractGenerator {
-	defaultFont: string;
-	defaultSize: number;
-	constructor() {
-		this.defaultFont = "Times New Roman";
-		this.defaultSize = 26; // 13pt in half-points (docx uses half-points)
-	}
-
-	/**
-	 * Parse markdown text and return segments with formatting
-	 * @param {string} text - Text with markdown formatting
-	 * @returns {Array} Array of objects with text and formatting properties
-	 */
-	parseMarkdownText(text: string) {
-		const segments = [];
-
-		// Pattern to match markdown formatting
-		const pattern = /(\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*|__.*?__|_.*?_|[^*_]+)/g;
-		const parts = text.match(pattern) || [];
-
-		for (const part of parts) {
-			if (!part.trim()) continue;
-
-			let isBold = false;
-			let isItalic = false;
-			let isUnderline = false;
-			let cleanText = part;
-
-			// Check for bold italic (***text***)
-			if (part.startsWith("***") && part.endsWith("***") && part.length > 6) {
-				isBold = true;
-				isItalic = true;
-				cleanText = part.slice(3, -3);
-			}
-			// Check for bold (**text**)
-			else if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
-				isBold = true;
-				cleanText = part.slice(2, -2);
-			}
-			// Check for italic (*text*)
-			else if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
-				isItalic = true;
-				cleanText = part.slice(1, -1);
-			}
-			// Check for underline (__text__)
-			else if (part.startsWith("__") && part.endsWith("__") && part.length > 4) {
-				isUnderline = true;
-				cleanText = part.slice(2, -2);
-			}
-			// Check for underline (_text_)
-			else if (part.startsWith("_") && part.endsWith("_") && part.length > 2) {
-				isUnderline = true;
-				cleanText = part.slice(1, -1);
-			}
-
-			if (cleanText) {
-				segments.push({
-					text: cleanText,
-					bold: isBold,
-					italics: isItalic,
-					underline: isUnderline ? {} : undefined,
-				});
-			}
-		}
-
-		return segments;
-	}
-
-	/**
-	 * Create a paragraph with markdown formatting
-	 * @param {string} text - Text with markdown
-	 * @param {string} alignment - Paragraph alignment
-	 * @returns {Paragraph} Docx paragraph object
-	 */
-	createMarkdownParagraph(
-		text: string,
-		alignment: "left" | "start" | "center" | "end" | "both" | "mediumKashida" | "distribute" | "numTab" | "highKashida" | "lowKashida" | "thaiDistribute" | "right",
-	) {
-		const segments = this.parseMarkdownText(text);
-
-		if (segments.length === 0) {
-			return new Paragraph({
-				alignment: alignment || AlignmentType.LEFT,
-			});
-		}
-
-		const textRuns = segments.map(
-			(segment) =>
-				new TextRun({
-					text: segment.text,
-					font: this.defaultFont,
-					size: this.defaultSize,
-					bold: segment.bold,
-					italics: segment.italics,
-					underline: segment.underline,
-				}),
-		);
-
-		return new Paragraph({
-			children: textRuns,
-			alignment: alignment,
-		});
-	}
-
-	/**
-	 * Create a simple paragraph
-	 * @param {string} text - Plain text
-	 * @param {string} alignment - Paragraph alignment
-	 * @param {boolean} bold - Bold formatting
-	 * @returns {Paragraph} Docx paragraph object
-	 */
-	createSimpleParagraph(text: string, alignment = AlignmentType.CENTER, bold = false) {
-		return new Paragraph({
-			children: [
-				new TextRun({
-					text: text,
-					font: this.defaultFont,
-					size: this.defaultSize,
-					bold: bold,
-				}),
-			],
-			alignment: alignment,
-		});
-	}
-
-	/**
-	 * Create an empty paragraph (blank line)
-	 * @returns {Paragraph} Empty paragraph
-	 */
-	createEmptyParagraph() {
-		return new Paragraph({
-			children: [new TextRun({ text: "" })],
-		});
-	}
-
-	/**
-	 * Process template by replacing placeholders
-	 * @param {string} templatePath - Path to template document
-	 * @param {Object} data - Contract data
-	 * @returns {Document} Modified document
-	 */
-	// async processTemplate(templatePath, data) {
-	// 	// Note: This is simplified as docx library doesn't directly support
-	// 	// loading and modifying existing documents like python-docx
-	// 	// You would need additional libraries like 'docx-templates' or 'pizzip'
-	// 	// For now, we'll create a new document
-	// 	console.log("Note: Template processing would require additional libraries like docx-templates");
-	// 	return new Document({
-	// 		sections: [
-	// 			{
-	// 				properties: {},
-	// 				children: [],
-	// 			},
-	// 		],
-	// 	});
-	// }
-
-	/**
-	 * Generate complete contract document
-	 * @param {Object} contractData - Contract data from JSON
-	 * @param {string} templatePath - Optional template path
-	 * @returns {Document} Generated document
-	 */
-	async generateContract(contractData: any, templatePath = null) {
-		const paragraphs = [];
-
-		// Add contratante text with markdown support
-		if (contractData.contratanteTexto) {
-			paragraphs.push(this.createMarkdownParagraph(contractData.contratanteTexto, AlignmentType.LEFT));
-		}
-
-		// Add contratada text with markdown support
-		if (contractData.contratadaTexto) {
-			paragraphs.push(this.createMarkdownParagraph(contractData.contratadaTexto, AlignmentType.LEFT));
-		}
-
-		// Add each clausula with markdown support
-		if (contractData.clausulas) {
-			for (const clausula of contractData.clausulas) {
-				// Split by paragraphs and process each
-				const paragraphTexts = clausula.split("\n");
-
-				for (const paragraphText of paragraphTexts) {
-					if (paragraphText.trim()) {
-						// Handle single newlines within paragraphs
-						const lines = paragraphText.split("\n") as string[];
-						const combinedText = lines
-							.map((line) => line.trim())
-							.filter((line) => line)
-							.join(" ");
-
-						paragraphs.push(this.createMarkdownParagraph(combinedText, AlignmentType.JUSTIFIED));
-					}
-				}
-			}
-		}
-
-		// Add blank line before date
-		paragraphs.push(this.createEmptyParagraph());
-
-		// Add date text
-		if (contractData.dataTexto) {
-			paragraphs.push(this.createMarkdownParagraph(contractData.dataTexto, AlignmentType.CENTER));
-		}
-
-		// Add blank line after date
-		paragraphs.push(this.createEmptyParagraph());
-		paragraphs.push(this.createEmptyParagraph());
-
-		// Add signatures
-		if (contractData.assinaturas) {
-			const assinaturas = contractData.assinaturas;
-
-			// Contratante signature
-			if (assinaturas.contratante) {
-				paragraphs.push(this.createSimpleParagraph("______________________________________"));
-				paragraphs.push(this.createMarkdownParagraph(assinaturas.contratante.nome, AlignmentType.CENTER));
-				paragraphs.push(this.createMarkdownParagraph(`CPF/CNPJ: ${assinaturas.contratante.cpfCnpj}`, AlignmentType.CENTER));
-				paragraphs.push(this.createEmptyParagraph());
-			}
-
-			// Contratada signature
-			if (assinaturas.contratada) {
-				paragraphs.push(this.createSimpleParagraph("______________________________________"));
-				paragraphs.push(this.createMarkdownParagraph(assinaturas.contratada.nome, AlignmentType.CENTER));
-				paragraphs.push(this.createMarkdownParagraph(`CPF/CNPJ: ${assinaturas.contratada.cpfCnpj}`, AlignmentType.CENTER));
-				paragraphs.push(this.createEmptyParagraph());
-			}
-
-			// Testemunha 1
-			if (assinaturas.testemunha1) {
-				paragraphs.push(this.createSimpleParagraph("______________________________________"));
-				paragraphs.push(this.createMarkdownParagraph(`TESTEMUNHA 1: ${assinaturas.testemunha1.nome}`, AlignmentType.CENTER));
-				paragraphs.push(this.createMarkdownParagraph(`CPF/CNPJ: ${assinaturas.testemunha1.cpfCnpj}`, AlignmentType.CENTER));
-			}
-
-			// Testemunha 2
-			if (assinaturas.testemunha2) {
-				paragraphs.push(this.createSimpleParagraph("______________________________________"));
-				paragraphs.push(this.createMarkdownParagraph(`TESTEMUNHA 2: ${assinaturas.testemunha2.nome}`, AlignmentType.CENTER));
-				paragraphs.push(this.createMarkdownParagraph(`CPF/CNPJ: ${assinaturas.testemunha2.cpfCnpj}`, AlignmentType.CENTER));
-			}
-		}
-
-		// Create document
-		const doc = new Document({
-			sections: [
-				{
-					properties: {},
-					children: paragraphs,
-				},
-			],
-		});
-
-		return doc;
-	}
-}
 
 const contractData = {
 	contratanteTexto: "**CONTRATANTE: CENTRO DE FORMAÇÃO DE CONDUTORES PILOTAR LTDA**",
@@ -321,13 +65,33 @@ const contractData = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const contractGenerator = new ContractGenerator();
-	const contract = await contractGenerator.generateContract(contractData);
-	// Generate the DOCX file as a buffer
-	const buffer = await Packer.toBuffer(contract);
+	const projectsDb = await connectToDatabase();
 
-	// Set headers for file download
-	res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-	res.setHeader("Content-Disposition", "attachment; filename=contract.docx");
-	res.status(200).send(buffer);
+	const projectsCollection = projectsDb.collection<TProject>("dados");
+
+	const aggregated = await projectsCollection
+		.aggregate([
+			{
+				$match: {
+					"contrato.status": "ASSINADO",
+					tipoDeServico: "SISTEMA FOTOVOLTAICO",
+				},
+			},
+			{
+				$group: {
+					_id: "$cidade",
+					contagem: {
+						$count: {},
+					},
+				},
+			},
+			{
+				$sort: {
+					contagem: -1,
+				},
+			},
+		])
+		.toArray();
+
+	return res.json(aggregated);
 }

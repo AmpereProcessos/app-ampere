@@ -8,7 +8,7 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import { useClientById } from "@/utils/methods/query/clients";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import type { TProjectDTO } from "@/utils/schemas/projects";
+import type { TProjectComissionedUser, TProjectDTO } from "@/utils/schemas/projects";
 import { BadgeDollarSign, Code, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
@@ -31,12 +31,7 @@ import CheckboxInput from "@/components/inputs/Checkbox";
 type ComissionInfoHolder = {
 	comissionableValue: number;
 	comissionableItems: TGetComissionDataOutputByProjectId["comissoes"]["itensComissionaveis"];
-	sellerComissionPercentage: number;
-	insiderComissionPercentage: number;
-	sellerComissionValue: number;
-	insiderComissionValue: number;
-	comissionDefined: boolean;
-	comissionPaid: boolean;
+	comissioned: TGetComissionDataOutputByProjectId["comissoes"]["comissionados"];
 };
 
 type ControlProjectComissionProps = {
@@ -59,12 +54,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 	const [infoHolder, setInfoHolder] = useState<ComissionInfoHolder>({
 		comissionableValue: project?.comissoes?.valorComissionavel || 0,
 		comissionableItems: project?.comissoes?.itensComissionaveis || ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"],
-		sellerComissionPercentage: project?.comissoes?.porcentagemVendedor || 0,
-		sellerComissionValue: (project?.comissoes?.valorComissionavel || 0) * ((project?.comissoes?.porcentagemVendedor || 0) / 100) || 0,
-		insiderComissionPercentage: project?.comissoes?.porcentagemInsider || 0,
-		insiderComissionValue: (project?.comissoes?.valorComissionavel || 0) * ((project?.comissoes?.porcentagemInsider || 0) / 100) || 0,
-		comissionDefined: project?.comissoes?.efetivado || false,
-		comissionPaid: project?.comissoes?.pagamentoRealizado || false,
+		comissioned: project?.comissoes?.comissionados || [],
 	});
 	function updateInfoHolder(changes: Partial<ComissionInfoHolder>) {
 		setInfoHolder((prev) => ({ ...prev, ...changes }));
@@ -114,9 +104,9 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 									mutateUpdateComissionData({
 										id: projectId,
 										changes: {
-											"comissoes.porcentagemVendedor": infoHolder.sellerComissionPercentage,
-											"comissoes.porcentagemInsider": infoHolder.insiderComissionPercentage,
-											"comissoes.efetivado": infoHolder.comissionDefined,
+											"comissoes.comissionados": infoHolder.comissioned,
+											"comissoes.itensComissionaveis": infoHolder.comissionableItems,
+											"comissoes.valorComissionavel": infoHolder.comissionableValue,
 										},
 									})
 								}
@@ -153,9 +143,9 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 									mutateUpdateComissionData({
 										id: projectId,
 										changes: {
-											"comissoes.porcentagemVendedor": infoHolder.sellerComissionPercentage,
-											"comissoes.porcentagemInsider": infoHolder.insiderComissionPercentage,
-											"comissoes.efetivado": infoHolder.comissionDefined,
+											"comissoes.comissionados": infoHolder.comissioned,
+											"comissoes.itensComissionaveis": infoHolder.comissionableItems,
+											"comissoes.valorComissionavel": infoHolder.comissionableValue,
 										},
 									})
 								}
@@ -192,6 +182,9 @@ function ProjectComissionDataBlock({
 			}),
 		});
 	}
+	function updateComissioned({ index, changes }: { index: number; changes: Partial<TProjectComissionedUser> }) {
+		updateInfoHolder({ comissioned: infoHolder.comissioned.map((comissioned, i) => (i === index ? { ...comissioned, ...changes } : comissioned)) });
+	}
 	return (
 		<div className="w-full h-full flex flex-col gap-6">
 			<div className="w-full flex flex-col gap-1.5">
@@ -202,32 +195,19 @@ function ProjectComissionDataBlock({
 						{project.identificadorApp} - {project.nome}
 					</h3>
 				</div>
-				<div className="w-full flex items-center gap-1.5">
-					<UserRound className="w-4 h-4" />
-					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">VENDEDOR</h3>
-					<Avatar className="h-5 w-5">
-						<AvatarImage src={project.vendedor.avatar_url || undefined} alt={project.vendedor.nome} />
-						<AvatarFallback>{formatNameAsInitials(project.vendedor.nome || "")}</AvatarFallback>
-					</Avatar>
-					<h3 className="text-sm font-semibold tracking-tight">{project.vendedor.nome}</h3>
-					<h3 className="text-xs font-semibold tracking-tight">COMISSÃO: {project.comissoes?.porcentagemVendedor || 0}%</h3>
-				</div>
-				<div className="w-full flex items-center gap-1.5">
-					<UserRound className="w-4 h-4" />
-					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">INSIDER</h3>
-					{project.insider.nome ? (
-						<>
-							<Avatar className="h-5 w-5">
-								<AvatarImage src={project.insider.avatar_url || undefined} alt={project.insider.nome} />
-								<AvatarFallback>{formatNameAsInitials(project.insider.nome || "")}</AvatarFallback>
-							</Avatar>
-							<h3 className="text-sm font-semibold tracking-tight">{project.insider.nome || "N/A"}</h3>
-							<h3 className="text-xs font-semibold tracking-tight">COMISSÃO: {project.comissoes?.porcentagemInsider || 0}%</h3>
-						</>
-					) : (
-						<h3 className="text-sm font-semibold tracking-tight">N/A</h3>
-					)}
-				</div>
+				{project.comissoes.comissionados.map((comissioned, index) => (
+					<div key={`${comissioned.nome}-${index}`} className="w-full flex items-center gap-1.5">
+						<UserRound className="w-4 h-4" />
+						<h3 className="text-sm font-semibold tracking-tighter text-primary/80">{comissioned.papel}</h3>
+						<Avatar className="h-5 w-5">
+							<AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
+							<AvatarFallback>{formatNameAsInitials(comissioned.nome || "")}</AvatarFallback>
+						</Avatar>
+						<h3 className="text-sm font-semibold tracking-tight">{comissioned.nome}</h3>
+						<h3 className="text-xs font-semibold tracking-tight">COMISSÃO: {comissioned.porcentagem || 0}%</h3>
+					</div>
+				))}
+
 				<div className="w-full flex items-center gap-1.5">
 					<FaSolarPanel className="w-4 h-4" />
 					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DO PROJETO</h3>
@@ -259,25 +239,11 @@ function ProjectComissionDataBlock({
 					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR COMISSIONÁVEL SUGERIDO</h3>
 					<h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.comissoes?.valorComissionavelSugerido || 0)}</h3>
 				</div>
-				<div className="w-full flex items-center gap-1.5">
-					<UserRound className="w-4 h-4" />
-					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">COMISSÃO DE VENDEDOR SUGERIDA</h3>
-					<h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.vendedor.comissao || 0)}%</h3>
-				</div>
-				<div className="w-full flex items-center gap-1.5">
-					<UserRound className="w-4 h-4" />
-					<h3 className="text-sm font-semibold tracking-tighter text-primary/80">COMISSÃO DE INSIDER SUGERIDA</h3>
-					<h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.insider.comissao || 0)}%</h3>
-				</div>
 				<div className="w-full flex items-center justify-center">
 					<Button
 						onClick={() => {
 							updateInfoHolder({
 								comissionableValue: project.comissoes?.valorComissionavelSugerido || 0,
-								sellerComissionPercentage: project.vendedor.comissao,
-								insiderComissionPercentage: project.insider.comissao,
-								sellerComissionValue: (project.comissoes?.valorComissionavelSugerido || 0) * ((project.vendedor.comissao || 0) / 100) || 0,
-								insiderComissionValue: (project.comissoes?.valorComissionavelSugerido || 0) * ((project.insider.comissao || 0) / 100) || 0,
 							});
 						}}
 						variant="ghost"
@@ -321,99 +287,56 @@ function ProjectComissionDataBlock({
 				</div>
 				<div className="w-full flex flex-col gap-1.5">
 					<h1 className="text-sm font-bold leading-none tracking-tight">COMISSIONADOS</h1>
-
-					<div className="w-full flex flex-col gap-1 p-2 border border-primary/10 rounded-md bg-[#fff] dark:bg-[#121212] shadow-sm">
-						<div className="w-full flex items-center justify-center gap-2">
-							<Avatar className="h-5 w-5">
-								<AvatarImage src={project.vendedor.avatar_url || undefined} alt={project.vendedor.nome} />
-								<AvatarFallback>{formatNameAsInitials(project.vendedor.nome || "")}</AvatarFallback>
-							</Avatar>
-							<h1 className="text-[0.6rem] font-bold tracking-tighter">{project.vendedor.nome}</h1>
-						</div>
-						<NumberInput
-							label="COMISSÃO DO VENDEDOR (%)"
-							value={infoHolder.sellerComissionPercentage}
-							handleChange={(v) => {
-								updateInfoHolder({ sellerComissionPercentage: v, sellerComissionValue: v * (infoHolder.comissionableValue / 100) });
-							}}
-							placeholder="Preencha aqui a porcentagem da comissão do vendedor..."
-							width="100%"
-							labelClassName="text-[0.6rem]"
-							holderClassName="text-xs p-2 min-h-[34px]"
-						/>
-						<NumberInput
-							label="COMISSÃO DO VENDEDOR (R$)"
-							value={infoHolder.sellerComissionValue}
-							handleChange={(v) => {
-								const percentage = (v / infoHolder.comissionableValue) * 100;
-								updateInfoHolder({ sellerComissionPercentage: percentage, sellerComissionValue: v });
-							}}
-							placeholder="Preencha aqui o valor da comissão do vendedor..."
-							width="100%"
-							labelClassName="text-[0.6rem]"
-							holderClassName="text-xs p-2 min-h-[34px]"
-						/>
-						<div className="w-full flex items-center justify-center">
-							<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.55rem] font-bold italic text-primary/80">
-								<p>COMISSÃO FINAL DO VENDEDOR</p>
-								<p className="text-[#15599a] font-black text-[0.57rem]">{formatToMoney(infoHolder.comissionableValue * (infoHolder.sellerComissionPercentage / 100))}</p>
-							</div>
-						</div>
-					</div>
-					{project.insider.nome ? (
-						<div className="w-full flex flex-col gap-1 p-2 border border-primary/10 rounded-md bg-[#fff] dark:bg-[#121212] shadow-sm">
-							<div className="w-full flex items-center justify-center">
-								<div className={"flex items-center gap-2 rounded-lg p-1 text-[0.6rem] font-medium bg-primary/80 px-2 text-white dark:bg-primary/20"}>
-									<Avatar className="h-5 w-5">
-										<AvatarImage src={project.insider.avatar_url || undefined} alt={project.insider.nome} />
-										<AvatarFallback>{formatNameAsInitials(project.insider.nome || "")}</AvatarFallback>
-									</Avatar>
-									<h1 className="text-[0.6rem] font-bold tracking-tighter">{project.insider.nome}</h1>
-								</div>
+					{infoHolder.comissioned.map((comissioned, index) => (
+						<div key={`${comissioned.nome}-${index}`} className="w-full flex flex-col gap-1 p-2 border border-primary/10 rounded-md bg-[#fff] dark:bg-[#121212] shadow-sm">
+							<div className="w-full flex items-center justify-center gap-2">
+								<Avatar className="h-5 w-5">
+									<AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
+									<AvatarFallback>{formatNameAsInitials(comissioned.nome || "")}</AvatarFallback>
+								</Avatar>
+								<h1 className="text-[0.6rem] font-bold tracking-tighter">{comissioned.nome}</h1>
 							</div>
 							<NumberInput
-								label="COMISSÃO DO INSIDER"
-								value={infoHolder.insiderComissionPercentage}
+								label="COMISSÃO DO VENDEDOR (%)"
+								value={comissioned.porcentagem}
 								handleChange={(v) => {
-									updateInfoHolder({ insiderComissionPercentage: v, insiderComissionValue: v * (infoHolder.comissionableValue / 100) });
+									updateComissioned({ index, changes: { porcentagem: v } });
 								}}
-								placeholder="Preencha aqui a porcentagem da comissão do insider..."
+								placeholder="Preencha aqui a porcentagem da comissão do vendedor..."
 								width="100%"
 								labelClassName="text-[0.6rem]"
 								holderClassName="text-xs p-2 min-h-[34px]"
 							/>
 							<NumberInput
-								label="COMISSÃO DO INSIDER (R$)"
-								value={infoHolder.insiderComissionValue}
+								label="COMISSÃO DO VENDEDOR (R$)"
+								value={comissioned.porcentagem * (infoHolder.comissionableValue / 100)}
 								handleChange={(v) => {
 									const percentage = (v / infoHolder.comissionableValue) * 100;
-									updateInfoHolder({ insiderComissionPercentage: percentage, insiderComissionValue: v });
+									updateComissioned({ index, changes: { porcentagem: percentage } });
 								}}
-								placeholder="Preencha aqui o valor da comissão do insider..."
+								placeholder="Preencha aqui o valor da comissão do vendedor..."
 								width="100%"
 								labelClassName="text-[0.6rem]"
 								holderClassName="text-xs p-2 min-h-[34px]"
 							/>
 							<div className="w-full flex items-center justify-center">
 								<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.55rem] font-bold italic text-primary/80">
-									<p>COMISSÃO FINAL DO INSIDER</p>
-									<p className="text-[#15599a] font-black text-[0.57rem]">{formatToMoney(infoHolder.comissionableValue * (infoHolder.insiderComissionPercentage / 100))}</p>
+									<p>COMISSÃO FINAL DO VENDEDOR</p>
+									<p className="text-[#15599a] font-black text-[0.57rem]">{formatToMoney(infoHolder.comissionableValue * (comissioned.porcentagem / 100))}</p>
 								</div>
 							</div>
 						</div>
-					) : null}
+					))}
 				</div>
 				<div className="w-full flex items-center justify-center gap-2 flex-wrap">
 					<div className="w-fit">
-						<CheckboxInput
-							labelTrue="COMISSÃO EFETIVADA"
-							labelFalse="COMISSÃO EFETIVADA"
-							checked={infoHolder.comissionDefined}
-							handleChange={(v) => updateInfoHolder({ comissionDefined: v })}
-						/>
-					</div>
-					<div className="w-fit">
-						<CheckboxInput labelTrue="COMISSÃO PAGA" labelFalse="COMISSÃO PAGA" checked={infoHolder.comissionPaid} handleChange={(v) => updateInfoHolder({ comissionPaid: v })} />
+						<Button
+							variant="ghost"
+							size="fit"
+							onClick={() => updateInfoHolder({ comissioned: infoHolder.comissioned.map((comissioned) => ({ ...comissioned, dataValidacao: new Date().toISOString() })) })}
+						>
+							EFETIVAR TODAS
+						</Button>
 					</div>
 				</div>
 			</div>

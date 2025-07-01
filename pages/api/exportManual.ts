@@ -24,123 +24,72 @@ import type { TServiceOrderTag } from "@/utils/schemas/service-order";
 import createHttpError from "http-errors";
 const getExport: NextApiHandler<any> = async (req, res) => {
 	const projectsDb = await connectToProjectsDatabase();
-	// const requestsDb: Db = await connectToSolicitacoesDatabase();
+	const crmDb = await connectToCRMDatabase();
 
-	// const projectsCollection = projectsDb.collection<TProject>("dados");
-	// const requestsCollection = requestsDb.collection<TContractRequest>("contrato");
+	const projectsCollection = projectsDb.collection<TProject>("dados");
+	const crmUsersCollection = crmDb.collection<TCRMUser>("users");
 
-	// Defining the second semester of 2024
-	const firstPeriodStart = "2024-06-01T00:00:00.000Z";
-	const firstPeriodEnd = "2024-12-31T23:59:59.999Z";
-	// Defining the first semester of 2025
-	const secondPeriodStart = "2025-01-01T00:00:00.000Z";
-	const secondPeriodEnd = "2025-06-30T23:59:59.999Z";
+	const projects = await projectsCollection.find({}).toArray();
+	const crmUsers = await crmUsersCollection.find({}).toArray();
 
-	const projectsInFirstPeriod = await projectsDb
-		.collection<TProject>("dados")
-		.find({
-			"contrato.dataAssinatura": { $gte: firstPeriodStart, $lte: firstPeriodEnd },
-		})
-		.toArray();
+	const missingSellersMap = new Map<string, number>();
+	const missingSdrsMap = new Map<string, number>();
+	const comissionsBulkwrite: AnyBulkWriteOperation<TProject>[] = projects.map((project) => {
+		let comissionDateReference: string | null = null;
+		const comissioned = [];
+		const sellerName = project.vendedor.nome;
+		const sdrName = project.insider;
 
-	const firstPeriodExport = projectsInFirstPeriod.map((project) => {
+		const seller = crmUsers.find((user) => user.nome === sellerName);
+		const sdr = crmUsers.find((user) => user.nome === sdrName);
+		if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {
+			comissionDateReference = project.compra.dataPagamento || null;
+		} else {
+			comissionDateReference = project.contrato.dataAssinatura || null;
+		}
+
+		if (sellerName && !seller) {
+			missingSellersMap.set(sellerName || "", (missingSellersMap.get(sellerName || "") || 0) + 1);
+		}
+		if (sdrName && sdrName !== "NÃO DEFINIDO" && !sdr) {
+			missingSdrsMap.set(sdrName || "", (missingSdrsMap.get(sdrName || "") || 0) + 1);
+		}
+		if (sellerName) {
+			comissioned.push({
+				idCrm: seller?._id.toString(),
+				nome: sellerName,
+				papel: "VENDEDOR",
+				porcentagem: project.comissoes?.porcentagemVendedor || 0,
+				avatar_url: seller?.avatar_url,
+				dataEfetivacao: project.comissoes?.efetivado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
+				dataPagamento: project.comissoes?.pagamentoRealizado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
+			});
+		}
+		if (sdrName && sdrName !== "NÃO DEFINIDO" && sdrName !== sellerName) {
+			comissioned.push({
+				idCrm: sdr?._id.toString(),
+				nome: sdrName,
+				papel: "INSIDER",
+				porcentagem: project.comissoes?.porcentagemInsider || 0,
+				avatar_url: sdr?.avatar_url,
+				dataEfetivacao: project.comissoes?.efetivado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
+				dataPagamento: project.comissoes?.pagamentoRealizado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
+			});
+		}
 		return {
-			QTDE: project.qtde,
-			NOME: project.nomeDoContrato,
-			CIDADE: project.cidade,
-			UF: project.uf,
-			"TIPO DE SERVIÇO": project.tipoDeServico,
-			"DATA DE ASSINATURA": formatDateAsLocale(project.contrato.dataAssinatura),
-			"VALOR DO CONTRATO": formatToMoney(
-				getContractValue({
-					projectValue: project.sistema.valorProjeto,
-					insuranceValue: project.seguro?.valor,
-					oemValue: project.oem?.valor,
-					paValue: project.padrao?.valor,
-					structureValue: project.estruturaPersonalizada?.valor,
-				}),
-			),
-			MODULOS: getProductsStr(project.produtos?.filter((product) => product.categoria === "MÓDULO") || []),
-			INVERSORES: getProductsStr(project.produtos?.filter((product) => product.categoria === "INVERSOR") || []),
-			"DATA DE PAGAMENTO (RECURSOS)": formatDateAsLocale(project.compra?.dataPagamento) || "N/A",
-			"DATA DE PAGAMENTO (COMPRA)": formatDateAsLocale(project.compra?.dataPagamentoEquipamentos) || "N/A",
-			"FATURAMENTO CONCLUÍDO": project.faturamento?.concluido ? "SIM" : "NÃO",
-			"DATA DE FATURAMENTO": formatDateAsLocale(project.faturamento?.dataFaturamento) || "N/A",
-			"OBSERVAÇÕES DO FATURAMENTO": project.faturamento?.observacoes,
+			updateOne: {
+				filter: { _id: project._id },
+				update: {
+					$set: { "comissoes.dataReferencia": comissionDateReference, "comissoes.comissionados": comissioned },
+				},
+			},
 		};
 	});
 
-	const projectsInSecondPeriod = await projectsDb
-		.collection<TProject>("dados")
-		.find({
-			"contrato.dataAssinatura": { $gte: secondPeriodStart, $lte: secondPeriodEnd },
-		})
-		.toArray();
+	const bulkwriteResponse = await projectsCollection.bulkWrite(comissionsBulkwrite);
 
-	const secondPeriodExport = projectsInSecondPeriod.map((project) => {
-		return {
-			QTDE: project.qtde,
-			NOME: project.nomeDoContrato,
-			CIDADE: project.cidade,
-			UF: project.uf,
-			"TIPO DE SERVIÇO": project.tipoDeServico,
-			"DATA DE ASSINATURA": formatDateAsLocale(project.contrato.dataAssinatura),
-			"VALOR DO CONTRATO": formatToMoney(
-				getContractValue({
-					projectValue: project.sistema.valorProjeto,
-					insuranceValue: project.seguro?.valor,
-					oemValue: project.oem?.valor,
-					paValue: project.padrao?.valor,
-					structureValue: project.estruturaPersonalizada?.valor,
-				}),
-			),
-			MODULOS: getProductsStr(project.produtos?.filter((product) => product.categoria === "MÓDULO") || []),
-			INVERSORES: getProductsStr(project.produtos?.filter((product) => product.categoria === "INVERSOR") || []),
-			"DATA DE PAGAMENTO (RECURSOS)": formatDateAsLocale(project.compra?.dataPagamento) || "N/A",
-			"DATA DE PAGAMENTO (COMPRA)": formatDateAsLocale(project.compra?.dataPagamentoEquipamentos) || "N/A",
-			"FATURAMENTO CONCLUÍDO": project.faturamento?.concluido ? "SIM" : "NÃO",
-			"DATA DE FATURAMENTO": formatDateAsLocale(project.faturamento?.dataFaturamento) || "N/A",
-			"OBSERVAÇÕES DO FATURAMENTO": project.faturamento?.observacoes,
-		};
-	});
-
-	// const startDate = dayjs().subtract(1, "month").startOf("month").subtract(3, "hour").toDate();
-	// const endDate = dayjs().subtract(1, "month").endOf("month").subtract(3, "hour").toDate();
-	// console.log(startDate, endDate);
-	// const projects = await projectsCollection
-	// 	.find({
-	// 		tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
-	// 		"contrato.dataAssinatura": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
-	// 	})
-	// 	.toArray();
-	// const requests = await requestsCollection.find({}).toArray();
-
-	// const formatted = projects
-	// 	.map((project) => {
-	// 		const projectRequest = requests.find((request) => request._id.toString() === project.idSolicitacaoContrato);
-
-	// 		if (!projectRequest) return null;
-
-	// 		const paymentForm = projectRequest.formaDePagamento;
-	// 		if (!paymentForm) return null;
-	// 		if (["100% À VISTA NO DINHEIRO/DÉBITO/PIX", "100% À VISTA NO DÉBITO/PIX", "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO"].includes(paymentForm)) {
-	// 			return {
-	// 				qtde: project.qtde,
-	// 				nome: project.nomeDoContrato,
-	// 				formaDePagamento: paymentForm,
-	// 				credor: project.pagamento.credor,
-	// 				dataAssinatura: formatDateAsLocale(project.contrato.dataAssinatura),
-	// 			};
-	// 		}
-	// 	})
-	// 	.filter((project) => !!project);
-
-	// return res.json({
-	// 	formatted: formatted.map((f) => `${f.qtde} ${f.nome}`).join(","),
-	// });
-	return res.send({
-		firstPeriodExport,
-		secondPeriodExport,
+	return res.json({
+		bulkwriteResponse,
 	});
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;

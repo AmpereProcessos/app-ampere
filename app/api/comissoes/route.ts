@@ -100,20 +100,9 @@ async function getComissionData(request: NextRequest) {
 							oemValue: appProject.oem?.valor,
 							insuranceValue: appProject.seguro?.valor,
 						}),
-						vendedor: {
-							id: crmSellerUserInfo?._id.toString(),
-							nome: crmSellerUserInfo?.nome,
-							avatar_url: crmSellerUserInfo?.avatar_url,
-							comissao: seller,
-						},
-						insider: {
-							id: crmSDRUserInfo?._id.toString(),
-							nome: crmSDRUserInfo?.nome,
-							avatar_url: crmSDRUserInfo?.avatar_url,
-							comissao: insider,
-						},
 						comissoes: {
 							efetivado: isComissionDefined,
+							comissionados: appProject.comissoes?.comissionados || [],
 							pagamentoRealizado: isComissionPaid,
 							itensComissionaveis: comissianableItems,
 							valorComissionavel: appProject.comissoes?.valorComissionavel || 0,
@@ -210,18 +199,6 @@ async function getComissionData(request: NextRequest) {
 				cidade: project.cidade,
 				vendedorApp: project.vendedor.nome,
 				insiderApp: project.insider,
-				vendedor: {
-					id: crmSellerUserInfo?._id.toString() || "",
-					nome: crmSellerUserInfo?.nome || "",
-					avatar_url: crmSellerUserInfo?.avatar_url || undefined,
-					comissao: commissionPercentageValues.seller || 0,
-				},
-				insider: {
-					id: crmSDRUserInfo?._id.toString(),
-					nome: crmSDRUserInfo?.nome,
-					avatar_url: crmSDRUserInfo?.avatar_url,
-					comissao: commissionPercentageValues.insider,
-				},
 				dataAssinatura: project.contrato?.dataAssinatura,
 				dataRecebimentoParcial: project.compra?.dataPagamento,
 				potenciaPico: project.sistema?.potPico,
@@ -237,6 +214,7 @@ async function getComissionData(request: NextRequest) {
 				}),
 				comissoes: {
 					efetivado: isComissionDefined,
+					comissionados: project.comissoes?.comissionados || [],
 					pagamentoRealizado: isComissionPaid,
 					itensComissionaveis: comissianableItems,
 					valorComissionavel: project.comissoes?.valorComissionavel || 0,
@@ -291,24 +269,17 @@ async function getProjectsForComission({ collection, after, before, sellers, ins
 	const signedQueryFilter: Filter<TProject> = {
 		"contrato.status": "ASSINADO",
 	};
-	const photovoltaicQueryFilter: Filter<TProject> = {
-		tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
-		$and: [{ "compra.dataPagamento": { $gte: after } }, { "compra.dataPagamento": { $lte: before } }],
-	};
-	const nonPhotovoltaicQueryFilter: Filter<TProject> = {
-		tipoDeServico: { $nin: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
-		$and: [{ "contrato.dataAssinatura": { $gte: after } }, { "contrato.dataAssinatura": { $lte: before } }],
+
+	const referenceDateQueryFilter: Filter<TProject> = {
+		"comissoes.dataReferencia": { $gte: after, $lte: before },
 	};
 	const sellersQueryFilter: Filter<TProject> = sellers.length > 0 ? { "vendedor.nome": { $in: sellers } } : {};
 	const insidersQueryFilter: Filter<TProject> = insiders.length > 0 ? { "insider.nome": { $in: insiders } } : {};
 	const serviceTypesQueryFilter: Filter<TProject> = serviceTypes.length > 0 ? { tipoDeServico: { $in: serviceTypes } } : {};
 
-	const orQueryFilter: Filter<TProject> = {
-		$or: [photovoltaicQueryFilter, nonPhotovoltaicQueryFilter],
-	};
 	const projectsQueryFilter: Filter<TProject> = {
 		...signedQueryFilter,
-		...orQueryFilter,
+		...referenceDateQueryFilter,
 		...sellersQueryFilter,
 		...insidersQueryFilter,
 		...serviceTypesQueryFilter,

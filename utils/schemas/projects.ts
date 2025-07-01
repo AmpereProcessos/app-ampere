@@ -58,6 +58,7 @@ export const ProjectComissionedUserSchema = z.object({
 	nome: z.string({ invalid_type_error: "Tipo não válido para o nome do comissionado." }),
 	papel: z.enum(["VENDEDOR", "INSIDER", "INDICADOR"]),
 	porcentagem: z.number({ invalid_type_error: "Tipo não válido para a porcentagem do comissionado." }),
+	valor: z.number({ invalid_type_error: "Tipo não válido para o valor do comissionado." }).optional().nullable(),
 	avatar_url: z.string({ invalid_type_error: "Tipo não válido para o avatar do comissionado." }).optional().nullable(),
 	dataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a efetivação do comissionado." }).optional().nullable(),
 	dataPagamento: z.string({ invalid_type_error: "Tipo não válido para o pagamento realizado do comissionado." }).optional().nullable(),

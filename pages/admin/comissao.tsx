@@ -270,7 +270,7 @@ function CommissionMain() {
 					)}
 				</div>
 				<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">TOTAL VENDIDO</h1>
 							<MdAttachMoney />
@@ -280,7 +280,7 @@ function CommissionMain() {
 							<p className="text-xs text-gray-500">{formatDecimalPlaces(stats.potenciaVendida)} kWp</p>
 						</div>
 					</div>
-					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO TOTAL</h1>
 							<FaPercentage />
@@ -291,17 +291,8 @@ function CommissionMain() {
 							<p className="text-xs text-gray-500">{formatToMoney(stats.comissaoTimeSDR)} para o time de SDR</p>
 						</div>
 					</div>
-					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
-						<div className="flex items-center justify-between">
-							<h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR ITEM</h1>
-							<FaPercentage />
-						</div>
-						<div className="mt-2 flex w-full flex-col">
-							<div className="text-gray-500">{formatToMoney(stats.comissaoProjeto)} em projeto UFV</div>
-							<p className="text-gray-500">{formatToMoney(stats.comissaoPadrao)} em padrão</p>
-						</div>
-					</div>
-					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+
+					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">ANÁLISE</h1>
 							<BiStats />
@@ -309,6 +300,39 @@ function CommissionMain() {
 						<div className="mt-2 flex w-full flex-col">
 							<div className="text-2xl font-bold text-[#15599a]">{formatDecimalPlaces((stats.comissaoTotal * 100) / stats.totalVendido)}%</div>
 							<p className="text-sm text-gray-500">{formatDecimalPlaces(stats.totalVendido / stats.potenciaVendida)} R$/kWp</p>
+						</div>
+					</div>
+				</div>
+				<div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
+					<div className="flex items-center justify-between">
+						<h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR ITEM</h1>
+						<FaPercentage />
+					</div>
+					<div className="mt-2 flex w-full flex-wrap items-center justify-center gap-3">
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+							<FaSolarPanel className={cn("w-5 h-5 min-w-5 min-h-5")} />
+							<p className="font-medium text-sm">COMISSÃO EM PROJETO</p>
+							<p className="font-medium text-sm">{formatToMoney(stats.comissaoProjeto)}</p>
+						</div>
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+							<MdElectricMeter className={cn("w-5 h-5 min-w-5 min-h-5")} />
+							<p className="font-medium text-sm">COMISSÃO EM PADRÃO</p>
+							<p className="font-medium text-sm">{formatToMoney(stats.comissaoPadrao)}</p>
+						</div>
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+							<MdOutlineRoofing className={cn("w-5 h-5 min-w-5 min-h-5")} />
+							<p className="font-medium text-sm">COMISSÃO EM ESTRUTURA PERSONALIZADA</p>
+							<p className="font-medium text-sm">{formatToMoney(stats.comissaoEstrutura)}</p>
+						</div>
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+							<Wrench className={cn("w-5 h-5 min-w-5 min-h-5")} />
+							<p className="font-medium text-sm">COMISSÃO EM O&M</p>
+							<p className="font-medium text-sm">{formatToMoney(stats.comissaoOem)}</p>
+						</div>
+						<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+							<FaShieldHalved className={cn("w-5 h-5 min-w-5 min-h-5")} />
+							<p className="font-medium text-sm">COMISSÃO EM SEGURO</p>
+							<p className="font-medium text-sm">{formatToMoney(stats.comissaoSeguro)}</p>
 						</div>
 					</div>
 				</div>
@@ -375,12 +399,12 @@ function CommissionMain() {
 			<div className="w-full flex items-center justify-end mt-4 flex-col lg:flex-row">
 				{areMissingComissionDefinitions ? (
 					<LoadingButton variant="ghost" loading={isBulkUpdateMissingComissionDefinitionsPending} onClick={() => bulkUpdateMissingComissionDefinitionsMutation(projects ?? [])}>
-						EFETIVAR COMISSÕES FALTANTES COM VALORES SUGERIDOS
+						EFETIVAR VALORES FALTANTES
 					</LoadingButton>
 				) : null}
 				{areMissingComissionPayments ? (
 					<LoadingButton variant="ghost" loading={isBulkUpdateMissingComissionPaymentsPending} onClick={() => bulkUpdateMissingComissionPaymentsMutation(projects ?? [])}>
-						REGISTRAR PAGAMENTOS DE COMISSÕES FALTANTES
+						REGISTRAR PAGAMENTOS FALTANTES
 					</LoadingButton>
 				) : null}
 			</div>
@@ -433,6 +457,9 @@ type ProjectComissionCardProps = {
 	handleClick: (id: string) => void;
 };
 function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProps) {
+	const allComissionsDefined = project.comissoes.comissionados.every((comissionado) => comissionado.dataEfetivacao);
+	const allComissionsPaid = project.comissoes.comissionados.every((comissionado) => comissionado.dataPagamento);
+	const allComissionsValidated = project.comissoes.comissionados.every((comissionado) => comissionado.dataValidacao);
 	const totalComissionPercentage = project.comissoes.comissionados.reduce((acc, comissionado) => acc + comissionado.porcentagem, 0) / 100;
 	const totalComissionValue = project.comissoes.valorComissionavel * totalComissionPercentage;
 	const comissionValueMap = {
@@ -520,21 +547,30 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
 					<div
 						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
-							"bg-orange-100 text-orange-700": !project.comissoes.efetivado,
-							"bg-green-100 text-green-700": project.comissoes.efetivado,
+							"bg-orange-100 text-orange-700": !allComissionsDefined,
+							"bg-green-100 text-green-700": allComissionsDefined,
 						})}
 					>
 						<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
-						<p className={cn("font-medium text-[0.57rem]")}>{project.comissoes.efetivado ? "COMISSÕES EFETIVADAS" : "VALORES NÃO EFETIVADOS"}</p>
+						<p className={cn("font-medium text-[0.57rem]")}>{allComissionsDefined ? "COMISSÕES EFETIVADAS" : "VALORES NÃO EFETIVADOS"}</p>
 					</div>
 					<div
 						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
-							"bg-orange-100 text-orange-700": !project.comissoes.pagamentoRealizado,
-							"bg-green-100 text-green-700": project.comissoes.pagamentoRealizado,
+							"bg-orange-100 text-orange-700": !allComissionsPaid,
+							"bg-green-100 text-green-700": allComissionsPaid,
 						})}
 					>
 						<BadgeDollarSign className={cn("w-3 h-3 min-w-3 min-h-3")} />
-						<p className={cn("font-medium text-[0.57rem]")}>{project.comissoes.pagamentoRealizado ? "PAGAMENTO DE COMISSÕES REALIZADO" : "PAGAMENTO DE COMISSÕES NÃO REALIZADO"}</p>
+						<p className={cn("font-medium text-[0.57rem]")}>{allComissionsPaid ? "PAGAMENTO DE COMISSÕES REALIZADO" : "PAGAMENTO DE COMISSÕES NÃO REALIZADO"}</p>
+					</div>
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": !allComissionsValidated,
+							"bg-green-100 text-green-700": allComissionsValidated,
+						})}
+					>
+						<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.57rem]")}>{allComissionsValidated ? "VALIDAÇÕES RELIZADAS" : "VALIDAÇÕES PENDENTES"}</p>
 					</div>
 					<div className="flex items-center gap-1 flex-wrap">
 						<Users className={cn("w-3 h-3 min-w-3 min-h-3")} />
@@ -550,7 +586,12 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
 								</Avatar>
 								<p className="text-[#15599a] font-black text-[0.57rem]">{comissionado.nome}</p>
 								<p className="text-green-700 font-black text-[0.57rem]">{comissionado.porcentagem}%</p>
-								{comissionado.dataValidacao ? <BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3 text-green-700")} /> : null}
+								<BadgeCheck
+									className={cn("w-3 h-3 min-w-3 min-h-3", {
+										"text-orange-700": !comissionado.dataValidacao,
+										"text-green-700": comissionado.dataValidacao,
+									})}
+								/>
 							</div>
 						))}
 					</div>

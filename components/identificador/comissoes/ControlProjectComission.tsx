@@ -9,14 +9,14 @@ import { useClientById } from "@/utils/methods/query/clients";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import type { TProjectComissionedUser, TProjectDTO } from "@/utils/schemas/projects";
-import { BadgeDollarSign, Code, UserRound } from "lucide-react";
+import { BadgeCheck, BadgeDollarSign, Code, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { FaSolarPanel } from "react-icons/fa";
 import { MdElectricMeter, MdOutlineRoofing } from "react-icons/md";
 import { FaShieldHalved } from "react-icons/fa6";
 import NumberInput from "@/components/inputs/Number";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import toast from "react-hot-toast";
@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import type { TGetComissionDataOutputByProjectId } from "@/app/api/comissoes/route";
 import { ComissionableItems, type TComissionableItemsEnum } from "@/utils/select-options";
 import CheckboxInput from "@/components/inputs/Checkbox";
+import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
 
 type ComissionInfoHolder = {
 	comissionableValue: number;
@@ -48,6 +49,7 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 	const queryClient = useQueryClient();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const { data: project, isLoading, isError, error, isSuccess } = useComissionDataByProjectId({ projectId });
+	console.log("PROJECT COMISSION DATA", project);
 	const MENU_TITLE = "EDITAR COMISSÃO";
 	const MENU_DESCRIPTION = "Preencha os campos abaixo para editar a comissão.";
 	const BUTTON_TEXT = "ATUALIZAR COMISSÃO";
@@ -81,6 +83,15 @@ function ControlProjectComission({ projectId, session, closeModal, callbacks }: 
 			return toast.error(msg);
 		},
 	});
+	useEffect(() => {
+		if (project) {
+			setInfoHolder({
+				comissionableValue: project.comissoes?.valorComissionavel || 0,
+				comissionableItems: project.comissoes?.itensComissionaveis || [],
+				comissioned: project.comissoes?.comissionados || [],
+			});
+		}
+	}, [project]);
 	return isDesktop ? (
 		<Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
 			<DialogContent className="flex flex-col h-fit min-h-[60vh] max-h-[70vh]">
@@ -286,21 +297,46 @@ function ProjectComissionDataBlock({
 					})}
 				</div>
 				<div className="w-full flex flex-col gap-1.5">
-					<h1 className="text-sm font-bold leading-none tracking-tight">COMISSIONADOS</h1>
+					<div className="w-full flex items-center justify-between gap-2">
+						<h1 className="text-sm font-bold leading-none tracking-tight">COMISSIONADOS</h1>
+
+						<div className="w-fit">
+							<Button
+								variant="ghost"
+								size="fit"
+								onClick={() => updateInfoHolder({ comissioned: infoHolder.comissioned.map((comissioned) => ({ ...comissioned, dataEfetivacao: new Date().toISOString() })) })}
+							>
+								EFETIVAR TODAS
+							</Button>
+						</div>
+					</div>
 					{infoHolder.comissioned.map((comissioned, index) => (
 						<div key={`${comissioned.nome}-${index}`} className="w-full flex flex-col gap-1 p-2 border border-primary/10 rounded-md bg-[#fff] dark:bg-[#121212] shadow-sm">
-							<div className="w-full flex items-center justify-center gap-2">
-								<Avatar className="h-5 w-5">
-									<AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
-									<AvatarFallback>{formatNameAsInitials(comissioned.nome || "")}</AvatarFallback>
-								</Avatar>
-								<h1 className="text-[0.6rem] font-bold tracking-tighter">{comissioned.nome}</h1>
+							<div className="w-full flex items-center justify-between">
+								<div className="flex items-center justify-center gap-2">
+									<h1 className="text-[0.6rem] font-bold tracking-tighter">COMISSÃO DO VENDEDOR:</h1>
+									<Avatar className="h-5 w-5">
+										<AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
+										<AvatarFallback>{formatNameAsInitials(comissioned.nome || "")}</AvatarFallback>
+									</Avatar>
+									<h1 className="text-[0.6rem] font-bold tracking-tighter">{comissioned.nome}</h1>
+								</div>
+								<div
+									className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+										"bg-orange-100 text-orange-700": !comissioned.dataValidacao,
+										"bg-green-100 text-green-700": comissioned.dataValidacao,
+									})}
+								>
+									<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
+									<p className={cn("font-medium text-[0.57rem]")}>{comissioned.dataValidacao ? "VALIDADO" : "NÃO VALIDADO"}</p>
+								</div>
 							</div>
+
 							<NumberInput
 								label="COMISSÃO DO VENDEDOR (%)"
 								value={comissioned.porcentagem}
 								handleChange={(v) => {
-									updateComissioned({ index, changes: { porcentagem: v } });
+									updateComissioned({ index, changes: { porcentagem: v, valor: (v / 100) * infoHolder.comissionableValue } });
 								}}
 								placeholder="Preencha aqui a porcentagem da comissão do vendedor..."
 								width="100%"
@@ -309,10 +345,9 @@ function ProjectComissionDataBlock({
 							/>
 							<NumberInput
 								label="COMISSÃO DO VENDEDOR (R$)"
-								value={comissioned.porcentagem * (infoHolder.comissionableValue / 100)}
+								value={comissioned.valor || null}
 								handleChange={(v) => {
-									const percentage = (v / infoHolder.comissionableValue) * 100;
-									updateComissioned({ index, changes: { porcentagem: percentage } });
+									updateComissioned({ index, changes: { valor: v, porcentagem: (v / infoHolder.comissionableValue) * 100 } });
 								}}
 								placeholder="Preencha aqui o valor da comissão do vendedor..."
 								width="100%"
@@ -325,19 +360,30 @@ function ProjectComissionDataBlock({
 									<p className="text-[#15599a] font-black text-[0.57rem]">{formatToMoney(infoHolder.comissionableValue * (comissioned.porcentagem / 100))}</p>
 								</div>
 							</div>
+							<div className="w-full flex items-center gap-2 flex-wrap justify-center">
+								<div className="w-fit">
+									<CheckboxWithDate
+										labelFalse="VALORES NÃO EFETIVADOS"
+										labelTrue="VALORES EFETIVADOS"
+										date={comissioned.dataEfetivacao ? new Date(comissioned.dataEfetivacao) : null}
+										handleChange={(value) => {
+											updateComissioned({ index, changes: { dataEfetivacao: value } });
+										}}
+									/>
+								</div>
+								<div className="w-fit">
+									<CheckboxWithDate
+										labelFalse="PAGAMENTO NÃO REALIZADO"
+										labelTrue="PAGAMENTO REALIZADO"
+										date={comissioned.dataPagamento ? new Date(comissioned.dataPagamento) : null}
+										handleChange={(value) => {
+											updateComissioned({ index, changes: { dataPagamento: value } });
+										}}
+									/>
+								</div>
+							</div>
 						</div>
 					))}
-				</div>
-				<div className="w-full flex items-center justify-center gap-2 flex-wrap">
-					<div className="w-fit">
-						<Button
-							variant="ghost"
-							size="fit"
-							onClick={() => updateInfoHolder({ comissioned: infoHolder.comissioned.map((comissioned) => ({ ...comissioned, dataValidacao: new Date().toISOString() })) })}
-						>
-							EFETIVAR TODAS
-						</Button>
-					</div>
 				</div>
 			</div>
 		</div>

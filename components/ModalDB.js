@@ -49,6 +49,8 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 	const userHasOeMAccess = !!session?.user.permissoes.suporte.visualizar;
 	const userHasRestrictionPermission = session.user.permissoes.gestao.restringirProjetos;
 
+	const userHasComissionValuesAccess = ["PPS", "Financeiro", "ADM", "RH"].every((el) => session?.user.permissoes.rotas.includes(el));
+
 	const { data: project, isLoading, isSuccess, isError, error } = useClientById({ id: projectId, enabled: !!projectId });
 	const { data: updateLogs } = useProjectUpdateLogs({ projectId });
 
@@ -84,7 +86,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 							{userHasOverallAccess || userHasOeMAccess ? (
 								<SaveButton text={"Salvar alterações"} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
 							) : null}
-							<button>
+							<button type="button">
 								<VscChromeClose onClick={() => closeModal()} style={{ color: "red" }} />
 							</button>
 						</div>
@@ -148,7 +150,7 @@ function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 								setChanges={setChanges}
 								updateLogs={updateLogs || []}
 								minimalInfo={false}
-								showPaymentInfo={true}
+								showPaymentInfo={userHasComissionValuesAccess}
 							/>
 							<InfoJornadaBlock editor={userHasOverallAccess} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} updateLogs={updateLogs || []} />
 							<InfoPagamentoBlock editor={userHasOverallAccess} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} updateLogs={updateLogs || []} />

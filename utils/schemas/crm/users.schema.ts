@@ -1,7 +1,8 @@
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import z from "zod";
 import type { TSaleGoalDTO } from "./sale-goal.schema";
 import type { TPartner } from "./partner.schema";
+import { PricingMethodConditionTypes } from "./pricing-method.schema";
 
 const ComissionScenarioConditionTypes = z.enum(["IGUAL_TEXTO", "IGUAL_NÚMERICO", "MAIOR_QUE_NÚMERICO", "MENOR_QUE_NÚMERICO", "INTERVALO_NÚMERICO", "INCLUI_LISTA"], {
 	required_error: "Tipo de condicional não informado.",
@@ -353,15 +354,25 @@ export const PermissionsSchema = z.object({
 });
 export type TUserPermissions = z.infer<typeof PermissionsSchema>;
 
-const ComissionSchema = z.object({
-	aplicavel: z.boolean({
-		required_error: "Aplicabilidade de comissão ao usuário não informada.",
-		invalid_type_error: "Tipo não válido para a aplicabilidade de comissão ao usuário.",
+const ComissionItemSchema = z.object({
+	tipoProjeto: z.object({
+		id: z.string({
+			required_error: "ID do tipo de projeto não informado.",
+			invalid_type_error: "Tipo não válido para o ID do tipo de projeto.",
+		}),
+		nome: z.string({
+			required_error: "Nome do tipo de projeto não informado.",
+			invalid_type_error: "Tipo não válido para o nome do tipo de projeto.",
+		}),
+	}),
+	papel: z.string({
+		required_error: "Papel do usuário na venda não informado.",
+		invalid_type_error: "Tipo não válido para o papel do usuário na venda.",
 	}),
 	resultados: z.array(
 		z.object({
 			condicao: z.object({
-				tipo: ComissionScenarioConditionTypes.optional().nullable(),
+				tipo: PricingMethodConditionTypes.optional().nullable(),
 				aplicavel: z.boolean({
 					required_error: "Aplicabilidade de condição no resultado não informada.",
 					invalid_type_error: "Tipo não válido para aplicabilidade de condição no resultado.",
@@ -413,19 +424,21 @@ const ComissionSchema = z.object({
 							required_error: "Texto de comparação da lista de opções da condição não informado.",
 							invalid_type_error: "Tipo não válido para texto de comparação da lista de opções da condição.",
 						}),
-						{
-							required_error: "Lista de opções de comparação não informada.",
-							invalid_type_error: "Tipo não válido para lista de opções de comparação.",
-						},
+						{ required_error: "Lista de opções de comparação não informada.", invalid_type_error: "Tipo não válido para lista de opções de comparação." },
 					)
 					.optional()
 					.nullable(),
 			}),
-			formulaArr: z.array(z.string({ required_error: "Item da fórmula não informada.", invalid_type_error: "Tipo não válido para item da fórmula." })),
+			formulaArr: z.array(
+				z.string({
+					required_error: "Item da fórmula da comissão não informado.",
+					invalid_type_error: "Tipo não válido para item da fórmula da comissão.",
+				}),
+			),
 		}),
 	),
 });
-export type TUserComission = z.infer<typeof ComissionSchema>;
+export type TUserComissionItem = z.infer<typeof ComissionItemSchema>;
 const GeneralUserSchema = z.object({
 	nome: z.string(),
 	administrador: z.boolean(),
@@ -440,7 +453,7 @@ const GeneralUserSchema = z.object({
 		semSDR: z.number().optional().nullable(),
 		comSDR: z.number().optional().nullable(),
 	}),
-	comissionamento: ComissionSchema,
+	comissionamento: z.array(ComissionItemSchema),
 	ativo: z.boolean(),
 	dataExclusao: z.string().datetime().optional().nullable(),
 	dataInsercao: z.string().datetime().optional().nullable(),
@@ -472,7 +485,7 @@ export const InsertUserSchema = z.object({
 		semSDR: z.number().optional().nullable(),
 		comSDR: z.number().optional().nullable(),
 	}),
-	comissionamento: ComissionSchema,
+	comissionamento: z.array(ComissionItemSchema),
 	ativo: z.boolean(),
 	dataInsercao: z.string().datetime().optional().nullable(),
 	dataAlteracao: z.string().datetime().optional().nullable(),

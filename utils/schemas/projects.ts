@@ -94,7 +94,14 @@ const GeneralProjectSchema = z.object({
 	comissoes: z
 		.object({
 			dataReferencia: z.string({ invalid_type_error: "Tipo não válido para a data de referência da comissão." }).optional().nullable(),
+			valorComissionavel: z.number({ invalid_type_error: "Tipo não válido para o valor comissionável." }).optional().nullable(),
+			itensComissionaveis: z
+				.array(z.enum(["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"]))
+				.optional()
+				.nullable(),
 			comissionados: z.array(ProjectComissionedUserSchema).optional().nullable(),
+
+			// Deprecated fields
 			efetivado: z
 				.boolean({
 					invalid_type_error: "Tipo não válido para a efetivação da comissão.",
@@ -119,11 +126,7 @@ const GeneralProjectSchema = z.object({
 				})
 				.optional()
 				.nullable(),
-			valorComissionavel: z.number({ invalid_type_error: "Tipo não válido para o valor comissionável." }).optional().nullable(),
-			itensComissionaveis: z
-				.array(z.enum(["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"]))
-				.optional()
-				.nullable(),
+
 			dataValidacaoVendedor: z.string({ invalid_type_error: "Tipo não válido para a data de validação do vendedor." }).optional().nullable(),
 			dataValidacaoInsider: z.string({ invalid_type_error: "Tipo não válido para a data de validação do insider." }).optional().nullable(),
 		})

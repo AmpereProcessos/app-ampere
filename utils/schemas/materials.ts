@@ -246,5 +246,11 @@ export const QueryMaterialsFiltersSchema = z.object({
 	aboveMaximum: z.boolean({
 		invalid_type_error: "Tipo não válido para filtro de materiais abaixo do mínimo.",
 	}),
+	minimumUndefined: z.boolean({
+		invalid_type_error: "Tipo não válido para filtro de materiais com mínimo indefinido.",
+	}),
+	maximumUndefined: z.boolean({
+		invalid_type_error: "Tipo não válido para filtro de materiais com máximo indefinido.",
+	}),
 });
 export type TQueryMaterialsFiltersSchema = z.infer<typeof QueryMaterialsFiltersSchema>;

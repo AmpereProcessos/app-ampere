@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import { formatWithoutDiacritics } from "../formatting";
 import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from "@/pages/api/almoxarifado/estoque/database";
+import type { TGetStockAnalyticsOutput } from "@/pages/api/almoxarifado/estoque/estatisticas";
 
 export async function fetchMaterials() {
 	try {
@@ -190,6 +191,8 @@ export function useMaterialsDatabase() {
 		period: {},
 		belowMinimum: false,
 		aboveMaximum: false,
+		minimumUndefined: false,
+		maximumUndefined: false,
 	});
 	function updateFilters(changes: Partial<TGetMaterialsDatabaseInput>) {
 		return setFilters((prev) => ({ ...prev, ...changes }));
@@ -205,4 +208,20 @@ export function useMaterialsDatabase() {
 		filters,
 		updateFilters,
 	};
+}
+
+async function fetchStockAnalytics() {
+	try {
+		const { data }: { data: TGetStockAnalyticsOutput } = await axios.get("/api/almoxarifado/estoque/estatisticas");
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export function useStockAnalytics() {
+	return useQuery({
+		queryKey: ["stock-analytics"],
+		queryFn: fetchStockAnalytics,
+	});
 }

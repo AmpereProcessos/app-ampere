@@ -84,6 +84,18 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 			}
 		: {};
 
+	const maximumUndefinedFilter: Filter<TMaterial> = filters.maximumUndefined
+		? {
+				qtdeMaxima: null,
+			}
+		: {};
+
+	const minimumUndefinedFilter: Filter<TMaterial> = filters.minimumUndefined
+		? {
+				qtdeMinima: null,
+			}
+		: {};
+
 	const query: Filter<TMaterial> = {
 		...orQuery,
 		...quantityFilter,
@@ -91,6 +103,8 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 		...periodQuery,
 		...belowMinimumFilter,
 		...aboveMaximumFilter,
+		...minimumUndefinedFilter,
+		...maximumUndefinedFilter,
 	};
 
 	const skip = PAGE_SIZE * (Number(filters.page) - 1);

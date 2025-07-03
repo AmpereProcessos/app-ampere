@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MdOutlineMiscellaneousServices, MdSync } from "react-icons/md";
 import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
-import { FaBolt, FaIndustry, FaUserAlt } from "react-icons/fa";
+import { FaBolt, FaIndustry, FaUser, FaUserAlt } from "react-icons/fa";
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsPersonVcard } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { AiOutlineSafety } from "react-icons/ai";
@@ -100,6 +100,10 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 										includeUf: true,
 									})}
 								</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<FaUser />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">VENDIDO POR: {project.vendedor.nome}</p>
 							</div>
 						</div>
 					</div>

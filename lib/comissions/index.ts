@@ -9,6 +9,9 @@ type GetComissionDefinitionsParams = {
 	saleOeMValue: number;
 	saleInsuranceValue: number;
 	saleResponsiblesCombination: string;
+	salePartnerId: string;
+	saleSellerPartnerId: string;
+	saleSDRPartnerId: string;
 };
 export function getComissionDefinitions({
 	systemPeakPower,
@@ -19,6 +22,9 @@ export function getComissionDefinitions({
 	saleOeMValue,
 	saleInsuranceValue,
 	saleResponsiblesCombination,
+	salePartnerId,
+	saleSellerPartnerId,
+	saleSDRPartnerId,
 }: GetComissionDefinitionsParams) {
 	return [
 		{
@@ -52,6 +58,18 @@ export function getComissionDefinitions({
 		{
 			identifier: "combinacao_responsaveis",
 			value: saleResponsiblesCombination,
+		},
+		{
+			identifier: "parceiro_venda",
+			value: salePartnerId,
+		},
+		{
+			identifier: "parceiro_vendedor",
+			value: saleSellerPartnerId,
+		},
+		{
+			identifier: "parceiro_sdr",
+			value: saleSDRPartnerId,
 		},
 	];
 }

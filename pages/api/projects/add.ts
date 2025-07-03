@@ -79,8 +79,8 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 		oemValue: project.oem?.valor || 0,
 		insuranceValue: project.seguro?.valor || 0,
 	});
-	// const opportunitySeller = opportunity.responsaveis.find((responsible) => responsible.papel === "VENDEDOR");
-	// const opportunityInsider = opportunity.responsaveis.find((responsible) => responsible.papel === "SDR");
+	const opportunitySeller = opportunity.responsaveis.find((responsible) => responsible.papel === "VENDEDOR");
+	const opportunityInsider = opportunity.responsaveis.find((responsible) => responsible.papel === "SDR");
 
 	const opportunityResponsibleUsers = await crmUsersCollection
 		.find(
@@ -111,6 +111,8 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 				dataValidacao: null,
 			};
 
+		const opportunitySellerUser = opportunityResponsibleUsers.find((u) => u._id.toString() === opportunitySeller?.id);
+		const opportunityInsiderUser = opportunityResponsibleUsers.find((u) => u._id.toString() === opportunityInsider?.id);
 		const opportunityResponsibleUniqueRoles = [...new Set(opportunity.responsaveis.map((responsible) => responsible.papel))];
 		const opportunityResponsiblesCombination = opportunityResponsibleUniqueRoles.sort((a, b) => a.localeCompare(b)).join(" + ");
 		const comissionDefinitions = getComissionDefinitions({
@@ -122,6 +124,9 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 			saleOeMValue: project.oem?.valor || 0,
 			saleInsuranceValue: project.seguro?.valor || 0,
 			saleResponsiblesCombination: opportunityResponsiblesCombination,
+			salePartnerId: opportunity.idParceiro,
+			saleSellerPartnerId: opportunitySellerUser?.idParceiro || "",
+			saleSDRPartnerId: opportunityInsiderUser?.idParceiro || "",
 		});
 		const comissionValue = getComissionValue({
 			userRole: responsible.papel,

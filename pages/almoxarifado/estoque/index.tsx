@@ -35,6 +35,7 @@ import DateInput from "@/components/inputs/Date";
 import DateTimeInput from "@/components/inputs/DateTimeInput";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import CheckboxInput from "@/components/inputs/Checkbox";
+import NewPurchaseControlSimplified from "@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified";
 
 function StockPage() {
 	const { data: session, status } = useSession({ required: true });
@@ -53,6 +54,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 	const [filterMenuIsOpens, setFilterMenuIsOpen] = useState<boolean>(false);
 	const [newMaterialModalIsOpen, setNewMaterialModalIsOpen] = useState<boolean>(false);
 	const [editMaterialModal, setEditMaterialModal] = useState({ id: null as string | null, isOpen: false });
+	const [newPurchaseControlModalIsOpen, setNewPurchaseControlModalIsOpen] = useState<boolean>(false);
 	const { data: materialsResult, isLoading, isError, isSuccess, error, filters, updateFilters } = useMaterialsDatabase();
 
 	const materials = materialsResult?.materials || [];
@@ -74,10 +76,17 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 								<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setFilterMenuIsOpen(true)} />
 							</div>
 						)}
+						<Button variant={"ghost"} onClick={() => setNewPurchaseControlModalIsOpen((prev) => !prev)}>
+							NOVA SOLICITAÇÃO DE COMPRA
+						</Button>
 						<Button onClick={() => setNewMaterialModalIsOpen((prev) => !prev)}>NOVO MATERIAL</Button>
 					</div>
 				</div>
 				<div className="w-full flex items-center justify-center flex-wrap lg:justify-end gap-6 gap-y-1">
+					<Link href={"/suprimentos/entregas?tagIds=67113e8d1cef044a60bb7606"} className="flex items-center gap-1 hover:text-cyan-500 transition-colors">
+						<FaBox className="h-4 w-4" />
+						<p className="text-xs">ACOMPANHAMENTO DE ENTREGAS</p>
+					</Link>
 					<Link href={"/almoxarifado/estoque/relatorio-pdf"} className="flex items-center gap-1 hover:text-cyan-500 transition-colors">
 						<FileText className="h-4 w-4" />
 						<p className="text-xs">RELATÓRIO EM PDF</p>
@@ -126,6 +135,25 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 			{newMaterialModalIsOpen ? <NewMaterial closeModal={() => setNewMaterialModalIsOpen(false)} /> : null}
 			{editMaterialModal.id && editMaterialModal.isOpen ? (
 				<EditMaterial materialId={editMaterialModal.id} closeModal={() => setEditMaterialModal({ id: null, isOpen: false })} />
+			) : null}
+			{newPurchaseControlModalIsOpen ? (
+				<NewPurchaseControlSimplified
+					session={session}
+					affectedQueryKey={[]}
+					initialData={{
+						etiquetas: [
+							{
+								id: "67113e8d1cef044a60bb7606",
+								titulo: "ALMOXARIFADO",
+								cores: {
+									primaria: "#FF0000",
+									secundaria: "#FFCCCB",
+								},
+							},
+						],
+					}}
+					closeModal={() => setNewPurchaseControlModalIsOpen(false)}
+				/>
 			) : null}
 		</div>
 	);

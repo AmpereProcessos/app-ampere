@@ -325,7 +325,7 @@ export const PurchaseControlKanbanSimplifiedProjection = {
 	dataEfetivacao: 1,
 };
 
-export type TPurchaseControlDeliveryTracking = Pick<TPurchaseControl, "titulo" | "dataPedido" | "entrega" | "fornecedor" | "transporte" | "dataInsercao"> & {
+export type TPurchaseControlDeliveryTracking = Pick<TPurchaseControl, "titulo" | "dataPedido" | "entrega" | "fornecedor" | "transporte" | "dataInsercao" | "etiquetas"> & {
 	projetoDados?: {
 		_id: string;
 		nomeDoContrato: TProject["nomeDoContrato"];

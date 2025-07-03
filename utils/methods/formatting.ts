@@ -84,7 +84,6 @@ export function formatLocation({
 	includeCEP?: boolean;
 }) {
 	var addressStr = "";
-	console.log("INCLUDE CEP", includeCEP, "CEP", location.cep);
 	if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`;
 	if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`;
 	if (!location.endereco && !includeUf && !includeCity) return "";

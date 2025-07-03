@@ -49,7 +49,6 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 						updateCompositionItemHolder({
 							materialId: m._id,
 							descricao: m.nome,
-							valor: m.preco,
 							unidade: m.grandeza || "UN",
 						})
 					}

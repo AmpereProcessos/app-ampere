@@ -35,20 +35,45 @@ import { updateProject } from "@/utils/methods/mutation/clients";
 import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
 import type { Session } from "next-auth";
 import type { TPurchaseControlDeliveryTrackingDTO } from "@/utils/schemas/purchases";
-import { usePurchaseControlById } from "@/utils/methods/query/purchase-controls";
+import { usePurchaseControlById, usePurchaseControlsTags } from "@/utils/methods/query/purchase-controls";
 import { MdLandscape, MdPhone } from "react-icons/md";
 import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
 import { updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
 import { handleProjectServiceOrderTrigger } from "@/utils/methods/mutation/triggers";
+import type { GetServerSideProps } from "next";
+import CheckboxInput from "@/components/inputs/Checkbox";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
-function DeliveriesPage() {
+
+interface DeliveriesPageProps {
+	tagIds: string[];
+	purchasedOnly: boolean;
+	deliveredRecentOnly: boolean;
+}
+
+export const getServerSideProps: GetServerSideProps<DeliveriesPageProps> = async (context) => {
+	const { tagIds, purchasedOnly, deliveredRecentOnly } = context.query;
+
+	// Se for string, converte para array usando a vírgula como delimitador
+	const parsedTagIds = typeof tagIds === "string" ? tagIds.split(",").filter(Boolean) : [];
+	const parsedPurchasedOnly = typeof purchasedOnly === "string" ? purchasedOnly === "true" : true;
+	const parsedDeliveredRecentOnly = typeof deliveredRecentOnly === "string" ? deliveredRecentOnly === "true" : false;
+	return {
+		props: {
+			tagIds: parsedTagIds,
+			purchasedOnly: parsedPurchasedOnly,
+			deliveredRecentOnly: parsedDeliveredRecentOnly,
+		},
+	};
+};
+
+function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: DeliveriesPageProps) {
 	const { data: session, status } = useSession({ required: true });
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false);
 	const [acknowlegdeMenu, setAcknowlegdeMenu] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
-	const [menuIsOpen, setMenuIsOpen] = useState<{ id: string | null; name: string | null; isOpen: boolean }>({ id: null, name: null, isOpen: false });
-	const { data: projects, isLoading, isError, isSuccess, error, filters, setFilters } = useProjectsInDelivery();
+	const { data: projects, isLoading, isError, isSuccess, error, filters, setFilters } = useProjectsInDelivery({ initialFilters: { tagIds, purchasedOnly, deliveredRecentOnly } });
+	const { data: tags } = usePurchaseControlsTags();
 	if (status !== "authenticated") return <LoadingPage />;
 
 	return (
@@ -114,6 +139,32 @@ function DeliveriesPage() {
 								onReset={() => setFilters((prev) => ({ ...prev, ufs: [] }))}
 								selectedItemLabel="NÃO DEFINIDO"
 							/>
+							<MultipleSelectInput
+								label="ETIQUETAS"
+								selected={filters.tagIds}
+								handleChange={(value) => setFilters((prev) => ({ ...prev, tagIds: value as string[] }))}
+								options={tags?.map((tag) => ({ id: tag._id, label: tag.titulo, value: tag._id })) || []}
+								onReset={() => setFilters((prev) => ({ ...prev, tagIds: [] }))}
+								selectedItemLabel="NÃO DEFINIDO"
+							/>
+						</div>
+						<div className="flex w-full items-center  gap-2 flex-wrap">
+							<div className="w-fit">
+								<CheckboxInput
+									labelTrue="COMPRAS COM PEDIDO FEITO"
+									labelFalse="COMPRAS COM PEDIDO FEITO"
+									checked={filters.purchasedOnly}
+									handleChange={(value) => setFilters((prev) => ({ ...prev, purchasedOnly: value }))}
+								/>
+							</div>
+							<div className="w-fit">
+								<CheckboxInput
+									labelTrue="COMPRAS ENTREGUES RECENTEMENTE"
+									labelFalse="COMPRAS ENTREGUES RECENTEMENTE"
+									checked={filters.deliveredRecentOnly}
+									handleChange={(value) => setFilters((prev) => ({ ...prev, deliveredRecentOnly: value }))}
+								/>
+							</div>
 						</div>
 					</motion.div>
 				) : null}
@@ -217,7 +268,12 @@ function ProjectCard({ project, handleClick }: ProjectCardProps) {
 					</div>
 				</div>
 			</div>
-			<div className="flex w-full items-center justify-end">
+			<div className="flex w-full items-center justify-between">
+				<div className="flex items-center gap-1">
+					<BsCalendarPlus width={10} height={10} />
+					<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">DATA DA REQUISIÇÃO</h1>
+					<h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.dataInsercao, true)}</h1>
+				</div>
 				<button type="button" onClick={() => handleClick(project._id)} className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
 					<Pencil width={10} height={10} />
 					<p>ACUSAR RECEBIMENTO</p>

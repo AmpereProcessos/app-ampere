@@ -1,9 +1,9 @@
 import { apiHandler } from "@/utils/api";
 import { formatDateAsLocale, getProductsStr } from "@/utils/methods/formatting";
 import type { TContractRequest } from "@/utils/schemas/contract-requests";
-import { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 
-import type { TProject } from "@/utils/schemas/projects";
+import type { TProject, TProjectComissionedUser } from "@/utils/schemas/projects";
 import type { TPurchaseControl, TPurchaseControlTag } from "@/utils/schemas/purchases";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToProjectsDatabase from "@/utils/services/mongodb/projects";
@@ -22,74 +22,99 @@ import connectToAuxiliariesDatabase from "@/utils/services/mongodb/auxiliaries";
 import type { TTag } from "@/utils/schemas/tags";
 import type { TServiceOrderTag } from "@/utils/schemas/service-order";
 import createHttpError from "http-errors";
+import { getComissionDefinitions, getComissionValue } from "@/lib/comissions";
 const getExport: NextApiHandler<any> = async (req, res) => {
 	const projectsDb = await connectToProjectsDatabase();
 	const crmDb = await connectToCRMDatabase();
 
 	const projectsCollection = projectsDb.collection<TProject>("dados");
 	const crmUsersCollection = crmDb.collection<TCRMUser>("users");
+	const crmOpportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
+	const startTwoMonthsAgo = dayjs().subtract(2, "month").startOf("month").toISOString();
+	const today = dayjs().toISOString();
+	const projects = await projectsCollection
+		.find({
+			"comissoes.dataReferencia": { $gte: startTwoMonthsAgo, $lte: today },
+		})
+		.toArray();
 
-	const projects = await projectsCollection.find({}).toArray();
+	const opportunitiesObjectIds = projects.filter((project) => !!project.idProjetoCRM).map((project) => new ObjectId(project.idProjetoCRM as string));
 	const crmUsers = await crmUsersCollection.find({}).toArray();
+	const crmOpportunities = await crmOpportunitiesCollection.find({ _id: { $in: opportunitiesObjectIds } }).toArray();
 
-	const missingSellersMap = new Map<string, number>();
-	const missingSdrsMap = new Map<string, number>();
-	const comissionsBulkwrite: AnyBulkWriteOperation<TProject>[] = projects.map((project) => {
-		let comissionDateReference: string | null = null;
-		const comissioned = [];
-		const sellerName = project.vendedor.nome;
-		const sdrName = project.insider;
-
-		const seller = crmUsers.find((user) => user.nome === sellerName);
-		const sdr = crmUsers.find((user) => user.nome === sdrName);
-		if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {
-			comissionDateReference = project.compra.dataPagamento || null;
-		} else {
-			comissionDateReference = project.contrato.dataAssinatura || null;
-		}
-
-		if (sellerName && !seller) {
-			missingSellersMap.set(sellerName || "", (missingSellersMap.get(sellerName || "") || 0) + 1);
-		}
-		if (sdrName && sdrName !== "NÃO DEFINIDO" && !sdr) {
-			missingSdrsMap.set(sdrName || "", (missingSdrsMap.get(sdrName || "") || 0) + 1);
-		}
-		if (sellerName) {
-			comissioned.push({
-				idCrm: seller?._id.toString(),
-				nome: sellerName,
-				papel: "VENDEDOR",
-				porcentagem: project.comissoes?.porcentagemVendedor || 0,
-				avatar_url: seller?.avatar_url,
-				dataEfetivacao: project.comissoes?.efetivado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
-				dataPagamento: project.comissoes?.pagamentoRealizado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
+	const bulkwriteArr: AnyBulkWriteOperation<TProject>[] = projects
+		.map((project) => {
+			const opportunity = crmOpportunities.find((opportunity) => opportunity._id.toString() === project.idProjetoCRM);
+			if (!opportunity) {
+				console.log("[ERROR] Opportunity not found for project", project.nomeDoContrato);
+				return null;
+			}
+			const saleValue = getContractValue({
+				projectValue: project.sistema.valorProjeto,
+				structureValue: project.estruturaPersonalizada.valor || 0,
+				paValue: project.padrao?.valor || 0,
+				oemValue: project.oem?.valor || 0,
+				insuranceValue: project.seguro?.valor || 0,
 			});
-		}
-		if (sdrName && sdrName !== "NÃO DEFINIDO" && sdrName !== sellerName) {
-			comissioned.push({
-				idCrm: sdr?._id.toString(),
-				nome: sdrName,
-				papel: "INSIDER",
-				porcentagem: project.comissoes?.porcentagemInsider || 0,
-				avatar_url: sdr?.avatar_url,
-				dataEfetivacao: project.comissoes?.efetivado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
-				dataPagamento: project.comissoes?.pagamentoRealizado && comissionDateReference ? dayjs(comissionDateReference).endOf("month").subtract(3, "hours").toISOString() : null,
-			});
-		}
-		return {
-			updateOne: {
-				filter: { _id: project._id },
-				update: {
-					$set: { "comissoes.dataReferencia": comissionDateReference, "comissoes.comissionados": comissioned },
+			const opportunityResponsiblesUniqueRoles = [...new Set(opportunity.responsaveis.map((responsible) => responsible.papel))];
+			const opportunityResponsiblesCombination = opportunityResponsiblesUniqueRoles.sort((a, b) => a.localeCompare(b)).join(" + ");
+
+			const opportunitySeller = opportunity.responsaveis.find((responsible) => responsible.papel === "VENDEDOR");
+			const opportunityInsider = opportunity.responsaveis.find((responsible) => responsible.papel === "SDR");
+			const opportunitySellerUser = crmUsers.find((user) => user._id.toString() === opportunitySeller?.id);
+			const opportunityInsiderUser = crmUsers.find((user) => user._id.toString() === opportunityInsider?.id);
+			const comissionableUsers: TProjectComissionedUser[] = opportunity.responsaveis
+				.map((responsible) => {
+					const responsibleUser = crmUsers.find((user) => user._id.toString() === responsible.id);
+					if (!responsibleUser) {
+						console.log("[ERROR] Responsible user not found for opportunity", { opportunityIdentifier: opportunity.identificador, responsibleIdentifier: responsible.id });
+						return null;
+					}
+					const comissionDefinition = getComissionDefinitions({
+						systemPeakPower: project.sistema.potPico,
+						saleValue,
+						saleProjectValue: project.sistema.valorProjeto,
+						saleStructureValue: project.estruturaPersonalizada.valor || 0,
+						saleEnergyPaValue: project.padrao?.valor || 0,
+						saleOeMValue: project.oem?.valor || 0,
+						saleInsuranceValue: project.seguro?.valor || 0,
+						saleResponsiblesCombination: opportunityResponsiblesCombination,
+						salePartnerId: opportunity.idParceiro,
+						saleSellerPartnerId: opportunitySellerUser?.idParceiro || "",
+						saleSDRPartnerId: opportunityInsiderUser?.idParceiro || "",
+					});
+					const comissionValue = getComissionValue({
+						userRole: responsible.papel,
+						projectTypeId: opportunity.tipo.id,
+						userComissionConfig: responsibleUser.comissionamento,
+						definitions: comissionDefinition,
+					});
+					const comissionableUser: TProjectComissionedUser = {
+						idCrm: responsibleUser._id.toString(),
+						nome: responsibleUser.nome,
+						papel: responsible.papel as TProjectComissionedUser["papel"],
+						porcentagem: (comissionValue / saleValue) * 100,
+						valor: comissionValue,
+						avatar_url: responsibleUser.avatar_url,
+					};
+					return comissionableUser;
+				})
+				.filter((user) => !!user);
+			return {
+				updateOne: {
+					filter: { _id: project._id },
+					update: {
+						$set: { "comissoes.comissionados": comissionableUsers },
+					},
 				},
-			},
-		};
-	});
+			};
+		})
+		.filter((operation) => !!operation);
 
-	const bulkwriteResponse = await projectsCollection.bulkWrite(comissionsBulkwrite);
-
+	// const bulkwriteResponse = await projectsCollection.bulkWrite(bulkwriteArr);
+	console.log(bulkwriteArr.length);
 	return res.json({
-		bulkwriteResponse,
+		bulkwriteArr,
 	});
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;

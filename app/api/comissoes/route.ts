@@ -150,7 +150,10 @@ async function getComissionData(request: NextRequest) {
 		insiders: insidersArr,
 		serviceTypes: serviceTypesArr,
 	});
-	const opportunities = await getOpportunitiesForComission({ collection: crmOpportunitiesCollection, after: afterFixed, before: beforeFixed });
+	const opportunities = await getOpportunitiesForComission({
+		collection: crmOpportunitiesCollection,
+		ids: projects.map((project) => project.idProjetoCRM).filter((id) => !!id) as string[],
+	});
 
 	const comissionInformation = projects
 		.map((project) => {
@@ -290,12 +293,11 @@ async function getProjectsForComission({ collection, after, before, sellers, ins
 }
 type GetOpportunitiesForComissionParams = {
 	collection: Collection<TOpportunity>;
-	after: string;
-	before: string;
+	ids: string[];
 };
-async function getOpportunitiesForComission({ collection, after, before }: GetOpportunitiesForComissionParams) {
+async function getOpportunitiesForComission({ collection, ids }: GetOpportunitiesForComissionParams) {
 	const opportunitiesQueryFilter: Filter<TOpportunity> = {
-		"ganho.data": { $gte: after, $lte: before },
+		_id: { $in: ids.map((id) => new ObjectId(id)) },
 	};
 	const opportunities = await collection.find(opportunitiesQueryFilter).toArray();
 	return opportunities as WithId<TOpportunity>[];

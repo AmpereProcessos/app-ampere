@@ -181,7 +181,12 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
 				) : null}
 			</div>
 			{acknowlegdeMenu.id && acknowlegdeMenu.isOpen ? (
-				<AcknowledgeDeliveryMenu session={session} purchaseControlId={acknowlegdeMenu.id} closeModal={() => setAcknowlegdeMenu({ id: null, isOpen: false })} />
+				<AcknowledgeDeliveryMenu
+					session={session}
+					purchaseControlId={acknowlegdeMenu.id}
+					closeModal={() => setAcknowlegdeMenu({ id: null, isOpen: false })}
+					affectedQueryKey={["projects-in-delivery", filters]}
+				/>
 			) : null}
 		</div>
 	);
@@ -287,6 +292,7 @@ type AcknowledgeDeliveryMenuProps = {
 	session: Session;
 	purchaseControlId: string;
 	closeModal: () => void;
+	affectedQueryKey: any[];
 };
 type TAcknowlegdeDeliveryInfo = {
 	deliveryDate: string | null;
@@ -297,7 +303,7 @@ type TAcknowlegdeDeliveryInfo = {
 	}[];
 };
 
-function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal }: AcknowledgeDeliveryMenuProps) {
+function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affectedQueryKey }: AcknowledgeDeliveryMenuProps) {
 	const queryClient = useQueryClient();
 
 	const { data: purchaseControl, isLoading, isError, isSuccess, error } = usePurchaseControlById({ id: purchaseControlId });
@@ -384,7 +390,7 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal }: Ack
 		mutationKey: ["acknowlegde-delivery"],
 		mutationFn: async () => handleAcknowledgeDelivery(infoHolder),
 		queryClient: queryClient,
-		affectedQueryKey: ["projects-in-delivery"],
+		affectedQueryKey: affectedQueryKey,
 	});
 	return (
 		<Dialog.Root open onOpenChange={closeModal}>

@@ -103,7 +103,7 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 							</div>
 							<div className="flex items-center gap-1">
 								<FaUser />
-								<p className="text-[0.6rem] font-medium leading-none tracking-tight">VENDIDO POR: {project.vendedor.nome}</p>
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">VENDIDO POR: {project.vendedor?.nome || "N/A"}</p>
 							</div>
 						</div>
 					</div>

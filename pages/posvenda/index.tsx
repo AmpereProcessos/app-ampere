@@ -189,6 +189,11 @@ function Posvenda() {
 					</div>
 				</div>
 				<div className="my-2 flex w-full items-center justify-end gap-2">
+					<Link href="/calls/chamadosPosVenda">
+						<button type="button" className="rounded-md bg-gray-300 py-1 px-4 text-sm font-bold text-black">
+							CHAMADOS
+						</button>
+					</Link>
 					<Link href="/financeiro/receitas">
 						<button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
 							RECEITAS
@@ -204,29 +209,6 @@ function Posvenda() {
 				<AnimatePresence>
 					{dropdownMenuVisible ? (
 						<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-							{/* <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-              <button
-                onClick={() => setCardMode(!cardMode)}
-                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-              >
-                {cardMode ? <GoCreditCard /> : <MdOutlineFormatListBulleted />}
-                {cardMode ? 'MODO CARD' : 'MODO LISTA'}
-              </button>
-              <button
-                onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
-                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-              >
-                <BiTime />
-                SEM CONTATO RECENTE
-              </button>
-              <button
-                onClick={ordenate}
-                className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black rounded"
-              >
-                <TbArrowsDownUp />
-                ORDERNAR
-              </button>
-              </div> */}
 							<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
 								<TextInput
 									label="NOME DO CONTRATO"

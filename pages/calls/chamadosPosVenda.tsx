@@ -16,7 +16,7 @@ import { updatePosVendaCall } from "@/utils/methods/mutation/pos-venda-calls";
 import { useGetAllPosVendaCalls, useGetPosVendaCallsStatistics } from "@/utils/methods/query/pos-venda-calls";
 import type { TPosVendaCall, TPosVendaCallDTO } from "@/utils/schemas/pos-venda-calls";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BadgeDollarSign, ChartArea, Check, Pencil, Plus, X } from "lucide-react";
+import { BadgeCheck, BadgeDollarSign, ChartArea, Check, Pencil, Plus, X } from "lucide-react";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -365,6 +365,17 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
 					</div>
 					<div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
 						<h1 className="whitespace-pre-line text-[0.6rem] font-medium">{item.descricao || "DESCRIÇÃO NÃO DEFINIDA"}</h1>
+					</div>
+					<div className="w-full flex items-center justify-center flex-wrap">
+						<div
+							className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+								"bg-gray-100 text-gray-700": !item.metadados.cobravel,
+								"bg-green-100 text-green-700": item.metadados.cobravel,
+							})}
+						>
+							<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
+							<p className={cn("font-medium text-[0.57rem]")}>{item.metadados.cobravel ? "CHAMADO COBRÁVEL" : "CHAMADO NÃO COBRÁVEL"}</p>
+						</div>
 					</div>
 					<div className="flex w-full items-center justify-between gap-2">
 						<div className="flex grow flex-wrap items-center gap-2">

@@ -36,10 +36,20 @@ export const PosVendaCallSchema = z.object({
 		.optional()
 		.nullable(),
 	metadados: z.object({
-		valor: z.number({
-			required_error: "Valor é obrigatório",
-			invalid_type_error: "Valor deve ser um número",
-		}),
+		cobravel: z
+			.boolean({
+				required_error: "Cobravel é obrigatório",
+				invalid_type_error: "Cobravel deve ser uma boolean",
+			})
+			.optional()
+			.nullable(),
+		valor: z
+			.number({
+				required_error: "Valor é obrigatório",
+				invalid_type_error: "Valor deve ser um número",
+			})
+			.optional()
+			.nullable(),
 		dataPagamento: z
 			.string({
 				required_error: "Data de pagamento é obrigatória",

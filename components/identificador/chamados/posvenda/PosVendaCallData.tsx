@@ -23,6 +23,7 @@ import FileReferenceCard from "../../referencias-arquivos/FileReferenceCard";
 import { cn } from "@/lib/utils";
 import NewManyFileReferencesMenu from "../../referencias-arquivos/NewManyFileReferencesMenu";
 import { useQueryClient } from "@tanstack/react-query";
+import CheckboxInput from "@/components/inputs/Checkbox";
 
 type PosVendaCallDataProps = {
 	session: Session;
@@ -104,25 +105,37 @@ function PaymentData() {
 				<h3 className="w-full text-sm tracking-tight text-muted-foreground">Define aqui as informações de pagamento do chamado</h3>
 			</div>
 
-			<div className="w-full flex flex-col gap-2 items-center lg:flex-row">
-				<div className="w-full lg:w-1/2">
-					<NumberInput
-						label={"VALOR"}
-						placeholder={"Preencha o valor do chamado"}
-						value={metadados.valor}
-						handleChange={(value) => updateCall({ metadados: { ...metadados, valor: value } })}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/2">
-					<DateInput
-						label={"DATA DE PAGAMENTO"}
-						value={formatDate(metadados.dataPagamento)}
-						handleChange={(value) => updateCall({ metadados: { ...metadados, dataPagamento: formatDateInputChange(value, "string") as string } })}
-						width="100%"
+			<div className="w-full flex items-center justify-center">
+				<div className="w-fit">
+					<CheckboxInput
+						labelTrue="CHAMADO COBRÁVEL"
+						labelFalse="CHAMADO COBRÁVEL"
+						checked={metadados.cobravel ?? false}
+						handleChange={(value) => updateCall({ metadados: { ...metadados, cobravel: value } })}
 					/>
 				</div>
 			</div>
+			{metadados.cobravel ? (
+				<div className="w-full flex flex-col gap-2 items-center lg:flex-row">
+					<div className="w-full lg:w-1/2">
+						<NumberInput
+							label={"VALOR"}
+							placeholder={"Preencha o valor do chamado"}
+							value={metadados.valor ?? null}
+							handleChange={(value) => updateCall({ metadados: { ...metadados, valor: value } })}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<DateInput
+							label={"DATA DE PAGAMENTO"}
+							value={formatDate(metadados.dataPagamento)}
+							handleChange={(value) => updateCall({ metadados: { ...metadados, dataPagamento: formatDateInputChange(value, "string") as string } })}
+							width="100%"
+						/>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }

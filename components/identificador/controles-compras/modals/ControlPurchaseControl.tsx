@@ -106,10 +106,7 @@ function ControlPurchaseControl({ session, purchaseControlId, affectedQueryKey, 
 		affectedQueryKey: affectedQueryKey,
 		callbackFn: () => closeModal(),
 	});
-	function addProductToComposition(product: TPurchaseControl["composicao"][number]) {
-		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
-		toast.success("Produto adicionado à composição");
-	}
+
 	const TITLE = "EDITAR CONTROLE DE COMPRA";
 	const DESCRIPTION = "Atualize os dados do Controle de Compra.";
 	const BUTTON_TEXT = "ATUALIZAR CONTROLE DE COMPRA";

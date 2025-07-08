@@ -261,6 +261,8 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			}
 		}
 
+		const isSolarUFVSale = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico);
+
 		// Now, updating the project with the new allocations and other data
 		await projectscollection.updateOne(
 			{ _id: new ObjectId(projectId) },
@@ -282,6 +284,8 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 					"compra.statusEntrega": purchaseControl.entrega.status,
 					"compra.kitInfo": purchaseControl.composicao.map((c) => `${c.qtde}-${c.descricao}`).join("\n"),
 					"obra.pendencias": purchaseControl.metadata?.pendenciasExecucao,
+					// updating the comission reference is project is UFV sale
+					"comissoes.dataReferencia": isSolarUFVSale ? purchaseControl.dataLiberacaoPagamento : project.comissoes?.dataReferencia,
 					alocacoes: projectAllocations,
 				},
 			},

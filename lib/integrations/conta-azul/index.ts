@@ -30,6 +30,17 @@ function getContaAzulProductsAndServicesFromRevenueType(revenueType: string) {
 	return equivalent || CONTA_AZUL_PRODUCTS_AND_SERVICES[0];
 }
 
+export async function getContaAzulClientId(clientCpfCnpj: string, accessToken: string) {
+	const url = `https://api.contaazul.com/v1/customers?search=${clientCpfCnpj}`;
+	const headers = {
+		Authorization: `Bearer ${accessToken}`,
+		"Content-Type": "application/json",
+	};
+
+	const { data } = await axios.get(url, { headers });
+	return data[0]?.id || null;
+}
+
 type CreateSaleFromRevenueParams = {
 	revenue: TRevenue;
 	client: TClient;
@@ -47,23 +58,36 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 
 		let contaAzulCustomerId = client.idContaAzulCliente;
 		if (!contaAzulCustomerId) {
-			const contaAzulCustomer = {
-				name: revenue.projeto.nome || client.nome,
-				email: client.email,
-				mobile_phone: client.telefonePrimario,
-				person_type: client.cpfCnpj ? (client.cpfCnpj.length > 14 ? "LEGAL" : "NATURAL") : "NATURAL",
-				document: client.cpfCnpj ? client.cpfCnpj.replaceAll(".", "").replaceAll("-", "") : undefined,
-				address: {
-					zip_code: client.cep || undefined,
-					street: client.endereco || undefined,
-					number: client.numeroOuIdentificador && client.numeroOuIdentificador.length < 10 ? client.numeroOuIdentificador.substring(0, 10) : undefined,
-					neighborhood: client.bairro || undefined,
-				},
-			};
-			const { data: clientResponse } = await axios.post(newClientUrl, contaAzulCustomer, { headers });
-			console.log("CONTA AZUL CREATE CLIENT RESPONSE", clientResponse);
+			const cpfCnpj = client.cpfCnpj;
+			if (!cpfCnpj) {
+				throw new Error("Cliente não possui CPF/CNPJ para vincular ao cliente no Conta Azul.");
+			}
 
-			contaAzulCustomerId = clientResponse.id as string;
+			console.log("[INFO] Trying to get client via CPF/CNPJ:", cpfCnpj);
+			const cpfCnpjWithoutMask = cpfCnpj.replaceAll(".", "").replaceAll("-", "");
+			contaAzulCustomerId = await getContaAzulClientId(cpfCnpjWithoutMask, accessToken);
+			console.log("[INFO] Found client via CPF/CNPJ:", contaAzulCustomerId);
+			if (!contaAzulCustomerId) {
+				console.log("[INFO] Client not found via CPF/CNPJ, creating new client...");
+				// If not found, creating new client
+				const contaAzulCustomer = {
+					name: revenue.projeto.nome || client.nome,
+					email: client.email,
+					mobile_phone: client.telefonePrimario,
+					person_type: client.cpfCnpj ? (client.cpfCnpj.length > 14 ? "LEGAL" : "NATURAL") : "NATURAL",
+					document: cpfCnpjWithoutMask,
+					address: {
+						zip_code: client.cep || undefined,
+						street: client.endereco || undefined,
+						number: client.numeroOuIdentificador && client.numeroOuIdentificador.length < 10 ? client.numeroOuIdentificador.substring(0, 10) : undefined,
+						neighborhood: client.bairro || undefined,
+					},
+				};
+				const { data: clientResponse } = await axios.post(newClientUrl, contaAzulCustomer, { headers });
+				console.log("[INFO] Client created successfully:", clientResponse);
+
+				contaAzulCustomerId = clientResponse.id as string;
+			}
 		}
 		const contaAzulProductsAndServices = getContaAzulProductsAndServicesFromRevenueType(revenue.tipo);
 		const contaAzulSale = {
@@ -93,9 +117,9 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 				: undefined,
 			notes: revenue.projeto.id ? `Venda do Projeto ${revenue.projeto.nome}, do tipo ${revenue.tipo}.` : "",
 		};
-		console.log("CONTA AZUL SALE TO CREATE", contaAzulSale);
+		console.log("[INFO] Sale to create:", contaAzulSale);
 		const { data } = await axios.post(url, contaAzulSale, { headers });
-		console.log("CONTA AZUL CREATE SALE RESPONSE", data);
+		console.log("[INFO] Sale created successfully:", data);
 		const contaAzulSaleId = data.id as string;
 		if (!contaAzulSaleId) throw new Error("Ocorreu um erro ao criar a venda no Conta Azul.");
 		return { contaAzulSaleId, contaAzulCustomerId };

@@ -97,7 +97,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
 	}
 
 	const queryTagsIds = typeof queryTags === "string" ? queryTags.split(",").filter((q) => !!ObjectId.isValid(q)) : [];
-	const queryPendingConclusionValue = queryPendingConclusion === "true" ? true : false;
+	const queryPendingConclusionValue = queryPendingConclusion === "true";
 
 	const queryTagsQuery: Filter<TPurchaseControl> = queryTagsIds.length > 0 ? { "etiquetas.id": { $in: queryTagsIds } } : {};
 	const queryPendingConclusionQuery: Filter<TPurchaseControl> = queryPendingConclusionValue ? { dataEfetivacao: null } : {};

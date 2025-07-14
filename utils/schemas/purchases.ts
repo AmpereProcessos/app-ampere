@@ -5,6 +5,7 @@ import type { TProject, TProjectDTO } from "./projects";
 const PurchaseStatus = z.enum(
 	[
 		"PENDENTE",
+		"ALMOXARIFADO",
 		"EM COTAÇÃO",
 		"AGUARDANDO APROVAÇÃO",
 		"AGUARDANDO NOTA FUTURA",

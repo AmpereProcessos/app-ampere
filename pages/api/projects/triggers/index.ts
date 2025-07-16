@@ -196,71 +196,6 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			throw new createHttpError.NotFound("Controle de compra não encontrado.");
 		}
 
-		// Now, syncing the project with update to data information from the purchase control
-
-		// First, getting the project allocations synced
-		let projectAllocations: TProject["alocacoes"] = project.alocacoes || [];
-		if (purchaseControl.entrega.dataEfetivacao) {
-			// If the purchase control has been delivered, we gotta apply some syncing with project allocations
-			// If the project has no allocations, we gotta create them from the purchase composition
-			if (projectAllocations.length === 0) {
-				projectAllocations = purchaseControl.composicao
-					.filter((c) => !!c.materialId)
-					.map((c) => ({
-						idMaterial: c.materialId as string,
-						quantidade: c.qtde,
-						quantidadePrevista: c.qtde,
-						unidade: c.unidade,
-						precoUnitario: c.valor,
-						movimentacoes: [
-							{
-								idCompra: purchaseControl._id.toString(),
-								data: purchaseControl.entrega.dataEfetivacao as string,
-								quantidade: c.qtde,
-								precoUnitario: c.valor,
-								titulo: purchaseControl.titulo,
-							},
-						],
-						nome: c.descricao,
-					}));
-			} else {
-				console.log("WENT HERE");
-				// In case the project already has allocations, we gotta update those who came from the purchase control
-				projectAllocations = projectAllocations.map((a) => {
-					// Getting info about the existence of movements from the purchase control
-					const hasMovementsFromPurchaseControl = a.movimentacoes.some((m) => m.idCompra === purchaseControl._id.toString());
-					console.log("hasMovementsFromPurchaseControl", hasMovementsFromPurchaseControl);
-					// If the allocation has no movements from the purchase control, we don't need to update anything
-					if (!hasMovementsFromPurchaseControl) return a;
-					console.log("WENT HERE 2");
-					// If the allocation has movements from the purchase control, we need to update the data of the movements
-					const updatedMovements: Exclude<TProject["alocacoes"], undefined | null>[number]["movimentacoes"] = a.movimentacoes.map((m) => {
-						if (m.idCompra === purchaseControl._id.toString()) {
-							const equivalentPurchaseControlMovement = purchaseControl.composicao.find((c) => c.materialId === a.idMaterial);
-							return {
-								idCompra: purchaseControl._id.toString(),
-								titulo: purchaseControl.titulo,
-								data: purchaseControl.entrega.dataEfetivacao as string,
-								quantidade: equivalentPurchaseControlMovement?.qtde || m.quantidade,
-								precoUnitario: equivalentPurchaseControlMovement?.valor || m.precoUnitario,
-							};
-						}
-						return m;
-					});
-					// Getting the new allocation quantity
-					const newAllocationQty = updatedMovements.reduce((acc, curr) => acc + curr.quantidade, 0);
-					// Getting the new allocation price from the ponderation of the movements price and quantity
-					const newAllocationPrice = updatedMovements.reduce((acc, curr) => acc + curr.quantidade * curr.precoUnitario, 0) / newAllocationQty;
-					return {
-						...a,
-						quantidade: newAllocationQty,
-						precoUnitario: newAllocationPrice,
-						movimentacoes: updatedMovements,
-					};
-				});
-			}
-		}
-
 		const isSolarUFVSale = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico);
 
 		// Now, updating the project with the new allocations and other data
@@ -286,7 +221,6 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 					"obra.pendencias": purchaseControl.metadata?.pendenciasExecucao,
 					// updating the comission reference is project is UFV sale
 					"comissoes.dataReferencia": isSolarUFVSale ? purchaseControl.dataLiberacaoPagamento : project.comissoes?.dataReferencia,
-					alocacoes: projectAllocations,
 				},
 			},
 		);
@@ -303,7 +237,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 						"projeto.compraEntregaDataEfetivacao": purchaseControl.entrega.dataEfetivacao,
 						dataPrevisaoLiberacao: purchaseControl.entrega.dataPrevisao,
 						dataLiberacao: purchaseControl.entrega.dataEfetivacao,
-						alocacoes: projectAllocations,
+						alocacoes: project.alocacoes,
 					},
 				},
 			);

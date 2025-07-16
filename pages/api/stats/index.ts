@@ -399,8 +399,8 @@ async function getAchievedPowerSale({ collection, partialQuery }: GetStats) {
 }
 
 export async function getCompanyGoalsStats({ collection, partialQuery }: GetStats) {
-	const GOAL_INITIAL_DATE_PARAM = "2024-07-01T00:00:00.000Z";
-	const GOAL_INITIAL_DATE_CONSORTIUM_PARAM = "2024-06-01T00:00:00.000Z";
+	const GOAL_INITIAL_DATE_PARAM = "2025-01-01T00:00:00.000Z";
+	const GOAL_END_DATE_PARAM = "2025-06-30T23:59:59.999Z";
 	// Define queries for all company goals
 	// 1 - Sistema Fotovoltaico + Aumento - R$ 5.000.000,00 geral /  R$ 833.333,33/mes (contando a partir de 01/07 )
 	// 2 - O&M + Montagem e Desmontagem - R$ 90.000,00 geral /  R$ 15.000,00/mes (contando a partir de 01/07 )
@@ -413,7 +413,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 		.aggregate([
 			{
 				$match: {
-					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: "2024-12-31T23:59:59.999Z" },
+					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: GOAL_END_DATE_PARAM },
 					tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] },
 				},
 			},
@@ -451,7 +451,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 			{
 				$match: {
 					_id: { $ne: new ObjectId("66981e5340f27828dd49a6cb") },
-					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM },
+					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: GOAL_END_DATE_PARAM },
 					tipoDeServico: {
 						$in: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM", "PRODUTOS", "MANUTENÇÃO CORRETIVA", "PRODUTOS E SERVIÇOS AVULSOS", "MONITORAMENTO"],
 					},
@@ -489,13 +489,30 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 	// INSIDE SALES
 	// TODO: utilizar dos responsáveis do CRM para atualizar o campo de INSIDER dos projetos
 	// TODO: utilizar do campo de idOportunidade do CRM para demarcar vendas por INBOUND marketing
+	const insiderNames = [
+		"ALESSANDER IDALECIO",
+		"YASMIM ARAUJO",
+		"LAYANE FERNANDA",
+		"AMANDA SANTOS",
+		"DANDARA LINA",
+		"LEONARDO VITAL",
+		"ANDY CALAZANS",
+		"HALINA OLIVEIRA",
+		"MARCONI ÁTILA",
+		"SHIRLEY VANESSA",
+		"VITOR FERNANDES",
+		"SARAH AZEVEDO",
+		"SOLANGE MEDEIROS",
+		"JOÃO VICTOR",
+	];
 	const insideSales = await collection
 		.aggregate([
 			{
 				$match: {
 					idMarketing: null,
-					"contrato.dataAssinatura": { $gte: "2024-07-01T00:00:00.000Z" },
-					$or: [{ insider: { $nin: [null, "NÃO DEFINIDO"] } }, { "vendedor.nome": { $in: ["ALESSANDER IDALECIO", "LAYANE FERNANDA", "AMANDA SANTOS"] } }],
+					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: GOAL_END_DATE_PARAM },
+					$or: [{ insider: { $nin: [null, "NÃO DEFINIDO"] } }, { "vendedor.nome": { $in: insiderNames } }],
+					tipoDeServico: { $ne: "CONSÓRCIO DE ENERGIA" },
 				},
 			},
 			{
@@ -537,7 +554,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 		.aggregate([
 			{
 				$match: {
-					"contrato.dataAssinatura": { $gte: "2024-07-01T00:00:00.000Z" },
+					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: GOAL_END_DATE_PARAM },
 					tipoDeServico: "SEGURO DE SISTEMA FOTOVOLTAICO",
 				},
 			},
@@ -574,7 +591,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 		.aggregate([
 			{
 				$match: {
-					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_CONSORTIUM_PARAM },
+					"contrato.dataAssinatura": { $gte: GOAL_INITIAL_DATE_PARAM, $lte: GOAL_END_DATE_PARAM },
 					tipoDeServico: "CONSÓRCIO DE ENERGIA",
 				},
 			},
@@ -610,6 +627,7 @@ export async function getCompanyGoalsStats({ collection, partialQuery }: GetStat
 			porVendedor: {},
 		},
 	);
+	console.log(GOAL_INITIAL_DATE_PARAM, GOAL_END_DATE_PARAM);
 	return {
 		"SISTEMA FOTOVOLTAICO": {
 			TOTAL: SISTEMA_FOTOVOLTAICO.total,

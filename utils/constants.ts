@@ -2236,6 +2236,7 @@ export const equipesTecnicas = [
 	{ id: 20, label: "EQUIPE 20 - RAFAEL E RODRIGO", value: "EQUIPE 20 - RAFAEL E RODRIGO" },
 	{ id: 21, label: "EQUIPE 21 - LEONILDO", value: "EQUIPE 21 - LEONILDO" },
 	{ id: 22, label: "EQUIPE 22 - MARCUS E LUIZ PEDRO", value: "EQUIPE 22 - MARCUS E LUIZ PEDRO" },
+	{ id: 23, label: "EQUIPE 23 - MARCUS E ANDREY", value: "EQUIPE 23 - MARCUS E ANDREY" },
 	{ id: 23, label: "EQUIPE OEM", value: "EQUIPE OEM" },
 	{ id: 24, label: "EQUIPE EXTERNA - VINICIUS", value: "EQUIPE EXTERNA - VINICIUS" },
 	{ id: 25, label: "EQUIPE EXTERNA - JEFFERSON", value: "EQUIPE EXTERNA - JEFFERSON" },

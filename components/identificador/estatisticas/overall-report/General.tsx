@@ -33,7 +33,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 							<h2 className="text-sm font-bold tracking-tight">NPS</h2>
 						</div>
 						<div className="w-full flex items-center justify-center">
-							<h1 className="text-lg font-bold tracking-tight">{formatDecimalPlaces(generalData.nps)}</h1>
+							<h1 className="text-lg font-bold tracking-tight">{formatDecimalPlaces(generalData.nps)}%</h1>
 						</div>
 					</div>
 				</div>
@@ -134,7 +134,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 							<h2 className="text-sm font-bold tracking-tight">POTÊNCIA HOMOLOGADA</h2>
 						</div>
 						<div className="w-full flex items-center justify-center">
-							<h1 className="text-lg font-bold tracking-tight">{generalData.homologacoes.potenciaHomologada}</h1>
+							<h1 className="text-lg font-bold tracking-tight">{formatDecimalPlaces(generalData.homologacoes.potenciaHomologada)} kWp</h1>
 						</div>
 					</div>
 					<div className="flex flex-col gap-2 rounded-xl border border-gray-400 bg-[#fff] p-3 w-full lg:w-1/4">

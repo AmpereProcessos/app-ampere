@@ -113,6 +113,7 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 			},
 		},
 		system: {
+			topology: contractRequest.topologia || "INVERSOR",
 			equipments:
 				proposal?.produtos
 					.filter((p) => ["MÓDULO", "INVERSOR"].includes(p.categoria))

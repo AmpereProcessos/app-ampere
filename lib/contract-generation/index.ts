@@ -25,6 +25,7 @@ type TGetContractModelDataParams = {
 		};
 	};
 	system: {
+		topology: "INVERSOR" | "MICRO-INVERSOR";
 		totalPower: number;
 		installationLocation: {
 			address: string;
@@ -63,7 +64,7 @@ export function getContractModelData({ customer, system, additionalServices, pay
 	const modules = system.equipments?.filter((r) => r.type === "MÓDULO") || [];
 	const inverters = system.equipments?.filter((r) => r.type === "INVERSOR") || [];
 	const modulesText = modules.map((r) => `- ${r.quantity} módulos ${r.model} ${r.power}W`).join("\n");
-	const invertersText = inverters.map((r) => `- ${r.quantity} inversores ${r.model} ${r.power}W`).join("\n");
+	const invertersText = inverters.map((r) => `- ${r.quantity} ${system.topology === "INVERSOR" ? "inversores" : "micro-inversores"} ${r.model} ${r.power}W`).join("\n");
 	const modulesMinWarranty = modules.reduce((acc, r) => acc + r.warranty, 0);
 	const invertersMinWarranty = inverters.reduce((acc, r) => acc + r.warranty, 0);
 
@@ -119,8 +120,8 @@ export function getContractModelData({ customer, system, additionalServices, pay
 	const paymentNonIncludedText =
 		"**3. O VALOR CONTRATADO NÃO ABRANGE**: \n\n" +
 		"- A adequação/readequação de telhados, madeiramentos, ferragens de sustentação do telhado, vigas, calhas, rufos, instalação ou troca de materiais de rede elétrica existente;\n\n" +
-		`${additionalServices.serviceEntranceAdequacy ? "- A melhoria e adequação no padrão de energia;\n\n" : ""}` +
-		`${additionalServices.structureAdequacy ? "- O fornecimento de estruturas de inclinação ou construção de barracões ou estruturas avulsas para instalações dos módulos fotovoltaico;\n\n" : ""}` +
+		`${!additionalServices.serviceEntranceAdequacy ? "- A melhoria e adequação no padrão de energia;\n\n" : ""}` +
+		`${!additionalServices.structureAdequacy ? "- O fornecimento de estruturas de inclinação ou construção de barracões ou estruturas avulsas para instalações dos módulos fotovoltaico;\n\n" : ""}` +
 		"- A execução e custeio de quaisquer obras diversas da natureza dos serviços prestados pela **CONTRATADA**;\n\n" +
 		"Cabe ao **CONTRATANTE** a execução e custeio de quaisquer obras diversas da natureza dos serviços prestados pela **CONTRATADA**, " +
 		"caso verificada a necessidade pela concessionária de energia ou equipe técnica destinada a instalação do sistema fotovoltaico, especificada em termo de visita técnica e, ainda, aquelas que, porventura, durante a execução do objeto, forem necessárias.\n\n";

@@ -35,7 +35,7 @@ function NutritionPage({ session }: NutritionPageProps) {
 
 	return (
 		<div className="grow p-6 flex flex-col w-full">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS PARA NUTRIÇÃO</p>

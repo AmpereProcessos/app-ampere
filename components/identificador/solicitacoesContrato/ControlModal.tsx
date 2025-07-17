@@ -268,7 +268,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 		<div id="edit-expense" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
 			<div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[75%]">
 				<div className="flex h-full w-full flex-col">
-					<div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2">
+					<div className="flex items-center justify-between border-b border-gray-300 px-2 pb-2">
 						<div className="flex flex-col gap-1">
 							<h3 className="text-base font-bold text-[#353432] dark:text-white ">CONTROLE DE FORMULÁRIO</h3>
 							<div className="flex items-center gap-1">

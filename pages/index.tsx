@@ -132,7 +132,7 @@ function Home() {
 							</div>
 						</div>
 						<div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
-							<div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
 									<h1 className="text-center uppercase tracking-tight text-gray-600">Obras finalizadas no mês</h1>
 									{validateStatsMonth(stats.instalacao.atual.identificador)}
@@ -142,7 +142,7 @@ function Home() {
 									Último mês: <strong>{stats.instalacao.anterior.contagem || "N/A"}</strong>
 								</p>
 							</div>
-							<div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
 									<h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico instalada no mês</h1>
 									{validateStatsMonth(stats.instalacao.atual.identificador)}
@@ -152,7 +152,7 @@ function Home() {
 									Último mês: <strong>{formatDecimalPlaces(stats.instalacao.anterior.valor)} kWp</strong>
 								</p>
 							</div>
-							<div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
 									<h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico homologada no mês</h1>
 									{validateStatsMonth(stats.homologacao.atual.identificador)}
@@ -162,7 +162,7 @@ function Home() {
 									Último mês: <strong>{formatDecimalPlaces(stats.homologacao.anterior.potencia)} kWp</strong>
 								</p>
 							</div>
-							<div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
 									<h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
 									{validateStatsMonth(stats.suprimentos.atual.identificador)}
@@ -172,7 +172,7 @@ function Home() {
 									Último mês: <strong>{formatDecimalPlaces(stats.suprimentos.anterior.tempoMedio, 0)} dias</strong>
 								</p>
 							</div>
-							<div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
 									<h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
 									{validateStatsMonth(stats.homologacao.atual.identificador)}
@@ -184,7 +184,7 @@ function Home() {
 							</div>
 						</div>
 						<div className="mt-4 grid grid-cols-1 grid-rows-2 gap-y-2 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
-							<div className="col-span-2 flex h-[425px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+							<div className="col-span-2 flex h-[425px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<h1 className="text-center text-xl text-gray-600">NPS</h1>
 								<div className="flex grow items-center justify-center">
 									<div className="h-[150px] w-[150px]">
@@ -213,7 +213,7 @@ function Home() {
 									</div>
 								</div>
 							</div>
-							<div className="col-span-8 flex h-[600px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[425px]">
+							<div className="col-span-8 flex h-[600px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[425px]">
 								<div className="flex w-full flex-wrap items-center gap-2 py-2">
 									<h1 className="text-center text-xl uppercase text-gray-600">Potência pico vendida</h1>
 									<div className="flex grow flex-wrap items-center justify-end gap-x-2">
@@ -223,7 +223,7 @@ function Home() {
 												onClick={() => {
 													setYear(yearValue);
 												}}
-												className={`cursor-pointer border border-gray-200 duration-500 ease-in-out hover:scale-105 ${
+												className={`cursor-pointer border border-gray-300 duration-500 ease-in-out hover:scale-105 ${
 													year == yearValue ? "bg-blue-200 hover:bg-transparent" : "bg-transparent hover:bg-blue-200"
 												} p-2 text-xs text-gray-600`}
 											>

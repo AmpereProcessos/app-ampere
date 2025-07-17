@@ -41,7 +41,7 @@ type RequestCardProps = {
 };
 function RequestCard({ request, openModal }: RequestCardProps) {
 	return (
-		<div className="flex w-full flex-col rounded-md border border-gray-200 p-4 lg:w-[550px]">
+		<div className="flex w-full flex-col rounded-md border border-gray-300 p-4 lg:w-[550px]">
 			<div className="flex w-full items-center justify-between gap-2">
 				<button type="button" onClick={() => openModal(request._id)} className="cursor-pointer text-xs font-black leading-none tracking-tight hover:text-cyan-500 lg:text-sm">
 					{request.nomeDoContrato}

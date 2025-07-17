@@ -125,7 +125,7 @@ function Posvenda() {
 
 	return (
 		<div className="grow p-6">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM JORNADA</p>
@@ -141,7 +141,7 @@ function Posvenda() {
 					)}
 				</div>
 				<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 							<VscDiffAdded />
@@ -150,7 +150,7 @@ function Posvenda() {
 							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
 						</div>
 					</div>
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A CONFECCIONAR</h1>
 							<FaListCheck />
@@ -159,7 +159,7 @@ function Posvenda() {
 							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraConfeccionar}</div>
 						</div>
 					</div>
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A ASSINAR</h1>
 							<FaSignature />
@@ -168,7 +168,7 @@ function Posvenda() {
 							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraAssinar}</div>
 						</div>
 					</div>
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">ENTREGAS HOJE</h1>
 							<TbTruckDelivery />
@@ -178,7 +178,7 @@ function Posvenda() {
 							<p className="text-xs text-gray-500">{getStats({ info: projects }).entregaSemana} essa semana</p>
 						</div>
 					</div>
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">CONTATOS PENDENTES</h1>
 							<TbAlertTriangle />

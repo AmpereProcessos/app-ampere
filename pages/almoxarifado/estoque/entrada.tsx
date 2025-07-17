@@ -125,7 +125,7 @@ export default function NewMaterialsEntrance() {
 	});
 	return (
 		<div className="w-full flex flex-col grow p-6 gap-12">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<p className="text-start text-2xl font-black uppercase text-[#15599a] w-full">ENTRADA DE MATERIAIS</p>
 			</div>
 			<div className="w-full flex flex-col gap-3">
@@ -335,7 +335,7 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
 						onChange={(e) => updateItem({ quantidade: Number(e.target.value) })}
 						name="qty-price"
 						type="number"
-						className="rounded-lg border border-gray-200 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+						className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
 					/>
 				</div>
 				<div className={"flex w-full flex-col gap-1 lg:w-1/2"}>
@@ -348,7 +348,7 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
 						onChange={(e) => updateItem({ valorUnitario: Number(e.target.value) })}
 						name="input-price"
 						type="number"
-						className="rounded-lg border border-gray-200 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+						className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
 					/>
 				</div>
 			</div>

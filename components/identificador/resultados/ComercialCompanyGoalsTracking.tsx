@@ -166,7 +166,7 @@ function ComercialCompanyGoalsTracking({ results }: ComercialCompanyGoalsTrackin
 	}, [activeGoal, GoalsParams, results]);
 
 	return (
-		<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] shadow-sm">
+		<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] shadow-sm">
 			{/* <div className="flex w-full flex-col items-center justify-between gap-2 rounded-tr-xl rounded-tl-xl bg-blue-800 p-2 px-4 lg:flex-row">
 				<div className="flex items-center gap-2">
 					<h1 className="text-sm font-bold uppercase tracking-tight text-white">VISUALIZAÇÃO DA META SEMESTRAL</h1>

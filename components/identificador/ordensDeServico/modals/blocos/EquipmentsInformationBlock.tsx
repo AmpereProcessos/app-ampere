@@ -172,7 +172,7 @@ type ModulesInformationProps = {
 };
 function ModulesInformation({ infoHolder, updateInfoHolder }: ModulesInformationProps) {
 	return (
-		<div className="flex w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+		<div className="flex w-full flex-col gap-2 rounded-lg border border-gray-300 p-2">
 			<div className="flex items-center gap-2">
 				<FaSolarPanel />
 				<h1 className="text-xs font-medium tracking-tight text-gray-500">MÓDULOS FOTOVOLTAICOS</h1>
@@ -233,7 +233,7 @@ type InvertersInformationProps = {
 };
 function InvertersInformation({ infoHolder, updateInfoHolder }: InvertersInformationProps) {
 	return (
-		<div className="flex w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+		<div className="flex w-full flex-col gap-2 rounded-lg border border-gray-300 p-2">
 			<div className="flex items-center gap-2">
 				<TbTopologyFull />
 				<h1 className="text-xs font-medium tracking-tight text-gray-500">INVERSORES</h1>
@@ -306,7 +306,7 @@ function TakeEquipmentBlock({ equipmentsToTake, addEquipmentToTake, removeEquipm
 		return addEquipmentToTake(info);
 	}
 	return (
-		<div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+		<div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-300 p-2">
 			<div className="flex w-full flex-wrap items-center justify-between gap-2">
 				<div className="flex items-center gap-2">
 					<Box size={15} />
@@ -407,7 +407,7 @@ function InLocoEquipmentBlock({ equipmentsInLoco, addEquipmentInLoco, removeEqui
 		return addEquipmentInLoco(info);
 	}
 	return (
-		<div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-200 p-2">
+		<div className="flex h-full w-full flex-col gap-2 rounded-lg border border-gray-300 p-2">
 			<div className="flex w-full flex-wrap items-center justify-between gap-2">
 				<div className="flex items-center gap-2">
 					<CircleDot size={15} />

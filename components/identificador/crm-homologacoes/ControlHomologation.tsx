@@ -113,7 +113,7 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
 		<div id="new-technical-analysis" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
 			<div className="relative left-[50%] top-[50%] z-[100] h-[80%] max-h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md bg-[#fff] p-[10px] lg:w-[80%]">
 				<div className="flex h-full w-full flex-col">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 						<div className="flex flex-col">
 							<h3 className="text-xl font-bold text-[#353432] dark:text-white ">EDITAR HOMOLOGAÇÃO</h3>
 							<h3 className="text-[0.65rem] font-bold text-gray-500 dark:text-white ">#{homologationId}</h3>

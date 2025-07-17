@@ -347,7 +347,7 @@ function EnergyDistributionReport() {
 					? Object.keys(instalacoes).map((key, index) => (
 							<div key={index} className="flex flex-col">
 								<h1 className="text-center font-bold bg-black  text-white text-sm p-1">{key}</h1>
-								<div className="grid grid-cols-6 lg:grid-cols-12 border-b border-gray-200">
+								<div className="grid grid-cols-6 lg:grid-cols-12 border-b border-gray-300">
 									<p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">PERÍODO</p>
 									<p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">INSTALAÇÃO</p>
 									<p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">MODALIDADE</p>
@@ -362,41 +362,41 @@ function EnergyDistributionReport() {
 									<p className="text-xxs font-bold text-white bg-[#15599a] text-center p-1">VALOR DA FATURA</p>
 								</div>
 								{instalacoes[key].map((item, index2) => (
-									<div key={index2} className="grid grid-cols-6 lg:grid-cols-12 gap-1 border-b border-gray-200">
-										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">{formatPeriodo(item.periodo)}</p>
+									<div key={index2} className="grid grid-cols-6 lg:grid-cols-12 gap-1 border-b border-gray-300">
+										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">{formatPeriodo(item.periodo)}</p>
 										<p
 											style={{
 												color: COLORS[index2],
 											}}
-											className={`text-xxs font-bold text-center border-r border-gray-200 p-1`}
+											className={`text-xxs font-bold text-center border-r border-gray-300 p-1`}
 										>
 											{item.instalacao}
 										</p>
-										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.modalidade == "Auto consumo-Geradora" ? "GERADORA" : "RECEBEDORA"}
 										</p>
-										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.quota ? `${item.quota.substr(0, item.quota.length - 4)}%` : "-"}
 										</p>
-										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.geracao != "0.0" ? Number(item.geracao).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.consumo != "0.0" ? Number(item.consumo).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.transferido != "0.0" ? Number(item.transferido).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.recebimento != "0.0" ? Number(item.recebimento).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.compensacao != "0.0" ? Number(item.compensacao).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+										<p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-300 p-1">
 											{item.saldoAtual ? Number(item.saldoAtual).toFixed(2).replace(".", ",") : "-"}
 										</p>
-										<div className="hidden lg:flex items-center border-r border-gray-200">
+										<div className="hidden lg:flex items-center border-r border-gray-300">
 											<input
 												type={"number"}
 												placeholder="-"
@@ -491,22 +491,22 @@ function EnergyDistributionReport() {
         <div classNameName="flex flex-col bg-[#fff]">
           {entregues.map((obj) => (
             <div classNameName="grid grid-cols-6 h-[36px]">
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 text-center font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 text-center font-bold border-b border-gray-300">
                 {obj.nomeDoProjeto}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.nomeDoContrato}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.sistema.qtdeModulos}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.sistema.topologia}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.cidade}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.compra.statusEntrega == "ENTREGUE"
                   ? obj.compra.dataEntrega
                     ? `${dayjs(new Date()).diff(
@@ -546,22 +546,22 @@ function EnergyDistributionReport() {
         <div classNameName="flex flex-col bg-[#fff]">
           {emRota.map((obj, index) => (
             <div key={index} classNameName="grid grid-cols-6 h-[36px]">
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.nomeDoProjeto}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.nomeDoContrato}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.sistema.qtdeModulos}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.sistema.topologia}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {obj.cidade}
               </div>
-              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-300">
                 {dayjs(obj.compra.previsaoEntrega).diff(new Date(), "day")} dias
               </div>
             </div>

@@ -18,7 +18,7 @@ function PadraoCard({ project }) {
 	}
 	return (
 		<div className="w-full rounded border border-[#15599a] p-2">
-			<div className="flex flex-col items-center justify-center gap-x-2 border-b border-gray-200 pb-2 lg:flex-row lg:justify-between">
+			<div className="flex flex-col items-center justify-center gap-x-2 border-b border-gray-300 pb-2 lg:flex-row lg:justify-between">
 				<div className="flex flex-col items-center justify-center">
 					<strong className="text-[#15599a]">#{project.qtde} </strong>
 					<p className="text-center font-bold">{project.nomeDoContrato}</p>

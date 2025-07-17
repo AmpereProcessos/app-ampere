@@ -65,7 +65,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 				style: "text-blue-300 border-2 border-blue-300",
 			};
 		} else {
-			return "border border-gray-200";
+			return "border border-gray-300";
 		}
 	}
 
@@ -92,7 +92,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 		<>
 			<AnimatedModalWrapper modalIsOpen={modalIsOpen}>
 				<div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 						<div className="flex items-center gap-2">
 							<h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : "CARREGANDO..."}</h1>
 							{project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}

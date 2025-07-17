@@ -69,7 +69,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
 		<>
 			<AnimatedModalWrapper modalIsOpen={modalIsOpen}>
 				<div className="flex h-full flex-col ">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 						<div className="flex gap-x-2">
 							<h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : "CARREGANDO..."}</h1>
 							{project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}

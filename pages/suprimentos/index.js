@@ -64,7 +64,7 @@ function Suprimentos() {
 		} else if (diff > 2) {
 			return "border-2 border-blue-700";
 		} else {
-			return "border border-gray-200";
+			return "border border-gray-300";
 		}
 	}
 
@@ -140,7 +140,7 @@ function Suprimentos() {
 	if (projectsSuccess && projects) {
 		return (
 			<div className="grow p-6">
-				<div className="flex flex-col justify-between border-b border-gray-200 p-1">
+				<div className="flex flex-col justify-between border-b border-gray-300 p-1">
 					<div className="flex w-full items-center justify-between">
 						<div className="flex flex-col items-center gap-2 lg:flex-row">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de suprimentos</p>
@@ -156,7 +156,7 @@ function Suprimentos() {
 						)}
 					</div>
 					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 								<VscDiffAdded />
@@ -166,7 +166,7 @@ function Suprimentos() {
 								<p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">COMPRAS PENDENTES</h1>
 								<AiOutlineShoppingCart />
@@ -176,7 +176,7 @@ function Suprimentos() {
 								<p className="text-xs text-gray-500">{getStats({ info: projects }).pendentesPronto} aptas para compra</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">EM ROTA</h1>
 								<TbTruckDelivery />
@@ -185,7 +185,7 @@ function Suprimentos() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).emRota}</div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">VALOR GASTO EM KITS</h1>
 								<MdAttachMoney />
@@ -199,7 +199,7 @@ function Suprimentos() {
 								</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">VALOR PREVISTO EM KITS</h1>
 								<MdAttachMoney />
@@ -368,7 +368,7 @@ function Suprimentos() {
 							transition={{ duration: 0.3, delay: 0.01 * index }}
 							key={project._id}
 							className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-								project.compra.dataPedido == undefined ? getBorderColor(project.compra.dataLiberacao) : "border border-gray-200"
+								project.compra.dataPedido == undefined ? getBorderColor(project.compra.dataLiberacao) : "border border-gray-300"
 							} hover:bg-blue-100`}
 						>
 							<TagTipoDeServico tipoDeServico={project.tipoDeServico} />

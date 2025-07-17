@@ -131,7 +131,7 @@ function Comercial() {
 	if (projectsSuccess && projects) {
 		return (
 			<div className="grow p-6">
-				<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+				<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 					<div className="flex w-full items-center justify-between">
 						<div className="flex flex-col items-center gap-2 lg:flex-row">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio comercial</p>
@@ -147,7 +147,7 @@ function Comercial() {
 						)}
 					</div>
 					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 								<VscDiffAdded />
@@ -157,7 +157,7 @@ function Comercial() {
 								<p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTO</h1>
 								<MdAttachMoney />
@@ -166,7 +166,7 @@ function Comercial() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vendido} </div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">EM CONFECÇÃO</h1>
 								<MdCreate />
@@ -175,7 +175,7 @@ function Comercial() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).confeccionar}</div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PARA ASSINAR</h1>
 								<FaSignature />
@@ -488,7 +488,7 @@ function Comercial() {
 							animate={{ opacity: 1, translateX: 0 }}
 							transition={{ duration: 0.3, delay: 0.01 * index }}
 							key={project._id}
-							className="w-full cursor-pointer border  border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
+							className="w-full cursor-pointer border  border-gray-300 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
 						>
 							<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
 							<div className="flex flex-col p-2 pb-3">

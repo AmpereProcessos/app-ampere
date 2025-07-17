@@ -51,7 +51,7 @@ function ADMProjectCard({ project, handleClick, index }: ADMProjectCardProps) {
 				handleClick(project._id);
 			}}
 			key={project._id}
-			className="w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
+			className="w-full cursor-pointer border border-gray-300 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
 		>
 			<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
 			<div className="flex flex-col p-2">

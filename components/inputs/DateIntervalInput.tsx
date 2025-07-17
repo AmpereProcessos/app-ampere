@@ -37,7 +37,7 @@ function DateIntervalInput({ label, labelClassName, className, value, handleChan
 								format(value.after, "dd/MM/yyyy", { locale: ptBR })
 							)
 						) : (
-							<span>Escolha uma data</span>
+							<span>Escolha um período</span>
 						)}
 					</Button>
 				</PopoverTrigger>

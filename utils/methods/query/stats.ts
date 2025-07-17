@@ -60,12 +60,10 @@ type TUseOverallReportParams = {
 	initialParams?: Partial<TOverallReportInput>;
 };
 export function useOverallReport({ initialParams }: TUseOverallReportParams) {
-	const monthStart = dayjs().startOf("month").toISOString();
-	const monthEnd = dayjs().endOf("month").toISOString();
 	const [queryParams, setQueryParams] = useState<TOverallReportInput>({
 		period: {
-			after: initialParams?.period?.after ?? monthStart,
-			before: initialParams?.period?.before ?? monthEnd,
+			after: initialParams?.period?.after ?? undefined,
+			before: initialParams?.period?.before ?? undefined,
 		},
 	});
 

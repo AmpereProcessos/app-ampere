@@ -433,7 +433,7 @@ export default function EnergyDistributionDashboard() {
 								{/* Period Stats Overview */}
 								<h1 className="text-2xl font-semibold text-white">Análise de Geração</h1>
 								<div className="w-full flex items-center gap-2 flex-col lg:flex-row">
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Geração Total</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -443,7 +443,7 @@ export default function EnergyDistributionDashboard() {
 											<p className="text-xs text-gray-500 mt-1">kWh gerados no período</p>
 										</CardContent>
 									</Card>
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Injeção Total</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -453,7 +453,7 @@ export default function EnergyDistributionDashboard() {
 											<p className="text-xs text-gray-500 mt-1">kWh injetados no período</p>
 										</CardContent>
 									</Card>
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Total Transferido</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -466,7 +466,7 @@ export default function EnergyDistributionDashboard() {
 								</div>
 								<h1 className="text-2xl font-semibold text-white">Análise do Consumo</h1>
 								<div className="w-full flex items-center gap-2 flex-col lg:flex-row">
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Consumo Total</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -476,7 +476,7 @@ export default function EnergyDistributionDashboard() {
 											<p className="text-xs text-gray-500 mt-1">kWh consumidos no período</p>
 										</CardContent>
 									</Card>
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Consumo Instantâneo</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -486,7 +486,7 @@ export default function EnergyDistributionDashboard() {
 											<p className="text-xs text-gray-500 mt-1">kWh consumidos pela geração no período</p>
 										</CardContent>
 									</Card>
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/3">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/3">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Taxa de Simultaneidade</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -499,7 +499,7 @@ export default function EnergyDistributionDashboard() {
 								</div>
 								<h1 className="text-2xl font-semibold text-white">Análise do Econômica</h1>
 								<div className="w-full flex items-center gap-2 flex-col lg:flex-row">
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/2">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/2">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Total pago</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -509,7 +509,7 @@ export default function EnergyDistributionDashboard() {
 											<p className="text-xs text-gray-500 mt-1">R$</p>
 										</CardContent>
 									</Card>
-									<Card className="bg-white border-gray-200 shadow-xl w-full lg:w-1/2">
+									<Card className="bg-white border-gray-300 shadow-xl w-full lg:w-1/2">
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-semibold text-gray-700">Total economizado</CardTitle>
 											<Zap className="h-5 w-5 text-black" />
@@ -522,7 +522,7 @@ export default function EnergyDistributionDashboard() {
 								</div>
 								{/* Charts Row */}
 								<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-									<Card className="bg-white border-gray-200 shadow-xl">
+									<Card className="bg-white border-gray-300 shadow-xl">
 										<CardHeader className="border-b border-gray-100">
 											<CardTitle className="text-black">Distribuição de Energia</CardTitle>
 											<CardDescription className="text-gray-600">Compensação por instalação</CardDescription>
@@ -558,7 +558,7 @@ export default function EnergyDistributionDashboard() {
 										</CardContent>
 									</Card>
 
-									<Card className="bg-white border-gray-200 shadow-xl">
+									<Card className="bg-white border-gray-300 shadow-xl">
 										<CardHeader className="border-b border-gray-100">
 											<CardTitle className="text-black">Comparativo de Energia</CardTitle>
 											<CardDescription className="text-gray-600">Geração vs Consumo vs Compensação</CardDescription>
@@ -592,7 +592,7 @@ export default function EnergyDistributionDashboard() {
 								{/* Installation Cards */}
 								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 									{installationRecords[selectedPeriod].map((record, index) => (
-										<Card key={`${record.identificador}-${index}`} className="bg-white border-gray-200 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
+										<Card key={`${record.identificador}-${index}`} className="bg-white border-gray-300 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
 											<div className="absolute top-0 left-0 w-2 h-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
 											<CardHeader className="pb-4 pl-6">
 												<div className="flex items-center justify-between">
@@ -636,13 +636,13 @@ export default function EnergyDistributionDashboard() {
 													<span className="text-sm font-medium text-gray-700">Transferido:</span>
 													<span className="font-bold text-black text-lg">{record.transferenciaValor ? `${formatDecimalPlaces(record.transferenciaValor, 2)} kWh` : "N/A"}</span>
 												</div>
-												<div className="pt-3 border-t border-gray-200">
+												<div className="pt-3 border-t border-gray-300">
 													<div className="flex justify-between items-center">
 														<span className="text-sm font-medium text-gray-700">Tarifa:</span>
 														<span className="font-bold text-black text-lg">{record.tarifaEnergia ? `${formatToMoney(record.tarifaEnergia)}/kWh` : "N/A"}</span>
 													</div>
 												</div>
-												<div className="pt-3 border-t border-gray-200">
+												<div className="pt-3 border-t border-gray-300">
 													<div className="flex justify-between items-center">
 														<span className="text-sm font-medium text-gray-700">Valor da Fatura:</span>
 														<span className="font-bold text-black text-lg">{record.valorFatura ? `${formatToMoney(record.valorFatura)}` : "N/A"}</span>

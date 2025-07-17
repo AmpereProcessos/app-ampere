@@ -130,7 +130,7 @@ function NewActivityMenu({ session, opportunity, project, homologationId, techni
 								/>
 							</div>
 						</div>
-						<div className="flex w-full flex-col rounded-md border border-gray-200 p-2 shadow-sm">
+						<div className="flex w-full flex-col rounded-md border border-gray-300 p-2 shadow-sm">
 							<h1 className="text-sm font-medium leading-none tracking-tight text-gray-500">DESCRIÇÃO DA ATIVIDADE</h1>
 							<input
 								value={newActivityHolder.descricao}

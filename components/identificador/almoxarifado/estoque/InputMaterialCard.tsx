@@ -111,7 +111,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
 						onChange={(e) => setInfoHolder((prev) => ({ ...prev, qtde: Number(e.target.value) }))}
 						name="qty-price"
 						type="number"
-						className="rounded-lg border border-gray-200 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+						className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
 					/>
 				</div>
 				<div className={`flex w-full flex-col gap-1 lg:w-1/2`}>
@@ -124,7 +124,7 @@ function InputMaterialCard({ inputMaterial, materials, clearMaterialHolder }: In
 						onChange={(e) => setInfoHolder((prev) => ({ ...prev, preco: Number(e.target.value) }))}
 						name="input-price"
 						type="number"
-						className="rounded-lg border border-gray-200 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+						className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
 					/>
 				</div>
 			</div>

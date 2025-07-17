@@ -1,143 +1,133 @@
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { Session } from 'next-auth'
-import { useQueryClient } from '@tanstack/react-query'
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { Session } from "next-auth";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { VscChromeClose } from 'react-icons/vsc'
+import { VscChromeClose } from "react-icons/vsc";
 
-import SelectInput from '../../../inputs/Select'
-import TextInput from '../../../inputs/Text'
-import NumberInput from '../../../inputs/Number'
-import DateInput from '../../../inputs/Date'
-import CheckboxInput from '@/components/inputs/Checkbox'
-import { paymentMethods, revenueSources } from '@/utils/select-options'
+import SelectInput from "../../../inputs/Select";
+import TextInput from "../../../inputs/Text";
+import NumberInput from "../../../inputs/Number";
+import DateInput from "../../../inputs/Date";
+import CheckboxInput from "@/components/inputs/Checkbox";
+import { paymentMethods, revenueSources } from "@/utils/select-options";
 
-import Fractionnements from '../Fractionnements'
+import Fractionnements from "../Fractionnements";
 
-import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import { TRevenue, TRevenueDTO } from '@/utils/schemas/revenues'
-import { formatDate } from '../../../../utils/constants'
+import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
+import { formatDateInputChange } from "@/utils/methods/shared";
+import { TRevenue, TRevenueDTO } from "@/utils/schemas/revenues";
+import { formatDate } from "../../../../utils/constants";
 
-import RevenueProjectVinculation from '../modals/blocos/utils/ProjectVinculation'
-import RevenueProjectInformationBlock from '../modals/blocos/ProjectInformationBlock'
-import RevenueGeneralInformationBlock from './blocos/GeneralInformationBlock'
-import { useRevenueProject } from '@/utils/methods/query/revenues'
-import { createRevenue } from '@/utils/methods/mutation/revenues'
-import RevenueReceiptsBlock from './blocos/ReceiptsBlock'
-import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
+import RevenueProjectVinculation from "../modals/blocos/utils/ProjectVinculation";
+import RevenueProjectInformationBlock from "../modals/blocos/ProjectInformationBlock";
+import RevenueGeneralInformationBlock from "./blocos/GeneralInformationBlock";
+import { useRevenueProject } from "@/utils/methods/query/revenues";
+import { createRevenue } from "@/utils/methods/mutation/revenues";
+import RevenueReceiptsBlock from "./blocos/ReceiptsBlock";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
-function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fracionamento'] }) {
-  const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
-  return 100 - currentTotal
+function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue["fracionamento"] }) {
+	const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0);
+	return 100 - currentTotal;
 }
 type NewRevenueProps = {
-  session: Session
-  closeModal: () => void
-}
+	session: Session;
+	closeModal: () => void;
+};
 function NewRevenue({ session, closeModal }: NewRevenueProps) {
-  const queryClient = useQueryClient()
-  const initialInfoHolder = {
-    nome: '',
-    tipo: '',
-    autor: {
-      id: session.user.id,
-      nome: session.user.nome,
-      avatar_url: session.user.avatar_url,
-    },
-    projeto: {
-      id: null,
-      nome: null,
-      identificador: null,
-    },
-    total: 0,
-    metodo: '',
-    efetivacao: {
-      efetivado: false,
-      data: null,
-    },
-    fracionamento: [],
-    criterioReferencia: false,
-    criterioCompetencia: false,
-    dataInsercao: new Date().toISOString(),
-  }
-  const [infoHolder, setInfoHolder] = useState<TRevenue>({
-    nome: '',
-    tipo: '',
-    autor: {
-      id: session.user.id,
-      nome: session.user.nome,
-      avatar_url: session.user.avatar_url,
-    },
-    projeto: {
-      id: null,
-      nome: null,
-      identificador: null,
-    },
-    total: 0,
-    metodo: '',
-    efetivacao: {
-      efetivado: true,
-      data: null,
-    },
-    fracionamento: [],
-    dataInsercao: new Date().toISOString(),
-  })
+	const queryClient = useQueryClient();
+	const initialInfoHolder = {
+		nome: "",
+		tipo: "",
+		autor: {
+			id: session.user.id,
+			nome: session.user.nome,
+			avatar_url: session.user.avatar_url,
+		},
+		projeto: {
+			id: null,
+			nome: null,
+			identificador: null,
+		},
+		total: 0,
+		metodo: "",
+		efetivacao: {
+			efetivado: false,
+			data: null,
+		},
+		fracionamento: [],
+		criterioReferencia: false,
+		criterioCompetencia: false,
+		dataInsercao: new Date().toISOString(),
+	};
+	const [infoHolder, setInfoHolder] = useState<TRevenue>({
+		nome: "",
+		tipo: "",
+		autor: {
+			id: session.user.id,
+			nome: session.user.nome,
+			avatar_url: session.user.avatar_url,
+		},
+		projeto: {
+			id: null,
+			nome: null,
+			identificador: null,
+		},
+		total: 0,
+		metodo: "",
+		efetivacao: {
+			efetivado: true,
+			data: null,
+		},
+		fracionamento: [],
+		dataInsercao: new Date().toISOString(),
+	});
 
-  const { data: project } = useRevenueProject({ projectId: infoHolder.projeto.id || null })
-  const { mutate: handleCreateRevenue, isPending } = useMutationWithFeedback({
-    mutationKey: ['create-revenue'],
-    mutationFn: createRevenue,
-    queryClient: queryClient,
-    affectedQueryKey: ['revenues'],
-    callbackFn: () => console.log(),
-  })
-  return (
-    <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="fixed left-[50%] top-[50%] z-[100] h-[70%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
-        <div className="flex h-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVA RECEITA</h3>
-            <button
-              onClick={() => closeModal()}
-              type="button"
-              className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-            >
-              <VscChromeClose style={{ color: 'red' }} />
-            </button>
-          </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-            <RevenueGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-            {project ? (
-              <RevenueProjectInformationBlock revenue={infoHolder} project={project} />
-            ) : (
-              <RevenueProjectVinculation
-                revenueId={undefined}
-                infoHolder={infoHolder}
-                setInfoHolder={setInfoHolder}
-                affectedQueryKey={['revenues']}
-                queryClient={queryClient}
-              />
-            )}
-            <RevenueReceiptsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-          </div>
-          <div className="mt-2 flex w-full items-center justify-end">
-            <LoadingButton
-              loading={isPending}
-              onClick={() =>
-                //@ts-ignore
-                handleCreateRevenue({ info: infoHolder })
-              }
-              type="button"
-              className="bg-green-800 hover:bg-green-700"
-            >
-              CRIAR RECEITA
-            </LoadingButton>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+	const { data: project } = useRevenueProject({ projectId: infoHolder.projeto.id || null });
+	const { mutate: handleCreateRevenue, isPending } = useMutationWithFeedback({
+		mutationKey: ["create-revenue"],
+		mutationFn: createRevenue,
+		queryClient: queryClient,
+		affectedQueryKey: ["revenues"],
+		callbackFn: () => console.log(),
+	});
+	return (
+		<div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
+			<div className="fixed left-[50%] top-[50%] z-[100] h-[70%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
+				<div className="flex h-full flex-col">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+						<h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVA RECEITA</h3>
+						<button onClick={() => closeModal()} type="button" className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200">
+							<VscChromeClose style={{ color: "red" }} />
+						</button>
+					</div>
+					<div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+						<RevenueGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+						{project ? (
+							<RevenueProjectInformationBlock revenue={infoHolder} project={project} />
+						) : (
+							<RevenueProjectVinculation revenueId={undefined} infoHolder={infoHolder} setInfoHolder={setInfoHolder} affectedQueryKey={["revenues"]} queryClient={queryClient} />
+						)}
+						<RevenueReceiptsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+					</div>
+					<div className="mt-2 flex w-full items-center justify-end">
+						<LoadingButton
+							loading={isPending}
+							onClick={() =>
+								//@ts-ignore
+								handleCreateRevenue({ info: infoHolder })
+							}
+							type="button"
+							className="bg-green-800 hover:bg-green-700"
+						>
+							CRIAR RECEITA
+						</LoadingButton>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
-export default NewRevenue
+export default NewRevenue;

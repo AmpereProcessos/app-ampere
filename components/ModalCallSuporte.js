@@ -140,7 +140,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 		<>
 			<AnimatedModalWrapper modalIsOpen={modalIsOpen} width={"47%"} height={"80%"}>
 				<div className="flex h-full flex-col">
-					<div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+					<div className="flex items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg">
 						<div className="flex flex-col items-center">
 							<h1 className="pl-6 font-bold uppercase text-[#15599a]">
 								{info.tipoChamado} {info.equipamento && `- ${info.equipamento}`}
@@ -148,7 +148,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 							<p className="text-xs text-gray-500">{info._id}</p>
 						</div>
 
-						{info.demanda && <span className="border border-gray-200 p-2 text-xs font-bold text-gray-600">DEMANDA {info.demanda}</span>}
+						{info.demanda && <span className="border border-gray-300 p-2 text-xs font-bold text-gray-600">DEMANDA {info.demanda}</span>}
 						<button>
 							<VscChromeClose
 								onClick={() => {
@@ -166,7 +166,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 					</p>
 					<div className="overscroll-y overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 						{!!session?.user.permissoes.posVenda.visualizar && info.fechamento ? (
-							<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+							<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 								<span className="text-center font-raleway font-bold">COLETA DE FEEDBACK</span>
 								<input
 									value={infoHolder.feedbackValor ? infoHolder.feedbackValor : ""}
@@ -185,7 +185,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 						) : (
 							false
 						)}
-						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="font-raleway font-bold">STATUS</span>
 							<div className="flex grow justify-center gap-x-2">
 								{info.statusChamado == "ABERTO" ? (
@@ -223,16 +223,16 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 								)}
 							</div>
 						</div>
-						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-raleway font-bold">NOME DO CLIENTE</span>
 							<p className="grow text-center font-raleway">{info.nomeCliente ? info.nomeCliente : "-"}</p>
 						</div>
-						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-raleway font-bold">NOME DA USINA</span>
 							<p className="grow text-center font-raleway">{info.nomeUsina ? info.nomeUsina : "-"}</p>
 						</div>
 						{info.tipoChamado == "DEFEITOS E GARANTIA" && (
-							<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+							<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
 								<span className="text-center font-bold uppercase">EQUIPAMENTO DEFEITUOSO</span>
 								<select
 									value={infoHolder.equipamento ? infoHolder.equipamento : "NÃO DEFINIDO"}
@@ -251,12 +251,12 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 								</select>
 							</div>
 						)}
-						<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-bold uppercase">EQUIPE RESPONSÁVEL</span>
 							<p className="grow text-center text-sm">{info.equipeResp ? info.equipeResp : "-"}</p>
 						</div>
 						{!["PROBLEMAS COM CONCESSIONÁRIA", "GOTEIRA", "DISTRIBUIÇÃO DE CRÉDITOS", "RETRABALHO EM ESTRUTURA"].includes(info.tipoChamado) && (
-							<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+							<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
 								<span className="text-center font-bold uppercase">LINK DA PLANTA</span>
 								<input
 									value={infoHolder.linkMonitoramento}
@@ -277,17 +277,17 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 							</a>
 						</div>
 
-						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-raleway font-bold">ABERTURA</span>
 							<p className="grow text-center font-raleway">{new Date(info.abertura).toLocaleString()}</p>
 						</div>
 						{info.fechamento && (
-							<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+							<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 								<span className="text-center font-raleway font-bold">FECHAMENTO</span>
 								<p className="grow text-center font-raleway">{new Date(info.fechamento).toLocaleString()}</p>
 							</div>
 						)}
-						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-raleway font-bold">CIDADE</span>
 							<select value={infoHolder.cidade} onChange={(e) => setInfo({ ...infoHolder, cidade: e.target.value })} className="mt-2 grow text-center text-xs outline-none lg:mt-0">
 								{info.cidade && <option value={info.cidade}>{info.cidade}</option>}
@@ -299,7 +299,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 								<option value={"A DEFINIR"}>A DEFINIR</option>
 							</select>
 						</div>
-						<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-bold">RESPONSÁVEL</span>
 							<select
 								value={infoHolder.responsavel}
@@ -311,18 +311,18 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 								<option value={"PÓS-VENDA"}>PÓS-VENDA</option>
 							</select>
 						</div>
-						<div className="mt-4 flex flex-col items-center justify-center gap-x-2 border border-gray-200 p-2 lg:flex-row">
+						<div className="mt-4 flex flex-col items-center justify-center gap-x-2 border border-gray-300 p-2 lg:flex-row">
 							<span className="text-center font-bold">O.S GERADA?</span>
 							<input checked={infoHolder.osGerada} onChange={(e) => setInfo({ ...infoHolder, osGerada: e.target.checked })} type={"checkbox"} className={"ml-2"} />
 						</div>
 
-						<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2">
+						<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2">
 							<span className="text-center font-raleway font-bold">DESCRIÇÃO DO PROBLEMA</span>
 							<span className="grow bg-gray-100 p-4 text-center font-raleway text-sm italic">{info.descricaoProblema ? info.descricaoProblema : ""}</span>
 						</div>
 						{info.tipoChamado.includes("GARANTIA") && (
 							<>
-								<div className="mt-4 flex flex-col gap-1 border border-gray-200 p-2">
+								<div className="mt-4 flex flex-col gap-1 border border-gray-300 p-2">
 									<span className="text-center font-raleway font-bold">ÚLTIMA ATUALIZAÇÃO DO CLIENTE</span>
 									<input
 										value={infoHolder.ultAtualizacaoCliente ? formatDate(infoHolder.ultAtualizacaoCliente) : null}
@@ -336,7 +336,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 										className="grow text-center font-raleway outline-none"
 									/>
 								</div>
-								<div className="mt-4 flex flex-col gap-1 border border-gray-200 p-2">
+								<div className="mt-4 flex flex-col gap-1 border border-gray-300 p-2">
 									<span className="text-center font-raleway font-bold">STATUS DA GARANTIA</span>
 									<select
 										value={infoHolder.statusGarantia ? infoHolder.statusGarantia : "NÃO DEFINIDO"}
@@ -359,7 +359,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, session, moda
 								</div>
 							</>
 						)}
-						<div className="mt-4 flex flex-col gap-x-2 border border-gray-200 p-2">
+						<div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2">
 							<span className="text-center font-raleway font-bold">ANOTAÇÕES</span>
 							<textarea
 								value={infoHolder.anotacoes ? infoHolder.anotacoes : ""}

@@ -158,7 +158,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
 	return (
 		<AnimatedModalWrapper modalIsOpen={modalIsOpen} width={"90%"} height={"87%"}>
 			<div className="flex h-full flex-col">
-				<div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
+				<div className="flex items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<h1 className="pl-6 text-xs font-bold text-[#15599a] lg:text-base">{order?.favorecido?.nome || "..."}</h1>
 						<p className="text-center text-xs text-gray-500">#{order?._id || "..."}</p>
@@ -291,7 +291,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
 							<DetailsModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 							<ExecutionDiary orderId={orderId} entryDatetime={order.periodo?.inicio} exitDatetime={order.periodo?.fim} history={order.periodo.historico} />
 						</div>
-						<div className="mt-2 flex w-full items-center justify-between border-t border-gray-200 py-1 px-4">
+						<div className="mt-2 flex w-full items-center justify-between border-t border-gray-300 py-1 px-4">
 							{session?.user.permissoes.ordensDeServico.editar ? (
 								<button onClick={() => handleOrderDelete(orderId)} className="py-1 font-bold text-red-500 duration-300 ease-in-out hover:scale-105 hover:text-red-700">
 									EXCLUIR

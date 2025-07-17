@@ -76,7 +76,7 @@ function Administracao() {
 
 	return (
 		<div className="grow p-6">
-			<div className="flex flex-col items-center gap-y-2 border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center gap-y-2 border-b border-gray-300 p-1">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de cobrança/faturamento</p>
@@ -92,7 +92,7 @@ function Administracao() {
 					)}
 				</div>
 				<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 							<VscDiffAdded />
@@ -102,7 +102,7 @@ function Administracao() {
 						</div>
 					</div>
 
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">COBRANÇAS PENDENTES</h1>
 							<MdPaid />
@@ -111,7 +111,7 @@ function Administracao() {
 							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).cobrancasPendentes}</div>
 						</div>
 					</div>
-					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+					<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTOS PENDENTES</h1>
 							<IoDocumentTextOutline />

@@ -55,7 +55,7 @@ function ServiceOrdersCardModePage({ session, handleSetMode }: ServiceOrdersCard
 	const callbackOnSettled = async () => await queryClient.invalidateQueries({ queryKey: ["service-orders-by-filters", filters] });
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
 					<div className="flex flex-col items-center  gap-1 lg:flex-row">
 						<div className="flex items-center gap-1">

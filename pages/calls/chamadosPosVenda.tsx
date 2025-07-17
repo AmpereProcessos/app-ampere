@@ -119,7 +119,7 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
 	const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey: ["pos-venda-calls", filters] });
 	return (
 		<div className="flex grow flex-col p-6">
-			<div className="flex flex-col items-center border-b border-gray-200 px-1 py-2">
+			<div className="flex flex-col items-center border-b border-gray-300 px-1 py-2">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">CHAMADOS DE POS VENDA</p>

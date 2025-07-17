@@ -78,7 +78,7 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
 
 	return (
 		<div className="grow p-6">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM PROCESSO DE ENTREGA</p>
@@ -397,7 +397,7 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
 			<Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
 			<Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[80%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[70%] lg:w-[50%]">
 				<div className="flex h-full w-full flex-col">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 						<h3 className="text-sm font-bold lg:text-xl">ACUSAR ENTREGA</h3>
 						<button onClick={() => closeModal()} type="button" className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200">
 							<VscChromeClose style={{ color: "red" }} />

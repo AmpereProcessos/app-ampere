@@ -136,7 +136,7 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
 
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
 					<div className="flex flex-col items-center  gap-1 lg:flex-row">
 						<div className="flex items-center gap-1">
@@ -274,7 +274,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
 				</Button>
 			</Popover.Trigger>
 			<Popover.Content className="z-[120] flex min-h-[250px] w-80 flex-col gap-2 rounded border border-gray-500 bg-white p-3 shadow-sm">
-				<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+				<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 					<h3 className="text-sm font-bold">MENU DE ETIQUETAS</h3>
 				</div>
 				<input

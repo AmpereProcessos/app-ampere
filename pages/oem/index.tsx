@@ -128,7 +128,7 @@ function OemPage() {
 	if (status === "authenticated") {
 		return (
 			<div className="grow p-6">
-				<div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
+				<div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 p-1">
 					<div className="GAP-2 flex w-full items-center justify-between">
 						<div className="flex flex-col items-center gap-2 lg:flex-row">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS NOS ESTAGIO DE O&M</p>
@@ -144,7 +144,7 @@ function OemPage() {
 						)}
 					</div>
 					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 								<VscDiffAdded />
@@ -154,7 +154,7 @@ function OemPage() {
 								<p className="text-xs text-gray-500">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">QUANTIDADE DE MÓDULOS</h1>
 								<FaSolarPanel />
@@ -163,7 +163,7 @@ function OemPage() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES PENDENTES</h1>
 								<FaList />
@@ -172,7 +172,7 @@ function OemPage() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES ATRASADAS</h1>
 								<MdError />
@@ -433,7 +433,7 @@ function OemPage() {
 									setModalProject({ id: project._id, isOpen: true });
 								}}
 								key={project._id}
-								className="w-full cursor-pointer border border-gray-200 hover:bg-blue-100 md:w-[350px]  lg:w-[450px]"
+								className="w-full cursor-pointer border border-gray-300 hover:bg-blue-100 md:w-[350px]  lg:w-[450px]"
 							>
 								<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
 								<div className="flex flex-col p-2 pb-3">

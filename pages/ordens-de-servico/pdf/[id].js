@@ -1,53 +1,53 @@
-import React, { useState } from 'react'
-import Link from 'next/link'
-import ServiceOrderPDF from '../../../components/OSMontagemPDF'
-import PadraoOS from '../../../components/PadraoOS'
-import PreventivaOS from '../../../components/PreventivaOS'
-import Logo from '../../../utils/images/logo-texto-azul-vertical.png'
-import Image from 'next/image'
-import EstruturaOS from '../../../components/EstruturaOS'
-import OSCorretiva from '../../../components/OSCorretivaPDF'
-import { useRouter } from 'next/router'
-import { useServiceOrderById } from '../../../utils/methods/query/service-orders'
-import LoadingPage from '../../../components/utils/LoadingPage'
+import React, { useState } from "react";
+import Link from "next/link";
+import ServiceOrderPDF from "../../../components/OSMontagemPDF";
+import PadraoOS from "../../../components/PadraoOS";
+import PreventivaOS from "../../../components/PreventivaOS";
+import Logo from "../../../utils/images/logo-texto-azul-vertical.png";
+import Image from "next/image";
+import EstruturaOS from "../../../components/EstruturaOS";
+import OSCorretiva from "../../../components/OSCorretivaPDF";
+import { useRouter } from "next/router";
+import { useServiceOrderById } from "../../../utils/methods/query/service-orders";
+import LoadingPage from "../../../components/utils/LoadingPage";
 function OSInfo({ info, index }) {
-  const router = useRouter()
-  const { data, isLoading, isSuccess, isError } = useServiceOrderById({ id: router?.query?.id, enabled: !!router?.query?.id })
-  const [osInfo, setosInfo] = useState(info)
-  const [urgency, setUrgency] = useState('NÃO DEFINIDO')
-  console.log(data)
-  if (isLoading) return <LoadingPage />
-  if (isError)
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        <h1 className="w-full text-center italic text-gray-500">Oops, um erro ocorreu.</h1>
-        <Link href="/">
-          <p className="cursor-pointer font-bold text-gray-700 hover:text-cyan-500">Voltar à página principal</p>
-        </Link>
-      </div>
-    )
-  if (isSuccess && data)
-    return (
-      <>
-        {data.categoria == 'PADRÃO' && <PadraoOS order={data} />}
-        {data.categoria == 'MONTAGEM' && <ServiceOrderPDF order={data} />}
-        {data.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={data} />}
-        {/* {data.categoria == 'ESTRUTURA' && (
+	const router = useRouter();
+	const { data, isLoading, isSuccess, isError } = useServiceOrderById({ id: router?.query?.id, enabled: !!router?.query?.id });
+	const [osInfo, setosInfo] = useState(info);
+	const [urgency, setUrgency] = useState("NÃO DEFINIDO");
+	console.log(data);
+	if (isLoading) return <LoadingPage />;
+	if (isError)
+		return (
+			<div className="flex h-full w-full flex-col items-center justify-center">
+				<h1 className="w-full text-center italic text-gray-500">Oops, um erro ocorreu.</h1>
+				<Link href="/">
+					<p className="cursor-pointer font-bold text-gray-700 hover:text-cyan-500">Voltar à página principal</p>
+				</Link>
+			</div>
+		);
+	if (isSuccess && data)
+		return (
+			<>
+				{data.categoria == "PADRÃO" && <PadraoOS order={data} />}
+				{data.categoria == "MONTAGEM" && <ServiceOrderPDF order={data} />}
+				{data.categoria == "MANUTENÇÃO PREVENTIVA" && <PreventivaOS order={data} />}
+				{/* {data.categoria == 'ESTRUTURA' && (
           <EstruturaOS
             info={osInfo}
             observacoesOS={osInfo.ordensDeServico[index].observacoes}
             servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
           />
         )} */}
-        {(data.categoria == 'MANUTENÇÃO CORRETIVA' || data.categoria == 'OUTROS') && <OSCorretiva order={data} />}
-      </>
-    )
+				{(data.categoria == "MANUTENÇÃO CORRETIVA" || data.categoria == "OUTROS") && <OSCorretiva order={data} />}
+			</>
+		);
 }
 
-export default OSInfo
+export default OSInfo;
 
 {
-  /**
+	/**
         <div className="flex flex-col p-6 grow bg-[#fff]">
           <div>
             <Link href={"/"}>
@@ -59,7 +59,7 @@ export default OSInfo
               GERAÇÃO DE OS
             </h1>
           </div>
-          <div className="flex flex-col justify-center flex-wrap p-3 border border-gray-200 shadow-lg">
+          <div className="flex flex-col justify-center flex-wrap p-3 border border-gray-300 shadow-lg">
             <h1 className="text-center font-bold font-raleway text-[#15599a]">
               INFORMAÇÕES DO CLIENTE
             </h1>
@@ -95,7 +95,7 @@ export default OSInfo
               />
             </div>
           </div>
-          <div className="flex flex-col p-3 border border-gray-200 mt-2 shadow-lg">
+          <div className="flex flex-col p-3 border border-gray-300 mt-2 shadow-lg">
             <h1 className="text-center font-bold font-raleway text-[#15599a]">
               INFORMAÇÕES DA INSTALAÇÃO
             </h1>
@@ -197,7 +197,7 @@ export default OSInfo
               />
             </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
+          <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-300 mt-2 shadow-lg">
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
                 OBSERVAÇÕES DA OS
@@ -267,7 +267,7 @@ export default OSInfo
               value={osInfo.ordensDeServico[index].servicoExecutado}
             />
           </div>
-          <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
+          <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-300 mt-2 shadow-lg">
             <DateInput
               label={"Data de criação da OS"}
               value={new Date(osInfo.ordensDeServico[index].dataDeAbertura)

@@ -66,7 +66,7 @@ function Projetos() {
 		if (diffDays > 90) {
 			return "border-2 border-blue-700";
 		}
-		return "border border-gray-200";
+		return "border border-gray-300";
 	}
 	function getDateDiff(date1, date2) {
 		const diffInMs = new Date(date1) - new Date(date2);
@@ -168,7 +168,7 @@ function Projetos() {
 	if (projectsSuccess && projects) {
 		return (
 			<div className="grow p-6">
-				<div className="flex flex-col items-center justify-between  gap-2 border-b border-gray-200 p-1">
+				<div className="flex flex-col items-center justify-between  gap-2 border-b border-gray-300 p-1">
 					<div className="flex w-full items-center justify-between">
 						<div className="flex flex-col items-center gap-2 lg:flex-row">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de engenharia</p>
@@ -184,7 +184,7 @@ function Projetos() {
 						)}
 					</div>
 					<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
 								<VscDiffAdded />
@@ -194,7 +194,7 @@ function Projetos() {
 								<p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PARECES APROVADOS</h1>
 								<BsPatchCheck />
@@ -203,7 +203,7 @@ function Projetos() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pareceresAprovados}</div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">PARECES NOTURNOS</h1>
 								<FaMoon />
@@ -212,7 +212,7 @@ function Projetos() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pareceresNoturnos} </div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">AGUARDANDO ASSINATURA</h1>
 								<FaSignature />
@@ -221,7 +221,7 @@ function Projetos() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).assinaturasPendentes} </div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">VISTORIA PENDENTE</h1>
 								<TbCheckupList />
@@ -230,7 +230,7 @@ function Projetos() {
 								<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vistoriasPendentes} </div>
 							</div>
 						</div>
-						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+						<div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
 							<div className="flex items-center justify-between">
 								<h1 className="text-sm font-medium uppercase tracking-tight">HOMOLOGAÇÃO COM PENDÊNCIAS</h1>
 								<TbAlertHexagonFilled />
@@ -658,7 +658,7 @@ function Projetos() {
 							className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
 								project.homologacao.acesso.dataResposta !== undefined && !project.homologacao.vistoria.dataEfetivacao
 									? getBorderColorByParecer(new Date(project.homologacao.acesso.dataResposta), new Date())
-									: "border border-gray-200"
+									: "border border-gray-300"
 							}  hover:bg-blue-100`}
 						>
 							<TagTipoDeServico tipoDeServico={project.tipoDeServico} />

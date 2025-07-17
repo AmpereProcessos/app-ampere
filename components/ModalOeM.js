@@ -64,7 +64,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
 		<>
 			<AnimatedModalWrapper modalIsOpen={modalIsOpen}>
 				<div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
-					<div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
 						<div className="flex items-center gap-2">
 							<h1 className="pl-6 font-bold  text-[#15599a]">
 								{infoHolder?.qtde} - {infoHolder?.nomeDoContrato}

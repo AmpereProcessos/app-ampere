@@ -35,7 +35,7 @@ function MainDatebasePage() {
 	);
 	return (
 		<div className="grow p-6">
-			<div className="flex w-full flex-col gap-2 border-b border-gray-200 p-1">
+			<div className="flex w-full flex-col gap-2 border-b border-gray-300 p-1">
 				<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
 					<div className="flex items-center gap-1">
 						{filterMenuIsOpen ? (
@@ -120,7 +120,7 @@ function MainDatebasePage() {
                   animate={{ opacity: 1, translateX: 0 }}
                   transition={{ duration: 0.3, delay: 0.01 * index }}
                   key={project._id}
-                  className="w-full cursor-pointer border  border-gray-200 p-3 hover:bg-blue-100 md:w-[250px] lg:w-[450px]"
+                  className="w-full cursor-pointer border  border-gray-300 p-3 hover:bg-blue-100 md:w-[250px] lg:w-[450px]"
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-import LoadingPage from '@/components/utils/LoadingPage'
+import LoadingPage from "@/components/utils/LoadingPage";
 
-import { useLocalStorage } from '@/lib/hooks/local-storage'
-import RevenuesPage from '@/components/identificador/receitas/RevenuesPage'
+import { useLocalStorage } from "@/lib/hooks/local-storage";
+import RevenuesPage from "@/components/identificador/receitas/RevenuesPage";
 
 function Revenues() {
-  const router = useRouter()
-  const { data: session, status } = useSession({ required: true })
-  const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar
+	const router = useRouter();
+	const { data: session, status } = useSession({ required: true });
+	const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar;
 
-  useEffect(() => {
-    if (session?.user && !isAuthorized) router.push('/')
-  }, [session?.user])
-  if (status != 'authenticated') return <LoadingPage />
+	useEffect(() => {
+		if (session?.user && !isAuthorized) router.push("/");
+	}, [session?.user]);
+	if (status != "authenticated") return <LoadingPage />;
 
-  return <RevenuesPage session={session} />
+	return <RevenuesPage session={session} />;
 }
-export default Revenues
+export default Revenues;
 
 // function Receitas() {
 //   const router = useRouter()
@@ -98,7 +98,7 @@ export default Revenues
 //   if (status != 'authenticated') return <LoadingPage />
 //   return (
 //     <div className="flex grow flex-col gap-2 p-6">
-//       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+//       <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 //         <div className="flex w-full items-center justify-between">
 //           <div className="flex flex-col items-center gap-2 lg:flex-row">
 //             <p className="text-center text-2xl font-black uppercase text-[#15599a]">RECEITAS</p>
@@ -114,7 +114,7 @@ export default Revenues
 //           )}
 //         </div>
 //         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">RECEITAS</h1>
 //               <VscDiffAdded />
@@ -123,7 +123,7 @@ export default Revenues
 //               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: revenues }).receitas}</div>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">RECEBIDO</h1>
 //               <MdAttachMoney />
@@ -132,7 +132,7 @@ export default Revenues
 //               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: revenues }).recebido)}</div>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">À RECEBER</h1>
 //               <MdOutlineWatchLater />
@@ -142,7 +142,7 @@ export default Revenues
 //               <p className="text-xs text-gray-500">{formatToMoney(getStats({ info: revenues }).receberHoje)} para hoje</p>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">EM ATRASO</h1>
 //               <MdOutlineAssignmentLate />

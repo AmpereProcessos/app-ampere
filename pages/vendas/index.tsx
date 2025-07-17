@@ -55,7 +55,7 @@ function Vendas() {
 	if (status !== "authenticated") return <LoadingPage />;
 	return (
 		<div className="grow p-6">
-			<div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-start">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS VENDIDOS</p>
@@ -284,7 +284,7 @@ function Vendas() {
 								transition={{ duration: 0.3, delay: 0.01 * index }}
 								key={project._id}
 								onClick={() => setModalProject({ id: project._id, isOpen: true })}
-								className="w-full cursor-pointer border border-gray-200 duration-300 ease-in-out  hover:bg-blue-50 md:w-[350px] lg:w-[450px]"
+								className="w-full cursor-pointer border border-gray-300 duration-300 ease-in-out  hover:bg-blue-50 md:w-[350px] lg:w-[450px]"
 							>
 								<TagTipoDeServico tipoDeServico={project.tipoDeServico} />
 								<div className="flex flex-col p-2 pb-3">

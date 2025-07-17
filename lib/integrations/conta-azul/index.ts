@@ -1,6 +1,7 @@
 import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TRevenue } from "@/utils/schemas/revenues";
 import axios from "axios";
+import type { WithId } from "mongodb";
 
 export const CONTA_AZUL_PRODUCTS_AND_SERVICES = [
 	{
@@ -43,11 +44,18 @@ export async function getContaAzulClientId(clientCpfCnpj: string, accessToken: s
 
 type CreateSaleFromRevenueParams = {
 	revenue: TRevenue;
-	client: TClient;
+	client: WithId<TClient>;
 	accessToken: string;
 };
 export async function createSaleFromRevenue({ revenue, client, accessToken }: CreateSaleFromRevenueParams) {
 	try {
+		console.log("[INFO] [CONTA AZUL] Starting sale creation from revenue.", {
+			revenueTitle: revenue.nome,
+			revenueType: revenue.tipo,
+			revenueTotal: revenue.total,
+			clientId: client._id.toString(),
+			clientCpfCnpj: client.cpfCnpj,
+		});
 		const url = "https://api.contaazul.com/v1/sales";
 		const newClientUrl = "https://api.contaazul.com/v1/customers";
 
@@ -58,17 +66,18 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 
 		let contaAzulCustomerId = client.idContaAzulCliente;
 		if (!contaAzulCustomerId) {
+			console.log("[INFO] [CONTA AZUL] Conta Azul client ID not vinculated yet.");
 			const cpfCnpj = client.cpfCnpj;
 			if (!cpfCnpj) {
 				throw new Error("Cliente não possui CPF/CNPJ para vincular ao cliente no Conta Azul.");
 			}
 
-			console.log("[INFO] Trying to get client via CPF/CNPJ:", cpfCnpj);
-			const cpfCnpjWithoutMask = cpfCnpj.replaceAll(".", "").replaceAll("-", "");
+			const cpfCnpjWithoutMask = cpfCnpj.replace(/\D/g, "");
+			console.log("[INFO] [CONTA AZUL] Trying to get client via CPF/CNPJ.", { cpfCnpj, cpfCnpjWithoutMask });
 			contaAzulCustomerId = await getContaAzulClientId(cpfCnpjWithoutMask, accessToken);
-			console.log("[INFO] Found client via CPF/CNPJ:", contaAzulCustomerId);
+			console.log("[INFO] [CONTA AZUL] Conta Azul client ID returned via CPF/CNPJ:", { contaAzulCustomerId });
 			if (!contaAzulCustomerId) {
-				console.log("[INFO] Client not found via CPF/CNPJ, creating new client...");
+				console.log("[INFO] [CONTA AZUL] Client not found via CPF/CNPJ, creating new client...");
 				// If not found, creating new client
 				const contaAzulCustomer = {
 					name: revenue.projeto.nome || client.nome,
@@ -84,7 +93,7 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 					},
 				};
 				const { data: clientResponse } = await axios.post(newClientUrl, contaAzulCustomer, { headers });
-				console.log("[INFO] Client created successfully:", clientResponse);
+				console.log("[INFO] [CONTA AZUL] Client created successfully:", clientResponse);
 
 				contaAzulCustomerId = clientResponse.id as string;
 			}
@@ -117,14 +126,14 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 				: undefined,
 			notes: revenue.projeto.id ? `Venda do Projeto ${revenue.projeto.nome}, do tipo ${revenue.tipo}.` : "",
 		};
-		console.log("[INFO] Sale to create:", contaAzulSale);
+		console.log("[INFO] [CONTA AZUL] Sale to create:", contaAzulSale);
 		const { data } = await axios.post(url, contaAzulSale, { headers });
-		console.log("[INFO] Sale created successfully:", data);
+		console.log("[INFO] [CONTA AZUL] Sale created successfully:", data);
 		const contaAzulSaleId = data.id as string;
 		if (!contaAzulSaleId) throw new Error("Ocorreu um erro ao criar a venda no Conta Azul.");
 		return { contaAzulSaleId, contaAzulCustomerId };
 	} catch (error) {
-		console.log("ERROR", error);
+		console.log("[ERROR] [CONTA AZUL] Error creating sale:", error);
 		throw error;
 	}
 }

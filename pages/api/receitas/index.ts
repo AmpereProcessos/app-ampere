@@ -102,7 +102,10 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	const db: Db = await connectToDatabase();
 	const crmDb = await connectToCRMDatabase();
 
-	console.log("REVENUE PAYLOAD", revenue);
+	console.log("[INFO] [CREATE REVENUE] Starting revenue creation process.", {
+		authorId: session.user.id,
+		authorName: session.user.nome,
+	});
 	const projectsCollection: Collection<TProject> = db.collection("dados");
 	const revenuesCollection: Collection<TRevenue> = db.collection("receitas");
 	const integrationsCollection: Collection<TIntegration> = db.collection("integracoes");
@@ -112,14 +115,13 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	let project: WithId<TProject> | null = null;
 	let client: WithId<TClient> | null = null;
 	if (revenueProjectId) {
-		console.log("CAME THIS PATH", revenueProjectId);
 		const projectResponse = await projectsCollection.findOne({ _id: new ObjectId(revenueProjectId) });
-		console.log("FOUND PROJECT", projectResponse?.nomeDoContrato);
 		project = projectResponse;
+		console.log(`[INFO] [CREATE REVENUE] Revenue attached to project ${projectResponse?._id.toString()}.`);
 		if (projectResponse?.idClienteCRM) {
 			const clientResponse = await clientsCollection.findOne({ _id: new ObjectId(projectResponse.idClienteCRM) });
-			console.log("FOUND CLIENT", clientResponse?.nome);
 			client = clientResponse;
+			console.log(`[INFO] [CREATE REVENUE] Revenue attached to client ${clientResponse?._id.toString()}.`);
 		}
 	}
 	const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection });

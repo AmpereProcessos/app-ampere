@@ -98,6 +98,7 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 			name: contractRequest.nomeDoContrato,
 			phone: contractRequest.telefone,
 			email: contractRequest.email,
+			maritalStatus: contractRequest.estadoCivil || "",
 			documents: {
 				cpfCnpj: contractRequest.cpf_cnpj?.toString() || "",
 				rg: contractRequest.rg?.toString() || "",

@@ -66,10 +66,10 @@ function ContractPDFPage({ id }: ContractPDFPageProps) {
 						</h1>
 						<h1 className="text-justify text-[0.85rem] font-medium">
 							<strong className="font-extrabold underline underline-offset-2">CONTRATADA:</strong> <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>, com nome fantasia de
-							AMPÈRE ENERGIAS, inscrita no CNPJ/MF n.º 27.901.968/0001-45, com sede na Avenida Nove, n.º 233, Centro, CEP 38.300-150, município de Ituiutaba/MG, por seu representante
+							AMPÈRE ENERGIAS, inscrita no CNPJ/MF n.º 27.901.968/0001-45, com sede na Rua 28, n.º 1842, Bairro Centro, CEP 38.300-078, município de Ituiutaba/MG, por seu representante
 							legal, Diogo Paulino Carvalho, brasileiro, solteiro, titular do RG MG-14372057 e do CPF/MF 072.427.186-43, integrada à{" "}
 							<strong className="font-extrabold underline underline-offset-2">DAP CONSULTORIA INTEGRADA LTDA</strong>, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob nº
-							43.830.044/0001-51, com sede na Avenida Nove, 233, sala 02, Centro, Ituiutaba/MG, CEP 38.300-150.
+							43.830.044/0001-51, com sede na Rua 28, n.º 1842, Bairro Centro, CEP 38.300-082, Ituiutaba/MG.
 						</h1>
 						<div className="flex w-full flex-col gap-1.5">
 							<h1 className="text-justify text-[0.85rem] font-medium">

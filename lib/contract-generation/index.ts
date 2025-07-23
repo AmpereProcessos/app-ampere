@@ -10,6 +10,7 @@ type TGetContractModelDataParams = {
 		name: string;
 		phone: string;
 		email: string;
+		maritalStatus: string;
 		documents: {
 			cpfCnpj: string;
 			rg: string;
@@ -57,9 +58,16 @@ type TGetContractModelDataParams = {
 };
 
 export function getContractModelData({ customer, system, additionalServices, payment }: TGetContractModelDataParams) {
+	const MARITAL_STATUS_MAP = {
+		"CASADO(A)": "casado(a)",
+		"SOLTEIRO(A)": "solteiro(a)",
+		"UNIÃO ESTÁVEL": "em união estável",
+		"DIVORCIADO(A)": "divorciado(a)",
+		"VIUVO(A)": "viúvo(a)",
+	};
 	const companyText =
 		"**CONTRATADA: AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA**, com nome fantasia de AMPÈRE ENERGIAS, inscrita no CNPJ/MF n.º **27.901.968/0001-45**, com sede na **Rua 28**, **n.º 1842**, **Centro**, **CEP 38300-082**, município de **Ituiutaba/MG**, por seu representante legal, Diogo Paulino Carvalho, brasileiro, solteiro, empresário, titular do RG **MG-14372057** e do CPF/MF **072.427.186-43**, residente e domiciliada na **Rua Vinte e Quatro**, n.º **75**, **Bairro Centro**, **CEP 38.300-078**, **Ituiutaba/MG**, integrada à **DAP CONSULTORIA INTEGRADA LTDA**, nome fantasia **IZAIRA SERVIÇOS**, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob nº **43.830.044/0001-51**, com sede na **Rua 28**, **n.º 1842**, **Centro**, **CEP 38300-082**, município de **Ituiutaba/MG**. \n\n";
-	const customerText = `**CONTRATANTE: ${customer.name}**, brasileiro, divorciado, bancário, titular do RG **${customer.documents.rg}**, inscrito no CPF/MF n.º **${customer.documents.cpfCnpj}**, com telefone **${customer.phone}**, com endereço em **${customer.location.address}**, **Nº${customer.location.number || "N/A"}** , **BAIRRO ${customer.location.neighborhood}**, **CEP ${customer.location.cep}**, no município de **${customer.location.city} ${customer.location.state}**, com endereço eletrônico **${customer.email}**. \n\n`;
+	const customerText = `**CONTRATANTE: ${customer.name}**, brasileiro (a), ${MARITAL_STATUS_MAP[customer.maritalStatus as keyof typeof MARITAL_STATUS_MAP] || "estado civil não definido"}, titular do RG **${customer.documents.rg}**, inscrito(a) no CPF/MF n.º **${customer.documents.cpfCnpj}**, com telefone **${customer.phone}**, com endereço em **${customer.location.address}**, **Nº${customer.location.number || "N/A"}** , **BAIRRO ${customer.location.neighborhood}**, **CEP ${customer.location.cep}**, no município de **${customer.location.city} ${customer.location.state}**, com endereço eletrônico **${customer.email}**. \n\n`;
 
 	const modules = system.equipments?.filter((r) => r.type === "MÓDULO") || [];
 	const inverters = system.equipments?.filter((r) => r.type === "INVERSOR") || [];

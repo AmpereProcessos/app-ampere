@@ -1,34 +1,16 @@
 import { apiHandler } from "@/utils/api";
-import { formatDateAsLocale, getProductsStr } from "@/utils/methods/formatting";
-import type { TContractRequest } from "@/utils/schemas/contract-requests";
-import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 
-import type { TProject, TProjectComissionedUser } from "@/utils/schemas/projects";
-import type { TPurchaseControl, TPurchaseControlTag } from "@/utils/schemas/purchases";
-import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import type { TPurchaseControl } from "@/utils/schemas/purchases";
+
 import connectToProjectsDatabase from "@/utils/services/mongodb/projects";
-import connectToSolicitacoesDatabase from "@/utils/services/mongodb/requests";
-import dayjs from "dayjs";
-import { type AnyBulkWriteOperation, type Collection, type Db, ObjectId, WithId } from "mongodb";
+
+import type { AnyBulkWriteOperation } from "mongodb";
 import type { NextApiHandler } from "next";
-import { getContractValue } from "../../utils/methods/util/projects";
-import type { TUser } from "@/utils/schemas/crm/user.schema";
-import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
-import { allActiveSellers, allSellers } from "@/utils/select-options";
-import { getProjectExportFormatted, ProjectExportablesSchema, type TProjectExportables } from "@/lib/data-exports";
-import { z } from "zod";
-import connectToAuxiliariesDatabase from "@/utils/services/mongodb/auxiliaries";
-import type { TTag } from "@/utils/schemas/tags";
-import type { TServiceOrderTag } from "@/utils/schemas/service-order";
-import createHttpError from "http-errors";
-import { getComissionDefinitions, getComissionValue } from "@/lib/comissions";
-import connectToDatabase from "@/utils/services/mongodb/projects";
-import axios from "axios";
-import { getContaAzulAccessToken } from "@/repositories/integrations/conta-azul/queries";
-import type { TIntegration } from "@/utils/schemas/integrations";
-import { getContaAzulClientId } from "@/lib/integrations/conta-azul";
+
+import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
+import type { TMaterial } from "@/utils/schemas/materials";
 const getExport: NextApiHandler<any> = async (req, res) => {
+	// const bulkwriteResponse = await purchaseControlsCollection.bulkWrite(bulkwriteUpdateArr);
 	return res.json("DESATIVADA");
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;

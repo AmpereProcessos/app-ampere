@@ -41,6 +41,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { getExcelFromJSON } from "@/lib/excel-utils";
+import { useUsers } from "@/utils/methods/query/crm/users";
 
 const comissionableItemsIconsMap = {
 	SISTEMA: FaSolarPanel,
@@ -59,6 +60,7 @@ function CommissionMain() {
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
 	const [editComissionProject, setEditComissionProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
+	const { data: crmUsers } = useUsers({ includeDeleted: false });
 	const { data: projects, isSuccess, isLoading, isError, filters, updateFilters } = useComissionData({});
 
 	function getStats({ info }: { info: TGetComissionDataOutputDefault }) {
@@ -356,11 +358,17 @@ function CommissionMain() {
 									<MultipleSelectInput
 										width={"100%"}
 										label={"VENDEDOR"}
-										selected={filters.sellerName}
-										options={allSellers}
+										selected={filters.sellerIds}
+										options={
+											crmUsers?.map((user) => ({
+												id: user._id,
+												label: user.nome,
+												value: user._id,
+											})) ?? []
+										}
 										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) => updateFilters({ sellerName: value as string[] })}
-										onReset={() => updateFilters({ sellerName: [] })}
+										handleChange={(value) => updateFilters({ sellerIds: value as string[] })}
+										onReset={() => updateFilters({ sellerIds: [] })}
 									/>
 								</div>
 								<div className="flex items-center justify-center gap-x-2">

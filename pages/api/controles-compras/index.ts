@@ -375,15 +375,6 @@ export async function handlePurchaseControlAllocationsImproved({
 			// Here, we deal with the allocations to the project
 			// For project related allocation, the procces is the same for ALLOCATING and UPDATING, since the sync is done by the movements array
 
-			// First, we gotta check that the purchase composition is clean, meaning that all the items are not allocated
-			const isPurchaseCompositionClean = purchaseControlComposition.every((c) => !c.dataAlocacao);
-			if (!isPurchaseCompositionClean) {
-				console.error(
-					"[ERROR] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] Composição de compra não está limpa para controle " + purchaseControlId + " (projeto: " + projectId + ")",
-				);
-				throw new createHttpError.BadRequest("Oops, parece haver um problema de sincronização de dados. Tente novamente mais tarde.");
-			}
-			// If the purchase composition is clean, we can proceed with the allocation
 			console.log("[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] Allocating items to project.", { projectId });
 
 			let allocations: Exclude<TProject["alocacoes"], undefined | null> = project.alocacoes || [];
@@ -622,7 +613,7 @@ export async function handlePurchaseControlAllocationsImproved({
 		console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando materiais em estoque para controle " + purchaseControlId);
 		const purchasedMaterialsObjectIds = purchaseControlComposition.filter((c) => !!c.materialId).map((c) => new ObjectId(c.materialId as string));
 		const materials = await materialsCollection.find({ _id: { $in: purchasedMaterialsObjectIds } }, { session: dbSession }).toArray();
-
+		const purchaseRelatedLogs = await materialsLogsCollection.find({ idCompra: purchaseControlId }, { session: dbSession }).toArray();
 		for (const item of purchaseControlComposition) {
 			const existingMaterial = materials.find((mat) => mat._id.toString() === item.materialId);
 
@@ -630,13 +621,18 @@ export async function handlePurchaseControlAllocationsImproved({
 				console.error("[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: " + item.materialId + " no controle " + purchaseControlId);
 				throw new createHttpError.NotFound("Material não encontrado.");
 			}
+			const existingAllocationLog = purchaseRelatedLogs.find((log) => log.material.id === existingMaterial._id.toString());
+
 			const isItemAllocated = !!item.dataAlocacao;
+			// If the item is allocated and the allocation log already exists and the quantity is the same, we don't need to update anything
+			if (isItemAllocated && existingAllocationLog && existingAllocationLog.qtdeNovo === item.qtdeAlocada) continue;
+
 			const updateQtyDiff = item.qtde - (item.qtdeAlocada || 0);
-			if (updateQtyDiff === 0) continue;
 			const newQty = existingMaterial.qtde + updateQtyDiff;
 			const newPrice = (existingMaterial.qtde * existingMaterial.preco + updateQtyDiff * item.valor) / (existingMaterial.qtde + updateQtyDiff);
 			console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando material:", {
 				materialId: existingMaterial._id.toString(),
+				diferenca: updateQtyDiff,
 				qtdeAnterior: existingMaterial.qtde,
 				qtdeNova: newQty,
 				precoAnterior: existingMaterial.preco,

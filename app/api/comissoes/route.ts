@@ -19,7 +19,6 @@ const GeneralQueryParamsSchema = z.object({
 		.string({ required_error: "Parâmetros de período inválidos.", invalid_type_error: "Parâmetros de período inválidos." })
 		.datetime({ message: "Parâmetros de período inválidos." }),
 	sellers: z.string({ invalid_type_error: "Tipo não válido para os vendedores." }).optional().nullable(),
-	insiders: z.string({ invalid_type_error: "Tipo não válido para os insiders." }).optional().nullable(),
 	serviceTypes: z.string({ invalid_type_error: "Tipo não válido para os tipos de serviço." }).optional().nullable(),
 });
 
@@ -125,13 +124,12 @@ async function getComissionData(request: NextRequest) {
 			{ status: 200 },
 		);
 	}
-	const { after, before, sellers, insiders, serviceTypes } = params;
+	const { after, before, sellers, serviceTypes } = params;
 
 	// Ajusting the filters
 	const afterFixed = dayjs(after).subtract(3, "hour").toISOString();
 	const beforeFixed = dayjs(before).subtract(3, "hour").toISOString();
 	const sellersArr = sellers?.split(",").filter((s) => !!s) || [];
-	const insidersArr = insiders?.split(",").filter((s) => !!s) || [];
 	const serviceTypesArr = serviceTypes?.split(",").filter((s) => !!s) || [];
 
 	const appDb = await connectToAppProjectsDatabase();
@@ -147,7 +145,6 @@ async function getComissionData(request: NextRequest) {
 		after: afterFixed,
 		before: beforeFixed,
 		sellers: sellersArr,
-		insiders: insidersArr,
 		serviceTypes: serviceTypesArr,
 	});
 	const opportunities = await getOpportunitiesForComission({
@@ -265,10 +262,9 @@ type GetProjectsForComissionParams = {
 	after: string;
 	before: string;
 	sellers: string[];
-	insiders: string[];
 	serviceTypes: string[];
 };
-async function getProjectsForComission({ collection, after, before, sellers, insiders, serviceTypes }: GetProjectsForComissionParams) {
+async function getProjectsForComission({ collection, after, before, sellers, serviceTypes }: GetProjectsForComissionParams) {
 	const signedQueryFilter: Filter<TProject> = {
 		"contrato.status": "ASSINADO",
 	};
@@ -276,15 +272,13 @@ async function getProjectsForComission({ collection, after, before, sellers, ins
 	const referenceDateQueryFilter: Filter<TProject> = {
 		"comissoes.dataReferencia": { $gte: after, $lte: before },
 	};
-	const sellersQueryFilter: Filter<TProject> = sellers.length > 0 ? { "vendedor.nome": { $in: sellers } } : {};
-	const insidersQueryFilter: Filter<TProject> = insiders.length > 0 ? { "insider.nome": { $in: insiders } } : {};
+	const sellersQueryFilter: Filter<TProject> = sellers.length > 0 ? { "comissoes.comissionados.idCrm": { $in: sellers } } : {};
 	const serviceTypesQueryFilter: Filter<TProject> = serviceTypes.length > 0 ? { tipoDeServico: { $in: serviceTypes } } : {};
 
 	const projectsQueryFilter: Filter<TProject> = {
 		...signedQueryFilter,
 		...referenceDateQueryFilter,
 		...sellersQueryFilter,
-		...insidersQueryFilter,
 		...serviceTypesQueryFilter,
 	};
 	const projects = await collection.find(projectsQueryFilter, { projection: ProjectComissionSimplifiedProjection }).toArray();

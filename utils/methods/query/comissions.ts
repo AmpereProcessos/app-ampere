@@ -86,7 +86,7 @@ async function fetchComissionDataByProjectId({ projectId }: { projectId: string 
 async function fetchComissionData({ filters }: { filters: ComissionDataFilters }) {
 	try {
 		const { data }: { data: TGetComissionDataOutput } = await axios.get(
-			`/api/comissoes?after=${filters.period.after}&before=${filters.period.before}&sellers=${filters.sellerName.join(",")}&insiders=${filters.insiderName.join(",")}&serviceTypes=${filters.serviceType.join(",")}`,
+			`/api/comissoes?after=${filters.period.after}&before=${filters.period.before}&sellers=${filters.sellerIds.join(",")}&serviceTypes=${filters.serviceType.join(",")}`,
 		);
 		if (!data.data.default) throw new Error("Não foi possível obter os dados das comissões.");
 		return data.data.default;
@@ -97,6 +97,7 @@ async function fetchComissionData({ filters }: { filters: ComissionDataFilters }
 
 type ComissionDataFilters = {
 	search: string;
+	sellerIds: string[];
 	sellerName: string[];
 	insiderName: string[];
 	serviceType: string[];
@@ -111,6 +112,7 @@ type UseComissionDataParams = {
 export function useComissionData({ initialFilters }: UseComissionDataParams) {
 	const [filters, setFilters] = useState<ComissionDataFilters>({
 		search: initialFilters?.search ?? "",
+		sellerIds: initialFilters?.sellerIds ?? [],
 		sellerName: initialFilters?.sellerName ?? [],
 		insiderName: initialFilters?.insiderName ?? [],
 		serviceType: initialFilters?.serviceType ?? [],

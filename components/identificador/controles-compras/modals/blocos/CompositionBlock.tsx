@@ -42,6 +42,7 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 
 	function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
 		const newItems: TPurchaseControl["composicao"] = itens.map((item) => ({
+			materialId: item.materialId,
 			categoria: item.categoria,
 			descricao: item.descricao,
 			qtde: item.qtde,

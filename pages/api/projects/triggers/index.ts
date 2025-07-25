@@ -233,6 +233,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				{
 					$set: {
 						etiquetas: getServiceOrderTagsFromProject(project),
+						"projeto.compraDataPagamento": purchaseControl.dataLiberacaoPagamento,
 						"projeto.compraEntregaDataPrevisao": purchaseControl.entrega.dataPrevisao,
 						"projeto.compraEntregaDataEfetivacao": purchaseControl.entrega.dataEfetivacao,
 						dataPrevisaoLiberacao: purchaseControl.entrega.dataPrevisao,

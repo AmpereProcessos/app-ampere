@@ -4,14 +4,40 @@ import type { TPurchaseControl } from "@/utils/schemas/purchases";
 
 import connectToProjectsDatabase from "@/utils/services/mongodb/projects";
 
-import type { AnyBulkWriteOperation } from "mongodb";
+import { ObjectId, type AnyBulkWriteOperation } from "mongodb";
 import type { NextApiHandler } from "next";
 
 import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
 import type { TMaterial } from "@/utils/schemas/materials";
+import type { TProject } from "@/utils/schemas/projects";
+import type { TServiceOrder } from "@/utils/schemas/service-order";
 const getExport: NextApiHandler<any> = async (req, res) => {
-	// const bulkwriteResponse = await purchaseControlsCollection.bulkWrite(bulkwriteUpdateArr);
-	return res.json("DESATIVADA");
+	const projectsDb = await connectToProjectsDatabase();
+
+	const projectsCollection = projectsDb.collection<TProject>("dados");
+	const serviceOrdersCollection = projectsDb.collection<TServiceOrder>("ordensDeServico");
+
+	const projects = await projectsCollection.find({}).toArray();
+
+	const bulkwriteUpdateServiceOrdersArr: AnyBulkWriteOperation<TServiceOrder>[] = projects
+		.map((project) => {
+			const purchasePaymentDate = project.compra?.dataPagamento;
+
+			if (!project.idOrdemServico) return null;
+
+			return {
+				updateOne: {
+					filter: { _id: new ObjectId(project.idOrdemServico) },
+					update: {
+						$set: { "projeto.compraDataPagamento": purchasePaymentDate },
+					},
+				},
+			};
+		})
+		.filter((x) => x !== null);
+
+	const bulkwriteResponse = await serviceOrdersCollection.bulkWrite(bulkwriteUpdateServiceOrdersArr);
+	return res.json(bulkwriteResponse);
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

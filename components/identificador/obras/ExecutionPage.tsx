@@ -196,13 +196,13 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
 								<div className="flex items-center gap-1">
 									<FaRegHourglass height={13} width={13} />
 									<h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
-										{serviceOrder.projeto.contratoDataAssinatura
+										{serviceOrder.projeto.compraDataPagamento
 											? `${getFormattedTextFromHoursAmount({
-													hours: getHoursDiff({ start: serviceOrder.projeto.contratoDataAssinatura, finish: new Date() }),
+													hours: getHoursDiff({ start: serviceOrder.projeto.compraDataPagamento, finish: new Date() }),
 													reference: "auto",
 													onlyComplete: false,
-												})} DESDE ASSINATURA`
-											: "NÃO ASSINADO"}
+												})} DESDE PAGAMENTO`
+											: "NÃO PAGO"}
 									</h1>
 								</div>
 								<div className="flex items-center gap-1">

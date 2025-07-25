@@ -119,6 +119,12 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 								</p>
 							</div>
 							<div className="flex items-center gap-1">
+								<BsCalendar />
+								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
+									{project.compra.dataPagamento ? `PAGAMENTO REALIZADO EM: ${formatDateAsLocale(project.compra.dataPagamento)}` : "PAGAMENTO NÃO REALIZADO"}
+								</p>
+							</div>
+							<div className="flex items-center gap-1">
 								<BsCalendarCheck />
 								<p className="text-[0.6rem] font-medium leading-none tracking-tight">
 									{project.compra.dataEntrega ? `ENTREGA REALIZADA EM: ${formatDateAsLocale(project.compra.dataEntrega)}` : "ENTREGA NÃO REALIZADA"}

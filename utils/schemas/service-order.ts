@@ -83,6 +83,7 @@ export const ServiceOrderSchema = z.object({
 		// Important tracking fields
 		vendedorNome: z.string({ invalid_type_error: "Tipo não válido para o nome do vendedor." }).optional().nullable(),
 		contratoDataAssinatura: z.string({ invalid_type_error: "Tipo não válido para a data de assinatura do contrato." }).optional().nullable(),
+		compraDataPagamento: z.string({ invalid_type_error: "Tipo não válido para a data de pagamento da compra." }).optional().nullable(),
 		compraEntregaDataPrevisao: z.string({ invalid_type_error: "Tipo não válido para a data de previsão de entrega da compra." }).optional().nullable(),
 		compraEntregaDataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a data de efetivação de entrega da compra." }).optional().nullable(),
 		homologacaoAcessoDataResposta: z.string({ invalid_type_error: "Tipo não válido para a data de resposta da homologação de acesso." }).optional().nullable(),
@@ -282,6 +283,7 @@ const PersonalizedFieldFilters = z.enum(
 		"dataLiberacao",
 		"dataEfetivacao",
 		"projeto.contratoDataAssinatura",
+		"projeto.compraDataPagamento",
 		"projeto.compraEntregaDataPrevisao",
 		"projeto.compraEntregaDataEfetivacao",
 		"projeto.homologacaoAcessoDataResposta",
@@ -417,6 +419,7 @@ export type TServiceOrderProject = Pick<
 		kitInfo: TProject["compra"]["kitInfo"];
 		previsaoEntrega: TProject["compra"]["previsaoEntrega"];
 		dataEntrega: TProject["compra"]["dataEntrega"];
+		dataPagamento: TProject["compra"]["dataPagamento"];
 	};
 	homologacao: {
 		acesso: {

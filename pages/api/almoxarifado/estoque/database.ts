@@ -49,15 +49,23 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 				]
 			: [];
 
+	const locationQuery: Filter<TMaterial>[] =
+		filters.location.trim().length > 0
+			? [
+					{
+						localizacao: { $regex: filters.location, $options: "i" },
+					},
+					{
+						localizacao: filters.location,
+					},
+				]
+			: [];
+
 	console.log("SUPPLIERS", filters.suppliers);
 	const suppliersQuery: Filter<TMaterial> =
 		filters.suppliers.length > 0
 			? {
-					fornecedores: {
-						$exists: true,
-						$ne: null,
-						$in: filters.suppliers.map((supplier) => new RegExp(`^${supplier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i")),
-					},
+					"fornecedores.id": { $in: filters.suppliers },
 				}
 			: {};
 
@@ -85,7 +93,9 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 			: {};
 
 	const andOrQuery: Filter<TMaterial> =
-		nameQuery.length > 0 || skuQuery.length > 0 ? { $and: [...(nameQuery.length > 0 ? nameQuery : []), ...(skuQuery.length > 0 ? skuQuery : [])] } : {};
+		nameQuery.length > 0 || skuQuery.length > 0 || locationQuery.length > 0
+			? { $and: [...(nameQuery.length > 0 ? nameQuery : []), ...(skuQuery.length > 0 ? skuQuery : []), ...(locationQuery.length > 0 ? locationQuery : [])] }
+			: {};
 
 	const belowMinimumFilter: Filter<TMaterial> = filters.belowMinimum
 		? {

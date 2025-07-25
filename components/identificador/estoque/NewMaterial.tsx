@@ -16,9 +16,12 @@ import type { TMaterial } from "@/utils/schemas/materials";
 
 import MaterialGeneralBlock from "./blocos/General";
 import QuantityConfigBlock from "./blocos/QuantityConfig";
+import MaterialSuppliersBlock from "./blocos/Suppliers";
+import type { Session } from "next-auth";
 
 const initialState: TMaterial = { nome: "", nomeTecnico: "", preco: 0, qtde: 0, dataInsercao: new Date().toISOString() };
 type NewMaterialProps = {
+	session: Session;
 	closeModal: () => void;
 	callbacks?: {
 		onMutate?: () => void;
@@ -26,7 +29,7 @@ type NewMaterialProps = {
 		onSettled?: () => void;
 	};
 };
-function NewMaterial({ closeModal, callbacks }: NewMaterialProps) {
+function NewMaterial({ session, closeModal, callbacks }: NewMaterialProps) {
 	const queryClient = useQueryClient();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -70,7 +73,7 @@ function NewMaterial({ closeModal, callbacks }: NewMaterialProps) {
 					<DialogDescription>{DESCRIPTION}</DialogDescription>
 				</DialogHeader>
 				<div className="flex-1 overflow-auto">
-					<MaterialContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<MaterialContent session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
@@ -90,7 +93,7 @@ function NewMaterial({ closeModal, callbacks }: NewMaterialProps) {
 					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
 				</DrawerHeader>
 				<div className="flex-1 overflow-auto">
-					<MaterialContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<MaterialContent session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DrawerFooter>
 					<DrawerClose asChild>
@@ -109,13 +112,15 @@ function NewMaterial({ closeModal, callbacks }: NewMaterialProps) {
 export default NewMaterial;
 
 type MaterialContentProps = {
+	session: Session;
 	infoHolder: TMaterial;
 	updateInfoHolder: (changes: Partial<TMaterial>) => void;
 };
-function MaterialContent({ infoHolder, updateInfoHolder }: MaterialContentProps) {
+function MaterialContent({ session, infoHolder, updateInfoHolder }: MaterialContentProps) {
 	return (
 		<div className="flex h-full flex-col gap-3 px-4">
 			<MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 		</div>
 	);

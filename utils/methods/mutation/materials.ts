@@ -1,8 +1,7 @@
 import axios from "axios";
 import createHttpError from "http-errors";
-import { deleteWarehouseFormulary } from "./warehouse-forms";
-import { TInputMaterialData, TMaterial, TMaterialDTO } from "@/utils/schemas/materials";
-import { TMaterialEntranceInput } from "@/pages/api/almoxarifado/estoque";
+import type { TMaterial, TMaterialDTO, TMaterialSupplier } from "@/utils/schemas/materials";
+import type { TMaterialEntranceInput } from "@/pages/api/almoxarifado/estoque";
 
 type UpdateManyMaterialsParams = {
 	formularyId?: string;
@@ -135,6 +134,15 @@ export async function createMaterial({ info }: { info: TMaterial }) {
 		const { data } = await axios.post("/api/almoxarifado/estoque", info);
 		if (typeof data.message !== "string") return "Material criado com sucesso !";
 		return data.message as string;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function createMaterialSupplier({ info }: { info: TMaterialSupplier }) {
+	try {
+		const { data } = await axios.post("/api/almoxarifado/fornecedores", info);
+		return data as { data: { insertedId: string }; message: string };
 	} catch (error) {
 		throw error;
 	}

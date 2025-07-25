@@ -18,9 +18,13 @@ import MaterialGeneralBlock from "./blocos/General";
 import QuantityConfigBlock from "./blocos/QuantityConfig";
 import UpdateRegistriesBlock from "./blocos/UpdateRegistriesBlock";
 import { useMaterialById } from "@/utils/methods/query/materials";
+import MaterialSuppliersBlock from "./blocos/Suppliers";
+import type { Session } from "next-auth";
+
 const initialState: TMaterial = { nome: "", nomeTecnico: "", preco: 0, qtde: 0, dataInsercao: new Date().toISOString() };
 
 type EditMaterialProps = {
+	session: Session;
 	materialId: string;
 	closeModal: () => void;
 	callbacks?: {
@@ -29,7 +33,7 @@ type EditMaterialProps = {
 		onSettled?: () => void;
 	};
 };
-function EditMaterial({ materialId, closeModal, callbacks }: EditMaterialProps) {
+function EditMaterial({ session, materialId, closeModal, callbacks }: EditMaterialProps) {
 	const queryClient = useQueryClient();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const { data: material, isLoading, isError, isSuccess, error } = useMaterialById({ id: materialId });
@@ -77,7 +81,7 @@ function EditMaterial({ materialId, closeModal, callbacks }: EditMaterialProps) 
 					<DialogDescription>{DESCRIPTION}</DialogDescription>
 				</DialogHeader>
 				<div className="flex-1 overflow-auto">
-					<MaterialContent materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<MaterialContent session={session} materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
@@ -97,7 +101,7 @@ function EditMaterial({ materialId, closeModal, callbacks }: EditMaterialProps) 
 					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
 				</DrawerHeader>
 				<div className="flex-1 overflow-auto">
-					<MaterialContent materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<MaterialContent session={session} materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DrawerFooter>
 					<DrawerClose asChild>
@@ -116,15 +120,17 @@ function EditMaterial({ materialId, closeModal, callbacks }: EditMaterialProps) 
 export default EditMaterial;
 
 type MaterialContentProps = {
+	session: Session;
 	infoHolder: TMaterial;
 	updateInfoHolder: (changes: Partial<TMaterial>) => void;
 	materialId: string;
 };
-function MaterialContent({ infoHolder, updateInfoHolder, materialId }: MaterialContentProps) {
+function MaterialContent({ session, infoHolder, updateInfoHolder, materialId }: MaterialContentProps) {
 	return (
 		<div className="flex h-full flex-col gap-3 px-4">
 			<MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<UpdateRegistriesBlock materialId={materialId} />
 		</div>
 	);

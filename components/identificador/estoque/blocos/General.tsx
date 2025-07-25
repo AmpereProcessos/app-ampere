@@ -45,13 +45,7 @@ function MaterialGeneralBlock({ infoHolder, updateInfoHolder }: MaterialGeneralB
 				placeholder="Preencha o nome técnico do material..."
 				width="100%"
 			/>
-			<TagsInput
-				label={"FORNECEDORES"}
-				values={infoHolder.fornecedores || []}
-				handleChange={(value) => updateInfoHolder({ fornecedores: value })}
-				placeholder="Preencha os fornecedores do material..."
-				width="100%"
-			/>
+
 			<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 				<div className="w-full lg:w-1/2">
 					<NumberInput

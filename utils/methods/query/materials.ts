@@ -1,7 +1,14 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { isEmpty } from "../shared";
-import type { TMaterial, TMaterialDTO, TMaterialSimplifiedWithAlocatorDTO, TQueryVinculationMaterialsFilter } from "@/utils/schemas/materials";
+import type {
+	TMaterial,
+	TMaterialDTO,
+	TMaterialSimplifiedWithAlocatorDTO,
+	TMaterialSupplier,
+	TMaterialSupplierDTO,
+	TQueryVinculationMaterialsFilter,
+} from "@/utils/schemas/materials";
 import { useState } from "react";
 import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import { formatWithoutDiacritics } from "../formatting";
@@ -187,6 +194,7 @@ export function useMaterialsDatabase() {
 	const [filters, setFilters] = useState<TGetMaterialsDatabaseInput>({
 		page: 1,
 		sku: "",
+		location: "",
 		suppliers: [],
 		name: "",
 		quantity: {},
@@ -227,5 +235,21 @@ export function useStockAnalytics() {
 	return useQuery({
 		queryKey: ["stock-analytics"],
 		queryFn: fetchStockAnalytics,
+	});
+}
+
+async function fetchMaterialSuppliers() {
+	try {
+		const { data } = await axios.get("/api/almoxarifado/fornecedores");
+		return data.data as TMaterialSupplierDTO[];
+	} catch (error) {
+		throw error;
+	}
+}
+
+export function useMaterialSuppliers() {
+	return useQuery({
+		queryKey: ["material-suppliers"],
+		queryFn: fetchMaterialSuppliers,
 	});
 }

@@ -8,7 +8,7 @@ import { FaBox, FaMapMarkerAlt } from "react-icons/fa";
 
 import LoadingPage from "../../../components/utils/LoadingPage";
 
-import { useMaterials, useMaterialsDatabase, useMaterialsWithFilters } from "../../../utils/methods/query/materials";
+import { useMaterials, useMaterialsDatabase, useMaterialSuppliers, useMaterialsWithFilters } from "../../../utils/methods/query/materials";
 import { TbRulerMeasure } from "react-icons/tb";
 import TextInput from "../../../components/inputs/Text";
 import NumberInput from "../../../components/inputs/Number";
@@ -21,7 +21,7 @@ import { formatDecimalPlaces, formatToMoney, SlideMotionVariants } from "@/utils
 import EditMaterial from "@/components/identificador/estoque/EditMaterial";
 import { BsCalendarPlus } from "react-icons/bs";
 import { formatDateAsLocale, formatDateTimeForInput } from "@/utils/methods/formatting";
-import { Barcode, Box, ChartColumn, Code, DollarSign, Edit, FileText, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Tag, Truck } from "lucide-react";
+import { Barcode, Box, ChartColumn, Code, DollarSign, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Tag, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
@@ -38,6 +38,7 @@ import CheckboxInput from "@/components/inputs/Checkbox";
 import NewPurchaseControlSimplified from "@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified";
 import { useQueryClient } from "@tanstack/react-query";
 import TagsInput from "@/components/inputs/TagsInput";
+import MultipleSelectInput from "@/components/inputs/MultipleSelect";
 
 function StockPage() {
 	const { data: session, status } = useSession({ required: true });
@@ -137,10 +138,13 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 					)
 				) : null}
 			</div>
-			{newMaterialModalIsOpen ? <NewMaterial closeModal={() => setNewMaterialModalIsOpen(false)} callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }} /> : null}
+			{newMaterialModalIsOpen ? (
+				<NewMaterial session={session} closeModal={() => setNewMaterialModalIsOpen(false)} callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }} />
+			) : null}
 			{editMaterialModal.id && editMaterialModal.isOpen ? (
 				<EditMaterial
 					materialId={editMaterialModal.id}
+					session={session}
 					closeModal={() => setEditMaterialModal({ id: null, isOpen: false })}
 					callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }}
 				/>
@@ -184,7 +188,13 @@ function MaterialCard({ material, handleClick }: MaterialCardProps) {
 						</div>
 						<h1 className="text-sm font-bold tracking-tight">{material.nome}</h1>
 					</div>
-
+					{material.localizacao ? (
+						<div className="flex items-center gap-1">
+							<MapPin className="w-4 h-4 min-w-4 min-h-4" />
+							<h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+							<h1 className="py-0.5 text-center text-xs font-bold  text-primary">{material.localizacao}</h1>
+						</div>
+					) : null}
 					{material.qtdeMinima ? (
 						<div className="flex items-center gap-1">
 							<PackageMinus className="w-4 h-4 min-w-4 min-h-4" />
@@ -196,18 +206,34 @@ function MaterialCard({ material, handleClick }: MaterialCardProps) {
 						<div className="flex items-center gap-1">
 							<PackagePlus className="w-4 h-4 min-w-4 min-h-4" />
 							<h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">QTDE MÁXIMA</h1>
-							<h1 className="py-0.5 text-center text-xs font-bold  text-primary">{formatDecimalPlaces(material.qtdeMaxima)}</h1>
+							<h1 className="py-0.5 text-center text-xs font-bold text-primary">{formatDecimalPlaces(material.qtdeMaxima)}</h1>
 						</div>
 					) : null}
+					<div className="flex grow flex-wrap items-center justify-start gap-2">
+						<h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">FORNECEDORES</h1>
+						{material.fornecedores && material.fornecedores.length > 0 ? (
+							material.fornecedores.map((fornecedor, index) => (
+								<div
+									key={`${fornecedor.id}-${index}`}
+									style={{
+										border: "1px solid",
+										borderColor: fornecedor.cores.primaria,
+										color: fornecedor.cores.primaria,
+										backgroundColor: fornecedor.cores.secundaria,
+									}}
+									className={cn("flex items-center gap-1 rounded px-2 py-0.5")}
+								>
+									<Truck className="w-3 h-3 min-w-3 min-h-3" />
+									<h1 className="text-[0.55rem] font-bold tracking-tight">{fornecedor.nome}</h1>
+								</div>
+							))
+						) : (
+							<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NENHUM FORNECEDOR DEFINIDO</h1>
+						)}
+					</div>
 				</div>
 				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
 					<div className="flex items-center gap-2">
-						<div className="flex items-center gap-1">
-							<DollarSign className="w-4 h-4" />
-							<h3 className="text-xs text-primary/80 font-medium">
-								{formatToMoney(material.preco)} /{material.grandeza || "UN"}
-							</h3>
-						</div>
 						<div
 							className={cn("flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground", {
 								"bg-red-500 text-white": (material.qtdeMinima && material.qtde <= material.qtdeMinima) || (material.qtdeMaxima && material.qtde >= material.qtdeMaxima),
@@ -223,34 +249,13 @@ function MaterialCard({ material, handleClick }: MaterialCardProps) {
 					</div>
 				</div>
 			</div>
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
-					<div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-						<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">FORNECEDORES </h1>
-						{material.fornecedores && material.fornecedores.length > 0 ? (
-							material.fornecedores.map((fornecedor, index) => (
-								<div key={`${fornecedor}-${index + 1}`} className={cn("flex items-center gap-1 rounded px-2 py-0.5")}>
-									<Truck width={10} height={10} />
-									<h1 className="text-[0.5rem] font-bold tracking-tight">{fornecedor}</h1>
-								</div>
-							))
-						) : (
-							<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NENHUM FORNECEDOR DEFINIDO</h1>
-						)}
-					</div>
-				</div>
-				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end" />
-			</div>
+
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
 				<div className="flex flex-wrap items-center gap-2">
 					<div className="flex items-center gap-1">
 						<BsCalendarPlus />
 						<p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(material.dataInsercao, true)}</p>
 					</div>
-					{/* <div className="flex items-center gap-1">
-						<Avatar width={20} height={20} url={material.} />
-						<p className="text-[0.65rem] font-medium text-primary/80">{material.autor.nome}</p>
-					</div> */}
 				</div>
 				<Button variant={"ghost"} size="fit" onClick={() => handleClick(material._id)} className="flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]">
 					<Edit className="w-3 h-3 min-w-3 min-h-3" />
@@ -267,6 +272,7 @@ type FiltersMenuProps = {
 	closeMenu: () => void;
 };
 function FiltersMenu({ filters, updateFilters, closeMenu }: FiltersMenuProps) {
+	const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers, isSuccess: isSuccessSuppliers, error: errorSuppliers } = useMaterialSuppliers();
 	const [filtersHolder, setFiltersHolder] = useState(filters);
 
 	return (
@@ -292,12 +298,20 @@ function FiltersMenu({ filters, updateFilters, closeMenu }: FiltersMenuProps) {
 					value={filtersHolder.sku}
 					handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, sku: value }))}
 				/>
+				<TextInput
+					label="LOCALIZAÇÃO"
+					placeholder="Preencha aqui a localização do material..."
+					value={filtersHolder.location}
+					handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, location: value }))}
+				/>
 
-				<TagsInput
+				<MultipleSelectInput
 					label="FORNECEDORES"
-					placeholder="Preencha aqui os fornecedores..."
-					values={filtersHolder.suppliers}
-					handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, suppliers: value }))}
+					options={suppliers?.map((supplier) => ({ id: supplier._id, label: supplier.nome, value: supplier._id })) || []}
+					selected={filtersHolder.suppliers}
+					selectedItemLabel="NENHUM"
+					handleChange={(value) => setFiltersHolder((prev) => ({ ...prev, suppliers: value as string[] }))}
+					onReset={() => setFiltersHolder((prev) => ({ ...prev, suppliers: [] }))}
 				/>
 				<NumberInput
 					label="QUANTIDADE > QUE"

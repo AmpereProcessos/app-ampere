@@ -1,5 +1,27 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
+
+export const MaterialSupplierSchema = z.object({
+	nome: z.string({ required_error: "Nome do fornecedor não informado.", invalid_type_error: "Tipo não válido para o nome do fornecedor." }),
+	telefone: z.string({ required_error: "Telefone do fornecedor não informado.", invalid_type_error: "Tipo não válido para o telefone do fornecedor." }),
+	email: z.string({ required_error: "Email do fornecedor não informado.", invalid_type_error: "Tipo não válido para o email do fornecedor." }),
+	cnpj: z.string({ required_error: "CNPJ do fornecedor não informado.", invalid_type_error: "Tipo não válido para o CNPJ do fornecedor." }),
+	cores: z.object({
+		primaria: z.string({
+			required_error: "Código da cor da etiqueta não fornecido.",
+			invalid_type_error: "Tipo não válido para o código de cor da etiqueta.",
+		}),
+		secundaria: z.string({
+			required_error: "Código da cor secundária da etiqueta não fornecido.",
+			invalid_type_error: "Tipo não válido para o código de cor secundária da etiqueta.",
+		}),
+	}),
+	dataInsercao: z.string({
+		required_error: "Data de inserção do fornecedor não informada.",
+		invalid_type_error: "Tipo não válido para a data de inserção do fornecedor.",
+	}),
+});
+export type TMaterialSupplier = z.infer<typeof MaterialSupplierSchema>;
+export type TMaterialSupplierDTO = TMaterialSupplier & { _id: string };
 
 export const GeneralMaterialSchema = z.object({
 	alocadorId: z
@@ -84,8 +106,23 @@ export const GeneralMaterialSchema = z.object({
 		.nullable(),
 	fornecedores: z
 		.array(
-			z.string({
-				invalid_type_error: "Tipo não válido para o fornecedor.",
+			z.object({
+				id: z.string({
+					invalid_type_error: "Tipo não válido para o ID do fornecedor.",
+				}),
+				nome: z.string({
+					invalid_type_error: "Tipo não válido para o nome do fornecedor.",
+				}),
+				cores: z.object({
+					primaria: z.string({
+						required_error: "Código da cor da etiqueta não fornecido.",
+						invalid_type_error: "Tipo não válido para o código de cor da etiqueta.",
+					}),
+					secundaria: z.string({
+						required_error: "Código da cor secundária da etiqueta não fornecido.",
+						invalid_type_error: "Tipo não válido para o código de cor secundária da etiqueta.",
+					}),
+				}),
 			}),
 			{
 				invalid_type_error: "Tipo não válido para lista de fornecedores.",
@@ -171,8 +208,23 @@ export const InsertMaterialSchema = z.object({
 		.nullable(),
 	fornecedores: z
 		.array(
-			z.string({
-				invalid_type_error: "Tipo não válido para o fornecedor.",
+			z.object({
+				id: z.string({
+					invalid_type_error: "Tipo não válido para o ID do fornecedor.",
+				}),
+				nome: z.string({
+					invalid_type_error: "Tipo não válido para o nome do fornecedor.",
+				}),
+				cores: z.object({
+					primaria: z.string({
+						required_error: "Código da cor da etiqueta não fornecido.",
+						invalid_type_error: "Tipo não válido para o código de cor da etiqueta.",
+					}),
+					secundaria: z.string({
+						required_error: "Código da cor secundária da etiqueta não fornecido.",
+						invalid_type_error: "Tipo não válido para o código de cor secundária da etiqueta.",
+					}),
+				}),
 			}),
 			{
 				invalid_type_error: "Tipo não válido para lista de fornecedores.",
@@ -234,6 +286,10 @@ export const QueryMaterialsFiltersSchema = z.object({
 	sku: z.string({
 		required_error: "Filtro de código não informado.",
 		invalid_type_error: "Tipo não válido para o filtro de código.",
+	}),
+	location: z.string({
+		required_error: "Filtro de localização não informado.",
+		invalid_type_error: "Tipo não válido para o filtro de localização.",
 	}),
 	suppliers: z.array(
 		z.string({

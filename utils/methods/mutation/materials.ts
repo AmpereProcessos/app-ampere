@@ -99,16 +99,7 @@ export async function handleMaterialEntrance({ materialId, newPrice, diff }) {
 	}
 }
 export async function addMaterial(newMaterialObj) {
-	const {
-		nome: nome,
-		qtde: quantidade,
-		qtdeMinima: quantidadeMinima,
-		grandeza: grandeza,
-		preco: preco,
-		codigo: codigo,
-		localizacao: localizacao,
-		anotacoes: anotacoes,
-	} = newMaterialObj;
+	const { nome, qtde: quantidade, qtdeMinima: quantidadeMinima, grandeza, preco, codigo, localizacao, anotacoes } = newMaterialObj;
 	try {
 		if (!nome) throw new createHttpError.BadRequest("Nome não fornecido.");
 		if (!quantidade || Number(quantidade) <= 0) throw new createHttpError.BadRequest("Quantidade inválida!");
@@ -132,8 +123,8 @@ export async function addMaterial(newMaterialObj) {
 export async function updateMaterial({ id, changes }: { id: string; changes: Partial<TMaterialDTO> }) {
 	try {
 		const { data } = await axios.put(`/api/almoxarifado/estoque?id=${id}`, changes);
-		if (typeof data.message != "string") return "Material atualizado com sucesso !";
-		return data.message;
+		if (typeof data.message !== "string") return "Material atualizado com sucesso !";
+		return data.message as string;
 	} catch (error) {
 		throw error;
 	}
@@ -142,8 +133,8 @@ export async function updateMaterial({ id, changes }: { id: string; changes: Par
 export async function createMaterial({ info }: { info: TMaterial }) {
 	try {
 		const { data } = await axios.post("/api/almoxarifado/estoque", info);
-		if (typeof data.message != "string") return "Material criado com sucesso !";
-		return data.message;
+		if (typeof data.message !== "string") return "Material criado com sucesso !";
+		return data.message as string;
 	} catch (error) {
 		throw error;
 	}

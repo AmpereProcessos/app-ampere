@@ -7,6 +7,7 @@ import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-update
 import { formatWithoutDiacritics } from "../formatting";
 import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from "@/pages/api/almoxarifado/estoque/database";
 import type { TGetStockAnalyticsOutput } from "@/pages/api/almoxarifado/estoque/estatisticas";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
 
 export async function fetchMaterials() {
 	try {
@@ -185,6 +186,8 @@ async function fetchMaterialsWithFilters(input: TGetMaterialsDatabaseInput) {
 export function useMaterialsDatabase() {
 	const [filters, setFilters] = useState<TGetMaterialsDatabaseInput>({
 		page: 1,
+		sku: "",
+		suppliers: [],
 		name: "",
 		quantity: {},
 		price: {},
@@ -193,6 +196,7 @@ export function useMaterialsDatabase() {
 		aboveMaximum: false,
 		minimumUndefined: false,
 		maximumUndefined: false,
+		materialType: "non-equipment-only",
 	});
 	function updateFilters(changes: Partial<TGetMaterialsDatabaseInput>) {
 		return setFilters((prev) => ({ ...prev, ...changes }));

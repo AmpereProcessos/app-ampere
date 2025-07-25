@@ -8,6 +8,18 @@ export const GeneralMaterialSchema = z.object({
 		})
 		.optional()
 		.nullable(),
+	idEquipamento: z
+		.string({
+			invalid_type_error: "Tipo não válido para o ID do equipamento do material.",
+		})
+		.optional()
+		.nullable(),
+	sku: z
+		.string({
+			invalid_type_error: "Tipo não válido para o SKU do material.",
+		})
+		.optional()
+		.nullable(),
 	nome: z.string({
 		required_error: "Nome do material não informado.",
 		invalid_type_error: "Tipo não válido para o nome do material.",
@@ -70,6 +82,17 @@ export const GeneralMaterialSchema = z.object({
 		})
 		.optional()
 		.nullable(),
+	fornecedores: z
+		.array(
+			z.string({
+				invalid_type_error: "Tipo não válido para o fornecedor.",
+			}),
+			{
+				invalid_type_error: "Tipo não válido para lista de fornecedores.",
+			},
+		)
+		.optional()
+		.nullable(),
 	alteracao: z
 		.object({
 			id: z.string({
@@ -105,6 +128,16 @@ export const GeneralMaterialSchema = z.object({
 
 export const InsertMaterialSchema = z.object({
 	alocadorId: z.string({ required_error: "Alocador do material não fornecido.", invalid_type_error: "Tipo não válido para o alocador do material." }).optional().nullable(),
+	idEquipamento: z
+		.string({ required_error: "ID do equipamento do material não fornecido.", invalid_type_error: "Tipo não válido para o ID do equipamento do material." })
+		.optional()
+		.nullable(),
+	sku: z
+		.string({
+			invalid_type_error: "Tipo não válido para o SKU do material.",
+		})
+		.optional()
+		.nullable(),
 	nome: z
 		.string({ required_error: "Nome do material não fornecido.", invalid_type_error: "Tipo não válido para o nome do material." })
 		.min(3, "Nome do material deve conter ao menos 3 caracteres."),
@@ -134,6 +167,17 @@ export const InsertMaterialSchema = z.object({
 			data: z.string(),
 			responsavel: z.string(),
 		})
+		.optional()
+		.nullable(),
+	fornecedores: z
+		.array(
+			z.string({
+				invalid_type_error: "Tipo não válido para o fornecedor.",
+			}),
+			{
+				invalid_type_error: "Tipo não válido para lista de fornecedores.",
+			},
+		)
 		.optional()
 		.nullable(),
 	alteracao: z
@@ -187,6 +231,20 @@ export const QueryMaterialsFiltersSchema = z.object({
 		required_error: "Número da página não informado.",
 		invalid_type_error: "Tipo não válido para o número da página.",
 	}),
+	sku: z.string({
+		required_error: "Filtro de código não informado.",
+		invalid_type_error: "Tipo não válido para o filtro de código.",
+	}),
+	suppliers: z.array(
+		z.string({
+			required_error: "Filtro de fornecedor não informado.",
+			invalid_type_error: "Tipo não válido para o filtro de fornecedor.",
+		}),
+		{
+			required_error: "Filtro de fornecedor não informado.",
+			invalid_type_error: "Tipo não válido para o filtro de fornecedor.",
+		},
+	),
 	name: z.string({
 		required_error: "Filtro de nome não informado.",
 		invalid_type_error: "Tipo não válido para o filtro de nome.",
@@ -240,6 +298,7 @@ export const QueryMaterialsFiltersSchema = z.object({
 			.optional()
 			.nullable(),
 	}),
+	materialType: z.enum(["equipment-only", "non-equipment-only", "all"]),
 	belowMinimum: z.boolean({
 		invalid_type_error: "Tipo não válido para filtro de materiais abaixo do mínimo.",
 	}),

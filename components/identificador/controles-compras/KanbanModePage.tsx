@@ -50,6 +50,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 	function getPurchaseControlsByStatus(purchaseControls: TPurchaseControlKanbanSimplifiedDTO[] | undefined): TPurchaseControlByStatus[] {
 		if (!purchaseControls)
 			return Object.entries({
+				ALMOXARIFADO: [],
 				PENDENTE: [],
 				"EM COTAÇÃO": [],
 				"AGUARDANDO APROVAÇÃO": [],
@@ -71,6 +72,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 			return new Date(dateAAddedInStatus).getTime() - new Date(dateBAddedInStatus).getTime();
 		}
 		return Object.entries({
+			ALMOXARIFADO: purchaseControls.filter((c) => c.status === "ALMOXARIFADO"),
 			PENDENTE: purchaseControls.filter((c) => c.status === "PENDENTE"),
 			"EM COTAÇÃO": purchaseControls.filter((c) => c.status === "EM COTAÇÃO").sort((a, b) => handleSortByStatusLog("EM COTAÇÃO", a, b)),
 			"AGUARDANDO APROVAÇÃO": purchaseControls.filter((c) => c.status === "AGUARDANDO APROVAÇÃO").sort((a, b) => handleSortByStatusLog("AGUARDANDO APROVAÇÃO", a, b)),

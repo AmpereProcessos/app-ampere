@@ -37,6 +37,30 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 				]
 			: [];
 
+	const skuQuery: Filter<TMaterial>[] =
+		filters.sku.trim().length > 0
+			? [
+					{
+						sku: { $regex: filters.sku, $options: "i" },
+					},
+					{
+						sku: filters.sku,
+					},
+				]
+			: [];
+
+	console.log("SUPPLIERS", filters.suppliers);
+	const suppliersQuery: Filter<TMaterial> =
+		filters.suppliers.length > 0
+			? {
+					fornecedores: {
+						$exists: true,
+						$ne: null,
+						$in: filters.suppliers.map((supplier) => new RegExp(`^${supplier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i")),
+					},
+				}
+			: {};
+
 	const quantityFilter: Filter<TMaterial> =
 		isValidNumber(filters.quantity.greaterThan) && isValidNumber(filters.quantity.lessThan)
 			? {
@@ -60,7 +84,8 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 				}
 			: {};
 
-	const orQuery: Filter<TMaterial> = nameQuery.length > 0 ? { $or: nameQuery } : {};
+	const andOrQuery: Filter<TMaterial> =
+		nameQuery.length > 0 || skuQuery.length > 0 ? { $and: [...(nameQuery.length > 0 ? nameQuery : []), ...(skuQuery.length > 0 ? skuQuery : [])] } : {};
 
 	const belowMinimumFilter: Filter<TMaterial> = filters.belowMinimum
 		? {
@@ -96,8 +121,15 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 			}
 		: {};
 
+	const MATERIAL_TYPE_MAP = {
+		all: {},
+		"equipment-only": { idEquipamento: { $exists: true, $ne: null } },
+		"non-equipment-only": { idEquipamento: { $exists: false, $eq: null } },
+	};
+	const materialTypeFilter: Filter<TMaterial> = MATERIAL_TYPE_MAP[filters.materialType || "all"];
+
 	const query: Filter<TMaterial> = {
-		...orQuery,
+		...andOrQuery,
 		...quantityFilter,
 		...priceFilter,
 		...periodQuery,
@@ -105,6 +137,8 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 		...aboveMaximumFilter,
 		...minimumUndefinedFilter,
 		...maximumUndefinedFilter,
+		...suppliersQuery,
+		...materialTypeFilter,
 	};
 
 	const skip = PAGE_SIZE * (Number(filters.page) - 1);

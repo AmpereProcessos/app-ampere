@@ -17,7 +17,7 @@ import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { useMaterialLogsByType } from "@/utils/methods/query/materials";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
-import UpdateRegistriesCard from "@/components/identificador/estoque/UpdateRegistriesCard";
+import UpdateRegistriesCard from "@/components/identificador/estoque/blocos/UpdateRegistriesCard";
 
 export default function NewMaterialsEntrance() {
 	const [infoHolder, setInfoHolder] = useState<TMaterialEntranceInput | null>(null);

@@ -1,7 +1,7 @@
 import Avatar from "@/components/utils/Avatar";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
-import { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
+import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import React from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { BsCalendarPlus, BsCartPlusFill } from "react-icons/bs";
@@ -18,10 +18,10 @@ function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegi
 			<div className="flex w-full items-center justify-between gap-2">
 				<h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">{registry.tipo}</h1>
 				<div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 text-white">
-					{registry.tipo == "ENTRADA" ? <BsCartPlusFill size={12} /> : null}
-					{registry.tipo == "RETIRADA" ? <ImArrowUp size={12} /> : null}
-					{registry.tipo == "DEVOLUÇÃO" ? <ImArrowDown size={12} /> : null}
-					{registry.tipo == "ALTERAÇÃO MANUAL" ? <AiFillEdit size={12} /> : null}
+					{registry.tipo === "ENTRADA" ? <BsCartPlusFill size={12} /> : null}
+					{registry.tipo === "RETIRADA" ? <ImArrowUp size={12} /> : null}
+					{registry.tipo === "DEVOLUÇÃO" ? <ImArrowDown size={12} /> : null}
+					{registry.tipo === "ALTERAÇÃO MANUAL" ? <AiFillEdit size={12} /> : null}
 				</div>
 			</div>
 			{showMaterialName ? <h1 className="my-2 w-full text-center text-[0.65rem] font-medium tracking-tight text-blue-500">{registry.material.nome}</h1> : null}
@@ -56,7 +56,7 @@ function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegi
 				</div>
 			) : null}
 			<div className="mt-2 flex w-full items-center justify-between">
-				<div className={`flex items-center gap-2`}>
+				<div className="flex items-center gap-2">
 					<BsCalendarPlus />
 					<p className="text-xs font-medium text-gray-500">{formatDateAsLocale(registry.dataInsercao, true)}</p>
 				</div>

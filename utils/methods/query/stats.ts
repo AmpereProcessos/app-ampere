@@ -1,10 +1,9 @@
 import type { TExecutionStats } from "@/pages/api/stats/sector-reports/execution";
-import type { TDashboardStats, TSaleGraphStat } from "@/utils/schemas/stats";
+import type { TDashboardStats, TSaleGraphStat, TSalesRakingInput, TSalesRakingOutput } from "@/utils/schemas/stats";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
 import { useState } from "react";
-import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 
 async function fetchDashboardStats() {
@@ -76,6 +75,44 @@ export function useOverallReport({ initialParams }: TUseOverallReportParams) {
 		...useQuery({
 			queryKey: ["overall-report", queryParamsDebounced],
 			queryFn: async () => await fetchOverallReport(queryParamsDebounced),
+		}),
+		queryParams,
+		updateQueryParams,
+	};
+}
+
+async function fetchSalesRanking(payload: TSalesRakingInput) {
+	try {
+		const params = new URLSearchParams();
+		params.append("type", payload.type);
+		params.append("rankBy", payload.rankBy);
+		params.append("projectTypes", payload.projectTypes.join(","));
+		const { data }: { data: TSalesRakingOutput } = await axios.get("/api/stats/sales-ranking", { params });
+		return data.data;
+	} catch (error) {
+		console.error("[ERROR] Fetch sales ranking", error);
+		throw error;
+	}
+}
+
+type TUseSalesRankingParams = {
+	initialParams?: Partial<TSalesRakingInput>;
+};
+export function useSalesRanking({ initialParams }: TUseSalesRankingParams) {
+	const [queryParams, setQueryParams] = useState<TSalesRakingInput>({
+		type: initialParams?.type ?? "current-semester",
+		rankBy: initialParams?.rankBy ?? "sales-total-power",
+		projectTypes: initialParams?.projectTypes ?? ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"],
+	});
+	function updateQueryParams(params: Partial<TSalesRakingInput>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
+	const queryParamsDebounced = useDebounceMemo(queryParams, 500);
+
+	return {
+		...useQuery({
+			queryKey: ["sales-ranking", queryParamsDebounced],
+			queryFn: async () => await fetchSalesRanking(queryParamsDebounced),
 		}),
 		queryParams,
 		updateQueryParams,

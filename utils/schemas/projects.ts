@@ -515,6 +515,7 @@ const GeneralProjectSchema = z.object({
 		.optional()
 		.nullable(),
 	projeto: z.object({
+		status: z.string().optional().nullable(), // select options
 		acStatus: z.string().optional().nullable(), // select options
 		aumentoDeCarga: z.union([z.literal("SIM"), z.literal("NÃO")]),
 		dataLiberacaoDocumentacao: z.string().optional().nullable(),

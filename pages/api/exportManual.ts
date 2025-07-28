@@ -11,33 +11,63 @@ import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
 import type { TMaterial } from "@/utils/schemas/materials";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
+
+const userName = "DEVISSON LIMA";
 const getExport: NextApiHandler<any> = async (req, res) => {
 	const projectsDb = await connectToProjectsDatabase();
 
 	const projectsCollection = projectsDb.collection<TProject>("dados");
-	const serviceOrdersCollection = projectsDb.collection<TServiceOrder>("ordensDeServico");
 
-	const projects = await projectsCollection.find({}).toArray();
-
-	const bulkwriteUpdateServiceOrdersArr: AnyBulkWriteOperation<TServiceOrder>[] = projects
-		.map((project) => {
-			const purchasePaymentDate = project.compra?.dataPagamento;
-
-			if (!project.idOrdemServico) return null;
-
-			return {
-				updateOne: {
-					filter: { _id: new ObjectId(project.idOrdemServico) },
-					update: {
-						$set: { "projeto.compraDataPagamento": purchasePaymentDate },
-					},
+	const projects = await projectsCollection
+		.find({
+			$or: [
+				{
+					"vendedor.nome": userName,
 				},
-			};
+				{
+					insider: userName,
+				},
+			],
 		})
-		.filter((x) => x !== null);
+		.toArray();
 
-	const bulkwriteResponse = await serviceOrdersCollection.bulkWrite(bulkwriteUpdateServiceOrdersArr);
-	return res.json(bulkwriteResponse);
+	const byType = projects.reduce(
+		(acc, project) => {
+			const systemPower = project.sistema.potPico;
+			const seller = project.vendedor.nome;
+			const insider = project.insider;
+
+			if (seller === userName) {
+				acc.VENDEDOR.contagem++;
+				acc.VENDEDOR.potencia += systemPower;
+				return acc;
+			}
+			if (insider === userName) {
+				acc.INSIDER.contagem++;
+				acc.INSIDER.potencia += systemPower;
+				return acc;
+			}
+			return acc;
+		},
+		{
+			VENDEDOR: {
+				contagem: 0,
+				potencia: 0,
+			},
+			INSIDER: {
+				contagem: 0,
+				potencia: 0,
+			},
+		},
+	);
+	const totalProjectsQty = byType.VENDEDOR.contagem + byType.INSIDER.contagem;
+	const totalProjectsPower = byType.VENDEDOR.potencia + byType.INSIDER.potencia;
+	return res.json({
+		totalProjectsQty,
+		totalProjectsPower,
+		asSeller: byType.VENDEDOR,
+		asInsider: byType.INSIDER,
+	});
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

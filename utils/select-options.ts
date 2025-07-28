@@ -1536,6 +1536,20 @@ export const revenueSources = [
 	{ id: 19, label: "OUTRAS RECEITAS", value: "OUTRAS RECEITAS" },
 ];
 
+export const EngineeringProjectStatus = [
+	{ id: 1, label: "INICIAR PROJETO", value: "INICIAR PROJETO" },
+	{ id: 2, label: "PENDENTE DOCUMENTAÇÃO", value: "PENDENTE DOCUMENTAÇÃO" },
+	{ id: 3, label: "TROCA DE TITULARIDADE", value: "TROCA DE TITULARIDADE" },
+	{ id: 4, label: "DÉBITOS", value: "DÉBITOS" },
+	{ id: 5, label: "AGUARDANDO CONCESSIONÁRIA", value: "AGUARDANDO CONCESSIONÁRIA" },
+	{ id: 6, label: "APROVADO", value: "APROVADO" },
+	{ id: 7, label: "REPROVADO", value: "REPROVADO" },
+	{ id: 8, label: "DÉBITOS P/ VISTORIA", value: "DÉBITOS P/ VISTORIA" },
+	{ id: 9, label: "AGUARDANDO VISTORIA", value: "AGUARDANDO VISTORIA" },
+	{ id: 10, label: "VISTORIA REALIZADA", value: "VISTORIA REALIZADA" },
+	{ id: 11, label: "CONCLUÍDO", value: "CONCLUÍDO" },
+];
+
 export const PurchaseControlStatus = [
 	{ id: 1, label: "PENDENTE", value: "PENDENTE", deadlineDays: null },
 	{ id: 2, label: "ALMOXARIFADO", value: "ALMOXARIFADO", deadlineDays: null },

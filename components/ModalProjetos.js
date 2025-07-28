@@ -108,7 +108,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 								icon={<FaSave />}
 								handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
 							/>
-							<button>
+							<button type="button">
 								<VscChromeClose onClick={() => closeModal()} style={{ color: "red" }} />
 							</button>
 						</div>
@@ -131,7 +131,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 										<div className="flex">
 											<input
 												disabled={true}
-												checked={infoHolder.comissionamento?.comercial ? true : false}
+												checked={infoHolder.comissionamento?.comercial}
 												onChange={(e) => {
 													setChanges({
 														...changes,
@@ -159,7 +159,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 										<div className="flex">
 											<input
 												disabled={true}
-												checked={infoHolder.comissionamento?.suprimentos ? true : false}
+												checked={infoHolder.comissionamento?.suprimentos}
 												onChange={(e) => {
 													setChanges({
 														...changes,
@@ -187,7 +187,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
 										<div className="flex">
 											<input
 												disabled={!false}
-												checked={infoHolder.comissionamento?.projetos ? true : false}
+												checked={infoHolder.comissionamento?.projetos}
 												onChange={(e) => {
 													setChanges({
 														...changes,

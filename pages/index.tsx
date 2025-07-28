@@ -1,56 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { AreaChart, Area, LineChart, Legend, Line, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, YAxis, BarChart, Bar } from "recharts";
+import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, YAxis } from "recharts";
 
 import DashboardSkeleton from "../components/skeletons/DashboardSkeleton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../components/utils/LoadingPage";
-import { formatDecimalPlaces, sellerPhotos } from "../utils/constants";
+import { formatDecimalPlaces } from "../utils/constants";
 
 import { useDashboardStats, useSalesGraphStats } from "@/utils/methods/query/stats";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import ClientsBirthdays from "@/components/identificador/dashboard/ClientsBirthdays";
 import { getArrOfYearsBetweenYears } from "@/utils/methods/dates";
-import ComercialCompanyGoalsTracking from "@/components/identificador/resultados/ComercialCompanyGoalsTracking";
-import { FaRankingStar } from "react-icons/fa6";
-
-const months = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-
-function renderAvatarBySeller(sellerName: string) {
-	if (!sellerName) {
-		return (
-			<div className="flex h-[30px] max-h-[50px] w-[30px] max-w-[50px] items-center justify-center self-center rounded-full bg-gray-700 lg:h-[50px] lg:w-[50px]">
-				<p className="text-center text-xs font-bold text-white lg:text-lg">V</p>
-			</div>
-		);
-	}
-	const existingSellerWithPhoto = sellerPhotos.find((x) => x.nome === sellerName);
-	if (!existingSellerWithPhoto) {
-		const splittedName = sellerName.split(" ");
-		const firstLetter = splittedName[0][0];
-		let secondLetter = "";
-		if (["DE", "DA", "DO", "DOS", "DAS"].includes(splittedName[1])) secondLetter = splittedName[2] ? splittedName[2][0] : "";
-		else secondLetter = splittedName[1] ? splittedName[1][0] : "";
-
-		return (
-			<div className="flex h-[30px] max-h-[50px] w-[30px] max-w-[50px] items-center justify-center self-center rounded-full bg-gray-700 lg:h-[50px] lg:w-[50px]">
-				<p className="text-center text-xs font-bold uppercase text-white lg:text-lg">
-					{firstLetter}
-					{secondLetter}
-				</p>
-			</div>
-		);
-	}
-	return (
-		<div className="relative h-[30px] max-h-[50px] w-[30px] max-w-[50px] self-center lg:h-[50px] lg:w-[50px]">
-			<Image fill={true} src={existingSellerWithPhoto.avatar_url} alt={existingSellerWithPhoto.nome} style={{ borderRadius: "100%" }} />
-		</div>
-	);
-}
+import SalesRanking from "@/components/identificador/resultados/SalesRanking";
 
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
@@ -88,49 +51,7 @@ function Home() {
 			return (
 				<div className="relative grow bg-[#fafafa] p-6">
 					<div className="flex w-full flex-col">
-						{/* <ComercialCompanyGoalsTracking results={stats.meta} />
-						 */}
-						<div className="flex w-full flex-col gap-2">
-							<div className="flex w-full items-center justify-center gap-2">
-								<FaRankingStar />
-								<h1 className="text-base font-bold uppercase">RANKING DO MÊS</h1>
-							</div>
-							<div className="flex w-full justify-center gap-2">
-								<div className="flex w-full items-center justify-center lg:w-[70%]">
-									<div className="flex w-full items-center justify-center">
-										<div className="mb-2 flex w-full flex-col items-center">
-											<div className="flex h-fit w-full items-end justify-center gap-4 p-0 lg:h-[425px] lg:w-[1200px] lg:gap-10 lg:p-6">
-												<div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-													{renderAvatarBySeller(stats?.ranking.quarto.nome || "N/A")}
-													<h1 className="text-center text-sm font-bold text-gray-500">{stats?.ranking.quarto.nome}</h1>
-													<div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
-												</div>
-												<div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-													{renderAvatarBySeller(stats?.ranking.segundo.nome || "N/A")}
-													<h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats?.ranking.segundo.nome || "N/A"}</h1>
-													<div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
-												</div>
-												<div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-													{renderAvatarBySeller(stats?.ranking.primeiro.nome || "N/A")}
-													<h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats?.ranking.primeiro.nome || "N/A"}</h1>
-													<div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
-												</div>
-												<div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
-													{renderAvatarBySeller(stats?.ranking?.terceiro.nome || "N/A")}
-													<h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{stats?.ranking?.terceiro.nome || "N/A"}</h1>
-													<div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
-												</div>
-												<div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-													{renderAvatarBySeller(stats?.ranking.quinto.nome || "N/A")}
-													<h1 className="text-center text-sm font-bold text-gray-500">{stats?.ranking.quinto.nome || "N/A"}</h1>
-													<div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<SalesRanking />
 						<div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
 							<div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
 								<div className="flex justify-between">
@@ -201,7 +122,7 @@ function Home() {
 												// pathTransition: 'none',
 
 												// Colors
-												pathColor: `#fead61`,
+												pathColor: "#fead61",
 												textColor: "#15599a",
 												trailColor: "#d6d6d6",
 												backgroundColor: "#3e98c7",
@@ -218,17 +139,18 @@ function Home() {
 									<h1 className="text-center text-xl uppercase text-gray-600">Potência pico vendida</h1>
 									<div className="flex grow flex-wrap items-center justify-end gap-x-2">
 										{getArrOfYearsBetweenYears({ initialYear: 2020, endYear: currentYear }).map((yearValue, index) => (
-											<p
-												key={index}
+											<button
+												type="button"
+												key={yearValue}
 												onClick={() => {
 													setYear(yearValue);
 												}}
 												className={`cursor-pointer border border-gray-300 duration-500 ease-in-out hover:scale-105 ${
-													year == yearValue ? "bg-blue-200 hover:bg-transparent" : "bg-transparent hover:bg-blue-200"
+													year === yearValue ? "bg-blue-200 hover:bg-transparent" : "bg-transparent hover:bg-blue-200"
 												} p-2 text-xs text-gray-600`}
 											>
 												{yearValue}
-											</p>
+											</button>
 										))}
 									</div>
 								</div>

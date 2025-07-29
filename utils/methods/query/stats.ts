@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
 import { useState } from "react";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TEngineeringSectorStatsInput, TEngineeringSectorStatsOutput } from "@/pages/api/stats/sector-reports/engineering";
+import dayjs from "dayjs";
 
 async function fetchDashboardStats() {
 	const { data } = await axios.get("/api/stats");
@@ -113,6 +115,44 @@ export function useSalesRanking({ initialParams }: TUseSalesRankingParams) {
 		...useQuery({
 			queryKey: ["sales-ranking", queryParamsDebounced],
 			queryFn: async () => await fetchSalesRanking(queryParamsDebounced),
+		}),
+		queryParams,
+		updateQueryParams,
+	};
+}
+
+async function fetchEngineeringSectorStats(info: TEngineeringSectorStatsInput) {
+	try {
+		const urlParams = new URLSearchParams();
+		urlParams.append("after", info.after);
+		urlParams.append("before", info.before);
+		const { data }: { data: TEngineeringSectorStatsOutput } = await axios.get(`/api/stats/sector-reports/engineering?${urlParams.toString()}`);
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+type UseEngineeringSectorStatsParams = {
+	initialParams?: Partial<TEngineeringSectorStatsInput>;
+};
+export function useEngineeringSectorStats({ initialParams }: UseEngineeringSectorStatsParams) {
+	const monthStateDate = dayjs().startOf("month").toISOString();
+	const monthEndingDate = dayjs().endOf("month").toISOString();
+	const [queryParams, setQueryParams] = useState<TEngineeringSectorStatsInput>({
+		after: initialParams?.after ?? monthStateDate,
+		before: initialParams?.before ?? monthEndingDate,
+	});
+
+	function updateQueryParams(params: Partial<TEngineeringSectorStatsInput>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
+	const queryParamsDebounced = useDebounceMemo(queryParams, 500);
+
+	return {
+		...useQuery({
+			queryKey: ["engineering-sector-stats", queryParamsDebounced],
+			queryFn: async () => await fetchEngineeringSectorStats(queryParamsDebounced),
 		}),
 		queryParams,
 		updateQueryParams,

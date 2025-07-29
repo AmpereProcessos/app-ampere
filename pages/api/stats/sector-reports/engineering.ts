@@ -100,23 +100,19 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									],
 								},
 								{
-									$divide: [
-										{
-											$subtract: [
-												{
-													$dateFromString: {
-														dateString: HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE,
-													},
-												},
-												{
-													$dateFromString: {
-														dateString: HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE,
-													},
-												},
-											],
+									$dateDiff: {
+										startDate: {
+											$dateFromString: {
+												dateString: HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE,
+											},
 										},
-										3600000, // Converting from milliseconds to hours (1000 * 60 * 60)
-									],
+										endDate: {
+											$dateFromString: {
+												dateString: HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE,
+											},
+										},
+										unit: "hour",
+									},
 								},
 								0,
 							],

@@ -98,7 +98,10 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 				}
 			: {};
 
-	const andOrQuery: Filter<TMaterial> = nameQuery || skuQuery || locationQuery ? { $and: [nameQuery, skuQuery, locationQuery].filter((r) => Object.keys(r).length > 0) } : {};
+	const andOrQuery: Filter<TMaterial> =
+		Object.keys(nameQuery).length > 0 || Object.keys(skuQuery).length > 0 || Object.keys(locationQuery).length > 0
+			? { $and: [nameQuery, skuQuery, locationQuery].filter((r) => Object.keys(r).length > 0) }
+			: {};
 
 	const belowMinimumFilter: Filter<TMaterial> = filters.belowMinimum
 		? {
@@ -154,6 +157,7 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 		...materialTypeFilter,
 	};
 
+	console.log("QUERY", JSON.stringify(query, null, 2));
 	const skip = PAGE_SIZE * (Number(filters.page) - 1);
 	const limit = PAGE_SIZE;
 

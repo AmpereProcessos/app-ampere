@@ -4,13 +4,13 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import { cn } from "@/lib/utils";
-import { TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
+import type { TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { usePurchaseControlsByFilters } from "@/utils/methods/query/purchase-controls";
-import { TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
+import type { TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
 import { CheckCheck, Factory, ListFilter, Package, Pencil, ScrollText, Tag, Truck, X } from "lucide-react";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import React, { useState } from "react";
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from "react-icons/bs";
 import { FaLocationDot, FaRotate } from "react-icons/fa6";
@@ -54,7 +54,7 @@ function PurchaseControlsCardModePage({ session, handleSetMode }: PurchaseContro
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
 						</div>
 
-						<button onClick={() => handleSetMode("grouped")} className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800">
+						<button type="button" onClick={() => handleSetMode("grouped")} className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800">
 							<FaRotate />
 							<h1 className="font-medium">ALTERAR MODO</h1>
 						</button>
@@ -126,7 +126,7 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
 					{purchaseControl.etiquetas.length > 0 ? (
 						purchaseControl.etiquetas.map((tag, index) => (
 							<div
-								key={index}
+								key={tag.id}
 								style={{
 									border: "1px solid",
 									borderColor: tag.cores.primaria,
@@ -198,7 +198,7 @@ function PurchaseControlCard({ purchaseControl, handleClick }: PurchaseControlCa
 						<p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
 					</div>
 				</div>
-				<button onClick={() => handleClick(purchaseControl._id)} className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
+				<button type="button" onClick={() => handleClick(purchaseControl._id)} className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
 					<Pencil width={10} height={10} />
 					<p>EDITAR</p>
 				</button>

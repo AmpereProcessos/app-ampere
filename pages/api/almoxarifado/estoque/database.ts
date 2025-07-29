@@ -25,41 +25,47 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 	const db: Db = await connectToDatabase();
 	const materialsCollection = db.collection<TMaterial>("material");
 
-	const nameQuery: Filter<TMaterial>[] =
+	const nameQuery: Filter<TMaterial> =
 		filters.name.trim().length > 0
-			? [
-					{
-						nome: { $regex: filters.name, $options: "i" },
-					},
-					{
-						nome: filters,
-					},
-				]
-			: [];
+			? {
+					$or: [
+						{
+							nome: { $regex: filters.name, $options: "i" },
+						},
+						{
+							nome: filters.name,
+						},
+					],
+				}
+			: {};
 
-	const skuQuery: Filter<TMaterial>[] =
+	const skuQuery: Filter<TMaterial> =
 		filters.sku.trim().length > 0
-			? [
-					{
-						sku: { $regex: filters.sku, $options: "i" },
-					},
-					{
-						sku: filters.sku,
-					},
-				]
-			: [];
+			? {
+					$or: [
+						{
+							sku: { $regex: filters.sku, $options: "i" },
+						},
+						{
+							sku: filters.sku,
+						},
+					],
+				}
+			: {};
 
-	const locationQuery: Filter<TMaterial>[] =
+	const locationQuery: Filter<TMaterial> =
 		filters.location.trim().length > 0
-			? [
-					{
-						localizacao: { $regex: filters.location, $options: "i" },
-					},
-					{
-						localizacao: filters.location,
-					},
-				]
-			: [];
+			? {
+					$or: [
+						{
+							localizacao: { $regex: filters.location, $options: "i" },
+						},
+						{
+							localizacao: filters.location,
+						},
+					],
+				}
+			: {};
 
 	console.log("SUPPLIERS", filters.suppliers);
 	const suppliersQuery: Filter<TMaterial> =
@@ -92,10 +98,7 @@ const handleGetMaterialsWithFilters: NextApiHandler<PostResponse> = async (req, 
 				}
 			: {};
 
-	const andOrQuery: Filter<TMaterial> =
-		nameQuery.length > 0 || skuQuery.length > 0 || locationQuery.length > 0
-			? { $and: [...(nameQuery.length > 0 ? nameQuery : []), ...(skuQuery.length > 0 ? skuQuery : []), ...(locationQuery.length > 0 ? locationQuery : [])] }
-			: {};
+	const andOrQuery: Filter<TMaterial> = nameQuery || skuQuery || locationQuery ? { $and: [nameQuery, skuQuery, locationQuery].filter((r) => Object.keys(r).length > 0) } : {};
 
 	const belowMinimumFilter: Filter<TMaterial> = filters.belowMinimum
 		? {

@@ -83,7 +83,7 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									$and: [
 										{ $ne: [HOMOLOGATION_FIELDS_MAP.CONTRACT_STATUS, "RESCISÃO DE CONTRATO"] },
 										{ $eq: [HOMOLOGATION_FIELDS_MAP.EFFECTIVATION_DATE, null] },
-										{ $or: [{ $eq: [HOMOLOGATION_FIELDS_MAP.PURCHASE_LIB_STATUS, "PAGO"] }, { $ne: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] }] },
+										{ $or: [{ $eq: [HOMOLOGATION_FIELDS_MAP.PURCHASE_LIB_STATUS, "PAGO"] }, { $ne: [{ $ifNull: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] }, null] }] },
 									],
 								},
 								1,
@@ -98,7 +98,7 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									$and: [
 										{ $ne: [HOMOLOGATION_FIELDS_MAP.CONTRACT_STATUS, "RESCISÃO DE CONTRATO"] },
 										{ $eq: [HOMOLOGATION_FIELDS_MAP.EFFECTIVATION_DATE, null] },
-										{ $or: [{ $eq: [HOMOLOGATION_FIELDS_MAP.PURCHASE_LIB_STATUS, "PAGO"] }, { $ne: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] }] },
+										{ $or: [{ $eq: [HOMOLOGATION_FIELDS_MAP.PURCHASE_LIB_STATUS, "PAGO"] }, { $ne: [{ $ifNull: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] }, null] }] },
 									],
 								},
 								HOMOLOGATION_FIELDS_MAP.POWER,
@@ -136,7 +136,7 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									$and: [
 										{ $gte: [HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE, after] },
 										{ $lte: [HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE, before] },
-										{ $ne: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] },
+										{ $ne: [{ $ifNull: [HOMOLOGATION_FIELDS_MAP.LIBERATION_DATE, null] }, null] },
 									],
 								},
 								{
@@ -179,7 +179,7 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									$and: [
 										{ $gte: [HOMOLOGATION_FIELDS_MAP.ACCESS_RESPONSE_DATE, after] },
 										{ $lte: [HOMOLOGATION_FIELDS_MAP.ACCESS_RESPONSE_DATE, before] },
-										{ $ne: [HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE, null] },
+										{ $ne: [{ $ifNull: [HOMOLOGATION_FIELDS_MAP.ACCESS_REQUEST_DATE, null] }, null] },
 									],
 								},
 								{
@@ -296,7 +296,7 @@ const getEngineeringSectorStatsRoute: NextApiHandler<TEngineeringSectorStatsOutp
 									$and: [
 										{ $gte: [HOMOLOGATION_FIELDS_MAP.INSPECTION_RESPONSE_DATE, after] },
 										{ $lte: [HOMOLOGATION_FIELDS_MAP.INSPECTION_RESPONSE_DATE, before] },
-										{ $ne: [HOMOLOGATION_FIELDS_MAP.INSPECTION_REQUEST_DATE, null] },
+										{ $ne: [{ $ifNull: [HOMOLOGATION_FIELDS_MAP.INSPECTION_REQUEST_DATE, null] }, null] },
 									],
 								},
 								{

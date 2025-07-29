@@ -1,21 +1,16 @@
-import CheckboxInput from "@/components/inputs/Checkbox";
-
-import DateInput from "@/components/inputs/Date";
-import { TEnergyPAExecution } from "@/pages/api/gestao-obras/padroes";
-import { formatDate } from "@/utils/constants";
+import type { TEnergyPAExecution } from "@/pages/api/gestao-obras/padroes";
 import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { TLocation } from "@/utils/schemas/useful";
-import React, { useState } from "react";
-import { BsCalendarCheck, BsCode, BsPatchCheck } from "react-icons/bs";
+import type { TLocation } from "@/utils/schemas/useful";
+import React from "react";
+import { BsCalendarCheck, BsCode } from "react-icons/bs";
 import { FaCircle, FaPiggyBank } from "react-icons/fa";
-import { FaLocationDot, FaLocationPin } from "react-icons/fa6";
-import { MdAssistantPhoto, MdAttachMoney, MdElectricMeter, MdSettingsInputComponent } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { MdAssistantPhoto, MdDashboard, MdSettingsInputComponent } from "react-icons/md";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/utils/methods/mutation/clients";
-import toast from "react-hot-toast";
-import { formatDateInputChange } from "@/utils/methods/shared";
 import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
+import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
+import { formatDateInputChange } from "@/utils/methods/shared";
 
 type PAAdequationProjectCardProps = {
 	project: TEnergyPAExecution;
@@ -49,24 +44,21 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 	return (
 		<div className="flex w-full flex-col gap-4 rounded border border-gray-300 bg-[#fff] p-3 font-[Inter]">
 			<div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
-				<div className="flex items-center gap-1">
-					<h1 className="rounded-lg bg-[#15599a] px-2 py-1 text-xs font-bold text-white">{project.qtde}</h1>
-					<h1 className="text-sm font-black leading-none tracking-tight">{project.nomeDoContrato}</h1>
-				</div>
-				<div className="flex items-center gap-1">
-					<BsCode />
-					<h1 className="text-xs tracking-tight text-gray-500">#{project._id}</h1>
-				</div>
-			</div>
-			<div className="flex flex-col gap-0.5">
-				<div className="flex items-center gap-1">
-					<h1 className="text-[0.65rem] tracking-tight text-gray-500 lg:text-xs">LOCALIZAÇÃO</h1>
-				</div>
-				<div className="flex items-center gap-1">
-					<FaLocationDot />
-					<p className="text-sm font-[400] tracking-tight text-gray-800">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
+				<div className="flex flex-wrap items-center gap-2">
+					<div className="flex items-center gap-1">
+						<div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
+							<MdDashboard size={12} />
+							<p className="text-xs">{project.qtde}</p>
+						</div>
+						<h1 className="text-sm font-black leading-none tracking-tight">{project.nomeDoContrato}</h1>
+					</div>
+					<div className="flex items-center gap-1">
+						<FaLocationDot />
+						<p className="text-xs font-bold italic text-primary/80">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
+					</div>
 				</div>
 			</div>
+
 			<div className="flex flex-col gap-0.5">
 				<div className="flex items-center gap-1">
 					<h1 className="text-[0.65rem] tracking-tight text-gray-500 lg:text-xs">HOMOLOGAÇÃO</h1>
@@ -93,13 +85,13 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 				</div>
 				<div className="flex w-full flex-wrap items-center gap-4">
 					<div className="flex items-center gap-1">
-						<FaCircle color={!!project.padrao.aumentoCarga.dataEfetivacao ? "rgb(34,197,94)" : "black"} />
+						<FaCircle color={project.padrao.aumentoCarga.dataEfetivacao ? "rgb(34,197,94)" : "black"} />
 						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
 							{project.padrao.aumentoCarga.dataEfetivacao ? `ADEQUAÇÃO CONCLUÍDA EM ${formatDateAsLocale(project.padrao.aumentoCarga.dataEfetivacao)}` : "ADEQUAÇÃO PENDENTE"}
 						</p>
 					</div>
 					<div className="flex items-center gap-1">
-						<FaPiggyBank color={!!project.compra.dataPagamento ? "rgb(34,197,94)" : "black"} />
+						<FaPiggyBank color={project.compra.dataPagamento ? "rgb(34,197,94)" : "black"} />
 						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
 							{project.compra.dataPagamento ? `PAGAMENTO EM: ${formatDateAsLocale(project.compra.dataPagamento)}` : "PAGAMENTO PENDENTE"}
 						</p>
@@ -123,7 +115,7 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 					editable={!isPending}
 					showDate={!!project.padrao.aumentoCarga.dataEfetivacao}
 					date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
-					handleChange={(value) => handleUpdate(formatDateInputChange(value))}
+					handleChange={(value) => handleUpdate(formatDateInputChange(value, "string"))}
 				/>
 
 				{/* <div className="w-fit">

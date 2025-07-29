@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { ZodError } from "zod";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import type { NextResponse } from "next/server";
 
 export type UnwrapNextResponse<T> = T extends NextApiResponse<infer U> ? U : never;
@@ -58,5 +58,5 @@ export async function validateAuthenticationWithSession(req: NextApiRequest, res
 	// @ts-ignore
 	const session = await getServerSession(req, res, authOptions);
 	if (!session) throw new createHttpError.Unauthorized("Recurso não acessível a usuários não autenticados.");
-	return session;
+	return session as Session;
 }

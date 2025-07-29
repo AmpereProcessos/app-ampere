@@ -1,292 +1,359 @@
-import { TEnergyPAExecution } from '@/pages/api/gestao-obras/padroes'
-import { TProjectDTO } from '@/utils/schemas/projects'
-import axios from 'axios'
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { formatWithoutDiacritics } from '../formatting'
-import { TInstallationStructureExecution } from '@/pages/api/gestao-obras/estruturas'
+import type { TEnergyPAExecution, TEnergyPAExecutionWithFiltersInput, TEnergyPAExecutionWithFiltersOutput } from "@/pages/api/gestao-obras/padroes";
+import type { TProjectDTO } from "@/utils/schemas/projects";
+import axios from "axios";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { formatWithoutDiacritics } from "../formatting";
+import type { TInstallationStructureExecution } from "@/pages/api/gestao-obras/estruturas";
+import type { TEnergyPAStatsInput, TEnergyPAStatsOutput } from "@/pages/api/gestao-obras/padroes-estatisticas";
+import dayjs from "dayjs";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
 
 async function fetchProjects() {
-  try {
-    const { data } = await axios.get('/api/projects/obras')
-    return data as TProjectDTO[]
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get("/api/projects/obras");
+		return data as TProjectDTO[];
+	} catch (error) {
+		throw error;
+	}
 }
 
 export function useExecutionProjects() {
-  type Filters = {
-    search: string
-    roofTileType: string
-    serviceType: string[]
-    city: string[]
-    topology: string[]
-    technicalTeam: string[]
-    deliveryStatus: string[]
-    executionStatus: string[]
-    personalizedStructureApplied: boolean
-    personalizedStructureStatus: string[]
-    paAlterationApplied: boolean
-    paAlterationPending: boolean
-    partialPaymentDone: boolean
-    partialExecutionPending: boolean
-    missingObservations: boolean
-    outsideMatrix: boolean
-  }
-  const [filters, setFilters] = useState<Filters>({
-    search: '',
-    roofTileType: '',
-    serviceType: [],
-    city: [],
-    topology: [],
-    technicalTeam: [],
-    deliveryStatus: [],
-    executionStatus: [],
-    personalizedStructureApplied: false,
-    personalizedStructureStatus: [],
-    paAlterationApplied: false,
-    paAlterationPending: false,
-    partialPaymentDone: false,
-    partialExecutionPending: false,
-    missingObservations: false,
-    outsideMatrix: false,
-  })
-  function matchSearch(project: TProjectDTO) {
-    if (filters.search.trim().length == 0) return true
-    return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase())
-  }
-  function matchRoofTileType(project: TProjectDTO) {
-    if (filters.roofTileType.trim().length == 0) return true
-    return project.visitaTecnica.tipoDaTelha?.toUpperCase().includes(filters.roofTileType.toUpperCase())
-  }
-  function matchServiceType(project: TProjectDTO) {
-    if (filters.serviceType.length == 0) return true
-    return filters.serviceType.includes(project.tipoDeServico)
-  }
-  function matchCity(project: TProjectDTO) {
-    if (filters.city.length == 0) return true
-    return filters.city.includes(project.cidade)
-  }
-  function matchTopology(project: TProjectDTO) {
-    if (filters.topology.length == 0) return true
-    return filters.topology.includes(project.sistema.topologia || '')
-  }
-  function matchTechnicalTeam(project: TProjectDTO) {
-    if (filters.technicalTeam.length == 0) return true
-    return filters.technicalTeam.includes(project.obra.equipeResp || '')
-  }
-  function matchDeliveryStatus(project: TProjectDTO) {
-    if (filters.deliveryStatus.length == 0) return true
-    return filters.deliveryStatus.includes(project.compra.statusEntrega || '')
-  }
-  function matchExecutionStatus(project: TProjectDTO) {
-    if (filters.executionStatus.length == 0) return true
-    return filters.executionStatus.includes(project.obra.statusDaObra || '')
-  }
-  function matchPersonalizedStructureApplied(project: TProjectDTO) {
-    if (!filters.personalizedStructureApplied) return true
-    return project.estruturaPersonalizada.aplicavel == 'SIM'
-  }
-  function matchPersonalizedStructureStatus(project: TProjectDTO) {
-    if (filters.personalizedStructureStatus.length == 0) return true
-    return filters.personalizedStructureStatus.includes(project.estruturaPersonalizada.status || '')
-  }
-  function matchPaAlterationApplied(project: TProjectDTO) {
-    if (!filters.paAlterationApplied) return true
-    return !!project.padrao.aumentoCarga.aplicavel
-  }
-  function matchPaAlterationPending(project: TProjectDTO) {
-    if (!filters.paAlterationPending) return true
-    return !project.padrao.aumentoCarga.dataEfetivacao
-  }
-  function matchPartialPaymentDone(project: TProjectDTO) {
-    if (!filters.partialPaymentDone) return true
-    return !!project.compra.dataPagamento
-  }
-  function matchPartialExecutionPending(project: TProjectDTO) {
-    if (!filters.partialExecutionPending) return true
-    return project.obra.statusDaObra == 'CONCLUIDA PARCIAL' && !!project.homologacao.vistoria.dataEfetivacao
-  }
-  function matchMissingObservations(project: TProjectDTO) {
-    if (!filters.missingObservations) return true
-    return project.obra.observacoes?.trim().length <= 2
-  }
-  function matchOutsideMatrix(project: TProjectDTO) {
-    if (!filters.outsideMatrix) return true
-    return project.cidade != 'ITUIUTABA'
-  }
-  function handleModelData(data: TProjectDTO[]) {
-    var modeledData = data
-    return modeledData.filter(
-      (project) =>
-        matchSearch(project) &&
-        matchRoofTileType(project) &&
-        matchServiceType(project) &&
-        matchCity(project) &&
-        matchTopology(project) &&
-        matchTechnicalTeam(project) &&
-        matchDeliveryStatus(project) &&
-        matchExecutionStatus(project) &&
-        matchPersonalizedStructureApplied(project) &&
-        matchPersonalizedStructureStatus(project) &&
-        matchPaAlterationApplied(project) &&
-        matchPaAlterationPending(project) &&
-        matchPartialPaymentDone(project) &&
-        matchPartialExecutionPending(project) &&
-        matchMissingObservations(project) &&
-        matchOutsideMatrix(project)
-    )
-  }
-  return {
-    ...useQuery({
-      queryKey: ['execution-projects'],
-      queryFn: fetchProjects,
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+	type Filters = {
+		search: string;
+		roofTileType: string;
+		serviceType: string[];
+		city: string[];
+		topology: string[];
+		technicalTeam: string[];
+		deliveryStatus: string[];
+		executionStatus: string[];
+		personalizedStructureApplied: boolean;
+		personalizedStructureStatus: string[];
+		paAlterationApplied: boolean;
+		paAlterationPending: boolean;
+		partialPaymentDone: boolean;
+		partialExecutionPending: boolean;
+		missingObservations: boolean;
+		outsideMatrix: boolean;
+	};
+	const [filters, setFilters] = useState<Filters>({
+		search: "",
+		roofTileType: "",
+		serviceType: [],
+		city: [],
+		topology: [],
+		technicalTeam: [],
+		deliveryStatus: [],
+		executionStatus: [],
+		personalizedStructureApplied: false,
+		personalizedStructureStatus: [],
+		paAlterationApplied: false,
+		paAlterationPending: false,
+		partialPaymentDone: false,
+		partialExecutionPending: false,
+		missingObservations: false,
+		outsideMatrix: false,
+	});
+	function matchSearch(project: TProjectDTO) {
+		if (filters.search.trim().length === 0) return true;
+		return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase());
+	}
+	function matchRoofTileType(project: TProjectDTO) {
+		if (filters.roofTileType.trim().length === 0) return true;
+		return project.visitaTecnica.tipoDaTelha?.toUpperCase().includes(filters.roofTileType.toUpperCase());
+	}
+	function matchServiceType(project: TProjectDTO) {
+		if (filters.serviceType.length === 0) return true;
+		return filters.serviceType.includes(project.tipoDeServico);
+	}
+	function matchCity(project: TProjectDTO) {
+		if (filters.city.length === 0) return true;
+		return filters.city.includes(project.cidade);
+	}
+	function matchTopology(project: TProjectDTO) {
+		if (filters.topology.length === 0) return true;
+		return filters.topology.includes(project.sistema.topologia || "");
+	}
+	function matchTechnicalTeam(project: TProjectDTO) {
+		if (filters.technicalTeam.length === 0) return true;
+		return filters.technicalTeam.includes(project.obra.equipeResp || "");
+	}
+	function matchDeliveryStatus(project: TProjectDTO) {
+		if (filters.deliveryStatus.length === 0) return true;
+		return filters.deliveryStatus.includes(project.compra.statusEntrega || "");
+	}
+	function matchExecutionStatus(project: TProjectDTO) {
+		if (filters.executionStatus.length === 0) return true;
+		return filters.executionStatus.includes(project.obra.statusDaObra || "");
+	}
+	function matchPersonalizedStructureApplied(project: TProjectDTO) {
+		if (!filters.personalizedStructureApplied) return true;
+		return project.estruturaPersonalizada.aplicavel === "SIM";
+	}
+	function matchPersonalizedStructureStatus(project: TProjectDTO) {
+		if (filters.personalizedStructureStatus.length === 0) return true;
+		return filters.personalizedStructureStatus.includes(project.estruturaPersonalizada.status || "");
+	}
+	function matchPaAlterationApplied(project: TProjectDTO) {
+		if (!filters.paAlterationApplied) return true;
+		return !!project.padrao.aumentoCarga.aplicavel;
+	}
+	function matchPaAlterationPending(project: TProjectDTO) {
+		if (!filters.paAlterationPending) return true;
+		return !project.padrao.aumentoCarga.dataEfetivacao;
+	}
+	function matchPartialPaymentDone(project: TProjectDTO) {
+		if (!filters.partialPaymentDone) return true;
+		return !!project.compra.dataPagamento;
+	}
+	function matchPartialExecutionPending(project: TProjectDTO) {
+		if (!filters.partialExecutionPending) return true;
+		return project.obra.statusDaObra === "CONCLUIDA PARCIAL" && !!project.homologacao.vistoria.dataEfetivacao;
+	}
+	function matchMissingObservations(project: TProjectDTO) {
+		if (!filters.missingObservations) return true;
+		return project.obra.observacoes?.trim().length <= 2;
+	}
+	function matchOutsideMatrix(project: TProjectDTO) {
+		if (!filters.outsideMatrix) return true;
+		return project.cidade !== "ITUIUTABA";
+	}
+	function handleModelData(data: TProjectDTO[]) {
+		return data.filter(
+			(project) =>
+				matchSearch(project) &&
+				matchRoofTileType(project) &&
+				matchServiceType(project) &&
+				matchCity(project) &&
+				matchTopology(project) &&
+				matchTechnicalTeam(project) &&
+				matchDeliveryStatus(project) &&
+				matchExecutionStatus(project) &&
+				matchPersonalizedStructureApplied(project) &&
+				matchPersonalizedStructureStatus(project) &&
+				matchPaAlterationApplied(project) &&
+				matchPaAlterationPending(project) &&
+				matchPartialPaymentDone(project) &&
+				matchPartialExecutionPending(project) &&
+				matchMissingObservations(project) &&
+				matchOutsideMatrix(project),
+		);
+	}
+	return {
+		...useQuery({
+			queryKey: ["execution-projects"],
+			queryFn: fetchProjects,
+			select: (data) => handleModelData(data),
+		}),
+		filters,
+		setFilters,
+	};
 }
 
 async function fetchPAExecutionProjects() {
-  try {
-    const { data } = await axios.get('/api/gestao-obras/padroes')
-    return data.data as TEnergyPAExecution[]
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get("/api/gestao-obras/padroes");
+		return data.data as TEnergyPAExecution[];
+	} catch (error) {
+		throw error;
+	}
 }
 
 export type UsePAExecutionProjectsFilters = {
-  search: string
-  segments: string[]
-  accessStatus: string[]
-  pending: boolean
-  pendingPaid: boolean
-}
+	search: string;
+	segments: string[];
+	accessStatus: string[];
+	pending: boolean;
+	pendingPaid: boolean;
+};
 export function usePAExecutionProjects() {
-  const [filters, setFilters] = useState<UsePAExecutionProjectsFilters>({
-    search: '',
-    segments: [],
-    accessStatus: [],
-    pending: false,
-    pendingPaid: false,
-  })
+	const [filters, setFilters] = useState<UsePAExecutionProjectsFilters>({
+		search: "",
+		segments: [],
+		accessStatus: [],
+		pending: false,
+		pendingPaid: false,
+	});
 
-  function matchSearch(project: TEnergyPAExecution) {
-    if (filters.search.trim().length == 0) return true
-    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
-  }
+	function matchSearch(project: TEnergyPAExecution) {
+		if (filters.search.trim().length === 0) return true;
+		return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true));
+	}
 
-  function matchSegments(project: TEnergyPAExecution) {
-    if (filters.segments.length == 0) return true
-    return filters.segments.includes(project.segmento)
-  }
-  function matchAccessStatus(project: TEnergyPAExecution) {
-    if (filters.accessStatus.length == 0) return true
-    return filters.accessStatus.includes(project.homologacao.status)
-  }
+	function matchSegments(project: TEnergyPAExecution) {
+		if (filters.segments.length === 0) return true;
+		return filters.segments.includes(project.segmento);
+	}
+	function matchAccessStatus(project: TEnergyPAExecution) {
+		if (filters.accessStatus.length === 0) return true;
+		return filters.accessStatus.includes(project.homologacao.status);
+	}
 
-  function matchPending(project: TEnergyPAExecution) {
-    if (!filters.pending) return true
-    return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao
-  }
-  function matchPendingReady(project: TEnergyPAExecution) {
-    if (!filters.pendingPaid) return true
-    return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao && !!project.compra.dataPagamento
-  }
+	function matchPending(project: TEnergyPAExecution) {
+		if (!filters.pending) return true;
+		return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao;
+	}
+	function matchPendingReady(project: TEnergyPAExecution) {
+		if (!filters.pendingPaid) return true;
+		return !project.padrao.aumentoCarga.dataEfetivacao && !project.homologacao.vistoria.dataEfetivacao && !!project.compra.dataPagamento;
+	}
 
-  function handleModelData(data: TEnergyPAExecution[]) {
-    var modeledData = data
-    return modeledData.filter(
-      (project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPending(project) && matchPendingReady(project)
-    )
-  }
-  return {
-    ...useQuery({
-      queryKey: ['pa-execution-projects'],
-      queryFn: fetchPAExecutionProjects,
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+	function handleModelData(data: TEnergyPAExecution[]) {
+		return data.filter((project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPending(project) && matchPendingReady(project));
+	}
+	return {
+		...useQuery({
+			queryKey: ["pa-execution-projects"],
+			queryFn: fetchPAExecutionProjects,
+			select: (data) => handleModelData(data),
+		}),
+		filters,
+		setFilters,
+	};
 }
 
-async function fetchInstallationStructureProjects() {
-  try {
-    const { data } = await axios.get('/api/gestao-obras/estruturas')
+async function fetchPAExecutionStats(queryParams: TEnergyPAStatsInput) {
+	try {
+		const urlParams = new URLSearchParams();
+		urlParams.append("after", queryParams.after);
+		urlParams.append("before", queryParams.before);
+		const urlParamsString = urlParams.toString();
+		const { data }: { data: TEnergyPAStatsOutput } = await axios.get(`/api/gestao-obras/padroes-estatisticas?${urlParamsString}`);
+		return data.data;
+	} catch (error) {
+		console.log("[ERROR] Error fetching PA execution stats", error);
+		throw error;
+	}
+}
 
-    return data.data as TInstallationStructureExecution[]
-  } catch (error) {
-    throw error
-  }
+type UsePAExecutionStatsParams = {
+	initialFilters?: Partial<TEnergyPAStatsInput>;
+};
+export function usePAExecutionStats({ initialFilters }: UsePAExecutionStatsParams) {
+	const monthStart = dayjs().startOf("month").toISOString();
+	const monthEnd = dayjs().endOf("month").toISOString();
+	const [queryParams, setQueryParams] = useState<TEnergyPAStatsInput>({
+		after: initialFilters?.after || monthStart,
+		before: initialFilters?.before || monthEnd,
+	});
+	function updateQueryParams(params: Partial<TEnergyPAStatsInput>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
+	const queryParamsDebounced = useDebounceMemo(queryParams, 500);
+	return {
+		...useQuery({
+			queryKey: ["pa-execution-stats", queryParamsDebounced],
+			queryFn: async () => await fetchPAExecutionStats(queryParamsDebounced),
+		}),
+		queryParams,
+		updateQueryParams,
+	};
+}
+async function fetchInstallationStructureProjects() {
+	try {
+		const { data } = await axios.get("/api/gestao-obras/estruturas");
+
+		return data.data as TInstallationStructureExecution[];
+	} catch (error) {
+		throw error;
+	}
 }
 
 export type UseInstallationStructureExecutionProjectsFilters = {
-  search: string
-  segments: string[]
-  pendingPaid: boolean
-  pendingDelivery: boolean
-  pendingReady: boolean
-}
+	search: string;
+	segments: string[];
+	pendingPaid: boolean;
+	pendingDelivery: boolean;
+	pendingReady: boolean;
+};
 
 export function useInstallationStructureExecutionProjects() {
-  const [filters, setFilters] = useState<UseInstallationStructureExecutionProjectsFilters>({
-    search: '',
-    segments: [],
-    pendingPaid: false,
-    pendingDelivery: false,
-    pendingReady: false,
-  })
+	const [filters, setFilters] = useState<UseInstallationStructureExecutionProjectsFilters>({
+		search: "",
+		segments: [],
+		pendingPaid: false,
+		pendingDelivery: false,
+		pendingReady: false,
+	});
 
-  function matchSearch(project: TInstallationStructureExecution) {
-    if (filters.search.trim().length == 0) return true
-    return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true))
-  }
+	function matchSearch(project: TInstallationStructureExecution) {
+		if (filters.search.trim().length === 0) return true;
+		return formatWithoutDiacritics(project.nomeDoContrato, true).includes(formatWithoutDiacritics(filters.search, true));
+	}
 
-  function matchSegments(project: TInstallationStructureExecution) {
-    if (filters.segments.length == 0) return true
-    return filters.segments.includes(project.segmento)
-  }
+	function matchSegments(project: TInstallationStructureExecution) {
+		if (filters.segments.length === 0) return true;
+		return filters.segments.includes(project.segmento);
+	}
 
-  function matchPendingPayment(project: TInstallationStructureExecution) {
-    if (!filters.pendingPaid) return true
-    return !project.estruturaPersonalizada.dataMontagem && project.estruturaPersonalizada.status != 'PRONTA' && !!project.compra.dataPagamento
-  }
-  function matchPendingDelivery(project: TInstallationStructureExecution) {
-    if (!filters.pendingDelivery) return true
-    return (
-      !project.estruturaPersonalizada.dataMontagem &&
-      project.estruturaPersonalizada.status != 'PRONTA' &&
-      !!project.compra.dataPedido &&
-      !project.estruturaPersonalizada.dataEntrega
-    )
-  }
-  function matchPendingReady(project: TInstallationStructureExecution) {
-    if (!filters.pendingReady) return true
-    return (
-      !project.estruturaPersonalizada.dataMontagem &&
-      project.estruturaPersonalizada.status != 'PRONTA' &&
-      !!project.estruturaPersonalizada.dataEntrega &&
-      !!project.compra.dataPagamento
-    )
-  }
+	function matchPendingPayment(project: TInstallationStructureExecution) {
+		if (!filters.pendingPaid) return true;
+		return !project.estruturaPersonalizada.dataMontagem && project.estruturaPersonalizada.status !== "PRONTA" && !!project.compra.dataPagamento;
+	}
+	function matchPendingDelivery(project: TInstallationStructureExecution) {
+		if (!filters.pendingDelivery) return true;
+		return (
+			!project.estruturaPersonalizada.dataMontagem && project.estruturaPersonalizada.status !== "PRONTA" && !!project.compra.dataPedido && !project.estruturaPersonalizada.dataEntrega
+		);
+	}
+	function matchPendingReady(project: TInstallationStructureExecution) {
+		if (!filters.pendingReady) return true;
+		return (
+			!project.estruturaPersonalizada.dataMontagem &&
+			project.estruturaPersonalizada.status !== "PRONTA" &&
+			!!project.estruturaPersonalizada.dataEntrega &&
+			!!project.compra.dataPagamento
+		);
+	}
 
-  function handleModelData(data: TInstallationStructureExecution[]) {
-    return data.filter(
-      (project) =>
-        matchSearch(project) && matchSegments(project) && matchPendingPayment(project) && matchPendingDelivery(project) && matchPendingReady(project)
-    )
-  }
-  return {
-    ...useQuery({
-      queryKey: ['structure-execution-projects'],
-      queryFn: fetchInstallationStructureProjects,
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+	function handleModelData(data: TInstallationStructureExecution[]) {
+		return data.filter((project) => matchSearch(project) && matchSegments(project) && matchPendingPayment(project) && matchPendingDelivery(project) && matchPendingReady(project));
+	}
+	return {
+		...useQuery({
+			queryKey: ["structure-execution-projects"],
+			queryFn: fetchInstallationStructureProjects,
+			select: (data) => handleModelData(data),
+		}),
+		filters,
+		setFilters,
+	};
+}
+
+async function fetchEnergyPAExecutionWithFilters(queryParams: TEnergyPAExecutionWithFiltersInput) {
+	try {
+		const { data }: { data: TEnergyPAExecutionWithFiltersOutput } = await axios.post("/api/gestao-obras/padroes", queryParams);
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+type UseEnergyPAExecutionWithFiltersParams = {
+	initialFilters?: Partial<TEnergyPAExecutionWithFiltersInput>;
+};
+export function useEnergyPAExecutionWithFilters({ initialFilters }: UseEnergyPAExecutionWithFiltersParams) {
+	const [queryParams, setQueryParams] = useState<TEnergyPAExecutionWithFiltersInput>({
+		page: initialFilters?.page || 1,
+		search: initialFilters?.search || "",
+		segments: initialFilters?.segments || [],
+		homologationStatus: initialFilters?.homologationStatus || [],
+		responsabilityTypes: initialFilters?.responsabilityTypes || [],
+		pendingExecutionOnly: initialFilters?.pendingExecutionOnly || false,
+		paidOnly: initialFilters?.paidOnly || false,
+		period: initialFilters?.period || { field: null, after: null, before: null },
+	});
+	function updateQueryParams(params: Partial<TEnergyPAExecutionWithFiltersInput>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
+	const queryParamsDebounced = useDebounceMemo(queryParams, 500);
+	return {
+		...useQuery({
+			queryKey: ["energy-pa-execution-with-filters", queryParamsDebounced],
+			queryFn: async () => await fetchEnergyPAExecutionWithFilters(queryParamsDebounced),
+		}),
+		queryParams,
+		updateQueryParams,
+	};
 }

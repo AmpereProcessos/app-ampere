@@ -11,6 +11,8 @@ import { updateProject } from "@/utils/methods/mutation/clients";
 import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { formatDateInputChange } from "@/utils/methods/shared";
+import { cn } from "@/lib/utils";
+import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
 
 type PAAdequationProjectCardProps = {
 	project: TEnergyPAExecution;
@@ -35,6 +37,18 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 			throw error;
 		}
 	}
+	function getEnergyPAExecutionStatusFlag(project: TEnergyPAExecution) {
+		return (
+			<h1
+				className={cn("min-w-fit rounded-lg px-2 py-0.5 text-[0.5rem] text-white", {
+					"bg-green-500": project.padrao.aumentoCarga.dataEfetivacao,
+					"bg-orange-600": !project.padrao.aumentoCarga.dataEfetivacao,
+				})}
+			>
+				{project.padrao.aumentoCarga.dataEfetivacao ? "CONCLUÍDO" : "PENDENTE"}
+			</h1>
+		);
+	}
 	const { mutate: handleUpdate, isPending } = useMutationWithFeedback({
 		mutationKey: ["update-project", project._id],
 		mutationFn: updatePAAdequationExecutionDate,
@@ -47,16 +61,21 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 				<div className="flex flex-wrap items-center gap-2">
 					<div className="flex items-center gap-1">
 						<div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
-							<MdDashboard size={12} />
+							<MdDashboard className="w-3 h-3 min-w-3 min-h-3" />
 							<p className="text-xs">{project.qtde}</p>
 						</div>
 						<h1 className="text-sm font-black leading-none tracking-tight">{project.nomeDoContrato}</h1>
 					</div>
+					<div className={cn("flex items-center gap-1 self-center rounded-lg px-2 py-1", getServiceTypeTagColor(project.tipoDeServico || ""))}>
+						<MdDashboard className="w-3 h-3 min-w-3 min-h-3" />
+						<h1 className="text-[0.5rem] font-medium">{project.tipoDeServico}</h1>
+					</div>
 					<div className="flex items-center gap-1">
 						<FaLocationDot />
-						<p className="text-xs font-bold italic text-primary/80">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
+						<p className="text-xs font-medium italic text-primary/80">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
 					</div>
 				</div>
+				{getEnergyPAExecutionStatusFlag(project)}
 			</div>
 
 			<div className="flex flex-col gap-0.5">

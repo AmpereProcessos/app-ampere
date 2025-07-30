@@ -11,6 +11,7 @@ const EnergyPAExecutionProjection = {
 	_id: 1,
 	qtde: 1,
 	nomeDoContrato: 1,
+	tipoDeServico: 1,
 	"compra.dataPedido": 1,
 	"compra.dataPagamento": 1,
 	"compra.previsaoEntrega": 1,
@@ -37,6 +38,7 @@ export type TEnergyPAExecution = Pick<
 	| "_id"
 	| "qtde"
 	| "nomeDoContrato"
+	| "tipoDeServico"
 	| "compra"
 	| "cidade"
 	| "uf"

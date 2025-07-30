@@ -181,6 +181,9 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 
 	const periodQuery: Filter<TProject> = period.field && period.after && period.before ? { [period.field]: { $gte: period.after, $lte: period.before } } : {};
 	const query: Filter<TProject> = {
+		"contrato.status": { $ne: "RESCISÃO DE CONTRATO" },
+		"homologacao.dataEfetivacao": null,
+		$or: [{ "compra.statusLiberacao": "PAGO" }, { "homologacao.dataLiberacao": { $ne: null } }],
 		...searchQuery,
 		...projectTypesQuery,
 		...citiesQuery,
@@ -216,6 +219,7 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 
 	const reduced = projects.reduce((acc, project) => {
 		const homologationStatus = project.homologacao.status || "NÃO DEFINIDO";
+		if (!acc[homologationStatus]) acc[homologationStatus] = [];
 		acc[homologationStatus].push(project);
 		return acc;
 	}, byStatusInitial);

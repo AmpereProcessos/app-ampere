@@ -9,18 +9,27 @@ import { useEngineeringProjectsKanban } from "@/utils/methods/query/engineering"
 import ModalProjetos from "@/components/ModalProjetos";
 import type { TEngineeringProjectsKanbanOutput } from "@/pages/api/projects/engenharia/kanban";
 import { MdDashboard } from "react-icons/md";
-import { Tag, Pencil } from "lucide-react";
+import { Tag, Pencil, ListFilter } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { formatDateAsLocale } from "@/utils/methods/formatting";
+import dayjs from "dayjs";
+import { useViewModesStore } from "@/utils/stores/view-modes-store";
+import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
+import EngineeringProjectsKanbanModePageFilters from "./KanbanModePageFilters";
+
+const CurrentDate = dayjs().toDate();
 
 type EngineeringKanbanModePageProps = {
 	session: Session;
-	handleSetMode: (mode: "kanban" | "database") => void;
 };
-function EngineeringKanbanModePage({ session, handleSetMode }: EngineeringKanbanModePageProps) {
+function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) {
+	const updateViewMode = useViewModesStore((state) => state.updateMode);
+	const [filterMenusIsOpen, setFilterMenusIsOpen] = useState(false);
 	const [editProjectModal, setEditProjectModal] = useState<{ id: string | null; isOpen: boolean }>({
 		id: null,
 		isOpen: false,
 	});
-	const { data: kanbanProjects, isLoading, isError, error, isSuccess } = useEngineeringProjectsKanban();
+	const { data: kanbanProjects, isLoading, isError, error, isSuccess, filters, updateFilters } = useEngineeringProjectsKanban();
 
 	function onDragEnd(dragEndResult: DropResult) {}
 	return (
@@ -31,11 +40,22 @@ function EngineeringKanbanModePage({ session, handleSetMode }: EngineeringKanban
 						<div className="flex items-center gap-1">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM ENGENHARIA</p>
 						</div>
-						<button type="button" onClick={() => handleSetMode("database")} className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800">
+						<button
+							type="button"
+							onClick={() => updateViewMode("engineering", "database")}
+							className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+						>
 							<FaRotate />
 							<h1 className="font-medium">ALTERAR MODO</h1>
 						</button>
 					</div>
+					<button
+						type="button"
+						onClick={() => setFilterMenusIsOpen((prev) => !prev)}
+						className="rounded-full p-2 cursor-pointer bg-primary hover:bg-blue-500 hover:text-white text-primary-foreground transition-colors"
+					>
+						<ListFilter className="w-4 h-4 min-w-4 min-h-4" />
+					</button>
 				</div>
 			</div>
 
@@ -43,11 +63,16 @@ function EngineeringKanbanModePage({ session, handleSetMode }: EngineeringKanban
 				<div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 					{isLoading ? <LoadingComponent /> : null}
 					{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
-					{isSuccess ? Object.entries(kanbanProjects.data).map(([key, value]) => <EngineeringKanbanFunnelList key={key} listTitle={key} listItems={value} />) : null}
+					{isSuccess
+						? Object.entries(kanbanProjects).map(([key, value]) => <EngineeringKanbanFunnelList key={key} listTitle={key} listItems={value} handleItemClick={() => {}} />)
+						: null}
 				</div>
 			</DragDropContext>
 			{editProjectModal.isOpen && editProjectModal.id && (
 				<ModalProjetos projectId={editProjectModal.id} modalIsOpen={editProjectModal.isOpen} closeModal={() => setEditProjectModal({ id: null, isOpen: false })} />
+			)}
+			{filterMenusIsOpen && (
+				<EngineeringProjectsKanbanModePageFilters queryParams={filters} updateQueryParams={(params) => updateFilters(params)} closeMenu={() => setFilterMenusIsOpen(false)} />
 			)}
 		</div>
 	);
@@ -89,12 +114,89 @@ function EngineeringKanbanFunnelList({ listTitle, listItems, handleItemClick }: 
 	);
 }
 
+function getProjectFlags(project: TEngineeringProjectsKanbanOutput["data"][string][number]) {
+	const homologationStatusValue = project.homologacao.status;
+	const homologationStatusValueColor = homologationStatusValue === "APROVADO" ? "text-green-500" : homologationStatusValue === "REPROVADO" ? "text-red-500" : "text-primary";
+	const homologationInspectionIsDone = !!project.homologacao.vistoria.dataEfetivacao;
+	const executiveDiagramDone = !!project.homologacao.pendencias.diagramas;
+	const executiveDrawingDone = !!project.homologacao.pendencias.desenhos;
+	const projectIsDelivered = project.compra.statusEntrega === "ENTREGUE";
+	const projectsDelivery = {
+		label: projectIsDelivered ? "DATA DE ENTREGA" : "PREV. DE ENTREGA",
+		value: projectIsDelivered ? formatDateAsLocale(project.compra.dataEntrega) || "-" : formatDateAsLocale(project.compra.previsaoEntrega) || "-",
+	};
+
+	const timeSinceContractSignature = dayjs(project.contrato.dataAssinatura).diff(dayjs(CurrentDate), "day");
+	const timeSinceAccessGrantingRequest = project.homologacao.acesso.dataSolicitacao ? dayjs(project.homologacao.acesso.dataSolicitacao).diff(dayjs(CurrentDate), "day") : undefined;
+	const timeSinceAccessGrantingResponse = project.homologacao.acesso.dataResposta ? dayjs(project.homologacao.acesso.dataResposta).diff(dayjs(CurrentDate), "day") : undefined;
+
+	const isFastTrack = project.homologacao.fastTrack;
+
+	return {
+		homologationStatusFlag: {
+			label: "STATUS DA HOMOLOGAÇÃO",
+			value: homologationStatusValue,
+			valueColor: homologationStatusValueColor,
+		},
+		homologationInspectionFlag: {
+			label: "STATUS DA VISTORIA",
+			value: homologationInspectionIsDone ? "FEITA" : "PENDENTE",
+			valueColor: homologationInspectionIsDone ? "text-green-500" : "text-red-500",
+		},
+		executiveDiagramFlag: {
+			label: "DIAGRAMA UNIFILAR",
+			value: executiveDiagramDone ? "FEITO" : "PENDENTE",
+			valueColor: executiveDiagramDone ? "text-green-500" : "text-red-500",
+		},
+		executiveDrawingFlag: {
+			label: "DESENHO DO TELHADO",
+			value: executiveDrawingDone ? "FEITO" : "PENDENTE",
+			valueColor: executiveDrawingDone ? "text-green-500" : "text-red-500",
+		},
+		projectsDeliveryFlag: {
+			label: projectIsDelivered ? "DATA DE ENTREGA" : "PREV. DE ENTREGA",
+			value: projectIsDelivered ? formatDateAsLocale(project.compra.dataEntrega) || "-" : formatDateAsLocale(project.compra.previsaoEntrega) || "-",
+			valueColor: projectIsDelivered ? "text-green-500" : "text-red-500",
+		},
+		timeSinceContractSignatureFlag: {
+			label: "DESDE ASS.CONTRATO",
+			value: timeSinceContractSignature,
+			valueColor: "text-primary",
+		},
+		timeSinceAccessGrantingRequestFlag: {
+			label: "DESDE A SOLICITAÇÃO DE ACESSO",
+			value: timeSinceAccessGrantingRequest ? `${timeSinceAccessGrantingRequest} DIAS` : "-",
+			valueColor: "text-primary",
+		},
+		timeSinceAccessGrantingResponseFlag: {
+			label: "DESDE A RESPOSTA DO PARECER",
+			value: timeSinceAccessGrantingResponse ? `${timeSinceAccessGrantingResponse} DIAS` : "-",
+			valueColor: "text-primary",
+		},
+		isFastTrackedFlag: {
+			label: "FAST TRACK",
+			value: isFastTrack ? "SIM" : "NÃO",
+			valueColor: isFastTrack ? "text-green-500" : "text-red-500",
+		},
+	};
+}
 type EngineeringKanbanListItemProps = {
 	item: TEngineeringProjectsKanbanOutput["data"][string][number];
 	index: number;
 	handleClick: (id: string) => void;
 };
 function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanbanListItemProps) {
+	const {
+		homologationStatusFlag,
+		homologationInspectionFlag,
+		executiveDiagramFlag,
+		executiveDrawingFlag,
+		projectsDeliveryFlag,
+		timeSinceContractSignatureFlag,
+		timeSinceAccessGrantingRequestFlag,
+		timeSinceAccessGrantingResponseFlag,
+		isFastTrackedFlag,
+	} = getProjectFlags(item);
 	return (
 		<Draggable draggableId={item._id.toString()} index={index}>
 			{(provided) => (
@@ -114,6 +216,10 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
 						</button>
 					</div>
 					<div className="flex w-full grow flex-col gap-2 px-2">
+						<div className={cn("flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1", getServiceTypeTagColor(item.tipoDeServico || ""))}>
+							<MdDashboard size={12} />
+							<h1 className="text-[0.5rem] font-medium">{item.tipoDeServico}</h1>
+						</div>
 						{item.etiquetas && item.etiquetas.length > 0 ? (
 							<div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
 								<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
@@ -132,6 +238,51 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
 										<h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
 									</div>
 								))}
+							</div>
+						) : null}
+						<div className="flex items-center justify-between">
+							<div>
+								<span className="text-xxs">{homologationStatusFlag.label}</span>
+								<p className={cn("text-xs text-gray-600", homologationStatusFlag.valueColor)}>{homologationStatusFlag.value}</p>
+							</div>
+							<div className="text-end">
+								<span className="text-end text-xxs">{homologationInspectionFlag.label}</span>
+								<p className={cn("text-center text-xs text-gray-600", homologationInspectionFlag.valueColor)}>{homologationInspectionFlag.value}</p>
+							</div>
+						</div>
+						<div className="flex items-center justify-between">
+							<div>
+								<span className="text-xxs">{executiveDiagramFlag.label}</span>
+								<p className={cn("text-xs uppercase", executiveDiagramFlag.valueColor)}>{executiveDiagramFlag.value}</p>
+							</div>
+							<div>
+								<span className="text-center text-xxs">{projectsDeliveryFlag.label}</span>
+								<p className={cn("text-center text-xs uppercase text-gray-600", projectsDeliveryFlag.valueColor)}>{projectsDeliveryFlag.value}</p>
+							</div>
+							<div>
+								<span className="text-xxs">{executiveDrawingFlag.label}</span>
+								<p className={cn("text-center text-xs text-gray-600", executiveDrawingFlag.valueColor)}>{executiveDrawingFlag.value}</p>
+							</div>
+						</div>
+						<div className="flex items-center justify-between">
+							<div className="flex w-full flex-col">
+								<span className="text-xxs">{timeSinceContractSignatureFlag.label}</span>
+								<p className={cn("text-start text-xs uppercase text-red-500", timeSinceContractSignatureFlag.valueColor)}>{timeSinceContractSignatureFlag.value}</p>
+							</div>
+							<div className="flex w-full flex-col">
+								<span className="text-end text-xxs">{timeSinceAccessGrantingResponseFlag.label}</span>
+								<p className={cn("text-end text-xs uppercase text-red-500", timeSinceAccessGrantingResponseFlag.valueColor)}>{timeSinceAccessGrantingResponseFlag.value}</p>
+							</div>
+						</div>
+						{item.homologacao.acesso.dataSolicitacao ? (
+							<div className="flex w-full items-center justify-between">
+								<p className="text-xxs ">{timeSinceAccessGrantingRequestFlag.label}</p>
+								<p className={cn("text-start text-xs text-gray-600", timeSinceAccessGrantingRequestFlag.valueColor)}>{timeSinceAccessGrantingRequestFlag.value}</p>
+							</div>
+						) : null}
+						{item.homologacao.fastTrack ? (
+							<div className="flex w-full items-center justify-center">
+								<h1 className={cn("rounded px-2 py-1 text-[0.55rem] font-bold", isFastTrackedFlag.valueColor)}>{isFastTrackedFlag.value}</h1>
 							</div>
 						) : null}
 					</div>

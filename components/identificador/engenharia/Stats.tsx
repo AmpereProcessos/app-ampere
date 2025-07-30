@@ -1,7 +1,7 @@
-import { useEngineeringSectorStats } from "@/utils/methods/query/engineering";
 import { ChartArea, CircleCheck, CircleDashed, CircleX, DraftingCompass, GitPullRequestArrow, Network } from "lucide-react";
-import { DateIntervalInput } from "@/components/utils/DateIntervalInput";
-import { formatDecimalPlaces } from "@/utils/methods/handlers";
+import DateIntervalInput from "@/components/inputs/DateIntervalInput";
+import { formatDecimalPlaces } from "@/utils/constants";
+import { useEngineeringSectorStats } from "@/utils/methods/query/stats";
 
 function EngineeringStats() {
 	const { data: stats, queryParams, updateQueryParams } = useEngineeringSectorStats({});

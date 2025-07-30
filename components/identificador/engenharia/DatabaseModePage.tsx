@@ -12,36 +12,34 @@ import { FaMoon, FaSignature } from "react-icons/fa";
 import { BsPatchCheck } from "react-icons/bs";
 import { TbAlertHexagonFilled, TbCheckupList } from "react-icons/tb";
 
-import ModalProjetos from "../../components/ModalProjetos";
-import ProjetosSkeleton from "../../components/skeletons/ProjetosSkeleton";
-import TagTipoDeServico from "../../components/TagTipoDeServico";
-import LoadingPage from "../../components/utils/LoadingPage";
+import ModalProjetos from "@/components/ModalProjetos";
+import ProjetosSkeleton from "@/components/skeletons/ProjetosSkeleton";
+import TagTipoDeServico from "@/components/TagTipoDeServico";
 
-import TextInput from "../../components/inputs/Text";
-import SelectInput from "../../components/inputs/Select";
-import DateInput from "../../components/inputs/Date";
-import MultipleSelectInput from "../../components/inputs/MultipleSelect";
-import MultipleSelectInputVirtualized from "../../components/inputs/MultipleSelectInputVirtualized";
-import { ServiceOrderStatus, HomologationControlStatus, inspectionStatus, serviceTypes } from "../../utils/select-options";
-import { useEngineeringProjects } from "../../utils/methods/query/engineering";
-import { formatDateInputChange } from "../../utils/methods/shared";
-import { formatDate, formatDecimalPlaces, SlideMotionVariants } from "../../utils/constants";
+import TextInput from "@/components/inputs/Text";
+import SelectInput from "@/components/inputs/Select";
+import DateInput from "@/components/inputs/Date";
+import MultipleSelectInput from "@/components/inputs/MultipleSelect";
+import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectInputVirtualized";
+import { ServiceOrderStatus, HomologationControlStatus, inspectionStatus, serviceTypes } from "@/utils/select-options";
+import { useEngineeringProjects } from "@/utils/methods/query/engineering";
+import { formatDateInputChange } from "@/utils/methods/shared";
+import { formatDate, SlideMotionVariants } from "@/utils/constants";
 
 import StatesAndCities from "@/utils/jsons/estados-cidades.json";
-import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
-import { useTags } from "../../utils/methods/query/tags";
+import { useTags } from "@/utils/methods/query/tags";
 import type { Session } from "next-auth";
 import ErrorComponent from "@/components/utils/ErrorComponent";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import type { TProjectDTO } from "@/utils/schemas/projects";
 import { cn } from "@/lib/utils";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useUsers } from "@/utils/methods/query/crm/users";
-import ErrorPage from "@/components/utils/ErrorPage";
-import { useEngineeringSectorStats } from "@/utils/methods/query/stats";
-import { ChartArea, CircleCheck, CircleDashed, CircleX, DraftingCompass, GitPullRequestArrow, ListTodo, Network } from "lucide-react";
-import DateIntervalInput from "@/components/inputs/DateIntervalInput";
+
 import EngineeringStats from "./Stats";
+import type { TEngineeringProjectDTO } from "@/pages/api/projects/engenharia";
+import ProjectCardsTags from "@/components/utils/ProjectCardsTags";
+import { FaRotate } from "react-icons/fa6";
+import { useViewModesStore } from "@/utils/stores/view-modes-store";
+import { getErrorMessage } from "@/utils/methods/handlers";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
@@ -51,6 +49,7 @@ type EngineeringDatabaseModePageProps = {
 	session: Session;
 };
 function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePageProps) {
+	const updateViewMode = useViewModesStore((state) => state.updateMode);
 	const [filtersMenuIsOpen, setFiltersMenuIsOpen] = useState(false);
 	const [editProjectModal, setEditProjectModal] = useState<{ isOpen: boolean; projectId: string | null }>({ isOpen: false, projectId: null });
 	const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
@@ -71,6 +70,14 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de engenharia</p>
+						<button
+							type="button"
+							onClick={() => updateViewMode("engineering", "kanban")}
+							className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+						>
+							<FaRotate />
+							<h1 className="font-medium">ALTERAR MODO</h1>
+						</button>
 					</div>
 					{filtersMenuIsOpen ? (
 						<div className="cursor-pointer text-gray-600 hover:text-blue-400">
@@ -441,46 +448,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 								>
 									FALTANDO ASSINATURA
 								</button>
-								{/* <button
-									type="button"
-									onClick={() =>
-										setFilters({
-											...filters,
-											failedGranting: !filters,
-										})
-									}
-									className={`${filters.failedGranting ? "bg-red-500" : "bg-red-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-								>
-									PARECER REPROVADO
-								</button>
-								<button
-									type="button"
-									onClick={() =>
-										setFilters({
-											...filters,
-											failedInspection: !filters.failedInspection,
-										})
-									}
-									className={`${filters.failedInspection ? "bg-red-500" : "bg-red-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-								>
-									VISTORIA REPROVADA
-								</button> */}
 							</div>
-							{/* {getTotalCircuitBreakers() ? (
-								<div className="flex flex-col items-center justify-center gap-2">
-									<h1 className="font-medium text-gray-600">CONTAGEM DE DISJUNTORES CADASTRADOS</h1>
-									<div className="grid w-full grid-cols-1 gap-2 md:grid-cols-4">
-										{sortTotalCircuitBreakerKeys(Object.keys(getTotalCircuitBreakers())).map(
-											//Object.keys(getTotalCircuitBreakers())
-											(key, index) => (
-												<p key={`${key}`} className={`${getCircuitBreakerTypeColors(key)} rounded p-1 text-center`}>
-													{key} - ({formatDecimalPlaces(getTotalCircuitBreakers()[key])} UN)
-												</p>
-											),
-										)}
-									</div>
-								</div>
-							) : null} */}
 						</motion.div>
 					) : null}
 				</AnimatePresence>
@@ -502,7 +470,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 		</div>
 	);
 }
-
+export default EngineeringDatabaseModePage;
 function getProjectAccessGrantingStatusColors({ accessGrantingResponseDateString }: { accessGrantingResponseDateString?: string }) {
 	if (!accessGrantingResponseDateString) return "border border-gray-300";
 	const accessGrantingResponseDate = dayjs(accessGrantingResponseDateString).toDate();
@@ -520,7 +488,7 @@ function getProjectAccessGrantingStatusColors({ accessGrantingResponseDateString
 	}
 	return "border border-gray-300";
 }
-function getProjectFlags(project: TProjectDTO) {
+function getProjectFlags(project: TEngineeringProjectDTO) {
 	const homologationStatusValue = project.homologacao.status;
 	const homologationStatusValueColor = homologationStatusValue === "APROVADO" ? "text-green-500" : homologationStatusValue === "REPROVADO" ? "text-red-500" : "text-primary";
 	const homologationInspectionIsDone = !!project.homologacao.vistoria.dataEfetivacao;
@@ -586,7 +554,7 @@ function getProjectFlags(project: TProjectDTO) {
 		},
 	};
 }
-function ProjectCard({ project, index, handleOpenModal }: { project: TProjectDTO; handleOpenModal: (projectId: string) => void; index: number }) {
+function ProjectCard({ project, index, handleOpenModal }: { project: TEngineeringProjectDTO; handleOpenModal: (projectId: string) => void; index: number }) {
 	const {
 		homologationStatusFlag,
 		homologationInspectionFlag,
@@ -618,7 +586,7 @@ function ProjectCard({ project, index, handleOpenModal }: { project: TProjectDTO
 					<p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
 					<p className="text-xs text-[#15599a]">#{project.qtde}</p>
 				</div>
-				<ProjectCardsTags projectTags={project.etiquetas} />
+				<ProjectCardsTags projectTags={project.etiquetas || []} />
 				<div className="flex items-center justify-between">
 					<div>
 						<span className="text-xxs">{homologationStatusFlag.label}</span>

@@ -62,9 +62,9 @@ export function formatWithoutDiacritics(string: string, useUpperCase?: boolean) 
 			.normalize("NFD")
 			.replace(/[\u0300-\u036f]/g, "");
 }
-export function getProjectNestedFieldValue(project: TProjectDTO, path: string) {
+export function getProjectNestedFieldValue(project: Record<string, any>, path: string) {
 	// @ts-ignore
-	return path.split(".").reduce((acc, part) => acc && acc[part as keyof TProjectDTO], project);
+	return path.split(".").reduce((acc, part) => acc && acc[part as keyof Record<string, any>], project);
 }
 
 export function formatAsNumber(value: unknown) {

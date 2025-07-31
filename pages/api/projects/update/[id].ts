@@ -86,16 +86,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			const project = await collection.findOne({ _id: new ObjectId(id) });
 			if (!project) return res.status(404).json({ message: "Projeto não encontrado" });
 			const projectType = project.tipoDeServico;
-			const isSolarUFVSale = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(projectType);
+			const usesPaymentParam = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO", "PRODUTOS E SERVIÇOS AVULSOS", "MONTAGEM E DESMONTAGEM"].includes(projectType);
 
 			// If its a solar UFV sale, the comission date reference is the payment date
-			if (isSolarUFVSale && updateKeys.includes("compra.dataPagamento")) {
+			if (usesPaymentParam && updateKeys.includes("compra.dataPagamento")) {
 				console.log("[INFO] [PROJECT UPDATE] Solar UFV sale project. Handling comission update...");
 				const comissionDateReference = req.body["compra.dataPagamento"];
 				await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "comissoes.dataReferencia": comissionDateReference } });
 			}
 			// If its not a solar UFV sale, the comission date reference is the contract signature date
-			if (!isSolarUFVSale && updateKeys.includes("contrato.dataAssinatura")) {
+			if (!usesPaymentParam && updateKeys.includes("contrato.dataAssinatura")) {
 				console.log("[INFO] [PROJECT UPDATE] Non-solar UFV sale project. Handling comission update...");
 				const comissionDateReference = req.body["contrato.dataAssinatura"];
 				await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "comissoes.dataReferencia": comissionDateReference } });

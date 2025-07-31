@@ -88,7 +88,7 @@ function SalesRanking() {
 					{data?.others
 						.sort((a, b) => a.index - b.index)
 						.map((item, index) => (
-							<Avatar key={`${item.name}-${index}`} className="w-6 h-6 min-w-6 min-h-6">
+							<Avatar key={`${item.name}-${index}`} className="w-8 h-8 min-w-8 min-h-8">
 								<AvatarImage src={item.avatar} alt={item.name} />
 								<AvatarFallback>{item.name ? formatNameAsInitials(item.name) : "NA"}</AvatarFallback>
 							</Avatar>

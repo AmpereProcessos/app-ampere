@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { BsDownload, BsFunnel } from "react-icons/bs";
 
-import ComissionCard from "../../components/identificador/comissoes/ComissionCard";
 import ErrorComponent from "../../components/utils/ErrorComponent";
 import LoadingPage from "../../components/utils/LoadingPage";
 

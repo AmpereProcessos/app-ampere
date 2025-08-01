@@ -1,81 +1,109 @@
-import { z } from 'zod'
-import { AuthorSchema } from './users'
-import { ObjectId } from 'mongodb'
+import { z } from "zod";
+import { AuthorSchema } from "./users";
 
-const PropertyResponsibleSchema = z.object({
-  id: z.string({
-    required_error: 'ID do responsável pela propriedade não informado.',
-    invalid_type_error: 'Tipo não válido para o ID do responsável pela propriedade.',
-  }),
-  nome: z.string({
-    required_error: 'Nome do responsável pela propriedade não informado.',
-    invalid_type_error: 'Tipo não válido para o nome do responsável pela propriedade.',
-  }),
-  avatar_url: z
-    .string({ required_error: 'Avatar do responsável não informado.', invalid_type_error: 'Tipo não válido para o avatar do responsável.' })
-    .optional()
-    .nullable(),
-  quantidade: z
-    .number({
-      required_error: 'Quantidade em posse do responsável não informada.',
-      invalid_type_error: 'Tipo não válido para a quantidade em posse do responsável.',
-    })
-    .min(1, 'A quantidade em posse do responsável deve ser no mínimo 1.'),
-  dataRecebimento: z
-    .string({
-      required_error: 'Data de recebimento da propriedade não informada.',
-      invalid_type_error: 'Tipo não válido para data de recebimento da propriedade.',
-    })
-    .datetime({ message: 'Tipo inválido para data de recebimento.' }),
-  dataDevolucao: z
-    .string({
-      required_error: 'Data de devolução da propriedade não informada.',
-      invalid_type_error: 'Tipo não válido para data de devolução da propriedade.',
-    })
-    .datetime({ message: 'Tipo inválido para data de devolução da propriedade.' })
-    .optional()
-    .nullable(),
-})
+export const PropertyMetadataVehicleSchema = z.object({
+	tipo: z.literal("VEÍCULO"),
+	kmInicial: z.number({
+		required_error: "Kilometragem inicial não informada.",
+		invalid_type_error: "Tipo não válido para a kilometragem inicial.",
+	}),
+	kmAcumulado: z.number({
+		required_error: "Kilometragem acumulada não informada.",
+		invalid_type_error: "Tipo não válido para a kilometragem acumulada.",
+	}),
+});
+
 const GeneralPropertySchema = z.object({
-  nome: z.string(),
-  identificador: z.string(),
-  quantidade: z.number(),
-  tags: z.array(z.string()),
-  autor: AuthorSchema,
-  responsaveis: z.array(PropertyResponsibleSchema),
-  dataInsercao: z.string().datetime(),
-})
+	nome: z.string(),
+	identificador: z.string(),
+	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
+	tags: z.array(z.string()),
+	autor: AuthorSchema,
+	dataInsercao: z.string().datetime(),
+});
 export const InsertPropertySchema = z.object({
-  nome: z.string({ required_error: 'Nome da propriedade não informado.', invalid_type_error: 'Tipo não válido para o nome da propriedade.' }),
-  identificador: z.string({
-    required_error: 'Identificador da propriedade não informado.',
-    invalid_type_error: 'Tipo não válido para o identificador da propriedade.',
-  }),
-  quantidade: z
-    .number({
-      required_error: 'Quantidade de itens da propriedade não informada.',
-      invalid_type_error: 'Tipo não válido para a quantidade de itens da propriedade.',
-    })
-    .min(1, 'A quantidade mínima de itens é 1.'),
-  tags: z.array(z.string({ required_error: 'Tag não informada.', invalid_type_error: 'Tipo não válido para tag da propriedade.' })),
-  autor: AuthorSchema,
-  responsaveis: z.array(PropertyResponsibleSchema),
-  dataInsercao: z
-    .string({ required_error: 'Data de inserção não informada.', invalid_type_error: 'Tipo não válido para a data de inserção da propriedade.' })
-    .datetime({ message: 'Tipo inválido para a data de inserção.' }),
-})
+	nome: z.string({ required_error: "Nome da propriedade não informado.", invalid_type_error: "Tipo não válido para o nome da propriedade." }),
+	identificador: z.string({
+		required_error: "Identificador da propriedade não informado.",
+		invalid_type_error: "Tipo não válido para o identificador da propriedade.",
+	}),
+	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
+	tags: z.array(z.string({ required_error: "Tag não informada.", invalid_type_error: "Tipo não válido para tag da propriedade." })),
+	autor: AuthorSchema,
+	dataInsercao: z
+		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção da propriedade." })
+		.datetime({ message: "Tipo inválido para a data de inserção." }),
+});
+export type TProperty = z.infer<typeof GeneralPropertySchema>;
 
-const PropertyEntitySchema = z.object({
-  _id: z.instanceof(ObjectId),
-  nome: z.string(),
-  identificador: z.string(),
-  quantidade: z.number(),
-  tags: z.array(z.string()),
-  autor: AuthorSchema,
-  responsaveis: z.array(PropertyResponsibleSchema),
-  dataInsercao: z.string().datetime(),
-})
+export type TPropertyDTO = TProperty & { _id: string };
 
-export type TProperty = z.infer<typeof GeneralPropertySchema>
+export const PropertyUsageVehicleUsageMetadataSchema = z.object({
+	tipo: z.literal("USO DE VEÍCULO"),
+	kmInicial: z.number({
+		required_error: "Kilometragem inicial não informada.",
+		invalid_type_error: "Tipo não válido para a kilometragem inicial.",
+	}),
+	kmFinal: z
+		.number({
+			required_error: "Kilometragem final não informada.",
+		})
+		.optional()
+		.nullable(),
+});
+export type TPropertyUsageVehicleUsageMetadata = z.infer<typeof PropertyUsageVehicleUsageMetadataSchema>;
 
-export type TPropertyDTO = TProperty & { _id: string }
+export const PropertyTemporaryUsageSchema = z.object({
+	propriedade: z.object({
+		id: z.string({
+			required_error: "ID da propriedade não informado.",
+			invalid_type_error: "Tipo não válido para o ID da propriedade.",
+		}),
+		nome: z.string({
+			required_error: "Nome da propriedade não informado.",
+			invalid_type_error: "Tipo não válido para o nome da propriedade.",
+		}),
+		identificador: z.string({
+			required_error: "Identificador da propriedade não informado.",
+			invalid_type_error: "Tipo não válido para o identificador da propriedade.",
+		}),
+	}),
+	responsaveis: z.array(
+		z.object({
+			id: z.string({
+				required_error: "ID do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o ID do responsável.",
+			}),
+			nome: z.string({
+				required_error: "Nome do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o nome do responsável.",
+			}),
+			avatar_url: z.string({
+				required_error: "Avatar do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o avatar do responsável.",
+			}),
+			telefone: z.string({
+				required_error: "Telefone do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o telefone do responsável.",
+			}),
+		}),
+	),
+	arquivos: z.array(
+		z.object({
+			titulo: z.string({
+				required_error: "Título do arquivo não informado.",
+				invalid_type_error: "Tipo não válido para o título do arquivo.",
+			}),
+			url: z.string({
+				required_error: "URL do arquivo não informada.",
+				invalid_type_error: "Tipo não válido para a URL do arquivo.",
+			}),
+		}),
+	),
+	metadados: z.discriminatedUnion("tipo", [PropertyUsageVehicleUsageMetadataSchema]),
+	dataInicio: z.string().datetime({ message: "Tipo inválido para a data de início." }).optional().nullable(),
+	dataFim: z.string().datetime({ message: "Tipo inválido para a data de fim." }).optional().nullable(),
+	autor: AuthorSchema,
+	dataInsercao: z.string().datetime({ message: "Tipo inválido para a data de inserção." }),
+});
+export type TPropertyTemporaryUsage = z.infer<typeof PropertyTemporaryUsageSchema>;

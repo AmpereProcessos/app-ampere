@@ -8,6 +8,7 @@ import LoadingPage from "@/components/utils/LoadingPage";
 import { useProperties } from "@/utils/methods/query/properties";
 import { useEmployees } from "@/utils/methods/query/users";
 import { AnimatePresence, motion } from "framer-motion";
+import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
@@ -19,6 +20,18 @@ type TEditModal = {
 
 function Properties() {
 	const { data: session, status } = useSession({ required: true });
+
+	if (status !== "authenticated") return <LoadingPage />;
+
+	return <PropertiesContent session={session} />;
+}
+
+export default Properties;
+
+type PropertiesContentProps = {
+	session: Session;
+};
+function PropertiesContent({ session }: PropertiesContentProps) {
 	const { data: properties, isLoading, isError, isSuccess, filters, setFilters } = useProperties();
 	const { data: employees } = useEmployees({ active: true });
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false);
@@ -26,7 +39,7 @@ function Properties() {
 	const [editPropertyModal, setEditPropertyModal] = useState<TEditModal>({ id: null, isOpen: false });
 
 	const tags = [...new Set(properties?.flatMap((module) => module.tags) || [])];
-	if (status != "authenticated") return <LoadingPage />;
+
 	return (
 		<div className="grow p-6">
 			<div className="flex h-full grow flex-col">
@@ -48,6 +61,7 @@ function Properties() {
 					</div>
 					<div className="mt-2 flex w-full items-center justify-end gap-2">
 						<button
+							type="button"
 							onClick={() => setNewPropertyModalIsOpen(true)}
 							className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
 						>
@@ -117,7 +131,7 @@ function Properties() {
 					{isError ? <ErrorComponent msg="Erro ao buscar propriedades..." /> : null}
 					{isSuccess ? (
 						properties.length > 0 ? (
-							properties.map((property) => <PropertyCard property={property} openModal={(id) => setEditPropertyModal({ id: id, isOpen: true })} />)
+							properties.map((property) => <PropertyCard key={property._id} property={property} openModal={(id) => setEditPropertyModal({ id: id, isOpen: true })} />)
 						) : (
 							<p className="w-full text-center font-medium italic text-gray-500">Nenhuma propriedade encontrada.</p>
 						)
@@ -131,5 +145,3 @@ function Properties() {
 		</div>
 	);
 }
-
-export default Properties;

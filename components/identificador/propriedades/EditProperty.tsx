@@ -1,17 +1,18 @@
 import TextInput from "@/components/inputs/Text";
-import { TProperty, TPropertyDTO } from "@/utils/schemas/properties";
-import { Session } from "next-auth";
-import React, { useEffect, useState } from "react";
+import type { TProperty, TPropertyDTO } from "@/utils/schemas/properties";
+import type { Session } from "next-auth";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import TagsMenu from "./TagsMenu";
-import ResponsiblesMenu from "./ResponsiblesMenu";
-import NumberInput from "@/components/inputs/Number";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { createProperty, updateProperty } from "@/utils/methods/mutation/properties";
+import { updateProperty } from "@/utils/methods/mutation/properties";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePropertyById } from "@/utils/methods/query/properties";
 import LoadingPage from "@/components/utils/LoadingPage";
 import ErrorComponent from "@/components/utils/ErrorComponent";
+import VehicleProperties from "./VehicleProperties";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -24,9 +25,12 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 		_id: "id-holder",
 		nome: "",
 		identificador: "",
-		quantidade: 1,
 		tags: [],
-		responsaveis: [],
+		metadados: {
+			tipo: "VEÍCULO",
+			kmInicial: 0,
+			kmAcumulado: 0,
+		},
 		autor: {
 			id: session.user.id,
 			nome: session.user.nome,
@@ -34,6 +38,12 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 		},
 		dataInsercao: new Date().toISOString(),
 	});
+	function updateInfoHolder(info: Partial<TProperty>) {
+		setInfoHolder((prev) => ({
+			...prev,
+			...info,
+		}));
+	}
 	const { data: property, isLoading, isError, isSuccess } = usePropertyById({ id: propertyId });
 	const { mutate: handleUpdateProperty, isPending: updateLoading } = useMutationWithFeedback({
 		mutationKey: ["update-property", propertyId],
@@ -44,6 +54,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 	useEffect(() => {
 		if (property) setInfoHolder(property);
 	}, [property]);
+
 	return (
 		<div id="new-property" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
 			<div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
@@ -59,7 +70,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 					{isSuccess ? (
 						<div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 							<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-								<div className="w-full lg:w-1/3">
+								<div className="w-full lg:w-1/2">
 									<TextInput
 										label="NOME DA PROPRIEDADE"
 										placeholder="Preencha o nome da propriedade..."
@@ -68,7 +79,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 										width="100%"
 									/>
 								</div>
-								<div className="w-full lg:w-1/3">
+								<div className="w-full lg:w-1/2">
 									<TextInput
 										label="IDENTIFICADOR DA PROPRIEDADE"
 										placeholder="Preencha o identificador da propriedade..."
@@ -77,31 +88,21 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 										width="100%"
 									/>
 								</div>
-								<div className="w-full lg:w-1/3">
-									<NumberInput
-										label="QUANTIDADE DE ITENS"
-										placeholder="Preencha a quantidade de itens..."
-										value={infoHolder.quantidade}
-										handleChange={(value) => setInfoHolder((prev) => ({ ...prev, quantidade: value }))}
-										width="100%"
-									/>
-								</div>
 							</div>
-							<TagsMenu propertyHolder={infoHolder as TPropertyDTO} setPropertyHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TPropertyDTO>>} />
-
-							<ResponsiblesMenu propertyHolder={infoHolder as TPropertyDTO} setPropertyHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TPropertyDTO>>} />
+							<TagsMenu infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+							<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 						</div>
 					) : null}
 
 					<div className="my-1 flex w-full items-center justify-end">
-						<button
-							disabled={updateLoading || isLoading}
-							// @ts-ignore
+						<LoadingButton
+							loading={updateLoading}
+							type="button"
 							onClick={() => handleUpdateProperty({ id: propertyId, changes: infoHolder })}
 							className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
 						>
 							ATUALIZAR PROPRIEDADE
-						</button>
+						</LoadingButton>
 					</div>
 				</div>
 			</div>

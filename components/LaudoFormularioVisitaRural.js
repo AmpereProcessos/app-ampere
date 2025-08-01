@@ -1,7 +1,5 @@
 import React from "react";
-import Image from "next/image";
-import Logo from "../utils//images/logo-texto-azul-vertical.png";
-import Assinatura from "../utils/images/signature-diogo.jpg";
+
 import dayjs from "dayjs";
 function LaudoFormularioVisitaRural({ analysis }) {
 	return (

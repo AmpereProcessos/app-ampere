@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Logo from "../utils//images/logo-texto-azul-vertical.png";
 import fatorDeGeracaoPorOrientacao from "../utils/jsons/fatores-geracao.json";
-import Assinatura from "../utils/images/signature-diogo.jpg";
+import Assinatura from "../utils/images/signature-andrew.png";
 import dayjs from "dayjs";
 import { Bar, BarChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, LabelList } from "recharts";
 import { getGenFactorByOrientation } from "../utils/methods/shared";

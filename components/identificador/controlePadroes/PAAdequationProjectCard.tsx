@@ -1,4 +1,4 @@
-import type { TEnergyPAExecution } from "@/pages/api/gestao-obras/padroes";
+import type { TEnergyPAExecution, TEnergyPAExecutionWithFiltersOutput } from "@/pages/api/gestao-obras/padroes";
 import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
 import type { TLocation } from "@/utils/schemas/useful";
 import React from "react";
@@ -13,9 +13,10 @@ import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { cn } from "@/lib/utils";
 import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
+import { AlertCircle, BadgeCheck, Banknote, Cable, Contact, Signature, User } from "lucide-react";
 
 type PAAdequationProjectCardProps = {
-	project: TEnergyPAExecution;
+	project: TEnergyPAExecutionWithFiltersOutput["data"]["projects"][number];
 };
 function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 	const queryClient = useQueryClient();
@@ -72,59 +73,92 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 					</div>
 					<div className="flex items-center gap-1">
 						<FaLocationDot />
-						<p className="text-xs font-medium italic text-primary/80">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
+						<p className="text-[0.65rem] font-medium italic text-primary/80">{formatLocation({ location, includeUf: true, includeCity: true })}</p>
 					</div>
 				</div>
 				{getEnergyPAExecutionStatusFlag(project)}
 			</div>
-
-			<div className="flex flex-col gap-0.5">
-				<div className="flex items-center gap-1">
-					<h1 className="text-[0.65rem] tracking-tight text-gray-500 lg:text-xs">HOMOLOGAÇÃO</h1>
-				</div>
-				<div className="flex w-full flex-wrap items-center gap-4">
-					<div className="flex items-center gap-1">
-						<FaCircle />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">{project.homologacao.status}</p>
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+					<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">HOMOLOGAÇÃO</h1>
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": project.homologacao.status !== "APROVADO",
+							"bg-green-100 text-green-700": project.homologacao.status === "APROVADO",
+						})}
+					>
+						<BadgeCheck className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.6rem]")}>PARECER DE ACESSO: {project.homologacao.status}</p>
 					</div>
-					<div className="flex items-center gap-1">
-						<BsCalendarCheck />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
-							{project.homologacao.documentacao.dataConclusaoElaboracao
-								? `DOCUMENTAÇÃO CONCLUÍDA EM ${formatDateAsLocale(project.homologacao.documentacao.dataConclusaoElaboracao || project.homologacao.documentacao.dataAssinatura)}`
-								: "DOCUMENTAÇÃO NÃO CONCLUÍDA"}
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": !project.homologacao.documentacao.dataConclusaoElaboracao,
+							"bg-green-100 text-green-700": project.homologacao.documentacao.dataConclusaoElaboracao,
+						})}
+					>
+						<Signature className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.6rem]")}>DOCUMENTAÇÃO: {project.homologacao.documentacao.dataConclusaoElaboracao ? "CONCLUÍDA" : "PENDENTE"}</p>
+					</div>
+				</div>
+			</div>
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+					<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">PADRÃO</h1>
+					<div
+						className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {
+							"bg-orange-100 text-orange-700": !project.compra.dataPagamento,
+							"bg-green-100 text-green-700": project.compra.dataPagamento,
+						})}
+					>
+						<Banknote className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.6rem]")}>PAGAMENTO: {project.compra.dataPagamento ? "CONCLUÍDO" : "PENDENTE"}</p>
+					</div>
+					<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80")}>
+						<Contact className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.6rem]")}>RESPONSÁVEL: {project.padrao.respInstalacao || "N/A"}</p>
+					</div>
+					<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80")}>
+						<Cable className={cn("w-3 h-3 min-w-3 min-h-3")} />
+						<p className={cn("font-medium text-[0.6rem]")}>
+							TIPO: {project.visitaTecnica.amperagem || ""} {project.padrao.tipo || "N/A"}
 						</p>
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col gap-0.5">
-				<div className="flex items-center gap-1">
-					{/* <MdElectricMeter /> */}
-					<h1 className="text-[0.65rem] tracking-tight text-gray-500 lg:text-xs">PADRÃO</h1>
-				</div>
-				<div className="flex w-full flex-wrap items-center gap-4">
-					<div className="flex items-center gap-1">
-						<FaCircle color={project.padrao.aumentoCarga.dataEfetivacao ? "rgb(34,197,94)" : "black"} />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
-							{project.padrao.aumentoCarga.dataEfetivacao ? `ADEQUAÇÃO CONCLUÍDA EM ${formatDateAsLocale(project.padrao.aumentoCarga.dataEfetivacao)}` : "ADEQUAÇÃO PENDENTE"}
-						</p>
-					</div>
-					<div className="flex items-center gap-1">
-						<FaPiggyBank color={project.compra.dataPagamento ? "rgb(34,197,94)" : "black"} />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
-							{project.compra.dataPagamento ? `PAGAMENTO EM: ${formatDateAsLocale(project.compra.dataPagamento)}` : "PAGAMENTO PENDENTE"}
-						</p>
-					</div>
-					<div className="flex items-center gap-1">
-						<MdAssistantPhoto />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">INSTALAÇÃO PELA(O) {project.padrao.respInstalacao || "NÃO DEFINIDO"}</p>
-					</div>
-					<div className="flex items-center gap-1">
-						<MdSettingsInputComponent />
-						<p className="text-xs font-medium tracking-tight text-gray-800 lg:text-sm">
-							{project.visitaTecnica.amperagem || ""} {project.padrao.tipo || "TIPO NÃO DEFINIDO"}
-						</p>
-					</div>
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+					<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ORDEM DE SERVIÇO</h1>
+					{project.ordemDeServico ? (
+						<>
+							<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80", {})}>
+								<User className={cn("w-3 h-3 min-w-3 min-h-3")} />
+								<p className={cn("font-medium text-[0.6rem]")}>TÍTULO: {project.ordemDeServico?.descricao || "N/A"}</p>
+							</div>
+							<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80")}>
+								<Contact className={cn("w-3 h-3 min-w-3 min-h-3")} />
+								<p className={cn("font-medium text-[0.6rem]")}>RESPONSÁVEL: {project.ordemDeServico?.responsavel?.nome || "N/A"}</p>
+							</div>
+							<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80")}>
+								<Cable className={cn("w-3 h-3 min-w-3 min-h-3")} />
+								<p className={cn("font-medium text-[0.6rem]")}>
+									AGENDAMENTO: {project.ordemDeServico?.agendamento?.inicio ? formatDateAsLocale(project.ordemDeServico?.agendamento?.inicio) : "N/A"} -{" "}
+									{project.ordemDeServico?.agendamento?.fim ? formatDateAsLocale(project.ordemDeServico?.agendamento?.fim) : "N/A"}
+								</p>
+							</div>
+							<div className={cn("flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80")}>
+								<Cable className={cn("w-3 h-3 min-w-3 min-h-3")} />
+								<p className={cn("font-medium text-[0.6rem]")}>
+									EXECUÇÃO: {project.ordemDeServico?.periodo.inicio ? formatDateAsLocale(project.ordemDeServico?.periodo.inicio) : "N/A"} -{" "}
+									{project.ordemDeServico?.periodo.fim ? formatDateAsLocale(project.ordemDeServico?.periodo.fim) : "N/A"}
+								</p>
+							</div>
+						</>
+					) : (
+						<div className={cn("flex items-center gap-1 rounded-lg px-2 py-0.5 text-center text-[0.5rem] font-bold italic bg-orange-100 text-orange-700")}>
+							<AlertCircle className={cn("w-3 h-3 min-w-3 min-h-3")} />
+							<p className={cn("font-medium text-[0.6rem]")}>ORDEM DE SERVIÇO NÃO DEFINIDA</p>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="flex w-full items-center justify-end">
@@ -136,20 +170,6 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 					date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
 					handleChange={(value) => handleUpdate(formatDateInputChange(value, "string"))}
 				/>
-
-				{/* <div className="w-fit">
-               <DateInput
-                 label="DATA DE EXECUÇÃO"
-                 labelClassName="text-[0.6rem] tracking-tight"
-                 editable={!isPending}
-                 // inputClassName="w-full rounded-md border border-gray-300 p-2 text-[0.7rem] outline-none placeholder:italic"
-                 value={formatDate(project.padrao.aumentoCarga.dataEfetivacao)}
-                 handleChange={(value) => {
-                   handleUpdate(formatDateInputChange(value))
-                 }}
-                 width="100%"
-               />
-              </div> */}
 			</div>
 		</div>
 	);

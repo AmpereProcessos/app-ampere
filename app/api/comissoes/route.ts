@@ -127,8 +127,8 @@ async function getComissionData(request: NextRequest) {
 	const { after, before, sellers, serviceTypes } = params;
 
 	// Ajusting the filters
-	const afterFixed = dayjs(after).subtract(3, "hour").toISOString();
-	const beforeFixed = dayjs(before).subtract(3, "hour").toISOString();
+	const afterFixed = dayjs(after).toISOString();
+	const beforeFixed = dayjs(before).toISOString();
 	const sellersArr = sellers?.split(",").filter((s) => !!s) || [];
 	const serviceTypesArr = serviceTypes?.split(",").filter((s) => !!s) || [];
 

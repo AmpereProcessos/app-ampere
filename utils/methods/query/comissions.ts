@@ -110,6 +110,8 @@ type UseComissionDataParams = {
 	initialFilters?: Partial<ComissionDataFilters> | undefined;
 };
 export function useComissionData({ initialFilters }: UseComissionDataParams) {
+	const startOfPreviousMonth = dayjs().subtract(1, "month").startOf("month").subtract(3, "hours").toISOString();
+	const endOfPreviousMonth = dayjs().subtract(1, "month").endOf("month").subtract(3, "hours").toISOString();
 	const [filters, setFilters] = useState<ComissionDataFilters>({
 		search: initialFilters?.search ?? "",
 		sellerIds: initialFilters?.sellerIds ?? [],
@@ -117,8 +119,8 @@ export function useComissionData({ initialFilters }: UseComissionDataParams) {
 		insiderName: initialFilters?.insiderName ?? [],
 		serviceType: initialFilters?.serviceType ?? [],
 		period: initialFilters?.period ?? {
-			after: initialFilters?.period?.after ?? dayjs().subtract(1, "month").toISOString(),
-			before: initialFilters?.period?.before ?? dayjs().toISOString(),
+			after: initialFilters?.period?.after ?? startOfPreviousMonth,
+			before: initialFilters?.period?.before ?? endOfPreviousMonth,
 		},
 	});
 

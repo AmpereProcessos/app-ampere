@@ -20,7 +20,7 @@ import { allSellers, serviceTypes } from "../../utils/select-options";
 import { useComissionData } from "../../utils/methods/query/comissions";
 // import { bulkUpdateProjectsComission, updateAppProjectsComission } from "../../utils/methods/mutation/comission";
 import { MdAttachMoney, MdDashboard, MdElectricMeter, MdOutlineRoofing } from "react-icons/md";
-import { FaPercentage, FaSolarPanel } from "react-icons/fa";
+import { FaPercentage, FaSolarPanel, FaUser } from "react-icons/fa";
 import { BiStats } from "react-icons/bi";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -75,14 +75,15 @@ function CommissionMain() {
 				comissaoSeguro: 0,
 				comissaoTimeVendas: 0,
 				comissaoTimeSDR: 0,
+				comissaoPorUsuario: [],
 			};
 
 		const stats = info.reduce(
-			(acc, current) => {
+			(accInfo, current) => {
 				const comissionableValue = current.comissoes.valorComissionavel;
-				acc.totalVendido += current.valorContrato;
-				acc.potenciaVendida += current.potenciaPico;
-				acc.comissaoTotal += current.comissoes.comissionados.reduce((acc, comissionedCurrent) => {
+				accInfo.totalVendido += current.valorContrato;
+				accInfo.potenciaVendida += current.potenciaPico;
+				accInfo.comissaoTotal += current.comissoes.comissionados.reduce((acc, comissionedCurrent) => {
 					return acc + (comissionedCurrent.porcentagem * comissionableValue) / 100;
 				}, 0);
 				const comissionsByItem = current.comissoes.comissionados.reduce(
@@ -102,14 +103,23 @@ function CommissionMain() {
 						insurance: 0,
 					},
 				);
-				acc.comissaoProjeto += comissionsByItem.project;
-				acc.comissaoPadrao += comissionsByItem.energyPa;
-				acc.comissaoEstrutura += comissionsByItem.structure;
-				acc.comissaoOem += comissionsByItem.oem;
-				acc.comissaoSeguro += comissionsByItem.insurance;
+				accInfo.comissaoProjeto += comissionsByItem.project;
+				accInfo.comissaoPadrao += comissionsByItem.energyPa;
+				accInfo.comissaoEstrutura += comissionsByItem.structure;
+				accInfo.comissaoOem += comissionsByItem.oem;
+				accInfo.comissaoSeguro += comissionsByItem.insurance;
 
 				const comissionByTeams = current.comissoes.comissionados.reduce(
 					(acc, comissionedCurrent) => {
+						const comissionedCurrentId = comissionedCurrent.idCrm || "N/A";
+						if (!accInfo.comissaoPorUsuario[comissionedCurrentId]) {
+							accInfo.comissaoPorUsuario[comissionedCurrentId] = {
+								nome: comissionedCurrent.nome,
+								avatar_url: comissionedCurrent.avatar_url || undefined,
+								comissaoTotal: 0,
+							};
+						}
+						accInfo.comissaoPorUsuario[comissionedCurrentId].comissaoTotal += (comissionedCurrent.porcentagem * comissionableValue) / 100;
 						if (comissionedCurrent.papel === "VENDEDOR") {
 							acc.seller += (comissionedCurrent.porcentagem * comissionableValue) / 100;
 						} else if (comissionedCurrent.papel === "INSIDER") {
@@ -119,9 +129,9 @@ function CommissionMain() {
 					},
 					{ seller: 0, insider: 0 },
 				);
-				acc.comissaoTimeVendas += comissionByTeams.seller;
-				acc.comissaoTimeSDR += comissionByTeams.insider;
-				return acc;
+				accInfo.comissaoTimeVendas += comissionByTeams.seller;
+				accInfo.comissaoTimeSDR += comissionByTeams.insider;
+				return accInfo;
 			},
 			{
 				totalVendido: 0,
@@ -134,6 +144,7 @@ function CommissionMain() {
 				comissaoSeguro: 0,
 				comissaoTimeVendas: 0,
 				comissaoTimeSDR: 0,
+				comissaoPorUsuario: {} as Record<string, { nome: string; avatar_url?: string; comissaoTotal: number }>,
 			},
 		);
 
@@ -242,6 +253,14 @@ function CommissionMain() {
 	});
 
 	const stats = getStats({ info: projects ?? [] });
+	const statsComissionByUser = Object.entries(stats.comissaoPorUsuario)
+		.map(([key, value]) => ({
+			id: key,
+			nome: value.nome,
+			avatar_url: value.avatar_url,
+			comissaoTotal: value.comissaoTotal,
+		}))
+		.sort((a, b) => a.nome.localeCompare(b.nome));
 
 	const areMissingComissionDefinitions = projects?.some((project) => !project.comissoes.efetivado);
 	const areMissingComissionPayments = projects?.some((project) => !project.comissoes.pagamentoRealizado);
@@ -255,7 +274,7 @@ function CommissionMain() {
 	if (status !== "authenticated") return <LoadingPage />;
 	return (
 		<div className="flex grow flex-col p-6">
-			<div className="flex flex-col items-center border-b border-gray-300 px-1 py-2">
+			<div className="flex flex-col items-center border-b border-gray-300 px-1 py-2 gap-2">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black uppercase text-[#15599a]">COMISSÃO DE PROJETOS</p>
@@ -270,7 +289,7 @@ function CommissionMain() {
 						</div>
 					)}
 				</div>
-				<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
+				<div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
 					<div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
 						<div className="flex items-center justify-between">
 							<h1 className="text-sm font-medium uppercase tracking-tight">TOTAL VENDIDO</h1>
@@ -335,6 +354,24 @@ function CommissionMain() {
 							<p className="font-medium text-sm">COMISSÃO EM SEGURO</p>
 							<p className="font-medium text-sm">{formatToMoney(stats.comissaoSeguro)}</p>
 						</div>
+					</div>
+				</div>
+				<div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
+					<div className="flex items-center justify-between">
+						<h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR USUÁRIO</h1>
+						<FaUser />
+					</div>
+					<div className="mt-2 flex w-full flex-wrap items-center justify-between gap-3">
+						{statsComissionByUser.map((value) => (
+							<div key={value.id} className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
+								<Avatar className="h-5 w-5">
+									<AvatarImage src={value.avatar_url} />
+									<AvatarFallback className="text-xs">{formatNameAsInitials(value.nome)}</AvatarFallback>
+								</Avatar>
+								<p className="font-medium text-sm">{value.nome}</p>
+								<p className="font-medium text-sm">{formatToMoney(value.comissaoTotal)}</p>
+							</div>
+						))}
 					</div>
 				</div>
 				<AnimatePresence>

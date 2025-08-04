@@ -16,6 +16,9 @@ import dayjs from "dayjs";
 import { useViewModesStore } from "@/utils/stores/view-modes-store";
 import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
 import EngineeringProjectsKanbanModePageFilters from "./KanbanModePageFilters";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProject } from "@/utils/methods/mutation/clients";
+import { toast } from "react-hot-toast";
 
 const CurrentDate = dayjs().toDate();
 
@@ -23,6 +26,7 @@ type EngineeringKanbanModePageProps = {
 	session: Session;
 };
 function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) {
+	const queryClient = useQueryClient();
 	const updateViewMode = useViewModesStore((state) => state.updateMode);
 	const [filterMenusIsOpen, setFilterMenusIsOpen] = useState(false);
 	const [editProjectModal, setEditProjectModal] = useState<{ id: string | null; isOpen: boolean }>({
@@ -31,7 +35,74 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
 	});
 	const { data: kanbanProjects, isLoading, isError, error, isSuccess, filters, updateFilters } = useEngineeringProjectsKanban();
 
-	function onDragEnd(dragEndResult: DropResult) {}
+	async function onDragEnd(dragEndResult: DropResult) {
+		const { source, destination, draggableId } = dragEndResult;
+		if (!destination) return;
+		if (destination.droppableId === source.droppableId) return null;
+
+		const previousStatus = source.droppableId;
+		const newStatus = destination.droppableId;
+		await updateProject({
+			id: draggableId,
+			changes: {
+				"homologacao.status": newStatus,
+			},
+		});
+		return {
+			projectId: draggableId,
+			previousStatus,
+			newStatus,
+			message: "Status do projeto atualizado com sucesso",
+		};
+	}
+	const { mutate: handleUpdateProjectStatus } = useMutation({
+		mutationKey: ["update-engineering-project-status"],
+		mutationFn: onDragEnd,
+		onMutate: async (variables) => {
+			const { source, destination, draggableId } = variables;
+			if (!destination) return;
+			if (destination.droppableId === source.droppableId) return;
+			console.log("[INFO] [ENGINEERING_KANBAN_MODE_PAGE] Drag end result:", {
+				source: source.droppableId,
+				destination: destination.droppableId,
+				draggableId,
+			});
+			await queryClient.cancelQueries({ queryKey: ["engineering-projects-kanban", filters] });
+
+			const querySnapshot = queryClient.getQueryData(["engineering-projects-kanban", filters]) as TEngineeringProjectsKanbanOutput["data"];
+			if (!querySnapshot) return { querySnapshot };
+
+			queryClient.setQueryData(["engineering-projects-kanban", filters], (prevData: TEngineeringProjectsKanbanOutput["data"]) => {
+				const updatedProject = querySnapshot[source.droppableId].find((p) => p._id === draggableId);
+				if (!updatedProject) return prevData;
+
+				return {
+					...prevData,
+					[source.droppableId]: prevData[source.droppableId].filter((p) => p._id !== draggableId),
+					[destination.droppableId]: [
+						...prevData[destination.droppableId],
+						{
+							...updatedProject,
+							status: destination.droppableId,
+						},
+					],
+				};
+			});
+
+			return { querySnapshot };
+		},
+		onSuccess: async (data) => {
+			if (!data) return;
+			toast.success(data.message);
+			return;
+		},
+		onError: (error, variables, context) => {
+			queryClient.setQueryData(["engineering-projects-kanban", filters], context?.querySnapshot);
+		},
+		onSettled: (data, error, variables, context) => {
+			queryClient.invalidateQueries({ queryKey: ["engineering-projects-kanban", filters] });
+		},
+	});
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
 			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
@@ -59,7 +130,7 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
 				</div>
 			</div>
 
-			<DragDropContext onDragEnd={(e) => onDragEnd(e)}>
+			<DragDropContext onDragEnd={(e) => handleUpdateProjectStatus(e)}>
 				<div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
 					{isLoading ? <LoadingComponent /> : null}
 					{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}

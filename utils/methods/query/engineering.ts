@@ -209,7 +209,7 @@ export function useEngineeringProjectsKanban() {
 	}
 	return {
 		...useQuery({
-			queryKey: ["engineering-projects-kanban"],
+			queryKey: ["engineering-projects-kanban", filters],
 			queryFn: () => fetchEngineeringProjectsKanban(filters),
 		}),
 		filters,

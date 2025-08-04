@@ -1,6 +1,6 @@
 import type { TOverallReportOutput } from "@/pages/api/stats/overall-report";
-import { formatDecimalPlaces } from "@/utils/constants";
-import { Building, Building2, Earth, Heart, Pickaxe, Truck, Wrench, Zap } from "lucide-react";
+import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
+import { BadgeDollarSign, Building, Building2, DollarSign, Earth, Heart, Pickaxe, Ticket, Truck, Wrench, Zap } from "lucide-react";
 import { MdDashboard } from "react-icons/md";
 
 type OverallReportGeneralStatsProps = {
@@ -34,6 +34,44 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 						</div>
 						<div className="w-full flex items-center justify-center">
 							<h1 className="text-lg font-bold tracking-tight">{formatDecimalPlaces(generalData.nps)}%</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="w-full flex flex-col gap-2">
+				<div className="w-full flex flex-col gap-1">
+					<div className="flex items-center gap-2">
+						<BadgeDollarSign className="w-4 h-4 min-w-4 min-h-4" />
+						<h2 className="text-lg font-bold tracking-tight">VENDAS</h2>
+					</div>
+					<p className="text-sm text-primary/50">Informações gerais sobre vendas</p>
+				</div>
+				<div className="w-full flex items-center gap-2 flex-col lg:flex-row">
+					<div className="flex flex-col gap-2 rounded-xl border border-gray-400 bg-[#fff] p-3 w-full lg:w-1/2">
+						<div className="flex items-center gap-2">
+							<DollarSign className="w-4 h-4 min-w-4 min-h-4" />
+							<h2 className="text-sm font-bold tracking-tight">VALOR VENDIDO</h2>
+						</div>
+						<div className="w-full flex items-center justify-center">
+							<h1 className="text-lg font-bold tracking-tight">{formatToMoney(generalData.vendas.valorVendido)}</h1>
+						</div>
+					</div>
+					<div className="flex flex-col gap-2 rounded-xl border border-gray-400 bg-[#fff] p-3 w-full lg:w-1/2">
+						<div className="flex items-center gap-2">
+							<MdDashboard className="w-4 h-4 min-w-4 min-h-4" />
+							<h2 className="text-sm font-bold tracking-tight">PROJETOS VENDIDOS</h2>
+						</div>
+						<div className="w-full flex items-center justify-center">
+							<h1 className="text-lg font-bold tracking-tight">{generalData.vendas.qtdeVendida}</h1>
+						</div>
+					</div>
+					<div className="flex flex-col gap-2 rounded-xl border border-gray-400 bg-[#fff] p-3 w-full lg:w-1/2">
+						<div className="flex items-center gap-2">
+							<Ticket className="w-4 h-4 min-w-4 min-h-4" />
+							<h2 className="text-sm font-bold tracking-tight">TICKET MÉDIO</h2>
+						</div>
+						<div className="w-full flex items-center justify-center">
+							<h1 className="text-lg font-bold tracking-tight">{formatToMoney(generalData.vendas.valorVendido / generalData.vendas.qtdeVendida)}</h1>
 						</div>
 					</div>
 				</div>

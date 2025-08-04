@@ -3,7 +3,7 @@ import connectToDatabase from "@/utils/services/mongodb/projects";
 import type { NextApiHandler } from "next";
 import type { Collection, Filter } from "mongodb";
 import { z } from "zod";
-import { apiHandler } from "@/utils/api";
+import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { getGeneralSalesStats, getGeneralServiceExecutionStats, getGeneralHomologationStats, getGeneralSupplyStats, getGeneralNPS } from "@/repositories/stats/general";
 import { getUFVSaleStats, getUFVInstallationStats, getUFVHomologationStats } from "@/repositories/stats/ufv-stats";
 
@@ -119,11 +119,6 @@ async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
 				}
 			: { $ne: ["$compra.dataEntrega", null] };
 
-	console.log("QUERIES", {
-		signingPeriodQuery,
-		installationPeriodQuery,
-		homologationPeriodQuery,
-	});
 	// GENERAL STATS
 	const generalNPS = await getGeneralNPS({
 		collection: projectsCollection,
@@ -186,7 +181,13 @@ async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
 }
 export type TOverallReportOutput = Awaited<ReturnType<typeof getOverallReport>>;
 const getOverallReportHandler: NextApiHandler<TOverallReportOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	console.log("[INFO] [GET_OVERALL_REPORT] Requested by user", {
+		name: session.user.nome,
+		email: session.user.email,
+	});
 	const payload = await OverallReportSchema.parse(req.body);
+	console.log("[INFO] [GET_OVERALL_REPORT] Payload", payload);
 	const report = await getOverallReport(payload);
 	res.status(200).json(report);
 };

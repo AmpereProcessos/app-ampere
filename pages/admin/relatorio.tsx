@@ -4,19 +4,15 @@ import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import { useOverallReport } from "@/utils/methods/query/stats";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, TrendingUp, MapPin, Zap, DollarSign, Home, CheckCircle, Building2, Earth, Building } from "lucide-react";
-import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import { MdDashboard } from "react-icons/md";
-import { FaSolarPanel } from "react-icons/fa";
+
+import { BarChart3 } from "lucide-react";
+
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+
 import OverallReportGeneralStats from "@/components/identificador/estatisticas/overall-report/General";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
+import dayjs from "dayjs";
 
 function ReportPage() {
 	const { data: session, status } = useSession({ required: true });
@@ -30,9 +26,29 @@ function ReportPage() {
 }
 export default ReportPage;
 function ReportPageContent({ session }: { session: Session }) {
-	const [activeSegmentMode, setActiveSegmentMode] = useState<"instalacoes" | "homologacoes">("instalacoes");
 	const { data: report, isLoading, isError, error, isSuccess, queryParams, updateQueryParams } = useOverallReport({});
-	console.log(report);
+
+	const reportPeriodPresets = [
+		{
+			label: "Último mês",
+			interval: {
+				after: dayjs().subtract(1, "month").startOf("month").subtract(3, "hour").toDate(),
+				before: dayjs().subtract(1, "month").endOf("month").subtract(3, "hour").toDate(),
+			},
+		},
+
+		// Generate year presets from 2017 to current year
+		...Array.from({ length: dayjs().year() - 2017 + 1 }, (_, i) => {
+			const year = 2017 + i;
+			return {
+				label: String(year),
+				interval: {
+					after: dayjs(`${year}-01-01`).startOf("day").subtract(3, "hour").toDate(),
+					before: dayjs(`${year}-12-31`).endOf("day").subtract(3, "hour").toDate(),
+				},
+			};
+		}),
+	];
 	return (
 		<div className="flex grow flex-col p-6 bg-gray-50 min-h-screen">
 			{/* Header */}
@@ -60,6 +76,7 @@ function ReportPageContent({ session }: { session: Session }) {
 								},
 							})
 						}
+						presets={reportPeriodPresets}
 					/>
 				</div>
 			</div>

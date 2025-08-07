@@ -82,7 +82,7 @@ const getTemporaryUsagesHandler: NextApiHandler<TGetPropertyTemporaryUsagesOutpu
 };
 
 export type TCreateTemporaryUsageInput = TPropertyTemporaryUsage;
-async function createTemporaryUsageRoute({ payload, session }: { payload: TPropertyTemporaryUsage; session: Session }) {
+async function createTemporaryUsageRoute({ payload }: { payload: TPropertyTemporaryUsage }) {
 	const db = await connectToAdministrationDatabase();
 	const temporaryUsagesCollection = db.collection<TPropertyTemporaryUsage>("propriedades-uso-temporario");
 
@@ -101,9 +101,8 @@ async function createTemporaryUsageRoute({ payload, session }: { payload: TPrope
 export type TCreateTemporaryUsageOutput = Awaited<ReturnType<typeof createTemporaryUsageRoute>>;
 
 const createTemporaryUsageHandler: NextApiHandler<TCreateTemporaryUsageOutput> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
 	const payload = PropertyTemporaryUsageSchema.parse(req.body);
-	const temporaryUsage = await createTemporaryUsageRoute({ payload, session });
+	const temporaryUsage = await createTemporaryUsageRoute({ payload });
 	res.status(200).json(temporaryUsage);
 };
 

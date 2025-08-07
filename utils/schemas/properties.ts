@@ -11,6 +11,14 @@ export const PropertyMetadataVehicleSchema = z.object({
 		required_error: "Kilometragem acumulada não informada.",
 		invalid_type_error: "Tipo não válido para a kilometragem acumulada.",
 	}),
+	kmIntervaloRevisao: z.number({
+		required_error: "Kilometragem do intervalo de revisão não informada.",
+		invalid_type_error: "Tipo não válido para a kilometragem do intervalo de revisão.",
+	}),
+	kmProximaRevisao: z.number({
+		required_error: "Kilometragem da próxima manutenção não informada.",
+		invalid_type_error: "Tipo não válido para a kilometragem da próxima manutenção.",
+	}),
 });
 
 const GeneralPropertySchema = z.object({

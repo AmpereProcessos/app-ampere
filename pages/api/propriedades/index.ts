@@ -1,29 +1,64 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { InsertPropertySchema, type TProperty } from "@/utils/schemas/properties";
+import { InsertPropertySchema, type TProperty, type TPropertyTemporaryUsage } from "@/utils/schemas/properties";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
 import { type Collection, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
 
-type GetResponse = {
-	data: TProperty | TProperty[];
-};
-const getProperties: NextApiHandler<GetResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
-	const { id } = req.query;
-
+const getProperties = async ({ id, includeOpenUsages }: { id: string | undefined; includeOpenUsages?: boolean }) => {
 	const db = await connectToAdministrationDatabase();
 	const propertiesCollection: Collection<TProperty> = db.collection("propriedades");
+	const temporaryUsagesCollection: Collection<TPropertyTemporaryUsage> = db.collection("propriedades-uso-temporario");
 	if (id) {
 		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 		const property = await propertiesCollection.findOne({ _id: new ObjectId(id) });
 		if (!property) throw new createHttpError.NotFound("Propriedade não encontrada.");
-		return res.status(200).json({ data: property });
+		let openUsages: Array<TPropertyTemporaryUsage & { _id: string }> | undefined = undefined;
+		if (includeOpenUsages) {
+			const openUsagesRaw = await temporaryUsagesCollection.find({ "propriedade.id": id, dataFim: null }).toArray();
+			openUsages = openUsagesRaw.map((usage) => ({ ...usage, _id: (usage as any)._id.toString() }));
+		}
+		return {
+			data: {
+				default: undefined,
+				byId: { ...property, _id: property._id.toString(), ...(includeOpenUsages ? { usosTemporarios: openUsages || [] } : {}) },
+			},
+		};
 	}
 
 	const properties = await propertiesCollection.find({}).toArray();
+	let openUsagesByPropertyId: Record<string, Array<TPropertyTemporaryUsage & { _id: string }>> = {};
+	if (includeOpenUsages && properties.length > 0) {
+		const propertyIds = properties.map((p) => p._id.toString());
+		const openUsagesRaw = await temporaryUsagesCollection.find({ dataFim: null, "propriedade.id": { $in: propertyIds } }).toArray();
+		openUsagesByPropertyId = openUsagesRaw.reduce<Record<string, Array<TPropertyTemporaryUsage & { _id: string }>>>((acc, usage) => {
+			const propId = usage.propriedade.id;
+			if (!acc[propId]) acc[propId] = [];
+			acc[propId].push({ ...usage, _id: (usage as any)._id.toString() });
+			return acc;
+		}, {});
+	}
 
-	return res.status(200).json({ data: properties });
+	return {
+		data: {
+			default: properties.map((property) => ({
+				...property,
+				_id: property._id.toString(),
+				...(includeOpenUsages ? { usosTemporarios: openUsagesByPropertyId[property._id.toString()] || [] } : {}),
+			})),
+			byId: undefined,
+		},
+	};
+};
+export type TGetPropertiesOutput = Awaited<ReturnType<typeof getProperties>>;
+export type TGetPropertyByIdOutput = Exclude<Awaited<ReturnType<typeof getProperties>>["data"]["byId"], undefined>;
+export type TGetPropertiesDefaultOutput = Exclude<Awaited<ReturnType<typeof getProperties>>["data"]["default"], undefined>;
+
+const getPropertiesHandler: NextApiHandler<TGetPropertiesOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const { id, includeOpenUsages } = req.query;
+	const properties = await getProperties({ id: id as string | undefined, includeOpenUsages: includeOpenUsages === "true" });
+	return res.status(200).json(properties);
 };
 
 type PostResponse = {
@@ -85,7 +120,7 @@ const updateProperty: NextApiHandler<PutResponse> = async (req, res) => {
 };
 
 export default apiHandler({
-	GET: getProperties,
+	GET: getPropertiesHandler,
 	POST: createProperty,
 	PUT: updateProperty,
 });

@@ -126,7 +126,7 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 						) : null}
 					</AnimatePresence>
 				</div>
-				<div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
+				<div className="w-full flex flex-col gap-2">
 					{isLoading ? <LoadingPage /> : null}
 					{isError ? <ErrorComponent msg="Erro ao buscar propriedades..." /> : null}
 					{isSuccess ? (

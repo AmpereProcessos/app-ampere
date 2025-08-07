@@ -12,7 +12,7 @@ import { useEmployeeBySearch, useEmployees, useUsers } from "@/utils/methods/que
 import TextInput from "@/components/inputs/Text";
 import { formatNameAsInitials, formatToCPForCNPJ } from "@/utils/methods/formatting";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BadgeCheck, Boxes, Car, CloudUpload, FileStack, IdCard, Lock, Mail, Paperclip, Phone, UserRound } from "lucide-react";
+import { BadgeCheck, Boxes, Car, CloudUpload, Code, FileStack, IdCard, Lock, Mail, Paperclip, Phone, UserRound } from "lucide-react";
 import { motion } from "framer-motion";
 import { getFileTypeTitle, isFileImage, SlideMotionVariants } from "@/utils/constants";
 import NumberInput from "@/components/inputs/Number";
@@ -98,6 +98,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 	const getAttachments = usePropertyUsageStore((state) => state.getAttachments);
 	const propertyImageUrl = usePropertyUsageStore((state) => state.propertyUsage.propriedade.imagemUrl);
 	const propertyName = usePropertyUsageStore((state) => state.propertyUsage.propriedade.nome);
+	const propertyIdentifier = usePropertyUsageStore((state) => state.propertyUsage.propriedade.identificador);
 	const propertyMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
 
 	async function handleUsageMutationMethod({
@@ -155,6 +156,10 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 						<div className="w-full flex items-center justify-center gap-2">
 							{propertyImageUrl ? <Image src={propertyImageUrl} alt={`Imagem da propriedade ${propertyName}`} width={35} height={35} /> : null}
 							<h1 className="text-sm lg:text-lg font-bold leading-none tracking-tight text-center">{propertyName}</h1>
+							<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded-lg w-fit">
+								<Code size={15} />
+								<h1 className="text-[0.6rem] tracking-tight font-medium text-start w-fit">{propertyIdentifier}</h1>
+							</div>
 						</div>
 					</div>
 

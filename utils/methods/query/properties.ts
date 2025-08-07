@@ -7,11 +7,13 @@ import type { TGetPropertyTemporaryUsagesOutput, TPropertyTemporaryUsagesByPerio
 import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetTemporaryUsageByPropertyOutput, TTemporaryUsageByPropertyInput } from "@/pages/api/propriedades/uso-temporario/propriedade";
+import type { TGetPropertiesOutput } from "@/pages/api/propriedades";
 
 async function fetchProperties() {
 	try {
-		const { data } = await axios.get("/api/propriedades");
-		return data.data as TPropertyDTO[];
+		const { data }: { data: TGetPropertiesOutput } = await axios.get("/api/propriedades?includeOpenUsages=true");
+		if (!data.data.default) throw new Error("Não foi possível obter as propriedades.");
+		return data.data.default;
 	} catch (error) {
 		throw error;
 	}
@@ -32,9 +34,12 @@ export function useProperties() {
 		if (filters.search.trim().length === 0) return true;
 		return formatWithoutDiacritics(property.nome, true).includes(formatWithoutDiacritics(filters.search, true));
 	}
+	type TPropertyMaybeWithResponsibles = TPropertyDTO & { responsaveis?: { id: string }[] };
 	function matchResponsibles(property: TPropertyDTO) {
 		if (filters.responsibles.length === 0) return true;
-		return property.responsaveis.some((resp) => filters.responsibles.includes(resp.id));
+		const withResp = property as TPropertyMaybeWithResponsibles;
+		const responsaveis = withResp.responsaveis || [];
+		return responsaveis.some((resp: { id: string }) => filters.responsibles.includes(resp.id));
 	}
 	function matchTags(property: TPropertyDTO) {
 		if (filters.tags.length === 0) return true;
@@ -57,8 +62,9 @@ export function useProperties() {
 
 async function fetchPropertyById({ id }: { id: string }) {
 	try {
-		const { data } = await axios.get(`/api/propriedades?id=${id}`);
-		return data.data as TPropertyDTO;
+		const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?id=${id}&includeOpenUsages=true`);
+		if (!data.data.byId) throw new Error("Propriedade não encontrada.");
+		return data.data.byId;
 	} catch (error) {
 		throw error;
 	}

@@ -1,15 +1,20 @@
-import TextInput from "@/components/inputs/Text";
-import type { TProperty, TPropertyDTO } from "@/utils/schemas/properties";
-import type { Session } from "next-auth";
 import React, { useState } from "react";
-import { VscChromeClose } from "react-icons/vsc";
-import TagsMenu from "./TagsMenu";
-import ResponsiblesMenu from "./ResponsiblesMenu";
-import NumberInput from "@/components/inputs/Number";
+import type { Session } from "next-auth";
+import type { TProperty } from "@/utils/schemas/properties";
+
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { createProperty } from "@/utils/methods/mutation/properties";
-import { useQueryClient } from "@tanstack/react-query";
+
+import { useMediaQuery } from "@/lib/hooks/media-query";
+
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+
+import GeneralInfo from "./blocos/Generalnfo";
 import VehicleProperties from "./VehicleProperties";
 
 type NewPropertyProps = {
@@ -17,6 +22,8 @@ type NewPropertyProps = {
 	closeModal: () => void;
 };
 function NewProperty({ session, closeModal }: NewPropertyProps) {
+	const isDesktop = useMediaQuery("(min-width: 768px)");
+
 	const queryClient = useQueryClient();
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
 		nome: "",
@@ -26,6 +33,8 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 			tipo: "VEÍCULO",
 			kmInicial: 0,
 			kmAcumulado: 0,
+			kmIntervaloRevisao: 0,
+			kmProximaRevisao: 0,
 		},
 		autor: {
 			id: session.user.id,
@@ -47,55 +56,65 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 		queryClient: queryClient,
 		affectedQueryKey: ["properties"],
 	});
-	console.log(infoHolder);
-	return (
-		<div id="new-property" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-			<div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
-				<div className="flex h-full flex-col">
-					<div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-xl font-bold text-[#353432] dark:text-white ">CADASTRO DE PROPRIEDADE</h3>
-						<button onClick={() => closeModal()} type="button" className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200">
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					<div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-						<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-							<div className="w-full lg:w-1/2">
-								<TextInput
-									label="NOME DA PROPRIEDADE"
-									placeholder="Preencha o nome da propriedade..."
-									value={infoHolder.nome}
-									handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
-									width="100%"
-								/>
-							</div>
-							<div className="w-full lg:w-1/2">
-								<TextInput
-									label="IDENTIFICADOR DA PROPRIEDADE"
-									placeholder="Preencha o identificador da propriedade..."
-									value={infoHolder.identificador}
-									handleChange={(value) => setInfoHolder((prev) => ({ ...prev, identificador: value }))}
-									width="100%"
-								/>
-							</div>
-						</div>
-						<TagsMenu infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-						<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-					</div>
-					<div className="my-1 flex w-full items-center justify-end">
-						<LoadingButton
-							loading={isPending}
-							onClick={() => {
-								handleCreateProperty({ info: infoHolder });
-							}}
-						>
-							CADASTRAR PROPRIEDADE
-						</LoadingButton>
-					</div>
+	const MENU_TITLE = "NOVA PROPRIEDADE";
+	const MENU_DESCRIPTION = "Preencha os campos abaixo para criar uma nova propriedade.";
+	const BUTTON_TEXT = "CADASTRAR";
+	return isDesktop ? (
+		<Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
+			<DialogContent className="flex flex-col h-fit min-h-[60vh] max-h-[80vh] dark:bg-white">
+				<DialogHeader>
+					<DialogTitle>{MENU_TITLE}</DialogTitle>
+					<DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
+				</DialogHeader>
+
+				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+					<NewPropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
-			</div>
-		</div>
+				<DialogFooter>
+					<DialogClose asChild>
+						<Button variant="outline">FECHAR</Button>
+					</DialogClose>
+					<LoadingButton onClick={() => handleCreateProperty({ info: infoHolder })} loading={isPending}>
+						{BUTTON_TEXT}
+					</LoadingButton>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	) : (
+		<Drawer open onOpenChange={(v) => (!v ? closeModal() : null)}>
+			<DrawerContent className="h-fit max-h-[70vh] flex flex-col">
+				<DrawerHeader className="text-left">
+					<DrawerTitle>{MENU_TITLE}</DrawerTitle>
+					<DrawerDescription>{MENU_DESCRIPTION}</DrawerDescription>
+				</DrawerHeader>
+
+				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+					<NewPropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+				</div>
+				<DrawerFooter>
+					<DrawerClose asChild>
+						<Button variant="outline">FECHAR</Button>
+					</DrawerClose>
+					<LoadingButton onClick={() => handleCreateProperty({ info: infoHolder })} loading={isPending}>
+						{BUTTON_TEXT}
+					</LoadingButton>
+				</DrawerFooter>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
 export default NewProperty;
+
+type NewPropertyContentProps = {
+	infoHolder: TProperty;
+	updateInfoHolder: (info: Partial<TProperty>) => void;
+};
+function NewPropertyContent({ infoHolder, updateInfoHolder }: NewPropertyContentProps) {
+	return (
+		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
+			<GeneralInfo infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+		</div>
+	);
+}

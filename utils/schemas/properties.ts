@@ -16,6 +16,7 @@ export const PropertyMetadataVehicleSchema = z.object({
 const GeneralPropertySchema = z.object({
 	nome: z.string(),
 	identificador: z.string(),
+	imagemUrl: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
 	tags: z.array(z.string()),
 	autor: AuthorSchema,
@@ -27,6 +28,7 @@ export const InsertPropertySchema = z.object({
 		required_error: "Identificador da propriedade não informado.",
 		invalid_type_error: "Tipo não válido para o identificador da propriedade.",
 	}),
+	imagemUrl: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
 	tags: z.array(z.string({ required_error: "Tag não informada.", invalid_type_error: "Tipo não válido para tag da propriedade." })),
 	autor: AuthorSchema,
@@ -67,6 +69,13 @@ export const PropertyTemporaryUsageSchema = z.object({
 			required_error: "Identificador da propriedade não informado.",
 			invalid_type_error: "Tipo não válido para o identificador da propriedade.",
 		}),
+		imagemUrl: z
+			.string({
+				required_error: "URL da imagem da propriedade não informada.",
+				invalid_type_error: "Tipo não válido para a URL da imagem da propriedade.",
+			})
+			.optional()
+			.nullable(),
 	}),
 	responsaveis: z.array(
 		z.object({
@@ -78,10 +87,13 @@ export const PropertyTemporaryUsageSchema = z.object({
 				required_error: "Nome do responsável não informado.",
 				invalid_type_error: "Tipo não válido para o nome do responsável.",
 			}),
-			avatar_url: z.string({
-				required_error: "Avatar do responsável não informado.",
-				invalid_type_error: "Tipo não válido para o avatar do responsável.",
-			}),
+			avatar_url: z
+				.string({
+					required_error: "Avatar do responsável não informado.",
+					invalid_type_error: "Tipo não válido para o avatar do responsável.",
+				})
+				.optional()
+				.nullable(),
 			telefone: z.string({
 				required_error: "Telefone do responsável não informado.",
 				invalid_type_error: "Tipo não válido para o telefone do responsável.",
@@ -98,12 +110,29 @@ export const PropertyTemporaryUsageSchema = z.object({
 				required_error: "URL do arquivo não informada.",
 				invalid_type_error: "Tipo não válido para a URL do arquivo.",
 			}),
+			tamanho: z.number({
+				required_error: "Tamanho do arquivo não informado.",
+				invalid_type_error: "Tipo não válido para o tamanho do arquivo.",
+			}),
+			formato: z.string({
+				required_error: "Formato do arquivo não informado.",
+				invalid_type_error: "Tipo não válido para o formato do arquivo.",
+			}),
 		}),
 	),
 	metadados: z.discriminatedUnion("tipo", [PropertyUsageVehicleUsageMetadataSchema]),
 	dataInicio: z.string().datetime({ message: "Tipo inválido para a data de início." }).optional().nullable(),
 	dataFim: z.string().datetime({ message: "Tipo inválido para a data de fim." }).optional().nullable(),
-	autor: AuthorSchema,
+	autor: AuthorSchema.extend({
+		cpf: z.string({
+			required_error: "CPF do autor não informado.",
+			invalid_type_error: "Tipo não válido para o CPF do autor.",
+		}),
+		telefone: z.string({
+			required_error: "Telefone do autor não informado.",
+			invalid_type_error: "Tipo não válido para o telefone do autor.",
+		}),
+	}),
 	dataInsercao: z.string().datetime({ message: "Tipo inválido para a data de inserção." }),
 });
 export type TPropertyTemporaryUsage = z.infer<typeof PropertyTemporaryUsageSchema>;

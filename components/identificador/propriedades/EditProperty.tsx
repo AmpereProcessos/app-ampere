@@ -13,6 +13,9 @@ import LoadingPage from "@/components/utils/LoadingPage";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import VehicleProperties from "./VehicleProperties";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
+import { copyToClipboard } from "@/lib/utils";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -69,6 +72,16 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 					{isError ? <ErrorComponent msg={"Erro ao buscar propriedade."} /> : null}
 					{isSuccess ? (
 						<div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+							<div className="w-full flex items-center justify-center">
+								<Button
+									onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/publico/uso-temporario-propriedade/${infoHolder._id}`)}
+									variant="ghost"
+									className="flex items-center gap-2"
+								>
+									<Copy className="w-4 h-4" />
+									LINK DE USO TEMPORÁRIO
+								</Button>
+							</div>
 							<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 								<div className="w-full lg:w-1/2">
 									<TextInput

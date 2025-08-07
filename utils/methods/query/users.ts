@@ -3,6 +3,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatWithoutDiacritics } from "../formatting";
+import type { TEmployeeSearchInput, TEmployeeSearchOutput } from "@/pages/api/colaboradores/pesquisa-vinculacao";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
 
 async function fetchUsers() {
 	try {
@@ -92,4 +94,35 @@ export function useEmployeeById({ id }: { id: string }) {
 		queryKey: ["employee-by-id", id],
 		queryFn: async () => fetchEmployeeById({ id }),
 	});
+}
+
+export async function fetchEmployeeBySearch({ input }: { input: TEmployeeSearchInput }) {
+	try {
+		const { data }: { data: TEmployeeSearchOutput } = await axios.get(`/api/colaboradores/pesquisa-vinculacao?cpf=${input.cpf}&email=${input.email}`);
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+type UseEmployeeBySearchParams = {
+	initialQueryParams?: Partial<TEmployeeSearchInput>;
+};
+export function useEmployeeBySearch({ initialQueryParams }: UseEmployeeBySearchParams = {}) {
+	const [queryParams, setQueryParams] = useState<TEmployeeSearchInput>({ cpf: initialQueryParams?.cpf ?? "", email: initialQueryParams?.email ?? "" });
+	function updateQueryParams(params: Partial<TEmployeeSearchInput>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
+	const debouncedQueryParams = useDebounceMemo(queryParams, 1000);
+	return {
+		...useQuery({
+			queryKey: ["employee-by-search", debouncedQueryParams],
+			queryFn: async () => await fetchEmployeeBySearch({ input: debouncedQueryParams }),
+			enabled: debouncedQueryParams.cpf.length >= 14 || debouncedQueryParams.email.length >= 5,
+			retry: false,
+		}),
+
+		queryParams,
+		updateQueryParams,
+	};
 }

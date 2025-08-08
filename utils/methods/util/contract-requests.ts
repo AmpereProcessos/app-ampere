@@ -1,21 +1,26 @@
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import { THomologation } from "@/utils/schemas/partial/homologation";
-import { TProject, TProjectDTO } from "@/utils/schemas/projects";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import type { THomologation } from "@/utils/schemas/partial/homologation";
+import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
+import dayjs from "dayjs";
 import { fetchFileReferencesByHomologationId } from "../query/crm/file-references";
 import { fetchHomologationById } from "../query/crm/homologations";
-import dayjs from "dayjs";
+import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
+import { createNotification } from "../mutation/notifications";
 
 type HandleSendNotificationToCobrancasParams = {
 	contractName: string;
 };
 export async function handleSendNotificationToCobrancas({ contractName }: HandleSendNotificationToCobrancasParams) {
 	try {
-		let data = await axios.post("/api/notificacoes/1", {
-			destinatario: "678560fb2ec7aa25e918151e",
-			remetente: "SISTEMA",
-			mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Desde já agradeço, Volts.`,
-		});
+		const notification: TCreateNotificationInput = {
+			notificadosIds: ["678560fb2ec7aa25e918151e"],
+			assunto: "NOVA APROVAÇÃO DE CONTRATO",
+			corpo: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Desde já agradeço, Volts.`,
+			enviarEmail: true,
+			enviarSMS: true,
+		};
+		await createNotification({ info: notification });
 		return "Notificação enviada com sucesso !";
 	} catch (error) {
 		throw error;

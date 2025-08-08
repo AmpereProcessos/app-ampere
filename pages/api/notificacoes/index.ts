@@ -8,6 +8,8 @@ import dayjs from "dayjs";
 import createHttpError from "http-errors";
 import { type Collection, type Db, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
+import type { Session } from "next-auth";
+import { z } from "zod";
 
 type GetResponse = {
 	data: TNotification[] | TNotification;
@@ -37,40 +39,75 @@ type PostResponse = {
 	message: string;
 };
 
-const createNotification: NextApiHandler<PostResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
+const CreateNotificationInputSchema = z.object({
+	notificadosIds: z.array(
+		z.string({
+			required_error: "ID do destinatário não informado.",
+			invalid_type_error: "Tipo não válido para ID do destinatário.",
+		}),
+	),
+	assunto: z.string({
+		required_error: "Assunto não informado.",
+		invalid_type_error: "Tipo não válido para assunto.",
+	}),
+	corpo: z.string({
+		required_error: "Corpo não informado.",
+		invalid_type_error: "Tipo não válido para corpo.",
+	}),
+	acaoPrimaria: z
+		.object({
+			titulo: z.string({
+				required_error: "Título não informado.",
+				invalid_type_error: "Tipo não válido para título.",
+			}),
+			link: z.string({
+				required_error: "Link não informado.",
+				invalid_type_error: "Tipo não válido para link.",
+			}),
+		})
+		.optional()
+		.nullable(),
+});
+export type TCreateNotificationInput = z.infer<typeof CreateNotificationInputSchema>;
+async function createNotificationInNovu({ payload, session }: { payload: TCreateNotificationInput; session: Session }) {
 	console.log("[INFO] [CREATE NOTIFICATION] Starting notification creation...", {
 		userId: session.user.id,
 		userName: session.user.nome,
 	});
 
-	const notification = InsertNotificationSchema.parse(req.body);
-	const db: Db = await connectToDatabase();
-	const collection: Collection<TNotification> = db.collection("notificacoes");
-
 	// Inserting notification in novu
 	const novuPayload: TGeneralNotificationPayload = {
-		subject: notification.mensagem,
-		body: notification.mensagem,
-		text: notification.mensagem,
-		primaryAction: {
-			label: "Ver notificação",
-			redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/notificacoes`,
-		},
+		subject: payload.assunto,
+		body: payload.corpo,
+		text: payload.corpo,
+		primaryAction: payload.acaoPrimaria
+			? {
+					label: payload.acaoPrimaria.titulo,
+					redirectUrl: payload.acaoPrimaria.link,
+				}
+			: undefined,
 		authorAvatarUrl: session.user.avatar_url ?? undefined,
 	};
 	const novuResponse = await novu.trigger({
-		to: getNovuSubscriberId(notification.destinatario),
+		to: payload.notificadosIds.map((id) => getNovuSubscriberId(id)),
 		workflowId: NOVU_WORKFLOW_IDS.NOTIFY_GENERAL_NOTIFICATION,
 		payload: novuPayload,
 	});
 	console.log("[INFO] [CREATE NOTIFICATION] Novu response...", novuResponse.result);
-	const insertResponse = await collection.insertOne({ ...notification, dataDeEnvio: new Date() });
-	if (!insertResponse.acknowledged) throw new createHttpError.BadRequest("Oops, houve um erro ao criar notificação.");
-	console.log("[SUCCESS] [CREATE NOTIFICATION] Notification created successfully !", {
-		notificationId: insertResponse.insertedId.toString(),
-	});
-	return res.status(201).json({ data: { insertedId: insertResponse.insertedId.toString() }, message: "Notificação criada com sucesso !" });
+
+	return {
+		data: {
+			insertedId: novuResponse.result.transactionId ?? "",
+		},
+		message: "Notificação criada com sucesso !",
+	};
+}
+export type TCreateNotificationOutput = Awaited<ReturnType<typeof createNotificationInNovu>>;
+const createNotificationHandler: NextApiHandler<PostResponse> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const payload = CreateNotificationInputSchema.parse(req.body);
+	const result = await createNotificationInNovu({ payload, session });
+	return res.status(201).json(result);
 };
 
 type PutResponse = {
@@ -101,6 +138,6 @@ const editNotification: NextApiHandler<PutResponse> = async (req, res) => {
 
 export default apiHandler({
 	GET: getNotifications,
-	POST: createNotification,
+	POST: createNotificationHandler,
 	PUT: editNotification,
 });

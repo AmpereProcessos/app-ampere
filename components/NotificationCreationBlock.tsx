@@ -14,6 +14,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createNotification } from "../utils/methods/mutation/notifications";
 import type { TNotification } from "@/utils/schemas/notifications";
 import type { Session } from "next-auth";
+import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
+import MultipleSelectWithImages from "./inputs/MultipleSelectWithImages";
+import TextInput from "./inputs/Text";
+import TextareaInput from "./inputs/TextareaInput";
+import { LoadingButton } from "./utils/Buttons/LoadingButton";
 const variants = {
 	hidden: {
 		opacity: 0.2,
@@ -44,10 +49,12 @@ function NotificationCreationBlock({ session, codProjeto, nomeDoProjeto }: Notif
 	const queryClient = useQueryClient();
 	const { data: users } = useUsers();
 
-	async function handleNotificationCreation(info: TNotification) {
-		if (info.destinatario == null || info.destinatario === "NÃO DEFINIDO") throw new Error("Destinatário não informado.");
+	async function handleNotificationCreation(info: TCreateNotificationInput) {
+		if (info.notificadosIds.length === 0) throw new Error("Destinatário não informado.");
 
-		if (info.mensagem.trim().length < 3) throw new Error("Mensagem não informada.");
+		if (info.assunto.trim().length < 3) throw new Error("Assunto não informado.");
+
+		if (info.corpo.trim().length < 3) throw new Error("Corpo não informado.");
 
 		return createNotification({ info: info });
 	}
@@ -59,18 +66,15 @@ function NotificationCreationBlock({ session, codProjeto, nomeDoProjeto }: Notif
 	});
 	const [notifyMenuVisible, setNotifyMenuVisible] = useState(false);
 
-	const initialNotification: TNotification = {
-		destinatario: "",
-		mensagem: "",
-		projetoReferencia: codProjeto,
-		nomeDoProjeto: nomeDoProjeto,
-		dataDeEnvio: new Date().toISOString(),
-		lido: false,
-		remetente: session.user.nome,
-		remetenteId: session.user.id,
+	const initialNotification: TCreateNotificationInput = {
+		notificadosIds: [],
+		assunto: "",
+		corpo: "",
 	};
-	const [notInfo, setNotInfo] = useState<TNotification>(initialNotification);
-
+	const [infoHolder, setInfoHolder] = useState<TCreateNotificationInput>(initialNotification);
+	function updateInfoHolder(changes: Partial<TCreateNotificationInput>) {
+		setInfoHolder((prev) => ({ ...prev, ...changes }));
+	}
 	return (
 		<>
 			<div className="flex w-full items-center justify-center gap-6 rounded-md bg-[#15599a] p-2">
@@ -100,7 +104,7 @@ function NotificationCreationBlock({ session, codProjeto, nomeDoProjeto }: Notif
 									<p className="text-xs font-medium text-gray-500">{session.user.nome || "Autor não identificado"}</p>
 								</div>
 							</div>
-							<SelectInputWithImages
+							<MultipleSelectWithImages
 								label="DESTINATÁRIO"
 								labelClassName="font-bold text-xs"
 								editable={true}
@@ -108,36 +112,23 @@ function NotificationCreationBlock({ session, codProjeto, nomeDoProjeto }: Notif
 									users?.map((resp) => ({
 										id: resp._id,
 										label: resp.usuario,
-										value: resp,
+										value: resp._id,
 										url: resp.avatar_url ?? undefined,
-										fallback: formatNameAsInitials(resp.usuario),
 									})) || []
 								}
-								value={notInfo.destinatario}
+								selected={infoHolder.notificadosIds}
+								resetOptionLabel="NÃO DEFINIDO"
 								handleChange={(value) => {
-									setNotInfo((prev) => ({ ...prev, destinatario: value._id }));
+									updateInfoHolder({ notificadosIds: value });
 								}}
-								onReset={() => setNotInfo((prev) => ({ ...prev, destinatario: "" }))}
-								selectedItemLabel="NÃO DEFINIDO"
+								onReset={() => updateInfoHolder({ notificadosIds: [] })}
 								width="100%"
 							/>
-							<h1 className="mt-4 text-xs font-bold">MENSAGEM</h1>
-							<textarea
-								className="mt-1 w-full resize-none rounded-md border border-primary/30 bg-primary/5 p-3 text-center text-sm outline-none"
-								value={notInfo.mensagem}
-								onChange={(e) => setNotInfo((prev) => ({ ...prev, mensagem: e.target.value }))}
-							/>
+							<TextInput label="ASSUNTO" placeholder="Assunto da notificação" value={infoHolder.assunto} handleChange={(value) => updateInfoHolder({ assunto: value })} width="100%" />
+							<TextareaInput label="CORPO" placeholder="Corpo da notificação" value={infoHolder.corpo} handleChange={(value) => updateInfoHolder({ corpo: value })} />
+
 							<div className="flex w-full items-center justify-end">
-								<button
-									type="button"
-									disabled={isPending}
-									onClick={() => handleNotificationCreationMutation(notInfo)}
-									className="mt-2 rounded-lg bg-blue-200  text-[25px] duration-300 ease-in hover:scale-110 hover:bg-blue-600 hover:text-white"
-								>
-									<div className="h-hull w-full -translate-x-1 rotate-45 p-2 duration-300 ease-in hover:translate-x-0 hover:rotate-0">
-										<IoIosSend />
-									</div>
-								</button>
+								<LoadingButton onClick={() => handleNotificationCreationMutation(infoHolder)}>ENVIAR</LoadingButton>
 							</div>
 						</div>
 					</motion.div>

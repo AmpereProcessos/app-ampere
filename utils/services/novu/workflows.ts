@@ -18,16 +18,19 @@ export const GeneralNotificationPayloadSchema = z.object({
 		required_error: "Texto não informado.",
 		invalid_type_error: "Tipo não válido para texto.",
 	}),
-	primaryAction: z.object({
-		label: z.string({
-			required_error: "Label não informado.",
-			invalid_type_error: "Tipo não válido para label.",
-		}),
-		redirectUrl: z.string({
-			required_error: "URL de redirecionamento não informada.",
-			invalid_type_error: "Tipo não válido para URL de redirecionamento.",
-		}),
-	}),
+	primaryAction: z
+		.object({
+			label: z.string({
+				required_error: "Label não informado.",
+				invalid_type_error: "Tipo não válido para label.",
+			}),
+			redirectUrl: z.string({
+				required_error: "URL de redirecionamento não informada.",
+				invalid_type_error: "Tipo não válido para URL de redirecionamento.",
+			}),
+		})
+		.optional()
+		.nullable(),
 	authorAvatarUrl: z
 		.string({
 			required_error: "URL do avatar do autor não informada.",
@@ -45,17 +48,21 @@ export const generalNoficationWorkflow = workflow(
 				subject: payload.subject,
 				body: payload.body,
 				avatar: payload.authorAvatarUrl,
-				redirect: {
-					url: payload.primaryAction.redirectUrl,
-					target: "_blank",
-				},
-				primaryAction: {
-					label: payload.primaryAction.label,
-					redirect: {
-						url: payload.primaryAction.redirectUrl,
-						target: "_self",
-					},
-				},
+				redirect: payload.primaryAction
+					? {
+							url: payload.primaryAction.redirectUrl,
+							target: "_blank",
+						}
+					: undefined,
+				primaryAction: payload.primaryAction
+					? {
+							label: payload.primaryAction.label,
+							redirect: {
+								url: payload.primaryAction.redirectUrl,
+								target: "_self",
+							},
+						}
+					: undefined,
 				data: {
 					customData: "customValue",
 					text: payload.text,

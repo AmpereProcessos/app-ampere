@@ -13,7 +13,7 @@ type Preset = {
 };
 
 type DateIntervalInputProps = {
-	label: string;
+	label?: string;
 	labelClassName?: string;
 	className?: string;
 	value: { after?: Date; before?: Date };

@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetTemporaryUsageByPropertyOutput, TTemporaryUsageByPropertyInput } from "@/pages/api/propriedades/uso-temporario/propriedade";
 import type { TGetPropertiesOutput, TPropertiesQueryParamsInput } from "@/pages/api/propriedades";
+import type { TPropertiesStatsOutput, TStatsQueryParamsInput } from "@/pages/api/propriedades/estatisticas";
 
 async function fetchProperties(queryParams: TPropertiesQueryParamsInput) {
 	try {
@@ -145,4 +146,44 @@ export function useOpenPropertyTemporaryUsageByPropertyId({ id }: { id: string }
 		queryKey: ["open-property-temporary-usage-by-property-id", id],
 		queryFn: async () => await fetchOpenPropertyTemporaryUsageByPropertyId({ openUsagePropertyId: id }),
 	});
+}
+
+async function fetchPropertiesStats(payload: TStatsQueryParamsInput) {
+	try {
+		const urlParams = new URLSearchParams();
+		if ("after" in payload) urlParams.set("after", payload.after);
+		if ("before" in payload) urlParams.set("before", payload.before);
+
+		const { data } = await axios.get<TPropertiesStatsOutput>(`/api/propriedades/estatisticas?${urlParams.toString()}`);
+		return data.data;
+	} catch (error) {
+		throw error;
+	}
+}
+
+type UsePropertiesStatsParams = {
+	initialParams?: TStatsQueryParamsInput;
+};
+export function usePropertiesStats({ initialParams }: UsePropertiesStatsParams) {
+	const monthStart = dayjs().startOf("month").toISOString();
+	const monthEnd = dayjs().endOf("month").toISOString();
+	const [queryParams, setQueryParams] = useState<TStatsQueryParamsInput>({
+		after: initialParams?.after ?? monthStart,
+		before: initialParams?.before ?? monthEnd,
+	});
+	function updateQueryParams(params: Partial<TStatsQueryParamsInput>) {
+		setQueryParams((prev) => ({
+			...prev,
+			...params,
+		}));
+	}
+	const debouncedQueryParams = useDebounceMemo(queryParams, 500);
+	return {
+		...useQuery({
+			queryKey: ["properties-stats", debouncedQueryParams],
+			queryFn: async () => await fetchPropertiesStats(debouncedQueryParams),
+		}),
+		queryParams,
+		updateQueryParams,
+	};
 }

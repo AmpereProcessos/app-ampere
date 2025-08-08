@@ -67,7 +67,6 @@ function VehicleProperties({ isDesktop, infoHolder, updateInfoHolder }: VehicleP
 						placeholder="Preencha a kilometragem acumulada..."
 						value={infoHolder.metadados?.kmAcumulado}
 						handleChange={(value) => updateInfoHolder({ metadados: { ...infoHolder.metadados, kmAcumulado: value } })}
-						editable={false}
 						width="100%"
 					/>
 				</div>

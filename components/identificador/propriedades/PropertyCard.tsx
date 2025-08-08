@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import type { TGetPropertiesDefaultOutput } from "@/pages/api/propriedades";
-import { Car, Code, Landmark, Pencil, ScanSearch } from "lucide-react";
+import { Code, Landmark, Pencil, ScanSearch } from "lucide-react";
 import React from "react";
-import { BsCalendarPlus, BsCode } from "react-icons/bs";
+import { BsCalendarPlus } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getVehicleReviewAlertLevelByKmDifference } from "@/lib/property-usage";

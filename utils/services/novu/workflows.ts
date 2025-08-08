@@ -79,23 +79,19 @@ export const generalNoficationWorkflow = workflow(
 				},
 			};
 		});
-		if (payload.sendSMS) {
-			await step.sms("sms", async () => {
-				console.log("[NOVU WORKFLOW] Running SMS workflow...");
-				return {
-					body: payload.body,
-				};
-			});
-		}
-		if (payload.sendEmail) {
-			await step.email("email", async () => {
-				console.log("[NOVU WORKFLOW] Running email workflow...");
-				return {
-					subject: payload.subject,
-					body: payload.body,
-				};
-			});
-		}
+		await step.sms("sms", async () => {
+			console.log("[NOVU WORKFLOW] Running SMS workflow...");
+			return {
+				body: payload.body,
+			};
+		});
+		await step.email("email", async () => {
+			console.log("[NOVU WORKFLOW] Running email workflow...");
+			return {
+				subject: payload.subject,
+				body: payload.body,
+			};
+		});
 	},
 	{ payloadSchema: GeneralNotificationPayloadSchema },
 );

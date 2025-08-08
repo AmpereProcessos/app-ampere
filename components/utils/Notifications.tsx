@@ -20,8 +20,7 @@ function Notifications({ session }: { session: Session }) {
 			<div className="relative">
 				<Inbox
 					applicationIdentifier={NOVU_APPLICATION_IDENTIFIER}
-					// subscriber={getNovuSubscriberId(session.user.id)}
-					subscriber={"6756d8303387f832d3411394"}
+					subscriber={getNovuSubscriberId(session.user.id)}
 					localization={{
 						"inbox.filters.dropdownOptions.unread": "Não lidas",
 						"inbox.filters.dropdownOptions.default": "Lidas e não lidas",

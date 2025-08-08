@@ -181,8 +181,8 @@ function SharableUsageLink({ id }: { id: string }) {
 	return (
 		<Button
 			onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/publico/uso-temporario-propriedade/${id}`)}
-			className="flex items-center gap-2 rounded w-fit"
-			variant="outline"
+			className="flex items-center gap-2 rounded w-fit self-center"
+			variant="ghost"
 		>
 			<LinkIcon size={15} />
 			<h1 className="text-xs tracking-tight font-medium text-start w-fit">LINK DE USO TEMPORÁRIO</h1>

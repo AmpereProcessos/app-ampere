@@ -1,4 +1,5 @@
 import TextInput from "@/components/inputs/Text";
+import TextareaInput from "@/components/inputs/TextareaInput";
 import type { TSimpleAttachment } from "@/utils/methods/uploading";
 import type { TProperty } from "@/utils/schemas/properties";
 import { LayoutGrid } from "lucide-react";
@@ -18,6 +19,7 @@ export default function GeneralInfo({ imageHolder, setImageHolder, infoHolder, u
 				<LayoutGrid size={15} />
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES DA PROPRIEDADE</h1>
 			</div>
+			<ImageContent imageUrl={infoHolder.imagemUrl} imageHolder={imageHolder} setImageHolder={setImageHolder} />
 			<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 				<div className="w-full lg:w-1/2">
 					<TextInput
@@ -38,7 +40,12 @@ export default function GeneralInfo({ imageHolder, setImageHolder, infoHolder, u
 					/>
 				</div>
 			</div>
-			<ImageContent imageUrl={infoHolder.imagemUrl} imageHolder={imageHolder} setImageHolder={setImageHolder} />
+			<TextareaInput
+				label="ANOTAÇÕES"
+				placeholder="Preencha as anotações da propriedade..."
+				value={infoHolder.anotacoes ?? ""}
+				handleChange={(value) => updateInfoHolder({ anotacoes: value })}
+			/>
 		</div>
 	);
 }

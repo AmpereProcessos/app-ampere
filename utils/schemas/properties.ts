@@ -34,6 +34,7 @@ const GeneralPropertySchema = z.object({
 	nome: z.string(),
 	identificador: z.string(),
 	imagemUrl: z.string().optional().nullable(),
+	anotacoes: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
 	autor: AuthorSchema,
 	dataInsercao: z.string().datetime(),
@@ -45,6 +46,12 @@ export const InsertPropertySchema = z.object({
 		invalid_type_error: "Tipo não válido para o identificador da propriedade.",
 	}),
 	imagemUrl: z.string().optional().nullable(),
+	anotacoes: z
+		.string({
+			invalid_type_error: "Tipo não válido para as anotações da propriedade.",
+		})
+		.optional()
+		.nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
 	autor: AuthorSchema,
 	dataInsercao: z

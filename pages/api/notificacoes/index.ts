@@ -67,6 +67,18 @@ const CreateNotificationInputSchema = z.object({
 		})
 		.optional()
 		.nullable(),
+	enviarSMS: z
+		.boolean({
+			required_error: "Envio de SMS não informado.",
+			invalid_type_error: "Tipo não válido para envio de SMS.",
+		})
+		.optional(),
+	enviarEmail: z
+		.boolean({
+			required_error: "Envio de e-mail não informado.",
+			invalid_type_error: "Tipo não válido para envio de e-mail.",
+		})
+		.optional(),
 });
 export type TCreateNotificationInput = z.infer<typeof CreateNotificationInputSchema>;
 async function createNotificationInNovu({ payload, session }: { payload: TCreateNotificationInput; session: Session }) {

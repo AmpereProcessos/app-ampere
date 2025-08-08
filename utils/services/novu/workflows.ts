@@ -37,6 +37,16 @@ export const GeneralNotificationPayloadSchema = z.object({
 			invalid_type_error: "Tipo não válido para URL do avatar do autor.",
 		})
 		.optional(),
+	sendSMS: z
+		.boolean({
+			invalid_type_error: "Tipo não válido para envio de SMS.",
+		})
+		.optional(),
+	sendEmail: z
+		.boolean({
+			invalid_type_error: "Tipo não válido para envio de e-mail.",
+		})
+		.optional(),
 });
 export type TGeneralNotificationPayload = z.infer<typeof GeneralNotificationPayloadSchema>;
 export const generalNoficationWorkflow = workflow(
@@ -69,6 +79,23 @@ export const generalNoficationWorkflow = workflow(
 				},
 			};
 		});
+		if (payload.sendSMS) {
+			await step.sms("sms", async () => {
+				console.log("[NOVU WORKFLOW] Running SMS workflow...");
+				return {
+					body: payload.body,
+				};
+			});
+		}
+		if (payload.sendEmail) {
+			await step.email("email", async () => {
+				console.log("[NOVU WORKFLOW] Running email workflow...");
+				return {
+					subject: payload.subject,
+					body: payload.body,
+				};
+			});
+		}
 	},
 	{ payloadSchema: GeneralNotificationPayloadSchema },
 );

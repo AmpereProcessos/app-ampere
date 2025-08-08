@@ -129,7 +129,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 		},
 	});
 	return (
-		<div className="flex h-full justify-center px-6 lg:py-12 py-6 bg-background">
+		<div className="flex h-full justify-center px-0 lg:px-6 lg:py-12 py-6 bg-background">
 			{isUsageMutationSuccess ? (
 				<div className="w-full h-full flex flex-col gap-1 items-center justify-center">
 					<div className="flex flex-col gap-1 items-center">

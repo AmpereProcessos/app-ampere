@@ -60,7 +60,7 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 						</button>
 					</div>
 					<motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="mt-4 flex w-full flex-col gap-y-2">
-						<div className="flex items-center gap-3 justify-between w-full">
+						<div className="flex items-center gap-3 justify-between w-full flex-col lg:flex-row gap-y-1">
 							<div className="grow min-w-[250px]">
 								<Input
 									placeholder="PESQUISAR PROPRIEDADE..."
@@ -78,7 +78,7 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 										size={"fit"}
 										className={cn("flex items-center gap-2 px-2 py-1", config.stylingClassName, {
 											"opacity-100": filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"]),
-											"opacity-80": !filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"]),
+											"bg-primary/20": !filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"]),
 										})}
 										onClick={() =>
 											updateFilters({

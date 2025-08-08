@@ -3,6 +3,11 @@ import { storage } from "../services/firebase/firebase-storage";
 import { fileTypes } from "../constants";
 import { uploadFile } from "./firebase";
 
+export type TSimpleAttachment = {
+	file: File | null;
+	previewUrl: string | null;
+};
+
 export type TAttachmentState = {
 	titulo: string;
 	arquivos: {

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { usePropertyTemporaryUsages } from "@/utils/methods/query/properties";
-import { Code, Timer, CheckCircle2, Eye, Link as LinkIcon, Plus, Check, Link } from "lucide-react";
+import { Code, Timer, CheckCircle2, Eye, Link as LinkIcon, Plus, Check } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -19,6 +19,7 @@ import { renderIconWithClassNames } from "@/utils/methods/rendering";
 import { BsCalendarCheck, BsCalendarPlus } from "react-icons/bs";
 import type { TGetPropertyTemporaryUsagesDefaultOutput } from "@/pages/api/propriedades/uso-temporario";
 import ViewPropertyUsage from "@/components/identificador/propriedades/ViewPropertyUsage";
+import Link from "next/link";
 
 function TemporaryUsages() {
 	const { data: session, status } = useSession({ required: true });
@@ -188,7 +189,7 @@ function TemporaryUsageCard({ usage, handleClick }: { usage: TGetPropertyTempora
 				{statusBadge}
 			</div>
 			<div className="flex w-full items-center justify-between flex-col sm:flex-row">
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 flex-wrap">
 					<div className="flex items-center gap-2">
 						<BsCalendarPlus className="w-4 h-4" />
 						<p className="text-xs font-medium tracking-tight">INÍCIO: {formatDateAsLocale(usage.dataInicio || usage.dataInsercao) || "N/A"}</p>

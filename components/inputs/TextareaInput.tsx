@@ -1,37 +1,36 @@
-import { cn } from '@/lib/utils'
-import React from 'react'
+import { cn } from "@/lib/utils";
+import React from "react";
 
 type TextareaInputProps = {
-  label: string
-  labelClassName?: string
-  holderClassName?: string
-  value: string
-  placeholder: string
-  editable?: boolean
-  handleChange: (value: string) => void
-}
+	label: string;
+	labelClassName?: string;
+	holderClassName?: string;
+	value: string;
+	placeholder: string;
+	editable?: boolean;
+	handleChange: (value: string) => void;
+};
 function TextareaInput({ label, labelClassName, holderClassName, value, placeholder, editable = true, handleChange }: TextareaInputProps) {
-  return (
-    <div className="flex w-full flex-col rounded-md border border-primary/20 shadow-sm">
-      <h1
-        className={cn('font w-full rounded-tl-md rounded-tr-md bg-primary p-1 text-center text-xs font-bold text-primary-foreground', labelClassName)}
-      >
-        {label}
-      </h1>
-      <textarea
-        disabled={!editable}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => {
-          handleChange(e.target.value)
-        }}
-        className={cn(
-          'min-h-[80px] w-full resize-none rounded-bl-md rounded-br-md bg-[#fff] p-3 text-center text-xs font-medium text-primary outline-none dark:bg-[#121212] lg:min-h-[65px]',
-          holderClassName
-        )}
-      />
-    </div>
-  )
+	const inputIdentifier = label.toLowerCase().replace(" ", "_");
+	return (
+		<div className="flex w-full flex-col gap-1">
+			<label htmlFor={inputIdentifier} className={cn("text-sm font-medium tracking-tight text-primary/80", labelClassName)}>
+				{label}
+			</label>
+			<textarea
+				disabled={!editable}
+				placeholder={placeholder}
+				value={value}
+				onChange={(e) => {
+					handleChange(e.target.value);
+				}}
+				className={cn(
+					"min-h-[80px] w-full resize-none rounded-bl-md rounded-br-md border border-primary/20  bg-[#fff] p-3 text-center text-xs font-medium text-primary outline-none dark:bg-[#121212] lg:min-h-[65px]",
+					holderClassName,
+				)}
+			/>
+		</div>
+	);
 }
 
-export default TextareaInput
+export default TextareaInput;

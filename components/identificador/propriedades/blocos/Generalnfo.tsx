@@ -1,12 +1,17 @@
 import TextInput from "@/components/inputs/Text";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
 import type { TProperty } from "@/utils/schemas/properties";
 import { LayoutGrid } from "lucide-react";
+import Image from "next/image";
+import { MdAttachFile } from "react-icons/md";
 
 type GeneralInfoProps = {
+	imageHolder: TSimpleAttachment;
+	setImageHolder: (image: TSimpleAttachment) => void;
 	infoHolder: TProperty;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
 };
-export default function GeneralInfo({ infoHolder, updateInfoHolder }: GeneralInfoProps) {
+export default function GeneralInfo({ imageHolder, setImageHolder, infoHolder, updateInfoHolder }: GeneralInfoProps) {
 	return (
 		<div className="flex w-full flex-col gap-2">
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded w-fit">
@@ -33,6 +38,42 @@ export default function GeneralInfo({ infoHolder, updateInfoHolder }: GeneralInf
 					/>
 				</div>
 			</div>
+			<ImageContent imageUrl={infoHolder.imagemUrl} imageHolder={imageHolder} setImageHolder={setImageHolder} />
+		</div>
+	);
+}
+
+function ImageContent({
+	imageUrl,
+	imageHolder,
+	setImageHolder,
+}: { imageUrl: TProperty["imagemUrl"]; imageHolder: TSimpleAttachment; setImageHolder: (image: TSimpleAttachment) => void }) {
+	return (
+		<div className="w-full flex items-center justify-center">
+			<label htmlFor="dropzone-file" className="relative h-[125px] w-[125px] rounded-lg overflow-hidden cursor-pointer">
+				{imageUrl ? (
+					<Image src={imageUrl} alt="Imagem principal do item." objectFit="cover" fill={true} />
+				) : imageHolder.previewUrl ? (
+					<Image src={imageHolder.previewUrl} alt="Imagem principal do item." objectFit="cover" fill={true} />
+				) : (
+					<div className="w-full h-full bg-primary/20 flex items-center justify-center gap-1 flex-col">
+						<MdAttachFile className="w-6 h-6" />
+						<p className="font-medium text-xs text-center">DEFINIR IMAGEM PRINCIPAL</p>
+					</div>
+				)}
+				<input
+					onChange={(e) => {
+						const file = e.target.files?.[0] ?? null;
+						setImageHolder({ file, previewUrl: file ? URL.createObjectURL(file) : null });
+					}}
+					id="dropzone-file"
+					type="file"
+					className="absolute h-full w-full opacity-0 cursor-pointer"
+					accept=".png,.jpeg,.jpg"
+					multiple={false}
+					tabIndex={-1}
+				/>
+			</label>
 		</div>
 	);
 }

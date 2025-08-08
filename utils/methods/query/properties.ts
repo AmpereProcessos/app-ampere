@@ -30,7 +30,7 @@ type TUsePropertiesParams = {
 export function useProperties({ initialFilters }: TUsePropertiesParams) {
 	const [filters, setFilters] = useState<TPropertiesQueryParamsInput>({
 		search: initialFilters?.search ?? "",
-		metadataTypes: initialFilters?.metadataTypes ?? [],
+		metadataTypes: initialFilters?.metadataTypes ?? ["VEÍCULO"],
 		includeOpenUsages: initialFilters?.includeOpenUsages ?? true,
 	});
 

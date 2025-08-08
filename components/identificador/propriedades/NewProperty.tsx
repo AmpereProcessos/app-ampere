@@ -16,6 +16,9 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 
 import GeneralInfo from "./blocos/Generalnfo";
 import VehicleProperties from "./VehicleProperties";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
+import { uploadFile } from "@/utils/methods/firebase";
+import { formatAsSlug } from "@/utils/methods/formatting";
 
 type NewPropertyProps = {
 	session: Session;
@@ -25,6 +28,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
 	const queryClient = useQueryClient();
+	const [imageHolder, setImageHolder] = useState<TSimpleAttachment>({ file: null, previewUrl: null });
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
 		nome: "",
 		identificador: "",
@@ -34,6 +38,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 			kmAcumulado: 0,
 			kmIntervaloRevisao: 0,
 			kmProximaRevisao: 0,
+			revisoes: [],
 		},
 		autor: {
 			id: session.user.id,
@@ -49,9 +54,22 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 			...info,
 		}));
 	}
-	const { mutate: handleCreateProperty, isPending } = useMutationWithFeedback({
+	async function handleCreateProperty({ info }: { info: TProperty }) {
+		let imageUrl = info.imagemUrl;
+		if (imageHolder.file) {
+			const { url } = await uploadFile({
+				vinculationId: info.nome,
+				fileName: `${formatAsSlug(info.nome)}-imagem-principal`,
+				file: imageHolder.file,
+				prefix: "propriedades",
+			});
+			imageUrl = url;
+		}
+		return await createProperty({ info: { ...info, imagemUrl: imageUrl } });
+	}
+	const { mutate: handleCreatePropertyMutation, isPending } = useMutationWithFeedback({
 		mutationKey: ["create-property"],
-		mutationFn: createProperty,
+		mutationFn: handleCreateProperty,
 		queryClient: queryClient,
 		affectedQueryKey: ["properties"],
 	});
@@ -67,13 +85,13 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 				</DialogHeader>
 
 				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-					<NewPropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<NewPropertyContent isDesktop={isDesktop} imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant="outline">FECHAR</Button>
 					</DialogClose>
-					<LoadingButton onClick={() => handleCreateProperty({ info: infoHolder })} loading={isPending}>
+					<LoadingButton onClick={() => handleCreatePropertyMutation({ info: infoHolder })} loading={isPending}>
 						{BUTTON_TEXT}
 					</LoadingButton>
 				</DialogFooter>
@@ -88,13 +106,13 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 				</DrawerHeader>
 
 				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-					<NewPropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+					<NewPropertyContent isDesktop={isDesktop} imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 				</div>
 				<DrawerFooter>
 					<DrawerClose asChild>
 						<Button variant="outline">FECHAR</Button>
 					</DrawerClose>
-					<LoadingButton onClick={() => handleCreateProperty({ info: infoHolder })} loading={isPending}>
+					<LoadingButton onClick={() => handleCreatePropertyMutation({ info: infoHolder })} loading={isPending}>
 						{BUTTON_TEXT}
 					</LoadingButton>
 				</DrawerFooter>
@@ -106,14 +124,17 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 export default NewProperty;
 
 type NewPropertyContentProps = {
+	isDesktop: boolean;
+	imageHolder: TSimpleAttachment;
+	setImageHolder: (image: TSimpleAttachment) => void;
 	infoHolder: TProperty;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
 };
-function NewPropertyContent({ infoHolder, updateInfoHolder }: NewPropertyContentProps) {
+function NewPropertyContent({ isDesktop, imageHolder, setImageHolder, infoHolder, updateInfoHolder }: NewPropertyContentProps) {
 	return (
 		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
-			<GeneralInfo infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-			<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<GeneralInfo imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<VehicleProperties isDesktop={isDesktop} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 		</div>
 	);
 }

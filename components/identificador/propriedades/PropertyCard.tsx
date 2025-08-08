@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import type { TGetPropertiesDefaultOutput } from "@/pages/api/propriedades";
-import { Car, Code, Pencil, ScanSearch } from "lucide-react";
+import { Car, Code, Landmark, Pencil, ScanSearch } from "lucide-react";
 import React from "react";
 import { BsCalendarPlus, BsCode } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { PROPERTY_METADATA_TYPES_CONFIG } from "@/lib/properties";
 import { renderIconWithClassNames } from "@/utils/methods/rendering";
 import { Badge } from "@/components/ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import Image from "next/image";
 
 type PropertyCardProps = {
 	property: TGetPropertiesDefaultOutput[number];
@@ -22,74 +23,88 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
 	const vehicleReviewAlertLevel =
 		property.metadados.tipo === "VEÍCULO" ? getVehicleReviewAlertLevelByKmDifference(property.metadados.kmProximaRevisao - property.metadados.kmAcumulado) : null;
 	return (
-		<div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex items-center gap-2 flex-wrap">
-					<Badge className={cn(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].stylingClassName, "rounded-full text-[0.65rem]")}>
-						{renderIconWithClassNames(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].icon, "h-4 w-4 min-w-4 min-h-4")}
-						{property.metadados.tipo}
-					</Badge>
-					<p className="text-sm font-bold leading-none tracking-tight">{property.nome}</p>
-					<div className={cn("flex items-center gap-1")}>
-						<Code className="w-4 h-4" />
-						<p className="text-xs font-medium tracking-tight">{property.identificador}</p>
-					</div>
-					{property.metadados.tipo === "VEÍCULO" ? (
-						<>
-							{vehicleReviewAlertLevel ? (
-								<Badge className={cn(vehicleReviewAlertLevel.color, "rounded-full text-[0.65rem]")}>
-									<ScanSearch size={12} />
-									<p>{vehicleReviewAlertLevel.text}</p>
-								</Badge>
-							) : null}
-						</>
-					) : null}
+		<div className="flex w-full gap-3 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212] flex-col sm:flex-row">
+			<div className="flex items-center justify-center">
+				<div className="w-20 h-20 min-w-20 min-h-20 max-w-20 max-h-20 rounded-lg overflow-hidden relative">
+					{property.imagemUrl ? (
+						<Image src={property.imagemUrl} alt={property.nome} fill={true} />
+					) : (
+						<div className="w-full h-full bg-primary/50 text-primary-foreground flex items-center justify-center">
+							<Landmark className="w-6 h-6" />
+						</div>
+					)}
 				</div>
-				{openUsages.length > 0 ? (
-					<HoverCard>
-						<HoverCardTrigger asChild>
-							<Button variant={"ghost"} size={"fit"} className="text-xs">
-								{openUsages.length} USOS EM ANDAMENTO
-							</Button>
-						</HoverCardTrigger>
-						<HoverCardContent className="w-80">
-							<h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
-							<div className="flex flex-col gap-3">
-								{openUsages.map((usage) => (
-									<div key={usage._id} className="w-full flex flex-col gap-1 p-2 rounded-lg bg-primary/10">
-										<div className="w-full flex items-center justify-between">
-											<Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
-										</div>
-										<div className="w-full flex items-center justify-between">
-											<div className="flex items-center gap-2">
-												<Avatar className="w-4 h-4 min-w-4 min-h-4">
-													<AvatarImage src={usage.autor.avatar_url ?? undefined} />
-													<AvatarFallback>{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
-												</Avatar>
-												<p className="text-xs font-medium tracking-tight">{usage.autor.nome}</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<BsCalendarPlus className="w-4 h-4" />
-												<p className="text-xs font-medium tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
-											</div>
-										</div>
-									</div>
-								))}
-							</div>
-						</HoverCardContent>
-					</HoverCard>
-				) : null}
 			</div>
-
-			<div className="mt-4 flex w-full items-center justify-between gap-1">
-				<div className="flex items-center gap-1">
-					<BsCalendarPlus />
-					<p className="text-xs font-medium text-gray-500">{formatDateAsLocale(property.dataInsercao) || "N/A"}</p>
+			<div className="flex flex-col justify-between gap-2 grow h-full">
+				<div className="flex w-full flex-col items-start lg:items-center justify-between gap-2 lg:flex-row">
+					<div className="flex items-center gap-2 flex-wrap">
+						<Badge className={cn(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].stylingClassName, "rounded-full text-[0.65rem]")}>
+							{renderIconWithClassNames(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].icon, "h-4 w-4 min-w-4 min-h-4")}
+							{property.metadados.tipo}
+						</Badge>
+						<p className="text-sm font-bold leading-none tracking-tight">{property.nome}</p>
+						<div className={cn("flex items-center gap-1")}>
+							<Code className="w-4 h-4" />
+							<p className="text-xs font-medium tracking-tight">{property.identificador}</p>
+						</div>
+						{property.metadados.tipo === "VEÍCULO" ? (
+							<>
+								{vehicleReviewAlertLevel ? (
+									<Badge className={cn(vehicleReviewAlertLevel.color, "rounded-full text-[0.65rem]")}>
+										<ScanSearch size={12} />
+										<p>{vehicleReviewAlertLevel.text}</p>
+									</Badge>
+								) : null}
+							</>
+						) : null}
+					</div>
+					{openUsages.length > 0 ? (
+						<HoverCard>
+							<HoverCardTrigger asChild>
+								<Button variant={"ghost"} size={"fit"} className="text-xs">
+									{openUsages.length} USOS EM ANDAMENTO
+								</Button>
+							</HoverCardTrigger>
+							<HoverCardContent className="w-80">
+								<h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
+								<div className="flex flex-col gap-3">
+									{openUsages.map((usage) => (
+										<div key={usage._id} className="w-full flex flex-col gap-1 p-2 rounded-lg bg-primary/10">
+											<div className="w-full flex items-center justify-between">
+												<Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
+											</div>
+											<div className="w-full flex items-center justify-between">
+												<div className="flex items-center gap-2">
+													<Avatar className="w-4 h-4 min-w-4 min-h-4">
+														<AvatarImage src={usage.autor.avatar_url ?? undefined} />
+														<AvatarFallback>{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
+													</Avatar>
+													<p className="text-xs font-medium tracking-tight">{usage.autor.nome}</p>
+												</div>
+												<div className="flex items-center gap-2">
+													<BsCalendarPlus className="w-4 h-4" />
+													<p className="text-xs font-medium tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							</HoverCardContent>
+						</HoverCard>
+					) : (
+						<div />
+					)}
 				</div>
-				<Button variant={"ghost"} className="flex items-center gap-1 px-2 py-1" size={"fit"} onClick={() => openModal(property._id)}>
-					<Pencil size={16} />
-					<p className="text-sm font-semibold text-primary/80">EDITAR</p>
-				</Button>
+				<div className="flex w-full items-center justify-between gap-1">
+					<div className="flex items-center gap-1">
+						<BsCalendarPlus />
+						<p className="text-xs font-medium text-gray-500">{formatDateAsLocale(property.dataInsercao) || "N/A"}</p>
+					</div>
+					<Button variant={"ghost"} className="flex items-center gap-1 px-2 py-1" size={"fit"} onClick={() => openModal(property._id)}>
+						<Pencil size={16} />
+						<p className="text-sm font-semibold text-primary/80">EDITAR</p>
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

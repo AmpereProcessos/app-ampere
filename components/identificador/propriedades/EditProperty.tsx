@@ -22,6 +22,9 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { LinkIcon } from "lucide-react";
 import { copyToClipboard } from "@/lib/utils";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
+import { formatAsSlug, formatWithoutDiacritics } from "@/utils/methods/formatting";
+import { uploadFile } from "@/utils/methods/firebase";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -40,6 +43,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 			kmAcumulado: 0,
 			kmIntervaloRevisao: 0,
 			kmProximaRevisao: 0,
+			revisoes: [],
 		},
 		autor: {
 			id: session.user.id,
@@ -48,6 +52,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 		},
 		dataInsercao: new Date().toISOString(),
 	});
+	const [imageHolder, setImageHolder] = useState<TSimpleAttachment>({ file: null, previewUrl: null });
 	function updateInfoHolder(info: Partial<TProperty>) {
 		setInfoHolder((prev) => ({
 			...prev,
@@ -55,9 +60,23 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 		}));
 	}
 	const { data: property, isLoading, isError, isSuccess, error } = usePropertyById({ id: propertyId });
-	const { mutate: handleUpdateProperty, isPending: updateLoading } = useMutationWithFeedback({
+
+	async function handleUpdateProperty({ id, changes, file }: { id: string; changes: TProperty; file: TSimpleAttachment["file"] }) {
+		let imageUrl = changes.imagemUrl;
+		if (file) {
+			const { url } = await uploadFile({
+				vinculationId: changes.nome,
+				fileName: `${formatAsSlug(changes.nome)}-imagem-principal`,
+				file: file,
+				prefix: "propriedades",
+			});
+			imageUrl = url;
+		}
+		return await updateProperty({ id, changes: { ...changes, imagemUrl: imageUrl } });
+	}
+	const { mutate: handleUpdatePropertyMutation, isPending: updateLoading } = useMutationWithFeedback({
 		mutationKey: ["update-property", propertyId],
-		mutationFn: updateProperty,
+		mutationFn: handleUpdateProperty,
 		queryClient: queryClient,
 		affectedQueryKey: ["properties"],
 	});
@@ -80,13 +99,20 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 				{isSuccess ? (
 					<>
 						<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-							<PropertyContent propertyId={propertyId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+							<PropertyContent
+								isDesktop={isDesktop}
+								imageHolder={imageHolder}
+								setImageHolder={setImageHolder}
+								propertyId={propertyId}
+								infoHolder={infoHolder}
+								updateInfoHolder={updateInfoHolder}
+							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button variant="outline">FECHAR</Button>
 							</DialogClose>
-							<LoadingButton onClick={() => handleUpdateProperty({ id: propertyId, changes: infoHolder })} loading={updateLoading}>
+							<LoadingButton onClick={() => handleUpdatePropertyMutation({ id: propertyId, changes: infoHolder, file: imageHolder.file })} loading={updateLoading}>
 								{BUTTON_TEXT}
 							</LoadingButton>
 						</DialogFooter>
@@ -107,13 +133,20 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 				{isSuccess ? (
 					<>
 						<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-							<PropertyContent propertyId={propertyId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+							<PropertyContent
+								isDesktop={isDesktop}
+								imageHolder={imageHolder}
+								setImageHolder={setImageHolder}
+								propertyId={propertyId}
+								infoHolder={infoHolder}
+								updateInfoHolder={updateInfoHolder}
+							/>
 						</div>
 						<DrawerFooter>
 							<DrawerClose asChild>
 								<Button variant="outline">FECHAR</Button>
 							</DrawerClose>
-							<LoadingButton onClick={() => handleUpdateProperty({ id: propertyId, changes: infoHolder })} loading={updateLoading}>
+							<LoadingButton onClick={() => handleUpdatePropertyMutation({ id: propertyId, changes: infoHolder, file: imageHolder.file })} loading={updateLoading}>
 								{BUTTON_TEXT}
 							</LoadingButton>
 						</DrawerFooter>
@@ -127,17 +160,19 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 export default EditProperty;
 
 type PropertyContentProps = {
+	isDesktop: boolean;
 	propertyId: string;
+	imageHolder: TSimpleAttachment;
+	setImageHolder: (image: TSimpleAttachment) => void;
 	infoHolder: TProperty;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
 };
-function PropertyContent({ propertyId, infoHolder, updateInfoHolder }: PropertyContentProps) {
+function PropertyContent({ isDesktop, propertyId, imageHolder, setImageHolder, infoHolder, updateInfoHolder }: PropertyContentProps) {
 	return (
 		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
 			<SharableUsageLink id={propertyId} />
-
-			<GeneralInfo infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-			<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<GeneralInfo imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<VehicleProperties isDesktop={isDesktop} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 		</div>
 	);
 }

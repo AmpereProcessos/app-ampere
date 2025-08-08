@@ -26,6 +26,7 @@ import toast from "react-hot-toast";
 import { usePropertyUsageStore, PropertyUsageProvider } from "@/utils/stores/property-usage";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import TextareaInput from "@/components/inputs/TextareaInput";
 
 function PublicPropertyTemporaryUsagePage() {
 	const router = useRouter();
@@ -101,12 +102,18 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 	const propertyName = usePropertyUsageStore((state) => state.propertyUsage.propriedade.nome);
 	const propertyIdentifier = usePropertyUsageStore((state) => state.propertyUsage.propriedade.identificador);
 	const propertyMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
-
+	const propertyUsageNotes = usePropertyUsageStore((state) => state.propertyUsage.anotacoes);
 	async function handleUsageMutationMethod({
 		propertyUsageId,
 		info,
 		attachments,
 	}: { propertyUsageId: string | undefined; info: TPropertyTemporaryUsage; attachments: TAttachmentState[] }) {
+		// If usage is for a vehicle, check if the kmFinal is greater than the kmInitial
+		if (propertyMetadataType === "USO DE VEÍCULO") {
+			if (info.metadados.kmFinal && info.metadados.kmFinal < info.metadados.kmInicial) {
+				throw new Error("A kilometragem final não pode ser menor que a kilometragem inicial.");
+			}
+		}
 		const filesMetadata = await handleMultipleAttachmentsUpdate({ attachments, vinculationId: info.propriedade.id });
 		if (propertyUsageId) {
 			return await updatePropertyUsage({ id: propertyUsageId, changes: { ...info, arquivos: [...info.arquivos, ...filesMetadata], dataFim: new Date().toISOString() } });
@@ -155,7 +162,11 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 							<h1 className="text-sm lg:text-lg font-bold leading-none tracking-tight text-center">UTILIZAÇÃO DE PROPRIEDADE</h1>
 						</div>
 						<div className="w-full flex items-center justify-center gap-2">
-							{propertyImageUrl ? <Image src={propertyImageUrl} alt={`Imagem da propriedade ${propertyName}`} width={35} height={35} /> : null}
+							{propertyImageUrl ? (
+								<div className="w-10 h-10 min-w-10 min-h-10 max-w-10 max-h-10 rounded-lg overflow-hidden relative">
+									<Image src={propertyImageUrl} alt={`Imagem da propriedade ${propertyName}`} fill={true} />
+								</div>
+							) : null}
 							<h1 className="text-sm lg:text-lg font-bold leading-none tracking-tight text-center">{propertyName}</h1>
 							<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded-lg w-fit">
 								<Code size={15} />
@@ -178,6 +189,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 						)}
 						<UserSelection />
 						{propertyMetadataType === "USO DE VEÍCULO" ? <VehicleMetadata property={openUsage.property} hasOpenUsage={!!openUsage.openUsage} /> : null}
+						<Others />
 						<div className="w-full flex items-center justify-end">
 							<LoadingButton
 								loading={isUsageMutationLoading}
@@ -431,5 +443,20 @@ function PropertyAttachmentCard({ index, propertyUsageMetadataType, attachment }
 				)}
 			</div>
 		</div>
+	);
+}
+
+function Others() {
+	const propertyUsageNotes = usePropertyUsageStore((state) => state.propertyUsage.anotacoes);
+	const updatePropertyUsage = usePropertyUsageStore((state) => state.updatePropertyUsage);
+	return (
+		<>
+			<TextareaInput
+				label="ANOTAÇÕES"
+				placeholder="Preencha aqui qualquer detalhe relevante, como detalhes de uma possível avaria, etc..."
+				value={propertyUsageNotes ?? ""}
+				handleChange={(value) => updatePropertyUsage({ anotacoes: value })}
+			/>
+		</>
 	);
 }

@@ -8,7 +8,7 @@ import LoadingComponent from "@/components/utils/LoadingComponent";
 import { usePropertyTemporaryUsageById } from "@/utils/methods/query/properties";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import type { TGetPropertyTemporaryUsageByIdOutput } from "@/pages/api/propriedades/uso-temporario";
-import { Calendar, Code, Download, ExternalLink, LayoutGrid, LinkIcon, Paperclip, UsersRound } from "lucide-react";
+import { Calendar, Code, Diamond, Download, ExternalLink, LayoutGrid, LinkIcon, Paperclip, UsersRound } from "lucide-react";
 import Image from "next/image";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -91,6 +91,7 @@ function ViewPropertyUsageContent({ usage }: { usage: TGetPropertyTemporaryUsage
 			<ResponsibleContent responsible={usage.responsaveis} />
 			<MetadataContent metadata={usage.metadados} />
 			<AttachmentsContent attachments={usage.arquivos} />
+			<OthersContent notes={usage.anotacoes} />
 		</div>
 	);
 }
@@ -215,6 +216,21 @@ function AttachmentsContent({ attachments }: { attachments: TGetPropertyTemporar
 					</div>
 				</div>
 			))}
+		</div>
+	);
+}
+
+function OthersContent({ notes }: { notes: TGetPropertyTemporaryUsageByIdOutput["anotacoes"] }) {
+	return (
+		<div className="flex w-full flex-col gap-2">
+			<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded w-fit">
+				<Diamond size={15} />
+				<h1 className="text-xs tracking-tight font-medium text-start w-fit">OUTRAS INFORMAÇÕES</h1>
+			</div>
+			<div className="flex flex-col gap-1">
+				<h2 className="text-sm font-medium tracking-tight">ANOTAÇÕES</h2>
+				<h2 className="text-sm font-bold tracking-tight text-start">{notes ?? "Nenhuma anotação encontrada."}</h2>
+			</div>
 		</div>
 	);
 }

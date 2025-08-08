@@ -19,8 +19,17 @@ export const PropertyMetadataVehicleSchema = z.object({
 		required_error: "Kilometragem da próxima manutenção não informada.",
 		invalid_type_error: "Tipo não válido para a kilometragem da próxima manutenção.",
 	}),
+	revisoes: z.array(
+		z.object({
+			km: z.number({
+				required_error: "Kilometragem da revisão não informada.",
+				invalid_type_error: "Tipo não válido para a kilometragem da revisão.",
+			}),
+			data: z.string().datetime({ message: "Tipo inválido para a data da revisão." }),
+		}),
+	),
 });
-
+export type TPropertyMetadataVehicle = z.infer<typeof PropertyMetadataVehicleSchema>;
 const GeneralPropertySchema = z.object({
 	nome: z.string(),
 	identificador: z.string(),
@@ -126,6 +135,12 @@ export const PropertyTemporaryUsageSchema = z.object({
 			}),
 		}),
 	),
+	anotacoes: z
+		.string({
+			invalid_type_error: "Tipo não válido para as anotações.",
+		})
+		.optional()
+		.nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyUsageVehicleUsageMetadataSchema]),
 	dataInicio: z.string().datetime({ message: "Tipo inválido para a data de início." }).optional().nullable(),
 	dataFim: z.string().datetime({ message: "Tipo inválido para a data de fim." }).optional().nullable(),

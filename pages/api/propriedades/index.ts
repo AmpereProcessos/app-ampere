@@ -58,7 +58,7 @@ const getProperties = async ({ id, includeOpenUsages, search, metadataTypes }: T
 			}
 		: {};
 
-	const metadataTypesQuery: Filter<TProperty> = metadataTypes.length > 0 ? { "metadados.tipo": { $in: metadataTypes } } : {};
+	const metadataTypesQuery: Filter<TProperty> = { "metadados.tipo": { $in: metadataTypes } };
 
 	const query: Filter<TProperty> = { ...searchQuery, ...metadataTypesQuery };
 	const properties = await propertiesCollection.find(query).toArray();

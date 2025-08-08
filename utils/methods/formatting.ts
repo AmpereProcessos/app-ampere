@@ -62,6 +62,14 @@ export function formatWithoutDiacritics(string: string, useUpperCase?: boolean) 
 			.normalize("NFD")
 			.replace(/[\u0300-\u036f]/g, "");
 }
+export function formatAsSlug(string: string) {
+	return string
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.replace(/ /g, "-")
+		.replace(/[^\w-]+/g, "");
+}
 export function getProjectNestedFieldValue(project: Record<string, any>, path: string) {
 	// @ts-ignore
 	return path.split(".").reduce((acc, part) => acc && acc[part as keyof Record<string, any>], project);

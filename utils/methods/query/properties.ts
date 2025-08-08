@@ -7,11 +7,16 @@ import type { TGetPropertyTemporaryUsagesOutput, TPropertyTemporaryUsagesByPerio
 import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetTemporaryUsageByPropertyOutput, TTemporaryUsageByPropertyInput } from "@/pages/api/propriedades/uso-temporario/propriedade";
-import type { TGetPropertiesOutput } from "@/pages/api/propriedades";
+import type { TGetPropertiesOutput, TPropertiesQueryParamsInput } from "@/pages/api/propriedades";
 
-async function fetchProperties() {
+async function fetchProperties(queryParams: TPropertiesQueryParamsInput) {
 	try {
-		const { data }: { data: TGetPropertiesOutput } = await axios.get("/api/propriedades?includeOpenUsages=true");
+		const urlParams = new URLSearchParams();
+		if ("search" in queryParams) urlParams.set("search", queryParams.search || "");
+		if ("metadataTypes" in queryParams) urlParams.set("metadataTypes", queryParams.metadataTypes.join(","));
+		if ("includeOpenUsages" in queryParams) urlParams.set("includeOpenUsages", queryParams.includeOpenUsages.toString());
+
+		const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?${urlParams.toString()}`);
 		if (!data.data.default) throw new Error("Não foi possível obter as propriedades.");
 		return data.data.default;
 	} catch (error) {
@@ -19,44 +24,31 @@ async function fetchProperties() {
 	}
 }
 
-type UsePropertiesFilters = {
-	search: string;
-	responsibles: string[];
-	tags: string[];
+type TUsePropertiesParams = {
+	initialFilters?: Partial<Exclude<TPropertiesQueryParamsInput, "id">>;
 };
-export function useProperties() {
-	const [filters, setFilters] = useState<UsePropertiesFilters>({
-		search: "",
-		responsibles: [],
-		tags: [],
+export function useProperties({ initialFilters }: TUsePropertiesParams) {
+	const [filters, setFilters] = useState<TPropertiesQueryParamsInput>({
+		search: initialFilters?.search ?? "",
+		metadataTypes: initialFilters?.metadataTypes ?? [],
+		includeOpenUsages: initialFilters?.includeOpenUsages ?? true,
 	});
-	function matchSearch(property: TPropertyDTO) {
-		if (filters.search.trim().length === 0) return true;
-		return formatWithoutDiacritics(property.nome, true).includes(formatWithoutDiacritics(filters.search, true));
-	}
-	type TPropertyMaybeWithResponsibles = TPropertyDTO & { responsaveis?: { id: string }[] };
-	function matchResponsibles(property: TPropertyDTO) {
-		if (filters.responsibles.length === 0) return true;
-		const withResp = property as TPropertyMaybeWithResponsibles;
-		const responsaveis = withResp.responsaveis || [];
-		return responsaveis.some((resp: { id: string }) => filters.responsibles.includes(resp.id));
-	}
-	function matchTags(property: TPropertyDTO) {
-		if (filters.tags.length === 0) return true;
-		return property.tags.some((tag) => filters.tags.includes(tag));
+
+	function updateFilters(filters: Partial<TPropertiesQueryParamsInput>) {
+		setFilters((prev) => ({
+			...prev,
+			...filters,
+		}));
 	}
 
-	function handleModelData(data: TPropertyDTO[]) {
-		return data.filter((property) => matchSearch(property) && matchResponsibles(property) && matchTags(property));
-	}
+	const queryParamsDebounced = useDebounceMemo(filters, 500);
 	return {
 		...useQuery({
-			queryKey: ["properties"],
-			queryFn: fetchProperties,
-			select: (data) => handleModelData(data),
+			queryKey: ["properties", queryParamsDebounced],
+			queryFn: async () => await fetchProperties(queryParamsDebounced),
 		}),
 		filters,
-		setFilters,
+		updateFilters,
 	};
 }
 
@@ -80,9 +72,10 @@ export function usePropertyById({ id }: { id: string }) {
 async function fetchPropertyTemporaryUsages(params: TPropertyTemporaryUsagesByPeriodInput) {
 	try {
 		const urlParams = new URLSearchParams();
-		if ("periodAfter" in params) urlParams.set("periodAfter", params.periodAfter);
-		if ("periodBefore" in params) urlParams.set("periodBefore", params.periodBefore);
-		if ("periodType" in params) urlParams.set("periodType", params.periodType);
+		if ("periodAfter" in params && params.periodAfter) urlParams.set("periodAfter", params.periodAfter);
+		if ("periodBefore" in params && params.periodBefore) urlParams.set("periodBefore", params.periodBefore);
+		if ("periodType" in params && params.periodType) urlParams.set("periodType", params.periodType);
+		if ("type" in params && params.type) urlParams.set("type", params.type);
 
 		const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?${urlParams.toString()}`);
 		if (!data.data.default) throw new Error("Não foi possível obter os usos temporários da propriedade.");
@@ -96,12 +89,11 @@ type UsePropertyTemporaryUsagesParams = {
 	initialParams?: TPropertyTemporaryUsagesByPeriodInput;
 };
 export function usePropertyTemporaryUsages({ initialParams }: UsePropertyTemporaryUsagesParams) {
-	const monthStart = dayjs().startOf("month").toISOString();
-	const monthEnd = dayjs().endOf("month").toISOString();
 	const [queryParams, setQueryParams] = useState<TPropertyTemporaryUsagesByPeriodInput>({
-		periodAfter: initialParams?.periodAfter ?? monthStart,
-		periodBefore: initialParams?.periodBefore ?? monthEnd,
-		periodType: initialParams?.periodType ?? "dataInicio",
+		type: initialParams?.type ?? "all",
+		periodAfter: initialParams?.periodAfter ?? undefined,
+		periodBefore: initialParams?.periodBefore ?? undefined,
+		periodType: initialParams?.periodType ?? undefined,
 	});
 
 	function updateQueryParams(params: Partial<TPropertyTemporaryUsagesByPeriodInput>) {
@@ -120,6 +112,23 @@ export function usePropertyTemporaryUsages({ initialParams }: UsePropertyTempora
 		queryParams,
 		updateQueryParams,
 	};
+}
+
+async function fetchPropertyTemporaryUsageById({ id }: { id: string }) {
+	try {
+		const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?id=${id}`);
+		if (!data.data.byId) throw new Error("Uso temporário não encontrado.");
+		return data.data.byId;
+	} catch (error) {
+		throw error;
+	}
+}
+
+export function usePropertyTemporaryUsageById({ id }: { id: string }) {
+	return useQuery({
+		queryKey: ["property-temporary-usage-by-id", id],
+		queryFn: async () => await fetchPropertyTemporaryUsageById({ id }),
+	});
 }
 
 async function fetchOpenPropertyTemporaryUsageByPropertyId(input: TTemporaryUsageByPropertyInput) {

@@ -26,7 +26,6 @@ const GeneralPropertySchema = z.object({
 	identificador: z.string(),
 	imagemUrl: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
-	tags: z.array(z.string()),
 	autor: AuthorSchema,
 	dataInsercao: z.string().datetime(),
 });
@@ -38,7 +37,6 @@ export const InsertPropertySchema = z.object({
 	}),
 	imagemUrl: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
-	tags: z.array(z.string({ required_error: "Tag não informada.", invalid_type_error: "Tipo não válido para tag da propriedade." })),
 	autor: AuthorSchema,
 	dataInsercao: z
 		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção da propriedade." })
@@ -144,3 +142,4 @@ export const PropertyTemporaryUsageSchema = z.object({
 	dataInsercao: z.string().datetime({ message: "Tipo inválido para a data de inserção." }),
 });
 export type TPropertyTemporaryUsage = z.infer<typeof PropertyTemporaryUsageSchema>;
+export type TPropertyTemporaryUsageDTO = TPropertyTemporaryUsage & { _id: string };

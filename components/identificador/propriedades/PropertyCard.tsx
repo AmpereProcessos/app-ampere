@@ -1,12 +1,16 @@
 import { cn } from "@/lib/utils";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import type { TGetPropertiesDefaultOutput } from "@/pages/api/propriedades";
-import { Car, Code, Pencil } from "lucide-react";
+import { Car, Code, Pencil, ScanSearch } from "lucide-react";
 import React from "react";
 import { BsCalendarPlus, BsCode } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getVehicleReviewAlertLevelByKmDifference } from "@/lib/property-usage";
+import { PROPERTY_METADATA_TYPES_CONFIG } from "@/lib/properties";
+import { renderIconWithClassNames } from "@/utils/methods/rendering";
+import { Badge } from "@/components/ui/badge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 type PropertyCardProps = {
 	property: TGetPropertiesDefaultOutput[number];
@@ -21,60 +25,62 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
 		<div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
 				<div className="flex items-center gap-2 flex-wrap">
+					<Badge className={cn(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].stylingClassName, "rounded-full text-[0.65rem]")}>
+						{renderIconWithClassNames(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].icon, "h-4 w-4 min-w-4 min-h-4")}
+						{property.metadados.tipo}
+					</Badge>
 					<p className="text-sm font-bold leading-none tracking-tight">{property.nome}</p>
-					<div className={cn("flex items-center gap-1 rounded-lg bg-primary/20 px-2 py-0.5 text-center text-xs font-bold italic text-primary/80")}>
-						<Code size={12} />
-						<p>{property.identificador}</p>
+					<div className={cn("flex items-center gap-1")}>
+						<Code className="w-4 h-4" />
+						<p className="text-xs font-medium tracking-tight">{property.identificador}</p>
 					</div>
 					{property.metadados.tipo === "VEÍCULO" ? (
 						<>
-							<div className={cn("flex items-center gap-1 rounded-lg bg-primary/20 px-2 py-0.5 text-center text-xs font-bold italic text-primary/80")}>
-								<Car size={12} />
-								<p>{property.metadados.tipo}</p>
-							</div>
 							{vehicleReviewAlertLevel ? (
-								<div className={cn("flex items-center gap-1 rounded-lg px-2 py-0.5 text-center text-xs font-bold italic", vehicleReviewAlertLevel.color)}>
-									<Car size={12} />
+								<Badge className={cn(vehicleReviewAlertLevel.color, "rounded-full text-[0.65rem]")}>
+									<ScanSearch size={12} />
 									<p>{vehicleReviewAlertLevel.text}</p>
-								</div>
+								</Badge>
 							) : null}
 						</>
 					) : null}
 				</div>
-			</div>
-			{openUsages.length > 0 ? (
-				<div className="flex flex-col gap-1">
-					<div className="flex items-center justify-between">
-						<p className="text-[0.65rem] font-semibold text-primary/80">USOS EM ABERTO ({openUsages.length})</p>
-					</div>
-					<div className="flex flex-col gap-1">
-						{openUsages.map((usage) => (
-							<div key={usage._id} className="flex  items-center justify-between rounded-sm bg-primary/10 border border-primary/50 p-1">
-								<div className="flex items-center gap-2">
-									<span className="text-xs font-semibold uppercase text-primary/70">{usage.metadados.tipo}</span>
-									{usage.metadados.tipo === "USO DE VEÍCULO" ? <span className="text-xs text-primary/80 tracking-tight">KM: {usage.metadados.kmInicial} → ...</span> : null}
-								</div>
-
-								<div className="flex fitems-center gap-2">
-									{usage.responsaveis.map((resp) => (
-										<div key={resp.id} className="flex items-center gap-2">
-											<Avatar className="h-5 w-5">
-												<AvatarImage src={resp.avatar_url ?? undefined} />
-												<AvatarFallback>{formatNameAsInitials(resp.nome)}</AvatarFallback>
-											</Avatar>
-											<p className="text-xs font-medium text-primary/80">{resp.nome}</p>
+				{openUsages.length > 0 ? (
+					<HoverCard>
+						<HoverCardTrigger asChild>
+							<Button variant={"ghost"} size={"fit"} className="text-xs">
+								{openUsages.length} USOS EM ANDAMENTO
+							</Button>
+						</HoverCardTrigger>
+						<HoverCardContent className="w-80">
+							<h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
+							<div className="flex flex-col gap-3">
+								{openUsages.map((usage) => (
+									<div key={usage._id} className="w-full flex flex-col gap-1 p-2 rounded-lg bg-primary/10">
+										<div className="w-full flex items-center justify-between">
+											<Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
 										</div>
-									))}
-									<div className="flex items-center gap-1 text-primary/80">
-										<BsCalendarPlus className="w-4 h-4" />
-										<span className="text-xs font-medium text-primary/80">INÍCIO: {formatDateAsLocale(usage.dataInicio || usage.dataInsercao) || "N/A"}</span>
+										<div className="w-full flex items-center justify-between">
+											<div className="flex items-center gap-2">
+												<Avatar className="w-4 h-4 min-w-4 min-h-4">
+													<AvatarImage src={usage.autor.avatar_url ?? undefined} />
+													<AvatarFallback>{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
+												</Avatar>
+												<p className="text-xs font-medium tracking-tight">{usage.autor.nome}</p>
+											</div>
+											<div className="flex items-center gap-2">
+												<BsCalendarPlus className="w-4 h-4" />
+												<p className="text-xs font-medium tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
+											</div>
+										</div>
 									</div>
-								</div>
+								))}
 							</div>
-						))}
-					</div>
-				</div>
-			) : null}
+						</HoverCardContent>
+					</HoverCard>
+				) : null}
+			</div>
+
 			<div className="mt-4 flex w-full items-center justify-between gap-1">
 				<div className="flex items-center gap-1">
 					<BsCalendarPlus />

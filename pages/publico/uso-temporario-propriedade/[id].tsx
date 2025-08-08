@@ -12,11 +12,11 @@ import { useEmployeeBySearch, useEmployees, useUsers } from "@/utils/methods/que
 import TextInput from "@/components/inputs/Text";
 import { formatNameAsInitials, formatToCPForCNPJ } from "@/utils/methods/formatting";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BadgeCheck, Boxes, Car, CloudUpload, Code, FileStack, IdCard, Lock, Mail, Paperclip, Phone, UserRound } from "lucide-react";
+import { AlertCircle, BadgeCheck, Boxes, Car, Check, CloudUpload, Code, FileStack, IdCard, Lock, Mail, Paperclip, Phone, Plus, UserRound } from "lucide-react";
 import { motion } from "framer-motion";
 import { getFileTypeTitle, isFileImage, SlideMotionVariants } from "@/utils/constants";
 import NumberInput from "@/components/inputs/Number";
-import { DOCUMENTS_BY_USAGE_TYPE, PropertyTemporaryUsageMetadataTypeByPropertyType } from "@/lib/property-usage";
+import { DOCUMENTS_BY_USAGE_TYPE, getVehicleReviewAlertLevelByKmDifference, PropertyTemporaryUsageMetadataTypeByPropertyType } from "@/lib/property-usage";
 import { renderIconWithClassNames } from "@/utils/methods/rendering";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { useMutation } from "@tanstack/react-query";
@@ -25,6 +25,7 @@ import { createPropertyUsage, updatePropertyUsage } from "@/utils/methods/mutati
 import toast from "react-hot-toast";
 import { usePropertyUsageStore, PropertyUsageProvider } from "@/utils/stores/property-usage";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 function PublicPropertyTemporaryUsagePage() {
 	const router = useRouter();
@@ -164,8 +165,19 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 					</div>
 
 					<div className="bg-[#fff] dark:bg-[#121212] w-full flex p-3.5 flex-col gap-1.5 shadow-sm border border-primary/20 rounded-lg">
+						{openUsage.openUsage ? (
+							<div className={cn("flex items-center justify-center gap-1 px-2 py-1 rounded w-fit self-center bg-green-200 text-green-800")}>
+								<Check size={15} />
+								<h1 className="text-xs tracking-tight font-medium text-start w-fit">Você está finalizando o uso temporário da propriedade.</h1>
+							</div>
+						) : (
+							<div className={cn("flex items-center justify-center gap-1 px-2 py-1 rounded w-fit self-center bg-blue-200 text-blue-800")}>
+								<Plus size={15} />
+								<h1 className="text-xs tracking-tight font-medium text-start w-fit">Você está iniciando o uso temporário da propriedade.</h1>
+							</div>
+						)}
 						<UserSelection />
-						{propertyMetadataType === "USO DE VEÍCULO" ? <VehicleMetadata hasOpenUsage={!!openUsage.openUsage} /> : null}
+						{propertyMetadataType === "USO DE VEÍCULO" ? <VehicleMetadata property={openUsage.property} hasOpenUsage={!!openUsage.openUsage} /> : null}
 						<div className="w-full flex items-center justify-end">
 							<LoadingButton
 								loading={isUsageMutationLoading}
@@ -266,10 +278,10 @@ function UserSelection() {
 }
 
 type VehicleMetadataProps = {
+	property: TGetTemporaryUsageByPropertyOutput["data"]["property"];
 	hasOpenUsage: boolean;
 };
-function VehicleMetadata({ hasOpenUsage }: VehicleMetadataProps) {
-	console.log("Rerendering VehicleMetadata");
+function VehicleMetadata({ property, hasOpenUsage }: VehicleMetadataProps) {
 	const propertyUsageMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
 	const updatePropertyUsageMetadata = usePropertyUsageStore((state) => state.updatePropertyUsageMetadata);
 	const attachments = usePropertyUsageStore((state) => state.attachments);
@@ -301,12 +313,19 @@ function VehicleMetadata({ hasOpenUsage }: VehicleMetadataProps) {
 			</div>
 		);
 	}
+	const vehicleReviewAlertLevel = getVehicleReviewAlertLevelByKmDifference(property.metadados.kmProximaRevisao - property.metadados.kmAcumulado);
 	return (
 		<div className="w-full flex flex-col gap-2">
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded w-fit">
 				<Car size={15} />
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">DETALHES DO USO DO VEÍCULO</h1>
 			</div>
+			{vehicleReviewAlertLevel ? (
+				<div className={cn("flex items-center justify-center gap-1 px-2 py-1 rounded w-full", vehicleReviewAlertLevel.color)}>
+					<AlertCircle size={15} />
+					<h1 className="text-xs tracking-tight font-medium text-start w-fit">{vehicleReviewAlertLevel.call}</h1>
+				</div>
+			) : null}
 			{hasOpenUsage ? <FinishUsageMetadata /> : <StartUsageMetadata />}
 			<div className="w-full flex flex-col gap-2">
 				<h1 className="text-sm font-medium tracking-tight text-primary/80">ANEXOS</h1>

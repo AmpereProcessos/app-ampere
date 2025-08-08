@@ -1,17 +1,21 @@
 import EditProperty from "@/components/identificador/propriedades/EditProperty";
 import NewProperty from "@/components/identificador/propriedades/NewProperty";
 import PropertyCard from "@/components/identificador/propriedades/PropertyCard";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
-import TextInput from "@/components/inputs/Text";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
+import { PROPERTY_METADATA_TYPES_CONFIG } from "@/lib/properties";
+import { cn } from "@/lib/utils";
+import { SlideMotionVariants } from "@/utils/constants";
 import { useProperties } from "@/utils/methods/query/properties";
-import { useEmployees } from "@/utils/methods/query/users";
-import { AnimatePresence, motion } from "framer-motion";
+import { renderIconWithClassNames } from "@/utils/methods/rendering";
+import type { TProperty } from "@/utils/schemas/properties";
+import { motion } from "framer-motion";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import React, { useState } from "react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 
 type TEditModal = {
 	id: string | null;
@@ -32,32 +36,19 @@ type PropertiesContentProps = {
 	session: Session;
 };
 function PropertiesContent({ session }: PropertiesContentProps) {
-	const { data: properties, isLoading, isError, isSuccess, filters, setFilters } = useProperties();
-	const { data: employees } = useEmployees({ active: true });
-	const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false);
+	const { data: properties, isLoading, isError, isSuccess, filters, updateFilters } = useProperties({ initialFilters: { includeOpenUsages: true } });
 	const [newPropertyModalIsOpen, setNewPropertyModalIsOpen] = useState<boolean>(false);
 	const [editPropertyModal, setEditPropertyModal] = useState<TEditModal>({ id: null, isOpen: false });
 
-	const tags = [...new Set(properties?.flatMap((module) => module.tags) || [])];
-
 	return (
-		<div className="grow p-6">
-			<div className="flex h-full grow flex-col">
-				<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+		<div className="grow flex flex-col h-full w-full gap-6 p-6">
+			<div className="w-full flex flex-col gap-3 border-b border-primary/30 pb-1">
+				<div className="flex flex-col items-center justify-between">
 					<div className="flex w-full items-center justify-between">
 						<div className="flex flex-col">
 							<p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE PROPRIEDADES</p>
 							<p className="text-sm tracking-tight text-gray-500">{properties?.length || "..."} propriedades contabilizadas</p>
 						</div>
-						{dropdownMenuVisible ? (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(false)} />
-							</div>
-						) : (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(true)} />
-							</div>
-						)}
 					</div>
 					<div className="mt-2 flex w-full items-center justify-end gap-2">
 						<button
@@ -68,75 +59,61 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 							CADASTRAR PROPRIEDADE
 						</button>
 					</div>
-					<AnimatePresence>
-						{dropdownMenuVisible ? (
-							<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-								<div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
-									<TextInput
-										label={"NOME DO ITEM"}
-										value={filters.search}
-										placeholder={"Digite o nome do item..."}
-										handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-									/>
-
-									<div className="w-full lg:w-[350px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"RESPONSÁVEIS"}
-											selected={filters.responsibles}
-											options={employees?.map((e) => ({ id: e._id, label: e.usuario, value: e._id })) || []}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													responsibles: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													responsibles: [],
-												}))
-											}
-										/>
-									</div>
-									<div className="w-full lg:w-[350px]">
-										<MultipleSelectInput
-											width={"100%"}
-											label={"TAGS"}
-											selected={filters.tags}
-											options={tags?.map((tag, index) => ({ id: index + 1, label: tag, value: tag })) || []}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value) =>
-												setFilters((prev) => ({
-													...prev,
-													tags: value as string[],
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													tags: [],
-												}))
-											}
-										/>
-									</div>
-								</div>
-							</motion.div>
-						) : null}
-					</AnimatePresence>
+					<motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="mt-4 flex w-full flex-col gap-y-2">
+						<div className="flex items-center gap-3 justify-between w-full">
+							<div className="grow min-w-[250px]">
+								<Input
+									placeholder="PESQUISAR PROPRIEDADE..."
+									value={filters.search || ""}
+									onChange={(e) => updateFilters({ search: e.target.value })}
+									className="w-full outline-none ring-0 focus:ring-0 focus:ring-offset-0"
+								/>
+							</div>
+							<div className="flex gap-2 justify-end">
+								<h1 className="text-sm font-medium text-primary/80">TIPOS DE PROPRIEDADE</h1>
+								{Object.entries(PROPERTY_METADATA_TYPES_CONFIG).map(([type, config]) => (
+									<Button
+										key={type}
+										variant={"ghost"}
+										size={"fit"}
+										className={cn("flex items-center gap-2 px-2 py-1", config.stylingClassName, {
+											"opacity-100": filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"]),
+											"opacity-80": !filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"]),
+										})}
+										onClick={() =>
+											updateFilters({
+												metadataTypes: filters.metadataTypes.includes(type as TProperty["metadados"]["tipo"])
+													? filters.metadataTypes.filter((t) => t !== type)
+													: [...filters.metadataTypes, type as TProperty["metadados"]["tipo"]],
+											})
+										}
+									>
+										{renderIconWithClassNames(config.icon, "h-4 w-4")}
+										<p className="text-sm">{config.name}</p>
+									</Button>
+								))}
+							</div>
+						</div>
+					</motion.div>
 				</div>
-				<div className="w-full flex flex-col gap-2">
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg="Erro ao buscar propriedades..." /> : null}
-					{isSuccess ? (
-						properties.length > 0 ? (
-							properties.map((property) => <PropertyCard key={property._id} property={property} openModal={(id) => setEditPropertyModal({ id: id, isOpen: true })} />)
-						) : (
-							<p className="w-full text-center font-medium italic text-gray-500">Nenhuma propriedade encontrada.</p>
-						)
-					) : null}
+				<div className="w-full flex items-center justify-end">
+					<Button variant={"link"} asChild>
+						<Link href={"/adm/propriedades/usos-temporarios"}>USOS TEMPORÁRIOS</Link>
+					</Button>
 				</div>
+			</div>
+			<div className="w-full flex flex-col gap-2">
+				{isLoading ? <LoadingPage /> : null}
+				{isError ? <ErrorComponent msg="Erro ao buscar propriedades..." /> : null}
+				{isSuccess ? (
+					properties.length > 0 ? (
+						properties.map((property) => <PropertyCard key={property._id} property={property} openModal={(id) => setEditPropertyModal({ id: id, isOpen: true })} />)
+					) : (
+						<div className="w-full flex items-center justify-center gap-2">
+							<p className="w-full text-center font-medium italic text-primary/80">Nenhuma propriedade para os parâmetros estabelecidos.</p>
+						</div>
+					)
+				) : null}
 			</div>
 			{editPropertyModal.id && editPropertyModal.isOpen ? (
 				<EditProperty propertyId={editPropertyModal.id} session={session} closeModal={() => setEditPropertyModal({ id: null, isOpen: false })} />

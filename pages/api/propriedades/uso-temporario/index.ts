@@ -9,16 +9,21 @@ import type { Session } from "next-auth";
 import { z } from "zod";
 
 const PropertyTemporaryUsagesByPeriodQueryParams = z.object({
+	type: z.enum(["all", "open", "closed"]),
 	periodAfter: z
 		.string({
 			required_error: "Data de início não informada.",
 			invalid_type_error: "Tipo não válido para a data de início.",
 		})
-		.datetime({ message: "Tipo inválido para a data de início." }),
+		.datetime({ message: "Tipo inválido para a data de início." })
+		.optional()
+		.nullable(),
 	periodBefore: z
 		.string({ required_error: "Data de término não informada.", invalid_type_error: "Tipo não válido para a data de término." })
-		.datetime({ message: "Tipo inválido para a data de término." }),
-	periodType: z.enum(["dataInicio", "dataFim"]),
+		.datetime({ message: "Tipo inválido para a data de término." })
+		.optional()
+		.nullable(),
+	periodType: z.enum(["dataInicio", "dataFim"]).optional().nullable(),
 });
 export type TPropertyTemporaryUsagesByPeriodInput = z.infer<typeof PropertyTemporaryUsagesByPeriodQueryParams>;
 
@@ -56,14 +61,32 @@ async function getTemporaryUsagesRoute({ params, session }: { params: TPropertyT
 
 	const { periodAfter, periodBefore, periodType } = params;
 
-	const periodQuery: Filter<TPropertyTemporaryUsage> = {
-		[periodType]: {
-			$gte: periodAfter,
-			$lte: periodBefore,
+	const typeQueryMap: Record<TPropertyTemporaryUsagesByPeriodInput["type"], Filter<TPropertyTemporaryUsage>> = {
+		all: {},
+		open: {
+			dataFim: null,
+		},
+		closed: {
+			dataFim: { $ne: null },
 		},
 	};
 
-	const temporaryUsages = await temporaryUsagesCollection.find(periodQuery).toArray();
+	const typeQuery = typeQueryMap[params.type];
+	const periodQuery: Filter<TPropertyTemporaryUsage> =
+		periodAfter && periodBefore && periodType
+			? {
+					[periodType]: {
+						$gte: periodAfter,
+						$lte: periodBefore,
+					},
+				}
+			: {};
+
+	const query = {
+		...typeQuery,
+		...periodQuery,
+	};
+	const temporaryUsages = await temporaryUsagesCollection.find(query).toArray();
 
 	return {
 		data: {
@@ -73,6 +96,8 @@ async function getTemporaryUsagesRoute({ params, session }: { params: TPropertyT
 	};
 }
 export type TGetPropertyTemporaryUsagesOutput = Awaited<ReturnType<typeof getTemporaryUsagesRoute>>;
+export type TGetPropertyTemporaryUsagesDefaultOutput = Exclude<TGetPropertyTemporaryUsagesOutput["data"]["default"], undefined>;
+export type TGetPropertyTemporaryUsageByIdOutput = Exclude<TGetPropertyTemporaryUsagesOutput["data"]["byId"], undefined>;
 
 const getTemporaryUsagesHandler: NextApiHandler<TGetPropertyTemporaryUsagesOutput> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);

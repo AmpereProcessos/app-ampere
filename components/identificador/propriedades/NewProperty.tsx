@@ -28,7 +28,6 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
 		nome: "",
 		identificador: "",
-		tags: [],
 		metadados: {
 			tipo: "VEÍCULO",
 			kmInicial: 0,

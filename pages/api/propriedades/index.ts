@@ -1,11 +1,30 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { InsertPropertySchema, type TProperty, type TPropertyTemporaryUsage } from "@/utils/schemas/properties";
+import { InsertPropertySchema, PropertyMetadataVehicleSchema, type TPropertyTemporaryUsageDTO, type TProperty, type TPropertyTemporaryUsage } from "@/utils/schemas/properties";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
-import { type Collection, ObjectId } from "mongodb";
+import { type Collection, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
+import { z } from "zod";
 
-const getProperties = async ({ id, includeOpenUsages }: { id: string | undefined; includeOpenUsages?: boolean }) => {
+const PropertiesQueryParamsInputSchema = z.object({
+	// general properties filter
+	includeOpenUsages: z
+		.string({ invalid_type_error: "Tipo não válido para o includeOpenUsages." })
+		.optional()
+		.nullable()
+		.transform((val) => val === "true"),
+	// singular property filter
+	id: z.string({ invalid_type_error: "Tipo não válido para o ID." }).optional().nullable(),
+	// multiple properties filter
+	search: z.string({ invalid_type_error: "Tipo não válido para o search." }).optional().nullable(),
+	metadataTypes: z
+		.string({ invalid_type_error: "Tipo não válido para o metadataType." })
+		.optional()
+		.nullable()
+		.transform((val) => z.array(PropertyMetadataVehicleSchema.shape.tipo).parse(val ? val.split(",") : [])),
+});
+export type TPropertiesQueryParamsInput = z.infer<typeof PropertiesQueryParamsInputSchema>;
+const getProperties = async ({ id, includeOpenUsages, search, metadataTypes }: TPropertiesQueryParamsInput) => {
 	const db = await connectToAdministrationDatabase();
 	const propertiesCollection: Collection<TProperty> = db.collection("propriedades");
 	const temporaryUsagesCollection: Collection<TPropertyTemporaryUsage> = db.collection("propriedades-uso-temporario");
@@ -26,17 +45,34 @@ const getProperties = async ({ id, includeOpenUsages }: { id: string | undefined
 		};
 	}
 
-	const properties = await propertiesCollection.find({}).toArray();
-	let openUsagesByPropertyId: Record<string, Array<TPropertyTemporaryUsage & { _id: string }>> = {};
+	const searchQuery: Filter<TProperty> = search
+		? {
+				$or: [
+					{
+						$or: [{ nome: { $regex: search, $options: "i" } }, { nome: search }],
+					},
+					{
+						$or: [{ identificador: { $regex: search, $options: "i" } }, { identificador: search }],
+					},
+				],
+			}
+		: {};
+
+	const metadataTypesQuery: Filter<TProperty> = metadataTypes.length > 0 ? { "metadados.tipo": { $in: metadataTypes } } : {};
+
+	const query: Filter<TProperty> = { ...searchQuery, ...metadataTypesQuery };
+	const properties = await propertiesCollection.find(query).toArray();
+
+	let openUsagesByPropertyId: Map<string, Array<TPropertyTemporaryUsageDTO>> | undefined = undefined;
 	if (includeOpenUsages && properties.length > 0) {
 		const propertyIds = properties.map((p) => p._id.toString());
-		const openUsagesRaw = await temporaryUsagesCollection.find({ dataFim: null, "propriedade.id": { $in: propertyIds } }).toArray();
-		openUsagesByPropertyId = openUsagesRaw.reduce<Record<string, Array<TPropertyTemporaryUsage & { _id: string }>>>((acc, usage) => {
-			const propId = usage.propriedade.id;
-			if (!acc[propId]) acc[propId] = [];
-			acc[propId].push({ ...usage, _id: (usage as any)._id.toString() });
-			return acc;
-		}, {});
+		const openUsagesFoundProperties = await temporaryUsagesCollection.find({ dataFim: null, "propriedade.id": { $in: propertyIds } }).toArray();
+		openUsagesByPropertyId = new Map(
+			properties.map((p) => {
+				const equivalentUsages = openUsagesFoundProperties.filter((u) => u.propriedade.id === p._id.toString()).map((u) => ({ ...u, _id: u._id.toString() }));
+				return [p._id.toString(), equivalentUsages];
+			}),
+		);
 	}
 
 	return {
@@ -44,7 +80,7 @@ const getProperties = async ({ id, includeOpenUsages }: { id: string | undefined
 			default: properties.map((property) => ({
 				...property,
 				_id: property._id.toString(),
-				...(includeOpenUsages ? { usosTemporarios: openUsagesByPropertyId[property._id.toString()] || [] } : {}),
+				...(includeOpenUsages && openUsagesByPropertyId ? { usosTemporarios: openUsagesByPropertyId.get(property._id.toString()) || [] } : {}),
 			})),
 			byId: undefined,
 		},
@@ -56,8 +92,8 @@ export type TGetPropertiesDefaultOutput = Exclude<Awaited<ReturnType<typeof getP
 
 const getPropertiesHandler: NextApiHandler<TGetPropertiesOutput> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const { id, includeOpenUsages } = req.query;
-	const properties = await getProperties({ id: id as string | undefined, includeOpenUsages: includeOpenUsages === "true" });
+	const queryParams = PropertiesQueryParamsInputSchema.parse(req.query);
+	const properties = await getProperties(queryParams);
 	return res.status(200).json(properties);
 };
 

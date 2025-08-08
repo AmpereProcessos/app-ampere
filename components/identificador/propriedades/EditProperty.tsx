@@ -20,6 +20,8 @@ import { usePropertyById } from "@/utils/methods/query/properties";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
+import { LinkIcon } from "lucide-react";
+import { copyToClipboard } from "@/lib/utils";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -32,7 +34,6 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
 		nome: "",
 		identificador: "",
-		tags: [],
 		metadados: {
 			tipo: "VEÍCULO",
 			kmInicial: 0,
@@ -79,7 +80,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 				{isSuccess ? (
 					<>
 						<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-							<PropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+							<PropertyContent propertyId={propertyId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>
@@ -106,7 +107,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 				{isSuccess ? (
 					<>
 						<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-							<PropertyContent infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+							<PropertyContent propertyId={propertyId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 						</div>
 						<DrawerFooter>
 							<DrawerClose asChild>
@@ -126,14 +127,30 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 export default EditProperty;
 
 type PropertyContentProps = {
+	propertyId: string;
 	infoHolder: TProperty;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
 };
-function PropertyContent({ infoHolder, updateInfoHolder }: PropertyContentProps) {
+function PropertyContent({ propertyId, infoHolder, updateInfoHolder }: PropertyContentProps) {
 	return (
 		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
+			<SharableUsageLink id={propertyId} />
+
 			<GeneralInfo infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<VehicleProperties infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 		</div>
+	);
+}
+
+function SharableUsageLink({ id }: { id: string }) {
+	return (
+		<Button
+			onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/publico/uso-temporario-propriedade/${id}`)}
+			className="flex items-center gap-2 rounded w-fit"
+			variant="outline"
+		>
+			<LinkIcon size={15} />
+			<h1 className="text-xs tracking-tight font-medium text-start w-fit">LINK DE USO TEMPORÁRIO</h1>
+		</Button>
 	);
 }

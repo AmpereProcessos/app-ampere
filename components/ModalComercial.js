@@ -89,7 +89,7 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
 					{isError ? <ErrorPage msg={errorMsg} /> : null}
 					{isSuccess && infoHolder && session ? (
 						<div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-							<NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+							<NotificationCreationBlock session={session} nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 							<InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
 							<InfoClienteBlock editable={true} infoHolder={infoHolder} setInfo={setInfo} clientChanges={clientChanges} setClientChanges={setClientChanges} />
 							<InfoVendaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} updateLogs={updateLogs || []} project={project} />

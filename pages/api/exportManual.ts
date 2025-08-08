@@ -4,7 +4,7 @@ import type { TPurchaseControl } from "@/utils/schemas/purchases";
 
 import connectToProjectsDatabase from "@/utils/services/mongodb/projects";
 
-import { type Db, ObjectId, type AnyBulkWriteOperation } from "mongodb";
+import { type Db, ObjectId, type AnyBulkWriteOperation, type Collection } from "mongodb";
 import type { NextApiHandler } from "next";
 
 import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
@@ -14,9 +14,33 @@ import type { TServiceOrder } from "@/utils/schemas/service-order";
 import connectToRequestsDatabase from "@/utils/services/mongodb/requests";
 import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import dayjs from "dayjs";
+import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
+import type { TEmployee } from "@/utils/schemas/users";
+import { novu } from "@/utils/services/novu";
+import { getNovuSubscriberId } from "@/utils/services/novu/config";
 
 const previousMonth = dayjs().subtract(1, "month").startOf("month");
 const getExport: NextApiHandler<any> = async (req, res) => {
+	const admDb = await connectToAdministrationDatabase();
+	const usersCollection: Collection<TEmployee> = admDb.collection("colaboradores");
+
+	const employees = await usersCollection.find({}).toArray();
+
+	const novuResponse = await novu.subscribers.createBulk({
+		subscribers: employees
+			.filter((r) => !!r.email)
+			.map((employee) => ({
+				subscriberId: getNovuSubscriberId(employee._id.toString()),
+				email: employee.email,
+				firstName: employee.nome,
+				phone: employee.telefone,
+				avatar: employee.avatar_url,
+				locale: "pt-BR",
+			})),
+	});
+	console.log(novuResponse);
+
+	return res.json({ message: "Subscribers created successfully" });
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

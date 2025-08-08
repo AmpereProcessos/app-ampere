@@ -16,6 +16,7 @@ import Avatar from "./utils/Avatar";
 import NotificationBlock from "./identificador/notificacoes/NotificationBlock";
 import ConfigDropDown from "./ConfigDropDown";
 import { formatNameAsInitials } from "../utils/methods/formatting";
+import Notifications from "./utils/Notifications";
 
 type HeaderProps = {
 	toggleSidebar: () => void;
@@ -49,7 +50,7 @@ function Header({ toggleSidebar }: HeaderProps) {
 				<button type="button" onClick={() => setConfigDropDown((prev) => !prev)}>
 					<Avatar url={session.user.avatar_url} fallback={formatNameAsInitials(session.user?.nome || "USER")} height={40} width={40} />
 				</button>
-				<NotificationBlock session={session} />
+				<Notifications session={session} />
 				<HeaderActivitesBlock session={session} />
 				{session?.user.permissoes.gestao.visualizarResultados ? (
 					<button type="button" className="hidden text-[#fead41] lg:block">

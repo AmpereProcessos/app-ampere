@@ -151,10 +151,10 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
 			toast.error(msg);
 		}
 	}
-	console.log(infoHolder);
 	useEffect(() => {
 		if (order) setInfoHolder(order);
 	}, [order]);
+	if (!session) return null;
 	return (
 		<AnimatedModalWrapper modalIsOpen={modalIsOpen} width={"90%"} height={"87%"}>
 			<div className="flex h-full flex-col">
@@ -207,7 +207,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
 							) : (
 								<FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 							)}
-							<NotificationCreationBlock nomeDoProjeto={infoHolder.projeto.nome} codProjeto={infoHolder.projeto.identificador} />
+							<NotificationCreationBlock session={session} nomeDoProjeto={infoHolder.projeto.nome || ""} codProjeto={infoHolder.projeto.identificador?.toString() || ""} />
 							<div className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
 								<h1 className="font-bold text-white">EXECUÇÃO</h1>
 							</div>

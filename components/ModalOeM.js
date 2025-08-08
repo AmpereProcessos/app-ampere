@@ -78,7 +78,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
 								icon={<FaSave />}
 								handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes, queryClient: queryClient })}
 							/>
-							<button>
+							<button type="button">
 								<VscChromeClose onClick={() => closeModal()} style={{ color: "red" }} />
 							</button>
 						</div>
@@ -87,7 +87,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
 					{isError ? <ErrorPage msg={errorMsg} /> : null}
 					{isSuccess && infoHolder?._id && session ? (
 						<div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-							<NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+							<NotificationCreationBlock session={session} nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
 							<InfoVendaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} updateLogs={updateLogs || []} />
 							<InfoEtiquetasBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />

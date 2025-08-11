@@ -6,6 +6,18 @@ import { PurchaseUpdateItemSchema } from "./purchases";
 import type { TClientDTO } from "./crm/client.schema";
 import { GeneralHomologationSchema } from "./partial/homologation";
 
+export const RestrictionSchema = z.object({
+	aplicavel: z.boolean({ invalid_type_error: "Tipo não válido para a aplicabilidade da restrição." }).optional().nullable(),
+	observacoes: z.string({ invalid_type_error: "Tipo não válido para as observações da restrição." }).optional().nullable(),
+	data: z.string({ invalid_type_error: "Tipo não válido para a data da restrição." }).datetime().optional().nullable(),
+	autor: z.object({
+		id: z.string({ invalid_type_error: "Tipo não válido para o ID do autor da restrição." }),
+		nome: z.string({ invalid_type_error: "Tipo não válido para o nome do autor da restrição." }),
+		avatar: z.string({ invalid_type_error: "Tipo não válido para o avatar do autor da restrição." }).optional().nullable(),
+	}),
+});
+export type TRestriction = z.infer<typeof RestrictionSchema>;
+
 export const ResourceItemSchema = z.object({
 	idMaterial: z.string({ required_error: "ID do material não informado.", invalid_type_error: "Tipo não válido para o ID do material." }),
 	nome: z.string({ required_error: "Nome do material não informado.", invalid_type_error: "Tipo não válido para o nome do material." }),
@@ -636,13 +648,7 @@ const GeneralProjectSchema = z.object({
 			.optional()
 			.nullable(),
 	}),
-	restricao: z
-		.object({
-			aplicavel: z.boolean().optional().nullable(),
-			observacoes: z.string().optional().nullable(),
-		})
-		.optional()
-		.nullable(),
+	restricao: RestrictionSchema.optional().nullable(),
 });
 
 export type TProject = z.infer<typeof GeneralProjectSchema>;

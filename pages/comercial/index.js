@@ -563,7 +563,12 @@ function Comercial() {
 					</Link>
 				)}
 				{modalProject.isOpen && modalProject.projectId ? (
-					<ModalComercial projectId={modalProject.projectId} modalIsOpen={modalProject.isOpen} closeModal={() => setModalProject({ isOpen: false, projectId: null })} />
+					<ModalComercial
+						session={session}
+						projectId={modalProject.projectId}
+						modalIsOpen={modalProject.isOpen}
+						closeModal={() => setModalProject({ isOpen: false, projectId: null })}
+					/>
 				) : null}
 			</div>
 		);

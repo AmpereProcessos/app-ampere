@@ -25,6 +25,8 @@ import { copyToClipboard } from "@/lib/utils";
 import type { TSimpleAttachment } from "@/utils/methods/uploading";
 import { formatAsSlug, formatWithoutDiacritics } from "@/utils/methods/formatting";
 import { uploadFile } from "@/utils/methods/firebase";
+import QRCode from "qrcode";
+import toast from "react-hot-toast";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -171,6 +173,8 @@ function PropertyContent({ isDesktop, propertyId, imageHolder, setImageHolder, i
 	return (
 		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
 			<SharableUsageLink id={propertyId} />
+			<PropertyUsageLink id={propertyId} qrCodeLinkSvgString={infoHolder.usoTemporarioLinkUrlQRCode ?? undefined} updateInfoHolder={updateInfoHolder} />
+
 			<GeneralInfo imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<VehicleProperties isDesktop={isDesktop} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 		</div>
@@ -187,5 +191,41 @@ function SharableUsageLink({ id }: { id: string }) {
 			<LinkIcon size={15} />
 			<h1 className="text-xs tracking-tight font-medium text-start w-fit">LINK DE USO TEMPORÁRIO</h1>
 		</Button>
+	);
+}
+
+function PropertyUsageLink({ id, qrCodeLinkSvgString, updateInfoHolder }: { id: string; qrCodeLinkSvgString?: string; updateInfoHolder: (info: Partial<TProperty>) => void }) {
+	async function generateQRCode(link: string) {
+		const svgString = await QRCode.toString(link, {
+			type: "svg",
+			width: 100,
+			margin: 2,
+			color: {
+				dark: "#000000",
+				light: "#FFFFFF",
+			},
+		});
+		updateInfoHolder({ usoTemporarioLinkUrlQRCode: svgString });
+		toast.success("Código QR gerado com sucesso!");
+	}
+	if (!qrCodeLinkSvgString)
+		return (
+			<div className="w-full flex items-center justify-center">
+				<Button
+					size={"fit"}
+					className="px-2 py-1 text-xs"
+					variant={"ghost"}
+					onClick={() => generateQRCode(`${process.env.NEXT_PUBLIC_APP_URL}/publico/uso-temporario-propriedade/${id}`)}
+				>
+					GERAR CÓDIGO QR DO LINK
+				</Button>
+			</div>
+		);
+	return (
+		<div className="w-full flex items-center justify-center">
+			<div className="flex items-center justify-center border border-primary/30 p-2 rounded-md">
+				<div dangerouslySetInnerHTML={{ __html: qrCodeLinkSvgString }} className="size-24" />
+			</div>
+		</div>
 	);
 }

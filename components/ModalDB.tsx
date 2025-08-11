@@ -4,7 +4,6 @@ import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 
 import SaveButton from "./utils/Buttons/SaveButton";
-import { useSession } from "next-auth/react";
 
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import LoadingPage from "./utils/LoadingPage";
@@ -40,6 +39,7 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
 import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
+
 function ModalDB({ session, projectId, modalIsOpen, closeModal }) {
 	const queryClient = useQueryClient();
 

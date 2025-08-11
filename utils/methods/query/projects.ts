@@ -43,6 +43,7 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
 			queryKey: ["projects-by-filters", page, filters],
 			queryFn: async () => await fetchProjectsByPersonalizedFilters({ page, filters }),
 		}),
+		filters,
 		updateFilters,
 	};
 }

@@ -16,7 +16,7 @@ export const RestrictionSchema = z.object({
 		avatar: z.string({ invalid_type_error: "Tipo não válido para o avatar do autor da restrição." }).optional().nullable(),
 	}),
 });
-export type TRestriction = z.infer<typeof RestrictionSchema>;
+export type TProjectRestriction = z.infer<typeof RestrictionSchema>;
 
 export const ResourceItemSchema = z.object({
 	idMaterial: z.string({ required_error: "ID do material não informado.", invalid_type_error: "Tipo não válido para o ID do material." }),

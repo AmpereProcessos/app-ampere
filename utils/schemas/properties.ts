@@ -36,6 +36,7 @@ const GeneralPropertySchema = z.object({
 	imagemUrl: z.string().optional().nullable(),
 	anotacoes: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
+	usoTemporarioLinkUrlQRCode: z.string().optional().nullable(),
 	autor: AuthorSchema,
 	dataInsercao: z.string().datetime(),
 });
@@ -53,6 +54,7 @@ export const InsertPropertySchema = z.object({
 		.optional()
 		.nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
+	usoTemporarioLinkUrlQRCode: z.string().optional().nullable(),
 	autor: AuthorSchema,
 	dataInsercao: z
 		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção da propriedade." })

@@ -6,7 +6,7 @@ import SelectInput from "./SelectInput";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { updateProject } from "@/utils/methods/mutation/clients";
-import ModalDB from "./ModalDB";
+import ModalDatabase from "./ModalDatabase";
 
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import CheckboxInput from "./inputs/Checkbox";
@@ -37,12 +37,6 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 	const [activitiesMenuIsOpen, setActivitiesMenuIsOpen] = useState<boolean>(false);
 	const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false);
 
-	function getDateDiff(date1: Date, date2: Date) {
-		//@ts-ignore
-		const diffInMs = date1 - date2;
-		const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-		return diffInDays;
-	}
 	function getBarColor(lastContact: string | undefined | null) {
 		if (!lastContact) return "bg-red-500";
 		const sinceLastContact = dayjs().diff(lastContact, "day");
@@ -505,7 +499,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 						) : null}
 					</div>
 				</div>
-				{modalProjectIsOpen ? <ModalDB session={session} projectId={projectId} closeModal={() => setModalProjectIsOpen(false)} modalIsOpen={modalProjectIsOpen} /> : null}
+				{modalProjectIsOpen ? <ModalDatabase session={session} projectId={projectId} closeModal={() => setModalProjectIsOpen(false)} /> : null}
 			</div>
 		);
 

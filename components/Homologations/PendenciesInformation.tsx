@@ -35,7 +35,7 @@ function PendenciesInformation({ infoHolder, setInfoHolder, changes, setChanges 
 					width="100%"
 				/>
 			</div>
-			<div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
+			<div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row flex-wrap">
 				<div className="w-fit">
 					<CheckboxWithDate
 						labelFalse="DIAGRAMAS FEITOS"

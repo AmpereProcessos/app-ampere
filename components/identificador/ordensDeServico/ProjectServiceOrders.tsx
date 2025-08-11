@@ -162,7 +162,7 @@ function ProjectServiceOrderCard({ serviceOrder, handleClick }: ProjectServiceOr
 					<h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.responsavel.nome}</h1>
 				</div>
 			</div>
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row flex-wrap">
 				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
 					<div className="flex items-center gap-1">
 						<Tag size={12} />

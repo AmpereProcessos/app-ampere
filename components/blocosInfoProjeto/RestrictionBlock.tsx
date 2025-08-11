@@ -9,40 +9,63 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { LoadingButton } from "../utils/Buttons/LoadingButton";
 import { Button } from "../ui/button";
+import { TUpdateProjectRestrictionInput } from "@/pages/api/projects/restricao";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
+import { useMutation } from "@tanstack/react-query";
+import { updateProjectRestriction } from "@/utils/methods/mutation/clients";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils/methods/handlers";
 type RestrictionBlockProps = {
+	projectId: string;
 	session: Session;
 	infoHolder: TProjectDTO;
 	setInfo: Dispatch<SetStateAction<TProjectDTO>>;
 	changes: { [key: string]: any };
 	setChanges: Dispatch<SetStateAction<{ [key: string]: any }>>;
+	callbacks?: {
+		onMutate?: () => void;
+		onSuccess?: () => void;
+		onError?: () => void;
+		onSettled?: () => void;
+	};
 };
-function RestrictionBlock({ session, infoHolder, setInfo, changes, setChanges }: RestrictionBlockProps) {
+function RestrictionBlock({ projectId, session, infoHolder, setInfo, changes, setChanges, callbacks }: RestrictionBlockProps) {
+	const [isRestrictionMenuOpen, setIsRestrictionMenuOpen] = useState(false);
 	return (
 		<div className="flex w-full flex-col gap-2 rounded-md border border-gray-500 pb-2 shadow-lg">
 			<div className="mb-2 flex w-full items-center justify-center gap-1 rounded-tr-md rounded-tl-md bg-gray-500 py-2 text-center font-bold text-white">
 				<FaLock />
 				<h1>RESTRIÇÃO DE PROJETO</h1>
 			</div>
-			<div className="w-fit self-center">
-				<CheckboxInput
-					labelFalse="RESTRINGIR PROJETO"
-					labelTrue="RESTRINGIR PROJETO"
-					checked={!!infoHolder.restricao?.aplicavel}
-					handleChange={(value) => {
-						setInfo((prev) => ({ ...prev, restricao: { ...(prev.restricao || {}), aplicavel: value } }));
-						setChanges((prev) => ({ ...prev, "restricao.aplicavel": value }));
-					}}
-				/>
+			<div className="w-full flex flex-col items-center gap-2">
+				{infoHolder.restricao?.aplicavel ? (
+					<div className="flex flex-col gap-2">
+						<h2 className="text-center text-lg font-bold leading-none">O projeto em questão está restrito.</h2>
+						<h3 className="text-center text-lg font-semibold leading-none">
+							Restrição feita em {formatDateAsLocale(infoHolder.restricao?.data)} por {infoHolder.restricao?.autor?.nome}.
+						</h3>
+						<div className="flex items-center justify-center w-full p-2 bg-primary/20 rounded-md">
+							<p className="text-center text-sm">{infoHolder.restricao?.observacoes}</p>
+						</div>
+					</div>
+				) : (
+					<div className="flex flex-col gap-1">
+						<h2 className="text-center text-lg font-bold leading-none">O projeto em questão NÃO foi restringido.</h2>
+					</div>
+				)}
+				<Button size={"fit"} variant={"ghost"} className="px-2 py-1 self-center" onClick={() => setIsRestrictionMenuOpen(true)}>
+					ABRIR MENU DE RESTRIÇÃO
+				</Button>
 			</div>
-			<TextareaInput
-				label="OBSERVAÇÕES SOBRE A RESTRIÇÃO"
-				placeholder="Preencha aqui observações, justificativas e afins sobre a restrição..."
-				value={infoHolder.restricao?.observacoes || ""}
-				handleChange={(value) => {
-					setInfo((prev) => ({ ...prev, restricao: { ...(prev.restricao || {}), observacoes: value } }));
-					setChanges((prev) => ({ ...prev, "restricao.observacoes": value }));
-				}}
-			/>
+			{isRestrictionMenuOpen ? (
+				<ProjectRestrictionMenu
+					projectId={projectId}
+					currentRestriction={infoHolder.restricao}
+					session={session}
+					closeMenu={() => setIsRestrictionMenuOpen(false)}
+					callbacks={callbacks}
+				/>
+			) : null}
 		</div>
 	);
 }
@@ -50,59 +73,106 @@ function RestrictionBlock({ session, infoHolder, setInfo, changes, setChanges }:
 export default RestrictionBlock;
 
 type ProjectRestrictionMenuProps = {
-	initialRestriction: TProject["restricao"];
+	projectId: string;
+	currentRestriction: TProject["restricao"];
 	session: Session;
 	closeMenu: () => void;
+	callbacks?: {
+		onMutate?: () => void;
+		onSuccess?: () => void;
+		onError?: () => void;
+		onSettled?: () => void;
+	};
 };
-function ProjectRestrictionMenu({ initialRestriction, session, closeMenu }: ProjectRestrictionMenuProps) {
-	const [restrictionHolder, setRestrictionHolder] = useState<TProjectRestriction>(
-		initialRestriction || {
-			aplicavel: false,
-			observacoes: "",
-			autor: {
-				id: "",
-				nome: "",
-				avatar: "",
-			},
-		},
-	);
+function ProjectRestrictionMenu({ projectId, currentRestriction, session, closeMenu, callbacks }: ProjectRestrictionMenuProps) {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const MENU_TITLE = "RESTRIÇÃO DE PROJETO";
 	const MENU_DESCRIPTION = "Gerencie as informações completas do projeto.";
-	const BUTTON_TEXT = "SALVAR ALTERAÇÕES";
 
+	const { mutate: updateProjectRestrictionMutation, isPending: isUpdatingProjectRestriction } = useMutation({
+		mutationKey: ["update-project-restriction", projectId],
+		mutationFn: updateProjectRestriction,
+		onMutate: () => {
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: (data) => {
+			toast.success(data.message);
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			closeMenu();
+		},
+		onError: (error) => {
+			toast.error(getErrorMessage(error));
+			if (callbacks?.onError) callbacks.onError();
+		},
+		onSettled: () => {
+			if (callbacks?.onSettled) callbacks.onSettled();
+		},
+	});
+	function RestrictedContent() {
+		return (
+			<div className="w-full flex flex-col gap-2">
+				<div className="flex flex-col gap-1">
+					<h2 className="text-center text-lg font-bold leading-none">O projeto em questão está restrito.</h2>
+					<h3 className="text-center text-lg font-semibold leading-none">
+						Restrição feita em {formatDateAsLocale(currentRestriction?.data)} por {currentRestriction?.autor?.nome}.
+					</h3>
+				</div>
+				<div className="flex items-center justify-center w-full p-2 bg-primary/20 rounded-md">
+					<p className="text-center text-sm">{currentRestriction?.observacoes}</p>
+				</div>
+				<LoadingButton
+					size={"fit"}
+					variant={"ghost"}
+					className="px-2 py-1 self-center"
+					onClick={() => updateProjectRestrictionMutation({ projectId, type: "REMOVE_RESTRICTION" })}
+					loading={isUpdatingProjectRestriction}
+				>
+					REMOVER RESTRIÇÃO
+				</LoadingButton>
+			</div>
+		);
+	}
+	function UnrestrictedContent() {
+		const [observations, setObservations] = useState("");
+		return (
+			<div className="w-full flex flex-col gap-3">
+				<div className="flex flex-col gap-1">
+					<h2 className="text-center text-lg font-bold leading-none">O projeto em questão não está restrito.</h2>
+					<h3 className="text-center text-lg font-semibold leading-none">Se deseja restringi-lo, preencha as observações abaixo.</h3>
+				</div>
+				<TextareaInput
+					label="OBSERVAÇÕES SOBRE A RESTRIÇÃO"
+					placeholder="Preencha aqui observações, justificativas e afins sobre a restrição..."
+					value={observations}
+					handleChange={setObservations}
+				/>
+				<LoadingButton
+					size={"fit"}
+					variant={"destructive"}
+					className="px-2 py-1 self-center"
+					onClick={() => updateProjectRestrictionMutation({ projectId, type: "ADD_RESTRICTION", observations })}
+					loading={isUpdatingProjectRestriction}
+				>
+					RESTRINGIR PROJETO
+				</LoadingButton>
+			</div>
+		);
+	}
 	return isDesktop ? (
 		<Dialog open onOpenChange={(v) => (!v ? closeMenu() : null)}>
-			<DialogContent className="flex flex-col min-h-[80vh] max-h-[80vh] dark:bg-white min-w-[80vw]">
+			<DialogContent className="flex flex-col h-fit dark:bg-white">
 				<DialogHeader>
 					<DialogTitle>{MENU_TITLE}</DialogTitle>
 					<DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
 				</DialogHeader>
 
 				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-					<ModalDatabaseContent
-						session={session}
-						projectId={projectId}
-						project={project}
-						infoHolder={infoHolder}
-						setInfoHolder={createNonNullableSetter(setInfo)}
-						changes={changes}
-						setChanges={setChanges}
-						clientChanges={clientChanges}
-						setClientChanges={setClientChanges}
-						userHasOverallAccess={userHasOverallAccess}
-						userHasOeMAccess={userHasOeMAccess}
-						userHasRestrictionPermission={userHasRestrictionPermission}
-						userHasComissionValuesAccess={userHasComissionValuesAccess}
-					/>
+					{currentRestriction?.aplicavel ? <RestrictedContent /> : <UnrestrictedContent />}
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant="outline">FECHAR</Button>
 					</DialogClose>
-					<LoadingButton onClick={() => {}} loading={false}>
-						{BUTTON_TEXT}
-					</LoadingButton>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
@@ -115,29 +185,12 @@ function ProjectRestrictionMenu({ initialRestriction, session, closeMenu }: Proj
 				</DrawerHeader>
 
 				<div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
-					<ModalDatabaseContent
-						session={session}
-						projectId={projectId}
-						project={project}
-						infoHolder={infoHolder}
-						setInfoHolder={createNonNullableSetter(setInfo)}
-						changes={changes}
-						setChanges={setChanges}
-						clientChanges={clientChanges}
-						setClientChanges={setClientChanges}
-						userHasOverallAccess={userHasOverallAccess}
-						userHasOeMAccess={userHasOeMAccess}
-						userHasRestrictionPermission={userHasRestrictionPermission}
-						userHasComissionValuesAccess={userHasComissionValuesAccess}
-					/>
+					{currentRestriction?.aplicavel ? <RestrictedContent /> : <UnrestrictedContent />}
 				</div>
 				<DrawerFooter>
 					<DrawerClose asChild>
 						<Button variant="outline">FECHAR</Button>
 					</DrawerClose>
-					<LoadingButton onClick={() => {}} loading={false}>
-						{BUTTON_TEXT}
-					</LoadingButton>
 				</DrawerFooter>
 			</DrawerContent>
 		</Drawer>

@@ -1,5 +1,5 @@
 import ProjectActivityCard from "@/components/identificador/atividades/ProjectActivityCard";
-import ModalDB from "@/components/ModalDB";
+import ModalDatabase from "@/components/ModalDatabase";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
@@ -52,9 +52,7 @@ function Monitoring() {
 					)
 				) : null}
 			</div>
-			{editModal.id && editModal.isOpen ? (
-				<ModalDB session={session} projectId={editModal.id} closeModal={() => setEditModal({ id: null, isOpen: false })} modalIsOpen={editModal.isOpen} />
-			) : null}
+			{editModal.id && editModal.isOpen ? <ModalDatabase session={session} projectId={editModal.id} closeModal={() => setEditModal({ id: null, isOpen: false })} /> : null}
 		</div>
 	);
 }

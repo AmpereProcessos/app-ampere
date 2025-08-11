@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
-import { TProjectDTO } from "@/utils/schemas/projects";
+import type { TProjectDTO } from "@/utils/schemas/projects";
 import SelectInput from "../inputs/Select";
 import NumberInput from "../inputs/Number";
 import TextInput from "../inputs/Text";
 import CheckboxInput from "../inputs/Checkbox";
-import { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
+import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
 import UpdateLogsBlock from "../identificador/registrosAlteracoesProjeto/UpdateLogsBlock";
 import System from "../identificador/registrosAlteracoesProjeto/secao/System";
-import ProductCard from "../identificador/produtos/ProductCard";
-import ServiceCard from "../identificador/servicos/ServiceCard";
+
 import { MdOutlineMiscellaneousServices } from "react-icons/md";
 import NewProductMenu from "./Utils/NewProductMenu";
 import NewServiceMenu from "./Utils/NewServiceMenu";
@@ -20,9 +20,9 @@ import { SystemTopologiesTypes } from "@/utils/select-options";
 type InfoSistemaBlockProps = {
 	editor: boolean;
 	infoHolder: TProjectDTO;
-	setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>;
+	setInfo: Dispatch<SetStateAction<TProjectDTO>>;
 	changes: { [key: string]: any };
-	setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>;
+	setChanges: Dispatch<SetStateAction<{ [key: string]: any }>>;
 	updateLogs: TProjectUpdateLogDTO[];
 	showPaymentInfo: boolean;
 };
@@ -171,6 +171,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 								},
 							}));
 						}}
+						width="100%"
 					/>
 				</div>
 				<div className="w-full lg:w-1/4">
@@ -186,11 +187,12 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 							}));
 							setInfo((prev) => ({ ...prev, sistema: { ...prev.sistema, potModulos: value } }));
 						}}
+						width="100%"
 					/>
 				</div>
 			</div>
 
-			{infoHolder.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+			{infoHolder.tipoDeServico === "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
 				<>
 					<h1 className="mt-2 w-full text-center font-black text-[#fead41]">SISTEMA OFF GRID</h1>
 					<div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
@@ -233,7 +235,7 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 								width="100%"
 							/>
 						</div>
-						{infoHolder.sistema.tipoControlador != "INTEGRADO AO INVERSOR" ? (
+						{infoHolder.sistema.tipoControlador !== "INTEGRADO AO INVERSOR" ? (
 							<>
 								<div className="w-full lg:w-1/4">
 									<TextInput
@@ -305,79 +307,77 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 					</div>
 				</>
 			)}
-			{infoHolder.tipoDeServico == "BOMBA SOLAR" && (
-				<>
-					<div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
-						<div className="w-full lg:w-1/3">
-							<TextInput
-								label={"MARCA DA BOMBA"}
-								editable={editor}
-								value={infoHolder.sistema.marcaBomba}
-								placeholder="Preencha aqui a marca da bomba..."
-								handleChange={(value) => {
-									setChanges((prev) => ({
-										...prev,
-										"sistema.marcaBomba": value,
-									}));
-									setInfo((prev) => ({
-										...prev,
-										sistema: {
-											...prev.sistema,
-											marcaBomba: value,
-										},
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-1/3">
-							<NumberInput
-								label={"QTDE DE BOMBAS"}
-								editable={editor}
-								value={infoHolder.sistema.qtdeBomba || null}
-								placeholder="Preencha aqui a quantidade de bombas..."
-								handleChange={(value) => {
-									setChanges((prev) => ({
-										...prev,
-										"sistema.qtdeBomba": value,
-									}));
-									setInfo((prev) => ({
-										...prev,
-										sistema: {
-											...prev.sistema,
-											qtdeBomba: value,
-										},
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-1/3">
-							<NumberInput
-								label={"POTÊNCIA DA BOMBA"}
-								editable={editor}
-								value={infoHolder.sistema.potBomba || null}
-								placeholder="Preencha aqui a potência da(s) bomba(s)..."
-								handleChange={(value) => {
-									setChanges((prev) => ({
-										...prev,
-										"sistema.potBomba": value,
-									}));
-									setInfo((prev) => ({
-										...prev,
-										sistema: {
-											...prev.sistema,
-											potBomba: value,
-										},
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
+			{infoHolder.tipoDeServico === "BOMBA SOLAR" && (
+				<div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
+					<div className="w-full lg:w-1/3">
+						<TextInput
+							label={"MARCA DA BOMBA"}
+							editable={editor}
+							value={infoHolder.sistema.marcaBomba}
+							placeholder="Preencha aqui a marca da bomba..."
+							handleChange={(value) => {
+								setChanges((prev) => ({
+									...prev,
+									"sistema.marcaBomba": value,
+								}));
+								setInfo((prev) => ({
+									...prev,
+									sistema: {
+										...prev.sistema,
+										marcaBomba: value,
+									},
+								}));
+							}}
+							width="100%"
+						/>
 					</div>
-				</>
+					<div className="w-full lg:w-1/3">
+						<NumberInput
+							label={"QTDE DE BOMBAS"}
+							editable={editor}
+							value={infoHolder.sistema.qtdeBomba || null}
+							placeholder="Preencha aqui a quantidade de bombas..."
+							handleChange={(value) => {
+								setChanges((prev) => ({
+									...prev,
+									"sistema.qtdeBomba": value,
+								}));
+								setInfo((prev) => ({
+									...prev,
+									sistema: {
+										...prev.sistema,
+										qtdeBomba: value,
+									},
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/3">
+						<NumberInput
+							label={"POTÊNCIA DA BOMBA"}
+							editable={editor}
+							value={infoHolder.sistema.potBomba || null}
+							placeholder="Preencha aqui a potência da(s) bomba(s)..."
+							handleChange={(value) => {
+								setChanges((prev) => ({
+									...prev,
+									"sistema.potBomba": value,
+								}));
+								setInfo((prev) => ({
+									...prev,
+									sistema: {
+										...prev.sistema,
+										potBomba: value,
+									},
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+				</div>
 			)}
-			{infoHolder.tipoDeServico == "BOMBA SOLAR" || infoHolder.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" ? (
+			{infoHolder.tipoDeServico === "BOMBA SOLAR" || infoHolder.tipoDeServico === "SISTEMA FOTOVOLTAICO (OFF GRID)" ? (
 				<div className="mt-2 flex w-full flex-col items-center justify-center gap-2 px-2 lg:flex-row">
 					<div className="w-full lg:w-1/4">
 						<TextInput
@@ -488,36 +488,38 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 			) : null}
 			<div className="my-2 flex w-full items-center justify-end gap-4 px-2">
 				<button
+					type="button"
 					onClick={() => setNewCompositionItemMenu("service")}
 					className={`${
-						newCompositionItemMenu == "service" ? "opacity-100" : "opacity-60"
+						newCompositionItemMenu === "service" ? "opacity-100" : "opacity-60"
 					} flex items-center gap-1 rounded-lg border border-cyan-500 bg-cyan-50 px-2 py-1 text-xs text-cyan-500 duration-300 ease-in-out hover:border-cyan-700 hover:text-cyan-700`}
 				>
 					<MdOutlineMiscellaneousServices />
 					<p className="font-medium">NOVO SERVIÇO</p>
 				</button>
 				<button
+					type="button"
 					onClick={() => setNewCompositionItemMenu("product")}
 					className={`${
-						newCompositionItemMenu == "product" ? "opacity-100" : "opacity-60"
+						newCompositionItemMenu === "product" ? "opacity-100" : "opacity-60"
 					} flex items-center gap-1 rounded-lg border border-amber-500 bg-amber-50 px-2 py-1 text-xs text-amber-500 duration-300 ease-in-out hover:border-amber-700 hover:text-amber-700`}
 				>
 					<MdOutlineMiscellaneousServices />
 					<p className="font-medium">NOVO PRODUTO</p>
 				</button>
 			</div>
-			{newCompositionItemMenu == "product" ? (
+			{newCompositionItemMenu === "product" ? (
 				<NewProductMenu infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} closeMenu={() => setNewCompositionItemMenu(null)} />
 			) : null}
-			{newCompositionItemMenu == "service" ? (
+			{newCompositionItemMenu === "service" ? (
 				<NewServiceMenu infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} closeMenu={() => setNewCompositionItemMenu(null)} />
 			) : null}
 			<h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">PRODUTOS</h1>
 			<div className="flex w-full flex-wrap items-center justify-start gap-2 p-2">
 				{infoHolder.produtos && infoHolder.produtos.length > 0 ? (
 					infoHolder.produtos.map((product, index) => (
-						<div className="w-full lg:w-[400px]">
-							<ProductItem key={index} index={index} product={product} removeProduct={(index) => removeProductFromProject(index)} />
+						<div key={`${product.id}-${index}`} className="w-full lg:w-[400px]">
+							<ProductItem index={index} product={product} removeProduct={(index) => removeProductFromProject(index)} />
 						</div>
 					))
 				) : (
@@ -528,8 +530,8 @@ function InfoSistemaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 			<div className="flex w-full flex-wrap items-center justify-start gap-2 p-2">
 				{infoHolder.servicos && infoHolder.servicos.length > 0 ? (
 					infoHolder.servicos.map((service, index) => (
-						<div className="w-full lg:w-[400px]">
-							<ServiceItem key={index} index={index} service={service} removeService={(index) => removeServiceFromProject(index)} />
+						<div key={`${service.id}-${index}`} className="w-full lg:w-[400px]">
+							<ServiceItem index={index} service={service} removeService={(index) => removeServiceFromProject(index)} />
 						</div>
 					))
 				) : (

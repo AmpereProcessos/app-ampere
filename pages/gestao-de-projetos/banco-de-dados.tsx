@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import ModalDB from "../../components/ModalDB";
-
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 

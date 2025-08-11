@@ -85,13 +85,18 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 		return "Atualizações feitas com sucesso !";
 	}
 
+	const handleOnMutate = async () => {
+		await queryClient.cancelQueries({ queryKey: ["project-by-id", projectId] });
+		callbacks?.onMutate?.();
+	};
+	const handleOnSettled = async () => {
+		await queryClient.invalidateQueries({ queryKey: ["project-by-id", projectId] });
+		callbacks?.onSettled?.();
+	};
 	const { mutate: handleProjectUpdateMutation, isPending } = useMutation({
 		mutationKey: ["update-project"],
 		mutationFn: handleProjectUpdate,
-		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey: ["project-by-id", projectId] });
-			callbacks?.onMutate?.();
-		},
+		onMutate: handleOnMutate,
 		onSuccess: (data) => {
 			toast.success(data);
 			callbacks?.onSuccess?.();
@@ -100,10 +105,7 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 			toast.error(getErrorMessage(err));
 			callbacks?.onError?.();
 		},
-		onSettled: async () => {
-			await queryClient.invalidateQueries({ queryKey: ["project-by-id", projectId] });
-			callbacks?.onSettled?.();
-		},
+		onSettled: handleOnSettled,
 	});
 
 	const MENU_TITLE = project ? `${project.qtde} - ${project.nomeDoContrato}` : "Carregando informações...";
@@ -137,6 +139,12 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 								userHasOeMAccess={userHasOeMAccess}
 								userHasRestrictionPermission={userHasRestrictionPermission}
 								userHasComissionValuesAccess={userHasComissionValuesAccess}
+								callbacks={{
+									onMutate: handleOnMutate,
+									onSettled: handleOnSettled,
+									onSuccess: callbacks?.onSuccess,
+									onError: callbacks?.onError,
+								}}
 							/>
 						</div>
 						<DialogFooter>
@@ -177,6 +185,12 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 								userHasOeMAccess={userHasOeMAccess}
 								userHasRestrictionPermission={userHasRestrictionPermission}
 								userHasComissionValuesAccess={userHasComissionValuesAccess}
+								callbacks={{
+									onMutate: handleOnMutate,
+									onSettled: handleOnSettled,
+									onSuccess: callbacks?.onSuccess,
+									onError: callbacks?.onError,
+								}}
 							/>
 						</div>
 						<DrawerFooter>
@@ -218,6 +232,12 @@ type ModalDatabaseContentProps = {
 	userHasOeMAccess: boolean;
 	userHasRestrictionPermission: boolean;
 	userHasComissionValuesAccess: boolean;
+	callbacks?: {
+		onMutate?: () => void;
+		onSuccess?: () => void;
+		onError?: () => void;
+		onSettled?: () => void;
+	};
 };
 
 function ModalDatabaseContent({
@@ -234,6 +254,7 @@ function ModalDatabaseContent({
 	userHasOeMAccess,
 	userHasRestrictionPermission,
 	userHasComissionValuesAccess,
+	callbacks,
 }: ModalDatabaseContentProps) {
 	const { data: updateLogs } = useProjectUpdateLogs({ projectId });
 
@@ -380,7 +401,9 @@ function ModalDatabaseContent({
 
 			<InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
 
-			{userHasRestrictionPermission ? <RestrictionBlock infoHolder={infoHolder} setInfo={setInfoHolder} changes={changes} setChanges={setChanges} /> : null}
+			{userHasRestrictionPermission ? (
+				<RestrictionBlock projectId={projectId} session={session} infoHolder={infoHolder} setInfo={setInfoHolder} changes={changes} setChanges={setChanges} callbacks={callbacks} />
+			) : null}
 		</div>
 	);
 }

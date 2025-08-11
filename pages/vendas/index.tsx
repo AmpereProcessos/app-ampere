@@ -17,7 +17,7 @@ import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectIn
 import DateInput from "@/components/inputs/Date";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import SelectInput from "@/components/inputs/Select";
-import ModalDB from "@/components/ModalDB";
+import ModalDatabase from "@/components/ModalDatabase";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import toast from "react-hot-toast";
 import { getContractValue } from "@/utils/methods/util/projects";
@@ -347,9 +347,7 @@ function Vendas() {
 						))
 					: null}
 			</div>
-			{modalProject.isOpen && modalProject.id && (
-				<ModalDB session={session} projectId={modalProject.id} closeModal={() => setModalProject({ isOpen: false, id: null })} modalIsOpen={modalProject.isOpen} />
-			)}
+			{modalProject.isOpen && modalProject.id && <ModalDatabase session={session} projectId={modalProject.id} closeModal={() => setModalProject({ isOpen: false, id: null })} />}
 		</div>
 	);
 }

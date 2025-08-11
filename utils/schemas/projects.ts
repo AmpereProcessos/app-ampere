@@ -13,7 +13,7 @@ export const RestrictionSchema = z.object({
 	autor: z.object({
 		id: z.string({ invalid_type_error: "Tipo não válido para o ID do autor da restrição." }),
 		nome: z.string({ invalid_type_error: "Tipo não válido para o nome do autor da restrição." }),
-		avatar: z.string({ invalid_type_error: "Tipo não válido para o avatar do autor da restrição." }).optional().nullable(),
+		avatar_url: z.string({ invalid_type_error: "Tipo não válido para o avatar do autor da restrição." }).optional().nullable(),
 	}),
 });
 export type TProjectRestriction = z.infer<typeof RestrictionSchema>;

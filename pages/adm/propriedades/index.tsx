@@ -119,7 +119,10 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 						</div>
 					</motion.div>
 				</div>
-				<div className="w-full flex items-center justify-end">
+				<div className="w-full flex items-center justify-end gap-2">
+					<Button variant={"link"} asChild>
+						<Link href={"/adm/propriedades/usos-temporarios-pdf-qr-codes"}>PDF QR CODES</Link>
+					</Button>
 					<Button variant={"link"} asChild>
 						<Link href={"/adm/propriedades/usos-temporarios"}>USOS TEMPORÁRIOS</Link>
 					</Button>

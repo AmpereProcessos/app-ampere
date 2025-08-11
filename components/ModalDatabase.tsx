@@ -33,6 +33,7 @@ import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import RestrictionBlock from "./blocosInfoProjeto/RestrictionBlock";
 import ProjectServiceOrders from "./identificador/ordensDeServico/ProjectServiceOrders";
+import InfoOeMBlock from "./blocosInfoProjeto/InfoOeMBlock";
 
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import LoadingComponent from "./utils/LoadingComponent";
@@ -386,6 +387,8 @@ function ModalDatabaseContent({
 			/>
 
 			<ProjectServiceOrders projectId={project._id} session={session} projectMainServiceOrderId={project.idOrdemServico} />
+
+			<InfoOeMBlock editor={userHasOeMAccess} infoHolder={infoHolder} setInfo={setInfoHolder} changes={changes} setChanges={setChanges} />
 
 			<InfoMaterialBlock
 				editor={userHasOverallAccess}

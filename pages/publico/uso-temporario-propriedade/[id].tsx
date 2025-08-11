@@ -102,17 +102,34 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 	const propertyName = usePropertyUsageStore((state) => state.propertyUsage.propriedade.nome);
 	const propertyIdentifier = usePropertyUsageStore((state) => state.propertyUsage.propriedade.identificador);
 	const propertyMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
-	const propertyUsageNotes = usePropertyUsageStore((state) => state.propertyUsage.anotacoes);
+	const reset = usePropertyUsageStore((state) => state.reset);
 	async function handleUsageMutationMethod({
 		propertyUsageId,
 		info,
 		attachments,
-	}: { propertyUsageId: string | undefined; info: TPropertyTemporaryUsage; attachments: TAttachmentState[] }) {
+		type,
+	}: { type: "start" | "finish"; propertyUsageId: string | undefined; info: TPropertyTemporaryUsage; attachments: TAttachmentState[] }) {
 		// If usage is for a vehicle, check if the kmFinal is greater than the kmInitial
 		if (propertyMetadataType === "USO DE VEÍCULO") {
+			if (!info.metadados.kmInicial) {
+				throw new Error("A kilometragem inicial é obrigatória.");
+			}
+			if (type === "finish") {
+				if (!info.metadados.kmFinal) {
+					throw new Error("Para a finalização de uso, a kilometragem final é obrigatória.");
+				}
+			}
 			if (info.metadados.kmFinal && info.metadados.kmFinal < info.metadados.kmInicial) {
 				throw new Error("A kilometragem final não pode ser menor que a kilometragem inicial.");
 			}
+		}
+		// Checkinf for obligatory attachments
+		const obligatoryAttachments = DOCUMENTS_BY_USAGE_TYPE[propertyMetadataType].filter((doc) => doc.optional === false);
+		const obligatoryAttachmentsNotFilled = obligatoryAttachments.filter(
+			(obligatoryAttachment) => !attachments.some((file) => file.identificador === obligatoryAttachment.identifier && file.arquivos.length > 0),
+		);
+		if (obligatoryAttachmentsNotFilled.length > 0) {
+			throw new Error(`A(s) anexação(ões) ${obligatoryAttachmentsNotFilled.map((obligatoryAttachment) => obligatoryAttachment.title).join(", ")} são obrigatórias.`);
 		}
 		const filesMetadata = await handleMultipleAttachmentsUpdate({ attachments, vinculationId: info.propriedade.id });
 		if (propertyUsageId) {
@@ -130,6 +147,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 		mutationFn: handleUsageMutationMethod,
 		onSuccess: (data) => {
 			toast.success(data.message);
+			reset();
 		},
 		onError: (error) => {
 			toast.error(getErrorMessage(error));
@@ -194,7 +212,12 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 							<LoadingButton
 								loading={isUsageMutationLoading}
 								onClick={() => {
-									handleUsageMutation({ propertyUsageId: openUsage.openUsage?._id, info: getPropertyUsage(), attachments: getAttachments() });
+									handleUsageMutation({
+										type: openUsage.openUsage ? "finish" : "start",
+										propertyUsageId: openUsage.openUsage?._id,
+										info: getPropertyUsage(),
+										attachments: getAttachments(),
+									});
 								}}
 							>
 								{openUsage.openUsage ? "FINALIZAR USO" : "INICIAR USO"}
@@ -297,6 +320,7 @@ function VehicleMetadata({ property, hasOpenUsage }: VehicleMetadataProps) {
 	const propertyUsageMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
 	const updatePropertyUsageMetadata = usePropertyUsageStore((state) => state.updatePropertyUsageMetadata);
 	const attachments = usePropertyUsageStore((state) => state.attachments);
+	console.log("attachments", attachments);
 	function StartUsageMetadata() {
 		const initialKm = usePropertyUsageStore((state) => state.propertyUsage.metadados.kmInicial);
 		return (

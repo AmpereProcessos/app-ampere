@@ -109,6 +109,9 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 		attachments,
 		type,
 	}: { type: "start" | "finish"; propertyUsageId: string | undefined; info: TPropertyTemporaryUsage; attachments: TAttachmentState[] }) {
+		if (!info.autor.id) {
+			throw new Error(`Identifique-se para iniciar o uso temporário do(a) ${info.propriedade.nome}.`);
+		}
 		// If usage is for a vehicle, check if the kmFinal is greater than the kmInitial
 		if (propertyMetadataType === "USO DE VEÍCULO") {
 			if (!info.metadados.kmInicial) {

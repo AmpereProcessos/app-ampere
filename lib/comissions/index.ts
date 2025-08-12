@@ -135,7 +135,7 @@ type GetComissionValueParams = {
 };
 export function getComissionValue({ userComissionConfig, projectTypeId, userRole, definitions }: GetComissionValueParams) {
 	const comissionConfig = userComissionConfig.find((c) => c.tipoProjeto.id === projectTypeId && c.papel === userRole);
-	if (!comissionConfig) return 0;
+	if (!comissionConfig) return { comissionValue: 0, comissionFormula: [], comissionFormulaPopulated: "" };
 
 	const orderedPossibleResults = comissionConfig.resultados.sort((a, b) => (a.condicao.aplicavel === b.condicao.aplicavel ? 0 : a.condicao.aplicavel ? -1 : 1));
 
@@ -148,8 +148,7 @@ export function getComissionValue({ userComissionConfig, projectTypeId, userRole
 		return isComissionConditionMatched({ conditionConfig: r.condicao, definitions });
 	});
 	// If no result is applicable, then the comission is 0
-	if (!applicableResult) return 0;
-
+	if (!applicableResult) return { comissionValue: 0, comissionFormula: [], comissionFormulaPopulated: "" };
 	try {
 		const populatedFormula = applicableResult.formulaArr
 			.map((f) => {
@@ -171,9 +170,9 @@ export function getComissionValue({ userComissionConfig, projectTypeId, userRole
 			.join("");
 		const evaluatedComission = eval(populatedFormula);
 
-		return Number(evaluatedComission);
+		return { comissionValue: Number(evaluatedComission), comissionFormula: applicableResult.formulaArr, comissionFormulaPopulated: populatedFormula };
 	} catch (error) {
 		console.log("Error processing comission formula", error);
-		return 0;
+		return { comissionValue: 0, comissionFormula: applicableResult.formulaArr, comissionFormulaPopulated: "" };
 	}
 }

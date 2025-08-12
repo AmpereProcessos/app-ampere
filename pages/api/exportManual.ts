@@ -18,29 +18,15 @@ import connectToAdministrationDatabase from "@/utils/services/mongodb/administra
 import type { TEmployee } from "@/utils/schemas/users";
 import { novu } from "@/utils/services/novu";
 import { getNovuSubscriberId } from "@/utils/services/novu/config";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import type { TCRMUser } from "@/utils/schemas/crm/users.schema";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import { C } from "@novu/framework/dist/cjs/health-check.types-CqgJlurQ.cjs";
+import { getComissionDefinitions, getComissionValue } from "@/lib/comissions";
+import { getContractValue } from "@/utils/methods/util/projects";
 
-const previousMonth = dayjs().subtract(1, "month").startOf("month");
 const getExport: NextApiHandler<any> = async (req, res) => {
-	const admDb = await connectToAdministrationDatabase();
-	const usersCollection: Collection<TEmployee> = admDb.collection("colaboradores");
-
-	const employees = await usersCollection.find({}).toArray();
-
-	const novuResponse = await novu.subscribers.createBulk({
-		subscribers: employees
-			.filter((r) => !!r.email)
-			.map((employee) => ({
-				subscriberId: getNovuSubscriberId(employee._id.toString()),
-				email: employee.email,
-				firstName: employee.nome,
-				phone: employee.telefone,
-				avatar: employee.avatar_url,
-				locale: "pt-BR",
-			})),
-	});
-	console.log(novuResponse);
-
-	return res.json({ message: "Subscribers created successfully" });
+	return res.json({ message: "Not implemented" });
 	// const analysis = projects.map((project) => {
 	// 	let comercialValidationConclusionDate = project.obra.saida;
 	// 	if (["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico)) {

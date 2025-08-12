@@ -39,6 +39,7 @@ import type { TProjectDTO } from "@/utils/schemas/projects";
 import LoadingComponent from "./utils/LoadingComponent";
 import ErrorPage from "./utils/ErrorPage";
 import toast from "react-hot-toast";
+import InfoComissionamentoBlock from "./blocosInfoProjeto/InfoComissionamentoBlock";
 
 type ModalDatabaseProps = {
 	session: Session;
@@ -387,6 +388,8 @@ function ModalDatabaseContent({
 			/>
 
 			<ProjectServiceOrders projectId={project._id} session={session} projectMainServiceOrderId={project.idOrdemServico} />
+
+			<InfoComissionamentoBlock editor={userHasOeMAccess} infoHolder={infoHolder} setInfo={setInfoHolder} changes={changes} setChanges={setChanges} />
 
 			<InfoOeMBlock editor={userHasOeMAccess} infoHolder={infoHolder} setInfo={setInfoHolder} changes={changes} setChanges={setChanges} />
 

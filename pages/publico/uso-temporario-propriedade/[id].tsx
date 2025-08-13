@@ -27,6 +27,7 @@ import { usePropertyUsageStore, PropertyUsageProvider } from "@/utils/stores/pro
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import TextareaInput from "@/components/inputs/TextareaInput";
+import CheckboxInput from "@/components/inputs/Checkbox";
 
 function PublicPropertyTemporaryUsagePage() {
 	const router = useRouter();
@@ -105,10 +106,17 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 	const reset = usePropertyUsageStore((state) => state.reset);
 	async function handleUsageMutationMethod({
 		propertyUsageId,
+		property,
 		info,
 		attachments,
 		type,
-	}: { type: "start" | "finish"; propertyUsageId: string | undefined; info: TPropertyTemporaryUsage; attachments: TAttachmentState[] }) {
+	}: {
+		type: "start" | "finish";
+		propertyUsageId: string | undefined;
+		property: TGetTemporaryUsageByPropertyOutput["data"]["property"];
+		info: TPropertyTemporaryUsage;
+		attachments: TAttachmentState[];
+	}) {
 		if (!info.autor.id) {
 			throw new Error(`Identifique-se para iniciar o uso temporário do(a) ${info.propriedade.nome}.`);
 		}
@@ -125,6 +133,9 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 			if (info.metadados.kmFinal && info.metadados.kmFinal < info.metadados.kmInicial) {
 				throw new Error("A kilometragem final não pode ser menor que a kilometragem inicial.");
 			}
+		}
+		if (property.justificativaUsoTemporarioObrigatorio && (!info.justificativa || info.justificativa.trim().length <= 3)) {
+			throw new Error("Preencha uma justificativa válida.");
 		}
 		// Checkinf for obligatory attachments
 		const obligatoryAttachments = DOCUMENTS_BY_USAGE_TYPE[propertyMetadataType].filter((doc) => doc.optional === false);
@@ -210,7 +221,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 						)}
 						<UserSelection />
 						{propertyMetadataType === "USO DE VEÍCULO" ? <VehicleMetadata property={openUsage.property} hasOpenUsage={!!openUsage.openUsage} /> : null}
-						<Others />
+						<Others property={openUsage.property} />
 						<div className="w-full flex items-center justify-end">
 							<LoadingButton
 								loading={isUsageMutationLoading}
@@ -218,6 +229,7 @@ function PublicPropertyTemporaryUsagePageContentForm({ openUsage }: { openUsage:
 									handleUsageMutation({
 										type: openUsage.openUsage ? "finish" : "start",
 										propertyUsageId: openUsage.openUsage?._id,
+										property: openUsage.property,
 										info: getPropertyUsage(),
 										attachments: getAttachments(),
 									});
@@ -321,6 +333,8 @@ type VehicleMetadataProps = {
 };
 function VehicleMetadata({ property, hasOpenUsage }: VehicleMetadataProps) {
 	const propertyUsageMetadataType = usePropertyUsageStore((state) => state.propertyUsage.metadados.tipo);
+	const justificative = usePropertyUsageStore((state) => state.propertyUsage.justificativa);
+	const updatePropertyUsage = usePropertyUsageStore((state) => state.updatePropertyUsage);
 	const updatePropertyUsageMetadata = usePropertyUsageStore((state) => state.updatePropertyUsageMetadata);
 	const attachments = usePropertyUsageStore((state) => state.attachments);
 	console.log("attachments", attachments);
@@ -366,6 +380,7 @@ function VehicleMetadata({ property, hasOpenUsage }: VehicleMetadataProps) {
 				</div>
 			) : null}
 			{hasOpenUsage ? <FinishUsageMetadata /> : <StartUsageMetadata />}
+
 			<div className="w-full flex flex-col gap-2">
 				<h1 className="text-sm font-medium tracking-tight text-primary/80">ANEXOS</h1>
 				{attachments.length > 0 ? (
@@ -473,11 +488,20 @@ function PropertyAttachmentCard({ index, propertyUsageMetadataType, attachment }
 	);
 }
 
-function Others() {
+function Others({ property }: { property: TGetTemporaryUsageByPropertyOutput["data"]["property"] }) {
+	const justificative = usePropertyUsageStore((state) => state.propertyUsage.justificativa);
 	const propertyUsageNotes = usePropertyUsageStore((state) => state.propertyUsage.anotacoes);
 	const updatePropertyUsage = usePropertyUsageStore((state) => state.updatePropertyUsage);
 	return (
 		<>
+			{property.justificativaUsoTemporarioObrigatorio ? (
+				<TextareaInput
+					label="JUSTIFICATIVA"
+					placeholder="Preencha a justificativa para o uso da propriedade..."
+					value={justificative ?? ""}
+					handleChange={(value) => updatePropertyUsage({ justificativa: value })}
+				/>
+			) : null}
 			<TextareaInput
 				label="ANOTAÇÕES"
 				placeholder="Preencha aqui qualquer detalhe relevante, como detalhes de uma possível avaria, etc..."

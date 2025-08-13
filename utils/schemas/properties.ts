@@ -37,6 +37,12 @@ const GeneralPropertySchema = z.object({
 	anotacoes: z.string().optional().nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
 	usoTemporarioLinkUrlQRCode: z.string().optional().nullable(),
+	justificativaUsoTemporarioObrigatorio: z
+		.boolean({
+			invalid_type_error: "Tipo não válido para a justificativa de uso temporário.",
+		})
+		.optional()
+		.nullable(),
 	autor: AuthorSchema,
 	dataInsercao: z.string().datetime(),
 });
@@ -54,7 +60,19 @@ export const InsertPropertySchema = z.object({
 		.optional()
 		.nullable(),
 	metadados: z.discriminatedUnion("tipo", [PropertyMetadataVehicleSchema]),
-	usoTemporarioLinkUrlQRCode: z.string().optional().nullable(),
+	usoTemporarioLinkUrlQRCode: z
+		.string({
+			required_error: "URL do QR Code não informada.",
+			invalid_type_error: "Tipo não válido para a URL do QR Code.",
+		})
+		.optional()
+		.nullable(),
+	justificativaUsoTemporarioObrigatorio: z
+		.boolean({
+			invalid_type_error: "Tipo não válido para a justificativa de uso temporário.",
+		})
+		.optional()
+		.nullable(),
 	autor: AuthorSchema,
 	dataInsercao: z
 		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção da propriedade." })
@@ -144,6 +162,13 @@ export const PropertyTemporaryUsageSchema = z.object({
 			}),
 		}),
 	),
+	justificativa: z
+		.string({
+			required_error: "Justificativa não informada.",
+			invalid_type_error: "Tipo não válido para a justificativa.",
+		})
+		.optional()
+		.nullable(),
 	anotacoes: z
 		.string({
 			invalid_type_error: "Tipo não válido para as anotações.",

@@ -9,6 +9,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { formatDate } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
+import CheckboxInput from "@/components/inputs/Checkbox";
 
 type VehiclePropertiesProps = {
 	isDesktop: boolean;
@@ -93,6 +94,7 @@ function VehicleProperties({ isDesktop, infoHolder, updateInfoHolder }: VehicleP
 						/>
 					</div>
 				</div>
+
 				{infoHolder.metadados?.revisoes.length > 0 ? (
 					<>
 						<h1 className="text-[0.65rem] tracking-tight font-medium text-start w-fit text-primary/70">REVISÕES DO VEÍCULO </h1>

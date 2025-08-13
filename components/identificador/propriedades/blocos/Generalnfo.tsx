@@ -1,3 +1,4 @@
+import CheckboxInput from "@/components/inputs/Checkbox";
 import TextInput from "@/components/inputs/Text";
 import TextareaInput from "@/components/inputs/TextareaInput";
 import type { TSimpleAttachment } from "@/utils/methods/uploading";
@@ -46,6 +47,14 @@ export default function GeneralInfo({ imageHolder, setImageHolder, infoHolder, u
 				value={infoHolder.anotacoes ?? ""}
 				handleChange={(value) => updateInfoHolder({ anotacoes: value })}
 			/>
+			<div className="w-full flex items-center justify-center">
+				<CheckboxInput
+					labelFalse="JUSTIFICATIVA DE USO TEMPORÁRIO OBRIGATÓRIA"
+					labelTrue="JUSTIFICATIVA DE USO TEMPORÁRIO OBRIGATÓRIA"
+					checked={!!infoHolder.justificativaUsoTemporarioObrigatorio}
+					handleChange={(value) => updateInfoHolder({ justificativaUsoTemporarioObrigatorio: value })}
+				/>
+			</div>
 		</div>
 	);
 }

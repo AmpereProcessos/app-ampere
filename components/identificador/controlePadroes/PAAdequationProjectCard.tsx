@@ -6,7 +6,7 @@ import { BsCalendarCheck, BsCode } from "react-icons/bs";
 import { FaCircle, FaPiggyBank } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdAssistantPhoto, MdDashboard, MdSettingsInputComponent } from "react-icons/md";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
@@ -14,11 +14,18 @@ import { formatDateInputChange } from "@/utils/methods/shared";
 import { cn } from "@/lib/utils";
 import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
 import { AlertCircle, BadgeCheck, Banknote, Cable, Contact, Signature, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 type PAAdequationProjectCardProps = {
 	project: TEnergyPAExecutionWithFiltersOutput["data"]["projects"][number];
+	callbacks?: {
+		onMutate?: () => void;
+		onSuccess?: () => void;
+		onSettled?: () => void;
+	};
 };
-function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
+function PAAdequationProjectCard({ project, callbacks }: PAAdequationProjectCardProps) {
 	const queryClient = useQueryClient();
 	const location: TLocation = {
 		cep: project.cep?.toString(),
@@ -50,11 +57,19 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 			</h1>
 		);
 	}
-	const { mutate: handleUpdate, isPending } = useMutationWithFeedback({
+	const { mutate: handleUpdate, isPending } = useMutation({
 		mutationKey: ["update-project", project._id],
 		mutationFn: updatePAAdequationExecutionDate,
-		affectedQueryKey: ["pa-execution-projects"],
-		queryClient: queryClient,
+		onMutate: () => {
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: (data) => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			toast.success(data);
+		},
+		onSettled: () => {
+			if (callbacks?.onSettled) callbacks.onSettled();
+		},
 	});
 	return (
 		<div className="flex w-full flex-col gap-4 rounded border border-gray-300 bg-[#fff] p-3 font-[Inter]">
@@ -168,7 +183,9 @@ function PAAdequationProjectCard({ project }: PAAdequationProjectCardProps) {
 					editable={!isPending}
 					showDate={!!project.padrao.aumentoCarga.dataEfetivacao}
 					date={project.padrao.aumentoCarga.dataEfetivacao || project.obra.saida || null}
-					handleChange={(value) => handleUpdate(formatDateInputChange(value, "string"))}
+					handleChange={(value) => {
+						handleUpdate(formatDateInputChange(value, "string"));
+					}}
 				/>
 			</div>
 		</div>

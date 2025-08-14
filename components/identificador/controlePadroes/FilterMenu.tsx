@@ -50,6 +50,7 @@ function PAAdequationsFilterMenu({ queryParams, updateQueryParams, closeMenu }: 
 								]}
 								selectedItemLabel="NÃO DEFINIDO"
 								onReset={() => setQueryParamsHolder((prev) => ({ ...prev, segments: [] }))}
+								width={"100%"}
 							/>
 
 							<MultipleSelectInput
@@ -64,6 +65,7 @@ function PAAdequationsFilterMenu({ queryParams, updateQueryParams, closeMenu }: 
 								]}
 								selectedItemLabel="NÃO DEFINIDO"
 								onReset={() => setQueryParamsHolder((prev) => ({ ...prev, responsabilityTypes: [] }))}
+								width={"100%"}
 							/>
 							<MultipleSelectInput
 								label="STATUS DO PARECER DE ACESSO"
@@ -73,6 +75,7 @@ function PAAdequationsFilterMenu({ queryParams, updateQueryParams, closeMenu }: 
 								options={HomologationControlStatus}
 								selectedItemLabel="NÃO DEFINIDO"
 								onReset={() => setQueryParamsHolder((prev) => ({ ...prev, homologationStatus: [] }))}
+								width={"100%"}
 							/>
 						</div>
 

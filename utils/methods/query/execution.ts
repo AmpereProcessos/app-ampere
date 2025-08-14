@@ -353,6 +353,7 @@ export function useEnergyPAExecutionWithFilters({ initialFilters }: UseEnergyPAE
 			queryKey: ["energy-pa-execution-with-filters", queryParamsDebounced],
 			queryFn: async () => await fetchEnergyPAExecutionWithFilters(queryParamsDebounced),
 		}),
+		queryKey: ["energy-pa-execution-with-filters", queryParamsDebounced],
 		queryParams,
 		updateQueryParams,
 	};

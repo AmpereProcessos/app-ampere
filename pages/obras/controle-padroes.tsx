@@ -14,18 +14,22 @@ import { ChartArea, CircleCheck, LayoutGrid, X } from "lucide-react";
 import DateIntervalInput from "@/components/inputs/DateIntervalInput";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { useQueryClient } from "@tanstack/react-query";
 
 function EnergyPAControls() {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const { data: session, status } = useSession({ required: true });
 	const isAuthorized = session?.user.permissoes.rotas.includes("Obras") || session?.user.permissoes.rotas.includes("Pós-Venda");
-	const { data: projectsResult, isLoading, isError, isSuccess, queryParams, updateQueryParams } = useEnergyPAExecutionWithFilters({});
+	const { data: projectsResult, isLoading, isError, isSuccess, queryParams, updateQueryParams, queryKey } = useEnergyPAExecutionWithFilters({});
 	const projects = projectsResult?.projects || [];
 	const projectsMatched = projectsResult?.projectsMatched || 0;
 	const projectsShowing = projects.length;
 	const totalPages = projectsResult?.totalPages || 0;
 	const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false);
 
+	const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey });
+	const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey });
 	if (status !== "authenticated") return <LoadingPage />;
 	if (!isAuthorized) return <UnauthorizedPage />;
 	return (
@@ -61,7 +65,9 @@ function EnergyPAControls() {
 				{isError ? <ErrorComponent msg={"Erro ao encontrar projetos para adequação de padrão."} /> : null}
 				{isSuccess && projects ? (
 					projects.length > 0 ? (
-						projects.map((project) => <PAAdequationProjectCard key={project._id} project={project} />)
+						projects.map((project) => (
+							<PAAdequationProjectCard key={project._id} project={project} callbacks={{ onMutate: handleOnMutate, onSuccess: handleOnSettled, onSettled: handleOnSettled }} />
+						))
 					) : (
 						<p className="w-full text-center font-medium text-gray-500">Nenhum projeto foi encontrado...</p>
 					)

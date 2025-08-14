@@ -137,6 +137,7 @@ export function isEmpty(value) {
 }
 
 export function formatDateInputChange<T extends "date" | "string" | undefined>(value: any, returnType?: T, normalizeHours = true): T extends "date" ? Date : string | null {
+	if (value === null) return null as any;
 	if (Number.isNaN(new Date(value).getMilliseconds())) return null as any;
 	if (!returnType || returnType === "string") {
 		if (!normalizeHours) return new Date(value).toISOString() as any;
@@ -151,7 +152,6 @@ export function pushToAuthPage(router) {
 }
 export function getGenFactorByOrientation({ city, uf, orientation }) {
 	if (!city || !uf) return 127;
-
 	var cityFactor = genFactors.find((genFactor) => genFactor.CIDADE == city && genFactor.UF == uf);
 	if (!cityFactor) return 127;
 

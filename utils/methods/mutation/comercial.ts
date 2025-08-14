@@ -72,7 +72,7 @@ type NotifyContractSigningParams = {
 };
 async function notifyContractSigning({ projectName, projectIdentifier }: NotifyContractSigningParams) {
 	const notification: TCreateNotificationInput = {
-		notificadosIds: ["6353eb83ef4e1a367a877949", "64638b6c2071c508968bdf08"],
+		notificadosIds: ["678560fb2ec7aa25e918151e"],
 		assunto: "NOVO CONTRATO ASSINADO",
 		corpo: `Contrato ${projectName} (${projectIdentifier}) foi atualizado como ASSINADO.`,
 		enviarEmail: true,

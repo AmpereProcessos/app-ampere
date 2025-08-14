@@ -78,10 +78,11 @@ const handleGetSalesRanking: NextApiHandler<TSalesRakingOutput> = async (req, re
 			},
 		)
 		.toArray();
-	const aggreagated = (await projectsCollection
+	const aggregated = (await projectsCollection
 		.aggregate([
 			{
 				$match: {
+					"contrato.status": "ASSINADO",
 					tipoDeServico: { $in: params.projectTypes },
 					"contrato.dataAssinatura": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
 				},
@@ -136,7 +137,7 @@ const handleGetSalesRanking: NextApiHandler<TSalesRakingOutput> = async (req, re
 		valorTotal: number;
 	}[];
 
-	const fiveFirst = aggreagated.slice(0, 5).map((item) => {
+	const fiveFirst = aggregated.slice(0, 5).map((item) => {
 		const equivalentUser = users.find((user) => user.nome === item._id);
 		return {
 			name: equivalentUser?.nome || "NÃO DEFINIDO",
@@ -146,7 +147,7 @@ const handleGetSalesRanking: NextApiHandler<TSalesRakingOutput> = async (req, re
 			totalSoldPower: item.potenciaVendida,
 		};
 	});
-	const others = aggreagated.slice(5).map((item, index) => {
+	const others = aggregated.slice(5).map((item, index) => {
 		const equivalentUser = users.find((user) => user.nome === item._id);
 		return {
 			index: index + 1,

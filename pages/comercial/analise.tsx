@@ -17,7 +17,7 @@ import { useComercialAnalyticalData } from "../../utils/methods/query/comercial"
 import { VscDiffAdded } from "react-icons/vsc";
 import { MdAttachMoney } from "react-icons/md";
 import { ImPower } from "react-icons/im";
-import { TComercialAnalyticalItem } from "../api/projects/analitico/comercial";
+import type { TComercialAnalyticalItem } from "../api/projects/analitico/comercial";
 
 const currentDate = new Date();
 
@@ -171,7 +171,7 @@ function Analise() {
 									width={"100%"}
 									label={"DEPOIS DE"}
 									value={dateFilter.after ? formatDate(dateFilter.after) : undefined}
-									handleChange={(value) => setDateFilter((prev) => ({ ...prev, after: formatDateInputChange(value) }))}
+									handleChange={(value) => setDateFilter((prev) => ({ ...prev, after: formatDateInputChange(value) as string }))}
 								/>
 							</div>
 							<div className="w-full lg:w-[250px]">
@@ -179,11 +179,12 @@ function Analise() {
 									width={"100%"}
 									label={"ANTES DE"}
 									value={dateFilter.before ? formatDate(dateFilter.before) : undefined}
-									handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) }))}
+									handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) as string }))}
 								/>
 							</div>
 						</div>
-						<div
+						<button
+							type="button"
 							onClick={() =>
 								setFilters({
 									...filters,
@@ -193,7 +194,7 @@ function Analise() {
 							className={`${filters.pendingVinculation ? "bg-[#15599a]" : "bg-blue-300"} flex h-[47px] cursor-pointer items-center justify-center rounded px-2 font-bold text-white`}
 						>
 							SEM VINCULAÇÃO
-						</div>
+						</button>
 					</div>
 				</div>
 			</div>

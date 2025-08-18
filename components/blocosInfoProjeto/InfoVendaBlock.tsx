@@ -714,6 +714,46 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 								/>
 							</div>
 						</div>
+						<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+							<div className="w-full lg:w-1/2">
+								<NumberInput
+									label={"QTDE DE MODULOS"}
+									placeholder="Preencha a quantidade de modulos"
+									value={infoHolder.oem?.qtdeModulos ? infoHolder.oem?.qtdeModulos : 0}
+									editable={editor}
+									handleChange={(value) => {
+										setChanges((prev) => ({
+											...prev,
+											"oem.qtdeModulos": value,
+										}));
+										setInfo((prev) => ({
+											...prev,
+											oem: { ...(prev.oem || {}), qtdeModulos: value },
+										}));
+									}}
+									width="100%"
+								/>
+							</div>
+							<div className="w-full lg:w-1/2">
+								<NumberInput
+									label={"QTDE DE INVERSORES"}
+									placeholder="Preencha a quantidade de inversores"
+									value={infoHolder.oem?.qtdeInversores ? infoHolder.oem?.qtdeInversores : 0}
+									editable={editor}
+									handleChange={(value) => {
+										setChanges((prev) => ({
+											...prev,
+											"oem.qtdeInversores": value,
+										}));
+										setInfo((prev) => ({
+											...prev,
+											oem: { ...(prev.oem || {}), qtdeInversores: value },
+										}));
+									}}
+									width="100%"
+								/>
+							</div>
+						</div>
 					</div>
 				) : null}
 			</div>

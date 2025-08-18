@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import NumberInput from "../inputs/Number";
 import SelectInput from "../inputs/Select";
 import DateInput from "../inputs/Date";
 import { formatDate, oemPlans, statusObra } from "../../utils/constants";
-import { TProjectDTO } from "@/utils/schemas/projects";
+import type { TProjectDTO } from "@/utils/schemas/projects";
 import CheckboxInput from "../inputs/Checkbox";
 import { VscChromeClose } from "react-icons/vsc";
 import { MdAdd } from "react-icons/md";
@@ -19,9 +19,9 @@ import dayjs from "dayjs";
 type InfoOeMBlockProps = {
 	editor: boolean;
 	infoHolder: TProjectDTO;
-	setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>;
+	setInfo: Dispatch<SetStateAction<TProjectDTO>>;
 	changes: { [key: string]: any };
-	setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>;
+	setChanges: Dispatch<SetStateAction<{ [key: string]: any }>>;
 };
 function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: InfoOeMBlockProps) {
 	const [newMaintenanceMenuIsOpen, setNewMaintenanceMenuIsOpen] = useState<boolean>(false);
@@ -117,7 +117,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
 									...prev,
 									oem: {
 										...prev.oem,
-										dataInicio: formatDateInputChange(value),
+										dataInicio: formatDateInputChange(value, "string"),
 										duracao: Math.round(dayjs(formatDateInputChange(prev.oem?.dataFim)).diff(formatDateInputChange(value), "days") / 365),
 									},
 								}));
@@ -139,7 +139,7 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
 									...prev,
 									oem: {
 										...prev.oem,
-										dataFim: formatDateInputChange(value),
+										dataFim: formatDateInputChange(value, "string"),
 										duracao: Math.round(dayjs(formatDateInputChange(value)).diff(prev.oem?.dataInicio, "days") / 365), //   dayjs(formatDateInputChange(value)).diff(prev.oem.dataInicio),
 									},
 								}));
@@ -157,17 +157,17 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
 			<h1 className="mt-2 w-full text-center font-black text-[#fead41]">MANUTENÇÕES</h1>
 			<div className="flex w-full items-center justify-end p-2">
 				{newMaintenanceMenuIsOpen ? (
-					<button>
-						<button
-							onClick={() => setNewMaintenanceMenuIsOpen(false)}
-							className="flex items-center gap-1 rounded-lg border border-red-500 bg-red-50 px-2 py-1 text-xs text-red-500 duration-300 ease-in-out hover:border-red-700 hover:text-red-700"
-						>
-							<VscChromeClose />
-							<p className="font-medium">FECHAR MENU</p>
-						</button>
+					<button
+						type="button"
+						onClick={() => setNewMaintenanceMenuIsOpen(false)}
+						className="flex items-center gap-1 rounded-lg border border-red-500 bg-red-50 px-2 py-1 text-xs text-red-500 duration-300 ease-in-out hover:border-red-700 hover:text-red-700"
+					>
+						<VscChromeClose />
+						<p className="font-medium">FECHAR MENU</p>
 					</button>
 				) : (
 					<button
+						type="button"
 						onClick={() => setNewMaintenanceMenuIsOpen(true)}
 						className="flex items-center gap-1 rounded-lg border border-cyan-500 bg-cyan-50 px-2 py-1 text-xs text-cyan-500 duration-300 ease-in-out hover:border-cyan-700 hover:text-cyan-700"
 					>
@@ -180,7 +180,12 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
 			<div className="mt-2 flex w-full items-start justify-around gap-4">
 				{infoHolder.manutencoes.length > 0 ? (
 					infoHolder.manutencoes.map((maintenance, index) => (
-						<MaintenanceCard key={index} maintenance={maintenance} handleRemove={() => removeMaintenance(index)} handleUpdate={(info) => updateMaintenance({ info, index })} />
+						<MaintenanceCard
+							key={`${maintenance.titulo}-${index}`}
+							maintenance={maintenance}
+							handleRemove={() => removeMaintenance(index)}
+							handleUpdate={(info) => updateMaintenance({ info, index })}
+						/>
 					))
 				) : (
 					<p className="text-sm font-medium italic tracking-tight text-gray-500">Não há registros de manutenção.</p>
@@ -261,100 +266,22 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
 								oem: { ...(prev.oem || {}), oemConcluido: value },
 								obra: {
 									...prev.obra,
-									entrada: prev.obra.entrada ? prev.obra.entrada : !!value ? new Date().toISOString() : prev.obra.entrada,
-									saida: prev.obra.saida ? prev.obra.saida : !!value ? new Date().toISOString() : prev.obra.saida,
-									statusDaObra: !!value ? "CONCLUIDA" : prev.obra.statusDaObra,
+									entrada: prev.obra.entrada ? prev.obra.entrada : value ? new Date().toISOString() : prev.obra.entrada,
+									saida: prev.obra.saida ? prev.obra.saida : value ? new Date().toISOString() : prev.obra.saida,
+									statusDaObra: value ? "CONCLUIDA" : prev.obra.statusDaObra,
 								},
 							}));
 							setChanges((prev) => ({
 								...prev,
 								"oem.oemConcluido": value,
-								"obra.entrada": infoHolder.obra.entrada ? infoHolder.obra.entrada : !!value ? new Date().toISOString() : infoHolder.obra.entrada,
-								"obra.saida": infoHolder.obra.saida ? infoHolder.obra.saida : !!value ? new Date().toISOString() : infoHolder.obra.saida,
-								"obra.status": !!value ? "CONCLUIDA" : infoHolder.obra.statusDaObra,
+								"obra.entrada": infoHolder.obra.entrada ? infoHolder.obra.entrada : value ? new Date().toISOString() : infoHolder.obra.entrada,
+								"obra.saida": infoHolder.obra.saida ? infoHolder.obra.saida : value ? new Date().toISOString() : infoHolder.obra.saida,
+								"obra.status": value ? "CONCLUIDA" : infoHolder.obra.statusDaObra,
 							}));
 						}}
 					/>
 				</div>
 			</div>
-			{/* <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-              <DateInput
-                label={'MANUTENÇÃO PREVENTIVA'}
-                editable={editor}
-                value={
-                  infoHolder.manutencaoPreventiva?.data != undefined && infoHolder.manutencaoPreventiva.data != '-'
-                    ? new Date(infoHolder.manutencaoPreventiva.data).toISOString().slice(0, 10)
-                    : 0
-                }
-                handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    'manutencaoPreventiva.data': isNaN(value) ? new Date(value).toISOString() : null,
-                    'manutencaoPreventiva.status': isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
-                  })
-                  setInfo({
-                    ...infoHolder,
-                    manutencaoPreventiva: {
-                      ...infoHolder.manutencaoPreventiva,
-                      data: isNaN(value) ? new Date(value).toISOString() : null,
-                      status: isNaN(value) ? 'REALIZADO' : 'NÃO REALIZADO',
-                    },
-                  })
-                }}
-              />
-              <div className="flex w-[350px] flex-col items-center">
-                <span className="text-center font-raleway text-sm font-bold uppercase">O&M CONCLUÍDO ?</span>
-                <div className="flex">
-                  <input
-                    disabled={!editor}
-                    checked={infoHolder.oem?.oemConcluido == true ? true : false}
-                    onChange={(e) => {
-                      setChanges({
-                        ...changes,
-                        'oem.oemConcluido': e.target.checked,
-                        'obra.statusDaObra': 'CONCLUÍDA',
-                      })
-                      setInfo({
-                        ...infoHolder,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: 'CONCLUIDA',
-                        },
-                        oem: {
-                          ...infoHolder.oem,
-                          oemConcluido: e.target.checked,
-                        },
-                      })
-                    }}
-                    type="checkbox"
-                    name="oemConcluido"
-                    id="oemConcluido"
-                  />
-                  <label className="ml-2" htmlFor="oemConcluido">
-                    {infoHolder.oem?.oemConcluido ? 'SIM' : 'NÃO'}
-                  </label>
-                </div>
-              </div>
-              <SelectInput
-                label={'STATUS DA OBRA'}
-                value={infoHolder.obra?.statusDaObra ? infoHolder.obra?.statusDaObra : 'NÃO DEFINIDO'}
-                editable={editor}
-                options={statusObra.map((status) => status)}
-                handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    'obra.statusDaObra': value,
-                  })
-                  setInfo({
-                    ...infoHolder,
-                    obra: {
-                      ...infoHolder.obra,
-                      statusDaObra: value,
-                    },
-                  })
-                }}
-              />
-             </div> */}
 		</div>
 	);
 }

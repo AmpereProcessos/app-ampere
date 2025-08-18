@@ -82,6 +82,14 @@ const GeneralContractRequestSchema = z.object({
 	marcaModulos: z.string(),
 	qtdeModulos: z.union([z.string(), z.number()]),
 	potModulos: z.string(),
+	// Oem items
+	marcaModulosOem: z.string().optional().nullable(),
+	qtdeModulosOem: z.string().optional().nullable(),
+	potModulosOem: z.string().optional().nullable(),
+	marcaInversorOem: z.string().optional().nullable(),
+	qtdeInversorOem: z.string().optional().nullable(),
+	potInversorOem: z.string().optional().nullable(),
+
 	marcaModulosAnterior: z.string().optional().nullable(),
 	qtdeModulosAnterior: z.union([z.string(), z.number()]).optional().nullable(),
 	potModulosAnterior: z.string().optional().nullable(),

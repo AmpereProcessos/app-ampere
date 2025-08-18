@@ -465,6 +465,10 @@ const GeneralProjectSchema = z.object({
 		dataFim: z.string().datetime().optional().nullable(),
 		oemConcluido: z.boolean().optional().nullable(),
 		plano: z.string().optional().nullable(),
+
+		qtdeModulos: z.number().optional().nullable(),
+		qtdeInversores: z.number().optional().nullable(),
+
 		qtdeManutencoes: z.number().optional().nullable(),
 		valor: z.number().optional().nullable(),
 	}),

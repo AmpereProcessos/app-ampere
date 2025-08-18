@@ -52,46 +52,46 @@ export async function handleSendEmailToCobrancas({ requestId, contractName }: Ha
 }
 
 function getObservationsForInstallationLocationChange({ willChange }: { willChange: boolean }) {
-	if (willChange) return `HAVERÁ MUDANÇA DE LOCAL.`;
-	else return `NÃO HAVERÁ MUDANÇA DE LOCAL`;
+	if (willChange) return "HAVERÁ MUDANÇA DE LOCAL.";
+	return "NÃO HAVERÁ MUDANÇA DE LOCAL";
 }
 function getKitInformation(info: TContractRequestDTO) {
-	let moduleSplitMarca = info.marcaModulos.split("/");
-	let moduleSplitQtde = info.qtdeModulos.toString().split("/");
-	let moduleSplitPot = info.potModulos.split("/");
-	let holder = [];
+	const moduleSplitMarca = info.marcaModulos.split("/");
+	const moduleSplitQtde = info.qtdeModulos.toString().split("/");
+	const moduleSplitPot = info.potModulos.split("/");
+	const holder = [];
 	for (let i = 0; i < moduleSplitMarca.length; i++) {
-		let str = `${moduleSplitQtde} - ${moduleSplitMarca}(${moduleSplitPot}W)`;
+		const str = `${moduleSplitQtde} - ${moduleSplitMarca}(${moduleSplitPot}W)`;
 		holder.push(str);
 	}
-	let inverterSplitMarca = info.marcaInversor.split("/");
-	let inverterSplitQtde = info.qtdeInversor.split("/");
-	let inverterSplitPot = info.potInversor.split("/");
+	const inverterSplitMarca = info.marcaInversor.split("/");
+	const inverterSplitQtde = info.qtdeInversor.split("/");
+	const inverterSplitPot = info.potInversor.split("/");
 	for (let i = 0; i < inverterSplitMarca.length; i++) {
-		let str = `${inverterSplitQtde} - ${inverterSplitMarca}(${inverterSplitPot}W)`;
+		const str = `${inverterSplitQtde} - ${inverterSplitMarca}(${inverterSplitPot}W)`;
 		holder.push(str);
 	}
 	return holder.join("\n");
 }
-function getModulesInformation({ qty, power }: { qty: number | string; power: number | string }) {
-	let splitQtde = qty.toString().split("/");
-	let splitPot = power.toString().split("/");
-	let totalModulesPower = 0;
+function getProductInformation({ qty, power }: { qty: number | string; power: number | string }) {
+	const splitQtde = qty.toString().split("/");
+	const splitPot = power.toString().split("/");
+	let totalPower = 0;
 	for (let i = 0; i < splitQtde.length; i++) {
-		let iQty = Number(splitQtde[i]) || 0;
-		let iPower = Number(splitPot[i]) || 0;
-		totalModulesPower = totalModulesPower + (iQty * iPower) / 1000;
+		const iQty = Number(splitQtde[i]) || 0;
+		const iPower = Number(splitPot[i]) || 0;
+		totalPower = totalPower + (iQty * iPower) / 1000;
 	}
-	let totalModulesQty = splitQtde.reduce((partialSum, a) => Number(partialSum) + Number(a), 0);
-	return { totalModulesPower, totalModulesQty };
+	const totalQty = splitQtde.reduce((partialSum, a) => Number(partialSum) + Number(a), 0);
+	return { totalPower, totalQty };
 }
 function getInverterInformation({ model, qty, power }: { model: number | string; qty: number | string; power: number | string }) {
-	let splitMarca = model.toString().split("/");
-	let splitQtde = qty.toString().split("/");
-	let splitPot = power.toString().split("/");
-	let holder = [];
+	const splitMarca = model.toString().split("/");
+	const splitQtde = qty.toString().split("/");
+	const splitPot = power.toString().split("/");
+	const holder = [];
 	for (let i = 0; i < splitMarca.length; i++) {
-		let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
+		const str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
 		holder.push(str);
 	}
 	return holder.join(" - ");
@@ -99,9 +99,9 @@ function getInverterInformation({ model, qty, power }: { model: number | string;
 function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: string }) {
 	if (!applicable) return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] };
 
-	if (plan == "MANUTENÇÃO SIMPLES" || plan == "MANUTENÇÃO SIMLES") return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: "MANUTENÇÃO", dataEfetivacao: null }] };
+	if (plan === "MANUTENÇÃO SIMPLES" || plan === "MANUTENÇÃO SIMLES") return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: "MANUTENÇÃO", dataEfetivacao: null }] };
 
-	if (plan == "PLANO SOL")
+	if (plan === "PLANO SOL")
 		return {
 			duracao: 1,
 			qtdeManutencoes: 1,
@@ -110,7 +110,7 @@ function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: st
 			dataFim: dayjs().add(365, "days").toISOString(),
 		};
 
-	if (plan == "PLANO SOL +")
+	if (plan === "PLANO SOL +")
 		return {
 			duracao: 1,
 			qtdeManutencoes: 2,
@@ -144,7 +144,7 @@ const EnergyDistributorEquivalent = {
 	DF: "ELEKTRO",
 };
 export function getProjectInformationFromRequest({ request }: HandleGetProjectInformationFromRequestParams) {
-	const OeMInfo = getOeMInformation({ applicable: request.possuiOeM == "SIM", plan: request.planoOeM });
+	const OeMInfo = getOeMInformation({ applicable: request.possuiOeM === "SIM", plan: request.planoOeM });
 	const insertObj: TProject = {
 		qtde: 0,
 		nomeDoContrato: request.nomeDoContrato.toUpperCase(),
@@ -165,10 +165,10 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 		codigoSVB: request.codigoSVB,
 		segmento: request.segmento as TProjectDTO["segmento"],
 		obsComercial:
-			request.tipoDeServico == "MONTAGEM E DESMONTAGEM"
+			request.tipoDeServico === "MONTAGEM E DESMONTAGEM"
 				? request.obsComercial
-					? request.obsComercial + getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal == "SIM" })
-					: getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal == "SIM" })
+					? request.obsComercial + getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal === "SIM" })
+					: getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal === "SIM" })
 				: request.obsComercial,
 		visitaTecnica: {
 			status: request.idVisitaTecnica,
@@ -184,7 +184,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			respInstalacao: request.respTrocaPadrao,
 			valor: request.valorPadrao,
 			aumentoCarga: {
-				aplicavel: request.aumentoDeCarga == "SIM" || request.aumentoDisjuntor == "SIM",
+				aplicavel: request.aumentoDeCarga === "SIM" || request.aumentoDisjuntor === "SIM",
 			},
 		},
 		estruturaPersonalizada: {
@@ -192,7 +192,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			tipo: request.tipoEstrutura,
 			respPagamento: request.responsavelEstrutura,
 			valor: request.valorEstrutura,
-			status: request.estruturaAmpere == "NÃO" ? "PENDÊNCIA" : "N/A",
+			status: request.estruturaAmpere === "NÃO" ? "PENDÊNCIA" : "N/A",
 			statusEntrega: "",
 		},
 		contrato: {
@@ -217,9 +217,9 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			cobrancaFeita: false,
 		},
 		faturamento: {
-			necessarioNotaFiscalAdiantada: request.necessidadeNFAdiantada == "SIM",
-			necessarioCodigoFiname: request.necessidadeCodigoFiname == "SIM",
-			necessarioInscricaoRural: request.necessidaInscricaoRural == "SIM",
+			necessarioNotaFiscalAdiantada: request.necessidadeNFAdiantada === "SIM",
+			necessarioCodigoFiname: request.necessidadeCodigoFiname === "SIM",
+			necessarioInscricaoRural: request.necessidaInscricaoRural === "SIM",
 			previsaoFaturamento: "", // adicionar empresa e cnpj de faturamento
 			cnpjFaturamento: "",
 			empresaFaturamento: null,
@@ -247,7 +247,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			dataPedido: undefined, // formatar como data
 			dataPagamento: undefined,
 			previsaoEntrega: undefined, // formatar como data
-			localEntrega: request.localEntrega == "MESMO DO PROJETO" ? request.localEntrega : "DIFERENTE DO PROJETO",
+			localEntrega: request.localEntrega === "MESMO DO PROJETO" ? request.localEntrega : "DIFERENTE DO PROJETO",
 			informacoes: "",
 			rastreio: "",
 			statusEntrega: request.tipoDeServico === "MONTAGEM E DESMONTAGEM" ? "ENTREGUE" : "NÃO DEFINIDO",
@@ -256,19 +256,19 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			titularProjeto: request.nomeTitularProjeto || "",
 			numeroInstalacao: request.numeroInstalacao || "",
 			distCreditos: request.possuiDistribuicao || "NÃO DEFINIDO",
-			qtdeDistCreditos: request.distribuicoes?.length != 0 ? request.distribuicoes?.length : 0,
+			qtdeDistCreditos: request.distribuicoes?.length !== 0 ? request.distribuicoes?.length : 0,
 		},
 		sistema: {
-			qtdeModulos: getModulesInformation({
+			qtdeModulos: getProductInformation({
 				qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
 				power: request.potModulos ? request.potModulos?.toString() : "0",
-			}).totalModulesQty,
+			}).totalQty,
 			potModulos: request.potModulos,
-			potPico: getModulesInformation({
+			potPico: getProductInformation({
 				qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
 				power: request.potModulos ? request.potModulos?.toString() : "0",
-			}).totalModulesPower,
-			topologia: request.topologia == "INVERSOR" ? "INVERSOR" : "MICRO",
+			}).totalPower,
+			topologia: request.topologia === "INVERSOR" ? "INVERSOR" : "MICRO",
 			inversor: getInverterInformation({
 				model: request.marcaInversor ? request.marcaInversor?.toString().toUpperCase() : "",
 				qty: request.qtdeInversor ? request.qtdeInversor.toString() : "0",
@@ -289,7 +289,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 		},
 		satisfacao: {},
 		seguro: {
-			aplicavel: request.clienteSegurado == "SIM",
+			aplicavel: request.clienteSegurado === "SIM",
 			dataInicio: new Date().toISOString(),
 			dataFim: dayjs().add(365, "days").toISOString(),
 		},
@@ -304,8 +304,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			diagramaUnifilar: undefined,
 			desenhoTelhado: undefined,
 			mapaDeMicro: undefined,
-			aumentoDeCarga: request.aumentoDeCarga == "SIM" || request.aumentoDisjuntor == "SIM" ? "SIM" : "NÃO",
-			acStatus: request.aumentoDeCarga == "SIM" ? "PENDÊNCIA" : "NÃO DEFINIDO",
+			aumentoDeCarga: request.aumentoDeCarga === "SIM" || request.aumentoDisjuntor === "SIM" ? "SIM" : "NÃO",
+			acStatus: request.aumentoDeCarga === "SIM" ? "PENDÊNCIA" : "NÃO DEFINIDO",
 			projetoConcluido: "NÃO",
 			realizarHomologacao: request.realizarHomologacao,
 		},
@@ -344,7 +344,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 				dependentes: request?.distribuicoes?.map((d) => ({ numeroInstalacao: d.numInstalacao, recebimentoPercentual: d.excedente || 0 })) || [],
 			},
 			documentacao: {
-				formaAssinatura: request.formaAssinatura == "DIGITAL" ? "DIGITAL" : "FÍSICA",
+				formaAssinatura: request.formaAssinatura === "DIGITAL" ? "DIGITAL" : "FÍSICA",
 				dataInicioElaboracao: null,
 				dataConclusaoElaboracao: null,
 				dataLiberacao: null,
@@ -383,18 +383,20 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			status: "NÃO DEFINIDO",
 		},
 		oem: {
-			aplicavel: request.possuiOeM == "SIM" ? true : false, // checar se existe campo existente na gestao
+			aplicavel: request.possuiOeM === "SIM", // checar se existe campo existente na gestao
 			duracao: OeMInfo.duracao,
 			qtdeManutencoes: OeMInfo.qtdeManutencoes,
 			diagnostico: undefined,
 			dataInicio: OeMInfo.dataInicio,
 			dataFim: OeMInfo.dataFim,
 			plano: request.planoOeM,
+			qtdeModulos: request.qtdeModulosOem ? getProductInformation({ qty: request.qtdeModulosOem, power: request.potModulosOem || "" }).totalQty : null,
+			qtdeInversores: request.qtdeInversorOem ? getProductInformation({ qty: request.qtdeInversorOem, power: request.potInversorOem || "" }).totalQty : null,
 			valor: Number(request.valorOeMOuSeguro) || 0,
 		},
 		obra: {
 			laudo: request.laudo ? (request.laudo as TProjectDTO["obra"]["laudo"]) : "NÃO DEFINIDO",
-			observacoes: request.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal == "SIM" }) : "", // possibilidade de substituir \n por /, e quebrar textp em pontos
+			observacoes: request.tipoDeServico === "MONTAGEM E DESMONTAGEM" ? getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal === "SIM" }) : "", // possibilidade de substituir \n por /, e quebrar textp em pontos
 			statusSolicitacao: "NÃO SOLICITADA",
 			entrada: undefined, // formatar como data
 			saida: undefined, // formatar como data.
@@ -410,7 +412,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			materialFaltante: "",
 		},
 		manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
-		manutencoes: getOeMInformation({ applicable: request.possuiOeM == "SIM", plan: request.planoOeM }).manutencoes,
+		manutencoes: getOeMInformation({ applicable: request.possuiOeM === "SIM", plan: request.planoOeM }).manutencoes,
 		relatorios: {
 			envioUm: { status: "NÃO REALIZADO", data: null },
 			envioDois: { status: "NÃO REALIZADO", data: null },

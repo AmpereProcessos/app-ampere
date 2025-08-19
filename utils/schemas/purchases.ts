@@ -63,6 +63,11 @@ const PurchaseCompositionItemSchema = z.object({
 		required_error: "Quantidade do item de composição da compra não informada.",
 		invalid_type_error: "Tipo não válido para a quantidade do item de composição da compra.",
 	}),
+	// Data for billing purposes
+	unidadeFaturamento: z.string({ invalid_type_error: "Tipo não válido para a unidade de faturamento do item de composição da compra." }).optional().nullable(),
+	valorFaturamento: z.number({ invalid_type_error: "Tipo não válido para o valor de faturamento do item de composição da compra." }).optional().nullable(),
+	qtdeFaturamento: z.number({ invalid_type_error: "Tipo não válido para a quantidade de faturamento do item de composição da compra." }).optional().nullable(),
+	fatorConversao: z.number({ invalid_type_error: "Tipo não válido para o fator de conversão do item de composição da compra." }).optional().nullable(),
 });
 
 export const PurchaseUpdateItemSchema = z.object({

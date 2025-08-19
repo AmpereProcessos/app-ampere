@@ -4,7 +4,7 @@ import { GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
 import { useAllocators } from "@/utils/methods/query/allocators";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
 
-import { PurchaseCompositionItemCategories } from "@/utils/select-options";
+import { PurchaseCompositionItemCategories, units } from "@/utils/select-options";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 
 import MaterialSelector from "@/components/identificador/almoxarifado/estoque/MaterialVinculatorSelector";
+import { cn } from "@/lib/utils";
+import { renderIconWithClassNames } from "@/utils/methods/rendering";
 type PurchaseNewCompositionItemProps = {
 	addCompositionItem: (item: TPurchaseControl["composicao"][number]) => void;
 };
@@ -54,21 +56,33 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 					}
 					unvinculateMaterial={() => updateCompositionItemHolder({ materialId: null, descricao: "", valor: 0 })}
 				/>
+				<div className="flex w-full flex-wrap items-center justify-center gap-2">
+					{PurchaseCompositionItemCategories.map((category) => (
+						<button
+							key={category.id}
+							type="button"
+							className={cn("flex flex-col items-center justify-center rounded-lg p-2 border border-cyan-500 text-cyan-500 w-20 h-14", {
+								"bg-cyan-500 text-white": compositionItemHolder.categoria === category.value,
+								"bg-transparent text-cyan-500": compositionItemHolder.categoria !== category.value,
+							})}
+							onClick={() => updateCompositionItemHolder({ categoria: category.value as "MÓDULO" | "INVERSOR" | "INSUMO" | "ESTRUTURA" | "PADRÃO" | "OUTROS" })}
+						>
+							{renderIconWithClassNames(category.icon, "w-5 h-5")}
+							<p className="text-[0.65rem] font-medium">{category.label}</p>
+						</button>
+					))}
+				</div>
 				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 					<div className="lg:w-1/3 w-full">
 						<SelectInput
-							label="CATEGORIA"
+							label="UNIDADE DE FATURAMENTO"
 							selectedItemLabel="NÃO DEFINIDO"
-							options={PurchaseCompositionItemCategories}
-							value={compositionItemHolder.categoria}
-							handleChange={(value) =>
-								updateCompositionItemHolder({
-									categoria: value,
-								})
-							}
+							options={units}
+							value={compositionItemHolder.unidadeFaturamento}
+							handleChange={(value) => updateCompositionItemHolder({ unidadeFaturamento: value })}
 							onReset={() => {
 								updateCompositionItemHolder({
-									categoria: "OUTROS",
+									unidadeFaturamento: null,
 								});
 							}}
 							width="100%"
@@ -76,8 +90,71 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 					</div>
 					<div className="lg:w-1/3 w-full">
 						<NumberInput
+							label="QUANTIDADE DE FATURAMENTO"
+							value={compositionItemHolder.qtdeFaturamento || null}
+							handleChange={(value) => updateCompositionItemHolder({ qtdeFaturamento: value, qtde: value * (compositionItemHolder.fatorConversao || 1) })}
+							placeholder="Preencha aqui a quantidade de faturamento."
+							width="100%"
+						/>
+					</div>
+					<div className="lg:w-1/3 w-full">
+						<NumberInput
+							label="VALOR DE FATURAMENTO"
+							value={compositionItemHolder.valorFaturamento || null}
+							handleChange={(value) => updateCompositionItemHolder({ valorFaturamento: value, valor: value / (compositionItemHolder.fatorConversao || 1) })}
+							placeholder="Preencha aqui o valor de faturamento."
+							width="100%"
+						/>
+					</div>
+				</div>
+				<div className="w-full flex items-center justify-center">
+					<NumberInput
+						label="FATOR DE CONVERSÃO"
+						value={compositionItemHolder.fatorConversao || null}
+						handleChange={(value) =>
+							updateCompositionItemHolder({
+								fatorConversao: value,
+								qtde: value * (compositionItemHolder.qtdeFaturamento || 1),
+								valor: (compositionItemHolder.valorFaturamento || 1) / value,
+							})
+						}
+						placeholder="Preencha aqui o fator de conversão."
+						labelClassName="text-[0.6rem]"
+						holderClassName="text-xs p-2 min-h-[34px]"
+						width="100%"
+					/>
+				</div>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="lg:w-1/3 w-full">
+						<SelectInput
+							label="UNIDADE"
+							selectedItemLabel="NÃO DEFINIDO"
+							options={units}
+							value={compositionItemHolder.unidade}
+							handleChange={(value) =>
+								updateCompositionItemHolder({
+									unidade: value,
+								})
+							}
+							onReset={() => {
+								updateCompositionItemHolder({
+									unidade: "UN",
+								});
+							}}
+							editable={false}
+							width="100%"
+						/>
+					</div>
+					<div className="lg:w-1/3 w-full">
+						<NumberInput
 							value={compositionItemHolder.qtde}
-							handleChange={(value) => updateCompositionItemHolder({ qtde: value })}
+							handleChange={(value) =>
+								updateCompositionItemHolder({
+									qtde: value,
+									fatorConversao: value / (compositionItemHolder.qtdeFaturamento || 1),
+									valorFaturamento: (compositionItemHolder.valor * value) / (compositionItemHolder.qtdeFaturamento || 1),
+								})
+							}
 							label="QUANTIDADE"
 							placeholder="Preencha aqui a quantidade."
 							width={"100%"}
@@ -86,7 +163,14 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 					<div className="lg:w-1/3 w-full">
 						<NumberInput
 							value={compositionItemHolder.valor}
-							handleChange={(value) => updateCompositionItemHolder({ valor: value })}
+							handleChange={(value) => {
+								const newFactor = (compositionItemHolder.valorFaturamento || 1) / value;
+								updateCompositionItemHolder({
+									valor: value,
+									fatorConversao: newFactor,
+									qtdeFaturamento: compositionItemHolder.qtde / newFactor,
+								});
+							}}
 							label="VALOR UNITÁRIO"
 							placeholder="Preencha aqui o valor unitário."
 							width={"100%"}

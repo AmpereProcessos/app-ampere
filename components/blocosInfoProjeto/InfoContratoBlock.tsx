@@ -185,6 +185,8 @@ function ComissionableUsersCard({ comissionedUser, comissionableValue }: Comissi
 						<AvatarFallback>{formatNameAsInitials(comissionedUser.nome || "NA")}</AvatarFallback>
 					</Avatar>
 					<p className="text-sm font-bold leading-none tracking-tight">{comissionedUser.nome}</p>
+				</div>
+				<div className="grow flex items-center justify-start gap-2 flex-wrap">
 					<div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
 						<BadgeDollarSign className={cn("w-3 h-3 min-w-3 min-h-3")} />
 						<p className="font-black text-[0.57rem]">{formatToMoney(comissionedUser.valor || (comissionedUser.porcentagem * comissionableValue) / 100)}</p>

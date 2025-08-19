@@ -40,6 +40,7 @@ import LoadingComponent from "./utils/LoadingComponent";
 import ErrorPage from "./utils/ErrorPage";
 import toast from "react-hot-toast";
 import InfoComissionamentoBlock from "./blocosInfoProjeto/InfoComissionamentoBlock";
+import { Loader2 } from "lucide-react";
 
 type ModalDatabaseProps = {
 	session: Session;
@@ -122,7 +123,12 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 					<DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
 				</DialogHeader>
 
-				{isLoading ? <LoadingComponent /> : null}
+				{isLoading ? (
+					<div className="flex-1 flex items-center justify-center">
+						<Loader2 className="w-10 h-10 animate-spin" />
+						<h1>Carregando informações do projeto...</h1>
+					</div>
+				) : null}
 				{isError ? <ErrorPage msg={getErrorMessage(error)} /> : null}
 				{isSuccess && infoHolder ? (
 					<>
@@ -163,12 +169,17 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 		</Dialog>
 	) : (
 		<Drawer open onOpenChange={(v) => (!v ? closeModal() : null)}>
-			<DrawerContent className="h-fit max-h-[70vh] flex flex-col">
+			<DrawerContent className="h-fit max-h-[80vh] flex flex-col">
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{MENU_TITLE}</DrawerTitle>
 					<DrawerDescription>{MENU_DESCRIPTION}</DrawerDescription>
 				</DrawerHeader>
-				{isLoading ? <LoadingComponent /> : null}
+				{isLoading ? (
+					<div className="flex-1 flex items-center justify-center">
+						<Loader2 className="w-10 h-10 animate-spin" />
+						<h1>Carregando informações do projeto...</h1>
+					</div>
+				) : null}
 				{isError ? <ErrorPage msg={getErrorMessage(error)} /> : null}
 				{isSuccess && infoHolder ? (
 					<>

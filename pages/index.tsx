@@ -37,7 +37,7 @@ function Home() {
 		if (month >= 10) return <p className="text-xs font-semibold text-[#fead61]">{`${month}/${year}`}</p>;
 		return <p className="text-xs font-semibold text-[#fead61]">{`0${month}/${year}`}</p>;
 	}
-	console.log(session);
+	console.log("SESSION", session);
 	if (status === "loading") return <LoadingPage />;
 	if (status === "authenticated") {
 		if (session.user?.visualizacao.tipo === "EXECUÇÃO") {

@@ -161,6 +161,14 @@ export const GeneralMaterialSchema = z.object({
 		.datetime({
 			message: "Data de inserção não informada ou inválida.",
 		}),
+	dataExclusao: z
+		.string({
+			required_error: "Data de exclusão não informada.",
+			invalid_type_error: "Tipo não válido para a data de exclusão.",
+		})
+		.datetime({
+			message: "Data de exclusão não informada ou inválida.",
+		}).optional().nullable(),
 });
 
 export const InsertMaterialSchema = z.object({

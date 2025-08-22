@@ -17,7 +17,7 @@ import type { TMaterial } from "@/utils/schemas/materials";
 import MaterialGeneralBlock from "./blocos/General";
 import QuantityConfigBlock from "./blocos/QuantityConfig";
 import UpdateRegistriesBlock from "./blocos/UpdateRegistriesBlock";
-import { useMaterialById } from "@/utils/methods/query/materials";
+import { useMaterialById, useMaterialDeletionData } from "@/utils/methods/query/materials";
 import MaterialSuppliersBlock from "./blocos/Suppliers";
 import type { Session } from "next-auth";
 
@@ -37,6 +37,7 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
 	const queryClient = useQueryClient();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const { data: material, isLoading, isError, isSuccess, error } = useMaterialById({ id: materialId });
+	const { data: deletionData } = useMaterialDeletionData({ id: materialId });
 	const [infoHolder, setInfoHolder] = useState<TMaterial>(initialState);
 	function updateInfoHolder(changes: Partial<TMaterial>) {
 		setInfoHolder((prev) => ({ ...prev, ...changes }));

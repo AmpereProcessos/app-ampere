@@ -1,138 +1,157 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-hot-toast'
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
+import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 
-import { useMediaQuery } from "@/lib/hooks/media-query";
+import { useMediaQuery } from '@/lib/hooks/media-query'
 
-import { getErrorMessage } from "@/utils/methods/handlers";
-import { updateMaterial } from "@/utils/methods/mutation/materials";
-import type { TMaterial } from "@/utils/schemas/materials";
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { updateMaterial } from '@/utils/methods/mutation/materials'
+import type { TMaterial } from '@/utils/schemas/materials'
 
-import MaterialGeneralBlock from "./blocos/General";
-import QuantityConfigBlock from "./blocos/QuantityConfig";
-import UpdateRegistriesBlock from "./blocos/UpdateRegistriesBlock";
-import { useMaterialById, useMaterialDeletionData } from "@/utils/methods/query/materials";
-import MaterialSuppliersBlock from "./blocos/Suppliers";
-import type { Session } from "next-auth";
+import MaterialGeneralBlock from './blocos/General'
+import QuantityConfigBlock from './blocos/QuantityConfig'
+import UpdateRegistriesBlock from './blocos/UpdateRegistriesBlock'
+import { useMaterialById, useMaterialDeletionData } from '@/utils/methods/query/materials'
+import MaterialSuppliersBlock from './blocos/Suppliers'
+import type { Session } from 'next-auth'
+import Advanced from './blocos/Advanced'
+import { TMaterialDeletionDataOutput } from '@/pages/api/almoxarifado/materiais/exclusao'
 
-const initialState: TMaterial = { nome: "", nomeTecnico: "", preco: 0, qtde: 0, dataInsercao: new Date().toISOString() };
+const initialState: TMaterial = { nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() }
 
 type EditMaterialProps = {
-	session: Session;
-	materialId: string;
-	closeModal: () => void;
-	callbacks?: {
-		onMutate?: () => void;
-		onSuccess?: () => void;
-		onSettled?: () => void;
-	};
-};
+  session: Session
+  materialId: string
+  closeModal: () => void
+  callbacks?: {
+    onMutate?: () => void
+    onSuccess?: () => void
+    onSettled?: () => void
+  }
+}
 function EditMaterial({ session, materialId, closeModal, callbacks }: EditMaterialProps) {
-	const queryClient = useQueryClient();
-	const isDesktop = useMediaQuery("(min-width: 768px)");
-	const { data: material, isLoading, isError, isSuccess, error } = useMaterialById({ id: materialId });
-	const { data: deletionData } = useMaterialDeletionData({ id: materialId });
-	const [infoHolder, setInfoHolder] = useState<TMaterial>(initialState);
-	function updateInfoHolder(changes: Partial<TMaterial>) {
-		setInfoHolder((prev) => ({ ...prev, ...changes }));
-	}
-	function resetInfoHolder() {
-		setInfoHolder(initialState);
-	}
+  const queryClient = useQueryClient()
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const { data: material, isLoading, isError, isSuccess, error } = useMaterialById({ id: materialId })
+  const { data: deletionData } = useMaterialDeletionData({ id: materialId })
+  const [infoHolder, setInfoHolder] = useState<TMaterial>(initialState)
+  function updateInfoHolder(changes: Partial<TMaterial>) {
+    setInfoHolder((prev) => ({ ...prev, ...changes }))
+  }
+  function resetInfoHolder() {
+    setInfoHolder(initialState)
+  }
 
-	const { mutate: handleMaterialUpdate, isPending } = useMutation({
-		mutationKey: ["update-material", materialId],
-		mutationFn: updateMaterial,
-		onMutate: async () => {
-			if (callbacks?.onMutate) callbacks.onMutate();
-		},
-		onSuccess: async (data) => {
-			if (callbacks?.onSuccess) callbacks.onSuccess();
-			resetInfoHolder();
-			closeModal();
-			return toast.success(data);
-		},
-		onSettled: async () => {
-			if (callbacks?.onSettled) callbacks.onSettled();
-		},
-		onError: (error) => {
-			const msg = getErrorMessage(error);
-			return toast.error(msg);
-		},
-	});
-	useEffect(() => {
-		if (material) setInfoHolder(material);
-	}, [material]);
+  const { mutate: handleMaterialUpdate, isPending } = useMutation({
+    mutationKey: ['update-material', materialId],
+    mutationFn: updateMaterial,
+    onMutate: async () => {
+      if (callbacks?.onMutate) callbacks.onMutate()
+    },
+    onSuccess: async (data) => {
+      if (callbacks?.onSuccess) callbacks.onSuccess()
+      resetInfoHolder()
+      closeModal()
+      return toast.success(data)
+    },
+    onSettled: async () => {
+      if (callbacks?.onSettled) callbacks.onSettled()
+    },
+    onError: (error) => {
+      const msg = getErrorMessage(error)
+      return toast.error(msg)
+    },
+  })
+  useEffect(() => {
+    if (material) setInfoHolder(material)
+  }, [material])
 
-	const TITLE = "EDITAR MATERIAL";
-	const DESCRIPTION = "Preencha os dados do Material.";
-	const BUTTON_TEXT = "EDITAR MATERIAL";
+  const TITLE = 'EDITAR MATERIAL'
+  const DESCRIPTION = 'Preencha os dados do Material.'
+  const BUTTON_TEXT = 'EDITAR MATERIAL'
 
-	return isDesktop ? (
-		<Dialog open={true} onOpenChange={closeModal}>
-			<DialogContent className="min-w-[80%] w-[80%] h-[85vh]">
-				<DialogHeader>
-					<DialogTitle>{TITLE}</DialogTitle>
-					<DialogDescription>{DESCRIPTION}</DialogDescription>
-				</DialogHeader>
-				<div className="flex-1 overflow-auto">
-					<MaterialContent session={session} materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-				</div>
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button variant="outline">FECHAR</Button>
-					</DialogClose>
-					<LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
-						{BUTTON_TEXT}
-					</LoadingButton>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
-	) : (
-		<Drawer open={true} onOpenChange={closeModal}>
-			<DrawerContent className="h-[85vh] flex flex-col">
-				<DrawerHeader>
-					<DrawerTitle>{TITLE}</DrawerTitle>
-					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
-				</DrawerHeader>
-				<div className="flex-1 overflow-auto">
-					<MaterialContent session={session} materialId={materialId} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-				</div>
-				<DrawerFooter>
-					<DrawerClose asChild>
-						<Button variant="outline">FECHAR</Button>
-					</DrawerClose>
+  return isDesktop ? (
+    <Dialog open={true} onOpenChange={closeModal}>
+      <DialogContent className="h-[85vh] w-[80%] min-w-[80%]">
+        <DialogHeader>
+          <DialogTitle>{TITLE}</DialogTitle>
+          <DialogDescription>{DESCRIPTION}</DialogDescription>
+        </DialogHeader>
+        <div className="flex-1 overflow-auto">
+          <MaterialContent
+            session={session}
+            materialId={materialId}
+            infoHolder={infoHolder}
+            updateInfoHolder={updateInfoHolder}
+            deletionData={deletionData}
+            closeModal={closeModal}
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">FECHAR</Button>
+          </DialogClose>
+          <LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
+            {BUTTON_TEXT}
+          </LoadingButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ) : (
+    <Drawer open={true} onOpenChange={closeModal}>
+      <DrawerContent className="flex h-[85vh] flex-col">
+        <DrawerHeader>
+          <DrawerTitle>{TITLE}</DrawerTitle>
+          <DrawerDescription>{DESCRIPTION}</DrawerDescription>
+        </DrawerHeader>
+        <div className="flex-1 overflow-auto">
+          <MaterialContent
+            session={session}
+            materialId={materialId}
+            infoHolder={infoHolder}
+            updateInfoHolder={updateInfoHolder}
+            deletionData={deletionData}
+            closeModal={closeModal}
+          />
+        </div>
+        <DrawerFooter>
+          <DrawerClose asChild>
+            <Button variant="outline">FECHAR</Button>
+          </DrawerClose>
 
-					<LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
-						{BUTTON_TEXT}
-					</LoadingButton>
-				</DrawerFooter>
-			</DrawerContent>
-		</Drawer>
-	);
+          <LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
+            {BUTTON_TEXT}
+          </LoadingButton>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
 }
 
-export default EditMaterial;
+export default EditMaterial
 
 type MaterialContentProps = {
-	session: Session;
-	infoHolder: TMaterial;
-	updateInfoHolder: (changes: Partial<TMaterial>) => void;
-	materialId: string;
-};
-function MaterialContent({ session, infoHolder, updateInfoHolder, materialId }: MaterialContentProps) {
-	return (
-		<div className="flex h-full flex-col gap-3 px-4">
-			<MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-			<QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-			<MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-			<UpdateRegistriesBlock materialId={materialId} />
-		</div>
-	);
+  session: Session
+  infoHolder: TMaterial
+  updateInfoHolder: (changes: Partial<TMaterial>) => void
+  materialId: string
+  deletionData?: TMaterialDeletionDataOutput['data']
+  closeModal: () => void
+}
+function MaterialContent({ session, infoHolder, updateInfoHolder, materialId, deletionData, closeModal }: MaterialContentProps) {
+  return (
+    <div className="flex h-full flex-col gap-3 px-4">
+      <MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+      <QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+      <MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+      <UpdateRegistriesBlock materialId={materialId} />
+      {deletionData ? <Advanced materialId={materialId} material={infoHolder} deletionData={deletionData} closeModal={closeModal} /> : null}
+    </div>
+  )
 }

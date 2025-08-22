@@ -149,9 +149,10 @@ export async function createMaterialSupplier({ info }: { info: TMaterialSupplier
   }
 }
 
-export async function deleteMaterial({ id, type, mergeIntoId }: TDeleteMaterialInput) {
+export async function deleteMaterial(payload: TDeleteMaterialInput) {
   try {
-    const { data } = await axios.post<TDeleteMaterialOutput>('/api/almoxarifado/materiais/exclusao', { id, type, mergeIntoId })
+    console.log(`[INFO] [DELETE-MATERIAL] Running ${payload.type} for ${payload.id}`)
+    const { data } = await axios.post<TDeleteMaterialOutput>('/api/almoxarifado/materiais/exclusao', payload)
     return data
   } catch (error) {
     throw error

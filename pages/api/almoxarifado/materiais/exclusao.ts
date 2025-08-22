@@ -32,7 +32,7 @@ async function getMaterialDeletionData(input: z.infer<typeof GetMaterialDeletion
   const { id } = input
 
   const warehouseDb = await connectToWarehouseDatabase()
-  const materialsCollection = warehouseDb.collection<TMaterial>('materials')
+  const materialsCollection = warehouseDb.collection<TMaterial>('material')
   const warehouseFormulariesCollection = warehouseDb.collection<TNewWarehouseFormulary>('formularios')
 
   const projectsDb = await connectToDatabase()
@@ -107,32 +107,53 @@ const getMaterialDeletionDataHandler: NextApiHandler<TMaterialDeletionDataOutput
   res.status(200).json(data)
 }
 
-const DeleteMaterialInputSchema = z.object({
-  id: z
-    .string({
-      required_error: 'ID do material não informado.',
-      invalid_type_error: 'Tipo não válido para o ID do material.',
-    })
-    .refine((v) => ObjectId.isValid(v), {
-      message: 'ID do material inválido.',
-    }),
-  type: DeletionTypesEnumSchema,
-  mergeIntoId: z
-    .string({
-      required_error: 'ID do material para mesclagem não informado.',
-      invalid_type_error: 'Tipo não válido para o ID do material para mesclagem.',
-    })
-    .refine((v) => ObjectId.isValid(v), {
-      message: 'ID do material para mesclagem inválido.',
-    })
-    .optional()
-    .nullable(),
-})
+const DeleteMaterialInputSchema = z.discriminatedUnion('type', [
+  z.object({
+    id: z
+      .string({
+        required_error: 'ID do material não informado.',
+        invalid_type_error: 'Tipo não válido para o ID do material.',
+      })
+      .refine((v) => ObjectId.isValid(v), {
+        message: 'ID do material inválido.',
+      }),
+    type: z.literal(DeletionTypesEnumSchema.Values['hard-delete']),
+  }),
+  z.object({
+    id: z
+      .string({
+        required_error: 'ID do material não informado.',
+        invalid_type_error: 'Tipo não válido para o ID do material.',
+      })
+      .refine((v) => ObjectId.isValid(v), {
+        message: 'ID do material inválido.',
+      }),
+    type: z.literal(DeletionTypesEnumSchema.Values['soft-delete']),
+  }),
+  z.object({
+    id: z
+      .string({
+        required_error: 'ID do material não informado.',
+        invalid_type_error: 'Tipo não válido para o ID do material.',
+      })
+      .refine((v) => ObjectId.isValid(v), {
+        message: 'ID do material inválido.',
+      }),
+    type: z.literal(DeletionTypesEnumSchema.Values['merge']),
+    mergeIntoId: z
+      .string({
+        required_error: 'ID do material para mesclagem não informado.',
+        invalid_type_error: 'Tipo não válido para o ID do material para mesclagem.',
+      })
+      .refine((v) => ObjectId.isValid(v), {
+        message: 'ID do material para mesclagem inválido.',
+      }),
+    mergeMethod: z.enum(['combine', 'replace-target-with-origin', 'keep-target']),
+  }),
+])
 export type TDeleteMaterialInput = z.infer<typeof DeleteMaterialInputSchema>
 
 async function deleteMaterial(payload: TDeleteMaterialInput) {
-  const { id, type, mergeIntoId } = payload
-
   const dbClient = await clientPromise
   const warehouseDb: Db = dbClient.db('almoxarifado')
   const materialsCollection = warehouseDb.collection<TMaterial>('material')
@@ -147,105 +168,155 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 
   const dbSession = dbClient.startSession()
 
+  const references = {
+    purchases: await purchasesCollection.count({
+      'composicao.materialId': payload.id,
+    }),
+    warehouseFormularies: await warehouseFormulariesCollection.count({
+      'materiais.id': payload.id,
+    }),
+    technicalAnalysis: await crmTechnicalAnalyses.count({
+      'suprimentos.itens.idMaterial': payload.id,
+    }),
+    projects: await projectsCollection.count({
+      'alocacoes.idMaterial': payload.id,
+    }),
+  }
+
+  const totalReferences = Object.values(references).reduce((acc, curr) => acc + curr, 0)
   try {
     const result = await dbSession.withTransaction(async () => {
       // Verificar dependências DENTRO da transação
-      const references = {
-        purchases: await purchasesCollection.count(
-          {
-            'composicao.materialId': id,
-          },
-          { session: dbSession }
-        ),
-        warehouseFormularies: await warehouseFormulariesCollection.count(
-          {
-            'materiais.id': id,
-          },
-          { session: dbSession }
-        ),
-        technicalAnalysis: await crmTechnicalAnalyses.count(
-          {
-            'suprimentos.itens.idMaterial': id,
-          },
-          { session: dbSession }
-        ),
-        projects: await projectsCollection.count(
-          {
-            'alocacoes.idMaterial': id,
-          },
-          { session: dbSession }
-        ),
-      }
 
-      const totalReferences = Object.values(references).reduce((acc, curr) => acc + curr, 0)
-
-      if (type === 'hard-delete') {
+      if (payload.type === 'hard-delete') {
+        console.log(`[INFO] [DELETE-MATERIAL] [HARD_DELETE] Running hard delete for ${payload.id}`)
         if (totalReferences > 0) {
           throw new createHttpError.BadRequest('Material possui dependências e não pode ser excluído.')
         }
-        await materialsCollection.deleteOne({ _id: new ObjectId(id) }, { session: dbSession })
+        await materialsCollection.deleteOne({ _id: new ObjectId(payload.id) }, { session: dbSession })
 
         return {
-          data: { deletedId: id },
+          data: { deletedId: payload.id },
           message: 'Material excluído com sucesso.',
         }
       }
 
-      if (type === 'soft-delete') {
-        await materialsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { dataExclusao: new Date().toISOString() } }, { session: dbSession })
+      if (payload.type === 'soft-delete') {
+        console.log(`[INFO] [DELETE-MATERIAL] [SOFT_DELETE] Running soft delete for ${payload.id}`)
+        await materialsCollection.updateOne(
+          { _id: new ObjectId(payload.id) },
+          { $set: { dataExclusao: new Date().toISOString() } },
+          { session: dbSession }
+        )
 
         return {
-          data: { deletedId: id },
+          data: { deletedId: payload.id },
           message: 'Material excluído com sucesso.',
         }
       }
 
-      if (type === 'merge') {
-        if (!mergeIntoId) {
+      if (payload.type === 'merge') {
+        console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Running merge for ${payload.id} into ${payload.mergeIntoId}`)
+        if (!payload.mergeIntoId) {
           throw new createHttpError.BadRequest('ID do material para mesclagem não informado.')
         }
 
-        await materialsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { dataExclusao: new Date().toISOString() } }, { session: dbSession })
+        const originMaterial = await materialsCollection.findOne({ _id: new ObjectId(payload.id) }, { session: dbSession })
+        const targetMaterial = await materialsCollection.findOne({ _id: new ObjectId(payload.mergeIntoId) }, { session: dbSession })
+        if (!originMaterial || !targetMaterial) {
+          throw new createHttpError.NotFound('Material de origem ou destino não encontrado.')
+        }
+        // First, soft deleting the origin material
+        await materialsCollection.updateOne(
+          { _id: new ObjectId(payload.id) },
+          { $set: { dataExclusao: new Date().toISOString() } },
+          { session: dbSession }
+        )
 
+        if (payload.mergeMethod === 'combine') {
+          // Combining the origin material into the target material
+          const weightedPrices =
+            (originMaterial.preco * originMaterial.qtde + targetMaterial.preco * targetMaterial.qtde) / (originMaterial.qtde + targetMaterial.qtde)
+          const finalQty = originMaterial.qtde + targetMaterial.qtde
+          console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Combining origin material into target material.`, {
+            originMaterialPrice: originMaterial.preco,
+            originMaterialQty: originMaterial.qtde,
+            targetMaterialPrice: targetMaterial.preco,
+            targetMaterialQty: targetMaterial.qtde,
+            finalPrice: weightedPrices,
+            finalQty: finalQty,
+          })
+
+          // Updating the target material with the new values
+          await materialsCollection.updateOne(
+            { _id: new ObjectId(payload.mergeIntoId) },
+            { $set: { qtde: finalQty, preco: weightedPrices } },
+            { session: dbSession }
+          )
+          // Deleting the origin material
+          await materialsCollection.deleteOne({ _id: new ObjectId(payload.id) }, { session: dbSession })
+        }
+        if (payload.mergeMethod === 'replace-target-with-origin') {
+          console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Replacing target material data with origin material.`)
+          // Replacing the target material with the origin material
+          await materialsCollection.updateOne(
+            { _id: new ObjectId(payload.mergeIntoId) },
+            { $set: { qtde: originMaterial.qtde, preco: originMaterial.preco } },
+            { session: dbSession }
+          )
+        }
+        if (payload.mergeMethod === 'keep-target') {
+          // In this case, nothing needs to be done
+          console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Keep target method selected. Nothing to do.`)
+        }
         // Atualizações com session em todas as operações
+        console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Updating purchases...`)
         const updatePurchasesResponse = await purchasesCollection.updateMany(
-          { 'composicao.materialId': id },
-          { $set: { 'composicao.$[elem].materialId': mergeIntoId } },
+          { 'composicao.materialId': payload.id },
+          { $set: { 'composicao.$[elem].materialId': payload.mergeIntoId } },
           {
             session: dbSession,
-            arrayFilters: [{ 'elem.materialId': id }],
+            arrayFilters: [{ 'elem.materialId': payload.id }],
           }
         )
 
         const updateWarehouseFormulariesResponse = await warehouseFormulariesCollection.updateMany(
-          { 'materiais.id': id },
-          { $set: { 'materiais.$[elem].id': mergeIntoId } },
+          { 'materiais.id': payload.id },
+          { $set: { 'materiais.$[elem].id': payload.mergeIntoId } },
           {
             session: dbSession,
-            arrayFilters: [{ 'elem.id': id }],
+            arrayFilters: [{ 'elem.id': payload.id }],
           }
         )
 
         const updateTechnicalAnalysisResponse = await crmTechnicalAnalyses.updateMany(
-          { 'suprimentos.itens.idMaterial': id },
-          { $set: { 'suprimentos.itens.$[elem].idMaterial': mergeIntoId } },
+          { 'suprimentos.itens.idMaterial': payload.id },
+          { $set: { 'suprimentos.itens.$[elem].idMaterial': payload.mergeIntoId } },
           {
             session: dbSession,
-            arrayFilters: [{ 'elem.idMaterial': id }],
+            arrayFilters: [{ 'elem.idMaterial': payload.id }],
           }
         )
 
         const updateProjectsResponse = await projectsCollection.updateMany(
-          { 'alocacoes.idMaterial': id },
-          { $set: { 'alocacoes.$[elem].idMaterial': mergeIntoId } },
+          { 'alocacoes.idMaterial': payload.id },
+          { $set: { 'alocacoes.$[elem].idMaterial': payload.mergeIntoId } },
           {
             session: dbSession,
-            arrayFilters: [{ 'elem.idMaterial': id }],
+            arrayFilters: [{ 'elem.idMaterial': payload.id }],
           }
         )
-
+        console.log(`[INFO] [DELETE-MATERIAL] [MERGE] Merge completed.`, {
+          purchases: { matched: updatePurchasesResponse.matchedCount, updated: updatePurchasesResponse.modifiedCount },
+          warehouseFormularies: {
+            matched: updateWarehouseFormulariesResponse.matchedCount,
+            updated: updateWarehouseFormulariesResponse.modifiedCount,
+          },
+          technicalAnalysis: { matched: updateTechnicalAnalysisResponse.matchedCount, updated: updateTechnicalAnalysisResponse.modifiedCount },
+          projects: { matched: updateProjectsResponse.matchedCount, updated: updateProjectsResponse.modifiedCount },
+        })
         return {
-          data: { deletedId: id },
+          data: { deletedId: payload.id },
           message: 'Material mesclado com sucesso.',
           mergeStats: {
             purchases: { matched: updatePurchasesResponse.matchedCount, updated: updatePurchasesResponse.modifiedCount },
@@ -283,9 +354,11 @@ export type TDeleteMaterialOutput = Awaited<ReturnType<typeof deleteMaterial>>
 const deleteMaterialHandler: NextApiHandler<TDeleteMaterialOutput> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const { id, type, mergeIntoId } = DeleteMaterialInputSchema.parse(req.body)
+  console.log(`[INFO] [DELETE-MATERIAL] Handler called by ${session.user.nome}`)
+  console.log(req.body)
+  const payload = DeleteMaterialInputSchema.parse(req.body)
 
-  const data = await deleteMaterial({ id, type, mergeIntoId })
+  const data = await deleteMaterial(payload)
 
   res.status(200).json(data)
 }

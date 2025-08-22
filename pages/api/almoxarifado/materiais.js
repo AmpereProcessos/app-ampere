@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/react'
+import { getSession } from '../../../components/providers/SessionProvider'
 import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import connectToProjectsDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'

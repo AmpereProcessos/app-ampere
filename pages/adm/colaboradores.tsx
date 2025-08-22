@@ -1,106 +1,111 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from 'react'
+import { useSession } from '@/components/providers/SessionProvider'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 
-import NewEmployee from "@/components/identificador/colaboradores/NewEmployee";
+import NewEmployee from '@/components/identificador/colaboradores/NewEmployee'
 
-import EmployeeCard from "@/components/identificador/colaboradores/EmployeeCard";
-import LoadingPage from "@/components/utils/LoadingPage";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import EditEmployee from "@/components/identificador/colaboradores/EditEmployee";
+import EmployeeCard from '@/components/identificador/colaboradores/EmployeeCard'
+import LoadingPage from '@/components/utils/LoadingPage'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import EditEmployee from '@/components/identificador/colaboradores/EditEmployee'
 
-import { useEmployees } from "@/utils/methods/query/users";
-import { AnimatePresence, motion } from "framer-motion";
-import TextInput from "@/components/inputs/Text";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import CheckboxInput from "@/components/inputs/Checkbox";
-import Link from "next/link";
+import { useEmployees } from '@/utils/methods/query/users'
+import { AnimatePresence, motion } from 'framer-motion'
+import TextInput from '@/components/inputs/Text'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import CheckboxInput from '@/components/inputs/Checkbox'
+import Link from 'next/link'
 type TEditModal = {
-	isOpen: boolean;
-	id: string | null;
-};
+  isOpen: boolean
+  id: string | null
+}
 
 function Employees() {
-	const router = useRouter();
-	const queryClient = useQueryClient();
-	const { data: session, status } = useSession({ required: true, onUnauthenticated: () => router.push("/auth/signin") });
-	const [activeOnly, setActiveOnly] = useState<boolean>(true);
-	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
-	const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees({ active: activeOnly });
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const { session, status } = useSession({ required: true })
+  const [activeOnly, setActiveOnly] = useState<boolean>(true)
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+  const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees({ active: activeOnly })
 
-	const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false);
-	const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null });
+  const [newEmployeeModalIsOpen, setNewEmployeeModalIsOpen] = useState<boolean>(false)
+  const [editEmployeeModal, setEditEmployeeModal] = useState<TEditModal>({ isOpen: false, id: null })
 
-	if (status != "authenticated") return <LoadingPage />;
-	return (
-		<div className="grow p-6">
-			<div className="flex h-full grow flex-col">
-				<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-					<div className="flex w-full items-center justify-between">
-						<div className="flex flex-col">
-							<p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
-							<div className="flex items-center gap-2">
-								<p className="text-sm tracking-tight text-gray-500">{employees?.length || "..."} colaboradores contabilizados</p>
-								<CheckboxInput labelFalse="COLABORADORES ATIVOS" labelTrue="COLABORADORES ATIVOS" checked={activeOnly} handleChange={(value) => setActiveOnly(value)} />
-							</div>
-						</div>
-						{dropdownMenuVisible ? (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(false)} />
-							</div>
-						) : (
-							<div className="cursor-pointer text-gray-600 hover:text-blue-400">
-								<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(true)} />
-							</div>
-						)}
-					</div>
-					<div className="flex w-full items-center justify-between gap-2">
-						<div className="flex items-center gap-2">
-							<Link href={"/adm/propriedades"}>
-								<div className="whitespace-nowrap rounded bg-blue-900 px-4 py-1 text-sm font-medium text-white shadow disabled:bg-blue-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white">
-									PROPRIEDADES
-								</div>
-							</Link>
-						</div>
+  if (status != 'authenticated') return <LoadingPage />
+  return (
+    <div className="grow p-6">
+      <div className="flex h-full grow flex-col">
+        <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE COLABORADORES</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm tracking-tight text-gray-500">{employees?.length || '...'} colaboradores contabilizados</p>
+                <CheckboxInput
+                  labelFalse="COLABORADORES ATIVOS"
+                  labelTrue="COLABORADORES ATIVOS"
+                  checked={activeOnly}
+                  handleChange={(value) => setActiveOnly(value)}
+                />
+              </div>
+            </div>
+            {dropdownMenuVisible ? (
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+              </div>
+            ) : (
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+              </div>
+            )}
+          </div>
+          <div className="flex w-full items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Link href={'/adm/propriedades'}>
+                <div className="whitespace-nowrap rounded bg-blue-900 px-4 py-1 text-sm font-medium text-white shadow disabled:bg-blue-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white">
+                  PROPRIEDADES
+                </div>
+              </Link>
+            </div>
 
-						<button
-							onClick={() => setNewEmployeeModalIsOpen(true)}
-							className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
-						>
-							NOVO COLABORADOR
-						</button>
-					</div>
-					<AnimatePresence>
-						{dropdownMenuVisible ? (
-							<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-								<div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
-									<TextInput
-										label={"NOME"}
-										value={filters.search}
-										placeholder={"Digite o nome do colaborador..."}
-										handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-									/>
-								</div>
-							</motion.div>
-						) : null}
-					</AnimatePresence>
-				</div>
-				<div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg="Erro ao buscar usuários" /> : null}
-					{isSuccess &&
-						employees.map((employee, index: number) => (
-							<EmployeeCard key={employee._id?.toString()} employee={employee} openModal={(id) => setEditEmployeeModal({ isOpen: true, id: id })} />
-						))}
-				</div>
-				{newEmployeeModalIsOpen ? <NewEmployee closeModal={() => setNewEmployeeModalIsOpen(false)} session={session} /> : null}
-				{editEmployeeModal.isOpen && editEmployeeModal.id ? (
-					<EditEmployee userId={editEmployeeModal.id} closeModal={() => setEditEmployeeModal({ isOpen: false, id: null })} session={session} />
-				) : null}
-			</div>
-		</div>
-	);
+            <button
+              onClick={() => setNewEmployeeModalIsOpen(true)}
+              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            >
+              NOVO COLABORADOR
+            </button>
+          </div>
+          <AnimatePresence>
+            {dropdownMenuVisible ? (
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
+                  <TextInput
+                    label={'NOME'}
+                    value={filters.search}
+                    placeholder={'Digite o nome do colaborador...'}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+        <div className="flex w-full flex-wrap items-start justify-around gap-2 py-2">
+          {isLoading ? <LoadingPage /> : null}
+          {isError ? <ErrorComponent msg="Erro ao buscar usuários" /> : null}
+          {isSuccess &&
+            employees.map((employee, index: number) => (
+              <EmployeeCard key={employee._id?.toString()} employee={employee} openModal={(id) => setEditEmployeeModal({ isOpen: true, id: id })} />
+            ))}
+        </div>
+        {newEmployeeModalIsOpen ? <NewEmployee closeModal={() => setNewEmployeeModalIsOpen(false)} session={session} /> : null}
+        {editEmployeeModal.isOpen && editEmployeeModal.id ? (
+          <EditEmployee userId={editEmployeeModal.id} closeModal={() => setEditEmployeeModal({ isOpen: false, id: null })} session={session} />
+        ) : null}
+      </div>
+    </div>
+  )
 }
 // type Exportation = {
 //   periodo: string
@@ -195,4 +200,4 @@ function Employees() {
 //     </div>
 //   )
 // }
-export default Employees;
+export default Employees

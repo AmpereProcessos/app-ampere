@@ -10,7 +10,7 @@ import { TPersonalizedTechnicalAnalysisFilter } from '@/utils/schemas/technical-
 import { TUserDTO } from '@/utils/schemas/users'
 import { TechnicalAnalysisComplexity, TechnicalAnalysisSolicitationTypes, technicalAnalysisStatus } from '@/utils/select-options'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useState } from 'react'
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }))
@@ -22,7 +22,7 @@ type FilterMenuProps = {
   setAnalysts: (authors: string[] | null) => void
   applicantsOptions?: TUserDTO[]
   analystsOptions?: TUserDTOSimplified[]
-  session: Session
+  session: TAuthSession
   queryLoading: boolean
   resetSelectedPage: () => void
 }

@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import connectToDatabase from '../../../../utils/services/mongodb/projects'
 
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { TProject } from '@/utils/schemas/projects'
 import { Collection, Db } from 'mongodb'
 import { formatDecimalPlaces } from '@/utils/constants'
@@ -11,7 +11,7 @@ import createHttpError from 'http-errors'
 import { TSaleGraphStat } from '@/utils/schemas/stats'
 import { getGenFactorByOrientation } from '@/utils/methods/shared'
 
-function getQueryByVisualization(session: Session) {
+function getQueryByVisualization(session: TAuthSession) {
   const visualization = session.user.visualizacao.tipo
   const seller = session.user.visualizacao.referencia
 

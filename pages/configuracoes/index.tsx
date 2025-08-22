@@ -1,11 +1,11 @@
 import AllocatorsBlock from '@/components/identificador/configuracoes/AllocatorsBlock'
 import LoadingPage from '@/components/utils/LoadingPage'
-import { Session } from 'next-auth'
-import { useSession } from 'next-auth/react'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { useSession } from '@/components/providers/SessionProvider'
 import React, { useState } from 'react'
 
 function ConfigurationsMainPage() {
-  const { data: session, status } = useSession({ required: true })
+  const { session, status } = useSession({ required: true })
   if (status != 'authenticated') return <LoadingPage />
   return <ConfigurationBlock session={session} />
 }
@@ -14,7 +14,7 @@ export default ConfigurationsMainPage
 
 type ConfigurationPageModes = 'profile' | 'users' | 'allocators'
 type ConfigurationBlockProps = {
-  session: Session
+  session: TAuthSession
 }
 function ConfigurationBlock({ session }: ConfigurationBlockProps) {
   const [mode, setMode] = useState<ConfigurationPageModes>('allocators')

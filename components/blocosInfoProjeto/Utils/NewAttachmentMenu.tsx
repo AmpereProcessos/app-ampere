@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Session } from 'next-auth'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -18,6 +17,7 @@ import { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import { TAttachmentHolder } from '@/utils/schemas/useful'
 import { FileReferenceCategories } from '@/utils/select-options'
 import { formatLongString, GeneralVisibleHiddenExitMotionVariants, getFileTypeTitle, isFileImage } from '@/utils/constants'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 type TNewFileAttachmentHolder = {
   fileReference: {
@@ -41,7 +41,7 @@ type NewAttachmentMenuProps = {
   projectId: string
   projectName: string
   projectCode: string
-  session: Session
+  session: TAuthSession
   allowedCategories: string[]
   callbacks?: {
     onMutate?: () => void

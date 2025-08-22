@@ -10,10 +10,10 @@ import { useRevenues } from '../../../utils/methods/query/revenues'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { TRevenueDTO } from '@/utils/schemas/revenues'
 import EditRevenue from './modals/EditRevenue'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 type RevenuesWrapperProps = {
-  session: Session
+  session: TAuthSession
 }
 function RevenuesWrapper({ session }: RevenuesWrapperProps) {
   const { data: revenues, isLoading, isError, isSuccess } = useRevenues()

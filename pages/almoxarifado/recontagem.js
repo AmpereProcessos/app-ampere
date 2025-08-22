@@ -1,24 +1,17 @@
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import { useSession } from '../../components/providers/SessionProvider'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import Logo from '../../utils//images/logo-texto-azul-vertical.png'
 import LoadingPage from '../../components/utils/LoadingPage'
-import Image from 'next/image'
-import Link from 'next/link'
-import Select from 'react-select'
-import { RiArrowDownSFill, RiArrowUpSFill } from 'react-icons/ri'
+
 import SaveButton from '../../components/utils/Buttons/SaveButton'
 import { FaSave } from 'react-icons/fa'
 import dayjs from 'dayjs'
 
 function Recontagem() {
   const router = useRouter()
-  const { data: session, status } = useSession({
+  const { session, status } = useSession({
     required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
   })
   const [showFilter, setShowFilter] = useState(true)
   const [materials, setMaterials] = useState()

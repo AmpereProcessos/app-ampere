@@ -5,7 +5,7 @@ import connectToAdministrationDatabase from '@/utils/services/mongodb/administra
 import connectToDatabase from '@/utils/services/mongodb/projects'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { GetServerSidePropsContext } from 'next'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 
 import ApplicantBlock from '@/components/identificador/crm-homologacoes/ApplicantBlock'
@@ -42,7 +42,7 @@ type HomologationPublicFormularyProps = {
 function HomologationPublicFormulary({ projectJSON, sessionJSON, error }: HomologationPublicFormularyProps) {
   if (error) return <ErrorComponent msg={error} />
   const project: TProjectForHomologationDTO = JSON.parse(projectJSON)
-  const session: Session = JSON.parse(sessionJSON)
+  const session: TAuthSession = JSON.parse(sessionJSON)
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<THomologation>({
     status: 'PENDENTE',
@@ -262,7 +262,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   )
   const user = await usersCollection.findOne({ _id: new ObjectId(process.env.PUBLIC_USER_ID) })
 
-  const session: Session | null = user
+  const session: TAuthSession | null = user
     ? {
         expires: '',
         user: {

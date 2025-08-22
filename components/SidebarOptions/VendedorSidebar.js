@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React from 'react'
 import { RiDashboardFill } from 'react-icons/ri'
-import { TbRecharging } from 'react-icons/tb'
 import { FaSolarPanel } from 'react-icons/fa'
-import { TbReportAnalytics } from 'react-icons/tb'
-import { AiOutlineForm } from 'react-icons/ai'
 import { MdAddIcCall } from 'react-icons/md'
 
-import { BsFillPatchCheckFill } from 'react-icons/bs'
+import { TbReportAnalytics } from 'react-icons/tb'
 
 import { ImFolderOpen } from 'react-icons/im'
 

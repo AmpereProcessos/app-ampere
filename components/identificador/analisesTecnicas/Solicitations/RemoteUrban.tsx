@@ -7,13 +7,13 @@ import StructureInfo from '../Stages/StructureInfo'
 import InstallationInfo from '../Stages/InstallationInfo'
 import ReviewInfo from '../Stages/ReviewInfo'
 
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { TTechnicalAnalysis } from '@/utils/schemas/technical-analysis'
 import { TFileHolder } from '@/utils/schemas/crm/file-reference.schema'
 import { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 
 type RemoteUrbanProps = {
-  session: Session
+  session: TAuthSession
   infoHolder: TTechnicalAnalysis
   setInfoHolder: React.Dispatch<React.SetStateAction<TTechnicalAnalysis>>
   resetSolicitationType: () => void

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '../../../../components/providers/SessionProvider'
 import { useCRMUsers } from '../../../../utils/methods/query/crmUsers'
 import SelectInputWithImages from '../../../inputs/SelectWithImages'
 import { formatDateAsLocale, formatNameAsInitials } from '../../../../utils/methods/formatting'
@@ -15,7 +15,7 @@ import { createActivityFromTechAnalysys } from '../../../../utils/methods/mutati
 import { notifySellerInCRM } from '../../../../utils/methods/handlers'
 
 function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
-  const { data: session } = useSession()
+  const { session } = useSession({ required: true })
   const { data: crmUsers } = useCRMUsers({ enabled: true })
   const [pendencyHolder, setPendencyHolder] = useState({
     categoria: null,

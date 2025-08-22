@@ -1,19 +1,8 @@
-import React, { useState } from 'react'
-import { Session } from 'next-auth'
-import { AnimatePresence, motion } from 'framer-motion'
-
-import { TActivity } from '@/utils/schemas/activities'
-
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { MdOutlineCheckBox } from 'react-icons/md'
 
-import SelectInputWithImages from '../inputs/SelectWithImages'
-import { formatNameAsInitials } from '@/utils/methods/formatting'
-import toast from 'react-hot-toast'
-import Avatar from '../utils/Avatar'
 import { useProjectActivities } from '@/utils/methods/query/activities'
-import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { createActivity } from '@/utils/methods/mutation/activities'
+
 import { useQueryClient } from '@tanstack/react-query'
 import NewProjectActivityMenu from '../identificador/atividades/NewProjectActivityMenu'
 import LoadingPage from '../utils/LoadingPage'
@@ -44,7 +33,7 @@ type InfoAtividadesBlockProps = {
   projectId: string
   projectName: string
   projectIdentifier: string | number
-  session: Session
+  session: TAuthSession
 }
 function InfoAtividadesBlock({ projectId, projectName, projectIdentifier, session }: InfoAtividadesBlockProps) {
   const queryClient = useQueryClient()

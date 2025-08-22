@@ -15,7 +15,7 @@ import TextInput from '@/components/inputs/Text'
 import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { revenueSources } from '@/utils/select-options'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { usePendingPayments } from '@/utils/methods/query/expenses'
 import EditExpense from '../modals/EditExpense'
 import { TPaymentUnwindSimplifiedDTO } from '@/utils/schemas/expenses'
@@ -26,7 +26,7 @@ import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
 
 type PaymentsBlockProps = {
-  session: Session
+  session: TAuthSession
   storedPaymentsApportionmentsFilter: string[]
   storedPaymentsCategoriesFilter: string[]
 }

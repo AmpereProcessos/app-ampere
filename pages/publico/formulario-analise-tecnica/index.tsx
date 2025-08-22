@@ -22,7 +22,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { getMetadata, ref } from 'firebase/storage'
 import { Collection, Db, ObjectId } from 'mongodb'
 import { GetServerSidePropsContext } from 'next'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsFillClipboardCheckFill } from 'react-icons/bs'
@@ -41,7 +41,7 @@ type TechnicalAnalysisProps = {
 function TechnicalAnalysis({ projectJSON, sessionJSON, error }: TechnicalAnalysisProps) {
   if (error) return <ErrorComponent msg={error} />
   const project: TProjectForAnalysisDTO = JSON.parse(projectJSON)
-  const session: Session = JSON.parse(sessionJSON)
+  const session: TAuthSession = JSON.parse(sessionJSON)
   const queryClient = useQueryClient()
   const [infoHolder, setInfoHolder] = useState<TTechnicalAnalysis>({
     idParceiro: '65454ba15cf3e3ecf534b308',
@@ -387,7 +387,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   )
   const user = await usersCollection.findOne({ _id: new ObjectId(process.env.PUBLIC_USER_ID) })
 
-  const session: Session | null = user
+  const session: TAuthSession | null = user
     ? {
         expires: '',
         user: {

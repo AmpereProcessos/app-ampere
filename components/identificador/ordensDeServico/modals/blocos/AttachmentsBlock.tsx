@@ -6,14 +6,14 @@ import { cn } from '@/lib/utils'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { useFileReferences } from '@/utils/methods/query/crm/file-references'
 import { TFileReferencesQueryParams } from '@/utils/schemas/crm/file-reference.schema'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useQueryClient } from '@tanstack/react-query'
-import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import { MdAttachFile, MdDashboard } from 'react-icons/md'
 
 type ServiceOrderFileReferencesProps = {
   attachmentPrefix: string
-  session: Session
+  session: TAuthSession
   projectId?: string
   serviceOrderId: string
 }

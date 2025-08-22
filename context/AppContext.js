@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { createContext, useState, useEffect } from 'react'
 import Router, { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { useSession } from '../components/providers/SessionProvider'
 export const AppContext = createContext()
 
 export function AppProvider({ children }) {
-  const router = useRouter()
-  const { data: session, status } = useSession()
+  const { session } = useSession({ required: true })
   return (
     <AppContext.Provider
       value={{

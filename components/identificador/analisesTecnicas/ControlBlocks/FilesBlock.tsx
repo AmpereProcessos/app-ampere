@@ -2,7 +2,7 @@ import React from 'react'
 
 import Link from 'next/link'
 
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useFileReferencesByAnalysisId } from '@/utils/methods/query/crm/file-references'
 import FileReferenceCard from '../../referencias-arquivos/FileReferenceCard'
 import AttachFileMenu from './Utils/AttachFileMenu'
@@ -10,7 +10,7 @@ import AttachFileMenu from './Utils/AttachFileMenu'
 type FilesBlockProps = {
   auxiliarFilesLink?: string | null
   analysisId: string
-  session: Session
+  session: TAuthSession
 }
 function FilesBlock({ auxiliarFilesLink, analysisId, session }: FilesBlockProps) {
   const { data: fileReferences } = useFileReferencesByAnalysisId({ analysisId })

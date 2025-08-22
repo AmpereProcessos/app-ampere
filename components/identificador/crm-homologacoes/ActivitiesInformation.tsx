@@ -1,6 +1,6 @@
 import { useActivitiesByHomologationId } from '@/utils/methods/query/crm/activities'
 import { THomologation, THomologationDTO } from '@/utils/schemas/crm/homologation.schema'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useState } from 'react'
 import { AiFillCloseCircle, AiFillEdit } from 'react-icons/ai'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
@@ -11,7 +11,7 @@ import HomologationActivity from './Utils/HomologationActivity'
 
 type ActivitiesInformationProps = {
   homologation: THomologationDTO
-  session: Session
+  session: TAuthSession
   opportunity: THomologation['oportunidade']
 }
 function ActivitiesInformation({ homologation, session, opportunity }: ActivitiesInformationProps) {

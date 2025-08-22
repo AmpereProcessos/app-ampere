@@ -14,19 +14,17 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import TextInput from '@/components/inputs/Text'
-import SelectInput from '@/components/inputs/Select'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { revenueSources } from '@/utils/select-options'
-import { useLocalStorage } from '@/lib/hooks/local-storage'
 import EditRevenue from '../modals/EditRevenue'
-import { Session } from 'next-auth'
 import { MdDashboard } from 'react-icons/md'
 import { FaDiamond } from 'react-icons/fa6'
 import DateInput from '@/components/inputs/Date'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import { TAuthSession } from '@/lib/authentication/types'
 
 type ReceiptsBlockProps = {
-  session: Session
+  session: TAuthSession
   storedReceiptsTypesFilter: string[]
 }
 function ReceiptsBlock({ session, storedReceiptsTypesFilter }: ReceiptsBlockProps) {

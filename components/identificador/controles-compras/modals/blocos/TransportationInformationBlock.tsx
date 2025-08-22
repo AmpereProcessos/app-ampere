@@ -1,7 +1,7 @@
 import TextInput from '@/components/inputs/Text'
 import { formatToPhone } from '@/utils/methods/formatting'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 
 type PurchaseControlTransportationInformationBlockProps = {

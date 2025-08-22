@@ -5,9 +5,9 @@ import { Collection, Db } from 'mongodb'
 import { TProject } from '@/utils/schemas/projects'
 import { TBirthdayRecord } from '@/utils/schemas/stats'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 
-function getQueryByVisualization(session: Session) {
+function getQueryByVisualization(session: TAuthSession) {
   const visualization = session.user.visualizacao.tipo
   const seller = session.user.visualizacao.referencia
   if (visualization == 'VENDAS') return { 'vendedor.nome': seller }

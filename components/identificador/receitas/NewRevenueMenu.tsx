@@ -7,7 +7,7 @@ import { formatDate } from '@/utils/constants'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { TRevenue } from '@/utils/schemas/revenues'
 import { paymentMethods, revenueSources } from '@/utils/select-options'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import Fractionnements from './Fractionnements'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
@@ -20,7 +20,7 @@ function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fr
 }
 
 type NewRevenueMenuProps = {
-  session: Session
+  session: TAuthSession
   projectId?: string | null
   projectName?: string | null
   projectIdentificator?: string | null

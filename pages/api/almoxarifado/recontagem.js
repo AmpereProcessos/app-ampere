@@ -1,11 +1,9 @@
-import { getSession } from 'next-auth/react'
 import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import { ObjectId } from 'mongodb'
-import { getServerSession } from 'next-auth'
+import { getValidCurrentSessionUncached } from '../../../lib/authentication/session'
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { user } = await getSession({ req: req })
-    console.log(user)
+    const { user } = await getValidCurrentSessionUncached()
     const db = await connectToDatabase(process.env.DB_KEY)
     const collection = db.collection('material')
     let { changes } = req.body

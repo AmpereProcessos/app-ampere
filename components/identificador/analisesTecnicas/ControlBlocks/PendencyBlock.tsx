@@ -1,6 +1,6 @@
 import { useActivitiesByTechnicalAnalysisId } from '@/utils/methods/query/crm/activities'
 import { TTechnicalAnalysisDTO } from '@/utils/schemas/technical-analysis'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import NewActivityMenu from '../../crmAtividades/NewActivityMenu'
 import LoadingPage from '@/components/utils/LoadingPage'
@@ -8,7 +8,7 @@ import ErrorComponent from '@/components/utils/ErrorComponent'
 import TechnicalAnalysisActivity from './Utils/TechnicalAnalysisActivity'
 
 type PendencyBlockProps = {
-  session: Session
+  session: TAuthSession
   technicalAnalysisId: string
   opportunity: { id?: string | null; nome?: string | null }
   infoHolder: TTechnicalAnalysisDTO

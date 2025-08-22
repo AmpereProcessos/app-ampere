@@ -1,4 +1,4 @@
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useRef } from 'react'
@@ -34,7 +34,7 @@ export function useClickOutside(ref: React.MutableRefObject<any>, cb: () => void
 }
 
 type UseUnauthorizedRedirectProps = {
-  session: Session | null
+  session: TAuthSession | null
   routes: string[]
 }
 export function useUnauthorizedRedirect({ session, routes }: UseUnauthorizedRedirectProps) {

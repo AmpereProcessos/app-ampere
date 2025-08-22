@@ -15,7 +15,7 @@ type PostResponse = {
 const createActivity: NextApiHandler<PostResponse> = async (req, res) => {
   const activity = InsertActivitySchema.parse(req.body)
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TActivity> = db.collection('atividades')
 
   const insertResponse = await collection.insertOne({ ...activity, dataInsercao: new Date().toISOString() })
@@ -31,7 +31,7 @@ type GetResponse = {
 const getActivities: NextApiHandler<GetResponse> = async (req, res) => {
   const { id, projectId, responsibleId, onlyOpen } = req.query
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TActivity> = db.collection('atividades')
 
   // In case query is for a specific activity
@@ -69,7 +69,7 @@ const updateActivity: NextApiHandler<PutResponse> = async (req, res) => {
   const changes = UpdateActivitySchema.parse(req.body)
   if (!id || typeof id != 'string' || !ObjectId.isValid(id)) throw new createHttpError.BadRequest('ID inválido.')
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TActivity> = db.collection('atividades')
 
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } })

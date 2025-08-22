@@ -1,7 +1,7 @@
 import { FileReferenceCategories } from '@/utils/select-options'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 
-export function getAllowedCategories({ session }: { session: Session }) {
+export function getAllowedCategories({ session }: { session: TAuthSession }) {
   const permissions = session.user.permissoes
   const categories = FileReferenceCategories.map((f) => {
     if (!f.restrict) return { value: f.value, allowed: true }

@@ -1,20 +1,19 @@
 'use client'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { SessionProvider } from 'next-auth/react'
+
+import { SessionProvider } from '@/components/providers/SessionProvider'
 import React, { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Header from '@/components/Header'
+import Header from '@/components/layout/Header'
 import Sidebar from '@/components/Sidebar'
 import { Toaster } from 'react-hot-toast'
 
-function ProvidersWrapper({ children, session }: { children: React.ReactNode; session: any }) {
+function ProvidersWrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient()
   const [sidebarVisible, setSidebarVisible] = useState(false)
 
   return (
     <>
-      <SessionProvider session={session}>
+      <SessionProvider>
         <QueryClientProvider client={queryClient}>
           <div className="font-Inter flex min-h-[100vh] w-screen max-w-full  flex-col bg-[#fff] xl:min-h-[100vh]">
             <Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />

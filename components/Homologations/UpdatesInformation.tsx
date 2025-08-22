@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import toast from 'react-hot-toast'
-import { Session } from 'next-auth'
 import { BsCalendarPlus } from 'react-icons/bs'
 import Avatar from '../utils/Avatar'
 import { MdDelete } from 'react-icons/md'
@@ -10,15 +9,16 @@ import TextInput from '../inputs/Text'
 import { formatDateAsLocale, formatDateTime } from '@/utils/methods/formatting'
 import DateTimeInput from '../inputs/DateTimeInput'
 import { formatDateInputChange } from '@/utils/methods/shared'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 type UpdatesInformationProps = {
-  session: Session
+  session: TAuthSession
   infoHolder: TProjectDTOWithHomologation
   setInfoHolder: React.Dispatch<React.SetStateAction<TProjectDTOWithHomologation>>
   changes: { [key: string]: any }
   setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
 }
-function UpdatesInformation({ session, infoHolder, setInfoHolder, changes, setChanges }: UpdatesInformationProps) {
+function UpdatesInformation({ session, infoHolder, setInfoHolder, setChanges }: UpdatesInformationProps) {
   const [updateHolder, setUpdateHolder] = useState<TProjectDTOWithHomologation['homologacao']['atualizacoes'][number]>({
     data: new Date().toISOString(),
     descricao: '',

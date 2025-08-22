@@ -1,23 +1,21 @@
 import { Button } from '@/components/ui/button'
-import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
-import { formatNameAsInitials } from '@/utils/methods/formatting'
 import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { useAllocators } from '@/utils/methods/query/allocators'
 import { TAllocatorDTO } from '@/utils/schemas/allocators'
 import { Pencil } from 'lucide-react'
-import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import { BsCalendarPlus } from 'react-icons/bs'
 import { FaLocationDot } from 'react-icons/fa6'
 import ControlAllocator from '../almoxarifado/alocadores/ControlAllocator'
 import NewAllocator from '../almoxarifado/alocadores/NewAllocator'
 import { useQueryClient } from '@tanstack/react-query'
+import { TAuthSession } from '@/lib/authentication/types'
 
 type ConfigurationsAllocatorsBlockProps = {
-  session: Session
+  session: TAuthSession
 }
 function ConfigurationsAllocatorsBlock({ session }: ConfigurationsAllocatorsBlockProps) {
   const queryClient = useQueryClient()

@@ -6,14 +6,14 @@ import { GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import { TPurchaseControl } from '@/utils/schemas/purchases'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCalendarPlus } from 'react-icons/bs'
 import { MdAddBox, MdDelete } from 'react-icons/md'
 
 type PurchaseControlUpdatesInformationBlockProps = {
-  session: Session
+  session: TAuthSession
   infoHolder: TPurchaseControl
   setInfoHolder: React.Dispatch<React.SetStateAction<TPurchaseControl>>
 }
@@ -59,7 +59,7 @@ function PurchaseControlUpdatesInformationBlock({ session, infoHolder, setInfoHo
 export default PurchaseControlUpdatesInformationBlock
 
 type NewUpdateMenuProps = {
-  session: Session
+  session: TAuthSession
   addUpdate: (update: TPurchaseControl['atualizacoes'][number]) => void
   closeMenu: () => void
 }

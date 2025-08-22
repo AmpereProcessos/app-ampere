@@ -14,7 +14,7 @@ import { formatToMoney } from '@/utils/constants'
 import { MdDashboard } from 'react-icons/md'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import Avatar from '@/components/utils/Avatar'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import EditExpense from '../modals/EditExpense'
 import RevenuesFilterMenu from './ExpensesFilterMenu'
 import { useExpensesByFilters } from '@/utils/methods/query/expenses'
@@ -22,7 +22,7 @@ import { TExpensesByFiltersResult } from '@/pages/api/despesas/search'
 import ExpensesFilterMenu from './ExpensesFilterMenu'
 
 type ExpensesBlockProps = {
-  session: Session
+  session: TAuthSession
   storedExpensesApportionmentsFilter: string[]
   storedExpensesCategoriesFilter: string[]
 }

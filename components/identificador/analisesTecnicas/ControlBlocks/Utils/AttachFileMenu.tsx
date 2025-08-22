@@ -8,13 +8,13 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import { storage } from '@/utils/services/firebase/firebase-storage'
 import { getMetadata, ref } from 'firebase/storage'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
 type AttachFileMenuProps = {
   analysisId: string
-  session: Session
+  session: TAuthSession
 }
 function AttachFileMenu({ analysisId, session }: AttachFileMenuProps) {
   const queryClient = useQueryClient()

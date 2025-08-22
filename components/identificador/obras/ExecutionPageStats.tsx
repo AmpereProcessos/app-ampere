@@ -1,50 +1,50 @@
-import { cn } from "@/lib/utils";
-import type { TServiceOrderStatsOutput } from "@/pages/api/ordensDeServico/stats";
-import { SlideMotionVariants } from "@/utils/constants";
-import { useServiceOrdersStats } from "@/utils/methods/query/service-orders";
-import { AnimatePresence, motion } from "framer-motion";
-import { Building2, Check, ChevronDown, ChevronUp, CircleDot, Contact } from "lucide-react";
-import type { Session } from "next-auth";
-import { useState } from "react";
-import { FaPlay } from "react-icons/fa";
+import { cn } from '@/lib/utils'
+import type { TServiceOrderStatsOutput } from '@/pages/api/ordensDeServico/stats'
+import { SlideMotionVariants } from '@/utils/constants'
+import { useServiceOrdersStats } from '@/utils/methods/query/service-orders'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Building2, Check, ChevronDown, ChevronUp, CircleDot, Contact } from 'lucide-react'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { useState } from 'react'
+import { FaPlay } from 'react-icons/fa'
 
 type ExecutionPageStatsProps = {
-	session: Session;
-};
+  session: TAuthSession
+}
 export default function ExecutionPageStats({ session }: ExecutionPageStatsProps) {
-	const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats();
-	return (
-		// <div className="w-full flex flex-col gap-2 p-3 border border-primary/20 shadow-sm rounded-md">
-		<div className="w-full flex flex-col lg:flex-row gap-4">
-			<div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3 lg:flex-row">
-				<div className="flex items-center justify-start gap-2">
-					<FaPlay />
-					<h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS INICIADOS</h1>
-				</div>
-				<h1 className="font-black leading-none">{serviceOrdersStats?.iniciadas || 0}</h1>
-			</div>
-			<div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3 lg:flex-row">
-				<div className="flex items-center justify-start gap-2">
-					<div className={"flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border border-primary bg-blue-500 text-white"}>
-						<CircleDot size={12} />
-					</div>
-					<h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
-				</div>
-				<h1 className="font-black leading-none">{serviceOrdersStats?.emAndamento || 0}</h1>
-			</div>
-			<div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-[400px] lg:flex-row">
-				<div className="flex items-center justify-start gap-2">
-					<div className={"flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border border-primary bg-green-500 text-white"}>
-						<Check size={12} />
-					</div>
-					<h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS EXECUTADOS</h1>
-				</div>
-				<h1 className="font-black leading-none">{serviceOrdersStats?.concluidas || 0}</h1>
-			</div>
-		</div>
+  const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats()
+  return (
+    // <div className="w-full flex flex-col gap-2 p-3 border border-primary/20 shadow-sm rounded-md">
+    <div className="flex w-full flex-col gap-4 lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3 lg:flex-row">
+        <div className="flex items-center justify-start gap-2">
+          <FaPlay />
+          <h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS INICIADOS</h1>
+        </div>
+        <h1 className="font-black leading-none">{serviceOrdersStats?.iniciadas || 0}</h1>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3 lg:flex-row">
+        <div className="flex items-center justify-start gap-2">
+          <div className={'min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-blue-500 text-white'}>
+            <CircleDot size={12} />
+          </div>
+          <h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
+        </div>
+        <h1 className="font-black leading-none">{serviceOrdersStats?.emAndamento || 0}</h1>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 rounded border border-primary/50 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-[400px] lg:flex-row">
+        <div className="flex items-center justify-start gap-2">
+          <div className={'min-h-4 min-w-4 flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-green-500 text-white'}>
+            <Check size={12} />
+          </div>
+          <h1 className="text-xs font-medium leading-none tracking-tight">SERVIÇOS EXECUTADOS</h1>
+        </div>
+        <h1 className="font-black leading-none">{serviceOrdersStats?.concluidas || 0}</h1>
+      </div>
+    </div>
 
-		// </div>
-	);
+    // </div>
+  )
 }
 
 // type ResultsByCityProps = {

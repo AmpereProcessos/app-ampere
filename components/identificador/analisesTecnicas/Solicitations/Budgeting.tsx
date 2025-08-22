@@ -12,7 +12,7 @@ import { TInverter, TKitDTO, TModule } from "@/utils/schemas/crm/kits.schema";
 import { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 import { TEquipment, TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
 import { additionalCostsCategories, ProductItemCategories, units } from "@/utils/select-options";
-import { Session } from "next-auth";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillDelete } from "react-icons/ai";

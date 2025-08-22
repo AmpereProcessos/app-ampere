@@ -4,10 +4,10 @@ import AlertVolts from '../../../utils/svgs/alert-volts.svg'
 import SleepVolts from '../../../utils/svgs/sleep-volts.svg'
 import { useNotifications } from '@/utils/methods/query/notifications'
 
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import NotificationsModal from './NotificationsModal'
 type NotificationBlockProps = {
-  session: Session
+  session: TAuthSession
 }
 function NotificationBlock({ session }: NotificationBlockProps) {
   const { data: notifications } = useNotifications({ id: session.user.id })

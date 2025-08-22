@@ -7,13 +7,13 @@ import { getErrorMessage } from '@/utils/methods/handlers'
 import { useFileReferences } from '@/utils/methods/query/crm/file-references'
 import { TFileReferencesQueryParams } from '@/utils/schemas/crm/file-reference.schema'
 import { useQueryClient } from '@tanstack/react-query'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import { MdAttachFile, MdDashboard } from 'react-icons/md'
 
 type PurchaseControlFileReferencesProps = {
   attachmentPrefix: string
-  session: Session
+  session: TAuthSession
   projectId?: string
   purchaseId: string
 }

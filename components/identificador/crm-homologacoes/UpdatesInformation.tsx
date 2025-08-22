@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { BsCalendarPlus } from 'react-icons/bs'
 
 import { MdDelete } from 'react-icons/md'
@@ -13,7 +13,7 @@ import { formatDateInputChange } from '@/utils/methods/shared'
 import Avatar from '@/components/utils/Avatar'
 
 type UpdatesInformationProps = {
-  session: Session
+  session: TAuthSession
   infoHolder: THomologationDTO
   setInfoHolder: React.Dispatch<React.SetStateAction<THomologationDTO>>
 }

@@ -15,7 +15,7 @@ import connectToWarehouseDatabase from '@/utils/services/mongodb/warehouse'
 import createHttpError from 'http-errors'
 import { type ClientSession, type Collection, type Db, type Filter, ObjectId } from 'mongodb'
 import type { NextApiHandler } from 'next'
-import type { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 type GetResponse = {
   data: TPurchaseControlWithProjectDTO | TPurchaseControl[]
@@ -350,7 +350,7 @@ type HandlePurchaseControlAllocationsImprovedParams = {
   materialsCollection: Collection<TMaterial>
   materialsLogsCollection: Collection<TMaterialUpdateRegistry>
   dbSession: ClientSession
-  userSession: Session
+  userSession: TAuthSession
 }
 
 export async function handlePurchaseControlAllocationsImproved({

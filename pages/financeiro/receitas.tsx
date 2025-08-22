@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react'
+import { useSession } from '@/components/providers/SessionProvider'
+import { useRouter } from 'next/router'
 
-import LoadingPage from "@/components/utils/LoadingPage";
+import LoadingPage from '@/components/utils/LoadingPage'
 
-import { useLocalStorage } from "@/lib/hooks/local-storage";
-import RevenuesPage from "@/components/identificador/receitas/RevenuesPage";
+import RevenuesPage from '@/components/identificador/receitas/RevenuesPage'
 
 function Revenues() {
-	const router = useRouter();
-	const { data: session, status } = useSession({ required: true });
-	const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar;
+  const router = useRouter()
+  const { session, status } = useSession({ required: true })
+  const isAuthorized = !!session?.user.permissoes.financeiro.visualizar || !!session?.user.permissoes.financeiro.visualizar
 
-	useEffect(() => {
-		if (session?.user && !isAuthorized) router.push("/");
-	}, [session?.user]);
-	if (status != "authenticated") return <LoadingPage />;
+  useEffect(() => {
+    if (session?.user && !isAuthorized) router.push('/')
+  }, [session?.user])
+  if (status != 'authenticated') return <LoadingPage />
 
-	return <RevenuesPage session={session} />;
+  return <RevenuesPage session={session} />
 }
-export default Revenues;
+export default Revenues
 
 // function Receitas() {
 //   const router = useRouter()
-//   const { data: session, status } = useSession({
+//   const { session, status } = useSession({
 //     required: true,
 //     onUnauthenticated: () => {
 //       router.push('/auth/signin')

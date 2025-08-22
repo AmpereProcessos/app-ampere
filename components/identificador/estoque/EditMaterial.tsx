@@ -19,14 +19,14 @@ import QuantityConfigBlock from './blocos/QuantityConfig'
 import UpdateRegistriesBlock from './blocos/UpdateRegistriesBlock'
 import { useMaterialById, useMaterialDeletionData } from '@/utils/methods/query/materials'
 import MaterialSuppliersBlock from './blocos/Suppliers'
-import type { Session } from 'next-auth'
 import Advanced from './blocos/Advanced'
 import { TMaterialDeletionDataOutput } from '@/pages/api/almoxarifado/materiais/exclusao'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 const initialState: TMaterial = { nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() }
 
 type EditMaterialProps = {
-  session: Session
+  session: TAuthSession
   materialId: string
   closeModal: () => void
   callbacks?: {
@@ -137,7 +137,7 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
 export default EditMaterial
 
 type MaterialContentProps = {
-  session: Session
+  session: TAuthSession
   infoHolder: TMaterial
   updateInfoHolder: (changes: Partial<TMaterial>) => void
   materialId: string

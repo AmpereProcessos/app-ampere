@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 
 import HeaderActivitiesModal from './HeaderActivitiesModal'
 import { useResponsibleActivities } from '@/utils/methods/query/activities'
 import { MdOutlineCheckBox } from 'react-icons/md'
 
 type HeaderActivitesBlockProps = {
-  session: Session
+  session: TAuthSession
 }
 function HeaderActivitesBlock({ session }: HeaderActivitesBlockProps) {
   const [activitiesModalIsOpen, setActivitiesModalIsOpen] = useState<boolean>(false)

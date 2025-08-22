@@ -6,7 +6,7 @@ import { useFileReferencesByHomologationId } from '@/utils/methods/query/crm/fil
 import { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import { storage } from '@/utils/services/firebase/firebase-storage'
 import { getMetadata, ref } from 'firebase/storage'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import FileReferenceCard from '../referencias-arquivos/FileReferenceCard'
@@ -14,7 +14,7 @@ import DocumentFileInput from '@/components/inputs/DocumentFileInput'
 import TextInput from '@/components/inputs/Text'
 
 type HomologationFilesProps = {
-  session: Session
+  session: TAuthSession
   homologationId: string
 }
 function HomologationFiles({ session, homologationId }: HomologationFilesProps) {

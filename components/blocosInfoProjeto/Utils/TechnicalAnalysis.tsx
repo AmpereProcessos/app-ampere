@@ -2,10 +2,10 @@ import TechnicalAnalysisFiles from '@/components/identificador/analisesTecnicas/
 import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { useTechnicalAnalysisById } from '@/utils/methods/query/technical-analysis'
 import { TProjectDTO } from '@/utils/schemas/projects'
-import { Session } from 'next-auth'
 import React from 'react'
 import { BsCalendarCheckFill, BsCalendarFill } from 'react-icons/bs'
 import { IoMdAdd } from 'react-icons/io'
@@ -30,7 +30,7 @@ function getViewPermissions({ routes }: { routes?: string[] }) {
 }
 type TechnicalAnalysisProps = {
   analysisId: string
-  session: Session
+  session: TAuthSession
   infoHolder: TProjectDTO
   setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>
   changes: { [key: string]: any }

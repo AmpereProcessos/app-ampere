@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/components/providers/SessionProvider'
 import ModalNewServiceOrder from './identificador/ordensDeServico/modals/ModalNewProjectServiceOrder'
 import { TProjectDTO } from '@/utils/schemas/projects'
 
@@ -8,7 +8,7 @@ type OSCreationBlockProps = {
   categories: { label: string; value: string }[]
 }
 function OSCreationBlock({ project, categories }: OSCreationBlockProps) {
-  const { data: session, status } = useSession()
+  const { session, status } = useSession({ required: true })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   if (status != 'authenticated') return null
   return (

@@ -3,7 +3,7 @@ import { uploadFile } from '@/utils/methods/firebase'
 import { createFileReference } from '@/utils/methods/mutation/file-references'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TFileReference } from '@/utils/schemas/file-reference.schema'
-import { Session } from 'next-auth'
+import type { TAuthSession } from '@/lib/authentication/types'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { BsCloudUploadFill } from 'react-icons/bs'
@@ -12,7 +12,7 @@ import EmployeeFiles from '../EmployeeFiles'
 
 type DocumentsProps = {
   employeeId: string
-  session: Session
+  session: TAuthSession
 }
 function Documents({ employeeId, session }: DocumentsProps) {
   const queryClient = useQueryClient()

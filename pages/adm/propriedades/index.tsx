@@ -67,10 +67,10 @@ function PropertiesContent({ session }: PropertiesContentProps) {
   }
   return (
     <div className="flex h-full w-full grow flex-col gap-6 p-6">
-      <div className="flex w-full flex-col gap-3 border-b border-primary/30 pb-1">
+      <div className="border-primary/30 flex w-full flex-col gap-3 border-b pb-1">
         <div className="flex flex-col items-center justify-between">
           <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE PROPRIEDADES</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLE DE PROPRIEDADES</p>
             <div className="flex items-center justify-end gap-2">
               <Button type="button" variant={'ghost'} size={'icon'} onClick={() => handleExportToExcel(properties)}>
                 <Download className="h-4 w-4" />
@@ -83,19 +83,19 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 
           <motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="mt-4 flex w-full flex-col gap-y-2">
             <div className="flex w-full flex-col gap-y-2">
-              <div className="flex w-full items-center gap-2 rounded-lg border border-primary/30 p-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <Search className="min-w-4 min-h-4 h-4 w-4" />
+              <div className="border-primary/30 flex w-full items-center gap-2 rounded-lg border p-2">
+                <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full">
+                  <Search className="h-4 min-h-4 w-4 min-w-4" />
                 </div>
                 <input
                   placeholder="PESQUISAR PROPRIEDADE..."
                   value={filters.search || ''}
                   onChange={(e) => updateFilters({ search: e.target.value })}
-                  className="grow text-xs outline-none ring-0 placeholder:font-medium focus:ring-0 focus:ring-offset-0"
+                  className="grow text-xs ring-0 outline-hidden placeholder:font-medium focus:ring-0 focus:ring-offset-0"
                 />
               </div>
               <div className="flex w-full items-center justify-start gap-2">
-                <h1 className="text-sm font-medium text-primary/80">TIPOS DE PROPRIEDADE</h1>
+                <h1 className="text-primary/80 text-sm font-medium">TIPOS DE PROPRIEDADE</h1>
                 {Object.entries(PROPERTY_METADATA_TYPES_CONFIG).map(([type, config]) => (
                   <Button
                     key={type}
@@ -141,7 +141,7 @@ function PropertiesContent({ session }: PropertiesContentProps) {
             ))
           ) : (
             <div className="flex w-full items-center justify-center gap-2">
-              <p className="w-full text-center font-medium italic text-primary/80">Nenhuma propriedade para os parâmetros estabelecidos.</p>
+              <p className="text-primary/80 w-full text-center font-medium italic">Nenhuma propriedade para os parâmetros estabelecidos.</p>
             </div>
           )
         ) : null}
@@ -159,11 +159,11 @@ function PropertiesStats() {
   const { data: stats, isLoading, isError, isSuccess, queryParams, updateQueryParams } = usePropertiesStats({})
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-xl border border-gray-300 p-3 shadow-sm">
+    <div className="border-primary/20 flex w-full flex-col gap-2 rounded-xl border p-3 shadow-xs">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
-          <ChartArea className="min-w-4 min-h-4 h-4 w-4" />
-          <h1 className="text-xs font-medium uppercase tracking-tight">ESTATÍSTICAS</h1>
+          <ChartArea className="h-4 min-h-4 w-4 min-w-4" />
+          <h1 className="text-xs font-medium tracking-tight uppercase">ESTATÍSTICAS</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -171,11 +171,11 @@ function PropertiesStats() {
             size={'fit'}
             className={cn('rounded-full p-1', {
               'bg-primary/80 text-primary-foreground hover:bg-primary/60 hover:text-primary-foreground': showStats,
-              'bg-transparent hover:bg-primary/20': !showStats,
+              'hover:bg-primary/20 bg-transparent': !showStats,
             })}
             onClick={() => setShowStats(!showStats)}
           >
-            <Eye className="min-w-4 min-h-4 h-4 w-4" />
+            <Eye className="h-4 min-h-4 w-4 min-w-4" />
           </Button>
           <DateIntervalInput
             labelClassName="text-xs font-medium leading-none tracking-tight"
@@ -202,55 +202,55 @@ function PropertiesStats() {
             exit="exit"
             className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row"
           >
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">PROPRIEDADES</h1>
-                <Landmark className="min-w-4 min-h-4 h-4 w-4" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">PROPRIEDADES</h1>
+                <Landmark className="h-4 min-h-4 w-4 min-w-4" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.totalPropriedades}</div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">VEÍCULOS COM REVISÃO PENDENTE</h1>
-                <Car className="min-w-4 min-h-4 h-4 w-4 text-yellow-700" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">VEÍCULOS COM REVISÃO PENDENTE</h1>
+                <Car className="h-4 min-h-4 w-4 min-w-4 text-yellow-700" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.veiculosRevisaoPendente}</div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">VEÍCULOS COM REVISÃO ATRASADA</h1>
-                <Car className="min-w-4 min-h-4 h-4 w-4 text-red-700" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">VEÍCULOS COM REVISÃO ATRASADA</h1>
+                <Car className="h-4 min-h-4 w-4 min-w-4 text-red-700" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.veiculosRevisaoAtrasada}</div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">USOS TEMPORÁRIOS EM ANDAMENTO</h1>
-                <Calendar className="min-w-4 min-h-4 h-4 w-4 text-blue-700" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">USOS TEMPORÁRIOS EM ANDAMENTO</h1>
+                <Calendar className="h-4 min-h-4 w-4 min-w-4 text-blue-700" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.usosTemporariosAbertos}</div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">USOS TEMPORÁRIOS FINALIZADOS</h1>
-                <Calendar className="min-w-4 min-h-4 h-4 w-4 text-green-700" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">USOS TEMPORÁRIOS FINALIZADOS</h1>
+                <Calendar className="h-4 min-h-4 w-4 min-w-4 text-green-700" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.usosTemporariosFinalizados}</div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-xs font-medium uppercase tracking-tight">USOS TEMPORÁRIOS INICIADOS</h1>
-                <Calendar className="min-w-4 min-h-4 h-4 w-4 text-blue-700" />
+                <h1 className="text-xs font-medium tracking-tight uppercase">USOS TEMPORÁRIOS INICIADOS</h1>
+                <Calendar className="h-4 min-h-4 w-4 min-w-4 text-blue-700" />
               </div>
               <div className="flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats?.usosTemporariosIniciados}</div>

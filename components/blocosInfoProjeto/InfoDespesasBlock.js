@@ -19,14 +19,14 @@ function InfoDespesasBlock({ projectId }) {
   }
   return (
     <div className="flex w-full flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DESPESAS DO PROJETO</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">DESPESAS DO PROJETO</span>
       <div className="flex w-full grow flex-wrap justify-center gap-2 px-2">
         {isSuccess ? (
           expenses.length > 0 ? (
             expenses.map((expense, index) => <ExpenseItem key={expense._id} expense={expense} />)
           ) : (
             <div className="flex w-full items-center justify-center">
-              <p className="italic text-gray-500">Não há gastos vinculados à esse projeto...</p>
+              <p className="text-primary/60 italic">Não há gastos vinculados à esse projeto...</p>
             </div>
           )
         ) : null}

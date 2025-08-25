@@ -1,79 +1,61 @@
-import React, { useState } from "react";
-import SelectFloatingInput from "./SelectFloatingInput";
+import React, { useState } from 'react'
+import SelectFloatingInput from './SelectFloatingInput'
 
-function FormVisitaTecnicaOrcamentacao({
-  dados,
-  setDados,
-  uploadImages,
-  images,
-  setImages,
-  sendStatus,
-}) {
-  const [imagesOK, setImagesOK] = useState(false);
+function FormVisitaTecnicaOrcamentacao({ dados, setDados, uploadImages, images, setImages, sendStatus }) {
+  const [imagesOK, setImagesOK] = useState(false)
   const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   function validateFields() {
-    if (
-      dados.tipoOrcamentacao == "NÃO DEFINIDO" ||
-      dados.tipoOrcamentacao == null
-    ) {
+    if (dados.tipoOrcamentacao == 'NÃO DEFINIDO' || dados.tipoOrcamentacao == null) {
       setMsg({
-        text: "Por favor, preencha o tipo de orçamentação.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha o tipo de orçamentação.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    setMsg({ text: "", color: "" });
-    return true;
+    setMsg({ text: '', color: '' })
+    return true
   }
   function handleSend() {
     if (validateFields()) {
-      uploadImages();
+      uploadImages()
     }
   }
   return (
-    <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        ORÇAMENTAÇÃO
-      </span>
-      <div className="flex gap-2 justify-around flex-wrap mt-4">
+    <div className="bg-background flex w-full flex-col border border-[#15599a] p-4 shadow-lg">
+      <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">ORÇAMENTAÇÃO</span>
+      <div className="mt-4 flex flex-wrap justify-around gap-2">
         <SelectFloatingInput
-          label={"TIPO DE ORÇAMENTAÇÃO"}
+          label={'TIPO DE ORÇAMENTAÇÃO'}
           editable={true}
-          width={"450px"}
-          value={
-            dados.tipoOrcamentacao ? dados.tipoOrcamentacao : "NÃO DEFINIDO"
-          }
+          width={'450px'}
+          value={dados.tipoOrcamentacao ? dados.tipoOrcamentacao : 'NÃO DEFINIDO'}
           options={[
-            { label: "PADRÃO", value: "PADRÃO" },
-            { label: "BARRACÃO COM TELHA", value: "BARRACÃO COM TELHA" },
-            { label: "BARRACÃO SEM TELHA", value: "BARRACÃO SEM TELHA" },
-            { label: "SUBESTAÇÃO", value: "SUBESTAÇÃO" },
+            { label: 'PADRÃO', value: 'PADRÃO' },
+            { label: 'BARRACÃO COM TELHA', value: 'BARRACÃO COM TELHA' },
+            { label: 'BARRACÃO SEM TELHA', value: 'BARRACÃO SEM TELHA' },
+            { label: 'SUBESTAÇÃO', value: 'SUBESTAÇÃO' },
             {
-              label: "INFRAESTRUTURA ELÉTRICA",
-              value: "INFRAESTRUTURA ELÉTRICA",
+              label: 'INFRAESTRUTURA ELÉTRICA',
+              value: 'INFRAESTRUTURA ELÉTRICA',
             },
             {
-              label: "OUTRO (INDIQUE NA DESCRIÇÃO)",
-              value: "OUTRO (INDIQUE NA DESCRIÇÃO)",
+              label: 'OUTRO (INDIQUE NA DESCRIÇÃO)',
+              value: 'OUTRO (INDIQUE NA DESCRIÇÃO)',
             },
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
           ]}
-          handleChange={(value) =>
-            setDados({ ...dados, tipoOrcamentacao: value })
-          }
+          handleChange={(value) => setDados({ ...dados, tipoOrcamentacao: value })}
         />
       </div>
-      <div className="flex flex-col w-full text-sm lg:text-base items-center">
-        <span className="uppercase font-bold font-raleway text-center text-sm">
-          DESCRIÇÃO PARA ORÇAMENTAÇÃO
-        </span>
+      <div className="flex w-full flex-col items-center text-sm lg:text-base">
+        <span className="font-raleway text-center text-sm font-bold uppercase">DESCRIÇÃO PARA ORÇAMENTAÇÃO</span>
         <input
-          className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+          className={`text-primary/80 w-full text-center text-xs uppercase outline-hidden`}
           value={dados.descricaoOrcamentacao}
-          placeholder={"DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO"}
+          placeholder={'DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO'}
           onChange={(e) =>
             setDados({
               ...dados,
@@ -83,49 +65,39 @@ function FormVisitaTecnicaOrcamentacao({
           type="text"
         />
       </div>
-      <div className="flex items-center justify-center gap-2 mt-4">
-        <div className="w-fit flex flex-col items-center">
-          <label
-            className="ml-2 text-center text-[#15599a] font-bold"
-            htmlFor="contaDeEnergia"
-          >
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <div className="flex w-fit flex-col items-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="contaDeEnergia">
             ARQUIVOS P/ AUXÍLIO DA ORÇAMENTAÇÃO
           </label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
             <div className="absolute">
               {imagesOK ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
-                    ARQUIVOS ADICIONADOS
-                  </span>
+                  <span className="block text-center font-normal text-gray-400">ARQUIVOS ADICIONADOS</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">
-                    Adicione o arquivo aqui...
-                  </span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                 </div>
               )}
             </div>
             <input
               onChange={(e) => {
-                let obj = {};
-                Array.prototype.forEach.call(
-                  e.target.files,
-                  function (file, index) {
-                    obj = {
-                      ...obj,
-                      [`orcamentacao${index + 1}-`]: {
-                        title: `ORÇAMENTAÇÃO ARQUIVO ${index + 1}`,
-                        file: file,
-                      },
-                    };
+                let obj = {}
+                Array.prototype.forEach.call(e.target.files, function (file, index) {
+                  obj = {
+                    ...obj,
+                    [`orcamentacao${index + 1}-`]: {
+                      title: `ORÇAMENTAÇÃO ARQUIVO ${index + 1}`,
+                      file: file,
+                    },
                   }
-                );
-                setImagesOK(true);
-                setImages({ ...images, ...obj });
+                })
+                setImagesOK(true)
+                setImages({ ...images, ...obj })
                 /*e.target.files.forEach((value, index) => {
                   obj = { ...obj, [`${index + 1}desenho`]: value };
                 });*/
@@ -138,20 +110,18 @@ function FormVisitaTecnicaOrcamentacao({
           </div>
         </div>
       </div>
-      {msg.text && (
-        <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
-      )}
-      <div className="flex justify-center items-center mt-3">
+      {msg.text && <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>}
+      <div className="mt-3 flex items-center justify-center">
         <button
-          disabled={sendStatus == "loading"}
+          disabled={sendStatus == 'loading'}
           onClick={handleSend}
-          className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit disabled:bg-gray-500"
+          className="disabled:bg-primary/60 w-fit rounded bg-[#fead61] p-2 text-center font-bold hover:bg-[#15599a] hover:text-white"
         >
-          {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
+          {sendStatus == 'loading' ? 'CARREGANDO' : 'ENVIAR FORMULÁRIO'}
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default FormVisitaTecnicaOrcamentacao;
+export default FormVisitaTecnicaOrcamentacao

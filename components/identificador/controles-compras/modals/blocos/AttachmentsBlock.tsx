@@ -37,14 +37,14 @@ function PurchaseControlFileReferences({ attachmentPrefix, session, projectId, p
 
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">ARQUIVOS</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">ARQUIVOS</h1>
       <div className="flex w-full items-center justify-end">
         {projectId ? (
           <button
             onClick={() => setShowProjectFiles((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-cyan-400  hover:bg-gray-400': showProjectFiles,
-              'bg-gray-300  hover:bg-cyan-300': !showProjectFiles,
+              'bg-cyan-400 hover:bg-gray-400': showProjectFiles,
+              'bg-primary/20 hover:bg-cyan-300': !showProjectFiles,
             })}
           >
             <MdDashboard />
@@ -59,7 +59,7 @@ function PurchaseControlFileReferences({ attachmentPrefix, session, projectId, p
           fileReferences.length > 0 ? (
             fileReferences.map((fileReference) => <FileReferenceCard key={fileReference._id} info={fileReference} />)
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum arquivo anexado.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum arquivo anexado.</div>
           )
         ) : null}
       </div>
@@ -67,8 +67,8 @@ function PurchaseControlFileReferences({ attachmentPrefix, session, projectId, p
         <button
           onClick={() => setNewFileReferencesMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': newFileReferencesMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !newFileReferencesMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': newFileReferencesMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !newFileReferencesMenuIsOpen,
           })}
         >
           <MdAttachFile />

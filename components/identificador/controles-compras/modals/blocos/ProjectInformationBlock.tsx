@@ -90,14 +90,14 @@ function PurchaseControlProjectInformationBlock({
   })
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO PROJETO</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">INFORMAÇÕES DO PROJETO</h1>
       <div className="flex w-full items-center justify-center">
         <button
           type="button"
           disabled={isPending}
           onClick={() => mutate()}
           className={cn(
-            'flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-white duration-300 ease-in-out  disabled:bg-gray-500 hover:bg-blue-700 disabled:hover:bg-gray-500'
+            'disabled:bg-primary/60 disabled:hover:bg-primary/60 flex items-center gap-1 rounded-lg bg-blue-600 px-2 py-1 text-white duration-300 ease-in-out hover:bg-blue-700'
           )}
         >
           <MdSync />
@@ -105,30 +105,30 @@ function PurchaseControlProjectInformationBlock({
         </button>
       </div>
       <div className="flex w-full grow flex-col gap-2">
-        <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">GERAIS</h1>
+        <h1 className="bg-primary/60 w-full p-1 text-center text-xs font-medium text-white">GERAIS</h1>
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-[0.65rem] font-medium text-gray-500">PROJETO</p>
+            <p className="text-primary/60 text-[0.65rem] font-medium">PROJETO</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <FaUserAlt />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project.nomeDoContrato}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project.nomeDoContrato}</p>
               </div>
               <div className="flex items-center gap-1">
                 <MdPhone />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.telefone}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.telefone}</p>
               </div>
               <div className="flex items-center gap-1">
                 <BsPersonVcard />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.cpf_cnpj}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.cpf_cnpj}</p>
               </div>
               <div className="flex items-center gap-1">
                 <MdLandscape />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.inscricaoRural || 'N/A'}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.inscricaoRural || 'N/A'}</p>
               </div>
               <div className="flex items-center gap-1">
                 <FaLocationDot />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">
                   {formatLocation({
                     location: {
                       uf: project.uf || '',
@@ -149,50 +149,50 @@ function PurchaseControlProjectInformationBlock({
             </div>
           </div>
         </div>
-        <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">PAGAMENTO</h1>
+        <h1 className="bg-primary/60 w-full p-1 text-center text-xs font-medium text-white">PAGAMENTO</h1>
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-[0.65rem] font-medium text-gray-500">PAGADOR</p>
+            <p className="text-primary/60 text-[0.65rem] font-medium">PAGADOR</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <FaUserAlt />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.pagador}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador}</p>
               </div>
               <div className="flex items-center gap-1">
                 <BsPersonVcard />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.cpf_cnpjPagador || 'N/A'}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.cpf_cnpjPagador || 'N/A'}</p>
               </div>
               <div className="flex items-center gap-1">
                 <FaPhone />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.contatoPagador}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.contatoPagador}</p>
               </div>
             </div>
           </div>
           <div className="flex flex-col items-center gap-1 lg:items-end">
-            <p className="text-[0.65rem] font-medium text-gray-500">CREDOR</p>
+            <p className="text-primary/60 text-[0.65rem] font-medium">CREDOR</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <BsStack />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.forma || 'NÃO DEFINIDO'}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.forma || 'NÃO DEFINIDO'}</p>
               </div>
               <div className="flex items-center gap-1">
                 <MdOutlinePayment />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.metodo || 'NÃO DEFINIDO'}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.metodo || 'NÃO DEFINIDO'}</p>
               </div>
 
               <div className="flex items-center gap-1">
                 <BsBank />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credor || 'NÃO DEFINIDO'}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.credor || 'NÃO DEFINIDO'}</p>
               </div>
               {project.pagamento.forma === 'FINANCIAMENTO' ? (
                 <>
                   <div className="flex items-center gap-1">
                     <FaUserAlt />
-                    <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credorNomeGerente}</p>
+                    <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.credorNomeGerente}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <FaPhone />
-                    <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.pagamento.credorContatoGerente}</p>
+                    <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.credorContatoGerente}</p>
                   </div>
                 </>
               ) : null}
@@ -201,10 +201,10 @@ function PurchaseControlProjectInformationBlock({
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-x-4 gap-y-2 lg:flex-row">
           <div className="flex w-full flex-col lg:w-1/2">
-            <h1 className="w-full text-center text-[0.6rem] font-medium tracking-tight text-primary lg:text-start">
+            <h1 className="text-primary w-full text-center text-[0.6rem] font-medium tracking-tight lg:text-start">
               OBSERVAÇÕES GERAIS SOBRE A NEGOCIAÇÃO
             </h1>
-            <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+            <div className="bg-primary/10 flex w-full items-center justify-center rounded p-2">
               <h1 className="text-[0.6rem] font-medium">{project.pagamento.negociacao || 'OBSERVAÇÕES DA NEGOCIAÇÃO NÃO DEFINIDAS'}</h1>
             </div>
           </div>
@@ -231,34 +231,34 @@ function PurchaseControlProjectInformationBlock({
                  </div>
                ) : null}
               </div> */}
-        <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">PRODUTOS</h1>
+        <h1 className="bg-primary/60 w-full p-1 text-center text-xs font-medium text-white">PRODUTOS</h1>
         <div className="flex w-full flex-wrap items-center gap-2">
           {project.produtos && project.produtos.length > 0 ? (
             project.produtos.map((product) => (
-              <div key={product.id} className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+              <div key={product.id} className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]">
                 <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
                   <div className="flex w-full items-center gap-1 lg:grow">
-                    <div className="flex h-[25px] w-[25px] items-center justify-center rounded-full border border-black p-1 dark:border-[#fff]">
+                    <div className="flex h-[25px] w-[25px] items-center justify-center rounded-full border border-black p-1 dark:border-white">
                       {renderProductCategoryIcon(product.categoria, 15)}
                     </div>
-                    <p className="text-sm font-bold leading-none tracking-tight">
+                    <p className="text-sm leading-none font-bold tracking-tight">
                       <strong className="text-[#FF9B50]">{product.qtde}</strong> x {product.modelo}
                     </p>
                   </div>
                   <div className="flex w-full items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
                     <div className="flex items-center gap-1">
                       <FaIndustry size={12} />
-                      <p className="text-[0.6rem] font-light text-gray-500 lg:text-xs">{product.fabricante}</p>
+                      <p className="text-primary/60 text-[0.6rem] font-light lg:text-xs">{product.fabricante}</p>
                     </div>
                     {product.potencia ? (
                       <div className="flex items-center gap-1">
                         <FaBolt size={12} />
-                        <p className="text-[0.6rem] font-light text-gray-500 lg:text-xs">{product.potencia} W</p>
+                        <p className="text-primary/60 text-[0.6rem] font-light lg:text-xs">{product.potencia} W</p>
                       </div>
                     ) : null}
                     <div className="flex items-center gap-1">
                       <AiOutlineSafety size={12} />
-                      <p className="text-[0.6rem] font-light text-gray-500 lg:text-xs">{product.garantia} ANOS</p>
+                      <p className="text-primary/60 text-[0.6rem] font-light lg:text-xs">{product.garantia} ANOS</p>
                     </div>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ function PurchaseControlProjectInformationBlock({
                         valor: 0,
                       })
                     }
-                    className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2  py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black"
+                    className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2 py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black"
                   >
                     <IoMdAdd width={10} height={10} />
                     <p>ADICIONAR À COMPOSIÇÃO</p>
@@ -283,11 +283,11 @@ function PurchaseControlProjectInformationBlock({
               </div>
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum produto adicionado</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum produto adicionado</div>
           )}
         </div>
         <ProjectServiceOrderBlock session={session} project={project} projectId={project._id} />
-        <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">OUTROS</h1>
+        <h1 className="bg-primary/60 w-full p-1 text-center text-xs font-medium text-white">OUTROS</h1>
         <div className="flex items-center justify-center">
           <div className="w-fit">
             <CheckboxInput
@@ -305,8 +305,8 @@ function PurchaseControlProjectInformationBlock({
                 type="button"
                 onClick={() => setTechnicalAnalysisBlockIsOpen((prev) => !prev)}
                 className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-                  'bg-gray-300  hover:bg-red-300': technicalAnalysisBlockIsOpen,
-                  'bg-green-300  hover:bg-green-400': !technicalAnalysisBlockIsOpen,
+                  'bg-primary/20 hover:bg-red-300': technicalAnalysisBlockIsOpen,
+                  'bg-green-300 hover:bg-green-400': !technicalAnalysisBlockIsOpen,
                 })}
               >
                 <TbReportAnalytics />
@@ -344,49 +344,49 @@ function TechnicalAnalysisBlock({ analysisId, addProductToComposition }: Technic
         <div className="flex w-full flex-col gap-2 px-4">
           <h1 className="self-center rounded border border-[#15599a] p-1 font-bold text-[#15599a]">{analysis.status}</h1>
           <div className="flex w-full items-center justify-center gap-2">
-            <h1 className="font-raleway text-xs font-bold text-gray-500">ANALISTA</h1>
+            <h1 className="font-raleway text-primary/60 text-xs font-bold">ANALISTA</h1>
             <Avatar url={analysis.analista?.avatar_url} fallback={'A'} height={30} width={30} />
-            <p className="text-sm font-medium text-gray-500">{analysis.analista?.apelido || 'NÃO DEFINIDO'}</p>
+            <p className="text-primary/60 text-sm font-medium">{analysis.analista?.apelido || 'NÃO DEFINIDO'}</p>
           </div>
           <div className="flex w-full flex-wrap justify-around">
-            <div className="flex flex-col rounded-md border border-gray-500 p-3">
-              <p className="text-[0.6rem] font-medium uppercase leading-none tracking-tight text-gray-500">TIPO DE TELHA</p>
-              <h1 className="text-center text-xs font-medium uppercase text-black">{analysis.detalhes.tipoTelha}</h1>
+            <div className="border-primary/60 flex flex-col rounded-md border p-3">
+              <p className="text-primary/60 text-[0.6rem] leading-none font-medium tracking-tight uppercase">TIPO DE TELHA</p>
+              <h1 className="text-center text-xs font-medium text-black uppercase">{analysis.detalhes.tipoTelha}</h1>
             </div>
-            <div className="flex flex-col rounded-md border border-gray-500 p-3">
-              <p className="text-[0.6rem] font-medium uppercase leading-none tracking-tight text-gray-500">TIPO DA ESTRUTURA</p>
-              <h1 className="text-center text-xs font-medium uppercase text-black">{analysis.detalhes.tipoEstrutura}</h1>
+            <div className="border-primary/60 flex flex-col rounded-md border p-3">
+              <p className="text-primary/60 text-[0.6rem] leading-none font-medium tracking-tight uppercase">TIPO DA ESTRUTURA</p>
+              <h1 className="text-center text-xs font-medium text-black uppercase">{analysis.detalhes.tipoEstrutura}</h1>
             </div>
-            <div className="flex flex-col rounded-md border border-gray-500 p-3">
-              <p className="text-[0.6rem] font-medium uppercase leading-none tracking-tight text-gray-500">MATERIAL DA ESTRUTURA</p>
-              <h1 className="text-center text-xs font-medium uppercase text-black">{analysis.detalhes.materialEstrutura}</h1>
+            <div className="border-primary/60 flex flex-col rounded-md border p-3">
+              <p className="text-primary/60 text-[0.6rem] leading-none font-medium tracking-tight uppercase">MATERIAL DA ESTRUTURA</p>
+              <h1 className="text-center text-xs font-medium text-black uppercase">{analysis.detalhes.materialEstrutura}</h1>
             </div>
-            <div className="flex flex-col rounded-md border border-gray-500 p-3">
-              <p className="text-[0.6rem] font-medium uppercase leading-none tracking-tight text-gray-500">ORIENTAÇÃO DA ESTRUTURA</p>
-              <h1 className="text-center text-xs font-medium uppercase text-black">{analysis.detalhes.orientacao || '-'}</h1>
+            <div className="border-primary/60 flex flex-col rounded-md border p-3">
+              <p className="text-primary/60 text-[0.6rem] leading-none font-medium tracking-tight uppercase">ORIENTAÇÃO DA ESTRUTURA</p>
+              <h1 className="text-center text-xs font-medium text-black uppercase">{analysis.detalhes.orientacao || '-'}</h1>
             </div>
-            <div className="flex flex-col rounded-md border border-gray-500 p-3">
-              <p className="text-[0.6rem] font-medium uppercase leading-none tracking-tight text-gray-500">CONCESSIONÁRIA</p>
-              <h1 className="text-center text-xs font-medium uppercase text-black">{analysis.detalhes.concessionaria}</h1>
+            <div className="border-primary/60 flex flex-col rounded-md border p-3">
+              <p className="text-primary/60 text-[0.6rem] leading-none font-medium tracking-tight uppercase">CONCESSIONÁRIA</p>
+              <h1 className="text-center text-xs font-medium text-black uppercase">{analysis.detalhes.concessionaria}</h1>
             </div>
           </div>
           <div className="flex w-full flex-col gap-1">
             <h1 className="w-full rounded-sm bg-[#fead41] p-1 text-center font-bold text-white">SUPRIMENTOS</h1>
             <div className="mt-2 flex flex-col gap-1">
-              <h1 className="text-sm font-medium leading-none tracking-tight text-gray-500">OBSERVAÇÕES P/ SUPRIMENTOS</h1>
-              <div className="overscroll-y flex h-[50px] max-h-[50px] w-full items-center justify-center overflow-y-auto rounded-md border border-cyan-500 bg-gray-100 p-3 text-center text-sm text-gray-500 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">OBSERVAÇÕES P/ SUPRIMENTOS</h1>
+              <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 text-primary/60 bg-primary/20 flex h-[50px] max-h-[50px] w-full items-center justify-center overflow-y-auto rounded-md border border-cyan-500 p-3 text-center text-sm">
                 {analysis.suprimentos?.observacoes}
               </div>
             </div>
             {analysis.suprimentos?.itens?.map((item, index) => (
               <div key={`${item.descricao}-${index}`} className="flex w-full items-center justify-between">
                 <div className="flex flex-col">
-                  <h1 className="text-sm font-medium text-gray-500">
+                  <h1 className="text-primary/60 text-sm font-medium">
                     <strong>{item.qtde}</strong> x {item.descricao} <strong className="text-[#fead41]">({item.tipo})</strong>
                   </h1>
                   <div className="flex items-center gap-1">
                     <TbRulerMeasure />
-                    <p className="text-xs italic text-gray-500">{item.grandeza}</p>
+                    <p className="text-primary/60 text-xs italic">{item.grandeza}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-1">
@@ -439,7 +439,7 @@ function ProjectServiceOrderBlock({ session, project, projectId }: ProjectServic
   const handleSettled = async () => await queryClient.invalidateQueries({ queryKey: ['project-service-orders', projectId] })
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full bg-gray-500 p-1 text-center text-xs font-medium text-white">ORDENS DE SERVIÇOS</h1>
+      <h1 className="bg-primary/60 w-full p-1 text-center text-xs font-medium text-white">ORDENS DE SERVIÇOS</h1>
       <div className="flex w-full items-center justify-end">
         {!project.idOrdemServico ? (
           <button
@@ -451,7 +451,7 @@ function ProjectServiceOrderBlock({ session, project, projectId }: ProjectServic
             }
             disabled={isPending}
             className={cn(
-              'flex items-center gap-1 rounded-lg bg-blue-500 px-2 py-1 text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-gray-300 enabled:hover:bg-blue-600'
+              'disabled:text-primary/20 disabled:bg-primary/60 flex items-center gap-1 rounded-lg bg-blue-500 px-2 py-1 text-white duration-300 ease-in-out enabled:hover:bg-blue-600'
             )}
           >
             <MdDesignServices />
@@ -471,7 +471,7 @@ function ProjectServiceOrderBlock({ session, project, projectId }: ProjectServic
             />
           ))
         ) : (
-          <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma ordem de serviço encontrada.</div>
+          <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma ordem de serviço encontrada.</div>
         )
       ) : null}
       {editServiceOrderModal.isOpen && editServiceOrderModal.id ? (
@@ -494,54 +494,51 @@ type ServiceOrderCardProps = {
 }
 function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) {
   function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
-    if (serviceOrder.status === 'PENDENTE')
-      return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
+    if (serviceOrder.status === 'PENDENTE') return <div className="text-xxs rounded-full bg-red-600 px-2 py-0.5 font-medium text-white">PENDENTE</div>
 
     if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
-      return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGUARDANDO PLANEJAMENTO</div>
+      return <div className="text-xxs rounded-full bg-blue-800 px-2 py-0.5 font-medium text-white">AGUARDANDO PLANEJAMENTO</div>
 
     if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
-      return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
+      return <div className="text-xxs rounded-full bg-yellow-600 px-2 py-0.5 font-medium text-white">AGENDADA</div>
 
     if (serviceOrder.status === 'EM EXECUÇÃO')
-      return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>
+      return <div className="text-xxs rounded-full bg-blue-600 px-2 py-0.5 font-medium text-white">EM EXECUÇÃO</div>
 
     if (serviceOrder.status === 'CONCLUÍDA PARCIAL')
-      return <div className="rounded-full bg-purple-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">CONCLUÍDA PARCIAL</div>
+      return <div className="text-xxs rounded-full bg-purple-600 px-2 py-0.5 font-medium text-white">CONCLUÍDA PARCIAL</div>
 
-    if (serviceOrder.status === 'CONCLUÍDA')
-      return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">CONCLUÍDA</h1>
+    if (serviceOrder.status === 'CONCLUÍDA') return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">CONCLUÍDA</h1>
 
-    if (serviceOrder.status === 'CANCELADA')
-      return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">CANCELADA</h1>
+    if (serviceOrder.status === 'CANCELADA') return <h1 className="text-xxs bg-primary/60 min-w-fit rounded-lg px-2 py-0.5 text-white">CANCELADA</h1>
 
-    return <h1 className="min-w-fit rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-white">NÃO DEFINIDO</h1>
+    return <h1 className="bg-primary text-xxs min-w-fit rounded-lg px-2 py-0.5 text-white">NÃO DEFINIDO</h1>
   }
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{serviceOrder.descricao}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{serviceOrder.descricao}</p>
           {serviceOrder.projeto.nome ? (
             <div className="flex items-center gap-1">
               <MdDashboard size={10} />
-              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.projeto.nome}</h1>
+              <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.projeto.nome}</h1>
             </div>
           ) : null}
           {getStatusTag(serviceOrder)}
         </div>
         <div className="flex items-center gap-1">
           <UserRound size={12} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.responsavel.nome}</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.responsavel.nome}</h1>
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <Tag size={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.categoria}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.categoria}</h1>
           </div>
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
           {serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
             serviceOrder.etiquetas.map((tag, index) => (
               <div
@@ -555,39 +552,39 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
                 className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
               >
                 <Tag width={10} height={10} />
-                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
               </div>
             ))
           ) : (
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">NÃO DEFINIDAS</h1>
           )}
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCheck2 width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO DE LIBERAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO DE LIBERAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.dataPrevisaoLiberacao ? formatDateAsLocale(serviceOrder.dataPrevisaoLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCheck2All width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LIBERAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LIBERAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.dataLiberacao ? formatDateAsLocale(serviceOrder.dataLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">AGENDAMENTO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">AGENDAMENTO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.agendamento
                 ? `${formatDateAsLocale(serviceOrder.agendamento.inicio, true)} - ${serviceOrder.agendamento.fim ? formatDateAsLocale(serviceOrder.agendamento.fim, true) : 'N/A'}`
                 : 'N/A'}
@@ -595,8 +592,8 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarCheck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EXECUÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">EXECUÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.periodo.inicio
                 ? `${formatDateAsLocale(serviceOrder.periodo.inicio, true)} - ${serviceOrder.periodo.fim ? formatDateAsLocale(serviceOrder.periodo.fim, true) : 'N/A'}`
                 : 'N/A'}
@@ -608,12 +605,12 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
           </div>
           {serviceOrder.dataEfetivacao ? (
             <div className="flex items-center gap-1">
               <BsCalendarCheck color="#22c55e" />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
@@ -624,13 +621,13 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
               fallback={formatNameAsInitials(serviceOrder.autor?.nome || '')}
             />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{serviceOrder.autor?.nome || ''}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{serviceOrder.autor?.nome || ''}</p>
           </div>
         </div>
         <button
           type="button"
           onClick={() => handleClick(serviceOrder._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

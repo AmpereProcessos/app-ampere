@@ -13,7 +13,7 @@ type VistoryInformationProps = {
 function VistoryInformation({ infoHolder, setInfoHolder, changes, setChanges }: VistoryInformationProps) {
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE A VISTORIA</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE A VISTORIA</h1>
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <DateInput

@@ -16,17 +16,17 @@ function InProgress({ data }) {
   if (status !== 'authenticated') return <LoadingPage />
 
   return (
-    <div className="flex grow flex-col bg-gray-100 p-6">
+    <div className="bg-primary/20 flex grow flex-col p-6">
       <h1 className="text-center font-['Roboto'] text-xl font-bold text-[#15599a]">PROJETOS EM ANDAMENTO</h1>
-      <div className="mt-4 flex w-full grow bg-gray-100">
+      <div className="bg-primary/20 mt-4 flex w-full grow">
         <ol className="border-l-2 border-[#15599a]">
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-xxs text-white"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">ASSINATURA DO CONTRATO</h4>
+              <div className="text-xxs -mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-white"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">ASSINATURA DO CONTRATO</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.assContrato.length} projetos nesse estágio
               </p>
               <button
@@ -37,7 +37,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -45,11 +45,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">COMPRA DO KIT</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">COMPRA DO KIT</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.compraDoKit.length} projetos nesse estágio
               </p>
               <button
@@ -60,7 +60,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -68,11 +68,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">ENTREGA DO KIT</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">ENTREGA DO KIT</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.entregaDoKit.length} projetos nesse estágio
               </p>
               <button
@@ -83,7 +83,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -91,11 +91,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">ASSINATURA DA DOCUMENTAÇÃO</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">ASSINATURA DA DOCUMENTAÇÃO</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.assDocumentacoes.length} projetos nesse estágio
               </p>
               <button
@@ -106,7 +106,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -114,11 +114,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">LIBERAÇÃO DA CONCESSIONÁRIA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">LIBERAÇÃO DA CONCESSIONÁRIA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.libConc.length} projetos nesse estágio
               </p>
               <button
@@ -129,7 +129,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -137,11 +137,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">AGENDAMENTO DA OBRA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">AGENDAMENTO DA OBRA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.agendamentoObra.length} projetos nesse estágio
               </p>
               <button
@@ -152,7 +152,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -160,11 +160,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">TÉRMINO DA OBRA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">TÉRMINO DA OBRA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.terminoObra.length} projetos nesse estágio
               </p>
               <button
@@ -175,7 +175,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -183,11 +183,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">VISTORIA DA CONCESSIONÁRIA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">VISTORIA DA CONCESSIONÁRIA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.vistoriaConcessionaria.length} projetos nesse estágio
               </p>
               <button
@@ -198,7 +198,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -206,11 +206,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">LIGAMENTO DA USINA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">LIGAMENTO DA USINA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.ligamentoUsina.length} projetos nesse estágio
               </p>
               <button
@@ -221,7 +221,7 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
@@ -229,11 +229,11 @@ function InProgress({ data }) {
           </li>
           <li>
             <div className="flex-start flex items-center">
-              <div className="-ml-2 mr-3 -mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
-              <h4 className="-mt-2 text-xl font-semibold text-gray-800">ENTREGA TÉCNICA</h4>
+              <div className="-mt-2 mr-3 -ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600"></div>
+              <h4 className="text-primary/80 -mt-2 text-xl font-semibold">ENTREGA TÉCNICA</h4>
             </div>
-            <div className="ml-6 mb-6 flex flex-col gap-3 pb-6">
-              <p className="text-sm text-blue-600 transition duration-300 ease-in-out focus:text-blue-800 hover:text-blue-700">
+            <div className="mb-6 ml-6 flex flex-col gap-3 pb-6">
+              <p className="text-sm text-blue-600 transition duration-300 ease-in-out hover:text-blue-700 focus:text-blue-800">
                 {data.entregaTecnica.length} projetos nesse estágio
               </p>
               <button
@@ -244,19 +244,19 @@ function InProgress({ data }) {
                   })
                 }
                 type="button"
-                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs font-medium uppercase leading-tight text-white shadow-md hover:bg-blue-700 hover:font-bold"
+                className="w-fit rounded bg-blue-500 px-4 py-1.5 text-xs leading-tight font-medium text-white uppercase shadow-md hover:bg-blue-700 hover:font-bold"
               >
                 Ver projetos
               </button>
             </div>
           </li>
         </ol>
-        <div className="sticky top-[10%] left-[60%] h-[600px] w-[500px] rounded-sm border border-gray-300 bg-[#fff] p-3 shadow-lg">
-          <div className="flex flex-col items-center border-b border-gray-300 pb-2">
+        <div className="bg-background border-primary/20 sticky top-[10%] left-[60%] h-[600px] w-[500px] rounded-sm border p-3 shadow-lg">
+          <div className="border-primary/20 flex flex-col items-center border-b pb-2">
             <h1 className="text-center text-xl font-bold text-[#15599a]">PROJETOS</h1>
-            <p className="text-xs text-gray-600">CLIENTES NO ESTÁGIO: {selectedProjects.estagio}</p>
+            <p className="text-primary/80 text-xs">CLIENTES NO ESTÁGIO: {selectedProjects.estagio}</p>
           </div>
-          <div className="overscroll-y flex max-h-[520px] flex-col overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[520px] flex-col overflow-y-auto">
             {selectedProjects.projetos.map((info, index) => (
               <div key={index} className="flex items-center gap-3 border-b p-2">
                 <FaUser />

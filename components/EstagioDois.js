@@ -32,13 +32,13 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
     }
   }
   return (
-    <div className="flex flex-col h-[400px] w-full">
-      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)] h-[300px]">
-        <div className="flex flex-col h-[200px]">
-          <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
-            <div className="w-full flex items-start self-stretch">
+    <div className="flex h-[400px] w-full flex-col">
+      <div className="flex h-[300px] w-full flex-1 grow flex-col items-center justify-center gap-3 self-stretch text-left font-normal text-[rgba(79,88,96,1)]">
+        <div className="flex h-[200px] flex-col">
+          <div className="flex w-[300px] flex-col items-center justify-center gap-1 lg:w-[350px]">
+            <div className="flex w-full items-start self-stretch">
               <div>
-                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">Selecione seu estado</p>
+                <p className="m-0 w-[300px] text-[15px] leading-[1.2] lg:w-[350px]">Selecione seu estado</p>
               </div>
             </div>
             <div className="w-full">
@@ -70,8 +70,8 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                 className={`flex-1 ${
                   err.field == "UF"
                     ? "bg-red-200 border border-red-500"
-                    : "bg-white"
-                }  outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
+                    : "bg-background"
+                }  outline-hidden rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
               >
                 {estadosCidades.map((x) => (
                   <option value={x.sigla} key={x.sigla}>
@@ -81,10 +81,10 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
               </select> */}
             </div>
           </div>
-          <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
-            <div className="w-full flex items-start self-stretch">
+          <div className="flex w-[300px] flex-col items-center justify-center gap-1 lg:w-[350px]">
+            <div className="flex w-full items-start self-stretch">
               <div>
-                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">Selecione sua cidade</p>
+                <p className="m-0 w-[300px] text-[15px] leading-[1.2] lg:w-[350px]">Selecione sua cidade</p>
               </div>
             </div>
             <div className="w-full">
@@ -118,8 +118,8 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                 className={`flex-1 ${
                   err.field == "CIDADE"
                     ? "bg-red-200 border border-red-500"
-                    : "bg-white"
-                } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
+                    : "bg-background"
+                } outline-hidden rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
               >
                 {infoHolder.uf ? (
                   estadosCidades
@@ -137,11 +137,11 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
           </div>
         </div>
       </div>
-      <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
-        {err.text ? <p className="text-center italic text-red-500">{err.text}</p> : null}
+      <div className="flex h-[100px] w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
+        {err.text ? <p className="text-center text-red-500 italic">{err.text}</p> : null}
         <div className="w-full">
-          <div className="flex-1 flex flex-col justify-center items-center flex-grow rounded-lg p-3 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] hover:scale-[1.02] duration-300">
-            <p onClick={() => goNext()} className="w-full m-0 text-[19px] leading-[1.2] cursor-pointer">
+          <div className="flex flex-1 grow flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]">
+            <p onClick={() => goNext()} className="m-0 w-full cursor-pointer text-[19px] leading-[1.2]">
               Próximo
             </p>
           </div>

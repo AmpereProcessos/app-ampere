@@ -38,8 +38,8 @@ function Payments({ infoHolder, setInfoHolder, missingPercentage }: PaymentsProp
   }, [missingPercentage])
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 text-center font-bold text-white">PAGAMENTOS</h1>
-      <h1 className="my-2 w-full self-center text-center text-sm font-medium text-gray-500 lg:w-[80%]">
+      <h1 className="bg-primary/80 w-full rounded text-center font-bold text-white">PAGAMENTOS</h1>
+      <h1 className="text-primary/60 my-2 w-full self-center text-center text-sm font-medium lg:w-[80%]">
         Os pagamentos serão utilizadas como parametro para o <strong className="text-[#fead41]">regime de referência / regime de caixa.</strong>
       </h1>
       <div className="item-center flex w-full flex-col gap-2 lg:flex-row">
@@ -84,7 +84,7 @@ function Payments({ infoHolder, setInfoHolder, missingPercentage }: PaymentsProp
       </div>
       <div className="flex w-full items-center justify-end">
         <button
-          className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
           onClick={() => addPayment()}
         >
           ADICIONAR
@@ -122,11 +122,11 @@ function PaymentCard({ payment, paymentIndex, infoHolder, setInfoHolder, deleteP
     return setInfoHolder((prev) => ({ ...prev, pagamentos: fractionnements }))
   }
   return (
-    <div className={`flex w-full flex-col rounded-md border border-gray-500 p-2 shadow-sm`}>
+    <div className={`border-primary/60 flex w-full flex-col rounded-md border p-2 shadow-xs`}>
       <div className="flex w-full items-start justify-between gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">FRAÇÃO DE {formatDecimalPlaces(payment.porcentagem)}%</h1>
-          <h1 className="rounded-full bg-gray-800 px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">
+          <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">FRAÇÃO DE {formatDecimalPlaces(payment.porcentagem)}%</h1>
+          <h1 className="bg-primary/80 rounded-full px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">
             {formatToMoney((infoHolder.total * payment.porcentagem) / 100)}
           </h1>
           <button
@@ -181,14 +181,14 @@ function PaymentCard({ payment, paymentIndex, infoHolder, setInfoHolder, deleteP
       <div className="mt-2 flex w-full flex-wrap items-center justify-start gap-2">
         <div className="flex items-center gap-2">
           <BsCalendar color={'#ffc300'} />
-          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+          <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
             PREVISTO PARA {formatDateAsLocale(payment.dataPrevisaoPagamento)}
           </p>
         </div>
         {payment.dataPagamento ? (
           <div className="flex items-center gap-2">
             <BsCalendarCheck color={'#76c893'} />
-            <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+            <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
               RECEBIDO EM {formatDateAsLocale(payment.dataPagamento)}
             </p>
           </div>

@@ -33,7 +33,7 @@ function NewMaintenanceMenu({ infoHolder, setInfo, changes, setChanges }: NewMai
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="flex w-[90%] flex-col self-center rounded border border-gray-500 p-3 lg:w-[80%]"
+      className="border-primary/60 flex w-[90%] flex-col self-center rounded border p-3 lg:w-[80%]"
     >
       <div className="flex w-full items-center justify-between gap-2">
         <h1 className="font-bold tracking-tight">NOVA MANUTENÇÃO</h1>
@@ -60,7 +60,7 @@ function NewMaintenanceMenu({ infoHolder, setInfo, changes, setChanges }: NewMai
       <div className="mt-2 flex w-full items-center justify-end">
         <button
           onClick={() => addNewMaintenance(maintenanceHolder)}
-          className="whitespace-nowrap rounded bg-green-900 px-4 py-1 text-xs font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-green-800 enabled:hover:text-white"
+          className="disabled:bg-primary/60 rounded bg-green-900 px-4 py-1 text-xs font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-green-800 enabled:hover:text-white disabled:text-white"
         >
           ADICIONAR
         </button>

@@ -440,7 +440,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
   }
   console.log(dados)
   return (
-    <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-2 shadow-lg bg-[#fff]">
+    <div className="bg-background mt-12 flex min-h-[275px] w-full flex-col flex-wrap items-center gap-2 self-center border border-[#15599a] p-2 shadow-lg lg:w-[75%]">
       {dados.tipoDeSolicitacao != 'DÚVIDAS E AUXILIOS TÉCNICOS' ? (
         <>
           {' '}
@@ -478,13 +478,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
             ]}
             handleChange={(value) => setDados({ ...dados, tipoDoCliente: value })}
           />
-          <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÕES</span>
+          <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+            <span className="font-raleway text-center text-sm font-bold uppercase">OBSERVAÇÕES</span>
             <textarea
               placeholder={'Descrição da solicitação aqui..'}
               value={dados.observacoes}
               onChange={(e) => setDados({ ...dados, observacoes: e.target.value })}
-              className="w-full text-center h-[80px] bg-gray-100 resize-none p-2 outline-none border border-gray-600"
+              className="border-primary/80 bg-primary/20 h-[80px] w-full resize-none border p-2 text-center outline-hidden"
             />
           </div>
           {dados.tipoDeSolicitacao == 'PROPOSTA COMERCIAL (ON GRID)' && (
@@ -597,21 +597,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
               />
               {dados.tipoDoCliente == 'CPF' && (
                 <>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="comprovanteDeEndereco">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="comprovanteDeEndereco">
                       COMPROVANTE DE ENDEREÇO
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.comprovanteDeEndereco ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.comprovanteDeEndereco.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.comprovanteDeEndereco.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -628,21 +628,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="comprovanteDeRenda">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="comprovanteDeRenda">
                       COMPROVANTE DE RENDA
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.comprovanteDeRenda ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.comprovanteDeRenda.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.comprovanteDeRenda.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -659,21 +659,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="documentoPessoal">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="documentoPessoal">
                       DOCUMENTO COM CPF E RG
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.documentoPessoal ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.documentoPessoal.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.documentoPessoal.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -694,21 +694,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
               )}
               {dados.tipoDoCliente == 'CNPJ' && (
                 <>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="cartaoCNPJ">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="cartaoCNPJ">
                       CARTÃO CNPJ
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.cartaoCNPJ ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.cartaoCNPJ.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.cartaoCNPJ.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -725,21 +725,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="contratoSocial">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="contratoSocial">
                       CONTRATO SOCIAL
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.contratoSocial ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.contratoSocial.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.contratoSocial.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -756,21 +756,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="comprovanteDeEndereco">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="comprovanteDeEndereco">
                       COMPROVANTE DE ENDEREÇO DA INSTALAÇÃO
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.comprovanteDeEndereco ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.comprovanteDeEndereco.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.comprovanteDeEndereco.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -787,21 +787,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="comprovanteDeRenda">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="comprovanteDeRenda">
                       COMPROVANTE DE RENDA (REPRESENTANTE LEGAL)
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.comprovanteDeRenda ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.comprovanteDeRenda.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.comprovanteDeRenda.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -818,21 +818,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="declaracaoDeFaturamento">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="declaracaoDeFaturamento">
                       DECLARAÇÃO DE FATURAMENTO DA EMPRESA(12 MESES)
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.declaracaoDeFaturamento ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.declaracaoDeFaturamento.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.declaracaoDeFaturamento.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -849,21 +849,21 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       />
                     </div>
                   </div>
-                  <div className="w-fit flex flex-col items-center">
-                    <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="documentoPessoal">
+                  <div className="flex w-fit flex-col items-center">
+                    <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="documentoPessoal">
                       DOCUMENTO PESSOAL DO REPRESENTANTE LEGAL
                     </label>
-                    <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                    <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                       <div className="absolute">
                         {images.documentoPessoal ? (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal text-center">{images.documentoPessoal.name}</span>
+                            <span className="block text-center font-normal text-gray-400">{images.documentoPessoal.name}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
                             <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                            <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                            <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                           </div>
                         )}
                       </div>
@@ -920,9 +920,9 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                 ]}
                 handleChange={(value) => setDados({ ...dados, tipoDaEstrutura: value })}
               />
-              <div className="flex flex-col w-full mt-2">
-                <h1 className="text-center text-[#15599a] font-bold">EQUIPAMENTOS A SEREM ALIMENTADOS</h1>
-                <div className="flex items-center justify-center gap-2 flex-wrap">
+              <div className="mt-2 flex w-full flex-col">
+                <h1 className="text-center font-bold text-[#15599a]">EQUIPAMENTOS A SEREM ALIMENTADOS</h1>
+                <div className="flex flex-wrap items-center justify-center gap-2">
                   <TextInput
                     label={'EQUIPAMENTO'}
                     editable={true}
@@ -960,20 +960,20 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                       })
                     }
                   />
-                  <button onClick={addEquipment} className="p-1 rounded border border-green-500 text-green-500 hover:text-white hover:bg-green-500">
+                  <button onClick={addEquipment} className="rounded border border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white">
                     <IoMdAddCircle />
                   </button>
                 </div>
                 <div className="flex flex-col">
-                  <h1 className="text-center text-[#fead61] font-bold">LISTA</h1>
+                  <h1 className="text-center font-bold text-[#fead61]">LISTA</h1>
                   {dados.equipamentos?.length > 0 ? (
                     dados.equipamentos.map((item, index) => (
-                      <p key={index} className="text-gray-500 text-center">
+                      <p key={index} className="text-primary/60 text-center">
                         ({item.qtde}) {item.nome} - {item.pot}W, {item.horasDiarias} horas diárias{' '}
                       </p>
                     ))
                   ) : (
-                    <p className="text-center italic text-gray-500">SEM ITENS ADICIONADOS...</p>
+                    <p className="text-primary/60 text-center italic">SEM ITENS ADICIONADOS...</p>
                   )}
                 </div>
               </div>
@@ -982,23 +982,23 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         </>
       ) : (
         <>
-          <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">DESCREVA AQUI SUA DÚVIDA</span>
+          <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+            <span className="font-raleway text-center text-sm font-bold uppercase">DESCREVA AQUI SUA DÚVIDA</span>
             <textarea
               placeholder={'Descrição da dúvida aqui..'}
               value={dados.duvida}
               onChange={(e) => setDados({ ...dados, duvida: e.target.value })}
-              className="w-full text-center h-[80px] bg-gray-100 resize-none p-2 outline-none border border-gray-600"
+              className="border-primary/80 bg-primary/20 h-[80px] w-full resize-none border p-2 text-center outline-hidden"
             />
           </div>
         </>
       )}
-      {msg.text && <p className={`text-center italic text-sm ${msg.color}`}>{msg.text}</p>}
+      {msg.text && <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>}
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <button onClick={() => setStage(0)} className="bg-[#15599a] text-white font-bold p-2 rounded hover:bg-[#fead61] hover:text-black">
+        <button onClick={() => setStage(0)} className="rounded bg-[#15599a] p-2 font-bold text-white hover:bg-[#fead61] hover:text-black">
           VOLTAR
         </button>
-        <button disabled={buttonBlocked} onClick={createCall} className="bg-[#fead61] font-bold p-2 rounded hover:bg-[#15599a] hover:text-white">
+        <button disabled={buttonBlocked} onClick={createCall} className="rounded bg-[#fead61] p-2 font-bold hover:bg-[#15599a] hover:text-white">
           ENVIAR
         </button>
       </div>

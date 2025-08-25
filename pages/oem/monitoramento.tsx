@@ -34,10 +34,10 @@ function Monitoring() {
   if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
         <div className="GAP-2 flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS DE MONITORAMENTO</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS DE MONITORAMENTO</p>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@ function Monitoring() {
               />
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum projeto de monitoramento encontrado.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum projeto de monitoramento encontrado.</div>
           )
         ) : null}
       </div>
@@ -79,9 +79,9 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
   const openActivitiesCount = project.atividades ? project.atividades.filter((a) => !a.dataConclusao).length : 0
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-md border border-gray-500 p-3 shadow-sm">
+    <div className="border-primary/60 flex w-full flex-col gap-2 rounded-md border p-3 shadow-xs">
       <div className="flex w-full flex-col items-start justify-between lg:flex-row lg:items-center">
-        <h1 className="font-bold leading-none tracking-tight">
+        <h1 className="leading-none font-bold tracking-tight">
           <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
         </h1>
       </div>
@@ -89,22 +89,22 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
         <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
           <div className="flex items-center gap-1">
             <FaUser width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{project.vendedor.nome}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{project.vendedor.nome}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaPhone width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{project.telefone || 'N/A'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{project.telefone || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <MdEmail width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{project.email || 'N/A'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{project.email || 'N/A'}</h1>
           </div>
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatLocation({
                 location: {
                   uf: project.uf,
@@ -126,7 +126,7 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
           <button
             type="button"
             onClick={() => handleClick(project._id)}
-            className="flex items-center gap-1 rounded border border-[#fead41] py-1 px-4 text-xs font-medium text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-white"
+            className="flex items-center gap-1 rounded border border-[#fead41] px-4 py-1 text-xs font-medium text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-white"
           >
             <p>EXPANDIR</p>
             <FaExpandArrowsAlt />
@@ -142,7 +142,7 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
               onClick={() => setActivitiesMenuIsOpen((prev) => !prev)}
               className={`${
                 openActivitiesCount > 0 ? 'border-red-500 text-red-500 hover:bg-red-500' : 'border-blue-500 text-blue-500 hover:bg-blue-500'
-              } flex items-center gap-1 rounded border py-1 px-4 text-xs font-medium duration-300 ease-in-out hover:text-white`}
+              } flex items-center gap-1 rounded border px-4 py-1 text-xs font-medium duration-300 ease-in-out hover:text-white`}
             >
               <p>ATIVIDADES</p>
               <MdOutlineCheckBox size={18} />
@@ -155,7 +155,7 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
               // @ts-ignore
               handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })
             }}
-            className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+            className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-primary/60 enabled:hover:bg-primary/70"
            >
             SALVAR ANOTAÇÕES
            </button> */}
@@ -173,7 +173,7 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
             ))}
           </div>
         ) : (
-          <h1 className="w-full py-1 text-center text-sm italic text-gray-500">Nenhuma atividade cadastrada...</h1>
+          <h1 className="text-primary/60 w-full py-1 text-center text-sm italic">Nenhuma atividade cadastrada...</h1>
         )
       ) : null}
     </div>

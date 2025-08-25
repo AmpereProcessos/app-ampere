@@ -225,7 +225,7 @@ function NewProductMenu({ infoHolder, setInfo, changes, setChanges, closeMenu }:
           </div>
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addInverterToKit()}
             >
               ADICIONAR INVERSOR
@@ -303,7 +303,7 @@ function NewProductMenu({ infoHolder, setInfo, changes, setChanges, closeMenu }:
           </div>
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addModuleToKit()}
             >
               ADICIONAR MÓDULO
@@ -407,7 +407,7 @@ function NewProductMenu({ infoHolder, setInfo, changes, setChanges, closeMenu }:
 
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addPersonalizedProductToKit()}
             >
               ADICIONAR PRODUTO PERSONALIZADO

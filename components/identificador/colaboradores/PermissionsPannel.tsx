@@ -11,7 +11,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
     <>
       <h1 className="w-full pt-4 text-center text-sm font-medium">PERMISSÕES DO USUÁRIO</h1>
       {/**USUÁRIOS */}
-      <h1 className="w-full text-start text-sm text-gray-500">USUÁRIOS</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">USUÁRIOS</h1>
       <CheckboxInput
         labelFalse="APTO A CRIAR USUÁRIOS"
         labelTrue="APTO A CRIAR USUÁRIOS"
@@ -64,7 +64,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR COMERCIAL */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR COMERCIAL</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR COMERCIAL</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR COMERCIAL"
         labelTrue="APTO A VISUALIZAR SETOR COMERCIAL"
@@ -104,7 +104,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**PÓS VENDAS */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE PÓS-VENDA</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE PÓS-VENDA</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE PÓS VENDA"
         labelTrue="APTO A VISUALIZAR SETOR DE PÓS VENDA"
@@ -144,7 +144,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR SUPRIMENTOS */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR SUPRIMENTOS</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR SUPRIMENTOS</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR SUPRIMENTOS"
         labelTrue="APTO A VISUALIZAR SETOR SUPRIMENTOS"
@@ -184,7 +184,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE ENGENHARIA */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE ENGENHARIA</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE ENGENHARIA</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE ENGENHARIA"
         labelTrue="APTO A VISUALIZAR SETOR DE ENGENHARIA"
@@ -224,7 +224,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE OBRAS */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE OBRAS</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE OBRAS</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE OBRAS"
         labelTrue="APTO A VISUALIZAR SETOR DE OBRAS"
@@ -264,7 +264,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE SUPORTE */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE SUPORTE</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE SUPORTE</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE SUPORTE"
         labelTrue="APTO A VISUALIZAR SETOR DE SUPORTE"
@@ -304,7 +304,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE ADMINISTRATIVO */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE ADMINISTRATIVO</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE ADMINISTRATIVO</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE ADMINISTRATIVO"
         labelTrue="APTO A VISUALIZAR SETOR DE ADMINISTRATIVO"
@@ -344,7 +344,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE FINANCEIRO */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE FINANCEIRO</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE FINANCEIRO</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE FINANCEIRO"
         labelTrue="APTO A VISUALIZAR SETOR DE FINANCEIRO"
@@ -384,7 +384,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**SETOR DE RH */}
-      <h1 className="w-full text-start text-sm text-gray-500">SETOR DE RH</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">SETOR DE RH</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR SETOR DE RH"
         labelTrue="APTO A VISUALIZAR SETOR DE RH"
@@ -424,7 +424,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**ORDENS DE SERVIÇO */}
-      <h1 className="w-full text-start text-sm text-gray-500">ORDENS DE SERVIÇO</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">ORDENS DE SERVIÇO</h1>
       <CheckboxInput
         labelFalse="APTO A CRIAR ORDENS DE SERVIÇO"
         labelTrue="APTO A CRIAR ORDENS DE SERVIÇO"
@@ -477,7 +477,7 @@ function PermissionsPannel({ infoHolder, setInfoHolder }: PermissionsPannelProps
       />
 
       {/**GESTÃO */}
-      <h1 className="w-full text-start text-sm text-gray-500">GESTÃO</h1>
+      <h1 className="text-primary/60 w-full text-start text-sm">GESTÃO</h1>
       <CheckboxInput
         labelFalse="APTO A VISUALIZAR RESULTADOS"
         labelTrue="APTO A VISUALIZAR RESULTADOS"

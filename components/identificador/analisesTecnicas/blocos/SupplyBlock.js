@@ -48,12 +48,12 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   console.log('SUPPLY HOLDER', supplyHolder)
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">SUPRIMENTOS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="w-full flex flex-col">
-          <h1 className="w-full p-1 bg-gray-500 text-white font-bold text-center rounded-tr-sm rounded-tl-sm">OBSERVAÇÕES</h1>
+        <div className="flex w-full flex-col">
+          <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">OBSERVAÇÕES</h1>
           <textarea
             placeholder="SEM OBSERVAÇÕES PREENCHIDAS..."
             value={infoHolder.suprimentos?.observacoes || ''}
@@ -64,7 +64,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
               }))
               setChanges((prev) => ({ ...prev, 'suprimentos.observacoes': e.target.value }))
             }}
-            className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+            className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
           />
         </div>
 
@@ -115,7 +115,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
         </div>
-        <div className="flex w-full items-center justify-end mt-2">
+        <div className="mt-2 flex w-full items-center justify-end">
           <button
             onClick={addSupplyItem}
             className="rounded border border-green-500 p-1 font-bold text-green-500 duration-300 ease-in-out hover:bg-green-500 hover:text-white"
@@ -125,14 +125,14 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
         </div>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           {infoHolder.suprimentos?.itens?.map((item, index) => (
-            <div key={index} className="flex w-full  items-center justify-between lg:w-[350px] border border-cyan-500 p-2 rounded-md shadow-sm">
+            <div key={index} className="flex w-full items-center justify-between rounded-md border border-cyan-500 p-2 shadow-xs lg:w-[350px]">
               <div className="flex flex-col">
-                <h1 className="text-sm font-medium text-gray-500">
+                <h1 className="text-primary/60 text-sm font-medium">
                   <strong>{item.qtde}</strong> x {item.descricao} <strong className="text-[#fead41]">({item.tipo})</strong>
                 </h1>
                 <div className="flex items-center gap-1">
                   <TbRulerMeasure />
-                  <p className="text-xs italic text-gray-500">{item.grandeza}</p>
+                  <p className="text-primary/60 text-xs italic">{item.grandeza}</p>
                 </div>
               </div>
               <div className="flex items-center justify-end gap-1">
@@ -144,7 +144,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
                 </button>
               </div>
             </div>
-          )) || <p className="w-full font-medium text-center text-xs italic text-gray-500">Nenhum item adicionado.</p>}
+          )) || <p className="text-primary/60 w-full text-center text-xs font-medium italic">Nenhum item adicionado.</p>}
         </div>
       </div>
     </div>

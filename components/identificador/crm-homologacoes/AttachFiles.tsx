@@ -26,7 +26,7 @@ function AttachFiles({ opportunityId, files, setFiles }: AttachFilesProps) {
   }
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">ARQUIVOS</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">ARQUIVOS</h1>
       <div className="flex w-full flex-col items-center justify-center gap-2">
         <div className="w-full lg:w-1/2">
           <DocumentFileInput
@@ -47,12 +47,12 @@ function AttachFiles({ opportunityId, files, setFiles }: AttachFilesProps) {
         </div>
         <button
           onClick={() => addFile(personalizedFile)}
-          className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR ARQUIVO
         </button>
       </div>
-      <h1 className="font-Inter mb-2 text-start font-bold leading-none tracking-tight">ARQUIVOS A SEREM ANEXADOS</h1>
+      <h1 className="font-Inter mb-2 text-start leading-none font-bold tracking-tight">ARQUIVOS A SEREM ANEXADOS</h1>
       <div className="flex w-full flex-wrap items-center justify-around gap-2">
         {Object.entries(files).length > 0 ? (
           Object.entries(files).map(([key, value], index) => (
@@ -61,12 +61,12 @@ function AttachFiles({ opportunityId, files, setFiles }: AttachFilesProps) {
                 <div className="text-lg text-black">
                   <AiFillFile />
                 </div>
-                <p className="text-sm font-bold leading-none tracking-tight text-gray-500">{key}</p>
+                <p className="text-primary/60 text-sm leading-none font-bold tracking-tight">{key}</p>
               </div>
             </div>
           ))
         ) : (
-          <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+          <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
             Nenhum arquivo anexado...
           </p>
         )}

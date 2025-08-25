@@ -200,15 +200,15 @@ function HomologationPublicFormulary({ projectJSON, sessionJSON, error }: Homolo
       {isSuccess ? (
         <div className="flex w-full grow flex-col items-center justify-center gap-2 text-green-500">
           <BsFillClipboardCheckFill color="rgb(34,197,94)" size={35} />
-          <p className="text-lg font-medium tracking-tight text-gray-500">Homologação requisitada com sucesso !</p>
+          <p className="text-primary/60 text-lg font-medium tracking-tight">Homologação requisitada com sucesso !</p>
         </div>
       ) : null}
       {!isPending && !isError && !isSuccess ? (
         <>
-          <div className="flex w-full items-center justify-center border-b border-gray-500 bg-black p-2">
+          <div className="border-primary/60 flex w-full items-center justify-center border-b bg-black p-2">
             <h1 className="text-center text-sm font-bold tracking-tight text-white">SOLICITAÇÃO DE ANÁLISE TÉCNICA P/ {project.nomeDoContrato}</h1>
           </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
             {/* <ApplicantBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} /> */}
             <HolderInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <InstallationInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
@@ -221,7 +221,7 @@ function HomologationPublicFormulary({ projectJSON, sessionJSON, error }: Homolo
               disabled={isPending}
               // @ts-ignore
               onClick={() => handleCreateHomologation({ info: infoHolder, files: files })}
-              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+              className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
             >
               SOLICITAR HOMOLOGAÇÃO
             </button>

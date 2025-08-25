@@ -18,13 +18,13 @@ import { useQueryClient } from '@tanstack/react-query'
 function getStatusTag(isExecuted: boolean) {
   if (!isExecuted)
     return (
-      <div className="flex min-w-fit items-center gap-2 rounded-full bg-orange-600 px-2 py-1 ">
+      <div className="flex min-w-fit items-center gap-2 rounded-full bg-orange-600 px-2 py-1">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">PENDENTE</h1>
       </div>
     )
 
   return (
-    <div className="flex min-w-fit items-center gap-2 rounded-full bg-green-600 px-2 py-1 ">
+    <div className="flex min-w-fit items-center gap-2 rounded-full bg-green-600 px-2 py-1">
       <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">CONCLUÍDO</h1>
     </div>
   )
@@ -35,13 +35,13 @@ function getDeliveryText({ status, deliveryDate }: { status: string; deliveryDat
     if (!deliveryDate) return <h1 className="text-[0.6rem] tracking-tight text-green-500">ENTREGUE</h1>
 
     return (
-      <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+      <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
         ENTREGUE <strong className="text-green-500">EM {formatDateAsLocale(deliveryDate)}</strong>
       </h1>
     )
   }
   return (
-    <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+    <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
       ENTREGA <strong className="text-orange-500">PENDENTE</strong>
     </h1>
   )
@@ -50,13 +50,13 @@ function getPaymentText({ paymentDate }: { paymentDate: string | null }) {
   const isDelivered = !!paymentDate
   if (isDelivered) {
     return (
-      <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+      <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
         PAGO EM <strong className="text-green-500">EM {formatDateAsLocale(paymentDate)}</strong>
       </h1>
     )
   }
   return (
-    <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+    <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
       PAGAMENTO <strong className="text-orange-500">PENDENTE</strong>
     </h1>
   )
@@ -95,27 +95,27 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
     queryClient: queryClient,
   })
   return (
-    <div className="flex w-full flex-col gap-4 rounded border border-gray-500 bg-[#fff] p-3 font-[Inter] shadow-md lg:w-[600px]">
+    <div className="bg-background border-primary/60 flex w-full flex-col gap-4 rounded border p-3 font-[Inter] shadow-md lg:w-[600px]">
       <div className="flex w-full items-center justify-between gap-2">
-        <h1 className="text-sm font-black leading-none tracking-tight">
+        <h1 className="text-sm leading-none font-black tracking-tight">
           <strong className="text-[#fead41]">({project.qtde})</strong> {project.nomeDoContrato}
         </h1>
         {getStatusTag(isExecuted)}
       </div>
       <div className="flex w-full flex-col">
         <div className="flex items-center gap-1">
-          <h1 className="text-[0.55rem] tracking-tight text-gray-500">ESTRUTURA</h1>
+          <h1 className="text-primary/60 text-[0.55rem] tracking-tight">ESTRUTURA</h1>
         </div>
         <div className="flex w-full flex-wrap items-center gap-x-6 gap-y-2">
           <div className="flex items-center gap-1">
             <FaDiamond />
-            <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+            <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
               TIPO <strong className="text-blue-500">{project.estruturaPersonalizada.tipo || 'N/A'}</strong>
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsBank2 />
-            <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+            <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
               RESP. DO(A) <strong className="text-blue-500">{project.estruturaPersonalizada.respPagamento || 'N/A'}</strong>
             </h1>
           </div>
@@ -125,13 +125,13 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
           </div>
           <div className="flex items-center gap-1">
             <MdOutlineAttachMoney />
-            <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+            <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
               VALOR DE <strong className="text-blue-500">{formatToMoney(project.estruturaPersonalizada.valor || 0)}</strong>
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <FaSolarPanel />
-            <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+            <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
               <strong className="text-blue-500">{project.sistema.qtdeModulos || 0} MÓDULOS</strong>
             </h1>
           </div>
@@ -139,7 +139,7 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
       </div>
       <div className="flex w-full flex-col">
         <div className="flex items-center gap-1">
-          <h1 className="text-[0.55rem] tracking-tight text-gray-500">ENTREGA</h1>
+          <h1 className="text-primary/60 text-[0.55rem] tracking-tight">ENTREGA</h1>
         </div>
         <div className="flex w-full flex-wrap items-center gap-x-6 gap-y-2">
           <div className="flex items-center gap-1">
@@ -153,12 +153,12 @@ function InstallationStrucutreProjectCard({ project }: InstallationStrucutreProj
       </div>
       <div className="flex w-full flex-col">
         <div className="flex items-center gap-1">
-          <h1 className="text-[0.55rem] tracking-tight text-gray-500">LOCALIZAÇÃO</h1>
+          <h1 className="text-primary/60 text-[0.55rem] tracking-tight">LOCALIZAÇÃO</h1>
         </div>
         <div className="flex w-full flex-wrap items-center gap-x-6 gap-y-2">
           <div className="flex items-center gap-1">
             <FaLocationDot />
-            <h1 className="text-[0.65rem] font-bold tracking-tight text-gray-800">
+            <h1 className="text-primary/80 text-[0.65rem] font-bold tracking-tight">
               {formatLocation({ location, includeUf: true, includeCity: true })}
             </h1>
           </div>

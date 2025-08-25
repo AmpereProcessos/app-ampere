@@ -37,7 +37,7 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }: FavoredModalBlockProps
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">FAVORECIDO</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
@@ -133,11 +133,11 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }: FavoredModalBlockProps
         ) : (
           <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="mt-2 flex w-full flex-col gap-1">
             <div className="mt-2 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
-              <div className="flex items-center gap-2 text-gray-800">
+              <div className="text-primary/80 flex items-center gap-2">
                 <FaUser size={'20px'} color="rgb(31,41,55)" />
                 <p className="font-raleway text-sm font-medium">{infoHolder.favorecido?.nome || 'N/A'}</p>
               </div>
-              <div className="flex items-center gap-2 text-gray-800">
+              <div className="text-primary/80 flex items-center gap-2">
                 <AiFillPhone size={'20px'} color="rgb(31,41,55)" />
                 <p className="font-raleway text-sm font-medium">{infoHolder.favorecido?.contato || 'N/A'}</p>
               </div>

@@ -13,7 +13,7 @@ type StructureBlockProps = {
 function StructureBlock({ infoHolder, setInfoHolder, changes, setChanges }: StructureBlockProps) {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">ESTRUTURA</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">

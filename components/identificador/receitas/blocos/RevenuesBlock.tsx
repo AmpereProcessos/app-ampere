@@ -44,14 +44,14 @@ function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProp
   const revenuesMatched = dashboardRevenues?.revenuesMatched || 0
   const totalPages = dashboardRevenues?.totalPages
   return (
-    <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
-      <div className="flex w-full items-center justify-between gap-2 border-b border-primary/30 pb-3">
-        <h1 className="text-sm font-bold leading-none tracking-tight">RECEITAS</h1>
+    <div className="border-primary bg-background flex h-full max-h-full w-full flex-col gap-2 rounded border p-3 shadow-xs dark:bg-[#121212]">
+      <div className="border-primary/30 flex w-full items-center justify-between gap-2 border-b pb-3">
+        <h1 className="text-sm leading-none font-bold tracking-tight">RECEITAS</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterMenuIsOpen((prev) => !prev)}
             className={cn(
-              'min-h-6 min-w-6 flex h-6 w-6 items-center justify-center rounded-full text-primary duration-300 ease-in-out hover:bg-primary/20',
+              'text-primary hover:bg-primary/20 flex h-6 min-h-6 w-6 min-w-6 items-center justify-center rounded-full duration-300 ease-in-out',
               {
                 'bg-primary/30': filterMenuIsOpen,
               }
@@ -70,14 +70,14 @@ function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProp
         itemsShowingText={revenuesShowing > 0 ? `Mostrando ${revenuesShowing} receitas.` : `Mostrando ${revenuesShowing} receita.`}
       />
 
-      <div className="flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           revenues && revenues.length > 0 ? (
             revenues.map((revenue) => <RevenueCard key={revenue._id} revenue={revenue} handleClick={(id) => setEditModal({ id, isOpen: true })} />)
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma receita encontrada.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma receita encontrada.</div>
           )
         ) : null}
       </div>
@@ -111,52 +111,52 @@ function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
     // In case partions received are equal to the total amount of receipts
     if (totalReceived == revenueTotal)
       return {
-        tag: <h1 className="rounded-lg bg-green-500 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">RECEBIDO</h1>,
+        tag: <h1 className="text-xxs rounded-lg bg-green-500 px-2 py-0.5 text-center font-medium text-white">RECEBIDO</h1>,
 
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
     if (totalReceived > 0)
       return {
-        tag: <h1 className="rounded-lg bg-orange-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">RECEBIDO PARCIAL</h1>,
+        tag: <h1 className="text-xxs rounded-lg bg-orange-600 px-2 py-0.5 text-center font-medium text-white">RECEBIDO PARCIAL</h1>,
 
         fractionationStr: `${partionsReceived}/${receipts.length}`,
       }
 
     return {
-      tag: <h1 className="rounded-lg bg-red-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PENDENTE</h1>,
+      tag: <h1 className="text-xxs rounded-lg bg-red-600 px-2 py-0.5 text-center font-medium text-white">PENDENTE</h1>,
 
       fractionationStr: `${partionsReceived}/${receipts.length}`,
     }
   }
   const { tag: ReceiptStatusTag, fractionationStr } = getReceiptStatus({ receipts: revenue.fracionamento, revenueTotal: revenue.total })
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{revenue.nome}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{revenue.nome}</p>
           {ReceiptStatusTag}
         </div>
-        <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">{formatToMoney(revenue.total)}</h1>
+        <h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">{formatToMoney(revenue.total)}</h1>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-fit min-w-fit items-center gap-1">
           <MdDashboard width={10} height={10} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{revenue.tipo}</h1>
+          <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{revenue.tipo}</h1>
         </div>
 
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">COMPETÊNCIA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">COMPETÊNCIA</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {revenue.efetivacao.data ? formatDateAsLocale(revenue.efetivacao.data) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCircleHalf width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">RECEBIMENTOS</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{fractionationStr}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">RECEBIMENTOS</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{fractionationStr}</h1>
           </div>
         </div>
       </div>
@@ -165,17 +165,17 @@ function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(revenue.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(revenue.dataInsercao, true)}</p>
           </div>
           <div className="flex items-center gap-1">
             <Avatar url={revenue.autor.avatar_url || undefined} height={20} width={20} fallback={formatNameAsInitials(revenue.autor.nome)} />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{revenue.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{revenue.autor.nome}</p>
           </div>
         </div>
         <button
           onClick={() => handleClick(revenue._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

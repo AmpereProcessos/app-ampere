@@ -91,7 +91,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
   const BUTTON_TEXT = 'ATUALIZAR'
   return isDesktop ? (
     <Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
-      <DialogContent className="flex h-fit max-h-[80vh] min-h-[60vh] flex-col dark:bg-white">
+      <DialogContent className="dark:bg-background flex h-fit max-h-[80vh] min-h-[60vh] flex-col">
         <DialogHeader>
           <DialogTitle>{MENU_TITLE}</DialogTitle>
           <DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
@@ -100,7 +100,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           <>
-            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+            <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
               <PropertyContent
                 isDesktop={isDesktop}
                 imageHolder={imageHolder}
@@ -137,7 +137,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           <>
-            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+            <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
               <PropertyContent
                 isDesktop={isDesktop}
                 imageHolder={imageHolder}
@@ -241,7 +241,7 @@ function PropertyUsageLink({
     )
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="flex items-center justify-center rounded-md border border-primary/30 p-2">
+      <div className="border-primary/30 flex items-center justify-center rounded-md border p-2">
         <div dangerouslySetInnerHTML={{ __html: qrCodeLinkSvgString }} className="size-24" />
       </div>
     </div>

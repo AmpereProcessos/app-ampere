@@ -41,7 +41,7 @@ function QRCodesContent() {
   const { data: properties } = useProperties({})
   if (!properties) {
     return (
-      <div className="relative flex grow flex-col items-center justify-center bg-[#fff] p-6">
+      <div className="bg-background relative flex grow flex-col items-center justify-center p-6">
         <p>Carregando propriedades...</p>
       </div>
     )
@@ -50,11 +50,11 @@ function QRCodesContent() {
   const propertyChunks = chunkArray(properties, 16)
 
   return (
-    <div className="relative flex grow flex-col items-center justify-center gap-8 bg-[#fff] p-6">
+    <div className="bg-background relative flex grow flex-col items-center justify-center gap-8 p-6">
       {propertyChunks.map((chunk, idx) => (
         <div
           key={idx.toString()}
-          className="mb-8 flex h-[1120px] w-[800px] flex-col items-center justify-center rounded-lg bg-white p-8 shadow-lg"
+          className="bg-background mb-8 flex h-[1120px] w-[800px] flex-col items-center justify-center rounded-lg p-8 shadow-lg"
           style={{ pageBreakAfter: 'always' }}
         >
           <div className="grid h-full w-full grid-cols-4 grid-rows-4">
@@ -69,9 +69,9 @@ function QRCodesContent() {
                   >
                     <div className="flex flex-col items-center justify-center">
                       <div className="text-center text-xs font-semibold">{property.nome}</div>
-                      <div className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1">
+                      <div className="bg-primary/10 flex items-center gap-1 rounded-md px-2 py-1">
                         <Code className="h-3 w-3" />
-                        <p className="text-[0.7rem] font-bold text-primary">{property.identificador}</p>
+                        <p className="text-primary text-[0.7rem] font-bold">{property.identificador}</p>
                       </div>
                     </div>
                     {property.usoTemporarioLinkUrlQRCode ? (
@@ -81,7 +81,7 @@ function QRCodesContent() {
                         className="size-24"
                       />
                     ) : (
-                      <div className="size-24 flex items-center justify-center text-xs text-gray-400">Sem QR Code</div>
+                      <div className="flex size-24 items-center justify-center text-xs text-gray-400">Sem QR Code</div>
                     )}
                   </div>
                 )

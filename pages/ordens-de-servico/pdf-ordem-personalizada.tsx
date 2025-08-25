@@ -122,8 +122,8 @@ function OrdemServicoEmBranco() {
   }
   return (
     <div className="flex w-full flex-col items-center">
-      <div className="flex w-[80%] flex-col rounded-md border border-gray-500 print:hidden">
-        <h1 className="w-full bg-gray-800 py-2 text-center font-bold text-white">PREENCHIMENTO DE DADOS</h1>
+      <div className="border-primary/60 flex w-[80%] flex-col rounded-md border print:hidden">
+        <h1 className="bg-primary/80 w-full py-2 text-center font-bold text-white">PREENCHIMENTO DE DADOS</h1>
         <div className="flex w-full flex-col p-2">
           <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-[50%]">
@@ -320,7 +320,7 @@ function OrdemServicoEmBranco() {
               />
             </div>
           </div>
-          <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">EQUIPAMENTOS</h1>
+          <h1 className="bg-primary/80 mt-4 w-full rounded-md p-2 text-center font-bold text-white">EQUIPAMENTOS</h1>
           <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <TextInput
@@ -421,7 +421,7 @@ function OrdemServicoEmBranco() {
               <AvailableMaterialsBlock osInfo={infoHolder} setOsInfo={setInfoHolder} useKitInformation={() => toast.error('Não disponível.')} />
             </div>
           </div>
-          <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">DETALHES</h1>
+          <h1 className="bg-primary/80 mt-4 w-full rounded-md p-2 text-center font-bold text-white">DETALHES</h1>
           <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-1/3">
               <SelectInput
@@ -585,7 +585,7 @@ function OrdemServicoEmBranco() {
 
           <h1 className="mt-6 text-center font-bold">TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA</h1>
           <div className="mt-8 px-4">
-            <p className="text-center font-raleway">
+            <p className="font-raleway text-center">
               Eu, {infoHolder.favorecido.nome}, declaro que a equipe técnica da empresa <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>
               , inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no dia ____/____/_____ à manutenção preventiva, prevista em contrato, do sistema
               fotovoltaico de {((infoHolder.equipamentos.modulos.qtde || 0) * (Number(infoHolder.equipamentos.modulos.potencia) || 0)) / 1000} kWp
@@ -601,14 +601,14 @@ function OrdemServicoEmBranco() {
             <p className="mt-6 text-end">Ituiutaba, ____/____/_____</p>
             <div className="mt-32 flex flex-col">
               <hr className="border-t-2 border-black" />
-              <p className="mt-4 text-center font-raleway font-bold">TÉCNICO</p>
+              <p className="font-raleway mt-4 text-center font-bold">TÉCNICO</p>
             </div>
             <div className="mt-32 flex flex-col">
               <hr className="border-t-2 border-black" />
-              <p className="mt-4 text-center font-raleway font-bold">CLIENTE</p>
+              <p className="font-raleway mt-4 text-center font-bold">CLIENTE</p>
             </div>
             <div className="mt-72">
-              <p className="text-center font-raleway">Avenida Nove, 233 - Centro, Ituiutaba-MG</p>
+              <p className="font-raleway text-center">Avenida Nove, 233 - Centro, Ituiutaba-MG</p>
               <p className="text-center">ampereenergiascomercial@gmail.com</p>
             </div>
           </div>

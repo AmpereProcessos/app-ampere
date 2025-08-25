@@ -46,7 +46,7 @@ function InfoProjetoBlock({
 
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O PROJETO</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES SOBRE O PROJETO</span>
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Project logs={updateLogs} />} />
       <div className="flex w-full flex-col items-center justify-center gap-4 px-2 lg:flex-row">
         <CheckboxInput
@@ -89,7 +89,7 @@ function InfoProjetoBlock({
         />
       </div>
       {isContractAttached && isPendingProjectInitiation ? (
-        <div className="px my-2 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 py-1 px-2 italic text-orange-500">
+        <div className="px my-2 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 px-2 py-1 text-orange-500 italic">
           <div className="flex items-center justify-center gap-1">
             <TbAlertCircle />
             <p className="text-sm">LEMBRETE</p>
@@ -471,7 +471,7 @@ function InfoProjetoBlock({
           {infoHolder.parecer.statusDoParecerDeAcesso == 'PENDENCIAS' && (
             <div className="mt-2 flex w-full items-center justify-center">
               <div className="flex w-[450px] flex-col items-center">
-                <span className="text-center font-raleway text-sm font-bold uppercase">PENDÊNCIAS DO PARECER</span>
+                <span className="font-raleway text-center text-sm font-bold uppercase">PENDÊNCIAS DO PARECER</span>
                 <textarea
                   readOnly={!editor}
                   value={infoHolder.parecer?.pendencias ? infoHolder.parecer?.pendencias : ''}
@@ -489,7 +489,7 @@ function InfoProjetoBlock({
                       },
                     })
                   }}
-                  className="h-[150px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+                  className="border-primary/80 h-[150px] w-full resize-none border bg-gray-200 p-2 text-center outline-hidden"
                 />
               </div>
             </div>
@@ -648,8 +648,8 @@ function InfoProjetoBlock({
             ) : null}
           </div>
           {infoHolder.vistoria?.vistoriaReprovada === 'SIM' && infoHolder.vistoria.equipeDeCampoNecessaria === 'SIM' && (
-            <div className="flex flex-col  pb-2 shadow-lg">
-              <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">ORDENS DE SERVIÇO</span>
+            <div className="flex flex-col pb-2 shadow-lg">
+              <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">ORDENS DE SERVIÇO</span>
               <OSCreationBlock
                 project={infoHolder}
                 categories={[

@@ -31,7 +31,7 @@ function ConfigurationsAllocatorsBlock({ session }: ConfigurationsAllocatorsBloc
   }
   return (
     <div className="flex h-full grow flex-col">
-      <div className="flex w-full flex-col items-center justify-between border-b border-primary/20 pb-2 lg:flex-row">
+      <div className="border-primary/20 flex w-full flex-col items-center justify-between border-b pb-2 lg:flex-row">
         <div className="flex flex-col">
           <h1 className="text-lg font-bold">Controle de Alocadores</h1>
           <p className="text-sm text-[#71717A]">Gerencie, adicione e edite os alocadores</p>
@@ -50,7 +50,7 @@ function ConfigurationsAllocatorsBlock({ session }: ConfigurationsAllocatorsBloc
               <AllocatorCard key={allocator._id} allocator={allocator} handleClick={(id) => setEditModal({ id, isOpen: true })} />
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum alocador encontrado.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum alocador encontrado.</div>
           )
         ) : null}
       </div>
@@ -81,16 +81,16 @@ type AllocatorCardProps = {
 }
 function AllocatorCard({ allocator, handleClick }: AllocatorCardProps) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full items-center justify-start gap-2 lg:grow">
-          <p className="text-sm font-bold leading-none tracking-tight">{allocator.nome}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{allocator.nome}</p>
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatLocation({
                 location: {
                   uf: allocator!.localizacao.uf || '',
@@ -114,12 +114,12 @@ function AllocatorCard({ allocator, handleClick }: AllocatorCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(allocator.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(allocator.dataInsercao, true)}</p>
           </div>
         </div>
         <button
           onClick={() => handleClick(allocator._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

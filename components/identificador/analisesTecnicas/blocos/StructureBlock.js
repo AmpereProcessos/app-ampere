@@ -6,11 +6,11 @@ import TextInput from '../../../inputs/Text'
 function StructureBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">ESTRUTURA</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="flex w-full flex-col gap-2 lg:flex-row justify-around">
+        <div className="flex w-full flex-col justify-around gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <SelectInput
               label="MATERIAL DA ESTRUTURA"
@@ -68,7 +68,7 @@ function StructureBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             </div>
           ) : null}
         </div>
-        <div className="flex w-full flex-col gap-2 lg:flex-row justify-around">
+        <div className="flex w-full flex-col justify-around gap-2 lg:flex-row">
           <div className="w-full lg:w-1/4">
             <TextInput
               label="ORIENTAÇÃO"

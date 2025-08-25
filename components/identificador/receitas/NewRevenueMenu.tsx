@@ -58,7 +58,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
     callbackFn: () => console.log(),
   })
   return (
-    <div className="mt-2 flex w-[90%] flex-col gap-2 self-center rounded border border-gray-500 p-2">
+    <div className="border-primary/60 mt-2 flex w-[90%] flex-col gap-2 self-center rounded border p-2">
       <div className="my-2 flex w-full flex-col gap-2 lg:flex-row">
         <div className="w-full lg:w-1/2">
           <TextInput
@@ -103,7 +103,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
           />
         </div>
       </div>
-      <h1 className="font-Inter w-fit self-center rounded-md bg-gray-300 p-2 text-xs font-medium leading-none tracking-tight text-gray-700">
+      <h1 className="font-Inter bg-primary/20 text-primary/70 w-fit self-center rounded-md p-2 text-xs leading-none font-medium tracking-tight">
         OBS: O parâmetro de efetivação se refere a data em que a receita entra no regime de competência.
       </h1>
       <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
@@ -127,7 +127,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
         <div className="flex w-full items-center justify-center lg:w-1/2">
           <DateInput
             label={infoHolder.efetivacao.efetivado ? 'DATA DA EFETIVAÇÃO' : 'PREVISÃO DE EFETIVAÇÃO'}
-            labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+            labelClassName="text-center text-primary/60 font-normal font-raleway text-sm"
             value={infoHolder.efetivacao.data ? formatDate(infoHolder.efetivacao.data) : undefined}
             handleChange={(value) =>
               setInfoHolder((prev) => ({
@@ -151,7 +151,7 @@ function NewRevenueMenu({ session, projectId, projectName, projectIdentificator 
           disabled={isPending}
           // @ts-ignore
           onClick={() => handleCreateRevenue({ info: infoHolder })}
-          className="w-fit rounded border border-green-500 py-1 px-4 text-sm font-medium text-green-500 disabled:border-gray-500 disabled:text-gray-500 hover:bg-green-500 hover:text-white"
+          className="disabled:border-primary/60 disabled:text-primary/60 w-fit rounded border border-green-500 px-4 py-1 text-sm font-medium text-green-500 hover:bg-green-500 hover:text-white"
         >
           CRIAR RECEITA
         </button>

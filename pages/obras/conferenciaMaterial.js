@@ -38,8 +38,8 @@ function ConferenciaMaterial() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="grow bg-[#fff] p-6">
-        <div className="mb-2 flex w-full items-center border-b border-gray-300">
+      <div className="bg-background grow p-6">
+        <div className="border-primary/20 mb-2 flex w-full items-center border-b">
           <h1 className="pb-2 text-xl font-bold text-[#fead61]">CONFERÊNCIA DE MATERIAL</h1>
         </div>
         <div className="flex w-full flex-col flex-wrap gap-y-2">

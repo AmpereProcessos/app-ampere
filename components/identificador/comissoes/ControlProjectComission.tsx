@@ -215,7 +215,7 @@ function ProjectComissionDataBlock({
       <div className="flex w-full flex-col gap-1.5">
         <div className="flex w-full items-center gap-1.5">
           <Code className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">NOME DO PROJETO</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">NOME DO PROJETO</h3>
           <h3 className="text-sm font-semibold tracking-tight">
             {project.identificadorApp} - {project.nome}
           </h3>
@@ -223,7 +223,7 @@ function ProjectComissionDataBlock({
         {project.comissoes.comissionados.map((comissioned, index) => (
           <div key={`${comissioned.nome}-${index}`} className="flex w-full items-center gap-1.5">
             <UserRound className="h-4 w-4" />
-            <h3 className="text-sm font-semibold tracking-tighter text-primary/80">{comissioned.papel}</h3>
+            <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">{comissioned.papel}</h3>
             <Avatar className="h-5 w-5">
               <AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
               <AvatarFallback>{formatNameAsInitials(comissioned.nome || '')}</AvatarFallback>
@@ -235,33 +235,33 @@ function ProjectComissionDataBlock({
 
         <div className="flex w-full items-center gap-1.5">
           <FaSolarPanel className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DO PROJETO</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR DO PROJETO</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.valorProjeto || 0)}</h3>
         </div>
         <div className="flex w-full items-center gap-1.5">
           <MdElectricMeter className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DO PADRÃO</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR DO PADRÃO</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.valorPadrao || 0)}</h3>
         </div>
         <div className="flex w-full items-center gap-1.5">
           <MdOutlineRoofing className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DA ESTRUTURA</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR DA ESTRUTURA</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.valorEstruturaPersonalizada || 0)}</h3>
         </div>
         <div className="flex w-full items-center gap-1.5">
           <FaSolarPanel className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DO OEM</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR DO OEM</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.valorOem || 0)}</h3>
         </div>
         <div className="flex w-full items-center gap-1.5">
           <FaShieldHalved className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR DO SEGURO</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR DO SEGURO</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.valorSeguro || 0)}</h3>
         </div>
-        <div className="h-[1px] w-full bg-primary/10" />
+        <div className="bg-primary/10 h-px w-full" />
         <div className="flex w-full items-center gap-1.5">
           <BadgeDollarSign className="h-4 w-4" />
-          <h3 className="text-sm font-semibold tracking-tighter text-primary/80">VALOR COMISSIONÁVEL SUGERIDO</h3>
+          <h3 className="text-primary/80 text-sm font-semibold tracking-tighter">VALOR COMISSIONÁVEL SUGERIDO</h3>
           <h3 className="text-sm font-semibold tracking-tight">{formatToMoney(project.comissoes?.valorComissionavelSugerido || 0)}</h3>
         </div>
         <div className="flex w-full items-center justify-center">
@@ -289,7 +289,7 @@ function ProjectComissionDataBlock({
           labelClassName="text-[0.6rem]"
           holderClassName="text-xs p-2 min-h-[34px]"
         />
-        <h1 className="text-[0.6rem] font-medium tracking-tight text-primary/80">ITENS COMISSIONÁVEIS</h1>
+        <h1 className="text-primary/80 text-[0.6rem] font-medium tracking-tight">ITENS COMISSIONÁVEIS</h1>
         <div className="flex w-full flex-wrap items-center gap-1.5">
           {ComissionableItems.map((item) => {
             const itemIsInComissionableItems = infoHolder.comissionableItems.includes(item as TComissionableItemsEnum)
@@ -299,7 +299,7 @@ function ProjectComissionDataBlock({
                 className={cn('flex items-center gap-1.5 px-2 py-1', {
                   'bg-green-500 text-white': itemIsInComissionableItems,
                 })}
-                variant={'outline'}
+                variant={'outline-solid'}
                 size={'fit'}
                 onClick={() => {
                   updateComissionableItems(item as TComissionableItemsEnum)
@@ -312,7 +312,7 @@ function ProjectComissionDataBlock({
         </div>
         <div className="flex w-full flex-col gap-1.5">
           <div className="flex w-full items-center justify-between gap-2">
-            <h1 className="text-sm font-bold leading-none tracking-tight">COMISSIONADOS</h1>
+            <h1 className="text-sm leading-none font-bold tracking-tight">COMISSIONADOS</h1>
 
             <div className="w-fit">
               <Button
@@ -341,9 +341,9 @@ function ProjectComissionDataBlock({
             <button
               type="button"
               onClick={() => setNewComissionedMenuIsOpen(true)}
-              className="flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem] text-primary transition-colors hover:bg-blue-600 hover:text-white"
+              className="text-primary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem] transition-colors hover:bg-blue-600 hover:text-white"
             >
-              <Plus className="min-w-4 min-h-4 h-4 w-4" />
+              <Plus className="h-4 min-h-4 w-4 min-w-4" />
               <p>ADICIONAR COMISSIONADO</p>
             </button>
           </div>
@@ -368,15 +368,15 @@ type ComissionedCardProps = {
 }
 function ComissionedCard({ comissionableValue, comissioned, updateComissioned, removeComissioned }: ComissionedCardProps) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded-md border border-primary/30 bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary/30 bg-background flex w-full flex-col gap-1 rounded-md border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center justify-center gap-2">
           <button
             type="button"
             onClick={() => removeComissioned()}
-            className="flex items-center gap-1 rounded-full p-2 text-[0.6rem] text-primary transition-colors hover:bg-red-600 hover:text-white"
+            className="text-primary flex items-center gap-1 rounded-full p-2 text-[0.6rem] transition-colors hover:bg-red-600 hover:text-white"
           >
-            <Trash className="min-w-3 min-h-3 h-3 w-3" />
+            <Trash className="h-3 min-h-3 w-3 min-w-3" />
           </button>
           <h1 className="text-[0.6rem] font-bold tracking-tighter">COMISSÃO DO VENDEDOR:</h1>
           <Avatar className="h-5 w-5">
@@ -386,12 +386,12 @@ function ComissionedCard({ comissionableValue, comissioned, updateComissioned, r
           <h1 className="text-[0.6rem] font-bold tracking-tighter">{comissioned.nome}</h1>
         </div>
         <div
-          className={cn('flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80', {
+          className={cn('bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic', {
             'bg-orange-100 text-orange-700': !comissioned.dataValidacao,
             'bg-green-100 text-green-700': comissioned.dataValidacao,
           })}
         >
-          <BadgeCheck className={cn('min-w-3 min-h-3 h-3 w-3')} />
+          <BadgeCheck className={cn('h-3 min-h-3 w-3 min-w-3')} />
           <p className={cn('text-[0.57rem] font-medium')}>{comissioned.dataValidacao ? 'VALIDADO' : 'NÃO VALIDADO'}</p>
         </div>
       </div>
@@ -419,7 +419,7 @@ function ComissionedCard({ comissionableValue, comissioned, updateComissioned, r
         holderClassName="text-xs p-2 min-h-[34px]"
       />
       <div className="flex w-full items-center justify-center">
-        <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.55rem] font-bold italic text-primary/80">
+        <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center text-[0.55rem] font-bold italic">
           <p>COMISSÃO FINAL DO VENDEDOR</p>
           <p className="text-[0.57rem] font-black text-[#15599a]">{formatToMoney(comissionableValue * (comissioned.porcentagem / 100))}</p>
         </div>

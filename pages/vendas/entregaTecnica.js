@@ -63,7 +63,7 @@ function EntregaTecnica() {
   if (status == 'authenticated') {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col border-b border-gray-300 pb-2">
+        <div className="border-primary/20 flex flex-col border-b pb-2">
           <h1 className="text-center text-xl font-bold text-[#15599a]">ENTREGAS TÉCNICAS PENDENTES ({filteredProjects?.length})</h1>
           <div className="flex w-full items-center justify-center gap-2">
             <button
@@ -100,7 +100,7 @@ function EntregaTecnica() {
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

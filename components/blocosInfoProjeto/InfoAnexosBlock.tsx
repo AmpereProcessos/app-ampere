@@ -43,14 +43,14 @@ function InfoAnexosBlock({ projectId, project, session }: InfoAnexosBlockProps) 
   }
   return (
     <div className="flex w-full flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ARQUIVOS DO PROJETO</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">ARQUIVOS DO PROJETO</span>
       <div className="flex w-full flex-col gap-2 p-2">
         <div className="flex w-full flex-wrap items-center justify-end gap-2">
           <button
             onClick={() => setNewAttachmentMenuIsOpen((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-gray-300  hover:bg-red-300': newAttachmentMenuIsOpen,
-              'bg-green-300  hover:bg-green-400': !newAttachmentMenuIsOpen,
+              'bg-primary/20 hover:bg-red-300': newAttachmentMenuIsOpen,
+              'bg-green-300 hover:bg-green-400': !newAttachmentMenuIsOpen,
             })}
           >
             <MdAttachFile />
@@ -120,7 +120,7 @@ function ProjectFilesFiltersMenu({ allowedCategories, filters, setFilters }: Pro
             key={index}
             onClick={() => handleCategoryChange(cat.value)}
             className={cn(
-              'rounded-lg border border-primary bg-transparent px-2 py-1 text-[0.55rem] font-bold text-primary duration-300 ease-in-out lg:text-[0.6rem]',
+              'border-primary text-primary rounded-lg border bg-transparent px-2 py-1 text-[0.55rem] font-bold duration-300 ease-in-out lg:text-[0.6rem]',
               filters.categories.includes(cat.value) ? 'bg-primary text-secondary' : ''
             )}
             // className={`rounded-lg ${category == cat ? "bg-blue-500 text-white" : "bg-transparent text-blue-500"} border border-blue-500 px-2 py-1 text-[0.6rem] font-bold`}

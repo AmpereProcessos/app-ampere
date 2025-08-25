@@ -153,10 +153,10 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
     return goToNextStage()
   }
   return (
-    <div className="flex h-full max-h-full w-full flex-col bg-[#fff] px-2">
-      <h1 className="w-full rounded-md  bg-gray-700 p-1 text-center font-medium text-white">INFORMAÇÕES DOS EQUIPAMENTOS</h1>
-      <div className="flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-        <p className="my-2 w-full text-center text-sm leading-none tracking-tight text-gray-500">
+    <div className="bg-background flex h-full max-h-full w-full flex-col px-2">
+      <h1 className="bg-primary/70 w-full rounded-md p-1 text-center font-medium text-white">INFORMAÇÕES DOS EQUIPAMENTOS</h1>
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto px-2 py-1">
+        <p className="text-primary/60 my-2 w-full text-center text-sm leading-none tracking-tight">
           Preencha abaixo os <strong className="text-cyan-500">equipamentos</strong> a serem análisados, ou, escolha um dos kits ativos.
         </p>
         <div className="flex w-full flex-col gap-1">
@@ -230,7 +230,7 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
           </div>
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addInverterToEquipments(inverterHolder)}
             >
               ADICIONAR INVERSOR
@@ -308,7 +308,7 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
           </div>
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addModuleToEquipments(moduleHolder)}
             >
               ADICIONAR MÓDULO
@@ -398,7 +398,7 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
 
           <div className="flex items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addPersonalizedEquipment(personalizedProductHolder)}
             >
               ADICIONAR PRODUTO PERSONALIZADO
@@ -406,17 +406,17 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
           </div>
         </div>
 
-        <h1 className="mt-2 w-full text-start font-sans  font-bold text-cyan-500">EQUIPAMENTOS ESCOLHIDOS</h1>
+        <h1 className="mt-2 w-full text-start font-sans font-bold text-cyan-500">EQUIPAMENTOS ESCOLHIDOS</h1>
         <div className="flex w-full flex-col flex-wrap justify-around gap-2 lg:flex-row">
           {infoHolder.equipamentos.length > 0 ? (
             infoHolder.equipamentos.map((equipment, index) => (
-              <div key={index} className="mt-1 flex w-full flex-col rounded-md border border-gray-300 p-2 lg:w-[350px]">
+              <div key={index} className="border-primary/20 mt-1 flex w-full flex-col rounded-md border p-2 lg:w-[350px]">
                 <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
                   <div className="flex items-center gap-1">
                     <div className="flex h-[25px] w-[25px] items-center justify-center rounded-full border border-black p-1 text-[15px]">
                       {renderProductCategoryIcon(equipment.categoria, 18)}
                     </div>
-                    <p className="text-[0.6rem] font-medium leading-none tracking-tight lg:text-xs">
+                    <p className="text-[0.6rem] leading-none font-medium tracking-tight lg:text-xs">
                       <strong className="text-[#FF9B50]">{equipment.qtde}</strong> x {equipment.modelo}
                     </p>
                   </div>
@@ -431,21 +431,21 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
                 <div className="flex w-full items-center justify-end gap-2 pl-2">
                   <div className="flex items-center gap-1">
                     <FaIndustry size={15} />
-                    <p className="text-[0.6rem] font-light text-gray-500">{equipment.fabricante}</p>
+                    <p className="text-primary/60 text-[0.6rem] font-light">{equipment.fabricante}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <ImPower size={15} />
-                    <p className="text-[0.6rem] font-light text-gray-500">{equipment.potencia} W</p>
+                    <p className="text-primary/60 text-[0.6rem] font-light">{equipment.potencia} W</p>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhum equipamento adicionado à lista.</p>
+            <p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhum equipamento adicionado à lista.</p>
           )}
         </div>
         <div className="flex w-full flex-col gap-1 rounded border border-orange-700 p-2">
-          <p className="my-2 w-full text-center text-sm leading-none tracking-tight text-gray-500">
+          <p className="text-primary/60 my-2 w-full text-center text-sm leading-none tracking-tight">
             A análise será feita para venda de um <strong className="text-orange-700">aumento de sistema</strong> ? Se sim, marque a opção abaixo e
             preencha acerca dos equipamentos já instalados.
           </p>
@@ -463,7 +463,7 @@ function SystemInfo({ infoHolder, setInfoHolder, goToNextStage, goToPreviousStag
         </div>
       </div>
       <div className="mt-2 flex w-full justify-between">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button onClick={() => validateAndProceed()} className="rounded p-2 font-bold hover:bg-black hover:text-white">

@@ -129,53 +129,53 @@ function OemPage() {
   if (status === 'authenticated') {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
           <div className="GAP-2 flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS NOS ESTAGIO DE O&M</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NOS ESTAGIO DE O&M</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
                 <VscDiffAdded />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-xs text-gray-500">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
+                <p className="text-primary/60 text-xs">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">QUANTIDADE DE MÓDULOS</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">QUANTIDADE DE MÓDULOS</h1>
                 <FaSolarPanel />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES PENDENTES</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES PENDENTES</h1>
                 <FaList />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">MANUTENÇÕES ATRASADAS</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES ATRASADAS</h1>
                 <MdError />
               </div>
               <div className="mt-2 flex w-full flex-col">
@@ -434,29 +434,29 @@ function OemPage() {
                   setModalProject({ id: project._id, isOpen: true })
                 }}
                 key={project._id}
-                className="w-full cursor-pointer border border-gray-300 hover:bg-blue-100 md:w-[350px]  lg:w-[450px]"
+                className="border-primary/20 dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2 pb-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold text-gray-700">{project.nomeDoContrato}</p>
+                    <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
                     <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
                   </div>
                   <ProjectCardsTags projectTags={project.etiquetas} />
 
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CIDADE</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CIDADE</span>
                       <p className="text-xs font-medium tracking-tight">{project.cidade}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">TOPOLOGIA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TOPOLOGIA</span>
                       <p className="text-xs font-medium tracking-tight">{project.sistema.topologia}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className={`text-[0.6rem] leading-none tracking-tight text-gray-500`}>STATUS DO O&M</span>
+                      <span className={`text-primary/60 text-[0.6rem] leading-none tracking-tight`}>STATUS DO O&M</span>
                       <p
                         className={`text-xs font-medium tracking-tight ${checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color}`}
                       >
@@ -464,23 +464,23 @@ function OemPage() {
                       </p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">NÚMERO DE MÓDULOS</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">NÚMERO DE MÓDULOS</span>
                       <p className={'text-xs font-medium tracking-tight'}>{project.sistema.qtdeModulos}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">EQUIPE TÉCNICA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">EQUIPE TÉCNICA</span>
                       <p className={'text-xs font-medium tracking-tight'}>{project.obra.equipeResp || 'NÃO DEFINIDO'}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">SAÍDA DE OBRA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">SAÍDA DE OBRA</span>
                       <p className={'text-xs font-medium tracking-tight'}>{formatDateAsLocale(project.obra.saida)}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-center">
                     <div className="flex flex-col items-center">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">PLANO DE O&M</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PLANO DE O&M</span>
                       <p className={'text-center text-xs font-medium tracking-tight text-cyan-500'}>{project.oem?.plano || 'NÃO DEFINIDO'}</p>
                     </div>
                   </div>
@@ -492,7 +492,7 @@ function OemPage() {
           )}
         </div>
         <Link href={'/oem/baixaPerformance'}>
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">ACOMPANHAMENTO DE PERFORMANCE</p>
           </div>
         </Link>

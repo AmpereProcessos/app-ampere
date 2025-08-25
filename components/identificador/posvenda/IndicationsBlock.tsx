@@ -26,8 +26,8 @@ function IndicationsBlock({ projectId, projectName }: IndicationsBlockProps) {
   })
   return (
     <div className="flex w-full flex-col">
-      <div className="my-6 h-[1px] w-full bg-gray-500"></div>
-      <p className="my-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
+      <div className="bg-primary/60 my-6 h-px w-full"></div>
+      <p className="text-primary/80 my-2 w-full self-center text-center font-medium tracking-tight lg:w-[60%]">
         Gostou dos nossos serviços ? Indique um conhecido para começar já a economizar na conta de luz.
       </p>
       <div className="flex w-full items-center gap-2">
@@ -61,7 +61,7 @@ function IndicationsBlock({ projectId, projectName }: IndicationsBlockProps) {
               indication: { nome: indication.nome, telefone: indication.telefone, idIndicacao: projectId },
             })
           }
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR INDICAÇÃO
         </button>
@@ -72,18 +72,18 @@ function IndicationsBlock({ projectId, projectName }: IndicationsBlockProps) {
         {isSuccess ? (
           indications.length > 0 ? (
             indications.map((indication) => (
-              <div key={indication._id} className="flex w-[350px] flex-col rounded-md border border-gray-500 p-3">
-                <h1 className="grow text-xs font-black leading-none tracking-tight  lg:text-sm">{indication.nome}</h1>
+              <div key={indication._id} className="border-primary/60 flex w-[350px] flex-col rounded-md border p-3">
+                <h1 className="grow text-xs leading-none font-black tracking-tight lg:text-sm">{indication.nome}</h1>
               </div>
             ))
           ) : (
-            <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+            <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
               Oops, parece que não tem nenhuma indicação feita por você. Vamos começar ?
             </p>
           )
         ) : null}
       </div>
-      <div className="my-6 h-[1px] w-full bg-gray-500"></div>
+      <div className="bg-primary/60 my-6 h-px w-full"></div>
     </div>
   )
 }

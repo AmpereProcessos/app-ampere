@@ -131,7 +131,7 @@ function InsideSales() {
     return (
       <div></div>
       //   <div className="flex grow flex-col p-6">
-      //     <div className="flex flex-col border-b border-gray-300 pb-2">
+      //     <div className="flex flex-col border-b border-primary/20 pb-2">
       //       <div className="flex items-center justify-between">
       //         <h1 className="text-start  font-['Roboto'] text-2xl  font-bold text-[#15599a]">
       //           ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
@@ -159,11 +159,11 @@ function InsideSales() {
       //           </div>
       //         </div>
       //         {dropdownMenuVisible ? (
-      //           <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+      //           <div className="cursor-pointer text-primary/80 hover:text-blue-400">
       //             <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
       //           </div>
       //         ) : (
-      //           <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+      //           <div className="cursor-pointer text-primary/80 hover:text-blue-400">
       //             <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
       //           </div>
       //         )}
@@ -187,7 +187,7 @@ function InsideSales() {
       //                     })
       //                   }
       //                   type="date"
-      //                   className="border border-gray-300 py-1 px-2 outline-none"
+      //                   className="border border-primary/20 py-1 px-2 outline-hidden"
       //                 />
       //                 <p>&</p>
       //                 <input
@@ -202,7 +202,7 @@ function InsideSales() {
       //                     })
       //                   }
       //                   type="date"
-      //                   className="border border-gray-300 py-1 px-2 outline-none"
+      //                   className="border border-primary/20 py-1 px-2 outline-hidden"
       //                 />
       //               </div>
       //               <div className="flex items-center justify-between gap-2">
@@ -220,7 +220,7 @@ function InsideSales() {
       //               <div className="flex flex-col items-center gap-2 lg:flex-row">
       //                 <input
       //                   type={'text'}
-      //                   className="w-full rounded border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[250px]"
+      //                   className="w-full rounded border border-primary/20 p-1.5 outline-hidden placeholder:italic lg:w-[250px]"
       //                   placeholder="Digite o nome do contrato"
       //                   value={filters.pesquisaFilter}
       //                   onChange={(e) =>
@@ -234,7 +234,7 @@ function InsideSales() {
       //                   <div className="flex w-fit flex-col items-center">
       //                     <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
       //                     <input
-      //                       className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+      //                       className="w-full text-center text-xs uppercase text-primary/80 outline-hidden"
       //                       type="date"
       //                       value={dateFilter.after ? formatDate(dateFilter.after) : null}
       //                       onChange={(e) =>
@@ -248,7 +248,7 @@ function InsideSales() {
       //                   <div className="flex w-fit flex-col items-center">
       //                     <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
       //                     <input
-      //                       className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+      //                       className="w-full text-center text-xs uppercase text-primary/80 outline-hidden"
       //                       type="date"
       //                       value={dateFilter.before ? formatDate(dateFilter.before) : null}
       //                       onChange={(e) =>

@@ -127,13 +127,13 @@ function PropostaOeM() {
   }
   if (pageType == 'FORM')
     return (
-      <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
-        <div className="w-[90%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
-          <div className="flex items-center justify-center h-[80px]">
+      <div className="flex grow flex-col items-center bg-[#15599a] p-6">
+        <div className="bg-background border-primary/20 flex w-[90%] flex-col items-center rounded-lg border p-2 shadow-lg">
+          <div className="flex h-[80px] items-center justify-center">
             <Image height={'80px'} width={'80px'} src={Logo} objectFit="fill" />
           </div>
-          <div className="flex flex-col w-full px-4 py-4 items-center gap-y-2">
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DA VENDA</h1>
+          <div className="flex w-full flex-col items-center gap-y-2 px-4 py-4">
+            <h1 className="w-full pb-2 text-center text-lg font-medium text-[#fead61]">INFORMAÇÕES DA VENDA</h1>
             <TextFloatingInput
               label={'NOME DO CLIENTE'}
               editable={true}
@@ -197,7 +197,7 @@ function PropostaOeM() {
               }
               width={'50%'}
             />
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DO SISTEMA</h1>
+            <h1 className="w-full pb-2 text-center text-lg font-medium text-[#fead61]">INFORMAÇÕES DO SISTEMA</h1>
             <NumberFloatingInput
               label={'QUANTIDADE DE MÓDULOS'}
               editable={true}
@@ -234,8 +234,8 @@ function PropostaOeM() {
               }
               width={'50%'}
             />
-            <div className="w-full flex items-center justify-center gap-2">
-              <div className="lg:ml-[24px] ml-0 w-full lg:w-[50%]">
+            <div className="flex w-full items-center justify-center gap-2">
+              <div className="ml-0 w-full lg:ml-[24px] lg:w-[50%]">
                 <NumberFloatingInput
                   label={'DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO'}
                   editable={true}
@@ -251,15 +251,15 @@ function PropostaOeM() {
               </div>
               <button
                 onClick={() => getDistanceBetweenCities(`${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`, 'ITUIUTABA, MG, BRASIL')}
-                className="bg-[#fead61] text-[#15599a] p-1 rounded hover:bg-[#15599a] hover:text-[#fead61]"
+                className="rounded bg-[#fead61] p-1 text-[#15599a] hover:bg-[#15599a] hover:text-[#fead61]"
               >
                 <AiOutlineSearch />
               </button>
             </div>
           </div>
-          <div className="w-full flex items-center justify-end pr-2">
+          <div className="flex w-full items-center justify-end pr-2">
             {!msg.status ? (
-              <button onClick={createPropose} className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white">
+              <button onClick={createPropose} className="rounded bg-green-300 p-2 font-medium hover:bg-green-500 hover:text-white">
                 CRIAR PROPOSTA
               </button>
             ) : (
@@ -268,7 +268,7 @@ function PropostaOeM() {
                   <div role="status">
                     <svg
                       aria-hidden="true"
-                      className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -290,7 +290,7 @@ function PropostaOeM() {
                     <p className={`text-xs italic ${msg.color} mr-4`}>{msg.text}</p>
                     <button
                       onClick={() => setPageType('PROPOSE')}
-                      className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white"
+                      className="rounded bg-green-300 p-2 font-medium hover:bg-green-500 hover:text-white"
                     >
                       VER PROPOSTA
                     </button>

@@ -64,12 +64,12 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
         <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex items-center gap-2">
-              <h1 className="pl-6 font-bold  text-[#15599a]">
+              <h1 className="pl-6 font-bold text-[#15599a]">
                 {infoHolder?.qtde} - {infoHolder?.nomeDoContrato}
               </h1>
-              {infoHolder?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{infoHolder?.codigoSVB}</p>}
+              {infoHolder?.codigoSVB && <p className="text-primary/80 text-sm font-bold">#{infoHolder?.codigoSVB}</p>}
             </div>
 
             <div className="flex items-center gap-x-2">
@@ -86,7 +86,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder?._id && session ? (
-            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto">
               <NotificationCreationBlock session={session} nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
               <InfoVendaBlock

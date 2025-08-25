@@ -17,7 +17,7 @@ import { TbAlertCircle } from 'react-icons/tb'
 function renderInputText(files: FileList | null) {
   if (!files)
     return (
-      <p className="mb-2 px-2 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-primary/60 mb-2 px-2 text-center text-sm dark:text-gray-400">
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
@@ -25,9 +25,9 @@ function renderInputText(files: FileList | null) {
   const filesAsArr = Array.from(files)
   if (filesAsArr.length > 1) {
     const str = filesAsArr.map((file) => formatLongString(file.name, 15)).join(', ')
-    return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{str}</p>
+    return <p className="text-primary/60 mb-2 text-sm dark:text-gray-400">{str}</p>
   }
-  return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{filesAsArr[0]?.name}</p>
+  return <p className="text-primary/60 mb-2 text-sm dark:text-gray-400">{filesAsArr[0]?.name}</p>
 }
 
 type ProjectFileAttachmentBlockProps = {
@@ -118,9 +118,9 @@ function ProjectFileAttachmentBlock({ categories, client, project, id, multiple 
       <div className="relative flex w-full items-center justify-center">
         <label
           htmlFor="dropzone-file"
-          className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          className="dark:hover:bg-bray-800 dark:border-primary/80 dark:hover:bg-primary/80 border-primary/20 dark:hover:border-primary/60 hover:bg-primary/20 dark:bg-primary/70 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50"
         >
-          <div className="flex flex-col items-center justify-center pb-6 pt-5 text-gray-800">
+          <div className="text-primary/80 flex flex-col items-center justify-center pt-5 pb-6">
             <BiSolidCloudDownload color={'rgb(31,41,55)'} size={50} />
 
             {renderInputText(files)}
@@ -157,7 +157,7 @@ function ProjectFileAttachmentBlock({ categories, client, project, id, multiple 
         </div>
       </div>
       {isAttachingContract && isPendingProjectInitiation ? (
-        <div className="px my-1 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 py-1 px-2 italic text-orange-500">
+        <div className="px my-1 flex w-full flex-col rounded-xl border border-orange-500 bg-orange-100 px-2 py-1 text-orange-500 italic">
           <div className="flex items-center justify-center gap-1">
             <TbAlertCircle />
             <p className="text-sm">LEMBRETE</p>
@@ -168,7 +168,7 @@ function ProjectFileAttachmentBlock({ categories, client, project, id, multiple 
         </div>
       ) : null}
       {isAttachingContract && isPendingPurchaseAnalysisLiberation ? (
-        <div className="px my-1 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 py-1 px-2 italic text-yellow-500">
+        <div className="px my-1 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 px-2 py-1 text-yellow-500 italic">
           <div className="flex items-center justify-center gap-1">
             <TbAlertCircle />
             <p className="text-sm">LEMBRETE</p>
@@ -181,7 +181,7 @@ function ProjectFileAttachmentBlock({ categories, client, project, id, multiple 
       <button
         disabled={loading}
         onClick={uploadFiles}
-        className="w-fit self-center rounded-md border border-[#15599a] p-1 text-center font-bold text-[#15599a] duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white enabled:hover:bg-[#15599a] enabled:hover:text-white"
+        className="disabled:bg-primary/60 w-fit self-center rounded-md border border-[#15599a] p-1 text-center font-bold text-[#15599a] duration-300 ease-in-out enabled:hover:bg-[#15599a] enabled:hover:text-white disabled:text-white"
       >
         ANEXAR
       </button>

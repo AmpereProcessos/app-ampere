@@ -43,8 +43,8 @@ function ServiceOrderObservationsBlock({ infoHolder, updateInfoHolder, useObserv
         <button
           onClick={() => setNewObservationMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': newObservationMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !newObservationMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': newObservationMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !newObservationMenuIsOpen,
           })}
         >
           <MdAddBox />
@@ -58,12 +58,12 @@ function ServiceOrderObservationsBlock({ infoHolder, updateInfoHolder, useObserv
           <NewObservationMenu addObservation={addObservation} closeMenu={() => setNewObservationMenuIsOpen(false)} />
         ) : null}
       </AnimatePresence>
-      <h1 className="text-[0.65rem] font-bold leading-none tracking-tight text-gray-500 lg:text-xs">LISTA DE OBSERVAÇÕES</h1>
+      <h1 className="text-primary/60 text-[0.65rem] leading-none font-bold tracking-tight lg:text-xs">LISTA DE OBSERVAÇÕES</h1>
       <div className="flex w-full flex-col gap-2">
         {infoHolder.observacoes.length > 0 ? (
           infoHolder.observacoes.map((obs, index) => <ObservationCard key={index} observation={obs} handleRemove={() => removeObservation(index)} />)
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhuma observação adicionada ao projeto.</p>
+          <p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhuma observação adicionada ao projeto.</p>
         )}
       </div>
     </div>
@@ -89,7 +89,7 @@ function NewObservationMenu({ addObservation, closeMenu }: NewObservationMenuPro
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+      className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
     >
       <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVA ATUALIZAÇÃO</h1>
       <div className="flex w-full grow flex-col gap-2 p-3">
@@ -131,9 +131,9 @@ type ObservationCardProps = {
 }
 function ObservationCard({ observation, handleRemove }: ObservationCardProps) {
   return (
-    <div className="flex w-full flex-col rounded-md border border-gray-500">
+    <div className="border-primary/60 flex w-full flex-col rounded-md border">
       <div className="flex min-h-[25px] w-full flex-col items-start justify-between gap-1 lg:flex-row">
-        <div className="flex w-full items-center justify-center rounded-br-md rounded-tl-md bg-cyan-700 lg:w-[40%]">
+        <div className="flex w-full items-center justify-center rounded-tl-md rounded-br-md bg-cyan-700 lg:w-[40%]">
           <p className="w-full text-center text-xs font-medium text-white">{observation.topico}</p>
         </div>
         <div className="flex grow items-center justify-end gap-2 p-2">
@@ -146,7 +146,7 @@ function ObservationCard({ observation, handleRemove }: ObservationCardProps) {
           </button>
         </div>
       </div>
-      <h1 className="w-full p-2 text-center text-xs font-medium tracking-tight text-gray-500">{observation.descricao}</h1>
+      <h1 className="text-primary/60 w-full p-2 text-center text-xs font-medium tracking-tight">{observation.descricao}</h1>
     </div>
   )
 }

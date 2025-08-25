@@ -97,41 +97,41 @@ function Analise() {
   }, [session])
   return (
     <div className="flex grow flex-col p-6">
-      <div className="mb-2 flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 mb-2 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-            <p className="text-center text-2xl font-bold uppercase text-[#15599a]">ANÁLISE COMERCIAL</p>
+            <p className="text-center text-2xl font-bold text-[#15599a] uppercase">ANÁLISE COMERCIAL</p>
           </div>
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">CONTAGEM DE PROJETOS</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">CONTAGEM DE PROJETOS</h1>
               <VscDiffAdded />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">APP: {getStats({ info: projects }).projetos.app}</div>
-              <p className="text-sm text-gray-500">CRM: {getStats({ info: projects }).projetos.crm}</p>
+              <p className="text-primary/60 text-sm">CRM: {getStats({ info: projects }).projetos.crm}</p>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">VALOR VENDIDO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">VALOR VENDIDO</h1>
               <MdAttachMoney />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">APP: {formatToMoney(getStats({ info: projects }).vendido.app)}</div>
-              <p className="text-sm text-gray-500">CRM: {formatToMoney(getStats({ info: projects }).vendido.crm)}</p>
+              <p className="text-primary/60 text-sm">CRM: {formatToMoney(getStats({ info: projects }).vendido.crm)}</p>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">POTÊNCIA VENDIDA</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">POTÊNCIA VENDIDA</h1>
               <ImPower />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">APP: {formatDecimalPlaces(getStats({ info: projects }).potencia.app)}</div>
-              <p className="text-sm text-gray-500">CRM: {formatDecimalPlaces(getStats({ info: projects }).potencia.crm)}</p>
+              <p className="text-primary/60 text-sm">CRM: {formatDecimalPlaces(getStats({ info: projects }).potencia.crm)}</p>
             </div>
           </div>
         </div>
@@ -209,7 +209,7 @@ function Analise() {
           </div>
         ) : (
           <div className="flex grow items-center justify-center">
-            <h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
+            <h1 className="text-primary/60 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
           </div>
         )
       ) : null}

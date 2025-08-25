@@ -22,11 +22,11 @@ function FractionnementCard({ fractionnement, fractionnementIndex, infoHolder, s
     return setInfoHolder((prev) => ({ ...prev, fracionamento: fractionnements }))
   }
   return (
-    <div className={`flex w-full flex-col rounded-md border border-gray-500 p-2 shadow-sm`}>
+    <div className={`border-primary/60 flex w-full flex-col rounded-md border p-2 shadow-xs`}>
       <div className="flex w-full items-start justify-between gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">FRAÇÃO DE {formatDecimalPlaces(fractionnement.porcentagem)}%</h1>
-          <h1 className="rounded-full bg-gray-800 px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">
+          <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">FRAÇÃO DE {formatDecimalPlaces(fractionnement.porcentagem)}%</h1>
+          <h1 className="bg-primary/80 rounded-full px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">
             {formatToMoney((infoHolder.total * fractionnement.porcentagem) / 100)}
           </h1>
           <button
@@ -87,14 +87,14 @@ function FractionnementCard({ fractionnement, fractionnementIndex, infoHolder, s
       <div className="mt-2 flex w-full flex-wrap items-center justify-start gap-2">
         <div className="flex items-center gap-2">
           <BsCalendar color={'#ffc300'} />
-          <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+          <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
             PREVISTO PARA {formatDateAsLocale(fractionnement.dataPrevisaoRecebimento)}
           </p>
         </div>
         {fractionnement.dataRecebimento ? (
           <div className="flex items-center gap-2">
             <BsCalendarCheck color={'#76c893'} />
-            <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+            <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
               RECEBIDO EM {formatDateAsLocale(fractionnement.dataRecebimento)}
             </p>
           </div>

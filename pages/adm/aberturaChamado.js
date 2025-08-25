@@ -102,8 +102,8 @@ function AberturaChamadoADM() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <section className="flex min-h-[100vh] items-center justify-center bg-[#fff]">
-        <div className="flex w-[40%] flex-col items-center rounded border border-[#15599a] bg-[#fff] p-4">
+      <section className="bg-background flex min-h-screen items-center justify-center">
+        <div className="bg-background flex w-[40%] flex-col items-center rounded border border-[#15599a] p-4">
           <h1 className="mt-2 text-center font-bold text-[#15599a]">ABERTURA DE CHAMADOS - FINANCEIRO</h1>
           <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
             <span className="font-bold">NOME DO CLIENTE</span>
@@ -135,7 +135,7 @@ function AberturaChamadoADM() {
             <select
               value={callInfo.demanda}
               onChange={(e) => setCallInfo({ ...callInfo, demanda: e.target.value })}
-              className="h-[36px] grow border border-gray-300 text-center outline-none"
+              className="border-primary/20 h-[36px] grow border text-center outline-hidden"
             >
               <option>PAGAMENTO</option>
               <option>COBRANÇA</option>
@@ -152,7 +152,7 @@ function AberturaChamadoADM() {
                   servico: e.target.value.toUpperCase(),
                 })
               }
-              className="font-sm h-[36px] border border-gray-300 p-2 text-center outline-none"
+              className="font-sm border-primary/20 h-[36px] border p-2 text-center outline-hidden"
             />
           </div>
           <div className="mt-2 grid w-full grid-cols-1 grid-rows-2 items-center lg:grid-cols-2 lg:grid-rows-1">
@@ -166,7 +166,7 @@ function AberturaChamadoADM() {
                   valor: Number(e.target.value),
                 })
               }
-              className="font-sm h-[36px] border border-gray-300 p-2 text-center outline-none"
+              className="font-sm border-primary/20 h-[36px] border p-2 text-center outline-hidden"
             />
           </div>
           {callInfo.demanda == 'PAGAMENTO' && (
@@ -180,7 +180,7 @@ function AberturaChamadoADM() {
                     nomeRecebedor: e.target.value.toUpperCase(),
                   })
                 }
-                className="font-sm h-[36px] border border-gray-300 p-2 text-center outline-none"
+                className="font-sm border-primary/20 h-[36px] border p-2 text-center outline-hidden"
               />
             </div>
           )}
@@ -195,7 +195,7 @@ function AberturaChamadoADM() {
                   observacoes: e.target.value.toUpperCase(),
                 })
               }
-              className="font-sm resize-none border border-gray-300 bg-gray-100 p-2 text-center outline-none"
+              className="font-sm border-primary/20 bg-primary/20 resize-none border p-2 text-center outline-hidden"
             />
           </div>
           {msg.text && <p className={`${msg.color} my-1 italic`}>{msg.text}</p>}

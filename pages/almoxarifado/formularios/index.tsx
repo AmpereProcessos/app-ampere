@@ -52,10 +52,10 @@ function Formularios() {
 
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">
               FORMULÁRIOS DE SAÍDA <strong className="text-[#fead41]">({forms?.length || '...'})</strong>
             </p>
           </div>
@@ -82,11 +82,11 @@ function Formularios() {
               </div>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
@@ -135,7 +135,7 @@ function Formularios() {
                   onClick={() => setFilters((prev) => ({ ...prev, done: !prev.done }))}
                   className={`rounded-md border border-blue-600 ${
                     filters.done ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600'
-                  }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                  } h-[49px] px-4 py-1 text-sm font-bold text-white`}
                 >
                   FINALIZADOS
                 </button>
@@ -144,7 +144,7 @@ function Formularios() {
                   onClick={() => setFilters((prev) => ({ ...prev, notDone: !prev.notDone }))}
                   className={`rounded-md border border-orange-600 ${
                     filters.notDone ? 'bg-orange-600 text-white' : 'bg-transparent text-orange-600'
-                  }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                  } h-[49px] px-4 py-1 text-sm font-bold text-white`}
                 >
                   EM ABERTO
                 </button>
@@ -160,7 +160,7 @@ function Formularios() {
           {forms.length > 0 ? (
             forms.map((form) => <FormularyCard key={form._id} formulary={form} openModal={(id) => setModalForm({ isOpen: true, id: id })} />)
           ) : (
-            <p className="w-full text-center font-medium italic text-gray-500">Nenhum formulário encontrado para o parâmetros de filtro.</p>
+            <p className="text-primary/60 w-full text-center font-medium italic">Nenhum formulário encontrado para o parâmetros de filtro.</p>
           )}
         </div>
       ) : null}
@@ -189,7 +189,7 @@ function Formularios() {
       <button
         type="button"
         onClick={() => setNewFormModalIsOpen(true)}
-        className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
+        className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
       >
         <p className="text-sm font-bold uppercase">Novo Formulário</p>
       </button>

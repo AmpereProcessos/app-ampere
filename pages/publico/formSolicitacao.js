@@ -130,13 +130,13 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
     tipoDeServico: 'SISTEMA FOTOVOLTAICO',
   })
   return (
-    <div className="p-6 bg-[#fff] min-h-[100vh] flex flex-col">
-      <div className="flex self-center items-center h-[100px] w-[100px]">
+    <div className="bg-background flex min-h-screen flex-col p-6">
+      <div className="flex h-[100px] w-[100px] items-center self-center">
         <Image src={Logo} />
       </div>
-      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-2xl">Formulário de Solicitacão</h1>
+      <h1 className="font-raleway text-center text-2xl font-bold text-[#15599a] uppercase">Formulário de Solicitacão</h1>
       <div className="flex flex-col items-center gap-y-5">
-        <div className="w-full flex flex-wrap justify-around border border-[#15599a] p-2 shadow-lg bg-[#fff]">
+        <div className="bg-background flex w-full flex-wrap justify-around border border-[#15599a] p-2 shadow-lg">
           <SelectInput
             label={'Vendedor'}
             value={info.nomeVendedor}

@@ -30,11 +30,11 @@ function TotemNumberInput({ width, label, showLabel, showTag = true, value, edit
   return (
     <div ref={divReff} className={`relative flex min-h-[50px] w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
-        <label htmlFor={inputIdentifier} className="font-sans font-bold  text-[#353432]">
+        <label htmlFor={inputIdentifier} className="font-sans font-bold text-[#353432]">
           {label}
         </label>
       ) : null}
-      <div onClick={() => setIsFocused(true)} className="flex w-full grow items-center gap-2 rounded-lg border border-gray-300 p-3 shadow-sm">
+      <div onClick={() => setIsFocused(true)} className="border-primary/20 flex w-full grow items-center gap-2 rounded-lg border p-3 shadow-xs">
         {showTag ? <p>R$</p> : null}
 
         <div className="grow rounded-md bg-transparent text-end text-sm">{value}</div>
@@ -47,7 +47,7 @@ function TotemNumberInput({ width, label, showLabel, showTag = true, value, edit
              type="number"
              placeholder={placeholder}
              onFocus={() => setIsFocused(true)}
-             className="grow rounded-md text-sm outline-none placeholder:italic text-end bg-transparent"
+             className="grow rounded-md text-sm outline-hidden placeholder:italic text-end bg-transparent"
             /> */}
       </div>
       {isFocused ? (

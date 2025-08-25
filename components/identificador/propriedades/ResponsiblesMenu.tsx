@@ -56,7 +56,7 @@ function ResponsiblesMenu({ propertyHolder, setPropertyHolder }: ResponsiblesMen
   return (
     <div className="flex w-full flex-col items-center gap-1">
       <h1 className="w-full text-center font-black">RESPONSÁVEIS</h1>
-      <p className="w-full text-center text-sm tracking-tight text-gray-500">Adicione aqui os responsáveis em posse da propriedade.</p>
+      <p className="text-primary/60 w-full text-center text-sm tracking-tight">Adicione aqui os responsáveis em posse da propriedade.</p>
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-[30%]">
           <SelectInputWithImages
@@ -107,7 +107,7 @@ function ResponsiblesMenu({ propertyHolder, setPropertyHolder }: ResponsiblesMen
       <div className="mt-1 flex w-full items-center justify-end">
         <button
           onClick={() => addResponsible(responsibleHolder)}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR RESPONSÁVEL
         </button>
@@ -115,13 +115,13 @@ function ResponsiblesMenu({ propertyHolder, setPropertyHolder }: ResponsiblesMen
       <div className="flex w-full flex-wrap items-start justify-around gap-2">
         {propertyHolder.responsaveis.length > 0 ? (
           propertyHolder.responsaveis.map((responsible, index) => (
-            <div key={index} className="flex w-[450px] flex-col rounded-xl border border-gray-300 p-2">
+            <div key={index} className="border-primary/20 flex w-[450px] flex-col rounded-xl border p-2">
               <div className="flex w-full items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <Avatar url={responsible.avatar_url} height={30} width={30} fallback={formatNameAsInitials(responsible.nome)} />
-                  <h1 className="text-xs font-medium leading-none tracking-tight  lg:text-sm">{responsible.nome}</h1>
+                  <h1 className="text-xs leading-none font-medium tracking-tight lg:text-sm">{responsible.nome}</h1>
                 </div>
-                <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
+                <div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">
                   <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">
                     {responsible.quantidade > 1 ? `${responsible.quantidade} ITENS` : `${responsible.quantidade} ITEM`}
                   </h1>
@@ -131,15 +131,15 @@ function ResponsiblesMenu({ propertyHolder, setPropertyHolder }: ResponsiblesMen
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
                     <BsDownload />
-                    <p className="text-xs font-medium text-gray-500">RECEBIDO EM: {formatDateAsLocale(responsible.dataRecebimento)}</p>
+                    <p className="text-primary/60 text-xs font-medium">RECEBIDO EM: {formatDateAsLocale(responsible.dataRecebimento)}</p>
                   </div>
                   {responsible.dataDevolucao ? (
                     <div className="flex items-center gap-2">
                       <BsUpload />
-                      <p className="text-xs font-medium text-gray-500">DEVOLVIDO EM: {formatDateAsLocale(responsible.dataDevolucao)}</p>
+                      <p className="text-primary/60 text-xs font-medium">DEVOLVIDO EM: {formatDateAsLocale(responsible.dataDevolucao)}</p>
                     </div>
                   ) : (
-                    <p className="text-xs font-medium text-gray-500">DEVOLUÇÃO PENDENTE</p>
+                    <p className="text-primary/60 text-xs font-medium">DEVOLUÇÃO PENDENTE</p>
                   )}
                 </div>
                 <button
@@ -153,7 +153,7 @@ function ResponsiblesMenu({ propertyHolder, setPropertyHolder }: ResponsiblesMen
             </div>
           ))
         ) : (
-          <p className="text-xs font-medium italic text-gray-500">Não há responsáveis cadastrados</p>
+          <p className="text-primary/60 text-xs font-medium italic">Não há responsáveis cadastrados</p>
         )}
       </div>
     </div>

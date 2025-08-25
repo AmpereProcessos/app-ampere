@@ -50,14 +50,14 @@ function ExpenseItemsInformationBlock({ infoHolder, setInfoHolder }: ExpenseItem
 
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">COMPOSIÇÃO DA DESPESA</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">COMPOSIÇÃO DA DESPESA</h1>
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center justify-end">
           <button
             onClick={() => setNewCompositionItemMenuIsOpen((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-gray-300  hover:bg-red-300': newCompositionItemMenuIsOpen,
-              'bg-green-300  hover:bg-green-400': !newCompositionItemMenuIsOpen,
+              'bg-primary/20 hover:bg-red-300': newCompositionItemMenuIsOpen,
+              'bg-green-300 hover:bg-green-400': !newCompositionItemMenuIsOpen,
             })}
           >
             <MdAddBox />
@@ -76,7 +76,7 @@ function ExpenseItemsInformationBlock({ infoHolder, setInfoHolder }: ExpenseItem
         />
 
         {compositionItemsTotal > infoHolder.total ? (
-          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs italic tracking-tight text-orange-400">
+          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs tracking-tight text-orange-400 italic">
             Por favor, ajuste os valores dos itens da composição. A somatória dos itens atuais excede o valor total estabelecido para a despesa.
           </p>
         ) : null}
@@ -106,7 +106,7 @@ function NewCompositionItemMenu({ addCompositionItem }: NewCompositionItemMenuPr
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+        className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO ITEM</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">

@@ -53,7 +53,7 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">COMPOSIÇÃO DA COMPRA</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">COMPOSIÇÃO DA COMPRA</h1>
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full flex-wrap items-center justify-end gap-2">
           {purchaseControlCompositionKits?.map((compositionKit) => (
@@ -71,8 +71,8 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
             type="button"
             onClick={() => setNewCompositionKitModalIsOpen((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-gray-300  hover:bg-red-300': newCompositionKitModalIsOpen,
-              'bg-green-300  hover:bg-green-400': !newCompositionKitModalIsOpen,
+              'bg-primary/20 hover:bg-red-300': newCompositionKitModalIsOpen,
+              'bg-green-300 hover:bg-green-400': !newCompositionKitModalIsOpen,
             })}
           >
             <Package className="h-4 w-4" />
@@ -84,8 +84,8 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
             type="button"
             onClick={() => setNewCompositionItemMenuIsOpen((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-gray-300  hover:bg-red-300': newCompositionItemMenuIsOpen,
-              'bg-green-300  hover:bg-green-400': !newCompositionItemMenuIsOpen,
+              'bg-primary/20 hover:bg-red-300': newCompositionItemMenuIsOpen,
+              'bg-green-300 hover:bg-green-400': !newCompositionItemMenuIsOpen,
             })}
           >
             <BsCart />
@@ -103,7 +103,7 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
           updateCompositionItem={updateCompositionItem}
         />
         {compositionItemsTotal > infoHolder.total ? (
-          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs italic tracking-tight text-orange-400">
+          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs tracking-tight text-orange-400 italic">
             Por favor, ajuste os valores dos itens da composição. A somatória dos itens atuais excede o valor total estabelecido para a compra.
           </p>
         ) : null}

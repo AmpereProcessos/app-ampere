@@ -65,7 +65,7 @@ function WorkingHoursMenu({ infoHolder, setInfoHolder }: WorkingHoursMenuProps) 
       <div className="flex w-full items-center justify-end">
         <button
           onClick={() => handleAddWorkingHours(workingHoursHolder)}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR HORÁRIO
         </button>
@@ -81,17 +81,17 @@ function WorkingHoursMenu({ infoHolder, setInfoHolder }: WorkingHoursMenuProps) 
       <div className="flex w-full flex-wrap items-start justify-around gap-2">
         {infoHolder.horariosTrabalho.length > 0 ? (
           infoHolder.horariosTrabalho.map((hour, index) => (
-            <div key={index} className="flex w-full flex-col rounded-md border border-gray-300 p-3 lg:w-[350px]">
-              <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">TURNO {index + 1}</h1>
+            <div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[350px]">
+              <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">TURNO {index + 1}</h1>
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className={`flex items-center gap-2 `}>
+                  <div className={`flex items-center gap-2`}>
                     <FaPlayCircle color="rgb(34,197,94)" />
-                    <p className="text-xs font-medium text-gray-500">INÍCIO ÀS {hour.horarioInicio}</p>
+                    <p className="text-primary/60 text-xs font-medium">INÍCIO ÀS {hour.horarioInicio}</p>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <FaStopCircle color={'#ed174c'} />
-                    <p className="text-xs font-medium text-gray-500">TERMINO ÀS {hour.horarioFinal}</p>
+                    <p className="text-primary/60 text-xs font-medium">TERMINO ÀS {hour.horarioFinal}</p>
                   </div>
                 </div>
 
@@ -106,7 +106,7 @@ function WorkingHoursMenu({ infoHolder, setInfoHolder }: WorkingHoursMenuProps) 
             </div>
           ))
         ) : (
-          <p className="text-xs font-medium italic text-gray-500">Não há registros de horários de trabalho.</p>
+          <p className="text-primary/60 text-xs font-medium italic">Não há registros de horários de trabalho.</p>
         )}
       </div>
     </>

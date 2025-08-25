@@ -78,13 +78,13 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
   const BUTTON_TEXT = 'CADASTRAR'
   return isDesktop ? (
     <Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
-      <DialogContent className="flex h-fit max-h-[80vh] min-h-[60vh] flex-col dark:bg-white">
+      <DialogContent className="dark:bg-background flex h-fit max-h-[80vh] min-h-[60vh] flex-col">
         <DialogHeader>
           <DialogTitle>{MENU_TITLE}</DialogTitle>
           <DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+        <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
           <NewPropertyContent
             isDesktop={isDesktop}
             imageHolder={imageHolder}
@@ -111,7 +111,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
           <DrawerDescription>{MENU_DESCRIPTION}</DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+        <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
           <NewPropertyContent
             isDesktop={isDesktop}
             imageHolder={imageHolder}

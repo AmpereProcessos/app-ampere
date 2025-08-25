@@ -9,16 +9,16 @@ function Calls() {
   if (status != 'authenticated') return <LoadingPage />
 
   return (
-    <div className="flex w-full grow flex-col bg-gray-100 p-6">
-      <div className="flex w-full items-center justify-around border border-gray-300 bg-[#fff] p-4 shadow-xl">
-        <h1 className="text-center font-['Roboto'] text-xl font-bold uppercase text-[#15599a]">Tipos de chamados</h1>
+    <div className="bg-primary/20 flex w-full grow flex-col p-6">
+      <div className="bg-background border-primary/20 flex w-full items-center justify-around border p-4 shadow-xl">
+        <h1 className="text-center font-['Roboto'] text-xl font-bold text-[#15599a] uppercase">Tipos de chamados</h1>
       </div>
 
       <div className="mt-5 flex w-full flex-wrap gap-4">
         {session?.user?.permissoes.rotas.includes('PPS') ? (
           <Link href="/calls/chamadosPPS">
-            <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-300 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
-              <h1 className="text-center font-raleway uppercase">Chamados Suporte PPS</h1>
+            <div className="bg-background border-primary/20 flex h-[250px] w-full grow cursor-pointer flex-col justify-center border p-4 shadow-xl lg:w-[600px]">
+              <h1 className="font-raleway text-center uppercase">Chamados Suporte PPS</h1>
             </div>
           </Link>
         ) : (
@@ -26,8 +26,8 @@ function Calls() {
         )}
         {session?.user?.permissoes.rotas?.includes('O&M') || session?.user?.permissoes.rotas?.includes('Pós-Venda') ? (
           <Link href="/calls/chamadosSuporte">
-            <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-300 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
-              <h1 className="text-center font-raleway uppercase">Chamados Suporte</h1>
+            <div className="bg-background border-primary/20 flex h-[250px] w-full grow cursor-pointer flex-col justify-center border p-4 shadow-xl lg:w-[600px]">
+              <h1 className="font-raleway text-center uppercase">Chamados Suporte</h1>
             </div>
           </Link>
         ) : (
@@ -35,8 +35,8 @@ function Calls() {
         )}
         {session?.user?.permissoes.rotas.includes('Projetos') ? (
           <Link href="/calls/chamadosProjetos">
-            <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-300 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
-              <h1 className="text-center font-raleway uppercase">Chamados Projetos</h1>
+            <div className="bg-background border-primary/20 flex h-[250px] w-full grow cursor-pointer flex-col justify-center border p-4 shadow-xl lg:w-[600px]">
+              <h1 className="font-raleway text-center uppercase">Chamados Projetos</h1>
             </div>
           </Link>
         ) : (
@@ -44,8 +44,8 @@ function Calls() {
         )}
         {session?.user?.permissoes.rotas.includes('ADM') ? (
           <Link href="/calls/chamadosADM">
-            <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-300 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
-              <h1 className="text-center font-raleway uppercase">Chamados ADM</h1>
+            <div className="bg-background border-primary/20 flex h-[250px] w-full grow cursor-pointer flex-col justify-center border p-4 shadow-xl lg:w-[600px]">
+              <h1 className="font-raleway text-center uppercase">Chamados ADM</h1>
             </div>
           </Link>
         ) : (
@@ -53,8 +53,8 @@ function Calls() {
         )}
         {session?.user?.permissoes.rotas.includes('Suprimentos') ? (
           <Link href="/calls/chamadosSuprimentos">
-            <div className="flex h-[250px] w-full grow cursor-pointer flex-col justify-center border border-gray-300 bg-[#fff] p-4 shadow-xl lg:w-[600px]">
-              <h1 className="text-center font-raleway uppercase">Chamados Suprimentos</h1>
+            <div className="bg-background border-primary/20 flex h-[250px] w-full grow cursor-pointer flex-col justify-center border p-4 shadow-xl lg:w-[600px]">
+              <h1 className="font-raleway text-center uppercase">Chamados Suprimentos</h1>
             </div>
           </Link>
         ) : (

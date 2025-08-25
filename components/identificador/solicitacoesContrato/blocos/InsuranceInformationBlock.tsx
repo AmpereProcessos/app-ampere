@@ -12,7 +12,7 @@ type InsuranceInformationBlockProps = {
 function InsuranceInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: InsuranceInformationBlockProps) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE SERVIÇOS DE SEGURO</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE SERVIÇOS DE SEGURO</h1>
       <div className="flex items-center justify-center">
         <div className="w-fit">
           <CheckboxInput

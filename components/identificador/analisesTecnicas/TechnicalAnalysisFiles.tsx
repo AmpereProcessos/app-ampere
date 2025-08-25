@@ -19,7 +19,7 @@ function TechnicalAnalysisFiles({ analysisId }: TechnicalAnalysisFilesProps) {
           fileReferences.length > 0 ? (
             fileReferences.map((reference) => <FileReferenceCard key={reference._id} info={reference} />)
           ) : (
-            <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
+            <p className="text-primary/60 w-full text-center text-xs font-medium italic">Nenhum arquivo adicionado.</p>
           )
         ) : null}
       </div>

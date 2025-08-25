@@ -69,10 +69,10 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
         <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex items-center gap-2">
               <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
+              {project?.codigoSVB && <p className="text-primary/80 text-sm font-bold">#{project.codigoSVB}</p>}
             </div>
             <div className="flex items-center gap-x-2">
               {/* {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>} */}
@@ -90,7 +90,7 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder && session ? (
-            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto">
               <NotificationCreationBlock session={session} nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock

@@ -15,7 +15,7 @@ function OSCreationBlock({ project, categories }: OSCreationBlockProps) {
     <div className="flex w-full flex-col items-center">
       <div
         onClick={() => setDropdownMenuVisible(true)}
-        className="mb-2 flex w-fit  cursor-pointer items-center justify-between rounded-md bg-gray-500 p-2 hover:bg-cyan-500"
+        className="bg-primary/60 mb-2 flex w-fit cursor-pointer items-center justify-between rounded-md p-2 hover:bg-cyan-500"
       >
         <h1 className="text-center font-bold text-white">ABRIR PAINEL DE CRIAÇÃO DE ORDEM DE SERVIÇO</h1>
       </div>

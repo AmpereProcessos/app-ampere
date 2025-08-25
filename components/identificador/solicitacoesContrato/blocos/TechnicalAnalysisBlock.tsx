@@ -52,8 +52,8 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
   console.log(infoHolder.idVisitaTecnica, !!infoHolder.idVisitaTecnica, analysisIdHolder)
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DE ANÁLISE TÉCNICA</h1>
-      <div className="flex w-[90%] flex-col items-center gap-2 self-center rounded border border-gray-300 p-3 md:w-[85%] lg:w-[50%]">
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DE ANÁLISE TÉCNICA</h1>
+      <div className="border-primary/20 flex w-[90%] flex-col items-center gap-2 self-center rounded border p-3 md:w-[85%] lg:w-[50%]">
         <TextInput
           label="ID DE ANÁLISE TÉCNICA"
           placeholder="Preencha aqui, se aplicavél, o ID da análise técnica do projeto."
@@ -69,7 +69,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
               // @ts-ignore
               handleVinculate(analysisIdHolder)
             }}
-            className="h-9 whitespace-nowrap rounded bg-blue-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-blue-800 enabled:hover:text-white"
+            className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
           >
             VINCULAR
           </button>

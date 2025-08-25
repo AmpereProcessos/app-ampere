@@ -35,13 +35,13 @@ function PurchaseControlBillingInformationBlock({ infoHolder, setInfoHolder }: P
   }
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO FATURAMENTO</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">INFORMAÇÕES DO FATURAMENTO</h1>
       <div className="flex w-full items-center justify-end">
         <button
           onClick={() => setNewBillingMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': newBillingMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !newBillingMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': newBillingMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !newBillingMenuIsOpen,
           })}
         >
           <MdAddBox />
@@ -51,7 +51,7 @@ function PurchaseControlBillingInformationBlock({ infoHolder, setInfoHolder }: P
         </button>
       </div>
       {newBillingMenuIsOpen ? <NewBillingMenu addBilling={addBilling} /> : null}
-      <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]"></div>
+      <div className="bg-background flex w-full flex-col gap-2 p-1 dark:bg-[#121212]"></div>
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           {infoHolder.faturamentos.length > 0 ? (
@@ -64,7 +64,7 @@ function PurchaseControlBillingInformationBlock({ infoHolder, setInfoHolder }: P
               />
             ))
           ) : (
-            <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de faturamento.</p>
+            <p className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Não há itens de faturamento.</p>
           )}
         </div>
       </div>
@@ -92,7 +92,7 @@ function NewBillingMenu({ addBilling }: NewBillingMenuProps) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+        className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO REGISTRO DE FATURAMENTO</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">
@@ -146,20 +146,20 @@ function BillingCard({ billing, handleUpdate, handleRemove }: BillingCardProps) 
   return (
     <>
       <AnimatePresence>
-        <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
+        <div className="bg-background border-primary/60 relative flex w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs">
           <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
             <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-2">
-              <h1 className="text-sm font-bold leading-none tracking-tight">{billing.titulo}</h1>
+              <h1 className="text-sm leading-none font-bold tracking-tight">{billing.titulo}</h1>
               <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 <div className="flex items-center gap-1">
                   <Barcode width={10} height={10} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">CÓDIGO</h1>
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{billing.codigoNotaFiscal}</h1>
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">CÓDIGO</h1>
+                  <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{billing.codigoNotaFiscal}</h1>
                 </div>
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck width={10} height={10} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURADO EM: </h1>
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(billing.data) || 'N/A'}</h1>
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FATURADO EM: </h1>
+                  <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(billing.data) || 'N/A'}</h1>
                 </div>
               </div>
             </div>

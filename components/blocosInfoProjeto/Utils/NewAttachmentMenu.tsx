@@ -177,7 +177,7 @@ function NewAttachmentMenu({
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="flex w-[90%] flex-col gap-2 self-center rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+        className="bg-background flex w-[90%] flex-col gap-2 self-center rounded border border-green-600 shadow-xs dark:bg-[#121212]"
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVOS ANEXOS</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">
@@ -197,14 +197,14 @@ function NewAttachmentMenu({
               <CategoriesMenu allowedCategories={allowedCategories} data={infoHolder} addCategory={addCategory} removeCategory={removeCategory} />
 
               <div className="flex w-full flex-col gap-1">
-                <h1 className="text-xs font-medium tracking-tight text-primary/60">ARQUIVOS ANEXADOS</h1>
+                <h1 className="text-primary/60 text-xs font-medium tracking-tight">ARQUIVOS ANEXADOS</h1>
                 <div className="flex w-full flex-wrap items-start justify-start gap-4">
                   {infoHolder.attachments.length > 0 ? (
                     infoHolder.attachments
                       .filter((a) => !!a.file)
                       .map((attachment, index) => (
-                        <div key={index} className="flex h-[100px] max-h-[100px] w-[80px] flex-col rounded border border-primary/50">
-                          <div className="relative flex h-[80] w-full grow items-center justify-center bg-gradient-to-b from-sky-400 to-sky-200">
+                        <div key={index} className="border-primary/50 flex h-[100px] max-h-[100px] w-[80px] flex-col rounded border">
+                          <div className="relative flex h-[80] w-full grow items-center justify-center bg-linear-to-b from-sky-400 to-sky-200">
                             {attachment.previewUrl ? (
                               <Image src={attachment.previewUrl} alt={attachment.file?.name || ''} fill={true} />
                             ) : (
@@ -213,13 +213,13 @@ function NewAttachmentMenu({
                               </h1>
                             )}
                           </div>
-                          <div className="h-[20px] rounded rounded-tl-none rounded-tr-none bg-primary p-1 text-center text-[0.45rem] font-bold text-primary-foreground">
+                          <div className="bg-primary text-primary-foreground h-[20px] rounded rounded-tl-none rounded-tr-none p-1 text-center text-[0.45rem] font-bold">
                             {formatLongString(attachment.file?.name || '', 12)}
                           </div>
                         </div>
                       ))
                   ) : (
-                    <p className="w-full text-start font-medium tracking-tight text-primary/80">Nenhum arquivo anexado.</p>
+                    <p className="text-primary/80 w-full text-start font-medium tracking-tight">Nenhum arquivo anexado.</p>
                   )}
                 </div>
               </div>
@@ -249,9 +249,9 @@ function AttachmentMenu({ data, addAttachment }: AttachmentMenuProps) {
     <div className="relative flex h-full w-full flex-col items-center justify-center">
       <label
         htmlFor="dropzone-file"
-        className="dark:hover:bg-bray-800 min-h-64 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/20 bg-[#fff] hover:bg-primary/10 dark:bg-[#121212]"
+        className="dark:hover:bg-bray-800 border-primary/20 bg-background hover:bg-primary/10 flex h-full min-h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed dark:bg-[#121212]"
       >
-        <div className="flex flex-col items-center justify-center px-2 pb-6 pt-5 text-primary">
+        <div className="text-primary flex flex-col items-center justify-center px-2 pt-5 pb-6">
           <BsCloudUploadFill color={'rgb(31,41,55)'} size={50} />
           <p className="text-center text-xs lg:text-base">Clique para escolher um ou mais arquivos ou os arraste para a àrea demarcada</p>
         </div>
@@ -295,7 +295,7 @@ function CategoriesMenu({ allowedCategories, data, addCategory, removeCategory }
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="text-[0.65rem] font-bold leading-none tracking-tight text-primary/80 lg:text-xs">CATEGORIAS APLICÁVEIS</h1>
+      <h1 className="text-primary/80 text-[0.65rem] leading-none font-bold tracking-tight lg:text-xs">CATEGORIAS APLICÁVEIS</h1>
       <div className="my-1 flex w-full flex-wrap items-center justify-around gap-4 gap-y-1 px-2 lg:justify-center">
         {FileReferenceCategories.filter((c) => allowedCategories.includes(c.value)).map((category, index) => (
           <button

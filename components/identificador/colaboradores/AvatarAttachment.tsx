@@ -62,14 +62,14 @@ function AvatarAttachment({ userId, userName, avatar_url }: AvatarAttachmentProp
           )}
         </div>
         <div className={`relative flex grow flex-col gap-1`}>
-          <label htmlFor={'avatar-input'} className="font-sans font-bold  text-[#353432]">
+          <label htmlFor={'avatar-input'} className="font-sans font-bold text-[#353432]">
             AVATAR
           </label>
-          <div className="flex h-[47px] w-full items-center gap-2 rounded-md border border-gray-300 p-3">
+          <div className="border-primary/20 flex h-[47px] w-full items-center gap-2 rounded-md border p-3">
             {file ? (
-              <p className="grow text-center leading-none tracking-tight text-gray-500">{formatLongString(file.name, 30)}</p>
+              <p className="text-primary/60 grow text-center leading-none tracking-tight">{formatLongString(file.name, 30)}</p>
             ) : (
-              <p className="grow text-center leading-none tracking-tight text-gray-500">
+              <p className="text-primary/60 grow text-center leading-none tracking-tight">
                 <span className="font-semibold text-cyan-500">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
               </p>
             )}
@@ -89,7 +89,7 @@ function AvatarAttachment({ userId, userName, avatar_url }: AvatarAttachmentProp
           disabled={!file || isPending}
           // @ts-ignore
           onClick={() => attachAvatar(file)}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           VINCULAR AVATAR
         </button>

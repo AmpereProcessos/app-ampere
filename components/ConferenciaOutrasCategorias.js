@@ -18,16 +18,16 @@ import { createManyFileReferences } from '../utils/methods/mutation/crm/file-ref
 function renderInputText(files) {
   if (!files)
     return (
-      <p className="mb-2 px-2 text-center text-sm text-primary/80">
+      <p className="text-primary/80 mb-2 px-2 text-center text-sm">
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
   const filesAsArr = Array.from(files)
   if (filesAsArr.length > 1) {
     const str = filesAsArr.map((file) => formatLongString(file.name, 15)).join(', ')
-    return <p className="mb-2 text-sm text-primary/80">{str}</p>
+    return <p className="text-primary/80 mb-2 text-sm">{str}</p>
   }
-  return <p className="mb-2 text-sm text-primary/80">{filesAsArr[0]?.name}</p>
+  return <p className="text-primary/80 mb-2 text-sm">{filesAsArr[0]?.name}</p>
 }
 function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
   const [finishInProgress, setFinishInProgress] = useState(false)
@@ -131,8 +131,8 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
       {files.length > 0 ? (
         <div className="flex w-full flex-wrap items-center justify-around">
           {files.map((file, index) => (
-            <div key={index} className="flex h-[160px] w-[100px] flex-col rounded border border-primary/50">
-              <div className="relative flex h-[100px] w-full grow items-center justify-center bg-gradient-to-b from-sky-400 to-sky-200">
+            <div key={index} className="border-primary/50 flex h-[160px] w-[100px] flex-col rounded border">
+              <div className="relative flex h-[100px] w-full grow items-center justify-center bg-linear-to-b from-sky-400 to-sky-200">
                 {file.previewUrl ? (
                   <Image src={file.previewUrl} alt={file.file?.name || ''} fill={true} />
                 ) : (
@@ -144,7 +144,7 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
               </div>
               <div
                 onClick={() => handleRemoveFile(index)}
-                className="h-[30px] cursor-pointer rounded-bl-none rounded-br-none bg-red-300 p-2 text-center text-[0.55rem] font-bold text-white duration-300 ease-in-out hover:bg-red-500"
+                className="h-[30px] cursor-pointer rounded-br-none rounded-bl-none bg-red-300 p-2 text-center text-[0.55rem] font-bold text-white duration-300 ease-in-out hover:bg-red-500"
               >
                 REMOVER
               </div>
@@ -152,17 +152,17 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
           ))}
         </div>
       ) : (
-        <p className="w-full text-sm tracking-tight text-gray-500">Nenhum arquivo vinculado...</p>
+        <p className="text-primary/60 w-full text-sm tracking-tight">Nenhum arquivo vinculado...</p>
       )}
       <div className="flex w-[90%] flex-col gap-2 self-center rounded-lg border border-green-800">
-        <h1 className="w-full rounded-tr-lg rounded-tl-lg bg-green-800 p-1 text-center text-xs font-medium text-white">ANEXO DE ARQUIVOS</h1>
+        <h1 className="w-full rounded-tl-lg rounded-tr-lg bg-green-800 p-1 text-center text-xs font-medium text-white">ANEXO DE ARQUIVOS</h1>
         <div className="flex w-full flex-col items-center gap-2 p-3">
           <div className="relative flex w-full items-center justify-center">
             <label
               htmlFor="dropzone-file"
-              className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+              className="dark:hover:bg-bray-800 dark:border-primary/80 dark:hover:bg-primary/80 border-primary/20 dark:hover:border-primary/60 hover:bg-primary/20 dark:bg-primary/70 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50"
             >
-              <div className="flex flex-col items-center justify-center pb-6 pt-5 text-primary">
+              <div className="text-primary flex flex-col items-center justify-center pt-5 pb-6">
                 <BsCloudUploadFill color={'rgb(31,41,55)'} size={50} />
                 {renderInputText(fileHolder.files)}
               </div>
@@ -182,7 +182,7 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
             placeholder="Preencha aqui o título dos arquivos..."
           />
           <div className="flex w-full items-center justify-center">
-            <button onClick={() => handleAddFiles()} className="rounded bg-black px-4 py-2 text-xs font-bold text-white shadow hover:bg-black/90">
+            <button onClick={() => handleAddFiles()} className="rounded bg-black px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-black/90">
               ADICIONAR ARQUIVOS
             </button>
           </div>
@@ -197,7 +197,7 @@ function ConferenciaOutrasCategorias({ session, order, closeModal, queryKey }) {
       <button
         disabled={finishInProgress}
         onClick={finishOS}
-        className="rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out disabled:bg-gray-500 disabled:text-white disabled:opacity-70 hover:scale-105 hover:bg-[#15599a] hover:text-white"
+        className="disabled:bg-primary/60 rounded border border-[#15599a] p-2 font-bold text-[#15599a] duration-500 ease-in-out hover:scale-105 hover:bg-[#15599a] hover:text-white disabled:text-white disabled:opacity-70"
       >
         FINALIZAR OS
       </button>

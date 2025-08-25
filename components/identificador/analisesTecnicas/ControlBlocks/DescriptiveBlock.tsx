@@ -39,7 +39,7 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }: De
 
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">DESCRITIVO</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
@@ -52,7 +52,7 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }: De
             width="100%"
           />
         </div>
-        <div className="w-full ">
+        <div className="w-full">
           <TextInput
             label="DESCRIÇÃO"
             placeholder="Preencha o descrição do item de descritivo..."
@@ -72,11 +72,11 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }: De
       </div>
       {infoHolder.descritivo?.length > 0 ? (
         infoHolder.descritivo.map((item, index) => (
-          <div key={index} className="mb-1 flex w-full flex-col rounded border border-gray-300 p-2 shadow-sm">
+          <div key={index} className="border-primary/20 mb-1 flex w-full flex-col rounded border p-2 shadow-xs">
             <div className="flex w-full items-center justify-between">
               <div className="flex w-full items-center justify-center gap-2">
                 <MdTopic />
-                <h1 className=" text-lg font-bold leading-none tracking-tight text-[#15599a]">{item.topico}</h1>
+                <h1 className="text-lg leading-none font-bold tracking-tight text-[#15599a]">{item.topico}</h1>
               </div>
               <button
                 onClick={() => removeDescriptiveItem(index)}
@@ -86,11 +86,11 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }: De
               </button>
             </div>
 
-            <p className="mt-1 w-full text-center text-sm text-gray-500">{item.descricao}</p>
+            <p className="text-primary/60 mt-1 w-full text-center text-sm">{item.descricao}</p>
           </div>
         ))
       ) : (
-        <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+        <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
           Nenhum item adicionado à lista...
         </p>
       )}

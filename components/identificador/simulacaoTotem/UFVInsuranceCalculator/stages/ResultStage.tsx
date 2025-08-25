@@ -135,8 +135,8 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
   ]
 
   return (
-    <div className={`flex grow flex-col bg-white font-raleway`}>
-      <div className="flex h-[100px] w-full items-center justify-center self-stretch bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
+    <div className={`bg-background font-raleway flex grow flex-col`}>
+      <div className="flex h-[100px] w-full items-center justify-center self-stretch bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="flex w-[90] flex-col items-center justify-center">
           {/* <img src={Logo} style={{ width: "100%" }} /> */}
           <Image src={AmpereWhiteLogo} quality={100} height={90} width={90} alt="LOGO" style={{ objectFit: 'cover' }} />
@@ -159,7 +159,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
           </h1>
           <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-blue-600 lg:w-1/2">
-              <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-blue-600 p-3">
+              <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-blue-600 p-3">
                 <h1 className="w-full text-center text-[0.7rem] font-bold text-white">RANKING DE CAUSAS FREQUENTES DE ACIONAMENTO</h1>
               </div>
               <div className="flex w-full flex-col gap-2 p-3">
@@ -177,7 +177,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                     <div className="flex h-[30px] w-full grow items-center justify-start rounded border border-black lg:w-fit">
                       <div
                         style={{ width: `${value}%`, minWidth: '20px', backgroundColor: 'black', height: 30 }}
-                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-sm"
+                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-xs"
                       >
                         {value}%
                       </div>
@@ -187,7 +187,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
               </div>
             </div>
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-orange-600 lg:w-1/2">
-              <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-orange-600 p-3">
+              <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-orange-600 p-3">
                 <h1 className="w-full text-center text-[0.7rem] font-bold text-white">ACIONAMENTOS POR CATEGORIA</h1>
               </div>
               <div className="flex w-full flex-col gap-2 p-3">
@@ -206,7 +206,7 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                     <div className="flex h-[30px] w-full grow items-center justify-start rounded border border-black lg:w-fit">
                       <div
                         style={{ width: `${value}%`, minWidth: '20px', backgroundColor: 'black', height: 30 }}
-                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-sm"
+                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-xs"
                       >
                         {value}%
                       </div>
@@ -217,13 +217,13 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
             </div>
           </div>
           <div className="my-2 flex w-full flex-col gap-2 px-2">
-            <h1 className="w-full text-center tracking-tight text-gray-500">
+            <h1 className="text-primary/60 w-full text-center tracking-tight">
               Não corra riscos desnecessários. Invista na segurança do seu sistema fotovoltaico e tenha a certeza de que, independentemente do que
               aconteça, você está protegido com uma cobertura confiável e abrangente.
             </h1>
-            <h1 className="w-full text-center tracking-tight text-gray-500">Entenda como funciona nossa proteção:</h1>
+            <h1 className="text-primary/60 w-full text-center tracking-tight">Entenda como funciona nossa proteção:</h1>
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-black lg:w-[80%]">
-              <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-black p-3">
+              <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-black p-3">
                 <h1 className="w-2/3 text-center text-xs font-bold text-white lg:text-sm">PROTEÇÃO</h1>
                 <h1 className="w-1/3 text-center text-xs font-bold text-white lg:text-sm">GARANTIA</h1>
                 <h1 className="w-1/3 text-center text-xs font-bold text-white lg:text-sm">SEGURO</h1>
@@ -232,9 +232,9 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                 {protectionDescription.map((value) => (
                   <div className="flex w-full items-center gap-0 lg:gap-1">
                     <div className="flex w-2/3 flex-col items-center justify-center gap-1 lg:flex-row lg:justify-start">
-                      <h1 className="text-center text-xs font-bold leading-none lg:text-sm">{value.label}</h1>
+                      <h1 className="text-center text-xs leading-none font-bold lg:text-sm">{value.label}</h1>
                       {value.additional ? (
-                        <p className="text-center text-xs font-light leading-none text-gray-500 lg:text-sm">{value.additional}</p>
+                        <p className="text-primary/60 text-center text-xs leading-none font-light lg:text-sm">{value.additional}</p>
                       ) : null}
                     </div>
                     <div className="flex w-1/3 items-center justify-center">
@@ -249,18 +249,18 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-green-800 p-3">
+        <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-green-800 p-3">
           <h1 className="w-full text-center text-[0.7rem] font-bold text-white">INVESTIMENTO</h1>
         </div>
-        <h1 className="mt-2 w-full text-center tracking-tight text-gray-500">
+        <h1 className="text-primary/60 mt-2 w-full text-center tracking-tight">
           Não deixe que imprevistos comprometam a eficiência e a rentabilidade do seu sistema fotovoltaico.
         </h1>
-        <h1 className="w-full text-center tracking-tight text-gray-500">Adquira já o nosso seguro anual especializado por:</h1>
+        <h1 className="text-primary/60 w-full text-center tracking-tight">Adquira já o nosso seguro anual especializado por:</h1>
         <h1 className="w-full text-center text-2xl font-black text-green-600">{formatToMoney(investiment)} / anual</h1>
       </div>
       <div className="mt-6 flex w-full flex-col">
         <h1 className="w-full text-center text-lg font-black">SOBRE NÓS</h1>
-        <div className="w-full self-center px-2 py-2 text-center text-sm font-medium tracking-tight text-gray-500 lg:w-[70%] lg:text-lg">
+        <div className="text-primary/60 w-full self-center px-2 py-2 text-center text-sm font-medium tracking-tight lg:w-[70%] lg:text-lg">
           A <strong className="text-[#fead41]">Ampère Energias</strong> é uma empresa que nasceu no Triangulo Mineiro, com a missão de ser a melhor
           empresa de soluções em energia do Brasil, oferecendo soluções completas e com qualidade para os nossos clientes, levando economia e
           qualidade, com praticidade e facilidade. A Ampère conta com{' '}

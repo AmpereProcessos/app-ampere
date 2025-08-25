@@ -125,62 +125,62 @@ function Posvenda() {
 
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM JORNADA</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS EM JORNADA</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
               <VscDiffAdded />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A CONFECCIONAR</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">DOCUMENTAÇÃO A CONFECCIONAR</h1>
               <FaListCheck />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraConfeccionar}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A ASSINAR</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">DOCUMENTAÇÃO A ASSINAR</h1>
               <FaSignature />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraAssinar}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">ENTREGAS HOJE</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">ENTREGAS HOJE</h1>
               <TbTruckDelivery />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).entregaHoje}</div>
-              <p className="text-xs text-gray-500">{getStats({ info: projects }).entregaSemana} essa semana</p>
+              <p className="text-primary/60 text-xs">{getStats({ info: projects }).entregaSemana} essa semana</p>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/5">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">CONTATOS PENDENTES</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">CONTATOS PENDENTES</h1>
               <TbAlertTriangle />
             </div>
             <div className="mt-2 flex w-full flex-col">
@@ -190,17 +190,17 @@ function Posvenda() {
         </div>
         <div className="my-2 flex w-full items-center justify-end gap-2">
           <Link href="/calls/chamadosPosVenda">
-            <button type="button" className="rounded-md bg-gray-300 py-1 px-4 text-sm font-bold text-black">
+            <button type="button" className="bg-primary/20 rounded-md px-4 py-1 text-sm font-bold text-black">
               CHAMADOS
             </button>
           </Link>
           <Link href="/financeiro/receitas">
-            <button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">
               RECEITAS
             </button>
           </Link>
           <Link href={'/obras/controle-padroes'}>
-            <button type="button" className="rounded-md bg-[#15599a] py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-[#15599a] px-4 py-1 text-sm font-bold text-white">
               CONTROLE DE PADRÕES
             </button>
           </Link>
@@ -313,42 +313,42 @@ function Posvenda() {
               </div>
               <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <div className={'flex flex-col gap-1'}>
-                  <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
+                  <label htmlFor={'ordenation'} className={'font-sans font-bold text-[#353432]'}>
                     ORDERNAR POR CONTATO
                   </label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder !== 'ASC' ? 'ASC' : null }))}
-                      className={`rounded border  border-[#15599a] py-1 font-bold ${filters.contactOrder === 'ASC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
+                      className={`rounded border border-[#15599a] py-1 font-bold ${filters.contactOrder === 'ASC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
                     >
                       CRESCENTE
                     </button>
                     <button
                       type="button"
                       onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder !== 'DESC' ? 'DESC' : null }))}
-                      className={`rounded border  border-[#15599a] py-1 font-bold ${filters.contactOrder === 'DESC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
+                      className={`rounded border border-[#15599a] py-1 font-bold ${filters.contactOrder === 'DESC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
                     >
                       DECRESCENTE
                     </button>
                   </div>
                 </div>
                 <div className={'h flex flex-col gap-1'}>
-                  <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
+                  <label htmlFor={'ordenation'} className={'font-sans font-bold text-[#353432]'}>
                     MODO DE VISUALIZAÇÃO
                   </label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setMode('CARD')}
-                      className={`rounded border  border-[#15599a] py-1 font-bold ${mode === 'CARD' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
+                      className={`rounded border border-[#15599a] py-1 font-bold ${mode === 'CARD' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
                     >
                       CARD
                     </button>
                     <button
                       type="button"
                       onClick={() => setMode('SIMPLIFIED')}
-                      className={`rounded border  border-[#15599a] py-1 font-bold ${mode === 'SIMPLIFIED' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
+                      className={`rounded border border-[#15599a] py-1 font-bold ${mode === 'SIMPLIFIED' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'} px-3`}
                     >
                       SIMPLIFICADO
                     </button>

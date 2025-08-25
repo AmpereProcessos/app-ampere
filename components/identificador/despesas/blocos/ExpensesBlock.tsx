@@ -53,14 +53,14 @@ function ExpensesBlock({ session, storedExpensesApportionmentsFilter, storedExpe
   const expensesMatched = dashboardExpenses?.expensesMatched || 0
   const totalPages = dashboardExpenses?.totalPages
   return (
-    <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
-      <div className="flex w-full items-center justify-between gap-2 border-b border-primary/30 pb-3">
-        <h1 className="text-sm font-bold leading-none tracking-tight">DESPESAS</h1>
+    <div className="border-primary bg-background flex h-full max-h-full w-full flex-col gap-2 rounded border p-3 shadow-xs dark:bg-[#121212]">
+      <div className="border-primary/30 flex w-full items-center justify-between gap-2 border-b pb-3">
+        <h1 className="text-sm leading-none font-bold tracking-tight">DESPESAS</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterMenuIsOpen((prev) => !prev)}
             className={cn(
-              'min-h-6 min-w-6 flex h-6 w-6 items-center justify-center rounded-full text-primary duration-300 ease-in-out hover:bg-primary/20',
+              'text-primary hover:bg-primary/20 flex h-6 min-h-6 w-6 min-w-6 items-center justify-center rounded-full duration-300 ease-in-out',
               {
                 'bg-primary/30': filterMenuIsOpen,
               }
@@ -79,14 +79,14 @@ function ExpensesBlock({ session, storedExpensesApportionmentsFilter, storedExpe
         itemsShowingText={expensesShowing > 0 ? `Mostrando ${expensesShowing} despesas.` : `Mostrando ${expensesShowing} despesa.`}
       />
 
-      <div className="flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           expenses && expenses.length > 0 ? (
             expenses.map((expense) => <ExpenseCard key={expense._id} expense={expense} handleClick={(id) => setEditModal({ id, isOpen: true })} />)
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma despesa encontrada.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma despesa encontrada.</div>
           )
         ) : null}
       </div>
@@ -120,52 +120,52 @@ function ExpenseCard({ expense, handleClick }: ExpenseCardProps) {
     // In case partions received are equal to the total amount of receipts
     if (totalReceived == expenseTotal)
       return {
-        tag: <h1 className="rounded-lg bg-green-500 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PAGO</h1>,
+        tag: <h1 className="text-xxs rounded-lg bg-green-500 px-2 py-0.5 text-center font-medium text-white">PAGO</h1>,
 
         fractionationStr: `${partionsReceived}/${payments.length}`,
       }
 
     if (totalReceived > 0)
       return {
-        tag: <h1 className="rounded-lg bg-orange-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PAGO PARCIAL</h1>,
+        tag: <h1 className="text-xxs rounded-lg bg-orange-600 px-2 py-0.5 text-center font-medium text-white">PAGO PARCIAL</h1>,
 
         fractionationStr: `${partionsReceived}/${payments.length}`,
       }
 
     return {
-      tag: <h1 className="rounded-lg bg-red-600 px-2 py-0.5 text-center text-[0.5rem] font-medium text-white">PENDENTE</h1>,
+      tag: <h1 className="text-xxs rounded-lg bg-red-600 px-2 py-0.5 text-center font-medium text-white">PENDENTE</h1>,
 
       fractionationStr: `${partionsReceived}/${payments.length}`,
     }
   }
   const { tag: ReceiptStatusTag, fractionationStr } = getReceiptStatus({ payments: expense.pagamentos, expenseTotal: expense.total })
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{expense.categoria}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{expense.categoria}</p>
           {ReceiptStatusTag}
         </div>
-        <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">{formatToMoney(expense.total)}</h1>
+        <h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">{formatToMoney(expense.total)}</h1>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-fit min-w-fit items-center gap-1">
           <MdDashboard width={10} height={10} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{expense.rateio}</h1>
+          <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{expense.rateio}</h1>
         </div>
 
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">COMPETÊNCIA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">COMPETÊNCIA</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {expense.efetivacao.data ? formatDateAsLocale(expense.efetivacao.data) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCircleHalf width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PAGAMENTOS</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{fractionationStr}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PAGAMENTOS</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{fractionationStr}</h1>
           </div>
         </div>
       </div>
@@ -174,17 +174,17 @@ function ExpenseCard({ expense, handleClick }: ExpenseCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(expense.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(expense.dataInsercao, true)}</p>
           </div>
           <div className="flex items-center gap-1">
             <Avatar url={expense.autor.avatar_url || undefined} height={20} width={20} fallback={formatNameAsInitials(expense.autor.nome)} />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{expense.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{expense.autor.nome}</p>
           </div>
         </div>
         <button
           onClick={() => handleClick(expense._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

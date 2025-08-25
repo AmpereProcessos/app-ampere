@@ -16,7 +16,7 @@ type RevenueGeneralInformationBlockProps = {
 function RevenueGeneralInformationBlock({ infoHolder, setInfoHolder }: RevenueGeneralInformationBlockProps) {
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES GERAIS</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">INFORMAÇÕES GERAIS</h1>
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/2">
@@ -62,7 +62,7 @@ function RevenueGeneralInformationBlock({ infoHolder, setInfoHolder }: RevenueGe
             />
           </div>
         </div>
-        <h1 className="w-fit self-center rounded-md bg-primary/10 p-2 text-[0.65rem] leading-none tracking-tight text-primary">
+        <h1 className="bg-primary/10 text-primary w-fit self-center rounded-md p-2 text-[0.65rem] leading-none tracking-tight">
           OBS: O PARÂMETRO DE EFETIVAÇÃO SE REFERE A DATA EM QUE A RECEITA ENTRA NO REGIME DE COMPETÊNCIA.
         </h1>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-2">
@@ -86,7 +86,7 @@ function RevenueGeneralInformationBlock({ infoHolder, setInfoHolder }: RevenueGe
           <div className="flex w-full items-center justify-center lg:w-1/2">
             <DateInput
               label={infoHolder.efetivacao.efetivado ? 'DATA DA EFETIVAÇÃO' : 'PREVISÃO DE EFETIVAÇÃO'}
-              labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+              labelClassName="text-center text-primary/60 font-normal font-raleway text-sm"
               value={infoHolder.efetivacao.data ? formatDate(infoHolder.efetivacao.data) : undefined}
               handleChange={(value) =>
                 setInfoHolder((prev) => ({

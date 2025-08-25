@@ -67,11 +67,11 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
     )
 
   return (
-    <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
-      <div className={`inline-flex h-full w-full grow flex-col items-start overflow-clip bg-white`}>
+    <div className={`bg-background font-raleway flex h-full grow flex-col items-center overflow-clip`}>
+      <div className={`bg-background inline-flex h-full w-full grow flex-col items-start overflow-clip`}>
         <div className="relative flex h-[80px] w-full items-center justify-center lg:h-[350px]">
           {/** LARGE DEVICES */}
-          <div className="absolute top-0 z-[2] hidden h-[80px] w-full lg:block lg:h-[350px]">
+          <div className="absolute top-0 z-2 hidden h-[80px] w-full lg:block lg:h-[350px]">
             <Image
               src={BackgroundImageWithSmallLogo}
               alt="FUNDO"
@@ -81,7 +81,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
             />
           </div>
           {/** SMALL DEVICES */}
-          <div className="absolute top-0 z-[2] block h-[80px] w-full lg:hidden lg:h-[350px]">
+          <div className="absolute top-0 z-2 block h-[80px] w-full lg:hidden lg:h-[350px]">
             <Image
               src={BackgroundImageWithBigLogo}
               alt="FUNDO"
@@ -94,33 +94,33 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
         <div className="flex w-full grow flex-col items-center justify-center gap-[18px] self-stretch px-3 pt-[18px] pb-[12px]">
           <div className="flex h-[700px] w-full flex-col items-center justify-center self-stretch rounded-lg bg-[rgba(245,245,245,1)] px-6 py-1 drop-shadow-lg lg:h-full">
             <div className="h-[100px] w-full text-center text-white">
-              <div className="flex w-full flex-1 flex-grow items-center justify-center self-stretch">
+              <div className="flex w-full flex-1 grow items-center justify-center self-stretch">
                 <div className="relative h-[30.05px] w-[300px] lg:w-[350px]">
                   {stage > 1 ? (
                     <motion.div
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
+                      className="absolute top-[42.5%] right-[50.23%] bottom-[45%] left-[3.38%] w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
                     />
                   ) : (
-                    <div className="absolute left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
+                    <div className="absolute top-[42.5%] right-[50.23%] bottom-[45%] left-[3.38%] w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
                   )}
                   {stage > 2 ? (
                     <motion.div
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute left-1/2 right-[50.23%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
+                      className="absolute top-[42.5%] right-[50.23%] bottom-[45%] left-1/2 w-[125px] bg-[rgba(21,89,154,1)] lg:w-[150px]"
                     />
                   ) : (
-                    <div className="absolute left-1/2 right-[3.6%] top-[42.5%] bottom-[45%] w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
+                    <div className="absolute top-[42.5%] right-[3.6%] bottom-[45%] left-1/2 w-[125px] bg-[rgba(79,88,96,1)] lg:w-[150px]" />
                   )}
-                  <div className="absolute inset-y-0 left-0 right-[90.99%] w-[30px] font-black">
+                  <div className="absolute inset-y-0 right-[90.99%] left-0 w-[30px] font-black">
                     <div className="absolute inset-0 w-[30px] rounded-full bg-[rgba(21,89,154,1)]" />
                     <p className="absolute inset-x-0 top-[20%] bottom-[20%] m-0 inline h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">1</p>
                   </div>
-                  <div className={`${stage > 1 ? 'font-black' : ''} absolute inset-y-0 left-[45.5%] right-[45.5%] w-[30px] font-normal`}>
+                  <div className={`${stage > 1 ? 'font-black' : ''} absolute inset-y-0 right-[45.5%] left-[45.5%] w-[30px] font-normal`}>
                     {stage > 1 ? (
                       <>
                         <motion.div
@@ -155,7 +155,7 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
                 </div>
               </div>
             </div>
-            <div className="z-[2]">
+            <div className="z-2">
               {stage == 1 && (
                 <FirstStage infoHolder={infoHolder} setInfoHolder={setInfoHolder} moveToNextStage={() => setStage((prev) => prev + 1)} />
               )}
@@ -168,10 +168,10 @@ function MainComponent({ resetSimulation }: MainComponentProps) {
             </div>
           </div>
         </div>
-        <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 px-10">
+        <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-2 bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 px-10">
           <h1 className="text-center text-xs font-black text-white lg:text-sm">
             A energia que move o mundo{'  '}
-            <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
+            <strong className="text-[rgba(254,173,65,1)]"> vem de você</strong>!
           </h1>
           <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex items-center gap-1 text-xs text-white lg:text-sm">

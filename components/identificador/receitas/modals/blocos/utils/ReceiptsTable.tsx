@@ -24,14 +24,14 @@ function RevenueReceiptsTable({ revenueId, revenueTotal, receipts, updateReceipt
   const receiptsTotal = receipts.reduce((acc, current) => acc + (current.valor || 0), 0)
 
   return (
-    <div className="flex w-full flex-col rounded border-0 border-primary/80 lg:border">
-      <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-gray-800 p-1 lg:flex">
+    <div className="border-primary/80 flex w-full flex-col rounded border-0 lg:border">
+      <div className="bg-primary/80 hidden w-full items-center gap-2 rounded rounded-br-none rounded-bl-none p-1 lg:flex">
         <h1 className="w-[40%] text-center text-sm font-bold text-white">TÍTULO</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">VALOR</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">PREV. DE RECEBIMENTO</h1>
         <h1 className="w-[20%] text-center text-sm font-bold text-white">DATA DE RECEBIMENTO</h1>
       </div>
-      <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]">
+      <div className="bg-background flex w-full flex-col gap-2 p-1 dark:bg-[#121212]">
         {receipts.length > 0 ? (
           receipts.map((item, index) => (
             <ReceiptTableItem
@@ -45,10 +45,10 @@ function RevenueReceiptsTable({ revenueId, revenueTotal, receipts, updateReceipt
             />
           ))
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há registros de recebimentos da receita.</p>
+          <p className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Não há registros de recebimentos da receita.</p>
         )}
         {receiptsTotal > revenueTotal ? (
-          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs italic tracking-tight text-orange-400">
+          <p className="w-full rounded border border-orange-400 bg-orange-50 p-1 text-center text-xs tracking-tight text-orange-400 italic">
             Por favor, ajuste os valores dos recebimentos. A somatória dos recebimentos atuais excede o valor total estabelecido para a receita.
           </p>
         ) : null}
@@ -74,7 +74,7 @@ function ReceiptTableItem({ revenueId, item, itemIndex, revenueTotal, handleUpda
   return (
     <>
       <AnimatePresence>
-        <div className="hidden w-full flex-col gap-1 bg-[#fff] dark:bg-[#121212] lg:flex">
+        <div className="bg-background hidden w-full flex-col gap-1 lg:flex dark:bg-[#121212]">
           <div className="flex w-full items-center gap-2 p-1">
             <div className="flex w-[40%] items-start gap-1">
               <div className="flex flex-col">
@@ -82,12 +82,12 @@ function ReceiptTableItem({ revenueId, item, itemIndex, revenueTotal, handleUpda
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <FaPercentage size={10} />
-                    <p className="text-[0.65rem] font-light italic leading-none tracking-tight text-primary/80">
+                    <p className="text-primary/80 text-[0.65rem] leading-none font-light tracking-tight italic">
                       {formatDecimalPlaces(((item.valor || 0) / revenueTotal) * 100)}%
                     </p>
                   </div>
                 </div>
-                {/* <p className="text-[0.65rem] font-light italic leading-none tracking-tight text-gray-500">{item.categoria}</p> */}
+                {/* <p className="text-[0.65rem] font-light italic leading-none tracking-tight text-primary/60">{item.categoria}</p> */}
               </div>
               <button
                 type="button"
@@ -109,22 +109,22 @@ function ReceiptTableItem({ revenueId, item, itemIndex, revenueTotal, handleUpda
             <h1 className="w-[20%] text-center text-xs tracking-tight">{formatDateAsLocale(item.dataRecebimento || undefined) || '-'}</h1>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212] lg:hidden">
+        <div className="border-primary bg-background flex w-full flex-col rounded-md border p-2 lg:hidden dark:bg-[#121212]">
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
               <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1 text-[20px]">
                 <MdAttachMoney size={15} />
               </div>
               {item.titulo ? (
-                <p className="text-sm font-bold leading-none tracking-tight">{item.titulo}</p>
+                <p className="text-sm leading-none font-bold tracking-tight">{item.titulo}</p>
               ) : (
-                <p className="text-sm font-bold leading-none tracking-tight">
+                <p className="text-sm leading-none font-bold tracking-tight">
                   RECEBIMENTO DE <strong className="text-[#FF9B50]">{formatDecimalPlaces(((item.valor || 0) / revenueTotal) * 100)}%</strong>
                 </p>
               )}
             </div>
             {!!item.valor && item.valor > 0 ? (
-              <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
+              <div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">
                 <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(item.valor)}</h1>
               </div>
             ) : null}
@@ -150,17 +150,17 @@ function ReceiptTableItem({ revenueId, item, itemIndex, revenueTotal, handleUpda
               {item.dataRecebimento ? (
                 <div className="flex items-center gap-1">
                   <BsPatchCheck color="rgb(34,197,94)" />
-                  <p className="text-[0.6rem] text-primary/80 lg:text-xs">RECEBIDO</p>
+                  <p className="text-primary/80 text-[0.6rem] lg:text-xs">RECEBIDO</p>
                 </div>
               ) : null}
               <div className="flex items-center gap-1">
                 <BsCalendar />
-                <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataPrevisaoRecebimento || undefined)}</p>
+                <p className="text-primary/80 text-[0.6rem] lg:text-xs">{formatDateAsLocale(item.dataPrevisaoRecebimento || undefined)}</p>
               </div>
               {item.dataRecebimento ? (
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck color="#22c55e " />
-                  <p className="text-[0.6rem] text-primary/80 lg:text-xs">{formatDateAsLocale(item.dataRecebimento || undefined)}</p>
+                  <p className="text-primary/80 text-[0.6rem] lg:text-xs">{formatDateAsLocale(item.dataRecebimento || undefined)}</p>
                 </div>
               ) : null}
             </div>

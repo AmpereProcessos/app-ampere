@@ -20,7 +20,7 @@ function PendencyBlock({ session, technicalAnalysisId, opportunity, infoHolder, 
   const { data: activities, isLoading, isError, isSuccess } = useActivitiesByTechnicalAnalysisId({ technicalAnalysisId: technicalAnalysisId })
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="mb-2 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 mb-2 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">PENDÊNCIAS</h1>
       </div>
       <NewActivityMenu
@@ -40,7 +40,7 @@ function PendencyBlock({ session, technicalAnalysisId, opportunity, infoHolder, 
               <TechnicalAnalysisActivity key={activity._id} activity={activity} technicalAnalysisId={technicalAnalysisId} />
             ))
           ) : (
-            <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+            <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
               Sem atividades adicionadas.
             </p>
           )

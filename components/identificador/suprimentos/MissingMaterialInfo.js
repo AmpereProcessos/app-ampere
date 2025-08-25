@@ -59,9 +59,9 @@ function ProjectMissingMaterialInfo({ infoHolder, setInfoHolder, setChanges }) {
     return
   }
   return (
-    <div className="w-full flex flex-col border border-cyan-500 p-3 rounded-lg h-full min-h-[300px] max-h-[300px]">
-      <div className="w-full flex items-center justify-between">
-        <h1 className="font-sans font-bold  text-[#353432] text-center">MATERIAL FALTANTE</h1>
+    <div className="flex h-full max-h-[300px] min-h-[300px] w-full flex-col rounded-lg border border-cyan-500 p-3">
+      <div className="flex w-full items-center justify-between">
+        <h1 className="text-center font-sans font-bold text-[#353432]">MATERIAL FALTANTE</h1>
         {addMenuIsOpen ? (
           <button
             onClick={() => setAddMenuIsOpen(false)}
@@ -71,14 +71,14 @@ function ProjectMissingMaterialInfo({ infoHolder, setInfoHolder, setChanges }) {
             <VscChromeClose style={{ color: 'red' }} />
           </button>
         ) : (
-          <button onClick={() => setAddMenuIsOpen(true)} className="flex items-center justify-center text-green-500 ">
+          <button onClick={() => setAddMenuIsOpen(true)} className="flex items-center justify-center text-green-500">
             <MdOutlineAddCircle style={{ fontSize: '25px' }} />
           </button>
         )}
       </div>
 
       {addMenuIsOpen ? (
-        <div className="w-full flex items-center gap-1">
+        <div className="flex w-full items-center gap-1">
           <div className="w-[70%]">
             <TextInput
               showLabel={false}
@@ -97,32 +97,32 @@ function ProjectMissingMaterialInfo({ infoHolder, setInfoHolder, setChanges }) {
               width={'100%'}
             />
           </div>
-          <div className="w-[10%] flex items-center justify-center">
+          <div className="flex w-[10%] items-center justify-center">
             <button onClick={() => addMaterial()} className="flex items-center justify-center text-green-500">
               <IoIosAdd />
             </button>
           </div>
         </div>
       ) : null}
-      <div className="mt-2 px-2 flex flex-col grow w-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="overscroll-y scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20 mt-2 flex w-full grow flex-col overflow-y-auto px-2">
         {getMissingMaterialAsList(infoHolder.material?.materialFaltante).length > 0 ? (
           getMissingMaterialAsList(infoHolder.material?.materialFaltante).map((equip, index) => (
-            <div key={index} className="flex items-center justify-between w-full">
+            <div key={index} className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <BsSuitDiamondFill />
-                <p className="text-xs text-gray-500 tracking-tight">
+                <p className="text-primary/60 text-xs tracking-tight">
                   {equip.qtde ? `${equip.qtde}x ` : ''}
                   {equip.descricao}
                 </p>
               </div>
-              <button onClick={() => removeMaterial(index)} className="flex items-center text-red-300 hover:text-red-500 justify-center text-sm">
+              <button onClick={() => removeMaterial(index)} className="flex items-center justify-center text-sm text-red-300 hover:text-red-500">
                 <AiFillDelete />
               </button>
             </div>
           ))
         ) : (
-          <div className="flex items-center justify-center grow">
-            <p className="text-sm italic text-gray-500 text-center">Nenhum material adicionado a lista...</p>
+          <div className="flex grow items-center justify-center">
+            <p className="text-primary/60 text-center text-sm italic">Nenhum material adicionado a lista...</p>
           </div>
         )}
       </div>

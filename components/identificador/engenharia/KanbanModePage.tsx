@@ -105,16 +105,16 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
   })
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM ENGENHARIA</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS EM ENGENHARIA</p>
             </div>
             <button
               type="button"
               onClick={() => updateViewMode('engineering', 'database')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -123,15 +123,15 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
           <button
             type="button"
             onClick={() => setFilterMenusIsOpen((prev) => !prev)}
-            className="cursor-pointer rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-blue-500 hover:text-white"
+            className="bg-primary text-primary-foreground cursor-pointer rounded-full p-2 transition-colors hover:bg-blue-500 hover:text-white"
           >
-            <ListFilter className="min-w-4 min-h-4 h-4 w-4" />
+            <ListFilter className="h-4 min-h-4 w-4 min-w-4" />
           </button>
         </div>
       </div>
 
       <DragDropContext onDragEnd={(e) => handleUpdateProjectStatus(e)}>
-        <div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess
@@ -177,13 +177,13 @@ function EngineeringKanbanFunnelList({ listTitle, listItems, handleItemClick }: 
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="w-full lg:w-1/3" />
-              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3 lg:text-[0.7rem]">
                 <MdDashboard />
                 <p>{listItems.length}</p>
               </div>
             </div>
           </div>
-          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2 ">
+          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2">
             {listItems.map((item, index) => (
               <EngineeringKanbanListItem key={item._id} item={item} index={index} handleClick={handleItemClick} />
             ))}
@@ -290,16 +290,16 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm"
+          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <h1 className="text-sm font-bold leading-none tracking-tight">{item.nomeDoContrato}</h1>
+              <h1 className="text-sm leading-none font-bold tracking-tight">{item.nomeDoContrato}</h1>
             </div>
             <button
               type="button"
               onClick={() => handleClick(item._id)}
-              className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+              className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
             >
               <Pencil width={10} height={10} />
               <p>EDITAR</p>
@@ -308,11 +308,11 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
           <div className="flex w-full grow flex-col gap-2 px-2">
             <div className={cn('flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1', getServiceTypeTagColor(item.tipoDeServico || ''))}>
               <MdDashboard size={12} />
-              <h1 className="text-[0.5rem] font-medium">{item.tipoDeServico}</h1>
+              <h1 className="text-xxs font-medium">{item.tipoDeServico}</h1>
             </div>
             {item.etiquetas && item.etiquetas.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+                <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
                 {item.etiquetas.map((tag, index) => (
                   <div
                     key={`${tag.id}-${index}`}
@@ -325,7 +325,7 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
                     className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
                   >
                     <Tag width={10} height={10} />
-                    <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                    <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
                   </div>
                 ))}
               </div>
@@ -333,11 +333,11 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xxs">{homologationStatusFlag.label}</span>
-                <p className={cn('text-xs text-gray-600', homologationStatusFlag.valueColor)}>{homologationStatusFlag.value}</p>
+                <p className={cn('text-primary/80 text-xs', homologationStatusFlag.valueColor)}>{homologationStatusFlag.value}</p>
               </div>
               <div className="text-end">
-                <span className="text-end text-xxs">{homologationInspectionFlag.label}</span>
-                <p className={cn('text-center text-xs text-gray-600', homologationInspectionFlag.valueColor)}>{homologationInspectionFlag.value}</p>
+                <span className="text-xxs text-end">{homologationInspectionFlag.label}</span>
+                <p className={cn('text-primary/80 text-center text-xs', homologationInspectionFlag.valueColor)}>{homologationInspectionFlag.value}</p>
               </div>
             </div>
             <div className="flex items-center justify-between">
@@ -346,32 +346,32 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
                 <p className={cn('text-xs uppercase', executiveDiagramFlag.valueColor)}>{executiveDiagramFlag.value}</p>
               </div>
               <div>
-                <span className="text-center text-xxs">{projectsDeliveryFlag.label}</span>
-                <p className={cn('text-center text-xs uppercase text-gray-600', projectsDeliveryFlag.valueColor)}>{projectsDeliveryFlag.value}</p>
+                <span className="text-xxs text-center">{projectsDeliveryFlag.label}</span>
+                <p className={cn('text-primary/80 text-center text-xs uppercase', projectsDeliveryFlag.valueColor)}>{projectsDeliveryFlag.value}</p>
               </div>
               <div>
                 <span className="text-xxs">{executiveDrawingFlag.label}</span>
-                <p className={cn('text-center text-xs text-gray-600', executiveDrawingFlag.valueColor)}>{executiveDrawingFlag.value}</p>
+                <p className={cn('text-primary/80 text-center text-xs', executiveDrawingFlag.valueColor)}>{executiveDrawingFlag.value}</p>
               </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex w-full flex-col">
                 <span className="text-xxs">{timeSinceContractSignatureFlag.label}</span>
-                <p className={cn('text-start text-xs uppercase text-red-500', timeSinceContractSignatureFlag.valueColor)}>
+                <p className={cn('text-start text-xs text-red-500 uppercase', timeSinceContractSignatureFlag.valueColor)}>
                   {timeSinceContractSignatureFlag.value}
                 </p>
               </div>
               <div className="flex w-full flex-col">
-                <span className="text-end text-xxs">{timeSinceAccessGrantingResponseFlag.label}</span>
-                <p className={cn('text-end text-xs uppercase text-red-500', timeSinceAccessGrantingResponseFlag.valueColor)}>
+                <span className="text-xxs text-end">{timeSinceAccessGrantingResponseFlag.label}</span>
+                <p className={cn('text-end text-xs text-red-500 uppercase', timeSinceAccessGrantingResponseFlag.valueColor)}>
                   {timeSinceAccessGrantingResponseFlag.value}
                 </p>
               </div>
             </div>
             {item.homologacao.acesso.dataSolicitacao ? (
               <div className="flex w-full items-center justify-between">
-                <p className="text-xxs ">{timeSinceAccessGrantingRequestFlag.label}</p>
-                <p className={cn('text-start text-xs text-gray-600', timeSinceAccessGrantingRequestFlag.valueColor)}>
+                <p className="text-xxs">{timeSinceAccessGrantingRequestFlag.label}</p>
+                <p className={cn('text-primary/80 text-start text-xs', timeSinceAccessGrantingRequestFlag.valueColor)}>
                   {timeSinceAccessGrantingRequestFlag.value}
                 </p>
               </div>

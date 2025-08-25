@@ -44,13 +44,13 @@ function ActivitiesInformation({ homologation, session, opportunity }: Activitie
               {menuEnabled ? (
                 activities.map((activity, index) => <HomologationActivity key={activity._id} activity={activity} homologationId={homologation._id} />)
               ) : (
-                <p className="flex w-full grow items-center justify-center gap-2 py-2 text-center font-medium italic tracking-tight text-gray-500">
+                <p className="text-primary/60 flex w-full grow items-center justify-center gap-2 py-2 text-center font-medium tracking-tight italic">
                   <strong className="text-orange-500">{openActivityCount} </strong> atividades em aberto.
                 </p>
               )}
             </>
           ) : (
-            <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+            <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
               Sem atividades adicionadas.
             </p>
           )

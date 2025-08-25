@@ -32,66 +32,62 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
               <Image height={30} width={30} src={AmpereLogo} alt="Logo Ampère" />
             </div>
           </Link>
-          <h1 className="text-center text-xl font-black leading-none tracking-tight text-white">COMPOSIÇÃO DE COMPRA</h1>
+          <h1 className="text-center text-xl leading-none font-black tracking-tight text-white">COMPOSIÇÃO DE COMPRA</h1>
         </div>
         <div className="flex w-full flex-col gap-2 border-x border-black py-2">
           <h1 className="w-full text-center text-lg font-black">{purchaseControl.titulo}</h1>
           {purchaseControl.projetoDados ? (
             <div className="flex flex-col items-center gap-1">
-              <p className="text-[0.7rem] font-medium text-gray-500">INFORMAÇÕES DE PROJETO</p>
+              <p className="text-primary/60 text-[0.7rem] font-medium">INFORMAÇÕES DE PROJETO</p>
               <div className="flex flex-wrap items-center justify-center gap-4 px-2">
                 <div className="flex items-center gap-1">
                   <FaUserAlt />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados!.nomeDoContrato}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados!.nomeDoContrato}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <MdPhone />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.telefone}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.telefone}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <BsPersonVcard />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.cpf_cnpj}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.cpf_cnpj}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <MdLandscape />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.inscricaoRural || 'N/A'}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.inscricaoRural || 'N/A'}</p>
                 </div>
               </div>
-              <p className="text-[0.7rem] font-medium text-gray-500">INFORMAÇÕES DE PAGAMENTO</p>
+              <p className="text-primary/60 text-[0.7rem] font-medium">INFORMAÇÕES DE PAGAMENTO</p>
               <div className="flex flex-wrap items-center justify-center gap-4 px-2">
                 <div className="flex items-center gap-1">
                   <FaUserAlt />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados.pagamento.pagador}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.pagador}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <FaPhone />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados.pagamento.contatoPagador}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.contatoPagador}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <BsPersonVcard />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.pagamento.cpf_cnpjPagador}</p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.pagamento.cpf_cnpjPagador}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <MdOutlinePayment />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">
-                    {purchaseControl.projetoDados.pagamento.forma || 'NÃO DEFINIDO'}
-                  </p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.forma || 'NÃO DEFINIDO'}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   <BsBank />
-                  <p className="text-[0.75rem] font-medium leading-none tracking-tight">
-                    {purchaseControl.projetoDados.pagamento.credor || 'NÃO DEFINIDO'}
-                  </p>
+                  <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.credor || 'NÃO DEFINIDO'}</p>
                 </div>
               </div>
             </div>
           ) : null}
           <div className="flex flex-col items-center gap-1">
-            <p className="text-[0.7rem] font-medium text-gray-500">LOCALIZAÇÃO</p>
+            <p className="text-primary/60 text-[0.7rem] font-medium">LOCALIZAÇÃO</p>
             <div className="flex w-full items-center justify-center">
               <div className="flex items-center gap-1">
                 <FaLocationDot />
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">
                   {formatLocation({
                     location: purchaseControl.entrega.localizacao,
                     includeCity: true,
@@ -103,8 +99,8 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
             </div>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <p className="text-[0.7rem] font-medium text-gray-500">ANOTAÇÕES</p>
-            <p className="w-[90%] rounded bg-gray-50 p-1 text-center text-[0.6rem] font-medium leading-none tracking-tight">
+            <p className="text-primary/60 text-[0.7rem] font-medium">ANOTAÇÕES</p>
+            <p className="w-[90%] rounded bg-gray-50 p-1 text-center text-[0.6rem] leading-none font-medium tracking-tight">
               {purchaseControl.anotacoes || 'NÃO DEFINIDO'}
             </p>
           </div>
@@ -121,7 +117,7 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
                 <h1 className="w-full text-start text-xs font-medium text-black">{item.descricao}</h1>
                 <div className="flex w-full items-center gap-1">
                   <MdDashboard />
-                  <h1 className="text-[0.65rem] tracking-tight text-gray-500">{item.categoria || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                  <h1 className="text-primary/60 text-[0.65rem] tracking-tight">{item.categoria || 'CÓDIGO NÃO DEFINIDO'}</h1>
                 </div>
               </div>
               <h1 className="w-[30%] text-center text-xs font-medium text-black">{item.unidade}</h1>

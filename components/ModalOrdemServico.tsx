@@ -158,10 +158,10 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
   return (
     <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'90%'} height={'87%'}>
       <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg">
+        <div className="border-primary/20 flex items-center justify-between border-b px-2 pb-2 text-lg">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
             <h1 className="pl-6 text-xs font-bold text-[#15599a] lg:text-base">{order?.favorecido?.nome || '...'}</h1>
-            <p className="text-center text-xs text-gray-500">#{order?._id || '...'}</p>
+            <p className="text-primary/60 text-center text-xs">#{order?._id || '...'}</p>
           </div>
           <button type="button">
             <VscChromeClose
@@ -174,7 +174,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
         </div>
         {isSuccess && infoHolder ? (
           <>
-            <div className="overscroll-y flex flex-col overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:px-0">
+            <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex flex-col overflow-y-auto px-2 py-2 lg:px-0">
               <div className="flex w-full items-center justify-center">
                 <h1 className="rounded border border-[#15599a] p-1 text-sm font-black text-[#15599a]">{order.categoria}</h1>
               </div>
@@ -182,9 +182,9 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
               <div className="mt-2 flex items-center justify-center gap-4">
                 <div className="flex items-center gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={order?.autor?.avatar_url} />
-                  <p className="text-xs font-medium text-gray-500">{order?.autor?.nome || 'Autor não identificado'}</p>
+                  <p className="text-primary/60 text-xs font-medium">{order?.autor?.nome || 'Autor não identificado'}</p>
                 </div>
-                <div className="flex items-center gap-2 text-gray-500">
+                <div className="text-primary/60 flex items-center gap-2">
                   <BsCalendarFill />
                   <p className="text-xs font-medium">{formatDateAsLocale(order?.dataInsercao, true)}</p>
                 </div>
@@ -192,11 +192,11 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
               <div className="mt-2 flex w-full items-center justify-center gap-2">
                 <div className="flex items-center gap-2">
                   <MdEngineering />
-                  <p className="text-xs font-medium uppercase text-gray-500">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
+                  <p className="text-primary/60 text-xs font-medium uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <IoMdAlert />
-                  <p className="text-xs font-medium uppercase text-gray-500">{order?.urgencia}</p>
+                  <p className="text-primary/60 text-xs font-medium uppercase">{order?.urgencia}</p>
                 </div>
               </div>
               {order?.dataEfetivacao ? (
@@ -212,7 +212,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
                 nomeDoProjeto={infoHolder.projeto.nome || ''}
                 codProjeto={infoHolder.projeto.identificador?.toString() || ''}
               />
-              <div className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+              <div className="bg-primary/80 mt-4 flex w-full items-center justify-center gap-2 rounded-md p-2">
                 <h1 className="font-bold text-white">EXECUÇÃO</h1>
               </div>
               <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
@@ -300,7 +300,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServi
                 history={order.periodo.historico}
               />
             </div>
-            <div className="mt-2 flex w-full items-center justify-between border-t border-gray-300 py-1 px-4">
+            <div className="border-primary/20 mt-2 flex w-full items-center justify-between border-t px-4 py-1">
               {session?.user.permissoes.ordensDeServico.editar ? (
                 <button
                   onClick={() => handleOrderDelete(orderId)}

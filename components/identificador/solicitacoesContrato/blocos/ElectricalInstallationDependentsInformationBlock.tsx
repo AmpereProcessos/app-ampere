@@ -34,7 +34,7 @@ function ElectricalInstallationDependentsInformationBlock({
   }
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE DISTRIBUIÇÕES DE CRÉDITO</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE DISTRIBUIÇÕES DE CRÉDITO</h1>
       <div className="flex items-center justify-center">
         <div className="w-fit">
           <CheckboxInput
@@ -77,13 +77,13 @@ function ElectricalInstallationDependentsInformationBlock({
           </div>
           <div className="flex w-full items-start justify-around gap-4">
             {infoHolder.distribuicoes.map((dist, index) => (
-              <div key={index} className="group flex items-center gap-2 rounded border border-gray-500 p-2 shadow-sm">
-                <h1 className="text-xs font-medium text-gray-500">INSTALAÇÃO Nº {dist.numInstalacao}</h1>
+              <div key={index} className="group border-primary/60 flex items-center gap-2 rounded border p-2 shadow-xs">
+                <h1 className="text-primary/60 text-xs font-medium">INSTALAÇÃO Nº {dist.numInstalacao}</h1>
                 <h1 className="rounded-lg bg-black px-2 py-1 text-[0.65rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)} %</h1>
                 <button
                   onClick={() => removeDistribution(index)}
                   type="button"
-                  className="flex items-center justify-center  rounded-lg p-1 opacity-0 duration-300 ease-linear group-hover:opacity-100 hover:scale-105 hover:bg-red-200"
+                  className="flex items-center justify-center rounded-lg p-1 opacity-0 duration-300 ease-linear group-hover:opacity-100 hover:scale-105 hover:bg-red-200"
                 >
                   <VscChromeClose style={{ color: 'red' }} />
                 </button>

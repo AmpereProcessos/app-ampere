@@ -37,8 +37,8 @@ function renderPagesIcons({
         return selectPage(p)
       }}
       className={`${
-        activePage == p ? 'border-black bg-black text-white' : 'border-transparent text-black hover:bg-gray-500'
-      } max-w-10 min-w-10 min-h-10 h-10 max-h-10 w-10 rounded-full border text-xs font-medium`}
+        activePage == p ? 'border-black bg-black text-white' : 'hover:bg-primary/60 border-transparent text-black'
+      } h-10 max-h-10 min-h-10 w-10 max-w-10 min-w-10 rounded-full border text-xs font-medium`}
     >
       {p}
     </button>
@@ -63,10 +63,10 @@ function ServiceOrdersPagination({
   queryLoading,
 }: ServiceOrdersPaginationProps) {
   return (
-    <div className="my-2 flex w-full flex-col items-center gap-1 ">
+    <div className="my-2 flex w-full flex-col items-center gap-1">
       {totalPages > 1 ? (
         <>
-          <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+          <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
             Um número grande de projetos foi encontrado, separamos em páginas para facilitar a visualização. Clique na página desejada para visualizar
             os demais projetos.
           </p>
@@ -77,7 +77,7 @@ function ServiceOrdersPagination({
                 if (activePage - 1 > 0) return selectPage(activePage - 1)
                 else return
               }}
-              className="font-sans flex select-none items-center gap-2 rounded-full px-6 py-3 text-center align-middle text-xs font-bold uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none hover:bg-gray-900/10 active:bg-gray-900/20"
+              className="flex items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold text-gray-900 uppercase transition-all select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <svg
@@ -100,7 +100,7 @@ function ServiceOrdersPagination({
                 if (activePage + 1 <= totalPages) selectPage(activePage + 1)
                 else return
               }}
-              className="font-sans flex select-none items-center gap-2 rounded-full px-6 py-3 text-center align-middle text-xs font-bold uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none hover:bg-gray-900/10 active:bg-gray-900/20"
+              className="flex items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold text-gray-900 uppercase transition-all select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               PRÓXIMA
@@ -120,14 +120,14 @@ function ServiceOrdersPagination({
         </>
       ) : null}
 
-      <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+      <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
         {serviceOrdersMatched
           ? serviceOrdersMatched > 0
             ? `${serviceOrdersMatched} ordens de serviço encontradas.`
             : `${serviceOrdersMatched} ordem de serviço encontrada.`
           : '...'}
       </p>
-      <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+      <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
         {serviceOrdersShowing
           ? serviceOrdersShowing > 0
             ? `Mostrando ${serviceOrdersShowing} ordens de serviço.`

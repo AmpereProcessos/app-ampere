@@ -188,11 +188,11 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
   })
   return (
     <Dialog.Root open onOpenChange={closeModal}>
-      <Dialog.Overlay className="fixed inset-0 z-[100] bg-[rgba(0,0,0,.85)] backdrop-blur-sm" />
-      <Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[70%]">
+      <Dialog.Overlay className="fixed inset-0 z-100 bg-[rgba(0,0,0,.85)] backdrop-blur-xs" />
+      <Dialog.Content className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[70%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVA HOMOLOGAÇÃO</h3>
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-xl font-bold text-[#353432] dark:text-white">NOVA HOMOLOGAÇÃO</h3>
             <button
               onClick={() => closeModal()}
               type="button"
@@ -206,12 +206,12 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
           {isSuccess ? (
             <div className="flex w-full grow flex-col items-center justify-center gap-2 text-green-500">
               <BsFillClipboardCheckFill color="rgb(34,197,94)" size={35} />
-              <p className="text-lg font-medium tracking-tight text-gray-500">Homologação requisitada com sucesso !</p>
+              <p className="text-primary/60 text-lg font-medium tracking-tight">Homologação requisitada com sucesso !</p>
             </div>
           ) : null}
           {!isPending && !isError && !isSuccess ? (
             <>
-              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
                 {/* <OpportunityInformationBlock
                 infoHolder={infoHolder}
                 setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<THomologation>>}
@@ -230,7 +230,7 @@ function NewHomologation({ opportunity, session, closeModal, affectedQueryKey }:
                   disabled={isPending}
                   // @ts-ignore
                   onClick={() => handleCreateHomologation({ info: infoHolder, files: files })}
-                  className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+                  className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
                 >
                   SOLICITAR HOMOLOGAÇÃO
                 </button>

@@ -25,7 +25,7 @@ function RevenuesFilterMenu({ queryParams, updateQueryParams, closeMenu }: Reven
             <SheetDescription>Escolha aqui parâmetros para filtrar as receitas.</SheetDescription>
           </SheetHeader>
 
-          <div className="flex h-full flex-col gap-y-4 overflow-y-auto overscroll-y-auto p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-4 overflow-y-auto overscroll-y-auto p-2">
             <div className="flex w-full flex-col gap-2">
               <MultipleSelectInputVirtualized
                 label={'STATUS'}

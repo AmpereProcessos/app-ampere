@@ -50,10 +50,10 @@ function Operacoes() {
   if (status == 'authenticated') {
     return (
       <div className="flex grow flex-col p-6">
-        <div className="flex flex-col border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-              <p className="text-center text-2xl font-bold uppercase text-[#15599a]">OPERAÇÕES E OUTROS PROJETOS</p>
+              <p className="text-center text-2xl font-bold text-[#15599a] uppercase">OPERAÇÕES E OUTROS PROJETOS</p>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@ function Operacoes() {
                       info: operation,
                     }))
                   }}
-                  className="flex h-[250px] w-[450px] cursor-pointer flex-col border border-gray-300 p-3 shadow-lg"
+                  className="border-primary/20 flex h-[250px] w-[450px] cursor-pointer flex-col border p-3 shadow-lg"
                 >
                   <div className="flex w-full justify-between">
                     <div></div>
@@ -107,26 +107,26 @@ function Operacoes() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <h1 className="text-start text-xs font-medium text-gray-500">INÍCIO</h1>
+                      <h1 className="text-primary/60 text-start text-xs font-medium">INÍCIO</h1>
                       <div className="flex items-center gap-2">
                         <AiOutlineCalendar style={{ color: '#15599a', fontSize: '20px' }} />
-                        <h1 className="text-xs font-medium text-gray-700 lg:text-base">
+                        <h1 className="text-primary/70 text-xs font-medium lg:text-base">
                           {operation.dataInicio ? dayjs(operation.dataInicio).format('DD/MM/YY') : null}
                         </h1>
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <h1 className="text-end text-xs font-medium text-gray-500">PREVISÃO DE CONCLUSÃO</h1>
+                      <h1 className="text-primary/60 text-end text-xs font-medium">PREVISÃO DE CONCLUSÃO</h1>
                       <div className="flex items-center justify-end gap-2">
                         {operation.previsaoConclusao ? (
                           <>
                             <BsCalendarCheckFill style={{ color: 'rgb(249,115,22)' }} />
-                            <h1 className="text-xs font-medium text-gray-700 lg:text-base">
+                            <h1 className="text-primary/70 text-xs font-medium lg:text-base">
                               {dayjs(operation.previsaoConclusao).format('DD/MM/YY HH:mm')}
                             </h1>
                           </>
                         ) : (
-                          <h1 className="text-xs font-medium text-gray-700 lg:text-base">NÃO DEFINIDO</h1>
+                          <h1 className="text-primary/70 text-xs font-medium lg:text-base">NÃO DEFINIDO</h1>
                         )}
                       </div>
                     </div>
@@ -136,12 +136,12 @@ function Operacoes() {
                     <div key={subIndex} className="flex w-full items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <TbActivity />
-                        <p className="text-xs text-gray-500">{activity.nome}</p>
+                        <p className="text-primary/60 text-xs">{activity.nome}</p>
                       </div>
                       {activity.subAtividades ? (
                         <div className="flex items-center gap-2">
                           <FaProjectDiagram style={{ color: '#15599a' }} />
-                          <p className="text-xs text-gray-500">+ {activity.subAtividades.length}</p>
+                          <p className="text-primary/60 text-xs">+ {activity.subAtividades.length}</p>
                         </div>
                       ) : null}
                     </div>
@@ -150,7 +150,7 @@ function Operacoes() {
               ))
             ) : (
               <div className="flex grow items-center justify-center">
-                <p className="italic text-gray-500">
+                <p className="text-primary/60 italic">
                   {session.user.visualizacao.referencia ? 'Nenhuma operação encontrada vinculada a sua equipe.' : 'Nenhuma operação encontrada.'}
                 </p>
               </div>
@@ -162,7 +162,7 @@ function Operacoes() {
         {session.user.permissoes.execucao.editar ? (
           <div
             onClick={() => setNewOperationModalIsOpen(true)}
-            className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
+            className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
           >
             <p className="text-sm font-bold uppercase">NOVA OPERAÇÃO</p>
           </div>

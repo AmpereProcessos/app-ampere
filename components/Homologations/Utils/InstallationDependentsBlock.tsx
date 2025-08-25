@@ -58,11 +58,11 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-        <h1 className="font-sans text-start  font-bold text-[#353432]">DEPENDENTES/RECEBEDORAS</h1>
+        <h1 className="text-start font-sans font-bold text-[#353432]">DEPENDENTES/RECEBEDORAS</h1>
         {infoHolder.homologacao.instalacao.dependentes.length > 0 ? (
           <div className="flex items-center gap-1">
             <h1 className="rounded-lg bg-green-500 px-2 py-1 text-[0.65rem] font-bold text-white">POSSUI DISTRIBUIÇÕES</h1>
-            <h1 className="rounded-lg bg-gray-800 px-2 py-1 text-[0.65rem] font-bold text-white">
+            <h1 className="bg-primary/80 rounded-lg px-2 py-1 text-[0.65rem] font-bold text-white">
               {infoHolder.homologacao.instalacao.dependentes.length}{' '}
               {infoHolder.homologacao.instalacao.dependentes.length > 1 ? 'RECEBEDORAS' : 'RECEBEDORA'}
             </h1>
@@ -73,8 +73,8 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
       </div>
       {infoHolder.homologacao.instalacao.dependentes.length > 0 ? (
         <div className="flex w-full flex-col gap-1">
-          <div className="flex w-full flex-col items-center rounded border-0 border-gray-800 lg:border">
-            <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-gray-500 p-1 lg:flex">
+          <div className="border-primary/80 flex w-full flex-col items-center rounded border-0 lg:border">
+            <div className="bg-primary/60 hidden w-full items-center gap-2 rounded rounded-br-none rounded-bl-none p-1 lg:flex">
               <h1 className="w-[20%] text-center text-sm font-bold text-white">INDEX</h1>
               <h1 className="w-[40%] text-center text-sm font-bold text-white">NÚMERO DA INSTALAÇÃO</h1>
               <h1 className="w-[40%] text-center text-sm font-bold text-white">PORCENTAGEM DE RECEBIMENTO</h1>
@@ -90,21 +90,21 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
                 />
               )
 
-              // <div key={index} className="group flex w-full flex-col items-center rounded border border-gray-800 shadow-sm">
-              //   <h1 className="w-full bg-gray-800 p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
+              // <div key={index} className="group flex w-full flex-col items-center rounded border border-primary/80 shadow-xs">
+              //   <h1 className="w-full bg-primary/80 p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
               //   <div className="flex w-full flex-col p-2">
               //     <div className="flex w-full items-start justify-between gap-4 p-2">
               //       <div className="flex flex-col items-center gap-1 lg:items-start">
               //         <div className="flex items-center gap-1">
               //           <BsCode size={12} />
-              //           <p className="text-[0.65rem] font-medium text-gray-500">INSTALAÇÃO</p>
+              //           <p className="text-[0.65rem] font-medium text-primary/60">INSTALAÇÃO</p>
               //         </div>
               //         <p className="text-[0.6rem] font-medium leading-none tracking-tight">{dependent.numeroInstalacao}</p>
               //       </div>
               //       <div className="flex flex-col items-center gap-1 lg:items-end">
               //         <div className="flex items-center gap-1">
               //           <FaPercentage size={12} />
-              //           <p className="text-[0.65rem] font-medium text-gray-500">PORCENTAGEM</p>
+              //           <p className="text-[0.65rem] font-medium text-primary/60">PORCENTAGEM</p>
               //         </div>
               //         <p className="text-[0.6rem] font-medium leading-none tracking-tight">{dependent.recebimentoPercentual}%</p>
               //       </div>
@@ -119,7 +119,7 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
               //     </div>
               //   </div>
 
-              //   {/* <h1 className="text-xs font-medium text-gray-500">INSTALAÇÃO Nº {dependent.numeroInstalacao}</h1>
+              //   {/* <h1 className="text-xs font-medium text-primary/60">INSTALAÇÃO Nº {dependent.numeroInstalacao}</h1>
               //   <h1 className="rounded-lg bg-black px-2 py-1 text-[0.65rem] font-bold text-white">
               //     {formatDecimalPlaces(dependent.recebimentoPercentual)} %
               //   </h1>
@@ -135,7 +135,7 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
           </div>
         </div>
       ) : (
-        <p className="w-full text-center text-sm font-medium text-gray-500">Não há recebedoras definidas para essa geradora.</p>
+        <p className="text-primary/60 w-full text-center text-sm font-medium">Não há recebedoras definidas para essa geradora.</p>
       )}
       <div className="flex w-full items-center justify-end">
         {newDependentMenuIsOpen ? (
@@ -182,7 +182,7 @@ function InstallationDependentsBlock({ infoHolder, setInfoHolder, changes, setCh
           </div>
           <div className="flex w-full items-center justify-end">
             <button
-              className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+              className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
               onClick={() => addDependent(newDependentHolder)}
             >
               ADICIONAR DEPENDENTE
@@ -229,23 +229,23 @@ function DependenteTableItem({ index, dependent, handleRemove, handleUpdate }: D
             <h1 className="w-[45%] text-center text-xs tracking-tight">{dependent.recebimentoPercentual}%</h1>
           </div>
         </div>
-        <div className="group flex w-full flex-col items-center rounded border border-gray-800 shadow-sm lg:hidden">
-          <h1 className="w-full bg-gray-800 p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
+        <div className="group border-primary/80 flex w-full flex-col items-center rounded border shadow-xs lg:hidden">
+          <h1 className="bg-primary/80 w-full p-1 text-center text-[0.65rem] font-bold text-white">RECEBEDORA {index + 1}</h1>
           <div className="flex w-full flex-col p-2">
             <div className="flex w-full items-start justify-between gap-4 p-2">
               <div className="flex flex-col items-center gap-1 lg:items-start">
                 <div className="flex items-center gap-1">
                   <BsCode size={12} />
-                  <p className="text-[0.65rem] font-medium text-gray-500">INSTALAÇÃO</p>
+                  <p className="text-primary/60 text-[0.65rem] font-medium">INSTALAÇÃO</p>
                 </div>
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{dependent.numeroInstalacao}</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{dependent.numeroInstalacao}</p>
               </div>
               <div className="flex flex-col items-center gap-1 lg:items-end">
                 <div className="flex items-center gap-1">
                   <FaPercentage size={12} />
-                  <p className="text-[0.65rem] font-medium text-gray-500">PORCENTAGEM</p>
+                  <p className="text-primary/60 text-[0.65rem] font-medium">PORCENTAGEM</p>
                 </div>
-                <p className="text-[0.6rem] font-medium leading-none tracking-tight">{dependent.recebimentoPercentual}%</p>
+                <p className="text-[0.6rem] leading-none font-medium tracking-tight">{dependent.recebimentoPercentual}%</p>
               </div>
             </div>
             <div className="flex w-full items-center justify-end gap-2">

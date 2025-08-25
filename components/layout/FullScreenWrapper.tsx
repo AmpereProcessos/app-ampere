@@ -9,8 +9,8 @@ const raleway = Raleway({
 
 function FullScreenWrapper({ children }: PropsWithChildren) {
   return (
-    <div className={cn('font-Inter flex min-h-[100vh] w-screen max-w-full flex-col bg-[#fff] antialiased xl:min-h-[100vh]', raleway.variable)}>
-      <div className="flex min-h-[100%] grow">
+    <div className={cn('font-Inter bg-background flex min-h-screen w-screen max-w-full flex-col antialiased xl:min-h-screen', raleway.variable)}>
+      <div className="flex min-h-full grow">
         <div className="flex w-full grow flex-col">{children}</div>
       </div>
     </div>

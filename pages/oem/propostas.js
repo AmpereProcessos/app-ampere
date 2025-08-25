@@ -61,8 +61,8 @@ function Propostas() {
   // if (status == "loading") return <LoadingPage />;
   // if (status == "authenticated") {
   //   return (
-  //     <div className="flex flex-col p-6 grow bg-[#fff]">
-  //       <div className="flex items-center gap-x-2 border-b-2 border-gray-300">
+  //     <div className="flex flex-col p-6 grow bg-background">
+  //       <div className="flex items-center gap-x-2 border-b-2 border-primary/20">
   //         <h1 className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
   //           PROPOSTAS DE O&M
   //         </h1>
@@ -73,14 +73,14 @@ function Propostas() {
   //           {proposes.data.map((propose) => (
   //             <div
   //               key={propose._id}
-  //               className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[175px] border border-gray-300 shadow-md"
+  //               className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[175px] border border-primary/20 shadow-md"
   //             >
   //               <div className="w-full flex items-center justify-between">
-  //                 <div className="flex items-center gap-2 text-gray-700">
+  //                 <div className="flex items-center gap-2 text-primary/70">
   //                   <HiIdentification style={{ color: "#15599a" }} />
   //                   <h1 className="font-medium">{propose.nomeCliente}</h1>
   //                 </div>
-  //                 <div className="flex items-center gap-2 text-gray-700">
+  //                 <div className="flex items-center gap-2 text-primary/70">
   //                   <FaCity style={{ color: "#fead61" }} />
   //                   <h1 className="font-medium">
   //                     {propose.cidade}/{propose.uf}
@@ -90,13 +90,13 @@ function Propostas() {
   //               <div className="flex items-center justify-between">
   //                 <div className="flex items-center gap-2">
   //                   <FaUser style={{ color: "#003d5b" }} />
-  //                   <h1 className="text-gray-700 font-medium text-xs">
+  //                   <h1 className="text-primary/70 font-medium text-xs">
   //                     {propose.vendedor}
   //                   </h1>
   //                 </div>
   //                 <div className="flex items-center gap-2">
   //                   <BsTelephoneFill style={{ color: "#16B010" }} />
-  //                   <h1 className="text-gray-700 font-medium text-xs">
+  //                   <h1 className="text-primary/70 font-medium text-xs">
   //                     {propose.telefoneVendedor
   //                       ? propose.telefoneVendedor
   //                       : "NÃO FORNECIDO"}
@@ -106,19 +106,19 @@ function Propostas() {
   //               <div className="flex items-center justify-between">
   //                 <div className="w-1/3 flex items-center justify-start gap-2">
   //                   <FaSolarPanel style={{ color: " rgb(217,119,6)" }} />
-  //                   <h1 className="text-gray-700 font-medium text-xs">
+  //                   <h1 className="text-primary/70 font-medium text-xs">
   //                     {propose.qtdeModulos} MÓDULOS
   //                   </h1>
   //                 </div>
   //                 <div className="w-1/3 flex items-center justify-center gap-2">
   //                   <GoGraph style={{ color: "blue" }} />
-  //                   <h1 className="text-gray-700 font-medium text-xs">
+  //                   <h1 className="text-primary/70 font-medium text-xs">
   //                     {propose.eficienciaAtual}%
   //                   </h1>
   //                 </div>
   //                 <div className="w-1/3 flex items-end justify-end gap-2">
   //                   <AiFillThunderbolt style={{ color: "red" }} />
-  //                   <h1 className="text-gray-700 font-medium text-xs">
+  //                   <h1 className="text-primary/70 font-medium text-xs">
   //                     {propose.potModulos} W
   //                   </h1>
   //                 </div>
@@ -144,7 +144,7 @@ function Propostas() {
   //           verifique a conexão com a internet e tente novamente.
   //         </p>
   //       ) : null} */}
-  //       <div className="flex py-2 gap-4 mt-5  shadow-lg w-full max-w-full overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+  //       <div className="flex py-2 gap-4 mt-5  shadow-lg w-full max-w-full overflow-x-auto scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20">
   //         <ListPropostas
   //           title={"Em apresentação"}
   //           listId={1}

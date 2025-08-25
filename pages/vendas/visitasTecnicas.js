@@ -35,7 +35,7 @@ function VisitasTecnicas({}) {
     } else if (statusAprovacao == 'REJEITADA') {
       return 'bg-red-300'
     } else {
-      return 'bg-[#fff]'
+      return 'bg-background'
     }
   }
   useEffect(() => {
@@ -46,8 +46,8 @@ function VisitasTecnicas({}) {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex grow flex-col bg-[#fff] p-6">
-        <div className="flex border-b border-gray-300">
+      <div className="bg-background flex grow flex-col p-6">
+        <div className="border-primary/20 flex border-b">
           <h1 className="text-xl font-bold text-[#15599a]">SEUS FORMULÁRIOS DE VISITA TÉCNICA</h1>
         </div>
         <div className="mt-4 flex flex-wrap justify-around gap-3">
@@ -58,7 +58,7 @@ function VisitasTecnicas({}) {
                 setModalIsOpen(true)
               }}
               key={solicitacao._id}
-              className={`flex w-[250px] cursor-pointer flex-col lg:w-[450px] ${getCardColor(solicitacao.status)} border border-gray-300 p-3 hover:bg-blue-100`}
+              className={`flex w-[250px] cursor-pointer flex-col lg:w-[450px] ${getCardColor(solicitacao.status)} border-primary/20 dark:hover:bg-primary/10 border p-3 hover:bg-blue-100`}
             >
               <div className="flex justify-center">
                 <h1 className="text-xs font-bold text-[#15599a]">{solicitacao.nomeDoCliente ? solicitacao.nomeDoCliente : '-'}</h1>
@@ -66,18 +66,18 @@ function VisitasTecnicas({}) {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xxs">VENDEDOR</span>
-                  <p className="text-xs text-gray-600">{solicitacao.nomeVendedor ? solicitacao.nomeVendedor : '-'}</p>
+                  <p className="text-primary/80 text-xs">{solicitacao.nomeVendedor ? solicitacao.nomeVendedor : '-'}</p>
                 </div>
                 <div>
                   <span className="text-xxs">CIDADE</span>
-                  <p className="text-xs text-gray-600">{solicitacao.cidade ? solicitacao.cidade : '-'}</p>
+                  <p className="text-primary/80 text-xs">{solicitacao.cidade ? solicitacao.cidade : '-'}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
         <Link href="/publico/formVisitaTecnica">
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">SOLICITAR VISITA</p>
           </div>
         </Link>

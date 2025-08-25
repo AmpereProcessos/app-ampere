@@ -36,7 +36,7 @@ function IGreenTechnicalAnalysisPage({ session }: IGreenTechnicalAnalysisPagePro
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-1">
             <div className="flex flex-col gap-1">
-              <h1 className="text-xl font-black leading-none tracking-tight md:text-2xl">CONTROLE DE ANÁLISES TÉCNICAS (IGREEN)</h1>
+              <h1 className="text-xl leading-none font-black tracking-tight md:text-2xl">CONTROLE DE ANÁLISES TÉCNICAS (IGREEN)</h1>
             </div>
           </div>
         </div>
@@ -58,25 +58,25 @@ type TechnicalAnalysisCardProps = {
 function TechnicalAnalysisCard({ analysis }: TechnicalAnalysisCardProps) {
   function getTechnicalAnalysisStatusTag(technicalAnalysis: TIGreenTechnicalAnalysis[number]) {
     if (technicalAnalysis.status === 'CONCLUÍDO' && technicalAnalysis.dataEfetivacao)
-      return <h1 className={cn('min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white')}>{analysis.status}</h1>
+      return <h1 className={cn('text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white')}>{analysis.status}</h1>
 
     const currentDate = new Date()
     if (technicalAnalysis.dataPrevisaoEfetivacao && technicalAnalysis.dataPrevisaoEfetivacao < currentDate)
-      return <h1 className={cn('min-w-fit rounded-lg bg-orange-500 px-2 py-0.5 text-[0.5rem] text-white')}>EM ATRASO</h1>
+      return <h1 className={cn('text-xxs min-w-fit rounded-lg bg-orange-500 px-2 py-0.5 text-white')}>EM ATRASO</h1>
 
-    if (status === 'EM ANDAMENTO') return <h1 className={cn('min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-[0.5rem] text-white')}>{status}</h1>
+    if (status === 'EM ANDAMENTO') return <h1 className={cn('text-xxs min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-white')}>{status}</h1>
 
-    return <h1 className={cn('min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white')}>{status}</h1>
+    return <h1 className={cn('text-xxs bg-primary/60 min-w-fit rounded-lg px-2 py-0.5 text-white')}>{status}</h1>
   }
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{analysis.titulo}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{analysis.titulo}</p>
           {getTechnicalAnalysisStatusTag(analysis)}
         </div>
         <div className="flex w-full items-center justify-between gap-1 lg:w-fit">
-          <p className="block text-[0.65rem] font-medium text-primary/80 lg:hidden">ANALISTAS</p>
+          <p className="text-primary/80 block text-[0.65rem] font-medium lg:hidden">ANALISTAS</p>
           <div className="flex -space-x-1 overflow-hidden">
             {analysis.analistas.map((analyst) => (
               <Avatar
@@ -94,15 +94,15 @@ function TechnicalAnalysisCard({ analysis }: TechnicalAnalysisCardProps) {
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <FaUser width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{analysis.cliente.nome}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{analysis.cliente.nome}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaPhone width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{analysis.cliente.telefonePrimario}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{analysis.cliente.telefonePrimario}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
               {formatLocation({
                 location: {
                   uf: analysis.localizacaoUf || '',
@@ -126,12 +126,12 @@ function TechnicalAnalysisCard({ analysis }: TechnicalAnalysisCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(analysis.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(analysis.dataInsercao, true)}</p>
           </div>
           {analysis.dataEfetivacao ? (
             <div className="flex items-center gap-1">
               <BsCalendarCheck color="#22c55e" />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(analysis.dataEfetivacao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(analysis.dataEfetivacao, true)}</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
@@ -142,11 +142,11 @@ function TechnicalAnalysisCard({ analysis }: TechnicalAnalysisCardProps) {
               height={20}
               fallback={formatNameAsInitials(analysis.autor.nome || '')}
             />
-            <p className="text-[0.65rem] font-medium text-primary/80">{analysis.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{analysis.autor.nome}</p>
           </div>
         </div>
         <Link href={`https://sistema-igreen.vercel.app/dashboard/analises-tecnicas/id/${analysis.id}`}>
-          <button type="button" className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary">
+          <button type="button" className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]">
             <SquareArrowOutUpRight width={10} height={10} />
             <p>IR À PÁGINA</p>
           </button>

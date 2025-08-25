@@ -48,7 +48,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }: EquipmentModalBlockP
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">EQUIPAMENTOS</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
@@ -171,7 +171,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }: EquipmentModalBlockP
              {infoHolder.equipamentos.disponivel.map((equip, index) => (
                <div key={index} className="flex items-center gap-2">
                  <BsSuitDiamondFill />
-                 <p className="text-xs text-gray-500 tracking-tight">
+                 <p className="text-xs text-primary/60 tracking-tight">
                    {equip.qtde ? `${equip.qtde}x ` : ''}
                    {equip.descricao}
                  </p>
@@ -185,7 +185,7 @@ function EquipmentModalBlock({ infoHolder, setInfoHolder }: EquipmentModalBlockP
              {infoHolder.equipamentos.retirada.map((equip, index) => (
                <div key={index} className="flex items-center gap-2">
                  <BsSuitDiamondFill />
-                 <p className="text-xs text-gray-500 tracking-tight">
+                 <p className="text-xs text-primary/60 tracking-tight">
                    {equip.qtde ? `${equip.qtde}x ` : ''}
                    {equip.descricao}
                  </p>

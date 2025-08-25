@@ -19,7 +19,7 @@ function FirstStage({ infoHolder, setInfoHolder, moveToNextStage }: FirstStagePr
 
   return (
     <div className="flex h-fit w-full flex-col">
-      <div className="flex h-[300px] w-full flex-1 flex-grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
+      <div className="flex h-[300px] w-full flex-1 grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
         <div className="flex h-[146px] w-[300px] flex-col items-center justify-center lg:w-[350px]">
           <div className="relative w-full leading-none">
             <p className="m-0 inline text-center text-[19px] font-normal leading-[1.2] text-[rgba(79,88,96,1)]">
@@ -85,7 +85,7 @@ function FirstStage({ infoHolder, setInfoHolder, moveToNextStage }: FirstStagePr
       </div>
       <div className="flex h-[100px] w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
         <div className="w-full">
-          <div className="flex flex-1 flex-grow flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]">
+          <div className="flex flex-1 grow flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]">
             <p
               onClick={() => {
                 if (validateFields()) return moveToNextStage()

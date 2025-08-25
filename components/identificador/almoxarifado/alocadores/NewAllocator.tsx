@@ -60,10 +60,10 @@ function NewAllocator({ session, closeModal, callbacks }: NewAllocatorProps) {
   })
   return (
     <Dialog.Root open={true} onOpenChange={closeModal}>
-      <Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
-      <Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[60%] lg:w-[50%]">
+      <Dialog.Overlay className="bg-primary/70 fixed inset-0 z-100 backdrop-blur-xs" />
+      <Dialog.Content className="bg-background fixed top-[50%] left-[50%] z-100 h-[90%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:h-[60%] lg:w-[50%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <h3 className="text-sm font-bold lg:text-xl">NOVO ALOCADOR</h3>
             <button
               onClick={() => closeModal()}
@@ -73,7 +73,7 @@ function NewAllocator({ session, closeModal, callbacks }: NewAllocatorProps) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1">
             <AllocatorGeneral data={infoHolder} updateAllocator={updateAllocator} />
             <AllocatorLocation data={infoHolder} updateAllocator={updateAllocator} />
           </div>

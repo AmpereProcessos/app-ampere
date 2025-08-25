@@ -43,7 +43,7 @@ function DetailsModalBlock({ infoHolder, setInfoHolder }: DetailsModalBlockProps
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">DETALHES</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}
@@ -199,90 +199,90 @@ function DetailsModalBlock({ infoHolder, setInfoHolder }: DetailsModalBlockProps
           <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="flex w-full flex-col gap-2">
             <div className="mt-2 flex w-full flex-col flex-wrap items-center justify-center gap-2 md:flex-row lg:gap-4">
               {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <IoMdWater />
-                    <p className="text-xs font-medium uppercase text-gray-500">PONTO DE ÁGUA</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">PONTO DE ÁGUA</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.pontoAgua || 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.pontoAgua || 'N/A'}</h1>
                 </div>
               ) : null}
               {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <MdOutlineWifiPassword />
-                    <p className="text-xs font-medium uppercase text-gray-500">SENHA DO WI-FI</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">SENHA DO WI-FI</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.senhaWifi || 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.senhaWifi || 'N/A'}</h1>
                 </div>
               ) : null}
               {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <BsFillGearFill />
-                    <p className="text-xs font-medium uppercase text-gray-500">CONFIGURAR MONITORAMENTO</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">CONFIGURAR MONITORAMENTO</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">
                     {infoHolder.detalhes.configuracaoMonitoramento ? 'SIM' : 'N/A'}
                   </h1>
                 </div>
               ) : null}
               {infoHolder.categoria == 'MANUTENÇÃO PREVENTIVA' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <BsArrowDownUp />
-                    <p className="text-xs font-medium uppercase text-gray-500">POSSUI TRAFO</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">POSSUI TRAFO</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.possuiTrafo ? 'SIM' : 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.possuiTrafo ? 'SIM' : 'N/A'}</h1>
                 </div>
               ) : null}
 
-              <div className="flex flex-col rounded-md border border-gray-500 p-3">
+              <div className="border-primary/60 flex flex-col rounded-md border p-3">
                 <div className="flex items-center gap-2">
                   <BsHouse />
-                  <p className="text-xs font-medium uppercase text-gray-500">TIPO ESTRUTURA</p>
+                  <p className="text-primary/60 text-xs font-medium uppercase">TIPO ESTRUTURA</p>
                 </div>
-                <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.tipoEstrutura || 'N/A'}</h1>
+                <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.tipoEstrutura || 'N/A'}</h1>
               </div>
-              <div className="flex flex-col rounded-md border border-gray-500 p-3">
+              <div className="border-primary/60 flex flex-col rounded-md border p-3">
                 <div className="flex items-center gap-2">
                   <TbTopologyFullHierarchy />
-                  <p className="text-xs font-medium uppercase text-gray-500">TOPOLOGIA</p>
+                  <p className="text-primary/60 text-xs font-medium uppercase">TOPOLOGIA</p>
                 </div>
-                <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.topologia || 'N/A'}</h1>
+                <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.topologia || 'N/A'}</h1>
               </div>
-              <div className="flex flex-col rounded-md border border-gray-500 p-3">
+              <div className="border-primary/60 flex flex-col rounded-md border p-3">
                 <div className="flex items-center gap-2">
                   <MdRoofing />
-                  <p className="text-xs font-medium uppercase text-gray-500">TIPO DE TELHA</p>
+                  <p className="text-primary/60 text-xs font-medium uppercase">TIPO DE TELHA</p>
                 </div>
-                <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.tipoTelha || 'N/A'}</h1>
+                <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.tipoTelha || 'N/A'}</h1>
               </div>
               {infoHolder.categoria == 'PADRÃO' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <MdElectricMeter />
-                    <p className="text-xs font-medium uppercase text-gray-500">TIPO DE PADRÃO</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">TIPO DE PADRÃO</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.tipoPadrao || 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.tipoPadrao || 'N/A'}</h1>
                 </div>
               ) : null}
               {infoHolder.categoria == 'PADRÃO' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <MdOutput />
-                    <p className="text-xs font-medium uppercase text-gray-500">TIPO DE SAÍDA DO PADRÃO</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">TIPO DE SAÍDA DO PADRÃO</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.tipoPadrao || 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.tipoPadrao || 'N/A'}</h1>
                 </div>
               ) : null}
               {infoHolder.categoria == 'PADRÃO' ? (
-                <div className="flex flex-col rounded-md border border-gray-500 p-3">
+                <div className="border-primary/60 flex flex-col rounded-md border p-3">
                   <div className="flex items-center gap-2">
                     <MdOutlineSettingsInputComponent />
-                    <p className="text-xs font-medium uppercase text-gray-500">AMPERAGEM</p>
+                    <p className="text-primary/60 text-xs font-medium uppercase">AMPERAGEM</p>
                   </div>
-                  <h1 className="text-center text-xs font-medium uppercase text-gray-500">{infoHolder.detalhes.amperagemPadrao || 'N/A'}</h1>
+                  <h1 className="text-primary/60 text-center text-xs font-medium uppercase">{infoHolder.detalhes.amperagemPadrao || 'N/A'}</h1>
                 </div>
               ) : null}
             </div>

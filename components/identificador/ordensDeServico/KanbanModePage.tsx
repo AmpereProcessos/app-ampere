@@ -136,15 +136,15 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
 
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE ORDEM DE SERVIÇO</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE ORDEM DE SERVIÇO</p>
             </div>
             <button
               onClick={() => handleSetMode('card')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -157,13 +157,13 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
           </div>
         </div>
         <div className="flex w-full flex-wrap items-center gap-2">
-          <h3 className="text-sm font-medium text-gray-500">FILTROS</h3>
+          <h3 className="text-primary/60 text-sm font-medium">FILTROS</h3>
           <FilterMenu tags={tags || []} queryParams={queryParams} updateQueryParams={updateQueryParams} />
         </div>
       </div>
 
       <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
-        <div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
@@ -222,7 +222,7 @@ function FilterMenu({ tags, queryParams, updateQueryParams }: FilterMenuProps) {
             color: tag.cores.primaria,
             backgroundColor: tag.cores.secundaria,
           }}
-          className={cn('group flex items-center gap-1 rounded py-0.5 pl-2 pr-1')}
+          className={cn('group flex items-center gap-1 rounded py-0.5 pr-1 pl-2')}
         >
           <Tag width={12} height={12} />
           <h1 className="text-[0.65rem] font-bold tracking-tight">{tag.titulo}</h1>
@@ -283,12 +283,12 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
           <h1 className="text-[0.65rem] font-bold tracking-tight">+ TAGS</h1>
         </Button>
       </Popover.Trigger>
-      <Popover.Content className="z-[120] flex min-h-[250px] w-80 flex-col gap-2 rounded border border-gray-500 bg-white p-3 shadow-sm">
-        <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+      <Popover.Content className="bg-background border-primary/60 z-120 flex min-h-[250px] w-80 flex-col gap-2 rounded border p-3 shadow-xs">
+        <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
           <h3 className="text-sm font-bold">MENU DE ETIQUETAS</h3>
         </div>
         <input
-          className="bg-transparent p-2 text-xs outline-none placeholder:italic"
+          className="bg-transparent p-2 text-xs outline-hidden placeholder:italic"
           value={holder.title}
           onChange={(e) => setHolder((prev) => ({ ...prev, title: e.target.value }))}
           placeholder="Filtre pelo título da tag..."
@@ -297,7 +297,7 @@ function TagsMenu({ currentApplicableTags, handleClick }: TagsMenuProps) {
         <div className="flex w-full grow flex-col gap-2">
           {isLoading ? (
             <div className="flex w-full grow items-center justify-center">
-              <h1 className="animate-pulse text-xs tracking-tight text-primary/80">Carregando...</h1>
+              <h1 className="text-primary/80 animate-pulse text-xs tracking-tight">Carregando...</h1>
             </div>
           ) : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -390,14 +390,14 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="w-full lg:w-1/3" />
-              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3 lg:text-[0.7rem]">
                 <MdDashboard />
                 <p>{items.length}</p>
               </div>
               <div className="w-full lg:w-1/3" />
             </div>
           </div>
-          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2 ">
+          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2">
             {items.map((item, index) => (
               <FunnelListItem key={item._id} item={item} index={index} handleClick={handleItemClick} />
             ))}
@@ -429,7 +429,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
           })}
         >
           <TbUrgent size={12} />
-          <h1 className="text-[0.5rem] font-medium">
+          <h1 className="text-xxs font-medium">
             {daysTillExpiration < 0 ? 'PARECER VENCIDO' : `${daysTillExpiration} DIAS ATÉ O VENCIMENTO DO PARECER`}
           </h1>
         </div>
@@ -442,7 +442,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm"
+          className="bg-background border-primary/60 relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
@@ -452,11 +452,11 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
               >
               {itemExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button> */}
-              <h1 className="text-sm font-bold leading-none tracking-tight">{item.favorecido.nome}</h1>
+              <h1 className="text-sm leading-none font-bold tracking-tight">{item.favorecido.nome}</h1>
             </div>
             <button
               onClick={() => handleClick(item._id)}
-              className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+              className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
             >
               <Pencil width={10} height={10} />
               <p>EDITAR</p>
@@ -465,7 +465,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
           <div className="flex w-full grow flex-col gap-2 px-2">
             {item.etiquetas && item.etiquetas?.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+                <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
                 {item.etiquetas.map((tag, index) => (
                   <div
                     key={index}
@@ -478,7 +478,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                     className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
                   >
                     <Tag width={10} height={10} />
-                    <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                    <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
                   </div>
                 ))}
               </div>
@@ -489,7 +489,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                   className={cn('flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1', getServiceTypeTagColor(item.projeto.tipo || ''))}
                 >
                   <MdDashboard size={12} />
-                  <h1 className="text-[0.5rem] font-medium">{item.projeto.tipo}</h1>
+                  <h1 className="text-xxs font-medium">{item.projeto.tipo}</h1>
                 </div>
                 {item.categoria == 'MONTAGEM' && item.projeto.homologacaoAcessoDataResposta
                   ? getHomologationAccessTag(item.projeto.homologacaoAcessoDataResposta)
@@ -497,14 +497,14 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                 {item.categoria == 'MONTAGEM' && item.projeto.homologacaoVistoriaDataEfetivacao ? (
                   <div className="flex w-fit items-center gap-1 self-center">
                     <BsPatchCheckFill height={13} width={13} color="#22c55e " />
-                    <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">VISTORIA FEITA</h1>
+                    <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">VISTORIA FEITA</h1>
                   </div>
                 ) : null}
                 {item.categoria == 'MONTAGEM' ? (
                   <div className="flex w-full flex-wrap items-center justify-around gap-2">
                     <div className="flex items-center gap-1">
                       <FaRegHourglass height={13} width={13} />
-                      <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                      <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">
                         {item.projeto.contratoDataAssinatura
                           ? `${getFormattedTextFromHoursAmount({
                               hours: getHoursDiff({ start: item.projeto.contratoDataAssinatura, finish: new Date() }),
@@ -516,7 +516,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                     </div>
                     <div className="flex items-center gap-1">
                       <FaRegHourglass height={13} width={13} />
-                      <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                      <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">
                         {item.projeto.compraEntregaDataEfetivacao
                           ? `${getFormattedTextFromHoursAmount({
                               hours: getHoursDiff({ start: item.projeto.compraEntregaDataEfetivacao, finish: new Date() }),
@@ -533,30 +533,30 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">
                 <FaLocationDot height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">
                   {item.localizacao.cidade} ({item.localizacao.uf})
                 </h1>
               </div>
               <div className="flex items-center gap-1">
                 <UserRound size={12} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.responsavel.nome}</h1>
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">{item.responsavel.nome}</h1>
               </div>
             </div>
             <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">
                 <FaSolarPanel height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.equipamentos.modulos.qtde || 0} MÓDULOS</h1>
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">{item.equipamentos.modulos.qtde || 0} MÓDULOS</h1>
               </div>
               <div className="flex items-center gap-1">
                 <MdRoofing height={13} width={13} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">{item.detalhes.tipoTelha ? `TELHA ${item.detalhes.tipoTelha}` : 'N/A'}</h1>
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">{item.detalhes.tipoTelha ? `TELHA ${item.detalhes.tipoTelha}` : 'N/A'}</h1>
               </div>
             </div>
             <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">
-                <h1 className="text-[0.6rem] font-medium text-primary/80">AGENDAMENTO</h1>
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">AGENDAMENTO</h1>
                 <BsCalendar width={12} height={12} />
-                <h1 className="text-[0.6rem] font-medium text-primary/80">
+                <h1 className="text-primary/80 text-[0.6rem] font-medium">
                   {item.agendamento
                     ? `${formatDateAsLocale(item.agendamento.inicio, true)} - ${item.agendamento.fim ? formatDateAsLocale(item.agendamento.fim, true) : 'N/A'}`
                     : 'N/A'}
@@ -575,13 +575,13 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             <div className="flex items-center gap-2">
               <div className="flex min-w-fit items-center gap-1">
                 <BsCalendarPlus />
-                <p className={`text-[0.65rem] font-medium text-gray-500`}>{formatDateAsLocale(item.dataInsercao, true)}</p>
+                <p className={`text-primary/60 text-[0.65rem] font-medium`}>{formatDateAsLocale(item.dataInsercao, true)}</p>
               </div>
 
               {item.dataEfetivacao ? (
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck color="#22c55e" />
-                  <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
+                  <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
                 </div>
               ) : null}
             </div>

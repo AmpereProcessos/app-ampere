@@ -178,16 +178,16 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
   })
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE COMPRA</p>
             </div>
             <button
               type="button"
               onClick={() => handleSetMode('card')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -208,7 +208,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
               onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
               className={cn(
                 'min-h-[46.6px] rounded p-2 text-xs font-bold text-white',
-                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-gray-600'
+                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-primary/80'
               )}
             >
               {queryParams.queryPendingConclusion ? 'EM ANDAMENTO' : 'TODAS'}
@@ -221,7 +221,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
       </div>
 
       <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
-        <div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
@@ -321,11 +321,11 @@ function FunnelList({ session, title, items, initialKanbanListExpandedModeOption
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="w-full lg:w-1/3" />
-              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3 lg:text-[0.7rem]">
                 <MdDashboard />
                 <p>{items.length}</p>
               </div>
-              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3 lg:text-[0.7rem]">
                 {deadlineDays ? (
                   <>
                     <Target size={12} />
@@ -335,7 +335,7 @@ function FunnelList({ session, title, items, initialKanbanListExpandedModeOption
               </div>
             </div>
           </div>
-          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2 ">
+          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2">
             {items.map((item, index) => (
               <FunnelListItem
                 key={item._id}
@@ -374,7 +374,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
       return (
         <div className="flex min-w-fit items-center gap-1 self-center rounded-lg bg-red-600 px-2 py-0.5 text-white">
           <TbUrgent size={12} />
-          <h1 className="text-[0.5rem]">ATRASADO</h1>
+          <h1 className="text-xxs">ATRASADO</h1>
         </div>
       )
 
@@ -382,7 +382,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
       return (
         <div className="flex min-w-fit items-center gap-1 self-center rounded-lg bg-yellow-600 px-2 py-0.5 text-white">
           <TbUrgent size={12} />
-          <h1 className="text-[0.5rem]">VENCENDO</h1>
+          <h1 className="text-xxs">VENCENDO</h1>
         </div>
       )
 
@@ -398,7 +398,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm"
+          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
@@ -409,12 +409,12 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
               >
                 {itemExpandedModeActive ? <IoMdContract /> : <IoMdExpand />}
               </button>
-              <h1 className="text-sm font-bold leading-none tracking-tight">{item.titulo}</h1>
+              <h1 className="text-sm leading-none font-bold tracking-tight">{item.titulo}</h1>
             </div>
             <button
               type="button"
               onClick={() => handleClick(item._id)}
-              className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+              className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
             >
               <Pencil width={10} height={10} />
               <p>EDITAR</p>
@@ -425,12 +425,14 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
             {item.registrosStatus?.[item.status]?.entrada ? (
               <div className="flex w-fit items-center gap-1 self-center">
                 <BsFunnel />
-                <p className={'text-[0.65rem] font-medium text-gray-500'}>{formatDateAsLocale(item.registrosStatus?.[item.status]?.entrada, true)}</p>
+                <p className={'text-primary/60 text-[0.65rem] font-medium'}>
+                  {formatDateAsLocale(item.registrosStatus?.[item.status]?.entrada, true)}
+                </p>
               </div>
             ) : null}
             {item.etiquetas.length > 0 ? (
               <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+                <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
                 {item.etiquetas.map((tag, index) => (
                   <div
                     key={`${tag.id}-${index}`}
@@ -443,7 +445,7 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                     className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
                   >
                     <Tag width={10} height={10} />
-                    <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                    <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
                   </div>
                 ))}
               </div>
@@ -453,17 +455,17 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                 <div className="flex w-full flex-wrap items-center justify-around gap-2">
                   <div className="flex items-center gap-1">
                     <Factory height={13} width={13} />
-                    <h1 className="text-[0.6rem] font-medium text-primary/80">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
+                    <h1 className="text-primary/80 text-[0.6rem] font-medium">{item.fornecedor.nome || 'FORNECEDOR INDEFINIDO'}</h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <ScrollText height={13} width={13} />
-                    <h1 className="text-[0.6rem] font-medium text-primary/80">
+                    <h1 className="text-primary/80 text-[0.6rem] font-medium">
                       FATURAMENTOS {item.faturamentos.filter((f) => !!f.data).length}/{item.faturamentos.length}
                     </h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <FaLocationDot height={13} width={13} />
-                    <h1 className="text-[0.6rem] font-medium text-primary/80">
+                    <h1 className="text-primary/80 text-[0.6rem] font-medium">
                       {item.entrega.localizacao.cidade} ({item.entrega.localizacao.uf})
                     </h1>
                   </div>
@@ -471,20 +473,20 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
                 <div className="flex w-full flex-wrap items-center justify-center gap-2">
                   <div className="flex items-center gap-1">
                     <BsCalendar width={10} height={10} />
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
+                    <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PEDIDO</h1>
+                    <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(item.dataPedido) || 'N/A'}</h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <BsCalendarEvent width={10} height={10} />
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+                    <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO</h1>
+                    <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
                       {formatDateAsLocale(item.entrega.dataPrevisao) || 'N/A'}
                     </h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <BsCalendarCheck width={10} height={10} />
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
-                    <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+                    <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ENTREGA</h1>
+                    <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
                       {formatDateAsLocale(item.entrega.dataEfetivacao) || 'N/A'}
                     </h1>
                   </div>
@@ -503,13 +505,13 @@ function FunnelListItem({ funnelListItemsExpandedModeActive, item, index, handle
             <div className="flex items-center gap-2">
               <div className="flex min-w-fit items-center gap-1">
                 <BsCalendarPlus />
-                <p className={'text-[0.65rem] font-medium text-gray-500'}>{formatDateAsLocale(item.dataInsercao, true)}</p>
+                <p className={'text-primary/60 text-[0.65rem] font-medium'}>{formatDateAsLocale(item.dataInsercao, true)}</p>
               </div>
 
               {item.dataEfetivacao ? (
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck color="#22c55e" />
-                  <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
+                  <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
                 </div>
               ) : null}
             </div>

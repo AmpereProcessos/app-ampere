@@ -7,11 +7,11 @@ import SelectInput from '../../../inputs/Select'
 function renderInputText(file) {
   if (!file)
     return (
-      <p className="mb-2 px-2 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-primary/60 mb-2 px-2 text-center text-sm dark:text-gray-400">
         <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
       </p>
     )
-  return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{file.name}</p>
+  return <p className="text-primary/60 mb-2 text-sm dark:text-gray-400">{file.name}</p>
 }
 function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnalysis }) {
   const [drawImageFile, setDrawImageFile] = useState(null)
@@ -38,7 +38,7 @@ function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnaly
   }
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">DESENHO</h1>
       </div>
       <div className="flex w-full flex-col">
@@ -70,7 +70,7 @@ function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnaly
           />
         </div>
         <div className="mt-2 flex w-full flex-col">
-          <h1 className="w-full rounded-tr-sm rounded-tl-sm bg-gray-500 p-1 text-center font-bold text-white">OBSERVAÇÕES</h1>
+          <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">OBSERVAÇÕES</h1>
           <textarea
             placeholder="SEM OBSERVAÇÕES PREENCHIDAS..."
             value={infoHolder.desenho?.observacoes || ''}
@@ -81,7 +81,7 @@ function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnaly
               }))
               setChanges((prev) => ({ ...prev, 'desenho.observacoes': e.target.value }))
             }}
-            className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+            className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
           />
         </div>
       </div>
@@ -89,10 +89,10 @@ function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnaly
         {previewImageURL || infoHolder.desenho.url ? (
           <div className="flex w-full flex-col items-center gap-2">
             {previewImageURL && !infoHolder.desenho.url ? (
-              <h1 className="text-center font-bold leading-none tracking-tight">PREVIEW DA IMAGEM</h1>
+              <h1 className="text-center leading-none font-bold tracking-tight">PREVIEW DA IMAGEM</h1>
             ) : null}
-            {!!infoHolder.desenho.url ? <h1 className="text-center font-bold leading-none tracking-tight">IMAGEM</h1> : null}
-            <div className="relative flex h-[300px] w-fit min-w-[300px] items-center justify-center rounded-[5%] border border-gray-500">
+            {!!infoHolder.desenho.url ? <h1 className="text-center leading-none font-bold tracking-tight">IMAGEM</h1> : null}
+            <div className="border-primary/60 relative flex h-[300px] w-fit min-w-[300px] items-center justify-center rounded-[5%] border">
               {previewImageURL || infoHolder.desenho.url ? (
                 <Image src={previewImageURL || infoHolder.desenho.url} objectFit="fill" layout="fill" style={{ borderRadius: '5%' }} />
               ) : null}
@@ -100,15 +100,15 @@ function DrawBlock({ infoHolder, setInfoHolder, changes, setChanges, updateAnaly
           </div>
         ) : (
           <div className="flex h-[300px] w-full items-center justify-center">
-            <p className="text-sm font-medium italic text-gray-500">Nenhuma imagem de desenho vinculada.</p>
+            <p className="text-primary/60 text-sm font-medium italic">Nenhuma imagem de desenho vinculada.</p>
           </div>
         )}
         <div className="relative flex w-full items-center justify-center">
           <label
             htmlFor="dropzone-file"
-            className="dark:hover:bg-bray-800 flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            className="dark:hover:bg-bray-800 dark:border-primary/80 dark:hover:bg-primary/80 border-primary/20 dark:hover:border-primary/60 hover:bg-primary/20 dark:bg-primary/70 flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50"
           >
-            <div className="flex flex-col items-center justify-center pb-6 pt-5 text-gray-800">
+            <div className="text-primary/80 flex flex-col items-center justify-center pt-5 pb-6">
               <BiSolidCloudDownload color={'rgb(31,41,55)'} size={50} />
 
               {renderInputText(drawImageFile)}

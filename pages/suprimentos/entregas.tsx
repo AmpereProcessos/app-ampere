@@ -86,17 +86,17 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
 
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS EM PROCESSO DE ENTREGA</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS EM PROCESSO DE ENTREGA</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
@@ -110,7 +110,7 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+            className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
           >
             <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
             <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
@@ -156,7 +156,7 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
                 selectedItemLabel="NÃO DEFINIDO"
               />
             </div>
-            <div className="flex w-full flex-wrap  items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2">
               <div className="w-fit">
                 <CheckboxInput
                   labelTrue="COMPRAS COM PEDIDO FEITO"
@@ -186,7 +186,7 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
               <ProjectCard key={project._id} project={project} handleClick={(id) => setAcknowlegdeMenu({ id, isOpen: true })} />
             ))
           ) : (
-            <p className="w-full text-center tracking-tight text-gray-500">Nenhuma compra em processo de entrega encontrado.</p>
+            <p className="text-primary/60 w-full text-center tracking-tight">Nenhuma compra em processo de entrega encontrado.</p>
           )
         ) : null}
       </div>
@@ -210,36 +210,36 @@ type ProjectCardProps = {
 }
 function ProjectCard({ project, handleClick }: ProjectCardProps) {
   function getDeliveryStatusTag(status: TPurchaseControlDeliveryTrackingDTO['entrega']['status']) {
-    if (status === 'AGUARDANDO COMPRA') return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status === 'AGUARDANDO COMPRA') return <h1 className="text-xxs min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-white">{status}</h1>
 
-    if (status === 'EM ROTA') return <h1 className="min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status === 'EM ROTA') return <h1 className="text-xxs min-w-fit rounded-lg bg-blue-600 px-2 py-0.5 text-white">{status}</h1>
 
-    if (status === 'ENTREGUE') return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status === 'ENTREGUE') return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">{status}</h1>
 
-    if (status === 'AGUARDANDO DESPACHE') return <h1 className="min-w-fit rounded-lg bg-orange-500 px-2 py-0.5 text-[0.5rem] text-white">{status}</h1>
+    if (status === 'AGUARDANDO DESPACHE') return <h1 className="text-xxs min-w-fit rounded-lg bg-orange-500 px-2 py-0.5 text-white">{status}</h1>
 
-    return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">NÃO DEFINIDO</h1>
+    return <h1 className="text-xxs bg-primary/60 min-w-fit rounded-lg px-2 py-0.5 text-white">NÃO DEFINIDO</h1>
   }
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-gray-500 p-2">
+    <div className="border-primary/60 flex w-full flex-col gap-1 rounded border p-2">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{project.titulo}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{project.titulo}</p>
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <FaUser width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{project.projetoDados?.vendedor?.nome}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{project.projetoDados?.vendedor?.nome}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaPhone width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{project.projetoDados?.telefone}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{project.projetoDados?.telefone}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
               {formatLocation({
                 location: {
                   uf: project.entrega.localizacao.uf,
@@ -258,31 +258,31 @@ function ProjectCard({ project, handleClick }: ProjectCardProps) {
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaIndustry width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FORNECEDOR</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{project.fornecedor?.nome || 'NÃO DEFINIDO'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FORNECEDOR</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{project.fornecedor?.nome || 'NÃO DEFINIDO'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarPlus width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">DATA DO PEDIDO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.dataPedido) || 'NÃO POSSUI'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">DATA DO PEDIDO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(project.dataPedido) || 'NÃO POSSUI'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarEvent width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO DE ENTREGA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO DE ENTREGA</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(project.entrega.dataPrevisao) || 'NÃO POSSUI'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendar2Check width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">DATA DE ENTREGA</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">DATA DE ENTREGA</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(project.entrega.dataEfetivacao) || 'NÃO POSSUI'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsTruck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ENTREGA</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ENTREGA</h1>
             {getDeliveryStatusTag(project.entrega.status)}
           </div>
         </div>
@@ -290,13 +290,13 @@ function ProjectCard({ project, handleClick }: ProjectCardProps) {
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-1">
           <BsCalendarPlus width={10} height={10} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">DATA DA REQUISIÇÃO</h1>
-          <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.dataInsercao, true)}</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">DATA DA REQUISIÇÃO</h1>
+          <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(project.dataInsercao, true)}</h1>
         </div>
         <button
           type="button"
           onClick={() => handleClick(project._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>ACUSAR RECEBIMENTO</p>
@@ -415,10 +415,10 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
   })
   return (
     <Dialog.Root open onOpenChange={closeModal}>
-      <Dialog.Overlay className="fixed inset-0 z-[100] bg-primary/70 backdrop-blur-sm" />
-      <Dialog.Content className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[80%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-background p-[10px] lg:h-[70%] lg:w-[50%]">
+      <Dialog.Overlay className="bg-primary/70 fixed inset-0 z-100 backdrop-blur-xs" />
+      <Dialog.Content className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[80%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:h-[70%] lg:w-[50%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <h3 className="text-sm font-bold lg:text-xl">ACUSAR ENTREGA</h3>
             <button
               onClick={() => closeModal()}
@@ -432,38 +432,36 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
             <>
-              <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1">
                 <div className="flex items-center gap-1 self-center">
                   <AlignCenter width={13} height={13} />
                   <h1 className="py-0.5 text-center text-sm font-bold italic">{purchaseControl.titulo}</h1>
                 </div>
                 {purchaseControl.projetoDados ? (
                   <>
-                    <h1 className="w-full rounded bg-gray-600 p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">
+                    <h1 className="bg-primary/80 w-full rounded p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">
                       INFORMAÇÕES DO PROJETO
                     </h1>
                     <div className="flex flex-wrap items-center justify-center gap-4 py-1">
                       <div className="flex items-center gap-1">
                         <FaUserAlt />
-                        <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.nomeDoContrato}</p>
+                        <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.nomeDoContrato}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <MdPhone />
-                        <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.telefone}</p>
+                        <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.telefone}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <BsPersonVcard />
-                        <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.projetoDados?.cpf_cnpj}</p>
+                        <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.cpf_cnpj}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <MdLandscape />
-                        <p className="text-[0.75rem] font-medium leading-none tracking-tight">
-                          {purchaseControl.projetoDados?.inscricaoRural || 'N/A'}
-                        </p>
+                        <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.inscricaoRural || 'N/A'}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <FaLocationDot />
-                        <p className="text-[0.75rem] font-medium leading-none tracking-tight">
+                        <p className="text-xs leading-none font-medium tracking-tight">
                           {formatLocation({
                             location: {
                               uf: purchaseControl.projetoDados?.uf || '',
@@ -484,52 +482,48 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
                     </div>
                   </>
                 ) : null}
-                <h1 className="w-full rounded bg-gray-600 p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">COMPOSIÇÃO</h1>
+                <h1 className="bg-primary/80 w-full rounded p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">COMPOSIÇÃO</h1>
                 {purchaseControl.composicao.length > 0 ? (
                   purchaseControl.composicao.map((item, index) => (
                     <div key={`${index}-${item.descricao}`} className="flex w-full items-center gap-2">
                       <ShoppingCart height={13} width={13} />
-                      <h1 className="text-[0.75rem] tracking-tight">
+                      <h1 className="text-xs tracking-tight">
                         {item.qtde}x {item.descricao}
                       </h1>
                     </div>
                   ))
                 ) : (
-                  <p className="w-full text-center text-[0.75rem] font-medium tracking-tight">Não há itens de composição da compra.</p>
+                  <p className="w-full text-center text-xs font-medium tracking-tight">Não há itens de composição da compra.</p>
                 )}
-                <h1 className="w-full rounded bg-gray-600 p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">FORNECEDOR</h1>
+                <h1 className="bg-primary/80 w-full rounded p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">FORNECEDOR</h1>
                 <div className="flex flex-wrap items-center justify-center gap-4 py-1">
                   <div className="flex items-center gap-1">
                     <FaIndustry height={10} width={10} />
-                    <p className="text-[0.75rem] font-medium leading-none tracking-tight">
-                      {purchaseControl.fornecedor?.nome || 'FORNECEDOR NÃO DEFINIDO'}
-                    </p>
+                    <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.fornecedor?.nome || 'FORNECEDOR NÃO DEFINIDO'}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <FaPhone height={10} width={10} />
-                    <p className="text-[0.75rem] font-medium leading-none tracking-tight">{purchaseControl.fornecedor?.contato || 'N/A'}</p>
+                    <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.fornecedor?.contato || 'N/A'}</p>
                   </div>
                 </div>
-                <h1 className="w-full rounded bg-gray-600 p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">TRANSPORTE</h1>
+                <h1 className="bg-primary/80 w-full rounded p-1 text-center text-[0.65rem] font-bold tracking-tight text-white">TRANSPORTE</h1>
                 <div className="flex flex-wrap items-center justify-center gap-4 py-1">
                   <div className="flex items-center gap-1">
                     <BsTruck height={10} width={10} />
-                    <p className="text-[0.75rem] font-medium leading-none tracking-tight">
+                    <p className="text-xs leading-none font-medium tracking-tight">
                       {purchaseControl.transporte?.transportadora.nome || 'FORNECEDOR NÃO DEFINIDO'}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     <FaPhone height={10} width={10} />
-                    <p className="text-[0.75rem] font-medium leading-none tracking-tight">
-                      {purchaseControl.transporte?.transportadora.contato || 'N/A'}
-                    </p>
+                    <p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.transporte?.transportadora.contato || 'N/A'}</p>
                   </div>
                   {purchaseControl.transporte.linkRastreio ? (
                     <div className="flex items-center gap-1">
                       <ExternalLink height={13} width={13} />
                       <a
                         href={purchaseControl.transporte.linkRastreio}
-                        className="text-[0.75rem] font-medium leading-none tracking-tight duration-300 ease-in-out hover:bg-blue-400"
+                        className="text-xs leading-none font-medium tracking-tight duration-300 ease-in-out hover:bg-blue-400"
                       >
                         LINK DE RASTREIO
                       </a>
@@ -549,9 +543,9 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
                   <div className="relative flex w-full items-center justify-center">
                     <label
                       htmlFor="dropzone-file"
-                      className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/20 bg-[#fff] hover:bg-primary/10 dark:bg-[#121212]"
+                      className="dark:hover:bg-bray-800 border-primary/20 bg-background hover:bg-primary/10 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed dark:bg-[#121212]"
                     >
-                      <div className="flex flex-col items-center justify-center pb-6 pt-5 text-primary">
+                      <div className="text-primary flex flex-col items-center justify-center pt-5 pb-6">
                         <BsCloudUploadFill color={'rgb(31,41,55)'} size={50} />
                         <p>Clique para escolher um ou mais arquivos ou os arraste para a àrea demarcada</p>
                       </div>
@@ -579,8 +573,8 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
                     {infoHolder.files
                       .filter((a) => !!a.file)
                       .map((attachment, index) => (
-                        <div key={`${index}-${attachment.file.name}`} className="flex h-[180px] w-[150px] flex-col rounded border border-primary/50">
-                          <div className="relative flex h-[150px] w-full grow items-center justify-center bg-gradient-to-b from-sky-400 to-sky-200">
+                        <div key={`${index}-${attachment.file.name}`} className="border-primary/50 flex h-[180px] w-[150px] flex-col rounded border">
+                          <div className="relative flex h-[150px] w-full grow items-center justify-center bg-linear-to-b from-sky-400 to-sky-200">
                             {attachment.previewUrl ? (
                               <Image src={attachment.previewUrl} alt={attachment.file?.name || ''} fill={true} />
                             ) : (
@@ -589,7 +583,7 @@ function AcknowledgeDeliveryMenu({ session, purchaseControlId, closeModal, affec
                               </h1>
                             )}
                           </div>
-                          <div className="h-[30px] rounded rounded-tl-none rounded-tr-none bg-primary p-2 text-center text-[0.55rem] font-bold text-primary-foreground">
+                          <div className="bg-primary text-primary-foreground h-[30px] rounded rounded-tl-none rounded-tr-none p-2 text-center text-[0.55rem] font-bold">
                             {formatLongString(attachment.file?.name || '', 15)}
                           </div>
                         </div>

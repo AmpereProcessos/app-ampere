@@ -6,20 +6,20 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
   if (clientIdentifier.length < 14)
     return (
       <div className="flex w-full flex-col gap-2">
-        <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">ANEXO DE ARQUIVOS</h1>
-        <p className="py-2 text-center text-sm italic text-red-500">Preencha um CPF/CNPJ válido.</p>
+        <h1 className="bg-primary/80 mt-4 w-full rounded-md p-2 text-center font-bold text-white">ANEXO DE ARQUIVOS</h1>
+        <p className="py-2 text-center text-sm text-red-500 italic">Preencha um CPF/CNPJ válido.</p>
       </div>
     )
   return (
-    <div className="flex w-full flex-col gap-2 items-center">
-      <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">ANEXO DE ARQUIVOS</h1>
+    <div className="flex w-full flex-col items-center gap-2">
+      <h1 className="bg-primary/80 mt-4 w-full rounded-md p-2 text-center font-bold text-white">ANEXO DE ARQUIVOS</h1>
       {isCPF ? (
         <>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'comprovanteEndereco'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'comprovanteEndereco'} className="font-sans font-bold text-[#353432]">
               COMPROVANTE DE ENDEREÇO
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -39,11 +39,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'comprovanteRenda'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'comprovanteRenda'} className="font-sans font-bold text-[#353432]">
               COMPROVANTE DE RENDA
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -63,11 +63,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'documentoPessoal'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'documentoPessoal'} className="font-sans font-bold text-[#353432]">
               DOCUMENTO PESSOAL (COM CPF/CNPJ)
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -91,11 +91,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
       ) : null}
       {isCNPJ ? (
         <>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'cartaoCNPJ'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'cartaoCNPJ'} className="font-sans font-bold text-[#353432]">
               CARTÃO CNPJ
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -115,11 +115,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'contratoSocial'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'contratoSocial'} className="font-sans font-bold text-[#353432]">
               CONTRATO SOCIAL
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -139,11 +139,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'comprovanteEndereco'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'comprovanteEndereco'} className="font-sans font-bold text-[#353432]">
               COMPROVANTE DE ENDEREÇO DA INSTALAÇÃO
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -163,11 +163,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'comprovanteRenda'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'comprovanteRenda'} className="font-sans font-bold text-[#353432]">
               COMPROVANTE DE RENDA (REPRESENTANTE LEGAL)
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -187,11 +187,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'declaracaoFaturamento'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'declaracaoFaturamento'} className="font-sans font-bold text-[#353432]">
               DECLARAÇÃO DE FATURAMENTO (12 MESES)
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
@@ -211,11 +211,11 @@ function AttachFile({ files, setFiles, clientIdentifier }) {
               />
             </div>
           </div>
-          <div className="flex lg:w-full flex-col w-[50%]">
-            <label htmlFor={'documentoPessoal'} className="font-sans font-bold  text-[#353432]">
+          <div className="flex w-[50%] flex-col lg:w-full">
+            <label htmlFor={'documentoPessoal'} className="font-sans font-bold text-[#353432]">
               DOCUMENTO PESSOAL (REPRESENTANTE LEGAL)
             </label>
-            <div className="relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+            <div className="bg-primary/20 relative flex h-[46px] w-full items-center justify-center overflow-x-hidden rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>

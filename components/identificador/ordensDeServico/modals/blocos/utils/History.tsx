@@ -28,15 +28,15 @@ function ServiceOrderHistoryBlock({ infoHolder, updateInfoHolder }: HistoryBlock
   return (
     <div className="flex w-full flex-col gap-4">
       <h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">REGISTRO DE ATIVIDADES</h1>
-      <p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
+      <p className="text-primary/80 my-1 w-full text-center text-sm font-light tracking-tighter">
         Preencha aqui, se aplicável, o histórico detalhado de atividades executadas no serviço.
       </p>
       <div className="flex w-full items-center justify-end gap-2">
         <button
           onClick={() => setHistoryMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': historyMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !historyMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': historyMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !historyMenuIsOpen,
           })}
         >
           <MdAddBox />
@@ -48,16 +48,16 @@ function ServiceOrderHistoryBlock({ infoHolder, updateInfoHolder }: HistoryBlock
       <AnimatePresence>
         {historyMenuIsOpen ? <NewHistoryMenu addHistory={addHistory} closeMenu={() => setHistoryMenuIsOpen(false)} /> : null}
       </AnimatePresence>
-      <h1 className="text-[0.65rem] font-bold leading-none tracking-tight text-gray-500 lg:text-xs">REGISTROS DE ATIVIDADES</h1>
+      <h1 className="text-primary/60 text-[0.65rem] leading-none font-bold tracking-tight lg:text-xs">REGISTROS DE ATIVIDADES</h1>
       <div className="flex w-full flex-col gap-2">
         {infoHolder.periodo.historico ? (
           infoHolder.periodo.historico.length > 0 ? (
             infoHolder.periodo.historico.map((history, index) => <HistoryCard key={index} history={history} />)
           ) : (
-            <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhum registro de atividade adicionado.</p>
+            <p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhum registro de atividade adicionado.</p>
           )
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhum registro de atividade adicionado.</p>
+          <p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhum registro de atividade adicionado.</p>
         )}
       </div>
     </div>
@@ -83,7 +83,7 @@ function NewHistoryMenu({ addHistory, closeMenu }: NewHistoryMenuProps) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+      className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
     >
       <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO REGISTRO DE ATIVIDADE</h1>
       <div className="flex w-full grow flex-col gap-2 p-3">
@@ -131,19 +131,19 @@ function NewHistoryMenu({ addHistory, closeMenu }: NewHistoryMenuProps) {
 
 function HistoryCard({ history }: { history: Exclude<TServiceOrder['periodo']['historico'], null | undefined>[number] }) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-1">
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ATIVIDADES DESEMPENHADAS EM:</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ATIVIDADES DESEMPENHADAS EM:</h1>
           <BsCalendar width={10} height={10} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+          <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
             {history.entrada
               ? `${formatDateAsLocale(history.entrada, true)} - ${history.saida ? formatDateAsLocale(history.saida, true) : 'N/A'}`
               : 'N/A'}
           </h1>
         </div>
       </div>
-      <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
+      <div className="bg-primary/10 flex w-full items-center justify-center rounded p-2">
         <h1 className="text-[0.6rem] font-medium">{history.anotacoes}</h1>
       </div>
     </div>

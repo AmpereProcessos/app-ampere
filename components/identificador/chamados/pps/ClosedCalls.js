@@ -53,19 +53,19 @@ function ClosedCalls() {
   }
   console.log(currentDate)
   return (
-    <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+    <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[720px]">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="font-Raleway flex flex-wrap items-center justify-center gap-2">
-            <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
+            <p className="text-center text-xl font-bold text-[#15599a] uppercase">Chamados abertos</p>
             <p className="font-bold text-[#fead61]">({isFetched ? calls.length : '...'})</p>
           </div>
           {filterMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuVisible(true)} />
             </div>
           )}
@@ -118,7 +118,7 @@ function ClosedCalls() {
           ) : null}
         </AnimatePresence>
       </div>
-      <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto px-2">
         {isLoading ? <LoadingPage /> : null}
         {isFetched ? (
           calls?.length > 0 ? (
@@ -126,7 +126,7 @@ function ClosedCalls() {
           ) : (
             <div className="flex w-full grow flex-col items-center justify-center">
               <p className="text-lg font-black text-[#fead41]">EBA !!!</p>
-              <p className="text-md font-medium italic text-gray-500">Não há chamados em aberto...</p>
+              <p className="text-md text-primary/60 font-medium italic">Não há chamados em aberto...</p>
             </div>
           )
         ) : null}

@@ -62,7 +62,7 @@ function ProjectKitInfo({ infoHolder, setInfoHolder, setChanges }) {
   return (
     <div className="flex h-full max-h-[300px] min-h-[300px] w-full flex-col rounded-lg border border-cyan-500 p-3">
       <div className="flex w-full items-center justify-between">
-        <h1 className="font-sans text-center  font-bold text-[#353432]">EQUIPAMENTOS DO KIT</h1>
+        <h1 className="text-center font-sans font-bold text-[#353432]">EQUIPAMENTOS DO KIT</h1>
         {addMenuIsOpen ? (
           <button
             onClick={() => setAddMenuIsOpen(false)}
@@ -72,7 +72,7 @@ function ProjectKitInfo({ infoHolder, setInfoHolder, setChanges }) {
             <VscChromeClose style={{ color: 'red' }} />
           </button>
         ) : (
-          <button onClick={() => setAddMenuIsOpen(true)} className="flex items-center justify-center text-green-500 ">
+          <button onClick={() => setAddMenuIsOpen(true)} className="flex items-center justify-center text-green-500">
             <MdOutlineAddCircle style={{ fontSize: '25px' }} />
           </button>
         )}
@@ -105,13 +105,13 @@ function ProjectKitInfo({ infoHolder, setInfoHolder, setChanges }) {
           </div>
         </div>
       ) : null}
-      <div className="overscroll-y mt-2 flex w-full grow flex-col overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex w-full grow flex-col overflow-y-auto px-2">
         {getKitInfoAsList(infoHolder.compra?.kitInfo).length > 0 ? (
           getKitInfoAsList(infoHolder.compra?.kitInfo).map((equip, index) => (
             <div key={index} className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <BsSuitDiamondFill />
-                <p className="text-xs tracking-tight text-gray-500">
+                <p className="text-primary/60 text-xs tracking-tight">
                   {equip.qtde ? `${equip.qtde}x ` : ''}
                   {equip.descricao}
                 </p>
@@ -123,7 +123,7 @@ function ProjectKitInfo({ infoHolder, setInfoHolder, setChanges }) {
           ))
         ) : (
           <div className="flex grow items-center justify-center">
-            <p className="text-center text-sm italic text-gray-500">Nenhum material adicionado aos itens do kit...</p>
+            <p className="text-primary/60 text-center text-sm italic">Nenhum material adicionado aos itens do kit...</p>
           </div>
         )}
       </div>

@@ -117,32 +117,32 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
     })
   }
   return (
-    <div className="w-full flex flex-col">
+    <div className="flex w-full flex-col">
       <div className="flex items-center justify-center gap-2">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ASSINATURA DIGITAL</span>
+        <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">ASSINATURA DIGITAL</span>
         <div
           onClick={() => setShowMenu((prev) => !prev)}
           className={`${
             showMenu
               ? 'bg-[#15599a] text-white hover:bg-transparent hover:text-[#15599a]'
-              : 'text-[#15559a] bg-transparent hover:bg-[#15599a] hover:text-white'
-          } p-2 rounded-full border border-[#15599a] text-xs hover:scale-110 duration-300 ease-in-out cursor-pointer`}
+              : 'bg-transparent text-[#15559a] hover:bg-[#15599a] hover:text-white'
+          } cursor-pointer rounded-full border border-[#15599a] p-2 text-xs duration-300 ease-in-out hover:scale-110`}
         >
           <FaFileSignature />
         </div>
       </div>
       {showMenu ? (
-        <div className="w-full flex flex-col mt-2 items-center">
+        <div className="mt-2 flex w-full flex-col items-center">
           {digitalSigningInfo ? (
-            <div className="w-full flex flex-col items-center">
+            <div className="flex w-full flex-col items-center">
               {digitalSigningInfo.documentoFinalizado ? (
                 <>
                   {downloadMsg.status == 'loading' ? (
-                    <div className="grow flex items-center justify-center">
+                    <div className="flex grow items-center justify-center">
                       <div role="status">
                         <svg
                           aria-hidden="true"
-                          className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                          className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                           viewBox="0 0 100 101"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -162,15 +162,15 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                   ) : (
                     <div
                       onClick={() => handleDownload(digitalSigningInfo.documentoKey)}
-                      className="flex w-fit items-center p-2 rounded border border-blue-400 gap-2 cursor-pointer"
+                      className="flex w-fit cursor-pointer items-center gap-2 rounded border border-blue-400 p-2"
                     >
                       <FaFilePdf style={{ color: 'rgb(96,165,250)' }} />
-                      <p className="text-sm text-gray-500 font-medium">ARQUIVO ASSINADO</p>
+                      <p className="text-primary/60 text-sm font-medium">ARQUIVO ASSINADO</p>
                     </div>
                   )}
                 </>
               ) : null}
-              <h1 className="text-center text-gray-500 font-medium text-sm">
+              <h1 className="text-primary/60 text-center text-sm font-medium">
                 Um documento foi adicionado para assinatura digital. Abaixo, estão os status de assinatura dos signatários vinculados:
               </h1>
               <div className="flex w-full flex-col items-center">
@@ -182,7 +182,7 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                   >
                     {digitalSigningInfo.assinaturaContratante ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span className={`${digitalSigningInfo.assinaturaContratante ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DO CLIENTE</span>
+                  <span className={`${digitalSigningInfo.assinaturaContratante ? 'text-green-500' : 'text-primary/60'}`}>ASSINATURA DO CLIENTE</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
@@ -192,7 +192,9 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                   >
                     {digitalSigningInfo.assinaturaContratada ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span className={`${digitalSigningInfo.assinaturaContratada ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DA CONTRATADA</span>
+                  <span className={`${digitalSigningInfo.assinaturaContratada ? 'text-green-500' : 'text-primary/60'}`}>
+                    ASSINATURA DA CONTRATADA
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
@@ -202,7 +204,7 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                   >
                     {digitalSigningInfo.assinaturaValidador ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span className={`${digitalSigningInfo.assinaturaValidador ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DO VALIDADOR</span>
+                  <span className={`${digitalSigningInfo.assinaturaValidador ? 'text-green-500' : 'text-primary/60'}`}>ASSINATURA DO VALIDADOR</span>
                 </div>
               </div>
             </div>
@@ -223,13 +225,13 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                 ]}
                 handleChange={(value) => setToSignFile(value)}
               />
-              {uploadMsg.text ? <p className={`text-sm text-center ${uploadMsg.color} w-full`}>{uploadMsg.text}</p> : null}
+              {uploadMsg.text ? <p className={`text-center text-sm ${uploadMsg.color} w-full`}>{uploadMsg.text}</p> : null}
               {uploadMsg.status == 'loading' ? (
-                <div className="grow flex items-center justify-center">
+                <div className="flex grow items-center justify-center">
                   <div role="status">
                     <svg
                       aria-hidden="true"
-                      className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -247,14 +249,14 @@ function ESigningBlock({ projectId, contractName, email, phone_number, documenta
                   </div>
                 </div>
               ) : (
-                <button onClick={send} className="bg-blue-200 hover:text-white hover:bg-blue-600 p-1 rounded-lg mt-2 flex items-center gap-1">
+                <button onClick={send} className="mt-2 flex items-center gap-1 rounded-lg bg-blue-200 p-1 hover:bg-blue-600 hover:text-white">
                   <p className="text-xs font-medium">ENVIAR</p>
                   <IoIosSend style={{ fontSize: '15px', marginTop: '1px' }} />
                 </button>
               )}
             </>
           ) : (
-            <p className="text-sm text-gray-500 italic text-center">
+            <p className="text-primary/60 text-center text-sm italic">
               Nenhum arquivo anexado na categoria de <strong className="text-[#fead61]">contratos</strong> . Por favor, anexe um arquivo para
               desbloquear o menu de E-Signing
             </p>

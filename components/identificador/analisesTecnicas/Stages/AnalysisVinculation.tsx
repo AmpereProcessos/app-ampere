@@ -50,7 +50,7 @@ function getStatusColor(status: string) {
     return 'border-red-500 text-red-500'
   }
 
-  return 'border-gray-500 text-gray-500'
+  return 'border-primary/60 text-primary/60'
 }
 function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationType, goToNextStage }: AnalysisVinculationProps) {
   const { session } = useSession({ required: true })
@@ -75,13 +75,13 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
   }
 
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <span className="text-center text-lg font-bold uppercase text-[#15599a]">VINCULO DE ANÁLISE PRÉVIA</span>
-      <p className="mb-4 text-center text-gray-500">
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <span className="text-center text-lg font-bold text-[#15599a] uppercase">VINCULO DE ANÁLISE PRÉVIA</span>
+      <p className="text-primary/60 mb-4 text-center">
         Utilizaremos das informações de uma análise prévia para que você possa reutilizar informações já preenchidas e alterar somente o que desejar.
       </p>
       <div className="flex w-full grow flex-col gap-2">
-        <span className="rounded bg-black py-2 text-center text-lg font-bold uppercase text-white">ANÁLISES TÉCNICAS PRÉVIAS</span>
+        <span className="rounded bg-black py-2 text-center text-lg font-bold text-white uppercase">ANÁLISES TÉCNICAS PRÉVIAS</span>
         {isError ? <ErrorComponent msg="Erro ao buscar clientes similares..." /> : null}
         {isLoading ? <LoadingComponent /> : null}
         {isSuccess ? (
@@ -96,14 +96,14 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
 
             {technicalAnalysis.length > 0 ? (
               technicalAnalysis.map((analysis, index) => (
-                <div key={`${analysis.nome}-${index}`} className="flex w-full items-center rounded-md border border-gray-300">
-                  <div className={`h-full w-[5px] rounded-bl-md rounded-tl-md ${getTagColor(analysis.status)}`}></div>
+                <div key={`${analysis.nome}-${index}`} className="border-primary/20 flex w-full items-center rounded-md border">
+                  <div className={`h-full w-[5px] rounded-tl-md rounded-bl-md ${getTagColor(analysis.status)}`}></div>
                   <div className="flex grow flex-col p-3">
                     <div className="flex w-full items-start justify-between">
                       <div className="flex flex-col">
-                        <h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{analysis.tipoSolicitacao}</h1>
+                        <h1 className="w-full text-start text-sm leading-none font-bold tracking-tight">{analysis.tipoSolicitacao}</h1>
 
-                        <p className="mt-1 text-[0.6rem] font-bold text-gray-500">
+                        <p className="text-primary/60 mt-1 text-[0.6rem] font-bold">
                           <strong className="text-[#fead41]">{analysis.oportunidade.identificador}</strong> {analysis.oportunidade.nome}
                         </p>
                       </div>
@@ -115,7 +115,7 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
                     <div className="mt-1 flex w-full items-center justify-between">
                       <div className="flex items-center gap-2">
                         <p className="text-xs font-medium">{analysis.requerente.nome || analysis.requerente.apelido}</p>
-                        <div className={`flex items-center gap-2 text-gray-500`}>
+                        <div className={`text-primary/60 flex items-center gap-2`}>
                           <BsCalendarFill />
                           <p className="text-xs font-medium">{dayjs(analysis.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
                         </div>
@@ -139,14 +139,14 @@ function AnalysisVinculation({ requestInfo, setRequestInfo, resetSolicitationTyp
               ))
             ) : (
               <div className="flex items-center justify-center">
-                <p className="text-center text-gray-500">Oops, não conseguimos encontrar nenhuma visita recente requirida por você.</p>
+                <p className="text-primary/60 text-center">Oops, não conseguimos encontrar nenhuma visita recente requirida por você.</p>
               </div>
             )}
           </div>
         ) : null}
 
         <div className="mt-2 flex w-full justify-between">
-          <button onClick={() => resetSolicitationType()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+          <button onClick={() => resetSolicitationType()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
             Voltar
           </button>
           {/* <button

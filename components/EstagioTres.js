@@ -1,14 +1,14 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
 const phoneMask = (value) => {
-  if (!value) return "";
-  value = value.replace(/\D/g, "");
-  value = value.replace(/(\d{2})(\d)/, "($1) $2");
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-  return value;
-};
+  if (!value) return ''
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, '($1) $2')
+  value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+  return value
+}
 function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
   // const router = useRouter();
 
@@ -40,19 +40,19 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
   let obj = {
     telefone: infoHolder.telefone,
     nome: infoHolder.nome,
-    responsavel: "NÃO DEFINIDO",
+    responsavel: 'NÃO DEFINIDO',
     cidade: infoHolder.cidade,
-    canal: "CALCULADORA SOLAR",
-    campanha: "",
+    canal: 'CALCULADORA SOLAR',
+    campanha: '',
     dataDeAquisicao: new Date(),
     consumo: infoHolder.valorFatura,
-    vendedor: "NÃO DEFINIDO",
+    vendedor: 'NÃO DEFINIDO',
     dataDeEnvio: new Date(),
     codigoSVB: 0,
-    nicho: "NÃO DEFINIDO",
-    leadscoreProduto: "NÃO DEFINIDO",
-    leadscoreBranding: "NÃO DEFINIDO",
-  };
+    nicho: 'NÃO DEFINIDO',
+    leadscoreProduto: 'NÃO DEFINIDO',
+    leadscoreBranding: 'NÃO DEFINIDO',
+  }
   // async function createSimulation() {
   //   setLoading(true);
   //   if (validateFields()) {
@@ -67,14 +67,12 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
   //   }
   // }
   return (
-    <div className="flex flex-col h-[400px] w-full">
-      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch font-normal text-[rgba(79,88,96,1)] h-[300px]">
-        <div className="gap-1 flex flex-col justify-center items-center text-left w-[350px]">
+    <div className="flex h-[400px] w-full flex-col">
+      <div className="flex h-[300px] w-full flex-1 grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
+        <div className="flex w-[350px] flex-col items-center justify-center gap-1 text-left">
           <div className="w-[300px] lg:w-[350px]">
             <div>
-              <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
-                Seu nome
-              </p>
+              <p className="m-0 w-[300px] text-[15px] leading-[1.2] lg:w-[350px]">Seu nome</p>
             </div>
           </div>
           <div className="w-[300px] lg:w-[350px]">
@@ -86,45 +84,35 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
                   nome: e.target.value,
                 })
               }
-              type={"text"}
+              type={'text'}
               className={`flex-1 ${
-                submitErr.field == "NOME"
-                  ? "bg-red-200 border border-red-500"
-                  : "bg-white"
-              } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
+                submitErr.field == 'NOME' ? 'border border-red-500 bg-red-200' : 'bg-background'
+              } h-[47px] w-[300px] rounded-lg p-2 text-center outline-hidden lg:w-[350px]`}
             />
           </div>
         </div>
-        <div className="gap-1 flex flex-col justify-center items-center text-left w-full">
+        <div className="flex w-full flex-col items-center justify-center gap-1 text-left">
           <div className="w-[300px] lg:w-[350px]">
             <div>
-              <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
-                Seu melhor e-mail
-              </p>
+              <p className="m-0 w-[300px] text-[15px] leading-[1.2] lg:w-[350px]">Seu melhor e-mail</p>
             </div>
           </div>
           <div className="w-[300px] lg:w-[350px]">
             <input
               name="email"
-              type={"email"}
+              type={'email'}
               value={infoHolder.email}
-              onChange={(e) =>
-                setInfoHolder({ ...infoHolder, email: e.target.value })
-              }
+              onChange={(e) => setInfoHolder({ ...infoHolder, email: e.target.value })}
               className={`flex-1 ${
-                submitErr.field == "EMAIL"
-                  ? "bg-red-200 border border-red-500"
-                  : "bg-white"
-              } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
+                submitErr.field == 'EMAIL' ? 'border border-red-500 bg-red-200' : 'bg-background'
+              } h-[47px] w-[300px] rounded-lg p-2 text-center outline-hidden lg:w-[350px]`}
             />
           </div>
         </div>
-        <div className="gap-1 flex flex-col justify-center items-center text-left w-full">
+        <div className="flex w-full flex-col items-center justify-center gap-1 text-left">
           <div className="w-[300px] lg:w-[350px]">
             <div>
-              <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
-                Telefone
-              </p>
+              <p className="m-0 w-[300px] text-[15px] leading-[1.2] lg:w-[350px]">Telefone</p>
             </div>
           </div>
           <div className="w-[300px] lg:w-[350px]">
@@ -136,35 +124,30 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
                   telefone: phoneMask(e.target.value),
                 })
               }
-              type={"text"}
+              type={'text'}
               className={`flex-1 ${
-                submitErr.field == "TELEFONE"
-                  ? "bg-red-200 border border-red-500"
-                  : "bg-white"
-              } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
+                submitErr.field == 'TELEFONE' ? 'border border-red-500 bg-red-200' : 'bg-background'
+              } h-[47px] w-[300px] rounded-lg p-2 text-center outline-hidden lg:w-[350px]`}
             />
           </div>
         </div>
-        <div className="gap-1 text-center w-[350px]">
-          <div className="px-6 w-full h-10 flex flex-col justify-center items-center self-stretch">
-            <p className="w-full text-xs m-0 leading-[1.2]">
-              Fique tranquilo. Pedimos essas informações para desenvolver uma
-              simulação mais exata para você!
+        <div className="w-[350px] gap-1 text-center">
+          <div className="flex h-10 w-full flex-col items-center justify-center self-stretch px-6">
+            <p className="m-0 w-full text-xs leading-[1.2]">
+              Fique tranquilo. Pedimos essas informações para desenvolver uma simulação mais exata para você!
             </p>
           </div>
         </div>
       </div>
-      <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
-        {submitErr.text ? (
-          <p className="text-center italic text-red-500">{submitErr.text}</p>
-        ) : null}
+      <div className="flex h-[100px] w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
+        {submitErr.text ? <p className="text-center text-red-500 italic">{submitErr.text}</p> : null}
         <div className="w-full">
           {submitLoading ? (
-            <div className="flex w-[350px] justify-center items-center self-center">
+            <div className="flex w-[350px] items-center justify-center self-center">
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                  className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -184,17 +167,15 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
           ) : (
             <button
               type="submit"
-              className="flex-1 w-[350px] cursor-pointer flex flex-col justify-center items-center flex-grow rounded-lg p-3 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] hover:scale-[1.02] duration-300"
+              className="flex w-[350px] flex-1 grow cursor-pointer flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]"
             >
-              <p className="w-full m-0 text-[19px] leading-[1.2]">
-                Visualizar simulação
-              </p>
+              <p className="m-0 w-full text-[19px] leading-[1.2]">Visualizar simulação</p>
             </button>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default EstagioTres;
+export default EstagioTres

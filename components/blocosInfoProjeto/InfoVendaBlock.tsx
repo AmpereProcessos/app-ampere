@@ -71,7 +71,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DO CONTRATO</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DO CONTRATO</span>
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Client logs={updateLogs} />} />
       <div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
         <div className="w-full lg:w-1/3">
@@ -842,7 +842,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
               obsComercial: e.target.value,
             })
           }}
-          className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center text-xs outline-none"
+          className="border-primary/80 h-[80px] w-full resize-none border bg-gray-200 p-2 text-center text-xs outline-hidden"
         />
       </div>
       {infoHolder.linkDrive && (
@@ -857,7 +857,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
           <Link href={`/comercial/pdfProcuracao/${infoHolder.idSolicitacaoContrato}`}>
             <button
               type="button"
-              className="flex items-center gap-2 rounded border border-gray-600 px-4 py-2 text-gray-600 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
+              className="border-primary/80 text-primary/80 flex items-center gap-2 rounded border px-4 py-2 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
             >
               <FaFile />
               <p className="text-xs font-bold tracking-tight">TEMPLATE DE PROCURAÇÃO</p>

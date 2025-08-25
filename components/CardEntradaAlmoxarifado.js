@@ -71,12 +71,12 @@ function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
     }
   }
   return (
-    <div className="border-200 flex w-full flex-col gap-2 rounded border p-2">
+    <div className="flex w-full flex-col gap-2 rounded border border-200 p-2">
       <h1 className="w-full text-center font-bold text-[#15599a]">{item.nome}</h1>
       <div className="flex w-full items-center gap-2">
         <div className="flex w-1/3 items-center justify-start gap-2">
           <FaBox color="#fead41" />
-          <p className="text-center text-xs text-gray-700">
+          <p className="text-primary/70 text-center text-xs">
             {item.qtde
               ? Number(item.qtde).toLocaleString('pt-br', {
                   maximumFractionDigits: 2,
@@ -86,18 +86,18 @@ function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
           </p>
         </div>
         {menuIsOpen ? (
-          <div onClick={() => setMenuIsOpen(false)} className="flex w-1/3 cursor-pointer justify-center text-gray-600 hover:text-blue-400">
+          <div onClick={() => setMenuIsOpen(false)} className="text-primary/80 flex w-1/3 cursor-pointer justify-center hover:text-blue-400">
             <IoMdArrowDropupCircle />
           </div>
         ) : (
-          <div onClick={() => setMenuIsOpen(true)} className="flex w-1/3 cursor-pointer justify-center text-gray-600 hover:text-blue-400">
+          <div onClick={() => setMenuIsOpen(true)} className="text-primary/80 flex w-1/3 cursor-pointer justify-center hover:text-blue-400">
             <IoMdArrowDropdownCircle />
           </div>
         )}
 
         <div className="flex w-1/3 items-center justify-end gap-2">
           <ImPriceTag color={'#15599a'} />
-          <p className="text-center text-xs text-gray-700">{item.preco ? `R$${item.preco.toFixed(2).replace('.', ',')}` : '-'}</p>
+          <p className="text-primary/70 text-center text-xs">{item.preco ? `R$${item.preco.toFixed(2).replace('.', ',')}` : '-'}</p>
         </div>
       </div>
       {menuIsOpen ? (

@@ -97,23 +97,23 @@ export default Revenues
 //   if (status != 'authenticated') return <LoadingPage />
 //   return (
 //     <div className="flex grow flex-col gap-2 p-6">
-//       <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+//       <div className="flex flex-col items-center justify-between border-b border-primary/20 p-1">
 //         <div className="flex w-full items-center justify-between">
 //           <div className="flex flex-col items-center gap-2 lg:flex-row">
 //             <p className="text-center text-2xl font-black uppercase text-[#15599a]">RECEITAS</p>
 //           </div>
 //           {dropdownMenuVisible ? (
-//             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+//             <div className="cursor-pointer text-primary/80 hover:text-blue-400">
 //               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
 //             </div>
 //           ) : (
-//             <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+//             <div className="cursor-pointer text-primary/80 hover:text-blue-400">
 //               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
 //             </div>
 //           )}
 //         </div>
 //         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-primary/20 bg-background p-3 shadow-xs lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">RECEITAS</h1>
 //               <VscDiffAdded />
@@ -122,7 +122,7 @@ export default Revenues
 //               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: revenues }).receitas}</div>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-primary/20 bg-background p-3 shadow-xs lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">RECEBIDO</h1>
 //               <MdAttachMoney />
@@ -131,17 +131,17 @@ export default Revenues
 //               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: revenues }).recebido)}</div>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-primary/20 bg-background p-3 shadow-xs lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">À RECEBER</h1>
 //               <MdOutlineWatchLater />
 //             </div>
 //             <div className="mt-2 flex w-full flex-col">
 //               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: revenues }).receber)}</div>
-//               <p className="text-xs text-gray-500">{formatToMoney(getStats({ info: revenues }).receberHoje)} para hoje</p>
+//               <p className="text-xs text-primary/60">{formatToMoney(getStats({ info: revenues }).receberHoje)} para hoje</p>
 //             </div>
 //           </div>
-//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+//           <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-primary/20 bg-background p-3 shadow-xs lg:w-1/4">
 //             <div className="flex items-center justify-between">
 //               <h1 className="text-sm font-medium uppercase tracking-tight">EM ATRASO</h1>
 //               <MdOutlineAssignmentLate />
@@ -223,7 +223,7 @@ export default Revenues
 //               <RevenueCard key={revenue._id} revenue={revenue} openModal={(id) => setModalRevenue({ isOpen: true, id: id })} />
 //             ))
 //           ) : (
-//             <p className="w-full text-center italic text-gray-500">Nenhuma receita encontrada...</p>
+//             <p className="w-full text-center italic text-primary/60">Nenhuma receita encontrada...</p>
 //           )
 //         ) : null}
 //         {modalRevenue.isOpen && modalRevenue.id ? (

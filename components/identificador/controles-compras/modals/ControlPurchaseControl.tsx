@@ -220,12 +220,12 @@ function PurchaseControlDataBlock({
     toast.success('Produto adicionado à composição')
   }
   return (
-    <div className="flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+    <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto overscroll-y-auto p-2 py-1">
       <div className="flex w-full items-center justify-center">
         <Link href={`/suprimentos/controle-compras/pdf/${purchaseControlId}`}>
           <button
             type="button"
-            className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+            className={cn('hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out')}
           >
             <ExternalLink width={14} height={14} />
             <h1 className="text-xs font-medium tracking-tight">PÁGINA DO PEDIDO</h1>

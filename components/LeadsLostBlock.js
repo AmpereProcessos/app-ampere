@@ -1,47 +1,36 @@
-import React, { useState } from "react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import React, { useState } from 'react'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 function LeadsLostBlock({ lostLeads }) {
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   return (
-    <div className="flex flex-col w-full bg-[#fff] shadow-md rounded-md p-3">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          <h1 className="text-gray-800 font-medium">PERDIDOS</h1>
+    <div className="bg-background flex w-full flex-col rounded-md p-3 shadow-md">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <h1 className="text-primary/80 font-medium">PERDIDOS</h1>
         </div>
         {dropdownMenuVisible ? (
-          <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-            <IoMdArrowDropupCircle
-              style={{ fontSize: "25px" }}
-              onClick={() => setDropdownMenuVisible(false)}
-            />
+          <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+            <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
           </div>
         ) : (
-          <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-            <IoMdArrowDropdownCircle
-              style={{ fontSize: "25px" }}
-              onClick={() => setDropdownMenuVisible(true)}
-            />
+          <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+            <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
           </div>
         )}
       </div>
       {dropdownMenuVisible ? (
-        <div className="grid grid-cols-2 gap-2 w-full">
+        <div className="grid w-full grid-cols-2 gap-2">
           {lostLeads.map((lead, index) => (
-            <div
-              key={index}
-              className="bg-red-100 flex flex-col w-full rounded-md p-2"
-            >
-              <h1 className="text-gray-800 font-medium">{lead.nome}</h1>
-              <p className="w-full text-center py-1 text-xs italic text-red-500 font-medium">
-                {lead.motivoPerda}
-              </p>
+            <div key={index} className="flex w-full flex-col rounded-md bg-red-100 p-2">
+              <h1 className="text-primary/80 font-medium">{lead.nome}</h1>
+              <p className="w-full py-1 text-center text-xs font-medium text-red-500 italic">{lead.motivoPerda}</p>
             </div>
           ))}
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default LeadsLostBlock;
+export default LeadsLostBlock

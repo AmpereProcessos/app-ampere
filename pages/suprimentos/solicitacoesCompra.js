@@ -111,18 +111,18 @@ function SolicitacoesCompra() {
   if (status == 'authenticated') {
     return (
       <div className="flex grow flex-col p-6">
-        <div className="flex flex-col justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 font-['Roboto'] lg:flex-row">
-              <p className="text-center text-2xl font-bold uppercase text-[#15599a]">SOLICITAÇÕES DE COMPRA</p>
+              <p className="text-center text-2xl font-bold text-[#15599a] uppercase">SOLICITAÇÕES DE COMPRA</p>
               <p className="font-bold text-[#fead61]">({filteredSolicitations?.length})</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
@@ -132,7 +132,7 @@ function SolicitacoesCompra() {
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
                 <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                   <input
-                    className="w-full rounded  border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                    className="border-primary/20 w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                     placeholder="DIGITE O NOME DO SOLICITANTE"
                     value={filters.search}
                     onChange={(e) => handleSearchFilter(e.target.value)}
@@ -140,9 +140,9 @@ function SolicitacoesCompra() {
                   <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
                     <div className="flex items-center justify-center gap-x-2">
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                           onChange={(e) => {
@@ -154,9 +154,9 @@ function SolicitacoesCompra() {
                         />
                       </div>
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -285,27 +285,27 @@ function SolicitacoesCompra() {
                   onClick={() => handleOpenModal(solicitation)}
                   className={`flex flex-col ${getBGColor(
                     solicitation.aprovacao
-                  )} w-[450px] cursor-pointer gap-4 rounded-sm border border-gray-300 p-3 shadow-lg duration-300 ease-in-out hover:scale-[1.02] hover:bg-blue-50`}
+                  )} border-primary/20 w-[450px] cursor-pointer gap-4 rounded-sm border p-3 shadow-lg duration-300 ease-in-out hover:scale-[1.02] hover:bg-blue-50`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FaUserAlt style={{ color: '#003d5b' }} />
-                      <h1 className="font-medium text-gray-700">{solicitation.requisitante.nome}</h1>
+                      <h1 className="text-primary/70 font-medium">{solicitation.requisitante.nome}</h1>
                     </div>
                     <div className="flex items-center gap-2">
                       <BsFillTelephoneFill style={{ color: '#16B010' }} />
-                      <h1 className="font-medium text-gray-700">{solicitation.requisitante.telefone}</h1>
+                      <h1 className="text-primary/70 font-medium">{solicitation.requisitante.telefone}</h1>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="flex flex-col  items-start">
-                      <h1 className="text-start text-xs font-medium text-gray-500">STATUS</h1>
+                    <div className="flex flex-col items-start">
+                      <h1 className="text-primary/60 text-start text-xs font-medium">STATUS</h1>
                       <h1 className={`text-xs ${getStatusColor(solicitation.status)} rounded-md p-1 font-medium`}>
                         {solicitation.status ? solicitation.status : 'EM ABERTO'}
                       </h1>
                     </div>
-                    <div className="flex flex-col  items-end">
-                      <h1 className="text-end text-xs font-medium text-gray-500">RESPONSÁVEL</h1>
+                    <div className="flex flex-col items-end">
+                      <h1 className="text-primary/60 text-end text-xs font-medium">RESPONSÁVEL</h1>
                       <h1 className={`rounded-md p-1 text-end text-xs font-medium`}>
                         {solicitation.responsavel ? solicitation.responsavel : 'NÃO DEFINIDO'}
                       </h1>
@@ -314,38 +314,38 @@ function SolicitacoesCompra() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <h1 className="text-start text-xs font-medium text-gray-500">SOLICITAÇÃO</h1>
+                      <h1 className="text-primary/60 text-start text-xs font-medium">SOLICITAÇÃO</h1>
                       <div className="flex items-center gap-2">
                         <BsCalendarFill style={{ color: '#15599a' }} />
-                        <h1 className="text-xs font-medium text-gray-700 lg:text-base">
+                        <h1 className="text-primary/70 text-xs font-medium lg:text-base">
                           {solicitation.dataInsercao ? dayjs(solicitation.dataInsercao).format('DD/MM/YY HH:mm') : null}
                         </h1>
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <h1 className="text-end text-xs font-medium text-gray-500">PRAZO/URGÊNCIA</h1>
+                      <h1 className="text-primary/60 text-end text-xs font-medium">PRAZO/URGÊNCIA</h1>
                       <div className="flex items-center justify-end gap-2">
                         <BsCalendarCheckFill style={{ color: 'rgb(249,115,22)' }} />
-                        <h1 className="text-xs font-medium text-gray-700 lg:text-base">{solicitation.urgencia}</h1>
+                        <h1 className="text-primary/70 text-xs font-medium lg:text-base">{solicitation.urgencia}</h1>
                       </div>
                     </div>
                   </div>
                   <div className="flex w-full flex-col">
                     <div className="flex items-center justify-center gap-2">
                       <BsFillCartFill />
-                      <h1 className="text-center text-xs font-medium text-gray-500">ITENS</h1>
+                      <h1 className="text-primary/60 text-center text-xs font-medium">ITENS</h1>
                     </div>
                     {solicitation.itens.map((item, index) => {
                       if (index <= 3)
                         return (
                           <div key={index} className="flex w-full items-center justify-between">
-                            <p className="text-sm font-light text-gray-700">{formatLongString(item.descricao)}</p>
-                            <p className="text-sm font-light text-gray-700">x{item.qtde}</p>
+                            <p className="text-primary/70 text-sm font-light">{formatLongString(item.descricao)}</p>
+                            <p className="text-primary/70 text-sm font-light">x{item.qtde}</p>
                           </div>
                         )
                     })}
                     {solicitation.itens.length > 4 ? (
-                      <p className="w-full text-center text-sm font-light text-gray-700">Clique para ver demais itens</p>
+                      <p className="text-primary/70 w-full text-center text-sm font-light">Clique para ver demais itens</p>
                     ) : null}
                   </div>
                 </div>
@@ -355,7 +355,7 @@ function SolicitacoesCompra() {
                 <div className="ml-2 flex h-[50px] w-[50px] items-center duration-500 ease-in-out hover:scale-105">
                   <Image src={SleepVolts} />
                 </div>
-                <p className="text-lg italic text-gray-400">Sem solicitações de compra...</p>
+                <p className="text-lg text-gray-400 italic">Sem solicitações de compra...</p>
               </div>
             )}
           </div>

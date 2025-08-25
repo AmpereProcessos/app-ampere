@@ -17,10 +17,10 @@ function RevenuesPage({ session }: RevenuesPageProps) {
   const storedRevenuesTypesFilter = storedRevenuesTypesFilterStr ? (JSON.parse(storedRevenuesTypesFilterStr) as string[]) : []
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">RECEITAS</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">RECEITAS</p>
           </div>
           <Button onClick={() => setNewRevenueModalIsOpen(true)}>NOVA RECEITA</Button>
         </div>

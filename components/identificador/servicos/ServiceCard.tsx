@@ -1,28 +1,28 @@
-import { TServiceItem } from "@/utils/schemas/crm/kits.schema";
-import React from "react";
-import { AiOutlineSafety } from "react-icons/ai";
-import { MdOutlineMiscellaneousServices } from "react-icons/md";
+import { TServiceItem } from '@/utils/schemas/crm/kits.schema'
+import React from 'react'
+import { AiOutlineSafety } from 'react-icons/ai'
+import { MdOutlineMiscellaneousServices } from 'react-icons/md'
 
 type ServiceCardProps = {
-	service: TServiceItem;
-};
+  service: TServiceItem
+}
 function ServiceCard({ service }: ServiceCardProps) {
-	return (
-		<div className="mt-1 flex flex-col gap-1 rounded-md border border-gray-300 p-2">
-			<div className="flex w-full items-center justify-between gap-2">
-				<div className="flex items-center gap-1">
-					<div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1">
-						<MdOutlineMiscellaneousServices />
-					</div>
-					<p className="text-[0.6rem] font-medium leading-none tracking-tight lg:text-xs">{service.descricao}</p>
-				</div>
-			</div>
-			<div className="flex w-full items-center justify-end gap-1">
-				<AiOutlineSafety size={15} />
-				<p className="text-[0.6rem] font-light text-gray-500">{service.garantia > 1 ? `${service.garantia} ANOS` : `${service.garantia} ANO`} </p>
-			</div>
-		</div>
-	);
+  return (
+    <div className="border-primary/20 mt-1 flex flex-col gap-1 rounded-md border p-2">
+      <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex items-center gap-1">
+          <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full border border-black p-1">
+            <MdOutlineMiscellaneousServices />
+          </div>
+          <p className="text-[0.6rem] leading-none font-medium tracking-tight lg:text-xs">{service.descricao}</p>
+        </div>
+      </div>
+      <div className="flex w-full items-center justify-end gap-1">
+        <AiOutlineSafety size={15} />
+        <p className="text-primary/60 text-[0.6rem] font-light">{service.garantia > 1 ? `${service.garantia} ANOS` : `${service.garantia} ANO`} </p>
+      </div>
+    </div>
+  )
 }
 
-export default ServiceCard;
+export default ServiceCard

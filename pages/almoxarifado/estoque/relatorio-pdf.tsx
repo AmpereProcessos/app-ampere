@@ -27,7 +27,7 @@ function RelatorioEstoque() {
               <Image height={30} width={30} src={Logo} alt="Logo" />
             </div>
           </Link>
-          <h1 className="text-center text-xl font-black leading-none tracking-tight text-white">RELATÓRIO DE ESTOQUE</h1>
+          <h1 className="text-center text-xl leading-none font-black tracking-tight text-white">RELATÓRIO DE ESTOQUE</h1>
         </div>
         <div className="flex w-full grow flex-col">
           <div className="flex items-center gap-2 border border-black bg-[#fead41] p-2">
@@ -47,7 +47,7 @@ function RelatorioEstoque() {
                       <h1 className="w-full text-start text-xs font-medium text-black">{material.nome}</h1>
                       <div className="flex w-full items-center gap-1">
                         <BsCode />
-                        <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.codigo || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                        <h1 className="text-primary/60 text-[0.65rem] tracking-tight">{material.codigo || 'CÓDIGO NÃO DEFINIDO'}</h1>
                       </div>
                     </div>
                     <h1 className="w-[20%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtde)}</h1>
@@ -58,7 +58,7 @@ function RelatorioEstoque() {
                 // <div
                 //   key={index}
                 //   // prettier-ignore
-                //   className={`grid ${checkQty({qty: material.qtde,minQty: material.qtdeMinima,})? 'bg-red-200' : ''} grid-cols-9 gap-x-2 border-b border-x border-gray-700`}
+                //   className={`grid ${checkQty({qty: material.qtde,minQty: material.qtdeMinima,})? 'bg-red-200' : ''} grid-cols-9 gap-x-2 border-b border-x border-primary/70`}
                 // >
                 //   <div className="col-span-1 whitespace-nowrap py-4 text-center text-xs font-medium text-gray-900">{index + 1}</div>
                 //   <div className="col-span-4 flex items-center gap-2 whitespace-nowrap py-4 text-center  text-xs font-medium text-gray-900 ">

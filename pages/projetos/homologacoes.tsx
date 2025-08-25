@@ -19,21 +19,21 @@ function HomologationsControlPage() {
   if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex w-full max-w-full grow flex-col overflow-x-hidden bg-[#f8f9fa] p-6">
-      <div className="flex flex-col items-center border-b border-[#000] pb-2">
+      <div className="flex flex-col items-center border-b border-black pb-2">
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-1">
             {filterMenuIsOpen ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
               </div>
             )}
             <div className="flex flex-col gap-1">
-              <h1 className="text-xl font-black leading-none tracking-tight md:text-2xl">CONTROLE DE HOMOLOGAÇÕES</h1>
-              <p className="text-sm leading-none tracking-tight text-gray-500">
+              <h1 className="text-xl leading-none font-black tracking-tight md:text-2xl">CONTROLE DE HOMOLOGAÇÕES</h1>
+              <p className="text-primary/60 text-sm leading-none tracking-tight">
                 {homologations?.length
                   ? homologations.length > 0
                     ? `${homologations.length} homologações contabilizadas`
@@ -45,7 +45,7 @@ function HomologationsControlPage() {
           <button
             type="button"
             onClick={() => setNewHomologationModalIsOpen(true)}
-            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
           >
             CRIAR HOMOLOGAÇÃO
           </button>
@@ -66,7 +66,7 @@ function HomologationsControlPage() {
               />
             ))
           ) : (
-            <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+            <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
               Não foram encontradas homologações...
             </p>
           )

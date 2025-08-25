@@ -6,22 +6,22 @@ import { orientationIcons } from '../../../../utils/select-options'
 function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">ALOCAÇÃO DE MÓDULOS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['NORTE'])}
               </div>
 
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">NORTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">NORTE</p>
             </div>
 
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.norte}
               onChange={(e) => {
@@ -29,7 +29,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.norte': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.norte
                 ? (
                     (getGenFactorByOrientation({
@@ -45,15 +45,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['NORDESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">NORDESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">NORDESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.nordeste}
               onChange={(e) => {
@@ -61,7 +61,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.nordeste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.nordeste
                 ? (
                     (getGenFactorByOrientation({
@@ -77,15 +77,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['LESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">LESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">LESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.leste}
               onChange={(e) => {
@@ -93,7 +93,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.leste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.leste
                 ? (
                     (getGenFactorByOrientation({
@@ -109,15 +109,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['SUDESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">SUDESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">SUDESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.sudeste}
               onChange={(e) => {
@@ -128,7 +128,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sudeste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.sudeste
                 ? (
                     (getGenFactorByOrientation({
@@ -144,15 +144,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['SUL'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">SUL</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">SUL</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.sul}
               onChange={(e) => {
@@ -163,7 +163,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sul': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.sul
                 ? (
                     (getGenFactorByOrientation({
@@ -179,15 +179,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['SUDOESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">SUDOESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">SUDOESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.sudoeste}
               onChange={(e) => {
@@ -198,7 +198,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.sudoeste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.sudoeste
                 ? (
                     (getGenFactorByOrientation({
@@ -214,15 +214,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['OESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">OESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">OESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.oeste}
               onChange={(e) => {
@@ -233,7 +233,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.oeste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.oeste
                 ? (
                     (getGenFactorByOrientation({
@@ -249,15 +249,15 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
               kWh
             </p>
           </div>
-          <div className="grid grid-cols-3 items-center p-1 rounded border border-cyan-500">
-            <div className="flex items-center gap-2 justify-start">
-              <div className="flex items-center justify-center p-1 rounded-full border border-cyan-500 text-cyan-500">
+          <div className="grid grid-cols-3 items-center rounded border border-cyan-500 p-1">
+            <div className="flex items-center justify-start gap-2">
+              <div className="flex items-center justify-center rounded-full border border-cyan-500 p-1 text-cyan-500">
                 {renderIcon(orientationIcons['NOROESTE'])}
               </div>
-              <p className="text-center font-bold text-gray-700 text-xs lg:text-base">NOROESTE</p>
+              <p className="text-primary/70 text-center text-xs font-bold lg:text-base">NOROESTE</p>
             </div>
             <input
-              className="outline-none p-2 text-center font-bold text-gray-700"
+              className="text-primary/70 p-2 text-center font-bold outline-hidden"
               type={'number'}
               value={infoHolder.alocacaoModulos.noroeste}
               onChange={(e) => {
@@ -268,7 +268,7 @@ function ModuleOrientationBlock({ infoHolder, setInfoHolder, changes, setChanges
                 setChanges((prev) => ({ ...prev, 'alocacaoModulos.noroeste': Number(e.target.value) }))
               }}
             />
-            <p className="text-center font-bold text-gray-700 text-xs lg:text-base">
+            <p className="text-primary/70 text-center text-xs font-bold lg:text-base">
               {infoHolder.alocacaoModulos.noroeste
                 ? (
                     (getGenFactorByOrientation({

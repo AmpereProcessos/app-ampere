@@ -39,16 +39,16 @@ function TechnicalAnalysisPage({ session }: TechnicalAnalysisPageProps) {
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-1">
             {filterMenuIsOpen ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
               </div>
             )}
             <div className="flex flex-col gap-1">
-              <h1 className="text-xl font-black leading-none tracking-tight md:text-2xl">CONTROLE DE ANÁLISES TÉCNICAS</h1>
+              <h1 className="text-xl leading-none font-black tracking-tight md:text-2xl">CONTROLE DE ANÁLISES TÉCNICAS</h1>
             </div>
           </div>
         </div>

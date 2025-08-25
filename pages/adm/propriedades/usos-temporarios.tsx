@@ -38,18 +38,18 @@ function TemporaryUsagesContent({ session }: TemporaryUsagesContentProps) {
   const [viewPropertyUsageId, setViewPropertyUsageId] = useState<string | null>(null)
   return (
     <div className="flex h-full w-full grow flex-col gap-6 p-6">
-      <div className="flex w-full flex-col gap-3 border-b border-primary/30 pb-1">
+      <div className="border-primary/30 flex w-full flex-col gap-3 border-b pb-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">USOS TEMPORÁRIOS DE PROPRIEDADES</p>
-            <p className="text-sm tracking-tight text-gray-500">{data?.length || '...'} registros encontrados</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">USOS TEMPORÁRIOS DE PROPRIEDADES</p>
+            <p className="text-primary/60 text-sm tracking-tight">{data?.length || '...'} registros encontrados</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
@@ -128,7 +128,7 @@ function TemporaryUsagesContent({ session }: TemporaryUsagesContentProps) {
           data.length > 0 ? (
             data.map((usage) => <TemporaryUsageCard key={usage._id as any} usage={usage as any} handleClick={(id) => setViewPropertyUsageId(id)} />)
           ) : (
-            <p className="w-full text-center font-medium italic text-gray-500">Nenhum uso temporário encontrado.</p>
+            <p className="text-primary/60 w-full text-center font-medium italic">Nenhum uso temporário encontrado.</p>
           )
         ) : null}
       </div>
@@ -170,10 +170,10 @@ function TemporaryUsageCard({ usage, handleClick }: { usage: TGetPropertyTempora
     ) : null
 
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{usage.propriedade.nome}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{usage.propriedade.nome}</p>
           <div className={cn('flex items-center gap-1')}>
             <Code className="h-4 w-4" />
             <p className="text-xs font-medium tracking-tight">{usage.propriedade.identificador}</p>
@@ -207,14 +207,14 @@ function TemporaryUsageCard({ usage, handleClick }: { usage: TGetPropertyTempora
                   <AvatarImage src={resp.avatar_url ?? undefined} />
                   <AvatarFallback>{formatNameAsInitials(resp.nome)}</AvatarFallback>
                 </Avatar>
-                <p className="text-xs font-medium text-primary/80">{resp.nome}</p>
+                <p className="text-primary/80 text-xs font-medium">{resp.nome}</p>
               </div>
             ))}
           </div>
         </div>
         <Button variant={'ghost'} className="flex items-center gap-1 px-2 py-1" size={'fit'} onClick={() => handleClick(usage._id)}>
           <Eye size={16} />
-          <p className="text-sm font-semibold text-primary/80">VISUALIZAR</p>
+          <p className="text-primary/80 text-sm font-semibold">VISUALIZAR</p>
         </Button>
       </div>
     </div>

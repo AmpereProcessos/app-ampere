@@ -9,11 +9,11 @@ import { inverterFixationOptions, roofTyles, structureTypes } from '../../../../
 function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">DETALHES ADICIONAIS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="flex w-full flex-col gap-2 lg:flex-row justify-around">
+        <div className="flex w-full flex-col justify-around gap-2 lg:flex-row">
           <div className="w-full lg:w-1/4">
             <TextInput
               label="CONCESSIONÁRIA"
@@ -101,7 +101,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </div>
         </div> */}
         <div className="flex w-full flex-col gap-2 lg:flex-row">
-          <div className="flex items-center justify-center w-full lg:w-1/4">
+          <div className="flex w-full items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DE DRONE DISPONÍVEIS"
               labelTrue="IMAGENS DE DRONE DISPONÍVEIS"
@@ -115,7 +115,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
 
-          <div className="flex items-center justify-center w-full lg:w-1/4">
+          <div className="flex w-full items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DA FACHADA DISPONÍVEIS"
               labelTrue="IMAGENS DA FACHADA DISPONÍVEIS"
@@ -129,7 +129,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
 
-          <div className="flex items-center justify-center w-full lg:w-1/4">
+          <div className="flex w-full items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DE SATÉLITE DISPONÍVEIS"
               labelTrue="IMAGENS DE SATÉLITE DISPONÍVEIS"
@@ -142,7 +142,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
               width={'100%'}
             />
           </div>
-          <div className="flex items-center justify-center w-full lg:w-1/4">
+          <div className="flex w-full items-center justify-center lg:w-1/4">
             <CheckboxInput
               labelFalse="MEDIÇÕES DISPONÍVEIS"
               labelTrue="MEDIÇÕES DISPONÍVEIS"

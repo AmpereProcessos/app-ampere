@@ -34,17 +34,17 @@ function EnergyPAControls() {
   if (!isAuthorized) return <UnauthorizedPage />
   return (
     <div className="grow bg-slate-50 p-6">
-      <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS COM ADEQUAÇÃO DE PADRÃO</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS COM ADEQUAÇÃO DE PADRÃO</p>
           </div>
           {filterMenuIsOpen ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
             </div>
           )}
@@ -73,7 +73,7 @@ function EnergyPAControls() {
               />
             ))
           ) : (
-            <p className="w-full text-center font-medium text-gray-500">Nenhum projeto foi encontrado...</p>
+            <p className="text-primary/60 w-full text-center font-medium">Nenhum projeto foi encontrado...</p>
           )
         ) : null}
       </div>
@@ -108,82 +108,82 @@ function EnergyPAFiltersShowcase({ queryParams, updateQueryParams }: EnergyPAFil
     queryParams.period.field
   return (
     <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:justify-end">
-      {isAnyFilterApplied ? <p className="text-xs font-medium tracking-tight text-primary/80">FILTROS APLICADOS</p> : null}
+      {isAnyFilterApplied ? <p className="text-primary/80 text-xs font-medium tracking-tight">FILTROS APLICADOS</p> : null}
       {queryParams.search && queryParams.search.length > 0 ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             BUSCA: <strong>{queryParams.search}</strong>
           </p>
           <button
             type="button"
             onClick={() => updateQueryParams({ search: '' })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {queryParams.segments.length > 0 ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             SEGMENTOS: <strong>{queryParams.segments.join(', ')}</strong>
           </p>
           <button
             type="button"
             onClick={() => updateQueryParams({ segments: [] })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {queryParams.homologationStatus.length > 0 ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             STATUS DO PARECER DE ACESSO: <strong>{queryParams.homologationStatus.join(', ')}</strong>
           </p>
         </div>
       ) : null}
       {queryParams.responsabilityTypes.length > 0 ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             RESPONSABILIDADE: <strong>{queryParams.responsabilityTypes.join(', ')}</strong>
           </p>
           <button
             type="button"
             onClick={() => updateQueryParams({ responsabilityTypes: [] })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {queryParams.pendingExecutionOnly ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">APENAS NÃO EXECUTADOS</p>
           <button
             type="button"
             onClick={() => updateQueryParams({ pendingExecutionOnly: false })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {queryParams.paidOnly ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">APENAS PAGOS</p>
           <button
             type="button"
             onClick={() => updateQueryParams({ paidOnly: false })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {queryParams.period.field && queryParams.period.after && queryParams.period.before ? (
-        <div className="flex items-center gap-1 rounded-lg bg-primary/10 px-2 py-1 text-[0.65rem]">
+        <div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             {PERIO_FIELD_MAP[queryParams.period.field]} {formatDateAsLocale(queryParams.period.after)} a{' '}
             {formatDateAsLocale(queryParams.period.before)}
@@ -191,7 +191,7 @@ function EnergyPAFiltersShowcase({ queryParams, updateQueryParams }: EnergyPAFil
           <button
             type="button"
             onClick={() => updateQueryParams({ period: { field: null, after: null, before: null } })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
@@ -204,11 +204,11 @@ function EnergyPAFiltersShowcase({ queryParams, updateQueryParams }: EnergyPAFil
 function EnergyPAExecutionStats() {
   const { data: stats, isLoading, isError, isSuccess, queryParams, updateQueryParams } = usePAExecutionStats({})
   return (
-    <div className="flex w-full flex-col gap-2 rounded-xl border border-gray-300 p-3 shadow-sm">
+    <div className="border-primary/20 flex w-full flex-col gap-2 rounded-xl border p-3 shadow-xs">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
-          <ChartArea className="min-w-4 min-h-4 h-4 w-4" />
-          <h1 className="text-xs font-medium uppercase tracking-tight">ESTATÍSTICAS</h1>
+          <ChartArea className="h-4 min-h-4 w-4 min-w-4" />
+          <h1 className="text-xs font-medium tracking-tight uppercase">ESTATÍSTICAS</h1>
         </div>
         <DateIntervalInput
           label="Período"
@@ -227,43 +227,43 @@ function EnergyPAExecutionStats() {
         />
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-        <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+        <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xs font-medium uppercase tracking-tight">TOTAL DE ADEQUAÇÕES DE PADRÃO</h1>
-            <LayoutGrid className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-xs font-medium tracking-tight uppercase">TOTAL DE ADEQUAÇÕES DE PADRÃO</h1>
+            <LayoutGrid className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="flex w-full flex-col">
             <div className="text-2xl font-bold text-[#15599a]">{stats?.totalAdequacoes}</div>
           </div>
         </div>
-        <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+        <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xs font-medium uppercase tracking-tight">ADEQUAÇÕES DE PADRÃO CONCLUÍDAS</h1>
-            <CircleCheck className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-xs font-medium tracking-tight uppercase">ADEQUAÇÕES DE PADRÃO CONCLUÍDAS</h1>
+            <CircleCheck className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="flex w-full flex-col">
             <div className="text-2xl font-bold text-[#15599a]">{stats?.adequacoesConcluidas}</div>
           </div>
         </div>
-        <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+        <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xs font-medium uppercase tracking-tight">ADEQUAÇÕES DE PADRÃO PENDENTES</h1>
-            <LayoutGrid className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-xs font-medium tracking-tight uppercase">ADEQUAÇÕES DE PADRÃO PENDENTES</h1>
+            <LayoutGrid className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="flex w-full flex-col">
             <div className="text-2xl font-bold text-[#15599a]">{stats?.totalAdequacoesPendentes}</div>
-            <p className="text-xs text-gray-500">{stats?.totalAdequacoesPendentesPagas} pagos</p>
+            <p className="text-primary/60 text-xs">{stats?.totalAdequacoesPendentesPagas} pagos</p>
           </div>
         </div>
       </div>
-      <div className="flex w-full flex-col gap-1 rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
-        <h1 className="text-xs font-medium uppercase tracking-tight">POR RESPONSABILIDADE</h1>
+      <div className="bg-background border-primary/20 flex w-full flex-col gap-1 rounded-xl border p-3 shadow-xs">
+        <h1 className="text-xs font-medium tracking-tight uppercase">POR RESPONSABILIDADE</h1>
         <div className="flex w-full flex-wrap justify-start gap-2">
           {stats?.porResponsabilidade.map((responsability) => (
-            <div key={responsability.tipo} className="flex items-center gap-2 rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
-              <h1 className="text-xs font-medium uppercase tracking-tight">{responsability.tipo}</h1>
-              <div className="text-xs text-gray-500">{responsability.totalAdequacoesPendentes} pendentes</div>
-              <div className="text-xs text-gray-500">{responsability.totalAdequacoesPendentesPagas} pagos</div>
+            <div key={responsability.tipo} className="bg-background border-primary/20 flex items-center gap-2 rounded-xl border p-3 shadow-xs">
+              <h1 className="text-xs font-medium tracking-tight uppercase">{responsability.tipo}</h1>
+              <div className="text-primary/60 text-xs">{responsability.totalAdequacoesPendentes} pendentes</div>
+              <div className="text-primary/60 text-xs">{responsability.totalAdequacoesPendentesPagas} pagos</div>
             </div>
           ))}
         </div>

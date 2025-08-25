@@ -22,7 +22,7 @@ function ProjectCardsTags({ projectTags }: ProjectCardsTagsProps) {
 					className={cn("flex items-center gap-1 rounded px-2 py-0.5")}
 				>
 					<Tag width={10} height={10} />
-					<h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+					<h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
 				</div>
 			))}
 		</div>

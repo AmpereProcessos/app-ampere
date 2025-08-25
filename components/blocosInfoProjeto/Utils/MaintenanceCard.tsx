@@ -21,9 +21,9 @@ function MaintenanceCard({ maintenance, handleRemove, handleUpdate }: Maintenanc
 
   return (
     <AnimatePresence>
-      <div className="flex w-full flex-col gap-2 rounded border border-gray-500 p-2 lg:w-[400px]">
+      <div className="border-primary/60 flex w-full flex-col gap-2 rounded border p-2 lg:w-[400px]">
         <div className="flex w-full items-center justify-between">
-          <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">{maintenance.titulo}</h1>
+          <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{maintenance.titulo}</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleUpdate({ ...maintenance, dataEfetivacao: new Date().toISOString() })}
@@ -88,7 +88,7 @@ function MaintenanceCard({ maintenance, handleRemove, handleUpdate }: Maintenanc
                 handleUpdate(itemHolder)
                 setEditMenuIsOpen(false)
               }}
-              className="self-center whitespace-nowrap rounded bg-blue-800 px-4 py-1 text-xs font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-blue-700 enabled:hover:text-white"
+              className="disabled:bg-primary/60 self-center rounded bg-blue-800 px-4 py-1 text-xs font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-700 enabled:hover:text-white disabled:text-white"
             >
               ATUALIZAR
             </button>

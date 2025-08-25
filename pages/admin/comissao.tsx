@@ -274,98 +274,98 @@ function CommissionMain() {
   if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col p-6">
-      <div className="flex flex-col items-center gap-2 border-b border-gray-300 px-1 py-2">
+      <div className="border-primary/20 flex flex-col items-center gap-2 border-b px-1 py-2">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">COMISSÃO DE PROJETOS</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">COMISSÃO DE PROJETOS</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">TOTAL VENDIDO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">TOTAL VENDIDO</h1>
               <MdAttachMoney />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(stats.totalVendido)}</div>
-              <p className="text-xs text-gray-500">{formatDecimalPlaces(stats.potenciaVendida)} kWp</p>
+              <p className="text-primary/60 text-xs">{formatDecimalPlaces(stats.potenciaVendida)} kWp</p>
             </div>
           </div>
-          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO TOTAL</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">COMISSÃO TOTAL</h1>
               <FaPercentage />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(stats.comissaoTotal)}</div>
-              <p className="text-xs text-gray-500">{formatToMoney(stats.comissaoTimeVendas)} para o time de vendas</p>
-              <p className="text-xs text-gray-500">{formatToMoney(stats.comissaoTimeSDR)} para o time de SDR</p>
+              <p className="text-primary/60 text-xs">{formatToMoney(stats.comissaoTimeVendas)} para o time de vendas</p>
+              <p className="text-primary/60 text-xs">{formatToMoney(stats.comissaoTimeSDR)} para o time de SDR</p>
             </div>
           </div>
 
-          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[130px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">ANÁLISE</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">ANÁLISE</h1>
               <BiStats />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{formatDecimalPlaces((stats.comissaoTotal * 100) / stats.totalVendido)}%</div>
-              <p className="text-sm text-gray-500">{formatDecimalPlaces(stats.totalVendido / stats.potenciaVendida)} R$/kWp</p>
+              <p className="text-primary/60 text-sm">{formatDecimalPlaces(stats.totalVendido / stats.potenciaVendida)} R$/kWp</p>
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
+        <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs">
           <div className="flex items-center justify-between">
-            <h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR ITEM</h1>
+            <h1 className="text-sm font-medium tracking-tight uppercase">COMISSÃO POR ITEM</h1>
             <FaPercentage />
           </div>
           <div className="mt-2 flex w-full flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
-              <FaSolarPanel className={cn('min-w-5 min-h-5 h-5 w-5')} />
+            <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
+              <FaSolarPanel className={cn('h-5 min-h-5 w-5 min-w-5')} />
               <p className="text-sm font-medium">COMISSÃO EM PROJETO</p>
               <p className="text-sm font-medium">{formatToMoney(stats.comissaoProjeto)}</p>
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
-              <MdElectricMeter className={cn('min-w-5 min-h-5 h-5 w-5')} />
+            <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
+              <MdElectricMeter className={cn('h-5 min-h-5 w-5 min-w-5')} />
               <p className="text-sm font-medium">COMISSÃO EM PADRÃO</p>
               <p className="text-sm font-medium">{formatToMoney(stats.comissaoPadrao)}</p>
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
-              <MdOutlineRoofing className={cn('min-w-5 min-h-5 h-5 w-5')} />
+            <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
+              <MdOutlineRoofing className={cn('h-5 min-h-5 w-5 min-w-5')} />
               <p className="text-sm font-medium">COMISSÃO EM ESTRUTURA PERSONALIZADA</p>
               <p className="text-sm font-medium">{formatToMoney(stats.comissaoEstrutura)}</p>
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
-              <Wrench className={cn('min-w-5 min-h-5 h-5 w-5')} />
+            <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
+              <Wrench className={cn('h-5 min-h-5 w-5 min-w-5')} />
               <p className="text-sm font-medium">COMISSÃO EM O&M</p>
               <p className="text-sm font-medium">{formatToMoney(stats.comissaoOem)}</p>
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80">
-              <FaShieldHalved className={cn('min-w-5 min-h-5 h-5 w-5')} />
+            <div className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
+              <FaShieldHalved className={cn('h-5 min-h-5 w-5 min-w-5')} />
               <p className="text-sm font-medium">COMISSÃO EM SEGURO</p>
               <p className="text-sm font-medium">{formatToMoney(stats.comissaoSeguro)}</p>
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
+        <div className="bg-background border-primary/20 flex w-full flex-col rounded-xl border p-3 shadow-xs">
           <div className="flex items-center justify-between">
-            <h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR USUÁRIO</h1>
+            <h1 className="text-sm font-medium tracking-tight uppercase">COMISSÃO POR USUÁRIO</h1>
             <FaUser />
           </div>
           <div className="mt-2 flex w-full flex-wrap items-center justify-between gap-3">
             {statsComissionByUser.map((value) => (
               <div
                 key={value.id}
-                className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center font-bold italic text-primary/80"
+                className="bg-secondary text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic"
               >
                 <Avatar className="h-5 w-5">
                   <AvatarImage src={value.avatar_url} />
@@ -442,7 +442,7 @@ function CommissionMain() {
                 <button
                   type="button"
                   onClick={exportData}
-                  className="flex cursor-pointer items-center rounded-lg  p-2 font-bold text-[#15599a] transition duration-300 ease-in-out hover:scale-105"
+                  className="flex cursor-pointer items-center rounded-lg p-2 font-bold text-[#15599a] transition duration-300 ease-in-out hover:scale-105"
                 >
                   <p className="mr-2 text-sm">BAIXAR DADOS</p>
                   <BsDownload />
@@ -513,7 +513,7 @@ function ComissionsDatabaseView({ projects, handleClick }: ComissionsDatabaseVie
         projects.map((project) => <ProjectComissionCard key={project.identificadorApp} project={project} handleClick={(id) => handleClick(id)} />)
       ) : (
         <div className="flex grow items-center justify-center">
-          <h1 className="text-lg italic text-gray-500">Nenhuma informação encontrada para o período de análise</h1>
+          <h1 className="text-primary/60 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
         </div>
       )}
     </div>
@@ -565,23 +565,23 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
   }
   const comissionByItemList = getComissionByItemList(project)
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
+          <div className="text-primary/80 flex items-center gap-1 text-center text-xs font-bold italic">
             <MdDashboard size={12} />
             <p className="text-xs">{project.identificadorApp}</p>
           </div>
-          <p className="text-sm font-bold leading-none tracking-tight">{project.nome}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{project.nome}</p>
           <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${project.idOportunidadeCRM}`} target="_blank" rel="noreferrer">
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+            <div className="bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
               <BsFunnel size={12} />
               <p>{project.identificadorCrm}</p>
             </div>
           </Link>
           <div
             className={cn(
-              'flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80',
+              'bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic',
               getProjectTypeCollors(project.tipo)
             )}
           >
@@ -590,77 +590,77 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
           </div>
           <HoverCard>
             <HoverCardTrigger asChild>
-              <div className="flex items-center gap-1  text-center text-[0.57rem] font-bold italic text-primary/80">
-                <Calendar className="min-w-3.5 min-h-3.5 h-3.5 w-3.5" />
+              <div className="text-primary/80 flex items-center gap-1 text-center text-[0.57rem] font-bold italic">
+                <Calendar className="h-3.5 min-h-3.5 w-3.5 min-w-3.5" />
                 <p>{formatDateAsLocale(getDateParams(project))}</p>
               </div>
             </HoverCardTrigger>
-            <HoverCardContent className="min-w-80 w-fit">
+            <HoverCardContent className="w-fit min-w-80">
               <div className="space-y-1">
                 <div className="flex w-full items-center justify-between gap-2">
-                  <p className="text-sm font-semibold text-primary/80">DATA DE ASSINATURA:</p>
-                  <p className="text-sm font-semibold text-primary/80">{formatDateAsLocale(project.dataAssinatura) || 'N/A'}</p>
+                  <p className="text-primary/80 text-sm font-semibold">DATA DE ASSINATURA:</p>
+                  <p className="text-primary/80 text-sm font-semibold">{formatDateAsLocale(project.dataAssinatura) || 'N/A'}</p>
                 </div>
                 <div className="flex w-full items-center justify-between gap-2">
-                  <p className="text-sm font-semibold text-primary/80">DATA DE PAGAMENTO PARCIAL: </p>
-                  <p className="text-sm font-semibold text-primary/80">{formatDateAsLocale(project.dataRecebimentoParcial) || 'N/A'}</p>
+                  <p className="text-primary/80 text-sm font-semibold">DATA DE PAGAMENTO PARCIAL: </p>
+                  <p className="text-primary/80 text-sm font-semibold">{formatDateAsLocale(project.dataRecebimentoParcial) || 'N/A'}</p>
                 </div>
               </div>
             </HoverCardContent>
           </HoverCard>
         </div>
         <Button variant={'ghost'} className="flex items-center gap-1 px-2 py-1" size={'fit'} onClick={() => handleClick(project._id)}>
-          <Pencil className="min-h-4 min-w-4 h-4 w-4" />
-          <p className="text-sm font-semibold text-primary/80">EDITAR</p>
+          <Pencil className="h-4 min-h-4 w-4 min-w-4" />
+          <p className="text-primary/80 text-sm font-semibold">EDITAR</p>
         </Button>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div
-            className={cn('flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80', {
+            className={cn('bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic', {
               'bg-orange-100 text-orange-700': !allComissionsDefined,
               'bg-green-100 text-green-700': allComissionsDefined,
             })}
           >
-            <BadgeCheck className={cn('min-w-3 min-h-3 h-3 w-3')} />
+            <BadgeCheck className={cn('h-3 min-h-3 w-3 min-w-3')} />
             <p className={cn('text-[0.57rem] font-medium')}>{allComissionsDefined ? 'COMISSÕES EFETIVADAS' : 'VALORES NÃO EFETIVADOS'}</p>
           </div>
           <div
-            className={cn('flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80', {
+            className={cn('bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic', {
               'bg-orange-100 text-orange-700': !allComissionsPaid,
               'bg-green-100 text-green-700': allComissionsPaid,
             })}
           >
-            <BadgeDollarSign className={cn('min-w-3 min-h-3 h-3 w-3')} />
+            <BadgeDollarSign className={cn('h-3 min-h-3 w-3 min-w-3')} />
             <p className={cn('text-[0.57rem] font-medium')}>
               {allComissionsPaid ? 'PAGAMENTO DE COMISSÕES REALIZADO' : 'PAGAMENTO DE COMISSÕES NÃO REALIZADO'}
             </p>
           </div>
           <div
-            className={cn('flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80', {
+            className={cn('bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic', {
               'bg-orange-100 text-orange-700': !allComissionsValidated,
               'bg-green-100 text-green-700': allComissionsValidated,
             })}
           >
-            <BadgeCheck className={cn('min-w-3 min-h-3 h-3 w-3')} />
+            <BadgeCheck className={cn('h-3 min-h-3 w-3 min-w-3')} />
             <p className={cn('text-[0.57rem] font-medium')}>{allComissionsValidated ? 'VALIDAÇÕES RELIZADAS' : 'VALIDAÇÕES PENDENTES'}</p>
           </div>
           <div className="flex flex-wrap items-center gap-1">
-            <Users className={cn('min-w-3 min-h-3 h-3 w-3')} />
-            <p className="text-[0.5rem] font-bold italic text-primary/80">COMISSIONADOS</p>
+            <Users className={cn('h-3 min-h-3 w-3 min-w-3')} />
+            <p className="text-xxs text-primary/80 font-bold italic">COMISSIONADOS</p>
             {project.comissoes.comissionados.map((comissionado, index) => (
               <div
                 key={`${comissionado.nome}-${index}`}
-                className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80"
+                className="bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic"
               >
-                <Avatar className="min-h-5 min-w-5 h-5 w-5">
+                <Avatar className="h-5 min-h-5 w-5 min-w-5">
                   <AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
                   <AvatarFallback>{formatNameAsInitials(comissionado.nome || 'NA')}</AvatarFallback>
                 </Avatar>
                 <p className="text-[0.57rem] font-black text-[#15599a]">{comissionado.nome}</p>
                 <p className="text-[0.57rem] font-black text-green-700">{comissionado.porcentagem}%</p>
                 <BadgeCheck
-                  className={cn('min-w-3 min-h-3 h-3 w-3', {
+                  className={cn('h-3 min-h-3 w-3 min-w-3', {
                     'text-orange-700': !comissionado.dataValidacao,
                     'text-green-700': comissionado.dataValidacao,
                   })}
@@ -676,34 +676,34 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
             <HoverCard key={item.item}>
               <HoverCardTrigger asChild>
                 <Button variant={'ghost'} className="flex items-center gap-1 px-2 py-1" size={'fit'}>
-                  <item.icon className="min-h-4 min-w-4 h-4 w-4" />
-                  <p className="text-sm font-semibold text-primary/80">{formatToMoney(item.comissaoTotal)}</p>
+                  <item.icon className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary/80 text-sm font-semibold">{formatToMoney(item.comissaoTotal)}</p>
                 </Button>
               </HoverCardTrigger>
-              <HoverCardContent className="min-w-80 w-fit">
+              <HoverCardContent className="w-fit min-w-80">
                 <div className="space-y-1">
                   <div className="flex w-full items-center justify-between gap-2">
-                    <p className="text-sm font-semibold text-primary/80">VALOR COMISSIONÁVEL DO ITEM</p>
-                    <p className="text-sm font-semibold text-primary/80">{formatToMoney(item.valor)}</p>
+                    <p className="text-primary/80 text-sm font-semibold">VALOR COMISSIONÁVEL DO ITEM</p>
+                    <p className="text-primary/80 text-sm font-semibold">{formatToMoney(item.valor)}</p>
                   </div>
                   {item.comissionados.map((comissionado, index) => (
                     <div key={`${comissionado.nome}-${index}`} className="flex w-full items-center justify-between gap-2">
                       <div className="flex items-center gap-1">
-                        <Avatar className="min-h-5 min-w-3 h-5 w-5">
+                        <Avatar className="h-5 min-h-5 w-5 min-w-3">
                           <AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
                           <AvatarFallback>{formatNameAsInitials(comissionado.nome || 'NA')}</AvatarFallback>
                         </Avatar>
-                        <p className="text-sm font-semibold text-primary/80">{comissionado.nome}</p>
+                        <p className="text-primary/80 text-sm font-semibold">{comissionado.nome}</p>
                       </div>
 
-                      <p className="text-sm font-semibold text-primary/80">{formatToMoney(comissionado.comissao)}</p>
+                      <p className="text-primary/80 text-sm font-semibold">{formatToMoney(comissionado.comissao)}</p>
                     </div>
                   ))}
                 </div>
-                <div className="my-2 h-[1px] w-full rounded bg-primary" />
+                <div className="bg-primary my-2 h-px w-full rounded" />
                 <div className="flex w-full items-center justify-between gap-2">
-                  <p className="text-sm font-semibold text-primary/80">COMISSÃO TOTAL</p>
-                  <p className="text-sm font-semibold text-primary/80">{formatToMoney(item.comissaoTotal)}</p>
+                  <p className="text-primary/80 text-sm font-semibold">COMISSÃO TOTAL</p>
+                  <p className="text-primary/80 text-sm font-semibold">{formatToMoney(item.comissaoTotal)}</p>
                 </div>
               </HoverCardContent>
             </HoverCard>
@@ -712,35 +712,35 @@ function ProjectComissionCard({ project, handleClick }: ProjectComissionCardProp
         <HoverCard>
           <HoverCardTrigger asChild>
             <Button variant={'ghost'} className="flex items-center gap-1 px-2 py-1" size={'fit'}>
-              <BadgeDollarSign className="min-h-4 min-w-4 h-4 w-4" />
-              <p className="text-sm font-semibold text-primary/80">{formatToMoney(totalComissionValue)}</p>
+              <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4" />
+              <p className="text-primary/80 text-sm font-semibold">{formatToMoney(totalComissionValue)}</p>
             </Button>
           </HoverCardTrigger>
-          <HoverCardContent className="min-w-80 w-fit">
+          <HoverCardContent className="w-fit min-w-80">
             <div className="space-y-1">
               <div className="flex w-full items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-primary/80">VALOR COMISSIONÁVEL TOTAL</p>
-                <p className="text-sm font-semibold text-primary/80">{formatToMoney(project.comissoes.valorComissionavel)}</p>
+                <p className="text-primary/80 text-sm font-semibold">VALOR COMISSIONÁVEL TOTAL</p>
+                <p className="text-primary/80 text-sm font-semibold">{formatToMoney(project.comissoes.valorComissionavel)}</p>
               </div>
               {project.comissoes.comissionados.map((comissionado, index) => (
                 <div key={`${comissionado.nome}-${index}`} className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
-                    <Avatar className="min-h-5 min-w-3 h-5 w-5">
+                    <Avatar className="h-5 min-h-5 w-5 min-w-3">
                       <AvatarImage src={comissionado.avatar_url || undefined} alt={comissionado.nome} />
                       <AvatarFallback>{formatNameAsInitials(comissionado.nome || 'NA')}</AvatarFallback>
                     </Avatar>
-                    <p className="text-sm font-semibold text-primary/80">{comissionado.nome}</p>
+                    <p className="text-primary/80 text-sm font-semibold">{comissionado.nome}</p>
                   </div>
-                  <p className="text-sm font-semibold text-primary/80">
+                  <p className="text-primary/80 text-sm font-semibold">
                     {formatToMoney((comissionado.porcentagem / 100) * project.comissoes.valorComissionavel)}
                   </p>
                 </div>
               ))}
             </div>
-            <div className="my-2 h-[1px] w-full rounded bg-primary" />
+            <div className="bg-primary my-2 h-px w-full rounded" />
             <div className="flex w-full items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-primary/80">COMISSÃO TOTAL</p>
-              <p className="text-sm font-semibold text-primary/80">{formatToMoney(totalComissionValue)}</p>
+              <p className="text-primary/80 text-sm font-semibold">COMISSÃO TOTAL</p>
+              <p className="text-primary/80 text-sm font-semibold">{formatToMoney(totalComissionValue)}</p>
             </div>
           </HoverCardContent>
         </HoverCard>
@@ -804,11 +804,11 @@ function ComissionsReportViewSeller({
   }, 0)
   return (
     <AnimatePresence>
-      <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+      <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
-              <Avatar className="min-h-5 min-w-5 h-5 w-5">
+            <div className="text-primary/80 flex items-center gap-1 text-center text-xs font-bold italic">
+              <Avatar className="h-5 min-h-5 w-5 min-w-5">
                 <AvatarImage src={seller.avatar_url || undefined} alt={seller.name} />
                 <AvatarFallback>{formatNameAsInitials(seller.name || 'NA')}</AvatarFallback>
               </Avatar>
@@ -826,8 +826,8 @@ function ComissionsReportViewSeller({
               {!showProjects ? <ChevronDown width={14} height={14} /> : <ChevronUp width={14} height={14} />}
             </Button>
             <div className="flex items-center gap-1 px-2 py-1">
-              <BadgeDollarSign className="min-h-4 min-w-4 h-4 w-4" />
-              <p className="text-sm font-semibold text-primary/80">{formatToMoney(totalComissionValue)}</p>
+              <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4" />
+              <p className="text-primary/80 text-sm font-semibold">{formatToMoney(totalComissionValue)}</p>
             </div>
           </div>
         </div>
@@ -849,17 +849,17 @@ function ComissionsReportViewSeller({
                 className="flex flex-col items-center justify-between px-2 lg:flex-row"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-1 text-center text-xs font-bold italic text-primary/80">
+                  <div className="text-primary/80 flex items-center gap-1 text-center text-xs font-bold italic">
                     <MdDashboard size={12} />
                     <p className="text-xs">{project.identificadorApp}</p>
                   </div>
-                  <p className="text-sm font-bold leading-none tracking-tight">{project.nome}</p>
+                  <p className="text-sm leading-none font-bold tracking-tight">{project.nome}</p>
                   <Link
                     href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${project.idOportunidadeCRM}`}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
+                    <div className="bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic">
                       <BsFunnel size={12} />
                       <p>{project.identificadorCrm}</p>
                     </div>
@@ -867,7 +867,7 @@ function ComissionsReportViewSeller({
 
                   <div
                     className={cn(
-                      'flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80',
+                      'bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic',
                       getProjectTypeCollors(project.tipo)
                     )}
                   >
@@ -877,12 +877,12 @@ function ComissionsReportViewSeller({
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1 px-2 py-1">
-                    <Percent className="min-h-4 min-w-4 h-4 w-4" />
-                    <p className="text-sm font-semibold text-primary/80">{formatDecimalPlaces(comissioned.porcentagem)}%</p>
+                    <Percent className="h-4 min-h-4 w-4 min-w-4" />
+                    <p className="text-primary/80 text-sm font-semibold">{formatDecimalPlaces(comissioned.porcentagem)}%</p>
                   </div>
                   <div className="flex items-center gap-1 px-2 py-1">
-                    <BadgeDollarSign className="min-h-4 min-w-4 h-4 w-4" />
-                    <p className="text-sm font-semibold text-primary/80">{formatToMoney(comissionValue)}</p>
+                    <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4" />
+                    <p className="text-primary/80 text-sm font-semibold">{formatToMoney(comissionValue)}</p>
                   </div>
                 </div>
               </motion.div>

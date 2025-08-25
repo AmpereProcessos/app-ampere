@@ -119,10 +119,10 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
   const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey: ['pos-venda-calls', filters] })
   return (
     <div className="flex grow flex-col p-6">
-      <div className="flex flex-col items-center border-b border-gray-300 px-1 py-2">
+      <div className="border-primary/20 flex flex-col items-center border-b px-1 py-2">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">CHAMADOS DE POS VENDA</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">CHAMADOS DE POS VENDA</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant={'ghost'} onClick={() => setFilterMenuIsOpen(true)}>
@@ -135,7 +135,7 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
       <FiltersShowcase filters={filters} updateFilters={updateFilters} />
       <PosVendaCallsStatistics />
       <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
-        <div className="flex max-h-[600px] w-full gap-3 overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
@@ -187,13 +187,13 @@ function PosVendaCallsStatistics() {
   const { data: statistics, isLoading, isError, isSuccess, filters, updateFilters } = useGetPosVendaCallsStatistics({})
 
   return (
-    <div className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <ChartArea className="min-w-4 min-h-4 h-4 w-4" />
+          <ChartArea className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">ESTATÍSTICAS</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Estatísticas de chamados de pos venda</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Estatísticas de chamados de pos venda</h3>
       </div>
       <div className="flex w-full items-center justify-end">
         <DateIntervalInput
@@ -213,28 +213,28 @@ function PosVendaCallsStatistics() {
         />
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
-        <div className="flex w-full flex-col rounded-xl border border-primary/30 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3">
+        <div className="border-primary/30 bg-background flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3 dark:bg-[#121212]">
           <div className="flex items-center justify-between">
-            <h1 className="text-sm font-medium uppercase tracking-tight">CHAMADOS CRIADOS</h1>
-            <Plus className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-sm font-medium tracking-tight uppercase">CHAMADOS CRIADOS</h1>
+            <Plus className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="mt-2 flex w-full flex-col">
             <div className="text-xl font-bold text-[#15599a]">{statistics?.criadas || 0}</div>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-xl border border-primary/30 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3">
+        <div className="border-primary/30 bg-background flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3 dark:bg-[#121212]">
           <div className="flex items-center justify-between">
-            <h1 className="text-sm font-medium uppercase tracking-tight">CHAMADOS CONCLUÍDOS</h1>
-            <Check className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-sm font-medium tracking-tight uppercase">CHAMADOS CONCLUÍDOS</h1>
+            <Check className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="mt-2 flex w-full flex-col">
             <div className="text-xl font-bold text-[#15599a]">{statistics?.concluidas || 0}</div>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-xl border border-primary/30 bg-[#fff] p-3 shadow-sm dark:bg-[#121212] lg:w-1/3">
+        <div className="border-primary/30 bg-background flex w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3 dark:bg-[#121212]">
           <div className="flex items-center justify-between">
-            <h1 className="text-sm font-medium uppercase tracking-tight">VALOR TOTAL</h1>
-            <BadgeDollarSign className="min-w-4 min-h-4 h-4 w-4" />
+            <h1 className="text-sm font-medium tracking-tight uppercase">VALOR TOTAL</h1>
+            <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4" />
           </div>
           <div className="mt-2 flex w-full flex-col">
             <div className="text-xl font-bold text-[#15599a]">{formatToMoney(statistics?.valorTotal || 0)}</div>
@@ -257,7 +257,7 @@ function FiltersShowcase({ filters, updateFilters }: FiltersShowcaseProps) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-end">
       {filters.periodAfter && filters.periodBefore && filters.periodField ? (
-        <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-[0.65rem]">
+        <div className="bg-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             PERÍODO:{' '}
             <strong>
@@ -267,7 +267,7 @@ function FiltersShowcase({ filters, updateFilters }: FiltersShowcaseProps) {
           <button
             type="button"
             onClick={() => updateFilters({ periodAfter: null, periodBefore: null, periodField: null })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
@@ -275,26 +275,26 @@ function FiltersShowcase({ filters, updateFilters }: FiltersShowcaseProps) {
       ) : null}
 
       {filters.search && filters.search.length > 0 ? (
-        <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-[0.65rem]">
+        <div className="bg-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">
             BUSCA: <strong>{filters.search}</strong>
           </p>
           <button
             type="button"
             onClick={() => updateFilters({ search: null })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
         </div>
       ) : null}
       {filters.ongoingOnly ? (
-        <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-[0.65rem]">
+        <div className="bg-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
           <p className="text-primary/80">APENAS CHAMADOS EM ANDAMENTO</p>
           <button
             type="button"
             onClick={() => updateFilters({ ongoingOnly: null })}
-            className="rounded-lg bg-transparent p-1 text-primary hover:bg-primary/20"
+            className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
           >
             <X size={12} />
           </button>
@@ -321,14 +321,14 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
             </div>
             <div className="mt-1 flex w-full flex-col items-center justify-center px-2 pb-2 lg:flex-row">
               <div className="w-full lg:w-1/3" />
-              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3  lg:text-[0.7rem]">
+              <div className="flex w-full items-center justify-center gap-1 text-[0.65rem] text-white lg:w-1/3 lg:text-[0.7rem]">
                 <MdDashboard />
                 <p>{items.length}</p>
               </div>
               <div className="w-full lg:w-1/3" />
             </div>
           </div>
-          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2 ">
+          <div ref={provided.innerRef} {...provided.droppableProps} className="my-1 flex flex-col gap-2">
             {items.map((item, index) => (
               <FunnelListItem key={item._id} item={item} index={index} handleClick={handleItemClick} />
             ))}
@@ -352,16 +352,16 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm"
+          className="bg-background border-primary/60 relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <h1 className="text-sm font-bold leading-none tracking-tight">{item.titulo}</h1>
+              <h1 className="text-sm leading-none font-bold tracking-tight">{item.titulo}</h1>
             </div>
             <button
               type="button"
               onClick={() => handleClick(item._id)}
-              className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+              className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
             >
               <Pencil width={10} height={10} />
               <p>EDITAR</p>
@@ -374,25 +374,22 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                   className={cn('flex w-fit items-center gap-1 self-center rounded-lg px-2 py-1', getServiceTypeTagColor(item.projeto.tipo || ''))}
                 >
                   <MdDashboard size={12} />
-                  <h1 className="text-[0.5rem] font-medium">{item.projeto.tipo}</h1>
+                  <h1 className="text-xxs font-medium">{item.projeto.tipo}</h1>
                 </div>
               </>
             ) : null}
           </div>
-          <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-            <h1 className="whitespace-pre-line text-[0.6rem] font-medium">{item.descricao || 'DESCRIÇÃO NÃO DEFINIDA'}</h1>
+          <div className="bg-primary/10 flex w-full items-center justify-center rounded p-2">
+            <h1 className="text-[0.6rem] font-medium whitespace-pre-line">{item.descricao || 'DESCRIÇÃO NÃO DEFINIDA'}</h1>
           </div>
           <div className="flex w-full flex-wrap items-center justify-center">
             <div
-              className={cn(
-                'flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80',
-                {
-                  'bg-gray-100 text-gray-700': !item.metadados.cobravel,
-                  'bg-green-100 text-green-700': item.metadados.cobravel,
-                }
-              )}
+              className={cn('bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic', {
+                'bg-primary/20 text-primary/70': !item.metadados.cobravel,
+                'bg-green-100 text-green-700': item.metadados.cobravel,
+              })}
             >
-              <BadgeCheck className={cn('min-w-3 min-h-3 h-3 w-3')} />
+              <BadgeCheck className={cn('h-3 min-h-3 w-3 min-w-3')} />
               <p className={cn('text-[0.57rem] font-medium')}>{item.metadados.cobravel ? 'CHAMADO COBRÁVEL' : 'CHAMADO NÃO COBRÁVEL'}</p>
             </div>
           </div>
@@ -409,13 +406,13 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             <div className="flex items-center gap-2">
               <div className="flex min-w-fit items-center gap-1">
                 <BsCalendarPlus />
-                <p className={'text-[0.65rem] font-medium text-gray-500'}>{formatDateAsLocale(item.dataInsercao, true)}</p>
+                <p className={'text-primary/60 text-[0.65rem] font-medium'}>{formatDateAsLocale(item.dataInsercao, true)}</p>
               </div>
 
               {item.dataEfetivacao ? (
                 <div className="flex items-center gap-1">
                   <BsCalendarCheck className="text-green-500" />
-                  <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
+                  <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(item.dataEfetivacao, true)}</p>
                 </div>
               ) : null}
             </div>

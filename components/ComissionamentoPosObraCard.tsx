@@ -25,13 +25,13 @@ function getStatusTag(meterChange: string | null) {
   const diff = dayjs().diff(meterChange, 'day')
   if (diff > 3) {
     return (
-      <div className="flex min-w-fit items-center gap-2 rounded-full bg-red-600 px-2 py-1 ">
+      <div className="flex min-w-fit items-center gap-2 rounded-full bg-red-600 px-2 py-1">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">EM ATRASO</h1>
       </div>
     )
   } else {
     return (
-      <div className="flex min-w-fit items-center gap-2 rounded-full bg-blue-600 px-2 py-1 ">
+      <div className="flex min-w-fit items-center gap-2 rounded-full bg-blue-600 px-2 py-1">
         <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">PENDENTE</h1>
       </div>
     )
@@ -73,29 +73,29 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
       initial={{ opacity: 0, translateY: -20 }}
       animate={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 0.3, delay: 0.01 * index }}
-      className={`flex w-full flex-col rounded border border-gray-500 p-3`}
+      className={`border-primary/60 flex w-full flex-col rounded border p-3`}
     >
       <div className="flex w-full items-center justify-between gap-2">
-        <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">{project.nomeDoContrato}</h1>
+        <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{project.nomeDoContrato}</h1>
         {getStatusTag(project.homologacao.vistoria.dataEfetivacao || null)}
       </div>
       <div className="flex w-full flex-wrap items-center gap-2">
         <div className="flex items-center gap-1">
           <BsCalendar size={12} />
-          <p className="text-[0.6rem] font-medium leading-none tracking-tight">TROCA DO MEDIDOR:</p>
-          <p className="text-[0.6rem] font-black leading-none tracking-tight">
+          <p className="text-[0.6rem] leading-none font-medium tracking-tight">TROCA DO MEDIDOR:</p>
+          <p className="text-[0.6rem] leading-none font-black tracking-tight">
             {formatDateAsLocale(project.homologacao.vistoria.dataEfetivacao) || 'NÃO DEFINIDO'}
           </p>
         </div>
         <div className="flex items-center gap-1">
           <BsCalendar size={12} />
-          <p className="text-[0.6rem] font-medium leading-none tracking-tight">SAÍDA DE OBRA:</p>
-          <p className="text-[0.6rem] font-black leading-none tracking-tight">{formatDateAsLocale(project.obra.saida) || 'NÃO DEFINIDO'}</p>
+          <p className="text-[0.6rem] leading-none font-medium tracking-tight">SAÍDA DE OBRA:</p>
+          <p className="text-[0.6rem] leading-none font-black tracking-tight">{formatDateAsLocale(project.obra.saida) || 'NÃO DEFINIDO'}</p>
         </div>
         <div className="flex items-center gap-1">
           <FaUser size={12} />
-          <p className="text-[0.6rem] font-medium leading-none tracking-tight">EQUIPE RESPONSÁVEL:</p>
-          <p className="text-[0.6rem] font-black leading-none tracking-tight">{project.obra.equipeResp}</p>
+          <p className="text-[0.6rem] leading-none font-medium tracking-tight">EQUIPE RESPONSÁVEL:</p>
+          <p className="text-[0.6rem] leading-none font-black tracking-tight">{project.obra.equipeResp}</p>
         </div>
       </div>
       <div className="flex w-full flex-wrap items-center justify-center gap-2">
@@ -309,7 +309,7 @@ function ComissionamentoPosObraCard({ project, index }: ComissionamentoPosObraCa
               // @ts-ignore
               handleUpdateProject({ id: project._id, changes: changes })
             }}
-            className="h-9 whitespace-nowrap rounded bg-blue-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-blue-800 enabled:hover:text-white"
+            className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
           >
             ATUALIZAR PROJETO
           </button>

@@ -112,7 +112,7 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
               </div>
               <div className="w-1/2 lg:w-full">
                 <div className="flex w-full flex-col gap-1">
-                  <label htmlFor={'DATAVENCIMENTO'} className="font-sans font-bold  text-[#353432]">
+                  <label htmlFor={'DATAVENCIMENTO'} className="font-sans font-bold text-[#353432]">
                     DATA DE VENCIMENTO
                   </label>
                   <input
@@ -135,22 +135,22 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
                       }))
                     }
                     type="datetime-local"
-                    className="w-full rounded-md border border-gray-300 p-3 text-sm outline-none placeholder:italic"
+                    className="border-primary/20 w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic"
                   />
                 </div>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-md border border-gray-300 p-2 shadow-sm">
-              <h1 className="text-sm font-medium leading-none tracking-tight text-gray-500">DESCRIÇÃO DA ATIVIDADE</h1>
+            <div className="border-primary/20 flex w-full flex-col rounded-md border p-2 shadow-xs">
+              <h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">DESCRIÇÃO DA ATIVIDADE</h1>
               <input
                 value={newActivityHolder.descricao}
                 onChange={(e) => setNewActivityHolder((prev) => ({ ...prev, descricao: e.target.value }))}
                 type="text"
                 placeholder="Preencha aqui uma descrição mais específica da atividade a ser feita..."
-                className="w-full p-3 text-start text-sm outline-none"
+                className="w-full p-3 text-start text-sm outline-hidden"
               />
             </div>
-            <h1 className="text-sm font-medium leading-none tracking-tight text-gray-500">VINCULE RESPONSÁVEIS</h1>
+            <h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">VINCULE RESPONSÁVEIS</h1>
             <div className="flex w-full items-center gap-2">
               <div className="flex items-end gap-2">
                 {/**@ts-ignore */}
@@ -175,16 +175,16 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
 
                 <button
                   onClick={() => handleVinculateResponsible(newResponsibleHolder)}
-                  className="min-h-[46.6px]  rounded border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 shadow hover:bg-orange-500 hover:text-white"
+                  className="min-h-[46.6px] rounded border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 shadow-sm hover:bg-orange-500 hover:text-white"
                 >
                   VINCULAR
                 </button>
               </div>
               <div className="flex grow items-center justify-start gap-2">
                 {newActivityHolder.responsaveis.map((resp, index) => (
-                  <div key={index} className="flex items-center gap-2 rounded-lg border border-cyan-500 p-2 shadow-sm">
+                  <div key={index} className="flex items-center gap-2 rounded-lg border border-cyan-500 p-2 shadow-xs">
                     <Avatar width={25} height={25} url={resp.avatar_url} fallback={formatNameAsInitials(resp.nome)} />
-                    <p className="text-sm font-medium tracking-tight text-gray-500">{resp.nome}</p>
+                    <p className="text-primary/60 text-sm font-medium tracking-tight">{resp.nome}</p>
                   </div>
                 ))}
               </div>
@@ -193,7 +193,7 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
               <button
                 // @ts-ignore
                 onClick={() => handleCreateActivity({ info: newActivityHolder })}
-                className='enabled:hover:text-white" whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800'
+                className='enabled:hover:text-white" disabled:bg-primary/60 enabled:hover:bg-primary/80 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm disabled:text-white'
               >
                 CRIAR ATIVIDADE
               </button>

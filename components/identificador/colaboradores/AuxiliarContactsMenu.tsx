@@ -69,7 +69,7 @@ function AuxiliarContactsMenu({ infoHolder, setInfoHolder }: AuxiliarContactsMen
       <div className="flex w-full items-center justify-end">
         <button
           onClick={() => handleAddAuxiliarContact(contactsHolder)}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR CONTATO
         </button>
@@ -78,9 +78,9 @@ function AuxiliarContactsMenu({ infoHolder, setInfoHolder }: AuxiliarContactsMen
       <div className="flex w-full flex-wrap items-start justify-around gap-2">
         {infoHolder.contatosAuxiliares.length > 0 ? (
           infoHolder.contatosAuxiliares.map((contact, index) => (
-            <div key={index} className="flex w-full flex-col rounded-md border border-gray-300 p-3 lg:w-[350px]">
+            <div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[350px]">
               <div className="flex w-full items-center justify-between">
-                <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">{contact.nome}</h1>
+                <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{contact.nome}</h1>
                 <button
                   onClick={() => handleDeleteAuxiliarContact(index)}
                   type="button"
@@ -90,19 +90,19 @@ function AuxiliarContactsMenu({ infoHolder, setInfoHolder }: AuxiliarContactsMen
                 </button>
               </div>
               <div className="flex w-full items-center justify-between gap-2">
-                <div className={`flex items-center gap-2 `}>
+                <div className={`flex items-center gap-2`}>
                   <FaUsers />
-                  <p className="text-xs font-medium text-gray-500">{contact.grau}</p>
+                  <p className="text-primary/60 text-xs font-medium">{contact.grau}</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <FaPhone color={'#15599a'} />
-                  <p className="text-xs font-medium text-gray-500">{contact.telefone}</p>
+                  <p className="text-primary/60 text-xs font-medium">{contact.telefone}</p>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-xs font-medium italic text-gray-500">Não há contatos auxiliares cadastrados</p>
+          <p className="text-primary/60 text-xs font-medium italic">Não há contatos auxiliares cadastrados</p>
         )}
       </div>
     </>

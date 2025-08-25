@@ -40,14 +40,14 @@ function ReceiptsBlock({ session, storedReceiptsTypesFilter }: ReceiptsBlockProp
     setFilters,
   } = usePendingReceipts({ initialFilters: { search: '', types: storedReceiptsTypesFilter, previewPeriod: {} } })
   return (
-    <div className="flex h-full max-h-full w-full flex-col gap-2 rounded border border-primary bg-[#fff] p-3 shadow-sm dark:bg-[#121212]">
-      <div className="flex w-full items-center justify-between gap-2 border-b border-primary/30 pb-3">
-        <h1 className="text-sm font-bold leading-none tracking-tight">RECEBIMENTOS PENDENTES</h1>
+    <div className="border-primary bg-background flex h-full max-h-full w-full flex-col gap-2 rounded border p-3 shadow-xs dark:bg-[#121212]">
+      <div className="border-primary/30 flex w-full items-center justify-between gap-2 border-b pb-3">
+        <h1 className="text-sm leading-none font-bold tracking-tight">RECEBIMENTOS PENDENTES</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterMenuIsOpen((prev) => !prev)}
             className={cn(
-              'min-h-6 min-w-6 flex h-6 w-6 items-center justify-center rounded-full text-primary duration-300 ease-in-out hover:bg-primary/20',
+              'text-primary hover:bg-primary/20 flex h-6 min-h-6 w-6 min-w-6 items-center justify-center rounded-full duration-300 ease-in-out',
               {
                 'bg-primary/30': filterMenuIsOpen,
               }
@@ -58,14 +58,14 @@ function ReceiptsBlock({ session, storedReceiptsTypesFilter }: ReceiptsBlockProp
         </div>
       </div>
       <AnimatePresence>{filterMenuIsOpen ? <ReceiptsFilterMenu filters={filters} setFilters={setFilters} /> : null}</AnimatePresence>
-      <div className="flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           receipts.length > 0 ? (
             receipts.map((receipt) => <ReceiptCard key={receipt._id} receipt={receipt} handleClick={(id) => setEditModal({ id, isOpen: true })} />)
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum recebimento pendente encontrado.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum recebimento pendente encontrado.</div>
           )
         ) : null}
       </div>
@@ -85,22 +85,22 @@ type ReceiptCardProps = {
 function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
   function getStatusTag(receipt: TReceiptUnwindSimplifiedDTO) {
     if (!!receipt.fracionamento.dataRecebimento)
-      return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">RECEBIDO</h1>
+      return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">RECEBIDO</h1>
 
     const isForToday = dayjs().isSame(receipt.fracionamento.dataPrevisaoRecebimento)
-    if (isForToday) return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">RECEBER HOJE</h1>
+    if (isForToday) return <h1 className="text-xxs min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-white">RECEBER HOJE</h1>
 
     const isOverDue = dayjs(new Date()).isAfter(receipt.fracionamento.dataPrevisaoRecebimento)
-    if (isOverDue) return <h1 className="min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-[0.5rem] text-white">EM ATRASO</h1>
+    if (isOverDue) return <h1 className="text-xxs min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-white">EM ATRASO</h1>
 
-    return <h1 className="min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-[0.5rem] text-white">A RECEBER</h1>
+    return <h1 className="text-xxs min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-white">A RECEBER</h1>
   }
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{receipt.fracionamento.titulo}</p>
-          <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">
+          <p className="text-sm leading-none font-bold tracking-tight">{receipt.fracionamento.titulo}</p>
+          <div className="bg-secondary text-xxs text-primary/80 flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-medium italic">
             <FaPercentage />
             <h1>
               PARCIAL DE{' '}
@@ -114,7 +114,7 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
           </div>
           {getStatusTag(receipt)}
         </div>
-        <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">
+        <h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">
           {formatToMoney(receipt.fracionamento.valor || 0)}
         </h1>
       </div>
@@ -122,11 +122,11 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <MdDashboard width={8} height={8} />
-            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{receipt.nome}</h1>
+            <h1 className="text-xxs text-primary py-0.5 text-center font-bold">{receipt.nome}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaDiamond width={8} height={8} />
-            <h1 className="py-0.5 text-center text-[0.5rem] font-bold text-primary">{receipt.tipo}</h1>
+            <h1 className="text-xxs text-primary py-0.5 text-center font-bold">{receipt.tipo}</h1>
           </div>
         </div>
       </div>
@@ -134,15 +134,15 @@ function ReceiptCard({ receipt, handleClick }: ReceiptCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarEvent />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISTO PARA</h1>
-            <p className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISTO PARA</h1>
+            <p className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(receipt.fracionamento.dataPrevisaoRecebimento)}
             </p>
           </div>
         </div>
         <button
           onClick={() => handleClick(receipt._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>
@@ -166,7 +166,7 @@ function ReceiptsFilterMenu({ filters, setFilters }: ReceiptsFilterMenuProps) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+      className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
     >
       <TextInput
         label="PESQUISA"

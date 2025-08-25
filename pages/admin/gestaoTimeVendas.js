@@ -114,16 +114,16 @@ function GestaoTimeDeVendas() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}`,
-          color: 'bg-white text-gray-600',
-          borderColor: 'border-gray-600',
+          color: 'bg-background text-primary/80',
+          borderColor: 'border-primary/80',
         }
       }
     } else {
       return {
         valorVendido: '-',
         meta: '-',
-        color: 'bg-white text-gray-600',
-        borderColor: 'border-gray-600',
+        color: 'bg-background text-primary/80',
+        borderColor: 'border-primary/80',
       }
     }
   }
@@ -152,7 +152,7 @@ function GestaoTimeDeVendas() {
                 value={filters.year}
                 onChange={(e) => setFilters({ ...filters, year: Number(e.target.value) })}
                 type="number"
-                className="w-[200px] rounded-sm border border-gray-300 p-1 text-center text-gray-600 outline-none"
+                className="text-primary/80 border-primary/20 w-[200px] rounded-sm border p-1 text-center outline-hidden"
               />
             </div>
             <button
@@ -188,7 +188,7 @@ function GestaoTimeDeVendas() {
               FILTRAR
             </button>
           </div>
-          <div className="grid-cols-13 grid w-full items-center rounded-tr-lg rounded-tl-lg border border-gray-300">
+          <div className="border-primary/20 grid w-full grid-cols-13 items-center rounded-tl-lg rounded-tr-lg border">
             <h1 className="rounded-tl-lg border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">NOME</h1>
             <h1 className="border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">JANEIRO</h1>
             <h1 className="border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">FEVEREIRO</h1>
@@ -205,16 +205,16 @@ function GestaoTimeDeVendas() {
           </div>
           {sellersInfo ? (
             sellers.map((vendedor, index) => (
-              <div key={index} className="grid-cols-13 grid w-full items-center border border-gray-300">
+              <div key={index} className="border-primary/20 grid w-full grid-cols-13 items-center border">
                 <div
-                  className={`flex h-[60px] items-center justify-center border-r border-gray-300 p-1 text-center text-xxs font-bold text-gray-600 lg:text-xs`}
+                  className={`text-xxs text-primary/80 border-primary/20 flex h-[60px] items-center justify-center border-r p-1 text-center font-bold lg:text-xs`}
                 >
                   {vendedor.nome}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 1).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -233,9 +233,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 2).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -254,9 +254,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 3).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -275,9 +275,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 4).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -296,9 +296,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 5).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -317,9 +317,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 6).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -338,9 +338,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 7).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -359,9 +359,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 8).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -380,9 +380,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 9).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -401,9 +401,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 10).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -422,9 +422,9 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${
                     getMonthlyPerformance(vendedor.nome, 11).color
-                  } h-[60px] border-r border-gray-300`}
+                  } border-primary/20 h-[60px] border-r`}
                 >
                   {index == 0 ? (
                     <>
@@ -443,7 +443,7 @@ function GestaoTimeDeVendas() {
                   )}
                 </div>
                 <div
-                  className={`flex flex-col items-center justify-center p-1 text-center text-xxs font-bold lg:text-xs ${getMonthlyPerformance(vendedor.nome, 12).color} h-[60px]`}
+                  className={`text-xxs flex flex-col items-center justify-center p-1 text-center font-bold lg:text-xs ${getMonthlyPerformance(vendedor.nome, 12).color} h-[60px]`}
                 >
                   {index == 0 ? (
                     <>
@@ -469,7 +469,7 @@ function GestaoTimeDeVendas() {
         </div>
         <div className="my-2 flex w-full flex-col items-center">
           <h1 className="text-center text-xl font-bold">META MENSAL POR VENDEDOR</h1>
-          <div className="grid-cols-14 grid w-full items-center rounded-tr-lg rounded-tl-lg border border-gray-300">
+          <div className="border-primary/20 grid w-full grid-cols-14 items-center rounded-tl-lg rounded-tr-lg border">
             <h1 className="rounded-tl-lg border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">NOME</h1>
             <h1 className="border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">JANEIRO</h1>
             <h1 className="border-r border-white bg-[#15599a] p-1 text-center font-bold text-white">FEVEREIRO</h1>

@@ -49,19 +49,19 @@ function Configuracoes() {
   console.log(receiptAccounts)
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex w-full flex-col border-b border-gray-300 pb-1">
-        <p className="text-start text-2xl font-bold uppercase text-[#15599a]">CONFIGURAÇÕES</p>
+      <div className="border-primary/20 flex w-full flex-col border-b pb-1">
+        <p className="text-start text-2xl font-bold text-[#15599a] uppercase">CONFIGURAÇÕES</p>
       </div>
       <div className="flex w-full items-start gap-2 py-2">
-        <div className="flex h-[500px] max-h-[500px]  w-[50%] flex-col rounded border border-gray-300 shadow-lg">
+        <div className="border-primary/20 flex h-[500px] max-h-[500px] w-[50%] flex-col rounded border shadow-lg">
           <div className="flex w-full items-center justify-between px-2">
-            <h1 className="border-b border-gray-300 p-3 pb-1 text-center font-raleway font-black">CENTROS DE CUSTO</h1>
+            <h1 className="border-primary/20 font-raleway border-b p-3 pb-1 text-center font-black">CENTROS DE CUSTO</h1>
             <button onClick={() => setNewApportionmentModalIsOpen(true)}>
               <MdOutlineAddCircle color="rgb(34,197,94)" size={'25px'} />
             </button>
           </div>
 
-          <div className="overscroll-y flex grow flex-col gap-3 overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-3 overflow-y-auto px-2 py-2">
             {apportionmentsFetching ? <LoadingPage /> : null}
             {apportionmentsSuccess
               ? apportionments?.map((apportionment, index) => (
@@ -70,14 +70,14 @@ function Configuracoes() {
               : null}
           </div>
         </div>
-        <div className="flex h-[500px] max-h-[500px]  w-[50%] flex-col  rounded border border-gray-300 shadow-lg">
+        <div className="border-primary/20 flex h-[500px] max-h-[500px] w-[50%] flex-col rounded border shadow-lg">
           <div className="flex w-full items-center justify-between px-2">
-            <h1 className="border-b border-gray-300 p-3 pb-1 text-center font-raleway font-black">CONTAS DE RECEBIMENTO</h1>
+            <h1 className="border-primary/20 font-raleway border-b p-3 pb-1 text-center font-black">CONTAS DE RECEBIMENTO</h1>
             <button onClick={() => setNewAccountModalIsOpen(true)}>
               <MdOutlineAddCircle color="rgb(34,197,94)" size={'25px'} />
             </button>
           </div>
-          <div className="overscroll-y flex grow flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-3 overflow-y-auto">
             {receiptAccountsFetching ? <LoadingPage /> : null}
             {receiptAccountsSuccess
               ? receiptAccounts?.map((account, index) => <AccountItem key={index} account={account} openEditModal={handleOpenEditAccount} />)

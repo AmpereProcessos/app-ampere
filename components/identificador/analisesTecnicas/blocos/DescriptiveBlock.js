@@ -32,11 +32,11 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
 
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">DESCRITIVO</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="w-full lg:w-[500px] self-center">
+        <div className="w-full self-center lg:w-[500px]">
           <TextInput
             label="TÓPICO"
             placeholder="Preencha o tópico do item de descritivo..."
@@ -45,7 +45,7 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             width="100%"
           />
         </div>
-        <div className="w-full ">
+        <div className="w-full">
           <TextInput
             label="DESCRIÇÃO"
             placeholder="Preencha o descrição do item de descritivo..."
@@ -54,7 +54,7 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             width="100%"
           />
         </div>
-        <div className="flex w-full items-center justify-end mb-2">
+        <div className="mb-2 flex w-full items-center justify-end">
           <button
             onClick={addDescriptiveItem}
             className="rounded border border-green-500 p-1 font-bold text-green-500 duration-300 ease-in-out hover:bg-green-500 hover:text-white"
@@ -65,11 +65,11 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
       </div>
       {infoHolder.descritivo?.length > 0 ? (
         infoHolder.descritivo.map((item, index) => (
-          <div key={index} className="flex w-full flex-col p-2 border border-gray-300 rounded shadow-sm mb-1">
+          <div key={index} className="border-primary/20 mb-1 flex w-full flex-col rounded border p-2 shadow-xs">
             <div className="flex w-full items-center justify-between">
-              <div className="w-full flex items-center justify-center gap-2">
+              <div className="flex w-full items-center justify-center gap-2">
                 <MdTopic />
-                <h1 className=" leading-none tracking-tight font-bold text-[#15599a] text-lg">{item.topico}</h1>
+                <h1 className="text-lg leading-none font-bold tracking-tight text-[#15599a]">{item.topico}</h1>
               </div>
               <button
                 onClick={() => removeDescriptiveItem(index)}
@@ -79,11 +79,11 @@ function DescriptiveBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
               </button>
             </div>
 
-            <p className="w-full text-center text-sm text-gray-500 mt-1">{item.descricao}</p>
+            <p className="text-primary/60 mt-1 w-full text-center text-sm">{item.descricao}</p>
           </div>
         ))
       ) : (
-        <p className="w-full py-1 text-center font-medium italic text-gray-500 text-xs">Nenhum item adicionado...</p>
+        <p className="text-primary/60 w-full py-1 text-center text-xs font-medium italic">Nenhum item adicionado...</p>
       )}
     </div>
   )

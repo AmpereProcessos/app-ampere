@@ -138,58 +138,58 @@ function Comercial() {
   if (projectsSuccess && projects) {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio comercial</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">Projetos no estágio comercial</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
                 <VscDiffAdded />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
+                <p className="text-primary/60 text-xs">{getStats({ info: projects }).potencia} kWp</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">FATURAMENTO</h1>
                 <MdAttachMoney />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vendido} </div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">EM CONFECÇÃO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">EM CONFECÇÃO</h1>
                 <MdCreate />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).confeccionar}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PARA ASSINAR</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PARA ASSINAR</h1>
                 <FaSignature />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).assinar}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).vendidoAssinar} para assinar</p>
+                <p className="text-primary/60 text-xs">{getStats({ info: projects }).vendidoAssinar} para assinar</p>
               </div>
             </div>
           </div>
@@ -495,34 +495,34 @@ function Comercial() {
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
-              className="w-full cursor-pointer border  border-gray-300 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
+              className="border-primary/20 dark:hover:bg-primary/10 dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2 pb-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold text-gray-700">{project.nomeDoContrato}</p>
+                  <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
                   <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <ProjectCardsTags projectTags={project.etiquetas} />
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CONTRATO</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CONTRATO</span>
                     <p className={`text-xs font-medium ${getContractTagColor(project.contrato.status)}`}>
                       {project.contrato?.status && project.contrato?.status}
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">VENDEDOR</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">VENDEDOR</span>
                     <p className="text-xs font-medium tracking-tight text-[#15599a]">{project.vendedor?.nome}</p>
                   </div>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">FORMA DE PAGAMENTO</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">FORMA DE PAGAMENTO</span>
                     <p className="text-xs font-medium tracking-tight">{project.pagamento?.forma && project.pagamento.forma}</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">VALOR TOTAL</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">VALOR TOTAL</span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
                       {formatToMoney(
                         getContractValue({
@@ -536,13 +536,13 @@ function Comercial() {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DO PARECER</span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
                       {project.homologacao?.acesso.dataResposta ? 'LIBERADO' : 'NÃO LIBERADO'}
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA COMPRA</span>
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DA COMPRA</span>
                     <p className="text-xs font-medium tracking-tight">
                       {project.compra.liberacao ? project.compra.status || 'NÃO DEFINIDO' : 'NÃO LIBERADA'}
                     </p>
@@ -551,17 +551,17 @@ function Comercial() {
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {project.idProjetoCRM ? <FaCode color={'rgb(34,197,94)'} /> : null}
-                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">
+                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
                       IDENTIFICADOR: <strong>{project.codigoSVB}</strong>
                     </h1>
                   </div>
                   {project.idVisitaTecnica ? (
                     <div className="flex items-center gap-2">
                       {project.idVisitaTecnica ? <FaCode color={'rgb(34,197,94)'} /> : null}
-                      <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">VISITA VINCULADA</h1>
+                      <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">VISITA VINCULADA</h1>
                     </div>
                   ) : (
-                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">SEM VISITA VINCULADA</h1>
+                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">SEM VISITA VINCULADA</h1>
                   )}
                 </div>
               </div>
@@ -570,7 +570,7 @@ function Comercial() {
         </div>
         {session.user?.regional === undefined && (
           <Link href={'/comercial/solicitacoes-contrato'}>
-            <div className="left-150 fixed bottom-10  cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+            <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
               <p className="text-sm font-bold uppercase">Formulários</p>
             </div>
           </Link>

@@ -41,51 +41,41 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
   return (
     <>
       <div>
-        <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
+        <h2 className="text-primary/60 text-xs">PRINCIPAL</h2>
         <Link href="/">
-          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-            <RiDashboardFill style={{ color: '#15599a', fontSize: '20px' }} />
-            <p className="pl-3 text-xs text-gray-600">Dashboard</p>
+          <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+            <RiDashboardFill className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+            <p className="text-primary/80 pl-3 text-xs">Dashboard</p>
           </div>
         </Link>
       </div>
       <div className="mt-6">
-        <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
+        <h2 className="text-primary/60 text-xs">GESTÃO DE PROJETOS</h2>
         <Link href="/gestao-de-projetos/emAndamento">
-          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-            <TbRecharging
-              style={{
-                color: '#15599a',
-                fontSize: '20px',
-              }}
-            />
+          <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+            <TbRecharging className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
 
-            <p className="pl-3 text-xs text-gray-600">Em andamento</p>
+            <p className="text-primary/80 pl-3 text-xs">Em andamento</p>
           </div>
         </Link>
 
         <Link href="/gestao-de-projetos/banco-de-dados">
-          <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-            <FaDatabase
-              style={{
-                color: '#15599a',
-                fontSize: '20px',
-              }}
-            />
+          <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+            <FaDatabase className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
 
-            <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
+            <p className="text-primary/80 pl-3 text-xs">Banco de dados</p>
           </div>
         </Link>
       </div>
 
       <>
         <div className="mt-6">
-          <h2 className="text-xs text-gray-500">SETORES</h2>
+          <h2 className="text-primary/60 text-xs">SETORES</h2>
           {checkRoute('PPS') ? (
             <Link href="/comercial">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <SiCashapp style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Comercial</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <SiCashapp className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Comercial</p>
               </div>
             </Link>
           ) : (
@@ -93,9 +83,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <FaShoppingCart style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Suprimentos</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <FaShoppingCart className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Suprimentos</p>
               </div>
             </Link>
           ) : (
@@ -103,9 +93,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRouteEitherAccess(['Projetos', 'Pós-Venda']) ? (
             <Link href="/projetos">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdEngineering style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Projetos</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdEngineering className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Projetos</p>
               </div>
             </Link>
           ) : (
@@ -113,9 +103,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Obras') ? (
             <Link href="/obras">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <FaTools style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Obras</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <FaTools className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Obras</p>
               </div>
             </Link>
           ) : (
@@ -123,9 +113,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRouteEitherAccess(['O&M', 'Pós-Venda']) ? (
             <Link href={'/oem/comissionamento'}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <ImCheckboxChecked style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Comissionamento Pós-Obra</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <ImCheckboxChecked className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Comissionamento Pós-Obra</p>
               </div>
             </Link>
           ) : (
@@ -133,9 +123,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BiSupport style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Pós-Venda</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BiSupport className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Pós-Venda</p>
               </div>
             </Link>
           ) : (
@@ -143,9 +133,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRouteEitherAccess(['O&M', 'Pós-Venda']) ? (
             <Link href="/posvenda/nutricao">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BsCalendar2Week style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Nutrição Pós-Venda</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BsCalendar2Week className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Nutrição Pós-Venda</p>
               </div>
             </Link>
           ) : (
@@ -153,44 +143,44 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {session.user.permissoes.recursosHumanos.visualizar ? (
             <Link href="/adm/colaboradores">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdPeople style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">RH</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdPeople className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">RH</p>
               </div>
             </Link>
           ) : null}
           {checkRoute('ADM') ? (
             <Link href="/adm">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BsFolderPlus style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">ADM</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BsFolderPlus className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">ADM</p>
               </div>
             </Link>
           ) : null}
         </div>
         <div className="mt-6">
-          <h2 className="text-xs text-gray-500">OUTROS</h2>
+          <h2 className="text-primary/60 text-xs">OUTROS</h2>
 
           <Link href="/calls">
-            <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-              <FaTasks style={{ color: '#15599a', fontSize: '20px' }} />
-              <p className="pl-3 text-xs text-gray-600">Chamados</p>
+            <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+              <FaTasks className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+              <p className="text-primary/80 pl-3 text-xs">Chamados</p>
             </div>
           </Link>
           {checkRoute('ADM') ? (
             <Link href="/admin/auditoria-financeira">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BsBank2 style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Auditoria Financeira</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BsBank2 className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Auditoria Financeira</p>
               </div>
             </Link>
           ) : null}
 
           {checkRoute('Suprimentos') ? (
             <Link href="/suprimentos/solicitacoesCompra">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdAddShoppingCart style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Solicitações de Compra</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdAddShoppingCart className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Solicitações de Compra</p>
               </div>
             </Link>
           ) : (
@@ -198,17 +188,17 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {(userIsManager || checkRoute('ADM') || checkRoute('RH')) && (
             <Link href="/admin/comissao">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <AiOutlinePercentage style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Comissões</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <AiOutlinePercentage className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Comissões</p>
               </div>
             </Link>
           )}
           {checkRoute('Suprimentos') || checkRoute('Pós-Venda') ? (
             <Link href="/suprimentos/entregas">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <TbTruckDelivery style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Entregas</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <TbTruckDelivery className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Entregas</p>
               </div>
             </Link>
           ) : (
@@ -216,9 +206,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {userIsController ? (
             <Link href={'/ordens-de-servico'}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdDesignServices style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdDesignServices className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Banco de OS</p>
               </div>
             </Link>
           ) : (
@@ -226,9 +216,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Almoxarifado') ? (
             <Link href={'/almoxarifado'}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <FaWarehouse style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <FaWarehouse className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Almoxarifado</p>
               </div>
             </Link>
           ) : (
@@ -236,9 +226,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Projetos') ? (
             <Link href={'/projetos/comissionamento'}>
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <VscWorkspaceTrusted style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Comissionamento</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <VscWorkspaceTrusted className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Comissionamento</p>
               </div>
             </Link>
           ) : (
@@ -246,9 +236,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('O&M') ? (
             <Link href="/oem">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <FaSolarPanel style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">O&M</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <FaSolarPanel className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">O&M</p>
               </div>
             </Link>
           ) : (
@@ -256,9 +246,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('Pós-Venda') ? (
             <Link href="/seguro-fotovoltaico">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BsShieldFillCheck style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Seguro Fotovoltaico</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BsShieldFillCheck className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Seguro Fotovoltaico</p>
               </div>
             </Link>
           ) : (
@@ -266,9 +256,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {checkRoute('O&M') ? (
             <Link href="/oem/monitoramento">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <BsSpeedometer2 style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Monitoramento</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <BsSpeedometer2 className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Monitoramento</p>
               </div>
             </Link>
           ) : (
@@ -276,22 +266,22 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {/* {userIsManager ? (
                <Link  href={`/vendas/leads`}>
-                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-primary/10 dark:hover:bg-cyan-800">
                    <MdAddIcCall
                      style={{
                        color: '#15599a',
                        fontSize: '20px',
                      }}
                    />
-                   <p className="pl-3 text-xs text-gray-600">Leads</p>
+                   <p className="pl-3 text-xs 80xt-primary/60">Leads</p>
                  </div>
                </Link>
               ) : null} */}
           {checkRoute('Obras') ? (
             <Link href="/obras/gestao-obras">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdOutlineBuildCircle style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">Gestão de Obras</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdOutlineBuildCircle className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">Gestão de Obras</p>
               </div>
             </Link>
           ) : (
@@ -299,9 +289,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
           )}
           {/* {userIsManager ? (
                <Link  href="/admin/gestaoTimeVendas">
-                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                   <TbDashboard style={{ color: '#15599a', fontSize: '20px' }} />
-                   <p className="pl-3 text-xs text-gray-600">Gestão - Time de Vendas</p>
+                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-primary/10 dark:hover:bg-cyan-800">
+                   <TbDashboard className='text-[#15599a] w-4 h-4 min-w-4 min-h dark:text-blue-500-4'/>
+                   <p className="pl-3 text-xs 80xt-primary/60">Gestão - Time de Vendas</p>
                  </div>
                </Link>
               ) : (
@@ -309,9 +299,9 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
               )} */}
           {checkRoute('Pós-Venda') ? (
             <Link href="/posvenda/nps">
-              <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-                <MdSentimentSatisfiedAlt style={{ color: '#15599a', fontSize: '20px' }} />
-                <p className="pl-3 text-xs text-gray-600">NPS</p>
+              <div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-cyan-800">
+                <MdSentimentSatisfiedAlt className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+                <p className="text-primary/80 pl-3 text-xs">NPS</p>
               </div>
             </Link>
           ) : (

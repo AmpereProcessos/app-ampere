@@ -17,7 +17,7 @@ function FinishOrderBlock({ infoHolder, setInfoHolder }: FinishOrderBlockProps) 
         <div className="mt-2 flex items-center gap-2">
           <DateInput
             label={'DATA DE FINALIZAÇÃO'}
-            labelClassName="font-bold text-xs text-gray-500"
+            labelClassName="font-bold text-xs text-primary/60"
             value={infoHolder.dataEfetivacao ? formatDate(infoHolder.dataEfetivacao) : undefined}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataEfetivacao: formatDateInputChange(value) }))}
           />
@@ -32,7 +32,7 @@ function FinishOrderBlock({ infoHolder, setInfoHolder }: FinishOrderBlockProps) 
         </div>
       ) : (
         <>
-          <div className="mt-4 flex w-fit items-center justify-center gap-2 self-center rounded border border-gray-600 p-1 text-gray-600">
+          <div className="border-primary/80 text-primary/80 mt-4 flex w-fit items-center justify-center gap-2 self-center rounded border p-1">
             <p className="text-xs font-medium">EM ANDAMENTO</p>
           </div>
           <button onClick={() => setMenuIsOpen(true)} className="mb-4 text-sm font-medium text-green-500">

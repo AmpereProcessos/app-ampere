@@ -39,7 +39,7 @@ function CallFile({ info }) {
       <div className="flex items-center gap-2">
         <MdAttachFile color="rgb(107,114,128)" />
         <Link href={info.link}>
-          <div className="text-sm font-medium text-gray-600 duration-300 ease-in-out hover:text-cyan-500">{info.title || 'ARQUIVO'}</div>
+          <div className="text-primary/80 text-sm font-medium duration-300 ease-in-out hover:text-cyan-500">{info.title || 'ARQUIVO'}</div>
         </Link>
         {info.format ? <p className="text-[0.6rem] font-medium text-[#fead41]">({info.format})</p> : null}
       </div>

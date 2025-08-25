@@ -31,7 +31,7 @@ function Login({ searchParams }: LoginProps) {
               <form action={login} className={cn('flex flex-col gap-6')}>
                 <div className="flex flex-col items-center gap-2 text-center">
                   <h1 className="text-2xl font-bold">Acesse sua conta Ampère Energias</h1>
-                  <p className="text-balance text-sm text-muted-foreground">Preencha as suas credenciais para acessar ao app.</p>
+                  <p className="text-muted-foreground text-sm text-balance">Preencha as suas credenciais para acessar ao app.</p>
                 </div>
                 <div className="grid gap-6">
                   <div className="grid gap-3">
@@ -42,14 +42,14 @@ function Login({ searchParams }: LoginProps) {
                       type="email"
                       placeholder="seu@email.com"
                       required
-                      className="dark:border-gray-300 dark:bg-white dark:text-black dark:placeholder:text-gray-500"
+                      className="dark:bg-background dark:border-primary/20 dark:placeholder:text-primary/60 dark:text-black"
                     />
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center">
                       <Label htmlFor="password">Senha</Label>
                     </div>
-                    <Input id="password" name="password" type="password" placeholder="suasenha123" required className="dark:bg-white" />
+                    <Input id="password" name="password" type="password" placeholder="suasenha123" required className="dark:bg-background" />
                   </div>
                   {searchParams?.error && <p className="w-full text-center text-red-500">{searchParams.error}</p>}
                   <Button type="submit" className="w-full font-bold">
@@ -73,7 +73,7 @@ function Login({ searchParams }: LoginProps) {
             </div>
           </div>
         </div>
-        <div className="hidden items-center justify-center bg-muted lg:flex">
+        <div className="bg-muted hidden items-center justify-center lg:flex">
           <div className="relative h-64 w-64">
             <Image src={AmpereWhiteLogo} alt="Logo da Ampère Energias" fill className="object-contain" />
           </div>

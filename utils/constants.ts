@@ -39,7 +39,7 @@ export const ProjectTypesCollors = {
   MONITORAMENTO: 'bg-[#08A89F] text-white',
 }
 export function getProjectTypeCollors(type: string) {
-  return ProjectTypesCollors[type as keyof typeof ProjectTypesCollors] || 'bg-gray-500 text-white'
+  return ProjectTypesCollors[type as keyof typeof ProjectTypesCollors] || 'bg-primary/60 text-white'
 }
 export const tiposDeTelha = [
   { label: 'PORTUGUESA', value: 'PORTUGUESA' },

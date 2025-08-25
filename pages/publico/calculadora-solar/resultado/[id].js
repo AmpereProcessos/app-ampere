@@ -16,28 +16,28 @@ export default function Result(props) {
 
     if (currentHour >= 0 && currentHour < 5) {
       return (
-        <p className="m-0 inline text-xl leading-[1.2] text-gray-600">
+        <p className="text-primary/80 m-0 inline text-xl leading-[1.2]">
           Olá <strong className="text-[#15599a]">{clientName}</strong>, tudo bem ?
         </p>
       )
     }
     if (currentHour > 5 && currentHour < 12) {
       return (
-        <p className="m-0 inline text-xl leading-[1.2] text-gray-600">
+        <p className="text-primary/80 m-0 inline text-xl leading-[1.2]">
           Bom dia <strong className="text-[#15599a]">{clientName}</strong>, tudo bem ?
         </p>
       )
     }
     if (currentHour > 12 && currentHour < 19) {
       return (
-        <p className="m-0 inline text-xl leading-[1.2] text-gray-600">
+        <p className="text-primary/80 m-0 inline text-xl leading-[1.2]">
           Boa tarde <strong className="text-[#15599a]">{clientName}</strong>, tudo bem ?
         </p>
       )
     }
     if (currentHour > 19 && currentHour <= 23) {
       return (
-        <p className="m-0 inline text-xl leading-[1.2] text-gray-600">
+        <p className="text-primary/80 m-0 inline text-xl leading-[1.2]">
           Boa noite <strong className="text-[#15599a]">{clientName}</strong>, tudo bem ?
         </p>
       )
@@ -68,8 +68,8 @@ export default function Result(props) {
           style={{ display: 'none', visibility: 'hidden' }}
         ></iframe>
       </noscript>
-      <div className={`flex grow flex-col bg-white font-['Raleway']`}>
-        <div className="flex h-[82px] w-full items-center justify-center self-stretch bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
+      <div className={`bg-background flex grow flex-col font-['Raleway']`}>
+        <div className="flex h-[82px] w-full items-center justify-center self-stretch bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
           <div className="flex w-[80px] flex-col items-center justify-center">
             {/* <img src={Logo} style={{ width: "100%" }} /> */}
             <Image src={Logo} blurDataURL="image.com" quality={100} height={50} width={50} alt="LOGO" style={{ objectFit: 'cover' }} />
@@ -97,23 +97,23 @@ export default function Result(props) {
           </p>
 
           <div className="mt-6 flex flex-col items-center justify-center gap-4 lg:flex-row">
-            <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-              <h1 className="text-[16px] tracking-tight ">Geração mensal aproximada</h1>
+            <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+              <h1 className="text-[16px] tracking-tight">Geração mensal aproximada</h1>
               <div className="flex items-end justify-center gap-1">
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                   {props.energiaGerada.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </h1>
-                <p className="mb-1 flex flex-grow-0 items-end justify-center text-sm text-gray-700">KWh</p>
+                <p className="text-primary/70 mb-1 flex grow-0 items-end justify-center text-sm">KWh</p>
               </div>
             </div>
-            <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-              <h1 className="text-[16px] tracking-tight ">Investimento aproximado</h1>
+            <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+              <h1 className="text-[16px] tracking-tight">Investimento aproximado</h1>
               <div className="flex items-start justify-center gap-1">
-                <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-700">R$</p>
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+                <p className="text-primary/70 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                   {props.valorInvestido.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -121,10 +121,10 @@ export default function Result(props) {
                 </h1>
               </div>
             </div>
-            <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-              <h1 className="text-[16px] tracking-tight ">Placas necessárias ({props.potModulos} Wp)</h1>
+            <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+              <h1 className="text-[16px] tracking-tight">Placas necessárias ({props.potModulos} Wp)</h1>
               <div className="flex items-start justify-center gap-1">
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                   {props.numModulos.toLocaleString('pt-br', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
@@ -137,13 +137,13 @@ export default function Result(props) {
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
             <div className="flex w-full flex-col lg:w-1/3">
               <h1 className="font-bold text-green-800">Financiamento bancário</h1>
-              <div className="flex min-h-[90px] w-full flex-col rounded-lg border border-gray-500 bg-[rgba(58,181,74,255)] p-2 shadow-md">
+              <div className="border-primary/60 flex min-h-[90px] w-full flex-col rounded-lg border bg-[rgba(58,181,74,255)] p-2 shadow-md">
                 <h1 className="text-[16px] tracking-tight text-gray-200">
                   <strong className="text-white">60</strong> parcelas de:
                 </h1>
                 <div className="flex items-start justify-center gap-1">
-                  <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-100">R$</p>
-                  <h1 className="flex items-end justify-end font-raleway text-[35px] font-black text-white lg:text-[40px]">
+                  <p className="text-primary/20 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                  <h1 className="font-raleway flex items-end justify-end text-[35px] font-black text-white lg:text-[40px]">
                     {props.parcelaFinanciamento.toLocaleString('pt-br', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -154,13 +154,13 @@ export default function Result(props) {
             </div>
             <div className="flex w-full flex-col lg:w-1/3">
               <h1 className="font-bold text-green-800">Cartão de Crédito</h1>
-              <div className="flex min-h-[90px] w-full flex-col rounded-lg border border-gray-500 bg-[rgba(58,181,74,255)] p-2 shadow-md">
+              <div className="border-primary/60 flex min-h-[90px] w-full flex-col rounded-lg border bg-[rgba(58,181,74,255)] p-2 shadow-md">
                 <h1 className="text-[16px] tracking-tight text-gray-200">
                   <strong className="text-white">12</strong> parcelas de:
                 </h1>
                 <div className="flex items-start justify-center gap-1">
-                  <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-100">R$</p>
-                  <h1 className="flex items-end justify-end font-raleway text-[35px] font-black text-white lg:text-[40px]">
+                  <p className="text-primary/20 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                  <h1 className="font-raleway flex items-end justify-end text-[35px] font-black text-white lg:text-[40px]">
                     {props.parcelaCartao.toLocaleString('pt-br', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -171,19 +171,19 @@ export default function Result(props) {
             </div>
             <div className="flex w-full flex-col lg:w-1/3">
               <h1 className="font-bold">Observações</h1>
-              <div className="flex min-h-[90px] w-full flex-col items-center justify-center rounded-lg border border-gray-300 bg-gray-200 p-2 text-xs font-semibold shadow-md lg:text-sm">
+              <div className="border-primary/20 flex min-h-[90px] w-full flex-col items-center justify-center rounded-lg border bg-gray-200 p-2 text-xs font-semibold shadow-md lg:text-sm">
                 *Todos os valores apresentados nessa simulação são estimativas, podendo, desse modo, variar de acordo com condições externas. Para
                 valores reais, consultar com especialistas.*
               </div>
             </div>
           </div>
-          <h1 className="text-xl font-bold text-gray-500 lg:text-[35px]">Economia e Retorno</h1>
+          <h1 className="text-primary/60 text-xl font-bold lg:text-[35px]">Economia e Retorno</h1>
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
-            <div className="flex min-h-[50px] w-full flex-col rounded-lg border  border-gray-500 bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
+            <div className="border-primary/60 flex min-h-[50px] w-full flex-col rounded-lg border bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
               <h1 className="text-[16px] tracking-tight">Sua economia ao longo do ano será de:</h1>
               <div className="flex items-start justify-center gap-2">
-                <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-700">R$</p>
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+                <p className="text-primary/70 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                   {props.economiaAnual.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -192,7 +192,7 @@ export default function Result(props) {
               </div>
             </div>
 
-            <div className="flex min-h-[50px] w-full flex-col rounded-lg border  border-gray-500 bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
+            <div className="border-primary/60 flex min-h-[50px] w-full flex-col rounded-lg border bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
               <h1 className="text-[16px] tracking-tight">Tempo de retorno do investimento</h1>
               <div className="flex items-end justify-center gap-2">
                 <p className="font-raleway text-[35px] font-black lg:text-[40px]">{beautifyNumberAsString(props.anosCompletosPayback)}</p>
@@ -220,7 +220,7 @@ export default function Result(props) {
             </h1>
           </div>
         </div>
-        <div className="flex h-[175px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
+        <div className="flex h-[175px] w-full flex-col items-center justify-center gap-2 bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
           <div className="flex flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="relative h-[80px] w-[80px]">
               <Image src={Logo} quality={100} fill={true} alt="LOGO" />

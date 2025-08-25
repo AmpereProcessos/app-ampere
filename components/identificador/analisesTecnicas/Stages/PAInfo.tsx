@@ -77,10 +77,10 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
     return goToNextStage()
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <h1 className="w-full rounded-md  bg-gray-700 p-1 text-center font-medium text-white">INFORMAÇÕES DO PADRÃO DE ENERGIA</h1>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <h1 className="bg-primary/70 w-full rounded-md p-1 text-center font-medium text-white">INFORMAÇÕES DO PADRÃO DE ENERGIA</h1>
       <div className="flex w-full grow flex-col gap-2">
-        <p className="my-2 w-full self-center text-center text-sm leading-none tracking-tight text-gray-500 lg:w-[60%]">
+        <p className="text-primary/60 my-2 w-full self-center text-center text-sm leading-none tracking-tight lg:w-[60%]">
           Preencha abaixo as informações do padrão de energia instalação e clique em{' '}
           <strong className="font-bold text-green-500">adicionar (+)</strong>. Se necessário, você pode adicionar mais de um padrão de energia à
           lista.
@@ -190,15 +190,15 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
             ADICIONAR ITEM
           </button>
         </div>
-        <h1 className="font-sans mt-2 w-full text-start  font-bold text-cyan-500">LISTA DE PADRÕES</h1>
+        <h1 className="mt-2 w-full text-start font-sans font-bold text-cyan-500">LISTA DE PADRÕES</h1>
         <div className="mt-2 flex w-full flex-col flex-wrap items-start justify-around gap-2 lg:flex-row">
           {infoHolder.padrao.length > 0 ? (
             infoHolder.padrao.map((paInfo, index) => (
-              <div key={index} className="flex w-[450px] flex-col rounded-md border border-gray-500 p-2 shadow-sm">
+              <div key={index} className="border-primary/60 flex w-[450px] flex-col rounded-md border p-2 shadow-xs">
                 <div className="flex w-full items-center justify-between gap-1">
                   <div className="flex items-center gap-1">
-                    <h1 className="font-black leading-none tracking-tight">PADRÃO {paInfo.ligacao}</h1>
-                    <h1 className="rounded-full bg-gray-800 px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">{paInfo.amperagem}</h1>
+                    <h1 className="leading-none font-black tracking-tight">PADRÃO {paInfo.ligacao}</h1>
+                    <h1 className="bg-primary/80 rounded-full px-2 py-1 text-[0.65rem] font-medium text-white lg:text-xs">{paInfo.amperagem}</h1>
                   </div>
                   <button
                     onClick={() => removeEnergyPA(index)}
@@ -209,18 +209,18 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
                 </div>
                 <div className="flex items-center gap-1">
                   <TbCategory2 />
-                  <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{paInfo.tipo}</p>
+                  <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{paInfo.tipo}</p>
                 </div>
                 <div className="mt-4 flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
                     <AiOutlineArrowDown />
-                    <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                    <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                       <strong className="text-cyan-500">ENTRADA:</strong> {paInfo.tipoEntrada}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     <AiOutlineArrowUp />
-                    <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                    <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                       <strong className="text-cyan-500">SAÍDA:</strong> {paInfo.tipoSaida}
                     </p>
                   </div>
@@ -228,13 +228,13 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
                 <div className="mt-2 flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-1">
                     <IoMdBarcode />
-                    <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                    <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                       <strong className="text-cyan-500">Nº DO MEDIDOR:</strong> {paInfo.codigoMedidor}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     <TbBoxModel2 />
-                    <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                    <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                       <strong className="text-cyan-500">MODELO DA CAIXA:</strong>: {paInfo.modeloCaixaMedidor || 'NÃO DEFINIDO'}
                     </p>
                   </div>
@@ -243,7 +243,7 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
                   {paInfo.codigoPosteDerivacao ? (
                     <div className="flex w-1/2 items-center gap-2 lg:w-fit">
                       <IoMdBarcode />
-                      <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+                      <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                         <strong className="text-cyan-500">Nº DO POSTE DE DERIVAÇÃO:</strong> {paInfo.codigoPosteDerivacao}
                       </p>
                     </div>
@@ -252,11 +252,11 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
               </div>
             ))
           ) : (
-            <p className="w-full text-center text-sm font-medium tracking-tight text-gray-500">Nenhum padrão de energia adicionado à lista.</p>
+            <p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhum padrão de energia adicionado à lista.</p>
           )}
         </div>
 
-        <h1 className="font-sans mt-2 w-full text-start  font-bold text-cyan-500">ARQUIVOS</h1>
+        <h1 className="mt-2 w-full text-start font-sans font-bold text-cyan-500">ARQUIVOS</h1>
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/2">
             <DocumentFileInput
@@ -291,15 +291,15 @@ function PAInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextStage, goT
         </div>
       </div>
 
-      <div className="mt-2 flex w-full items-end justify-between bg-[#fff]">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+      <div className="bg-background mt-2 flex w-full items-end justify-between">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button
           onClick={() => {
             validateAndProceed()
           }}
-          className=" rounded p-2 font-bold hover:bg-black hover:text-white"
+          className="rounded p-2 font-bold hover:bg-black hover:text-white"
         >
           Prosseguir
         </button>

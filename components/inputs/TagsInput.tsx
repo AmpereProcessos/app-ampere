@@ -50,7 +50,7 @@ function TagsInput({ width, label, labelClassName, holderClassName, showLabel = 
 
 			<div
 				className={cn(
-					"flex min-h-[48px] w-full flex-wrap items-center gap-1 rounded-md border border-primary/20 p-2 shadow-sm duration-500 ease-in-out focus-within:border-primary",
+					"flex min-h-[48px] w-full flex-wrap items-center gap-1 rounded-md border border-primary/20 p-2 shadow-xs duration-500 ease-in-out focus-within:border-primary",
 					holderClassName,
 				)}
 			>
@@ -79,7 +79,7 @@ function TagsInput({ width, label, labelClassName, holderClassName, showLabel = 
 						id={inputIdentifier}
 						type="text"
 						placeholder={values.length === 0 ? placeholder : ""}
-						className="min-w-[120px] flex-1 border-none bg-transparent p-1 text-sm outline-none placeholder:italic"
+						className="min-w-[120px] flex-1 border-none bg-transparent p-1 text-sm outline-hidden placeholder:italic"
 					/>
 				)}
 			</div>

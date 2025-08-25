@@ -108,7 +108,7 @@ function AttachFileMenu({ analysisId, session }: AttachFileMenuProps) {
         disabled={isPending}
         // @ts-ignore
         onClick={() => handleAttachFile(personalizedFile)}
-        className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+        className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
       >
         ADICIONAR ARQUIVO
       </button>

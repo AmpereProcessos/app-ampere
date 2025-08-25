@@ -128,12 +128,12 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
     setActiveCostIndex(undefined)
   }
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+    <div className="flex w-full flex-col">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">CUSTOS ADICIONAIS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="w-full flex flex-col lg:flex-row items-end gap-2 justify-center">
+        <div className="flex w-full flex-col items-end justify-center gap-2 lg:flex-row">
           <div className="w-full lg:w-[350px]">
             <TextInput
               label={'BUSCA DE MATERIAIS'}
@@ -145,41 +145,41 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
           </div>
           <button
             onClick={() => fetchWarehouseMaterialsBySearch(warehouseSearchText)}
-            className="p-3 rounded border border-[#fead41] text-[#fead41] hover:bg-[#fead41] hover:text-black duration-300 ease-in-out h-[47px]"
+            className="h-[47px] rounded border border-[#fead41] p-3 text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-black"
           >
             <AiOutlineSearch />
           </button>
         </div>
-        <div className="flex w-full flex-wrap justify-around gap-2 my-4 max-h-[450px] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="overscroll-y scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20 my-4 flex max-h-[450px] w-full flex-wrap justify-around gap-2 overflow-y-auto">
           {warehouseMaterials ? (
             warehouseMaterials.length > 0 ? (
               warehouseMaterials.map((mat, index) => (
-                <div key={index} className="w-[350px] flex flex-col border border-gray-300 rounded-md p-3 gap-3">
-                  <h1 className="w-full text-center text-sm font-bold leading-none tracking-tight  lg:text-start">{mat.nome}</h1>
+                <div key={index} className="border-primary/20 flex w-[350px] flex-col gap-3 rounded-md border p-3">
+                  <h1 className="w-full text-center text-sm leading-none font-bold tracking-tight lg:text-start">{mat.nome}</h1>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FaBox color="#fead41" />
-                      <p className="text-sm text-gray-500 font-medium">{mat.qtde}</p>
+                      <p className="text-primary/60 text-sm font-medium">{mat.qtde}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <ImPriceTag color="rgb(34,197,94)" />
-                      <p className="text-sm text-gray-500 font-medium">{formatToMoney(mat.preco)}</p>
+                      <p className="text-primary/60 text-sm font-medium">{formatToMoney(mat.preco)}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setWarehouseItemAsHolder(mat)}
-                    className="p-1 rounded self-center text-green-500 border-green-500 font-medium hover:bg-green-500 hover:text-white duration-300 ease-in-out"
+                    className="self-center rounded border-green-500 p-1 font-medium text-green-500 duration-300 ease-in-out hover:bg-green-500 hover:text-white"
                   >
                     ADICIONAR
                   </button>
                 </div>
               ))
             ) : (
-              <p className="w-full text-center text-gray-500 italic">Nenhum material foi encontrado...</p>
+              <p className="text-primary/60 w-full text-center italic">Nenhum material foi encontrado...</p>
             )
           ) : null}
         </div>
-        <div className="w-full flex flex-col lg:flex-row items-center gap-2">
+        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <SelectInput
               label={'CATEGORIA DO CUSTO'}
@@ -212,7 +212,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
             />
           </div>
         </div>
-        <div className="w-full flex flex-col lg:flex-row items-center gap-2 mt-2">
+        <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <NumberInput
               label={'QUANTIDADE'}
@@ -245,11 +245,11 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
             />
           </div>
         </div>
-        <div className="w-full flex items-center justify-end mt-4">
+        <div className="mt-4 flex w-full items-center justify-end">
           {activeCostIndex >= 0 ? (
             <button
               onClick={() => saveChanges({ index: activeCostIndex })}
-              className="flex items-center gap-2 p-1 rounded w-fit border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white duration-300 ease-in-out"
+              className="flex w-fit items-center gap-2 rounded border border-blue-500 p-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white"
             >
               <p className="font-bold">SALVAR</p>
               <FaSave />
@@ -257,7 +257,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
           ) : (
             <button
               onClick={() => addCost()}
-              className="flex items-center gap-2 p-1 rounded w-fit border border-green-500 text-green-500 hover:bg-green-500 hover:text-white duration-300 ease-in-out"
+              className="flex w-fit items-center gap-2 rounded border border-green-500 p-1 text-green-500 duration-300 ease-in-out hover:bg-green-500 hover:text-white"
             >
               <p className="font-bold">ADICIONAR ITEM</p>
               <IoMdAdd />
@@ -265,11 +265,11 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
           )}
         </div>
         {infoHolder.custos?.length > 0 ? (
-          <div className="w-full flex flex-col gap-2 mt-2">
+          <div className="mt-2 flex w-full flex-col gap-2">
             {infoHolder.custos.map((cost, index) => (
-              <div key={index} className="p-3 rounded-md w-full flex flex-col border border-gray-300">
-                <div className="w-full flex justify-between">
-                  <h1 className="font-bold leading-none tracking-tight text-start">{cost.categoria}</h1>
+              <div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-3">
+                <div className="flex w-full justify-between">
+                  <h1 className="text-start leading-none font-bold tracking-tight">{cost.categoria}</h1>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -283,27 +283,27 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
                         setActiveCostIndex(index)
                         setCostHolder(holder)
                       }}
-                      className="text-red-400 hover:text-red-500 duration-300 ease-in-out"
+                      className="text-red-400 duration-300 ease-in-out hover:text-red-500"
                     >
                       <AiFillEdit />
                     </button>
-                    <button onClick={() => removeCost(index)} className="text-red-400 hover:text-red-500 duration-300 ease-in-out">
+                    <button onClick={() => removeCost(index)} className="text-red-400 duration-300 ease-in-out hover:text-red-500">
                       <AiFillDelete />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">{cost.descricao}</p>
-                <div className="w-full flex items-center justify-between">
+                <p className="text-primary/60 text-sm">{cost.descricao}</p>
+                <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
                       <FaBox color="#fead41" />
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-primary/60 text-sm font-medium">
                         {cost.qtde} {cost.grandeza}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 text-green-500">
                       <ImPriceTag color="rgb(34,197,94)" />
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-primary/60 text-sm font-medium">
                         {cost.custoUnitario ? formatToMoney(cost.custoUnitario) : 'R$ 0,00'} / {cost.grandeza}
                       </p>
                     </div>

@@ -55,26 +55,26 @@ function ServiceOrdersCardModePage({ session, handleSetMode }: ServiceOrdersCard
   const callbackOnSettled = async () => await queryClient.invalidateQueries({ queryKey: ['service-orders-by-filters', filters] })
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
               {filterMenuIsOpen ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
                 </div>
               )}
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE ORDENS DE SERVIÇO</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLE DE ORDENS DE SERVIÇO</p>
             </div>
 
             <button
               type="button"
               onClick={() => handleSetMode('kanban')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -123,7 +123,7 @@ function ServiceOrdersCardModePage({ session, handleSetMode }: ServiceOrdersCard
               />
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma ordem de serviço encontrada.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma ordem de serviço encontrada.</div>
           )
         ) : null}
       </div>
@@ -160,38 +160,35 @@ type ServiceOrderCardProps = {
 }
 function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) {
   function getStatusTag(serviceOrder: TServiceOrderSimplifiedDTO) {
-    if (serviceOrder.status === 'PENDENTE')
-      return <div className="rounded-full bg-red-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">PENDENTE</div>
+    if (serviceOrder.status === 'PENDENTE') return <div className="text-xxs rounded-full bg-red-600 px-2 py-0.5 font-medium text-white">PENDENTE</div>
 
     if (serviceOrder.status === 'AGUARDANDO PLANEJAMENTO')
-      return <div className="rounded-full bg-blue-800 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM PLANEJAMENTO</div>
+      return <div className="text-xxs rounded-full bg-blue-800 px-2 py-0.5 font-medium text-white">EM PLANEJAMENTO</div>
 
     if (serviceOrder.status === 'AGUARDANDO AGENDAMENTO')
-      return <div className="rounded-full bg-yellow-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">AGENDADA</div>
+      return <div className="text-xxs rounded-full bg-yellow-600 px-2 py-0.5 font-medium text-white">AGENDADA</div>
 
     if (serviceOrder.status === 'EM EXECUÇÃO')
-      return <div className="rounded-full bg-blue-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">EM EXECUÇÃO</div>
+      return <div className="text-xxs rounded-full bg-blue-600 px-2 py-0.5 font-medium text-white">EM EXECUÇÃO</div>
 
     if (serviceOrder.status === 'CONCLUÍDA PARCIAL')
-      return <div className="rounded-full bg-purple-600 px-2 py-0.5 text-[0.5rem] font-medium text-white">CONCLUÍDA PARCIAL</div>
+      return <div className="text-xxs rounded-full bg-purple-600 px-2 py-0.5 font-medium text-white">CONCLUÍDA PARCIAL</div>
 
-    if (serviceOrder.status === 'CONCLUÍDA')
-      return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">CONCLUÍDA</h1>
+    if (serviceOrder.status === 'CONCLUÍDA') return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">CONCLUÍDA</h1>
 
-    if (serviceOrder.status === 'CANCELADA')
-      return <h1 className="min-w-fit rounded-lg bg-gray-500 px-2 py-0.5 text-[0.5rem] text-white">CANCELADA</h1>
+    if (serviceOrder.status === 'CANCELADA') return <h1 className="text-xxs bg-primary/60 min-w-fit rounded-lg px-2 py-0.5 text-white">CANCELADA</h1>
 
-    return <h1 className="min-w-fit rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-white">NÃO DEFINIDO</h1>
+    return <h1 className="bg-primary text-xxs min-w-fit rounded-lg px-2 py-0.5 text-white">NÃO DEFINIDO</h1>
   }
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold leading-none tracking-tight">{serviceOrder.descricao}</p>
+          <p className="text-sm leading-none font-bold tracking-tight">{serviceOrder.descricao}</p>
           {serviceOrder.projeto.nome ? (
             <div className="flex items-center gap-1">
               <MdDashboard size={10} />
-              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.projeto.nome}</h1>
+              <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.projeto.nome}</h1>
             </div>
           ) : null}
 
@@ -199,16 +196,16 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
         </div>
         <div className="flex items-center gap-1">
           <UserRound size={12} />
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.responsavel.nome}</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.responsavel.nome}</h1>
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <Tag size={12} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{serviceOrder.categoria}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{serviceOrder.categoria}</h1>
           </div>
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
           {serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
             serviceOrder.etiquetas.map((tag, index) => (
               <div
@@ -222,39 +219,39 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
                 className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
               >
                 <Tag width={10} height={10} />
-                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
               </div>
             ))
           ) : (
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">NÃO DEFINIDAS</h1>
           )}
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCheck2 width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO DE LIBERAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO DE LIBERAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.dataPrevisaoLiberacao ? formatDateAsLocale(serviceOrder.dataPrevisaoLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCheck2All width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LIBERAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LIBERAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.dataLiberacao ? formatDateAsLocale(serviceOrder.dataLiberacao) : 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">AGENDAMENTO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">AGENDAMENTO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.agendamento
                 ? `${formatDateAsLocale(serviceOrder.agendamento.inicio, true)} - ${serviceOrder.agendamento.fim ? formatDateAsLocale(serviceOrder.agendamento.fim, true) : 'N/A'}`
                 : 'N/A'}
@@ -262,8 +259,8 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarCheck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EXECUÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">EXECUÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {serviceOrder.periodo.inicio
                 ? `${formatDateAsLocale(serviceOrder.periodo.inicio, true)} - ${serviceOrder.periodo.fim ? formatDateAsLocale(serviceOrder.periodo.fim, true) : 'N/A'}`
                 : 'N/A'}
@@ -275,12 +272,12 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
           </div>
           {serviceOrder.dataEfetivacao ? (
             <div className="flex items-center gap-1">
               <BsCalendarCheck color="#22c55e" />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
@@ -291,13 +288,13 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
               fallback={formatNameAsInitials(serviceOrder.autor?.nome || '')}
             />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{serviceOrder.autor?.nome || ''}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{serviceOrder.autor?.nome || ''}</p>
           </div>
         </div>
         <button
           type="button"
           onClick={() => handleClick(serviceOrder._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

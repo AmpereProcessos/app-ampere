@@ -73,7 +73,7 @@ function FilesBlock({ tag, files, vinculateFiles, vinculationPending }: FilesBlo
   }
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">DOCUMENTAÇÃO</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">DOCUMENTAÇÃO</span>
       <div className="flex w-full grow flex-wrap items-start justify-around gap-2 px-2">
         {files?.map((x, index) => (
           <div key={index} className="w-full lg:w-[450px]">
@@ -98,17 +98,17 @@ function FilesBlock({ tag, files, vinculateFiles, vinculationPending }: FilesBlo
         <div className="relative mb-4 flex w-full items-center justify-center">
           <label
             htmlFor="dropzone-file"
-            className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            className="dark:hover:bg-bray-800 dark:border-primary/80 dark:hover:bg-primary/80 border-primary/20 dark:hover:border-primary/60 hover:bg-primary/20 dark:bg-primary/70 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed bg-gray-50"
           >
-            <div className="flex flex-col items-center justify-center pb-6 pt-5 text-gray-800">
+            <div className="text-primary/80 flex flex-col items-center justify-center pt-5 pb-6">
               <BsCloudUploadFill color={'rgb(31,41,55)'} size={50} />
 
               {fileHolder.files ? (
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-primary/60 mb-2 text-sm dark:text-gray-400">
                   {fileHolder.files.length > 0 ? `${fileHolder.files[0]?.name}, outros...` : fileHolder.files[0].name}
                 </p>
               ) : (
-                <p className="mb-2 px-2 text-center text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-primary/60 mb-2 px-2 text-center text-sm dark:text-gray-400">
                   <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
                 </p>
               )}
@@ -130,7 +130,7 @@ function FilesBlock({ tag, files, vinculateFiles, vinculationPending }: FilesBlo
             // @ts-ignore
             disabled={vinculationPending}
             onClick={() => attachFiles(fileHolder)}
-            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
           >
             ANEXAR
           </button>

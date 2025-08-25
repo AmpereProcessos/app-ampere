@@ -30,22 +30,22 @@ function InfoReceitasBlock({ session, project, projectId, projectName, projectId
 
   return (
     <div className="flex flex-col rounded-md border border-green-400 pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-green-400 py-2 text-center font-bold text-white">RECEITAS</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-green-400 py-2 text-center font-bold text-white">RECEITAS</span>
       <div className="flex w-full items-center justify-end gap-2 px-2">
         {revenues && revenues.length < 1 ? (
           <button
             onClick={() => generateContractRevenue({ data: project, queryClient: queryClient })}
-            className="rounded-md bg-green-700 py-1 px-4 text-sm font-bold text-white"
+            className="rounded-md bg-green-700 px-4 py-1 text-sm font-bold text-white"
           >
             GERAR RECEITA DE CONTRATO
           </button>
         ) : null}
         {newRevenueMenuIsOpen ? (
-          <button onClick={() => setNewRevenueMenuIsOpen(false)} className="rounded-md bg-[#ed174c] py-1 px-4 text-sm font-bold text-white">
+          <button onClick={() => setNewRevenueMenuIsOpen(false)} className="rounded-md bg-[#ed174c] px-4 py-1 text-sm font-bold text-white">
             FECHAR
           </button>
         ) : (
-          <button onClick={() => setNewRevenueMenuIsOpen(true)} className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+          <button onClick={() => setNewRevenueMenuIsOpen(true)} className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">
             NOVA RECEITA
           </button>
         )}
@@ -68,7 +68,7 @@ function InfoReceitasBlock({ session, project, projectId, projectName, projectId
               <RevenueCard key={revenue._id} revenue={revenue} openModal={(id) => setModalRevenue({ isOpen: true, id: id })} />
             ))
           ) : (
-            <p className="w-full text-center italic text-gray-500">Nenhuma receita encontrada...</p>
+            <p className="text-primary/60 w-full text-center italic">Nenhuma receita encontrada...</p>
           )
         ) : null}
       </div>

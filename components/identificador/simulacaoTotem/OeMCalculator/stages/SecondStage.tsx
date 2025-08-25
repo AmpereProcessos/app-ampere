@@ -10,7 +10,7 @@ type SecondStageProps = {
 function SecondStage({ infoHolder, setInfoHolder, moveToNextStage }: SecondStageProps) {
   return (
     <div className="flex h-[400px] w-full flex-col">
-      <div className="flex h-[300px] w-full flex-1 flex-grow flex-col items-center justify-center gap-3 self-stretch text-left font-normal text-[rgba(79,88,96,1)]">
+      <div className="flex h-[300px] w-full flex-1 grow flex-col items-center justify-center gap-3 self-stretch text-left font-normal text-[rgba(79,88,96,1)]">
         <div className="flex h-[120px] w-[300px] flex-col items-center justify-center lg:w-[350px]">
           <div className="relative flex w-full flex-col leading-none">
             <p className="m-0 inline text-center text-[19px] font-normal leading-[1.2] text-[rgba(79,88,96,1)]">Diz aí pra gente onde você mora.</p>{' '}
@@ -60,7 +60,7 @@ function SecondStage({ infoHolder, setInfoHolder, moveToNextStage }: SecondStage
         <div className="w-full">
           <div
             onClick={() => moveToNextStage()}
-            className="flex flex-1 flex-grow cursor-pointer flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]"
+            className="flex flex-1 grow cursor-pointer flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]"
           >
             <p className="m-0 w-full text-[19px] leading-[1.2]">Próximo</p>
           </div>

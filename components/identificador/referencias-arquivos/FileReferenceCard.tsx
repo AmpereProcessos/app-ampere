@@ -45,32 +45,32 @@ function FileReferenceCard({ info, onDeleteCallbacks }: FileReferenceCardProps) 
     },
   })
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
       <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row">
         <div className="flex items-center gap-2">
           {handleRenderFileIcon(info.formato)}
-          <a href={info.url} className="cursor-pointer text-sm font-bold leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500">
+          <a href={info.url} className="cursor-pointer text-sm leading-none font-bold tracking-tight duration-300 ease-in-out hover:text-cyan-500">
             {info.titulo}
           </a>
-          <h1 className="rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80">{info.formato}</h1>
+          <h1 className="bg-secondary text-xxs text-primary/80 rounded-lg px-2 py-0.5 text-center font-medium italic">{info.formato}</h1>
         </div>
         <div className="hidden items-center justify-end gap-2 md:flex">
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1">
               <BsCalendarPlus />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(info.dataInsercao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(info.dataInsercao, true)}</p>
             </div>
             <div className="flex items-center gap-1">
               <Avatar url={info.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(info.autor.nome || '')} />
 
-              <p className="text-[0.65rem] font-medium text-primary/80">{info.autor.nome}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{info.autor.nome}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               disabled={isPending}
               onClick={() => handleDeleteFileReference({ id: info._id })}
-              className="flex items-center gap-1 rounded-lg bg-red-600 px-2 py-1 text-[0.6rem] text-white disabled:bg-gray-500 enabled:hover:bg-red-500"
+              className="disabled:bg-primary/60 flex items-center gap-1 rounded-lg bg-red-600 px-2 py-1 text-[0.6rem] text-white enabled:hover:bg-red-500"
             >
               <MdDelete width={10} height={10} />
               <p>DELETAR</p>
@@ -87,9 +87,9 @@ function FileReferenceCard({ info, onDeleteCallbacks }: FileReferenceCardProps) 
       </div>
       {!!info.categorias && info.categorias.length > 0 ? (
         <div className="flex w-full flex-wrap items-center gap-2">
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">CATEGORIAS</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">CATEGORIAS</h1>
           {info.categorias.map((category, index) => (
-            <h1 key={index} className="rounded-lg bg-primary px-2 py-0.5 text-[0.5rem] text-secondary">
+            <h1 key={index} className="bg-primary text-xxs text-secondary rounded-lg px-2 py-0.5">
               {category}
             </h1>
           ))}
@@ -99,12 +99,12 @@ function FileReferenceCard({ info, onDeleteCallbacks }: FileReferenceCardProps) 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(info.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(info.dataInsercao, true)}</p>
           </div>
           <div className="flex items-center gap-1">
             <Avatar url={info.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(info.autor.nome || '')} />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{info.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{info.autor.nome}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

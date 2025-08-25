@@ -38,20 +38,20 @@ function MainUFVInsurancePage() {
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
               {filterMenuIsOpen ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
                 </div>
               )}
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS DE SEGURO FOTOVOLTAICO</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS DE SEGURO FOTOVOLTAICO</p>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@ function MainUFVInsurancePage() {
             <UFVInsuranceProjectCard key={project._id} project={project} onRevenueEditClick={(id) => setRevenueModal({ id, isOpen: true })} />
           ))
         ) : (
-          <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum projeto encontrado.</div>
+          <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum projeto encontrado.</div>
         )
       ) : null}
       {revenueModal.id && revenueModal.isOpen ? (
@@ -90,7 +90,7 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+      className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
     >
       <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
       <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
@@ -183,9 +183,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
   function getContractStatus(status: TProjectUFVInsuranceDTO['contrato']['status']) {
     if (status === 'AGUARDANDO SOLICITAÇÃO')
       return (
-        <div className="flex min-w-fit items-center gap-1 rounded-lg bg-gray-500 px-2 py-0.5 text-white">
+        <div className="bg-primary/60 flex min-w-fit items-center gap-1 rounded-lg px-2 py-0.5 text-white">
           <Signature size={12} />
-          <h1 className="text-[0.5rem]">{status}</h1>
+          <h1 className="text-xxs">{status}</h1>
         </div>
       )
 
@@ -193,7 +193,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-blue-600 px-2 py-0.5 text-white">
           <Signature size={12} />
-          <h1 className="text-[0.5rem]">{status}</h1>
+          <h1 className="text-xxs">{status}</h1>
         </div>
       )
 
@@ -201,7 +201,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-orange-600 px-2 py-0.5 text-white">
           <Signature size={12} />
-          <h1 className="text-[0.5rem]">{status}</h1>
+          <h1 className="text-xxs">{status}</h1>
         </div>
       )
 
@@ -209,7 +209,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-green-500 px-2 py-0.5 text-white">
           <Signature size={12} />
-          <h1 className="text-[0.5rem]">{status}</h1>
+          <h1 className="text-xxs">{status}</h1>
         </div>
       )
 
@@ -217,14 +217,14 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
       return (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-red-500 px-2 py-0.5 text-white">
           <Signature size={12} />
-          <h1 className="text-[0.5rem]">{status}</h1>7
+          <h1 className="text-xxs">{status}</h1>7
         </div>
       )
 
     return (
-      <div className="flex min-w-fit items-center gap-1 rounded-lg bg-gray-500 px-2 py-0.5 text-white">
+      <div className="bg-primary/60 flex min-w-fit items-center gap-1 rounded-lg px-2 py-0.5 text-white">
         <Signature size={12} />
-        <h1 className="text-[0.5rem]">NÃO DEFINIDO</h1>
+        <h1 className="text-xxs">NÃO DEFINIDO</h1>
       </div>
     )
   }
@@ -232,9 +232,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
     if (!revenue)
       return {
         tag: (
-          <div className="flex min-w-fit items-center gap-1 rounded-lg bg-gray-500 px-2 py-0.5 text-white">
+          <div className="bg-primary/60 flex min-w-fit items-center gap-1 rounded-lg px-2 py-0.5 text-white">
             <BadgeDollarSignIcon size={12} />
-            <h1 className="text-[0.5rem]">NÃO DEFINIDO</h1>
+            <h1 className="text-xxs">NÃO DEFINIDO</h1>
           </div>
         ),
 
@@ -251,7 +251,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
         tag: (
           <div className="flex min-w-fit items-center gap-1 rounded-lg bg-green-500 px-2 py-0.5 text-white">
             <BadgeDollarSignIcon size={12} />
-            <h1 className="text-[0.5rem]">RECEBIDO</h1>
+            <h1 className="text-xxs">RECEBIDO</h1>
           </div>
         ),
 
@@ -263,7 +263,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
         tag: (
           <div className="flex min-w-fit items-center gap-1 rounded-lg bg-orange-600 px-2 py-0.5 text-white">
             <BadgeDollarSignIcon size={12} />
-            <h1 className="text-[0.5rem]">RECEBIDO PARCIAL</h1>
+            <h1 className="text-xxs">RECEBIDO PARCIAL</h1>
           </div>
         ),
 
@@ -274,7 +274,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
       tag: (
         <div className="flex min-w-fit items-center gap-1 rounded-lg bg-red-600 px-2 py-0.5 text-white">
           <BadgeDollarSignIcon size={12} />
-          <h1 className="text-[0.5rem]">PENDENTE</h1>
+          <h1 className="text-xxs">PENDENTE</h1>
         </div>
       ),
 
@@ -282,22 +282,22 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
     }
   }
   function getReceiptStatus(receipt: TRevenue['fracionamento'][number]) {
-    if (!!receipt.dataRecebimento) return <h1 className="min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-[0.5rem] text-white">RECEBIDO</h1>
+    if (!!receipt.dataRecebimento) return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">RECEBIDO</h1>
 
     const isForToday = dayjs().isSame(receipt.dataPrevisaoRecebimento)
-    if (isForToday) return <h1 className="min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-[0.5rem] text-white">RECEBER HOJE</h1>
+    if (isForToday) return <h1 className="text-xxs min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-white">RECEBER HOJE</h1>
 
     const isOverDue = dayjs(new Date()).isAfter(receipt.dataPrevisaoRecebimento)
-    if (isOverDue) return <h1 className="min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-[0.5rem] text-white">EM ATRASO</h1>
+    if (isOverDue) return <h1 className="text-xxs min-w-fit rounded-lg bg-red-600 px-2 py-0.5 text-white">EM ATRASO</h1>
 
-    return <h1 className="min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-[0.5rem] text-white">A RECEBER</h1>
+    return <h1 className="text-xxs min-w-fit rounded-lg bg-blue-500 px-2 py-0.5 text-white">A RECEBER</h1>
   }
   const receiptStatus = getRevenueStatus(project.receita)
   return (
-    <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
+    <div className="bg-background border-primary/60 relative flex w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-2">
-          <h1 className="text-sm font-bold leading-none tracking-tight">{project.nomeDoContrato}</h1>
+          <h1 className="text-sm leading-none font-bold tracking-tight">{project.nomeDoContrato}</h1>
           {getContractStatus(project.contrato.status)}
         </div>
       </div>
@@ -305,15 +305,15 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
           <div className="flex items-center gap-1">
             <BsPersonVcard />
-            <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.cpf_cnpj}</p>
+            <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.cpf_cnpj}</p>
           </div>
           <div className="flex items-center gap-1">
             <MdPhone />
-            <p className="text-[0.6rem] font-medium leading-none tracking-tight">{project?.telefone}</p>
+            <p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.telefone}</p>
           </div>
           <div className="flex items-center gap-1">
             <FaLocationDot width={15} height={15} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
               {formatLocation({
                 location: {
                   uf: project!.uf || '',
@@ -335,43 +335,43 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <Signature width={15} height={15} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">ASSINADO EM:</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.contrato.dataAssinatura)}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ASSINADO EM:</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(project.contrato.dataAssinatura)}</h1>
           </div>
           <div className="flex items-center gap-1">
             <BadgeDollarSignIcon width={15} height={15} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">VALOR</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">VALOR</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatToMoney(project.seguro?.valor || project.sistema.valorProjeto || 0)}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <Clock width={15} height={15} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">DURAÇÃO:</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDecimalPlaces(project.seguro?.duracao || 0, 0)}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">DURAÇÃO:</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDecimalPlaces(project.seguro?.duracao || 0, 0)}</h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarPlus width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">INÍCIO DO SEGURO:</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.seguro?.dataInicio)}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">INÍCIO DO SEGURO:</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(project.seguro?.dataInicio)}</h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarCheck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FIM DO SEGURO:</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(project.seguro?.dataFim)}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FIM DO SEGURO:</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(project.seguro?.dataFim)}</h1>
           </div>
         </div>
       </div>
       <div className="flex w-full flex-col gap-3">
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-2">
-            <h1 className="text-[0.6rem] font-medium leading-none tracking-tight">RECEITA</h1>
+            <h1 className="text-[0.6rem] leading-none font-medium tracking-tight">RECEITA</h1>
             {receiptStatus.tag}
             {receiptStatus.fractionationStr ? (
               <button
                 onClick={() => setShowReceipts((prev) => !prev)}
                 className={cn(
-                  'rounded bg-blue-100 py-0.5 px-2 text-[0.5rem] font-bold text-primary/80 duration-300 ease-in-out',
+                  'text-xxs text-primary/80 rounded bg-blue-100 px-2 py-0.5 font-bold duration-300 ease-in-out',
                   showReceipts ? 'bg-blue-300' : ''
                 )}
               >
@@ -382,9 +382,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
           {!!project.receita?._id ? (
             <button
               onClick={() => onRevenueEditClick(project.receita?._id || '')}
-              className="flex items-center justify-center gap-2 rounded border border-gray-800 bg-gray-600 px-2 py-0.5 text-white duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-500"
+              className="bg-primary/80 hover:border-primary/60 hover:bg-primary/60 border-primary/80 flex items-center justify-center gap-2 rounded border px-2 py-0.5 text-white duration-300 ease-in-out"
             >
-              <p className="text-[0.5rem] font-medium">EDITAR RECEITA</p>
+              <p className="text-xxs font-medium">EDITAR RECEITA</p>
               <MdEdit size={10} />
             </button>
           ) : null}
@@ -396,8 +396,8 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
               project.receita.fracionamento.map((receipt, index) => (
                 <div key={index} className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
                   <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                    <p className="text-[0.65rem] font-medium leading-none tracking-tight">{receipt.titulo}</p>
-                    <div className="hidden items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-medium italic text-primary/80 lg:flex">
+                    <p className="text-[0.65rem] leading-none font-medium tracking-tight">{receipt.titulo}</p>
+                    <div className="bg-secondary text-xxs text-primary/80 hidden items-center gap-1 rounded-lg px-2 py-0.5 text-center font-medium italic lg:flex">
                       <FaPercentage />
                       <h1>
                         PARCIAL DE{' '}
@@ -414,31 +414,29 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
                   <div className="hidden flex-wrap items-center justify-center gap-2 lg:flex lg:justify-end">
                     <div className="flex items-center gap-1">
                       <BsCalendarEvent />
-                      <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISTO PARA</h1>
-                      <p className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
-                        {formatDateAsLocale(receipt.dataPrevisaoRecebimento)}
-                      </p>
+                      <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISTO PARA</h1>
+                      <p className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(receipt.dataPrevisaoRecebimento)}</p>
                     </div>
                     {receipt.dataRecebimento ? (
                       <div className="flex items-center gap-1">
                         <BsCalendarCheck color="#22c55e " />
-                        <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">RECEBIDO EM</h1>
-                        <p className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(receipt.dataRecebimento)}</p>
+                        <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">RECEBIDO EM</h1>
+                        <p className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(receipt.dataRecebimento)}</p>
                       </div>
                     ) : null}
 
-                    <h1 className="rounded-lg bg-primary px-2 py-0.5 text-center text-[0.65rem] font-medium text-secondary">
+                    <h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">
                       {formatToMoney(receipt.valor || 0)}
                     </h1>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="w-full text-start text-[0.65rem] font-medium tracking-tight text-primary/80">Nenhum recebimento definido.</div>
+              <div className="text-primary/80 w-full text-start text-[0.65rem] font-medium tracking-tight">Nenhum recebimento definido.</div>
             )
           ) : null
         ) : (
-          <div className="w-full text-start text-[0.65rem] font-medium tracking-tight text-primary/80">Receita não encontrada.</div>
+          <div className="text-primary/80 w-full text-start text-[0.65rem] font-medium tracking-tight">Receita não encontrada.</div>
         )}
       </div>
     </div>

@@ -21,7 +21,7 @@ function EmployeeFiles({ employeeId }: EmployeeFilesProps) {
             </div>
           ))
         ) : (
-          <p className="w-full text-center font-bold italic tracking-tight text-gray-500">Sem arquivos vinculados ao colaborador.</p>
+          <p className="text-primary/60 w-full text-center font-bold tracking-tight italic">Sem arquivos vinculados ao colaborador.</p>
         )
       ) : null}
     </div>

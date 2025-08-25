@@ -62,7 +62,7 @@ function InfoAtividadesBlock({ projectId, projectName, projectIdentifier, sessio
               />
             ))
           ) : (
-            <h1 className="w-full py-1 text-center text-sm italic text-gray-500">Nenhuma atividade cadastrada...</h1>
+            <h1 className="text-primary/60 w-full py-1 text-center text-sm italic">Nenhuma atividade cadastrada...</h1>
           )
         ) : null}
       </div>

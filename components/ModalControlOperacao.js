@@ -95,57 +95,57 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
     <>
       <AnimatedModalWrapper width={'90%'} height={'80%'} modalIsOpen={isOpen}>
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-gray-300 pb-2">
+          <div className="border-primary/20 flex items-center justify-between border-b pb-2">
             <h1 className="font-bold text-[#15599a]">{operation.nome}</h1>
             <button>
               <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex grow flex-col overflow-y-auto overscroll-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col overflow-y-auto overscroll-y-auto px-2">
             <h1 className="w-full bg-[#15599a] p-1 text-center font-medium text-white">INFORMAÇÕES GERAIS DA OPERAÇÃO</h1>
             <div className="flex w-full flex-col gap-2 pt-4 lg:flex-row">
               <div className="w-full lg:w-1/2">
                 <div className="flex w-full flex-col">
-                  <h1 className="text-sm text-gray-500">NOME DA OPERAÇÃO</h1>
-                  <p className="font-arial border-b-2 border-gray-300 text-center text-sm text-gray-700">{operationInfo.nome}</p>
+                  <h1 className="text-primary/60 text-sm">NOME DA OPERAÇÃO</h1>
+                  <p className="font-arial border-primary/20 text-primary/70 border-b-2 text-center text-sm">{operationInfo.nome}</p>
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
                 <div className="flex w-full flex-col">
-                  <h1 className="text-sm text-gray-500">DESCRIÇÃO</h1>
-                  <p className="font-arial border-b-2 border-gray-300 text-center text-sm text-gray-700">{operationInfo.descricao}</p>
+                  <h1 className="text-primary/60 text-sm">DESCRIÇÃO</h1>
+                  <p className="font-arial border-primary/20 text-primary/70 border-b-2 text-center text-sm">{operationInfo.descricao}</p>
                 </div>
               </div>
             </div>
             <div className="flex w-full flex-col gap-2 pt-4 lg:flex-row">
               <div className="w=full lg:w-1/2">
                 <div className="flex w-full flex-col">
-                  <h1 className="text-sm text-gray-500">DATA DE INÍCIO</h1>
-                  <p className="font-arial border-b-2 border-gray-300 text-center text-sm text-gray-700">
+                  <h1 className="text-primary/60 text-sm">DATA DE INÍCIO</h1>
+                  <p className="font-arial border-primary/20 text-primary/70 border-b-2 text-center text-sm">
                     {new Date(operationInfo.dataInicio).toLocaleDateString()}
                   </p>
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
                 <div className="flex w-full flex-col">
-                  <h1 className="text-sm text-gray-500">PREVISÃO DE CONCLUSÃO</h1>
-                  <p className="font-arial border-b-2 border-gray-300 text-center text-sm text-gray-700">{operationInfo.previsaoConclusao}</p>
+                  <h1 className="text-primary/60 text-sm">PREVISÃO DE CONCLUSÃO</h1>
+                  <p className="font-arial border-primary/20 text-primary/70 border-b-2 text-center text-sm">{operationInfo.previsaoConclusao}</p>
                 </div>
               </div>
             </div>
             <h1 className="w-full bg-[#15599a] p-1 text-center font-medium text-white">ATIVIDADES</h1>
-            <div className="flex h-[250px] max-h-[250px] min-h-[250px] w-full flex-col overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-[250px] max-h-[250px] min-h-[250px] w-full flex-col overflow-y-auto overscroll-y-auto">
               {operationInfo.atividades.length > 0 ? (
                 operationInfo.atividades.map((activity, index, arr) => (
-                  <div key={index} className={`flex w-full flex-col items-start py-2 ${arr.length > 1 ? 'border-b border-gray-300' : ''}`}>
+                  <div key={index} className={`flex w-full flex-col items-start py-2 ${arr.length > 1 ? 'border-primary/20 border-b' : ''}`}>
                     <div className="flex w-full items-center justify-around">
-                      <p className="w-3/5 text-start font-medium text-gray-700 lg:w-2/5">{activity.nome}</p>
+                      <p className="text-primary/70 w-3/5 text-start font-medium lg:w-2/5">{activity.nome}</p>
                       <div className="hidden w-2/6 items-center gap-2 lg:flex">
-                        <div className="flex items-center gap-2 text-center font-medium text-gray-700">
+                        <div className="text-primary/70 flex items-center gap-2 text-center font-medium">
                           <p>INICIO EM:</p>
                           <p>{activity.dataInicio ? dayjs(activity.dataInicio).add(4, 'hours').format('DD/MM/YYYY') : '-'}</p>
                         </div>
-                        <div className="flex items-center gap-2 text-center font-medium text-gray-700">
+                        <div className="text-primary/70 flex items-center gap-2 text-center font-medium">
                           <p>PREV.CONCLUSAO EM:</p>
                           <p>{activity.previsaoConclusao ? dayjs(activity.previsaoConclusao).add(4, 'hours').format('DD/MM/YYYY') : '-'}</p>
                         </div>
@@ -169,18 +169,18 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                     {activity.subAtividades
                       ? activity.subAtividades.map((subActivity, subIndex) => (
                           <div key={subIndex} className="my-1 flex w-full items-start justify-around">
-                            <p className="w-3/5 text-center text-xs text-gray-500 lg:w-2/5">{subActivity.nome}</p>
+                            <p className="text-primary/60 w-3/5 text-center text-xs lg:w-2/5">{subActivity.nome}</p>
 
                             <div className="hidden w-2/5 items-center gap-2 lg:flex">
-                              <p className="hidden text-center text-xs text-gray-500 lg:block">
+                              <p className="text-primary/60 hidden text-center text-xs lg:block">
                                 {subActivity.dataInicio ? `INICIO EM: ${dayjs(subActivity.dataInicio).add(4, 'hours').format('DD/MM/YYYY')}` : '-'}
                               </p>
                               {subActivity.dataConclusao ? (
-                                <p className="hidden text-center text-xs text-gray-500 lg:block">
+                                <p className="text-primary/60 hidden text-center text-xs lg:block">
                                   CONCLUSÃO EM: {dayjs(subActivity.dataConclusao).add(4, 'hours').format('DD/MM/YYYY')}
                                 </p>
                               ) : (
-                                <p className="hidden text-center text-xs text-gray-500 lg:block">
+                                <p className="text-primary/60 hidden text-center text-xs lg:block">
                                   {subActivity.previsaoConclusao
                                     ? `PREV.CONCLUSÃO EM: ${dayjs(subActivity.previsaoConclusao).add(4, 'hours').format('DD/MM/YYYY')}`
                                     : '-'}
@@ -214,7 +214,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                                     }))
                                     handleUpdates(changesObj)
                                   }}
-                                  className="cursor-pointer rounded border border-green-500 p-1 text-xxs text-green-500 hover:bg-green-500 hover:text-white"
+                                  className="text-xxs cursor-pointer rounded border border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white"
                                 >
                                   CONCLUIR
                                 </button>
@@ -258,7 +258,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                 ))
               ) : (
                 <div className="flex w-full grow items-center justify-center py-2">
-                  <p className="font-medium italic text-gray-500">Sem atividades vinculadas...</p>
+                  <p className="text-primary/60 font-medium italic">Sem atividades vinculadas...</p>
                 </div>
               )}
             </div>
@@ -270,7 +270,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
               setReportInfo={setReportInfo}
             />
           </div>
-          {/* <div className="w-full py-2 border-t border-gray-300 flex items-center justify-end justify-self-end">
+          {/* <div className="w-full py-2 border-t border-primary/20 flex items-center justify-end justify-self-end">
             {operationMsg.text ? (
               <p className={`text-sm italic ${operationMsg.color}`}>
                 {operationMsg.text}

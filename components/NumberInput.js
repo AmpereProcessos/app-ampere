@@ -1,49 +1,24 @@
-import React from "react";
+import React from 'react'
 
-function NumberInput({
-  label,
-  value,
-  handleChange,
-  editable,
-  tag,
-  unit,
-  labelColor,
-  widthFit,
-}) {
+function NumberInput({ label, value, handleChange, editable, tag, unit, labelColor, widthFit }) {
   return (
-    <div
-      className={`flex flex-col w-full text-xs ${
-        widthFit ? "w-fit" : "lg:w-[350px]"
-      } lg:text-base items-center`}
-    >
-      <span
-        className={`uppercase font-bold font-raleway ${
-          labelColor ? labelColor : ""
-        } text-center text-sm`}
-      >
-        {label}
-      </span>
+    <div className={`flex w-full flex-col text-xs ${widthFit ? 'w-fit' : 'lg:w-[350px]'} items-center lg:text-base`}>
+      <span className={`font-raleway font-bold uppercase ${labelColor ? labelColor : ''} text-center text-sm`}>{label}</span>
       <div className="flex items-center justify-center">
-        {tag && (
-          <p className="text-xs w-fit text-center uppercase text-gray-600 ">
-            {tag}
-          </p>
-        )}
+        {tag && <p className="text-primary/80 w-fit text-center text-xs uppercase">{tag}</p>}
         <input
           id={label}
           name={label}
-          className="text-xs w-fit text-center uppercase text-gray-600 outline-none bg-transparent"
+          className="text-primary/80 w-fit bg-transparent text-center text-xs uppercase outline-hidden"
           type="number"
           readOnly={!editable}
           value={value ? value.toString() : 0}
           onChange={(e) => handleChange(e.target.value)}
         />
-        {unit && (
-          <p className="text-xs w-fittext-center text-gray-600 ">{unit}</p>
-        )}
+        {unit && <p className="w-fittext-center text-primary/80 text-xs">{unit}</p>}
       </div>
     </div>
-  );
+  )
 }
 
-export default NumberInput;
+export default NumberInput

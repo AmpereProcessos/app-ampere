@@ -1,175 +1,135 @@
-import React, { useState } from "react";
-import SelectInput from "./SelectInput";
-import TextInput from "./TextInput";
+import React, { useState } from 'react'
+import SelectInput from './SelectInput'
+import TextInput from './TextInput'
 
-function FormVisitaTecnicaQuatro({
-  dados,
-  setDados,
-  images,
-  setImages,
-  uploadImages,
-  sendStatus,
-}) {
-  const [msg, setMsg] = useState({ text: "", color: "" });
-  console.log(images);
+function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages, uploadImages, sendStatus }) {
+  const [msg, setMsg] = useState({ text: '', color: '' })
+  console.log(images)
   function validateFields() {
-    if (
-      dados.localInstalacaoInversor == "" ||
-      dados.localInstalacaoInversor == "NÃO DEFINIDO"
-    ) {
+    if (dados.localInstalacaoInversor == '' || dados.localInstalacaoInversor == 'NÃO DEFINIDO') {
       setMsg({
-        text: "Por favor, preencha o local de instalação do inversor.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha o local de instalação do inversor.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (
-      dados.distanciaInversorRoteador == "" ||
-      dados.distanciaInversorRoteador == "NÃO DEFINIDO"
-    ) {
+    if (dados.distanciaInversorRoteador == '' || dados.distanciaInversorRoteador == 'NÃO DEFINIDO') {
       setMsg({
-        text: "Por favor, preencha a distância do inversor até o roteador.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a distância do inversor até o roteador.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!images.fotoFaixada) {
       setMsg({
-        text: "Por favor, anexe a foto da faixada",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, anexe a foto da faixada',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!images.fotoLocalInstalacao) {
       setMsg({
-        text: "Por favor, anexe a foto do local da instalação.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, anexe a foto do local da instalação.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!images.fotoQuadroDistribuicao) {
       setMsg({
-        text: "Por favor, anexe a foto do quadro de distribuição.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, anexe a foto do quadro de distribuição.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    return true;
+    return true
   }
   function goToNext() {
     if (validateFields()) {
-      setMsg({ text: "", color: "" });
-      uploadImages();
+      setMsg({ text: '', color: '' })
+      uploadImages()
     }
   }
   return (
-    <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        INSTALAÇÃO
-      </span>
-      <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
+    <div className="bg-background flex w-full flex-col border border-[#15599a] p-4 shadow-lg">
+      <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">INSTALAÇÃO</span>
+      <div className="mt-2 flex flex-wrap items-center justify-around gap-2">
         <SelectInput
-          label={"LOCAL DE INSTALAÇÃO DO INVERSOR"}
+          label={'LOCAL DE INSTALAÇÃO DO INVERSOR'}
           editable={true}
-          value={
-            dados.localInstalacaoInversor
-              ? dados.localInstalacaoInversor
-              : "NÃO DEFINIDO"
-          }
+          value={dados.localInstalacaoInversor ? dados.localInstalacaoInversor : 'NÃO DEFINIDO'}
           options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
-            { label: "LAVANDERIA", value: "LAVANDERIA" },
-            { label: "VARANDA", value: "VARANDA" },
-            { label: "GARAGEM", value: "GARAGEM" },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+            { label: 'MICRO-INVERSOR', value: 'MICRO-INVERSOR' },
+            { label: 'LAVANDERIA', value: 'LAVANDERIA' },
+            { label: 'VARANDA', value: 'VARANDA' },
+            { label: 'GARAGEM', value: 'GARAGEM' },
             {
-              label: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
-              value: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
+              label: 'OUTRO(DESCREVA EM OBSERVAÇÕES)',
+              value: 'OUTRO(DESCREVA EM OBSERVAÇÕES)',
             },
           ]}
-          handleChange={(value) =>
-            setDados({ ...dados, localInstalacaoInversor: value })
-          }
+          handleChange={(value) => setDados({ ...dados, localInstalacaoInversor: value })}
         />
         <SelectInput
-          label={
-            "DISTÂNCIA MÉDIA DO SISTEMA FOTOVOLTAICO ATÉ O QUADRO DE DISTRIBUIÇÃO"
-          }
+          label={'DISTÂNCIA MÉDIA DO SISTEMA FOTOVOLTAICO ATÉ O QUADRO DE DISTRIBUIÇÃO'}
           editable={true}
           value={dados.distanciaSistemaQuadro}
           options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "5 METROS", value: "5 METROS" },
-            { label: "10 METROS", value: "10 METROS" },
-            { label: "15 METROS", value: "15 METROS" },
-            { label: "20 METROS", value: "20 METROS" },
-            { label: "25 METROS", value: "25 METROS" },
-            { label: "30 METROS", value: "30 METROS" },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+            { label: '5 METROS', value: '5 METROS' },
+            { label: '10 METROS', value: '10 METROS' },
+            { label: '15 METROS', value: '15 METROS' },
+            { label: '20 METROS', value: '20 METROS' },
+            { label: '25 METROS', value: '25 METROS' },
+            { label: '30 METROS', value: '30 METROS' },
           ]}
-          handleChange={(value) =>
-            setDados({ ...dados, distanciaSistemaQuadro: value })
-          }
+          handleChange={(value) => setDados({ ...dados, distanciaSistemaQuadro: value })}
         />
         <SelectInput
-          label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
+          label={'DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR'}
           editable={true}
           value={dados.distanciaInversorRoteador}
           options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "5 METROS", value: "5 METROS" },
-            { label: "10 METROS", value: "10 METROS" },
-            { label: "15 METROS", value: "15 METROS" },
-            { label: "20 METROS", value: "20 METROS" },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+            { label: '5 METROS', value: '5 METROS' },
+            { label: '10 METROS', value: '10 METROS' },
+            { label: '15 METROS', value: '15 METROS' },
+            { label: '20 METROS', value: '20 METROS' },
           ]}
-          handleChange={(value) =>
-            setDados({ ...dados, distanciaInversorRoteador: value })
-          }
+          handleChange={(value) => setDados({ ...dados, distanciaInversorRoteador: value })}
         />
         <TextInput
-          label={"LOCAL DO ATERRAMENTO DO SISTEMA (SOMENTE P/GOIÁS)"}
+          label={'LOCAL DO ATERRAMENTO DO SISTEMA (SOMENTE P/GOIÁS)'}
           editable={true}
-          value={dados.localAterramento ? dados.localAterramento : ""}
-          handleChange={(value) =>
-            setDados({ ...dados, localAterramento: value.toUpperCase() })
-          }
+          value={dados.localAterramento ? dados.localAterramento : ''}
+          handleChange={(value) => setDados({ ...dados, localAterramento: value.toUpperCase() })}
         />
       </div>
-      <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-        <span className="uppercase font-bold font-raleway text-center text-sm">
-          OBSERVAÇÕES SOBRE A INSTALAÇÃO
-        </span>
+      <div className="mt-2 flex w-full flex-col items-center self-center px-2">
+        <span className="font-raleway text-center text-sm font-bold uppercase">OBSERVAÇÕES SOBRE A INSTALAÇÃO</span>
         <textarea
-          placeholder={"Descrição aqui.."}
+          placeholder={'Descrição aqui..'}
           value={dados.obsInstalacao}
-          onChange={(e) =>
-            setDados({ ...dados, obsInstalacao: e.target.value })
-          }
-          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+          onChange={(e) => setDados({ ...dados, obsInstalacao: e.target.value })}
+          className="border-primary/80 h-[80px] w-full resize-none border bg-gray-200 p-2 text-center outline-hidden"
         />
       </div>
-      <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
-        <div className="w-fit flex flex-col items-center self-center">
-          <label
-            className="ml-2 text-center text-[#15599a] font-bold"
-            htmlFor="propostaComercial"
-          >
+      <div className="mt-4 flex flex-wrap items-center justify-around gap-2">
+        <div className="flex w-fit flex-col items-center self-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
             FOTO DA FACHADA
           </label>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
             <div className="absolute">
               {images.fotoFaixada ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoFaixada.file.name}
-                  </span>
+                  <span className="block text-center font-normal text-gray-400">{images.fotoFaixada.file.name}</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">
-                    Adicione o arquivo aqui
-                  </span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                 </div>
               )}
             </div>
@@ -178,7 +138,7 @@ function FormVisitaTecnicaQuatro({
                 setImages({
                   ...images,
                   fotoFaixada: {
-                    title: "FOTO DA FACHADA",
+                    title: 'FOTO DA FACHADA',
                     file: e.target.files[0],
                   },
                 })
@@ -189,33 +149,22 @@ function FormVisitaTecnicaQuatro({
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center self-center">
-          <label
-            className="ml-2 text-center text-[#15599a] font-bold"
-            htmlFor="propostaComercial"
-          >
-            FOTO DO LOCAL DA INSTALAÇÃO DO INVERSOR OU NOVO LOCAL QUADRO DE
-            DISTRIBUIÇÃO
+        <div className="flex w-fit flex-col items-center self-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
+            FOTO DO LOCAL DA INSTALAÇÃO DO INVERSOR OU NOVO LOCAL QUADRO DE DISTRIBUIÇÃO
           </label>
-          <p className="text-center text-xs">
-            CASO O QUADRO NÃO TENHA ESPAÇO TIRE UMA FOTO DO LOCAL NOVO DE
-            INSTALAÇÃO
-          </p>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <p className="text-center text-xs">CASO O QUADRO NÃO TENHA ESPAÇO TIRE UMA FOTO DO LOCAL NOVO DE INSTALAÇÃO</p>
+          <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
             <div className="absolute">
               {images.fotoLocalInstalacao ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoLocalInstalacao.file.name}
-                  </span>
+                  <span className="block text-center font-normal text-gray-400">{images.fotoLocalInstalacao.file.name}</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">
-                    Adicione o arquivo aqui
-                  </span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                 </div>
               )}
             </div>
@@ -224,7 +173,7 @@ function FormVisitaTecnicaQuatro({
                 setImages({
                   ...images,
                   fotoLocalInstalacao: {
-                    title: "FOTO DO LOCAL DE INSTALAÇÃO DO INVERSOR",
+                    title: 'FOTO DO LOCAL DE INSTALAÇÃO DO INVERSOR',
                     file: e.target.files[0],
                   },
                 })
@@ -235,32 +184,22 @@ function FormVisitaTecnicaQuatro({
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center self-center">
-          <label
-            className="ml-2 text-center text-[#15599a] font-bold"
-            htmlFor="propostaComercial"
-          >
+        <div className="flex w-fit flex-col items-center self-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
             FOTO DO QUADRO DE DISTRIBUIÇÃO
           </label>
-          <p className="text-center text-xs">
-            TIRE A FOTO COM A TAMPA ABERTA PARA VISUALIZAR ESPAÇO DOS
-            DISJUNTORES
-          </p>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <p className="text-center text-xs">TIRE A FOTO COM A TAMPA ABERTA PARA VISUALIZAR ESPAÇO DOS DISJUNTORES</p>
+          <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
             <div className="absolute">
               {images.fotoQuadroDistribuicao ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoQuadroDistribuicao.file.name}
-                  </span>
+                  <span className="block text-center font-normal text-gray-400">{images.fotoQuadroDistribuicao.file.name}</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">
-                    Adicione o arquivo aqui
-                  </span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                 </div>
               )}
             </div>
@@ -269,7 +208,7 @@ function FormVisitaTecnicaQuatro({
                 setImages({
                   ...images,
                   fotoQuadroDistribuicao: {
-                    title: "FOTO DO QUADRO DE DISTRIBUIÇÃO",
+                    title: 'FOTO DO QUADRO DE DISTRIBUIÇÃO',
                     file: e.target.files[0],
                   },
                 })
@@ -280,29 +219,22 @@ function FormVisitaTecnicaQuatro({
             />
           </div>
         </div>
-        <div className="w-fit flex flex-col items-center self-center">
-          <label
-            className="ml-2 text-center text-[#15599a] font-bold"
-            htmlFor="propostaComercial"
-          >
+        <div className="flex w-fit flex-col items-center self-center">
+          <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
             FOTO DO ATERRAMENTO
           </label>
           <p className="text-center text-xs">SOMENTE P/ GOIÁS</p>
-          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
             <div className="absolute">
               {images.fotoAterramento ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoAterramento.file.name}
-                  </span>
+                  <span className="block text-center font-normal text-gray-400">{images.fotoAterramento.file.name}</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                  <span className="block text-gray-400 font-normal">
-                    Adicione o arquivo aqui
-                  </span>
+                  <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                 </div>
               )}
             </div>
@@ -311,7 +243,7 @@ function FormVisitaTecnicaQuatro({
                 setImages({
                   ...images,
                   fotoAterramento: {
-                    title: "FOTO DO ATERRAMENTO",
+                    title: 'FOTO DO ATERRAMENTO',
                     file: e.target.files[0],
                   },
                 })
@@ -323,20 +255,18 @@ function FormVisitaTecnicaQuatro({
           </div>
         </div>
       </div>
-      {msg.text && (
-        <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
-      )}
+      {msg.text && <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>}
       <div className="flex items-center justify-center gap-2">
         <button
           onClick={goToNext}
-          disabled={sendStatus == "loading"}
-          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded disabled:bg-gray-500"
+          disabled={sendStatus == 'loading'}
+          className="disabled:bg-primary/60 rounded bg-[#fead61] p-2 font-bold hover:bg-[#15599a] hover:text-white"
         >
-          {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
+          {sendStatus == 'loading' ? 'CARREGANDO' : 'ENVIAR FORMULÁRIO'}
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default FormVisitaTecnicaQuatro;
+export default FormVisitaTecnicaQuatro

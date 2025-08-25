@@ -182,7 +182,7 @@ function BaixaPerformance() {
   if (status == 'authenticated') {
     return (
       <div className="flex grow flex-col p-6">
-        <div className="border-b border-gray-300 p-2">
+        <div className="border-primary/20 border-b p-2">
           <h1 className="text-xl font-bold text-[#15599a]">
             IDENTIFICAÇÃO DE BAIXA PERFORMANCE {badPerformers.length > 0 && `(${badPerformers.length})`}
           </h1>
@@ -224,7 +224,7 @@ function BaixaPerformance() {
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -246,11 +246,11 @@ function BaixaPerformance() {
           </h1>
           <div className="flex flex-wrap justify-between gap-2">
             {badPerformers.map((usina, index) => (
-              <div key={index} className="flex h-[60px] w-[300px] items-center justify-between gap-2 rounded-md border border-gray-300 shadow-md">
+              <div key={index} className="border-primary/20 flex h-[60px] w-[300px] items-center justify-between gap-2 rounded-md border shadow-md">
                 <div className="flex h-full w-[50px] items-center justify-center rounded-tl-md rounded-bl-md bg-red-400 text-xs font-bold text-white">
                   {usina.performance.toFixed(2).replace('.', ',')} %
                 </div>
-                <p className="text-center text-xs text-gray-700">{usina.nomeUsina}</p>
+                <p className="text-primary/70 text-center text-xs">{usina.nomeUsina}</p>
                 <button
                   onClick={() => handleOpenModal(usina)}
                   className="flex h-full w-[30px] items-center justify-center rounded-tr-md rounded-br-md bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white"
@@ -277,7 +277,7 @@ function BaixaPerformance() {
               />
               <input
                 type={'text'}
-                className={'h-[36px] w-[350px] rounded-md border border-gray-300 p-2 text-center text-xs outline-none'}
+                className={'border-primary/20 h-[36px] w-[350px] rounded-md border p-2 text-center text-xs outline-hidden'}
                 placeholder={'DIGITE O NOME DA USINA...'}
                 onChange={(e) => handleSearchFilter(e.target.value)}
               />
@@ -292,15 +292,15 @@ function BaixaPerformance() {
               <div
                 key={index}
                 onClick={() => handleOpenModal({ ...item, created: true })}
-                className="grid w-full cursor-pointer grid-cols-6 border-b border-[#15599a] bg-slate-50 hover:bg-blue-100"
+                className="dark:hover:bg-primary/10 grid w-full cursor-pointer grid-cols-6 border-b border-[#15599a] bg-slate-50 hover:bg-blue-100"
               >
                 <div className="border-x border-[#15599a] p-1 text-center font-bold">
                   <h1 className={`${statusStyles[item.status].textColor}`}>{item.status}</h1>
                 </div>
-                <div className="border-r border-[#15599a] p-1 text-center font-bold text-gray-700">#{item.codProjeto}</div>
-                <div className="col-span-2 border-r border-[#15599a] p-1 text-center font-bold text-gray-700">{item.nomeUsina}</div>
+                <div className="text-primary/70 border-r border-[#15599a] p-1 text-center font-bold">#{item.codProjeto}</div>
+                <div className="text-primary/70 col-span-2 border-r border-[#15599a] p-1 text-center font-bold">{item.nomeUsina}</div>
                 <div className="col-span-2 flex items-center justify-center gap-4 border-r border-[#15599a] p-1">
-                  <p className="text-center font-bold text-gray-700">{item.problema}</p>
+                  <p className="text-primary/70 text-center font-bold">{item.problema}</p>
                   {item.problema == 'PROBLEMA COM CONEXÃO' && (
                     <MdSignalWifiStatusbarConnectedNoInternet4 style={{ color: '#FF9D00', fontSize: '20px' }} />
                   )}

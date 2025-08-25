@@ -96,15 +96,15 @@ function RelatorioSetor() {
   }
   function renderStatsByCity(data: TProjectDTO[], dueDate: string, dilutionDate: string | null) {
     return Object.entries(getTotalsByCity(data, dueDate, dilutionDate)).map(([key, value], index) => (
-      <div key={index} className="flex w-full items-center gap-2 border-b border-gray-300 py-1">
-        <h1 className="w-1/3 text-center text-xs font-medium tracking-tight text-gray-500 lg:text-sm">{key}</h1>
+      <div key={index} className="border-primary/20 flex w-full items-center gap-2 border-b py-1">
+        <h1 className="text-primary/60 w-1/3 text-center text-xs font-medium tracking-tight lg:text-sm">{key}</h1>
         <div className="flex w-1/3 flex-col items-center">
-          <h1 className="w-1/3 text-center text-xs font-medium tracking-tight text-gray-500 lg:text-sm">
+          <h1 className="text-primary/60 w-1/3 text-center text-xs font-medium tracking-tight lg:text-sm">
             {formatDecimalPlaces(value.general.plants, 0, 0)}
           </h1>
         </div>
         <div className="flex w-1/3 flex-col items-center">
-          <h1 className="w-1/3 text-center text-xs font-medium tracking-tight text-gray-500 lg:text-sm">
+          <h1 className="text-primary/60 w-1/3 text-center text-xs font-medium tracking-tight lg:text-sm">
             {formatDecimalPlaces(value.general.modules, 0, 0)}
           </h1>
         </div>
@@ -115,8 +115,8 @@ function RelatorioSetor() {
     return data.map((project) => (
       <div className="flex w-full flex-col gap-1">
         <div className="flex w-full items-center justify-between gap-2">
-          <h1 className="tracking-tightlg:text-sm text-xs font-black leading-none">{project.nomeDoContrato}</h1>
-          <div className="flex min-w-fit items-center gap-1 rounded-full bg-gray-800 px-2 py-1 text-white">
+          <h1 className="tracking-tightlg:text-sm text-xs leading-none font-black">{project.nomeDoContrato}</h1>
+          <div className="bg-primary/80 flex min-w-fit items-center gap-1 rounded-full px-2 py-1 text-white">
             <h1 className="text-[0.65rem] font-medium lg:text-xs">{project.sistema.qtdeModulos}</h1>
             <FaSolarPanel size={15} />
           </div>
@@ -124,13 +124,13 @@ function RelatorioSetor() {
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-1">
             <BsCalendar />
-            <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+            <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
               TROCA DO MEDIDOR EM: {formatDateAsLocale(project.medidor.data)}
             </p>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarX color="#ed174c" />
-            <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+            <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
               VENCIDO EM: {dayjs(project.medidor.data).add(1, 'year').format('DD/MM/YYYY')}
             </p>
           </div>
@@ -140,8 +140,8 @@ function RelatorioSetor() {
   }
   return (
     <div className="grow p-6">
-      <div className="flex flex-col gap-1 border-b border-gray-300 p-1">
-        <p className="text-2xl font-black uppercase text-[#15599a]">RELATÓRIO DE OPERAÇÃO E MANUTENÇÃO</p>
+      <div className="border-primary/20 flex flex-col gap-1 border-b p-1">
+        <p className="text-2xl font-black text-[#15599a] uppercase">RELATÓRIO DE OPERAÇÃO E MANUTENÇÃO</p>
         <div className="flex w-full items-center justify-end">
           <MultipleSelectInputVirtualized
             label={'CIDADE'}
@@ -173,7 +173,7 @@ function RelatorioSetor() {
               <motion.div
                 initial={{ scale: 0.8, opacity: 0.6 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-gray-300 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%] gap-4"
+                className="overscroll-y flex h-fit max-h-[400px] w-full flex-col self-center overflow-y-auto border border-primary/20 p-2 scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 lg:w-[50%] gap-4"
               >
                 {filteredDataByMaxDateParamSecondScenario.map((client, index) => (
                   <div key={index} className="flex w-full items-center justify-between gap-2 py-1 font-medium">
@@ -191,9 +191,9 @@ function RelatorioSetor() {
             </AnimatePresence> */}
             {/** FIRST SCENARIO*/}
             <div className="flex w-full flex-col gap-4">
-              <div className="flex flex-col items-center  justify-center bg-[#15599a] p-2">
+              <div className="flex flex-col items-center justify-center bg-[#15599a] p-2">
                 <p className="text-3xl font-bold text-white">CENÁRIO PRIMÁRIO</p>
-                <p className="text-center text-sm font-medium italic text-white">
+                <p className="text-center text-sm font-medium text-white italic">
                   Considerando vencimento até: {formatDateAsLocale(scenarios.first.dueDate)}
                   {scenarios.first.dilutionDate ? `, com diluição até ${formatDateAsLocale(scenarios.first.dilutionDate)}` : null}
                 </p>
@@ -221,7 +221,7 @@ function RelatorioSetor() {
                 <div className="w-full lg:w-1/3">
                   <div className={`flex w-full flex-col gap-1`}>
                     <h1 className={'font-sans font-bold text-[#353432]'}>DIAS ÚTEIS ATÉ O FIM DO PRAZO</h1>
-                    <h1 className="h-[47px] w-full rounded-md border border-gray-300 p-3 text-sm outline-none placeholder:italic">
+                    <h1 className="border-primary/20 h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
                       {/** @ts-ignore */}
                       {scenarios.first.dilutionDate ? getBusinessDayDiff(scenarios.first.dilutionDate, new Date()) : 'N/A'}
                       {/* {scenarios.first.dilutionDate ? dayjs(scenarios.first.dilutionDate).businessDiff(dayjs()) : 'N/A'} */}
@@ -243,14 +243,14 @@ function RelatorioSetor() {
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0.6 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="overscroll-y flex h-fit max-h-[400px] w-full flex-col gap-4 self-center overflow-y-auto border border-gray-300 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
+                    className="overscroll-y border-primary/20 scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-fit max-h-[400px] w-full flex-col gap-4 self-center overflow-y-auto border p-2 lg:w-[50%]"
                   >
                     {renderClients(firstScenarioData)}
                   </motion.div>
                 ) : null}
               </AnimatePresence>
               <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE USINAS A SEREM LIMPAS</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaHome color="#fead41" size={'40px'} />
@@ -260,7 +260,7 @@ function RelatorioSetor() {
                     </p>
                   </div>
                 </div>
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE MÓDULOS A SEREM LIMPOS</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaHome color="#fead41" size={'40px'} />
@@ -270,7 +270,7 @@ function RelatorioSetor() {
                     </p>
                   </div>
                 </div>
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE MÓDULOS POR DIA</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaSolarPanel color="#fead41" size={'40px'} />
@@ -286,7 +286,7 @@ function RelatorioSetor() {
                   </div>
                 </div>
               </div>
-              <div className="flex w-full flex-col rounded border border-gray-300 shadow-lg">
+              <div className="border-primary/20 flex w-full flex-col rounded border shadow-lg">
                 <div className="flex w-full items-center gap-2 bg-[#15599a] p-2">
                   <h1 className="w-1/3 text-center font-medium text-white">CIDADE</h1>
                   <h1 className="w-1/3 text-center font-medium text-white">Nº DE USINAS</h1>
@@ -297,9 +297,9 @@ function RelatorioSetor() {
             </div>
             {/** SECOND SCENARIO*/}
             <div className="flex w-full flex-col gap-4">
-              <div className="flex flex-col items-center  justify-center bg-[#fead41] p-2">
+              <div className="flex flex-col items-center justify-center bg-[#fead41] p-2">
                 <p className="text-3xl font-bold text-white">CENÁRIO SECUNDÁRIO</p>
-                <p className="text-center text-sm font-medium italic text-white">
+                <p className="text-center text-sm font-medium text-white italic">
                   Considerando vencimento até: {formatDateAsLocale(scenarios.second.dueDate)}
                   {scenarios.second.dilutionDate ? `, com diluição até ${formatDateAsLocale(scenarios.second.dilutionDate)}` : null}
                 </p>
@@ -327,7 +327,7 @@ function RelatorioSetor() {
                 <div className="w-full lg:w-1/3">
                   <div className={`flex w-full flex-col gap-1`}>
                     <h1 className={'font-sans font-bold text-[#353432]'}>DIAS ÚTEIS ATÉ O FIM DO PRAZO</h1>
-                    <h1 className="h-[47px] w-full rounded-md border border-gray-300 p-3 text-sm outline-none placeholder:italic">
+                    <h1 className="border-primary/20 h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
                       {/** @ts-ignore */}
                       {scenarios.second.dilutionDate ? getBusinessDayDiff(scenarios.second.dilutionDate, new Date()) : 'N/A'}
                       {/* {scenarios.first.dilutionDate ? dayjs(scenarios.first.dilutionDate).businessDiff(dayjs()) : 'N/A'} */}
@@ -349,14 +349,14 @@ function RelatorioSetor() {
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0.6 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="overscroll-y flex h-fit max-h-[400px] w-full flex-col gap-4 self-center overflow-y-auto border border-gray-300 p-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:w-[50%]"
+                    className="overscroll-y border-primary/20 scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-fit max-h-[400px] w-full flex-col gap-4 self-center overflow-y-auto border p-2 lg:w-[50%]"
                   >
                     {renderClients(secondScenarioData)}
                   </motion.div>
                 ) : null}
               </AnimatePresence>
               <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE USINAS A SEREM LIMPAS</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaHome color="#fead41" size={'40px'} />
@@ -366,7 +366,7 @@ function RelatorioSetor() {
                     </p>
                   </div>
                 </div>
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE MÓDULOS À SEREM LIMPOS</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaSolarPanel color="#fead41" size={'40px'} />
@@ -376,7 +376,7 @@ function RelatorioSetor() {
                     </p>
                   </div>
                 </div>
-                <div className="flex w-full flex-col items-center rounded border border-gray-300 p-3 shadow-lg lg:w-1/3">
+                <div className="border-primary/20 flex w-full flex-col items-center rounded border p-3 shadow-lg lg:w-1/3">
                   <h1 className="font-Poppins text-center text-lg font-medium text-[#15599a]">Nº DE MÓDULOS POR DIA</h1>
                   <div className="flex w-full items-center justify-center gap-2">
                     <FaSolarPanel color="#fead41" size={'40px'} />
@@ -392,7 +392,7 @@ function RelatorioSetor() {
                   </div>
                 </div>
               </div>
-              <div className="flex w-full flex-col rounded border border-gray-300 shadow-lg">
+              <div className="border-primary/20 flex w-full flex-col rounded border shadow-lg">
                 <div className="flex w-full items-center gap-2 bg-[#15599a] p-2">
                   <h1 className="w-1/3 text-center font-medium text-white">CIDADE</h1>
                   <h1 className="w-1/3 text-center font-medium text-white">Nº DE USINAS</h1>

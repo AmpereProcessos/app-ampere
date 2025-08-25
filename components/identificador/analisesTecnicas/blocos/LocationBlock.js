@@ -32,7 +32,7 @@ function LocationBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">LOCALIZAÇÃO</h1>
         <button onClick={() => setEditEnabled((prev) => !prev)}>
           {!editEnabled ? <AiFillEdit color="white" /> : <AiFillCloseCircle color="#ff1736" />}

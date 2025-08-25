@@ -57,54 +57,54 @@ function NPS() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="grow bg-[#fff] p-6">
-        <div className="mb-6 flex flex-col items-center border-b border-gray-300 pb-2">
+      <div className="bg-background grow p-6">
+        <div className="border-primary/20 mb-6 flex flex-col items-center border-b pb-2">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">COLETA DE NPS</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">COLETA DE NPS</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
                 <VscDiffAdded />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: data }).projetos}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: data }).coletados} coletados</p>
+                <p className="text-primary/60 text-xs">{getStats({ info: data }).coletados} coletados</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROMOTORES</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PROMOTORES</h1>
                 <BiHappyAlt />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: data }).promotores}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">DETRATORES</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">DETRATORES</h1>
                 <BiSad />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: data }).detratores}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">NPS</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">NPS</h1>
                 <MdGrade />
               </div>
               <div className="mt-2 flex w-full flex-col">
@@ -129,7 +129,7 @@ function NPS() {
             ) : (
               <div className="flex flex-col items-center justify-center gap-4">
                 <ImSad style={{ fontSize: '50px', color: '#fead61' }} />
-                <p className="w-full text-center text-sm italic text-gray-600 lg:w-[50%]">
+                <p className="text-primary/80 w-full text-center text-sm italic lg:w-[50%]">
                   Oops, parece que não há projetos que se enquadrem nos filtros definidos.
                 </p>
               </div>

@@ -96,7 +96,7 @@ function ModalComercial({ session, projectId, closeModal }: ModalComercialProps)
 
   return isDesktop ? (
     <Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
-      <DialogContent className="flex max-h-[80vh]  min-h-[80vh] min-w-[80vw] flex-col dark:bg-white">
+      <DialogContent className="dark:bg-background flex max-h-[80vh] min-h-[80vh] min-w-[80vw] flex-col">
         <DialogHeader>
           <DialogTitle>{MENU_TITLE}</DialogTitle>
           <DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
@@ -106,7 +106,7 @@ function ModalComercial({ session, projectId, closeModal }: ModalComercialProps)
         {isError ? <ErrorPage msg={getErrorMessage(error)} /> : null}
         {isSuccess && infoHolder ? (
           <>
-            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+            <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
               <ModalComercialContent
                 session={session}
                 projectId={projectId}
@@ -148,7 +148,7 @@ function ModalComercial({ session, projectId, closeModal }: ModalComercialProps)
         {isError ? <ErrorPage msg={getErrorMessage(error)} /> : null}
         {isSuccess && infoHolder ? (
           <>
-            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+            <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
               <ModalComercialContent
                 session={session}
                 projectId={projectId}

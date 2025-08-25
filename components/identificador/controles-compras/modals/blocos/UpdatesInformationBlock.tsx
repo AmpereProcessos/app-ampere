@@ -29,13 +29,13 @@ function PurchaseControlUpdatesInformationBlock({ session, infoHolder, setInfoHo
   }
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">ATUALIZAÇÕES DA COMPRA</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">ATUALIZAÇÕES DA COMPRA</h1>
       <div className="flex w-full items-center justify-end">
         <button
           onClick={() => setNewUpdateMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': newUpdateMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !newUpdateMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': newUpdateMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !newUpdateMenuIsOpen,
           })}
         >
           <MdAddBox />
@@ -45,11 +45,11 @@ function PurchaseControlUpdatesInformationBlock({ session, infoHolder, setInfoHo
         </button>
       </div>
       {newUpdateMenuIsOpen ? <NewUpdateMenu session={session} addUpdate={addUpdate} closeMenu={() => setNewUpdateMenuIsOpen(false)} /> : null}
-      <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]">
+      <div className="bg-background flex w-full flex-col gap-2 p-1 dark:bg-[#121212]">
         {infoHolder.atualizacoes.length > 0 ? (
           infoHolder.atualizacoes.map((item, index) => <UpdateCard key={index} update={item} removeUpdate={() => removeUpdate(index)} />)
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não atualização definida.</p>
+          <p className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Não atualização definida.</p>
         )}
       </div>
     </div>
@@ -82,7 +82,7 @@ function NewUpdateMenu({ session, addUpdate, closeMenu }: NewUpdateMenuProps) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+        className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVA ATUALIZAÇÃO</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">
@@ -111,18 +111,18 @@ type UpdateCardProps = {
 
 function UpdateCard({ update, removeUpdate }: UpdateCardProps) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]">
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <p className="text-[0.65rem] font-medium text-primary/80">ATUALIZAÇÃO POR:</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">ATUALIZAÇÃO POR:</p>
             <Avatar url={update.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(update.autor.nome)} />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{update.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{update.autor.nome}</p>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(update.data, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(update.data, true)}</p>
           </div>
         </div>
         <button
@@ -133,7 +133,7 @@ function UpdateCard({ update, removeUpdate }: UpdateCardProps) {
           <p>REMOVER</p>
         </button>
       </div>
-      <p className="rounded-lg bg-primary/10 p-2 text-center text-xs text-primary">{update.descricao}</p>
+      <p className="bg-primary/10 text-primary rounded-lg p-2 text-center text-xs">{update.descricao}</p>
     </div>
   )
 }

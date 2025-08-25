@@ -49,8 +49,8 @@ function AdditionalServicesInfo({ infoHolder, setInfoHolder, files, setFiles, go
     return true
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <span className="py-2 text-center text-lg font-bold uppercase text-[#15599a]">SERIVÇOS ADICIONAIS</span>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <span className="py-2 text-center text-lg font-bold text-[#15599a] uppercase">SERIVÇOS ADICIONAIS</span>
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="flex w-full items-center justify-center lg:w-[50%]">
@@ -279,7 +279,7 @@ function AdditionalServicesInfo({ infoHolder, setInfoHolder, files, setFiles, go
       </div>
 
       <div className="mt-2 flex w-full justify-between">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button

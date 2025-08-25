@@ -12,9 +12,9 @@ type UpdateLogCardProps = {
 }
 function UpdateLogCard({ log, relatedFields }: UpdateLogCardProps) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded border border-gray-300 p-3">
+    <div className="border-primary/20 flex w-full flex-col gap-1 rounded border p-3">
       <div className="flex w-full items-center justify-between gap-2">
-        <h1 className="text-sm font-black leading-none tracking-tight">ALTERAÇÕES</h1>
+        <h1 className="text-sm leading-none font-black tracking-tight">ALTERAÇÕES</h1>
         <div className="flex items-center justify-end gap-4">
           <div className={`flex items-center gap-1`}>
             <BsCalendarPlus />
@@ -32,11 +32,11 @@ function UpdateLogCard({ log, relatedFields }: UpdateLogCardProps) {
           if (!relatedFields.includes(field)) return null
           if (!updateLog) return null
           return (
-            <div className="flex w-fit items-center gap-1 rounded-lg border border-gray-500 px-2 py-1">
+            <div className="border-primary/60 flex w-fit items-center gap-1 rounded-lg border px-2 py-1">
               <div className="flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] items-center justify-center rounded-full border border-black p-1">
                 <MdEdit size={10} />
               </div>
-              <h1 className="text-[0.6rem] tracking-tight text-gray-500">
+              <h1 className="text-primary/60 text-[0.6rem] tracking-tight">
                 <strong className="text-orange-500">{updateLog.label}</strong> ALTERADO(A) PARA:{' '}
               </h1>
               <h1 className="text-[0.6rem] font-bold tracking-tight text-cyan-600">{updateLog.valueFormatted}</h1>

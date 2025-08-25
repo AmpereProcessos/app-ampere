@@ -95,10 +95,10 @@ function NotificationCreationBlock({ session, codProjeto, nomeDoProjeto }: Notif
             <div className="flex w-full flex-col self-center lg:w-[50%]">
               <div className="flex w-full items-center justify-center gap-2">
                 <h1 className="text-xs font-bold">REMETENTE</h1>
-                <div className="h-full w-[1px] bg-primary/30" />
-                <div className="flex items-center justify-center  gap-2">
+                <div className="bg-primary/30 h-full w-px" />
+                <div className="flex items-center justify-center gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={session.user.avatar_url} />
-                  <p className="text-xs font-medium text-gray-500">{session.user.nome || 'Autor não identificado'}</p>
+                  <p className="text-primary/60 text-xs font-medium">{session.user.nome || 'Autor não identificado'}</p>
                 </div>
               </div>
               <MultipleSelectWithImages

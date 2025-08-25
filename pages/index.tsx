@@ -49,74 +49,74 @@ function Home() {
     if (isError) return <ErrorComponent msg={'Oops, houve um erro ao carregar o dashboard geral.'} />
     if (isSuccess)
       return (
-        <div className="relative grow bg-[#fafafa] p-6">
+        <div className="bg-background relative grow p-6">
           <div className="flex w-full flex-col">
             <SalesRanking />
-            <div className="grid-rows-10 mt-2 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
-              <div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+            <div className="mt-2 grid w-full grid-cols-1 grid-rows-10 gap-y-2 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
+              <div className="bg-background border-primary/20 col-span-2 flex h-[250px] flex-col border p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="text-center uppercase tracking-tight text-gray-600">Obras finalizadas no mês</h1>
+                  <h1 className="text-primary/80 text-center tracking-tight uppercase">Obras finalizadas no mês</h1>
                   {validateStatsMonth(stats.instalacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">
                   {stats.instalacao.atual.contagem} obras
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-primary/80 text-center text-xs">
                   Último mês: <strong>{stats.instalacao.anterior.contagem || 'N/A'}</strong>
                 </p>
               </div>
-              <div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+              <div className="bg-background border-primary/20 col-span-2 flex h-[250px] flex-col border p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico instalada no mês</h1>
+                  <h1 className="text-primary/80 text-center tracking-tight uppercase">Potência Pico instalada no mês</h1>
                   {validateStatsMonth(stats.instalacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                   {formatDecimalPlaces(stats.instalacao.atual.valor)} kWp
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-primary/80 text-center text-xs">
                   Último mês: <strong>{formatDecimalPlaces(stats.instalacao.anterior.valor)} kWp</strong>
                 </p>
               </div>
-              <div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+              <div className="bg-background border-primary/20 col-span-2 flex h-[250px] flex-col border p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="text-center uppercase tracking-tight text-gray-600">Potência Pico homologada no mês</h1>
+                  <h1 className="text-primary/80 text-center tracking-tight uppercase">Potência Pico homologada no mês</h1>
                   {validateStatsMonth(stats.homologacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                   {formatDecimalPlaces(stats.homologacao.atual.potencia)} kWp
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-primary/80 text-center text-xs">
                   Último mês: <strong>{formatDecimalPlaces(stats.homologacao.anterior.potencia)} kWp</strong>
                 </p>
               </div>
-              <div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+              <div className="bg-background border-primary/20 col-span-2 flex h-[250px] flex-col border p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
+                  <h1 className="text-primary/80 text-center tracking-tight uppercase">TEMPO MÉDIO PARA COMPRA</h1>
                   {validateStatsMonth(stats.suprimentos.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                   {formatDecimalPlaces(stats.suprimentos.atual.tempoMedio, 0)} dias
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-primary/80 text-center text-xs">
                   Último mês: <strong>{formatDecimalPlaces(stats.suprimentos.anterior.tempoMedio, 0)} dias</strong>
                 </p>
               </div>
-              <div className="col-span-2 flex h-[250px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+              <div className="bg-background border-primary/20 col-span-2 flex h-[250px] flex-col border p-4 shadow-xl">
                 <div className="flex justify-between">
-                  <h1 className="text-center uppercase tracking-tight text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
+                  <h1 className="text-primary/80 text-center tracking-tight uppercase">TEMPO MÉDIO DE APROVAÇÃO</h1>
                   {validateStatsMonth(stats.homologacao.atual.identificador)}
                 </div>
                 <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                   {formatDecimalPlaces(stats.homologacao.atual.tempoMedio, 0)} dias
                 </p>
-                <p className="text-center text-xs text-gray-600">
+                <p className="text-primary/80 text-center text-xs">
                   Último mês: <strong>{formatDecimalPlaces(stats.homologacao.anterior.tempoMedio, 0)} dias</strong>
                 </p>
               </div>
             </div>
             <div className="mt-4 grid grid-cols-1 grid-rows-2 gap-y-2 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
-              <div className="col-span-2 flex h-[425px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
-                <h1 className="text-center text-xl text-gray-600">NPS</h1>
+              <div className="bg-background border-primary/20 col-span-2 flex h-[425px] flex-col border p-4 shadow-xl">
+                <h1 className="text-primary/80 text-center text-xl">NPS</h1>
                 <div className="flex grow items-center justify-center">
                   <div className="h-[150px] w-[150px]">
                     <CircularProgressbar
@@ -144,9 +144,9 @@ function Home() {
                   </div>
                 </div>
               </div>
-              <div className="col-span-8 flex h-[600px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[425px]">
+              <div className="bg-background border-primary/20 col-span-8 flex h-[600px] flex-col border p-4 shadow-xl lg:h-[425px]">
                 <div className="flex w-full flex-wrap items-center gap-2 py-2">
-                  <h1 className="text-center text-xl uppercase text-gray-600">Potência pico vendida</h1>
+                  <h1 className="text-primary/80 text-center text-xl uppercase">Potência pico vendida</h1>
                   <div className="flex grow flex-wrap items-center justify-end gap-x-2">
                     {getArrOfYearsBetweenYears({ initialYear: 2020, endYear: currentYear }).map((yearValue, index) => (
                       <button
@@ -155,9 +155,9 @@ function Home() {
                         onClick={() => {
                           setYear(yearValue)
                         }}
-                        className={`cursor-pointer border border-gray-300 duration-500 ease-in-out hover:scale-105 ${
+                        className={`border-primary/20 cursor-pointer border duration-500 ease-in-out hover:scale-105 ${
                           year === yearValue ? 'bg-blue-200 hover:bg-transparent' : 'bg-transparent hover:bg-blue-200'
-                        } p-2 text-xs text-gray-600`}
+                        } text-primary/80 p-2 text-xs`}
                       >
                         {yearValue}
                       </button>

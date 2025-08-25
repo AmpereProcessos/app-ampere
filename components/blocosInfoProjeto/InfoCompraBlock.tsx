@@ -36,20 +36,20 @@ import { handleCreateProjectPurchaseControlTrigger } from '@/utils/methods/mutat
 function getPrevisionStatus({ forecast, final }: { forecast?: number | null; final?: number | null }) {
   if (!final || final == 0)
     return (
-      <h1 className="relative right-0 top-0 rounded border border-gray-500 p-2 text-xs font-bold tracking-tight text-gray-500 lg:absolute lg:right-10">
+      <h1 className="border-primary/60 text-primary/60 relative top-0 right-0 rounded border p-2 text-xs font-bold tracking-tight lg:absolute lg:right-10">
         PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
       </h1>
     )
 
   if (final < (forecast || 0))
     return (
-      <h1 className="relative right-0 top-0 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:right-10">
+      <h1 className="relative top-0 right-0 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:right-10">
         PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
       </h1>
     )
 
   return (
-    <h1 className="relative right-0 top-0 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500 lg:absolute lg:right-10">
+    <h1 className="relative top-0 right-0 rounded border border-red-500 p-2 text-xs font-bold tracking-tight text-red-500 lg:absolute lg:right-10">
       PREVISTO PARA O KIT: {formatToMoney(forecast || 0)}
     </h1>
   )
@@ -57,7 +57,7 @@ function getPrevisionStatus({ forecast, final }: { forecast?: number | null; fin
 function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao']['status'] }) {
   if (status == 'APROVADO')
     return (
-      <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:left-10">
+      <div className="relative top-0 left-0 flex items-center gap-2 rounded border border-green-500 p-2 text-xs font-bold tracking-tight text-green-500 lg:absolute lg:left-10">
         <BsCheckAll />
         <h1>{status}</h1>
       </div>
@@ -65,14 +65,14 @@ function getAccessGrantingStatus({ status }: { status: TProjectDTO['homologacao'
 
   if (status == 'APROVADO NOTURNO')
     return (
-      <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
+      <div className="relative top-0 left-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
         <FaMoon />
         <h1>{status}</h1>
       </div>
     )
 
   return (
-    <div className="relative left-0 top-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
+    <div className="relative top-0 left-0 flex items-center gap-2 rounded border border-black p-2 text-xs font-bold tracking-tight text-black lg:absolute lg:left-10">
       <h1>{status}</h1>
     </div>
   )
@@ -109,7 +109,7 @@ function InfoCompraBlock({
   const isPendingPurchaseAnalysisLiberation = !!project && !project.compra.liberacao
   return (
     <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
+      <span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DA COMPRA</span>
       <UpdateLogsBlock logs={updateLogs} SectionElement={<Purchase logs={updateLogs} />} />
       <div className="relative mt-2 mb-4 flex w-full flex-col items-center justify-center gap-2">
         {getPrevisionStatus({ forecast: infoHolder.compra.previsaoValorDoKit, final: infoHolder.compra.valorDoKit })}
@@ -127,7 +127,7 @@ function InfoCompraBlock({
           />
 
           {/* {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (
-                  <div className="flex items-center gap-2 text-gray-500">
+                  <div className="flex items-center gap-2 text-primary/60">
                     <BsCalendarFill />
                     <p className="text-xs font-medium">{dayjs(infoHolder.compra.dataLiberacao).add(3, 'hour').format('DD/MM/YYYY')}</p>
                   </div>
@@ -153,7 +153,7 @@ function InfoCompraBlock({
         />
       </div>
       {isContractAttached && isPendingPurchaseAnalysisLiberation ? (
-        <div className="px my-2 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 py-1 px-2 italic text-yellow-500">
+        <div className="px my-2 flex w-full flex-col rounded-xl border border-yellow-500 bg-yellow-100 px-2 py-1 text-yellow-500 italic">
           <div className="flex items-center justify-center gap-1">
             <TbAlertCircle />
             <p className="text-sm">LEMBRETE</p>
@@ -184,8 +184,8 @@ function InfoCompraBlock({
         <button
           onClick={() => setShowLocationInformation((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': showLocationInformation,
-            'bg-green-300  hover:bg-green-400': !showLocationInformation,
+            'bg-primary/20 hover:bg-red-300': showLocationInformation,
+            'bg-green-300 hover:bg-green-400': !showLocationInformation,
           })}
         >
           <FaLocationDot />
@@ -810,11 +810,11 @@ function InfoCompraBlock({
         </div>
       )}
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">ATUALIZAÇÕES</h1>
-      <div className="flex w-full flex-col items-center gap-2 py-2 px-2">
+      <div className="flex w-full flex-col items-center gap-2 px-2 py-2">
         {infoHolder.compra.atualizacoes && infoHolder.compra.atualizacoes.length > 0 ? (
           infoHolder.compra.atualizacoes.map((item, index) => <UpdateCard key={index} update={item} />)
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não atualização definida.</p>
+          <p className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Não atualização definida.</p>
         )}
       </div>
       <PurchaseControlsBlock session={session} project={project} />
@@ -863,25 +863,25 @@ function PurchaseControlsBlock({ session, project }: PurchaseControlsBlockProps)
   })
   return (
     <div className="flex w-[90%] flex-col gap-2 self-center rounded border border-black">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center text-xs font-bold text-white">CONTROLES DE COMPRA</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center text-xs font-bold text-white">CONTROLES DE COMPRA</h1>
       <div className="flex w-full grow flex-col gap-1 p-2">
         <div className="flex w-full items-center justify-center lg:justify-end">
           <button
             type="button"
             disabled={isMutationLoading}
             onClick={() => handleGenerateContractPurchase({ projectId: project._id })}
-            className="rounded-md bg-green-700 py-1 px-4 text-sm font-bold text-white disabled:bg-gray-500"
+            className="disabled:bg-primary/60 rounded-md bg-green-700 px-4 py-1 text-sm font-bold text-white"
           >
             GERAR COMPRA DO CONTRATO
           </button>
         </div>
-        {isLoading ? <p className="w-full animate-pulse text-center text-xs font-bold tracking-tight text-gray-500">Carregando...</p> : null}
+        {isLoading ? <p className="text-primary/60 w-full animate-pulse text-center text-xs font-bold tracking-tight">Carregando...</p> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           purchaseControls && purchaseControls.length > 0 ? (
             purchaseControls.map((purchaseControl) => <PurchaseControlCard key={purchaseControl._id} purchaseControl={purchaseControl} />)
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum controle de compra encontrado.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum controle de compra encontrado.</div>
           )
         ) : null}
       </div>
@@ -894,13 +894,13 @@ type PurchaseControlCardProps = {
 }
 function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
   return (
-    <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
+    <div className="bg-background border-primary/60 relative flex w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-2">
           <h1
             className={cn('rounded-lg px-2 py-0.5 text-[0.65rem] font-medium text-white', {
               'bg-red-600': purchaseControl.status == 'PENDENTE',
-              'bg-gray-700': purchaseControl.status === 'EM COTAÇÃO',
+              'bg-primary/70': purchaseControl.status === 'EM COTAÇÃO',
               'bg-teal-600': purchaseControl.status === 'AGUARDANDO APROVAÇÃO',
               'bg-sky-500': purchaseControl.status === 'AGUARDANDO NOTA FUTURA',
               'bg-orange-600': purchaseControl.status === 'AGUARDANDO PAGAMENTO',
@@ -914,12 +914,12 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
           >
             {purchaseControl.status}
           </h1>
-          <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
+          <h1 className="text-sm leading-none font-bold tracking-tight">{purchaseControl.titulo}</h1>
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
           {purchaseControl.etiquetas.length > 0 ? (
             purchaseControl.etiquetas.map((tag, index) => (
               <div
@@ -933,37 +933,37 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
                 className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
               >
                 <Tag width={10} height={10} />
-                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
               </div>
             ))
           ) : (
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">NÃO DEFINIDAS</h1>
           )}
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <Factory width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FORNECEDOR</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FORNECEDOR</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {purchaseControl.entrega.localizacao.cidade} ({purchaseControl.entrega.localizacao.uf})
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarEvent width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(purchaseControl.entrega.dataPrevisao) || 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarCheck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EFETIVAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">EFETIVAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(purchaseControl.entrega.dataEfetivacao) || 'N/A'}
             </h1>
           </div>
@@ -973,12 +973,12 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(purchaseControl.dataInsercao, true)}</p>
           </div>
           {purchaseControl.dataEfetivacao ? (
             <div className="flex items-center gap-1">
               <BsCalendarCheck color="#22c55e" />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataEfetivacao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(purchaseControl.dataEfetivacao, true)}</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
@@ -989,7 +989,7 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
               fallback={formatNameAsInitials(purchaseControl.autor.nome)}
             />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{purchaseControl.autor.nome}</p>
           </div>
         </div>
       </div>
@@ -999,22 +999,22 @@ function PurchaseControlCard({ purchaseControl }: PurchaseControlCardProps) {
 
 function UpdateCard({ update }: { update: TPurchaseControl['atualizacoes'][number] }) {
   return (
-    <div className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]">
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <p className="text-[0.65rem] font-medium text-primary/80">ATUALIZAÇÃO POR:</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">ATUALIZAÇÃO POR:</p>
             <Avatar url={update.autor.avatar_url || undefined} width={20} height={20} fallback={formatNameAsInitials(update.autor.nome)} />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{update.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{update.autor.nome}</p>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(update.data, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(update.data, true)}</p>
           </div>
         </div>
       </div>
-      <p className="rounded-lg bg-primary/10 p-2 text-center text-xs text-primary">{update.descricao}</p>
+      <p className="bg-primary/10 text-primary rounded-lg p-2 text-center text-xs">{update.descricao}</p>
     </div>
   )
 }

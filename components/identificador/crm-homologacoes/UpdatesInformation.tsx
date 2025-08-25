@@ -69,7 +69,7 @@ function UpdatesInformation({ session, infoHolder, setInfoHolder }: UpdatesInfor
       </div>
       <div className="flex items-center justify-end">
         <button
-          className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
           onClick={() => addUpdate(updateHolder)}
         >
           ADICIONAR ATUALIZAÇÃO
@@ -77,19 +77,19 @@ function UpdatesInformation({ session, infoHolder, setInfoHolder }: UpdatesInfor
       </div>
 
       <div className="mt-2 flex w-full flex-col gap-1">
-        <h1 className="font-Inter mb-2 text-start font-bold leading-none tracking-tight">ATUALIZAÇÕES DA HOMOLOGAÇÃO</h1>
+        <h1 className="font-Inter mb-2 text-start leading-none font-bold tracking-tight">ATUALIZAÇÕES DA HOMOLOGAÇÃO</h1>
         {infoHolder.atualizacoes.length > 0 ? (
           infoHolder.atualizacoes.map((update, index) => (
-            <div key={index} className="flex w-full flex-col gap-1 rounded-md border border-gray-500 p-3">
+            <div key={index} className="border-primary/60 flex w-full flex-col gap-1 rounded-md border p-3">
               <div className="flex w-full items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <BsCalendarPlus />
-                    <h1 className="cursor-pointer text-xs font-black leading-none tracking-tight">{formatDateAsLocale(update.data, true)}</h1>
+                    <h1 className="cursor-pointer text-xs leading-none font-black tracking-tight">{formatDateAsLocale(update.data, true)}</h1>
                   </div>
                   <div className="flex items-center gap-1">
                     <Avatar fallback={'R'} url={update.autor.avatar_url || undefined} height={20} width={20} />
-                    <p className="text-xs font-medium text-gray-500">{update.autor.nome}</p>
+                    <p className="text-primary/60 text-xs font-medium">{update.autor.nome}</p>
                   </div>
                 </div>
                 <button
@@ -100,13 +100,13 @@ function UpdatesInformation({ session, infoHolder, setInfoHolder }: UpdatesInfor
                   <MdDelete style={{ color: 'red' }} size={15} />
                 </button>
               </div>
-              <div className="flex w-full items-center justify-center rounded-md bg-gray-100 p-2 text-center text-xs font-medium text-gray-500">
+              <div className="text-primary/60 bg-primary/20 flex w-full items-center justify-center rounded-md p-2 text-center text-xs font-medium">
                 {update.descricao}
               </div>
             </div>
           ))
         ) : (
-          <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+          <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
             Sem atualizações adicionadas.
           </p>
         )}

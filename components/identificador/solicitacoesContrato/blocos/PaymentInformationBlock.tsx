@@ -18,7 +18,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
   const { data: creditors } = useCreditors()
   return (
     <div className="flex w-full flex-col gap-4">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PAGAMENTO</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PAGAMENTO</h1>
       <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
         <div className="w-full lg:w-1/3">
           <TextInput
@@ -328,12 +328,12 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
       />
 
       <div className="mt-2 flex w-full flex-col items-center self-center px-2">
-        <span className="text-center font-raleway text-sm font-bold uppercase">DESCRIÇÃO DA NEGOCIAÇÃO</span>
+        <span className="font-raleway text-center text-sm font-bold uppercase">DESCRIÇÃO DA NEGOCIAÇÃO</span>
         <textarea
           readOnly={!userHasEditPermission}
           placeholder={'Descreva aqui a negociação'}
           value={infoHolder.descricaoNegociacao}
-          className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+          className="border-primary/80 h-[80px] w-full resize-none border bg-gray-200 p-2 text-center outline-hidden"
           onChange={(e) =>
             setInfoHolder((prev) => ({
               ...prev,

@@ -13,7 +13,7 @@ function OpportunityInformationBlock({ infoHolder, setInfoHolder }: OpportunityI
   const [vinculationMenuIsOpen, setVinculationMenuIsOpen] = useState(false)
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">OPORTUNIDADE</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">OPORTUNIDADE</h1>
       {infoHolder.oportunidade.id ? (
         <div className="my-2 flex flex-col items-center justify-center">
           <h1 className="font-bold">OPORTUNIDADE</h1>

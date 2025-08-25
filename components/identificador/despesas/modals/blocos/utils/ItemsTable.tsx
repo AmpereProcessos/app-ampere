@@ -21,15 +21,15 @@ type ExpenseItemsTableProps = {
 
 function ExpenseItemsTable({ expenseTotal, composition, updateCompositionItem, removeCompositionItem, updateExpenseTotal }: ExpenseItemsTableProps) {
   return (
-    <div className="flex w-full flex-col rounded border-0 border-primary/80 lg:border">
-      <div className="hidden w-full items-center gap-2 rounded rounded-bl-[0] rounded-br-[0] bg-primary/80 p-1 lg:flex">
-        <h1 className="w-[30%] text-center text-sm font-bold text-secondary">ITEM</h1>
-        <h1 className="w-[15%] text-center text-sm font-bold text-secondary">UNIDADE</h1>
-        <h1 className="w-[15%] text-center text-sm font-bold text-secondary">QTDE</h1>
-        <h1 className="w-[20%] text-center text-sm font-bold text-secondary">VALOR</h1>
-        <h1 className="w-[20%] text-center text-sm font-bold text-secondary">TOTAL</h1>
+    <div className="border-primary/80 flex w-full flex-col rounded border-0 lg:border">
+      <div className="bg-primary/80 hidden w-full items-center gap-2 rounded rounded-br-none rounded-bl-none p-1 lg:flex">
+        <h1 className="text-secondary w-[30%] text-center text-sm font-bold">ITEM</h1>
+        <h1 className="text-secondary w-[15%] text-center text-sm font-bold">UNIDADE</h1>
+        <h1 className="text-secondary w-[15%] text-center text-sm font-bold">QTDE</h1>
+        <h1 className="text-secondary w-[20%] text-center text-sm font-bold">VALOR</h1>
+        <h1 className="text-secondary w-[20%] text-center text-sm font-bold">TOTAL</h1>
       </div>
-      <div className="flex w-full flex-col gap-2 bg-[#fff] p-1 dark:bg-[#121212]">
+      <div className="bg-background flex w-full flex-col gap-2 p-1 dark:bg-[#121212]">
         {composition.length > 0 ? (
           composition.map((item, index) => (
             <CompositionTableItem
@@ -40,7 +40,7 @@ function ExpenseItemsTable({ expenseTotal, composition, updateCompositionItem, r
             />
           ))
         ) : (
-          <p className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Não há itens de composição da receita.</p>
+          <p className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Não há itens de composição da receita.</p>
         )}
       </div>
       <ExpenseTotalMenu expenseTotal={expenseTotal} handleUpdate={(info) => updateExpenseTotal(info)} />
@@ -61,12 +61,12 @@ function CompositionTableItem({ item, handleUpdate, handleRemove }: CompositionT
   return (
     <>
       <AnimatePresence>
-        <div className="hidden w-full flex-col gap-1 bg-[#fff] dark:bg-[#121212] lg:flex">
-          <div className="flex w-full items-center gap-2  p-1">
+        <div className="bg-background hidden w-full flex-col gap-1 lg:flex dark:bg-[#121212]">
+          <div className="flex w-full items-center gap-2 p-1">
             <div className="flex w-[30%] items-start gap-1">
               <div className="flex flex-col">
                 <h1 className="text-xs tracking-tight">{item.descricao}</h1>
-                {/* <p className="text-[0.65rem] font-light italic leading-none tracking-tight text-gray-500">{item.categoria}</p> */}
+                {/* <p className="text-[0.65rem] font-light italic leading-none tracking-tight text-primary/60">{item.categoria}</p> */}
               </div>
               <button
                 onClick={() => setEditMenuIsOpen((prev) => !prev)}
@@ -87,19 +87,19 @@ function CompositionTableItem({ item, handleUpdate, handleRemove }: CompositionT
             <h1 className="w-[20%] text-center text-xs tracking-tight">{item.preco ? formatToMoney(item.qtde * item.preco) : '-'}</h1>
           </div>
         </div>
-        <div className="flex w-full flex-col rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212] lg:hidden">
+        <div className="border-primary bg-background flex w-full flex-col rounded-md border p-2 lg:hidden dark:bg-[#121212]">
           <div className="flex w-full flex-col items-start justify-between gap-2">
             <div className="flex w-full items-center justify-between gap-2">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1">
-                  <p className="text-sm font-bold leading-none tracking-tight">
+                  <p className="text-sm leading-none font-bold tracking-tight">
                     <strong className="text-[#FF9B50]">{item.qtde}</strong> x {item.descricao}
                   </p>
                 </div>
               </div>
 
               {item.preco > 0 ? (
-                <div className="flex min-w-fit items-center gap-2 rounded-full bg-gray-800 px-2 py-1 ">
+                <div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">
                   <h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(item.qtde * item.preco)}</h1>
                 </div>
               ) : null}
@@ -108,12 +108,12 @@ function CompositionTableItem({ item, handleUpdate, handleRemove }: CompositionT
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   <TbRulerMeasure />
-                  <p className="text-[0.6rem] italic text-gray-500 lg:text-xs">{renderUnitLabel(item.unidade)}</p>
+                  <p className="text-primary/60 text-[0.6rem] italic lg:text-xs">{renderUnitLabel(item.unidade)}</p>
                 </div>
                 {item.preco > 0 ? (
                   <div className="flex items-center gap-1">
                     <FaDollarSign />
-                    <p className="text-[0.6rem] italic text-gray-500 lg:text-xs">
+                    <p className="text-primary/60 text-[0.6rem] italic lg:text-xs">
                       {formatToMoney(item.preco)}/{item.unidade}
                     </p>
                   </div>
@@ -244,7 +244,7 @@ function ExpenseTotalMenu({ expenseTotal, handleUpdate }: ExpenseTotalMenuProps)
     <>
       <AnimatePresence>
         <div className="flex w-full flex-col">
-          <h1 className="w-full bg-primary/80 p-1 text-center text-sm font-bold text-secondary">TOTAL</h1>
+          <h1 className="bg-primary/80 text-secondary w-full p-1 text-center text-sm font-bold">TOTAL</h1>
           <div className="flex w-full items-center justify-center gap-2 p-2">
             <h1 className="text-lg font-bold tracking-tight">{formatToMoney(expenseTotal)}</h1>
             <button
@@ -286,7 +286,7 @@ function ExpenseTotalMenu({ expenseTotal, handleUpdate }: ExpenseTotalMenuProps)
                   handleUpdate({ newTotal: totalHolder, updateItemsProportionally: false })
                   setEditMenuIsOpen(false)
                 }}
-                className="rounded bg-gray-800 p-1 px-4 text-[0.6rem] font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+                className="bg-primary/80 hover:bg-primary/70 rounded p-1 px-4 text-[0.6rem] font-medium text-white duration-300 ease-in-out"
               >
                 ATUALIZAR SOMENTE TOTAL
               </button>

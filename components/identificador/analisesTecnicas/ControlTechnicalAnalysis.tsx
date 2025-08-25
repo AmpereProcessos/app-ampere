@@ -177,13 +177,13 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
 
   console.log('TESTE')
   return (
-    <div id="control-technical-analysis" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="relative left-[50%] top-[50%] z-[100] h-[80%] max-h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md bg-[#fff] p-[10px] lg:w-[90%]">
+    <div id="control-technical-analysis" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background relative top-[50%] left-[50%] z-100 h-[80%] max-h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md p-[10px] lg:w-[90%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex flex-col items-start">
-              <h3 className="text-xl font-bold text-[#353432] dark:text-white ">{infoHolder.nome || 'CONTROLAR ANÁLISE TÉCNICA'}</h3>
-              <p className="text-[0.6rem] italic tracking-tight text-gray-500">#{analysisId}</p>
+              <h3 className="text-xl font-bold text-[#353432] dark:text-white">{infoHolder.nome || 'CONTROLAR ANÁLISE TÉCNICA'}</h3>
+              <p className="text-primary/60 text-[0.6rem] tracking-tight italic">#{analysisId}</p>
             </div>
 
             <button
@@ -194,18 +194,18 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
             {isLoading ? <LoadingPage /> : null}
             {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
             {isSuccess ? (
               <>
-                <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+                <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-2">
                   <div className="mt-2 flex items-center justify-center gap-4">
                     <div className="flex items-center gap-2">
                       <Avatar fallback={'U'} height={25} width={25} url={infoHolder?.requerente?.avatar_url || undefined} />
-                      <p className="text-xs font-medium text-gray-500">{infoHolder?.requerente?.nome || 'Autor não identificado'}</p>
+                      <p className="text-primary/60 text-xs font-medium">{infoHolder?.requerente?.nome || 'Autor não identificado'}</p>
                     </div>
-                    <div className="flex items-center gap-2 text-gray-500">
+                    <div className="text-primary/60 flex items-center gap-2">
                       <BsCalendarFill />
                       <p className="text-xs font-medium">{formatDateAsLocale(infoHolder.dataInsercao, true)}</p>
                     </div>
@@ -295,7 +295,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                           // @ts-ignore
                           handleEditTechnicalAnalysis({ id: analysisId, changes: { status: 'PENDENTE', dataEfetivacao: null } })
                         }
-                        className="rounded border border-gray-500 p-1 font-bold text-gray-500 duration-300 ease-in-out hover:bg-gray-500 hover:text-white"
+                        className="border-primary/60 text-primary/60 hover:bg-primary/60 rounded border p-1 font-bold duration-300 ease-in-out hover:text-white"
                       >
                         REABRIR ANÁLISE
                       </button>
@@ -341,9 +341,9 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                       }))
                       setChanges((prev) => ({ ...prev, anotacoes: e.target.value }))
                     }}
-                    className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+                    className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
                   />
-                  <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+                  <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
                     <h1 className="font-bold text-white">PROJETO</h1>
                   </div>
                   {analysis.oportunidade ? (
@@ -352,12 +352,12 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                         <BsCode size={'20px'} color="rgb(31,41,55)" />
                         {analysis.oportunidade.id ? (
                           <Link href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${analysis.oportunidade.id}`}>
-                            <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                            <p className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                               #{analysis.oportunidade.identificador || 'N/A'}
                             </p>
                           </Link>
                         ) : (
-                          <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
+                          <p className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
                             #{analysis.oportunidade.identificador || 'N/A'}
                           </p>
                         )}
@@ -368,10 +368,12 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                       </div>
                     </div>
                   ) : (
-                    <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
+                    <p className="text-primary/60 w-full py-2 text-center text-sm italic">Sem informações do projeto...</p>
                   )}
                   <div className="flex w-full flex-col">
-                    <h1 className="w-full rounded-tl-sm rounded-tr-sm bg-gray-500 p-1 text-center font-bold text-white">COMENTÁRIOS DO REQUERENTE</h1>
+                    <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">
+                      COMENTÁRIOS DO REQUERENTE
+                    </h1>
                     <textarea
                       placeholder="SEM COMENTÁRIOS PREENCHIDOS..."
                       value={infoHolder.comentarios || ''}
@@ -383,7 +385,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                         }))
                         setChanges((prev) => ({ ...prev, ecomentarios: e.target.value }))
                       }}
-                      className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+                      className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
                     />
                   </div>
                   <PendencyBlock
@@ -416,13 +418,13 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                     updateAnalysis={(change) => {}}
                   />
                   <ConclusionBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />{' '}
-                  <div className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+                  <div className="bg-primary/80 mt-4 flex w-full items-center justify-center gap-2 rounded-md p-2">
                     <h1 className="font-bold text-white">TIPOS DE LAUDO</h1>
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-center gap-2 px-4">
                     {technicalAnalysisReportTypes.map((type) => (
                       <Link key={type.id} href={`/projetos/laudo-pdf/${analysisId}?type=${type.value}`}>
-                        <p className="w-fit rounded border border-black px-2 py-1 text-center font-bold shadow-sm hover:bg-black hover:text-white">
+                        <p className="w-fit rounded border border-black px-2 py-1 text-center font-bold shadow-xs hover:bg-black hover:text-white">
                           {type.value}
                         </p>
                       </Link>
@@ -435,7 +437,7 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
                     disabled={isLoadingMutation}
                     // @ts-ignore
                     onClick={() => handleEditTechnicalAnalysis({ id: analysisId, changes: changes })}
-                    className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+                    className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
                   >
                     SALVAR ALTERAÇÕES
                   </button>

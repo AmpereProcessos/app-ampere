@@ -72,9 +72,9 @@ function ChamadosPPS() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
-        <div className="flex w-full flex-col items-center justify-between border border-gray-300 bg-[#fff] p-4 shadow-xl lg:flex-row">
-          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE SUPORTE AO VENDEDOR</p>
+      <div className="bg-primary/20 flex w-full grow flex-col gap-y-2 p-6">
+        <div className="bg-background border-primary/20 flex w-full flex-col items-center justify-between border p-4 shadow-xl lg:flex-row">
+          <p className="text-center font-['Roboto'] text-2xl font-bold text-[#15599a] uppercase">CHAMADOS DE SUPORTE AO VENDEDOR</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         {/* Abertos */}
@@ -82,7 +82,7 @@ function ChamadosPPS() {
         {/* Fechados */}
         <ClosedCalls />
         <Link href="/publico/chamadoExternoPPS">
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">Novo chamado</p>
           </div>
         </Link>

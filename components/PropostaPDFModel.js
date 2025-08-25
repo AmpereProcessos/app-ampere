@@ -86,8 +86,8 @@ function PropostaPDFModel({ info }) {
   return (
     <div style={{ width: '210mm', height: '297mm' }} id="pdf" ref={pdfRef} className="bg-zinc-200 p-4">
       <div id="myMm" style={{ height: '1mm' }} />
-      <div className="grid grid-cols-5 w-full">
-        <div className="flex flex-col col-span-2">
+      <div className="grid w-full grid-cols-5">
+        <div className="col-span-2 flex flex-col">
           <h1 className="text-xl font-bold text-[#15599b]">{info.nomeCliente}</h1>
           <p className="text-xl font-bold">{info.cidade}</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
@@ -97,31 +97,31 @@ function PropostaPDFModel({ info }) {
             <Image height={70} width={70} className="cursor-pointer" src={Logo} />
           </div>
         </div>
-        <div className="flex flex-col items-end col-span-2">
+        <div className="col-span-2 flex flex-col items-end">
           <h1 className="text-xl font-bold">Atendido por:</h1>
-          <p className="font-bold text-center">{info.vendedor}</p>
+          <p className="text-center font-bold">{info.vendedor}</p>
           <p className="font-bold">{info.telefoneVendedor ? info.telefoneVendedor : '(34) 9 9775-7001'}</p>
         </div>
       </div>
       <div className="mt-5 border-2 border-black">
-        <div className="w-full flex items-center justify-center pb-2 bg-[#15599b] text-white font-bold text-center">ESCOPO DO PROJETO</div>
+        <div className="flex w-full items-center justify-center bg-[#15599b] pb-2 text-center font-bold text-white">ESCOPO DO PROJETO</div>
         <div className="grid grid-cols-4 divide-x-2 divide-black pb-2">
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Qtd.Módulos - Potência</p>
+            <p className="flex h-14 items-center text-center font-bold text-[#15599b]">Qtd.Módulos - Potência</p>
             <p>
               {info.qtdeModulos} - {info.potModulos}W
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Potência kWp</p>
+            <p className="flex h-14 items-center text-center font-bold text-[#15599b]">Potência kWp</p>
             <p>{(info.qtdeModulos * info.potModulos) / 1000}kWp</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Eficiência atual</p>
+            <p className="flex h-14 items-center text-center font-bold text-[#15599b]">Eficiência atual</p>
             <p>{info.eficienciaAtual}%</p>
           </div>
           <div className="flex flex-col items-center border-r-2 border-black">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Estimativa de perda financeira anual</p>
+            <p className="flex h-14 items-center text-center font-bold text-[#15599b]">Estimativa de perda financeira anual</p>
             <p>
               R${' '}
               {getLoses().toLocaleString('pt-br', {
@@ -132,8 +132,8 @@ function PropostaPDFModel({ info }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col mt-2">
-        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO</h1>
+      <div className="mt-2 flex flex-col">
+        <h1 className="w-full text-center text-xl font-semibold text-[#15599b]">CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO</h1>
         <div className="flex justify-center">
           <ul className="font-semibold">
             <li>1. Perda de geração de energia e eficiência;</li>
@@ -146,26 +146,26 @@ function PropostaPDFModel({ info }) {
         </div>
       </div>
       <div className="mt-2">
-        <h1 className="w-full pb-2 bg-[#15599b] text-white font-bold text-center ">PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO</h1>
+        <h1 className="w-full bg-[#15599b] pb-2 text-center font-bold text-white">PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO</h1>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
                 <table className="min-w-full border text-center">
-                  <thead className="border-b bg-white">
+                  <thead className="bg-background border-b">
                     <tr>
-                      <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-2 border-r">
+                      <th scope="col" className="border-r px-6 py-2 text-sm font-medium text-gray-900">
                         Serviços
                       </th>
-                      <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-2 border-r">
+                      <th scope="col" className="border-r px-2 py-2 text-sm font-medium text-gray-900">
                         Manutenção simples
                       </th>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-2 border-r">
+                          <th scope="col" className="border-r px-2 py-2 text-sm font-medium text-gray-900">
                             Plano Sol
                           </th>
-                          <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-2">
+                          <th scope="col" className="px-6 py-2 text-sm font-medium text-gray-900">
                             Plano Sol+
                           </th>
                         </>
@@ -173,9 +173,9 @@ function PropostaPDFModel({ info }) {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS</td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                    <tr className="bg-background border-b">
+                      <td className="border-r px-2 text-sm font-medium text-gray-900">MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS</td>
+                      <td className="border-r px-6 py-4 text-center text-sm font-light whitespace-nowrap text-gray-900">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -188,7 +188,7 @@ function PropostaPDFModel({ info }) {
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                          <td className="border-r px-6 py-4 text-center text-sm font-light whitespace-nowrap text-gray-900">
                             <div className="flex justify-center">
                               <FiCheck
                                 style={{
@@ -199,8 +199,8 @@ function PropostaPDFModel({ info }) {
                               />
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
-                            <div className="flex justify-center items-center">
+                          <td className="px-6 py-4 text-center text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <FiCheck
                                 style={{
                                   color: '#23c906',
@@ -213,9 +213,9 @@ function PropostaPDFModel({ info }) {
                         </>
                       ) : null}
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">REAPERTO CONEXÕES ELÉTRICAS</td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                    <tr className="bg-background border-b">
+                      <td className="border-r px-2 text-sm font-medium text-gray-900">REAPERTO CONEXÕES ELÉTRICAS</td>
+                      <td className="border-r px-6 py-2 text-sm font-light whitespace-nowrap text-gray-900">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -228,7 +228,7 @@ function PropostaPDFModel({ info }) {
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                          <td className="border-r px-6 py-2 text-sm font-light whitespace-nowrap text-gray-900">
                             <div className="flex justify-center">
                               <FiCheck
                                 style={{
@@ -239,8 +239,8 @@ function PropostaPDFModel({ info }) {
                               />
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
+                          <td className="px-6 py-2 text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <FiCheck
                                 style={{
                                   color: '#23c906',
@@ -253,11 +253,11 @@ function PropostaPDFModel({ info }) {
                         </>
                       ) : null}
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr className="bg-background border-b">
+                      <td className="border-r px-2 text-sm font-medium text-gray-900">
                         ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS EQUIPAMENTOS ELÉTRICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -270,7 +270,7 @@ function PropostaPDFModel({ info }) {
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                          <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
                             <div className="flex justify-center">
                               <FiCheck
                                 style={{
@@ -281,8 +281,8 @@ function PropostaPDFModel({ info }) {
                               />
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
+                          <td className="px-6 py-4 text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <FiCheck
                                 style={{
                                   color: '#23c906',
@@ -295,9 +295,9 @@ function PropostaPDFModel({ info }) {
                         </>
                       ) : null}
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">LIMPEZA NOS MÓDULOS FOTOVOLTAICOS</td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                    <tr className="bg-background border-b">
+                      <td className="border-r px-2 text-sm font-medium text-gray-900">LIMPEZA NOS MÓDULOS FOTOVOLTAICOS</td>
+                      <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -310,7 +310,7 @@ function PropostaPDFModel({ info }) {
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                          <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
                             <div className="flex justify-center">
                               <FiCheck
                                 style={{
@@ -321,8 +321,8 @@ function PropostaPDFModel({ info }) {
                               />
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
+                          <td className="px-6 py-4 text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <p>2x</p>
                               <FiCheck
                                 style={{
@@ -338,27 +338,27 @@ function PropostaPDFModel({ info }) {
                     </tr>
                     {!info.currentPlanOption == 1 ? (
                       <>
-                        <tr className="border-b bg-white">
-                          <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        <tr className="bg-background border-b">
+                          <td className="border-r px-2 text-sm font-medium text-gray-900">
                             MANUTENÇÃO ADICIONAL, COM VALOR JÁ ESTIPULADO EM CONTRATO
                           </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">X</td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                          <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">X</td>
+                          <td className="border-r px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
                             <div className="flex justify-center">
                               <p>50% do valor do contrato</p>
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
+                          <td className="px-6 py-4 text-sm font-light whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <p>70% do valor do contrato</p>
                             </div>
                           </td>
                         </tr>
-                        <tr className="border-b bg-white">
-                          <td className="px-2 text-sm font-medium text-gray-900 border-r">DISTRIBUIÇÃO DE CRÉDITOS</td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">X</td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap border-r">
-                            <div className="flex justify-center items-center">
+                        <tr className="bg-background border-b">
+                          <td className="border-r px-2 text-sm font-medium text-gray-900">DISTRIBUIÇÃO DE CRÉDITOS</td>
+                          <td className="border-r px-6 py-2 text-sm font-light whitespace-nowrap text-gray-900">X</td>
+                          <td className="border-r px-6 py-2 text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center">
                               <p>2x</p>
                               <FiCheck
                                 style={{
@@ -369,31 +369,31 @@ function PropostaPDFModel({ info }) {
                               />
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                            <div className="flex justify-center items-center text-green-500">ILIMITADO</div>
+                          <td className="px-6 py-2 text-sm font-bold whitespace-nowrap text-gray-900">
+                            <div className="flex items-center justify-center text-green-500">ILIMITADO</div>
                           </td>
                         </tr>
                       </>
                     ) : null}
 
-                    <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
+                    <tr className="bg-background border-b">
+                      <td className="border-r px-2 py-1 text-sm font-medium text-gray-900">
                         VALOR DO PLANO ANUAL
                         <strong className="text-xxs font-medium"> PARCELAMOS EM ATÉ 6X NOS CARTÕES VISA/MASTER SEM JUROS</strong>
                         {/* {quotaCreditNumber()}
                         {quotaBoletoNumber()} */}
                       </td>
 
-                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                      <td className="border-r px-6 py-4 text-sm font-semibold whitespace-nowrap text-gray-900">
                         R$
                         {(findPrice(info.qtdeModulos) * info.qtdeModulos + 1.5 * 2 * info.distancia).toFixed(2).replace('.', ',')}
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
-                          <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                          <td className="border-r px-6 py-4 text-sm font-semibold whitespace-nowrap text-gray-900">
                             R$ {(1.3 * findPrice(info.qtdeModulos) * info.qtdeModulos + 1.5 * 2 * info.distancia).toFixed(2).replace('.', ',')}
                           </td>
-                          <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 text-sm font-semibold whitespace-nowrap text-gray-900">
                             R$ {(1.5 * findPrice(info.qtdeModulos) * info.qtdeModulos + 1.5 * 4 * info.distancia).toFixed(2).replace('.', ',')}
                           </td>
                         </>
@@ -407,8 +407,8 @@ function PropostaPDFModel({ info }) {
         </div>
       </div>
       <div>
-        <div className="w-full flex items-center justify-center pb-2 bg-[#15599b] text-white font-bold text-center">ASSINATURA</div>
-        <div className="pt-10 flex justify-between">
+        <div className="flex w-full items-center justify-center bg-[#15599b] pb-2 text-center font-bold text-white">ASSINATURA</div>
+        <div className="flex justify-between pt-10">
           <div className="w-[35%]">
             <hr className="border-t-2 border-black" />
             <p className="text-center">Cliente</p>
@@ -419,7 +419,7 @@ function PropostaPDFModel({ info }) {
           </div>
         </div>
       </div>
-      <div className="w-full flex items-center justify-center mt-1">
+      <div className="mt-1 flex w-full items-center justify-center">
         <p className="text-sm text-[#15599a] italic">*Proposta com validade de 30 dias contando de {new Date().toLocaleDateString()}</p>
       </div>
     </div>

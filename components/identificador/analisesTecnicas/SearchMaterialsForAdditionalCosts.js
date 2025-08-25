@@ -28,7 +28,7 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
     })
   }
   return (
-    <div className="flex flex-col w-full mb-4 my-2 ">
+    <div className="my-2 mb-4 flex w-full flex-col">
       <div className="flex w-full items-center gap-2">
         <div className="grow">
           <TextInput
@@ -40,20 +40,20 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
           />
         </div>
 
-        <button onClick={searchItems} className="p-2 rounded-md bg-[#fead61] text-[#15599a]">
+        <button onClick={searchItems} className="rounded-md bg-[#fead61] p-2 text-[#15599a]">
           <AiOutlineSearch />
         </button>
       </div>
       {status == 'success' ? (
-        <div className="flex flex-col gap-2 w-full">
-          <div className="w-full grid grid-cols-4 items-center px-2">
-            <h1 className="text-center text-[#fead61] font-bold">NOME</h1>
-            <h1 className="text-center text-[#fead61] font-bold">QTDE</h1>
-            <h1 className="text-center text-[#fead61] font-bold">PREÇO</h1>
-            <h1 className="text-center text-[#fead61] font-bold">AÇÃO</h1>
+        <div className="flex w-full flex-col gap-2">
+          <div className="grid w-full grid-cols-4 items-center px-2">
+            <h1 className="text-center font-bold text-[#fead61]">NOME</h1>
+            <h1 className="text-center font-bold text-[#fead61]">QTDE</h1>
+            <h1 className="text-center font-bold text-[#fead61]">PREÇO</h1>
+            <h1 className="text-center font-bold text-[#fead61]">AÇÃO</h1>
           </div>
           {materials.map((item, index) => (
-            <div key={index} className="w-full grid grid-cols-4 items-center px-2">
+            <div key={index} className="grid w-full grid-cols-4 items-center px-2">
               <h1 className="text-center">{item.nome}</h1>
               <h1 className="text-center">{item.qtde}</h1>
               <h1 className="text-center">
@@ -64,7 +64,7 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
                     })
                   : '-'}
               </h1>
-              <button onClick={() => addItemToHolder(item)} className="text-green-500 flex items-center justify-center">
+              <button onClick={() => addItemToHolder(item)} className="flex items-center justify-center text-green-500">
                 <MdOutlineAddCircle style={{ fontSize: '20px' }} />
               </button>
             </div>
@@ -72,10 +72,10 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
         </div>
       ) : null}
       {status == 'loading' ? (
-        <div className="w-full flex items-center justify-center" role="status">
+        <div className="flex w-full items-center justify-center" role="status">
           <svg
             aria-hidden="true"
-            className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

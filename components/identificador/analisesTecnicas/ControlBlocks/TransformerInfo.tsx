@@ -66,8 +66,8 @@ function TransformerInfo({
     return true
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <span className="py-2 text-center text-lg font-bold uppercase text-[#15599a]">DADOS DO TRANSFORMADOR</span>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <span className="py-2 text-center text-lg font-bold text-[#15599a] uppercase">DADOS DO TRANSFORMADOR</span>
 
       <div className="flex w-full grow flex-col gap-2">
         <div className="w-full self-center lg:w-1/3">
@@ -108,7 +108,7 @@ function TransformerInfo({
                 </label>
                 {files?.fotoTrafo ? <BsCheckCircleFill style={{ color: 'rgb(34,197,94)' }} /> : null}
               </div>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {files?.fotoTrafo ? (
                     <div className="flex flex-col items-center">
@@ -147,7 +147,7 @@ function TransformerInfo({
                 </label>
                 {files?.fotoLocalizacaoTrafo ? <BsCheckCircleFill style={{ color: 'rgb(34,197,94)' }} /> : null}
               </div>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {files?.fotoLocalizacaoTrafo ? (
                     <div className="flex flex-col items-center">
@@ -188,7 +188,7 @@ function TransformerInfo({
                 </label>
                 {files?.fotoNumeroTrafo ? <BsCheckCircleFill style={{ color: 'rgb(34,197,94)' }} /> : null}
               </div>
-              <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {files?.fotoNumeroTrafo ? (
                     <div className="flex flex-col items-center">
@@ -226,8 +226,8 @@ function TransformerInfo({
         ) : null}
       </div>
 
-      <div className="mt-2 flex w-full items-end justify-between bg-[#fff]">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+      <div className="bg-background mt-2 flex w-full items-end justify-between">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button
@@ -236,7 +236,7 @@ function TransformerInfo({
               goToNextStage()
             }
           }}
-          className=" rounded p-2 font-bold hover:bg-black hover:text-white"
+          className="rounded p-2 font-bold hover:bg-black hover:text-white"
         >
           Prosseguir
         </button>

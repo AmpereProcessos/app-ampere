@@ -1,29 +1,11 @@
-import React from "react";
+import React from 'react'
 
-function SelectInput({
-  label,
-  value,
-  options,
-  handleChange,
-  editable,
-  widthFit,
-  labelColor,
-}) {
+function SelectInput({ label, value, options, handleChange, editable, widthFit, labelColor }) {
   return (
-    <div
-      className={`flex flex-col w-full text-sm lg:text-base ${
-        widthFit ? "w-full" : "lg:w-[350px]"
-      } items-center`}
-    >
-      <span
-        className={`uppercase font-bold font-raleway text-center text-sm ${
-          labelColor ? labelColor : ""
-        }`}
-      >
-        {label}
-      </span>
+    <div className={`flex w-full flex-col text-sm lg:text-base ${widthFit ? 'w-full' : 'lg:w-[350px]'} items-center`}>
+      <span className={`font-raleway text-center text-sm font-bold uppercase ${labelColor ? labelColor : ''}`}>{label}</span>
       <select
-        className="text-xs w-full text-center bg-transparent uppercase text-gray-600 outline-none"
+        className="text-primary/80 w-full bg-transparent text-center text-xs uppercase outline-hidden"
         onChange={(e) => handleChange(e.target.value)}
         disabled={!editable}
         value={value}
@@ -36,7 +18,7 @@ function SelectInput({
           ))}
       </select>
     </div>
-  );
+  )
 }
 
-export default SelectInput;
+export default SelectInput

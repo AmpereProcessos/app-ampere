@@ -12,7 +12,7 @@ function CheckboxInput({
   handleChange,
 }) {
   return (
-    <div className={`flex flex-col w-full gap-2 text-sm lg:text-base ${widthFit ? 'w-fit' : 'lg:w-[350px]'} items-center`}>
+    <div className={`flex w-full flex-col gap-2 text-sm lg:text-base ${widthFit ? 'w-fit' : 'lg:w-[350px]'} items-center`}>
       <span className={labelClassName}>{title}</span>
       <div className="flex w-full items-center justify-center gap-2">
         <div
@@ -26,7 +26,7 @@ function CheckboxInput({
           {checked ? <BsCheck style={{ color: '#fead61' }} /> : null}
         </div>
         <p
-          className="cursor-pointer text-xs text-gray-600"
+          className="text-primary/80 cursor-pointer text-xs"
           onClick={() => {
             if (editable) handleChange(!checked)
           }}

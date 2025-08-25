@@ -69,11 +69,11 @@ function EnergyConsortiumCalculator() {
             <Image src={EnergyDiscountImage} alt="" />
           </div>
         </div>
-        <a className="text-[0.3rem] text-gray-100" href="https://storyset.com/people">
+        <a className="text-primary/20 text-[0.3rem]" href="https://storyset.com/people">
           People illustrations by Storyset
         </a>
       </div>
-      <div className="flex h-full w-full grow flex-col rounded-tl-md rounded-br-md bg-[#fff] p-6">
+      <div className="bg-background flex h-full w-full grow flex-col rounded-tl-md rounded-br-md p-6">
         <h1 className="w-full text-center text-2xl font-black text-[#15599a]">SIMULE AQUI SEU DESCONTO DE ENERGIA</h1>
         <div className="mt-6 flex w-full grow flex-col gap-5">
           <div className="flex w-full flex-col items-center gap-4 self-center lg:w-[70%] lg:flex-row">
@@ -140,14 +140,14 @@ function EnergyConsortiumCalculator() {
             <div className="flex w-full items-center justify-between gap-4 self-center">
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: prev.expense - 10 }))}
-                className="flex items-center justify-center rounded-full border border-gray-500 bg-[#fff] p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex items-center justify-center rounded-full border p-3 text-xs duration-300 ease-in-out hover:scale-105 lg:text-lg"
               >
                 <FaMinus />
               </button>
-              <h1 className="text-4xl font-black ">{formatToMoney(simulation.expense)}</h1>
+              <h1 className="text-4xl font-black">{formatToMoney(simulation.expense)}</h1>
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: prev.expense + 10 }))}
-                className="flex items-center justify-center rounded-full border border-gray-500 bg-[#fff] p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex items-center justify-center rounded-full border p-3 text-xs duration-300 ease-in-out hover:scale-105 lg:text-lg"
               >
                 <FaPlus />
               </button>
@@ -155,25 +155,25 @@ function EnergyConsortiumCalculator() {
             <div className="flex w-full items-center justify-between gap-3">
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: 100 }))}
-                className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex w-[40%] min-w-1/5 items-center justify-center rounded-md border p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
               >
                 R$ 100
               </button>
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: 250 }))}
-                className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex w-[40%] min-w-1/5 items-center justify-center rounded-md border p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
               >
                 R$ 250
               </button>
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: 500 }))}
-                className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex w-[40%] min-w-1/5 items-center justify-center rounded-md border p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
               >
                 R$ 500
               </button>
               <button
                 onClick={() => setSimulation((prev) => ({ ...prev, expense: 1000 }))}
-                className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+                className="bg-background border-primary/60 hover:bg-primary/20 flex w-[40%] min-w-1/5 items-center justify-center rounded-md border p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
               >
                 R$ 1000
               </button>
@@ -183,7 +183,7 @@ function EnergyConsortiumCalculator() {
             <div className="flex min-h-[50px] w-full flex-col items-center justify-center gap-1">
               <button
                 onClick={() => handleSimulation({ simulation })}
-                className="rounded bg-black p-3 px-12 font-bold text-white duration-300 hover:scale-[1.02] hover:bg-gray-800"
+                className="hover:bg-primary/80 rounded bg-black p-3 px-12 font-bold text-white duration-300 hover:scale-[1.02]"
               >
                 SIMULAR
               </button>
@@ -200,16 +200,16 @@ function EnergyConsortiumCalculator() {
                 exit="exit"
                 className="flex w-full flex-col gap-4 self-center lg:w-[70%]"
               >
-                <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
+                <h1 className="w-full text-center text-sm leading-none font-medium tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
                 <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
                   <h1 className="text-3xl font-black tracking-tight">{formatToMoney(result.economy)} / MÊS</h1>
-                  <div className="h-[1px] w-full bg-black lg:h-full lg:w-[1px]"></div>
+                  <div className="h-px w-full bg-black lg:h-full lg:w-px"></div>
                   <h1 className="text-3xl font-black tracking-tight">
                     <strong className="text-[#04e762]">{formatToMoney(result.economy * 12)}</strong> / ANO
                   </h1>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:justify-end">
-                  <h1 className="text-sm tracking-tight text-gray-500">Deseja economizar na sua conta de energia ?</h1>
+                  <h1 className="text-primary/60 text-sm tracking-tight">Deseja economizar na sua conta de energia ?</h1>
                   <Link
                     href={
                       'https://portal.energea.com.br/auto-servir?empresa=1714682702286x426663626911252500&REP=1714682746611x553649292113980600&plano=1667231520862x115446081571782660'
@@ -225,14 +225,14 @@ function EnergyConsortiumCalculator() {
           ) : null}
           {stateHolder.status == 'loading' ? (
             <div className="flex min-h-[50px] w-full items-center justify-center">
-              <h1 className="animate-pulse text-center font-medium text-gray-500">{stateHolder.text}</h1>
+              <h1 className="text-primary/60 animate-pulse text-center font-medium">{stateHolder.text}</h1>
             </div>
           ) : null}
           {/* <div className="flex w-full flex-col gap-4 self-center lg:w-[70%]">
               <h1 className="w-full text-center text-sm font-medium leading-none tracking-tight">SUA ECONOMIA SERÁ DE:</h1>
               <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
                 <h1 className="text-3xl font-black tracking-tight">{formatToMoney(handleCalculation({ simulation }).economy)} / MÊS</h1>
-                <div className="h-[1px] w-full bg-black lg:h-full lg:w-[1px]"></div>
+                <div className="h-px w-full bg-black lg:h-full lg:w-px"></div>
                 <h1 className="text-3xl font-black tracking-tight">
                   <strong className="text-[#04e762]">{formatToMoney(handleCalculation({ simulation }).economy * 12)}</strong> / ANO
                 </h1>
@@ -248,7 +248,7 @@ function EnergyConsortiumCalculator() {
   )
 
   // return (
-  //   <div className="flex h-full w-full flex-col items-center justify-center bg-[#fff] p-3 font-[Inter] lg:flex-row">
+  //   <div className="flex h-full w-full flex-col items-center justify-center bg-background p-3 font-[Inter] lg:flex-row">
   //     <div className="flex h-full w-full flex-col justify-between lg:w-2/3">
   //       <div className="flex w-full grow items-center justify-center">
   //         <Image src={EnergyDiscountImage} width={600} height={600} />
@@ -262,14 +262,14 @@ function EnergyConsortiumCalculator() {
   //           <div className="flex w-full items-center justify-between gap-4 self-center">
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: prev.expense - 10 }))}
-  //               className="flex items-center justify-center rounded-full bg-[#fff] p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:text-lg"
+  //               className="flex items-center justify-center rounded-full bg-background p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:text-lg"
   //             >
   //               <FaMinus />
   //             </button>
   //             <h1 className="text-4xl font-black text-white">{formatToMoney(simulation.expense)}</h1>
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: prev.expense + 10 }))}
-  //               className="flex items-center justify-center rounded-full bg-[#fff] p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:text-lg"
+  //               className="flex items-center justify-center rounded-full bg-background p-3 text-xs duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:text-lg"
   //             >
   //               <FaPlus />
   //             </button>
@@ -277,25 +277,25 @@ function EnergyConsortiumCalculator() {
   //           <div className="flex w-full items-center justify-between gap-3">
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: 100 }))}
-  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-primary/60 bg-background p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
   //             >
   //               R$ 100
   //             </button>
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: 250 }))}
-  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-primary/60 bg-background p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
   //             >
   //               R$ 250
   //             </button>
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: 500 }))}
-  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-primary/60 bg-background p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
   //             >
   //               R$ 500
   //             </button>
   //             <button
   //               onClick={() => setSimulation((prev) => ({ ...prev, expense: 1000 }))}
-  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-gray-500 bg-white p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-gray-100 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
+  //               className="min-w-1/5 flex w-[40%] items-center justify-center rounded-md border border-primary/60 bg-background p-2 py-4 text-xs font-bold duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 lg:w-1/4 lg:p-3 lg:py-6 lg:text-lg"
   //             >
   //               R$ 1000
   //             </button>
@@ -341,7 +341,7 @@ function EnergyConsortiumCalculator() {
   //         <h1 className="w-full text-center font-medium tracking-tight text-white">SUA ECONOMIA SERÁ DE:</h1>
   //         <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
   //           <h1 className="text-5xl font-black text-white">{formatToMoney(handleCalculation({ simulation }).economy)} / MÊS</h1>
-  //           <div className="h-[1px] w-full bg-white lg:h-full lg:w-[1px]"></div>
+  //           <div className="h-px w-full bg-background lg:h-full lg:w-px"></div>
   //           <h1 className="text-5xl font-black text-white">
   //             <strong className="text-[#04e762]">{formatToMoney(handleCalculation({ simulation }).economy * 12)}</strong> / ANO
   //           </h1>

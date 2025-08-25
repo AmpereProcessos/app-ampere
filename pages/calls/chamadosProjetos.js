@@ -198,81 +198,81 @@ function ChamadosProjetos() {
   if (status == 'authenticated') {
     return (
       <div className="flex grow flex-col gap-y-2 p-6">
-        <div className="flex w-full items-center justify-between border border-gray-300 bg-[#fff] p-4 shadow-xl">
-          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE PROJETOS</p>
+        <div className="bg-background border-primary/20 flex w-full items-center justify-between border p-4 shadow-xl">
+          <p className="text-center font-['Roboto'] text-2xl font-bold text-[#15599a] uppercase">CHAMADOS DE PROJETOS</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
-        <div className="grid grid-cols-1 grid-rows-5  gap-3 lg:grid-cols-5 lg:grid-rows-1">
-          <div className="flex h-[150px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+        <div className="grid grid-cols-1 grid-rows-5 gap-3 lg:grid-cols-5 lg:grid-rows-1">
+          <div className="bg-background border-primary/20 flex h-[150px] flex-col border p-4 shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">ASSINATURAS</h1>
+              <h1 className="text-primary/80 uppercase">ASSINATURAS</h1>
             </div>
             <p className="flex grow items-center justify-center text-center text-xl font-bold text-[#fead61]">
               CONFECCIONAR: {stats.assinatura && stats.assinatura.confeccionar}
             </p>
-            <p className="text-center text-gray-600">
+            <p className="text-primary/80 text-center">
               PARA ASSINAR: <strong className="text-red-500">{stats.assinatura && stats.assinatura.paraAssinar}</strong>
             </p>
           </div>
-          <div className="flex h-[150px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+          <div className="bg-background border-primary/20 flex h-[150px] flex-col border p-4 shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">PARECER</h1>
+              <h1 className="text-primary/80 uppercase">PARECER</h1>
             </div>
             <p className="flex grow items-center justify-center text-center text-xl font-bold text-[#fead61]">
               SOLICITAR: {stats.parecer && stats.parecer.solicitar}
             </p>
-            <p className="text-center text-gray-600">
+            <p className="text-primary/80 text-center">
               AGUARDANDO CONC.: <strong className="text-red-500">{stats.parecer && stats.parecer.aguardando}</strong>
             </p>
           </div>
-          <div className="flex h-[150px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+          <div className="bg-background border-primary/20 flex h-[150px] flex-col border p-4 shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">COMISSIONAMENTO</h1>
+              <h1 className="text-primary/80 uppercase">COMISSIONAMENTO</h1>
             </div>
             <p className="flex grow items-center justify-center text-center text-xl font-bold text-[#fead61]">
               PROJETOS: {stats.comissionamento && stats.comissionamento.parcial}
             </p>
-            <p className="text-center text-gray-600">
+            <p className="text-primary/80 text-center">
               TOTAL: <strong className="text-red-500">{stats.comissionamento && stats.comissionamento.total}</strong>
             </p>
           </div>
-          <div className="flex h-[150px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+          <div className="bg-background border-primary/20 flex h-[150px] flex-col border p-4 shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">CHAMADOS</h1>
+              <h1 className="text-primary/80 uppercase">CHAMADOS</h1>
             </div>
             <p className="flex grow items-center justify-center text-center text-xl font-bold text-[#fead61]">
               DISTRIBUIÇÕES: {stats.distribuicoes && stats.distribuicoes}
             </p>
-            <p className="text-center text-gray-600">
+            <p className="text-primary/80 text-center">
               TOTAL: <strong className="text-red-500">{openCalls && openCalls.length}</strong>
             </p>
           </div>
-          <div className="flex h-[150px] flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl">
+          <div className="bg-background border-primary/20 flex h-[150px] flex-col border p-4 shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">VISTORIAS</h1>
+              <h1 className="text-primary/80 uppercase">VISTORIAS</h1>
             </div>
             <p className="flex grow items-center justify-center text-center text-xl font-bold text-[#fead61]">
               SOLICITAR: {stats.vistoria.pendente && stats.vistoria.pendente}
             </p>
-            <p className="text-center text-gray-600">
+            <p className="text-primary/80 text-center">
               AGUARDANDO CONCESSIONÁRIA: <strong className="text-red-500">{stats.vistoria.aguardando && stats.vistoria.aguardando}</strong>
             </p>
           </div>
         </div>
         {/* Abertos */}
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[720px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-                <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
+                <p className="text-center text-xl font-bold text-[#15599a] uppercase">Chamados abertos</p>
                 <p className="font-bold text-[#fead61]">({filteredOpenCalls?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -285,7 +285,7 @@ function ChamadosProjetos() {
                       type="text"
                       value={openCallsFilters.search}
                       onChange={(e) => handleSearchInOpenCalls(e.target.value)}
-                      className="h-[41px] w-full  rounded border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 h-[41px] w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO PROJETO"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -379,13 +379,13 @@ function ChamadosProjetos() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredOpenCalls ? (
               filteredOpenCalls.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className="max-h-[150px] min-h-[120px] w-full cursor-pointer border border-gray-300 p-3 hover:bg-blue-100 lg:w-[420px]"
+                  className="border-primary/20 dark:hover:bg-primary/10 max-h-[150px] min-h-[120px] w-full cursor-pointer border p-3 hover:bg-blue-100 lg:w-[420px]"
                 >
                   <div className="grid w-full grid-cols-5 items-center justify-between">
                     <h1 className="col-span-3 text-sm font-semibold uppercase">{call.projeto && call.projeto}</h1>
@@ -400,12 +400,12 @@ function ChamadosProjetos() {
                     )}
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
-                    <p className="text-xs text-gray-500">{call.responsavel}</p>
+                    <p className="text-primary/60 text-xs uppercase">Responsável:</p>
+                    <p className="text-primary/60 text-xs">{call.responsavel}</p>
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
-                    <p className="text-xs text-gray-500">{call.tipoDoChamado}</p>
+                    <p className="text-primary/60 text-xs uppercase">Tipo de chamado:</p>
+                    <p className="text-primary/60 text-xs">{call.tipoDoChamado}</p>
                   </div>
                 </div>
               ))
@@ -413,7 +413,7 @@ function ChamadosProjetos() {
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                  className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -433,19 +433,19 @@ function ChamadosProjetos() {
           </div>
         </div>
         {/* Fechados */}
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[500px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[500px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
                 <p className="text-center text-xl font-bold text-[#15599a]">CHAMADOS FINALIZADOS</p>
                 <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -464,7 +464,7 @@ function ChamadosProjetos() {
                         })
                       }
                       type="date"
-                      className="border border-gray-300 p-2 outline-none"
+                      className="border-primary/20 border p-2 outline-hidden"
                     />
                     <p>&</p>
                     <input
@@ -476,7 +476,7 @@ function ChamadosProjetos() {
                         })
                       }
                       type="date"
-                      className="border border-gray-300 p-2 outline-none"
+                      className="border-primary/20 border p-2 outline-hidden"
                     />
                     <FetchDataButton text={'BUSCAR'} icon={<MdDateRange />} handleClick={getClosedCallsByDate} />
                   </div>
@@ -484,7 +484,7 @@ function ChamadosProjetos() {
                     <input
                       value={closedCallsFilters.search}
                       onChange={(e) => handleSearchInClosedCalls(e.target.value)}
-                      className="w-full rounded  border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO PROJETO"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -545,13 +545,13 @@ function ChamadosProjetos() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredClosedCalls ? (
               filteredClosedCalls.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className="flex max-h-[150px] min-h-[120px] w-full cursor-pointer flex-col border border-gray-300 p-3 hover:bg-blue-100 lg:w-[420px]"
+                  className="border-primary/20 dark:hover:bg-primary/10 flex max-h-[150px] min-h-[120px] w-full cursor-pointer flex-col border p-3 hover:bg-blue-100 lg:w-[420px]"
                 >
                   <div className="grid w-full grid-cols-3 items-center gap-x-2">
                     <h1 className="col-span-2 text-sm font-semibold uppercase">{call.projeto && call.projeto}</h1>
@@ -562,12 +562,12 @@ function ChamadosProjetos() {
                     </p>
                   </div>
                   <div className="mt-2 grid w-full grid-cols-2 items-center">
-                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
-                    <p className="text-center text-xs text-gray-500">{call.responsavel}</p>
+                    <p className="text-primary/60 text-xs uppercase">Responsável:</p>
+                    <p className="text-primary/60 text-center text-xs">{call.responsavel}</p>
                   </div>
                   <div className="mt-2 grid w-full grid-cols-2 items-center">
-                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
-                    <p className="text-center text-xs text-gray-500">{call.tipoDoChamado}</p>
+                    <p className="text-primary/60 text-xs uppercase">Tipo de chamado:</p>
+                    <p className="text-primary/60 text-center text-xs">{call.tipoDoChamado}</p>
                   </div>
                 </div>
               ))
@@ -575,7 +575,7 @@ function ChamadosProjetos() {
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                  className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -595,7 +595,7 @@ function ChamadosProjetos() {
           </div>
         </div>
         <Link href="/publico/chamadosProjetos">
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">Novo chamado</p>
           </div>
         </Link>

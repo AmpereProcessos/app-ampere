@@ -174,7 +174,7 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
   }, [])
   return (
     <div className="flex w-full flex-col items-center py-4">
-      <h1 className="w-full text-start font-medium text-gray-700">
+      <h1 className="text-primary/70 w-full text-start font-medium">
         REPORTAR ATUALIZAÇÕES À <strong className="text-[#fead61]">{data.nomeAtividade ? data.nomeAtividade : 'OPERAÇÃO'}</strong>{' '}
       </h1>
       <div className="mt-3 w-full lg:w-[50%]">
@@ -191,7 +191,7 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
           width={'100%'}
         />
       </div>
-      <h3 className="w-full pb-2 text-center text-sm font-medium text-gray-500">LISTE ATIVIDADES FEITAS:</h3>
+      <h3 className="text-primary/60 w-full pb-2 text-center text-sm font-medium">LISTE ATIVIDADES FEITAS:</h3>
       <div className="flex w-full items-center px-2 lg:w-[50%] lg:px-0">
         <input
           type="text"
@@ -203,18 +203,18 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
             }))
           }
           placeholder="Digite aqui uma descrição da atividade realizada."
-          className="grow border-b border-gray-500 p-2 text-center text-sm outline-none"
+          className="border-primary/60 grow border-b p-2 text-center text-sm outline-hidden"
         />
         <button onClick={addActivity} className="text-lg text-green-500">
           <IoMdAdd />
         </button>
       </div>
-      {reportActivityHolder.error ? <p className="text-xs italic text-red-500">{reportActivityHolder.error}</p> : null}
-      <div className="flex w-full flex-col py-2 px-2 lg:w-[50%] lg:px-0">
+      {reportActivityHolder.error ? <p className="text-xs text-red-500 italic">{reportActivityHolder.error}</p> : null}
+      <div className="flex w-full flex-col px-2 py-2 lg:w-[50%] lg:px-0">
         {data.atividades.length > 0 ? (
           data.atividades.map((activity, index) => (
             <div className="flex w-full max-w-full items-center justify-between" key={index}>
-              <p className="grow break-words break-all text-center text-sm text-gray-500">{activity}</p>
+              <p className="text-primary/60 grow text-center text-sm break-words break-all">{activity}</p>
               <button
                 onClick={() => {
                   var activitiesArr = data.atividades
@@ -231,16 +231,16 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
             </div>
           ))
         ) : (
-          <p className="py-4 text-center text-xs font-extralight italic text-gray-500">Sem atividades adicionadas ao relatório...</p>
+          <p className="text-primary/60 py-4 text-center text-xs font-extralight italic">Sem atividades adicionadas ao relatório...</p>
         )}
       </div>
       <textarea
         value={data.anotacoes}
         onChange={(e) => setReportInfo((prev) => ({ ...prev, anotacoes: e.target.value }))}
         placeholder="Relate aqui detalhes adicionais sobre o dia, clima, problemas enfrentados, imprevistos, desvios de planejamento ou qualquer outra informação relevante."
-        className="h-[150px] max-h-[150px] w-full resize-none border border-gray-300 bg-gray-100 p-2 text-center outline-none lg:h-[100px] lg:max-h-[100px] lg:w-[50%]"
+        className="border-primary/20 bg-primary/20 h-[150px] max-h-[150px] w-full resize-none border p-2 text-center outline-hidden lg:h-[100px] lg:max-h-[100px] lg:w-[50%]"
       />
-      <h3 className="w-full py-2 text-center text-sm font-medium text-gray-500">ANEXE ARQUIVOS:</h3>
+      <h3 className="text-primary/60 w-full py-2 text-center text-sm font-medium">ANEXE ARQUIVOS:</h3>
       <div className="flex w-full flex-col items-center gap-2 lg:w-[50%] lg:flex-row">
         <input
           type="text"
@@ -252,14 +252,14 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
             }))
           }
           placeholder="Digite aqui o(s) nome do(s) arquivo(s)."
-          className="w-full border-b border-gray-500 p-2 text-center text-sm outline-none lg:w-[50%]"
+          className="border-primary/60 w-full border-b p-2 text-center text-sm outline-hidden lg:w-[50%]"
         />
-        <div className="relative flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-gray-100 p-2">
+        <div className="bg-primary/20 relative flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
           <div className="absolute">
             {fileHolder.file ? (
               <div className="flex flex-col items-center">
                 <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                <span className="block text-center text-xxs font-normal text-gray-400 lg:text-sm">
+                <span className="text-xxs block text-center font-normal text-gray-400 lg:text-sm">
                   {fileHolder.file.length == 1 ? fileHolder.file[0].name : `${fileHolder.file[0].name}...`}
                 </span>
               </div>
@@ -282,11 +282,11 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
           <IoMdAdd />
         </button>
       </div>
-      {fileHolder.error ? <p className="text-xs italic text-red-500">{fileHolder.error}</p> : null}
+      {fileHolder.error ? <p className="text-xs text-red-500 italic">{fileHolder.error}</p> : null}
       {files.length > 0 ? (
         files.map((filesInfo, index) => (
           <div className="mt-1 flex w-full items-center justify-between lg:w-[50%]" key={index}>
-            <p className="grow break-words break-all text-center text-sm text-blue-400">
+            <p className="grow text-center text-sm break-words break-all text-blue-400">
               {filesInfo.name} ({filesInfo.files.length} arquivos)
             </p>
             <button
@@ -305,7 +305,7 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
           </div>
         ))
       ) : (
-        <p className="py-1 text-center text-xs font-extralight italic text-gray-500">Sem arquivos adicionados ao relatório...</p>
+        <p className="text-primary/60 py-1 text-center text-xs font-extralight italic">Sem arquivos adicionados ao relatório...</p>
       )}
       <button
         onClick={sendReport}
@@ -345,10 +345,10 @@ function OperationReportBlock({ session, data, setReportInfo, operationName, ope
             reports.length > 0 ? (
               reports.map((report, index) => <ReportLine report={report} key={index} count={reports.length - index} />)
             ) : (
-              <p className="w-full animate-pulse py-4 text-center font-medium text-gray-600">Sem relatórios vinculados a essa operação.</p>
+              <p className="text-primary/80 w-full animate-pulse py-4 text-center font-medium">Sem relatórios vinculados a essa operação.</p>
             )
           ) : (
-            <p className="w-full animate-pulse py-4 text-center font-medium text-gray-600">Buscando...</p>
+            <p className="text-primary/80 w-full animate-pulse py-4 text-center font-medium">Buscando...</p>
           )
         ) : null}
       </div>

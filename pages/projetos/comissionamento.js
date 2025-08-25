@@ -86,10 +86,10 @@ function Comissionamento() {
   if (status == 'authenticated') {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-              <p className="text-2xl font-bold uppercase text-[#15599a]">Comissionamento</p>
+              <p className="text-2xl font-bold text-[#15599a] uppercase">Comissionamento</p>
               {filteredProjects && <p className="font-bold text-[#fead61]">({filteredProjects.length})</p>}
             </div>
           </div>
@@ -97,7 +97,7 @@ function Comissionamento() {
             <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
               <input
                 type={'text'}
-                className="w-full rounded  border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                className="border-primary/20 w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                 placeholder="DIGITE O NOME DO CONTRATO"
                 value={searchFilter}
                 onChange={(e) => handleSearchFilter(e.target.value)}
@@ -123,7 +123,7 @@ function Comissionamento() {
             </div>
           </div>
         </div>
-        <div className="mt-4 grid w-full grid-cols-1 gap-3 lg:grid-cols-2 ">
+        <div className="mt-4 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
           {filteredProjects.map((project) => (
             <ComissionamentoCard getProjects={getProjects} key={project._id} info={project} />
           ))}

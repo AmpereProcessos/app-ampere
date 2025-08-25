@@ -42,7 +42,7 @@ function ThirdStage({ infoHolder, setInfoHolder, createSimulation }: ThirdStageP
   }
   return (
     <div className="flex h-fit w-full flex-col">
-      <div className="flex h-[300px] w-full flex-1 flex-grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
+      <div className="flex h-[300px] w-full flex-1 grow flex-col items-center justify-center gap-3 self-stretch font-normal text-[rgba(79,88,96,1)]">
         <div className="flex w-[350px] flex-col items-center justify-center gap-1 text-left">
           <div className="w-[300px] lg:w-[350px]">
             <div>
@@ -140,7 +140,7 @@ function ThirdStage({ infoHolder, setInfoHolder, createSimulation }: ThirdStageP
                   dataNascimento: e.target.value != '' ? e.target.value : null,
                 }))
               }
-              className="w-full rounded-lg border border-gray-300 bg-transparent p-3 text-sm shadow-sm"
+              className="border-primary/20 w-full rounded-lg border bg-transparent p-3 text-sm shadow-xs"
             />
           </div>
         </div>
@@ -153,14 +153,14 @@ function ThirdStage({ infoHolder, setInfoHolder, createSimulation }: ThirdStageP
         </div>
       </div>
       <div className="flex h-[100px] w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
-        {submitErr.text ? <p className="text-center italic text-red-500">{submitErr.text}</p> : null}
+        {submitErr.text ? <p className="text-center text-red-500 italic">{submitErr.text}</p> : null}
         <div className="w-full">
           {submitLoading ? (
             <div className="flex w-full items-center justify-center self-center lg:w-[350px]">
               <div role="status">
                 <svg
                   aria-hidden="true"
-                  className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+                  className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +182,7 @@ function ThirdStage({ infoHolder, setInfoHolder, createSimulation }: ThirdStageP
             <button
               type="submit"
               onClick={handleFinishForm}
-              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02] lg:w-full"
+              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02] lg:w-full"
             >
               <p className="w-full text-sm lg:text-[19px]">Visualizar simulação</p>
             </button>

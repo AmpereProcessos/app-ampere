@@ -31,20 +31,20 @@ function ContractRequestFormsPage() {
   if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
               {filterMenuIsOpen ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
                 </div>
               )}
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">SOLICITAÇÕES DE CONTRATO</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">SOLICITAÇÕES DE CONTRATO</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -85,7 +85,7 @@ function ContractRequestFormsPage() {
               <RequestCard key={request._id} request={request} openModal={(id) => setEditContractRequestModal({ id: id, isOpen: true })} />
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma solicitação de contrato encontrada.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma solicitação de contrato encontrada.</div>
           )
         ) : null}
       </div>

@@ -166,14 +166,14 @@ function SolicitacaoCompra() {
     return value
   }
   return (
-    <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
+    <div className="flex grow flex-col items-center bg-[#15599a] p-6">
       {sendMsg.status ? (
-        <div className="w-[90%] h-[100%] bg-[#fff] rounded-lg flex flex-col justify-center border border-gray-300 shadow-lg p-2 items-center">
+        <div className="bg-background border-primary/20 flex h-full w-[90%] flex-col items-center justify-center rounded-lg border p-2 shadow-lg">
           {sendMsg.status == 'loading' ? (
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -192,24 +192,24 @@ function SolicitacaoCompra() {
           ) : null}
           {sendMsg.status == 'failure' ? <MdSmsFailed style={{ fontSize: '45px', color: 'red' }} /> : null}
           {sendMsg.status == 'success' ? <FiCheckCircle style={{ fontSize: '45px', color: 'green' }} /> : null}
-          <h1 className={`text-lg text-center italic ${sendMsg.color} font-medium mt-2`}>{sendMsg.text}</h1>
+          <h1 className={`text-center text-lg italic ${sendMsg.color} mt-2 font-medium`}>{sendMsg.text}</h1>
           {sendMsg.status != 'loading' ? (
             <button
               onClick={reset}
-              className="text-[#15559a] border border-[#15599a] font-medium p-2 rounded-md mt-4 hover:bg-[#15599a] hover:text-white"
+              className="mt-4 rounded-md border border-[#15599a] p-2 font-medium text-[#15559a] hover:bg-[#15599a] hover:text-white"
             >
               NOVA SOLICITAÇÃO
             </button>
           ) : null}
         </div>
       ) : (
-        <div className="w-[90%] h-[100%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
-          <div className="flex items-center justify-center h-[80px]">
+        <div className="bg-background border-primary/20 flex h-full w-[90%] flex-col items-center rounded-lg border p-2 shadow-lg">
+          <div className="flex h-[80px] items-center justify-center">
             <Image height={'80px'} width={'80px'} src={Logo} objectFit="fill" />
           </div>
-          <h1 className="w-full text-center text-[#15599a] text-2xl font-bold">SOLICITAÇÃO DE COMPRA</h1>
-          <div className="grow w-full flex flex-col items-center">
-            <h1 className="text-[#fead61] font-bold text-center my-4">INFORMAÇÕES GERAIS</h1>
+          <h1 className="w-full text-center text-2xl font-bold text-[#15599a]">SOLICITAÇÃO DE COMPRA</h1>
+          <div className="flex w-full grow flex-col items-center">
+            <h1 className="my-4 text-center font-bold text-[#fead61]">INFORMAÇÕES GERAIS</h1>
             <TextFloatingInput
               label={'NOME COMPLETO'}
               value={solicitationInfo.requisitante.nome}
@@ -276,7 +276,7 @@ function SolicitacaoCompra() {
                 }))
               }
               placeholder="Adicione aqui algum comentário/anotação sobre a solicitação de compra..."
-              className="w-[50%] resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
+              className="bg-primary/20 h-[100px] w-[50%] resize-none border border-blue-200 p-2 text-center text-sm outline-hidden"
             />
             {/* <div
               className={`flex flex-col relative font-mono items-center z-0 w-full lg:w-[50%] text-center mb-6 group`}
@@ -297,24 +297,24 @@ function SolicitacaoCompra() {
                 type="datetime-local"
                 name={"prazo"}
                 id={"prazo"}
-                className="flex py-2.5 z-1 items-center justify-center text-center px-0 w-full bg-[#fff] text-sm text-gray-900 border-0 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="flex py-2.5 z-1 items-center justify-center text-center px-0 w-full bg-background text-sm text-gray-900 border-0 border-b-2 border-primary/20 focus:outline-hidden focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
               />
 
               <label
                 htmlFor={"datahora"}
-                className="peer-focus:font-medium z-2 absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3  origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium z-2 absolute text-sm text-primary/60  duration-300 transform -translate-y-6 scale-75 top-3  origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 ITENS NECESSÁRIOS PARA QUE DATA?
               </label>
             </div> */}
-            <h1 className="text-[#fead61] font-bold text-center mt-4">ITENS</h1>
-            <p className="text-xs text-[#15599a] italic text-center mb-4">
+            <h1 className="mt-4 text-center font-bold text-[#fead61]">ITENS</h1>
+            <p className="mb-4 text-center text-xs text-[#15599a] italic">
               Preencha as informações sobre o item e clique em <strong className="text-green-500">adicionar.</strong>
             </p>
-            <div className="w-full flex-col lg:flex-row flex items-center gap-4">
-              <div className="lg:w-[90%] w-full flex flex-col  gap-4  items-center">
-                <div className="flex flex-col lg:flex-row items-center gap-4  w-full">
+            <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
+              <div className="flex w-full flex-col items-center gap-4 lg:w-[90%]">
+                <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
                   <div className="w-full lg:w-[50%]">
                     <TextFloatingInput
                       label={'NOME DO ITEM'}
@@ -364,30 +364,30 @@ function SolicitacaoCompra() {
                     }))
                   }
                   placeholder="Descreva aqui a finalidade do item (uso próprio ou venda), características do item, lugares específico pra compra e outras informações relevantes..."
-                  className="w-full resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
+                  className="bg-primary/20 h-[100px] w-full resize-none border border-blue-200 p-2 text-center text-sm outline-hidden"
                 />
               </div>
-              <div className="w-full lg:w-[10%] flex items-center justify-center">
-                <button onClick={addItens} className="text-green-500 text-2xl">
+              <div className="flex w-full items-center justify-center lg:w-[10%]">
+                <button onClick={addItens} className="text-2xl text-green-500">
                   <IoMdAddCircle />
                 </button>
               </div>
             </div>
-            {itemsMsg.text ? <p className={`w-full text-center ${itemsMsg.color} italic text-sm my-1`}>{itemsMsg.text}</p> : null}
+            {itemsMsg.text ? <p className={`w-full text-center ${itemsMsg.color} my-1 text-sm italic`}>{itemsMsg.text}</p> : null}
             {solicitationInfo.itens.length > 0 ? (
-              <div className="flex flex-col w-full items-center mt-4">
-                <div className="w-full flex items-center gap-2 bg-black">
-                  <h1 className="w-[40%] text-white text-center p-1 font-medium">NOME</h1>
-                  <h1 className="w-[20%] text-white text-center p-1 font-medium">QTDE</h1>
-                  <h1 className="w-[20%] text-white text-center p-1 font-medium">GRANDEZA</h1>
-                  <h1 className="w-[20%] text-white text-center p-1 font-medium">EXCLUIR</h1>
+              <div className="mt-4 flex w-full flex-col items-center">
+                <div className="flex w-full items-center gap-2 bg-black">
+                  <h1 className="w-[40%] p-1 text-center font-medium text-white">NOME</h1>
+                  <h1 className="w-[20%] p-1 text-center font-medium text-white">QTDE</h1>
+                  <h1 className="w-[20%] p-1 text-center font-medium text-white">GRANDEZA</h1>
+                  <h1 className="w-[20%] p-1 text-center font-medium text-white">EXCLUIR</h1>
                 </div>
                 {solicitationInfo.itens.map((item, index) => (
-                  <div key={index} className="w-full flex items-center gap-2">
-                    <h1 className="w-[40%] text-center p-1 font-medium">{item.descricao}</h1>
-                    <h1 className="w-[20%] text-center p-1 font-medium">{item.qtde}</h1>
-                    <h1 className="w-[20%] text-center p-1 font-medium">{item.grandeza}</h1>
-                    <div className="flex items-center justify-center text-red-500 w-[20%]">
+                  <div key={index} className="flex w-full items-center gap-2">
+                    <h1 className="w-[40%] p-1 text-center font-medium">{item.descricao}</h1>
+                    <h1 className="w-[20%] p-1 text-center font-medium">{item.qtde}</h1>
+                    <h1 className="w-[20%] p-1 text-center font-medium">{item.grandeza}</h1>
+                    <div className="flex w-[20%] items-center justify-center text-red-500">
                       <MdCancel
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
@@ -405,9 +405,9 @@ function SolicitacaoCompra() {
               </div>
             ) : null}
           </div>
-          <div className="w-full flex items-center justify-end gap-2 mt-4">
+          <div className="mt-4 flex w-full items-center justify-end gap-2">
             {sendMsg.text ? <p className={`text-sm italic ${sendMsg.color}`}>{sendMsg.text}</p> : null}
-            <button onClick={sendSolicitation} className="p-2 bg-green-500 text-white rounded font-bold">
+            <button onClick={sendSolicitation} className="rounded bg-green-500 p-2 font-bold text-white">
               ENVIAR
             </button>
           </div>

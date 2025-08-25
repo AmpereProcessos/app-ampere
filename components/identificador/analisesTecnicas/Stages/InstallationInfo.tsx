@@ -31,8 +31,8 @@ function InstallationInfo({ infoHolder, setInfoHolder, files, setFiles, goToNext
     return goToNextStage()
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <h1 className="w-full rounded-md  bg-gray-700 p-1 text-center font-medium text-white">INFORMAÇÕES SOBRE A INSTALAÇÃO </h1>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <h1 className="bg-primary/70 w-full rounded-md p-1 text-center font-medium text-white">INFORMAÇÕES SOBRE A INSTALAÇÃO </h1>
 
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full flex-col gap-2 lg:flex-row">
@@ -106,7 +106,7 @@ function InstallationInfo({ infoHolder, setInfoHolder, files, setFiles, goToNext
           </div>
         </div>
         <div className="flex w-full flex-col">
-          <h1 className="w-full rounded-tl-sm rounded-tr-sm bg-gray-500 p-1 text-center font-bold text-white">COMENTÁRIOS COMPLEMENTARES</h1>
+          <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">COMENTÁRIOS COMPLEMENTARES</h1>
           <textarea
             placeholder="Preencha comentários relevantes para execução da análise."
             value={infoHolder.comentarios || ''}
@@ -116,10 +116,10 @@ function InstallationInfo({ infoHolder, setInfoHolder, files, setFiles, goToNext
                 comentarios: e.target.value,
               }))
             }}
-            className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+            className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
           />
         </div>
-        <h1 className="font-sans mt-2 w-full text-start  font-bold text-cyan-500">ARQUIVOS</h1>
+        <h1 className="mt-2 w-full text-start font-sans font-bold text-cyan-500">ARQUIVOS</h1>
         <div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <DocumentFileInput
@@ -163,15 +163,15 @@ function InstallationInfo({ infoHolder, setInfoHolder, files, setFiles, goToNext
           </div>
         </div>
       </div>
-      <div className="mt-2 flex w-full items-end justify-between bg-[#fff]">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+      <div className="bg-background mt-2 flex w-full items-end justify-between">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button
           onClick={() => {
             validateAndProceed()
           }}
-          className=" rounded p-2 font-bold hover:bg-black hover:text-white"
+          className="rounded p-2 font-bold hover:bg-black hover:text-white"
         >
           Prosseguir
         </button>

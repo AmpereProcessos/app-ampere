@@ -65,11 +65,11 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
     if (revenue) setInfoHolder(revenue)
   }, [revenue])
   return (
-    <div id="defaultModal" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="fixed left-[50%] top-[50%] z-[100] h-[70%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[70%]">
+    <div id="defaultModal" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background fixed top-[50%] left-[50%] z-100 h-[70%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[70%]">
         <div className="flex h-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">ATUALIZAR RECEITA</h3>
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-xl font-bold text-[#353432] dark:text-white">ATUALIZAR RECEITA</h3>
             <button
               onClick={() => closeModal()}
               type="button"
@@ -82,7 +82,7 @@ function EditRevenue({ revenueId, session, closeModal }: EditRevenueProps) {
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
             <>
-              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
                 <RevenueGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
                 {revenue.projetoDados ? (
                   <RevenueProjectInformationBlock revenue={infoHolder} project={revenue.projetoDados} />

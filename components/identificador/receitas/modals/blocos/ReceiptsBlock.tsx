@@ -46,9 +46,9 @@ function RevenueReceiptsBlock({ revenueId, infoHolder, setInfoHolder }: RevenueR
 
   return (
     <div className="flex w-full grow flex-col gap-4">
-      <h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">RECEBIMENTOS DA RECEITA</h1>
+      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">RECEBIMENTOS DA RECEITA</h1>
       <div className="flex w-full flex-col gap-2">
-        <p className="w-full text-center text-sm tracking-tight text-primary">
+        <p className="text-primary w-full text-center text-sm tracking-tight">
           Gerencie aqui os recebimentos da receita através do controle de previsões e da efetivação dos recebimentos.
         </p>
         <div className="flex w-full items-center justify-end">
@@ -56,8 +56,8 @@ function RevenueReceiptsBlock({ revenueId, infoHolder, setInfoHolder }: RevenueR
             type="button"
             onClick={() => setNewReceiptMenuIsOpen((prev) => !prev)}
             className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-gray-300  hover:bg-red-300': newReceiptMenuIsOpen,
-              'bg-green-300  hover:bg-green-400': !newReceiptMenuIsOpen,
+              'bg-primary/20 hover:bg-red-300': newReceiptMenuIsOpen,
+              'bg-green-300 hover:bg-green-400': !newReceiptMenuIsOpen,
             })}
           >
             <MdAddBox />
@@ -108,7 +108,7 @@ function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewRece
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="flex w-full flex-col gap-2 rounded border border-green-600 bg-[#fff] shadow-sm dark:bg-[#121212]"
+        className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
       >
         <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO RECEBIMENTO</h1>
         <div className="flex w-full grow flex-col gap-2 p-3">

@@ -35,11 +35,11 @@ function SvpControl() {
       <div className="grow p-6">
         <div className="flex flex-col">
           <div className="flex items-center gap-x-2">
-            <p className="font-raleway text-2xl font-bold uppercase text-[#15599a]">CLIENTES SVP</p>
+            <p className="font-raleway text-2xl font-bold text-[#15599a] uppercase">CLIENTES SVP</p>
           </div>
           <div className="flex flex-col gap-y-2">
             {projects?.map((project) => (
-              <div key={project._id} className="flex w-full justify-between border border-gray-300 p-2 shadow-lg">
+              <div key={project._id} className="border-primary/20 flex w-full justify-between border p-2 shadow-lg">
                 <h1 className="font-bold text-[#15599a]">
                   ({project.qtde}) {project.nomeDoContrato}
                 </h1>

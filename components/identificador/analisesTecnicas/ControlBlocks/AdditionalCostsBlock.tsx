@@ -128,7 +128,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
   }
   return (
     <div className="flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">CUSTOS ADICIONAIS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
@@ -251,9 +251,9 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
         {infoHolder.custos?.length > 0 ? (
           <div className="mt-2 flex w-full flex-col gap-2">
             {infoHolder.custos.map((cost, index) => (
-              <div key={index} className="flex w-full flex-col rounded-md border border-gray-300 p-3">
+              <div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-3">
                 <div className="flex w-full justify-between">
-                  <h1 className="text-start font-bold leading-none tracking-tight">{cost.categoria}</h1>
+                  <h1 className="text-start leading-none font-bold tracking-tight">{cost.categoria}</h1>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -276,31 +276,31 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">{cost.descricao}</p>
+                <p className="text-primary/60 text-sm">{cost.descricao}</p>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
                       <FaBox color="#fead41" />
-                      <p className="text-sm font-medium text-gray-500">
+                      <p className="text-primary/60 text-sm font-medium">
                         {cost.qtde} {cost.grandeza}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 text-green-500">
                       <MdAttachMoney color="rgb(34,197,94)" />
-                      <p className="text-sm font-medium text-gray-500">
+                      <p className="text-primary/60 text-sm font-medium">
                         {cost.custoUnitario ? formatToMoney(cost.custoUnitario) : 'R$ 0,00'} / {cost.grandeza}
                       </p>
                     </div>
                     {cost.totalVendaSimples ? (
                       <div className="flex items-center gap-2 text-green-500">
                         <ImPriceTag color="rgb(34,197,94)" />
-                        <p className="text-sm font-medium text-gray-500">VENDA SIMPLES: {formatToMoney(cost.totalVendaSimples)}</p>
+                        <p className="text-primary/60 text-sm font-medium">VENDA SIMPLES: {formatToMoney(cost.totalVendaSimples)}</p>
                       </div>
                     ) : null}
                     {cost.totalVendaFaturavel ? (
                       <div className="flex items-center gap-2 text-green-500">
                         <ImPriceTag color="rgb(34,197,94)" />
-                        <p className="text-sm font-medium text-gray-500">VENDA FATURÁVEL: {formatToMoney(cost.totalVendaFaturavel)}</p>
+                        <p className="text-primary/60 text-sm font-medium">VENDA FATURÁVEL: {formatToMoney(cost.totalVendaFaturavel)}</p>
                       </div>
                     ) : null}
                   </div>

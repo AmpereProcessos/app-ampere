@@ -106,10 +106,10 @@ function FinancesAuditing() {
 
   return (
     <div className="flex grow flex-col p-6">
-      <div className="flex flex-col items-center border-b border-gray-300 px-1 py-2">
+      <div className="border-primary/20 flex flex-col items-center border-b px-1 py-2">
         <div className="flex w-full flex-col items-center justify-between lg:flex-row">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">AUDITORIA FINANCEIRA</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">AUDITORIA FINANCEIRA</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-2">
             <SelectInput
@@ -176,7 +176,7 @@ function FinancesAuditing() {
             />
           </div>
           <div className="flex flex-col">
-            <h1 className='"font-sans text-[#353432]"  font-bold'>FAIXA DE MÓDULOS</h1>
+            <h1 className='"font-sans text-[#353432]" font-bold'>FAIXA DE MÓDULOS</h1>
             <div className="flex items-center gap-1">
               <div className="w-[120px]">
                 <NumberInput
@@ -229,36 +229,36 @@ function FinancesAuditing() {
           </div>
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
               <VscDiffAdded />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: auditing }).projetos}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">RECEITAS</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">RECEITAS</h1>
               <FaHandHoldingDollar />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: auditing }).receitas)}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">DESPESAS</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">DESPESAS</h1>
               <FaCashRegister />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: auditing }).despesas)} </div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">MARGEM</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">MARGEM</h1>
               <FaPercent />
             </div>
             <div className="mt-2 flex w-full flex-col">
@@ -266,14 +266,14 @@ function FinancesAuditing() {
             </div>
           </div>
         </div>
-        <div className="flex min-h-[70px] w-full gap-2 rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm">
+        <div className="bg-background border-primary/20 flex min-h-[70px] w-full gap-2 rounded-xl border p-3 shadow-xs">
           <div className="flex items-center gap-2">
             <FaDiamond />
-            <h1 className="text-sm font-medium uppercase tracking-tight">DESPESAS POR TIPO</h1>
+            <h1 className="text-sm font-medium tracking-tight uppercase">DESPESAS POR TIPO</h1>
           </div>
           <div className="mt-2 flex grow flex-wrap items-center justify-around">
             {Object.entries(getStats({ info: auditing }).despesasPorTipo).map(([key, value], index) => (
-              <p key={index} className="text-[0.8rem] text-gray-500">
+              <p key={index} className="text-primary/60 text-[0.8rem]">
                 {key}: <strong>{formatToMoney(value)}</strong>
               </p>
             ))}

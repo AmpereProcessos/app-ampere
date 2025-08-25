@@ -25,13 +25,13 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
       ? getVehicleReviewAlertLevelByKmDifference(property.metadados.kmProximaRevisao - property.metadados.kmAcumulado)
       : null
   return (
-    <div className="flex w-full flex-col gap-3 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212] sm:flex-row">
+    <div className="border-primary bg-background flex w-full flex-col gap-3 rounded border p-2 shadow-xs sm:flex-row dark:bg-[#121212]">
       <div className="flex items-center justify-center">
-        <div className="min-w-20 min-h-20 max-w-20 relative h-20 max-h-20 w-20 overflow-hidden rounded-lg">
+        <div className="relative h-20 max-h-20 min-h-20 w-20 max-w-20 min-w-20 overflow-hidden rounded-lg">
           {property.imagemUrl ? (
             <Image src={property.imagemUrl} alt={property.nome} fill={true} objectFit="cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-primary/50 text-primary-foreground">
+            <div className="bg-primary/50 text-primary-foreground flex h-full w-full items-center justify-center">
               <Landmark className="h-6 w-6" />
             </div>
           )}
@@ -44,7 +44,7 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
               {renderIconWithClassNames(PROPERTY_METADATA_TYPES_CONFIG[property.metadados.tipo].icon, 'h-4 w-4 min-w-4 min-h-4')}
               {property.metadados.tipo}
             </Badge>
-            <p className="text-sm font-bold leading-none tracking-tight">{property.nome}</p>
+            <p className="text-sm leading-none font-bold tracking-tight">{property.nome}</p>
             <div className={cn('flex items-center gap-1')}>
               <Code className="h-4 w-4" />
               <p className="text-xs font-medium tracking-tight">{property.identificador || 'N/A'}</p>
@@ -71,13 +71,13 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
                 <h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
                 <div className="flex flex-col gap-3">
                   {openUsages.map((usage) => (
-                    <div key={usage._id} className="flex w-full flex-col gap-1 rounded-lg bg-primary/10 p-2">
+                    <div key={usage._id} className="bg-primary/10 flex w-full flex-col gap-1 rounded-lg p-2">
                       <div className="flex w-full items-center justify-between">
                         <Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
                       </div>
                       <div className="flex w-full items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Avatar className="min-w-4 min-h-4 h-4 w-4">
+                          <Avatar className="h-4 min-h-4 w-4 min-w-4">
                             <AvatarImage src={usage.autor.avatar_url ?? undefined} />
                             <AvatarFallback>{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
                           </Avatar>
@@ -100,11 +100,11 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
         <div className="flex w-full items-center justify-between gap-1">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(property.dataInsercao, true) || 'N/A'}</p>
+            <p className="text-primary/60 text-xs font-medium">{formatDateAsLocale(property.dataInsercao, true) || 'N/A'}</p>
           </div>
           <Button variant={'ghost'} className="flex items-center gap-1 px-2 py-1" size={'fit'} onClick={() => openModal(property._id)}>
             <Pencil size={16} />
-            <p className="text-sm font-semibold text-primary/80">EDITAR</p>
+            <p className="text-primary/80 text-sm font-semibold">EDITAR</p>
           </Button>
         </div>
       </div>

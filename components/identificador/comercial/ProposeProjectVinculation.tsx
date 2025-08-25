@@ -63,12 +63,12 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
     <div className="flex min-w-[350px] flex-col">
       <button
         onClick={() => setMenuIsOpen((prev) => !prev)}
-        className={`text-center text-sm text-gray-500 duration-300 ease-in-out hover:text-cyan-500`}
+        className={`text-primary/60 text-center text-sm duration-300 ease-in-out hover:text-cyan-500`}
       >
         {menuIsOpen ? 'FECHAR MENU' : 'ABRIR MENU DE VINCULAÇÃO'}
       </button>
       {menuIsOpen ? (
-        <div className="flex w-full flex-col gap-2 rounded border border-gray-300 p-3">
+        <div className="border-primary/20 flex w-full flex-col gap-2 rounded border p-3">
           <TextInput
             label={'ID DO PROJETO NO CRM'}
             value={CRMInformation.projectId}
@@ -89,7 +89,7 @@ function ProposeProjectVinculation({ idProject, idSolicitation, signatureDate, c
             // @ts-ignore
             disabled={isPending}
             onClick={() => mutate()}
-            className="w-full rounded-md border border-black py-2 text-sm font-medium leading-none tracking-tight duration-300 ease-in-out hover:bg-black hover:text-white"
+            className="w-full rounded-md border border-black py-2 text-sm leading-none font-medium tracking-tight duration-300 ease-in-out hover:bg-black hover:text-white"
           >
             VINCULAR
           </button>

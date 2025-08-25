@@ -35,12 +35,12 @@ function DesignationCard({ order }) {
       <div className="flex w-full flex-col items-start gap-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col gap-1">
-            <h1 className="text-center text-sm font-bold leading-none tracking-tight text-[#15599a] duration-300 ease-in-out  lg:text-start">
+            <h1 className="text-center text-sm leading-none font-bold tracking-tight text-[#15599a] duration-300 ease-in-out lg:text-start">
               {order.favorecido.nome}
             </h1>
             <div className="flex items-center gap-1">
               <AiFillTool />
-              <h1 className="text-center text-xs font-medium leading-none tracking-tight text-gray-500 duration-300 ease-in-out  lg:text-start">
+              <h1 className="text-primary/60 text-center text-xs leading-none font-medium tracking-tight duration-300 ease-in-out lg:text-start">
                 {order.descricao}
               </h1>
             </div>
@@ -55,7 +55,7 @@ function DesignationCard({ order }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className={`flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
+          <div className={`flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-primary/60'}`}>
             {order.dataEfetivacao ? <BsFillCalendarCheckFill /> : <BsCalendarFill />}
 
             <p className="text-xs font-medium">
@@ -70,21 +70,21 @@ function DesignationCard({ order }) {
             <h1 className="text-xs font-medium">CATEGORIA</h1>
             <MdCategory />
           </div>
-          <p className="text-sm text-gray-500">{order.categoria}</p>
+          <p className="text-primary/60 text-sm">{order.categoria}</p>
         </div>
         <div className="flex flex-col items-center gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xs font-medium">URGÊNCIA</h1>
             <IoMdAlert />
           </div>
-          <p className="text-sm text-gray-500">{order.urgencia}</p>
+          <p className="text-primary/60 text-sm">{order.urgencia}</p>
         </div>
         <div className="flex flex-col items-center gap-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xs font-medium">CIDADE - UF</h1>
             <FaCity />
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-primary/60 text-sm">
             {order.localizacao.cidade}-{order.localizacao.uf}
           </p>
         </div>

@@ -54,7 +54,7 @@ function EditExpenseFinalPriceMenu({ infoHolder, setInfoHolder }: EditExpenseFin
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex w-[70%] flex-col items-center gap-1 self-center rounded border border-gray-500 p-3 lg:w-[95%]"
+            className="border-primary/60 flex w-[70%] flex-col items-center gap-1 self-center rounded border p-3 lg:w-[95%]"
           >
             <NumberInput
               label="VALOR FINAL"
@@ -63,10 +63,10 @@ function EditExpenseFinalPriceMenu({ infoHolder, setInfoHolder }: EditExpenseFin
               handleChange={(value) => setFinalValueHolder(value)}
             />
 
-            <p className="w-full text-center text-xs tracking-tight text-gray-500">
+            <p className="text-primary/60 w-full text-center text-xs tracking-tight">
               Preencha o valor final desejado para despesa e clique em <strong className="text-green-600">CONFIRMAR</strong>
             </p>
-            <p className="w-full text-center text-xs tracking-tight text-gray-500">
+            <p className="text-primary/60 w-full text-center text-xs tracking-tight">
               Ao confirmar, reajustaremos individualmente os valores de todos os itens com base na taxa de alteração.
             </p>
             <div className="flex w-full items-center justify-end">

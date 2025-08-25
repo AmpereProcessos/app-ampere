@@ -55,7 +55,7 @@ function FilterMenu({
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+        className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
       >
         <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
         <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
@@ -178,7 +178,7 @@ function FilterMenu({
               resetSelectedPage()
               updateFilters(filtersHolder)
             }}
-            className="h-9 whitespace-nowrap rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-blue-700 enabled:hover:text-white"
+            className="disabled:bg-primary/60 h-9 rounded bg-blue-600 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-700 enabled:hover:text-white disabled:text-white"
           >
             PESQUISAR
           </button>

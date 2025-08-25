@@ -66,11 +66,11 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
     }
   }
   return (
-    <div className="flex w-full flex-col rounded-md border border-gray-300 p-3 shadow-sm">
+    <div className="border-primary/20 flex w-full flex-col rounded-md border p-3 shadow-xs">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <RxTimer />
-          <p className="text-sm font-thin leading-none tracking-tight lg:text-base">
+          <p className="text-sm leading-none font-thin tracking-tight lg:text-base">
             <strong className="font-bold text-[#fead41]">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
             <strong className="font-bold text-[#fead41]">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
           </p>
@@ -82,16 +82,18 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
 
       {!item.saida ? (
         <div className="mt-4 flex w-full flex-col lg:mt-2">
-          <h1 className="font-sans font-bold leading-none tracking-tight text-[#353432]">ANOTAÇÕES</h1>
+          <h1 className="font-sans leading-none font-bold tracking-tight text-[#353432]">ANOTAÇÕES</h1>
           <textarea
             value={infoHolder.anotacoes}
             placeholder="Preencha aqui anotações sobre o período de execução..."
             onChange={(e) => setInfoHolder((prev) => ({ ...prev, anotacoes: e.target.value }))}
-            className="mt-2 min-h-[50px] w-full resize-none rounded border border-gray-300 bg-gray-100 p-3 text-center text-sm text-gray-800 shadow-sm outline-none"
+            className="border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
           />
         </div>
       ) : (
-        <h1 className="my-1 w-full rounded-md bg-gray-100 py-3 text-center text-sm leading-none tracking-tight text-gray-500">{item.anotacoes}</h1>
+        <h1 className="text-primary/60 bg-primary/20 my-1 w-full rounded-md py-3 text-center text-sm leading-none tracking-tight">
+          {item.anotacoes}
+        </h1>
       )}
 
       {!item.saida ? (
@@ -105,7 +107,7 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
 
           <button
             onClick={() => handleRecordUpdate()}
-            className="mb-2 rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+            className="hover:bg-primary/70 mb-2 rounded bg-black px-4 py-2 text-xs font-medium text-white duration-300 ease-in-out"
           >
             REALIZAR CHECK-OUT
           </button>

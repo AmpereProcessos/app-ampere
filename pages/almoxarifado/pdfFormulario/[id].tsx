@@ -34,22 +34,22 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
               <Image height={30} width={30} src={Logo} alt="Logo Ampère" />
             </div>
           </Link>
-          <h1 className="text-center text-xl font-black leading-none tracking-tight text-white">RELATÓRIO DE SAÍDA DE MATERIAIS</h1>
+          <h1 className="text-center text-xl leading-none font-black tracking-tight text-white">RELATÓRIO DE SAÍDA DE MATERIAIS</h1>
         </div>
         <div className="flex w-full flex-col border-x border-black">
           <h1 className="w-full text-center text-lg font-black">{formulary.titulo}</h1>
           <div className="my-2 flex w-full items-center justify-center gap-2">
             <div className="flex items-center gap-1">
               <BsCode />
-              <h1 className="text-xs tracking-tight text-gray-500">{formulary._id}</h1>
+              <h1 className="text-primary/60 text-xs tracking-tight">{formulary._id}</h1>
             </div>
             <div className="flex items-center gap-1">
               <BsCalendarPlus />
-              <h1 className="text-xs tracking-tight text-gray-500">ABERTO EM: {formatDateAsLocale(formulary.dataInsercao, true)}</h1>
+              <h1 className="text-primary/60 text-xs tracking-tight">ABERTO EM: {formatDateAsLocale(formulary.dataInsercao, true)}</h1>
             </div>
             <div className="flex items-center gap-1">
               <BsCalendarCheck />
-              <h1 className="text-xs tracking-tight text-gray-500">
+              <h1 className="text-primary/60 text-xs tracking-tight">
                 FINALIZADO EM: {formatDateAsLocale(formulary.dataEfetivacao, true) || 'NÃO FINALIZADO'}
               </h1>
             </div>
@@ -71,7 +71,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
                 <h1 className="w-full text-start text-xs font-medium text-black">{material.nome}</h1>
                 <div className="flex w-full items-center gap-1">
                   <BsCode />
-                  <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
+                  <h1 className="text-primary/60 text-[0.65rem] tracking-tight">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
                 </div>
               </div>
               <h1 className="w-[15%] text-center text-xs font-medium text-black">{formatDecimalPlaces(material.qtdeRetirada)}</h1>
@@ -135,7 +135,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //         </h1>
   //       </div>
   //       <div className="flex flex-col px-2">
-  //         <div className="grid grid-cols-6 gap-x-2 border-b bg-gray-800">
+  //         <div className="grid grid-cols-6 gap-x-2 border-b bg-primary/80">
   //           <p className="col-span-2 px-6 py-4 text-center text-sm font-medium text-white">PRODUTO</p>
   //           {/* <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">CÓDIGO</p> */}
   //           <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">RETIRADA</p>
@@ -144,12 +144,12 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //           <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">VALOR</p>
   //         </div>
   //         {formulary.materiais.map((material, index) => (
-  //           <div key={index} className="grid grid-cols-6 gap-x-2 border-x border-b border-gray-700">
+  //           <div key={index} className="grid grid-cols-6 gap-x-2 border-x border-b border-primary/70">
   //             <div className="col-span-2 flex flex-col items-center justify-center">
   //               <p className="whitespace-nowrap text-center text-xs font-medium text-gray-900">{material.nome}</p>
   //               <div className="flex items-center gap-1">
   //                 <BsCode />
-  //                 <h1 className="text-[0.65rem] tracking-tight text-gray-500">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
+  //                 <h1 className="text-[0.65rem] tracking-tight text-primary/60">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
   //               </div>
   //             </div>
   //             {/* <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">{material.id || 'N/A'}</p> */}
@@ -167,7 +167,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //             </p>
   //           </div>
   //         ))}
-  //         <div className="grid grid-cols-6 gap-x-2  border-x border-b border-gray-700">
+  //         <div className="grid grid-cols-6 gap-x-2  border-x border-b border-primary/70">
   //           <p className="col-span-2 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">TOTAL</p>
   //           <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">-</p>
 
@@ -180,8 +180,8 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //         {/**<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
   //           <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
   //             <div className="overflow-hidden">
-  //               <table className="min-w-full border border-gray-700 text-center">
-  //                 <thead className="border-b bg-gray-800">
+  //               <table className="min-w-full border border-primary/70 text-center">
+  //                 <thead className="border-b bg-primary/80">
   //                   <tr>
   //                     <th
   //                       scope="col"
@@ -217,7 +217,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //                 </thead>
   //                 <tbody>
   //                   {formulary.materiais.map((material, index) => (
-  //                     <tr key={index} className="border-b border-gray-700">
+  //                     <tr key={index} className="border-b border-primary/70">
   //                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
   //                         {material.nome}
   //                       </td>
@@ -238,7 +238,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //                       </td>
   //                     </tr>
   //                   ))}
-  //                   <tr className="border-b border-gray-700">
+  //                   <tr className="border-b border-primary/70">
   //                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
   //                       TOTAL
   //                     </td>
@@ -304,12 +304,12 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //           </h1>
   //         </div>
   //         <div className="flex flex-col px-2">
-  //           <div className="grid grid-cols-3 gap-x-2 border-b bg-gray-800">
+  //           <div className="grid grid-cols-3 gap-x-2 border-b bg-primary/80">
   //             <p className="col-span-2 px-6 py-4 text-center text-sm font-medium text-white">PRODUTO</p>
   //             <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">RETIRADA</p>
   //           </div>
   //           {formulary.materiais.map((material, index) => (
-  //             <div key={index} className="grid grid-cols-3 gap-x-2 border-x border-b border-gray-700">
+  //             <div key={index} className="grid grid-cols-3 gap-x-2 border-x border-b border-primary/70">
   //               <p className="col-span-2 whitespace-nowrap py-4 text-center text-xs font-medium text-gray-900">{material.nome}</p>
   //               <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">{material.qtdeSaida}</p>
   //             </div>
@@ -323,8 +323,8 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //           {/**<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
   //           <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
   //             <div className="overflow-hidden">
-  //               <table className="min-w-full border border-gray-700 text-center">
-  //                 <thead className="border-b bg-gray-800">
+  //               <table className="min-w-full border border-primary/70 text-center">
+  //                 <thead className="border-b bg-primary/80">
   //                   <tr>
   //                     <th
   //                       scope="col"
@@ -360,7 +360,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //                 </thead>
   //                 <tbody>
   //                   {formulary.materiais.map((material, index) => (
-  //                     <tr key={index} className="border-b border-gray-700">
+  //                     <tr key={index} className="border-b border-primary/70">
   //                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
   //                         {material.nome}
   //                       </td>
@@ -381,7 +381,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //                       </td>
   //                     </tr>
   //                   ))}
-  //                   <tr className="border-b border-gray-700">
+  //                   <tr className="border-b border-primary/70">
   //                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
   //                       TOTAL
   //                     </td>

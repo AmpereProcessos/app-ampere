@@ -193,8 +193,8 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex h-full flex-col">
-            <div className="flex justify-between border-b border-gray-300 px-2 pb-2 text-lg">
-              <h1 className="pl-6 font-bold uppercase text-[#15599a]">ABERTURA DE REQUISIÇÃO</h1>
+            <div className="border-primary/20 flex justify-between border-b px-2 pb-2 text-lg">
+              <h1 className="pl-6 font-bold text-[#15599a] uppercase">ABERTURA DE REQUISIÇÃO</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -245,7 +245,7 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                 </div>
               </div>
               {callInfo.uso == 'CLIENTE' ? (
-                <div className="mt-2 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row lg:items-center">
+                <div className="border-primary/20 mt-2 flex flex-col gap-x-2 border p-2 lg:flex-row lg:items-center">
                   <span className="text-center font-bold uppercase">CLIENTE</span>
                   <div className={'grow'}>
                     <Select
@@ -290,7 +290,7 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                 </div>
               ) : null}
               {callInfo.uso == 'TERCEIRO' ? (
-                <div className="mt-2 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row lg:items-center">
+                <div className="border-primary/20 mt-2 flex flex-col gap-x-2 border p-2 lg:flex-row lg:items-center">
                   <span className="text-center font-bold uppercase">TERCEIRO</span>
                   <input
                     value={callInfo.nomeTerceiro}
@@ -301,16 +301,16 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                       }))
                     }
                     placeholder="Digite aqui o nome do terceiro..."
-                    className="h-[41px] grow rounded-md border border-gray-300 p-1 text-center outline-none"
+                    className="border-primary/20 h-[41px] grow rounded-md border p-1 text-center outline-hidden"
                   />
                 </div>
               ) : null}
-              <div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
+              <div className="border-primary/20 mt-4 flex flex-col gap-x-2 border p-2 lg:flex-row">
                 <span className="text-center font-bold uppercase">RESPONSÁVEL</span>
                 <select
                   value={callInfo.responsavel}
                   onChange={(e) => setCallInfo({ ...callInfo, responsavel: e.target.value })}
-                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-hidden lg:mt-0"
                 >
                   <option value={'A DEFINIR'}>A DEFINIR</option>
                   <option value={'DANNIEL RODRIGUES'}>DANNIEL RODRIGUES</option>
@@ -319,7 +319,7 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                   <option value={'DIOGO PAULINO'}>DIOGO PAULINO</option>
                 </select>
               </div>
-              <div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row lg:items-center">
+              <div className="border-primary/20 mt-4 flex flex-col gap-x-2 border p-2 lg:flex-row lg:items-center">
                 <span className="text-center font-bold uppercase">EQUIPE RESP</span>
                 <div className={'grow'}>
                   <SelectInput
@@ -330,15 +330,15 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                     handleChange={(value) => setCallInfo((prev) => ({ ...prev, equipeResp: value }))}
                     width={'100%'}
                   />
-                  {/* <p className="text-gray-600 text-center">{dados.equipeResp ? dados.equipeResp : '-'}</p> */}
+                  {/* <p className="text-primary/80 text-center">{dados.equipeResp ? dados.equipeResp : '-'}</p> */}
                 </div>
               </div>
-              <div className="mt-4 flex flex-col gap-x-2 border border-gray-300 p-2 lg:flex-row">
+              <div className="border-primary/20 mt-4 flex flex-col gap-x-2 border p-2 lg:flex-row">
                 <span className="text-center font-bold uppercase">SERVIÇO</span>
                 <select
                   value={callInfo.servico}
                   onChange={(e) => setCallInfo({ ...callInfo, servico: e.target.value })}
-                  className="mt-2 grow text-center text-xs outline-none lg:mt-0"
+                  className="mt-2 grow text-center text-xs outline-hidden lg:mt-0"
                 >
                   <option value={'PADRÃO'}>PADRÃO</option>
                   <option value={'ESTRUTURA'}>ESTRUTURA</option>
@@ -348,17 +348,17 @@ function NovoFormulario({ session, closeModal, invalidateQuery }) {
                   <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                 </select>
               </div>
-              <div className="mt-4 flex w-full flex-col border border-gray-300 p-2">
+              <div className="border-primary/20 mt-4 flex w-full flex-col border p-2">
                 <span className="text-center font-bold uppercase">ADICIONAR MATERIAIS</span>
                 <AddMaterialFormulario materials={materials} materialsFetching={materialsFetching} addMaterial={addMaterial} />
               </div>
-              {materialMsg && <p className="text-center text-sm italic text-red-500">{materialMsg}</p>}
-              <div className="mt-4 flex grow flex-col gap-y-2 border border-gray-300 p-2">
+              {materialMsg && <p className="text-center text-sm text-red-500 italic">{materialMsg}</p>}
+              <div className="border-primary/20 mt-4 flex grow flex-col gap-y-2 border p-2">
                 <h1 className="text-center font-bold">SAÍDA</h1>
                 <div className="flex flex-col overflow-y-auto overscroll-y-auto">
                   {callInfo.materiais.map((obj, index) => (
                     <div key={index} className="flex items-center justify-between px-2">
-                      <p className="list-none text-center font-bold text-gray-600">
+                      <p className="text-primary/80 list-none text-center font-bold">
                         {obj.nome} - ({obj.qtdeSaida})
                       </p>
                       <button

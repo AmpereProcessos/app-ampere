@@ -77,7 +77,7 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
 
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">PENDÊNCIAS</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
@@ -149,24 +149,24 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </button>
         </div>
       </div>
-      <h1 className="w-full rounded-tr-sm rounded-tl-sm bg-gray-500 p-1 text-center font-bold text-white">LISTA DE PENDÊNCIAS</h1>
+      <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">LISTA DE PENDÊNCIAS</h1>
       {infoHolder.pendencias && infoHolder.pendencias.length > 0 ? (
         infoHolder.pendencias.map((pendency, index) => (
-          <div key={index} className="mt-2 flex w-full flex-col rounded-md border border-gray-300 p-3 shadow-sm">
-            <h1 className="w-full text-start font-bold leading-none tracking-tight ">{pendency.categoria}</h1>
+          <div key={index} className="border-primary/20 mt-2 flex w-full flex-col rounded-md border p-3 shadow-xs">
+            <h1 className="w-full text-start leading-none font-bold tracking-tight">{pendency.categoria}</h1>
             <div className="mt-1 flex w-full items-center justify-start gap-2">
               <Avatar fallback={'R'} url={getUserAvatarUrl({ users: crmUsers, userName: pendency.responsavel })} height={20} width={20} />
-              <p className="text-xs font-medium text-gray-500">{pendency.responsavel}</p>
+              <p className="text-primary/60 text-xs font-medium">{pendency.responsavel}</p>
             </div>
-            <h1 className="my-2 rounded-md bg-gray-100 p-2 text-center text-sm text-gray-500">{pendency.descricao}</h1>
+            <h1 className="text-primary/60 bg-primary/20 my-2 rounded-md p-2 text-center text-sm">{pendency.descricao}</h1>
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className={`flex items-center gap-2 text-gray-500`}>
+                <div className={`text-primary/60 flex items-center gap-2`}>
                   <BsCalendarFill />
                   <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataInsercao)}</p>
                 </div>
                 {pendency.dataEfetivacao ? (
-                  <div className={`flex items-center gap-2 text-gray-500`}>
+                  <div className={`text-primary/60 flex items-center gap-2`}>
                     <BsCalendarCheckFill color="rgb(34,197,94)" />
                     <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataEfetivacao, true)}</p>
                   </div>
@@ -190,7 +190,7 @@ function PendencyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </div>
         ))
       ) : (
-        <p className="w-full py-2 text-center text-xs font-medium italic text-gray-500">Nenhum pendência cadastrada.</p>
+        <p className="text-primary/60 w-full py-2 text-center text-xs font-medium italic">Nenhum pendência cadastrada.</p>
       )}
     </div>
   )

@@ -49,12 +49,12 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
   return (
     <div className="flex min-h-screen grow flex-col bg-gray-50 p-6">
       {/* Header */}
-      <div className="mb-6 flex flex-col items-center rounded-lg border-b border-gray-300 bg-white px-6 py-4 shadow-sm">
+      <div className="bg-background border-primary/20 mb-6 flex flex-col items-center rounded-lg border-b px-6 py-4 shadow-xs">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-8 w-8 text-[#15599a]" />
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">RELATÓRIO GERAL</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">RELATÓRIO GERAL</p>
             </div>
           </div>
           <DateIntervalInput

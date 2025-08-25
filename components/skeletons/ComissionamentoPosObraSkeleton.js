@@ -1,80 +1,80 @@
-import React from "react";
+import React from 'react'
 
 function ComissionamentoPosObraSkeleton() {
-	return (
-		<div className="p-6 grow flex flex-col">
-			<div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-				<div className="flex items-center justify-between w-full">
-					<div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-						<p className="w-[250px] h-[72px] xs:w-[370px] xs:h-[36px] bg-gray-200 animate-pulse"></p>
-						<p className="w-[121] h-[18px] bg-gray-200 animate-pulse"></p>
-					</div>
-					<p className="w-[25px] h-[25px] rounded-full bg-gray-200 animate-pulse"></p>
-				</div>
-			</div>
-			<div className="flex flex-col gap-2 mt-2">
-				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item, index) => (
-					<div key={index} className={`grid grid-rows-6 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 border border-gray-300 p-2`}>
-						<div className="flex flex-col justify-around row-span-1 col-span-1">
-							<h1 className="w-[180px] h-[50px] bg-gray-200 animate-pulse"></h1>
-							<div className="w-[184px] h-[32px] bg-gray-200 animate-pulse"></div>
-						</div>
-						<div className="col-span-9 flex flex-col row-span-5">
-							<div className="flex items-center justify-center gap-4 mb-2">
-								<div className="flex flex-col items-center gap-1">
-									<p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-									<p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
-								</div>
-								<div className="flex flex-col items-center gap-1">
-									<p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-									<p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
-								</div>
-								<div className="flex flex-col items-center gap-1">
-									<p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-									<p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
-								</div>
-							</div>
+  return (
+    <div className="flex grow flex-col p-6">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
+            <p className="xs:w-[370px] xs:h-[36px] h-[72px] w-[250px] animate-pulse bg-gray-200"></p>
+            <p className="h-[18px] w-[121] animate-pulse bg-gray-200"></p>
+          </div>
+          <p className="h-[25px] w-[25px] animate-pulse rounded-full bg-gray-200"></p>
+        </div>
+      </div>
+      <div className="mt-2 flex flex-col gap-2">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item, index) => (
+          <div key={index} className={`border-primary/20 grid grid-cols-1 grid-rows-6 border p-2 lg:grid-cols-10 lg:grid-rows-1`}>
+            <div className="col-span-1 row-span-1 flex flex-col justify-around">
+              <h1 className="h-[50px] w-[180px] animate-pulse bg-gray-200"></h1>
+              <div className="h-[32px] w-[184px] animate-pulse bg-gray-200"></div>
+            </div>
+            <div className="col-span-9 row-span-5 flex flex-col">
+              <div className="mb-2 flex items-center justify-center gap-4">
+                <div className="flex flex-col items-center gap-1">
+                  <p className="h-[18px] w-[121px] animate-pulse bg-gray-200"></p>
+                  <p className="h-[15px] w-[62px] animate-pulse bg-gray-200"></p>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="h-[18px] w-[121px] animate-pulse bg-gray-200"></p>
+                  <p className="h-[15px] w-[62px] animate-pulse bg-gray-200"></p>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="h-[18px] w-[121px] animate-pulse bg-gray-200"></p>
+                  <p className="h-[15px] w-[62px] animate-pulse bg-gray-200"></p>
+                </div>
+              </div>
 
-							<div className="flex items-center justify-center gap-1 flex-wrap col-span-9">
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-								<div className="flex flex-col gap-1 w-[350px] items-center">
-									<div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-									<div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				))}
-			</div>
-		</div>
-	);
+              <div className="col-span-9 flex flex-wrap items-center justify-center gap-1">
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+                <div className="flex w-[350px] flex-col items-center gap-1">
+                  <div className="h-[20px] w-[150px] animate-pulse bg-gray-200"></div>
+                  <div className="h-[20px] w-[75px] animate-pulse bg-gray-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
-export default ComissionamentoPosObraSkeleton;
+export default ComissionamentoPosObraSkeleton

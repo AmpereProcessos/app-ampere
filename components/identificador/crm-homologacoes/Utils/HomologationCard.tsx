@@ -10,7 +10,7 @@ import { ImPower } from 'react-icons/im'
 
 function getStatusTag(status: string) {
   if (status == 'PENDENTE')
-    return <h1 className={`rounded-full bg-gray-800 px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
+    return <h1 className={`bg-primary/80 rounded-full px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
 
   if (status == 'ELABORANDO DOCUMENTAÇÕES')
     return <h1 className={`rounded-full bg-blue-500 px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
@@ -27,7 +27,7 @@ function getStatusTag(status: string) {
   if (status == 'APROVADO')
     return <h1 className={`rounded-full bg-green-500 px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
 
-  return <h1 className={`rounded-full bg-gray-800 px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
+  return <h1 className={`bg-primary/80 rounded-full px-2 py-1 text-center text-[0.65rem] font-bold text-white lg:text-xs`}>{status}</h1>
 }
 
 type HomologationCardProps = {
@@ -37,23 +37,23 @@ type HomologationCardProps = {
 }
 function HomologationCard({ homologation, handleClick, userHasEditPermission }: HomologationCardProps) {
   return (
-    <div className="flex w-full flex-col items-center rounded-md border border-gray-500 bg-[#fff] p-4 lg:w-[450px]">
+    <div className="bg-background border-primary/60 flex w-full flex-col items-center rounded-md border p-4 lg:w-[450px]">
       <div className="flex w-full items-start justify-between">
         <div className="flex grow flex-col">
           {userHasEditPermission ? (
             <h1
               onClick={() => handleClick(homologation._id)}
-              className="cursor-pointer text-sm font-black leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500"
+              className="cursor-pointer text-sm leading-none font-black tracking-tight duration-300 ease-in-out hover:text-cyan-500"
             >
               {homologation.titular.nome}
             </h1>
           ) : (
-            <h1 className="text-sm font-black leading-none tracking-tight">{homologation.titular.nome}</h1>
+            <h1 className="text-sm leading-none font-black tracking-tight">{homologation.titular.nome}</h1>
           )}
 
           <div className="flex items-center gap-1">
             <BsCode />
-            <p className="text-xs font-medium tracking-tight text-gray-500">INSTALAÇÃO Nº {homologation.instalacao.numeroInstalacao}</p>
+            <p className="text-primary/60 text-xs font-medium tracking-tight">INSTALAÇÃO Nº {homologation.instalacao.numeroInstalacao}</p>
           </div>
         </div>
         {getStatusTag(homologation.status)}
@@ -61,13 +61,13 @@ function HomologationCard({ homologation, handleClick, userHasEditPermission }: 
       <div className="mt-2 flex w-full items-center justify-start gap-2">
         <div className="flex items-center gap-1">
           <FaSolarPanel />
-          <p className="text-xs font-medium tracking-tight text-gray-500">
+          <p className="text-primary/60 text-xs font-medium tracking-tight">
             {getModulesPeakPotByProducts(homologation.equipamentos as TProductItem[])} kWp EM MÓDULOS
           </p>
         </div>
         <div className="flex items-center gap-1">
           <ImPower />
-          <p className="text-xs font-medium tracking-tight text-gray-500">
+          <p className="text-primary/60 text-xs font-medium tracking-tight">
             {getInverterPeakPowerByProducts(homologation.equipamentos as TProductItem[])} kWp EM INVERSORES
           </p>
         </div>
@@ -80,7 +80,7 @@ function HomologationCard({ homologation, handleClick, userHasEditPermission }: 
           height={20}
         />
 
-        <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+        <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
           REQUERIDO POR <strong className="text-cyan-500">{homologation.requerente.nome?.toUpperCase() || 'NÃO DEFINIDO'}</strong>
         </p>
       </div>

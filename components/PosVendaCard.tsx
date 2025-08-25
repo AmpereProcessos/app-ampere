@@ -46,7 +46,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
   function renderDeliveryInfo({ expectedAt, deliveredAt }: { expectedAt?: string | null; deliveredAt?: string | null }) {
     if (deliveredAt)
       return (
-        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+        <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
           ENTREGUE EM: <strong className="text-cyan-500">{formatDateAsLocale(deliveredAt)}</strong> (HÁ{' '}
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: deliveredAt, end: new Date() })} DIAS</strong> )
         </h1>
@@ -54,24 +54,24 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 
     if (expectedAt)
       return (
-        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+        <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
           PREVISTO PARA: {formatDateAsLocale(expectedAt)} (EM{' '}
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: expectedAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
 
-    return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">ENTREGA INDEFINIDA</h1>
+    return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">ENTREGA INDEFINIDA</h1>
   }
   function renderAccessInfo({ approvedAt }: { approvedAt?: string | null }) {
     if (approvedAt)
       return (
-        <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+        <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
           PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(approvedAt)}</strong> (HÁ{' '}
           <strong className="text-cyan-500">{getDifferenceBetweenDates({ start: approvedAt, end: new Date() })} DIAS</strong> )
         </h1>
       )
 
-    return <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">PARECER NÃO APROVADO</h1>
+    return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">PARECER NÃO APROVADO</h1>
   }
   const { mutate: handleUpdateProject, isPending } = useMutationWithFeedback({
     mutationKey: ['update-after-sales-project'],
@@ -88,12 +88,12 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 
   if (mode === 'CARD')
     return (
-      <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
+      <div className="font border-primary/20 flex w-full gap-2 rounded-md border shadow-xs">
         <div className={`h-full w-[7px] ${getBarColor(infoHolder.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
         <div className="flex w-full grow flex-col p-3">
           <div className="flex w-full flex-col items-start justify-between lg:flex-row lg:items-center">
             <div className="flex min-w-fit flex-wrap items-center gap-2">
-              <h1 className="font-bold leading-none tracking-tight">
+              <h1 className="leading-none font-bold tracking-tight">
                 <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
               </h1>
               <div className="w-fit">
@@ -102,7 +102,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             </div>
 
             <div className="mt-2 flex w-full items-center justify-center gap-2 lg:mt-0 lg:w-fit lg:justify-end">
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="text-primary/60 flex items-center gap-2">
                 <BsCalendarFill />
                 <p className="text-xs font-medium">
                   {project.jornada.dataUltimoContato ? formatDateAsLocale(project.jornada.dataUltimoContato) : 'SEM CONTATO'}
@@ -115,7 +115,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                   handleUpdateProject({ id: projectId, changes: { 'jornada.dataUltimoContato': new Date().toISOString() } })
                   setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, dataUltimoContato: new Date().toISOString() } }))
                 }}
-                className="flex items-center gap-1 rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+                className="hover:bg-primary/70 flex items-center gap-1 rounded bg-black px-4 py-2 text-xs font-medium text-white duration-300 ease-in-out"
               >
                 <p>CONTATO RECENTE</p>
                 <BsCheckAll size={18} />
@@ -123,22 +123,22 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             </div>
           </div>
           <div className="flex w-full flex-col">
-            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
+            <h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
             <div className="mt-1 flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">TELEFONE</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TELEFONE</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.telefone}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">VENDEDOR</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">VENDEDOR</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.vendedor.nome}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">TIPO DE SERVIÇO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TIPO DE SERVIÇO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">TIPO DE SERVIÇO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TIPO DE SERVIÇO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
               </div>
               {project.seguro?.aplicavel ? (
@@ -149,15 +149,15 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
               ) : null}
 
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">Nº DE MÓDULOS</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">Nº DE MÓDULOS</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.sistema.qtdeModulos}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DO PARECER</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.homologacao.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.homologacao.documentacao.dataLiberacao
                     ? formatDateAsLocale(project.homologacao.documentacao.dataLiberacao)
@@ -165,7 +165,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">ASSINATURA DA DOCUMENTAÇÃO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.homologacao.documentacao.dataAssinatura
                     ? formatDateAsLocale(project.homologacao.documentacao.dataAssinatura)
@@ -173,73 +173,73 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DE SUPLEMENTAÇÃO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DE SUPLEMENTAÇÃO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">COBRANÇA DO KIT</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">COBRANÇA DO KIT</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.dataRequisicaoPagamento ? formatDateAsLocale(project.compra.dataRequisicaoPagamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PAGAMENTO DO KIT (CLIENTE)</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PAGAMENTO DO KIT (CLIENTE)</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.dataPagamento ? formatDateAsLocale(project.compra.dataPagamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
 
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PREVISÃO DE ENTREGA</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PREVISÃO DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">DATA DE ENTREGA</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">DATA DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.dataEntrega ? formatDateAsLocale(project.compra.dataEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DE ENTREGA</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DE ENTREGA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.statusEntrega ? project.compra.statusEntrega : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">FORNECEDOR</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">FORNECEDOR</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.fornecedor || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center rounded p-1 lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">DATA DE FATURAMENTO</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">DATA DE FATURAMENTO</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.faturamento?.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
             </div>
-            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">INFORMAÇÕES DA JORNADA</h1>
+            <h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">INFORMAÇÕES DA JORNADA</h1>
             <div className="flex w-full flex-wrap items-center justify-around">
               {project.possuiDeficiencia === 'SIM' ? (
                 <>
                   <div className="flex flex-col items-center lg:items-start">
-                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">PESSOA COM DEFICIÊNCIA</h1>
+                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PESSOA COM DEFICIÊNCIA</h1>
                     <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.qualDeficiencia}</h1>
                   </div>
                 </>
               ) : null}
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">CONTATOS DA JORNADA</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CONTATOS DA JORNADA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.contatos || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
-                <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">CUIDADOS NA JORNADA</h1>
+                <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CUIDADOS NA JORNADA</h1>
                 <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
               </div>
             </div>
             <div className="mt-3 flex w-full flex-col items-center justify-around gap-3 border border-cyan-500 p-2">
               <div className="flex w-full items-center justify-between gap-2">
-                <h1 className="text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
+                <h1 className="text-start text-xs leading-none font-bold tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
                 <div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
                   <Link href={`/publico/jornada-do-cliente/${project._id}`}>
                     <div className="text-[0.65rem] font-bold">LINK DA JORNADA</div>
@@ -446,12 +446,12 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 </div>
               </div>
             </div>
-            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">ANOTAÇÕES</h1>
+            <h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">ANOTAÇÕES</h1>
             <textarea
               value={infoHolder.jornada.obsJornada || undefined}
               placeholder="Preencha aqui anotações da jornada do cliente..."
               onChange={(e) => setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, obsJornada: e.target.value } }))}
-              className="mt-2 min-h-[50px] w-full resize-none rounded border border-gray-300 bg-gray-100 p-3 text-center text-sm text-gray-800 shadow-sm outline-none"
+              className="border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
             />
 
             <div className="mt-1 flex w-full items-center justify-between">
@@ -459,7 +459,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                 <button
                   type="button"
                   onClick={() => setModalProjectIsOpen(true)}
-                  className="flex items-center gap-1 rounded border border-[#fead41] py-1 px-4 text-xs font-medium text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-white"
+                  className="flex items-center gap-1 rounded border border-[#fead41] px-4 py-1 text-xs font-medium text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-white"
                 >
                   <p>EXPANDIR</p>
                   <FaExpandArrowsAlt />
@@ -475,7 +475,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                     onClick={() => setActivitiesMenuIsOpen((prev) => !prev)}
                     className={`${
                       openActivitiesCount > 0 ? 'border-red-500 text-red-500 hover:bg-red-500' : 'border-blue-500 text-blue-500 hover:bg-blue-500'
-                    } flex items-center gap-1 rounded border py-1 px-4 text-xs font-medium duration-300 ease-in-out hover:text-white`}
+                    } flex items-center gap-1 rounded border px-4 py-1 text-xs font-medium duration-300 ease-in-out hover:text-white`}
                   >
                     <p>ATIVIDADES</p>
                     <MdOutlineCheckBox size={18} />
@@ -489,7 +489,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                   // @ts-ignore
                   handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })
                 }}
-                className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
               >
                 SALVAR ANOTAÇÕES
               </LoadingButton>
@@ -507,7 +507,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
                   ))}
                 </div>
               ) : (
-                <h1 className="w-full py-1 text-center text-sm italic text-gray-500">Nenhuma atividade cadastrada...</h1>
+                <h1 className="text-primary/60 w-full py-1 text-center text-sm italic">Nenhuma atividade cadastrada...</h1>
               )
             ) : null}
           </div>
@@ -518,12 +518,12 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
 
   if (mode === 'SIMPLIFIED')
     return (
-      <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
+      <div className="font border-primary/20 flex w-full gap-2 rounded-md border shadow-xs">
         <div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
         <div className="flex w-full grow flex-col p-3">
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="font-bold leading-none tracking-tight">
+              <h1 className="leading-none font-bold tracking-tight">
                 <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
               </h1>
               <div className="w-fit">
@@ -532,13 +532,13 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             </div>
 
             <div className="mt-2 flex items-center gap-3 lg:mt-0">
-              {/* <div className="flex items-center gap-2 text-gray-500">
+              {/* <div className="flex items-center gap-2 text-primary/60">
               <TbTruckDelivery />
               <p className="text-sm font-medium">
                {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
               </p>
               </div> */}
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="text-primary/60 flex items-center gap-2">
                 <BsCalendarFill />
                 <p className="text-sm font-medium">
                   {project.jornada.dataUltimoContato
@@ -551,7 +551,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
           <div className="mt-2 flex w-full flex-wrap items-center justify-start gap-4">
             <div className="flex items-center gap-1">
               <FaSignature />
-              <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+              <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
                 ASSINADO EM: <strong className="text-cyan-500">{formatDateAsLocale(project.contrato.dataAssinatura)}</strong> (HÁ{' '}
                 <strong className="text-cyan-500">
                   {getDifferenceBetweenDates({ start: project.contrato.dataAssinatura, end: new Date() })} DIAS
@@ -562,7 +562,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             {project.compra.dataPedido ? (
               <div className="flex items-center gap-1">
                 <FaStore />
-                <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+                <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
                   COMPRO COM: <strong className="text-cyan-500">{project.compra?.fornecedor}</strong>
                 </h1>
               </div>
@@ -571,7 +571,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             <div className="flex items-center gap-1">
               <TbTruckDelivery />
               {renderDeliveryInfo({ deliveredAt: project.compra.dataEntrega, expectedAt: project.compra.previsaoEntrega })}
-              {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+              {/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-primary/60 lg:text-xs">
               {project.compra.dataEntrega
                ? `ENTREGUE EM: ${formatDateAsLocale(project.compra.dataEntrega)} (HÁ 
               ${getDifferenceBetweenDates({ start: project.compra.dataEntrega, end: new Date() })} DIAS)`
@@ -584,7 +584,7 @@ function PosVendaCard({ session, projectId, project, mode }: PosVendaCardProps) 
             </div>
             <div className="flex items-center gap-1">
               <FaSolarPanel />
-              <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-gray-500 lg:text-xs">
+              <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
                 <strong className="text-cyan-500">{project.sistema?.qtdeModulos} MÓDULOS</strong>
               </h1>
             </div>

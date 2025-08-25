@@ -348,26 +348,26 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
   }
   console.log(images)
   return (
-    <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DOCUMENTAÇÃO</span>
-      <div className="flex flex-col gap-2 items-center">
-        <div className="flex gap-2 justify-around flex-wrap mt-2">
+    <div className="bg-background flex w-full flex-col border border-[#15599a] pb-2 shadow-lg">
+      <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">DOCUMENTAÇÃO</span>
+      <div className="flex flex-col items-center gap-2">
+        <div className="mt-2 flex flex-wrap justify-around gap-2">
           {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && (
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="contaDeEnergia">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="contaDeEnergia">
                 CONTA DE ENERGIA
               </label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {images.contaDeEnergia ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">{images.contaDeEnergia.name}</span>
+                      <span className="block text-center font-normal text-gray-400">{images.contaDeEnergia.name}</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -387,21 +387,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           )}
 
           {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && (
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="contaDeEnergia">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="contaDeEnergia">
                 LAUDO COMERCIAL
               </label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {images.laudo ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">{images.laudo.name}</span>
+                      <span className="block text-center font-normal text-gray-400">{images.laudo.name}</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -420,21 +420,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
             </div>
           )}
 
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
               PROPOSTA COMERCIAL ATUALIZADA
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 {images.propostaComercial ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">{images.propostaComercial.name}</span>
+                    <span className="block text-center font-normal text-gray-400">{images.propostaComercial.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                   </div>
                 )}
               </div>
@@ -451,21 +451,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
               />
             </div>
           </div>
-          <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+          <div className="flex w-fit flex-col items-center">
+            <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
               COMPROVANTE DE ENDEREÇO CORRESPONDENTE
             </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
               <div className="absolute">
                 {images.comprovanteEnderecoCorrespondente ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">{images.comprovanteEnderecoCorrespondente.name}</span>
+                    <span className="block text-center font-normal text-gray-400">{images.comprovanteEnderecoCorrespondente.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                    <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                   </div>
                 )}
               </div>
@@ -484,21 +484,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           </div>
           {dados.tipoDaInstalacao == 'RURAL' && (
             <>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   CAR
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.car ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.car.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.car.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -515,21 +515,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
                   />
                 </div>
               </div>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   MATRÍCULA
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.matricula ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.matricula.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.matricula.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -550,21 +550,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           )}
           {dados.tipoDaInstalacao == 'URBANO' && (
             <>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   IPTU
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.iptu ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.iptu.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.iptu.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -585,21 +585,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           )}
           {(dados.tipoDoTitular == 'PESSOA FISICA' || dados.tipoDeServico != 'SISTEMA FOTOVOLTAICO') && (
             <>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   DOCUMENTO COM FOTO
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.documentoComFoto ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.documentoComFoto.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.documentoComFoto.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -620,21 +620,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           )}
           {dados.tipoDoTitular == 'PESSOA JURIDICA' && (
             <>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   CONTRATO SOCIAL
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.contratoSocial ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.contratoSocial.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.contratoSocial.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -651,21 +651,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
                   />
                 </div>
               </div>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   CARTÃO CNPJ
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.cartaoCnpj ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.cartaoCnpj.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.cartaoCnpj.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -682,21 +682,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
                   />
                 </div>
               </div>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   COMPROVANTE DE ENDEREÇO - REPRESENTANTE LEGAL
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.comprovanteEnderecoRepresentante ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.comprovanteEnderecoRepresentante.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.comprovanteEnderecoRepresentante.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -713,21 +713,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
                   />
                 </div>
               </div>
-              <div className="w-fit flex flex-col items-center">
-                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+              <div className="flex w-fit flex-col items-center">
+                <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                   DOCUMENTO COM FOTO DE TODOS OS SÓCIOS
                 </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                   <div className="absolute">
                     {images.documentoComFotoSocios ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">{images.documentoComFotoSocios.name}</span>
+                        <span className="block text-center font-normal text-gray-400">{images.documentoComFotoSocios.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                        <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -756,7 +756,7 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
                   >
                     RELAÇÃO DE CARGAS
                   </label>
-                  <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-primary/20 flex justify-center items-center mt-2">
                     <div className="absolute">
                       {images.relacaoDeCargas ? (
                         <div className="flex flex-col items-center">
@@ -793,21 +793,21 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
           {dados.possuiDistribuicao == 'SIM' && (
             <>
               {dados.distribuicoes.map((dist, index) => (
-                <div key={index} className="w-fit flex flex-col items-center">
-                  <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+                <div key={index} className="flex w-fit flex-col items-center">
+                  <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                     RECEBEDORA {index + 1}
                   </label>
-                  <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                     <div className="absolute">
                       {images[`recebedora${index + 1}`] ? (
                         <div className="flex flex-col items-center">
                           <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span className="block text-gray-400 font-normal text-center">{images[`recebedora${index + 1}`].name}</span>
+                          <span className="block text-center font-normal text-gray-400">{images[`recebedora${index + 1}`].name}</span>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
                           <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                          <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                         </div>
                       )}
                     </div>
@@ -830,16 +830,16 @@ function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, p
         </div>
       </div>
       {imagesMsg.text && <p className={`text-center italic ${imagesMsg.color}`}>{imagesMsg.text}</p>}
-      <div className="flex justify-center mt-2 gap-2">
-        <button onClick={voltar} className="bg-[#15599a] rounded p-2 font-bold text-white">
+      <div className="mt-2 flex justify-center gap-2">
+        <button onClick={voltar} className="rounded bg-[#15599a] p-2 font-bold text-white">
           VOLTAR
         </button>
         {checks.allChecked ? (
-          <button onClick={avancar} className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold ">
+          <button onClick={avancar} className="w-fit rounded bg-[#fead61] p-2 text-center font-bold hover:bg-[#15599a] hover:text-white">
             PRÓXIMA ETAPA
           </button>
         ) : (
-          <button onClick={uploadImage} className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold">
+          <button onClick={uploadImage} className="rounded bg-[#fead61] p-2 font-bold hover:bg-[#15599a] hover:text-white">
             ENVIAR FOTOS
           </button>
         )}

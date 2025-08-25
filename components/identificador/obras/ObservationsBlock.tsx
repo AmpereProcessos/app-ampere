@@ -43,7 +43,7 @@ function ObservationsBlock({ infoHolder, setInfo, changes, setChanges }: Observa
   return (
     <div className="flex h-full max-h-[300px] min-h-[300px] w-full flex-col rounded-lg border border-cyan-500 p-3">
       <div className="flex w-full items-center justify-between">
-        <h1 className="font-sans text-center  font-bold text-[#353432]">OBSERVAÇÕES DE OBRA</h1>
+        <h1 className="text-center font-sans font-bold text-[#353432]">OBSERVAÇÕES DE OBRA</h1>
       </div>
       <div className="flex w-full items-center gap-1">
         <div className="w-[90%]">
@@ -58,7 +58,7 @@ function ObservationsBlock({ infoHolder, setInfo, changes, setChanges }: Observa
         </div>
 
         <div className="flex w-[10%] items-center justify-center">
-          <button onClick={() => addObservation(observationHolder)} className="flex items-center justify-center text-green-500 ">
+          <button onClick={() => addObservation(observationHolder)} className="flex items-center justify-center text-green-500">
             <MdOutlineAddCircle style={{ fontSize: '25px' }} />
           </button>
           {/* <button onClick={() => addObservation(observationHolder)} className="flex items-center justify-center text-green-500">
@@ -66,13 +66,13 @@ function ObservationsBlock({ infoHolder, setInfo, changes, setChanges }: Observa
                 </button> */}
         </div>
       </div>
-      <div className="overscroll-y mt-2 flex w-full grow flex-col overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex w-full grow flex-col overflow-y-auto px-2">
         {getObservationsAsList(infoHolder.obra.observacoes || '').length > 0 ? (
           getObservationsAsList(infoHolder.obra.observacoes || '').map((observation, index) => (
             <div key={index} className="flex w-full items-center justify-between">
               <div className="flex items-center gap-2">
                 <BsSuitDiamondFill />
-                <p className="text-xs tracking-tight text-gray-500">{observation}</p>
+                <p className="text-primary/60 text-xs tracking-tight">{observation}</p>
               </div>
               <button onClick={() => removeObservation(index)} className="flex items-center justify-center text-sm text-red-300 hover:text-red-500">
                 <AiFillDelete />
@@ -81,7 +81,7 @@ function ObservationsBlock({ infoHolder, setInfo, changes, setChanges }: Observa
           ))
         ) : (
           <div className="flex grow items-center justify-center">
-            <p className="text-center text-sm italic text-gray-500">Nenhum observação adicionada...</p>
+            <p className="text-primary/60 text-center text-sm italic">Nenhum observação adicionada...</p>
           </div>
         )}
       </div>

@@ -171,15 +171,15 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
     if (serviceOrder) setOsInfo(serviceOrder)
   }, [serviceOrder])
   return (
-    <div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
+    <div className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
       <motion.div
         initial={{ opacity: 0.3 }}
         animate={{ opacity: 1 }}
-        className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[80%]"
+        className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[80%]"
       >
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">EDITAR ORDEM DE SERVIÇO</h3>
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-xl font-bold text-[#353432] dark:text-white">EDITAR ORDEM DE SERVIÇO</h3>
             <button
               onClick={closeModal}
               type="button"
@@ -192,12 +192,12 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
             <>
-              <div className="flex h-full w-full flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-y-auto px-2 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full w-full flex-col gap-4 overflow-x-hidden overflow-y-auto overscroll-y-auto px-2 py-4">
                 <div className="flex w-full flex-wrap items-center justify-center gap-2">
                   <Link href={`/ordens-de-servico/pdf/${serviceOrderId}`}>
                     <button
                       type="button"
-                      className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+                      className={cn('hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out')}
                     >
                       <ExternalLink width={14} height={14} />
                       <h1 className="text-xs font-medium tracking-tight">PÁGINA DO ORDEM DE SERVIÇO</h1>
@@ -207,7 +207,9 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                     <Link href={`/oem/pdfTermo/${serviceOrderId}`}>
                       <button
                         type="button"
-                        className={cn('flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-800')}
+                        className={cn(
+                          'hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out'
+                        )}
                       >
                         <ExternalLink width={14} height={14} />
                         <h1 className="text-xs font-medium tracking-tight">PÁGINA DO TERMO DE SERVIÇO</h1>
@@ -261,7 +263,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   projectObservations={serviceOrder?.projetoDados?.obra?.observacoes || undefined}
                 />
               </div>
-              <div className="mt-2 flex w-full items-center justify-between border-t border-gray-300 py-1 px-4">
+              <div className="border-primary/20 mt-2 flex w-full items-center justify-between border-t px-4 py-1">
                 {!osInfo.dataEfetivacao ? (
                   <LoadingButton
                     loading={isPending}
@@ -276,7 +278,7 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                     loading={isPending}
                     onClick={() => mutate({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })}
                     type="button"
-                    className="bg-gray-500 hover:bg-gray-600"
+                    className="hover:bg-primary/80 bg-primary/60"
                   >
                     REABRIR ORDEM DE SERVIÇO
                   </LoadingButton>

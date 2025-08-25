@@ -247,25 +247,25 @@ function ChamadoExternoPPS() {
     return (
       <div className="flex h-full w-full grow flex-col items-center justify-center gap-4">
         <BsClipboardCheckFill style={{ color: 'rgb(34,197,94)', fontSize: '60px' }} />
-        <h1 className="text-lg font-medium italic text-gray-600">Solicitação criada com sucesso !</h1>
-        <button onClick={() => setInsertStatus(null)} className="font-raleway text-sm font-bold tracking-tight text-blue-500  hover:text-cyan-500">
+        <h1 className="text-primary/80 text-lg font-medium italic">Solicitação criada com sucesso !</h1>
+        <button onClick={() => setInsertStatus(null)} className="font-raleway text-sm font-bold tracking-tight text-blue-500 hover:text-cyan-500">
           ABRIR NOVO CHAMADO
         </button>
       </div>
     )
 
   return (
-    <div className="flex h-full flex-col bg-[#fff] ">
-      <div className="flex w-full items-center justify-center rounded-b bg-[#15599a] py-2 px-2 pb-2 text-lg">
-        <h3 className="text-xl font-bold text-white ">NOVO CHAMADO</h3>
+    <div className="bg-background flex h-full flex-col">
+      <div className="flex w-full items-center justify-center rounded-b bg-[#15599a] px-2 py-2 pb-2 text-lg">
+        <h3 className="text-xl font-bold text-white">NOVO CHAMADO</h3>
       </div>
       <div className="flex w-full grow flex-col">
         {/* <div className="mt-4 flex items-center justify-center gap-4">
               <div className="flex items-center gap-2">
                 <Avatar fallback={'U'} height={25} width={25} url={session?.user.avatar_url} />
-                <p className="text-xs font-medium text-gray-500">{session.user.nome}</p>
+                <p className="text-xs font-medium text-primary/60">{session.user.nome}</p>
               </div>
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="flex items-center gap-2 text-primary/60">
                 <BsCalendarFill />
                 <p className="text-xs font-medium">{dayjs().format('DD/MM/YYYY HH:mm')}</p>
               </div>
@@ -273,7 +273,7 @@ function ChamadoExternoPPS() {
         <div className="mt-4 w-full self-center lg:w-[50%]">
           <SelectInput
             label="VENDEDOR"
-            labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+            labelClassName="text-center text-primary/60 font-normal font-raleway text-sm"
             value={infoHolder.requerente.apelido}
             options={allActiveSellers.map((seller) => ({ id: seller.id, label: seller.label, value: seller.value }))}
             handleChange={(value) => setInfoHolder((prev) => ({ ...prev, requerente: { ...prev.requerente, apelido: value } }))}
@@ -283,7 +283,7 @@ function ChamadoExternoPPS() {
           />
         </div>
 
-        <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">TIPO DE SOLICITAÇÃO</h1>
+        <h1 className="bg-primary/80 mt-4 w-full p-2 text-center font-bold text-white">TIPO DE SOLICITAÇÃO</h1>
         <SelectInput
           label="TIPO DE SOLICITAÇÃO"
           showLabel={false}
@@ -294,34 +294,34 @@ function ChamadoExternoPPS() {
           onReset={() => setInfoHolder((prev) => ({ ...prev, tipoSolicitacao: null }))}
           width="100%"
         />
-        <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">ANOTAÇÕES</h1>
+        <h1 className="bg-primary/80 mt-4 w-full p-2 text-center font-bold text-white">ANOTAÇÕES</h1>
         <textarea
           value={infoHolder.observacoes}
           onChange={(e) => setInfoHolder((prev) => ({ ...prev, observacoes: e.target.value }))}
           placeholder="Preencha aqui as observações do chamado ou dúvidas."
-          className="h-fit min-h-[100px] grow resize-none bg-gray-200 p-3 text-center text-sm outline-none scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 placeholder:italic"
+          className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 h-fit min-h-[100px] grow resize-none bg-gray-200 p-3 text-center text-sm outline-hidden placeholder:italic"
         />
         {infoHolder.projeto ? (
           <>
-            <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">PROJETO</h1>
+            <h1 className="bg-primary/80 mt-4 w-full p-2 text-center font-bold text-white">PROJETO</h1>
             <div className="mt-2 flex flex-col items-center gap-1 px-2">
               {infoHolder.projeto.id ? (
                 <div className="flex flex-col items-center gap-1">
                   <p className="font-Raleway w-full text-center font-bold text-[#fead41]">#{infoHolder.projeto.codigo}</p>
-                  <h1 className="font-Raleway w-full text-center text-xl font-bold leading-none tracking-tight">{infoHolder.projeto.nome}</h1>
+                  <h1 className="font-Raleway w-full text-center text-xl leading-none font-bold tracking-tight">{infoHolder.projeto.nome}</h1>
                 </div>
               ) : (
                 <>
-                  <p className="w-full text-center text-sm italic text-gray-500 lg:w-[60%]">
+                  <p className="text-primary/60 w-full text-center text-sm italic lg:w-[60%]">
                     Lembrando que o código em questão é o código identificador de projeto no CRM, sendo esse o número que acompanha o padrão:
                   </p>
-                  <h1 className="mb-2 text-sm text-gray-500">
+                  <h1 className="text-primary/60 mb-2 text-sm">
                     <strong>CRM</strong>-<strong className="text-[#fead41]">(NÚMERO AQUI)</strong>
                   </h1>
                   <div className="flex items-end gap-2">
                     <NumberInput
                       label={'CÓDIGO IDENTIFICADOR DO PROJETO'}
-                      labelClassName="text-center text-gray-500 font-bold font-raleway text-sm lg:text-base"
+                      labelClassName="text-center text-primary/60 font-bold font-raleway text-sm lg:text-base"
                       value={infoHolder.projeto.codigo}
                       handleChange={(value) => setInfoHolder((prev) => ({ ...prev, projeto: { ...prev.projeto, codigo: value } }))}
                       placeholder={'Preencha aqui o código do projeto...'}
@@ -338,7 +338,7 @@ function ChamadoExternoPPS() {
             </div>
           </>
         ) : null}
-        <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">CLIENTE</h1>
+        <h1 className="bg-primary/80 mt-4 w-full p-2 text-center font-bold text-white">CLIENTE</h1>
         <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
@@ -487,7 +487,7 @@ function ChamadoExternoPPS() {
             </div>
           </div>
         ) : null}
-        <h1 className="mt-4 w-full  bg-gray-800 p-2 text-center font-bold text-white">PREMISSAS</h1>
+        <h1 className="bg-primary/80 mt-4 w-full p-2 text-center font-bold text-white">PREMISSAS</h1>
         {infoHolder.tipoSolicitacao != 'ANÁLISE DE CRÉDITO' ? (
           <div className="mt-1 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
             <div className="w-full lg:w-1/3">

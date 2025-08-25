@@ -64,7 +64,7 @@ function Suprimentos() {
     } else if (diff > 2) {
       return 'border-2 border-blue-700'
     } else {
-      return 'border border-gray-300'
+      return 'border border-primary/20'
     }
   }
 
@@ -140,68 +140,68 @@ function Suprimentos() {
   if (projectsSuccess && projects) {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de suprimentos</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">Projetos no estágio de suprimentos</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
           <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
                 <VscDiffAdded />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
+                <p className="text-primary/60 text-xs">{getStats({ info: projects }).potencia} kWp</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">COMPRAS PENDENTES</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">COMPRAS PENDENTES</h1>
                 <AiOutlineShoppingCart />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendentes} </div>
-                <p className="text-xs text-gray-500">{getStats({ info: projects }).pendentesPronto} aptas para compra</p>
+                <p className="text-primary/60 text-xs">{getStats({ info: projects }).pendentesPronto} aptas para compra</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">EM ROTA</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">EM ROTA</h1>
                 <TbTruckDelivery />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).emRota}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">VALOR GASTO EM KITS</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">VALOR GASTO EM KITS</h1>
                 <MdAttachMoney />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pago}</div>
-                <p className="text-xs text-gray-500">
+                <p className="text-primary/60 text-xs">
                   {Number(getStats({ info: projects }).resultado) > 0
                     ? `${formatDecimalPlaces(getStats({ info: projects }).resultado, 2)}% a menos que o previsto`
                     : `${formatDecimalPlaces(getStats({ info: projects }).resultado, 2)}% a mais que o previsto`}{' '}
                 </p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/6">
               <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">VALOR PREVISTO EM KITS</h1>
+                <h1 className="text-sm font-medium tracking-tight uppercase">VALOR PREVISTO EM KITS</h1>
                 <MdAttachMoney />
               </div>
               <div className="mt-2 flex w-full flex-col">
@@ -211,7 +211,7 @@ function Suprimentos() {
           </div>
           <div className="my-2 flex w-full items-center justify-end gap-2">
             <Link href="/suprimentos/controle-compras">
-              <button className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">CONTROLE DE COMPRAS</button>
+              <button className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">CONTROLE DE COMPRAS</button>
             </Link>
           </div>
           <AnimatePresence>
@@ -292,7 +292,7 @@ function Suprimentos() {
                     onClick={() => setFilters((prev) => ({ ...prev, yetToBuy: !prev.yetToBuy }))}
                     className={`rounded-md border border-blue-600 ${
                       filters.yetToBuy ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600'
-                    }  h-[49px] py-1 px-4 text-sm font-bold text-white`}
+                    } h-[49px] px-4 py-1 text-sm font-bold text-white`}
                   >
                     APTO PARA COMPRA
                   </button>
@@ -368,24 +368,24 @@ function Suprimentos() {
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
               className={`w-full cursor-pointer md:w-[350px] lg:w-[450px] ${
-                project.compra.dataPedido == undefined ? getBorderColor(project.compra.dataLiberacao) : 'border border-gray-300'
-              } hover:bg-blue-100`}
+                project.compra.dataPedido == undefined ? getBorderColor(project.compra.dataLiberacao) : 'border-primary/20 border'
+              } dark:hover:bg-primary/10 hover:bg-blue-100`}
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
+                  <p className="text-primary/70 text-xs">{project.nomeDoContrato}</p>
                   <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <ProjectCardsTags projectTags={project.etiquetas} />
                 <div className="mt-2 grid grid-cols-2">
                   <div className="flex flex-col items-start">
                     <span className="text-xxs">INFORMAÇÕES</span>
-                    <p className="text-xs  uppercase text-gray-600">{project.compra.informacoes ? project.compra.informacoes : '-'}</p>
+                    <p className="text-primary/80 text-xs uppercase">{project.compra.informacoes ? project.compra.informacoes : '-'}</p>
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xxs">STATUS</span>
-                    <p className="text-center text-xs text-gray-600">{project.compra.status ? project.compra.status : '-'}</p>
+                    <p className="text-primary/80 text-center text-xs">{project.compra.status ? project.compra.status : '-'}</p>
                   </div>
                 </div>
                 <div className="mt-1 grid grid-cols-3 items-center">
@@ -411,27 +411,27 @@ function Suprimentos() {
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xxs">STATUS ENTREGA</span>
-                    <p className="text-xs text-gray-600">{project.compra.statusEntrega ? project.compra.statusEntrega : '-'}</p>
+                    <p className="text-primary/80 text-xs">{project.compra.statusEntrega ? project.compra.statusEntrega : '-'}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-center pt-1">
                   <span className="text-xxs">FATURAMENTO</span>
-                  <p className="text-center text-xs uppercase text-gray-600">
+                  <p className="text-primary/80 text-center text-xs uppercase">
                     {project.faturamento?.previsaoFaturamento ? project.faturamento?.previsaoFaturamento : '-'}
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
                   <div className="flex w-full flex-col">
-                    <span className="text-center text-xxs">DESDE APROV.PARECER</span>
-                    <p className={`text-center text-xs uppercase text-red-500`}>
+                    <span className="text-xxs text-center">DESDE APROV.PARECER</span>
+                    <p className={`text-center text-xs text-red-500 uppercase`}>
                       {project.homologacao.acesso.dataResposta
                         ? `${getDateDiff(new Date(), new Date(project.homologacao.acesso.dataResposta))} DIAS`
                         : '-'}
                     </p>
                   </div>
                   <div className="flex w-full flex-col">
-                    <span className="text-center text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
-                    <p className={`text-xs ${project.compra.dataPedido ? 'text-gray-600' : 'text-red-500'} text-center`}>
+                    <span className="text-xxs text-center">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
+                    <p className={`text-xs ${project.compra.dataPedido ? 'text-primary/80' : 'text-red-500'} text-center`}>
                       {project.compra.dataPedido
                         ? `${dayjs(dayjs(project.compra.dataPedido).add(22, 'hour')).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`
                         : `${dayjs(new Date()).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`}
@@ -443,12 +443,12 @@ function Suprimentos() {
                 dayjs(new Date(project.compra.dataMaxPagamento)).isValid() ? (
                   dayjs(project.compra.dataMaxPagamento).isAfter(dayjs()) ? (
                     <p
-                      className={`text-center text-sm ${dayjs(project.compra.dataMaxPagamento).diff(new Date(), 'days') < 2 ? 'text-red-500' : 'text-gray-600'} italic`}
+                      className={`text-center text-sm ${dayjs(project.compra.dataMaxPagamento).diff(new Date(), 'days') < 2 ? 'text-red-500' : 'text-primary/80'} italic`}
                     >
                       DATA PAGAMENTO LIMITE EM: {dayjs(project.compra.dataMaxPagamento).diff(new Date(), 'day')} DIA(S)
                     </p>
                   ) : (
-                    <p className="text-center text-sm font-bold italic text-red-500">PAGAMENTO ATRASADO</p>
+                    <p className="text-center text-sm font-bold text-red-500 italic">PAGAMENTO ATRASADO</p>
                   )
                 ) : (
                   false
@@ -458,7 +458,7 @@ function Suprimentos() {
           ))}
         </div>
         <Link href={'/obras/conferenciaMaterial'}>
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">CONFERÊNCIA DE MATERIAIS</p>
           </div>
         </Link>

@@ -66,37 +66,37 @@ function ComissaoPDFView({ projects }) {
         </div>
 
         <h1 className="my-4 text-center font-bold text-[#fead61]">RELATÓRIO DE COMISSÃO DE VENDEDOR</h1>
-        <div className="grid w-full grid-cols-8 border border-gray-700">
-          <div className="col-span-7 flex h-[35px] items-center justify-center border-r border-gray-700 bg-[#fead61] p-1 text-center text-xs font-bold text-white">
+        <div className="border-primary/70 grid w-full grid-cols-8 border">
+          <div className="border-primary/70 col-span-7 flex h-[35px] items-center justify-center border-r bg-[#fead61] p-1 text-center text-xs font-bold text-white">
             VALOR TOTAL
           </div>
-          <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+          <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
             R$ {Number(getTotalComission().ativoProjeto) + Number(getTotalComission().ativoPadrao) + Number(getTotalComission().ativoEstrutura)}
           </div>
         </div>
-        <div className="grid w-full grid-cols-10 border border-gray-700">
-          <div className="col-span-2 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+        <div className="border-primary/70 grid w-full grid-cols-10 border">
+          <div className="border-primary/70 col-span-2 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             NOME DO CLIENTE
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             CÓDIGO SVB
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             VENDEDOR
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             VALOR DO PROJETO
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             VALOR DO PADRÃO
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             VALOR DA ESTRUTURA
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             INSIDER
           </div>
-          <div className="col-span-1 flex h-[50px] items-center justify-center border-r border-gray-700 bg-[#15599a] p-1 text-center text-xs font-bold text-white">
+          <div className="border-primary/70 col-span-1 flex h-[50px] items-center justify-center border-r bg-[#15599a] p-1 text-center text-xs font-bold text-white">
             % DE COMISSÃO
           </div>
           <div className="col-span-1 flex h-[50px] items-center justify-center bg-[#15599a] p-1 text-center text-xs font-bold text-white">
@@ -105,32 +105,32 @@ function ComissaoPDFView({ projects }) {
         </div>
         <div className="flex w-full flex-col">
           {projects.map((project, index) => (
-            <div key={index} className="grid w-full grid-cols-10 border border-t-0 border-gray-700">
-              <div className="col-span-2 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+            <div key={index} className="border-primary/70 grid w-full grid-cols-10 border border-t-0">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-2 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 {project.nomeDoContrato}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 {project.codigoSVB}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 {project.vendedor.nome}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 R$ {project.sistema.valorProjeto.toLocaleString('pt-br')}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 R$ {project.padrao.valor ? project.padrao.valor.toLocaleString('pt-br') : '-'}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 R$ {project.estruturaPersonalizada.valor ? project.estruturaPersonalizada.valor.toLocaleString('pt-br') : '-'}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 {project.insider ? project.insider : 'N/A'}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center border-r border-gray-700 p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="border-primary/70 text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center border-r p-1 text-center font-bold">
                 {project.porcentagemComissao}
               </div>
-              <div className="col-span-1 flex h-[35px] items-center justify-center p-1 text-center text-xxs font-bold text-gray-700">
+              <div className="text-xxs text-primary/70 col-span-1 flex h-[35px] items-center justify-center p-1 text-center font-bold">
                 R$ {getProjectTotalComission(project).toFixed(2)}
               </div>
             </div>

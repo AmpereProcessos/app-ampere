@@ -207,10 +207,10 @@ function ChamadosSuporte() {
       } else if (grau == 'D' && diffTempo > 96) {
         return 'border-red-500'
       } else {
-        return 'border-gray-300'
+        return 'border-primary/20'
       }
     } else {
-      return 'border-gray-300'
+      return 'border-primary/20'
     }
   }
   useEffect(() => {
@@ -227,24 +227,24 @@ function ChamadosSuporte() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
-        <div className="flex w-full items-center justify-between border border-gray-300 bg-[#fff] p-4 shadow-xl">
-          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS DE SUPORTE TÉCNICO</p>
+      <div className="bg-primary/20 flex w-full grow flex-col gap-y-2 p-6">
+        <div className="bg-background border-primary/20 flex w-full items-center justify-between border p-4 shadow-xl">
+          <p className="text-center font-['Roboto'] text-2xl font-bold text-[#15599a] uppercase">CHAMADOS DE SUPORTE TÉCNICO</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[720px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-                <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
+                <p className="text-center text-xl font-bold text-[#15599a] uppercase">Chamados abertos</p>
                 <p className="font-bold text-[#fead61]">({filteredInProgress?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -255,7 +255,7 @@ function ChamadosSuporte() {
                   <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                     <input
                       type="text"
-                      className="w-full rounded  border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
                       value={inProgressCallsFilters.searchFilter}
                       onChange={(e) => handleInProgressCallsSearchFilter(e.target.value)}
@@ -377,7 +377,7 @@ function ChamadosSuporte() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredInProgress ? (
               filteredInProgress.map((call) => (
                 <div
@@ -389,11 +389,11 @@ function ChamadosSuporte() {
                     call.oemConcluido,
                     call.abertura,
                     call.statusChamado
-                  )} p-3 hover:bg-blue-100`}
+                  )} dark:hover:bg-primary/10 p-3 hover:bg-blue-100`}
                 >
                   <div className="grid w-full grid-cols-6 items-center gap-2">
                     <h1 className="col-span-3 text-sm font-semibold uppercase">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
-                    {call.cidade && <p className="col-span-1 text-center text-xxs font-bold uppercase text-gray-700">{call.cidade}</p>}
+                    {call.cidade && <p className="text-xxs text-primary/70 col-span-1 text-center font-bold uppercase">{call.cidade}</p>}
                     <p
                       className={`col-span-2 rounded-lg border p-1 text-center text-xs font-bold ${statusStyles[call.statusChamado].textColor} ${
                         statusStyles[call.statusChamado].borderColor
@@ -403,21 +403,21 @@ function ChamadosSuporte() {
                     </p>
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
-                    <p className="text-xs text-gray-500">{call.responsavel}</p>
+                    <p className="text-primary/60 text-xs uppercase">Responsável:</p>
+                    <p className="text-primary/60 text-xs">{call.responsavel}</p>
                   </div>
                   <div className="mt-2 hidden w-full items-center justify-between lg:flex">
-                    <p className="text-xs uppercase text-gray-500">DEMANDA</p>
-                    <p className={`text-xs ${call.demanda == 'EXTERNA' ? 'text-red-500' : 'text-gray-500'}`}>{call.demanda ? call.demanda : '-'}</p>
+                    <p className="text-primary/60 text-xs uppercase">DEMANDA</p>
+                    <p className={`text-xs ${call.demanda == 'EXTERNA' ? 'text-red-500' : 'text-primary/60'}`}>{call.demanda ? call.demanda : '-'}</p>
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
-                    <p className="text-xs text-gray-500">{call.tipoChamado}</p>
+                    <p className="text-primary/60 text-xs uppercase">Tipo de chamado:</p>
+                    <p className="text-primary/60 text-xs">{call.tipoChamado}</p>
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">ABERTURA</p>
-                    <p className="text-xxs uppercase text-gray-500">{dayjs().diff(dayjs(call.abertura), 'hours')} horas em aberto</p>
-                    <p className="text-xs text-gray-500">{new Date(call.abertura).toLocaleString()}</p>
+                    <p className="text-primary/60 text-xs uppercase">ABERTURA</p>
+                    <p className="text-xxs text-primary/60 uppercase">{dayjs().diff(dayjs(call.abertura), 'hours')} horas em aberto</p>
+                    <p className="text-primary/60 text-xs">{new Date(call.abertura).toLocaleString()}</p>
                   </div>
                   {call.tipoChamado.includes('GARANTIA') &&
                   call.statusGarantia != 'IDENTIFICAÇÃO E TESTES' &&
@@ -433,19 +433,19 @@ function ChamadosSuporte() {
             )}
           </div>
         </div>
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[500px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[500px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-                <p className="text-center text-xl font-bold uppercase text-[#15599a]">CHAMADOS FINALIZADOS</p>
+                <p className="text-center text-xl font-bold text-[#15599a] uppercase">CHAMADOS FINALIZADOS</p>
                 <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -464,7 +464,7 @@ function ChamadosSuporte() {
                         })
                       }
                       type="date"
-                      className="border border-gray-300 p-2 outline-none"
+                      className="border-primary/20 border p-2 outline-hidden"
                     />
                     <p>&</p>
                     <input
@@ -476,7 +476,7 @@ function ChamadosSuporte() {
                         })
                       }
                       type="date"
-                      className="border border-gray-300 p-2 outline-none"
+                      className="border-primary/20 border p-2 outline-hidden"
                     />
                     <FetchDataButton handleClick={getClosedCallsByDate} text={'BUSCAR'} icon={<MdDateRange />} />
                   </div>
@@ -485,7 +485,7 @@ function ChamadosSuporte() {
                       value={closedCallsFilters.searchFilter}
                       onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
-                      className="h-[41px] w-full  rounded border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 h-[41px] w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                     />
                     <div className="w-full lg:w-[250px]">
                       <Select
@@ -575,13 +575,13 @@ function ChamadosSuporte() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredClosedCalls ? (
               filteredClosedCalls.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className="max-h-[180px] w-[370px] cursor-pointer border border-gray-300 p-3 hover:bg-blue-100"
+                  className="border-primary/20 dark:hover:bg-primary/10 max-h-[180px] w-[370px] cursor-pointer border p-3 hover:bg-blue-100"
                 >
                   <div className="flex w-full items-center justify-between gap-2">
                     {call.feedbackValor != undefined && call.feedbackValor != '' ? (
@@ -596,7 +596,7 @@ function ChamadosSuporte() {
                       false
                     )}
                     <h1 className="text-sm font-semibold uppercase">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
-                    {call.cidade && <p className="text-xs uppercase text-gray-700">{call.cidade}</p>}
+                    {call.cidade && <p className="text-primary/70 text-xs uppercase">{call.cidade}</p>}
                     <p
                       className={`rounded-lg border p-1 text-xs font-bold ${statusStyles[call.statusChamado].textColor} ${statusStyles[call.statusChamado].borderColor}`}
                     >
@@ -604,18 +604,18 @@ function ChamadosSuporte() {
                     </p>
                   </div>
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Responsável:</p>
-                    <p className="text-xs text-gray-500">{call.responsavel}</p>
+                    <p className="text-primary/60 text-xs uppercase">Responsável:</p>
+                    <p className="text-primary/60 text-xs">{call.responsavel}</p>
                   </div>
                   {call.demanda && (
                     <div className="mt-2 hidden w-full items-center justify-between lg:flex">
-                      <p className="text-xs uppercase text-gray-500">DEMANDA</p>
-                      <p className="text-xs text-gray-500">{call.demanda}</p>
+                      <p className="text-primary/60 text-xs uppercase">DEMANDA</p>
+                      <p className="text-primary/60 text-xs">{call.demanda}</p>
                     </div>
                   )}
                   <div className="mt-2 flex w-full items-center justify-between">
-                    <p className="text-xs uppercase text-gray-500">Tipo de chamado:</p>
-                    <p className="text-xs text-gray-500">{call.tipoChamado}</p>
+                    <p className="text-primary/60 text-xs uppercase">Tipo de chamado:</p>
+                    <p className="text-primary/60 text-xs">{call.tipoChamado}</p>
                   </div>
                 </div>
               ))
@@ -626,7 +626,7 @@ function ChamadosSuporte() {
         </div>
         <div
           onClick={() => setCreationModal(true)}
-          className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
+          className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]"
         >
           <p className="text-sm font-bold uppercase">Novo chamado</p>
         </div>

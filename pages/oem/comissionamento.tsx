@@ -74,61 +74,61 @@ function Comissionamento() {
 
   return (
     <div className="flex grow flex-col p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS PARA COMISSIONAMENTO PÓS-OBRA</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS PARA COMISSIONAMENTO PÓS-OBRA</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
               <VscDiffAdded />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PENDENTE USINA LIGADA</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PENDENTE USINA LIGADA</h1>
               <TbAlertHexagonFilled />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendenteUsinaLigada} </div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PENDENTE ENERGIA INJETADA</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PENDENTE ENERGIA INJETADA</h1>
               <TbAlertHexagonFilled />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendenteEnergiaInjetada}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PENDENTE CONFIGURAÇÃO DO APP</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PENDENTE CONFIGURAÇÃO DO APP</h1>
               <TbAlertHexagonFilled />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendenteConfiguracaoApp}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PENDENTE MONITORAMENTO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PENDENTE MONITORAMENTO</h1>
               <TbAlertHexagonFilled />
             </div>
             <div className="mt-2 flex w-full flex-col">
@@ -301,12 +301,12 @@ function Comissionamento() {
           projects.length > 0 ? (
             projects?.map((project, index) => <ComissionamentoPosObraCard key={project._id} project={project} index={index} />)
           ) : (
-            <p className="w-full text-center font-medium text-gray-500">Nenhum projeto foi encontrado.</p>
+            <p className="text-primary/60 w-full text-center font-medium">Nenhum projeto foi encontrado.</p>
           )
         ) : null}
       </div>
       <Link href={'/vendas/entregaTecnica'}>
-        <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+        <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
           <p className="text-sm font-bold uppercase">ENTREGAS TÉCNICAS PRESENCIAIS</p>
         </div>
       </Link>

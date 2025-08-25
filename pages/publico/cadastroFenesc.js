@@ -173,14 +173,14 @@ function CadastroFenesc() {
   }
 
   return (
-    <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
+    <div className="flex grow flex-col items-center bg-[#15599a] p-6">
       {msg.status ? (
-        <div className="w-[90%] h-[100%] bg-[#fff] rounded-lg flex flex-col justify-center border border-gray-300 shadow-lg p-2 items-center">
+        <div className="bg-background border-primary/20 flex h-full w-[90%] flex-col items-center justify-center rounded-lg border p-2 shadow-lg">
           {msg.status == 'loading' ? (
             <div role="status">
               <svg
                 aria-hidden="true"
-                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                className="dark:text-primary/80 mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -199,24 +199,24 @@ function CadastroFenesc() {
           ) : null}
           {msg.status == 'failure' ? <MdSmsFailed style={{ fontSize: '45px', color: 'red' }} /> : null}
           {msg.status == 'success' ? <FiCheckCircle style={{ fontSize: '45px', color: 'green' }} /> : null}
-          <h1 className={`text-lg text-center italic ${msg.color} font-medium mt-2`}>{msg.text}</h1>
+          <h1 className={`text-center text-lg italic ${msg.color} mt-2 font-medium`}>{msg.text}</h1>
           {msg.status != 'loading' ? (
             <button
               onClick={reset}
-              className="text-[#15559a] border border-[#15599a] font-medium p-2 rounded-md mt-4 hover:bg-[#15599a] hover:text-white"
+              className="mt-4 rounded-md border border-[#15599a] p-2 font-medium text-[#15559a] hover:bg-[#15599a] hover:text-white"
             >
               NOVO CADASTRO
             </button>
           ) : null}
         </div>
       ) : (
-        <div className="w-[90%] h-[100%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
-          <div className="flex items-center justify-center h-[80px]">
+        <div className="bg-background border-primary/20 flex h-full w-[90%] flex-col items-center rounded-lg border p-2 shadow-lg">
+          <div className="flex h-[80px] items-center justify-center">
             <Image height={'80px'} width={'80px'} src={Logo} objectFit="fill" />
           </div>
-          <h1 className="w-full text-center text-[#15599a] text-2xl font-bold">CADASTRO DE CLIENTES FENESC</h1>
-          <div className="grow w-full flex flex-col items-center">
-            <h1 className="text-[#fead61] font-bold text-center my-4">INFORMAÇÕES GERAIS</h1>
+          <h1 className="w-full text-center text-2xl font-bold text-[#15599a]">CADASTRO DE CLIENTES FENESC</h1>
+          <div className="flex w-full grow flex-col items-center">
+            <h1 className="my-4 text-center font-bold text-[#fead61]">INFORMAÇÕES GERAIS</h1>
             <SelectFoatingInput
               label={'VENDEDOR'}
               editable={true}
@@ -249,7 +249,7 @@ function CadastroFenesc() {
                 }))
               }
             />
-            <h1 className="text-[#fead61] font-bold text-center my-4">SISTEMA</h1>
+            <h1 className="my-4 text-center font-bold text-[#fead61]">SISTEMA</h1>
             <NumberFloatingInput
               label={'POTÊNCIA EM kWp'}
               editable={true}
@@ -276,7 +276,7 @@ function CadastroFenesc() {
               }}
               toString={false}
             />
-            <h1 className="text-[#fead61] font-bold text-center my-4">FINANCIAMENTO</h1>
+            <h1 className="my-4 text-center font-bold text-[#fead61]">FINANCIAMENTO</h1>
             <TextFloatingInput
               label={'NOME DO GERENTE'}
               editable={true}
@@ -385,21 +385,21 @@ function CadastroFenesc() {
                 }))
               }
             />
-            <div className="w-fit flex flex-col items-center">
-              <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
+            <div className="flex w-fit flex-col items-center">
+              <label className="ml-2 text-center font-bold text-[#15599a]" htmlFor="propostaComercial">
                 PROPOSTA COMERCIAL
               </label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="bg-primary/20 relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 p-2">
                 <div className="absolute">
                   {image ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">{image.name}</span>
+                      <span className="block text-center font-normal text-gray-400">{image.name}</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
+                      <span className="block font-normal text-gray-400">Adicione o arquivo aqui</span>
                     </div>
                   )}
                 </div>
@@ -407,9 +407,9 @@ function CadastroFenesc() {
               </div>
             </div>
           </div>
-          <div className="w-full flex items-center justify-end gap-2">
+          <div className="flex w-full items-center justify-end gap-2">
             {msg.text ? <p className={`text-sm italic ${msg.color}`}>{msg.text}</p> : null}
-            <button onClick={addRegister} className="p-2 bg-green-500 text-white rounded font-bold">
+            <button onClick={addRegister} className="rounded bg-green-500 p-2 font-bold text-white">
               ENVIAR
             </button>
           </div>

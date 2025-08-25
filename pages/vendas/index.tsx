@@ -56,18 +56,18 @@ function Vendas() {
   if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-start">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS VENDIDOS</p>
-            <p className="text-sm font-medium tracking-tight text-gray-500">{projects ? projects.length : '...'} projetos encontrados</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS VENDIDOS</p>
+            <p className="text-primary/60 text-sm font-medium tracking-tight">{projects ? projects.length : '...'} projetos encontrados</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
@@ -78,7 +78,7 @@ function Vendas() {
             onClick={async () => {
               handleExportation(projects)
             }}
-            className="flex w-full items-center gap-2 rounded-md bg-gray-300 px-2 py-1 text-sm font-medium lg:w-fit"
+            className="bg-primary/20 flex w-full items-center gap-2 rounded-md px-2 py-1 text-sm font-medium lg:w-fit"
           >
             <p>Exportar dados como .XLSX</p>
             <TbFileExport />
@@ -289,43 +289,43 @@ function Vendas() {
                 transition={{ duration: 0.3, delay: 0.01 * index }}
                 key={project._id}
                 onClick={() => setModalProject({ id: project._id, isOpen: true })}
-                className="w-full cursor-pointer border border-gray-300 duration-300 ease-in-out  hover:bg-blue-50 md:w-[350px] lg:w-[450px]"
+                className="border-primary/20 w-full cursor-pointer border duration-300 ease-in-out hover:bg-blue-50 md:w-[350px] lg:w-[450px]"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2 pb-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold text-gray-700">{project.nomeDoContrato}</p>
+                    <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
                     <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CIDADE</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CIDADE</span>
                       <p className={'text-xs font-medium'}>{project.cidade}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">TELEFONE</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TELEFONE</span>
                       <p className="text-xs font-medium">{project.telefone}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CONTRATO</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CONTRATO</span>
                       <p className={'text-xs font-medium'}>{project.contrato?.status && project.contrato?.status}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">PAGAMENTO</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PAGAMENTO</span>
                       <p className="text-xs font-medium">{project.pagamento.status || 'NÃO DEFINIDO'}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DO PARECER</span>
                       <p className="text-xs font-medium tracking-tight text-green-500">
                         {project.homologacao.acesso.dataResposta ? 'LIBERADO' : 'NÃO LIBERADO'}
                       </p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA COMPRA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DA COMPRA</span>
                       <p className="text-xs font-medium tracking-tight">
                         {project.compra.liberacao ? project.compra.status || 'NÃO DEFINIDO' : 'NÃO LIBERADA'}
                       </p>
@@ -333,21 +333,21 @@ function Vendas() {
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA OBRA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DA OBRA</span>
                       <p className="text-xs font-medium tracking-tight">{project.obra.statusDaObra || 'NÃO DEFINIDO'}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA VISTORIA</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">STATUS DA VISTORIA</span>
                       <p className="text-xs font-medium tracking-tight">{project.homologacao.vistoria.dataEfetivacao ? 'CONCLUÍDA' : 'PENDENTE'}</p>
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex flex-col items-start">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">PLANO DE O&M</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PLANO DE O&M</span>
                       <p className="text-xs font-medium tracking-tight">{project.oem?.plano || 'NÃO DEFINIDO'}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">NPS</span>
+                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">NPS</span>
                       <p className="text-xs font-medium tracking-tight">{project.nps || 'NÃO DEFINIDO'}</p>
                     </div>
                   </div>

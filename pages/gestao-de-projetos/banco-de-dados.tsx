@@ -49,20 +49,20 @@ function MainDatebasePage() {
 
   return (
     <div className="grow p-6">
-      <div className="flex w-full flex-col gap-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex w-full flex-col gap-2 border-b p-1">
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex items-center gap-1">
             {filterMenuIsOpen ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuIsOpen(true)} />
               </div>
             )}
             <div className="flex flex-col gap-1">
-              <h1 className="text-2xl font-black uppercase text-[#15599a]">BANCO DE CLIENTES</h1>
+              <h1 className="text-2xl font-black text-[#15599a] uppercase">BANCO DE CLIENTES</h1>
             </div>
           </div>
         </div>
@@ -80,8 +80,8 @@ function MainDatebasePage() {
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           {Object.entries(ProjectTypesCollors).map(([key, value]) => (
             <div key={key} className="flex items-center gap-1">
-              <div className={`min-w-5 min-h-5 h-5 w-5 rounded-full ${value}`} />
-              <p className="text-xs font-bold tracking-tight text-gray-500">{key}</p>
+              <div className={`h-5 min-h-5 w-5 min-w-5 rounded-full ${value}`} />
+              <p className="text-primary/60 text-xs font-bold tracking-tight">{key}</p>
             </div>
           ))}
         </div>

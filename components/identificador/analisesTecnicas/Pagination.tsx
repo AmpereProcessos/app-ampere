@@ -37,8 +37,8 @@ function renderPagesIcons({
         return selectPage(p)
       }}
       className={`${
-        activePage == p ? 'border-black bg-black text-white' : 'border-transparent text-black hover:bg-gray-500'
-      } max-w-10 lg:min-w-10 lg:min-h-10 min-h-8 min-w-8 h-8 max-h-10 w-8 rounded-full border text-xs font-medium lg:h-10 lg:w-10`}
+        activePage == p ? 'border-black bg-black text-white' : 'hover:bg-primary/60 border-transparent text-black'
+      } h-8 max-h-10 min-h-8 w-8 max-w-10 min-w-8 rounded-full border text-xs font-medium lg:h-10 lg:min-h-10 lg:w-10 lg:min-w-10`}
     >
       {p}
     </button>
@@ -62,10 +62,10 @@ function TechnicalAnalysisPagination({
   queryLoading,
 }: TechnicalAnalysisPaginationProps) {
   return (
-    <div className="my-2 flex w-full flex-col items-center gap-1 ">
+    <div className="my-2 flex w-full flex-col items-center gap-1">
       {totalPages > 1 ? (
         <>
-          <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+          <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
             Um número grande de análises foi encontrado, separamos em páginas para facilitar a visualização. Clique na página desejada para visualizar
             os demais análises.
           </p>
@@ -76,7 +76,7 @@ function TechnicalAnalysisPagination({
                 if (activePage - 1 > 0) return selectPage(activePage - 1)
                 else return
               }}
-              className="flex select-none items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none hover:bg-gray-900/10 active:bg-gray-900/20"
+              className="flex items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold text-gray-900 uppercase transition-all select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <svg
@@ -99,7 +99,7 @@ function TechnicalAnalysisPagination({
                 if (activePage + 1 <= totalPages) selectPage(activePage + 1)
                 else return
               }}
-              className="flex select-none items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none hover:bg-gray-900/10 active:bg-gray-900/20"
+              className="flex items-center gap-2 rounded-full px-6 py-3 text-center align-middle font-sans text-xs font-bold text-gray-900 uppercase transition-all select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               PRÓXIMA
@@ -119,10 +119,10 @@ function TechnicalAnalysisPagination({
         </>
       ) : null}
 
-      <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+      <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
         {analysisMatched ? (analysisMatched > 0 ? `${analysisMatched} análises encontrados.` : `${analysisMatched} análise encontrado.`) : '...'}
       </p>
-      <p className="w-full text-center text-sm leading-none tracking-tight text-gray-500">
+      <p className="text-primary/60 w-full text-center text-sm leading-none tracking-tight">
         {analysisShowing ? (analysisShowing > 0 ? `Mostrando ${analysisShowing} análises.` : `Mostrando ${analysisShowing} análise.`) : '...'}
       </p>
     </div>

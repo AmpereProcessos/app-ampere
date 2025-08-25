@@ -29,7 +29,7 @@ function DateMonthInput({ width, label, labelClassName, holderClassName, showLab
 				onReset={() => handleChange(undefined)}
 				type="month"
 				className={cn(
-					"w-full rounded-md border border-primary/20 p-3 text-sm shadow-sm outline-none duration-500 ease-in-out placeholder:italic focus:border-primary",
+					"w-full rounded-md border border-primary/20 p-3 text-sm shadow-xs outline-hidden duration-500 ease-in-out placeholder:italic focus:border-primary",
 					holderClassName,
 				)}
 			/>

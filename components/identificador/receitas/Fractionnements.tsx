@@ -38,8 +38,8 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
   }, [missingPercentage])
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 text-center font-bold text-white">FRACIONAMENTOS</h1>
-      <h1 className="my-2 w-full self-center text-center text-sm font-medium text-gray-500 lg:w-[80%]">
+      <h1 className="bg-primary/80 w-full rounded text-center font-bold text-white">FRACIONAMENTOS</h1>
+      <h1 className="text-primary/60 my-2 w-full self-center text-center text-sm font-medium lg:w-[80%]">
         Os fracionamentos se referem aos <strong className="text-[#fead41]">recebimentos da receita</strong> , ou seja, as parcelas em que a receita
         será divida. Portanto, serão utilizadas como parametro para o{' '}
         <strong className="text-[#fead41]">regime de referência / regime de caixa.</strong>
@@ -86,7 +86,7 @@ function Fractionnements({ infoHolder, setInfoHolder, missingPercentage }: Fract
       </div>
       <div className="flex w-full items-center justify-end">
         <button
-          className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
           onClick={() => addFractionnement()}
         >
           ADICIONAR

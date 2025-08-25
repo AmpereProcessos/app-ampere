@@ -29,8 +29,8 @@ function TransformerInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextS
     return goToNextStage()
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <h1 className="w-full rounded-md  bg-gray-700 p-1 text-center font-medium text-white">INFORMAÇÕES DO TRANSFORMADOR DE ENERGIA</h1>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <h1 className="bg-primary/70 w-full rounded-md p-1 text-center font-medium text-white">INFORMAÇÕES DO TRANSFORMADOR DE ENERGIA</h1>
       <div className="flex w-full grow flex-col gap-2">
         <div className="my-3 w-full self-center lg:w-1/3">
           <CheckboxInput
@@ -60,7 +60,7 @@ function TransformerInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextS
             />
           </div>
         </div>
-        <h1 className="font-sans mt-2 w-full text-start  font-bold text-cyan-500">ARQUIVOS</h1>
+        <h1 className="mt-2 w-full text-start font-sans font-bold text-cyan-500">ARQUIVOS</h1>
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <DocumentFileInput
@@ -86,15 +86,15 @@ function TransformerInfo({ infoHolder, setInfoHolder, files, setFiles, goToNextS
         </div>
       </div>
 
-      <div className="mt-2 flex w-full items-end justify-between bg-[#fff]">
-        <button onClick={() => goToPreviousStage()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+      <div className="bg-background mt-2 flex w-full items-end justify-between">
+        <button onClick={() => goToPreviousStage()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button
           onClick={() => {
             validateAndProceed()
           }}
-          className=" rounded p-2 font-bold hover:bg-black hover:text-white"
+          className="rounded p-2 font-bold hover:bg-black hover:text-white"
         >
           Prosseguir
         </button>

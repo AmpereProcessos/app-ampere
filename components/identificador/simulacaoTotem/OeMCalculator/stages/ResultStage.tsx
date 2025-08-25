@@ -120,8 +120,8 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
     return annualLoss
   }
   return (
-    <div className={`flex grow flex-col bg-white font-raleway`}>
-      <div className="flex h-[100px] w-full items-center justify-center self-stretch bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
+    <div className={`bg-background font-raleway flex grow flex-col`}>
+      <div className="flex h-[100px] w-full items-center justify-center self-stretch bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="flex w-[90] flex-col items-center justify-center">
           {/* <img src={Logo} style={{ width: "100%" }} /> */}
           <Image src={AmpereWhiteLogo} quality={100} height={90} width={90} alt="LOGO" style={{ objectFit: 'cover' }} />
@@ -144,7 +144,7 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
           </h1>
           <div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-red-600 lg:w-1/2">
-              <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-red-600 p-3">
+              <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-red-600 p-3">
                 <h1 className="w-full text-center text-[0.7rem] font-bold text-white">POTÊNCIAIS PROBLEMAS CAUSADOS PELA FALTA DE MANUTENÇÃO</h1>
               </div>
               <div className="flex w-full flex-col gap-2 p-3">
@@ -153,13 +153,13 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
                     <div className="flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] items-center justify-center rounded-full border-2 border-red-600 p-1 text-red-600 lg:h-[25px] lg:min-h-[25px] lg:w-[25px] lg:min-w-[25px]">
                       <VscChromeClose size={12} />
                     </div>
-                    <p className="text-xs tracking-tight text-gray-500 lg:text-base">{problem}</p>
+                    <p className="text-primary/60 text-xs tracking-tight lg:text-base">{problem}</p>
                   </div>
                 ))}
               </div>
             </div>
             <div className="flex h-full w-full grow flex-col self-center rounded-md border border-green-600 lg:w-1/2">
-              <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-green-600 p-3">
+              <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-green-600 p-3">
                 <h1 className="w-full text-center text-[0.7rem] font-bold text-white">BENEFÍCIOS DA MANUTENÇÃO E LIMPEZA</h1>
               </div>
               <div className="flex w-full flex-col gap-2 p-3">
@@ -168,14 +168,14 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
                     <div className="flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] items-center justify-center rounded-full border-2 border-green-600 p-1 text-green-600 lg:h-[25px] lg:min-h-[25px] lg:w-[25px] lg:min-w-[25px]">
                       <FaCheck size={12} />
                     </div>
-                    <p className="text-xs tracking-tight text-gray-500 lg:text-base">{benefit}</p>
+                    <p className="text-primary/60 text-xs tracking-tight lg:text-base">{benefit}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
           <div className="my-2 flex w-full flex-col">
-            <h1 className="w-full text-center tracking-tight text-gray-500">
+            <h1 className="text-primary/60 w-full text-center tracking-tight">
               A execução de uma manutenção e limpeza, para um sistema como o seu <strong className="text-[#fead41]">({numModulos} módulos)</strong> ,
               pode te fazer <strong className="text-green-600">recuperar um montante anual</strong> estimado de:
             </h1>
@@ -184,24 +184,24 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
             </h1>
           </div>
         </div>
-        <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-blue-800 p-3">
+        <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-blue-800 p-3">
           <h1 className="w-full text-center text-[0.7rem] font-bold text-white">CONHEÇA NOSSAS OPÇÕES PARA VOCÊ</h1>
         </div>
-        <div className="flex h-fit w-full flex-wrap items-stretch justify-center gap-2 py-2 px-2">
+        <div className="flex h-fit w-full flex-wrap items-stretch justify-center gap-2 px-2 py-2">
           {plans.map((plan, index) => (
-            <div key={index} className="flex w-[350px] flex-col rounded-lg border border-gray-500 bg-[#fff] p-6 shadow-lg">
+            <div key={index} className="bg-background border-primary/60 flex w-[350px] flex-col rounded-lg border p-6 shadow-lg">
               <div className="flex w-full items-center justify-between gap-2">
                 <h1 className="text-lg font-black">{plan.nome}</h1>
               </div>
-              <p className="w-full text-start text-xs  text-gray-500">{plan?.descricao || '...'}</p>
+              <p className="text-primary/60 w-full text-start text-xs">{plan?.descricao || '...'}</p>
               <div className="my-4 flex w-full items-end justify-center gap-1">
                 <h1 className="text-2xl font-black">{formatToMoney(plan.valor || 0)}</h1>
-                <h1 className="text-xs font-light text-gray-500">/ {plan?.intervalo.tipo}</h1>
+                <h1 className="text-primary/60 text-xs font-light">/ {plan?.intervalo.tipo}</h1>
               </div>
 
-              <div className="my-4 flex flex-grow flex-col gap-1">
-                <h1 className="text-[0.6rem] tracking-tight text-gray-500">DESCRITIVO</h1>
-                <div className="flex flex-grow flex-col gap-2">
+              <div className="my-4 flex grow flex-col gap-1">
+                <h1 className="text-primary/60 text-[0.6rem] tracking-tight">DESCRITIVO</h1>
+                <div className="flex grow flex-col gap-2">
                   {plan.descritivo.map((d, idx) => (
                     <div key={idx} className="flex items-center gap-1">
                       <div className="w-fit">
@@ -218,7 +218,7 @@ function ResultStage({ nome, numModulos, potenciaPico, resetSimulation }: Result
       </div>
       <div className="flex w-full flex-col">
         <h1 className="mt-2 w-full text-center text-lg font-black">SOBRE NÓS</h1>
-        <div className="w-full self-center px-2 py-2 text-center text-sm font-medium tracking-tight text-gray-500 lg:w-[70%] lg:text-lg">
+        <div className="text-primary/60 w-full self-center px-2 py-2 text-center text-sm font-medium tracking-tight lg:w-[70%] lg:text-lg">
           A <strong className="text-[#fead41]">Ampère Energias</strong> é uma empresa que nasceu no Triangulo Mineiro, com a missão de ser a melhor
           empresa de soluções em energia do Brasil, oferecendo soluções completas e com qualidade para os nossos clientes, levando economia e
           qualidade, com praticidade e facilidade. A Ampère conta com{' '}

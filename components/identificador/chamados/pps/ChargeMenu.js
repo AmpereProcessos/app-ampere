@@ -84,7 +84,7 @@ function ChargeMenu({ addCharge, removeCharge, charges }) {
           <div key={index} className="flex w-full items-center justify-between gap-2 rounded-md border border-cyan-500 p-2 lg:w-[50%]">
             <div className="flex items-center gap-2">
               <GiBatteryPack color="rgb(6,182,212)" size={'20px'} />
-              <p className="text-sm text-gray-500">
+              <p className="text-primary/60 text-sm">
                 <strong className="text-cyan-500">{charge.qtde}</strong> x <strong className="text-cyan-500">{charge.descricao}</strong> de{' '}
                 <strong className="text-cyan-500">{charge.potencia}W</strong> por{' '}
                 <strong className="text-cyan-500">{charge.horasFuncionamento} horas</strong>
@@ -97,7 +97,7 @@ function ChargeMenu({ addCharge, removeCharge, charges }) {
           </div>
         ))
       ) : (
-        <p className="py-1 text-sm italic text-gray-500">Sem cargas adicionadas...</p>
+        <p className="text-primary/60 py-1 text-sm italic">Sem cargas adicionadas...</p>
       )}
     </div>
   )

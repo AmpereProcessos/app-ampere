@@ -44,8 +44,8 @@ function PurchaseComponentDefinition() {
     setCompositionItemHolder((prev) => ({ ...prev, ...holder }))
   }
   return (
-    <div className="flex w-[90%] flex-col gap-2 rounded border border-primary/20 p-3">
-      <h1 className="text-center text-sm font-medium tracking-tight text-primary/80">Adicione um material à composição da compra.</h1>
+    <div className="border-primary/20 flex w-[90%] flex-col gap-2 rounded border p-3">
+      <h1 className="text-primary/80 text-center text-sm font-medium tracking-tight">Adicione um material à composição da compra.</h1>
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className="w-full lg:w-[30%]">
           <MaterialSelector compositionItemHolder={compositionItemHolder} updateCompositionItemHolder={updateCompositionItemHolder} />
@@ -113,18 +113,18 @@ function MaterialSelector({ compositionItemHolder, updateCompositionItemHolder }
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-full rounded-md border border-primary/20 p-3 text-xs shadow-sm outline-none duration-500 ease-in-out placeholder:italic focus:border-primary"
+            className="border-primary/20 focus:border-primary w-full rounded-md border p-3 text-xs shadow-xs outline-hidden duration-500 ease-in-out placeholder:italic"
           >
             {selectedMaterial ? (
               <div className="flex items-center gap-1">
-                <h1 className="text-sm font-medium tracking-tight text-primary">{selectedMaterial.nome}</h1>
+                <h1 className="text-primary text-sm font-medium tracking-tight">{selectedMaterial.nome}</h1>
                 <div className="flex items-center gap-1">
                   <Ruler width={15} height={15} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{selectedMaterial.grandeza}</h1>
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{selectedMaterial.grandeza}</h1>
                 </div>
                 <div className="flex items-center gap-1">
                   <Warehouse width={15} height={15} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
                     {selectedMaterial.alocadorDados?.nome || 'N/A'}
                   </h1>
                 </div>
@@ -142,10 +142,10 @@ function MaterialSelector({ compositionItemHolder, updateCompositionItemHolder }
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="flex max-h-[350px] w-[var(--radix-popover-trigger-width)] min-w-[var(--radix-popover-trigger-width)] flex-col gap-2 overflow-y-auto overscroll-y-auto p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300"
+          className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[350px] w-(--radix-popover-trigger-width) min-w-(--radix-popover-trigger-width) flex-col gap-2 overflow-y-auto overscroll-y-auto p-3"
           sideOffset={5}
         >
-          {isLoading ? <h1 className="animate-pulse text-center text-xs font-medium italic text-primary/80">Carregando...</h1> : null}
+          {isLoading ? <h1 className="text-primary/80 animate-pulse text-center text-xs font-medium italic">Carregando...</h1> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
           {isSuccess ? (
             <MaterialList
@@ -168,8 +168,8 @@ function MaterialSelector({ compositionItemHolder, updateCompositionItemHolder }
           {selectedMaterial ? <>{selectedMaterial.nome}</> : <>Defina aqui um material...</>}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="flex h-[80%] max-h-[80%]  w-full flex-col gap-2 p-3">
-        {isLoading ? <h1 className="animate-pulse text-center text-xs font-medium italic text-primary/80">Carregando...</h1> : null}
+      <DrawerContent className="flex h-[80%] max-h-[80%] w-full flex-col gap-2 p-3">
+        {isLoading ? <h1 className="text-primary/80 animate-pulse text-center text-xs font-medium italic">Carregando...</h1> : null}
         {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
         {isSuccess ? (
           <MaterialList
@@ -207,30 +207,33 @@ function MaterialList({
       <div className="flex w-full flex-col gap-1">
         <div className="flex w-full items-center justify-center gap-2">
           <Box size={15} />
-          <h1 className="text-center text-sm font-medium tracking-tight text-primary/80">MENU DE MATERIAIS</h1>
+          <h1 className="text-primary/80 text-center text-sm font-medium tracking-tight">MENU DE MATERIAIS</h1>
         </div>
         <input
           type="text"
           value={materialDescription}
           onChange={(e) => updateMaterialDescription(e.target.value)}
           placeholder="Filtre o item desejado..."
-          className="h-full w-full italic outline-none"
+          className="h-full w-full italic outline-hidden"
         />
       </div>
-      <div className="my-2 h-[1px] w-full bg-primary/30"></div>
-      <div className="flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="bg-primary/30 my-2 h-px w-full"></div>
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto">
         {materials.length > 0 ? (
           materials.map((material) => (
-            <div key={material._id} className="group flex w-full items-center justify-between gap-2 rounded px-2 py-1 hover:bg-blue-100">
+            <div
+              key={material._id}
+              className="group dark:hover:bg-primary/10 flex w-full items-center justify-between gap-2 rounded px-2 py-1 hover:bg-blue-100"
+            >
               <div className="flex items-center gap-2">
-                <h1 className="text-sm font-medium tracking-tight text-primary">{material.nome}</h1>
+                <h1 className="text-primary text-sm font-medium tracking-tight">{material.nome}</h1>
                 <div className="flex items-center gap-1">
                   <Ruler width={15} height={15} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{material.grandeza}</h1>
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{material.grandeza}</h1>
                 </div>
                 <div className="flex items-center gap-1">
                   <Warehouse width={15} height={15} />
-                  <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">{material.alocadorDados?.nome || 'N/A'}</h1>
+                  <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">{material.alocadorDados?.nome || 'N/A'}</h1>
                 </div>
               </div>
               <button
@@ -253,7 +256,7 @@ function MaterialList({
         ) : materialDescription.trim().length > 3 ? (
           <NewMaterialMenu initialName={materialDescription} />
         ) : (
-          <p className="text-center text-xs font-medium italic text-primary/80">Nenhum material encontrado...</p>
+          <p className="text-primary/80 text-center text-xs font-medium italic">Nenhum material encontrado...</p>
         )}
       </div>
     </>
@@ -290,7 +293,7 @@ function NewMaterialMenu({ initialName }: NewMaterialMenuProps) {
   })
   return (
     <div className="flex w-full grow flex-col items-center justify-center gap-1">
-      <h1 className="w-full text-center text-xs font-medium tracking-tight text-primary/80">Adicione um novo material ao estoque.</h1>
+      <h1 className="text-primary/80 w-full text-center text-xs font-medium tracking-tight">Adicione um novo material ao estoque.</h1>
       <div className="flex items-center">
         <SelectInput
           label="GRANDEZA"

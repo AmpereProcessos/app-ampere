@@ -5,12 +5,12 @@ import SelectInput from '../../../inputs/Select'
 function ConclusionBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+      <div className="bg-primary/80 flex w-full items-center justify-center gap-2 rounded-md p-2">
         <h1 className="font-bold text-white">CONCLUSÃO</h1>
       </div>
       <div className="mt-2 flex w-full flex-col gap-2">
-        <div className="w-full flex flex-col">
-          <h1 className="w-full p-1 bg-gray-500 text-white font-bold text-center rounded-tr-sm rounded-tl-sm">OBSERVAÇÕES</h1>
+        <div className="flex w-full flex-col">
+          <h1 className="bg-primary/60 w-full rounded-tl-sm rounded-tr-sm p-1 text-center font-bold text-white">OBSERVAÇÕES</h1>
           <textarea
             placeholder="SEM OBSERVAÇÕES PREENCHIDAS..."
             value={infoHolder.conclusao?.observacoes || ''}
@@ -21,10 +21,10 @@ function ConclusionBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
               }))
               setChanges((prev) => ({ ...prev, 'conclusao.observacoes': e.target.value }))
             }}
-            className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+            className="text-primary/80 bg-primary/20 min-h-[80px] w-full resize-none rounded-br-sm rounded-bl-sm p-3 text-center text-xs font-medium outline-hidden"
           />
         </div>
-        <div className="flex w-full flex-col gap-2 lg:flex-row justify-around">
+        <div className="flex w-full flex-col justify-around gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <CheckboxInput
               labelFalse="POSSUI ESPAÇO PARA INSTALAÇÃO"
@@ -65,7 +65,7 @@ function ConclusionBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
         </div>
-        <div className="flex w-full flex-col gap-2 lg:flex-row justify-around">
+        <div className="flex w-full flex-col justify-around gap-2 lg:flex-row">
           <div className="w-full lg:w-1/3">
             <SelectInput
               label={'CONDIÇÃO DO PADRÃO DE ENERGIA'}

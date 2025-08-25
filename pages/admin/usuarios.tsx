@@ -31,19 +31,19 @@ export default function UsersControl() {
 
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLE DE USUÁRIOS</p>
-            <p className="text-sm tracking-tight text-gray-500">{users?.length || '...'} usuários contabilizados.</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLE DE USUÁRIOS</p>
+            <p className="text-primary/60 text-sm tracking-tight">{users?.length || '...'} usuários contabilizados.</p>
           </div>
 
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
@@ -51,7 +51,7 @@ export default function UsersControl() {
         <div className="flex w-full items-center justify-end">
           <button
             onClick={() => setNewUserModalIsOpen(true)}
-            className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+            className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
           >
             NOVO USUÁRIO
           </button>
@@ -78,7 +78,7 @@ export default function UsersControl() {
           users.length > 0 ? (
             users.map((user) => <UserCard user={user} openModal={(id) => setEditUserModal({ id: id, isOpen: true })} />)
           ) : (
-            <p className="w-full text-center text-lg font-medium italic text-gray-500">Nenhum usuário encontrado.</p>
+            <p className="text-primary/60 w-full text-center text-lg font-medium italic">Nenhum usuário encontrado.</p>
           )
         ) : null}
       </div>
@@ -90,8 +90,8 @@ export default function UsersControl() {
   )
 
   // return (
-  //   <div className="flex grow flex-col overflow-x-hidden bg-[#fff]">
-  //     <div className="flex h-[80px] w-full items-center justify-center bg-gray-800 p-2">
+  //   <div className="flex grow flex-col overflow-x-hidden bg-background">
+  //     <div className="flex h-[80px] w-full items-center justify-center bg-primary/80 p-2">
   //       <h1 className="text-center font-bold text-white">CONTROLE DE USUÁRIOS</h1>
   //     </div>
   //     {users ? (
@@ -107,7 +107,7 @@ export default function UsersControl() {
   //         <div role="status">
   //           <svg
   //             aria-hidden="true"
-  //             className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+  //             className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-primary/80"
   //             viewBox="0 0 100 101"
   //             fill="none"
   //             xmlns="http://www.w3.org/2000/svg"

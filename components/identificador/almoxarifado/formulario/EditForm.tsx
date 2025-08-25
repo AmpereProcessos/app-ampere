@@ -219,13 +219,13 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
     if (formulary) setInfoHolder(formulary as TNewWarehouseFormularyDTO)
   }, [formulary])
   return (
-    <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
+    <div id="new-warehouse-form" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[60%]">
         <div className="flex h-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex flex-col">
-              <h3 className="text-xl font-bold text-[#353432] dark:text-white ">EDITAR FORMULÁRIO</h3>
-              <p className="text-xs text-gray-500">#{formularyId}</p>
+              <h3 className="text-xl font-bold text-[#353432] dark:text-white">EDITAR FORMULÁRIO</h3>
+              <p className="text-primary/60 text-xs">#{formularyId}</p>
             </div>
 
             <button
@@ -240,7 +240,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
           {isError ? <ErrorComponent msg={'Erro ao buscar informações do formulário.'} /> : null}
           {isSuccess ? (
             <>
-              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
                 <TextInput
                   label="TITULO DO FORMULÁRIO"
                   editable={!isFormularyFinished}
@@ -425,7 +425,7 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
               {!infoHolder.dataEfetivacao ? (
                 <div className="my-1 flex w-full items-center justify-end gap-2">
                   <Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-                    <div className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
+                    <div className="disabled:bg-primary/60 rounded bg-[#fead41] px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500">
                       DOCUMENTO (PDF)
                     </div>
                   </Link>
@@ -433,14 +433,14 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     disabled={loadingConclusion || loadingUpdate}
                     // @ts-ignore
                     onClick={() => handleUpdate({ id: formularyId, changes: infoHolder })}
-                    className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                    className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
                   >
                     SALVAR
                   </button>
                   <button
                     disabled={loadingConclusion || loadingUpdate}
                     onClick={() => handleConclusion()}
-                    className="rounded bg-green-600 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-green-700"
+                    className="disabled:bg-primary/60 rounded bg-green-600 px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-green-700"
                   >
                     FINALIZAR
                   </button>
@@ -451,12 +451,12 @@ function EditForm({ formularyId, session, closeModal, invalidateQuery }: EditFor
                     disabled={loadingDelete}
                     // @ts-ignore
                     onClick={() => handleDelete({ id: formularyId })}
-                    className="rounded bg-red-600 py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500"
+                    className="disabled:bg-primary/60 rounded bg-red-600 px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500"
                   >
                     EXCLUIR FORMULÁRIO
                   </button>
                   <Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-                    <div className="rounded bg-[#fead41] py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-red-500">
+                    <div className="disabled:bg-primary/60 rounded bg-[#fead41] px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500">
                       DOCUMENTO (PDF)
                     </div>
                   </Link>

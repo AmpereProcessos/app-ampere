@@ -82,15 +82,15 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
   const purchaseControlsByStatus = getPurchaseControlsByStatus(purchaseControls || [])
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row ">
-          <div className="flex flex-col items-center  gap-1 lg:flex-row">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
+          <div className="flex flex-col items-center gap-1 lg:flex-row">
             <div className="flex items-center gap-1">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">CONTROLES DE COMPRA</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE COMPRA</p>
             </div>
             <button
               onClick={() => handleSetMode('kanban')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -110,7 +110,7 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
               onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
               className={cn(
                 'min-h-[46.6px] rounded p-2 text-xs font-bold text-white',
-                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-gray-600'
+                queryParams.queryPendingConclusion ? 'bg-blue-600' : 'bg-primary/80'
               )}
             >
               {queryParams.queryPendingConclusion ? 'EM ANDAMENTO' : 'TODAS'}
@@ -169,7 +169,7 @@ function PurchaseControlGroupBlock({ data, handleItemClick, affectedQueryKey, in
       <div
         className={cn('flex w-full items-center justify-between gap-2 rounded p-2 text-xs', {
           'bg-red-600': data.title == 'PENDENTE',
-          'bg-gray-700': data.title === 'EM COTAÇÃO',
+          'bg-primary/70': data.title === 'EM COTAÇÃO',
           'bg-teal-600': data.title === 'AGUARDANDO APROVAÇÃO',
           'bg-sky-500': data.title === 'AGUARDANDO NOTA FUTURA',
           'bg-orange-600': data.title === 'AGUARDANDO PAGAMENTO',
@@ -234,7 +234,7 @@ function PurchaseControlGroupBlock({ data, handleItemClick, affectedQueryKey, in
             />
           ))
         ) : (
-          <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum controle de compra encontrado.</div>
+          <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhum controle de compra encontrado.</div>
         )
       ) : null}
     </div>
@@ -250,7 +250,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
   const queryClient = useQueryClient()
 
   return (
-    <div className="relative flex w-full flex-col justify-between gap-1 rounded border border-gray-500 bg-[#fff] p-2 shadow-sm">
+    <div className="bg-background border-primary/60 relative flex w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-2">
           <PurchaseControlStatusController
@@ -260,12 +260,12 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
             }}
           />
 
-          <h1 className="text-sm font-bold leading-none tracking-tight">{purchaseControl.titulo}</h1>
+          <h1 className="text-sm leading-none font-bold tracking-tight">{purchaseControl.titulo}</h1>
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-          <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+          <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
           {purchaseControl.etiquetas.length > 0 ? (
             purchaseControl.etiquetas.map((tag, index) => (
               <div
@@ -279,50 +279,50 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
                 className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
               >
                 <Tag width={10} height={10} />
-                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
               </div>
             ))
           ) : (
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NÃO DEFINIDAS</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">NÃO DEFINIDAS</h1>
           )}
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <Factory width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FORNECEDOR</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FORNECEDOR</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{purchaseControl.fornecedor.nome || 'N/A'}</h1>
           </div>
 
           <div className="flex items-center gap-1">
             <ScrollText width={13} height={13} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">FATURAMENTOS</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">FATURAMENTOS</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               FATURAMENTOS {purchaseControl.faturamentos.filter((f) => !!f.data).length}/{purchaseControl.faturamentos.length}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendar width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PEDIDO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">{formatDateAsLocale(purchaseControl.dataPedido) || 'N/A'}</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PEDIDO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{formatDateAsLocale(purchaseControl.dataPedido) || 'N/A'}</h1>
           </div>
           <div className="flex items-center gap-1">
             <FaLocationDot width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">LOCALIZAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {purchaseControl.entrega.localizacao.cidade} ({purchaseControl.entrega.localizacao.uf})
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarEvent width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">PREVISÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">PREVISÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(purchaseControl.entrega.dataPrevisao) || 'N/A'}
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <BsCalendarCheck width={10} height={10} />
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">EFETIVAÇÃO</h1>
-            <h1 className="py-0.5 text-center text-[0.6rem] font-bold  text-primary">
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">EFETIVAÇÃO</h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
               {formatDateAsLocale(purchaseControl.entrega.dataEfetivacao) || 'N/A'}
             </h1>
           </div>
@@ -332,12 +332,12 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataInsercao, true)}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(purchaseControl.dataInsercao, true)}</p>
           </div>
           {purchaseControl.dataEfetivacao ? (
             <div className="flex items-center gap-1">
               <BsCalendarCheck color="#22c55e" />
-              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(purchaseControl.dataEfetivacao, true)}</p>
+              <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(purchaseControl.dataEfetivacao, true)}</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
@@ -348,12 +348,12 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
               fallback={formatNameAsInitials(purchaseControl.autor.nome)}
             />
 
-            <p className="text-[0.65rem] font-medium text-primary/80">{purchaseControl.autor.nome}</p>
+            <p className="text-primary/80 text-[0.65rem] font-medium">{purchaseControl.autor.nome}</p>
           </div>
         </div>
         <button
           onClick={() => handleClick(purchaseControl._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>
@@ -394,7 +394,7 @@ function PurchaseControlStatusController({
           <button
             className={cn('rounded-lg px-2 py-0.5 text-[0.65rem] font-medium text-white', {
               'bg-red-600': purchaseControl.status == 'PENDENTE',
-              'bg-gray-700': purchaseControl.status === 'EM COTAÇÃO',
+              'bg-primary/70': purchaseControl.status === 'EM COTAÇÃO',
               'bg-teal-600': purchaseControl.status === 'AGUARDANDO APROVAÇÃO',
               'bg-sky-500': purchaseControl.status === 'AGUARDANDO NOTA FUTURA',
               'bg-orange-600': purchaseControl.status === 'AGUARDANDO PAGAMENTO',
@@ -427,9 +427,9 @@ function PurchaseControlStatusController({
                 <DropdownMenuItem className="flex items-center justify-between">
                   <div className="flex items-center gap-1">
                     <div
-                      className={cn('min-h-4 min-w-4 h-4 w-4 rounded-full', {
+                      className={cn('h-4 min-h-4 w-4 min-w-4 rounded-full', {
                         'bg-red-600': status.value == 'PENDENTE',
-                        'bg-gray-700': status.value === 'EM COTAÇÃO',
+                        'bg-primary/70': status.value === 'EM COTAÇÃO',
                         'bg-teal-600': status.value === 'AGUARDANDO APROVAÇÃO',
                         'bg-sky-500': status.value === 'AGUARDANDO NOTA FUTURA',
                         'bg-orange-600': status.value === 'AGUARDANDO PAGAMENTO',

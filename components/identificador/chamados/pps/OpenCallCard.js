@@ -16,44 +16,44 @@ function OpenCallCard({ call, handleOpenModal }) {
     <div
       key={call._id}
       onClick={() => handleOpenModal(call)}
-      className="flex  gap-2  w-full lg:w-[400px] h-[310px] lg:h-[280px] shadow-sm cursor-pointer border border-gray-300  hover:bg-blue-100 rounded-md"
+      className="border-primary/20 dark:hover:bg-primary/10 flex h-[310px] w-full cursor-pointer gap-2 rounded-md border shadow-xs hover:bg-blue-100 lg:h-[280px] lg:w-[400px]"
     >
       <div className={`h-full w-[7px] ${getBarColor(call.status)} rounded-tl-md rounded-bl-md`}></div>
-      <div className="flex flex-col w-full grow p-6">
-        <div className="flex flex-col w-full grow">
-          <div className="flex flex-col w-full">
-            <h1 className="w-full text-start font-bold tracking-tight leading-none ">{call.tipoSolicitacao}</h1>
+      <div className="flex w-full grow flex-col p-6">
+        <div className="flex w-full grow flex-col">
+          <div className="flex w-full flex-col">
+            <h1 className="w-full text-start leading-none font-bold tracking-tight">{call.tipoSolicitacao}</h1>
             {call.requerente ? (
-              <div className="flex items-center justify-start w-full gap-2 mt-1">
+              <div className="mt-1 flex w-full items-center justify-start gap-2">
                 <Avatar fallback={'R'} url={call.requerente?.avatar_url} height={20} width={20} />
 
-                <p className="font-medium text-gray-500 text-xs">{call.requerente && call.requerente.apelido}</p>
+                <p className="text-primary/60 text-xs font-medium">{call.requerente && call.requerente.apelido}</p>
               </div>
             ) : (
-              <p className="text-xs text-gray-500 w-full text-start mt-1">{call.requerente ? call.requerente.nome : 'Requerente não definido'}</p>
+              <p className="text-primary/60 mt-1 w-full text-start text-xs">{call.requerente ? call.requerente.nome : 'Requerente não definido'}</p>
             )}
           </div>
           {call.projeto ? (
-            <div className="w-full flex flex-col items-center gap-2 mt-2">
-              <p className="tracking-tight leading-none text-xs font-semibold text-[#fead41]">{call.projeto.codigo}</p>
-              <p className="tracking-tight leading-none text-xs font-semibold text-gray-500">
+            <div className="mt-2 flex w-full flex-col items-center gap-2">
+              <p className="text-xs leading-none font-semibold tracking-tight text-[#fead41]">{call.projeto.codigo}</p>
+              <p className="text-primary/60 text-xs leading-none font-semibold tracking-tight">
                 {call.projeto.nome ? call.projeto.nome : call.cliente.nome}
               </p>
             </div>
           ) : null}
-          <div className="flex flex-col mt-4  gap-1 w-full">
-            <p className="tracking-tight leading-none text-xs text-gray-800 font-semibold">OBSERVAÇÕES</p>
-            <p className="text-xs w-full text-start text-gray-500">{formatLongString(call.observacoes, 140)}</p>
+          <div className="mt-4 flex w-full flex-col gap-1">
+            <p className="text-primary/80 text-xs leading-none font-semibold tracking-tight">OBSERVAÇÕES</p>
+            <p className="text-primary/60 w-full text-start text-xs">{formatLongString(call.observacoes, 140)}</p>
           </div>
         </div>
-        <div className="w-full flex items-center justify-between">
-          <div className={`flex items-center gap-2 ${call.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
+        <div className="flex w-full items-center justify-between">
+          <div className={`flex items-center gap-2 ${call.dataEfetivacao ? 'text-green-500' : 'text-primary/60'}`}>
             <BsCalendarFill />
             <p className="text-xs font-medium">{dayjs(call.dataEfetivacao ? call.dataEfetivacao : call.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
           </div>
           <div className="flex items-center justify-center gap-2">
             <Avatar fallback={'U'} height={25} width={25} url={call.responsavel?.avatar_url || undefined} />
-            <p className="font-medium text-gray-500 text-xs">{call.responsavel?.apelido || 'À DEFINIR'}</p>
+            <p className="text-primary/60 text-xs font-medium">{call.responsavel?.apelido || 'À DEFINIR'}</p>
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ function TotemTextInput({
 
       <div
         onClick={() => setIsFocused(true)}
-        className="flex min-h-[47px] w-full items-center justify-center gap-2 rounded-lg border border-gray-300 p-3 shadow-sm"
+        className="border-primary/20 flex min-h-[47px] w-full items-center justify-center gap-2 rounded-lg border p-3 shadow-xs"
       >
         {value}
       </div>

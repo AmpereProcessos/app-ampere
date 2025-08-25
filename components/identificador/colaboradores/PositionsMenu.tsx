@@ -73,7 +73,7 @@ function PositionsMenu({ infoHolder, setInfoHolder }: PositionsMenuProps) {
       <div className="flex w-full items-center justify-end">
         <button
           onClick={() => handleAddPosition(positionHolder)}
-          className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+          className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR CARGO
         </button>
@@ -81,9 +81,9 @@ function PositionsMenu({ infoHolder, setInfoHolder }: PositionsMenuProps) {
       <div className="flex w-full flex-wrap items-start justify-around gap-2">
         {infoHolder.cargos.length ? (
           infoHolder.cargos.map((position, index) => (
-            <div key={index} className="flex w-full flex-col rounded-md border border-gray-300 p-3 lg:w-[450px]">
+            <div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[450px]">
               <div className="flex w-full items-center justify-between gap-2">
-                <h1 className="text-xs font-black leading-none tracking-tight lg:text-sm">{position.cargo}</h1>
+                <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{position.cargo}</h1>
                 <button
                   onClick={() => handleDeletePosition(index)}
                   type="button"
@@ -94,18 +94,18 @@ function PositionsMenu({ infoHolder, setInfoHolder }: PositionsMenuProps) {
               </div>
               <div className="flex items-center gap-2">
                 <BsCode />
-                <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">{position.cbo}</p>
+                <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{position.cbo}</p>
               </div>
               <div className="mt-2 flex w-full items-center justify-between">
                 <div className={`flex items-center gap-2`}>
                   <BsCalendarPlus />
-                  <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(position.dataInicio)}</p>
+                  <p className="text-primary/60 text-xs font-medium">{formatDateAsLocale(position.dataInicio)}</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   {position.dataFinal ? (
                     <>
                       <BsCalendarMinus color={'#ed174c'} />
-                      <p className="text-xs font-medium text-gray-500">{formatDateAsLocale(position.dataFinal)}</p>
+                      <p className="text-primary/60 text-xs font-medium">{formatDateAsLocale(position.dataFinal)}</p>
                     </>
                   ) : (
                     <p className="text-xs font-bold text-green-500">EM ABERTO</p>
@@ -115,7 +115,7 @@ function PositionsMenu({ infoHolder, setInfoHolder }: PositionsMenuProps) {
             </div>
           ))
         ) : (
-          <p className="text-xs font-medium italic text-gray-500">Não há registros de cargos ocupados.</p>
+          <p className="text-primary/60 text-xs font-medium italic">Não há registros de cargos ocupados.</p>
         )}
       </div>
     </>

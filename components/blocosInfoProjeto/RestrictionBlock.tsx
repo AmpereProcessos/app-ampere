@@ -30,25 +30,25 @@ type RestrictionBlockProps = {
 function RestrictionBlock({ projectId, infoHolder, callbacks }: RestrictionBlockProps) {
   const [isRestrictionMenuOpen, setIsRestrictionMenuOpen] = useState(false)
   return (
-    <div className="flex w-full flex-col gap-2 rounded-md border border-gray-500 pb-2 shadow-lg">
-      <div className="mb-2 flex w-full items-center justify-center gap-1 rounded-tr-md rounded-tl-md bg-gray-500 py-2 text-center font-bold text-white">
+    <div className="border-primary/60 flex w-full flex-col gap-2 rounded-md border pb-2 shadow-lg">
+      <div className="bg-primary/60 mb-2 flex w-full items-center justify-center gap-1 rounded-tl-md rounded-tr-md py-2 text-center font-bold text-white">
         <FaLock />
         <h1>RESTRIÇÃO DE PROJETO</h1>
       </div>
       <div className="flex w-full flex-col items-center gap-2">
         {infoHolder.restricao?.aplicavel ? (
           <div className="flex flex-col gap-2">
-            <h2 className="text-center text-lg font-bold leading-none">O projeto em questão está restrito.</h2>
-            <h3 className="text-center text-lg font-semibold leading-none">
+            <h2 className="text-center text-lg leading-none font-bold">O projeto em questão está restrito.</h2>
+            <h3 className="text-center text-lg leading-none font-semibold">
               Restrição feita em {formatDateAsLocale(infoHolder.restricao?.data)} por {infoHolder.restricao?.autor?.nome}.
             </h3>
-            <div className="flex w-full items-center justify-center rounded-md bg-primary/20 p-2">
+            <div className="bg-primary/20 flex w-full items-center justify-center rounded-md p-2">
               <p className="text-center text-sm">{infoHolder.restricao?.observacoes}</p>
             </div>
           </div>
         ) : (
           <div className="flex flex-col gap-1">
-            <h2 className="text-center text-lg font-bold leading-none">O projeto em questão NÃO foi restringido.</h2>
+            <h2 className="text-center text-lg leading-none font-bold">O projeto em questão NÃO foi restringido.</h2>
           </div>
         )}
         <Button size={'fit'} variant={'ghost'} className="self-center px-2 py-1" onClick={() => setIsRestrictionMenuOpen(true)}>
@@ -108,12 +108,12 @@ function ProjectRestrictionMenu({ projectId, currentRestriction, closeMenu, call
     return (
       <div className="flex w-full flex-col gap-2">
         <div className="flex flex-col gap-1">
-          <h2 className="text-center text-lg font-bold leading-none">O projeto em questão está restrito.</h2>
-          <h3 className="text-center text-lg font-semibold leading-none">
+          <h2 className="text-center text-lg leading-none font-bold">O projeto em questão está restrito.</h2>
+          <h3 className="text-center text-lg leading-none font-semibold">
             Restrição feita em {formatDateAsLocale(currentRestriction?.data)} por {currentRestriction?.autor?.nome}.
           </h3>
         </div>
-        <div className="flex w-full items-center justify-center rounded-md bg-primary/20 p-2">
+        <div className="bg-primary/20 flex w-full items-center justify-center rounded-md p-2">
           <p className="text-center text-sm">{currentRestriction?.observacoes}</p>
         </div>
         <LoadingButton
@@ -133,8 +133,8 @@ function ProjectRestrictionMenu({ projectId, currentRestriction, closeMenu, call
     return (
       <div className="flex w-full flex-col gap-3">
         <div className="flex flex-col gap-1">
-          <h2 className="text-center text-lg font-bold leading-none">O projeto em questão não está restrito.</h2>
-          <h3 className="text-center text-lg font-semibold leading-none">Se deseja restringi-lo, preencha as observações abaixo.</h3>
+          <h2 className="text-center text-lg leading-none font-bold">O projeto em questão não está restrito.</h2>
+          <h3 className="text-center text-lg leading-none font-semibold">Se deseja restringi-lo, preencha as observações abaixo.</h3>
         </div>
         <TextareaInput
           label="OBSERVAÇÕES SOBRE A RESTRIÇÃO"
@@ -156,13 +156,13 @@ function ProjectRestrictionMenu({ projectId, currentRestriction, closeMenu, call
   }
   return isDesktop ? (
     <Dialog open onOpenChange={(v) => (!v ? closeMenu() : null)}>
-      <DialogContent className="flex h-fit flex-col dark:bg-white">
+      <DialogContent className="dark:bg-background flex h-fit flex-col">
         <DialogHeader>
           <DialogTitle>{MENU_TITLE}</DialogTitle>
           <DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+        <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
           {currentRestriction?.aplicavel ? <RestrictedContent /> : <UnrestrictedContent />}
         </div>
         <DialogFooter>
@@ -180,7 +180,7 @@ function ProjectRestrictionMenu({ projectId, currentRestriction, closeMenu, call
           <DrawerDescription>{MENU_DESCRIPTION}</DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex-1 overflow-auto scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+        <div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex-1 overflow-auto">
           {currentRestriction?.aplicavel ? <RestrictedContent /> : <UnrestrictedContent />}
         </div>
         <DrawerFooter>

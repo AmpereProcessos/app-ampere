@@ -1,99 +1,82 @@
-import React from "react";
-import Card from "./Card";
-import { useDrop } from "react-dnd";
-import axios from "axios";
+import React from 'react'
+import Card from './Card'
+import { useDrop } from 'react-dnd'
+import axios from 'axios'
 function List({ proposes, title, listId, fetchProposes }) {
   function handleDrop(proposeId, stageId) {
     axios
-      .put("/api/o&m/updatePropose", {
+      .put('/api/o&m/updatePropose', {
         id: proposeId,
         listId: stageId,
       })
-      .then((res) => fetchProposes());
+      .then((res) => fetchProposes())
   }
   const [, dropRef] = useDrop({
-    accept: "CARD",
+    accept: 'CARD',
 
     hover(item, monitor) {},
     drop(item, monitor) {
-      handleDrop(item.id, listId);
+      handleDrop(item.id, listId)
     },
-  });
+  })
   function getListCumulativePrice() {
-    var totalSum = 0;
+    var totalSum = 0
     for (var i = 0; i < proposes.length; i++) {
       if (proposes[i]?.currentPlanOption == 0) {
-        totalSum = totalSum;
+        totalSum = totalSum
       }
       if (proposes[i]?.currentPlanOption == 1) {
-        totalSum =
-          totalSum +
-          (proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
+        totalSum = totalSum + (proposes[i].price * proposes[i].modulesQty + 1.5 * 2 * proposes[i].distance)
       }
       if (proposes[i]?.currentPlanOption == 2) {
-        totalSum =
-          totalSum +
-          (1.3 * proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
+        totalSum = totalSum + (1.3 * proposes[i].price * proposes[i].modulesQty + 1.5 * 2 * proposes[i].distance)
       }
       if (proposes[i]?.currentPlanOption == 3) {
-        totalSum =
-          totalSum +
-          (1.95 * proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
+        totalSum = totalSum + (1.95 * proposes[i].price * proposes[i].modulesQty + 1.5 * 2 * proposes[i].distance)
       }
     }
-    return totalSum.toFixed(2).replace(".", ",");
+    return totalSum.toFixed(2).replace('.', ',')
   }
   function getListCumulativeModules() {
-    var totalSum = 0;
+    var totalSum = 0
     for (var i = 0; i < proposes.length; i++) {
-      let n = Number(proposes[i].modulesQty);
-      totalSum = totalSum + n;
+      let n = Number(proposes[i].modulesQty)
+      totalSum = totalSum + n
     }
-    return totalSum;
+    return totalSum
   }
   function getListCumulativePeakPot() {
-    var totalSum = 0;
+    var totalSum = 0
     for (var i = 0; i < proposes.length; i++) {
-      let qty = Number(proposes[i].modulesQty);
-      let pot = Number(proposes[i].modulesPot);
+      let qty = Number(proposes[i].modulesQty)
+      let pot = Number(proposes[i].modulesPot)
       if (isNaN(proposes[i].modulesPot || proposes[i].modulesQty)) {
-        totalSum = totalSum;
+        totalSum = totalSum
       } else {
-        totalSum = totalSum + pot * qty;
+        totalSum = totalSum + pot * qty
       }
     }
-    return (totalSum / 1000).toFixed(2);
+    return (totalSum / 1000).toFixed(2)
   }
   return (
     <div
       ref={dropRef}
       id={listId}
-      className="flex flex-col lg:max-h-[550px] max-h-[150px] py-2 overflow-y-auto overscroll-y-auto items-center pt-2 px-1 grow bg-white h-full rounded shadow-2xl"
+      className="bg-background flex h-full max-h-[150px] grow flex-col items-center overflow-y-auto overscroll-y-auto rounded px-1 py-2 pt-2 shadow-2xl lg:max-h-[550px]"
     >
-      <div className="border-b pb-2 h-fit w-full text-center border-blue-300 text-xl font-bold">
+      <div className="h-fit w-full border-b border-blue-300 pb-2 text-center text-xl font-bold">
         <h1>{title}</h1>
         <div className="flex justify-center gap-x-2">
-          <p className="text-xs text-gray-500">R$ {getListCumulativePrice()}</p>
-          <p className="text-xs text-gray-500">
-            {getListCumulativeModules()} módulos
-          </p>
-          <p className="text-xs text-gray-500">
-            {getListCumulativePeakPot()} kWp
-          </p>
+          <p className="text-primary/60 text-xs">R$ {getListCumulativePrice()}</p>
+          <p className="text-primary/60 text-xs">{getListCumulativeModules()} módulos</p>
+          <p className="text-primary/60 text-xs">{getListCumulativePeakPot()} kWp</p>
         </div>
       </div>
       {proposes?.map((propose) => (
-        <Card
-          fetchProposes={fetchProposes}
-          key={propose._id}
-          propose={propose}
-        />
+        <Card fetchProposes={fetchProposes} key={propose._id} propose={propose} />
       ))}
     </div>
-  );
+  )
 }
 
-export default List;
+export default List

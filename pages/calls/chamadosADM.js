@@ -167,25 +167,25 @@ function ChamadosADM() {
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
-      <div className="flex w-full grow flex-col gap-y-2 bg-gray-100 p-6">
-        <div className="flex w-full items-center justify-between border border-gray-300 bg-[#fff] p-4 shadow-xl">
-          <p className="text-center font-['Roboto'] text-2xl font-bold uppercase text-[#15599a]">CHAMADOS AO FINANCEIRO/ADMINISTRAÇÃO</p>
+      <div className="bg-primary/20 flex w-full grow flex-col gap-y-2 p-6">
+        <div className="bg-background border-primary/20 flex w-full items-center justify-between border p-4 shadow-xl">
+          <p className="text-center font-['Roboto'] text-2xl font-bold text-[#15599a] uppercase">CHAMADOS AO FINANCEIRO/ADMINISTRAÇÃO</p>
           <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         {/** Abertos */}
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[720px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-                <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
+                <p className="text-center text-xl font-bold text-[#15599a] uppercase">Chamados abertos</p>
                 <p className="font-bold text-[#fead61]">({filteredInProgress?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -198,7 +198,7 @@ function ChamadosADM() {
                       type="text"
                       value={inProgressFilters.search}
                       onChange={(e) => handleOpenCallsSearchFilter(e.target.value)}
-                      className="h-[41px] w-full  rounded border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 h-[41px] w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CLIENTE"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -232,9 +232,9 @@ function ChamadosADM() {
                     </div>
                     <div className="flex w-full gap-x-2 lg:w-fit">
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={inProgressDateFilter.after && new Date(inProgressDateFilter.after).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -246,9 +246,9 @@ function ChamadosADM() {
                         />
                       </div>
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={inProgressDateFilter.before && new Date(inProgressDateFilter.before).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -268,13 +268,13 @@ function ChamadosADM() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredInProgress ? (
               filteredInProgress.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call)}
                   key={call._id}
-                  className="max-h-[150px] min-h-[120px] w-[420px] cursor-pointer border border-gray-300 p-3 hover:bg-blue-100"
+                  className="border-primary/20 dark:hover:bg-primary/10 max-h-[150px] min-h-[120px] w-[420px] cursor-pointer border p-3 hover:bg-blue-100"
                 >
                   <div className="mb-2 flex justify-between">
                     <div className="flex items-center gap-2">
@@ -293,11 +293,11 @@ function ChamadosADM() {
                     </p>
                   </div>
                   <div className="flex justify-between">
-                    <h1 className="text-xs text-gray-600">{call.nomeCliente}</h1>
+                    <h1 className="text-primary/80 text-xs">{call.nomeCliente}</h1>
                     <p className="text-xs font-bold text-[#15599a]">#{call.codigoProjeto}</p>
                   </div>
                   <div className="flex justify-center">
-                    <h1 className="text-center text-xs text-gray-600">{call.servico}</h1>
+                    <h1 className="text-primary/80 text-center text-xs">{call.servico}</h1>
                   </div>
                 </div>
               ))
@@ -307,19 +307,19 @@ function ChamadosADM() {
           </div>
         </div>
         {/** Fechados */}
-        <div className="flex h-[1200px] w-full flex-col border border-gray-300 bg-[#fff] p-4 shadow-xl lg:h-[500px]">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="bg-background border-primary/20 flex h-[1200px] w-full flex-col border p-4 shadow-xl lg:h-[500px]">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
-                <p className="text-center text-xl font-bold uppercase text-[#15599a]">CHAMADOS FINALIZADOS</p>
+                <p className="text-center text-xl font-bold text-[#15599a] uppercase">CHAMADOS FINALIZADOS</p>
                 <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
-                <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+                <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                   <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
@@ -332,7 +332,7 @@ function ChamadosADM() {
                       type="text"
                       value={closedFilters.search}
                       onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
-                      className="h-[41px] w-full  rounded border border-gray-300 p-1.5 outline-none placeholder:italic lg:w-[350px]"
+                      className="border-primary/20 h-[41px] w-full rounded border p-1.5 outline-hidden placeholder:italic lg:w-[350px]"
                       placeholder="DIGITE O NOME DO CLIENTE"
                     />
                     <div className="w-full lg:w-[250px]">
@@ -366,9 +366,9 @@ function ChamadosADM() {
                     </div>
                     <div className="flex w-full gap-x-2 lg:w-fit">
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Depois de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Depois de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={closedDateFilter.after && new Date(closedDateFilter.after).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -380,9 +380,9 @@ function ChamadosADM() {
                         />
                       </div>
                       <div className="flex w-fit flex-col items-center">
-                        <span className="text-center font-raleway text-sm font-bold uppercase">Antes de:</span>
+                        <span className="font-raleway text-center text-sm font-bold uppercase">Antes de:</span>
                         <input
-                          className="w-full text-center text-xs uppercase text-gray-600 outline-none"
+                          className="text-primary/80 w-full text-center text-xs uppercase outline-hidden"
                           type="date"
                           value={closedDateFilter.before && new Date(closedDateFilter.before).toISOString().slice(0, 10)}
                           onChange={(e) =>
@@ -402,13 +402,13 @@ function ChamadosADM() {
               ) : null}
             </AnimatePresence>
           </div>
-          <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
             {filteredClosedCalls ? (
               filteredClosedCalls.map((call) => (
                 <div
                   onClick={() => handleOpenModal(call)}
                   key={call._id}
-                  className="h-[100px] w-full cursor-pointer border border-gray-300 p-3 hover:bg-blue-100 lg:w-[420px]"
+                  className="border-primary/20 dark:hover:bg-primary/10 h-[100px] w-full cursor-pointer border p-3 hover:bg-blue-100 lg:w-[420px]"
                 >
                   <div className="mb-2 flex justify-between">
                     <div className="flex items-center gap-2">
@@ -427,11 +427,11 @@ function ChamadosADM() {
                     </p>
                   </div>
                   <div className="flex justify-between">
-                    <h1 className="text-xs text-gray-600">{call.nomeCliente}</h1>
+                    <h1 className="text-primary/80 text-xs">{call.nomeCliente}</h1>
                     <p className="text-xs font-bold text-[#15599a]">#{call.codigoProjeto}</p>
                   </div>
                   <div className="flex justify-center">
-                    <h1 className="text-center text-xs text-gray-600">{call.servico}</h1>
+                    <h1 className="text-primary/80 text-center text-xs">{call.servico}</h1>
                   </div>
                 </div>
               ))

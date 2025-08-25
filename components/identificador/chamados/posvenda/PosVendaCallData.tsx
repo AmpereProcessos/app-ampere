@@ -54,10 +54,10 @@ function GeneralData() {
     <div className="flex w-full flex-col gap-3">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <Info className="min-w-4 min-h-4 h-4 w-4" />
+          <Info className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">INFORMAÇÕES GERAIS</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Define aqui as informações gerais do chamado</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Define aqui as informações gerais do chamado</h3>
       </div>
 
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
@@ -105,10 +105,10 @@ function PaymentData() {
     <div className="flex w-full flex-col gap-3">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <BadgeDollarSign className="min-w-4 min-h-4 h-4 w-4" />
+          <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">PAGAMENTO</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Define aqui as informações de pagamento do chamado</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Define aqui as informações de pagamento do chamado</h3>
       </div>
 
       <div className="flex w-full items-center justify-center">
@@ -155,19 +155,17 @@ function Project() {
     <div className="flex w-full flex-col gap-3">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <MdDashboard className="min-w-4 min-h-4 h-4 w-4" />
+          <MdDashboard className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">PROJETO</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Define aqui o projeto do chamado</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Define aqui o projeto do chamado</h3>
       </div>
 
       {project ? (
-        <div className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+        <div className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]">
           <div className="flex items-center gap-2">
-            <MdDashboard className="min-w-4 min-h-4 h-4 w-4" />
-            <h1 className="rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.5rem] font-bold italic text-primary/80">
-              {project.identificador}
-            </h1>
+            <MdDashboard className="h-4 min-h-4 w-4 min-w-4" />
+            <h1 className="bg-secondary text-xxs text-primary/80 rounded-lg px-2 py-0.5 text-center font-bold italic">{project.identificador}</h1>
             <h1 className="text-sm font-medium">{project.nome}</h1>
           </div>
           <div className="flex items-center gap-2">
@@ -202,10 +200,10 @@ function Updates({ session }: { session: TAuthSession }) {
     <div className="flex w-full flex-col gap-3">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <List className="min-w-4 min-h-4 h-4 w-4" />
+          <List className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">ATUALIZAÇÕES</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Adicione aqui as atualizações do chamado</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Adicione aqui as atualizações do chamado</h3>
       </div>
       <MorphingPopover
         transition={{
@@ -218,27 +216,30 @@ function Updates({ session }: { session: TAuthSession }) {
       >
         <MorphingPopoverTrigger className="flex w-full items-center justify-center">
           <Button className="flex items-center gap-2 text-sm" variant={'ghost'}>
-            <Plus className="min-w-4 min-h-4 h-4 w-4" />
+            <Plus className="h-4 min-h-4 w-4 min-w-4" />
             ADICIONAR ATUALIZAÇÃO
           </Button>
         </MorphingPopoverTrigger>
-        <MorphingPopoverContent className="w-full rounded-lg border border-primary/30 shadow">
+        <MorphingPopoverContent className="border-primary/30 w-full rounded-lg border shadow-sm">
           <NewUpdateMenu session={session} closeMenu={() => setNewUpdateIsOpen(false)} />
         </MorphingPopoverContent>
       </MorphingPopover>
       {updates.map((update, index) => (
-        <div key={`${update.data}-${index}`} className="flex w-full flex-col gap-1 rounded-md border border-primary bg-[#fff] p-2 dark:bg-[#121212]">
+        <div
+          key={`${update.data}-${index}`}
+          className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]"
+        >
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
-                <Avatar className="min-w-4 min-h-4 h-4 w-4">
+                <Avatar className="h-4 min-h-4 w-4 min-w-4">
                   <AvatarImage src={update.autor.avatar_url ?? undefined} />
                   <AvatarFallback>{formatNameAsInitials(update.autor.nome)}</AvatarFallback>
                 </Avatar>
                 <h1 className="text-sm font-medium">{update.autor.nome}</h1>
               </div>
               <div className="flex items-center gap-2">
-                <BsCalendarPlus className="min-w-4 min-h-4 h-4 w-4" />
+                <BsCalendarPlus className="h-4 min-h-4 w-4 min-w-4" />
                 <h1 className="text-xs font-medium">{formatDateAsLocale(update.data, true)}</h1>
               </div>
             </div>
@@ -247,8 +248,8 @@ function Updates({ session }: { session: TAuthSession }) {
             </Button>
           </div>
           <div className="flex w-full items-center justify-center">
-            <div className="flex w-full items-center justify-center rounded bg-primary/10 p-2">
-              <h1 className="whitespace-pre-wrap text-[0.6rem] font-medium">{update.descricao || 'OBSERVAÇÃO NÃO DEFINIDA'}</h1>
+            <div className="bg-primary/10 flex w-full items-center justify-center rounded p-2">
+              <h1 className="text-[0.6rem] font-medium whitespace-pre-wrap">{update.descricao || 'OBSERVAÇÃO NÃO DEFINIDA'}</h1>
             </div>
           </div>
         </div>
@@ -289,7 +290,7 @@ function NewUpdateMenu({ session, closeMenu }: NewUpdateMenuProps) {
           style={{
             opacity: newUpdateInfo.descricao.length > 0 ? 0 : 1,
           }}
-          className="absolute top-3 left-4 select-none text-sm text-zinc-500 dark:text-zinc-400"
+          className="absolute top-3 left-4 text-sm text-zinc-500 select-none dark:text-zinc-400"
         >
           Atualização do chamado...
         </motion.span>
@@ -301,14 +302,14 @@ function NewUpdateMenu({ session, closeMenu }: NewUpdateMenuProps) {
         <div key="close" className="flex justify-between py-3 pr-4 pl-2">
           <button
             type="button"
-            className="text-zinc-950 flex items-center rounded-lg bg-white px-2 py-1 text-sm hover:bg-zinc-100 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-600"
+            className="bg-background flex items-center rounded-lg px-2 py-1 text-sm text-zinc-950 hover:bg-zinc-100 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-600"
             onClick={closeMenu}
             aria-label="Close popover"
           >
             <ArrowLeftIcon size={16} className="text-zinc-900 dark:text-zinc-100" />
           </button>
           <button
-            className="border-zinc-950/10 relative ml-1 flex h-8 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border bg-transparent px-2 text-sm text-zinc-500 transition-colors focus-visible:ring-2 hover:bg-zinc-100 hover:text-zinc-800 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800"
+            className="relative ml-1 flex h-8 shrink-0 scale-100 appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors select-none hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800"
             type="submit"
             aria-label="Submit note"
             onClick={() => {
@@ -338,18 +339,18 @@ function Attachments({ callId, session }: AttachmentsProps) {
     <div className="flex w-full flex-col gap-3">
       <div className="flex w-full flex-col gap-2">
         <div className="flex w-full items-center gap-1">
-          <File className="min-w-4 min-h-4 h-4 w-4" />
+          <File className="h-4 min-h-4 w-4 min-w-4" />
           <h1 className="text-sm font-bold tracking-tight">ANEXOS</h1>
         </div>
-        <h3 className="w-full text-sm tracking-tight text-muted-foreground">Anexe aqui os arquivos do chamado</h3>
+        <h3 className="text-muted-foreground w-full text-sm tracking-tight">Anexe aqui os arquivos do chamado</h3>
       </div>
       <div className="flex w-full items-center justify-end">
         <Button
           size={'sm'}
           onClick={() => setNewFileReferencesMenuIsOpen((prev) => !prev)}
           className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-            'bg-gray-300  hover:bg-red-300': newFileReferencesMenuIsOpen,
-            'bg-green-300  hover:bg-green-400': !newFileReferencesMenuIsOpen,
+            'bg-primary/20 hover:bg-red-300': newFileReferencesMenuIsOpen,
+            'bg-green-300 hover:bg-green-400': !newFileReferencesMenuIsOpen,
           })}
         >
           <MdAttachFile />

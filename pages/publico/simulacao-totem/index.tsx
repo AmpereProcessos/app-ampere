@@ -19,7 +19,7 @@ function EventTotemSimulationPage() {
   if (type == 'ufv-oem-calculator') return <OeMCalculationMainComponent resetSimulation={() => setType(null)} />
   if (type == 'ufv-insurance-calculator') return <UFVInsuranceCalculationMainComponent resetSimulation={() => setType(null)} />
   return (
-    <div className={`flex h-full grow flex-col items-center overflow-clip bg-white font-raleway`}>
+    <div className={`bg-background font-raleway flex h-full grow flex-col items-center overflow-clip`}>
       <div className="flex h-[120px] w-full items-center justify-center bg-[#15599a]">
         <div className="flex h-[90px] cursor-pointer items-center justify-center">
           <Image height={'90px'} width={'90px'} src={Logo} objectFit="fill" quality={100} />
@@ -30,7 +30,7 @@ function EventTotemSimulationPage() {
           {' '}
           SEJA BEM VINDO AO TOTEM DE SIMULAÇÃO DA AMPÈRE ENERGIAS !
         </h1>
-        <p className="mb-3 w-full text-center text-base tracking-tight text-gray-500 lg:text-xl">
+        <p className="text-primary/60 mb-3 w-full text-center text-base tracking-tight lg:text-xl">
           Dentre as opções abaixo, selecione a modalidade que gostaria de simular.
         </p>
         <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -42,7 +42,7 @@ function EventTotemSimulationPage() {
             <h1 className="text-[#15599a] group-hover:text-white">
               <FaSolarPanel size={50} />
             </h1>
-            <p className="w-full tracking-tight text-gray-500 duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor estimado para seu novo sistema fotovoltaico. Clique aqui e começa já a economizar.
             </p>
           </button>
@@ -54,7 +54,7 @@ function EventTotemSimulationPage() {
             <h1 className="text-[#15599a] group-hover:text-white">
               <MdSecurity size={50} />
             </h1>
-            <p className="w-full tracking-tight text-gray-500 duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor estimado pra segurar o seu sistema fotovoltaico.
             </p>
           </button>
@@ -66,18 +66,18 @@ function EventTotemSimulationPage() {
             <h1 className="text-[#15599a] group-hover:text-white">
               <BsSpeedometer2 size={50} />
             </h1>
-            <p className="w-full tracking-tight text-gray-500 duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor para obter nossos planos de operação e manutenção. Clique aqui e garanta a máxima eficiência do seu investimento.
             </p>
           </button>
         </div>
       </div>
 
-      <div className="flex h-[200px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
+      <div className="flex h-[200px] w-full flex-col items-center justify-center gap-2 bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
         <div className="flex items-center justify-center gap-3">
           <h1 className="text-center font-black text-white">
             A energia que move o mundo{'  '}
-            <strong className=" text-[rgba(254,173,65,1)]"> vem de você</strong>!
+            <strong className="text-[rgba(254,173,65,1)]"> vem de você</strong>!
           </h1>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">

@@ -65,7 +65,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
         style: 'text-blue-300 border-2 border-blue-300',
       }
     } else {
-      return 'border border-gray-300'
+      return 'border border-primary/20'
     }
   }
 
@@ -92,10 +92,10 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
         <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex items-center gap-2">
               <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
+              {project?.codigoSVB && <p className="text-primary/80 text-sm font-bold">#{project.codigoSVB}</p>}
               {!!project?.homologacao.acesso.dataResposta && !project?.homologacao.vistoria.dataEfetivacao && (
                 <div
                   className={`p-1 text-center text-xs font-bold italic ${getParecerWarning(new Date(project?.homologacao.acesso.dataResposta), new Date()).style}`}
@@ -118,7 +118,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={errorMsg} /> : null}
           {isSuccess && infoHolder && session ? (
-            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+            <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-full flex-col gap-y-2 overflow-y-auto">
               <NotificationCreationBlock session={session} nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
@@ -147,10 +147,10 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
               />
               <InfoHomologacaoBlock session={session} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>
+                <span className="py-2 text-center text-sm font-bold text-[#15599a] uppercase">COMISSIONAMENTO</span>
                 <div className="flex flex-wrap justify-center gap-2">
                   <div className="flex w-[350px] flex-col items-center">
-                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO COMERCIAL</span>
+                    <span className="font-raleway text-center text-sm font-bold uppercase">COMISSIONAMENTO COMERCIAL</span>
                     <div className="flex">
                       <input
                         disabled={true}
@@ -178,7 +178,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
                     </div>
                   </div>
                   <div className="flex w-[350px] flex-col items-center">
-                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO DE SUPRIMENTOS</span>
+                    <span className="font-raleway text-center text-sm font-bold uppercase">COMISSIONAMENTO DE SUPRIMENTOS</span>
                     <div className="flex">
                       <input
                         disabled={true}
@@ -206,7 +206,7 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal }) {
                     </div>
                   </div>
                   <div className="flex w-[350px] flex-col items-center">
-                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO PROJETOS</span>
+                    <span className="font-raleway text-center text-sm font-bold uppercase">COMISSIONAMENTO PROJETOS</span>
                     <div className="flex">
                       <input
                         disabled={!false}

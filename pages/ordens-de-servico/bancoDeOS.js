@@ -58,17 +58,17 @@ function BancoDeOS() {
   if (status == 'authenticated') {
     return (
       <div className="grow p-6">
-        <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">BANCO DE ORDENS DE SERVIÇO ({orders?.length || '...'})</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">BANCO DE ORDENS DE SERVIÇO ({orders?.length || '...'})</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
@@ -220,7 +220,7 @@ function BancoDeOS() {
           />
         ) : null}
         <Link href={'/ordemDeServico/designacoes'}>
-          <div className="left-150 fixed bottom-10 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
             <p className="text-sm font-bold uppercase">DESIGNAÇÃO DE OSS</p>
           </div>
         </Link>

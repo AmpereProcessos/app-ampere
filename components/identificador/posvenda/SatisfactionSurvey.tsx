@@ -62,18 +62,18 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
   }
   return (
     <>
-      <div className="my-6 h-[1px] w-full bg-gray-500"></div>
-      <h1 className="my-4 rounded-full bg-[#fead41] px-4 py-2 text-lg font-black leading-none tracking-tight text-white">PESQUISA DE SATISFAÇÃO</h1>
-      <p className="w-full self-center text-center font-medium tracking-tight text-gray-500 lg:w-[60%]">Seu projeto conosco foi concluído.</p>
-      <p className="mt-2 w-full self-center text-center font-medium tracking-tight text-gray-500 lg:w-[60%]">
+      <div className="bg-primary/60 my-6 h-px w-full"></div>
+      <h1 className="my-4 rounded-full bg-[#fead41] px-4 py-2 text-lg leading-none font-black tracking-tight text-white">PESQUISA DE SATISFAÇÃO</h1>
+      <p className="text-primary/60 w-full self-center text-center font-medium tracking-tight lg:w-[60%]">Seu projeto conosco foi concluído.</p>
+      <p className="text-primary/60 mt-2 w-full self-center text-center font-medium tracking-tight lg:w-[60%]">
         Esperamos que sua experiência conosco tenha sido a melhor possível até agora e gostaríamos de uma opinião sua para que pudessemos melhorar
         ainda mais os nossos serviços.
       </p>
-      <p className="mt-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
+      <p className="text-primary/80 mt-2 w-full self-center text-center font-medium tracking-tight lg:w-[60%]">
         Clique por favor abaixo na sua nota para algumas das etapas dos seus projetos.
       </p>
       <div className="mt-4 flex w-full flex-col gap-2">
-        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">VENDA</h1>
+        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base leading-none font-black tracking-tight text-white">VENDA</h1>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
             <div
@@ -89,7 +89,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
         </div>
       </div>
       <div className="mt-4 flex w-full flex-col gap-2">
-        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">ENTREGA</h1>
+        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base leading-none font-black tracking-tight text-white">ENTREGA</h1>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
             <div
@@ -105,7 +105,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
         </div>
       </div>
       <div className="mt-4 flex w-full flex-col gap-2">
-        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
+        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base leading-none font-black tracking-tight text-white">
           EXECUÇÃO/MONTAGEM
         </h1>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
@@ -123,7 +123,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
         </div>
       </div>
       <div className="mt-4 flex w-full flex-col gap-2">
-        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base font-black leading-none tracking-tight text-white">
+        <h1 className="w-fit self-center rounded-full bg-[#15599a] px-4 py-2 text-base leading-none font-black tracking-tight text-white">
           PÓS-VENDA
         </h1>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
@@ -142,7 +142,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
       </div>
       {/* {avg && avg > 7 ? (
             <div className="flex w-full flex-col gap-2">
-              <p className="my-2 w-full self-center text-center font-medium tracking-tight text-gray-800 lg:w-[60%]">
+              <p className="my-2 w-full self-center text-center font-medium tracking-tight text-primary/80 lg:w-[60%]">
                 Gostou dos nossos serviços ? Indique um conhecido para começar já a economizar na conta de luz.
               </p>
               {indications.map((indication, index) => (
@@ -184,7 +184,7 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
               <div className="mt-1 flex w-full items-center justify-end">
                 <button
                   onClick={() => setIndications((prev) => [...prev, { nome: '', telefone: '' }])}
-                  className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+                  className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-primary/60 enabled:hover:bg-primary/70"
                 >
                   ADICIONAR INDICAÇÃO
                 </button>
@@ -194,12 +194,12 @@ function SatisfactionSurvey({ projectId }: SatisfactionSurveyProps) {
       <div className="mt-4 flex w-full items-center justify-center">
         <button
           onClick={() => handleSurverAnswer()}
-          className="rounded bg-green-600 py-1 px-4 text-lg font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-green-700"
+          className="disabled:bg-primary/60 rounded bg-green-600 px-4 py-1 text-lg font-medium text-white duration-300 ease-in-out enabled:hover:bg-green-700"
         >
           RESPONDER PESQUISA
         </button>
       </div>
-      <div className="my-6 h-[1px] w-full bg-gray-500"></div>
+      <div className="bg-primary/60 my-6 h-px w-full"></div>
     </>
   )
 }

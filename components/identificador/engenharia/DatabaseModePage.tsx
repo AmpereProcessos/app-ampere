@@ -60,25 +60,25 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
   } = useEngineeringProjects()
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between  gap-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de engenharia</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">Projetos no estágio de engenharia</p>
             <button
               type="button"
               onClick={() => updateViewMode('engineering', 'kanban')}
-              className="flex items-center gap-1 px-2 text-xs text-gray-500 duration-300 ease-out hover:text-gray-800"
+              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
             </button>
           </div>
           {filtersMenuIsOpen ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFiltersMenuIsOpen(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFiltersMenuIsOpen(true)} />
             </div>
           )}
@@ -86,17 +86,17 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
         <EngineeringStats />
         <div className="my-2 flex w-full items-center justify-end gap-2">
           <Link href="/projetos/igreen-analises-tecnicas">
-            <button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">
               ANÁLISES TÉCNICAS IGREEN
             </button>
           </Link>
           <Link href="/projetos/analises-tecnicas">
-            <button type="button" className="rounded-md bg-[#15599a] py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-[#15599a] px-4 py-1 text-sm font-bold text-white">
               ANÁLISES TÉCNICAS
             </button>
           </Link>
           <Link href="/projetos/homologacoes">
-            <button type="button" className="rounded-md bg-[#fead41] py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-[#fead41] px-4 py-1 text-sm font-bold text-white">
               HOMOLOGAÇÕES AVULSAS
             </button>
           </Link>
@@ -486,7 +486,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 }
 export default EngineeringDatabaseModePage
 function getProjectAccessGrantingStatusColors({ accessGrantingResponseDateString }: { accessGrantingResponseDateString?: string }) {
-  if (!accessGrantingResponseDateString) return 'border border-gray-300'
+  if (!accessGrantingResponseDateString) return 'border border-primary/20'
   const accessGrantingResponseDate = dayjs(accessGrantingResponseDateString).toDate()
   const daysDiff = Math.abs(dayjs(CurrentDate).diff(dayjs(accessGrantingResponseDate), 'day'))
   // const timeDiff = Math.abs(CurrentDate.getTime() - accessGrantingResponseDate.getTime());
@@ -500,7 +500,7 @@ function getProjectAccessGrantingStatusColors({ accessGrantingResponseDateString
   if (daysDiff > 90) {
     return 'border-2 border-blue-700'
   }
-  return 'border border-gray-300'
+  return 'border border-primary/20'
 }
 function getProjectFlags(project: TEngineeringProjectDTO) {
   const homologationStatusValue = project.homologacao.status
@@ -603,25 +603,25 @@ function ProjectCard({
       animate={{ opacity: 1, translateX: 0, translateY: 0 }}
       transition={{ duration: 0.3, delay: 0.01 * index }}
       className={cn(
-        'w-full cursor-pointer hover:bg-blue-100 md:w-[350px] lg:w-[450px]',
+        'dark:hover:bg-primary/10 w-full cursor-pointer hover:bg-blue-100 md:w-[350px] lg:w-[450px]',
         getProjectAccessGrantingStatusColors({ accessGrantingResponseDateString: project.homologacao.acesso.dataResposta ?? undefined })
       )}
     >
       <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
       <div className="flex flex-col p-2">
         <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
+          <p className="text-primary/70 text-xs">{project.nomeDoContrato}</p>
           <p className="text-xs text-[#15599a]">#{project.qtde}</p>
         </div>
         <ProjectCardsTags projectTags={project.etiquetas || []} />
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xxs">{homologationStatusFlag.label}</span>
-            <p className={cn('text-xs text-gray-600', homologationStatusFlag.valueColor)}>{homologationStatusFlag.value}</p>
+            <p className={cn('text-primary/80 text-xs', homologationStatusFlag.valueColor)}>{homologationStatusFlag.value}</p>
           </div>
           <div className="text-end">
-            <span className="text-end text-xxs">{homologationInspectionFlag.label}</span>
-            <p className={cn('text-center text-xs text-gray-600', homologationInspectionFlag.valueColor)}>{homologationInspectionFlag.value}</p>
+            <span className="text-xxs text-end">{homologationInspectionFlag.label}</span>
+            <p className={cn('text-primary/80 text-center text-xs', homologationInspectionFlag.valueColor)}>{homologationInspectionFlag.value}</p>
           </div>
         </div>
         <div className="flex items-center justify-between">
@@ -630,32 +630,32 @@ function ProjectCard({
             <p className={cn('text-xs uppercase', executiveDiagramFlag.valueColor)}>{executiveDiagramFlag.value}</p>
           </div>
           <div>
-            <span className="text-center text-xxs">{projectsDeliveryFlag.label}</span>
-            <p className={cn('text-center text-xs uppercase text-gray-600', projectsDeliveryFlag.valueColor)}>{projectsDeliveryFlag.value}</p>
+            <span className="text-xxs text-center">{projectsDeliveryFlag.label}</span>
+            <p className={cn('text-primary/80 text-center text-xs uppercase', projectsDeliveryFlag.valueColor)}>{projectsDeliveryFlag.value}</p>
           </div>
           <div>
             <span className="text-xxs">{executiveDrawingFlag.label}</span>
-            <p className={cn('text-center text-xs text-gray-600', executiveDrawingFlag.valueColor)}>{executiveDrawingFlag.value}</p>
+            <p className={cn('text-primary/80 text-center text-xs', executiveDrawingFlag.valueColor)}>{executiveDrawingFlag.value}</p>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex w-full flex-col">
             <span className="text-xxs">{timeSinceContractSignatureFlag.label}</span>
-            <p className={cn('text-start text-xs uppercase text-red-500', timeSinceContractSignatureFlag.valueColor)}>
+            <p className={cn('text-start text-xs text-red-500 uppercase', timeSinceContractSignatureFlag.valueColor)}>
               {timeSinceContractSignatureFlag.value}
             </p>
           </div>
           <div className="flex w-full flex-col">
-            <span className="text-end text-xxs">{timeSinceAccessGrantingResponseFlag.label}</span>
-            <p className={cn('text-end text-xs uppercase text-red-500', timeSinceAccessGrantingResponseFlag.valueColor)}>
+            <span className="text-xxs text-end">{timeSinceAccessGrantingResponseFlag.label}</span>
+            <p className={cn('text-end text-xs text-red-500 uppercase', timeSinceAccessGrantingResponseFlag.valueColor)}>
               {timeSinceAccessGrantingResponseFlag.value}
             </p>
           </div>
         </div>
         {project.homologacao.acesso.dataSolicitacao ? (
           <div className="flex w-full items-center justify-between">
-            <p className="text-xxs ">{timeSinceAccessGrantingRequestFlag.label}</p>
-            <p className={cn('text-start text-xs text-gray-600', timeSinceAccessGrantingRequestFlag.valueColor)}>
+            <p className="text-xxs">{timeSinceAccessGrantingRequestFlag.label}</p>
+            <p className={cn('text-primary/80 text-start text-xs', timeSinceAccessGrantingRequestFlag.valueColor)}>
               {timeSinceAccessGrantingRequestFlag.value}
             </p>
           </div>

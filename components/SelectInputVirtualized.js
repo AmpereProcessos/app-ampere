@@ -14,18 +14,18 @@ function SelectInputVirtualized({ label, value, options, handleChange, editable,
   }
 
   const Row = ({ index, style }) => (
-    <div style={style} onClick={() => handleItemClick(options[index].value)} className="cursor-pointer text-center uppercase text-gray-600">
+    <div style={style} onClick={() => handleItemClick(options[index].value)} className="text-primary/80 cursor-pointer text-center uppercase">
       {options[index].label}
     </div>
   )
 
   return (
     <div className={`flex w-full flex-col text-sm lg:text-base ${widthFit ? 'w-full' : 'lg:w-[350px]'} items-center`}>
-      <span className={`text-center font-raleway text-sm font-bold uppercase ${labelColor ? labelColor : ''}`} onClick={toggleDropdown}>
+      <span className={`font-raleway text-center text-sm font-bold uppercase ${labelColor ? labelColor : ''}`} onClick={toggleDropdown}>
         {label}
       </span>
       <select
-        className="w-full bg-transparent text-center text-xs uppercase text-gray-600 outline-none"
+        className="text-primary/80 w-full bg-transparent text-center text-xs uppercase outline-hidden"
         onChange={(e) => handleChange(e.target.value)}
         disabled={!editable}
         value={value}
@@ -35,7 +35,7 @@ function SelectInputVirtualized({ label, value, options, handleChange, editable,
         </List>
       </select>
       {/* {isOpen && (
-        <div className="h-32 w-full overflow-y-auto border border-gray-300">
+        <div className="h-32 w-full overflow-y-auto border border-primary/20">
           <List
             height={128}
             itemCount={options.length}

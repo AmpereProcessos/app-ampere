@@ -73,25 +73,25 @@ function Administracao() {
 
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center gap-y-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center gap-y-2 border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio de cobrança/faturamento</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">Projetos no estágio de cobrança/faturamento</p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
           ) : (
-            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
           )}
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
               <VscDiffAdded />
             </div>
             <div className="mt-2 flex w-full flex-col">
@@ -99,18 +99,18 @@ function Administracao() {
             </div>
           </div>
 
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">COBRANÇAS PENDENTES</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">COBRANÇAS PENDENTES</h1>
               <MdPaid />
             </div>
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).cobrancasPendentes}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
-              <h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTOS PENDENTES</h1>
+              <h1 className="text-sm font-medium tracking-tight uppercase">FATURAMENTOS PENDENTES</h1>
               <IoDocumentTextOutline />
             </div>
             <div className="mt-2 flex w-full flex-col">
@@ -120,19 +120,19 @@ function Administracao() {
         </div>
         <div className="my-2 flex w-full items-center justify-end gap-2">
           <Link href="/financeiro/despesas">
-            <button type="button" className="rounded-md bg-[#ed174c] py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-[#ed174c] px-4 py-1 text-sm font-bold text-white">
               DESPESAS
             </button>
           </Link>
           <Link href="/financeiro/receitas">
-            <button type="button" className="rounded-md bg-green-400 py-1 px-4 text-sm font-bold text-white">
+            <button type="button" className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">
               RECEITAS
             </button>
           </Link>
         </div>
         <AnimatePresence>{dropdownMenuVisible ? <ADMProjectFilters filters={filters} setFilters={setFilters} /> : null}</AnimatePresence>
       </div>
-      <div className="mt-4  flex flex-wrap justify-around gap-3">
+      <div className="mt-4 flex flex-wrap justify-around gap-3">
         {isLoading ? <LoadingPage /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar projetos.'} /> : null}
         {isSuccess
@@ -175,7 +175,7 @@ function ADMProjectFilters({ filters, setFilters }: ADMProjectFiltersProps) {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+      className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
     >
       <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
       <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">

@@ -145,7 +145,7 @@ function pdfProposta({ info }) {
   //           <div className="inline-block min-w-full sm:px-6 lg:px-8">
   //             <div className="overflow-hidden">
   //               <table className="min-w-full border text-center">
-  //                 <thead className="border-b bg-white">
+  //                 <thead className="border-b bg-background">
   //                   <tr>
   //                     <th
   //                       scope="col"
@@ -184,7 +184,7 @@ function pdfProposta({ info }) {
   //                   </tr>
   //                 </thead>
   //                 <tbody>
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                       MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
   //                     </td>
@@ -230,7 +230,7 @@ function pdfProposta({ info }) {
   //                       </>
   //                     ) : null}
   //                   </tr>
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                       REAPERTO CONEXÕES ELÉTRICAS
   //                     </td>
@@ -276,7 +276,7 @@ function pdfProposta({ info }) {
   //                       </>
   //                     ) : null}
   //                   </tr>
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                       ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
   //                       EQUIPAMENTOS ELÉTRICOS
@@ -323,7 +323,7 @@ function pdfProposta({ info }) {
   //                       </>
   //                     ) : null}
   //                   </tr>
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                       CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
   //                       DE GERAÇÃO DO INVERSOR
@@ -370,7 +370,7 @@ function pdfProposta({ info }) {
   //                       </>
   //                     ) : null}
   //                   </tr>
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                       LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
   //                     </td>
@@ -426,7 +426,7 @@ function pdfProposta({ info }) {
   //                   </tr>
   //                   {!info.currentPlanOption == 1 ? (
   //                     <>
-  //                       <tr className="border-b bg-white">
+  //                       <tr className="border-b bg-background">
   //                         <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                           MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
   //                           RELATÓRIOS MENSAIS DE GERAÇÃO
@@ -460,7 +460,7 @@ function pdfProposta({ info }) {
   //                           </div>
   //                         </td>
   //                       </tr>
-  //                       <tr className="border-b bg-white">
+  //                       <tr className="border-b bg-background">
   //                         <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                           MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM
   //                           INSUMOS ELÉTRICOS)
@@ -495,7 +495,7 @@ function pdfProposta({ info }) {
   //                           </div>
   //                         </td>
   //                       </tr>
-  //                       <tr className="border-b bg-white">
+  //                       <tr className="border-b bg-background">
   //                         <td className="px-2 text-sm font-medium text-gray-900 border-r">
   //                           DISTRIBUIÇÃO DE CRÉDITOS
   //                         </td>
@@ -533,7 +533,7 @@ function pdfProposta({ info }) {
   //                     </>
   //                   ) : null}
 
-  //                   <tr className="border-b bg-white">
+  //                   <tr className="border-b bg-background">
   //                     <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
   //                       VALOR DO PLANO ANUAL {quotaCreditNumber()}
   //                       {quotaBoletoNumber()}

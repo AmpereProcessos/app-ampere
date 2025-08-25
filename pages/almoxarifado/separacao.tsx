@@ -58,19 +58,19 @@ function PendingMaterialSeparation() {
   if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
-          <div className="flex flex-col items-start ">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS PARA SEPARAÇÃO</p>
-            <p className="italic tracking-tight text-gray-500">{projects != null ? `${projects.length} projetos para separação...` : null}</p>
+          <div className="flex flex-col items-start">
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS PARA SEPARAÇÃO</p>
+            <p className="text-primary/60 tracking-tight italic">{projects != null ? `${projects.length} projetos para separação...` : null}</p>
           </div>
           <div className="flex items-center gap-2">
             {dropdownMenuVisible ? (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
+              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
@@ -85,7 +85,7 @@ function PendingMaterialSeparation() {
           projects.length > 0 ? (
             projects.map((project) => <SeparationProjectCard key={project._id} project={project} />)
           ) : (
-            <p className="w-full text-center text-lg font-medium italic text-gray-500">Nenhum projeto encontrado.</p>
+            <p className="text-primary/60 w-full text-center text-lg font-medium italic">Nenhum projeto encontrado.</p>
           )
         ) : null}
       </div>

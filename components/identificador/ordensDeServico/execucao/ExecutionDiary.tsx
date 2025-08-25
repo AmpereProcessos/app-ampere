@@ -103,7 +103,7 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
         {entryDatetime && !exitDatetime ? (
           <button
             onClick={() => finishOS()}
-            className="rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+            className="hover:bg-primary/70 rounded bg-black px-4 py-2 text-xs font-medium text-white duration-300 ease-in-out"
           >
             FINALIZAR ORDEM DE SERVIÇO
           </button>
@@ -134,20 +134,20 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
       <div className="my-1 flex w-full items-center justify-end">
         <button
           onClick={() => openExecutionRecord()}
-          className="rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black px-4 py-2 text-xs font-medium text-white duration-300 ease-in-out"
         >
           ABRIR REGISTRO DE EXECUÇÃO
         </button>
       </div>
       {history ? (
         <div className="mt-2 flex w-full flex-col gap-1">
-          <h1 className="font-bold leading-none tracking-tight">HISTÓRICO</h1>
+          <h1 className="leading-none font-bold tracking-tight">HISTÓRICO</h1>
           {history.map(
             (item, index) => (
               <ExecutionDiaryRecord orderId={orderId} item={item} itemIndex={index} history={history} />
             )
 
-            // <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
+            // <div className="flex flex-col w-full p-3 rounded-md shadow-xs border border-primary/20">
             //   <div className="flex items-center gap-2">
             //     <RxTimer />
             //     <p className="font-thin tracking-tight leading-none">
@@ -155,7 +155,7 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
             //       <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.saida, true)}</strong>
             //     </p>
             //   </div>
-            //   <h1 className="my-1 w-full py-3 bg-gray-100 text-center text-gray-500 text-sm rounded-md tracking-tight leading-none">
+            //   <h1 className="my-1 w-full py-3 bg-primary/20 text-center text-primary/60 text-sm rounded-md tracking-tight leading-none">
             //     {item.anotacoes}
             //   </h1>
             // </div>

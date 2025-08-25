@@ -110,13 +110,13 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
     if (homologation) setInfoHolder(homologation)
   }, [homologation])
   return (
-    <div id="new-technical-analysis" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="relative left-[50%] top-[50%] z-[100] h-[80%] max-h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md bg-[#fff] p-[10px] lg:w-[80%]">
+    <div id="new-technical-analysis" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background relative top-[50%] left-[50%] z-100 h-[80%] max-h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-md p-[10px] lg:w-[80%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <div className="flex flex-col">
-              <h3 className="text-xl font-bold text-[#353432] dark:text-white ">EDITAR HOMOLOGAÇÃO</h3>
-              <h3 className="text-[0.65rem] font-bold text-gray-500 dark:text-white ">#{homologationId}</h3>
+              <h3 className="text-xl font-bold text-[#353432] dark:text-white">EDITAR HOMOLOGAÇÃO</h3>
+              <h3 className="text-primary/60 text-[0.65rem] font-bold dark:text-white">#{homologationId}</h3>
             </div>
 
             <button
@@ -131,7 +131,7 @@ function ControlHomologation({ homologationId, session, closeModal }: ControlHom
           {isError ? <ErrorComponent msg="Oops, houve um erro ao buscar a homologação." /> : null}
           {isSuccess ? (
             <>
-              <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
                 <div className="my-2 flex flex-col items-center justify-center">
                   <h1 className="font-bold">OPORTUNIDADE</h1>
                   {infoHolder.oportunidade.id ? (

@@ -19,15 +19,15 @@ function CreditCardOptions() {
   return (
     <div className="grow p-6">
       <div className="flex h-full grow flex-col">
-        <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+        <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-col">
-              <p className="text-center text-2xl font-black uppercase text-[#15599a]">SIMULAÇÕES DE CARTÃO DE CRÉDITO</p>
-              <p className="text-sm tracking-tight text-gray-500">{options?.length || '...'} opções contabilizadas</p>
+              <p className="text-center text-2xl font-black text-[#15599a] uppercase">SIMULAÇÕES DE CARTÃO DE CRÉDITO</p>
+              <p className="text-primary/60 text-sm tracking-tight">{options?.length || '...'} opções contabilizadas</p>
             </div>
             <button
               onClick={() => setNewCreditCardOptionModalIsOpen(true)}
-              className="h-9 whitespace-nowrap rounded bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-gray-800 enabled:hover:text-white"
+              className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
             >
               NOVA OPÇÃO
             </button>
@@ -43,7 +43,7 @@ function CreditCardOptions() {
               ))}
             </div>
           ) : (
-            <p className="w-full text-center font-medium italic text-gray-500">Nenhuma opção de simulação foi encontrada...</p>
+            <p className="text-primary/60 w-full text-center font-medium italic">Nenhuma opção de simulação foi encontrada...</p>
           )
         ) : null}
       </div>
@@ -80,7 +80,7 @@ function CreditCardOptionCard({ option, handleClick }: CreditCardOptionCardProps
       <div className="flex w-full items-center justify-center bg-black p-2">
         <div className="flex items-center gap-2">
           <h1 className="font-bold tracking-tight text-white">{option.empresa}</h1>
-          <h1 className="rounded-lg bg-white px-2 py-0.5 text-[0.6rem] font-black text-black">{option.modalidade}</h1>
+          <h1 className="bg-background rounded-lg px-2 py-0.5 text-[0.6rem] font-black text-black">{option.modalidade}</h1>
           <button
             onClick={() => handleClick(option._id)}
             className="flex items-center gap-1 rounded-lg bg-blue-800 px-2 py-1 text-[0.6rem] text-white hover:bg-blue-700"
@@ -145,7 +145,7 @@ function CreditCardOptionCard({ option, handleClick }: CreditCardOptionCardProps
             <h1 className="bg-green-600 p-1 text-center text-[0.6rem] font-bold text-white">RESULTADO</h1>
             <div className="flex w-full flex-col gap-1 p-3">
               <h1 className="font-Poppins w-full text-center font-black">{formatToMoney(handleSimulation(simulation).total)}</h1>
-              <h1 className="text-center text-xs font-medium tracking-tight text-gray-500">
+              <h1 className="text-primary/60 text-center text-xs font-medium tracking-tight">
                 {simulation.parcelas}x PARCELAS DE: {formatToMoney(handleSimulation(simulation).valorParcela)}
               </h1>
             </div>

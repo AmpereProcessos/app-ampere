@@ -45,52 +45,52 @@ function ComissionCard({ project, userIsManager }) {
     }
   }
   return (
-    <div className="flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
+    <div className="border-primary/20 flex w-full gap-2 rounded-md border shadow-xs">
       <div className={`h-full w-[7px] ${getBarColor(project)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex w-full grow flex-col gap-2 p-3">
         <div className="flex w-full items-center gap-2">
           <div className="flex min-w-[350px] flex-col">
             <div className="flex items-center gap-1">
               <h1 className="font-black text-[#fead41]">{project.identificadorCRM}</h1>
-              <h1 className="font-bold leading-none tracking-tight">{project.nome}</h1>
+              <h1 className="leading-none font-bold tracking-tight">{project.nome}</h1>
             </div>
             <div className="flex items-center gap-1">
               <BsCode />
-              <p className="text-xxs italic text-gray-500">{project.id}</p>
-              <p className="text-xs text-gray-500">{project.tipoServico}</p>
+              <p className="text-xxs text-primary/60 italic">{project.id}</p>
+              <p className="text-primary/60 text-xs">{project.tipoServico}</p>
             </div>
           </div>
           <div className="flex grow items-center justify-between">
             <div className="flex items-center gap-2">
               <FaUserAlt />
               <div className="flex flex-col">
-                <p className="text-xs font-medium text-gray-500">VENDEDOR: {project.vendedor}</p>
-                {project.insider ? <p className="text-xs font-medium text-gray-500">INSIDER: {project.insider}</p> : null}
+                <p className="text-primary/60 text-xs font-medium">VENDEDOR: {project.vendedor}</p>
+                {project.insider ? <p className="text-primary/60 text-xs font-medium">INSIDER: {project.insider}</p> : null}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <BsCalendarFill />
               <div className="flex flex-col">
-                <p className="text-xs font-medium text-gray-500">ASSINATURA: {formatDateAsLocale(project.dataAssinatura)}</p>
+                <p className="text-primary/60 text-xs font-medium">ASSINATURA: {formatDateAsLocale(project.dataAssinatura)}</p>
 
-                <p className="text-xs font-medium text-gray-500">PAGAMENTO: {formatDateAsLocale(project.dataRecebimentoParcial)}</p>
+                <p className="text-primary/60 text-xs font-medium">PAGAMENTO: {formatDateAsLocale(project.dataRecebimentoParcial)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <ImPower />
-              <p className="text-xs font-medium text-gray-500">{formatDecimalPlaces(project.potenciaPico)}W</p>
+              <p className="text-primary/60 text-xs font-medium">{formatDecimalPlaces(project.potenciaPico)}W</p>
             </div>
             <div className="flex items-center gap-2">
               <FaSolarPanel />
-              <p className="text-xs font-medium text-gray-500">{formatToMoney(project.valorProjeto || 0)}</p>
+              <p className="text-primary/60 text-xs font-medium">{formatToMoney(project.valorProjeto || 0)}</p>
             </div>
             <div className="flex items-center gap-2">
               <MdElectricMeter />
-              <p className="text-xs font-medium text-gray-500">{formatToMoney(project.valorPadrao || 0)}</p>
+              <p className="text-primary/60 text-xs font-medium">{formatToMoney(project.valorPadrao || 0)}</p>
             </div>
             <div className="flex items-center gap-2">
               <MdOutlineAttachMoney />
-              <p className="text-xs font-medium text-gray-500">{formatToMoney(project.valorContrato || 0)}</p>
+              <p className="text-primary/60 text-xs font-medium">{formatToMoney(project.valorContrato || 0)}</p>
             </div>
           </div>
         </div>
@@ -120,30 +120,30 @@ function ComissionCard({ project, userIsManager }) {
           ) : null}
         </div>
         <div className="flex w-full items-center justify-around gap-2">
-          <div className="flex w-1/4 flex-col rounded-md border border-gray-500 p-1">
+          <div className="border-primary/60 flex w-1/4 flex-col rounded-md border p-1">
             <div className="flex items-center gap-2">
               <FaSolarPanel />
-              <p className="text-xs font-medium uppercase text-gray-500">COMISSÃO PELO PROJETO UFV</p>
+              <p className="text-primary/60 text-xs font-medium uppercase">COMISSÃO PELO PROJETO UFV</p>
             </div>
-            <h1 className="text-center text-xs font-medium uppercase text-gray-500">
+            <h1 className="text-primary/60 text-center text-xs font-medium uppercase">
               {formatToMoney(((project.valorProjeto || 0) * (comissionHolder.seller + comissionHolder.insider)) / 100)}
             </h1>
           </div>
-          <div className="flex w-1/4 flex-col rounded-md border border-gray-500 p-1">
+          <div className="border-primary/60 flex w-1/4 flex-col rounded-md border p-1">
             <div className="flex items-center gap-2">
               <MdElectricMeter />
-              <p className="text-xs font-medium uppercase text-gray-500">COMISSÃO PELO PADRÃO</p>
+              <p className="text-primary/60 text-xs font-medium uppercase">COMISSÃO PELO PADRÃO</p>
             </div>
-            <h1 className="text-center text-xs font-medium uppercase text-gray-500">
+            <h1 className="text-primary/60 text-center text-xs font-medium uppercase">
               {formatToMoney(((project.valorPadrao || 0) * (comissionHolder.seller + comissionHolder.insider)) / 100)}
             </h1>
           </div>
-          <div className="flex w-1/4 flex-col rounded-md border border-gray-500 p-1">
+          <div className="border-primary/60 flex w-1/4 flex-col rounded-md border p-1">
             <div className="flex items-center gap-2">
               <MdOutlineAttachMoney />
-              <p className="text-xs font-medium uppercase text-gray-500">COMISSÃO GERAL </p>
+              <p className="text-primary/60 text-xs font-medium uppercase">COMISSÃO GERAL </p>
             </div>
-            <h1 className="text-center text-xs font-medium uppercase text-gray-500">
+            <h1 className="text-primary/60 text-center text-xs font-medium uppercase">
               {formatToMoney(((project.valorContrato || 0) * (comissionHolder.seller + comissionHolder.insider)) / 100)}
             </h1>
           </div>
@@ -153,7 +153,7 @@ function ComissionCard({ project, userIsManager }) {
             <button
               disabled={isPending}
               onClick={() => efectivateCommission()}
-              className="rounded border border-black px-2 py-1 font-medium duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white enabled:hover:bg-black enabled:hover:text-white"
+              className="disabled:bg-primary/60 rounded border border-black px-2 py-1 font-medium duration-300 ease-in-out enabled:hover:bg-black enabled:hover:text-white disabled:text-white"
             >
               EFETIVAR COMISSÕES
             </button>

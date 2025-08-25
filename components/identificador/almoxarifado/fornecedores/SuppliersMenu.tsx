@@ -200,7 +200,7 @@ function SuppliersMenuContent({ session, suppliers, applicableSuppliersIds, hand
         value={infoHolder.nome}
         placeholder="Pesquise aqui por um fornecedor..."
         onChange={(e) => updateInfoHolder({ nome: e.target.value })}
-        className="w-full rounded-md p-1 text-sm outline-none duration-500 ease-in-out placeholder:italic"
+        className="w-full rounded-md p-1 text-sm outline-hidden duration-500 ease-in-out placeholder:italic"
       />
       <div className="flex w-full flex-col gap-1.5">
         <h1 className="text-sm font-medium tracking-tight text-primary/80">FORNECEDORES APLICADOS</h1>

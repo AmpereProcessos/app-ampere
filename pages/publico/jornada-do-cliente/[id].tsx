@@ -54,14 +54,14 @@ function ClientJourney({ projectJSON, error }: ClientJourneyProps) {
   if (error) return <ErrorComponent msg={error} />
   const project: TProjectDTO = JSON.parse(projectJSON)
   return (
-    <div className="flex h-full w-full  items-center justify-center bg-[#15599a] p-3">
-      <div key="1" className="flex flex-col items-center rounded-lg bg-white px-4 py-12 text-gray-900 shadow-md sm:px-6 lg:px-8">
+    <div className="flex h-full w-full items-center justify-center bg-[#15599a] p-3">
+      <div key="1" className="bg-background flex flex-col items-center rounded-lg px-4 py-12 text-gray-900 shadow-md sm:px-6 lg:px-8">
         {/* <section className="mx-auto max-w-5xl space-y-12"> */}
         <div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
           <h1 className="text-center text-3xl font-black md:text-5xl">SUA JORNADA DO CLIENTE</h1>
           <Image src={Logo} alt="Logo" width={60} height={60} />
         </div>
-        <p className="mt-2 text-center text-lg font-medium tracking-tight text-gray-500 md:text-xl">ACOMPANHE O PROCESSO DO SEU PROJETO CONOSCO</p>
+        <p className="text-primary/60 mt-2 text-center text-lg font-medium tracking-tight md:text-xl">ACOMPANHE O PROCESSO DO SEU PROJETO CONOSCO</p>
         <h2 className="mt-4 text-center text-3xl font-black text-[#15599a] md:text-4xl">{project.nomeDoContrato}</h2>
 
         {!project.nps && (!!project.jornada.dataEntregaTecnicaRemota || !!project.jornada.jornadaConcluida) ? (

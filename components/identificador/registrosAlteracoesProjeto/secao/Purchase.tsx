@@ -38,7 +38,7 @@ function Purchase({ logs }: PurchaseUpdateLogsProps) {
       {relatedLogs.length > 0 ? (
         relatedLogs.map((log) => <UpdateLogCard key={log._id} log={log} relatedFields={RelatedFields} />)
       ) : (
-        <p className="flex w-full grow items-center justify-center py-2 text-center font-medium italic tracking-tight text-gray-500">
+        <p className="text-primary/60 flex w-full grow items-center justify-center py-2 text-center font-medium tracking-tight italic">
           Sem registros de atualização relacionados a compra
         </p>
       )}

@@ -35,14 +35,14 @@ function NutritionPage({ session }: NutritionPageProps) {
 
   return (
     <div className="flex w-full grow flex-col p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS PARA NUTRIÇÃO</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS PARA NUTRIÇÃO</p>
           </div>
         </div>
       </div>
-      <div className="1.5xl:max-h- 2.25xl:max-h-[800px] mt-2 flex w-full overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 md:max-h-[500px]  lg:max-h-[600px]">
+      <div className="1.5xl:max-h- 2.25xl:max-h-[800px] scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex w-full overflow-x-auto md:max-h-[500px] lg:max-h-[600px]">
         {funnel?.etapas.map((stage) => (
           <StageBlock key={stage.id} session={session} stage={stage} opportunities={opportunities || []} />
         ))}
@@ -143,7 +143,7 @@ function OpportunityCard({
     },
   })
   return (
-    <div className="flex w-full flex-col gap-2 rounded border border-primary/20 bg-[#fff] p-2 shadow-sm">
+    <div className="border-primary/20 bg-background flex w-full flex-col gap-2 rounded border p-2 shadow-xs">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-1">
           <h1 className="text-xs font-bold text-[#fead41]">{opportunity.identificador}</h1>
@@ -158,7 +158,7 @@ function OpportunityCard({
         {opportunity.ultimaInteracao?.data ? (
           <div className="flex w-full items-center justify-center gap-1">
             <BsCalendar />
-            <p className={'text-[0.65rem] font-medium text-primary/50'}>
+            <p className={'text-primary/50 text-[0.65rem] font-medium'}>
               Última interação em: {formatDateAsLocale(opportunity.ultimaInteracao?.data, true)}
             </p>
           </div>
@@ -176,17 +176,17 @@ function OpportunityCard({
               return (
                 <div className="flex items-center gap-1">
                   <Avatar url={resp.avatar_url || undefined} fallback={formatNameAsInitials(resp.nome)} height={18} width={18} />
-                  <p className="text-[0.65rem] font-light text-primary/50">{resp.nome}</p>
+                  <p className="text-primary/50 text-[0.65rem] font-light">{resp.nome}</p>
                 </div>
               )
             return null
           })}
-          {opportunity.responsaveis.length > 2 ? <p className="text-[0.65rem] font-light text-primary/50">...</p> : null}
+          {opportunity.responsaveis.length > 2 ? <p className="text-primary/50 text-[0.65rem] font-light">...</p> : null}
         </div>
 
         <div className="ites-center flex min-w-fit gap-1">
           <BsCalendarPlus />
-          <p className={'text-[0.65rem] font-medium text-primary/50'}>{formatDateAsLocale(opportunity.dataInsercao, true)}</p>
+          <p className={'text-primary/50 text-[0.65rem] font-medium'}>{formatDateAsLocale(opportunity.dataInsercao, true)}</p>
         </div>
       </div>
     </div>

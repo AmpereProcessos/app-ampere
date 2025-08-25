@@ -265,15 +265,15 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
     if (request) setInfoHolder(request)
   }, [request])
   return (
-    <div id="edit-expense" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[75%]">
+    <div id="edit-expense" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[75%]">
         <div className="flex h-full w-full flex-col">
-          <div className="flex items-center justify-between border-b border-gray-300 px-2 pb-2">
+          <div className="border-primary/20 flex items-center justify-between border-b px-2 pb-2">
             <div className="flex flex-col gap-1">
-              <h3 className="text-base font-bold text-[#353432] dark:text-white ">CONTROLE DE FORMULÁRIO</h3>
+              <h3 className="text-base font-bold text-[#353432] dark:text-white">CONTROLE DE FORMULÁRIO</h3>
               <div className="flex items-center gap-1">
                 <BsCode />
-                <h1 className="text-xxs leading-none tracking-tight text-gray-500">#{requestId}</h1>
+                <h1 className="text-xxs text-primary/60 leading-none tracking-tight">#{requestId}</h1>
               </div>
             </div>
             <button
@@ -288,12 +288,12 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
           {isError ? <ErrorComponent msg={'Houve um erro ao buscar informações do formulário de contrato.'} /> : null}
           {isSuccess && !!infoHolder._id ? (
             <>
-              <div className="flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1">
                 <div className="flex w-full items-center justify-end gap-2">
                   <Link href={`/comercial/pdfProcuracao/${requestId}`}>
                     <button
                       type="button"
-                      className="flex items-center gap-2 rounded border border-gray-600 px-4 py-2 text-gray-600 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
+                      className="border-primary/80 text-primary/80 flex items-center gap-2 rounded border px-4 py-2 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
                     >
                       <FaFile />
                       <p className="text-xs font-bold tracking-tight">PROCURAÇÃO EM PDF</p>
@@ -384,14 +384,14 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                     <>
                       <div className="flex items-center gap-1">
                         <BsCalendarCheck color="rgb(34,197,94)" />
-                        <h1 className="text-sm font-medium tracking-tight text-gray-500">
+                        <h1 className="text-primary/60 text-sm font-medium tracking-tight">
                           APROVADO EM: {formatDateAsLocale(infoHolder.dataAprovacao, true)}
                         </h1>
                       </div>
                       {infoHolder.confeccionado ? (
                         <div className="flex items-center gap-1">
                           <BsPatchCheck color="rgb(34,197,94)" />
-                          <h1 className="text-sm font-medium tracking-tight text-gray-500">CONFECCIONADO</h1>
+                          <h1 className="text-primary/60 text-sm font-medium tracking-tight">CONFECCIONADO</h1>
                         </div>
                       ) : (
                         <button
@@ -412,7 +412,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                                 },
                               })
                           }}
-                          className="flex h-9 items-center gap-1 whitespace-nowrap rounded bg-cyan-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-cyan-600 enabled:hover:text-white"
+                          className="disabled:bg-primary/60 flex h-9 items-center gap-1 rounded bg-cyan-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-cyan-600 enabled:hover:text-white disabled:text-white"
                         >
                           <BsPatchCheck />
                           <p className="">VALIDAR CONFECÇÃO</p>
@@ -428,7 +428,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                           // @ts-ignore
                           handleApproveRequest(infoHolder)
                         }}
-                        className="h-9 whitespace-nowrap rounded bg-green-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-green-800 enabled:hover:text-white"
+                        className="disabled:bg-primary/60 h-9 rounded bg-green-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-green-800 enabled:hover:text-white disabled:text-white"
                       >
                         APROVAR FORMULÁRIO
                       </button>
@@ -439,7 +439,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                           // @ts-ignore
                           handleRejectRequest(infoHolder)
                         }}
-                        className="h-9 whitespace-nowrap rounded bg-red-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-red-800 enabled:hover:text-white"
+                        className="disabled:bg-primary/60 h-9 rounded bg-red-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-red-800 enabled:hover:text-white disabled:text-white"
                       >
                         REPROVAR FORMULÁRIO
                       </button>
@@ -468,7 +468,7 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
                       changes: { ...infoHolder },
                     })
                   }}
-                  className="h-9 whitespace-nowrap rounded bg-blue-800 px-4 py-2 text-sm font-medium text-white shadow disabled:bg-gray-500 disabled:text-white enabled:hover:bg-blue-800 enabled:hover:text-white"
+                  className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
                 >
                   ATUALIZAR FORMULÁRIO
                 </button>

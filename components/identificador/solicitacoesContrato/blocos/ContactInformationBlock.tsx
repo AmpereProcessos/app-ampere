@@ -11,7 +11,7 @@ type ContactInformationBlockProps = {
 function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: ContactInformationBlockProps) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">INFORMAÇÕES DE CONTATO</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DE CONTATO</h1>
       <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-1/4 lg:w-full">
           <TextInput
@@ -67,14 +67,14 @@ function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
       <div className="flex w-full flex-col items-center gap-4 lg:flex-row">
         <div className="w-full">
           <div className="mt-2 flex w-full flex-col items-center self-center px-2">
-            <span className="text-center font-raleway text-sm font-bold uppercase">CUIDADOS PARA CONTATO COM O CLIENTE</span>
+            <span className="font-raleway text-center text-sm font-bold uppercase">CUIDADOS PARA CONTATO COM O CLIENTE</span>
             <textarea
               readOnly={!userHasEditPermission}
               placeholder={
                 'Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc...'
               }
               value={infoHolder.cuidadosContatoJornada}
-              className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center outline-none"
+              className="border-primary/80 h-[80px] w-full resize-none border bg-gray-200 p-2 text-center outline-hidden"
               onChange={(e) =>
                 setInfoHolder((prev) => ({
                   ...prev,

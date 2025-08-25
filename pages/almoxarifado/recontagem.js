@@ -106,7 +106,7 @@ function Recontagem() {
         </Link>
       </div> */}
       <div className="flex w-full grow flex-col">
-        <div className="grid w-full grid-cols-9 gap-x-2 border-b bg-gray-800">
+        <div className="bg-primary/80 grid w-full grid-cols-9 gap-x-2 border-b">
           <p className="col-span-1 px-6 py-4 text-center text-sm font-medium text-white">INDEX</p>
           <p className="col-span-4 px-6 py-4 text-center text-sm font-medium text-white">NOME</p>
           <p className="col-span-2 px-6 py-4 text-center text-sm font-medium text-white">CÓDIGO</p>
@@ -115,22 +115,22 @@ function Recontagem() {
         </div>
         {materials && materials?.length
           ? materials.map((material, index) => (
-              <div key={index} className="grid grid-cols-9 gap-x-2 border-x border-b border-gray-700">
-                <div className="col-span-1 whitespace-nowrap py-4 text-center text-xs font-medium text-gray-900">{index + 1}</div>
-                <div className="col-span-4 whitespace-nowrap px-6 py-4 text-center text-xs font-medium text-gray-900">
+              <div key={index} className="border-primary/70 grid grid-cols-9 gap-x-2 border-x border-b">
+                <div className="col-span-1 py-4 text-center text-xs font-medium whitespace-nowrap text-gray-900">{index + 1}</div>
+                <div className="col-span-4 px-6 py-4 text-center text-xs font-medium whitespace-nowrap text-gray-900">
                   <p>{material.nome}</p>
                   {material.recontagem ? (
-                    <p className="text-xs italic text-gray-400">
+                    <p className="text-xs text-gray-400 italic">
                       Recontagem feita pela última vez em{' '}
                       <strong className="text-[#fead61]">{dayjs(material.recontagem.data).format('DD/MM/YYYY HH:mm')}</strong> por{' '}
                       {material.recontagem.responsavel ? material.recontagem.responsavel : session.user.nome}
                     </p>
                   ) : null}
                 </div>
-                <div className="col-span-2 whitespace-nowrap break-words px-6 py-4 text-center text-xs font-medium text-gray-900">
+                <div className="col-span-2 px-6 py-4 text-center text-xs font-medium break-words whitespace-nowrap text-gray-900">
                   {material.codigo ? material.codigo : '-'}
                 </div>
-                <div className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">
+                <div className="col-span-1 px-6 py-4 text-center text-sm font-medium whitespace-nowrap text-gray-900">
                   {material.qtde && material.qtde > 0
                     ? Number(material.qtde).toLocaleString('pt-br', {
                         minimumFractionDigits: 2,
@@ -139,7 +139,7 @@ function Recontagem() {
                     : '-'}
                 </div>
 
-                <div className="col-span-1 whitespace-nowrap text-center text-sm  font-medium text-gray-900">
+                <div className="col-span-1 text-center text-sm font-medium whitespace-nowrap text-gray-900">
                   <input
                     value={material.recontagem}
                     onChange={(e) => {
@@ -149,7 +149,7 @@ function Recontagem() {
                       setMaterials(materialsCopy)
                     }}
                     type="number"
-                    className="h-full w-full bg-transparent text-center text-xs outline-none"
+                    className="h-full w-full bg-transparent text-center text-xs outline-hidden"
                   />
                 </div>
               </div>

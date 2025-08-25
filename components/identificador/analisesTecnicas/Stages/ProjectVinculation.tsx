@@ -104,8 +104,8 @@ function ProjectVinculation({ requestInfo, setRequestInfo, resetSolicitationType
     return goToNextStage()
   }
   return (
-    <div className="flex w-full grow flex-col bg-[#fff] px-2">
-      <span className="text-center text-lg font-bold uppercase text-[#15599a]">INFORMAÇÕES DO PROJETO ATUAL</span>
+    <div className="bg-background flex w-full grow flex-col px-2">
+      <span className="text-center text-lg font-bold text-[#15599a] uppercase">INFORMAÇÕES DO PROJETO ATUAL</span>
       <div className="flex w-full grow flex-col gap-2">
         <div className="flex w-full items-center justify-center">
           <div className="w-fit">
@@ -119,7 +119,7 @@ function ProjectVinculation({ requestInfo, setRequestInfo, resetSolicitationType
           </div>
         </div>
         {isExistingProject ? <OperationProjectsBlock handleVinculation={handleVinculation} handleUnvinculation={handleUnvinculation} /> : null}
-        <h1 className="rounded bg-black py-1 text-center text-lg font-bold uppercase text-white">CONFIRMAÇÃO DAS INFORMAÇÕES</h1>
+        <h1 className="rounded bg-black py-1 text-center text-lg font-bold text-white uppercase">CONFIRMAÇÃO DAS INFORMAÇÕES</h1>
         <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
           <div className="w-full lg:w-[50%]">
             <TextInput
@@ -259,7 +259,7 @@ function ProjectVinculation({ requestInfo, setRequestInfo, resetSolicitationType
         </div>
       </div>
       <div className="mt-2 flex w-full justify-between">
-        <button onClick={() => resetSolicitationType()} className="rounded p-2 font-bold text-gray-500 duration-300 ease-in-out hover:scale-105">
+        <button onClick={() => resetSolicitationType()} className="text-primary/60 rounded p-2 font-bold duration-300 ease-in-out hover:scale-105">
           Voltar
         </button>
         <button

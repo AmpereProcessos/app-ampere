@@ -49,7 +49,7 @@ function FirstStage({ infoHolder, setInfoHolder, moveToNextStage }: FirstStagePr
       </div>
       <div className="flex h-[100px] w-full flex-col items-center justify-center gap-4 self-stretch text-center font-black text-white">
         <div className="w-full">
-          <div className="flex flex-1 flex-grow flex-col items-center justify-center rounded-lg bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]">
+          <div className="flex flex-1 grow flex-col items-center justify-center rounded-lg bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] p-3 duration-300 hover:scale-[1.02]">
             <p onClick={() => moveToNextStage()} className="m-0 w-full cursor-pointer text-[19px] leading-[1.2]">
               Próximo
             </p>

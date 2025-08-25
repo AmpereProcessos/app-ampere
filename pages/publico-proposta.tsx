@@ -95,8 +95,8 @@ function ProposePage() {
   }
   return (
     <div className="h-[29.7cm] w-[21cm] font-[Inter]">
-      <div className="relative flex h-[297mm] w-[210mm] flex-col overflow-hidden bg-white">
-        <div className="flex h-fit w-full items-center justify-between rounded-bl-md rounded-br-md bg-[#15599a] p-4">
+      <div className="bg-background relative flex h-[297mm] w-[210mm] flex-col overflow-hidden">
+        <div className="flex h-fit w-full items-center justify-between rounded-br-md rounded-bl-md bg-[#15599a] p-4">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <p className="text-xs font-bold text-white">CLIENTE</p>
@@ -134,30 +134,30 @@ function ProposePage() {
           integradoras de sistemas fotovoltaicos de Minas Gerais.
         </div>
         <div className="flex w-full flex-col gap-1">
-          <div className="flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-[#15599a] p-3">
-            <h1 className="w-full text-center text-[0.75rem] font-bold text-white">ESCOPO DE SERVIÇOS</h1>
+          <div className="flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-[#15599a] p-3">
+            <h1 className="w-full text-center text-xs font-bold text-white">ESCOPO DE SERVIÇOS</h1>
           </div>
           {/* <div className="flex w-full items-center">
               <h1 className="w-[75%] text-center font-bold">SERVIÇO</h1>
               <h1 className="w-[25%] text-center font-bold">VALOR</h1>
              </div> */}
           {info.servicos.map((service, index) => (
-            <div className="flex w-full flex-col border-b border-gray-500 p-2">
+            <div className="border-primary/60 flex w-full flex-col border-b p-2">
               <div className="flex w-full items-center gap-2">
                 <div className="flex min-h-[20px] min-w-[20px] items-center justify-center rounded-full border border-black text-center font-bold">
                   <h1 className="text-xs">{index + 1}</h1>
                 </div>
                 <h1 className="text-[0.7rem] font-black tracking-tight text-[#15599a]">{service.titulo}</h1>
               </div>
-              <div className="mt-2 flex w-full items-center justify-center text-center text-[0.6rem] font-medium uppercase text-gray-800">
+              <div className="text-primary/80 mt-2 flex w-full items-center justify-center text-center text-[0.6rem] font-medium uppercase">
                 {service.descricao}
               </div>
-              <h1 className="mt-2 mb-1 w-full text-xs font-medium leading-none tracking-tight text-gray-500">COMPOSIÇÃO</h1>
+              <h1 className="text-primary/60 mt-2 mb-1 w-full text-xs leading-none font-medium tracking-tight">COMPOSIÇÃO</h1>
               {service.itens.map((item, itemIndex) => (
                 <div key={itemIndex} className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <BsSuitDiamondFill size={10} />
-                    <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">{item.descricao}</h1>
+                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">{item.descricao}</h1>
                   </div>
                   <h1 className="text-[0.6rem] font-bold">{formatToMoney(item.valor)}</h1>
                 </div>
@@ -171,13 +171,13 @@ function ProposePage() {
             <h1 className="font-black tracking-tight text-[#15599a]">TOTAL</h1>
             <h1 className="font-bold">R$ 100.000,00</h1>
           </div>
-          <div className="mt-2 flex w-full items-center gap-1 rounded-bl-md rounded-br-md bg-[#15599a] p-3">
-            <h1 className="w-full text-center text-[0.75rem] font-bold text-white">RESPONSABILIDADES</h1>
+          <div className="mt-2 flex w-full items-center gap-1 rounded-br-md rounded-bl-md bg-[#15599a] p-3">
+            <h1 className="w-full text-center text-xs font-bold text-white">RESPONSABILIDADES</h1>
           </div>
           <div className="flex flex-col px-2">
             <div className="mt-2 flex items-center gap-2">
               <BsSuitDiamondFill size={10} />
-              <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">EXECUTAR OS SERVIÇOS PROPOSTOS CONFORME PROJETO APROVADO</h1>
+              <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">EXECUTAR OS SERVIÇOS PROPOSTOS CONFORME PROJETO APROVADO</h1>
             </div>
           </div>
         </div>

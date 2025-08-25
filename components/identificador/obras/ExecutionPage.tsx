@@ -55,17 +55,17 @@ export default function ExecutionPage({ session }: ExecutionPageProps) {
   const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey: ['service-orders-by-filters', filters] })
   return (
     <div className="grow p-6">
-      <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <p className="text-center text-2xl font-black uppercase text-[#15599a]">PROJETOS NO ESTÁGIO DE EXECUÇÃO</p>
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NO ESTÁGIO DE EXECUÇÃO</p>
           </div>
           <button
             type="button"
             onClick={() => setFilterMenusIsOpen((prev) => !prev)}
-            className="cursor-pointer rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-blue-500 hover:text-white"
+            className="bg-primary text-primary-foreground cursor-pointer rounded-full p-2 transition-colors hover:bg-blue-500 hover:text-white"
           >
-            <ListFilter className="min-w-4 min-h-4 h-4 w-4" />
+            <ListFilter className="h-4 min-h-4 w-4 min-w-4" />
           </button>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function ExecutionPage({ session }: ExecutionPageProps) {
               />
             ))
           ) : (
-            <div className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhuma ordem de serviço encontrada.</div>
+            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma ordem de serviço encontrada.</div>
           )
         ) : null}
       </div>
@@ -137,24 +137,24 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
         })}
       >
         <TbUrgent size={12} />
-        <h1 className="text-[0.5rem] font-medium">
+        <h1 className="text-xxs font-medium">
           {daysTillMaxAccessLiberationExecution < 0 ? 'PARECER VENCIDO' : `${daysTillMaxAccessLiberationExecution} DIAS ATÉ O VENCIMENTO DO PARECER`}
         </h1>
       </div>
     )
   }
   return (
-    <div className="flex w-full flex-col gap-3 border border-primary/20 p-3 lg:w-[450px]">
+    <div className="border-primary/20 flex w-full flex-col gap-3 border p-3 lg:w-[450px]">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-1">
-          <div className="flex items-center gap-1 self-center rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.6rem] font-bold italic text-primary/80">
-            <Code className="min-w-4 min-h-4 h-4 w-4" />
+          <div className="bg-secondary text-primary/80 flex items-center gap-1 self-center rounded-lg px-2 py-0.5 text-center text-[0.6rem] font-bold italic">
+            <Code className="h-4 min-h-4 w-4 min-w-4" />
             <p>{serviceOrder.projeto.identificador}</p>
           </div>
-          <h1 className="w-full text-start text-sm font-bold leading-none tracking-tight">{serviceOrder.favorecido.nome}</h1>
+          <h1 className="w-full text-start text-sm leading-none font-bold tracking-tight">{serviceOrder.favorecido.nome}</h1>
         </div>
         <h1
-          className={cn('min-w-fit rounded-lg bg-primary px-2 py-0.5 text-center text-[0.5rem] font-medium text-primary-foreground', {
+          className={cn('bg-primary text-xxs text-primary-foreground min-w-fit rounded-lg px-2 py-0.5 text-center font-medium', {
             'bg-red-500': serviceOrder.status === 'PENDENTE', // Vermelho claro
             'bg-[#757575]': serviceOrder.status === 'AGUARDANDO PLANEJAMENTO', // Cinza médio
             'bg-[#42A5F5]': serviceOrder.status === 'AGUARDANDO LIBERAÇÃO', // Azul suave
@@ -172,7 +172,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
       <div className="flex w-full grow flex-col gap-2">
         {serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
           <div className="flex w-full flex-wrap items-center justify-start gap-2 lg:grow">
-            <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">ETIQUETAS</h1>
+            <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">ETIQUETAS</h1>
             {serviceOrder.etiquetas.map((tag, index) => (
               <div
                 key={tag.id}
@@ -185,7 +185,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
                 className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
               >
                 <Tag width={10} height={10} />
-                <h1 className="text-[0.5rem] font-bold tracking-tight">{tag.titulo}</h1>
+                <h1 className="text-xxs font-bold tracking-tight">{tag.titulo}</h1>
               </div>
             ))}
           </div>
@@ -199,20 +199,20 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
               )}
             >
               <MdDashboard size={12} />
-              <h1 className="text-[0.5rem] font-medium">{serviceOrder.projeto.tipo}</h1>
+              <h1 className="text-xxs font-medium">{serviceOrder.projeto.tipo}</h1>
             </div>
             {serviceOrder.categoria === 'MONTAGEM' && serviceOrder.projeto.homologacaoAcessoDataResposta ? getHomologationAccessTag() : null}
             {serviceOrder.categoria === 'MONTAGEM' && serviceOrder.projeto.homologacaoVistoriaDataEfetivacao ? (
               <div className="flex w-fit items-center gap-1 self-center">
                 <BsPatchCheckFill height={13} width={13} color="#22c55e " />
-                <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">VISTORIA FEITA</h1>
+                <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">VISTORIA FEITA</h1>
               </div>
             ) : null}
             {serviceOrder.categoria === 'MONTAGEM' ? (
               <div className="flex w-full flex-wrap items-center justify-around gap-2">
                 <div className="flex items-center gap-1">
                   <FaRegHourglass height={13} width={13} />
-                  <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                  <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">
                     {serviceOrder.projeto.compraDataPagamento
                       ? `${getFormattedTextFromHoursAmount({
                           hours: getHoursDiff({ start: serviceOrder.projeto.compraDataPagamento, finish: new Date() }),
@@ -224,7 +224,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
                 </div>
                 <div className="flex items-center gap-1">
                   <FaRegHourglass height={13} width={13} />
-                  <h1 className="text-[0.6rem] font-medium uppercase text-primary/80">
+                  <h1 className="text-primary/80 text-[0.6rem] font-medium uppercase">
                     {serviceOrder.projeto.compraEntregaDataEfetivacao
                       ? `${getFormattedTextFromHoursAmount({
                           hours: getHoursDiff({ start: serviceOrder.projeto.compraEntregaDataEfetivacao, finish: new Date() }),
@@ -241,32 +241,32 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           <div className="flex items-center gap-1">
             <FaLocationDot height={13} width={13} />
-            <h1 className="text-[0.6rem] font-medium text-primary/80">
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
             </h1>
           </div>
           <div className="flex items-center gap-1">
             <UserRound size={12} />
-            <h1 className="text-[0.6rem] font-medium text-primary/80">{serviceOrder.responsavel.nome}</h1>
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">{serviceOrder.responsavel.nome}</h1>
           </div>
         </div>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           <div className="flex items-center gap-1">
             <FaSolarPanel height={13} width={13} />
-            <h1 className="text-[0.6rem] font-medium text-primary/80">{serviceOrder.equipamentos.modulos.qtde || 0} MÓDULOS</h1>
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">{serviceOrder.equipamentos.modulos.qtde || 0} MÓDULOS</h1>
           </div>
           <div className="flex items-center gap-1">
             <MdRoofing height={13} width={13} />
-            <h1 className="text-[0.6rem] font-medium text-primary/80">
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">
               {serviceOrder.detalhes.tipoTelha ? `TELHA ${serviceOrder.detalhes.tipoTelha}` : 'N/A'}
             </h1>
           </div>
         </div>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           <div className="flex items-center gap-1">
-            <h1 className="text-[0.6rem] font-medium text-primary/80">AGENDAMENTO</h1>
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">AGENDAMENTO</h1>
             <BsCalendar width={12} height={12} />
-            <h1 className="text-[0.6rem] font-medium text-primary/80">
+            <h1 className="text-primary/80 text-[0.6rem] font-medium">
               {serviceOrder.agendamento
                 ? `${formatDateAsLocale(serviceOrder.agendamento.inicio, true)} - ${serviceOrder.agendamento.fim ? formatDateAsLocale(serviceOrder.agendamento.fim, true) : 'N/A'}`
                 : 'N/A'}
@@ -283,17 +283,17 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
               height={18}
               width={18}
             />
-            <p className="text-[0.65rem] font-light text-primary/80">{serviceOrder.autor?.nome || ''}</p>
+            <p className="text-primary/80 text-[0.65rem] font-light">{serviceOrder.autor?.nome || ''}</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex min-w-fit items-center gap-1">
               <BsCalendarPlus />
-              <p className={'text-[0.65rem] font-medium text-primary/80'}>{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
+              <p className={'text-primary/80 text-[0.65rem] font-medium'}>{formatDateAsLocale(serviceOrder.dataInsercao, true)}</p>
             </div>
             {serviceOrder.dataEfetivacao ? (
               <div className="flex items-center gap-1">
                 <BsCalendarCheck color="#22c55e" />
-                <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
+                <p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(serviceOrder.dataEfetivacao, true)}</p>
               </div>
             ) : null}
           </div>
@@ -301,7 +301,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
         <button
           type="button"
           onClick={() => handleClick(serviceOrder._id)}
-          className="flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[0.6rem] text-secondary"
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >
           <Pencil width={10} height={10} />
           <p>EDITAR</p>

@@ -85,28 +85,28 @@ function RevenuesWrapper({ session }: RevenuesWrapperProps) {
   return (
     <div className="flex w-full grow flex-col">
       <div className="flex w-full items-center justify-center gap-2">
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-green-500 text-center text-sm text-white">RECEBIDO</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(revenues || []).received)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(revenues || []).received)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-[#15599a] text-center text-sm text-white">À RECEBER</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(revenues || []).toReceive)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(revenues || []).toReceive)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-[#fead41] text-center text-sm text-white">À RECEBER HOJE</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(revenues || []).toReceiveToday)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(revenues || []).toReceiveToday)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-red-500 text-center text-sm text-white">EM ATRASO</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(revenues || []).toReceiveOverdue)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(revenues || []).toReceiveOverdue)}</h1>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ function RevenuesWrapper({ session }: RevenuesWrapperProps) {
               <RevenueCard key={revenue._id} revenue={revenue} openModal={(id) => setModalRevenue({ isOpen: true, id: id })} />
             ))
           ) : (
-            <p className="w-full text-center italic text-gray-500">Nenhuma receita encontrada...</p>
+            <p className="text-primary/60 w-full text-center italic">Nenhuma receita encontrada...</p>
           )
         ) : null}
         {modalRevenue.isOpen && modalRevenue.id ? (

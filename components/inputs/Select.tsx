@@ -121,13 +121,13 @@ function SelectInput<T>({
     return (
       <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
         {showLabel ? (
-          <label htmlFor={inputIdentifier} className={cn('text-start text-sm font-medium tracking-tight text-primary/80', labelClassName)}>
+          <label htmlFor={inputIdentifier} className={cn('text-primary/80 text-start text-sm font-medium tracking-tight', labelClassName)}>
             {label}
           </label>
         ) : null}
         <div
           className={cn(
-            'flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border bg-[#fff] p-3 text-sm shadow-sm duration-500 ease-in-out dark:bg-[#121212]',
+            'bg-background flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border p-3 text-sm shadow-xs duration-500 ease-in-out dark:bg-[#121212]',
             selectMenuIsOpen ? 'border-primary' : 'border-primary/20',
             holderClassName
           )}
@@ -138,7 +138,7 @@ function SelectInput<T>({
               value={searchFilter}
               onChange={(e) => handleFilter(e.target.value)}
               placeholder="Filtre o item desejado..."
-              className="h-full w-full italic outline-none"
+              className="h-full w-full italic outline-hidden"
             />
           ) : (
             <p
@@ -148,7 +148,7 @@ function SelectInput<T>({
               onKeyDown={() => {
                 if (editable) setSelectMenuIsOpen((prev) => !prev)
               }}
-              className="grow cursor-pointer text-primary"
+              className="text-primary grow cursor-pointer"
             >
               {selectedId && options ? options.filter((item) => item.id === selectedId)[0]?.label : selectedItemLabel}
             </p>
@@ -173,31 +173,31 @@ function SelectInput<T>({
           <div
             className={`absolute ${
               dropdownDirection === 'down' ? 'top-[75px]' : 'bottom-[75px]'
-            } z-[100] flex h-[250px] max-h-[250px] w-full flex-col gap-1 self-center overflow-y-auto overscroll-y-auto rounded-md border border-primary/20 bg-[#fff] p-2 py-1 shadow-sm scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 dark:bg-[#121212]`}
+            } border-primary/20 bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 z-100 flex h-[250px] max-h-[250px] w-full flex-col gap-1 self-center overflow-y-auto overscroll-y-auto rounded-md border p-2 py-1 shadow-xs dark:bg-[#121212]`}
           >
             <div
               onClick={() => resetState()}
-              className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${!selectedId ? 'bg-primary/20' : ''}`}
+              className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${!selectedId ? 'bg-primary/20' : ''}`}
             >
-              <p className="grow text-sm font-medium text-primary">{selectedItemLabel}</p>
+              <p className="text-primary grow text-sm font-medium">{selectedItemLabel}</p>
               {!selectedId ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
             </div>
-            <div className="my-2 h-[1px] w-full bg-gray-200"></div>
+            <div className="my-2 h-px w-full bg-gray-200"></div>
             {items ? (
               items.map((item, index) => (
                 <div
                   onClick={() => handleSelect(item.id, item.value)}
                   key={item.id ? item.id : index}
-                  className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${
+                  className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${
                     selectedId == item.id ? 'bg-primary/20' : ''
                   }`}
                 >
-                  <p className="grow text-sm font-medium text-primary">{item.label}</p>
+                  <p className="text-primary grow text-sm font-medium">{item.label}</p>
                   {selectedId == item.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
                 </div>
               ))
             ) : (
-              <p className="w-full text-center text-sm italic text-primary">Sem opções disponíveis.</p>
+              <p className="text-primary w-full text-center text-sm italic">Sem opções disponíveis.</p>
             )}
           </div>
         ) : (
@@ -210,13 +210,13 @@ function SelectInput<T>({
     <Drawer open={selectMenuIsOpen} onOpenChange={setSelectMenuIsOpen}>
       <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
         {showLabel ? (
-          <label htmlFor={inputIdentifier} className={cn('text-start text-sm font-medium tracking-tight text-primary/80', labelClassName)}>
+          <label htmlFor={inputIdentifier} className={cn('text-primary/80 text-start text-sm font-medium tracking-tight', labelClassName)}>
             {label}
           </label>
         ) : null}
         <div
           className={cn(
-            'flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border bg-[#fff] p-3 text-sm shadow-sm duration-500 ease-in-out dark:bg-[#121212]',
+            'bg-background flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border p-3 text-sm shadow-xs duration-500 ease-in-out dark:bg-[#121212]',
             selectMenuIsOpen ? 'border-primary' : 'border-primary/20',
             holderClassName
           )}
@@ -228,7 +228,7 @@ function SelectInput<T>({
             onKeyDown={() => {
               if (editable) setSelectMenuIsOpen((prev) => !prev)
             }}
-            className="grow cursor-pointer text-primary"
+            className="text-primary grow cursor-pointer"
           >
             {selectedId && options ? options.filter((item) => item.id === selectedId)[0]?.label : selectedItemLabel}
           </p>
@@ -246,33 +246,33 @@ function SelectInput<T>({
             value={searchFilter}
             onChange={(e) => handleFilter(e.target.value)}
             placeholder="Filtre o item desejado..."
-            className="w-full bg-transparent p-2 text-sm italic outline-none"
+            className="w-full bg-transparent p-2 text-sm italic outline-hidden"
           />
 
           <div
             onClick={() => resetState()}
-            className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${!selectedId ? 'bg-primary/20' : ''}`}
+            className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${!selectedId ? 'bg-primary/20' : ''}`}
           >
-            <p className="grow text-sm font-medium text-primary">{selectedItemLabel}</p>
+            <p className="text-primary grow text-sm font-medium">{selectedItemLabel}</p>
             {!selectedId ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
           </div>
-          <div className="my-2 h-[1px] w-full bg-gray-200"></div>
-          <div className="flex h-[200px] min-h-[200px] flex-col gap-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:h-[350px] lg:max-h-[350px]">
+          <div className="my-2 h-px w-full bg-gray-200"></div>
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex h-[200px] min-h-[200px] flex-col gap-2 overflow-y-auto overscroll-y-auto lg:h-[350px] lg:max-h-[350px]">
             {items ? (
               items.map((item, index) => (
                 <div
                   onClick={() => handleSelect(item.id, item.value)}
                   key={item.id ? item.id : index}
-                  className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-primary/20 ${
+                  className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${
                     selectedId == item.id ? 'bg-primary/20' : ''
                   }`}
                 >
-                  <p className="grow text-sm font-medium text-primary">{item.label}</p>
+                  <p className="text-primary grow text-sm font-medium">{item.label}</p>
                   {selectedId == item.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
                 </div>
               ))
             ) : (
-              <p className="w-full text-center text-sm italic text-primary">Sem opções disponíveis.</p>
+              <p className="text-primary w-full text-center text-sm italic">Sem opções disponíveis.</p>
             )}
           </div>
         </DrawerContent>

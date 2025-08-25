@@ -91,12 +91,12 @@ function HomologationFiles({ session, homologationId }: HomologationFilesProps) 
   console.log(personalizedFile)
   return (
     <div className="flex w-full flex-col gap-2">
-      <h1 className="w-full rounded bg-gray-800 p-1 text-center font-bold text-white">ARQUIVOS</h1>
+      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">ARQUIVOS</h1>
       <div className="mt-2 flex w-full flex-wrap justify-around gap-2">
         {references && references.length > 0 ? (
           references.map((file, index) => <FileReferenceCard info={file} />)
         ) : (
-          <p className="w-full text-center text-xs font-medium italic text-gray-500">Nenhum arquivo adicionado.</p>
+          <p className="text-primary/60 w-full text-center text-xs font-medium italic">Nenhum arquivo adicionado.</p>
         )}
       </div>
       <div className="flex w-full flex-col items-center justify-center gap-2">
@@ -120,7 +120,7 @@ function HomologationFiles({ session, homologationId }: HomologationFilesProps) 
           disabled={mutationLoading}
           // @ts-ignore
           onClick={() => handleAttachFile(personalizedFile)}
-          className="rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
+          className="hover:bg-primary/70 rounded bg-black p-1 px-4 text-sm font-medium text-white duration-300 ease-in-out"
         >
           ADICIONAR ARQUIVO
         </button>

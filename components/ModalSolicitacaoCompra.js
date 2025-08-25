@@ -126,43 +126,43 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen, getSolicitations 
   return (
     <AnimatedModalWrapper modalIsOpen={isOpen} width={'70%'} height={'90%'}>
       <div className="flex h-full flex-col">
-        <div className="flex w-full items-center justify-between border-b border-gray-300 pb-2">
+        <div className="border-primary/20 flex w-full items-center justify-between border-b pb-2">
           <div className="flex items-center gap-2">
             <h1 className="text-sm font-bold text-[#15599a] lg:text-lg">SOLICITAÇÃO DE COMPRA</h1>
-            <p className="hidden text-xs text-gray-500 lg:block">#{info._id}</p>
+            <p className="text-primary/60 hidden text-xs lg:block">#{info._id}</p>
           </div>
           <button onClick={closeModal} className="rounded-lg p-1 text-red-500 hover:bg-red-200">
             <VscChromeClose />
           </button>
         </div>
-        <div className="flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto py-2 px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col gap-2 overflow-y-auto overscroll-y-auto px-2 py-2">
           <div className="flex w-full flex-wrap items-center justify-center gap-4 pb-4">
             <div className="flex flex-col items-center">
-              <h1 className="text-start text-xs font-medium text-gray-500">SOLICITAÇÃO FEITA EM:</h1>
+              <h1 className="text-primary/60 text-start text-xs font-medium">SOLICITAÇÃO FEITA EM:</h1>
               <div className="flex items-center gap-2">
                 <AiOutlineCalendar style={{ color: '#15599a' }} />
-                <h1 className="text-xs font-medium text-gray-700 lg:text-base">
+                <h1 className="text-primary/70 text-xs font-medium lg:text-base">
                   {info.dataInsercao ? dayjs(info.dataInsercao).format('DD/MM/YY HH:mm') : null}
                 </h1>
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-end text-xs font-medium text-gray-500">PRAZO:</h1>
+              <h1 className="text-primary/60 text-end text-xs font-medium">PRAZO:</h1>
               <div className="flex items-center justify-end gap-2">
                 <BsCalendarCheckFill style={{ color: 'rgb(249,115,22)' }} />
-                <h1 className="text-xs font-medium text-gray-700 lg:text-base">{info.urgencia}</h1>
+                <h1 className="text-primary/70 text-xs font-medium lg:text-base">{info.urgencia}</h1>
               </div>
             </div>
             {infoHolder.dataEfetivacao ? (
               <div className="flex flex-col items-center">
-                <h1 className="text-end text-xs font-medium text-gray-500">EFETIVAÇÃO</h1>
+                <h1 className="text-primary/60 text-end text-xs font-medium">EFETIVAÇÃO</h1>
                 <div className="flex items-center justify-end gap-2">
                   <BsCalendarCheckFill
                     style={{
                       color: 'rgb(34,197,94)',
                     }}
                   />
-                  <h1 className="text-xs font-medium text-gray-700 lg:text-base">
+                  <h1 className="text-primary/70 text-xs font-medium lg:text-base">
                     {infoHolder.dataEfetivacao ? dayjs(infoHolder.dataEfetivacao).format('DD/MM/YY HH:mm') : 'NÃO DEFINIDO'}
                   </h1>
                 </div>
@@ -273,7 +273,7 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen, getSolicitations 
               width={'100%'}
             />
           </div>
-          <h1 className="w-full text-center font-raleway text-sm font-normal text-gray-500">CRITÉRIO DE CUSTO</h1>
+          <h1 className="font-raleway text-primary/60 w-full text-center text-sm font-normal">CRITÉRIO DE CUSTO</h1>
           <div className="my-2 flex w-full flex-col justify-center gap-2 md:flex-row">
             <CheckboxInput
               editable={!infoHolder.dataEfetivacao}
@@ -306,12 +306,12 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen, getSolicitations 
               value={infoHolder.anotacoes}
               onChange={(e) => setInfo((prev) => ({ ...prev, anotacoes: e.target.value }))}
               placeholder="Anotações sobre a compra, detalhes sobre aprovação e outras informações relevantes..."
-              className="h-[90px] resize-none border border-gray-300 bg-gray-100 p-1 text-center text-sm outline-none"
+              className="border-primary/20 bg-primary/20 h-[90px] resize-none border p-1 text-center text-sm outline-hidden"
             />
           </div>
           <div className="flex grow flex-col">
             <h1 className="pb-2 text-center font-bold text-[#fead61]">ITENS</h1>
-            <div className="grid w-full grid-cols-10 items-center rounded-tr-md rounded-tl-md bg-gray-500 ">
+            <div className="bg-primary/60 grid w-full grid-cols-10 items-center rounded-tl-md rounded-tr-md">
               <h1 className="col-span-2 p-2 text-center text-xs font-medium text-white lg:text-base">NOME</h1>
               <h1 className="col-span-1 p-2 text-center text-xs font-medium text-white lg:text-base">QTDE</h1>
               <h1 className="col-span-2 p-2 text-center text-xs font-medium text-white lg:text-base">COTAÇÃO</h1>
@@ -322,30 +322,30 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen, getSolicitations 
             {infoHolder.itens?.map((item, index) => (
               <PurchaseSolicitationItemRow index={index} infoHolder={infoHolder} item={item} setInfo={setInfo} key={index} />
             ))}
-            <div className="flex w-full items-center gap-2 rounded-md bg-gray-500">
+            <div className="bg-primary/60 flex w-full items-center gap-2 rounded-md">
               <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">TOTAL</p>
             </div>
-            <h1 className="w-full rounded-bl rounded-br border-x border-b border-gray-300 py-2 px-2 text-center text-lg font-black">
+            <h1 className="border-primary/20 w-full rounded-br rounded-bl border-x border-b px-2 py-2 text-center text-lg font-black">
               {formatToMoney(getPurchaseMoney(infoHolder.itens))}
             </h1>
           </div>
 
-          <div className="h-[10px] w-full bg-gray-800"></div>
+          <div className="bg-primary/80 h-[10px] w-full"></div>
           {!infoHolder.dataEfetivacao ? <ProjectVinculationMenu linkClient={linkClient} unlinkClient={unlinkClient} /> : null}
 
           {infoHolder.projeto ? (
             <>
               <div className="my-2 flex w-full flex-col">
-                <h1 className="w-full text-center font-raleway text-sm font-normal text-gray-500">PROJETO VINCULADO</h1>
-                <p className="w-full text-center font-raleway text-lg font-black text-gray-700">{infoHolder.projeto.nome}</p>
+                <h1 className="font-raleway text-primary/60 w-full text-center text-sm font-normal">PROJETO VINCULADO</h1>
+                <p className="font-raleway text-primary/70 w-full text-center text-lg font-black">{infoHolder.projeto.nome}</p>
                 <div className="flex items-center justify-center gap-2">
-                  <p className="text-xs italic text-gray-500">(#{infoHolder.projeto.identificador})</p>
-                  <p className="text-xs italic text-gray-500">#{infoHolder.projeto.id}</p>
+                  <p className="text-primary/60 text-xs italic">(#{infoHolder.projeto.identificador})</p>
+                  <p className="text-primary/60 text-xs italic">#{infoHolder.projeto.id}</p>
                 </div>
               </div>
             </>
           ) : null}
-          <div className="flex items-center justify-between border-t border-gray-300 px-2 pt-2">
+          <div className="border-primary/20 flex items-center justify-between border-t px-2 pt-2">
             {!infoHolder.dataEfetivacao ? (
               <div className="flex items-center gap-2">
                 <button

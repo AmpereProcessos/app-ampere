@@ -126,27 +126,27 @@ export default function NewMaterialsEntrance() {
   })
   return (
     <div className="flex w-full grow flex-col gap-12 p-6">
-      <div className="flex flex-col items-center justify-between border-b border-gray-300 p-1">
-        <p className="w-full text-start text-2xl font-black uppercase text-[#15599a]">ENTRADA DE MATERIAIS</p>
+      <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <p className="w-full text-start text-2xl font-black text-[#15599a] uppercase">ENTRADA DE MATERIAIS</p>
       </div>
       <div className="flex w-full flex-col gap-3">
         <div className="flex flex-col items-center justify-center gap-1">
           <p className="w-full text-2xl font-bold uppercase">CADASTRO DE NOTA FISCAL</p>
-          <p className="w-full text-sm italic text-gray-500">Anexe a nota fiscal para iniciar o procedimento de entrada de materiais.</p>
+          <p className="text-primary/60 w-full text-sm italic">Anexe a nota fiscal para iniciar o procedimento de entrada de materiais.</p>
         </div>
         <label
           htmlFor="dropzone-file"
-          className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg  border-2 border-dashed"
+          className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed"
         >
-          <div className="flex flex-col items-center justify-center pb-6 pt-5 text-gray-800">
+          <div className="text-primary/80 flex flex-col items-center justify-center pt-5 pb-6">
             <BiSolidCloudDownload color={'rgb(31,41,55)'} size={50} />
             {infoHolder ? (
               <div className="flex w-full items-center justify-center gap-1">
                 <Check />
-                <p className="text-sm font-medium text-primary">NF ({infoHolder.idNF}) anexada com sucesso !</p>
+                <p className="text-primary text-sm font-medium">NF ({infoHolder.idNF}) anexada com sucesso !</p>
               </div>
             ) : (
-              <p className="text-sm font-medium text-primary">Clique aqui para anexar o arquivo XML.</p>
+              <p className="text-primary text-sm font-medium">Clique aqui para anexar o arquivo XML.</p>
             )}
           </div>
           <input
@@ -158,28 +158,28 @@ export default function NewMaterialsEntrance() {
           />
         </label>
         {infoHolder ? (
-          <div className="flex w-full flex-col gap-3 rounded border border-primary bg-[#fff] p-3 shadow-lg dark:bg-[#121212]">
-            <div className="flex items-center gap-1 self-center rounded-lg bg-primary px-2 py-1 text-primary-foreground">
-              <ReceiptCent className="min-w-4 min-h-4 h-4 w-4" />
+          <div className="border-primary bg-background flex w-full flex-col gap-3 rounded border p-3 shadow-lg dark:bg-[#121212]">
+            <div className="bg-primary text-primary-foreground flex items-center gap-1 self-center rounded-lg px-2 py-1">
+              <ReceiptCent className="h-4 min-h-4 w-4 min-w-4" />
               <h1 className="w-full text-center tracking-tight">
                 NOTA <strong>{infoHolder.idNF}</strong>
               </h1>
             </div>
 
             <div className="flex w-full flex-col gap-1">
-              <h1 className="w-full text-start text-xs tracking-tight text-primary/50">EMISSOR</h1>
+              <h1 className="text-primary/50 w-full text-start text-xs tracking-tight">EMISSOR</h1>
               <div className="flex w-full flex-wrap items-center gap-4 gap-y-2">
                 <div className="flex items-center gap-1">
-                  <User className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">{infoHolder.emissor.nome || 'NOME DO EMISSOR NÃO ENCONTRADO'}</p>
+                  <User className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">{infoHolder.emissor.nome || 'NOME DO EMISSOR NÃO ENCONTRADO'}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <IdCard className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">{infoHolder.emissor.cpfCnpj || 'CNPJ DO EMISSOR NÃO ENCONTRADO'}</p>
+                  <IdCard className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">{infoHolder.emissor.cpfCnpj || 'CNPJ DO EMISSOR NÃO ENCONTRADO'}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <MapPin className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">
+                  <MapPin className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">
                     {formatLocation({
                       location: {
                         cep: infoHolder.emissor.localizacao.cep,
@@ -198,23 +198,23 @@ export default function NewMaterialsEntrance() {
               </div>
             </div>
             <div className="flex w-full flex-col gap-1">
-              <h1 className="w-full text-start text-xs tracking-tight text-primary/50">DESTINATÁRIO</h1>
+              <h1 className="text-primary/50 w-full text-start text-xs tracking-tight">DESTINATÁRIO</h1>
               <div className="flex w-full flex-wrap items-center gap-4 gap-y-2">
                 <div className="flex items-center gap-1">
-                  <User className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">
+                  <User className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">
                     {infoHolder.destinatario.nome || 'NOME DO DESTINATÁRIO NÃO ENCONTRADO'}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <IdCard className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">
+                  <IdCard className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">
                     {infoHolder.destinatario.cpfCnpj || 'CNPJ DO DESTINATÁRIO NÃO ENCONTRADO'}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <MapPin className="min-w-4 min-h-4 h-4 w-4" />
-                  <p className="text-sm font-bold tracking-tight text-primary">
+                  <MapPin className="h-4 min-h-4 w-4 min-w-4" />
+                  <p className="text-primary text-sm font-bold tracking-tight">
                     {formatLocation({
                       location: {
                         cep: infoHolder.destinatario.localizacao.cep,
@@ -233,7 +233,7 @@ export default function NewMaterialsEntrance() {
               </div>
             </div>
             <div className="flex w-full flex-col gap-1">
-              <h1 className="w-full text-start text-xs tracking-tight text-primary/50">ITENS</h1>
+              <h1 className="text-primary/50 w-full text-start text-xs tracking-tight">ITENS</h1>
               <div className="flex w-full flex-col gap-3">
                 {infoHolder.itens.map((item, index) => (
                   <NewMaterialsEntranceItemCard key={item.index} item={item} updateItem={(changes) => updateItem({ index, changes })} />
@@ -274,19 +274,19 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
     return newPrice
   }
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border border-primary/50 p-2">
+    <div className="border-primary/50 flex w-full flex-col gap-2 rounded-lg border p-2">
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <h1 className="text-xs font-bold tracking-tight">{item.nome}</h1>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <DollarSign className="min-w-4 min-h-4 h-4 w-4" />
+              <DollarSign className="h-4 min-h-4 w-4 min-w-4" />
               <p className="text-sm font-medium tracking-tight">
                 {formatToMoney(item.valorUnitario)} / {item.unidade}
               </p>
             </div>
             <div className="flex items-center gap-1">
-              <Box className="min-w-4 min-h-4 h-4 w-4" />
+              <Box className="h-4 min-h-4 w-4 min-w-4" />
               <p className="text-sm font-medium tracking-tight">
                 {formatDecimalPlaces(item.quantidade)} {item.unidade}
               </p>
@@ -309,10 +309,10 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
           unvinculateMaterial={() => updateItem({ material: undefined })}
           renderSelectedMaterial={({ selectedMaterial, handleMaterialUnvinculation }) => (
             <div className="flex w-fit items-center gap-2 self-center rounded-lg px-2 py-1">
-              <h1 className="text-[0.65rem] font-medium tracking-tight text-primary">{selectedMaterial.nome}</h1>
+              <h1 className="text-primary text-[0.65rem] font-medium tracking-tight">{selectedMaterial.nome}</h1>
               <div className="flex items-center gap-1">
                 <Box width={15} height={15} />
-                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80">
+                <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
                   {selectedMaterial.qtde} {selectedMaterial.grandeza}
                 </h1>
               </div>
@@ -320,13 +320,13 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
                 type="button"
                 onClick={() => handleMaterialUnvinculation()}
                 className={cn(
-                  'group flex items-center justify-center rounded-full bg-green-600 p-1 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-500'
+                  'group hover:bg-primary/60 flex items-center justify-center rounded-full bg-green-600 p-1 text-xs font-medium text-white duration-300 ease-in-out'
                 )}
               >
-                <div className="block duration-300 animate-out group-hover:hidden">
+                <div className="animate-out block duration-300 group-hover:hidden">
                   <Link size={12} />
                 </div>
-                <div className="hidden duration-300 animate-in group-hover:block">
+                <div className="animate-in hidden duration-300 group-hover:block">
                   <X size={12} />
                 </div>
               </button>
@@ -346,7 +346,7 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
       </div>
       <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
         <div className={'flex w-full flex-col gap-1 lg:w-1/2'}>
-          <label htmlFor={'qty-price'} className={'font-sans text-[0.6rem] font-bold  tracking-tight text-[#353432]'}>
+          <label htmlFor={'qty-price'} className={'font-sans text-[0.6rem] font-bold tracking-tight text-[#353432]'}>
             QUANTIDADE DE ENTRADA
           </label>
           <input
@@ -355,11 +355,11 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
             onChange={(e) => updateItem({ quantidade: Number(e.target.value) })}
             name="qty-price"
             type="number"
-            className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+            className="border-primary/20 text-primary/60 rounded-lg border p-1 text-center text-[0.6rem] tracking-tight shadow-xs outline-hidden placeholder:italic"
           />
         </div>
         <div className={'flex w-full flex-col gap-1 lg:w-1/2'}>
-          <label htmlFor={'input-price'} className={'font-sans text-[0.6rem] font-bold  tracking-tight text-[#353432]'}>
+          <label htmlFor={'input-price'} className={'font-sans text-[0.6rem] font-bold tracking-tight text-[#353432]'}>
             PREÇO DE ENTRADA
           </label>
           <input
@@ -368,31 +368,31 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
             onChange={(e) => updateItem({ valorUnitario: Number(e.target.value) })}
             name="input-price"
             type="number"
-            className="rounded-lg border border-gray-300 p-1 text-center text-[0.6rem] tracking-tight text-gray-500 shadow-sm outline-none placeholder:italic"
+            className="border-primary/20 text-primary/60 rounded-lg border p-1 text-center text-[0.6rem] tracking-tight shadow-xs outline-hidden placeholder:italic"
           />
         </div>
       </div>
       {item.material ? (
-        <div className="mt-2 flex flex-col gap-2 rounded border border-primary/30 bg-secondary/50 p-3">
-          <h1 className="text-[0.65rem] font-bold leading-none tracking-tight text-gray-500 lg:text-xs">ATUALIZAÇÕES</h1>
+        <div className="border-primary/30 bg-secondary/50 mt-2 flex flex-col gap-2 rounded border p-3">
+          <h1 className="text-primary/60 text-[0.65rem] leading-none font-bold tracking-tight lg:text-xs">ATUALIZAÇÕES</h1>
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center gap-1">
-              <Box className="min-w-4 min-h-4 h-4 w-4" />
-              <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+              <Box className="h-4 min-h-4 w-4 min-w-4" />
+              <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                 {formatDecimalPlaces(item.material.quantidadeAtual)} {item.material.unidade || 'UN'}
               </p>
-              <MoveRight className="min-w-4 min-h-4 h-4 w-4" />
-              <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+              <MoveRight className="h-4 min-h-4 w-4 min-w-4" />
+              <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                 {formatDecimalPlaces(item.material.quantidadeAtual + item.quantidade)} {item.material.unidade || 'UN'}
               </p>
             </div>
             <div className="flex items-center gap-1">
               <DollarSign className="w" />
-              <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+              <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                 {formatToMoney(item.material.valorUnitarioAtual)}
               </p>
-              <MoveRight className="min-w-4 min-h-4 h-4 w-4" />
-              <p className="text-[0.65rem] font-medium leading-none tracking-tight text-gray-500 lg:text-xs">
+              <MoveRight className="h-4 min-h-4 w-4 min-w-4" />
+              <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                 {formatToMoney(
                   getNewPrice({
                     previousPrice: item.material.valorUnitarioAtual,
@@ -419,11 +419,11 @@ function NewMaterialsEntranceItemCard({ item, updateItem }: TNewMaterialsEntranc
 function UpdatesBlock() {
   const { data: logs, isLoading, isError, isSuccess } = useMaterialLogsByType({ type: 'ENTRADA' })
   return (
-    <div className="flex w-full flex-col gap-3 rounded border border-primary bg-[#fff] p-3 shadow-lg dark:bg-[#121212]">
-      <div className="flex items-center gap-1 self-center rounded-lg bg-primary px-2 py-1 text-primary-foreground">
+    <div className="border-primary bg-background flex w-full flex-col gap-3 rounded border p-3 shadow-lg dark:bg-[#121212]">
+      <div className="bg-primary text-primary-foreground flex items-center gap-1 self-center rounded-lg px-2 py-1">
         <h1 className="w-full text-center tracking-tight">ÚLTIMAS ALTERAÇÕES</h1>
       </div>
-      <div className="flex w-full grow flex-wrap items-start justify-around gap-2 overflow-y-auto overscroll-y-auto p-3 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-wrap items-start justify-around gap-2 overflow-y-auto overscroll-y-auto p-3">
         {isLoading ? <LoadingComponent /> : null}
         {isError ? <ErrorComponent msg={'Erro ao buscar registros de alteração.'} /> : null}
         {isSuccess ? logs.map((log) => <UpdateRegistriesCard key={log._id} registry={log} showMaterialName={true} />) : null}

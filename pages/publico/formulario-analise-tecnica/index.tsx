@@ -244,12 +244,12 @@ function TechnicalAnalysis({ projectJSON, sessionJSON, error }: TechnicalAnalysi
       {isSuccess ? (
         <div className="flex w-full grow flex-col items-center justify-center gap-2 text-green-500">
           <BsFillClipboardCheckFill color="rgb(34,197,94)" size={35} />
-          <p className="text-lg font-medium tracking-tight text-gray-500">Análise técnica requisitada com sucesso !</p>
+          <p className="text-primary/60 text-lg font-medium tracking-tight">Análise técnica requisitada com sucesso !</p>
         </div>
       ) : null}
       {!isPending && !isError && !isSuccess ? (
         <>
-          <div className="flex w-full items-center justify-center border-b border-gray-500 bg-black p-2">
+          <div className="border-primary/60 flex w-full items-center justify-center border-b bg-black p-2">
             <h1 className="text-center text-sm font-bold tracking-tight text-white">SOLICITAÇÃO DE ANÁLISE TÉCNICA P/ {project.nomeDoContrato}</h1>
           </div>
           <div className="flex w-full grow flex-col p-3">

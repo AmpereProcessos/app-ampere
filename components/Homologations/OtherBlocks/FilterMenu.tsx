@@ -19,7 +19,7 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="mt-2 flex w-full flex-col gap-2 rounded-md border border-gray-300 bg-[#fff] p-2"
+        className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
       >
         <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
         <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">

@@ -143,7 +143,7 @@ function MaterialsBlock({
                 // @ts-ignore
                 addMaterial({ id: materialHolder.id, qtde: materialHolder.qtde })
               }}
-              className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+              className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
             >
               ADICIONAR MATERIAL
             </button>
@@ -153,7 +153,7 @@ function MaterialsBlock({
 
       {formHolder.materiais.length > 0 ? (
         <div className="flex w-full flex-col gap-1">
-          <div className="flex w-full items-center gap-1 bg-gray-800">
+          <div className="bg-primary/80 flex w-full items-center gap-1">
             <h1 className="w-[40%] text-center font-bold text-white">MATERIAL</h1>
             <h1 className="w-[30%] text-center font-bold text-white">RETIRADO</h1>
             <h1 className="w-[30%] text-center font-bold text-white">DEVOLVIDO</h1>

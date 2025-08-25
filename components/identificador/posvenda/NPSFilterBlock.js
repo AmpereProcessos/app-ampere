@@ -162,8 +162,8 @@ function NPSFilterBlock({ filters, setFilters }) {
         <div
           onClick={() => setFilters({ ...filters, unCollected: !filters.unCollected })}
           className={`cursor-pointer p-2 ${
-            filters.unCollected ? 'bg-gray-500 text-white' : 'bg-transparent text-gray-500'
-          } w-fit rounded border border-gray-500 font-bold`}
+            filters.unCollected ? 'bg-primary/60 text-white' : 'text-primary/60 bg-transparent'
+          } border-primary/60 w-fit rounded border font-bold`}
         >
           NÃO COLETADOS
         </div>

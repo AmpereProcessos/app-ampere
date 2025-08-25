@@ -17,8 +17,8 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
   }
   const props = getInfo(Number(valorFaturaEnergia))
   return (
-    <div className={`flex grow flex-col bg-white font-raleway`}>
-      <div className="flex h-[82px] w-full items-center justify-center self-stretch bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
+    <div className={`bg-background font-raleway flex grow flex-col`}>
+      <div className="flex h-[82px] w-full items-center justify-center self-stretch bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="flex w-[80px] flex-col items-center justify-center">
           {/* <img src={Logo} style={{ width: "100%" }} /> */}
           <Image src={AmpereWhiteLogo} quality={100} height={50} width={50} alt="LOGO" style={{ objectFit: 'cover' }} />
@@ -55,23 +55,23 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
         </p>
 
         <div className="mt-6 flex flex-col items-center justify-center gap-4 lg:flex-row">
-          <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-            <h1 className="text-[16px] tracking-tight ">Geração mensal aproximada</h1>
+          <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+            <h1 className="text-[16px] tracking-tight">Geração mensal aproximada</h1>
             <div className="flex items-end justify-center gap-1">
-              <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+              <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                 {props.energiaGerada.toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </h1>
-              <p className="mb-1 flex flex-grow-0 items-end justify-center text-sm text-gray-700">KWh</p>
+              <p className="text-primary/70 mb-1 flex grow-0 items-end justify-center text-sm">KWh</p>
             </div>
           </div>
-          <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-            <h1 className="text-[16px] tracking-tight ">Investimento aproximado</h1>
+          <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+            <h1 className="text-[16px] tracking-tight">Investimento aproximado</h1>
             <div className="flex items-start justify-center gap-1">
-              <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-700">R$</p>
-              <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+              <p className="text-primary/70 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+              <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                 {props.valorInvestido.toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -79,10 +79,10 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
               </h1>
             </div>
           </div>
-          <div className="flex min-h-[65px] w-full flex-col rounded-lg border border-gray-500 bg-gray-200 p-2 shadow-md lg:w-1/3">
-            <h1 className="text-[16px] tracking-tight ">Placas necessárias ({props.potModulos} Wp)</h1>
+          <div className="border-primary/60 flex min-h-[65px] w-full flex-col rounded-lg border bg-gray-200 p-2 shadow-md lg:w-1/3">
+            <h1 className="text-[16px] tracking-tight">Placas necessárias ({props.potModulos} Wp)</h1>
             <div className="flex items-start justify-center gap-1">
-              <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+              <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                 {props.numModulos.toLocaleString('pt-br', {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
@@ -95,13 +95,13 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
         <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
           <div className="flex w-full flex-col lg:w-1/3">
             <h1 className="font-bold text-green-800">Financiamento bancário</h1>
-            <div className="flex min-h-[90px] w-full flex-col rounded-lg border border-gray-500 bg-[rgba(58,181,74,255)] p-2 shadow-md">
+            <div className="border-primary/60 flex min-h-[90px] w-full flex-col rounded-lg border bg-[rgba(58,181,74,255)] p-2 shadow-md">
               <h1 className="text-[16px] tracking-tight text-gray-200">
                 <strong className="text-white">60</strong> parcelas de:
               </h1>
               <div className="flex items-start justify-center gap-1">
-                <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-100">R$</p>
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black text-white lg:text-[40px]">
+                <p className="text-primary/20 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black text-white lg:text-[40px]">
                   {props.parcelaFinanciamento.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -112,13 +112,13 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           </div>
           <div className="flex w-full flex-col lg:w-1/3">
             <h1 className="font-bold text-green-800">Cartão de Crédito</h1>
-            <div className="flex min-h-[90px] w-full flex-col rounded-lg border border-gray-500 bg-[rgba(58,181,74,255)] p-2 shadow-md">
+            <div className="border-primary/60 flex min-h-[90px] w-full flex-col rounded-lg border bg-[rgba(58,181,74,255)] p-2 shadow-md">
               <h1 className="text-[16px] tracking-tight text-gray-200">
                 <strong className="text-white">12</strong> parcelas de:
               </h1>
               <div className="flex items-start justify-center gap-1">
-                <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-100">R$</p>
-                <h1 className="flex items-end justify-end font-raleway text-[35px] font-black text-white lg:text-[40px]">
+                <p className="text-primary/20 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+                <h1 className="font-raleway flex items-end justify-end text-[35px] font-black text-white lg:text-[40px]">
                   {props.parcelaCartao.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -129,19 +129,19 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           </div>
           <div className="flex w-full flex-col lg:w-1/3">
             <h1 className="font-bold">Observações</h1>
-            <div className="flex min-h-[90px] w-full flex-col items-center justify-center rounded-lg border border-gray-300 bg-gray-200 p-2 text-xs font-semibold shadow-md lg:text-sm">
+            <div className="border-primary/20 flex min-h-[90px] w-full flex-col items-center justify-center rounded-lg border bg-gray-200 p-2 text-xs font-semibold shadow-md lg:text-sm">
               *Todos os valores apresentados nessa simulação são estimativas, podendo, desse modo, variar de acordo com condições externas. Para
               valores reais, consultar com especialistas.*
             </div>
           </div>
         </div>
-        <h1 className="text-[35px] font-bold text-gray-500">Economia e Retorno</h1>
+        <h1 className="text-primary/60 text-[35px] font-bold">Economia e Retorno</h1>
         <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
-          <div className="flex min-h-[50px] w-full flex-col rounded-lg border  border-gray-500 bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
+          <div className="border-primary/60 flex min-h-[50px] w-full flex-col rounded-lg border bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
             <h1 className="text-[16px] tracking-tight">Sua economia ao longo do ano será de:</h1>
             <div className="flex items-start justify-center gap-2">
-              <p className="mt-2 flex flex-grow-0 items-end justify-center text-sm text-gray-700">R$</p>
-              <h1 className="flex items-end justify-end font-raleway text-[35px] font-black lg:text-[40px]">
+              <p className="text-primary/70 mt-2 flex grow-0 items-end justify-center text-sm">R$</p>
+              <h1 className="font-raleway flex items-end justify-end text-[35px] font-black lg:text-[40px]">
                 {props.economiaAnual.toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -150,7 +150,7 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
             </div>
           </div>
 
-          <div className="flex min-h-[50px] w-full flex-col rounded-lg border  border-gray-500 bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
+          <div className="border-primary/60 flex min-h-[50px] w-full flex-col rounded-lg border bg-gray-200 p-2 py-1 shadow-md lg:w-1/2">
             <h1 className="text-[16px] tracking-tight">Tempo de retorno do investimento</h1>
             <div className="flex items-end justify-center gap-2">
               <p className="font-raleway text-[35px] font-black lg:text-[40px]">{beutifyNumberAsString(props.anosCompletosPayback)}</p>
@@ -178,7 +178,7 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           </h1>
         </div>
       </div>
-      <div className="flex h-[175px] w-full flex-col items-center justify-center gap-2 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
+      <div className="flex h-[175px] w-full flex-col items-center justify-center gap-2 bg-linear-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] px-10">
         <div className="flex items-center justify-center gap-3">
           <div className="flex w-[80px] flex-col items-center justify-center">
             {/* <img src={Logo} style={{ width: "100%" }} /> */}
@@ -186,10 +186,10 @@ function ResultStage({ nome, valorFaturaEnergia, resetSimulation }: ResultStageP
           </div>
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-full leading-none">
-              <p className="m-0 inline text-[15px] font-normal leading-[1.2] text-white">A energia que move o mundo</p>
-              <p className="m-0 inline text-xs font-normal leading-[1.2] text-white"> </p>
-              <p className="m-0 inline text-[15px] font-black leading-[1.2] text-[rgba(254,173,65,1)]">vem de você</p>
-              <p className="m-0 inline text-xs font-normal leading-[1.2] text-white">!</p>
+              <p className="m-0 inline text-[15px] leading-[1.2] font-normal text-white">A energia que move o mundo</p>
+              <p className="m-0 inline text-xs leading-[1.2] font-normal text-white"> </p>
+              <p className="m-0 inline text-[15px] leading-[1.2] font-black text-[rgba(254,173,65,1)]">vem de você</p>
+              <p className="m-0 inline text-xs leading-[1.2] font-normal text-white">!</p>
             </div>
           </div>
         </div>

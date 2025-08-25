@@ -147,11 +147,11 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
     },
   })
   return (
-    <div id="new-warehouse-form" className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
-      <div className="fixed left-[50%] top-[50%] z-[100] h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff] p-[10px] lg:w-[60%]">
+    <div id="new-warehouse-form" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
+      <div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[60%]">
         <div className="flex h-full flex-col">
-          <div className="flex flex-col items-center justify-between border-b border-gray-300 px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-[#353432] dark:text-white ">NOVO FORMULÁRIO</h3>
+          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-xl font-bold text-[#353432] dark:text-white">NOVO FORMULÁRIO</h3>
             <button
               onClick={() => closeModal()}
               type="button"
@@ -160,10 +160,10 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
             {vinculateClient ? (
               <>
-                <p className=" w-full py-2 text-center font-medium tracking-tight text-gray-500">
+                <p className="text-primary/60 w-full py-2 text-center font-medium tracking-tight">
                   Se o formulário de saída de materiais possuir relação com algum cliente, vincule o cliente no menu abaixo. Se não,{' '}
                   <strong onClick={() => setVinculateClient(false)} className="cursor-pointer text-[#fead41]">
                     clique aqui
@@ -193,7 +193,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
               </>
             ) : (
               <>
-                <p className=" w-full py-2 text-center font-medium tracking-tight text-gray-500">
+                <p className="text-primary/60 w-full py-2 text-center font-medium tracking-tight">
                   Preencha um titulo para esse formulário de saída de materiais para futura identificação e filtro. Caso o formulário estiver
                   relacionado a um cliente,{' '}
                   <strong onClick={() => setVinculateClient(true)} className="cursor-pointer text-[#fead41]">
@@ -365,7 +365,7 @@ function NewForm({ session, closeModal, invalidateQuery }: NewFormProps) {
             <button
               disabled={isPending}
               onClick={() => handleCreation()}
-              className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
+              className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
             >
               CRIAR FORMULÁRIO
             </button>

@@ -81,28 +81,28 @@ function ExpensesWrapper({ userAuthorized, filters }) {
   return (
     <div className="flex w-full grow flex-col">
       <div className="flex w-full items-center justify-center gap-2">
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-green-500 text-center text-sm text-white">PAGO</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(expenses || []).paid)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(expenses || []).paid)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-[#15599a] text-center text-sm text-white">À PAGAR</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(expenses || []).toPay)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(expenses || []).toPay)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-[#fead41] text-center text-sm text-white">À PAGAR HOJE</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(expenses || []).toPayToday)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(expenses || []).toPayToday)}</h1>
           </div>
         </div>
-        <div className="flex min-h-[100px] w-[200px] flex-col rounded border border-gray-300 shadow-md">
+        <div className="border-primary/20 flex min-h-[100px] w-[200px] flex-col rounded border shadow-md">
           <div className="w-full rounded-tl rounded-tr bg-red-500 text-center text-sm text-white">EM ATRASO</div>
           <div className="flex w-full grow items-center justify-center">
-            <h1 className="text-center font-raleway font-bold">{formatToMoney(getStats(expenses || []).toPayOverdue)}</h1>
+            <h1 className="font-raleway text-center font-bold">{formatToMoney(getStats(expenses || []).toPayOverdue)}</h1>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ function ExpensesWrapper({ userAuthorized, filters }) {
           expenses.length > 0 ? (
             expenses.map((expense) => <ExpenseCard key={expense._id} expense={expense} openModal={handleOpenModal} />)
           ) : (
-            <p className="w-full text-center italic text-gray-500">Nenhuma despesa encontrada...</p>
+            <p className="text-primary/60 w-full text-center italic">Nenhuma despesa encontrada...</p>
           )
         ) : null}
         {modalExpense && modalIsOpen ? <ExpenseModal expense={modalExpense} closeModal={handleCloseModal} /> : null}

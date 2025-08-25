@@ -7,6 +7,7 @@ import { getHoursDiff } from '@/utils/methods/dates'
 import { appRouterApiHandler, type UnwrapAppRouterNextResponse } from '@/utils/api-app-router'
 import { getValidCurrentSessionUncached } from '@/lib/authentication/session'
 import createHttpError from 'http-errors'
+export const dynamic = 'force-dynamic'
 
 const GetPosVendaCallsStatisticsQueryParamsSchema = z.object({
   periodAfter: z

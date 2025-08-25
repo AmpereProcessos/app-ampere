@@ -7,6 +7,8 @@ import { getValidCurrentSessionUncached } from '@/lib/authentication/session'
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 const BulkUpdateProjectsComissionSchema = z.array(
   z.object({
     projectId: z.string({ required_error: 'ID do projeto é obrigatório.', invalid_type_error: 'ID do projeto é obrigatório.' }),

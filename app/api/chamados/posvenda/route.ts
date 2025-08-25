@@ -7,6 +7,9 @@ import { appRouterApiHandler, type UnwrapAppRouterNextResponse } from '@/utils/a
 import { PosVendaCallSchema, type TPosVendaCall, type TPosVendaCallDTO } from '@/utils/schemas/pos-venda-calls'
 import connectToCallsDatabase from '@/utils/services/mongodb/calls'
 import { getValidCurrentSessionUncached } from '@/lib/authentication/session'
+
+export const dynamic = 'force-dynamic'
+
 // GET Query Params Schemas
 const GetAllPosVendaCallsQueryParamsSchema = z.object({
   search: z

@@ -1,6 +1,8 @@
 import { deleteSessionTokenCookie, getCurrentSessionUncached } from '@/lib/authentication/session'
 import type { NextRequest } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { session, user } = await getCurrentSessionUncached()
   if (!session && !user) {

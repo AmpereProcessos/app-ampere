@@ -1,9 +1,9 @@
-import { getSession } from '../../../components/providers/SessionProvider'
 import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import connectToProjectsDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
 import createHttpError from 'http-errors'
 import { errorHandler } from '../../../utils/methods/handlers'
+import { apiHandler, validateAuthenticationWithSession } from '../../../utils/api'
 
 export default async function handler(req, res) {
   // Fetching up to date information about the materials
@@ -159,7 +159,7 @@ export default async function handler(req, res) {
       errorHandler(error, res)
     }
   } else if (req.method === 'POST') {
-    const { user } = await getSession({ req: req })
+    const { user } = await validateA({ req: req })
     try {
       let { changes, idProjeto, idFormulario, identificador, tag } = req.body
       // Validating existence of array of changes
@@ -198,7 +198,7 @@ export default async function handler(req, res) {
       errorHandler(error, res)
     }
   } else if (req.method === 'PUT') {
-    const { user } = await getSession({ req: req })
+    const { user } = await validateAuthenticationWithSession(req, res)
     const db = await connectToDatabase(process.env.DB_KEY)
     const collection = db.collection('material')
     const logCollection = db.collection('alteracoes')
@@ -229,7 +229,7 @@ export default async function handler(req, res) {
       errorHandler(error, res)
     }
   } else if (req.method === 'PATCH') {
-    const { user } = await getSession({ req: req })
+    const { user } = await validateAuthenticationWithSession(req, res)
     // Used for material entrance
     const { changes } = req.body
     try {

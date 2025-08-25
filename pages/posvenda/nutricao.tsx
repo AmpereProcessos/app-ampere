@@ -18,7 +18,7 @@ import { BsCalendar, BsCalendarPlus, BsFillMegaphoneFill } from 'react-icons/bs'
 import { MdDashboard } from 'react-icons/md'
 
 function MainNutritionPage() {
-  const { session, status } = useSession()
+  const { session, status } = useSession({ required: true })
   if (status !== 'authenticated') return <LoadingComponent />
 
   return <NutritionPage session={session} />

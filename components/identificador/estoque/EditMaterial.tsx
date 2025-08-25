@@ -22,6 +22,9 @@ import MaterialSuppliersBlock from './blocos/Suppliers'
 import Advanced from './blocos/Advanced'
 import { TMaterialDeletionDataOutput } from '@/pages/api/almoxarifado/materiais/exclusao'
 import type { TAuthSession } from '@/lib/authentication/types'
+import { TSimpleAttachment } from '@/utils/methods/uploading'
+import { uploadFile } from '@/utils/methods/firebase'
+import { formatAsSlug } from '@/utils/methods/formatting'
 
 const initialState: TMaterial = { nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() }
 
@@ -38,20 +41,35 @@ type EditMaterialProps = {
 function EditMaterial({ session, materialId, closeModal, callbacks }: EditMaterialProps) {
   const queryClient = useQueryClient()
   const isDesktop = useMediaQuery('(min-width: 768px)')
-  const { data: material, isLoading, isError, isSuccess, error } = useMaterialById({ id: materialId })
+  const { data: material, queryKey } = useMaterialById({ id: materialId })
   const { data: deletionData } = useMaterialDeletionData({ id: materialId })
   const [infoHolder, setInfoHolder] = useState<TMaterial>(initialState)
+  const [imageHolder, setImageHolder] = useState<TSimpleAttachment>({ file: null, previewUrl: null })
+
   function updateInfoHolder(changes: Partial<TMaterial>) {
     setInfoHolder((prev) => ({ ...prev, ...changes }))
   }
   function resetInfoHolder() {
     setInfoHolder(initialState)
   }
-
-  const { mutate: handleMaterialUpdate, isPending } = useMutation({
+  async function handleUpdateMaterial({ id, changes, file }: { id: string; changes: TMaterial; file: TSimpleAttachment['file'] }) {
+    let imageUrl = changes.imagemUrl
+    if (file) {
+      const { url } = await uploadFile({
+        vinculationId: changes.nome,
+        fileName: `${formatAsSlug(changes.nome)}-imagem-principal`,
+        file: file,
+        prefix: 'materiais',
+      })
+      imageUrl = url
+    }
+    return await updateMaterial({ id, changes: { ...changes, imagemUrl: imageUrl } })
+  }
+  const { mutate: handleMaterialUpdateMutation, isPending } = useMutation({
     mutationKey: ['update-material', materialId],
-    mutationFn: updateMaterial,
+    mutationFn: handleUpdateMaterial,
     onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: queryKey })
       if (callbacks?.onMutate) callbacks.onMutate()
     },
     onSuccess: async (data) => {
@@ -61,6 +79,7 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
       return toast.success(data)
     },
     onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKey })
       if (callbacks?.onSettled) callbacks.onSettled()
     },
     onError: (error) => {
@@ -91,13 +110,18 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
             updateInfoHolder={updateInfoHolder}
             deletionData={deletionData}
             closeModal={closeModal}
+            imageHolder={imageHolder}
+            setImageHolder={setImageHolder}
           />
         </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">FECHAR</Button>
           </DialogClose>
-          <LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
+          <LoadingButton
+            onClick={() => handleMaterialUpdateMutation({ id: materialId, changes: infoHolder, file: imageHolder.file })}
+            loading={isPending}
+          >
             {BUTTON_TEXT}
           </LoadingButton>
         </DialogFooter>
@@ -118,6 +142,8 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
             updateInfoHolder={updateInfoHolder}
             deletionData={deletionData}
             closeModal={closeModal}
+            imageHolder={imageHolder}
+            setImageHolder={setImageHolder}
           />
         </div>
         <DrawerFooter>
@@ -125,7 +151,10 @@ function EditMaterial({ session, materialId, closeModal, callbacks }: EditMateri
             <Button variant="outline">FECHAR</Button>
           </DrawerClose>
 
-          <LoadingButton onClick={() => handleMaterialUpdate({ id: materialId, changes: infoHolder })} loading={isPending}>
+          <LoadingButton
+            onClick={() => handleMaterialUpdateMutation({ id: materialId, changes: infoHolder, file: imageHolder.file })}
+            loading={isPending}
+          >
             {BUTTON_TEXT}
           </LoadingButton>
         </DrawerFooter>
@@ -143,11 +172,22 @@ type MaterialContentProps = {
   materialId: string
   deletionData?: TMaterialDeletionDataOutput['data']
   closeModal: () => void
+  imageHolder: TSimpleAttachment
+  setImageHolder: (image: TSimpleAttachment) => void
 }
-function MaterialContent({ session, infoHolder, updateInfoHolder, materialId, deletionData, closeModal }: MaterialContentProps) {
+function MaterialContent({
+  session,
+  infoHolder,
+  updateInfoHolder,
+  materialId,
+  deletionData,
+  closeModal,
+  imageHolder,
+  setImageHolder,
+}: MaterialContentProps) {
   return (
     <div className="flex h-full flex-col gap-3 px-4">
-      <MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+      <MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} imageHolder={imageHolder} setImageHolder={setImageHolder} />
       <QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
       <MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
       <UpdateRegistriesBlock materialId={materialId} />

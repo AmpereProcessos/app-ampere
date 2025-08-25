@@ -114,10 +114,13 @@ async function fetchMaterialById({ id }: { id: string }) {
   }
 }
 export function useMaterialById({ id }: { id: string }) {
-  return useQuery({
+  return {
+    ...useQuery({
+      queryKey: ['material-by-id', id],
+      queryFn: async () => await fetchMaterialById({ id }),
+    }),
     queryKey: ['material-by-id', id],
-    queryFn: async () => await fetchMaterialById({ id }),
-  })
+  }
 }
 export function useMaterialsWithFilters(enabled: boolean, filters: any) {
   const { search, qtyLessThan } = filters

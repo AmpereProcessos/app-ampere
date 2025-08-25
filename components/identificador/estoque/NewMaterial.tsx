@@ -18,6 +18,9 @@ import MaterialGeneralBlock from './blocos/General'
 import QuantityConfigBlock from './blocos/QuantityConfig'
 import MaterialSuppliersBlock from './blocos/Suppliers'
 import type { TAuthSession } from '@/lib/authentication/types'
+import { TSimpleAttachment } from '@/utils/methods/uploading'
+import { formatAsSlug } from '@/utils/methods/formatting'
+import { uploadFile } from '@/utils/methods/firebase'
 
 const initialState: TMaterial = { nome: '', nomeTecnico: '', preco: 0, qtde: 0, dataInsercao: new Date().toISOString() }
 type NewMaterialProps = {
@@ -37,12 +40,28 @@ function NewMaterial({ session, closeModal, callbacks }: NewMaterialProps) {
   function updateInfoHolder(changes: Partial<TMaterial>) {
     setInfoHolder((prev) => ({ ...prev, ...changes }))
   }
+  const [imageHolder, setImageHolder] = useState<TSimpleAttachment>({ file: null, previewUrl: null })
+
   function resetInfoHolder() {
     setInfoHolder(initialState)
   }
-  const { mutate: handleMaterialCreation, isPending } = useMutation({
+
+  async function handleMaterialCreation({ info, file }: { info: TMaterial; file: TSimpleAttachment['file'] }) {
+    let imageUrl = info.imagemUrl
+    if (file) {
+      const { url } = await uploadFile({
+        vinculationId: info.nome,
+        fileName: `${formatAsSlug(info.nome)}-imagem-principal`,
+        file: file,
+        prefix: 'materiais',
+      })
+      imageUrl = url
+    }
+    return await createMaterial({ info: { ...info, imagemUrl: imageUrl } })
+  }
+  const { mutate: handleMaterialCreationMutation, isPending } = useMutation({
     mutationKey: ['create-material'],
-    mutationFn: createMaterial,
+    mutationFn: handleMaterialCreation,
     onMutate: async () => {
       if (callbacks?.onMutate) callbacks.onMutate()
     },
@@ -73,13 +92,19 @@ function NewMaterial({ session, closeModal, callbacks }: NewMaterialProps) {
           <DialogDescription>{DESCRIPTION}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-auto">
-          <MaterialContent session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+          <MaterialContent
+            session={session}
+            infoHolder={infoHolder}
+            updateInfoHolder={updateInfoHolder}
+            imageHolder={imageHolder}
+            setImageHolder={setImageHolder}
+          />
         </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">FECHAR</Button>
           </DialogClose>
-          <LoadingButton onClick={() => handleMaterialCreation({ info: infoHolder })} loading={isPending}>
+          <LoadingButton onClick={() => handleMaterialCreationMutation({ info: infoHolder, file: imageHolder.file })} loading={isPending}>
             {BUTTON_TEXT}
           </LoadingButton>
         </DialogFooter>
@@ -93,14 +118,20 @@ function NewMaterial({ session, closeModal, callbacks }: NewMaterialProps) {
           <DrawerDescription>{DESCRIPTION}</DrawerDescription>
         </DrawerHeader>
         <div className="flex-1 overflow-auto">
-          <MaterialContent session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+          <MaterialContent
+            session={session}
+            infoHolder={infoHolder}
+            updateInfoHolder={updateInfoHolder}
+            imageHolder={imageHolder}
+            setImageHolder={setImageHolder}
+          />
         </div>
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline">FECHAR</Button>
           </DrawerClose>
 
-          <LoadingButton onClick={() => handleMaterialCreation({ info: infoHolder })} loading={isPending}>
+          <LoadingButton onClick={() => handleMaterialCreationMutation({ info: infoHolder, file: imageHolder.file })} loading={isPending}>
             {BUTTON_TEXT}
           </LoadingButton>
         </DrawerFooter>
@@ -115,11 +146,13 @@ type MaterialContentProps = {
   session: TAuthSession
   infoHolder: TMaterial
   updateInfoHolder: (changes: Partial<TMaterial>) => void
+  imageHolder: TSimpleAttachment
+  setImageHolder: (image: TSimpleAttachment) => void
 }
-function MaterialContent({ session, infoHolder, updateInfoHolder }: MaterialContentProps) {
+function MaterialContent({ session, infoHolder, updateInfoHolder, imageHolder, setImageHolder }: MaterialContentProps) {
   return (
     <div className="flex h-full flex-col gap-3 px-4">
-      <MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+      <MaterialGeneralBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} imageHolder={imageHolder} setImageHolder={setImageHolder} />
       <MaterialSuppliersBlock session={session} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
       <QuantityConfigBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
     </div>

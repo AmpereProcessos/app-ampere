@@ -32,6 +32,7 @@ import CheckboxInput from '@/components/inputs/Checkbox'
 import NewPurchaseControlSimplified from '@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified'
 import { useQueryClient } from '@tanstack/react-query'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import Image from 'next/image'
 
 function StockPage() {
   const { session, status } = useSession({ required: true })
@@ -180,95 +181,107 @@ type MaterialCardProps = {
 }
 function MaterialCard({ material, handleClick }: MaterialCardProps) {
   return (
-    <div className="flex w-full flex-col gap-2 rounded border border-primary/50 p-3">
-      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
-          <div className="flex items-center gap-1">
-            <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.65rem] font-bold italic text-primary/80">
-              <Code size={12} />
-              {material.sku}
+    <div className="flex w-full flex-col gap-3 rounded border border-primary bg-[#fff] p-2 shadow-sm dark:bg-[#121212] sm:flex-row">
+      <div className="flex items-center justify-center">
+        <div className="min-w-20 min-h-20 max-w-20 relative h-20 max-h-20 w-20 overflow-hidden rounded-lg">
+          {material.imagemUrl ? (
+            <Image src={material.imagemUrl} alt={material.nome} fill={true} objectFit="cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-primary/50 text-primary-foreground">
+              <Box className="h-6 w-6" />
             </div>
-            <h1 className="text-sm font-bold tracking-tight">{material.nome}</h1>
-          </div>
-          {material.localizacao ? (
-            <div className="flex items-center gap-1">
-              <MapPin className="min-w-4 min-h-4 h-4 w-4" />
-              <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
-              <h1 className="py-0.5 text-center text-xs font-bold  text-primary">{material.localizacao}</h1>
-            </div>
-          ) : null}
-          {material.qtdeMinima ? (
-            <div className="flex items-center gap-1">
-              <PackageMinus className="min-w-4 min-h-4 h-4 w-4" />
-              <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">QTDE MÍNIMA</h1>
-              <h1 className="py-0.5 text-center text-xs font-bold  text-primary">{formatDecimalPlaces(material.qtdeMinima)}</h1>
-            </div>
-          ) : null}
-          {material.qtdeMaxima ? (
-            <div className="flex items-center gap-1">
-              <PackagePlus className="min-w-4 min-h-4 h-4 w-4" />
-              <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">QTDE MÁXIMA</h1>
-              <h1 className="py-0.5 text-center text-xs font-bold text-primary">{formatDecimalPlaces(material.qtdeMaxima)}</h1>
-            </div>
-          ) : null}
-          <div className="flex grow flex-wrap items-center justify-start gap-2">
-            <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">FORNECEDORES</h1>
-            {material.fornecedores && material.fornecedores.length > 0 ? (
-              material.fornecedores.map((fornecedor, index) => (
-                <div
-                  key={`${fornecedor.id}-${index}`}
-                  style={{
-                    border: '1px solid',
-                    borderColor: fornecedor.cores.primaria,
-                    color: fornecedor.cores.primaria,
-                    backgroundColor: fornecedor.cores.secundaria,
-                  }}
-                  className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
-                >
-                  <Truck className="min-w-3 min-h-3 h-3 w-3" />
-                  <h1 className="text-[0.55rem] font-bold tracking-tight">{fornecedor.nome}</h1>
-                </div>
-              ))
-            ) : (
-              <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NENHUM FORNECEDOR DEFINIDO</h1>
-            )}
-          </div>
-        </div>
-        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
-          <div className="flex items-center gap-2">
-            <div
-              className={cn('flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-primary-foreground', {
-                'bg-red-500 text-white':
-                  (material.qtdeMinima && material.qtde <= material.qtdeMinima) || (material.qtdeMaxima && material.qtde >= material.qtdeMaxima),
-              })}
-            >
-              <Box className="h-4 w-4" />
-              <h3 className="text-xs font-bold">
-                {formatDecimalPlaces(material.qtde)} {material.grandeza || 'UN'}
-              </h3>
-              {material.qtdeMinima && material.qtde <= material.qtdeMinima ? <MoveDownRight className="h-4 w-4" /> : null}
-              {material.qtdeMaxima && material.qtde >= material.qtdeMaxima ? <MoveUpRight className="h-4 w-4" /> : null}
-            </div>
-          </div>
+          )}
         </div>
       </div>
-
-      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1">
-            <BsCalendarPlus />
-            <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(material.dataInsercao, true)}</p>
+      <div className="flex h-full grow flex-col justify-between gap-2">
+        <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
+          <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">
+            <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 rounded-lg bg-secondary px-2 py-0.5 text-center text-[0.65rem] font-bold italic text-primary/80">
+                <Code size={12} />
+                {material.sku || 'N/A'}
+              </div>
+              <h1 className="text-sm font-bold tracking-tight">{material.nome}</h1>
+            </div>
+            {material.localizacao ? (
+              <div className="flex items-center gap-1">
+                <MapPin className="min-w-4 min-h-4 h-4 w-4" />
+                <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">LOCALIZAÇÃO</h1>
+                <h1 className="py-0.5 text-center text-xs font-bold  text-primary">{material.localizacao}</h1>
+              </div>
+            ) : null}
+            {material.qtdeMinima ? (
+              <div className="flex items-center gap-1">
+                <PackageMinus className="min-w-4 min-h-4 h-4 w-4" />
+                <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">QTDE MÍNIMA</h1>
+                <h1 className="py-0.5 text-center text-xs font-bold  text-primary">{formatDecimalPlaces(material.qtdeMinima)}</h1>
+              </div>
+            ) : null}
+            {material.qtdeMaxima ? (
+              <div className="flex items-center gap-1">
+                <PackagePlus className="min-w-4 min-h-4 h-4 w-4" />
+                <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">QTDE MÁXIMA</h1>
+                <h1 className="py-0.5 text-center text-xs font-bold text-primary">{formatDecimalPlaces(material.qtdeMaxima)}</h1>
+              </div>
+            ) : null}
+            <div className="flex grow flex-wrap items-center justify-start gap-2">
+              <h1 className="py-0.5 text-center text-xs font-medium italic text-primary/80">FORNECEDORES</h1>
+              {material.fornecedores && material.fornecedores.length > 0 ? (
+                material.fornecedores.map((fornecedor, index) => (
+                  <div
+                    key={`${fornecedor.id}-${index}`}
+                    style={{
+                      border: '1px solid',
+                      borderColor: fornecedor.cores.primaria,
+                      color: fornecedor.cores.primaria,
+                      backgroundColor: fornecedor.cores.secundaria,
+                    }}
+                    className={cn('flex items-center gap-1 rounded px-2 py-0.5')}
+                  >
+                    <Truck className="min-w-3 min-h-3 h-3 w-3" />
+                    <h1 className="text-[0.55rem] font-bold tracking-tight">{fornecedor.nome}</h1>
+                  </div>
+                ))
+              ) : (
+                <h1 className="py-0.5 text-center text-[0.6rem] font-medium italic text-primary/80 ">NENHUM FORNECEDOR DEFINIDO</h1>
+              )}
+            </div>
+          </div>
+          <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
+            <div className="flex items-center gap-2">
+              <div
+                className={cn('flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-primary-foreground', {
+                  'bg-red-500 text-white':
+                    (material.qtdeMinima && material.qtde <= material.qtdeMinima) || (material.qtdeMaxima && material.qtde >= material.qtdeMaxima),
+                })}
+              >
+                <Box className="h-4 w-4" />
+                <h3 className="text-xs font-bold">
+                  {formatDecimalPlaces(material.qtde)} {material.grandeza || 'UN'}
+                </h3>
+                {material.qtdeMinima && material.qtde <= material.qtdeMinima ? <MoveDownRight className="h-4 w-4" /> : null}
+                {material.qtdeMaxima && material.qtde >= material.qtdeMaxima ? <MoveUpRight className="h-4 w-4" /> : null}
+              </div>
+            </div>
           </div>
         </div>
-        <Button
-          variant={'ghost'}
-          size="fit"
-          onClick={() => handleClick(material._id)}
-          className="flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
-        >
-          <Edit className="min-w-3 min-h-3 h-3 w-3" />
-          <p className="text-[0.65rem] font-medium">EDITAR</p>
-        </Button>
+        <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1">
+              <BsCalendarPlus />
+              <p className="text-[0.65rem] font-medium text-primary/80">{formatDateAsLocale(material.dataInsercao, true)}</p>
+            </div>
+          </div>
+          <Button
+            variant={'ghost'}
+            size="fit"
+            onClick={() => handleClick(material._id)}
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
+          >
+            <Edit className="min-w-3 min-h-3 h-3 w-3" />
+            <p className="text-[0.65rem] font-medium">EDITAR</p>
+          </Button>
+        </div>
       </div>
     </div>
   )

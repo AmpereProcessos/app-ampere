@@ -58,7 +58,7 @@ function Header({ toggleSidebar }: HeaderProps) {
         </div>
       </div>
       <div className="flex w-1/3 items-center justify-end gap-2">
-        <Button variant="ghost" onClick={() => setConfigDropDown((prev) => !prev)} size={'fit'} className="p-2">
+        <Button variant="ghost" onClick={() => setConfigDropDown((prev) => !prev)} size={'fit'} className="p-1 lg:p-2">
           <Avatar className="h-6 w-6 lg:h-8 lg:w-8">
             <AvatarImage src={session.user.avatar_url ?? undefined} />
             <AvatarFallback className="text-xs">{formatNameAsInitials(session.user?.nome || 'USER')}</AvatarFallback>
@@ -68,7 +68,7 @@ function Header({ toggleSidebar }: HeaderProps) {
         <Notifications session={session} />
         <HeaderActivitesBlock session={session} />
         {session?.user.permissoes.gestao.visualizarResultados ? (
-          <Button variant="ghost" asChild size={'fit'} className="hidden p-2 lg:flex">
+          <Button variant="ghost" asChild size={'fit'} className="hidden p-1 lg:flex lg:p-2">
             <Link href="/admin/relatorio">
               <AreaChart className="text-primary h-4 w-4 lg:h-5 lg:w-5" />
             </Link>
@@ -76,7 +76,7 @@ function Header({ toggleSidebar }: HeaderProps) {
         ) : null}
         <ThemeToggle />
 
-        <Button variant="ghost" asChild size={'fit'} className="p-2">
+        <Button variant="ghost" asChild size={'fit'} className="p-1 lg:p-2">
           <Link href="/api/auth/logout">
             <BiLogIn className="text-primary h-4 w-4 lg:h-5 lg:w-5" />
           </Link>

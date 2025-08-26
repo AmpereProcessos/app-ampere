@@ -16,7 +16,7 @@ function ProvidersWrapper({ children }: { children: React.ReactNode }) {
     <>
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <div className="font-Inter bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen">
               <Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
               <div className="flex min-h-full grow">

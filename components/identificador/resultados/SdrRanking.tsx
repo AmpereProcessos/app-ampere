@@ -5,116 +5,18 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import { cn } from '@/lib/utils'
 import { TGetSalesRankingOutput } from '@/pages/api/stats/sales-ranking'
-import { formatDecimalPlaces } from '@/utils/constants'
 import { formatNameAsInitials } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
-import { useSalesRanking } from '@/utils/methods/query/stats'
-import { CirclePlus, Zap } from 'lucide-react'
-import { FaRankingStar } from 'react-icons/fa6'
+import { useSDRRanking } from '@/utils/methods/query/stats'
+import { CheckCircle, CirclePlus, Send } from 'lucide-react'
 
-// export default function SalesRanking() {
-//   const { data, isLoading, isSuccess, isError, error, queryParams, updateQueryParams } = useSalesRanking({})
-
-//   const PERIOD_NAMING_MAP = {
-//     'current-month': 'RANKING DO MÊS',
-//     'current-semester': 'RANKING DO SEMESTRE',
-//     'current-year': 'RANKING DO ANO',
-//   }
-//   return (
-//     <div className="bg-background border-primary/20 flex w-full flex-col gap-2 border p-4 shadow-xl">
-//       <div className="flex w-full items-center justify-center gap-2">
-//         <FaRankingStar />
-//         <h1 className="text-base font-bold uppercase">{PERIOD_NAMING_MAP[queryParams.type]}</h1>
-//       </div>
-//       <div className="flex w-full justify-center gap-2">
-//         <div className="flex w-full items-center justify-center lg:w-[70%]">
-//           <div className="flex w-full items-center justify-center">
-//             <div className="mb-2 flex w-full flex-col items-center">
-//               <div className="flex h-fit w-full items-end justify-center gap-4 p-0 lg:h-[425px] lg:w-[1200px] lg:gap-10 lg:p-6">
-//                 <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-//                   <div className="flex w-full flex-col items-center justify-center gap-2">
-//                     <Avatar className="h-10 min-h-10 w-10 min-w-10">
-//                       <AvatarImage src={data?.fourth?.avatar} alt={data?.fourth?.name} />
-//                       <AvatarFallback>{data?.fourth?.name ? formatNameAsInitials(data?.fourth?.name) : 'NA'}</AvatarFallback>
-//                     </Avatar>
-//                     <h1 className="text-primary/80 text-center text-xs font-bold lg:text-sm">{data?.fourth?.name}</h1>
-//                   </div>
-
-//                   <div className="bg-primary/60 flex h-[30%] w-full items-center justify-center text-3xl font-bold text-white">4º</div>
-//                 </div>
-//                 <div className="flex h-full w-1/3 flex-col justify-end gap-2 lg:w-1/5">
-//                   <div className="flex w-full flex-col items-center justify-center gap-2">
-//                     <Avatar className="h-10 min-h-10 w-10 min-w-10">
-//                       <AvatarImage src={data?.second?.avatar} alt={data?.second?.name} />
-//                       <AvatarFallback>{data?.second?.name ? formatNameAsInitials(data?.second?.name) : 'NA'}</AvatarFallback>
-//                     </Avatar>
-//                     <h1 className="text-primary/80 text-center text-xs font-bold lg:text-sm">{data?.second?.name}</h1>
-//                   </div>
-
-//                   <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
-//                 </div>
-//                 <div className="flex h-full w-1/3 flex-col justify-end gap-2 lg:w-1/5">
-//                   <div className="flex w-full flex-col items-center justify-center gap-2">
-//                     <Avatar className="h-10 min-h-10 w-10 min-w-10">
-//                       <AvatarImage src={data?.first?.avatar} alt={data?.first?.name} />
-//                       <AvatarFallback>{data?.first?.name ? formatNameAsInitials(data?.first?.name) : 'NA'}</AvatarFallback>
-//                     </Avatar>
-//                     <h1 className="text-primary/80 text-center text-xs font-bold lg:text-sm">{data?.first?.name}</h1>
-//                   </div>
-
-//                   <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
-//                 </div>
-//                 <div className="flex h-full w-1/3 flex-col justify-end gap-2 lg:w-1/5">
-//                   <div className="flex w-full flex-col items-center justify-center gap-2">
-//                     <Avatar className="h-10 min-h-10 w-10 min-w-10">
-//                       <AvatarImage src={data?.third?.avatar} alt={data?.third?.name} />
-//                       <AvatarFallback>{data?.third?.name ? formatNameAsInitials(data?.third?.name) : 'NA'}</AvatarFallback>
-//                     </Avatar>
-//                     <h1 className="text-primary/80 text-center text-xs font-bold lg:text-sm">{data?.third?.name}</h1>
-//                   </div>
-
-//                   <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
-//                 </div>
-//                 <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
-//                   <div className="flex w-full flex-col items-center justify-center gap-2">
-//                     <Avatar className="h-10 min-h-10 w-10 min-w-10">
-//                       <AvatarImage src={data?.fifth?.avatar} alt={data?.fifth?.name} />
-//                       <AvatarFallback>{data?.fifth?.name ? formatNameAsInitials(data?.fifth?.name) : 'NA'}</AvatarFallback>
-//                     </Avatar>
-//                     <h1 className="text-primary/80 text-center text-xs font-bold lg:text-sm">{data?.fifth?.name}</h1>
-//                   </div>
-
-//                   <div className="bg-primary/60 flex h-[15%] w-full items-center justify-center text-3xl font-bold text-white">5º</div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="flex w-full flex-wrap items-center justify-end gap-2">
-//         <h1 className="text-primary/60 text-sm font-bold uppercase">OUTROS</h1>
-//         <div className="flex flex-wrap items-center justify-end gap-2 overflow-hidden">
-//           {data?.others
-//             .sort((a, b) => a.index - b.index)
-//             .map((item, index) => (
-//               <Avatar key={`${item.name}-${index}`} className="h-8 min-h-8 w-8 min-w-8">
-//                 <AvatarImage src={item.avatar} alt={item.name} />
-//                 <AvatarFallback>{item.name ? formatNameAsInitials(item.name) : 'NA'}</AvatarFallback>
-//               </Avatar>
-//             ))}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-export default function ModernSalesRanking() {
-  const { data, isLoading, isSuccess, isError, error, queryParams, updateQueryParams } = useSalesRanking({})
+export default function ModernSDRRanking() {
+  const { data, isLoading, isSuccess, isError, error, queryParams, updateQueryParams } = useSDRRanking({})
 
   const PERIOD_NAMING_MAP = {
-    'current-month': 'RANKING DE VENDEDORES DO MÊS',
-    'current-semester': 'RANKING DE VENDEDORES DO SEMESTRE',
-    'current-year': 'RANKING DE VENDEDORES DO ANO',
+    'current-month': 'RANKING DE SDRS DO MÊS',
+    'current-semester': 'RANKING DE SDRS DO SEMESTRE',
+    'current-year': 'RANKING DE SDRS DO ANO',
   }
 
   return (
@@ -125,16 +27,16 @@ export default function ModernSalesRanking() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant={queryParams.rankBy === 'sales-total-power' ? 'default' : 'ghost'}
+                variant={queryParams.rankBy === 'opportunities-send-qty' ? 'default' : 'ghost'}
                 size="fit"
                 className="rounded-lg p-2"
-                onClick={() => updateQueryParams({ rankBy: 'sales-total-power' })}
+                onClick={() => updateQueryParams({ rankBy: 'opportunities-send-qty' })}
               >
-                <Zap className="h-3 min-h-3 w-3 min-w-3 lg:h-4 lg:min-h-4 lg:w-4 lg:min-w-4" />
+                <Send className="h-3 min-h-3 w-3 min-w-3 lg:h-4 lg:min-h-4 lg:w-4 lg:min-w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>POTÊNCIA VENDIDA</p>
+              <p>PROJETOS ENVIADOS</p>
             </TooltipContent>
           </Tooltip>
 
@@ -144,16 +46,31 @@ export default function ModernSalesRanking() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant={queryParams.rankBy === 'sales-total-qty' ? 'default' : 'ghost'}
+                variant={queryParams.rankBy === 'opportunities-won-qty' ? 'default' : 'ghost'}
                 size="fit"
                 className="rounded-lg p-2"
-                onClick={() => updateQueryParams({ rankBy: 'sales-total-qty' })}
+                onClick={() => updateQueryParams({ rankBy: 'opportunities-won-qty' })}
+              >
+                <CheckCircle className="h-3 min-h-3 w-3 min-w-3 lg:h-4 lg:min-h-4 lg:w-4 lg:min-w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>PROJETOS GANHOS</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={queryParams.rankBy === 'opportunities-created-qty' ? 'default' : 'ghost'}
+                size="fit"
+                className="rounded-lg p-2"
+                onClick={() => updateQueryParams({ rankBy: 'opportunities-created-qty' })}
               >
                 <CirclePlus className="h-3 min-h-3 w-3 min-w-3 lg:h-4 lg:min-h-4 lg:w-4 lg:min-w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>PROJETOS VENDIDOS</p>
+              <p>PROJETOS CRIADOS</p>
             </TooltipContent>
           </Tooltip>
         </div>

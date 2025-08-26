@@ -1,62 +1,78 @@
 import TextInput from '@/components/inputs/Text'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import { cn } from '@/lib/utils'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getErrorMessage } from '@/utils/methods/handlers'
 import { useClientsBirthdays } from '@/utils/methods/query/clients'
+import { TBirthdayRecord } from '@/utils/schemas/stats'
+import { Cake, Phone } from 'lucide-react'
 import React from 'react'
 import { BsFillCalendarEventFill } from 'react-icons/bs'
 import { FaBirthdayCake } from 'react-icons/fa'
 
 function ClientsBirthdays() {
-  const { data: birthdays, isLoading, isError, isSuccess, filters, setFilters } = useClientsBirthdays()
-  return (
-    <div className="bg-background border-primary/20 mt-4 flex grow flex-col border p-4 shadow-xl">
-      <div className="flex w-full flex-col items-center justify-between lg:flex-row">
-        <h1 className="text-primary/80 text-[18px] uppercase">ANIVERSARIANTES DO MÊS</h1>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full lg:w-[250px]">
-            <TextInput
-              label="NOME"
-              showLabel={false}
-              placeholder="Pesquise pelo nome do contrato..."
-              value={filters.name}
-              handleChange={(value) => setFilters((prev) => ({ ...prev, name: value }))}
-              width="100%"
-            />
-          </div>
+  const { data: birthdays, isLoading, isError, isSuccess, error, filters, setFilters } = useClientsBirthdays()
 
-          <button
-            onClick={() => setFilters((prev) => ({ ...prev, isToday: !prev.isToday }))}
-            className={`${filters.isToday ? 'bg-[#fead41] text-white' : 'bg-transparent text-[#fead41]'} h-[49px] w-full rounded-md border border-[#fead41] p-2 font-bold lg:w-fit`}
-          >
-            ANIVERSARIANDO HOJE
-          </button>
+  return (
+    <div className="bg-card border-primary/20 flex h-full min-h-fit w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xs font-medium tracking-tight uppercase">ANIVERSARIANTES DO MÊS</h1>
+        <div className="flex items-center gap-2">
+          <Cake className="h-4 min-h-4 w-4 min-w-4" />
         </div>
       </div>
-      <div className="mt-2 flex w-full grow flex-wrap justify-center gap-y-2 lg:justify-between">
-        {isLoading ? <LoadingPage /> : null}
-        {isError ? <ErrorComponent msg={'Erro ao carregar aniversariantes do mês.'} /> : null}
-        {isSuccess
-          ? birthdays.map((birthday, index) => (
-              <div
-                key={index}
-                className="bg-background border-primary/20 flex w-full gap-2 rounded-md border p-3 text-center text-xs shadow-xs lg:w-[450px]"
-              >
-                <div className="flex w-full items-center justify-between">
-                  <h1 className="h-fit leading-none font-bold tracking-tight">{birthday.nome}</h1>
-                  {new Date(birthday.dataNascimento).getDate() == new Date().getDate() ? <FaBirthdayCake color="DA0C81" size={20} /> : null}
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <BsFillCalendarEventFill color="rgb(107,114,128)" />
-                  <p className="font-bold text-[#DA0C81]">
-                    {birthday.dataNascimento != undefined && new Date(birthday.dataNascimento).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            ))
-          : null}
+      <div className="flex w-full flex-1 items-center justify-center gap-4">
+        {isLoading ? <h3 className="text-muted-foreground animate-pulse">Carregando aniversariantes...</h3> : null}
+        {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+        {isSuccess ? <ClientsBirthdaysContent birthdays={birthdays} /> : null}
       </div>
     </div>
   )
 }
 
 export default ClientsBirthdays
+
+function ClientsBirthdaysContent({ birthdays }: { birthdays: TBirthdayRecord[] }) {
+  const currentDay = new Date().getDate()
+  const currentMonth = new Date().getMonth() + 1
+  const todaysBirthdays = birthdays.filter((birthday) => {
+    const birthdayDay = new Date(birthday.dataNascimento).getDate()
+    const birthdayMonth = new Date(birthday.dataNascimento).getMonth() + 1
+    return birthdayDay === currentDay && birthdayMonth === currentMonth
+  })
+
+  const otherBirthdays = birthdays.filter((birthday) => {
+    const birthdayDay = new Date(birthday.dataNascimento).getDate()
+    const birthdayMonth = new Date(birthday.dataNascimento).getMonth() + 1
+    return birthdayDay !== currentDay && birthdayMonth !== currentMonth
+  })
+  return (
+    <div className="flex w-full flex-col items-center gap-2">
+      <h2 className="text-primary w-full text-start text-[0.65rem] font-bold uppercase lg:text-xs">ANIVERSARIANTES DO DIA</h2>
+      {todaysBirthdays?.map((birthday, index) => (
+        <ClientsBirthdaysCard key={index} birthday={birthday} highlight />
+      ))}
+      <h2 className="text-primary w-full text-start text-[0.65rem] font-bold uppercase lg:text-xs">OUTROS</h2>
+      {otherBirthdays?.map((birthday, index) => (
+        <ClientsBirthdaysCard key={index} birthday={birthday} />
+      ))}
+    </div>
+  )
+}
+
+function ClientsBirthdaysCard({ birthday, highlight }: { birthday: TBirthdayRecord; highlight?: boolean }) {
+  return (
+    <div className={cn('flex w-full items-center justify-between gap-3 rounded p-2', highlight && 'border border-[#15599a] dark:border-[#fead41]')}>
+      <div className="flex items-center gap-2">
+        <h1 className="text-primary text-[0.65rem] font-semibold tracking-tight lg:text-xs">{birthday.nome}</h1>
+        <div className="flex items-center gap-1">
+          <Phone className="h-3 min-h-3 w-3 min-w-3" />
+          <h1 className="text-primary text-[0.5rem] font-semibold tracking-tight lg:text-[0.65rem]">{birthday.telefone}</h1>
+        </div>
+      </div>
+
+      <h1 className="text-primary text-[0.65rem] font-semibold tracking-tight lg:text-xs">{formatDateAsLocale(birthday.dataNascimento)}</h1>
+    </div>
+  )
+}

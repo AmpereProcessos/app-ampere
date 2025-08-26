@@ -1,179 +1,187 @@
-import { apiHandler } from "@/utils/api";
-import type { TUser } from "@/utils/schemas/crm/user.schema";
-import type { TProject } from "@/utils/schemas/projects";
-import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
-import connectToDatabase from "@/utils/services/mongodb/projects";
-import type { NextApiHandler } from "next";
-import dayjs from "dayjs";
-import { z } from "zod";
-import { SalesRakingQueryParams, type TSalesRakingOutput } from "@/utils/schemas/stats";
+import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
+import type { TUser } from '@/utils/schemas/crm/user.schema'
+import type { TProject } from '@/utils/schemas/projects'
+import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
+import connectToDatabase from '@/utils/services/mongodb/projects'
+import type { NextApiHandler } from 'next'
+import dayjs from 'dayjs'
+import { z } from 'zod'
 
-const handleGetSalesRanking: NextApiHandler<TSalesRakingOutput> = async (req, res) => {
-	const { type: typeString, rankBy: rankByString, projectTypes: projectTypesString } = req.query;
+const GetSalesRankingQueryParams = z.object({
+  type: z.enum(['current-month', 'current-semester', 'current-year'], {
+    required_error: 'Tipo de ranking é obrigatório',
+    invalid_type_error: 'Tipo de ranking inválido',
+  }),
+  rankBy: z.enum(['sales-total-qty', 'sales-total-value', 'sales-total-power'], {
+    required_error: 'Tipo de ranking é obrigatório',
+    invalid_type_error: 'Tipo de ranking inválido',
+  }),
+  projectTypes: z
+    .string({
+      required_error: 'Tipos de projetos são obrigatórios',
+      invalid_type_error: 'Tipos de projetos inválidos',
+    })
+    .transform((value) => value.split(',')),
+})
+export type TGetSalesRankingInput = z.infer<typeof GetSalesRankingQueryParams>
+async function getSalesRanking(params: TGetSalesRankingInput) {
+  const currentDate = dayjs()
+  const currentMonth = currentDate.month()
+  const currentSemesterMonthStart = currentMonth < 6 ? 0 : 6
 
-	const params = SalesRakingQueryParams.parse({
-		type: typeString as unknown,
-		rankBy: rankByString as unknown,
-		projectTypes: projectTypesString as unknown,
-	});
+  const PERIOD_MAP = {
+    'current-month': {
+      startDate: currentDate.startOf('month').subtract(3, 'hours').toDate(),
+      endDate: currentDate.endOf('month').subtract(3, 'hours').toDate(),
+    },
+    'current-semester': {
+      startDate: currentDate.set('month', currentSemesterMonthStart).startOf('month').toDate(),
+      endDate: currentDate
+        .set('month', currentSemesterMonthStart + 5)
+        .endOf('month')
+        .subtract(3, 'hours') // Fixing timezone issue
+        .toDate(),
+    },
+    'current-year': {
+      startDate: currentDate.startOf('year').subtract(3, 'hours').toDate(),
+      endDate: currentDate.endOf('year').subtract(3, 'hours').toDate(),
+    },
+  }
 
-	console.log("[INFO] Get sales ranking params", params);
-	const currentDate = dayjs();
-	const currentMonth = currentDate.month();
-	const currentSemesterMonthStart = currentMonth < 6 ? 0 : 6;
+  const RANK_BY_MAP = {
+    'sales-total-qty': {
+      field: 'qtdeVendida',
+      sort: -1,
+    },
+    'sales-total-value': {
+      field: 'valorTotal',
+      sort: -1,
+    },
+    'sales-total-power': {
+      field: 'potenciaVendida',
+      sort: -1,
+    },
+  }
+  const { startDate, endDate } = PERIOD_MAP[params.type]
+  const { field, sort } = RANK_BY_MAP[params.rankBy]
 
-	const PERIOD_MAP = {
-		"current-month": {
-			startDate: currentDate.startOf("month").subtract(3, "hours").toDate(),
-			endDate: currentDate.endOf("month").subtract(3, "hours").toDate(),
-		},
-		"current-semester": {
-			startDate: currentDate.set("month", currentSemesterMonthStart).startOf("month").toDate(),
-			endDate: currentDate
-				.set("month", currentSemesterMonthStart + 5)
-				.endOf("month")
-				.subtract(3, "hours") // Fixing timezone issue
-				.toDate(),
-		},
-		"current-year": {
-			startDate: currentDate.startOf("year").subtract(3, "hours").toDate(),
-			endDate: currentDate.endOf("year").subtract(3, "hours").toDate(),
-		},
-	};
+  const crmDb = await connectToCRMDatabase()
+  const crmCollection = crmDb.collection<TUser>('users')
 
-	const RANK_BY_MAP = {
-		"sales-total-qty": {
-			field: "qtdeVendida",
-			sort: -1,
-		},
-		"sales-total-value": {
-			field: "valorTotal",
-			sort: -1,
-		},
-		"sales-total-power": {
-			field: "potenciaVendida",
-			sort: -1,
-		},
-	};
-	const { startDate, endDate } = PERIOD_MAP[params.type];
-	const { field, sort } = RANK_BY_MAP[params.rankBy];
+  const projectsDb = await connectToDatabase()
+  const projectsCollection = projectsDb.collection<TProject>('dados')
 
-	console.log("[INFO] Period", { startDate, endDate });
-	console.log("[INFO] Rank by", { field, sort });
+  const users = await crmCollection
+    .find(
+      {},
+      {
+        projection: {
+          nome: 1,
+          avatar_url: 1,
+        },
+      }
+    )
+    .toArray()
+  const aggregated = (await projectsCollection
+    .aggregate([
+      {
+        $match: {
+          'contrato.status': 'ASSINADO',
+          tipoDeServico: { $in: params.projectTypes },
+          'contrato.dataAssinatura': { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
+        },
+      },
+      {
+        $group: {
+          _id: '$vendedor.nome',
+          qtdeVendida: {
+            $count: {},
+          },
+          potenciaVendida: {
+            $sum: '$sistema.potPico',
+          },
+          valorProjetoVendido: {
+            $sum: '$sistema.valorProjeto',
+          },
+          valorOeMVendido: {
+            $sum: '$oem.valor',
+          },
+          valorPadraoVendido: {
+            $sum: '$padrao.valor',
+          },
+          valorEstruturaPersonalizadaVendido: {
+            $sum: '$estruturaPersonalizada.valor',
+          },
+          valorSeguroVendido: {
+            $sum: '$seguro.valor',
+          },
+          valorTotal: {
+            $sum: {
+              $add: [
+                { $ifNull: ['$sistema.valorProjeto', 0] },
+                { $ifNull: ['$oem.valor', 0] },
+                { $ifNull: ['$padrao.valor', 0] },
+                { $ifNull: ['$estruturaPersonalizada.valor', 0] },
+                { $ifNull: ['$seguro.valor', 0] },
+              ],
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          [field]: sort,
+        },
+      },
+      {
+        $limit: 10,
+      },
+    ])
+    .toArray()) as {
+    _id: string
+    qtdeVendida: number
+    potenciaVendida: number
+    valorTotal: number
+  }[]
 
-	const crmDb = await connectToCRMDatabase();
-	const crmCollection = crmDb.collection<TUser>("users");
+  const ranking = aggregated.map((item, index) => {
+    const equivalentUser = users.find((user) => user.nome === item._id)
+    const valueMap = {
+      'sales-total-qty': item.qtdeVendida,
+      'sales-total-value': item.valorTotal,
+      'sales-total-power': item.potenciaVendida,
+    }
+    return {
+      index: index + 1,
+      name: equivalentUser?.nome || 'NÃO DEFINIDO',
+      avatar: equivalentUser?.avatar_url || undefined,
+      value: valueMap[params.rankBy],
+    }
+  })
 
-	const projectsDb = await connectToDatabase();
-	const projectsCollection = projectsDb.collection<TProject>("dados");
+  return {
+    data: {
+      ranking,
+    },
+  }
+}
+export type TGetSalesRankingOutput = Awaited<ReturnType<typeof getSalesRanking>>
 
-	const users = await crmCollection
-		.find(
-			{},
-			{
-				projection: {
-					nome: 1,
-					avatar_url: 1,
-				},
-			},
-		)
-		.toArray();
-	const aggregated = (await projectsCollection
-		.aggregate([
-			{
-				$match: {
-					"contrato.status": "ASSINADO",
-					tipoDeServico: { $in: params.projectTypes },
-					"contrato.dataAssinatura": { $gte: startDate.toISOString(), $lte: endDate.toISOString() },
-				},
-			},
-			{
-				$group: {
-					_id: "$vendedor.nome",
-					qtdeVendida: {
-						$count: {},
-					},
-					potenciaVendida: {
-						$sum: "$sistema.potPico",
-					},
-					valorProjetoVendido: {
-						$sum: "$sistema.valorProjeto",
-					},
-					valorOeMVendido: {
-						$sum: "$oem.valor",
-					},
-					valorPadraoVendido: {
-						$sum: "$padrao.valor",
-					},
-					valorEstruturaPersonalizadaVendido: {
-						$sum: "$estruturaPersonalizada.valor",
-					},
-					valorSeguroVendido: {
-						$sum: "$seguro.valor",
-					},
-					valorTotal: {
-						$sum: {
-							$add: [
-								{ $ifNull: ["$sistema.valorProjeto", 0] },
-								{ $ifNull: ["$oem.valor", 0] },
-								{ $ifNull: ["$padrao.valor", 0] },
-								{ $ifNull: ["$estruturaPersonalizada.valor", 0] },
-								{ $ifNull: ["$seguro.valor", 0] },
-							],
-						},
-					},
-				},
-			},
-			{
-				$sort: {
-					[field]: sort,
-				},
-			},
-		])
-		.toArray()) as {
-		_id: string;
-		qtdeVendida: number;
-		potenciaVendida: number;
-		valorTotal: number;
-	}[];
+const getSalesRankingHandler: NextApiHandler<TGetSalesRankingOutput> = async (req, res) => {
+  await validateAuthenticationWithSession(req, res)
+  const { type, rankBy, projectTypes } = req.query
 
-	const fiveFirst = aggregated.slice(0, 5).map((item) => {
-		const equivalentUser = users.find((user) => user.nome === item._id);
-		return {
-			name: equivalentUser?.nome || "NÃO DEFINIDO",
-			avatar: equivalentUser?.avatar_url || undefined,
-			totalSoldValue: item.valorTotal,
-			totalSoldQty: item.qtdeVendida,
-			totalSoldPower: item.potenciaVendida,
-		};
-	});
-	const others = aggregated.slice(5).map((item, index) => {
-		const equivalentUser = users.find((user) => user.nome === item._id);
-		return {
-			index: index + 1,
-			name: equivalentUser?.nome || "NÃO DEFINIDO",
-			avatar: equivalentUser?.avatar_url || undefined,
-			totalSoldValue: item.valorTotal,
-			totalSoldQty: item.qtdeVendida,
-			totalSoldPower: item.potenciaVendida,
-		};
-	});
+  const params = GetSalesRankingQueryParams.parse({
+    type: type as unknown,
+    rankBy: rankBy as unknown,
+    projectTypes: projectTypes as unknown,
+  })
 
-	console.log("[INFO] Others", others);
-	const output = {
-		data: {
-			first: fiveFirst[0] || undefined,
-			second: fiveFirst[1] || undefined,
-			third: fiveFirst[2] || undefined,
-			fourth: fiveFirst[3] || undefined,
-			fifth: fiveFirst[4] || undefined,
-			others,
-		},
-	};
+  const data = await getSalesRanking(params)
 
-	res.status(200).json(output);
-};
+  return res.status(200).json(data)
+}
 
 export default apiHandler({
-	GET: handleGetSalesRanking,
-});
+  GET: getSalesRankingHandler,
+})

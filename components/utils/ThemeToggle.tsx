@@ -13,7 +13,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
   return (
     <div className={cn('flex items-center justify-center', className)}>
-      <Button variant="ghost" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} size={'fit'} className="p-2">
+      <Button variant="ghost" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} size={'fit'} className="p-1 lg:p-2">
         {theme === 'light' ? <SunIcon className="h-4 w-4 lg:h-5 lg:w-5" /> : <MoonIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
       </Button>
     </div>

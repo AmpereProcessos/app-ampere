@@ -1,6 +1,5 @@
 import { NextApiHandler } from 'next'
 import connectToDatabase from '../../../utils/services/mongodb/projects'
-import { getFirstDayOfMonth, getLastDayOfMonth } from '@/utils/methods/dates'
 import { Collection, Db } from 'mongodb'
 import { TProject } from '@/utils/schemas/projects'
 import { TBirthdayRecord } from '@/utils/schemas/stats'
@@ -19,7 +18,7 @@ const getClientsBirthDays: NextApiHandler<GetResponse> = async (req, res) => {
 
   const partialQuery = getQueryByVisualization(session)
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+  const db: Db = await connectToDatabase()
   const collection: Collection<TProject> = db.collection('dados')
 
   const birthdays = await getBirthDays({ collection, partialQuery })
@@ -46,6 +45,7 @@ async function getBirthDays({ collection, partialQuery }: GetBirthDaysParams) {
           $project: {
             nomeDoContrato: 1,
             dataNascimento: 1,
+            telefone: 1,
             data: {
               ano: {
                 $year: { $dateFromString: { dateString: '$dataNascimento' } },
@@ -61,10 +61,19 @@ async function getBirthDays({ collection, partialQuery }: GetBirthDaysParams) {
             'data.mes': Number(currentMonth),
           },
         },
+        {
+          $sort: {
+            dataNascimento: -1,
+          },
+        },
       ])
       .toArray()
 
-    const birthdays = clients.map((client) => ({ nome: client.nomeDoContrato, dataNascimento: client.dataNascimento as string }))
+    const birthdays = clients.map((client) => ({
+      nome: client.nomeDoContrato,
+      dataNascimento: client.dataNascimento as string,
+      telefone: client.telefone,
+    }))
     return birthdays
   } catch (error) {
     throw error

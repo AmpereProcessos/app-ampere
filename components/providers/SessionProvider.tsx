@@ -74,8 +74,8 @@ export function SessionProvider({ children, initialSession = null }: SessionProv
       () => {
         validateSession()
       },
-      5 * 60 * 1000
-    ) // Valida a cada 5 minutos
+      30 * 60 * 1000
+    ) // Valida a cada 30 minutos
 
     return () => clearInterval(interval)
   }, [initialSession])

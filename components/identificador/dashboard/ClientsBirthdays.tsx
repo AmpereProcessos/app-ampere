@@ -6,6 +6,7 @@ import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { useClientsBirthdays } from '@/utils/methods/query/clients'
 import { TBirthdayRecord } from '@/utils/schemas/stats'
+import dayjs from 'dayjs'
 import { Cake, Phone } from 'lucide-react'
 import React from 'react'
 import { BsFillCalendarEventFill } from 'react-icons/bs'
@@ -37,15 +38,20 @@ function ClientsBirthdaysContent({ birthdays }: { birthdays: TBirthdayRecord[] }
   const currentDay = new Date().getDate()
   const currentMonth = new Date().getMonth() + 1
   const todaysBirthdays = birthdays.filter((birthday) => {
-    const birthdayDay = new Date(birthday.dataNascimento).getDate()
-    const birthdayMonth = new Date(birthday.dataNascimento).getMonth() + 1
-    return birthdayDay === currentDay && birthdayMonth === currentMonth
+    const birthDate = dayjs(birthday.dataNascimento).add(3, 'hours')
+    const birthdayDay = birthDate.date()
+    const birthdayMonth = birthDate.month() + 1
+    const isBirthdayToday = birthdayDay === currentDay && birthdayMonth === currentMonth
+    if (isBirthdayToday) console.log('birthday', birthday)
+    return isBirthdayToday
   })
 
   const otherBirthdays = birthdays.filter((birthday) => {
-    const birthdayDay = new Date(birthday.dataNascimento).getDate()
-    const birthdayMonth = new Date(birthday.dataNascimento).getMonth() + 1
-    return birthdayDay !== currentDay && birthdayMonth !== currentMonth
+    const birthDate = dayjs(birthday.dataNascimento).add(3, 'hours')
+    const birthdayDay = birthDate.date()
+    const birthdayMonth = birthDate.month() + 1
+    const isBirthdayToday = birthdayDay === currentDay && birthdayMonth === currentMonth
+    return !isBirthdayToday
   })
   return (
     <div className="flex w-full flex-col items-center gap-2">

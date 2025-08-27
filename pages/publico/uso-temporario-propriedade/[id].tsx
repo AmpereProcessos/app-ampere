@@ -6,37 +6,17 @@ import { useOpenPropertyTemporaryUsageByPropertyId } from '@/utils/methods/query
 import type { TPropertyTemporaryUsage } from '@/utils/schemas/properties'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect, useCallback, useMemo } from 'react'
+import { useEffect } from 'react'
 import Logo from '../../../utils/images/logo-sem-texto.png'
-import { useEmployeeBySearch, useEmployees, useUsers } from '@/utils/methods/query/users'
+import { useEmployeeBySearch } from '@/utils/methods/query/users'
 import TextInput from '@/components/inputs/Text'
 import { formatNameAsInitials, formatToCPForCNPJ } from '@/utils/methods/formatting'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  AlertCircle,
-  BadgeCheck,
-  Boxes,
-  Car,
-  Check,
-  CloudUpload,
-  Code,
-  FileStack,
-  IdCard,
-  Lock,
-  Mail,
-  Paperclip,
-  Phone,
-  Plus,
-  UserRound,
-} from 'lucide-react'
+import { AlertCircle, BadgeCheck, Car, Check, CloudUpload, Code, FileStack, IdCard, Lock, Paperclip, Phone, Plus, UserRound } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getFileTypeTitle, isFileImage, SlideMotionVariants } from '@/utils/constants'
 import NumberInput from '@/components/inputs/Number'
-import {
-  DOCUMENTS_BY_USAGE_TYPE,
-  getVehicleReviewAlertLevelByKmDifference,
-  PropertyTemporaryUsageMetadataTypeByPropertyType,
-} from '@/lib/property-usage'
+import { DOCUMENTS_BY_USAGE_TYPE, getVehicleReviewAlertLevelByKmDifference } from '@/lib/property-usage'
 import { renderIconWithClassNames } from '@/utils/methods/rendering'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import { useMutation } from '@tanstack/react-query'
@@ -47,7 +27,6 @@ import { usePropertyUsageStore, PropertyUsageProvider } from '@/utils/stores/pro
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import TextareaInput from '@/components/inputs/TextareaInput'
-import CheckboxInput from '@/components/inputs/Checkbox'
 
 function PublicPropertyTemporaryUsagePage() {
   const router = useRouter()
@@ -88,6 +67,7 @@ function PublicPropertyTemporaryUsagePageContent({ id }: PublicPropertyTemporary
         dataInsercao: openUsageRegistry.dataInsercao,
         dataFim: openUsageRegistry.dataFim,
         arquivos: openUsageRegistry.arquivos,
+        justificativa: openUsageRegistry.justificativa,
       }
       initialAttachments = DOCUMENTS_BY_USAGE_TYPE[openUsageRegistry.metadados.tipo].map((doc) => ({
         titulo: doc.title,

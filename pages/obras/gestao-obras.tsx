@@ -1,26 +1,36 @@
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import axios from 'axios'
 import { useSession } from '@/components/providers/SessionProvider'
-import LoadingPage from '../../components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
-import { useExecutionStats } from '@/utils/methods/query/stats'
-import { BsCalendarEvent, BsPatchCheck, BsTruck } from 'react-icons/bs'
-import { VscDebugStart } from 'react-icons/vsc'
-import { FaHourglassStart, FaPiggyBank } from 'react-icons/fa'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { formatDecimalPlaces } from '@/utils/constants'
-import { MdElectricMeter, MdRoofing } from 'react-icons/md'
+import { useExecutionStats } from '@/utils/methods/query/stats'
+import axios from 'axios'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { BsCalendarEvent, BsPatchCheck, BsTruck } from 'react-icons/bs'
+import { FaHourglassStart, FaPiggyBank } from 'react-icons/fa'
 import { FaListCheck } from 'react-icons/fa6'
+import { MdElectricMeter, MdRoofing } from 'react-icons/md'
+import { VscDebugStart } from 'react-icons/vsc'
+import LoadingPage from '../../components/utils/LoadingPage'
+
 function GestaoDeObras() {
   const router = useRouter()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
   const isAuthorized = session?.user.permissoes.rotas.includes('Obras')
 
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <GestaoDeObrasContent session={session} />
+}
+
+export default GestaoDeObras
+
+function GestaoDeObrasContent({ session }: { session: TAuthSession }) {
   const { data: stats, isLoading, isError, isSuccess } = useExecutionStats()
 
-  if (status != 'authenticated') return <LoadingPage />
-  if (!isAuthorized) return <UnauthorizedPage />
   return (
     <div className="flex w-full grow flex-col p-6">
       <div className="flex flex-col">
@@ -141,5 +151,3 @@ function GestaoDeObras() {
     </div>
   )
 }
-
-export default GestaoDeObras

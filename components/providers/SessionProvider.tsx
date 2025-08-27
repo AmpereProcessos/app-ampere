@@ -1,104 +1,48 @@
 'use client'
-import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { useRouter } from 'next/navigation'
+import type { TGetSessionResponse } from '@/app/api/auth/session/route'
 import type { TAuthSession } from '@/lib/authentication/types'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
-type SessionStatus = 'loading' | 'authenticated' | 'unauthenticated'
+async function fetchSession() {
+  try {
+    const { data } = await axios.get<TGetSessionResponse>('/api/auth/session')
+    return data
+  } catch (error) {
+    console.error('Error fetching session:', error)
+    return null
+  }
+}
 
-type SessionContextType =
+type TUseSessionResponse =
   | {
       session: TAuthSession
       status: 'authenticated'
-      refresh: () => Promise<void>
-    }
-  | {
-      session: null
-      status: 'loading'
-      refresh: () => Promise<void>
     }
   | {
       session: null
       status: 'unauthenticated'
-      refresh: () => Promise<void>
     }
-
-const SessionContext = createContext<SessionContextType | undefined>(undefined)
-
-interface SessionProviderProps {
-  children: ReactNode
-  initialSession?: TAuthSession | null
-}
-
-export function SessionProvider({ children, initialSession = null }: SessionProviderProps) {
-  const [session, setSession] = useState<TAuthSession | null>(initialSession)
-  const [status, setStatus] = useState<SessionStatus>(initialSession ? 'authenticated' : 'loading')
-
-  const validateSession = async () => {
-    try {
-      setStatus('loading')
-      const response = await fetch('/api/auth/session', {
-        credentials: 'include',
-      })
-
-      const data = await response.json()
-
-      if (data.success && data.session && data.user) {
-        setSession({
-          session: data.session,
-          user: data.user,
-        })
-        setStatus('authenticated')
-      } else {
-        setSession(null)
-        setStatus('unauthenticated')
-      }
-    } catch (error) {
-      console.error('Error validating session:', error)
-      setSession(null)
-      setStatus('unauthenticated')
+  | {
+      session: null
+      status: 'loading'
     }
+export function useSession(): TUseSessionResponse {
+  const { data, isLoading, isFetched } = useQuery({
+    queryKey: ['session'],
+    queryFn: fetchSession,
+    staleTime: 30 * 60 * 1000,
+    refetchInterval: 30 * 60 * 1000,
+  })
+
+  function getStatus() {
+    const isSessionDefined = !!data?.session
+    if (isFetched && isSessionDefined) return 'authenticated'
+    if (isFetched && !isSessionDefined) return 'unauthenticated'
+    return 'loading'
   }
-
-  const refresh = async () => {
-    await validateSession()
-  }
-
-  useEffect(() => {
-    // Se não temos sessão inicial, validamos
-    if (!initialSession) {
-      validateSession()
-    }
-
-    // Configurar intervalo de validação (opcional)
-    const interval = setInterval(
-      () => {
-        validateSession()
-      },
-      30 * 60 * 1000
-    ) // Valida a cada 30 minutos
-
-    return () => clearInterval(interval)
-  }, [initialSession])
-
-  const value: SessionContextType = {
-    session: session ?? null,
-    status,
-    refresh,
-  }
-
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
-}
-
-export function useSession({ required = false }: { required?: boolean }): SessionContextType {
-  const router = useRouter()
-  const context = useContext(SessionContext)
-  if (context === undefined) {
-    throw new Error('useSession deve ser usado dentro de um SessionProvider')
-  }
-  useEffect(() => {
-    if (required && context.status === 'unauthenticated') {
-      router.push('/auth/signin')
-    }
-  }, [context.status, required])
-  return context
+  const status = getStatus()
+  if (status === 'authenticated') return { session: data as TAuthSession, status }
+  if (status === 'unauthenticated') return { session: null, status }
+  return { session: null, status }
 }

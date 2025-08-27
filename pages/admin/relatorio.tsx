@@ -1,20 +1,24 @@
 import DateIntervalInput from '@/components/inputs/DateIntervalInput'
+import { useSession } from '@/components/providers/SessionProvider'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useOverallReport } from '@/utils/methods/query/stats'
-import { useSession } from '@/components/providers/SessionProvider'
 
 import { BarChart3 } from 'lucide-react'
 
 import OverallReportGeneralStats from '@/components/identificador/estatisticas/overall-report/General'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import dayjs from 'dayjs'
 
 function ReportPage() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
-  if (status !== 'authenticated') return <LoadingComponent />
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
 
   const hasResultsAccess = session.user.permissoes.gestao.visualizarResultados
   if (!hasResultsAccess) return <UnauthorizedPage />

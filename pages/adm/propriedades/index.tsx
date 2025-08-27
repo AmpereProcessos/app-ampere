@@ -2,10 +2,13 @@ import EditProperty from '@/components/identificador/propriedades/EditProperty'
 import NewProperty from '@/components/identificador/propriedades/NewProperty'
 import PropertyCard from '@/components/identificador/propriedades/PropertyCard'
 import DateIntervalInput from '@/components/inputs/DateIntervalInput'
+import { useSession } from '@/components/providers/SessionProvider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { getExcelFromJSON } from '@/lib/excel-utils'
 import { PROPERTY_METADATA_TYPES_CONFIG } from '@/lib/properties'
 import { cn } from '@/lib/utils'
@@ -17,8 +20,6 @@ import { renderIconWithClassNames } from '@/utils/methods/rendering'
 import type { TProperty } from '@/utils/schemas/properties'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Calendar, Car, ChartArea, Download, Eye, File, Landmark, Search } from 'lucide-react'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { useSession } from '@/components/providers/SessionProvider'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -29,9 +30,10 @@ type TEditModal = {
 }
 
 function Properties() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
-  if (status !== 'authenticated') return <LoadingPage />
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
 
   return <PropertiesContent session={session} />
 }

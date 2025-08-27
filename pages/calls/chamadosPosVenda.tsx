@@ -1,13 +1,17 @@
 import type { TGetAllPosVendaCallsInput } from '@/app/api/chamados/posvenda/route'
+import { getServiceTypeTagColor } from '@/components/TagTipoDeServico'
 import ControlPosVendaCall from '@/components/identificador/chamados/posvenda/ControlPosVendaCall'
 import PosVendaCallsFilterMenu from '@/components/identificador/chamados/posvenda/FilterMenu'
 import NewPosVendaCall from '@/components/identificador/chamados/posvenda/NewPosVendaCall'
 import DateIntervalInput from '@/components/inputs/DateIntervalInput'
-import { getServiceTypeTagColor } from '@/components/TagTipoDeServico'
+import { useSession } from '@/components/providers/SessionProvider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { cn } from '@/lib/utils'
 import { formatToMoney } from '@/utils/constants'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
@@ -17,10 +21,8 @@ import { useGetAllPosVendaCalls, useGetPosVendaCallsStatistics } from '@/utils/m
 import type { TPosVendaCall, TPosVendaCallDTO } from '@/utils/schemas/pos-venda-calls'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { BadgeCheck, BadgeDollarSign, ChartArea, Check, Pencil, Plus, X } from 'lucide-react'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { useSession } from '@/components/providers/SessionProvider'
 import { useState } from 'react'
-import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd'
 import toast from 'react-hot-toast'
 import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
 import { MdDashboard } from 'react-icons/md'
@@ -31,8 +33,10 @@ type TCallsByStatus = {
 }
 
 function PosVendaCallsPage() {
-  const { session, status } = useSession({ required: true })
-  if (status !== 'authenticated') return <LoadingComponent />
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
 
   return <PosVendaCalls session={session} />
 }

@@ -2,21 +2,34 @@ import ControlHomologation from '@/components/identificador/crm-homologacoes/Con
 import NewHomologation from '@/components/identificador/crm-homologacoes/NewHomologation'
 import FilterMenu from '@/components/identificador/crm-homologacoes/Utils/FilterMenu'
 import HomologationCard from '@/components/identificador/crm-homologacoes/Utils/HomologationCard'
+import { useSession } from '@/components/providers/SessionProvider'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useHomologations } from '@/utils/methods/query/crm/homologations'
-import { useSession } from '@/components/providers/SessionProvider'
 import React, { useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 function HomologationsControlPage() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <HomologationsControlPageContent session={session} />
+}
+
+export default HomologationsControlPage
+
+type HomologationsControlPageContentProps = {
+  session: TAuthSession
+}
+function HomologationsControlPageContent({ session }: HomologationsControlPageContentProps) {
   const { data: homologations, isLoading, isError, isSuccess, filters, setFilters } = useHomologations()
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [newHomologationModalIsOpen, setNewHomologationModalIsOpen] = useState<boolean>(false)
   const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
 
-  if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex w-full max-w-full grow flex-col overflow-x-hidden bg-[#f8f9fa] p-6">
       <div className="flex flex-col items-center border-b border-black pb-2">
@@ -81,5 +94,3 @@ function HomologationsControlPage() {
     </div>
   )
 }
-
-export default HomologationsControlPage

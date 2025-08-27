@@ -1,28 +1,37 @@
-import React, { useEffect, useState } from 'react'
 import { useSession } from '@/components/providers/SessionProvider'
+import React, { useEffect, useState } from 'react'
 
 import ErrorComponent from '../../components/utils/ErrorComponent'
 import LoadingPage from '../../components/utils/LoadingPage'
 
 import AnaliseBlock from '../../components/identificador/comercial/AnaliseBlock'
 
-import TextInput from '../../components/inputs/Text'
 import DateInput from '../../components/inputs/Date'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+import TextInput from '../../components/inputs/Text'
 
-import { formatDate, formatDecimalPlaces, formatToMoney } from '../../utils/constants'
-import { allSellers } from '../../utils/select-options'
-import { formatDateInputChange } from '../../utils/methods/shared'
-import { useComercialAnalyticalData } from '../../utils/methods/query/comercial'
-import { VscDiffAdded } from 'react-icons/vsc'
-import { MdAttachMoney } from 'react-icons/md'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { ImPower } from 'react-icons/im'
+import { MdAttachMoney } from 'react-icons/md'
+import { VscDiffAdded } from 'react-icons/vsc'
+import { formatDate, formatDecimalPlaces, formatToMoney } from '../../utils/constants'
+import { useComercialAnalyticalData } from '../../utils/methods/query/comercial'
+import { formatDateInputChange } from '../../utils/methods/shared'
+import { allSellers } from '../../utils/select-options'
 import type { TComercialAnalyticalItem } from '../api/projects/analitico/comercial'
-
 const currentDate = new Date()
 
 function Analise() {
-  const { session } = useSession({ required: true })
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <AnaliseContent session={session} />
+}
+
+export default Analise
+
+function AnaliseContent({ session }: { session: TAuthSession }) {
   const [dateFilter, setDateFilter] = useState({
     after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3).toISOString(),
     before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1).toISOString(),
@@ -216,5 +225,3 @@ function Analise() {
     </div>
   )
 }
-
-export default Analise

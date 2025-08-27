@@ -7,17 +7,20 @@ import LoadingPage from '../../components/utils/LoadingPage'
 
 import ErrorPage from '@/components/utils/ErrorPage'
 
-import { useViewModesStore } from '@/utils/stores/view-modes-store'
-import EngineeringKanbanModePage from '@/components/identificador/engenharia/KanbanModePage'
 import EngineeringDatabaseModePage from '@/components/identificador/engenharia/DatabaseModePage'
+import EngineeringKanbanModePage from '@/components/identificador/engenharia/KanbanModePage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedComponent from '@/components/utils/UnauthorizedComponent'
+import { useViewModesStore } from '@/utils/stores/view-modes-store'
 
 function Projetos() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
-  if (status !== 'authenticated') return <LoadingPage />
+  if (status === 'loading') return <LoadingPage />
+  if (status !== 'authenticated') return <UnauthenticatedComponent />
 
   const isAuthorized = session?.user.permissoes.rotas.includes('Projetos') || session.user.permissoes.engenharia.visualizar
-  if (!isAuthorized) return <ErrorPage msg="Você não tem permissão para acessar esta página" />
+  if (!isAuthorized) return <UnauthorizedComponent />
   return <ProjectsPageContent session={session} />
 }
 

@@ -1,29 +1,29 @@
+import { useSession } from '@/components/providers/SessionProvider'
+import { estadosECidades } from '@/utils/estados_cidades'
+import { formatToCEP, formatToCPForCNPJ } from '@/utils/methods/formatting'
+import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
+import { useUsers } from '@/utils/methods/query/crm/users'
+import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
+import type { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
+import type { TProjectDTO } from '@/utils/schemas/projects'
+import { allSellers, insiders, serviceTypes } from '@/utils/select-options'
+import { useQueryClient } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import Link from 'next/link'
 import type React from 'react'
+import toast from 'react-hot-toast'
+import { FaFile } from 'react-icons/fa'
 import { formatDate, oemPlans } from '../../utils/constants'
+import AllCities from '../../utils/jsons/cidades.json'
+import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
+import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
+import CheckboxInput from '../inputs/Checkbox'
+import DateInput from '../inputs/Date'
 import NumberInput from '../inputs/Number'
 import SelectInput from '../inputs/Select'
 import SelectInputVirtualized from '../inputs/SelectVirtualized'
-import AllCities from '../../utils/jsons/cidades.json'
-import TextInput from '../inputs/Text'
-import { useSession } from '@/components/providers/SessionProvider'
-import { FaFile } from 'react-icons/fa'
-import Link from 'next/link'
-import { allSellers, insiders, serviceTypes } from '@/utils/select-options'
-import toast from 'react-hot-toast'
-import { useQueryClient } from '@tanstack/react-query'
-import { formatToCEP, formatToCPForCNPJ } from '@/utils/methods/formatting'
-import type { TProjectDTO } from '@/utils/schemas/projects'
-import { formatDateInputChange, getCEPInfo } from '@/utils/methods/shared'
-import CheckboxInput from '../inputs/Checkbox'
-import { estadosECidades } from '@/utils/estados_cidades'
-import UpdateLogsBlock from '../identificador/registrosAlteracoesProjeto/UpdateLogsBlock'
-import type { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
-import Client from '../identificador/registrosAlteracoesProjeto/secao/Client'
-import DateInput from '../inputs/Date'
-import { usePartnersSimplified } from '@/utils/methods/query/crm/partners'
-import dayjs from 'dayjs'
-import { useUsers } from '@/utils/methods/query/crm/users'
 import SelectWithImages from '../inputs/SelectWithImages'
+import TextInput from '../inputs/Text'
 
 type InfoClientBlockProps = {
   editor: boolean
@@ -35,7 +35,7 @@ type InfoClientBlockProps = {
   project: TProjectDTO
 }
 function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], project }: InfoClientBlockProps) {
-  const { session } = useSession({ required: true })
+  const { session } = useSession()
   const { data: partners } = usePartnersSimplified()
   const { data: crmUsers } = useUsers({ includeDeleted: true })
   const queryClient = useQueryClient()

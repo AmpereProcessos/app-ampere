@@ -1,38 +1,55 @@
+import CheckboxInput from '@/components/inputs/Checkbox'
+import DateInput from '@/components/inputs/Date'
+import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
+import SelectInput from '@/components/inputs/Select'
+import TextInput from '@/components/inputs/Text'
+import { useSession } from '@/components/providers/SessionProvider'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
+import StatesAndCities from '@/utils/jsons/estados-cidades.json'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { useExecutionCommissioningProjects } from '@/utils/methods/query/oem'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import type { TProjectDTO } from '@/utils/schemas/projects'
+import { allActiveSellers } from '@/utils/select-options'
 import axios from 'axios'
+import { AnimatePresence, motion } from 'framer-motion'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import Select from 'react-select'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { motion, AnimatePresence } from 'framer-motion'
+import { TbAlertHexagonFilled } from 'react-icons/tb'
+import { VscDiffAdded } from 'react-icons/vsc'
+import Select from 'react-select'
 import ComissionamentoPosObraCard from '../../components/ComissionamentoPosObraCard'
 import ComissionamentoPosObraSkeleton from '../../components/skeletons/ComissionamentoPosObraSkeleton'
-import { cidadesAtendidas, equipesTecnicas, formatDate, vendedores } from '../../utils/constants'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
-import { useSession } from '@/components/providers/SessionProvider'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { VscDiffAdded } from 'react-icons/vsc'
-import { useExecutionCommissioningProjects } from '@/utils/methods/query/oem'
-import { TProjectDTO } from '@/utils/schemas/projects'
-import { TbAlertHexagonFilled } from 'react-icons/tb'
-import TextInput from '@/components/inputs/Text'
-import SelectInput from '@/components/inputs/Select'
-import DateInput from '@/components/inputs/Date'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
-import { allActiveSellers } from '@/utils/select-options'
-import StatesAndCities from '@/utils/jsons/estados-cidades.json'
-import CheckboxInput from '@/components/inputs/Checkbox'
-import ErrorComponent from '@/components/utils/ErrorComponent'
-import { getErrorMessage } from '@/utils/methods/handlers'
+import { cidadesAtendidas, equipesTecnicas, formatDate, vendedores } from '../../utils/constants'
 
-const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
+const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({
+  id: index + 1,
+  label: c,
+  value: c,
+}))
 
 function Comissionamento() {
-  const router = useRouter()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
+  const isAuthorized = session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <ComissionamentoContent session={session} />
+}
+
+export default Comissionamento
+
+function ComissionamentoContent({ session }: { session: TAuthSession }) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const { data: projects, isLoading, isError, isSuccess, error, filters, setFilters } = useExecutionCommissioningProjects()
@@ -60,18 +77,6 @@ function Comissionamento() {
       pendenteMonitoramento: pendeningMonitoring,
     }
   }
-
-  useEffect(() => {
-    if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('O&M') && !userRoutes.includes('Pós-Venda')) {
-        router.push('/')
-      }
-    }
-  }, [session])
-
-  if (status != 'authenticated') return <LoadingPage />
-
   return (
     <div className="flex grow flex-col p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
@@ -154,7 +159,15 @@ function Comissionamento() {
                         width={'100%'}
                         label={'DEPOIS DE'}
                         value={filters.date.after ? formatDate(filters.date.after) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            date: {
+                              ...prev.date,
+                              after: formatDateInputChange(value) as string,
+                            },
+                          }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
@@ -162,7 +175,15 @@ function Comissionamento() {
                         width={'100%'}
                         label={'ANTES DE'}
                         value={filters.date.before ? formatDate(filters.date.before) : undefined}
-                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            date: {
+                              ...prev.date,
+                              before: formatDateInputChange(value) as string,
+                            },
+                          }))
+                        }
                       />
                     </div>
                   </div>
@@ -173,7 +194,11 @@ function Comissionamento() {
                       value={filters.date.field || null}
                       options={[
                         { id: 1, label: 'SAÍDA DE OBRA', value: 'obra.saida' },
-                        { id: 2, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                        {
+                          id: 2,
+                          label: 'TROCA DO MEDIDOR',
+                          value: 'medidor.data',
+                        },
                       ]}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
@@ -205,9 +230,18 @@ function Comissionamento() {
                     width="100%"
                     label="EQUIPE TÉCNICA"
                     selected={filters.responsibleTeam}
-                    options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
+                    options={equipesTecnicas.map((team, index) => ({
+                      id: index + 1,
+                      label: team.label,
+                      value: team.value,
+                    }))}
                     selectedItemLabel="SEM FILTRO"
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, responsibleTeam: value as string[] }))}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        responsibleTeam: value as string[],
+                      }))
+                    }
                     onReset={() => setFilters((prev) => ({ ...prev, responsibleTeam: [] }))}
                   />
                 </div>
@@ -269,7 +303,12 @@ function Comissionamento() {
                     labelFalse="CONFERÊNCIA DE USINA LIGADA PENDENTE"
                     labelTrue="CONFERÊNCIA DE USINA LIGADA PENDENTE"
                     checked={filters.plantPowerCheckPending}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, plantPowerCheckPending: value }))}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        plantPowerCheckPending: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="w-fit">
@@ -277,7 +316,12 @@ function Comissionamento() {
                     labelFalse="CONFERÊNCIA DE ENERGIA INJETADA PENDENTE"
                     labelTrue="CONFERÊNCIA DE ENERGIA INJETADA PENDENTE"
                     checked={filters.injectedEnergyPending}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, injectedEnergyPending: value }))}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        injectedEnergyPending: value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="w-fit">
@@ -285,7 +329,12 @@ function Comissionamento() {
                     labelFalse="MONITORAMENTO PENDENTE"
                     labelTrue="MONITORAMENTO PENDENTE"
                     checked={filters.monitoringPending}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, monitoringPending: value }))}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        monitoringPending: value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -313,5 +362,3 @@ function Comissionamento() {
     </div>
   )
 }
-
-export default Comissionamento

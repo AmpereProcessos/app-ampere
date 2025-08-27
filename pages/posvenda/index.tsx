@@ -41,16 +41,24 @@ import { FaSignature } from 'react-icons/fa'
 import NumberInput from '@/components/inputs/Number'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import type { TAuthSession } from '@/lib/authentication/types'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
 
 function Posvenda() {
   const router = useRouter()
-  const { session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
-  })
+  const { session, status } = useSession()
 
+  const isAuthorized = session?.user.permissoes.rotas.includes('Pós-Venda')
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <PosvendaContent session={session} />
+}
+
+export default Posvenda
+
+function PosvendaContent({ session }: { session: TAuthSession }) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useAfterSalesProjects()
@@ -111,17 +119,6 @@ function Posvenda() {
       entregaSemana: deliveries.thisWeek,
     }
   }
-
-  useEffect(() => {
-    const validateAccess = async () => {
-      if (session) {
-        const userRoutes = session?.user.permissoes.rotas
-        if (!userRoutes?.includes('Pós-Venda')) router.push('/')
-      }
-    }
-    validateAccess()
-  }, [session])
-  if (status !== 'authenticated') return <LoadingPage />
 
   return (
     <div className="grow p-6">
@@ -536,5 +533,3 @@ function Posvenda() {
     </div>
   )
 }
-
-export default Posvenda

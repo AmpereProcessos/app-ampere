@@ -1,13 +1,19 @@
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import Link from 'next/link'
-import React, { useContext, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import React from 'react'
 import { useSession } from '../../components/providers/SessionProvider'
 import LoadingPage from '../../components/utils/LoadingPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 function Calls() {
-  const router = useRouter()
-  const { session, status } = useSession({ required: true })
-  if (status != 'authenticated') return <LoadingPage />
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <CallsContent session={session} />
+}
 
+export default Calls
+
+function CallsContent({ session }: { session: TAuthSession }) {
   return (
     <div className="bg-primary/20 flex w-full grow flex-col p-6">
       <div className="bg-background border-primary/20 flex w-full items-center justify-around border p-4 shadow-xl">
@@ -64,5 +70,3 @@ function Calls() {
     </div>
   )
 }
-
-export default Calls

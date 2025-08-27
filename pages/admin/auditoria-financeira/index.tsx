@@ -1,40 +1,50 @@
-import React, { useEffect, useState } from 'react'
 import { useSession } from '@/components/providers/SessionProvider'
 import type { TAuthSession } from '@/lib/authentication/types'
 import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 
 import AuditingCard from '@/components/identificador/auditoriaFinanceira/AuditingCard'
+import ProjectFinancesModal from '@/components/identificador/auditoriaFinanceira/ProjectFinancesModal'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
-import ProjectFinancesModal from '@/components/identificador/auditoriaFinanceira/ProjectFinancesModal'
 
 import DateInput from '@/components/inputs/Date'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import SelectInput from '@/components/inputs/Select'
 import TextInput from '@/components/inputs/Text'
-import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 
-import { formatDateInputChange } from '@/utils/methods/shared'
-import { useFinancialAuditing } from '@/utils/methods/query/financial-auditing'
 import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
+import { useFinancialAuditing } from '@/utils/methods/query/financial-auditing'
+import { formatDateInputChange } from '@/utils/methods/shared'
 
-import { TProjectFinances } from '../../api/stats/financial-auditing'
+import type { TProjectFinances } from '../../api/stats/financial-auditing'
 
-import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { FaCashRegister, FaPercent } from 'react-icons/fa'
+import { FaDiamond, FaHandHoldingDollar } from 'react-icons/fa6'
 import { VscDiffAdded } from 'react-icons/vsc'
 
-import { allSellers } from '@/utils/select-options'
 import NumberInput from '@/components/inputs/Number'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedComponent from '@/components/utils/UnauthorizedComponent'
+import { allSellers } from '@/utils/select-options'
 
-var currentDate = new Date()
+const currentDate = new Date()
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString()
 const beforeDateParam = new Date().toISOString()
 function FinancesAuditing() {
   const router = useRouter()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
   const isADM = !!session?.user?.permissoes.rotas?.includes('ADM')
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isADM) return <UnauthorizedComponent />
+  return <FinancesAuditingContent session={session} />
+}
 
+export default FinancesAuditing
+
+function FinancesAuditingContent({ session }: { session: TAuthSession }) {
   const [projectFinancesModal, setProjectFinancesModal] = useState<{ isOpen: boolean; projectId: string | null }>({
     isOpen: false,
     projectId: null,
@@ -69,21 +79,19 @@ function FinancesAuditing() {
     const projects = info.length
     const totalRevenues = info.reduce((acc, current) => {
       const currentTotalRevenue = Object.values(current.receitas).reduce((acc, current) => acc + current, 0)
-      acc += currentTotalRevenue
-      return acc
+      return acc + currentTotalRevenue
     }, 0)
     const totalExpenses = info.reduce((acc, current) => {
       const currentTotalRevenue = Object.values(current.despesas).reduce((acc, current) => acc + current, 0)
-      acc += currentTotalRevenue
-      return acc
+      return acc + currentTotalRevenue
     }, 0)
     const overallMargin = ((totalRevenues - totalExpenses) * 100) / totalRevenues
 
     const expensesByType = info.reduce((acc: { [key: string]: number }, current) => {
-      Object.entries(current.despesas).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(current.despesas)) {
         if (!acc[key]) acc[key] = 0
         acc[key] += value
-      })
+      }
       return acc
     }, {})
     console.log(expensesByType)
@@ -95,14 +103,6 @@ function FinancesAuditing() {
       despesasPorTipo: expensesByType,
     }
   }
-  useEffect(() => {
-    if (session) {
-      if (!isADM) router.push('/')
-    }
-  }, [session])
-  if (status == 'loading') return <LoadingPage />
-
-  if (status != 'authenticated') return <LoadingPage />
 
   return (
     <div className="flex grow flex-col p-6">
@@ -272,8 +272,8 @@ function FinancesAuditing() {
             <h1 className="text-sm font-medium tracking-tight uppercase">DESPESAS POR TIPO</h1>
           </div>
           <div className="mt-2 flex grow flex-wrap items-center justify-around">
-            {Object.entries(getStats({ info: auditing }).despesasPorTipo).map(([key, value], index) => (
-              <p key={index} className="text-primary/60 text-[0.8rem]">
+            {Object.entries(getStats({ info: auditing }).despesasPorTipo).map(([key, value]) => (
+              <p key={key} className="text-primary/60 text-[0.8rem]">
                 {key}: <strong>{formatToMoney(value)}</strong>
               </p>
             ))}
@@ -299,5 +299,3 @@ function FinancesAuditing() {
     </div>
   )
 }
-
-export default FinancesAuditing

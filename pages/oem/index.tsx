@@ -31,6 +31,9 @@ import { MdError } from 'react-icons/md'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { getDifferenceBetweenDates } from '@/utils/methods/dates'
 import ProjectCardsTags from '@/components/utils/ProjectCardsTags'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 const statusStyles = {
   REALIZADO: {
     textColor: 'text-green-500',
@@ -41,13 +44,17 @@ const statusStyles = {
 }
 function OemPage() {
   const router = useRouter()
-  const { session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin')
-    },
-  })
+  const { session, status } = useSession()
+  const isAuthorized = session?.user.permissoes.rotas.includes('O&M')
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <OemContent session={session} />
+}
 
+export default OemPage
+
+function OemContent({ session }: { session: TAuthSession }) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const { data: projects, isLoading, isError, isFetching, isSuccess, filters, setFilters } = useOeMProjects()
@@ -116,392 +123,383 @@ function OemPage() {
       manutencoesAtrasadas: overdueMaintenance,
     }
   }
-  useEffect(() => {
-    if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('O&M')) {
-        router.push('/')
-      }
-    }
-  }, [session])
 
-  if (status === 'loading') return <LoadingPage />
-  if (status === 'authenticated') {
-    return (
-      <div className="grow p-6">
-        <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
-          <div className="GAP-2 flex w-full items-center justify-between">
-            <div className="flex flex-col items-center gap-2 lg:flex-row">
-              <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NOS ESTAGIO DE O&M</p>
-            </div>
-            {dropdownMenuVisible ? (
-              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
-                <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
-              </div>
-            ) : (
-              <div className="text-primary/80 cursor-pointer hover:text-blue-400">
-                <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
-              </div>
-            )}
+  return (
+    <div className="grow p-6">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
+        <div className="GAP-2 flex w-full items-center justify-between">
+          <div className="flex flex-col items-center gap-2 lg:flex-row">
+            <p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NOS ESTAGIO DE O&M</p>
           </div>
-          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
-                <VscDiffAdded />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-primary/60 text-xs">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
-              </div>
+          {dropdownMenuVisible ? (
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+              <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium tracking-tight uppercase">QUANTIDADE DE MÓDULOS</h1>
-                <FaSolarPanel />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
-              </div>
+          ) : (
+            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+              <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES PENDENTES</h1>
-                <FaList />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
-              </div>
+          )}
+        </div>
+        <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium tracking-tight uppercase">PROJETOS NO ESTÁGIO</h1>
+              <VscDiffAdded />
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES ATRASADAS</h1>
-                <MdError />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesAtrasadas} </div>
-              </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
+              <p className="text-primary/60 text-xs">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
             </div>
           </div>
-          <AnimatePresence>
-            {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                  <TextInput
-                    label={'NOME DO PROJETO'}
-                    value={filters.search}
-                    placeholder={'Digite o nome do projeto...'}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-                  />
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium tracking-tight uppercase">QUANTIDADE DE MÓDULOS</h1>
+              <FaSolarPanel />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).modulos}</div>
+            </div>
+          </div>
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES PENDENTES</h1>
+              <FaList />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
+            </div>
+          </div>
+          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium tracking-tight uppercase">MANUTENÇÕES ATRASADAS</h1>
+              <MdError />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesAtrasadas} </div>
+            </div>
+          </div>
+        </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <TextInput
+                  label={'NOME DO PROJETO'}
+                  value={filters.search}
+                  placeholder={'Digite o nome do projeto...'}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                />
 
-                  <TextInput
-                    label={'BAIRRO'}
-                    value={filters.neighborhoodSearch}
-                    placeholder={'Digite o bairro do projeto...'}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, neighborhoodSearch: value }))}
-                  />
+                <TextInput
+                  label={'BAIRRO'}
+                  value={filters.neighborhoodSearch}
+                  placeholder={'Digite o bairro do projeto...'}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, neighborhoodSearch: value }))}
+                />
 
-                  <NumberInput
-                    label="NÚMERO DE MÓDULOS MAIOR QUE"
-                    placeholder="Preencha um filtro para o número de módulos..."
-                    value={filters.modulesQtyGte}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyGte: value }))}
-                  />
+                <NumberInput
+                  label="NÚMERO DE MÓDULOS MAIOR QUE"
+                  placeholder="Preencha um filtro para o número de módulos..."
+                  value={filters.modulesQtyGte}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyGte: value }))}
+                />
 
-                  <NumberInput
-                    label="NÚMERO DE MÓDULOS MENOR QUE"
-                    placeholder="Preencha um filtro para o número de módulos..."
-                    value={filters.modulesQtyLte}
-                    handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyLte: value }))}
-                  />
+                <NumberInput
+                  label="NÚMERO DE MÓDULOS MENOR QUE"
+                  placeholder="Preencha um filtro para o número de módulos..."
+                  value={filters.modulesQtyLte}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyLte: value }))}
+                />
 
-                  <div className="w-full lg:w-[300px]">
-                    <MultipleSelectInput
-                      width={'100%'}
-                      label={'TIPO DE SERVIÇO'}
-                      selected={filters.serviceType}
-                      options={serviceTypes}
-                      selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          serviceType: value as string[],
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          serviceType: [],
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
-                    <div className="flex items-center justify-center gap-x-2">
-                      <div className="w-full lg:w-[300px]">
-                        <DateInput
-                          width={'100%'}
-                          label={'DEPOIS DE'}
-                          value={filters.date.after ? formatDate(filters.date.after) : undefined}
-                          handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
-                        />
-                      </div>
-                      <div className="w-full lg:w-[300px]">
-                        <DateInput
-                          width={'100%'}
-                          label={'ANTES DE'}
-                          value={filters.date.before ? formatDate(filters.date.before) : undefined}
-                          handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
-                        />
-                      </div>
+                <div className="w-full lg:w-[300px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'TIPO DE SERVIÇO'}
+                    selected={filters.serviceType}
+                    options={serviceTypes}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        serviceType: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        serviceType: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                  <div className="flex items-center justify-center gap-x-2">
+                    <div className="w-full lg:w-[300px]">
+                      <DateInput
+                        width={'100%'}
+                        label={'DEPOIS DE'}
+                        value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) as string } }))
+                        }
+                      />
                     </div>
                     <div className="w-full lg:w-[300px]">
-                      <SelectInput
+                      <DateInput
                         width={'100%'}
-                        label={'CAMPO DE FILTRO'}
-                        value={filters.date.field || null}
-                        options={[
-                          {
-                            id: 1,
-                            label: 'SAÍDA DE OBRA',
-                            value: 'obra.saida',
-                          },
-                          {
-                            id: 2,
-                            label: 'TROCA DE MEDIDOR',
-                            value: 'medidor.data',
-                          },
-                          {
-                            id: 3,
-                            label: 'EXECUÇÃO DA MANUTENÇÃO',
-                            value: 'manutencoes.dataEfetivacao',
-                          },
-                        ]}
-                        selectedItemLabel={'SEM FILTRO'}
-                        handleChange={(value: string) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            date: {
-                              ...prev.date,
-                              field: value,
-                            },
-                          }))
-                        }
-                        onReset={() =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            date: {
-                              after: null,
-                              before: null,
-                              field: null,
-                            },
-                          }))
+                        label={'ANTES DE'}
+                        value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) as string } }))
                         }
                       />
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[300px]">
-                    <MultipleSelectInputVirtualized
+                    <SelectInput
                       width={'100%'}
-                      label={'CIDADE'}
-                      selected={filters.city}
-                      options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                      label={'CAMPO DE FILTRO'}
+                      value={filters.date.field || null}
+                      options={[
+                        {
+                          id: 1,
+                          label: 'SAÍDA DE OBRA',
+                          value: 'obra.saida',
+                        },
+                        {
+                          id: 2,
+                          label: 'TROCA DE MEDIDOR',
+                          value: 'medidor.data',
+                        },
+                        {
+                          id: 3,
+                          label: 'EXECUÇÃO DA MANUTENÇÃO',
+                          value: 'manutencoes.dataEfetivacao',
+                        },
+                      ]}
                       selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
+                      handleChange={(value: string) =>
                         setFilters((prev) => ({
                           ...prev,
-                          city: value as string[],
+                          date: {
+                            ...prev.date,
+                            field: value,
+                          },
                         }))
                       }
                       onReset={() =>
                         setFilters((prev) => ({
                           ...prev,
-                          city: [],
+                          date: {
+                            after: null,
+                            before: null,
+                            field: null,
+                          },
                         }))
                       }
                     />
-                  </div>
-                  <div className="w-full lg:w-[300px]">
-                    <MultipleSelectInput
-                      width={'100%'}
-                      label={'EQUIPE RESPONSÁVEL'}
-                      selected={filters.technicalTeam}
-                      options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
-                      selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          technicalTeam: value as string[],
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          technicalTeam: [],
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="w-full lg:w-[300px]">
-                    <MultipleSelectInput
-                      width={'100%'}
-                      label={'STATUS DA OBRA'}
-                      selected={filters.executionStatus}
-                      options={ServiceOrderStatus}
-                      selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          executionStatus: value as string[],
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          executionStatus: [],
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="w-full lg:w-[300px]">
-                    <MultipleSelectInput
-                      width={'100%'}
-                      label={'PLANO DE O&M'}
-                      selected={filters.oemPlan}
-                      options={oemPlans.map((plan, index) => ({ id: index + 1, label: plan.label, value: plan.value }))}
-                      selectedItemLabel={'SEM FILTRO'}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          oemPlan: value as string[],
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          oemPlan: [],
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                  <div
-                    onClick={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        pendingMaintenance: !filters.pendingMaintenance,
-                      }))
-                    }
-                    className={`${filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                  >
-                    MANUTENÇÃO PENDENTE
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        overdueMaintenance: !filters.overdueMaintenance,
-                      }))
-                    }
-                    className={`${filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                  >
-                    MANUTENÇÃO ATRASADA
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        systemOffline: !filters.systemOffline,
-                      }))
-                    }
-                    className={`${filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-                  >
-                    PENDENTE CONFERÊNCIA DE USINA LIGADA
-                  </div>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
-        <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
-          {projects ? (
-            projects.map((project) => (
-              <div
-                onClick={() => {
-                  setModalProject({ id: project._id, isOpen: true })
-                }}
-                key={project._id}
-                className="border-primary/20 dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
-              >
-                <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-                <div className="flex flex-col p-2 pb-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
-                    <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
-                  </div>
-                  <ProjectCardsTags projectTags={project.etiquetas} />
-
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex flex-col items-start">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CIDADE</span>
-                      <p className="text-xs font-medium tracking-tight">{project.cidade}</p>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TOPOLOGIA</span>
-                      <p className="text-xs font-medium tracking-tight">{project.sistema.topologia}</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex flex-col items-start">
-                      <span className={`text-primary/60 text-[0.6rem] leading-none tracking-tight`}>STATUS DO O&M</span>
-                      <p
-                        className={`text-xs font-medium tracking-tight ${checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color}`}
-                      >
-                        {checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">NÚMERO DE MÓDULOS</span>
-                      <p className={'text-xs font-medium tracking-tight'}>{project.sistema.qtdeModulos}</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex flex-col items-start">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">EQUIPE TÉCNICA</span>
-                      <p className={'text-xs font-medium tracking-tight'}>{project.obra.equipeResp || 'NÃO DEFINIDO'}</p>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">SAÍDA DE OBRA</span>
-                      <p className={'text-xs font-medium tracking-tight'}>{formatDateAsLocale(project.obra.saida)}</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center justify-center">
-                    <div className="flex flex-col items-center">
-                      <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PLANO DE O&M</span>
-                      <p className={'text-center text-xs font-medium tracking-tight text-cyan-500'}>{project.oem?.plano || 'NÃO DEFINIDO'}</p>
-                    </div>
                   </div>
                 </div>
               </div>
-            ))
-          ) : (
-            <LoadingPage />
-          )}
-        </div>
-        <Link href={'/oem/baixaPerformance'}>
-          <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
-            <p className="text-sm font-bold uppercase">ACOMPANHAMENTO DE PERFORMANCE</p>
-          </div>
-        </Link>
-        {modalProject.id && modalProject.isOpen && (
-          <ModalOeM closeModal={() => setModalProject({ id: null, isOpen: false })} modalIsOpen={modalProject.isOpen} projectId={modalProject.id} />
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div className="w-full lg:w-[300px]">
+                  <MultipleSelectInputVirtualized
+                    width={'100%'}
+                    label={'CIDADE'}
+                    selected={filters.city}
+                    options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        city: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        city: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[300px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'EQUIPE RESPONSÁVEL'}
+                    selected={filters.technicalTeam}
+                    options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        technicalTeam: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        technicalTeam: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[300px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'STATUS DA OBRA'}
+                    selected={filters.executionStatus}
+                    options={ServiceOrderStatus}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        executionStatus: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        executionStatus: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[300px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'PLANO DE O&M'}
+                    selected={filters.oemPlan}
+                    options={oemPlans.map((plan, index) => ({ id: index + 1, label: plan.label, value: plan.value }))}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        oemPlan: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        oemPlan: [],
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
+                <div
+                  onClick={() =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      pendingMaintenance: !filters.pendingMaintenance,
+                    }))
+                  }
+                  className={`${filters.pendingMaintenance ? 'bg-[#fead41]' : 'bg-orange-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                >
+                  MANUTENÇÃO PENDENTE
+                </div>
+                <div
+                  onClick={() =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      overdueMaintenance: !filters.overdueMaintenance,
+                    }))
+                  }
+                  className={`${filters.overdueMaintenance ? 'bg-red-500' : 'bg-red-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                >
+                  MANUTENÇÃO ATRASADA
+                </div>
+                <div
+                  onClick={() =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      systemOffline: !filters.systemOffline,
+                    }))
+                  }
+                  className={`${filters.systemOffline ? 'bg-[#fead41]' : 'bg-orange-300'} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
+                >
+                  PENDENTE CONFERÊNCIA DE USINA LIGADA
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      <div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
+        {projects ? (
+          projects.map((project) => (
+            <div
+              onClick={() => {
+                setModalProject({ id: project._id, isOpen: true })
+              }}
+              key={project._id}
+              className="border-primary/20 dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
+            >
+              <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+              <div className="flex flex-col p-2 pb-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
+                  <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
+                </div>
+                <ProjectCardsTags projectTags={project.etiquetas} />
+
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CIDADE</span>
+                    <p className="text-xs font-medium tracking-tight">{project.cidade}</p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TOPOLOGIA</span>
+                    <p className="text-xs font-medium tracking-tight">{project.sistema.topologia}</p>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className={`text-primary/60 text-[0.6rem] leading-none tracking-tight`}>STATUS DO O&M</span>
+                    <p
+                      className={`text-xs font-medium tracking-tight ${checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color}`}
+                    >
+                      {checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">NÚMERO DE MÓDULOS</span>
+                    <p className={'text-xs font-medium tracking-tight'}>{project.sistema.qtdeModulos}</p>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">EQUIPE TÉCNICA</span>
+                    <p className={'text-xs font-medium tracking-tight'}>{project.obra.equipeResp || 'NÃO DEFINIDO'}</p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">SAÍDA DE OBRA</span>
+                    <p className={'text-xs font-medium tracking-tight'}>{formatDateAsLocale(project.obra.saida)}</p>
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center justify-center">
+                  <div className="flex flex-col items-center">
+                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PLANO DE O&M</span>
+                    <p className={'text-center text-xs font-medium tracking-tight text-cyan-500'}>{project.oem?.plano || 'NÃO DEFINIDO'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <LoadingPage />
         )}
       </div>
-    )
-  }
+      <Link href={'/oem/baixaPerformance'}>
+        <div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+          <p className="text-sm font-bold uppercase">ACOMPANHAMENTO DE PERFORMANCE</p>
+        </div>
+      </Link>
+      {modalProject.id && modalProject.isOpen && (
+        <ModalOeM closeModal={() => setModalProject({ id: null, isOpen: false })} modalIsOpen={modalProject.isOpen} projectId={modalProject.id} />
+      )}
+    </div>
+  )
 }
-
-export default OemPage

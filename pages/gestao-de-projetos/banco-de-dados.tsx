@@ -1,26 +1,36 @@
 import React, { useState } from 'react'
 
-import { useRouter } from 'next/router'
 import { useSession } from '@/components/providers/SessionProvider'
+import { useRouter } from 'next/router'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 import LoadingPage from '../../components/utils/LoadingPage'
 
-import { ProjectTypesCollors } from '../../utils/constants'
-import { useProjectsByPersonalizedFilters } from '@/utils/methods/query/projects'
+import ModalDatabase from '@/components/ModalDatabase'
 import FilterMenu from '@/components/identificador/banco-de-dados/FilterMenu'
 import ProjectsDBPagination from '@/components/identificador/banco-de-dados/Pagination'
-import ErrorComponent from '@/components/utils/ErrorComponent'
 import ProjectDBCard from '@/components/identificador/banco-de-dados/ProjectDBCard'
-import { Button } from '@/components/ui/button'
 import ProjectExportationMenu from '@/components/identificador/projects/ProjectExportationMenu'
-import ModalDatabase from '@/components/ModalDatabase'
+import { Button } from '@/components/ui/button'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { useProjectsByPersonalizedFilters } from '@/utils/methods/query/projects'
 import { useQueryClient } from '@tanstack/react-query'
+import { ProjectTypesCollors } from '../../utils/constants'
 function MainDatebasePage() {
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <MainDatebasePageContent session={session} />
+}
+
+export default MainDatebasePage
+
+function MainDatebasePageContent({ session }: { session: TAuthSession }) {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const { session, status } = useSession({ required: true })
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [page, setPage] = useState<number>(1)
   const { data, isLoading, isError, isSuccess, filters, updateFilters } = useProjectsByPersonalizedFilters({ page })
@@ -45,7 +55,6 @@ function MainDatebasePage() {
     'ADM',
     'RH',
   ].every((el) => session?.user.permissoes.rotas.includes(el))
-  if (status !== 'authenticated') return <LoadingPage />
 
   return (
     <div className="grow p-6">
@@ -118,5 +127,3 @@ function MainDatebasePage() {
     </div>
   )
 }
-
-export default MainDatebasePage

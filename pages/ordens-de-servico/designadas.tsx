@@ -1,26 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react'
 import { useSession } from '@/components/providers/SessionProvider'
+import React, { useContext, useEffect, useState } from 'react'
 import ModalOS from '../../components/ModalOS'
 
 import { useServiceOrdersByResponsible } from '../../utils/methods/query/service-orders'
 
+import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
-import { getErrorMessage } from '@/utils/methods/handlers'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { cn } from '@/lib/utils'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
-import Avatar from '@/components/utils/Avatar'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import type { TServiceOrderSimplifiedDTO } from '@/utils/schemas/service-order'
+import { Pencil, Tag, UserRound } from 'lucide-react'
 import { BsCalendar, BsCalendarPlus } from 'react-icons/bs'
 import { BsCalendarCheck } from 'react-icons/bs'
-import { Pencil, Tag, UserRound } from 'lucide-react'
 import { FaLocationDot } from 'react-icons/fa6'
-import { cn } from '@/lib/utils'
 import { MdDashboard } from 'react-icons/md'
-import { TServiceOrderSimplifiedDTO } from '@/utils/schemas/service-order'
-import type { TAuthSession } from '@/lib/authentication/types'
 
 function OSDaEquipe() {
-  const { session, status } = useSession({ required: true })
-  if (status != 'authenticated') return <LoadingComponent />
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
   if (!session?.user?.visualizacao.referencia) return <ErrorComponent msg="Você não tem permissão para acessar esta página." />
   return <AssignedServiceOrdersPage responsibleName={session?.user?.visualizacao.referencia} session={session} />
 }
@@ -33,14 +36,15 @@ type AssignedServiceOrdersPageProps = {
 }
 function AssignedServiceOrdersPage({ responsibleName, session }: AssignedServiceOrdersPageProps) {
   const { data: orders, isLoading, isSuccess, isError, error } = useServiceOrdersByResponsible({ responsibleName })
-  const [editModal, setEditModal] = useState<{ isOpen: boolean; id: string | null }>({ isOpen: false, id: null })
+  const [editModal, setEditModal] = useState<{
+    isOpen: boolean
+    id: string | null
+  }>({ isOpen: false, id: null })
   return (
     <div className="bg-background flex grow flex-col p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
         <p className="text-center text-2xl font-black text-[#15599a] uppercase">ORDENS DE SERVIÇO DE {responsibleName}</p>
       </div>
-
-      <div className="flex w-full flex-wrap items-center gap-2"></div>
 
       {isSuccess ? (
         <div className="mt-4 flex flex-col justify-around gap-3">
@@ -49,7 +53,7 @@ function AssignedServiceOrdersPage({ responsibleName, session }: AssignedService
           {isSuccess ? (
             orders && orders.length > 0 ? (
               orders?.map((order, index) => (
-                <ServiceOrderCard key={index} serviceOrder={order} handleClick={() => setEditModal({ isOpen: true, id: order._id })} />
+                <ServiceOrderCard key={order._id} serviceOrder={order} handleClick={() => setEditModal({ isOpen: true, id: order._id })} />
               ))
             ) : (
               <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma ordem de serviço encontrada.</div>
@@ -118,7 +122,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           {serviceOrder.etiquetas && serviceOrder.etiquetas?.length > 0 ? (
             serviceOrder.etiquetas.map((tag, index) => (
               <div
-                key={index}
+                key={tag._id}
                 style={{
                   border: '1px solid',
                   borderColor: tag.cores.primaria,
@@ -187,6 +191,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           </div>
         </div>
         <button
+          type="button"
           onClick={() => handleClick(serviceOrder._id)}
           className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
         >

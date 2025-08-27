@@ -1,43 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import { useSession } from '../../components/providers/SessionProvider'
-import { useQueryClient } from '@tanstack/react-query'
-import { motion, AnimatePresence } from 'framer-motion'
 
 import { AiOutlineSearch } from 'react-icons/ai'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import ModalComercial from '../../components/ModalComercial'
 import TagTipoDeServico from '../../components/TagTipoDeServico'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
 import ComercialSkeleton from '../../components/skeletons/ComercialSkeleton'
+import FilterButton from '../../components/utils/Buttons/FilterButton'
 import LoadingPage from '../../components/utils/LoadingPage'
 
-import { useComercialProjects } from '../../utils/methods/query/comercial'
-import { formatDate, formatDecimalPlaces, formatToMoney, statusLiberacao, tiposDeServico, vendedores } from '../../utils/constants'
-import NumberInput from '../../components/inputs/Number'
-import TextInput from '../../components/inputs/Text'
-import DateInput from '../../components/inputs/Date'
-import SelectInput from '../../components/inputs/Select'
-import {
-  allActiveSellers,
-  contractStatus,
-  HomologationControlStatus,
-  insiders,
-  PurchaseControlStatus,
-  serviceTypes,
-} from '../../utils/select-options'
-import MultipleSelectInput from '../../components/inputs/MultipleSelect'
-import { formatDateInputChange } from '../../utils/methods/shared'
-import { VscDiffAdded } from 'react-icons/vsc'
 import { FaCode, FaSignature } from 'react-icons/fa'
 import { MdAttachMoney, MdCreate, MdOutlineAttachMoney } from 'react-icons/md'
-import { getContractValue } from '../../utils/methods/util/projects'
-import { useTags } from '../../utils/methods/query/tags'
+import { VscDiffAdded } from 'react-icons/vsc'
+import DateInput from '../../components/inputs/Date'
+import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+import NumberInput from '../../components/inputs/Number'
+import SelectInput from '../../components/inputs/Select'
+import TextInput from '../../components/inputs/Text'
 import ProjectCardsTags from '../../components/utils/ProjectCardsTags'
+import { formatDate, formatDecimalPlaces, formatToMoney, statusLiberacao, tiposDeServico, vendedores } from '../../utils/constants'
+import { useComercialProjects } from '../../utils/methods/query/comercial'
+import { useTags } from '../../utils/methods/query/tags'
+import { formatDateInputChange } from '../../utils/methods/shared'
+import { getContractValue } from '../../utils/methods/util/projects'
+import {
+  HomologationControlStatus,
+  PurchaseControlStatus,
+  allActiveSellers,
+  contractStatus,
+  insiders,
+  serviceTypes,
+} from '../../utils/select-options'
+import type { TAuthSession } from '@/lib/authentication/types'
 const statusStyles = {
   ASSINADO: {
     textColor: 'text-green-500',
@@ -56,9 +58,18 @@ function getContractTagColor(status) {
 }
 
 function Comercial() {
-  const router = useRouter()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
+  console.log({ session, status })
+  return <ComercialContent session={session} />
+}
+
+export default Comercial
+
+function ComercialContent({ session }: { session: TAuthSession }) {
   const { data: projects, isSuccess: projectsSuccess, filters, setFilters } = useComercialProjects({ enabled: !!session?.user })
   const { data: tags } = useTags({ initialFilters: { applicableToProjects: 'true' } })
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
@@ -127,14 +138,7 @@ function Comercial() {
     console.log('ID ESCOLHIDO', id)
     setModalProject({ projectId: id, isOpen: true })
   }
-  useEffect(() => {
-    if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('PPS')) return router.push('/')
-    }
-  }, [session])
-  console.log(filters.tagIds)
-  if (status !== 'authenticated') return <LoadingPage />
+
   if (projectsSuccess && projects) {
     return (
       <div className="grow p-6">
@@ -586,7 +590,4 @@ function Comercial() {
       </div>
     )
   }
-  return <ComercialSkeleton />
 }
-
-export default Comercial

@@ -1,6 +1,10 @@
+import { useSession } from '@/components/providers/SessionProvider'
 import Avatar from '@/components/utils/Avatar'
 import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import LoadingComponent from '@/components/utils/LoadingComponent'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { CRM_APP_URL } from '@/utils/constants'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
@@ -11,15 +15,14 @@ import type { TFunnelDTO } from '@/utils/schemas/crm/funnels.schema'
 import type { TOpportunitySimplifiedDTOWithProposalAndActivitiesAndFunnels } from '@/utils/schemas/crm/opportunity.schema'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Share2 } from 'lucide-react'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { useSession } from '@/components/providers/SessionProvider'
 import toast from 'react-hot-toast'
 import { BsCalendar, BsCalendarPlus, BsFillMegaphoneFill } from 'react-icons/bs'
 import { MdDashboard } from 'react-icons/md'
 
 function MainNutritionPage() {
-  const { session, status } = useSession({ required: true })
-  if (status !== 'authenticated') return <LoadingComponent />
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
 
   return <NutritionPage session={session} />
 }

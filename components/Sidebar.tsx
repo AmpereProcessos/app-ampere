@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { useRouter } from 'next/router'
 
 import { useSession } from '@/components/providers/SessionProvider'
 import type { TAuthSession } from '@/lib/authentication/types'
 import GeralSidebar from './SidebarOptions/GeralSidebar'
-import VendedorSidebar from './SidebarOptions/VendedorSidebar'
 import ObrasSidebar from './SidebarOptions/ObrasSidebar'
+import VendedorSidebar from './SidebarOptions/VendedorSidebar'
 
 const sidebar = {
   hidden: {
@@ -27,7 +27,7 @@ type SidebarProps = {
 function Sidebar({ sidebarVisible }: SidebarProps) {
   const router = useRouter()
   const publicOrDocumentPath = router.pathname.includes('pdf') || router.pathname.includes('publico') || router.pathname.includes('auth')
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
   if (status !== 'authenticated' || publicOrDocumentPath) return null
   return (

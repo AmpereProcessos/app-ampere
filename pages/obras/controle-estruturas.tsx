@@ -1,31 +1,43 @@
 import StructuresAdequationsFilterMenu from '@/components/identificador/controleEstruturas/FilterMenu'
 import InstallationStrucutreProjectCard from '@/components/identificador/controleEstruturas/InstallationStrucutreProjectCard'
+import { useSession } from '@/components/providers/SessionProvider'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { useInstallationStructureExecutionProjects } from '@/utils/methods/query/execution'
-import { useSession } from '@/components/providers/SessionProvider'
 import React, { useState } from 'react'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { TInstallationStructureExecution } from '../api/gestao-obras/estruturas'
-import { VscDiffAdded } from 'react-icons/vsc'
 import { FaTools } from 'react-icons/fa'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { VscDiffAdded } from 'react-icons/vsc'
+import type { TInstallationStructureExecution } from '../api/gestao-obras/estruturas'
 
 function InstallationStructureControls() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
   const isAuthorized = session?.user.permissoes.rotas.includes('Obras')
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <InstallationStructureControlsContent session={session} />
+}
+
+export default InstallationStructureControls
+
+function InstallationStructureControlsContent({ session }: { session: TAuthSession }) {
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
 
   const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useInstallationStructureExecutionProjects()
 
   function getStats(info: TInstallationStructureExecution[]) {
     const pending = info.reduce(
-      (acc, current) => (!current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status != 'PRONTA' ? acc + 1 : acc),
+      (acc, current) => (!current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status !== 'PRONTA' ? acc + 1 : acc),
       0
     )
     const pendingPaid = info.reduce(
       (acc, current) =>
-        !current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status != 'PRONTA' && !!current.compra.dataPagamento
+        !current.estruturaPersonalizada.dataMontagem && current.estruturaPersonalizada.status !== 'PRONTA' && !!current.compra.dataPagamento
           ? acc + 1
           : acc,
       0
@@ -37,8 +49,6 @@ function InstallationStructureControls() {
       pendentesPagos: pendingPaid,
     }
   }
-  if (status != 'authenticated') return <LoadingPage />
-  if (!isAuthorized) return <UnauthorizedPage />
   return (
     <div className="h-full grow bg-slate-50 p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
@@ -93,5 +103,3 @@ function InstallationStructureControls() {
     </div>
   )
 }
-
-export default InstallationStructureControls

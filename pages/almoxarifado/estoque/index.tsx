@@ -1,44 +1,48 @@
-import React, { useState } from 'react'
-import Link from 'next/link'
 import { useSession } from '@/components/providers/SessionProvider'
 import type { TAuthSession } from '@/lib/authentication/types'
+import Link from 'next/link'
+import React, { useState } from 'react'
 
 import { FaBox } from 'react-icons/fa'
 
 import LoadingPage from '../../../components/utils/LoadingPage'
 
-import { useMaterialsDatabase, useMaterialSuppliers } from '../../../utils/methods/query/materials'
-import TextInput from '../../../components/inputs/Text'
-import NumberInput from '../../../components/inputs/Number'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { AnimatePresence, motion } from 'framer-motion'
-import ErrorComponent from '@/components/utils/ErrorComponent'
-import NewMaterial from '@/components/identificador/estoque/NewMaterial'
-import { formatDecimalPlaces, SlideMotionVariants } from '@/utils/constants'
+import NewPurchaseControlSimplified from '@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified'
 import EditMaterial from '@/components/identificador/estoque/EditMaterial'
-import { BsCalendarPlus } from 'react-icons/bs'
-import { formatDateAsLocale, formatDateTimeForInput } from '@/utils/methods/formatting'
-import { Box, ChartColumn, Code, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Truck } from 'lucide-react'
+import NewMaterial from '@/components/identificador/estoque/NewMaterial'
+import CheckboxInput from '@/components/inputs/Checkbox'
+import DateTimeInput from '@/components/inputs/DateTimeInput'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import SelectInput from '@/components/inputs/Select'
 import { Button } from '@/components/ui/button'
+import ErrorComponent from '@/components/utils/ErrorComponent'
 import GeneralPaginationComponent from '@/components/utils/Pagination'
-import { getErrorMessage } from '@/utils/methods/handlers'
-import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from '@/pages/api/almoxarifado/estoque/database'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import UnauthorizedComponent from '@/components/utils/UnauthorizedComponent'
 import { cn } from '@/lib/utils'
-import SelectInput from '@/components/inputs/Select'
-import DateTimeInput from '@/components/inputs/DateTimeInput'
+import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from '@/pages/api/almoxarifado/estoque/database'
+import { SlideMotionVariants, formatDecimalPlaces } from '@/utils/constants'
+import { formatDateAsLocale, formatDateTimeForInput } from '@/utils/methods/formatting'
+import { getErrorMessage } from '@/utils/methods/handlers'
 import { formatDateInputChange } from '@/utils/methods/shared'
-import CheckboxInput from '@/components/inputs/Checkbox'
-import NewPurchaseControlSimplified from '@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified'
 import { useQueryClient } from '@tanstack/react-query'
-import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Box, ChartColumn, Code, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Truck } from 'lucide-react'
 import Image from 'next/image'
+import { BsCalendarPlus } from 'react-icons/bs'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import NumberInput from '../../../components/inputs/Number'
+import TextInput from '../../../components/inputs/Text'
+import { useMaterialSuppliers, useMaterialsDatabase } from '../../../utils/methods/query/materials'
 
 function StockPage() {
-  const { session, status } = useSession({ required: true })
-  if (status !== 'authenticated') return <LoadingPage />
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
   const isAuthorized = !!session?.user.permissoes.rotas?.includes('Almoxarifado') || !!session?.user.permissoes.rotas?.includes('Obras')
   if (!isAuthorized) return <UnauthorizedComponent />
+
   return <StockPageComponent session={session} />
 }
 

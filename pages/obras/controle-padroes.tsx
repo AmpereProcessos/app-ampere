@@ -1,26 +1,36 @@
 import React, { useState } from 'react'
 
-import { useRouter } from 'next/router'
-import { useSession } from '@/components/providers/SessionProvider'
-import LoadingPage from '../../components/utils/LoadingPage'
-import { useEnergyPAExecutionWithFilters, usePAExecutionStats } from '@/utils/methods/query/execution'
-import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import PAAdequationsFilterMenu from '@/components/identificador/controlePadroes/FilterMenu'
-import ErrorComponent from '@/components/utils/ErrorComponent'
 import PAAdequationProjectCard from '@/components/identificador/controlePadroes/PAAdequationProjectCard'
-import type { TEnergyPAExecutionWithFiltersInput } from '../api/gestao-obras/padroes'
-import { ChartArea, CircleCheck, LayoutGrid, X } from 'lucide-react'
 import DateIntervalInput from '@/components/inputs/DateIntervalInput'
+import { useSession } from '@/components/providers/SessionProvider'
+import ErrorComponent from '@/components/utils/ErrorComponent'
 import GeneralPaginationComponent from '@/components/utils/Pagination'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { useEnergyPAExecutionWithFilters, usePAExecutionStats } from '@/utils/methods/query/execution'
 import { useQueryClient } from '@tanstack/react-query'
+import { ChartArea, CircleCheck, LayoutGrid, X } from 'lucide-react'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import LoadingPage from '../../components/utils/LoadingPage'
+import type { TEnergyPAExecutionWithFiltersInput } from '../api/gestao-obras/padroes'
 
 function EnergyPAControls() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
   const isAuthorized = session?.user.permissoes.rotas.includes('Obras') || session?.user.permissoes.rotas.includes('Pós-Venda')
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <EnergyPAControlsContent session={session} />
+}
+
+export default EnergyPAControls
+
+function EnergyPAControlsContent({ session }: { session: TAuthSession }) {
+  const queryClient = useQueryClient()
   const { data: projectsResult, isLoading, isError, isSuccess, queryParams, updateQueryParams, queryKey } = useEnergyPAExecutionWithFilters({})
   const projects = projectsResult?.projects || []
   const projectsMatched = projectsResult?.projectsMatched || 0
@@ -30,8 +40,7 @@ function EnergyPAControls() {
 
   const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey })
   const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey })
-  if (status !== 'authenticated') return <LoadingPage />
-  if (!isAuthorized) return <UnauthorizedPage />
+
   return (
     <div className="grow bg-slate-50 p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
@@ -83,8 +92,6 @@ function EnergyPAControls() {
     </div>
   )
 }
-
-export default EnergyPAControls
 
 type EnergyPAFiltersShowcaseProps = {
   queryParams: TEnergyPAExecutionWithFiltersInput

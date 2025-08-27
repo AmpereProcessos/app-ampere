@@ -1,39 +1,49 @@
 import React, { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import ModalADM from '../../components/ModalADM'
 
-import TagTipoDeServico from '../../components/TagTipoDeServico'
-import { equipesTecnicas, formatDate, GeneralVisibleHiddenExitMotionVariants, SlideMotionVariants } from '../../utils/constants'
 import dayjs from 'dayjs'
+import TagTipoDeServico from '../../components/TagTipoDeServico'
+import { GeneralVisibleHiddenExitMotionVariants, SlideMotionVariants, equipesTecnicas, formatDate } from '../../utils/constants'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
 
-import { useSession } from '@/components/providers/SessionProvider'
-import LoadingPage from '../../components/utils/LoadingPage'
-import { billableCompanies, contractStatus, inspectionStatus } from '../../utils/select-options'
-import { type TUseADMProjectsFilters, useADMProjects } from '@/utils/methods/query/adm'
-import TextInput from '@/components/inputs/Text'
-import SelectInput from '@/components/inputs/Select'
-import DateInput from '@/components/inputs/Date'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import ErrorComponent from '@/components/utils/ErrorComponent'
-import type { TProjectDTO } from '@/utils/schemas/projects'
-import { VscDiffAdded } from 'react-icons/vsc'
-import { MdPaid } from 'react-icons/md'
-import { IoDocumentTextOutline } from 'react-icons/io5'
-import CheckboxInput from '@/components/inputs/Checkbox'
 import ADMProjectCard from '@/components/identificador/adm/ADMProjectCard'
+import CheckboxInput from '@/components/inputs/Checkbox'
+import DateInput from '@/components/inputs/Date'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import SelectInput from '@/components/inputs/Select'
+import TextInput from '@/components/inputs/Text'
+import { useSession } from '@/components/providers/SessionProvider'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import { type TUseADMProjectsFilters, useADMProjects } from '@/utils/methods/query/adm'
 import { useUsers } from '@/utils/methods/query/crm/users'
 import { useTags } from '@/utils/methods/query/tags'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import type { TProjectDTO } from '@/utils/schemas/projects'
+import { IoDocumentTextOutline } from 'react-icons/io5'
+import { MdPaid } from 'react-icons/md'
+import { VscDiffAdded } from 'react-icons/vsc'
+import LoadingPage from '../../components/utils/LoadingPage'
+import { billableCompanies, contractStatus, inspectionStatus } from '../../utils/select-options'
+import type { TAuthSession } from '@/lib/authentication/types'
 function Administracao() {
-  const router = useRouter()
-  const { session, status } = useSession({
-    required: true,
-  })
+  const { session, status } = useSession()
 
+  const isAuthorized = session?.user.permissoes.administrativo.visualizar
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <AdministracaoContent session={session} />
+}
+
+export default Administracao
+
+function AdministracaoContent({ session }: { session: TAuthSession }) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const { data: projects, filters, setFilters, isLoading, isSuccess, isError } = useADMProjects()
@@ -59,17 +69,6 @@ function Administracao() {
   function handleOpenModal(id: string) {
     return setModalProject({ isOpen: true, projectId: id })
   }
-
-  useEffect(() => {
-    if (session) {
-      const isAuthorized = session?.user.permissoes.administrativo.visualizar
-      if (!isAuthorized) {
-        router.push('/')
-      }
-    }
-  }, [session])
-
-  if (status !== 'authenticated') return <LoadingPage />
 
   return (
     <div className="grow p-6">
@@ -156,9 +155,6 @@ function Administracao() {
     </div>
   )
 }
-
-export default Administracao
-
 type ADMProjectFiltersProps = {
   filters: TUseADMProjectsFilters
   setFilters: Dispatch<SetStateAction<TUseADMProjectsFilters>>

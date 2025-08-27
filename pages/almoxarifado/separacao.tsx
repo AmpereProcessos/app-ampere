@@ -1,61 +1,27 @@
-import axios from 'axios'
-import React, { useState, useEffect } from 'react'
-import LoadingPage from '../../components/utils/LoadingPage'
-import { useSession } from '@/components/providers/SessionProvider'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { useRouter } from 'next/router'
-import { useWarehouseProjects } from '@/utils/methods/query/warehouse'
-import ErrorComponent from '@/components/utils/ErrorComponent'
 import FilterMenu from '@/components/identificador/almoxarifado/separacao/FilterMenu'
 import SeparationProjectCard from '@/components/identificador/almoxarifado/separacao/SeparationProjectCard'
+import { useSession } from '@/components/providers/SessionProvider'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { useWarehouseProjects } from '@/utils/methods/query/warehouse'
+import React, { useState } from 'react'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import LoadingPage from '../../components/utils/LoadingPage'
 function PendingMaterialSeparation() {
-  const { session, status } = useSession({ required: true })
-  const router = useRouter()
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
+  return <PendingMaterialSeparationContent session={session} />
+}
+
+export default PendingMaterialSeparation
+
+function PendingMaterialSeparationContent({ session }: { session: TAuthSession }) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
   const { data: projects, isLoading, isError, isSuccess, filters, setFilters } = useWarehouseProjects()
-
-  // function filterProjects() {
-  //   var newArr
-  //   if (filters.cidadeFilter.length > 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => filters.cidadeFilter.includes(project.cidade))
-  //   }
-  //   if (filters.equipeFilter.length > 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => filters.equipeFilter.includes(project.obra.equipeResp))
-  //   }
-  //   if (filters.statusDaObraFilter.length > 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => filters.statusDaObraFilter.includes(project.obra.statusDaObra))
-  //   }
-  //   if (filters.entregaStatusFilter.length > 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => filters.entregaStatusFilter.includes(project.compra.statusEntrega))
-  //   }
-  //   if (filters.qtdeModulosFilter && filters.qtdeModulosFilter != 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => Number(project.sistema.qtdeModulos) == Number(filters.qtdeModulosFilter))
-  //   }
-  //   if (filters.topologiaFilter.length > 0) {
-  //     if (!newArr) newArr = projects
-  //     newArr = newArr.filter((project) => filters.topologiaFilter.includes(project.sistema.topologia))
-  //   }
-  //   if (!newArr) setFilteredProjects(projects)
-  //   else {
-  //     setFilteredProjects(newArr)
-  //   }
-  // }
-  useEffect(() => {
-    if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      if (!userRoutes.includes('Obras') && !userRoutes.includes('Almoxarifado')) {
-        router.push('/')
-      }
-    }
-  }, [session])
-
-  if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="grow p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
@@ -92,5 +58,3 @@ function PendingMaterialSeparation() {
     </div>
   )
 }
-
-export default PendingMaterialSeparation

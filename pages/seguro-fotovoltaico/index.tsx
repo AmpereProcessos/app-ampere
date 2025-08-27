@@ -1,41 +1,61 @@
+import EditRevenue from '@/components/identificador/receitas/modals/EditRevenue'
+import TextInput from '@/components/inputs/Text'
+import { useSession } from '@/components/providers/SessionProvider'
 import { Button } from '@/components/ui/button'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
-import { getErrorMessage } from '@/utils/methods/handlers'
-import { useUFVInsuranceProjects, UseUFVInsuranceProjectsFiltersParams } from '@/utils/methods/query/ufv-insurance'
-import { BadgeDollarSign, BadgeDollarSignIcon, Clock, ListFilter, Signature } from 'lucide-react'
-import { useSession } from '@/components/providers/SessionProvider'
 import type { TAuthSession } from '@/lib/authentication/types'
-import React, { useState } from 'react'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { TProjectUFVInsuranceDTO } from '../api/projects/seguro-fotovoltaico'
-import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
-import { FaLocationDot } from 'react-icons/fa6'
-import { MdEdit, MdPhone } from 'react-icons/md'
-import { BsCalendarCheck, BsCalendarEvent, BsCalendarPlus, BsPersonVcard } from 'react-icons/bs'
-import { formatDecimalPlaces, formatToMoney, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
-import { FaPercentage } from 'react-icons/fa'
-import { TRevenue } from '@/utils/schemas/revenues'
-import dayjs from 'dayjs'
-import EditRevenue from '@/components/identificador/receitas/modals/EditRevenue'
-import { AnimatePresence, motion } from 'framer-motion'
-import TextInput from '@/components/inputs/Text'
 import { cn } from '@/lib/utils'
+import { GeneralVisibleHiddenExitMotionVariants, formatDecimalPlaces, formatToMoney } from '@/utils/constants'
+import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { type UseUFVInsuranceProjectsFiltersParams, useUFVInsuranceProjects } from '@/utils/methods/query/ufv-insurance'
+import type { TRevenue } from '@/utils/schemas/revenues'
+import dayjs from 'dayjs'
+import { AnimatePresence, motion } from 'framer-motion'
+import { BadgeDollarSign, BadgeDollarSignIcon, Clock, ListFilter, Signature } from 'lucide-react'
+import type React from 'react'
+import { useState } from 'react'
+import { BsCalendarCheck, BsCalendarEvent, BsCalendarPlus, BsPersonVcard } from 'react-icons/bs'
+import { FaPercentage } from 'react-icons/fa'
+import { FaLocationDot } from 'react-icons/fa6'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { MdEdit, MdPhone } from 'react-icons/md'
+import type { TProjectUFVInsuranceDTO } from '../api/projects/seguro-fotovoltaico'
 
-import StatesAndCities from '@/utils/jsons/estados-cidades.json'
-import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
 import CheckboxInput from '@/components/inputs/Checkbox'
+import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import StatesAndCities from '@/utils/jsons/estados-cidades.json'
 
-const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
-const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }))
+const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({
+  id: index + 1,
+  label: c,
+  value: c,
+}))
+const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({
+  id: index + 1,
+  label: c,
+  value: c,
+}))
 function MainUFVInsurancePage() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <MainUFVInsurancePageContent session={session} />
+}
+
+export default MainUFVInsurancePage
+
+function MainUFVInsurancePageContent({ session }: { session: TAuthSession }) {
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
-  const [revenueModal, setRevenueModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
+  const [revenueModal, setRevenueModal] = useState<{
+    id: string | null
+    isOpen: boolean
+  }>({ id: null, isOpen: false })
   const { data: projects, isLoading, isError, isSuccess, error, filters, setFilters } = useUFVInsuranceProjects()
 
-  if (status != 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
@@ -75,8 +95,6 @@ function MainUFVInsurancePage() {
     </div>
   )
 }
-
-export default MainUFVInsurancePage
 
 type FilterMenuProps = {
   filters: UseUFVInsuranceProjectsFiltersParams
@@ -157,7 +175,12 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
               labelFalse="RECEBIMENTOS PENDENTES PARA SEMANA"
               labelTrue="RECEBIMENTOS PENDENTES PARA SEMANA"
               checked={filters.pendingReceiptsForWeek}
-              handleChange={(value) => setFilters((prev) => ({ ...prev, pendingReceiptsForWeek: value }))}
+              handleChange={(value) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  pendingReceiptsForWeek: value,
+                }))
+              }
             />
           </div>
           <div className="w-fit">
@@ -165,7 +188,12 @@ function FilterMenu({ filters, setFilters }: FilterMenuProps) {
               labelFalse="RECEBIMENTOS PENDENTES PARA HOJE"
               labelTrue="RECEBIMENTOS PENDENTES PARA HOJE"
               checked={filters.pendingReceiptsForToday}
-              handleChange={(value) => setFilters((prev) => ({ ...prev, pendingReceiptsForToday: value }))}
+              handleChange={(value) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  pendingReceiptsForToday: value,
+                }))
+              }
             />
           </div>
         </div>
@@ -246,7 +274,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
     const totalReceived = receipts.reduce((acc, current) => (current.dataRecebimento ? acc + (current.valor || 0) : acc), 0)
     const partionsReceived = receipts.filter((r) => !!r.dataRecebimento).length
     // In case partions received are equal to the total amount of receipts
-    if (totalReceived == revenueTotal || Math.abs(totalReceived - revenueTotal) <= 2)
+    if (totalReceived === revenueTotal || Math.abs(totalReceived - revenueTotal) <= 2)
       return {
         tag: (
           <div className="flex min-w-fit items-center gap-1 rounded-lg bg-green-500 px-2 py-0.5 text-white">
@@ -282,7 +310,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
     }
   }
   function getReceiptStatus(receipt: TRevenue['fracionamento'][number]) {
-    if (!!receipt.dataRecebimento) return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">RECEBIDO</h1>
+    if (receipt.dataRecebimento) return <h1 className="text-xxs min-w-fit rounded-lg bg-green-500 px-2 py-0.5 text-white">RECEBIDO</h1>
 
     const isForToday = dayjs().isSame(receipt.dataPrevisaoRecebimento)
     if (isForToday) return <h1 className="text-xxs min-w-fit rounded-lg bg-orange-600 px-2 py-0.5 text-white">RECEBER HOJE</h1>
@@ -316,12 +344,12 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
             <h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">
               {formatLocation({
                 location: {
-                  uf: project!.uf || '',
-                  cidade: project!.cidade || '',
-                  cep: project!.cep?.toString() || '',
-                  bairro: project!.bairro,
-                  endereco: project!.logradouro,
-                  numeroOuIdentificador: project!.numeroResidencia?.toString() || '',
+                  uf: project.uf || '',
+                  cidade: project.cidade || '',
+                  cep: project.cep?.toString() || '',
+                  bairro: project.bairro,
+                  endereco: project.logradouro,
+                  numeroOuIdentificador: project.numeroResidencia?.toString() || '',
                   complemento: null,
                   latitude: null,
                   longitude: null,
@@ -369,6 +397,7 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
             {receiptStatus.tag}
             {receiptStatus.fractionationStr ? (
               <button
+                type="button"
                 onClick={() => setShowReceipts((prev) => !prev)}
                 className={cn(
                   'text-xxs text-primary/80 rounded bg-blue-100 px-2 py-0.5 font-bold duration-300 ease-in-out',
@@ -379,8 +408,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
               </button>
             ) : null}
           </div>
-          {!!project.receita?._id ? (
+          {project.receita?._id ? (
             <button
+              type="button"
               onClick={() => onRevenueEditClick(project.receita?._id || '')}
               className="bg-primary/80 hover:border-primary/60 hover:bg-primary/60 border-primary/80 flex items-center justify-center gap-2 rounded border px-2 py-0.5 text-white duration-300 ease-in-out"
             >
@@ -392,9 +422,9 @@ function UFVInsuranceProjectCard({ project, onRevenueEditClick }: UFVInsurancePr
 
         {project.receita ? (
           showReceipts ? (
-            project.receita.fracionamento.length > 0 ? (
-              project.receita.fracionamento.map((receipt, index) => (
-                <div key={index} className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+            project.receita?.fracionamento.length > 0 ? (
+              project.receita?.fracionamento.map((receipt) => (
+                <div key={receipt.titulo} className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
                   <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                     <p className="text-[0.65rem] leading-none font-medium tracking-tight">{receipt.titulo}</p>
                     <div className="bg-secondary text-xxs text-primary/80 hidden items-center gap-1 rounded-lg px-2 py-0.5 text-center font-medium italic lg:flex">

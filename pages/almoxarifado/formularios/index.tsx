@@ -1,27 +1,28 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
 import { useSession } from '@/components/providers/SessionProvider'
 import type { TAuthSession } from '@/lib/authentication/types'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
-import TextInput from '@/components/inputs/Text'
 import DateInput from '@/components/inputs/Date'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import TextInput from '@/components/inputs/Text'
 
-import ModalNewFormulary from '../../../components/identificador/almoxarifado/formulario/NewForm'
 import ModalEditFormulary from '../../../components/identificador/almoxarifado/formulario/EditForm'
+import ModalNewFormulary from '../../../components/identificador/almoxarifado/formulario/NewForm'
 
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '../../../components/utils/LoadingPage'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
-import { useWarehouseForms } from '@/utils/methods/query/warehouse-forms'
+import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 import { formatDate } from '@/utils/constants'
+import { getPeriodDateParamsByReferenceDate } from '@/utils/methods/dates'
+import { useWarehouseForms } from '@/utils/methods/query/warehouse-forms'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import { useQueryClient } from '@tanstack/react-query'
-import FormularyCard from '@/components/identificador/almoxarifado/formulario/FormularyCard'
-import { getPeriodDateParamsByReferenceDate } from '@/utils/methods/dates'
 
 type TDateParam = {
   after: string
@@ -34,13 +35,20 @@ type TEditModal = {
 }
 
 const currentDate = new Date()
-
 const { start, end } = getPeriodDateParamsByReferenceDate({ reference: currentDate, type: 'year' })
 function Formularios() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
 
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
+  return <FormulariosContent session={session} />
+}
+
+export default Formularios
+
+function FormulariosContent({ session }: { session: TAuthSession }) {
+  const queryClient = useQueryClient()
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   const [dateParam, setDateParam] = useState<TDateParam>({ after: start.toISOString(), before: end.toISOString() })
 
@@ -48,7 +56,6 @@ function Formularios() {
 
   const [newFormModalIsOpen, setNewFormModalIsOpen] = useState(false)
   const [modalForm, setModalForm] = useState<TEditModal>({ isOpen: false, id: null })
-  if (status !== 'authenticated') return <LoadingPage />
 
   return (
     <div className="grow p-6">
@@ -196,5 +203,3 @@ function Formularios() {
     </div>
   )
 }
-
-export default Formularios

@@ -1,37 +1,41 @@
-import ProjectActivityCard from '@/components/identificador/atividades/ProjectActivityCard'
 import ModalDatabase from '@/components/ModalDatabase'
+import ProjectActivityCard from '@/components/identificador/atividades/ProjectActivityCard'
+import { useSession } from '@/components/providers/SessionProvider'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { formatLocation } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { useMonitoringProjects } from '@/utils/methods/query/oem'
 import type { TMonitoringProjectDTOSimplified } from '@/utils/schemas/projects'
-import { useSession } from '@/components/providers/SessionProvider'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { type QueryClient, useQueryClient } from '@tanstack/react-query'
+import React, { useState } from 'react'
 import { FaExpandArrowsAlt, FaPhone, FaUser } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { MdEmail, MdOutlineCheckBox } from 'react-icons/md'
-import { VscDiffAdded } from 'react-icons/vsc'
-import { type QueryClient, useQueryClient } from '@tanstack/react-query'
 
 function Monitoring() {
+  const { session, status } = useSession()
+  const isAuthorized = session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <MonitoringContent session={session} />
+}
+
+export default Monitoring
+
+function MonitoringContent({ session }: { session: TAuthSession }) {
   const queryClient = useQueryClient()
-  const router = useRouter()
-  const { session, status } = useSession({ required: true })
   const { data: projects, isLoading, isError, isSuccess, error } = useMonitoringProjects()
-  const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
-  useEffect(() => {
-    if (session) {
-      const userRoutes = session?.user.permissoes.rotas
-      const technicalSupportViewPermission = session.user.permissoes.suporte.editar
-      if (!userRoutes.includes('O&M') && !technicalSupportViewPermission) {
-        router.push('/')
-      }
-    }
-  }, [session])
-  if (status !== 'authenticated') return <LoadingPage />
+  const [editModal, setEditModal] = useState<{
+    id: string | null
+    isOpen: boolean
+  }>({ id: null, isOpen: false })
+
   return (
     <div className="grow p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
@@ -65,8 +69,6 @@ function Monitoring() {
     </div>
   )
 }
-
-export default Monitoring
 
 type MonitoringProjectCardProps = {
   project: TMonitoringProjectDTOSimplified
@@ -168,7 +170,11 @@ function MonitoringProjectCard({ project, handleClick, queryClient }: Monitoring
                 key={activity._id}
                 activity={activity}
                 projectId={project._id}
-                mutateCallback={() => queryClient.invalidateQueries({ queryKey: ['monitoring-projects'] })}
+                mutateCallback={() =>
+                  queryClient.invalidateQueries({
+                    queryKey: ['monitoring-projects'],
+                  })
+                }
               />
             ))}
           </div>

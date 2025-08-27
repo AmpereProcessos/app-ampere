@@ -1,47 +1,48 @@
-import * as Dialog from '@radix-ui/react-dialog'
+import CheckboxInput from '@/components/inputs/Checkbox'
+import DateInput from '@/components/inputs/Date'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import TextInput from '@/components/inputs/Text'
+import { useSession } from '@/components/providers/SessionProvider'
+import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingComponent from '@/components/utils/LoadingComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { GeneralVisibleHiddenExitMotionVariants, fileTypes, formatDate, formatLongString, getFileTypeTitle, isFileImage } from '@/utils/constants'
+import StatesAndCities from '@/utils/jsons/estados-cidades.json'
+import { uploadFile } from '@/utils/methods/firebase'
 import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
+import { updateProject } from '@/utils/methods/mutation/clients'
+import { createManyFileReferences } from '@/utils/methods/mutation/crm/file-references'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
+import { handleProjectServiceOrderTrigger } from '@/utils/methods/mutation/triggers'
+import { usePurchaseControlById, usePurchaseControlsTags } from '@/utils/methods/query/purchase-controls'
 import { useProjectsInDelivery } from '@/utils/methods/query/supply'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import type { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
 import { TProjectDTO } from '@/utils/schemas/projects'
+import type { TPurchaseControlDeliveryTrackingDTO } from '@/utils/schemas/purchases'
+import { deliveryStatus } from '@/utils/select-options'
+import { storage } from '@/utils/services/firebase/firebase-storage'
+import * as Dialog from '@radix-ui/react-dialog'
+import { useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useSession } from '@/components/providers/SessionProvider'
+import { AlignCenter, ExternalLink, Pencil, ShoppingCart } from 'lucide-react'
+import type { GetServerSideProps } from 'next'
+import Image from 'next/image'
 import { PureComponent, useState } from 'react'
+import toast from 'react-hot-toast'
 import { BsCalendar2Check, BsCalendarEvent, BsCalendarPlus, BsCloudUploadFill, BsPersonVcard, BsTruck } from 'react-icons/bs'
 import { FaIndustry, FaPhone, FaUser, FaUserAlt } from 'react-icons/fa'
 import { FaLocationDot } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { VscChromeClose } from 'react-icons/vsc'
-import DateInput from '@/components/inputs/Date'
-import { fileTypes, formatDate, formatLongString, GeneralVisibleHiddenExitMotionVariants, getFileTypeTitle, isFileImage } from '@/utils/constants'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import Image from 'next/image'
-import { AlignCenter, ExternalLink, Pencil, ShoppingCart } from 'lucide-react'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { storage } from '@/utils/services/firebase/firebase-storage'
-import { uploadFile } from '@/utils/methods/firebase'
-import toast from 'react-hot-toast'
-import axios from 'axios'
-import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from '@tanstack/react-query'
-import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
-import TextInput from '@/components/inputs/Text'
-import MultipleSelectInput from '@/components/inputs/MultipleSelect'
-import { deliveryStatus } from '@/utils/select-options'
-import StatesAndCities from '@/utils/jsons/estados-cidades.json'
-import { updateProject } from '@/utils/methods/mutation/clients'
-import { createManyFileReferences } from '@/utils/methods/mutation/crm/file-references'
-import type { TAuthSession } from '@/lib/authentication/types'
-import type { TPurchaseControlDeliveryTrackingDTO } from '@/utils/schemas/purchases'
-import { usePurchaseControlById, usePurchaseControlsTags } from '@/utils/methods/query/purchase-controls'
 import { MdLandscape, MdPhone } from 'react-icons/md'
-import type { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
-import { updatePurchaseControl } from '@/utils/methods/mutation/purchase-controls'
-import { handleProjectServiceOrderTrigger } from '@/utils/methods/mutation/triggers'
-import type { GetServerSideProps } from 'next'
-import CheckboxInput from '@/components/inputs/Checkbox'
+import { VscChromeClose } from 'react-icons/vsc'
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }))
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }))
@@ -69,7 +70,19 @@ export const getServerSideProps: GetServerSideProps<DeliveriesPageProps> = async
 }
 
 function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: DeliveriesPageProps) {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <DeliveriesPageContent session={session} tagIds={tagIds} purchasedOnly={purchasedOnly} deliveredRecentOnly={deliveredRecentOnly} />
+}
+
+type DeliveriesPageContentProps = {
+  session: TAuthSession
+  tagIds: string[]
+  purchasedOnly: boolean
+  deliveredRecentOnly: boolean
+}
+function DeliveriesPageContent({ session, tagIds, purchasedOnly, deliveredRecentOnly }: DeliveriesPageContentProps) {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState<boolean>(false)
   const [acknowlegdeMenu, setAcknowlegdeMenu] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   const {
@@ -82,7 +95,6 @@ function DeliveriesPage({ tagIds, purchasedOnly, deliveredRecentOnly }: Deliveri
     setFilters,
   } = useProjectsInDelivery({ initialFilters: { tagIds, purchasedOnly, deliveredRecentOnly } })
   const { data: tags } = usePurchaseControlsTags()
-  if (status !== 'authenticated') return <LoadingPage />
 
   return (
     <div className="grow p-6">

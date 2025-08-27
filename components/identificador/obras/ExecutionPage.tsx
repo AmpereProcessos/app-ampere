@@ -154,7 +154,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
           <h1 className="w-full text-start text-sm leading-none font-bold tracking-tight">{serviceOrder.favorecido.nome}</h1>
         </div>
         <h1
-          className={cn('bg-primary text-xxs text-primary-foreground min-w-fit rounded-lg px-2 py-0.5 text-center font-medium', {
+          className={cn('bg-primary text-primary-foreground min-w-fit rounded-lg px-2 py-0.5 text-center text-[0.5rem] font-medium', {
             'bg-red-500': serviceOrder.status === 'PENDENTE', // Vermelho claro
             'bg-[#757575]': serviceOrder.status === 'AGUARDANDO PLANEJAMENTO', // Cinza médio
             'bg-[#42A5F5]': serviceOrder.status === 'AGUARDANDO LIBERAÇÃO', // Azul suave

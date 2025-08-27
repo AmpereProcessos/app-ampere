@@ -2,20 +2,35 @@ import EditCreditCardOption from '@/components/identificador/opcoes-cartao-credi
 import NewCreditCardOption from '@/components/identificador/opcoes-cartao-credito/NewCreditCardOption'
 import NumberInput from '@/components/inputs/Number'
 import SelectInput from '@/components/inputs/Select'
+import { useSession } from '@/components/providers/SessionProvider'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import { TAuthSession } from '@/lib/authentication/types'
 import { formatToMoney } from '@/utils/constants'
 import { useCreditCardOptions } from '@/utils/methods/query/credit-card-options'
-import { TCreditCardOptionDTO } from '@/utils/schemas/credit-card-options'
+import type { TCreditCardOptionDTO } from '@/utils/schemas/credit-card-options'
 import { Pencil } from 'lucide-react'
-import { useSession } from '@/components/providers/SessionProvider'
 import React, { useState } from 'react'
 
 function CreditCardOptions() {
-  const { session } = useSession({ required: true })
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
+  return <CreditCardOptionsContent session={session} />
+}
+
+export default CreditCardOptions
+
+function CreditCardOptionsContent({ session }: { session: TAuthSession }) {
   const { data: options, isLoading, isError, isSuccess, error } = useCreditCardOptions()
   const [newCreditCardOptionModalIsOpen, setNewCreditCardOptionModalIsOpen] = useState<boolean>(false)
-  const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
+  const [editModal, setEditModal] = useState<{
+    id: string | null
+    isOpen: boolean
+  }>({ id: null, isOpen: false })
   return (
     <div className="grow p-6">
       <div className="flex h-full grow flex-col">
@@ -26,6 +41,7 @@ function CreditCardOptions() {
               <p className="text-primary/60 text-sm tracking-tight">{options?.length || '...'} opções contabilizadas</p>
             </div>
             <button
+              type="button"
               onClick={() => setNewCreditCardOptionModalIsOpen(true)}
               className="disabled:bg-primary/60 enabled:hover:bg-primary/80 h-9 rounded bg-gray-900 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:text-white disabled:text-white"
             >
@@ -55,22 +71,24 @@ function CreditCardOptions() {
   )
 }
 
-export default CreditCardOptions
-
 type CreditCardOptionCardProps = {
   option: TCreditCardOptionDTO
   handleClick: (id: string) => void
 }
 function CreditCardOptionCard({ option, handleClick }: CreditCardOptionCardProps) {
-  const [simulation, setSimulation] = useState<{ valor: number; parcelas: string; opcaoPagamento: string | null }>({
+  const [simulation, setSimulation] = useState<{
+    valor: number
+    parcelas: string
+    opcaoPagamento: string | null
+  }>({
     valor: 0,
     parcelas: '1',
     opcaoPagamento: null,
   })
   function handleSimulation(data: { valor: number; parcelas: string; opcaoPagamento: string | null }) {
-    const selected = option.opcoes.find((p) => p.descricao == data.opcaoPagamento)
+    const selected = option.opcoes.find((p) => p.descricao === data.opcaoPagamento)
     if (!selected) return { total: 0, valorParcela: 0 }
-    const fractionment = Object.entries(selected.parcelas).find(([key, value]) => key == data.parcelas)
+    const fractionment = Object.entries(selected.parcelas).find(([key, value]) => key === data.parcelas)
     const tax = fractionment ? fractionment[1] / 100 : 0
     const total = data.valor * (1 + tax)
     return { total, valorParcela: total / Number(data.parcelas) }
@@ -82,6 +100,7 @@ function CreditCardOptionCard({ option, handleClick }: CreditCardOptionCardProps
           <h1 className="font-bold tracking-tight text-white">{option.empresa}</h1>
           <h1 className="bg-background rounded-lg px-2 py-0.5 text-[0.6rem] font-black text-black">{option.modalidade}</h1>
           <button
+            type="button"
             onClick={() => handleClick(option._id)}
             className="flex items-center gap-1 rounded-lg bg-blue-800 px-2 py-1 text-[0.6rem] text-white hover:bg-blue-700"
           >
@@ -132,7 +151,11 @@ function CreditCardOptionCard({ option, handleClick }: CreditCardOptionCardProps
               label="MÉTODO/BANDEIRA"
               labelClassName="text-xs tracking-tight font-medium"
               value={simulation.opcaoPagamento}
-              options={option.opcoes.map((x, index) => ({ id: index + 1, label: x.descricao, value: x.descricao }))}
+              options={option.opcoes.map((x, index) => ({
+                id: index + 1,
+                label: x.descricao,
+                value: x.descricao,
+              }))}
               handleChange={(value) => setSimulation((prev) => ({ ...prev, opcaoPagamento: value }))}
               selectedItemLabel="NÃO DEFINIDO"
               onReset={() => setSimulation((prev) => ({ ...prev, opcaoPagamento: null }))}

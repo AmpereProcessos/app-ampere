@@ -1,26 +1,27 @@
+import { useSession } from '@/components/providers/SessionProvider'
+import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
+import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { cn } from '@/lib/utils'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { formatLocation } from '@/utils/methods/formatting'
-import Avatar from '@/components/utils/Avatar'
-import { BsCalendarCheck } from 'react-icons/bs'
-import LoadingPage from '@/components/utils/LoadingPage'
-import { BsCalendarPlus } from 'react-icons/bs'
-import { cn } from '@/lib/utils'
-import { FaPhone } from 'react-icons/fa'
-import { useIGreenTechnicalAnalysis } from '@/utils/methods/query/igreen/technical-analysis'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { useSession } from '@/components/providers/SessionProvider'
-import type { TIGreenTechnicalAnalysis } from '../api/integracao/igreen/technical-analysis'
 import { formatNameAsInitials } from '@/utils/methods/formatting'
-import { FaUser } from 'react-icons/fa'
-import { FaLocationDot } from 'react-icons/fa6'
+import { useIGreenTechnicalAnalysis } from '@/utils/methods/query/igreen/technical-analysis'
 import { SquareArrowOutUpRight } from 'lucide-react'
 import Link from 'next/link'
+import { BsCalendarCheck } from 'react-icons/bs'
+import { BsCalendarPlus } from 'react-icons/bs'
+import { FaPhone } from 'react-icons/fa'
+import { FaUser } from 'react-icons/fa'
+import { FaLocationDot } from 'react-icons/fa6'
+import type { TIGreenTechnicalAnalysis } from '../api/integracao/igreen/technical-analysis'
 
 export default function IGreenTechnicalAnalysis() {
-  const { session, status } = useSession({ required: true })
-  if (status !== 'authenticated') return <LoadingPage />
-
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
   return <IGreenTechnicalAnalysisPage session={session} />
 }
 

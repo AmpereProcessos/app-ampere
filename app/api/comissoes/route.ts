@@ -1,15 +1,15 @@
+import { type UnwrapAppRouterNextResponse, appRouterApiHandler } from '@/utils/api-app-router'
 import { getContractValue } from '@/utils/methods/util/projects'
+import type { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
 import type { TUser } from '@/utils/schemas/crm/users.schema'
-import { NextResponse, type NextRequest } from 'next/server'
-import { z } from 'zod'
-import connectToAppProjectsDatabase from '@/utils/services/mongodb/projects'
 import { ProjectComissionSimplifiedProjection, type TProject, type TProjectComissionSimplified } from '@/utils/schemas/projects'
 import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
-import type { TOpportunity } from '@/utils/schemas/crm/opportunity.schema'
-import { type Filter, type Collection, ObjectId, type WithId } from 'mongodb'
-import createHttpError from 'http-errors'
+import connectToAppProjectsDatabase from '@/utils/services/mongodb/projects'
 import dayjs from 'dayjs'
-import { appRouterApiHandler, type UnwrapAppRouterNextResponse } from '@/utils/api-app-router'
+import createHttpError from 'http-errors'
+import { type Collection, type Filter, ObjectId, type WithId } from 'mongodb'
+import { type NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 export const dynamic = 'force-dynamic'
 
@@ -239,7 +239,7 @@ async function getComissionData(request: NextRequest) {
   return NextResponse.json(
     {
       data: {
-        default: comissionInformation,
+        default: comissionInformation as NonNullable<(typeof comissionInformation)[number]>[],
         byProjectId: undefined,
       },
       message: 'Dados das comissões obtidos com sucesso.',

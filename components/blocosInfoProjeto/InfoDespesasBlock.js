@@ -1,14 +1,14 @@
-import React from 'react'
-import { useProjectExpenses } from '../../utils/methods/query/expenses'
-import { formatToMoney, validateAuthorization } from '../../utils/constants'
-import { useSession } from '../../components/providers/SessionProvider'
-import { BsCalendarFill } from 'react-icons/bs'
-import LoadingPage from '../utils/LoadingPage'
 import dayjs from 'dayjs'
+import React from 'react'
+import { BsCalendarFill } from 'react-icons/bs'
 import { FaUserAlt } from 'react-icons/fa'
+import { useSession } from '../../components/providers/SessionProvider'
+import { formatToMoney, validateAuthorization } from '../../utils/constants'
+import { useProjectExpenses } from '../../utils/methods/query/expenses'
 import ExpenseItem from '../identificador/despesas/ExpenseItem'
+import LoadingPage from '../utils/LoadingPage'
 function InfoDespesasBlock({ projectId }) {
-  const { session } = useSession({ required: true })
+  const { session } = useSession()
   const { data: expenses, isSuccess, isFetching } = useProjectExpenses(projectId, validateAuthorization(session, 'ADM'))
   function getTotalExpenses(expensesArr) {
     const total = expensesArr.reduce((accumulator, current) => {

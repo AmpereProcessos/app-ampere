@@ -1,12 +1,15 @@
+import { useSession } from '@/components/providers/SessionProvider'
 import LoadingPage from '@/components/utils/LoadingPage'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import { TAuthSession } from '@/lib/authentication/types'
 import { useProperties } from '@/utils/methods/query/properties'
 import { Code } from 'lucide-react'
-import { useSession } from '@/components/providers/SessionProvider'
 
 function UsosTemporariosPdfQrCodes() {
-  const { status } = useSession({ required: true })
+  const { status } = useSession()
 
-  if (status !== 'authenticated') return <LoadingPage />
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
   return <QRCodesContent />
 }
 
@@ -37,7 +40,7 @@ function getCellBorderClasses(index: number) {
   classes += ' border-primary'
   return classes
 }
-function QRCodesContent() {
+function QRCodesContent({ session }: { session: TAuthSession }) {
   const { data: properties } = useProperties({})
   if (!properties) {
     return (

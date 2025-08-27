@@ -1,46 +1,49 @@
-import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
 
 import { useSession } from '@/components/providers/SessionProvider'
 import { useRouter } from 'next/router'
 
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 import { BsDownload, BsFunnel } from 'react-icons/bs'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 import ErrorComponent from '../../components/utils/ErrorComponent'
 import LoadingPage from '../../components/utils/LoadingPage'
 
-import TextInput from '../../components/inputs/Text'
 import DateInput from '../../components/inputs/Date'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+import TextInput from '../../components/inputs/Text'
 
-import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/methods/shared'
-import { formatDate, formatDecimalPlaces, formatToMoney, getProjectTypeCollors } from '../../utils/constants'
-import { allSellers, serviceTypes } from '../../utils/select-options'
-import { useComissionData } from '../../utils/methods/query/comissions'
-// import { bulkUpdateProjectsComission, updateAppProjectsComission } from "../../utils/methods/mutation/comission";
-import { MdAttachMoney, MdDashboard, MdElectricMeter, MdOutlineRoofing } from 'react-icons/md'
-import { FaPercentage, FaSolarPanel, FaUser } from 'react-icons/fa'
-import { BiStats } from 'react-icons/bi'
-import toast from 'react-hot-toast'
-import dayjs from 'dayjs'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-// import type { TComissionData, any } from "../api/gestao/comissoes";
-import { FaDiamond, FaShieldHalved } from 'react-icons/fa6'
-import { BadgeCheck, BadgeDollarSign, Calendar, ChevronDown, ChevronUp, Pencil, Users, Wrench, Percent } from 'lucide-react'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { Button } from '@/components/ui/button'
-import ControlProjectComission from '@/components/identificador/comissoes/ControlProjectComission'
-import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
 import type { TGetComissionDataOutputDefault } from '@/app/api/comissoes/route'
-import { bulkUpdateProjectsComission } from '@/utils/methods/mutation/comission'
+import ControlProjectComission from '@/components/identificador/comissoes/ControlProjectComission'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { LoadingButton } from '@/components/utils/Buttons/LoadingButton'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedComponent from '@/components/utils/UnauthorizedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { getExcelFromJSON } from '@/lib/excel-utils'
 import { cn } from '@/lib/utils'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs'
-import Link from 'next/link'
-import { getExcelFromJSON } from '@/lib/excel-utils'
+import { bulkUpdateProjectsComission } from '@/utils/methods/mutation/comission'
 import { useUsers } from '@/utils/methods/query/crm/users'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+import { BadgeCheck, BadgeDollarSign, Calendar, ChevronDown, ChevronUp, Pencil, Percent, Users, Wrench } from 'lucide-react'
+import Link from 'next/link'
+import toast from 'react-hot-toast'
+import { BiStats } from 'react-icons/bi'
+import { FaPercentage, FaSolarPanel, FaUser } from 'react-icons/fa'
+// import type { TComissionData, any } from "../api/gestao/comissoes";
+import { FaDiamond, FaShieldHalved } from 'react-icons/fa6'
+// import { bulkUpdateProjectsComission, updateAppProjectsComission } from "../../utils/methods/mutation/comission";
+import { MdAttachMoney, MdDashboard, MdElectricMeter, MdOutlineRoofing } from 'react-icons/md'
+import { formatDate, formatDecimalPlaces, formatToMoney, getProjectTypeCollors } from '../../utils/constants'
+import { useComissionData } from '../../utils/methods/query/comissions'
+import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/methods/shared'
+import { allSellers, serviceTypes } from '../../utils/select-options'
 
 const comissionableItemsIconsMap = {
   SISTEMA: FaSolarPanel,
@@ -52,13 +55,31 @@ const comissionableItemsIconsMap = {
 function CommissionMain() {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
+
   const userHasFinancesEditPermission = !!session?.user.permissoes.financeiro.editar
   const userHasAdministrativeEditPermission = !!session?.user.permissoes.administrativo.editar
 
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!userHasFinancesEditPermission && !userHasAdministrativeEditPermission) return <UnauthorizedComponent />
+  return <ComissionsDatabaseViewContent session={session} />
+}
+
+export default CommissionMain
+
+type ComissionsDatabaseViewContentProps = {
+  session: TAuthSession
+}
+function ComissionsDatabaseViewContent({ session }: ComissionsDatabaseViewContentProps) {
+  const queryClient = useQueryClient()
+
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
-  const [editComissionProject, setEditComissionProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
+  const [editComissionProject, setEditComissionProject] = useState<{
+    id: string | null
+    isOpen: boolean
+  }>({ id: null, isOpen: false })
   const { data: crmUsers } = useUsers({ includeDeleted: false })
   const { data: projects, isSuccess, isLoading, isError, filters, updateFilters } = useComissionData({})
 
@@ -80,6 +101,7 @@ function CommissionMain() {
 
     const stats = info.reduce(
       (accInfo, current) => {
+        if (!current) return accInfo
         const comissionableValue = current.comissoes.valorComissionavel
         accInfo.totalVendido += current.valorContrato
         accInfo.potenciaVendida += current.potenciaPico
@@ -153,6 +175,7 @@ function CommissionMain() {
   async function exportData() {
     if (!projects) return toast.error('Opps, parece que os dados não estão disponíveis para exportação.')
     const formattedJSON = projects.map((project) => {
+      if (!project) return null
       return {
         ID: project.identificadorApp,
         NOME: project.nome,
@@ -188,12 +211,12 @@ function CommissionMain() {
   }
 
   async function bulkUpdateMissingComissionPayments(info: TGetComissionDataOutputDefault) {
-    const missingComissionPayments = info.filter((project) => !project.comissoes.pagamentoRealizado)
+    const missingComissionPayments = info.filter((project) => !project?.comissoes?.pagamentoRealizado)
     const input = missingComissionPayments.map((project) => ({
-      projectId: project._id,
-      comissionableValue: project.comissoes.valorComissionavelSugerido,
-      comissionableItems: project.comissoes.itensComissionaveis,
-      comissioned: project.comissoes.comissionados,
+      projectId: project?._id || '',
+      comissionableValue: project?.comissoes.valorComissionavelSugerido,
+      comissionableItems: project?.comissoes.itensComissionaveis,
+      comissioned: project?.comissoes.comissionados,
     }))
 
     return await bulkUpdateProjectsComission(input)
@@ -232,7 +255,9 @@ function CommissionMain() {
       toast.error('Erro ao efetivar comissões com valores sugeridos.')
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['comissions', filters] })
+      await queryClient.invalidateQueries({
+        queryKey: ['comissions', filters],
+      })
     },
   })
   const { mutate: bulkUpdateMissingComissionPaymentsMutation, isPending: isBulkUpdateMissingComissionPaymentsPending } = useMutation({
@@ -248,7 +273,9 @@ function CommissionMain() {
       toast.error('Erro ao efetivar comissões com valores sugeridos.')
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['comissions', filters] })
+      await queryClient.invalidateQueries({
+        queryKey: ['comissions', filters],
+      })
     },
   })
 
@@ -262,16 +289,9 @@ function CommissionMain() {
     }))
     .sort((a, b) => a.nome.localeCompare(b.nome))
 
-  const areMissingComissionDefinitions = projects?.some((project) => !project.comissoes.efetivado)
-  const areMissingComissionPayments = projects?.some((project) => !project.comissoes.pagamentoRealizado)
+  const areMissingComissionDefinitions = projects?.some((project) => !project?.comissoes?.efetivado)
+  const areMissingComissionPayments = projects?.some((project) => !project?.comissoes?.pagamentoRealizado)
 
-  useEffect(() => {
-    if (session) {
-      if (!userHasFinancesEditPermission && !userHasAdministrativeEditPermission) router.push('/')
-    }
-  }, [session])
-
-  if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col p-6">
       <div className="border-primary/20 flex flex-col items-center gap-2 border-b px-1 py-2">
@@ -422,7 +442,12 @@ function CommissionMain() {
                       label={'DEPOIS DE'}
                       value={filters.period.after ? formatDate(filters.period.after) : undefined}
                       handleChange={(value) =>
-                        updateFilters({ period: { ...filters.period, after: formatDateInputChange(value, 'string') as string } })
+                        updateFilters({
+                          period: {
+                            ...filters.period,
+                            after: formatDateInputChange(value, 'string') as string,
+                          },
+                        })
                       }
                     />
                   </div>
@@ -432,7 +457,12 @@ function CommissionMain() {
                       label={'ANTES DE'}
                       value={filters.period.before ? formatDate(filters.period.before) : undefined}
                       handleChange={(value) =>
-                        updateFilters({ period: { ...filters.period, before: formatDateInputChange(value, 'string') as string } })
+                        updateFilters({
+                          period: {
+                            ...filters.period,
+                            before: formatDateInputChange(value, 'string') as string,
+                          },
+                        })
                       }
                     />
                   </div>
@@ -499,8 +529,6 @@ function CommissionMain() {
     </div>
   )
 }
-
-export default CommissionMain
 
 type ComissionsDatabaseViewProps = {
   projects: TGetComissionDataOutputDefault
@@ -765,7 +793,14 @@ function ComissionsReportView({ projects }: ComissionsReportViewProps) {
     (acc: Record<string, ComissionReportBySeller>, project) => {
       for (const comissioned of project.comissoes.comissionados) {
         if (!acc[comissioned.nome])
-          acc[comissioned.nome] = { seller: { id: comissioned.idCrm, name: comissioned.nome, avatar_url: comissioned.avatar_url }, projects: [] }
+          acc[comissioned.nome] = {
+            seller: {
+              id: comissioned.idCrm,
+              name: comissioned.nome,
+              avatar_url: comissioned.avatar_url,
+            },
+            projects: [],
+          }
         acc[comissioned.nome].projects.push(project)
       }
       return acc

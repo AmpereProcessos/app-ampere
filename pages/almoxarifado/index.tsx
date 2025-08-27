@@ -7,19 +7,18 @@ import { FaBox, FaWpforms } from 'react-icons/fa'
 import LoadingPage from '../../components/utils/LoadingPage'
 import { BsClipboardCheckFill } from 'react-icons/bs'
 import { TbSeparatorVertical } from 'react-icons/tb'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
 function GestaoAlmoxarifado() {
   const router = useRouter()
-  const { session, status } = useSession({
-    required: true,
-  })
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <GestaoAlmoxarifadoContent session={session} />
+}
 
-  useEffect(() => {
-    if (!session?.user?.permissoes.rotas?.includes('Obras') && !session?.user?.permissoes.rotas?.includes('Almoxarifado')) {
-      router.push('/')
-    }
-  }, [session])
-  if (status !== 'authenticated') return <LoadingPage />
+export default GestaoAlmoxarifado
 
+function GestaoAlmoxarifadoContent({ session }: { session: TAuthSession }) {
   return (
     <div className="flex w-full grow flex-col p-6">
       <div className="mt-5 flex flex-col">
@@ -68,5 +67,3 @@ function GestaoAlmoxarifado() {
     </div>
   )
 }
-
-export default GestaoAlmoxarifado

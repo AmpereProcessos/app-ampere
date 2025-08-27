@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
 import { useSession } from '@/components/providers/SessionProvider'
+import React, { useEffect, useState } from 'react'
 
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
@@ -7,18 +7,27 @@ import LoadingPage from '../../components/utils/LoadingPage'
 
 import { useContractRequestsByFilters } from '@/utils/methods/query/contract-requests'
 
-import ErrorComponent from '@/components/utils/ErrorComponent'
-import RequestCard from '@/components/identificador/solicitacoesContrato/RequestCard'
 import ContractRequestControlModal from '@/components/identificador/solicitacoesContrato/ControlModal'
-import { Button } from '@/components/ui/button'
-import { ListFilter } from 'lucide-react'
-import GeneralPaginationComponent from '@/components/utils/Pagination'
-import LoadingComponent from '@/components/utils/LoadingComponent'
-import { getErrorMessage } from '@/utils/methods/handlers'
 import ContractRequestsFilterMenu from '@/components/identificador/solicitacoesContrato/FiltersMenu'
+import RequestCard from '@/components/identificador/solicitacoesContrato/RequestCard'
+import { Button } from '@/components/ui/button'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import LoadingComponent from '@/components/utils/LoadingComponent'
+import GeneralPaginationComponent from '@/components/utils/Pagination'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { ListFilter } from 'lucide-react'
 
 function ContractRequestFormsPage() {
-  const { session, status } = useSession({ required: true })
+  const { session, status } = useSession()
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  return <ContractRequestFormsPageContent session={session} />
+}
+export default ContractRequestFormsPage
+
+function ContractRequestFormsPageContent({ session }: { session: TAuthSession }) {
   const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false)
   const [editContractRequestModal, setEditContractRequestModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false })
   const { data: contractRequestsByFiltersResult, isLoading, isError, isSuccess, error, filters, updateFilters } = useContractRequestsByFilters()
@@ -28,7 +37,6 @@ function ContractRequestFormsPage() {
   const contractRequestsShowing = contractRequests?.length || 0
   const totalPages = contractRequestsByFiltersResult?.totalPages || 0
 
-  if (status !== 'authenticated') return <LoadingPage />
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
@@ -99,4 +107,3 @@ function ContractRequestFormsPage() {
     </div>
   )
 }
-export default ContractRequestFormsPage

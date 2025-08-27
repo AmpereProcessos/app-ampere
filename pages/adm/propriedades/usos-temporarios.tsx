@@ -1,29 +1,33 @@
+import ViewPropertyUsage from '@/components/identificador/propriedades/ViewPropertyUsage'
 import DateInput from '@/components/inputs/Date'
+import SelectInput from '@/components/inputs/Select'
+import { useSession } from '@/components/providers/SessionProvider'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import ErrorComponent from '@/components/utils/ErrorComponent'
 import LoadingPage from '@/components/utils/LoadingPage'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import type { TAuthSession } from '@/lib/authentication/types'
+import { PROPERTY_METADATA_TYPES_CONFIG } from '@/lib/properties'
+import { cn } from '@/lib/utils'
+import type { TGetPropertyTemporaryUsagesDefaultOutput } from '@/pages/api/propriedades/uso-temporario'
 import { formatDateAsLocale, formatNameAsInitials } from '@/utils/methods/formatting'
 import { usePropertyTemporaryUsages } from '@/utils/methods/query/properties'
-import { Code, Timer, CheckCircle2, Eye, Link as LinkIcon, Plus, Check } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useSession } from '@/components/providers/SessionProvider'
-import React, { useState } from 'react'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import SelectInput from '@/components/inputs/Select'
-import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
-import { PROPERTY_METADATA_TYPES_CONFIG } from '@/lib/properties'
 import { renderIconWithClassNames } from '@/utils/methods/rendering'
-import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
-import type { TGetPropertyTemporaryUsagesDefaultOutput } from '@/pages/api/propriedades/uso-temporario'
-import ViewPropertyUsage from '@/components/identificador/propriedades/ViewPropertyUsage'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Check, CheckCircle2, Code, Eye, Link as LinkIcon, Plus, Timer } from 'lucide-react'
 import Link from 'next/link'
-import { TAuthSession } from '@/lib/authentication/types'
+import React, { useState } from 'react'
+import { BsCalendarCheck, BsCalendarPlus } from 'react-icons/bs'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 function TemporaryUsages() {
-  const { session, status } = useSession({ required: true })
-  if (status !== 'authenticated') return <LoadingPage />
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
   return <TemporaryUsagesContent session={session} />
 }
 

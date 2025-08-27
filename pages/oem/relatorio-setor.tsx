@@ -1,27 +1,26 @@
-import React, { useState } from 'react'
 import { useSession } from '@/components/providers/SessionProvider'
-import { useRouter } from 'next/router'
-import LoadingPage from '../../components/utils/LoadingPage'
-import { useOeMReportData } from '../../utils/methods/query/oem'
-import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney, validateAuthorization } from '../../utils/constants'
-import { FaSolarPanel, FaHome, FaUserAlt } from 'react-icons/fa'
-import dayjs from 'dayjs'
-// @ts-ignore
-import dayjsBusinessDays from 'dayjs-business-days'
-import DateFloatingInput from '../../components/DateFloatingInput'
-import { AnimatePresence, motion } from 'framer-motion'
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import Select from 'react-select'
-import DateInput from '../../components/inputs/Date'
-import NumberFloatingInput from '../../components/NumberFloatingInput'
-import SelectInput from '../../components/inputs/Select'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import { TProjectDTO } from '@/utils/schemas/projects'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import type { TProjectDTO } from '@/utils/schemas/projects'
+import dayjs from 'dayjs'
+import dayjsBusinessDays from 'dayjs-business-days'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import { FaHome, FaSolarPanel, FaUserAlt } from 'react-icons/fa'
+import DateInput from '../../components/inputs/Date'
+import LoadingPage from '../../components/utils/LoadingPage'
+import { formatDate, formatDecimalPlaces } from '../../utils/constants'
+import { useOeMReportData } from '../../utils/methods/query/oem'
 
 import MultipleSelectInputVirtualized from '@/components/inputs/MultipleSelectInputVirtualized'
-import AllCities from '../../utils/jsons/cidades.json'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import UnauthorizedPage from '@/components/utils/UnauthorizedPage'
+import type { TAuthSession } from '@/lib/authentication/types'
 import { BsCalendar, BsCalendarX } from 'react-icons/bs'
+import AllCities from '../../utils/jsons/cidades.json'
+
 dayjs.extend(dayjsBusinessDays)
 
 const initialFirstScenario = {
@@ -37,8 +36,8 @@ const initialSecondScenario = {
 
 type TotalsResults = { general: { plants: number; modules: number } }
 
-function formatAsNumber(x: any) {
-  const result = isNaN(x) ? 0 : Number(x)
+function formatAsNumber(x: number) {
+  const result = Number.isNaN(x) ? 0 : Number(x)
   return result
 }
 function getCorrespondentDateInPreviousYear(date: string) {
@@ -48,11 +47,6 @@ function getCorrespondentDateInPreviousYear(date: string) {
   return new Date(previousYear, month, day)
 }
 
-function getDayDiff(d1: string | Date, d2: string | Date) {
-  const timeDiff = Math.abs(new Date(d2).getTime() - new Date(d1).getTime())
-  const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
-  return dayDiff
-}
 function getBusinessDayDiff(d1: string | Date, d2: string | Date) {
   // @ts-ignore
   const diff = dayjs(d2).businessDiff(dayjs(d1))
@@ -65,8 +59,17 @@ function getFilteredData(data: TProjectDTO[], dueDate: string) {
 
 function RelatorioSetor() {
   const router = useRouter()
-  const { session } = useSession({ required: true })
-  const [showClientsNames, setShowClientsNames] = useState(false)
+  const { session, status } = useSession()
+  const isAuthorized = session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+  if (!isAuthorized) return <UnauthorizedPage />
+  return <RelatorioSetorContent session={session} />
+}
+
+export default RelatorioSetor
+
+function RelatorioSetorContent({ session }: { session: TAuthSession }) {
   const [scenarios, setScenarios] = useState({
     first: initialFirstScenario,
     second: initialSecondScenario,
@@ -78,14 +81,14 @@ function RelatorioSetor() {
   const secondScenarioData = getFilteredData(data || [], scenarios.second.dueDate)
   function getTotals(data: TProjectDTO[], dueDate: string, dilutionDate: string | null): TotalsResults {
     if (!data) return { general: { plants: 0, modules: 0 } }
-    const modules = data.reduce((acc, current) => acc + formatAsNumber(current.sistema?.qtdeModulos), 0)
+    const modules = data.reduce((acc, current) => acc + formatAsNumber(current.sistema?.qtdeModulos || 0), 0)
     const plants = data.length
 
     return { general: { plants: plants, modules: modules } }
   }
   function getTotalsByCity(data: TProjectDTO[], dueDate: string, dilutionDate: string | null) {
     const totals = data.reduce((acc: { [key: string]: TotalsResults }, current) => {
-      const modules = formatAsNumber(current.sistema?.qtdeModulos)
+      const modules = formatAsNumber(current.sistema?.qtdeModulos || 0)
       const city = current.cidade
       if (!acc[city]) acc[city] = { general: { plants: 0, modules: 0 } }
       acc[city].general.modules += modules
@@ -96,7 +99,7 @@ function RelatorioSetor() {
   }
   function renderStatsByCity(data: TProjectDTO[], dueDate: string, dilutionDate: string | null) {
     return Object.entries(getTotalsByCity(data, dueDate, dilutionDate)).map(([key, value], index) => (
-      <div key={index} className="border-primary/20 flex w-full items-center gap-2 border-b py-1">
+      <div key={`${key}-${index.toString()}`} className="border-primary/20 flex w-full items-center gap-2 border-b py-1">
         <h1 className="text-primary/60 w-1/3 text-center text-xs font-medium tracking-tight lg:text-sm">{key}</h1>
         <div className="flex w-1/3 flex-col items-center">
           <h1 className="text-primary/60 w-1/3 text-center text-xs font-medium tracking-tight lg:text-sm">
@@ -113,7 +116,7 @@ function RelatorioSetor() {
   }
   function renderClients(data: TProjectDTO[]) {
     return data.map((project) => (
-      <div className="flex w-full flex-col gap-1">
+      <div key={project._id} className="flex w-full flex-col gap-1">
         <div className="flex w-full items-center justify-between gap-2">
           <h1 className="tracking-tightlg:text-sm text-xs leading-none font-black">{project.nomeDoContrato}</h1>
           <div className="bg-primary/80 flex min-w-fit items-center gap-1 rounded-full px-2 py-1 text-white">
@@ -147,7 +150,11 @@ function RelatorioSetor() {
             label={'CIDADE'}
             selected={filters.city as string[]}
             selectedItemLabel="NÃO DEFINIDO"
-            options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+            options={AllCities.map((city, index) => ({
+              id: index + 1,
+              label: city,
+              value: city,
+            }))}
             handleChange={(value) => {
               // @ts-ignore
               setFilters((prev) => ({ ...prev, city: value as string[] }))
@@ -204,7 +211,15 @@ function RelatorioSetor() {
                   <DateInput
                     label="VENCIMENTO"
                     value={formatDate(scenarios.first.dueDate)}
-                    handleChange={(value) => setScenarios((prev) => ({ ...prev, first: { ...prev.first, dueDate: formatDateInputChange(value) } }))}
+                    handleChange={(value) =>
+                      setScenarios((prev) => ({
+                        ...prev,
+                        first: {
+                          ...prev.first,
+                          dueDate: formatDateInputChange(value) as string,
+                        },
+                      }))
+                    }
                     width="100%"
                   />
                 </div>
@@ -213,13 +228,19 @@ function RelatorioSetor() {
                     label="PRAZO DE EXECUÇÃO"
                     value={scenarios.first.dilutionDate ? formatDate(scenarios.first.dilutionDate) : undefined}
                     handleChange={(value) =>
-                      setScenarios((prev) => ({ ...prev, first: { ...prev.first, dilutionDate: formatDateInputChange(value) } }))
+                      setScenarios((prev) => ({
+                        ...prev,
+                        first: {
+                          ...prev.first,
+                          dilutionDate: formatDateInputChange(value) as string,
+                        },
+                      }))
                     }
                     width="100%"
                   />
                 </div>
                 <div className="w-full lg:w-1/3">
-                  <div className={`flex w-full flex-col gap-1`}>
+                  <div className="flex w-full flex-col gap-1">
                     <h1 className={'font-sans font-bold text-[#353432]'}>DIAS ÚTEIS ATÉ O FIM DO PRAZO</h1>
                     <h1 className="border-primary/20 h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
                       {/** @ts-ignore */}
@@ -231,8 +252,17 @@ function RelatorioSetor() {
               </div>
               <div className="flex w-full items-center justify-center py-2">
                 <button
-                  onClick={() => setScenarios((prev) => ({ ...prev, first: { ...prev.first, showClients: !prev.first.showClients } }))}
-                  className={`jgap-2 flex items-center rounded p-1 font-medium`}
+                  onClick={() =>
+                    setScenarios((prev) => ({
+                      ...prev,
+                      first: {
+                        ...prev.first,
+                        showClients: !prev.first.showClients,
+                      },
+                    }))
+                  }
+                  type="button"
+                  className="flex items-center gap-2 rounded p-1 font-medium"
                 >
                   <p>MOSTRAR CLIENTES</p>
                   {scenarios.first.showClients ? <AiFillEye /> : <AiFillEyeInvisible />}
@@ -310,7 +340,15 @@ function RelatorioSetor() {
                   <DateInput
                     label="VENCIMENTO"
                     value={formatDate(scenarios.second.dueDate)}
-                    handleChange={(value) => setScenarios((prev) => ({ ...prev, second: { ...prev.second, dueDate: formatDateInputChange(value) } }))}
+                    handleChange={(value) =>
+                      setScenarios((prev) => ({
+                        ...prev,
+                        second: {
+                          ...prev.second,
+                          dueDate: formatDateInputChange(value) as string,
+                        },
+                      }))
+                    }
                     width="100%"
                   />
                 </div>
@@ -319,13 +357,19 @@ function RelatorioSetor() {
                     label="PRAZO DE EXECUÇÃO"
                     value={scenarios.second.dilutionDate ? formatDate(scenarios.second.dilutionDate) : undefined}
                     handleChange={(value) =>
-                      setScenarios((prev) => ({ ...prev, second: { ...prev.second, dilutionDate: formatDateInputChange(value) } }))
+                      setScenarios((prev) => ({
+                        ...prev,
+                        second: {
+                          ...prev.second,
+                          dilutionDate: formatDateInputChange(value) as string,
+                        },
+                      }))
                     }
                     width="100%"
                   />
                 </div>
                 <div className="w-full lg:w-1/3">
-                  <div className={`flex w-full flex-col gap-1`}>
+                  <div className="flex w-full flex-col gap-1">
                     <h1 className={'font-sans font-bold text-[#353432]'}>DIAS ÚTEIS ATÉ O FIM DO PRAZO</h1>
                     <h1 className="border-primary/20 h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
                       {/** @ts-ignore */}
@@ -337,8 +381,17 @@ function RelatorioSetor() {
               </div>
               <div className="flex w-full items-center justify-center py-2">
                 <button
-                  onClick={() => setScenarios((prev) => ({ ...prev, second: { ...prev.second, showClients: !prev.second.showClients } }))}
-                  className={`jgap-2 flex items-center rounded p-1 font-medium`}
+                  onClick={() =>
+                    setScenarios((prev) => ({
+                      ...prev,
+                      second: {
+                        ...prev.second,
+                        showClients: !prev.second.showClients,
+                      },
+                    }))
+                  }
+                  type="button"
+                  className="flex items-center gap-2 rounded p-1 font-medium"
                 >
                   <p>MOSTRAR CLIENTES</p>
                   {scenarios.second.showClients ? <AiFillEye /> : <AiFillEyeInvisible />}
@@ -407,5 +460,3 @@ function RelatorioSetor() {
     </div>
   )
 }
-
-export default RelatorioSetor

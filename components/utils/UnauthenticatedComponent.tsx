@@ -9,7 +9,7 @@ function UnauthenticatedPage() {
       <MdOutlineSecurity className="text-red-500" size={35} />
       <p className="text-primary/60 text-sm font-medium italic">Você precisa estar autenticado para acessar essa página.</p>
       <Button variant={'ghost'} asChild>
-        <Link href="/auth/login">FAZER LOGIN</Link>
+        <Link href="/auth/signin">FAZER LOGIN</Link>
       </Button>
     </div>
   )

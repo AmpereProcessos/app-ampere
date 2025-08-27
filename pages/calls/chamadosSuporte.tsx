@@ -11,6 +11,7 @@ import Link from 'next/link'
 import Select from 'react-select'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { cidadesAtendidas, cities, tiposChamadosSuporte } from '../../utils/constants'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import dayjs from 'dayjs'
 import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
@@ -21,6 +22,43 @@ import LoadingPage from '../../components/utils/LoadingPage'
 import { TAuthSession } from '@/lib/authentication/types'
 import UnauthenticatedComponent from '../../components/utils/UnauthenticatedComponent'
 import UnauthorizedPage from '../../components/utils/UnauthorizedPage'
+
+// Types for the support call data
+interface SupportCall {
+  _id: string
+  nomeCliente?: string
+  nomeUsina?: string
+  abertura: string
+  demanda?: string
+  responsavel: string
+  tipoChamado: string
+  statusChamado: 'ABERTO' | 'PENDENTE' | 'EM ANDAMENTO' | 'RESOLVIDO'
+  cidade?: string
+  statusGarantia?: string
+  ultAtualizacaoCliente?: string
+  feedbackValor?: string
+  plano?: string
+  oemConcluido?: boolean
+  fechamento?: string
+}
+
+interface SupportCallsData {
+  openCalls: SupportCall[]
+  closedCalls: SupportCall[]
+}
+
+interface FilterState {
+  searchFilter: string
+  respFilter: string[]
+  statusFilter: string[]
+  cityFilter: string[]
+  typeFilter: string[]
+}
+
+interface ClosedCallsFilterState extends FilterState {
+  afterDateFilter: Date
+  beforeDateFilter: Date
+}
 
 const statusStyles = {
   ABERTO: {
@@ -40,8 +78,51 @@ const statusStyles = {
     borderColor: 'border-green-400',
   },
 }
+
 var dateFilterParam = new Date()
 dateFilterParam.setDate(dateFilterParam.getDate() - 2)
+
+// Custom hooks for React Query
+const useSupportCallsData = (afterDate: Date, beforeDate: Date) => {
+  return useQuery<SupportCallsData>({
+    queryKey: ['support-calls', afterDate, beforeDate],
+    queryFn: async () => {
+      const response = await axios.get(`/api/chamados/suporte/mainData?closedAfter=${afterDate}&closedBefore=${beforeDate}`)
+      return response.data
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+const useClosedCallsByDate = (afterDate: Date, beforeDate: Date, enabled: boolean = false) => {
+  return useQuery<SupportCall[]>({
+    queryKey: ['closed-calls-by-date', afterDate, beforeDate],
+    queryFn: async () => {
+      const response = await axios.post('/api/chamados/suporte/filteredByDate', {
+        date: {
+          after: afterDate,
+          before: beforeDate,
+        },
+      })
+      return response.data
+    },
+    enabled,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+const useSupportCallById = (id: string | null) => {
+  return useQuery<SupportCall>({
+    queryKey: ['support-call', id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/chamados/getSuporte/${id}`)
+      return response.data
+    },
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
 function ChamadosSuporte() {
   const { session, status } = useSession()
   const isAuthorized = session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')
@@ -55,100 +136,138 @@ export default ChamadosSuporte
 
 function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] = useState(false)
   const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] = useState(false)
 
-  // Array com os chamados, filtrados ou não.
-  const [inProgress, setInProgress] = useState()
-  const [filteredInProgress, setFilteredInProgress] = useState()
-  const [closedCalls, setClosedCalls] = useState()
-  const [filteredClosedCalls, setFilteredClosedCalls] = useState()
   // Controle booleano da abertura de modais
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [creationModal, setCreationModal] = useState(false)
   // Controle do chamado da modal
-  const [modalCall, setModalCall] = useState({})
+  const [modalCall, setModalCall] = useState<SupportCall | null>(null)
+  const [selectedCallId, setSelectedCallId] = useState<string | null>(null)
+
   // Controle de filtros
-  const [inProgressCallsFilters, setInProgressCallsFilters] = useState({
+  const [inProgressCallsFilters, setInProgressCallsFilters] = useState<FilterState>({
     searchFilter: '',
     respFilter: [],
     statusFilter: [],
     cityFilter: [],
     typeFilter: [],
   })
-  const [closedCallsFilters, setClosedCallsFilters] = useState({
+  const [closedCallsFilters, setClosedCallsFilters] = useState<ClosedCallsFilterState>({
     searchFilter: '',
     respFilter: [],
+    statusFilter: [],
     cityFilter: [],
     typeFilter: [],
     afterDateFilter: dateFilterParam,
     beforeDateFilter: new Date(),
   })
+
+  // React Query hooks
+  const {
+    data: callsData,
+    isLoading: isLoadingCalls,
+    error: callsError,
+    refetch: refetchCalls,
+  } = useSupportCallsData(closedCallsFilters.afterDateFilter, closedCallsFilters.beforeDateFilter)
+
+  const {
+    data: closedCallsByDate,
+    isLoading: isLoadingClosedCalls,
+    refetch: refetchClosedCalls,
+  } = useClosedCallsByDate(
+    closedCallsFilters.afterDateFilter,
+    closedCallsFilters.beforeDateFilter,
+    false // Only fetch when explicitly requested
+  )
+
+  const { data: selectedCall } = useSupportCallById(selectedCallId)
+
+  // Derived state for filtered calls
+  const [filteredInProgress, setFilteredInProgress] = useState<SupportCall[]>([])
+  const [filteredClosedCalls, setFilteredClosedCalls] = useState<SupportCall[]>([])
+
+  // Update filtered data when main data changes
+  useEffect(() => {
+    if (callsData) {
+      setFilteredInProgress(callsData.openCalls)
+      setFilteredClosedCalls(callsData.closedCalls)
+    }
+  }, [callsData])
+
+  // Update closed calls when date filter is applied
+  useEffect(() => {
+    if (closedCallsByDate) {
+      setFilteredClosedCalls(closedCallsByDate)
+    }
+  }, [closedCallsByDate])
+
   function getCalls() {
-    axios
-      .get(`/api/chamados/suporte/mainData?closedAfter=${closedCallsFilters.afterDateFilter}&closedBefore=${closedCallsFilters.beforeDateFilter}`)
-      .then((res) => {
-        setInProgress(res.data.openCalls)
-        setFilteredInProgress(res.data.openCalls)
-        setClosedCalls(res.data.closedCalls)
-        setFilteredClosedCalls(res.data.closedCalls)
-      })
+    refetchCalls()
   }
+
   function getClosedCallsByDate() {
-    axios
-      .post('/api/chamados/suporte/filteredByDate', {
-        date: {
-          after: closedCallsFilters.afterDateFilter,
-          before: closedCallsFilters.beforeDateFilter,
-        },
-      })
-      .then((res) => {
-        setFilteredClosedCalls(res.data)
-        setClosedCalls(res.data)
-      })
+    refetchClosedCalls()
   }
+
   function filterInProgressCalls() {
-    var newArr
+    if (!callsData?.openCalls) return callsData?.openCalls || []
+
+    let newArr: SupportCall[] | undefined
+
     if (inProgressCallsFilters.statusFilter.length > 0 && inProgressCallsFilters.respFilter.length > 0) {
-      newArr = inProgress.filter(
+      newArr = callsData.openCalls.filter(
         (call) => inProgressCallsFilters.respFilter.includes(call.responsavel) && inProgressCallsFilters.statusFilter.includes(call.statusChamado)
       )
     } else if (inProgressCallsFilters.respFilter.length > 0) {
-      newArr = inProgress.filter((call) => inProgressCallsFilters.respFilter.includes(call.responsavel))
+      newArr = callsData.openCalls.filter((call) => inProgressCallsFilters.respFilter.includes(call.responsavel))
     } else if (inProgressCallsFilters.statusFilter.length > 0) {
-      newArr = inProgress.filter((call) => inProgressCallsFilters.statusFilter.includes(call.statusChamado))
+      newArr = callsData.openCalls.filter((call) => inProgressCallsFilters.statusFilter.includes(call.statusChamado))
     }
+
     if (inProgressCallsFilters.cityFilter.length > 0) {
-      if (!newArr) newArr = inProgress
-      newArr = newArr.filter((call) => inProgressCallsFilters.cityFilter.includes(call.cidade))
+      if (!newArr) newArr = callsData.openCalls
+      newArr = newArr.filter((call) => call.cidade && inProgressCallsFilters.cityFilter.includes(call.cidade))
     }
+
     if (inProgressCallsFilters.typeFilter.length > 0) {
-      if (!newArr) newArr = inProgress
+      if (!newArr) newArr = callsData.openCalls
       newArr = newArr.filter((call) => inProgressCallsFilters.typeFilter.includes(call.tipoChamado))
     }
+
     if (!newArr) {
-      setFilteredInProgress(inProgress)
-      return inProgress
+      setFilteredInProgress(callsData.openCalls)
+      return callsData.openCalls
     } else {
       setFilteredInProgress(newArr)
       return newArr
     }
   }
+
   function filterClosedCalls() {
-    var newArr
+    const closedCalls = closedCallsByDate || callsData?.closedCalls || []
+    if (!closedCalls.length) return closedCalls
+
+    let newArr: SupportCall[] | undefined
+
     if (closedCallsFilters.cityFilter.length > 0) {
       if (!newArr) newArr = closedCalls
-      newArr = newArr.filter((call) => closedCallsFilters.cityFilter.includes(call.cidade))
+      newArr = newArr.filter((call) => call.cidade && closedCallsFilters.cityFilter.includes(call.cidade))
     }
+
     if (closedCallsFilters.typeFilter.length > 0) {
       if (!newArr) newArr = closedCalls
       newArr = newArr.filter((call) => closedCallsFilters.typeFilter.includes(call.tipoChamado))
     }
+
     if (closedCallsFilters.respFilter.length > 0) {
       if (!newArr) newArr = closedCalls
       newArr = newArr.filter((call) => closedCallsFilters.respFilter.includes(call.responsavel))
     }
+
     if (!newArr) {
       setFilteredClosedCalls(closedCalls)
       return closedCalls
@@ -157,63 +276,73 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
       return newArr
     }
   }
+
   // Filtros de pesquisa
-  function handleInProgressCallsSearchFilter(value) {
+  function handleInProgressCallsSearchFilter(value: string) {
     setInProgressCallsFilters({
       ...inProgressCallsFilters,
       searchFilter: value,
     })
-    if (value != '' || ' ') {
+
+    if (value !== '' && value !== ' ') {
       let filteredByOptions = filterInProgressCalls()
       let newArr = filteredByOptions.filter((call) =>
-        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina?.toUpperCase().includes(value.toUpperCase())
       )
       setFilteredInProgress(newArr)
     } else {
-      setFilteredInProgress(inProgress)
+      setFilteredInProgress(callsData?.openCalls || [])
     }
   }
-  function handleClosedCallsSearchFilter(value) {
+
+  function handleClosedCallsSearchFilter(value: string) {
     setClosedCallsFilters({ ...closedCallsFilters, searchFilter: value })
-    if (value != '' || ' ') {
+
+    if (value !== '' && value !== ' ') {
       let filteredByOptions = filterClosedCalls()
       let newArr = filteredByOptions.filter((call) =>
-        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina?.toUpperCase().includes(value.toUpperCase())
       )
       setFilteredClosedCalls(newArr)
     } else {
-      setFilteredClosedCalls(inProgress)
+      setFilteredClosedCalls(closedCallsByDate || callsData?.closedCalls || [])
     }
   }
-  function updateModalInfo(id) {
-    axios.get(`/api/chamados/getSuporte/${id}`).then((res) => {
-      setModalCall(res.data)
-      getCalls()
-    })
+
+  function updateModalInfo(id: string) {
+    setSelectedCallId(id)
+    // Invalidate and refetch the main calls data
+    queryClient.invalidateQueries({ queryKey: ['support-calls'] })
   }
-  function handleOpenModal(id) {
-    axios.get(`/api/chamados/getSuporte/${id}`).then((res) => {
-      setModalCall(res.data)
-      setModalIsOpen(true)
-    })
+
+  function handleOpenModal(id: string) {
+    setSelectedCallId(id)
+    setModalIsOpen(true)
   }
-  function getDeadlineStatus(tipoDoChamado, plano, statusPlano, abertura, statusChamado) {
-    if (statusChamado == 'ABERTO') {
-      let tipoInfo = tiposChamadosSuporte.filter((chamado) => chamado.tipo == tipoDoChamado)[0]
-      var grau
-      if (plano && plano != 'MANUTENÇÃO PREVENTIVA' && statusPlano != true) {
+
+  function getDeadlineStatus(
+    tipoDoChamado: string,
+    plano: string | undefined,
+    statusPlano: boolean | undefined,
+    abertura: string,
+    statusChamado: string
+  ) {
+    if (statusChamado === 'ABERTO') {
+      let tipoInfo = tiposChamadosSuporte.filter((chamado) => chamado.tipo === tipoDoChamado)[0]
+      var grau: string
+      if (plano && plano !== 'MANUTENÇÃO PREVENTIVA' && statusPlano !== true) {
         grau = tipoInfo ? tipoInfo.grauUrgenciaOeM : 'B'
       } else {
         grau = tipoInfo ? tipoInfo.grauUrgenciaNormal : 'B'
       }
       let diffTempo = dayjs().diff(dayjs(abertura), 'hours')
-      if (grau == 'A' && diffTempo > 24) {
+      if (grau === 'A' && diffTempo > 24) {
         return 'border-red-500'
-      } else if (grau == 'B' && diffTempo > 48) {
+      } else if (grau === 'B' && diffTempo > 48) {
         return 'border-red-500'
-      } else if (grau == 'C' && diffTempo > 72) {
+      } else if (grau === 'C' && diffTempo > 72) {
         return 'border-red-500'
-      } else if (grau == 'D' && diffTempo > 96) {
+      } else if (grau === 'D' && diffTempo > 96) {
         return 'border-red-500'
       } else {
         return 'border-primary/20'
@@ -221,6 +350,17 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
     } else {
       return 'border-primary/20'
     }
+  }
+
+  // Handle errors
+  if (callsError) {
+    return (
+      <div className="bg-primary/20 flex w-full grow flex-col gap-y-2 p-6">
+        <div className="bg-background border-primary/20 flex w-full items-center justify-center border p-4 shadow-xl">
+          <p className="text-red-500">Erro ao carregar os chamados. Tente novamente.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -234,7 +374,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
               <p className="text-center text-xl font-bold text-[#15599a] uppercase">Chamados abertos</p>
-              <p className="font-bold text-[#fead61]">({filteredInProgress?.length})</p>
+              <p className="font-bold text-[#fead61]">({filteredInProgress?.length || 0})</p>
             </div>
             {openCallsDropdownMenuVisible ? (
               <div className="text-primary/80 cursor-pointer hover:text-blue-400">
@@ -261,13 +401,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                     <Select
                       isMulti
                       placeholder="TIPO DE CHAMADO"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: '100%',
-                          minHeight: '41px',
-                        }),
-                      }}
+                      className="min-h-[41px]"
                       onChange={(e) =>
                         setInProgressCallsFilters({
                           ...inProgressCallsFilters,
@@ -283,13 +417,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                     <Select
                       isMulti
                       placeholder="CIDADE"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: '100%',
-                          minHeight: '41px',
-                        }),
-                      }}
+                      className="min-h-[41px]"
                       onChange={(e) =>
                         setInProgressCallsFilters({
                           ...inProgressCallsFilters,
@@ -306,7 +434,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                       isMulti
                       placeholder="STATUS DO CHAMADOS"
                       styles={{
-                        control: (base, state) => ({
+                        control: (base) => ({
                           ...base,
                           width: '100%',
                           minHeight: '41px',
@@ -335,7 +463,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                       isMulti
                       placeholder="RESPONSÁVEL"
                       styles={{
-                        control: (base, state) => ({
+                        control: (base) => ({
                           ...base,
                           width: '100%',
                           minHeight: '41px',
@@ -375,7 +503,9 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
           </AnimatePresence>
         </div>
         <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
-          {filteredInProgress ? (
+          {isLoadingCalls ? (
+            <LoadingPage />
+          ) : filteredInProgress ? (
             filteredInProgress.map((call) => (
               <div
                 onClick={() => handleOpenModal(call._id)}
@@ -405,7 +535,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                 </div>
                 <div className="mt-2 hidden w-full items-center justify-between lg:flex">
                   <p className="text-primary/60 text-xs uppercase">DEMANDA</p>
-                  <p className={`text-xs ${call.demanda == 'EXTERNA' ? 'text-red-500' : 'text-primary/60'}`}>{call.demanda ? call.demanda : '-'}</p>
+                  <p className={`text-xs ${call.demanda === 'EXTERNA' ? 'text-red-500' : 'text-primary/60'}`}>{call.demanda ? call.demanda : '-'}</p>
                 </div>
                 <div className="mt-2 flex w-full items-center justify-between">
                   <p className="text-primary/60 text-xs uppercase">Tipo de chamado:</p>
@@ -417,7 +547,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                   <p className="text-primary/60 text-xs">{new Date(call.abertura).toLocaleString()}</p>
                 </div>
                 {call.tipoChamado.includes('GARANTIA') &&
-                call.statusGarantia != 'IDENTIFICAÇÃO E TESTES' &&
+                call.statusGarantia !== 'IDENTIFICAÇÃO E TESTES' &&
                 (!call.ultAtualizacaoCliente || dayjs().diff(dayjs(call.ultAtualizacaoCliente), 'days') >= 7) ? (
                   <p className="text-center font-bold text-red-500">ATUALIZAR CLIENTE</p>
                 ) : (
@@ -435,7 +565,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
           <div className="flex w-full items-center justify-between">
             <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
               <p className="text-center text-xl font-bold text-[#15599a] uppercase">CHAMADOS FINALIZADOS</p>
-              <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
+              <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length || 0})</p>
             </div>
             {closedCallsDropdownMenuVisible ? (
               <div className="text-primary/80 cursor-pointer hover:text-blue-400">
@@ -457,7 +587,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                     onChange={(e) =>
                       setClosedCallsFilters({
                         ...closedCallsFilters,
-                        afterDateFilter: e.target.value,
+                        afterDateFilter: new Date(e.target.value),
                       })
                     }
                     type="date"
@@ -469,7 +599,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                     onChange={(e) =>
                       setClosedCallsFilters({
                         ...closedCallsFilters,
-                        beforeDateFilter: e.target.value,
+                        beforeDateFilter: new Date(e.target.value),
                       })
                     }
                     type="date"
@@ -489,7 +619,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                       isMulti
                       placeholder="TIPO DE CHAMADO"
                       styles={{
-                        control: (base, state) => ({
+                        control: (base) => ({
                           ...base,
                           width: '100%',
                           minHeight: '41px',
@@ -511,7 +641,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                       isMulti
                       placeholder="CIDADE"
                       styles={{
-                        control: (base, state) => ({
+                        control: (base) => ({
                           ...base,
                           width: '100%',
                           minHeight: '41px',
@@ -533,7 +663,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                       isMulti
                       placeholder="RESPONSÁVEL"
                       styles={{
-                        control: (base, state) => ({
+                        control: (base) => ({
                           ...base,
                           width: '100%',
                           minHeight: '41px',
@@ -573,7 +703,9 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
           </AnimatePresence>
         </div>
         <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto">
-          {filteredClosedCalls ? (
+          {isLoadingClosedCalls ? (
+            <LoadingPage />
+          ) : filteredClosedCalls ? (
             filteredClosedCalls.map((call) => (
               <div
                 onClick={() => handleOpenModal(call._id)}
@@ -581,7 +713,7 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
                 className="border-primary/20 dark:hover:bg-primary/10 max-h-[180px] w-[370px] cursor-pointer border p-3 hover:bg-blue-100"
               >
                 <div className="flex w-full items-center justify-between gap-2">
-                  {call.feedbackValor != undefined && call.feedbackValor != '' ? (
+                  {call.feedbackValor !== undefined && call.feedbackValor !== '' ? (
                     <BsFillPatchCheckFill
                       style={{
                         fontSize: '20px',
@@ -628,13 +760,13 @@ function ChamadosSuporteContent({ session }: { session: TAuthSession }) {
         <p className="text-sm font-bold uppercase">Novo chamado</p>
       </div>
       {creationModal && <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />}
-      {modalIsOpen && (
+      {modalIsOpen && selectedCall && (
         <ModalCallSuporte
           modalIsOpen={modalIsOpen}
           session={session}
           updateModalInfo={updateModalInfo}
           setModalIsOpen={setModalIsOpen}
-          info={modalCall}
+          info={selectedCall}
         />
       )}
     </div>

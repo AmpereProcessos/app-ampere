@@ -17,7 +17,7 @@ function Projetos() {
   const { session, status } = useSession()
 
   if (status === 'loading') return <LoadingPage />
-  if (status !== 'authenticated') return <UnauthenticatedComponent />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
 
   const isAuthorized = session?.user.permissoes.rotas.includes('Projetos') || session.user.permissoes.engenharia.visualizar
   if (!isAuthorized) return <UnauthorizedComponent />

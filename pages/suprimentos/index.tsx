@@ -32,15 +32,13 @@ import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponen
 import type { TAuthSession } from '@/lib/authentication/types'
 dayjs.extend(dayjsBusinessDays)
 
-function getDateDiff(date1, date2) {
+function getDateDiff(date1: Date, date2: Date) {
   const diffInMs = new Date(date1) - new Date(date2)
   const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
   return Number(diffInDays).toFixed(0)
 }
 
 function Suprimentos() {
-  const queryClient = useQueryClient()
-  const router = useRouter()
   const { session, status } = useSession()
   const isAuthorized = session?.user.permissoes.rotas.includes('Suprimentos')
   if (status === 'loading') return <LoadingPage />
@@ -360,7 +358,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
         </AnimatePresence>
       </div>
       <div className="mt-4 flex flex-wrap justify-around gap-3">
-        {projects.map((project, index) => (
+        {projects?.map((project, index) => (
           <motion.div
             onClick={() => {
               handleOpenModal(project._id)

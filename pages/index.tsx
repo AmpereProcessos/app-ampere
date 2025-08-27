@@ -13,11 +13,24 @@ import { Area, CartesianGrid, ComposedChart, Label, PolarGrid, PolarRadiusAxis, 
 import { cn } from '@/lib/utils'
 import { RadialBarChart, RadialBar } from 'recharts'
 import ClientsBirthdays from '@/components/identificador/dashboard/ClientsBirthdays'
+import { getCurrentSession } from '@/lib/authentication/session'
+import { useSession } from '@/components/providers/SessionProvider'
+import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponent'
+import LoadingPage from '@/components/utils/LoadingPage'
+
+export default function HomePage() {
+  const { session, status } = useSession()
+
+  if (status === 'loading') return <LoadingPage />
+  if (status === 'unauthenticated') return <UnauthenticatedComponent />
+
+  return <HomeContent user={session.user} />
+}
 
 type HomePageProps = {
   user: TAuthSession['user']
 }
-export default function HomePage({ user: _user }: HomePageProps) {
+function HomeContent({ user: _user }: HomePageProps) {
   return (
     <div className="bg-background flex grow flex-col gap-6 p-6">
       <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row lg:items-stretch">

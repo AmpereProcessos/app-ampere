@@ -15,7 +15,7 @@ type GetResponse = {
 const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
 
-  const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId, serviceOrderId } =
+  const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId, serviceOrderId, callId } =
     FileReferencesQueryParamsSchema.parse(req.query)
 
   console.log(req.query)
@@ -27,6 +27,7 @@ const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req
   const purchaseQuery: Filter<TFileReference> = purchaseId ? { idCompra: purchaseId } : {}
   const revenueQuery: Filter<TFileReference> = revenueId ? { idReceita: revenueId } : {}
   const serviceOrderQuery: Filter<TFileReference> = serviceOrderId ? { idOrdemServico: serviceOrderId } : {}
+  const callQuery: Filter<TFileReference> = callId ? { idChamado: callId } : {}
 
   const nonEmptyQueries = [
     clientQuery,
@@ -37,13 +38,14 @@ const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req
     purchaseQuery,
     revenueQuery,
     serviceOrderQuery,
+    callQuery,
   ].filter((r) => Object.keys(r).length > 0)
 
   console.log(nonEmptyQueries)
   const orQuery = { $or: nonEmptyQueries }
   const query = { ...orQuery }
 
-  const db = await connectToCRMDatabase(process.env.DB_KEY)
+  const db = await connectToCRMDatabase()
   const collection: Collection<TFileReference> = db.collection('file-references')
   // const db = await connectToDatabase(process.env.DB_KEY)
   // const collection: Collection<TFileReference> = db.collection('referencias-arquivos')
@@ -63,7 +65,7 @@ const createManyFileReferences: NextApiHandler<PostResponse> = async (req, res) 
 
   const manyAnalysis = z.array(InsertFileReferenceSchema).parse(req.body)
 
-  const db = await connectToCRMDatabase(process.env.DB_KEY)
+  const db = await connectToCRMDatabase()
   const fileReferencesCollection: Collection<TFileReference> = db.collection('file-references')
 
   const insertResponse = await insertManyFileReferences({ collection: fileReferencesCollection, info: manyAnalysis, partnerId: partnerId || '' })

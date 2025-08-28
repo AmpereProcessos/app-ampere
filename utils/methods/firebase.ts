@@ -6,14 +6,14 @@ import toast from 'react-hot-toast'
 type UploadFileParams = {
   file: File
   fileName: string
-  vinculationId: string
+  vinculationId?: string
   prefix: string
 }
 export async function uploadFile({ file, fileName, vinculationId, prefix }: UploadFileParams) {
   try {
     if (!file) throw new Error('Arquivo não fornecido.')
     const datetime = new Date().toISOString()
-    const fileRef = ref(storage, `${prefix}/(${vinculationId}) ${fileName} - ${datetime}`)
+    const fileRef = ref(storage, `${prefix}/${vinculationId ? `(${vinculationId})` : ''} ${fileName} - ${datetime}`)
     const uploadResponse = await uploadBytes(fileRef, file)
 
     const url = await getDownloadURL(ref(storage, uploadResponse.metadata.fullPath))

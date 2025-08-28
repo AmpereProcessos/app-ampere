@@ -1,7 +1,9 @@
 import { useDebounceMemo } from '@/lib/hooks/debounce'
 import { TGetManySupportCallsInput, TGetSupportCallsInput, TGetSupportCallsOutput } from '@/pages/api/chamados/suporte'
+import { TSupportCallsStatsInput, TSupportCallsStatsOutput } from '@/pages/api/chamados/suporte/stats'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { useState } from 'react'
 
 async function fetchSupportCalls(input: TGetManySupportCallsInput) {
@@ -60,4 +62,41 @@ export function useSupportCallById(id: string) {
     queryKey: ['support-call-by-id', id],
     queryFn: () => fetchSupportCallById(id),
   })
+}
+
+async function fetchSupportCallsStats(input: TSupportCallsStatsInput) {
+  const urlParams = new URLSearchParams()
+
+  if (input.periodAfter) urlParams.set('periodAfter', input.periodAfter)
+  if (input.periodBefore) urlParams.set('periodBefore', input.periodBefore)
+
+  const url = `/api/chamados/suporte/stats?${urlParams.toString()}`
+
+  const { data } = await axios.get<TSupportCallsStatsOutput>(url)
+
+  return data.data
+}
+
+export function useSupportCallsStats() {
+  const monthStart = dayjs().startOf('month').toISOString()
+  const monthEnd = dayjs().endOf('month').toISOString()
+  const [filters, setFilters] = useState<TSupportCallsStatsInput>({
+    periodAfter: monthStart,
+    periodBefore: monthEnd,
+  })
+
+  function updateFilters(changes: Partial<TSupportCallsStatsInput>) {
+    setFilters((prev) => ({ ...prev, ...changes }))
+  }
+
+  const debouncedFilters = useDebounceMemo(filters, 500)
+  return {
+    ...useQuery({
+      queryKey: ['support-calls-stats', debouncedFilters],
+      queryFn: () => fetchSupportCallsStats(debouncedFilters),
+    }),
+    queryKey: ['support-calls-stats', debouncedFilters],
+    filters,
+    updateFilters,
+  }
 }

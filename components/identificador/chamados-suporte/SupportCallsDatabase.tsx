@@ -21,6 +21,7 @@ import SelectInput from '@/components/inputs/Select'
 import DateInput from '@/components/inputs/Date'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import SupportCallsStats from './SupportCallsStats'
 
 type SupportCallsDatabaseProps = {
   session: TAuthSession
@@ -44,7 +45,7 @@ export function SupportCallsDatabase({ session }: SupportCallsDatabaseProps) {
 
   return (
     <div className="flex w-full grow flex-col gap-6 p-6">
-      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
+      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b pb-2">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
             <p className="text-center text-2xl font-black text-[#15599a] uppercase">BANCO DE CHAMADOS DE SUPORTE</p>
@@ -64,8 +65,11 @@ export function SupportCallsDatabase({ session }: SupportCallsDatabaseProps) {
             )}
           </div>
         </div>
+        <AnimatePresence>
+          {filtersMenuIsOpen ? <SupportCallsDatabaseFilters filters={filters} updateFilters={updateFilters} /> : null}
+        </AnimatePresence>
       </div>
-      <AnimatePresence>{filtersMenuIsOpen ? <SupportCallsDatabaseFilters filters={filters} updateFilters={updateFilters} /> : null}</AnimatePresence>
+      <SupportCallsStats />
       {isLoading ? <LoadingComponent /> : null}
       {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
       {isSuccess ? (

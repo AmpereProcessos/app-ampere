@@ -3,6 +3,7 @@ import { easeBackInOut } from 'd3-ease'
 import type { TAuthSession } from '@/lib/authentication/types'
 import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletypeXml, BsFillPlayBtnFill, BsImage } from 'react-icons/bs'
 import { IconType } from 'react-icons/lib'
+import { Check, Loader, X } from 'lucide-react'
 //teste
 
 export const IGREEN_DATABASE_PREFIX = 'project_manager'
@@ -1743,7 +1744,7 @@ export const ppsTiposSolicitacao = [
     value: 'NÃO DEFINIDO',
   },
 ]
-export const projetosSolicitations = [
+export const EngineeringCallTypes = [
   'A DEFINIR',
   'DIAGRAMA UNIFILAR',
   'PLANTA DE SITUAÇÃO',
@@ -1769,6 +1770,37 @@ export const projetosSolicitations = [
   'CONSULTA ESTÁGIO CEMIG',
   'OUTRO',
 ]
+export const EngineeringCallsStatus = [
+  {
+    id: 1,
+    label: 'PENDENTE',
+    value: 'PENDENTE',
+    color: 'bg-orange-300 text-orange-800',
+    icon: <X className="h-4 min-h-4 w-4 min-w-4" />,
+  },
+  {
+    id: 2,
+    label: 'EM ANDAMENTO',
+    value: 'EM ANDAMENTO',
+    color: 'bg-blue-300 text-blue-800',
+    icon: <Loader className="h-4 min-h-4 w-4 min-w-4" />,
+  },
+  {
+    id: 2,
+    label: 'AGUARDANDO CONCESSIONÁRIA',
+    value: 'AGUARDANDO CONCESSIONÁRIA',
+    color: 'bg-cyan-300 text-cyan-800',
+    icon: <Loader className="h-4 min-h-4 w-4 min-w-4" />,
+  },
+  {
+    id: 3,
+    label: 'FINALIZADO',
+    value: 'FINALIZADO',
+    color: 'bg-green-300 text-green-800',
+    icon: <Check className="h-4 min-h-4 w-4 min-w-4" />,
+  },
+]
+
 export const cidadesAtendidas = [
   'ITUIUTABA', // MG
   'IPIAÇU', //  MG

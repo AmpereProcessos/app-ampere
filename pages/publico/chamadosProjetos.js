@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import Logo from '../../utils/images/logo-texto-azul-vertical.png'
-import { projetistas, projetosSolicitations } from '../../utils/constants'
+import { projetistas, EngineeringCallTypes } from '../../utils/constants'
 import axios from 'axios'
 import Link from 'next/link'
 function ChamadosPPS() {
   const [responsavel, setResponsavel] = useState('A DEFINIR')
   const [projeto, setProjeto] = useState('')
-  const [tipoDoChamado, setTipoDoChamado] = useState(projetosSolicitations[0])
+  const [tipoDoChamado, setTipoDoChamado] = useState(EngineeringCallTypes[0])
   const [observacoes, setObservacoes] = useState('')
   const [callCreatedMessage, setCreatedMessage] = useState('')
   const [errorsMessage, setErrorMessage] = useState({
@@ -29,7 +29,7 @@ function ChamadosPPS() {
   function resetFields() {
     setResponsavel('A DEFINIR')
     setProjeto('')
-    setTipoDoChamado(projetosSolicitations[0])
+    setTipoDoChamado(EngineeringCallTypes[0])
     setObservacoes('')
   }
   async function handleOpenCall() {
@@ -86,7 +86,7 @@ function ChamadosPPS() {
             onChange={(e) => setTipoDoChamado(e.target.value)}
             className="mt-2 text-center text-xs outline-hidden lg:mt-0"
           >
-            {projetosSolicitations.map((type) => (
+            {EngineeringCallTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>

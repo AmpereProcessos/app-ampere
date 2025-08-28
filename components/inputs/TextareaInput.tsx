@@ -25,7 +25,7 @@ function TextareaInput({ label, labelClassName, holderClassName, value, placehol
           handleChange(e.target.value)
         }}
         className={cn(
-          'border-primary/20 bg-background text-primary min-h-[80px] w-full resize-none rounded-md border p-3 text-center text-xs font-medium outline-hidden lg:min-h-[65px] dark:bg-[#121212]',
+          'border-primary/20 bg-background text-primary field-sizing-content min-h-[80px] w-full resize-none rounded-md border p-3 text-center text-xs font-medium outline-hidden lg:min-h-[65px] dark:bg-[#121212]',
           holderClassName
         )}
       />

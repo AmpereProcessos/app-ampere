@@ -22,6 +22,7 @@ import LoadingPage from '../../components/utils/LoadingPage'
 import { TAuthSession } from '@/lib/authentication/types'
 import UnauthenticatedComponent from '../../components/utils/UnauthenticatedComponent'
 import UnauthorizedPage from '../../components/utils/UnauthorizedPage'
+import { SupportCallsDatabase } from '@/components/identificador/chamados-suporte/SupportCallsDatabase'
 
 // Types for the support call data
 interface SupportCall {
@@ -129,7 +130,7 @@ function ChamadosSuporte() {
   if (status === 'loading') return <LoadingPage />
   if (status === 'unauthenticated') return <UnauthenticatedComponent />
   if (!isAuthorized) return <UnauthorizedPage />
-  return <ChamadosSuporteContent session={session} />
+  return <SupportCallsDatabase session={session} />
 }
 
 export default ChamadosSuporte

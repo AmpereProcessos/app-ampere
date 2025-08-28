@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { AuthorSchema } from './users'
 
 // ObjectId schema for MongoDB
 const ObjectIdSchema = z.object({
@@ -50,7 +51,6 @@ const UltAlteracoesSchema = z.object({
 
 // Main support call schema
 export const SupportCallSchema = z.object({
-  _id: ObjectIdSchema,
   abertura: z.string({
     required_error: 'Data de abertura não informada',
     invalid_type_error: 'Tipo não válido para data de abertura',
@@ -83,6 +83,7 @@ export const SupportCallSchema = z.object({
     required_error: 'Tipo do chamado não informado',
     invalid_type_error: 'Tipo não válido para tipo do chamado',
   }),
+  responsavelUsuario: AuthorSchema.optional().nullable(),
   ultAlteracoes: UltAlteracoesSchema.optional(),
   ultAtualizacaoCliente: z.string().optional(),
 })

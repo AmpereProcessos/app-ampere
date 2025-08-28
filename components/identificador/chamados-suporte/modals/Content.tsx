@@ -31,7 +31,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
       if (previousData.statusChamado !== 'RESOLVIDO') return new Date().toISOString()
       return previousData.fechamento
     }
-    if (previousData.statusChamado === 'FECHADO') return undefined
+    if (previousData.statusChamado === 'RESOLVIDO') return undefined
     return previousData.fechamento
   }
   return (

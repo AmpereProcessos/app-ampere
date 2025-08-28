@@ -22,6 +22,7 @@ import DateInput from '@/components/inputs/Date'
 import MultipleSelectInput from '@/components/inputs/MultipleSelect'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import SupportCallsStats from './SupportCallsStats'
+import GeneralPaginationComponent from '@/components/utils/Pagination'
 
 type SupportCallsDatabaseProps = {
   session: TAuthSession
@@ -31,7 +32,7 @@ export function SupportCallsDatabase({ session }: SupportCallsDatabaseProps) {
   const queryClient = useQueryClient()
   const [filtersMenuIsOpen, setFiltersMenuIsOpen] = useState(false)
 
-  const { data: supportCalls, isLoading, isError, isSuccess, error, filters, updateFilters } = useSupportCalls()
+  const { data: supportCallsResult, isLoading, isError, isSuccess, error, filters, updateFilters } = useSupportCalls()
 
   const handleOnMutate = async () => {
     await queryClient.cancelQueries({ queryKey: ['support-calls', filters] })
@@ -42,7 +43,10 @@ export function SupportCallsDatabase({ session }: SupportCallsDatabaseProps) {
 
   const [newSupportCallMenuIsOpen, setNewSupportCallMenuIsOpen] = useState(false)
   const [editSupportCallMenuId, setEditSupportCallMenuId] = useState<string | null>(null)
-
+  const supportCalls = supportCallsResult?.calls || []
+  const supportCallsMatched = supportCallsResult?.callsMatched || 0
+  const supportCallsShowing = supportCalls.length
+  const totalPages = supportCallsResult?.totalPages || 0
   return (
     <div className="flex w-full grow flex-col gap-6 p-6">
       <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b pb-2">
@@ -68,8 +72,17 @@ export function SupportCallsDatabase({ session }: SupportCallsDatabaseProps) {
         <AnimatePresence>
           {filtersMenuIsOpen ? <SupportCallsDatabaseFilters filters={filters} updateFilters={updateFilters} /> : null}
         </AnimatePresence>
+        <SupportCallsDatabaseFiltersShowcase filters={filters} updateFilters={updateFilters} />
       </div>
       <SupportCallsStats />
+      <GeneralPaginationComponent
+        activePage={filters.page}
+        queryLoading={isLoading}
+        selectPage={(page) => updateFilters({ page })}
+        totalPages={totalPages}
+        itemsMatchedText={`Foram encontrados ${supportCallsMatched} chamados.`}
+        itemsShowingText={`Monstrando ${supportCallsShowing} chamados.`}
+      />
       {isLoading ? <LoadingComponent /> : null}
       {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
       {isSuccess ? (
@@ -112,11 +125,20 @@ type SupportCallsDatabaseFiltersProps = {
 }
 function SupportCallsDatabaseFilters({ filters, updateFilters }: SupportCallsDatabaseFiltersProps) {
   return (
-    <motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="mt-4 flex w-full flex-col gap-y-2">
+    <motion.div
+      variants={SlideMotionVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className={'bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-xs'}
+    >
+      <h1 className="text-[0.65rem] font-medium tracking-tight uppercase">FILTROS</h1>
       <div className="flex w-full flex-col items-center justify-start gap-2 md:flex-row">
         <div className="w-full md:w-[300px]">
           <TextInput
             label="PESQUISAR"
+            labelClassName="text-[0.7rem]"
+            holderClassName="text-xs p-2 min-h-[34px]"
             value={filters.search ?? ''}
             placeholder="PESQUISAR CHAMADO..."
             handleChange={(value) => updateFilters({ search: value })}
@@ -126,6 +148,8 @@ function SupportCallsDatabaseFilters({ filters, updateFilters }: SupportCallsDat
         <div className="w-full md:w-[300px]">
           <MultipleSelectInput
             label="STATUS"
+            labelClassName="text-[0.7rem]"
+            holderClassName="text-xs p-2 min-h-[34px]"
             selected={filters.status ?? []}
             handleChange={(value) => updateFilters({ status: value as string[] })}
             options={[
@@ -153,6 +177,8 @@ function SupportCallsDatabaseFilters({ filters, updateFilters }: SupportCallsDat
         <div className="w-full md:w-[300px]">
           <SelectInput
             label="CAMPO DE FILTRO DO PERÍODO"
+            labelClassName="text-[0.7rem]"
+            holderClassName="text-xs p-2 min-h-[34px]"
             value={filters.periodField ?? ''}
             handleChange={(value) => updateFilters({ periodField: value as 'abertura' | 'fechamento' | null | undefined })}
             options={[
@@ -175,8 +201,20 @@ function SupportCallsDatabaseFilters({ filters, updateFilters }: SupportCallsDat
         <div className="w-full md:w-[300px]">
           <DateInput
             label="DATA DE INÍCIO"
+            labelClassName="text-[0.7rem]"
+            holderClassName="text-xs p-2 min-h-[34px]"
             value={formatDate(filters.periodAfter)}
             handleChange={(value) => updateFilters({ periodAfter: value })}
+            width="100%"
+          />
+        </div>
+        <div className="w-full md:w-[300px]">
+          <DateInput
+            label="DATA DE FIM"
+            labelClassName="text-[0.7rem]"
+            holderClassName="text-xs p-2 min-h-[34px]"
+            value={formatDate(filters.periodBefore)}
+            handleChange={(value) => updateFilters({ periodBefore: value })}
             width="100%"
           />
         </div>
@@ -185,12 +223,54 @@ function SupportCallsDatabaseFilters({ filters, updateFilters }: SupportCallsDat
   )
 }
 
+type SupportCallsDatabaseFiltersShowcase = {
+  filters: TGetManySupportCallsInput
+  updateFilters: (filters: Partial<TGetManySupportCallsInput>) => void
+}
+function SupportCallsDatabaseFiltersShowcase({ filters, updateFilters }: SupportCallsDatabaseFiltersShowcase) {
+  const FilterTag = ({ label, value, onRemove }: { label: string; value: string; onRemove?: () => void }) => (
+    <div className="bg-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
+      <p className="text-primary/80">
+        {label}: <strong>{value}</strong>
+      </p>
+      {onRemove && (
+        <button type="button" onClick={onRemove} className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1">
+          <X size={12} />
+        </button>
+      )}
+    </div>
+  )
+  const PERIOD_MAP = {
+    abertura: 'ABERTURA',
+    fechamento: 'FECHAMENTO',
+  }
+  return (
+    <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:justify-end">
+      <h1 className="text-[0.65rem] font-medium tracking-tight uppercase">FILTROS APLICADOS</h1>
+      {filters.status.length > 0 ? (
+        <FilterTag label="STATUS" value={filters.status.join(', ')} onRemove={() => updateFilters({ status: [] })} />
+      ) : null}
+
+      {filters.search && filters.search.trim().length > 0 ? (
+        <FilterTag label="PESQUISA" value={filters.search} onRemove={() => updateFilters({ search: '' })} />
+      ) : null}
+
+      {filters.periodAfter && filters.periodBefore && filters.periodField ? (
+        <FilterTag
+          label="PERÍODO"
+          value={`${PERIOD_MAP[filters.periodField]} ${formatDateAsLocale(filters.periodAfter)} a ${formatDateAsLocale(filters.periodBefore)}`}
+          onRemove={() => updateFilters({ periodField: null, periodAfter: null, periodBefore: null })}
+        />
+      ) : null}
+    </div>
+  )
+}
 type SupportCardProps = {
-  call: TGetSupportCallsOutputDefault[number]
+  call: TGetSupportCallsOutputDefault['calls'][number]
   handleClick: () => void
 }
 function SupportCard({ call, handleClick }: SupportCardProps) {
-  function renderSupportCallStatus(callStatus: TGetSupportCallsOutputDefault[number]['statusChamado']) {
+  function renderSupportCallStatus(callStatus: TGetSupportCallsOutputDefault['calls'][number]['statusChamado']) {
     if (callStatus === 'RESOLVIDO')
       return (
         <div className={`inline-flex items-center gap-1 rounded-md bg-green-200 px-1.5 py-0.5 text-[0.65rem] font-bold text-green-700`}>

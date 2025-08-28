@@ -9,6 +9,7 @@ import { useState } from 'react'
 async function fetchSupportCalls(input: TGetManySupportCallsInput) {
   const urlParams = new URLSearchParams()
 
+  if (input.page) urlParams.set('page', input.page.toString())
   if (input.periodField) urlParams.set('periodField', input.periodField)
   if (input.periodAfter) urlParams.set('periodAfter', input.periodAfter)
   if (input.periodBefore) urlParams.set('periodBefore', input.periodBefore)
@@ -26,6 +27,7 @@ async function fetchSupportCalls(input: TGetManySupportCallsInput) {
 
 export function useSupportCalls() {
   const [filters, setFilters] = useState<TGetManySupportCallsInput>({
+    page: 1,
     status: ['EM ANDAMENTO', 'ABERTO'],
     search: '',
     periodField: null,

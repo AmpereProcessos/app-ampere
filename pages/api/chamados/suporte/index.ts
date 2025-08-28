@@ -8,6 +8,12 @@ import { NextApiHandler } from 'next'
 import z from 'zod'
 
 const GetManySupportCallsInputSchema = z.object({
+  page: z
+    .string({
+      required_error: 'Página não informada',
+      invalid_type_error: 'Tipo não válido para página',
+    })
+    .transform((s) => Number(s)),
   periodField: z.enum(['abertura', 'fechamento']).optional().nullable(),
   periodAfter: z
     .string({
@@ -28,7 +34,7 @@ const GetManySupportCallsInputSchema = z.object({
       required_error: 'Status não informado',
       invalid_type_error: 'Tipo não válido para status',
     })
-    .transform((s) => s.split(',')),
+    .transform((s) => s.split(',').filter((s) => s.trim().length > 0)),
   search: z
     .string({
       required_error: 'Busca não informada',
@@ -52,6 +58,7 @@ const GetSupportCallsInputSchema = z.union([GetManySupportCallsInputSchema, GetS
 export type TGetSupportCallsInput = z.infer<typeof GetSupportCallsInputSchema>
 
 async function getSupportCalls({ session, input }: { session: TAuthSession; input: TGetSupportCallsInput }) {
+  const PAGE_SIZE = 100
   const callsDb: Db = await connectToCallsDatabase()
   const supportCallsCollection = callsDb.collection<TSupportCall>('suporte')
 
@@ -68,12 +75,12 @@ async function getSupportCalls({ session, input }: { session: TAuthSession; inpu
     }
   }
 
-  const { periodField, periodAfter, periodBefore, status, search } = input
+  const { periodField, periodAfter, periodBefore, status, search, page } = input
 
   const statusQuery: Filter<TSupportCall> = status.length > 0 ? { statusChamado: { $in: status } } : {}
 
   const searchQuery: Filter<TSupportCall> =
-    search && search.length > 0
+    search && search.trim().length > 0
       ? {
           $or: [
             // By client name
@@ -96,24 +103,41 @@ async function getSupportCalls({ session, input }: { session: TAuthSession; inpu
         }
       : {}
 
+  const query: Filter<TSupportCall> = {
+    ...statusQuery,
+    ...searchQuery,
+    ...periodQuery,
+  }
+
+  const skip = PAGE_SIZE * (Number(page) - 1)
+  const limit = PAGE_SIZE
+
+  const callsMatched = await supportCallsCollection.countDocuments(query)
+  const totalPages = Math.ceil(callsMatched / PAGE_SIZE)
+
+  console.log('QUERY', JSON.stringify(query, null, 2))
   const calls = await supportCallsCollection
     .find(
       {
-        ...statusQuery,
-        ...searchQuery,
-        ...periodQuery,
+        ...query,
       },
       {
         sort: {
-          dataInsercao: -1,
+          abertura: -1,
         },
+        skip,
+        limit,
       }
     )
     .toArray()
 
   return {
     data: {
-      default: calls.map((c) => ({ ...c, _id: c._id.toString() })),
+      default: {
+        calls: calls.map((c) => ({ ...c, _id: c._id.toString() })),
+        callsMatched: callsMatched,
+        totalPages,
+      },
       byId: undefined,
     },
   }

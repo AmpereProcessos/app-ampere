@@ -272,6 +272,7 @@ export function WarrantyInfo({
   infoHolder: TSupportCall
   updateInfoHolder: (info: Partial<TSupportCall>) => void
 }) {
+  if (infoHolder.tipoChamado !== 'DEFEITOS E GARANTIA') return null
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="bg-primary/20 flex w-fit items-center gap-2 rounded px-2 py-1">

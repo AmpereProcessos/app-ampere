@@ -47,7 +47,7 @@ async function getSupportCallsStats({ session, input }: { session: TAuthSession;
           },
           totalClosed: {
             $sum: {
-              $cond: [{ $ne: ['$fechamento', null] }, 1, 0],
+              $cond: [{ $in: ['$statusChamado', ['RESOLVIDO']] }, 1, 0],
             },
           },
           totalOpen: {

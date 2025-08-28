@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import Logo from '@/utils/svgs/logo-texto-branco-vertical.svg'
-import Fundo from '@/utils/images/fundo-sol-placas.jpg'
 import Image from 'next/image'
 import { AiFillInstagram, AiFillPhone } from 'react-icons/ai'
 import { TbWorld } from 'react-icons/tb'
@@ -22,7 +21,7 @@ function EventTotemSimulationPage() {
     <div className={`bg-background font-raleway flex h-full grow flex-col items-center overflow-clip`}>
       <div className="flex h-[120px] w-full items-center justify-center bg-[#15599a]">
         <div className="flex h-[90px] cursor-pointer items-center justify-center">
-          <Image height={'90px'} width={'90px'} src={Logo} objectFit="fill" quality={100} />
+          <Image height={90} width={90} src={Logo} objectFit="fill" quality={100} alt="Logo da Ampère Energias" />
         </div>
       </div>
       <div className="flex w-[80%] grow flex-col justify-center p-6">
@@ -30,7 +29,7 @@ function EventTotemSimulationPage() {
           {' '}
           SEJA BEM VINDO AO TOTEM DE SIMULAÇÃO DA AMPÈRE ENERGIAS !
         </h1>
-        <p className="text-primary/60 mb-3 w-full text-center text-base tracking-tight lg:text-xl">
+        <p className="text-primary/80 mb-3 w-full text-center text-base tracking-tight lg:text-xl">
           Dentre as opções abaixo, selecione a modalidade que gostaria de simular.
         </p>
         <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -38,11 +37,13 @@ function EventTotemSimulationPage() {
             onClick={() => setType('ufv-system-calculator')}
             className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
-            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE ENERGIA SOLAR</h1>
-            <h1 className="text-[#15599a] group-hover:text-white">
+            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white dark:text-[#fead41]">
+              CALCULADORA DE ENERGIA SOLAR
+            </h1>
+            <h1 className="text-[#15599a] group-hover:text-white dark:text-[#fead41]">
               <FaSolarPanel size={50} />
             </h1>
-            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/80 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor estimado para seu novo sistema fotovoltaico. Clique aqui e começa já a economizar.
             </p>
           </button>
@@ -50,11 +51,13 @@ function EventTotemSimulationPage() {
             onClick={() => setType('ufv-insurance-calculator')}
             className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
-            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE SEGURO SOLAR</h1>
-            <h1 className="text-[#15599a] group-hover:text-white">
+            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white dark:text-[#fead41]">
+              CALCULADORA DE SEGURO SOLAR
+            </h1>
+            <h1 className="text-[#15599a] group-hover:text-white dark:text-[#fead41]">
               <MdSecurity size={50} />
             </h1>
-            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/80 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor estimado pra segurar o seu sistema fotovoltaico.
             </p>
           </button>
@@ -62,11 +65,13 @@ function EventTotemSimulationPage() {
             onClick={() => setType('ufv-oem-calculator')}
             className="group flex w-full flex-col items-center gap-2 rounded border-2 border-[#15599a] px-6 py-6 duration-300 ease-out hover:bg-[#15599a] lg:w-[80%]"
           >
-            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white">CALCULADORA DE MANUTENÇÃO E LIMPEZA</h1>
-            <h1 className="text-[#15599a] group-hover:text-white">
+            <h1 className="text-lg font-bold text-[#15599a] duration-300 ease-in-out group-hover:text-white dark:text-[#fead41]">
+              CALCULADORA DE MANUTENÇÃO E LIMPEZA
+            </h1>
+            <h1 className="text-[#15599a] group-hover:text-white dark:text-[#fead41]">
               <BsSpeedometer2 size={50} />
             </h1>
-            <p className="text-primary/60 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
+            <p className="text-primary/80 w-full tracking-tight duration-300 ease-in-out group-hover:text-gray-50">
               Descubra o valor para obter nossos planos de operação e manutenção. Clique aqui e garanta a máxima eficiência do seu investimento.
             </p>
           </button>

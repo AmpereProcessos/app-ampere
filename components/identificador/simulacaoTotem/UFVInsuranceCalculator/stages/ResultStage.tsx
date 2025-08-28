@@ -176,8 +176,8 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                     </div>
                     <div className="flex h-[30px] w-full grow items-center justify-start rounded border border-black lg:w-fit">
                       <div
-                        style={{ width: `${value}%`, minWidth: '20px', backgroundColor: 'black', height: 30 }}
-                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-xs"
+                        style={{ width: `${value}%`, minWidth: '20px', height: 30 }}
+                        className="bg-primary text-primary-foreground flex items-center justify-center rounded-sm text-xs font-bold shadow-xs"
                       >
                         {value}%
                       </div>
@@ -205,8 +205,8 @@ function ResultStage({ nome, valorReferencia, resetSimulation }: ResultStageProp
                     </div>
                     <div className="flex h-[30px] w-full grow items-center justify-start rounded border border-black lg:w-fit">
                       <div
-                        style={{ width: `${value}%`, minWidth: '20px', backgroundColor: 'black', height: 30 }}
-                        className="flex items-center justify-center rounded-sm text-xs font-bold text-white shadow-xs"
+                        style={{ width: `${value}%`, minWidth: '20px', height: 30 }}
+                        className="bg-primary text-primary-foreground flex items-center justify-center rounded-sm text-xs font-bold shadow-xs"
                       >
                         {value}%
                       </div>

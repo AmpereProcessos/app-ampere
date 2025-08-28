@@ -1,6 +1,6 @@
 import { useDebounce, useDebounceMemo } from '@/lib/hooks/debounce'
 import { useVinculationProjectsSearch } from '@/utils/methods/query/projects'
-import type { TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from '@/utils/schemas/projects'
+import type { TProjectDTO, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from '@/utils/schemas/projects'
 import React, { useState } from 'react'
 import { VscChromeClose } from 'react-icons/vsc'
 import { Input } from '@/components/ui/input'
@@ -14,10 +14,11 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { useMediaQuery } from '@/lib/hooks/media-query'
 import { Button } from '@/components/ui/button'
+import { fetchProjectById } from '@/utils/methods/query/clients'
 
 type ProjectVinculationMenuProps = {
   closeModal: () => void
-  handleSelect: (projectSimplified: TProjectDTODBSimplified) => void
+  handleSelect: (project: TProjectDTO) => void
 }
 function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculationMenuProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -27,6 +28,11 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
   const debouncedQueryParams = useDebounceMemo(queryParams, 350)
   const { data: projects, isLoading, isFetching, isError, isSuccess, isStale, error } = useVinculationProjectsSearch(debouncedQueryParams)
 
+  async function handleProjectSelection(projectId: string) {
+    const project = await fetchProjectById({ id: projectId })
+    handleSelect(project)
+    closeModal()
+  }
   const MENU_TITLE = 'NOVA CONDIÇÃO'
   const MENU_DESCRIPTION = 'Preencha os campos abaixo para criar uma nova condição.'
   return isDesktop ? (
@@ -37,7 +43,7 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
           <DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto">
+        <div className="flex flex-1 flex-col gap-3 overflow-auto">
           <Input
             value={queryParams.search}
             placeholder="Pesquisa aqui pelo nome ou código do projeto..."
@@ -62,7 +68,7 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleSelect(project)}
+                        onClick={() => handleProjectSelection(project._id)}
                         className="flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white duration-300 ease-in-out hover:bg-blue-700"
                       >
                         <FaLink />
@@ -149,7 +155,7 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleSelect(project)}
+                        onClick={() => handleProjectSelection(project._id)}
                         className="flex items-center gap-1 rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white duration-300 ease-in-out hover:bg-blue-700"
                       >
                         <FaLink />

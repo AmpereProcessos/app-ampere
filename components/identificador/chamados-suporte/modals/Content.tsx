@@ -2,7 +2,7 @@ import SelectInputVirtualized from '@/components/inputs/SelectVirtualized'
 import TextInput from '@/components/inputs/Text'
 
 import { TSupportCall } from '@/utils/schemas/support-calls'
-import { Check, LayoutGrid, Loader, X } from 'lucide-react'
+import { Check, Code, LayoutGrid, LinkIcon, Loader, Tag, UsersRound, X } from 'lucide-react'
 import { useState } from 'react'
 import StatesAndCities from '@/utils/jsons/estados-cidades.json'
 import SelectInput from '@/components/inputs/Select'
@@ -17,6 +17,9 @@ import { useUsers } from '@/utils/methods/query/users'
 import SelectWithImages from '@/components/inputs/SelectWithImages'
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import { BsCalendarCheck } from 'react-icons/bs'
+import { Button } from '@/components/ui/button'
+import ProjectVinculationMenu from '../../projects/ProjectVinculationMenu'
+import { FaCity } from 'react-icons/fa6'
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, value: c, label: c }))
 
@@ -25,6 +28,7 @@ type GeneralProps = {
   updateInfoHolder: (info: Partial<TSupportCall>) => void
 }
 export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
+  const [vinculationModalIsOpen, setVinculationModalIsOpen] = useState(false)
   const { data: users } = useUsers()
   function handleEffectivationUpdate(newValue: TSupportCall['statusChamado'], previousData: TSupportCall) {
     if (newValue === 'RESOLVIDO') {
@@ -72,6 +76,34 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
           RESOLVIDO
         </button>
       </div>
+      {infoHolder.idPai ? (
+        <div className="bg-card flex w-full flex-col items-center justify-center gap-3 p-3">
+          <div className="bg-primary/20 flex items-center gap-1 rounded-md px-2 py-0.5">
+            <Code className="h-3 min-h-3 w-3 min-w-3" />
+            <h1 className="text-[0.55rem]">{infoHolder.idPai}</h1>
+          </div>
+          <h1 className="text-sm font-medium tracking-tight">{infoHolder.nomeCliente}</h1>
+          <div className="flex w-full flex-wrap items-center justify-center gap-2">
+            <div className="items-canter flex gap-1">
+              <UsersRound className="h-3 min-h-3 w-3 min-w-3" />
+              <p className="text-primary/60 text-xs">{infoHolder.equipeResp}</p>
+            </div>
+            <div className="items-canter flex gap-1">
+              <FaCity className="h-3 min-h-3 w-3 min-w-3" />
+              <p className="text-primary/60 text-xs">{infoHolder.cidade}</p>
+            </div>
+            <div className="items-canter flex gap-1">
+              <Tag className="h-3 min-h-3 w-3 min-w-3" />
+              <p className="text-primary/60 text-xs">{infoHolder.plano}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Button className="flex w-full items-center gap-1" variant="ghost" onClick={() => setVinculationModalIsOpen(true)}>
+          <LinkIcon className="h-3 min-h-3 w-3 min-w-3" />
+          <h1 className="text-xs font-medium tracking-tight">VINCULAR PROJETO</h1>
+        </Button>
+      )}
       {infoHolder.fechamento ? (
         <div className={`flex w-fit items-center gap-1 self-center rounded-md bg-green-200 px-1.5 py-0.5 text-[0.65rem] font-bold text-green-700`}>
           <BsCalendarCheck className="h-3 min-h-3 w-3 min-w-3" />
@@ -162,6 +194,22 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
         placeholder="Preencha aqui as anotações..."
         handleChange={(value) => updateInfoHolder({ anotacoes: value })}
       />
+      {vinculationModalIsOpen ? (
+        <ProjectVinculationMenu
+          closeModal={() => setVinculationModalIsOpen(false)}
+          handleSelect={(project) => {
+            updateInfoHolder({
+              nomeCliente: project.nomeDoContrato,
+              idPai: project._id,
+              plano: project.oem.plano || undefined,
+              cidade: project.cidade,
+              oemConcluido: project.oem.oemConcluido || undefined,
+              equipeResp: project.obra.equipeResp || undefined,
+            })
+            setVinculationModalIsOpen(false)
+          }}
+        />
+      ) : null}
     </div>
   )
 }

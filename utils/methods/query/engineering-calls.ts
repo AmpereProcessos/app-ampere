@@ -29,7 +29,7 @@ async function fetchEngineeringCalls(input: TGetManyEngineeringCallsInput) {
 export function useEngineeringCalls() {
   const [filters, setFilters] = useState<TGetManyEngineeringCallsInput>({
     page: 1,
-    status: ['EM ANDAMENTO', 'ABERTO'],
+    status: ['EM ANDAMENTO', 'PENDENTE'],
     search: '',
     periodField: null,
     periodAfter: null,

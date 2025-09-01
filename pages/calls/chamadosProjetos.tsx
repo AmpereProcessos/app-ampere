@@ -8,7 +8,7 @@ import { EngineeringCallsDatabase } from '@/components/identificador/chamados-en
 
 function ChamadosEngenharia() {
   const { session, status } = useSession()
-  const isAuthorized = session?.user.permissoes.rotas.includes('O&M') || session?.user.permissoes.rotas.includes('Pós-Venda')
+  const isAuthorized = session?.user.permissoes.engenharia.visualizar
   if (status === 'loading') return <LoadingPage />
   if (status === 'unauthenticated') return <UnauthenticatedComponent />
   if (!isAuthorized) return <UnauthorizedPage />

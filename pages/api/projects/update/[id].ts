@@ -43,11 +43,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Checking for update on service order trackable fields
     if (
       [
+        'idVisitaTecnica',
         'vendedor.nome',
         'etiquetas',
         'contrato.dataAssinatura',
         'homologacao.fastTrack',
-        'homologacao.acesso.dataResposta',
+        'homologacao.acesso.dataResposta', 
         'homologacao.vistoria.dataEfetivacao',
         'pagamento.credor',
         'compra.dataPagamento',
@@ -67,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           {
             $set: {
               etiquetas: getServiceOrderTagsFromProject(project),
+              'idAnaliseTecnica': project.idVisitaTecnica,
               'projeto.vendedorNome': project.vendedor.nome,
               'projeto.contratoDataAssinatura': project.contrato?.dataAssinatura,
               'projeto.compraDataPagamento': project.compra?.dataPagamento,

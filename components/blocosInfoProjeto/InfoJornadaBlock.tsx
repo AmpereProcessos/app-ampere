@@ -1,8 +1,9 @@
+import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
+import type { TProjectDTO } from "@/utils/schemas/projects";
+import { Route } from "lucide-react";
+import Link from "next/link";
 import React, { type SetStateAction, type Dispatch } from "react";
 import CheckboxInput from "../inputs/Checkbox";
-import Link from "next/link";
-import type { TProjectDTO } from "@/utils/schemas/projects";
-import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
 
 type InfoJornadaBlockProps = {
 	editor: boolean;
@@ -14,8 +15,11 @@ type InfoJornadaBlockProps = {
 };
 function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [] }: InfoJornadaBlockProps) {
 	return (
-		<div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
-			<span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">JORNADA DO CLIENTE</span>
+		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
+			<div className="flex items-center gap-2 bg-primary/20 px-2 py-2 rounded w-full justify-center">
+				<Route className="h-4 w-4 min-h-4 min-w-4" />
+				<h1 className="text-xs tracking-tight font-medium text-start w-fit">JORNADA DO CLIENTE</h1>
+			</div>
 			<div className="flex w-full px-2">
 				<div className="flex w-full flex-wrap items-center justify-around gap-3 rounded border border-cyan-500 p-2">
 					<div className="flex w-full items-center justify-between gap-2">
@@ -31,7 +35,10 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"BOAS VINDAS"}
 						checked={!!infoHolder.jornada.boasVindas}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, boasVindas: value } }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, boasVindas: value },
+							}));
 							setChanges((prev) => ({ ...prev, "jornada.boasVindas": value }));
 						}}
 					/>
@@ -40,8 +47,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"ASSINATURA DAS DOCUMENTAÇÕES"}
 						checked={!!infoHolder.jornada.assDocumentacoes}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, assDocumentacoes: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.assDocumentacoes": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, assDocumentacoes: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.assDocumentacoes": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -49,7 +62,10 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"COMPRA DO KIT"}
 						checked={!!infoHolder.jornada.compraDoKit}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, compraDoKit: value } }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, compraDoKit: value },
+							}));
 							setChanges((prev) => ({ ...prev, "jornada.compraDoKit": value }));
 						}}
 					/>
@@ -58,7 +74,10 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"NF FATURADA"}
 						checked={!!infoHolder.jornada.nfFaturada}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, nfFaturada: value } }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, nfFaturada: value },
+							}));
 							setChanges((prev) => ({ ...prev, "jornada.nfFaturada": value }));
 						}}
 					/>
@@ -67,7 +86,10 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"PREVISÃO DE ENTREGA"}
 						checked={!!infoHolder.jornada.prevChegada}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, prevChegada: value } }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, prevChegada: value },
+							}));
 							setChanges((prev) => ({ ...prev, "jornada.prevChegada": value }));
 						}}
 					/>
@@ -76,8 +98,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"RESPOSTA DA CONCESSIONÁRIA"}
 						checked={!!infoHolder.jornada.respConcessionaria}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, respConcessionaria: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.respConcessionaria": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, respConcessionaria: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.respConcessionaria": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -85,8 +113,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"KIT ENTREGUE"}
 						checked={!!infoHolder.jornada.entregaDoKit}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaDoKit: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.entregaDoKit": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, entregaDoKit: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.entregaDoKit": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -94,8 +128,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"INSTALAÇÃO AGENDADA"}
 						checked={!!infoHolder.jornada.instalacaoAgendada}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoAgendada: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.instalacaoAgendada": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, instalacaoAgendada: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.instalacaoAgendada": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -103,8 +143,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"INSTALAÇÃO REALIZADA"}
 						checked={!!infoHolder.jornada.instalacaoRealizada}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoRealizada: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.instalacaoRealizada": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, instalacaoRealizada: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.instalacaoRealizada": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -112,8 +158,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"VISTORIA DA CONCESSIONÁRIA"}
 						checked={!!infoHolder.jornada.vistoriaConcessionaria}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, vistoriaConcessionaria: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.vistoriaConcessionaria": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, vistoriaConcessionaria: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.vistoriaConcessionaria": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -121,8 +173,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"SISTEMA LIGADO"}
 						checked={!!infoHolder.jornada.sistemaLigado}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, sistemaLigado: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.sistemaLigado": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, sistemaLigado: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.sistemaLigado": value,
+							}));
 						}}
 					/>
 					<CheckboxInput
@@ -130,8 +188,14 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 						labelTrue={"JORNADA CONCLUIDA"}
 						checked={!!infoHolder.jornada.jornadaConcluida}
 						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, jornadaConcluida: value } }));
-							setChanges((prev) => ({ ...prev, "jornada.jornadaConcluida": value }));
+							setInfo((prev) => ({
+								...prev,
+								jornada: { ...prev.jornada, jornadaConcluida: value },
+							}));
+							setChanges((prev) => ({
+								...prev,
+								"jornada.jornadaConcluida": value,
+							}));
 						}}
 					/>
 				</div>

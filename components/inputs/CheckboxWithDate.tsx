@@ -21,11 +21,11 @@ function CheckboxWithDate({ date, labelTrue, labelFalse, showDate = true, handle
     <Popover.Root>
       <Popover.Trigger disabled={!editable} asChild>
         <Button
-          variant={'outline-solid'}
+          variant={'outline'}
           className={cn('flex flex-col gap-1 shadow-none', !date && 'text-muted-foreground', 'border-0 hover:bg-transparent')}
         >
           <div className="flex items-center gap-2">
-            <div className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-black`}>
+            <div className={`flex h-[16px] w-[16px] items-center justify-center rounded-full border border-primary`}>
               {date ? <BsCheck style={{ color: 'black' }} /> : null}
             </div>
             <p className={'text-xs leading-none font-medium'}>{!!date ? labelTrue : labelFalse}</p>

@@ -87,6 +87,26 @@ export const ProjectExportablesSchema = z.object({
 		required_error: "Necessidade de exportação da longitude não informada",
 		invalid_type_error: "Necessidade de exportação da longitude não é um booleano",
 	}),
+	'pagamento.forma': z.boolean({
+		required_error: "Necessidade de exportação da forma de pagamento não informada",
+		invalid_type_error: "Necessidade de exportação da forma de pagamento não é um booleano",
+	}),
+	'pagamento.credor': z.boolean({
+		required_error: "Necessidade de exportação do credor não informada",
+		invalid_type_error: "Necessidade de exportação do credor não é um booleano",
+	}),
+	'pagamento.pagador': z.boolean({
+		required_error: "Necessidade de exportação do pagador não informada",
+		invalid_type_error: "Necessidade de exportação do pagador não é um booleano",
+	}),
+	'pagamento.contatoPagador': z.boolean({
+		required_error: "Necessidade de exportação do contato do pagador não informada",
+		invalid_type_error: "Necessidade de exportação do contato do pagador não é um booleano",
+	}),
+	'pagamento.cpf_cnpjPagador': z.boolean({
+		required_error: "Necessidade de exportação do CPF/CNPJ do pagador não informada",
+		invalid_type_error: "Necessidade de exportação do CPF/CNPJ do pagador não é um booleano",
+	}),
 	"contrato.status": z.boolean({
 		required_error: "Necessidade de exportação do status do contrato não informada.",
 		invalid_type_error: "Necessidade de exportação do status do contrato não é um booleano.",
@@ -242,6 +262,26 @@ export const ProjectExportableFieldsConfig: TProjectExportableFieldsConfig = {
 	longitude: {
 		label: "LONGITUDE",
 		formattingFunction: (value: TProject["longitude"]) => value?.toString() ?? "",
+	},
+	'pagamento.forma': {
+		label: "FORMA DE PAGAMENTO",
+		formattingFunction: (value: TProject["pagamento"]["forma"]) => value ?? "",
+	},
+	'pagamento.credor': {
+		label: "CREDOR",
+		formattingFunction: (value: TProject["pagamento"]["credor"]) => value ?? "",
+	},
+	'pagamento.pagador': {
+		label: "PAGADOR",
+		formattingFunction: (value: TProject["pagamento"]["pagador"]) => value ?? "",
+	},
+	'pagamento.contatoPagador': {
+		label: "CONTATO DO PAGADOR",
+		formattingFunction: (value: TProject["pagamento"]["contatoPagador"]) => value ?? "",
+	},
+	'pagamento.cpf_cnpjPagador': {
+		label: "CPF/CNPJ DO PAGADOR",
+		formattingFunction: (value: TProject["pagamento"]["cpf_cnpjPagador"]) => value?.toString() ?? "",
 	},
 	"contrato.status": {
 		label: "STATUS DO CONTRATO",

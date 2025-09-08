@@ -67,9 +67,14 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 			cidade: true,
 			bairro: false,
 			logradouro: false,
-			numeroResidencia: false,
+			numeroResidencia: false, 
 			latitude: false,
 			longitude: false,
+			"pagamento.forma": false,
+			"pagamento.credor": false,
+			"pagamento.pagador": false,
+			"pagamento.contatoPagador": false,
+			"pagamento.cpf_cnpjPagador": false,
 			"contrato.status": false,
 			"sistema.potPico": false,
 			"contrato.dataAssinatura": false,
@@ -401,6 +406,11 @@ function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePay
 					/>
 					<CheckboxInput labelFalse="LATITUDE" labelTrue="LATITUDE" checked={payloadHolder.projection.latitude} handleChange={(v) => updatePayloadProjection({ latitude: v })} />
 					<CheckboxInput labelFalse="LONGITUDE" labelTrue="LONGITUDE" checked={payloadHolder.projection.longitude} handleChange={(v) => updatePayloadProjection({ longitude: v })} />
+					<CheckboxInput labelFalse="FORMA DE PAGAMENTO" labelTrue="FORMA DE PAGAMENTO" checked={payloadHolder.projection["pagamento.forma"]} handleChange={(v) => updatePayloadProjection({ "pagamento.forma": v })} />
+					<CheckboxInput labelFalse="CREDOR" labelTrue="CREDOR" checked={payloadHolder.projection["pagamento.credor"]} handleChange={(v) => updatePayloadProjection({ "pagamento.credor": v })} />
+					<CheckboxInput labelFalse="PAGADOR" labelTrue="PAGADOR" checked={payloadHolder.projection["pagamento.pagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.pagador": v })} />
+					<CheckboxInput labelFalse="CONTATO DO PAGADOR" labelTrue="CONTATO DO PAGADOR" checked={payloadHolder.projection["pagamento.contatoPagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.contatoPagador": v })} />
+					<CheckboxInput labelFalse="CPF/CNPJ DO PAGADOR" labelTrue="CPF/CNPJ DO PAGADOR" checked={payloadHolder.projection["pagamento.cpf_cnpjPagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.cpf_cnpjPagador": v })} />
 					<CheckboxInput
 						labelFalse="STATUS DO CONTRATO"
 						labelTrue="STATUS DO CONTRATO"

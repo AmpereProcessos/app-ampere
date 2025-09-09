@@ -7,7 +7,7 @@ import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
 import type { TProjectComissionedUser, TProjectDTO } from "@/utils/schemas/projects";
-import { BadgeCheck, BadgeDollarSign } from "lucide-react";
+import { BadgeCheck, BadgeDollarSign, Percent } from "lucide-react";
 import { FileSignature } from "lucide-react";
 import { FaPercent } from "react-icons/fa";
 import { contractStatus } from "../../utils/select-options";
@@ -19,6 +19,7 @@ import DateInput from "../inputs/Date";
 import NumberInput from "../inputs/Number";
 import SelectInput from "../inputs/Select";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { InfoBlockSection } from "./Utils/SectionBlock";
 
 type InfoContratoBlockProps = {
 	editor: boolean;
@@ -37,209 +38,211 @@ function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, u
 				<FileSignature className="h-4 w-4 min-h-4 min-w-4" />
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES DO CONTRATO</h1>
 			</div>
-			<UpdateLogsBlock logs={updateLogs} SectionElement={<Contract logs={updateLogs} />} />
-			<div className="mt-2 flex w-full items-center justify-center">
-				<div className="w-full lg:w-1/2">
-					<SelectInput
-						editable={editor}
-						label="FORMA DE ASSINATURA"
-						options={[
-							{ id: 1, label: "FISICO", value: "FISICO" },
-							{ id: 2, label: "DIGITAL", value: "DIGITAL" },
-							{ id: 3, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-						]}
-						value={infoHolder.contrato.formaAssinatura}
-						selectedItemLabel="NÃO DEFINIDO"
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: { ...prev.contrato, formaAssinatura: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.formaAssinatura": value,
-							}));
-						}}
-						onReset={() => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: { ...prev.contrato, formaAssinatura: "NÃO DEFINIDO" },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.formaAssinatura": "NÃO DEFINIDO",
-							}));
-						}}
-						width="100%"
-					/>
-				</div>
-			</div>
-			<div className="mt-2 flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
-				<div className="w-full lg:w-1/4">
-					<SelectInput
-						editable={editor}
-						label="STATUS DO CONTRATO"
-						options={contractStatus}
-						value={infoHolder.contrato.status}
-						selectedItemLabel="NÃO DEFINIDO"
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: { ...prev.contrato, status: value },
-							}));
-							setChanges((prev) => ({ ...prev, "contrato.status": value }));
-						}}
-						onReset={() => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: { ...prev.contrato, status: "NÃO DEFINIDO" },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.status": "NÃO DEFINIDO",
-							}));
-						}}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/4">
-					<DateInput
-						label="DATA DE SOLICITAÇÃO"
-						value={infoHolder.contrato.dataSolicitacao ? formatDate(infoHolder.contrato.dataSolicitacao) : undefined}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: {
-									...prev.contrato,
-									dataSolicitacao: formatDateInputChange(value, "string"),
-								},
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.dataSolicitacao": formatDateInputChange(value),
-							}));
-						}}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/4">
-					<DateInput
-						label="DATA DE LIBERAÇÃO"
-						value={infoHolder.contrato.dataLiberacao ? formatDate(infoHolder.contrato.dataLiberacao) : undefined}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: {
-									...prev.contrato,
-									dataLiberacao: formatDateInputChange(value, "string"),
-								},
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.dataLiberacao": formatDateInputChange(value),
-							}));
-						}}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/4">
-					<DateInput
-						label="DATA DE ASSINATURA"
-						value={infoHolder.contrato.dataAssinatura ? formatDate(infoHolder.contrato.dataAssinatura) : undefined}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								contrato: {
-									...prev.contrato,
-									dataAssinatura: formatDateInputChange(value, "string"),
-								},
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"contrato.dataAssinatura": formatDateInputChange(value),
-							}));
-						}}
-						width="100%"
-					/>
-				</div>
-			</div>
-			{showPaymentInfo ? (
-				<div className="mt-2 flex w-full flex-col gap-2 px-2">
-					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-						<div className="w-full lg:w-1/2">
-							<DateInput
-								label="DATA DE REFERÊNCIA PARA COMISSÃO"
-								value={infoHolder.comissoes?.dataReferencia ? formatDate(infoHolder.comissoes?.dataReferencia) : undefined}
-								handleChange={(value) => {
-									setInfo((prev) => ({
-										...prev,
-										comissoes: {
-											...(prev.comissoes || {}),
-											dataReferencia: formatDateInputChange(value, "string"),
-										},
-									}));
-									setChanges((prev) => ({
-										...prev,
-										"comissoes.dataReferencia": formatDateInputChange(value, "string"),
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-1/2">
-							<NumberInput
-								label="VALOR COMISSIONÁVEL"
-								placeholder="Preencha o valor comissionável..."
-								editable={editor}
-								value={infoHolder.comissoes?.valorComissionavel || null}
-								handleChange={(value) => {
-									setInfo((prev) => ({
-										...prev,
-										comissoes: {
-											...(prev.comissoes || {}),
-											valorComissionavel: value,
-										},
-									}));
-									setChanges((prev) => ({
-										...prev,
-										"comissoes.valorComissionavel": value,
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
+			<div className="w-full flex flex-col gap-2 px-2">
+				<UpdateLogsBlock logs={updateLogs} SectionElement={<Contract logs={updateLogs} />} />
+				<div className="flex w-full items-center justify-center">
+					<div className="w-full lg:w-1/2">
+						<SelectInput
+							editable={editor}
+							label="FORMA DE ASSINATURA"
+							options={[
+								{ id: 1, label: "FISICO", value: "FISICO" },
+								{ id: 2, label: "DIGITAL", value: "DIGITAL" },
+								{ id: 3, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+							]}
+							value={infoHolder.contrato.formaAssinatura}
+							selectedItemLabel="NÃO DEFINIDO"
+							handleChange={(value) => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: { ...prev.contrato, formaAssinatura: value },
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.formaAssinatura": value,
+								}));
+							}}
+							onReset={() => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: { ...prev.contrato, formaAssinatura: "NÃO DEFINIDO" },
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.formaAssinatura": "NÃO DEFINIDO",
+								}));
+							}}
+							width="100%"
+						/>
 					</div>
-					<div className="flex w-full flex-col gap-2">
-						<p className="text-sm leading-none font-bold tracking-tight">COMISSIONADOS</p>
-						{infoHolder.comissoes?.comissionados && infoHolder.comissoes?.comissionados.length > 0 ? (
-							infoHolder.comissoes?.comissionados.map((comissionedUser) => (
-								<ComissionableUsersCard
-									key={comissionedUser.idCrm}
-									comissionedUser={comissionedUser}
-									comissionableValue={infoHolder.comissoes?.valorComissionavel || 0}
+				</div>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/4">
+						<SelectInput
+							editable={editor}
+							label="STATUS DO CONTRATO"
+							options={contractStatus}
+							value={infoHolder.contrato.status}
+							selectedItemLabel="NÃO DEFINIDO"
+							handleChange={(value) => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: { ...prev.contrato, status: value },
+								}));
+								setChanges((prev) => ({ ...prev, "contrato.status": value }));
+							}}
+							onReset={() => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: { ...prev.contrato, status: "NÃO DEFINIDO" },
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.status": "NÃO DEFINIDO",
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/4">
+						<DateInput
+							label="DATA DE SOLICITAÇÃO"
+							value={infoHolder.contrato.dataSolicitacao ? formatDate(infoHolder.contrato.dataSolicitacao) : undefined}
+							handleChange={(value) => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: {
+										...prev.contrato,
+										dataSolicitacao: formatDateInputChange(value, "string"),
+									},
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.dataSolicitacao": formatDateInputChange(value),
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/4">
+						<DateInput
+							label="DATA DE LIBERAÇÃO"
+							value={infoHolder.contrato.dataLiberacao ? formatDate(infoHolder.contrato.dataLiberacao) : undefined}
+							handleChange={(value) => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: {
+										...prev.contrato,
+										dataLiberacao: formatDateInputChange(value, "string"),
+									},
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.dataLiberacao": formatDateInputChange(value),
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/4">
+						<DateInput
+							label="DATA DE ASSINATURA"
+							value={infoHolder.contrato.dataAssinatura ? formatDate(infoHolder.contrato.dataAssinatura) : undefined}
+							handleChange={(value) => {
+								setInfo((prev) => ({
+									...prev,
+									contrato: {
+										...prev.contrato,
+										dataAssinatura: formatDateInputChange(value, "string"),
+									},
+								}));
+								setChanges((prev) => ({
+									...prev,
+									"contrato.dataAssinatura": formatDateInputChange(value),
+								}));
+							}}
+							width="100%"
+						/>
+					</div>
+				</div>
+				{showPaymentInfo ? (
+					<InfoBlockSection headerTitle="COMISSIONAMENTO" headerIcon={<Percent className="h-4 w-4 min-h-4 min-w-4" />}>
+						<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+							<div className="w-full lg:w-1/2">
+								<DateInput
+									label="DATA DE REFERÊNCIA PARA COMISSÃO"
+									value={infoHolder.comissoes?.dataReferencia ? formatDate(infoHolder.comissoes?.dataReferencia) : undefined}
+									handleChange={(value) => {
+										setInfo((prev) => ({
+											...prev,
+											comissoes: {
+												...(prev.comissoes || {}),
+												dataReferencia: formatDateInputChange(value, "string"),
+											},
+										}));
+										setChanges((prev) => ({
+											...prev,
+											"comissoes.dataReferencia": formatDateInputChange(value, "string"),
+										}));
+									}}
+									width="100%"
 								/>
-							))
-						) : (
-							<h1 className="text-primary/60 w-full py-1 text-center text-sm italic">Nenhum comissionado cadastrado...</h1>
-						)}
-					</div>
-				</div>
-			) : null}
+							</div>
+							<div className="w-full lg:w-1/2">
+								<NumberInput
+									label="VALOR COMISSIONÁVEL"
+									placeholder="Preencha o valor comissionável..."
+									editable={editor}
+									value={infoHolder.comissoes?.valorComissionavel || null}
+									handleChange={(value) => {
+										setInfo((prev) => ({
+											...prev,
+											comissoes: {
+												...(prev.comissoes || {}),
+												valorComissionavel: value,
+											},
+										}));
+										setChanges((prev) => ({
+											...prev,
+											"comissoes.valorComissionavel": value,
+										}));
+									}}
+									width="100%"
+								/>
+							</div>
+						</div>
+						<div className="flex w-full flex-col gap-2">
+							<p className="text-sm leading-none font-medium tracking-tight">COMISSIONADOS</p>
+							{infoHolder.comissoes?.comissionados && infoHolder.comissoes?.comissionados.length > 0 ? (
+								infoHolder.comissoes?.comissionados.map((comissionedUser) => (
+									<ComissionableUsersCard
+										key={comissionedUser.idCrm}
+										comissionedUser={comissionedUser}
+										comissionableValue={infoHolder.comissoes?.valorComissionavel || 0}
+									/>
+								))
+							) : (
+								<h1 className="text-primary/60 w-full py-1 text-center text-sm italic">Nenhum comissionado cadastrado...</h1>
+							)}
+						</div>
+					</InfoBlockSection>
+				) : null}
 
-			<div className="mt-2 flex w-full items-center justify-center">
-				<div className="w-fit">
-					<CheckboxWithDate
-						labelFalse="PROCESSO COMERCIAL CONCLUÍDO"
-						labelTrue="PROCESSO COMERCIAL CONCLUÍDO"
-						date={infoHolder.dataValidacaoComercial ? new Date(infoHolder.dataValidacaoComercial) : null}
-						handleChange={(value) => {
-							setInfo((prev) => ({ ...prev, dataValidacaoComercial: value }));
-							setChanges((prev) => ({
-								...prev,
-								dataValidacaoComercial: value,
-							}));
-						}}
-					/>
+				<div className="flex w-full items-center justify-center">
+					<div className="w-fit">
+						<CheckboxWithDate
+							labelFalse="PROCESSO COMERCIAL CONCLUÍDO"
+							labelTrue="PROCESSO COMERCIAL CONCLUÍDO"
+							date={infoHolder.dataValidacaoComercial ? new Date(infoHolder.dataValidacaoComercial) : null}
+							handleChange={(value) => {
+								setInfo((prev) => ({ ...prev, dataValidacaoComercial: value }));
+								setChanges((prev) => ({
+									...prev,
+									dataValidacaoComercial: value,
+								}));
+							}}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,109 +1,109 @@
-import { formatLongString } from '@/utils/constants'
-import { useClickOutside } from '@/utils/hooks'
-import { handleRenderFileIcon } from '@/utils/methods/rendering'
-import { TFileReferenceDTO } from '@/utils/schemas/crm/file-reference.schema'
-import React, { useRef, useState } from 'react'
+import { formatLongString } from "@/utils/constants";
+import { useClickOutside } from "@/utils/hooks";
+import { handleRenderFileIcon } from "@/utils/methods/rendering";
+import type { TFileReferenceDTO } from "@/utils/schemas/crm/file-reference.schema";
+import React, { useRef, useState } from "react";
 
-import { BsCheck2All, BsCloudUploadFill } from 'react-icons/bs'
+import { BsCheck2All, BsCloudUploadFill } from "react-icons/bs";
 
 type DocumentFileInputProps = {
-  label: string
-  value: File | string | null
-  handleChange: (file: File | null | string) => void
-  fileReferences?: TFileReferenceDTO[]
-  multiple?: boolean
-}
+	label: string;
+	value: File | string | null;
+	handleChange: (file: File | null | string) => void;
+	fileReferences?: TFileReferenceDTO[];
+	multiple?: boolean;
+};
 function DocumentFileInput({ label, value, handleChange, fileReferences, multiple = false }: DocumentFileInputProps) {
-  const ref = useRef(null)
-  const inputIdentifier = label.toLowerCase().replace(' ', '_')
-  const [showMenu, setShowMenu] = useState<boolean>(false)
-  useClickOutside(ref, () => setShowMenu(false))
-  return (
-    <div ref={ref} className="relative flex w-full flex-col justify-center self-center">
-      <div className="flex w-full items-center justify-between gap-2">
-        <label htmlFor={inputIdentifier} className={'text-start font-sans font-bold text-[#353432]'}>
-          {label}
-        </label>
-        {fileReferences ? (
-          !showMenu ? (
-            <button
-              onClick={() => setShowMenu(true)}
-              className="min-w-fit rounded-md bg-blue-800 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-blue-600"
-            >
-              MOSTRAR OPÇÕES
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowMenu(false)}
-              className="min-w-fit rounded-md bg-red-600 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-red-500"
-            >
-              FECHAR OPÇÕES
-            </button>
-          )
-        ) : null}
-      </div>
-      <div className="relative mt-2 flex w-full items-center justify-center">
-        <label
-          htmlFor="dropzone-file"
-          className={`bg-background border-primary/20 dark:hover:bg-primary/10 flex min-h-[58px] w-full cursor-pointer flex-col items-center justify-center rounded-md border p-3 hover:border-blue-300 hover:bg-blue-100`}
-        >
-          <div className="flex w-full items-center gap-2">
-            {value ? (
-              <p className="text-primary/60 grow text-center leading-none tracking-tight">
-                {typeof value != 'string' ? value.name : formatLongString(value, 30)}
-              </p>
-            ) : (
-              <p className="text-primary/60 grow text-center leading-none tracking-tight">
-                <span className="font-semibold text-cyan-500">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
-              </p>
-            )}
-            {value ? <BsCheck2All size={30} color={'rgb(34,197,94)'} /> : <BsCloudUploadFill size={30} />}
-          </div>
-          <input
-            onChange={(e) => {
-              if (e.target.files) return handleChange(e.target.files[0])
-              else return handleChange(null)
-            }}
-            id="dropzone-file"
-            type="file"
-            className="absolute h-full w-full opacity-0"
-            multiple={multiple}
-          />
-        </label>
-      </div>
-      {showMenu ? (
-        <div className="bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 border-primary/20 absolute top-[95px] z-100 flex h-[250px] max-h-[250px] w-full flex-col gap-2 self-center overflow-y-auto overscroll-y-auto rounded-md border p-2 py-1 shadow-xs">
-          {fileReferences?.map((reference) => (
-            <div key={reference._id} className="flex w-full flex-col rounded-md border border-cyan-500 p-2">
-              <div className="flex w-full items-center justify-between gap-1">
-                <div className="flex grow items-center gap-1">
-                  {handleRenderFileIcon(reference.formato, 12)}
-                  <a
-                    href={reference.url}
-                    className="text-primary/60 text-[0.65rem] leading-none font-bold tracking-tight duration-300 ease-in-out hover:text-cyan-500"
-                  >
-                    {reference.titulo}
-                  </a>
-                </div>
-                {value == reference.url ? (
-                  <h1 className="rounded-md bg-green-600 px-2 py-1 text-[0.55rem] font-medium text-white">ESCOLHIDO</h1>
-                ) : (
-                  <button
-                    onClick={() => handleChange(reference.url)}
-                    className="rounded-md bg-cyan-600 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-cyan-500"
-                  >
-                    USAR ARQUIVO
-                  </button>
-                )}
-              </div>
-              <div className="mt-1 flex w-full items-center justify-between gap-2">
-                <h1 className="text-primary/60 text-center text-[0.6rem] font-medium italic">{reference.formato}</h1>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-      {/* <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-primary/20 p-2">
+	const ref = useRef(null);
+	const inputIdentifier = label.toLowerCase().replace(" ", "_");
+	const [showMenu, setShowMenu] = useState<boolean>(false);
+	useClickOutside(ref, () => setShowMenu(false));
+	return (
+		<div ref={ref} className="relative flex w-full flex-col justify-center self-center">
+			<div className="flex w-full items-center justify-between gap-2">
+				<label htmlFor={inputIdentifier} className={"text-start font-sans font-bold text-primary"}>
+					{label}
+				</label>
+				{fileReferences ? (
+					!showMenu ? (
+						<button
+							onClick={() => setShowMenu(true)}
+							className="min-w-fit rounded-md bg-blue-800 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-blue-600"
+						>
+							MOSTRAR OPÇÕES
+						</button>
+					) : (
+						<button
+							onClick={() => setShowMenu(false)}
+							className="min-w-fit rounded-md bg-red-600 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-red-500"
+						>
+							FECHAR OPÇÕES
+						</button>
+					)
+				) : null}
+			</div>
+			<div className="relative mt-2 flex w-full items-center justify-center">
+				<label
+					htmlFor="dropzone-file"
+					className={`bg-background border-primary/20 dark:hover:bg-primary/10 flex min-h-[58px] w-full cursor-pointer flex-col items-center justify-center rounded-md border p-3 hover:border-blue-300 hover:bg-blue-100`}
+				>
+					<div className="flex w-full items-center gap-2">
+						{value ? (
+							<p className="text-primary/60 grow text-center leading-none tracking-tight">
+								{typeof value != "string" ? value.name : formatLongString(value, 30)}
+							</p>
+						) : (
+							<p className="text-primary/60 grow text-center leading-none tracking-tight">
+								<span className="font-semibold text-cyan-500">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
+							</p>
+						)}
+						{value ? <BsCheck2All size={30} color={"rgb(34,197,94)"} /> : <BsCloudUploadFill size={30} />}
+					</div>
+					<input
+						onChange={(e) => {
+							if (e.target.files) return handleChange(e.target.files[0]);
+							else return handleChange(null);
+						}}
+						id="dropzone-file"
+						type="file"
+						className="absolute h-full w-full opacity-0"
+						multiple={multiple}
+					/>
+				</label>
+			</div>
+			{showMenu ? (
+				<div className="bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 border-primary/20 absolute top-[95px] z-100 flex h-[250px] max-h-[250px] w-full flex-col gap-2 self-center overflow-y-auto overscroll-y-auto rounded-md border p-2 py-1 shadow-xs">
+					{fileReferences?.map((reference) => (
+						<div key={reference._id} className="flex w-full flex-col rounded-md border border-cyan-500 p-2">
+							<div className="flex w-full items-center justify-between gap-1">
+								<div className="flex grow items-center gap-1">
+									{handleRenderFileIcon(reference.formato, 12)}
+									<a
+										href={reference.url}
+										className="text-primary/60 text-[0.65rem] leading-none font-bold tracking-tight duration-300 ease-in-out hover:text-cyan-500"
+									>
+										{reference.titulo}
+									</a>
+								</div>
+								{value == reference.url ? (
+									<h1 className="rounded-md bg-green-600 px-2 py-1 text-[0.55rem] font-medium text-white">ESCOLHIDO</h1>
+								) : (
+									<button
+										onClick={() => handleChange(reference.url)}
+										className="rounded-md bg-cyan-600 px-2 py-1 text-[0.55rem] font-medium text-white hover:bg-cyan-500"
+									>
+										USAR ARQUIVO
+									</button>
+								)}
+							</div>
+							<div className="mt-1 flex w-full items-center justify-between gap-2">
+								<h1 className="text-primary/60 text-center text-[0.6rem] font-medium italic">{reference.formato}</h1>
+							</div>
+						</div>
+					))}
+				</div>
+			) : null}
+			{/* <div className="relative mt-2 flex h-fit items-center justify-center rounded-lg border-2 border-dotted border-blue-700 bg-primary/20 p-2">
            <div className="absolute">
              {value ? (
                <div className="flex flex-col items-center">
@@ -126,8 +126,8 @@ function DocumentFileInput({ label, value, handleChange, fileReferences, multipl
              accept=".png, .jpeg, .pdf"
            />
           </div> */}
-    </div>
-  )
+		</div>
+	);
 }
 
-export default DocumentFileInput
+export default DocumentFileInput;

@@ -2,6 +2,7 @@ import type { TAuthSession } from "@/lib/authentication/types";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { ClipboardList } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import CheckboxInput from "../inputs/Checkbox";
 import TextInput from "../inputs/Text";
 import TechnicalAnalysis from "./Utils/TechnicalAnalysis";
 
@@ -23,71 +24,73 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
 					<ClipboardList className="h-4 w-4 min-h-4 min-w-4" />
 					<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES SOBRE A VISITA TÉCNICA</h1>
 				</div>
-				<div className="flex flex-wrap justify-around gap-2">
-					<div className="flex w-[350px] items-center justify-center">
-						<input
+				<div className="flex w-full flex-col gap-2">
+					<div className="w-fit self-center">
+						<CheckboxInput
+							labelFalse="REALIZADA"
+							labelTrue="REALIZADA"
 							checked={infoHolder.visitaTecnica?.status === "REALIZADA"}
-							onChange={(e) => {
+							handleChange={(value) => {
 								setChanges({
 									...changes,
-									"visitaTecnica.status": e.target.checked ? "REALIZADA" : "PENDÊNCIA",
+									"visitaTecnica.status": value ? "REALIZADA" : "PENDÊNCIA",
 								});
 								setInfo({
 									...infoHolder,
 									visitaTecnica: {
 										...infoHolder.visitaTecnica,
-										status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
+										status: value ? "REALIZADA" : "PENDÊNCIA",
 									},
 								});
 							}}
-							type="checkbox"
-							name="visitaTecnica"
-							id="visitaTecnica"
 						/>
-
-						<label className="ml-2" htmlFor="visitaTecnica">
-							REALIZADA ?
-						</label>
 					</div>
-					<TextInput
-						label={"TÉCNICO RESPONSÁVEL"}
-						editable={editor}
-						value={infoHolder.visitaTecnica?.tecnico ? infoHolder.visitaTecnica?.tecnico : ""}
-						placeholder="Preencha o nome do técnico responsável."
-						handleChange={(value) => {
-							setChanges({
-								...changes,
-								"visitaTecnica.tecnico": value,
-							});
-							setInfo({
-								...infoHolder,
-								visitaTecnica: {
-									...infoHolder.visitaTecnica,
-									tecnico: value,
-								},
-							});
-						}}
-					/>
-
-					<TextInput
-						label={"Tipo da telha"}
-						editable={editor}
-						value={infoHolder.visitaTecnica?.tipoDaTelha ? infoHolder.visitaTecnica?.tipoDaTelha : ""}
-						placeholder="Preencha o tipo da telha."
-						handleChange={(value) => {
-							setChanges({
-								...changes,
-								"visitaTecnica.tipoDaTelha": value,
-							});
-							setInfo({
-								...infoHolder,
-								visitaTecnica: {
-									...infoHolder.visitaTecnica,
-									tipoDaTelha: value,
-								},
-							});
-						}}
-					/>
+					<div className="flex w-full flex-col items-center gap-2 px-2 lg:flex-row">
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label={"TÉCNICO RESPONSÁVEL"}
+								editable={editor}
+								value={infoHolder.visitaTecnica?.tecnico ? infoHolder.visitaTecnica?.tecnico : ""}
+								placeholder="Preencha o nome do técnico responsável."
+								handleChange={(value) => {
+									setChanges({
+										...changes,
+										"visitaTecnica.tecnico": value,
+									});
+									setInfo({
+										...infoHolder,
+										visitaTecnica: {
+											...infoHolder.visitaTecnica,
+											tecnico: value,
+										},
+									});
+								}}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label={"TIPO DA TELHA"}
+								editable={editor}
+								value={infoHolder.visitaTecnica?.tipoDaTelha ? infoHolder.visitaTecnica?.tipoDaTelha : ""}
+								placeholder="Preencha o tipo da telha..."
+								handleChange={(value) => {
+									setChanges({
+										...changes,
+										"visitaTecnica.tipoDaTelha": value,
+									});
+									setInfo({
+										...infoHolder,
+										visitaTecnica: {
+											...infoHolder.visitaTecnica,
+											tipoDaTelha: value,
+										},
+									});
+								}}
+								width="100%"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		);

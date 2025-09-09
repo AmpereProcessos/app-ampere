@@ -1,15 +1,17 @@
 import type { TComercialAnalyticalItem } from "@/pages/api/projects/analitico/comercial";
+import type { TCommercialProjectDTO } from "@/pages/api/projects/comercial";
 import type { TProjectDTO } from "@/utils/schemas/projects";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { getProjectNestedFieldValue } from "../formatting";
 
 async function fetchProjects() {
 	try {
 		const { data } = await axios.get("/api/projects/comercial");
-		return data;
+		return data as TCommercialProjectDTO[];
 	} catch (error) {
+		console.error(error);
 		throw error;
 	}
 }
@@ -56,62 +58,62 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
 		},
 	});
 
-	function matchSearch(project: TProjectDTO) {
+	function matchSearch(project: TCommercialProjectDTO) {
 		if (filters.search.trim().length === 0) return true;
 		return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase());
 	}
-	function matchIdentifier(project: TProjectDTO) {
+	function matchIdentifier(project: TCommercialProjectDTO) {
 		if (!filters.identifier) return true;
 		if (typeof project.codigoSVB === "string") return project.codigoSVB.includes(filters.identifier.toUpperCase());
 		if (typeof project.codigoSVB === "number") return project.codigoSVB.toString().includes(filters.identifier);
 	}
-	function matchContractStatus(project: TProjectDTO) {
+	function matchContractStatus(project: TCommercialProjectDTO) {
 		if (filters.contractStatus.length === 0) return true;
 		return filters.contractStatus.includes(project.contrato?.status || "");
 	}
-	function matchServiceType(project: TProjectDTO) {
+	function matchServiceType(project: TCommercialProjectDTO) {
 		if (filters.serviceType.length === 0) return true;
 		return filters.serviceType.includes(project.tipoDeServico);
 	}
-	function matchSellerName(project: TProjectDTO) {
+	function matchSellerName(project: TCommercialProjectDTO) {
 		if (filters.sellerName.length === 0) return true;
 		return filters.sellerName.includes(project.vendedor?.nome);
 	}
-	function matchInsiderName(project: TProjectDTO) {
+	function matchInsiderName(project: TCommercialProjectDTO) {
 		if (filters.insiderName.length === 0) return true;
 		return filters.insiderName.includes(project.insider || "");
 	}
-	function matchSupplyStatus(project: TProjectDTO) {
+	function matchSupplyStatus(project: TCommercialProjectDTO) {
 		if (filters.supplyStatus.length === 0) return true;
 		return filters.supplyStatus.includes(project.compra.status || "");
 	}
-	function matchGrantingStatus(project: TProjectDTO) {
+	function matchGrantingStatus(project: TCommercialProjectDTO) {
 		if (filters.grantingStatus.length === 0) return true;
 		return filters.grantingStatus.includes(project.homologacao.status || "");
 	}
-	function matchPendingSupplyLiberation(project: TProjectDTO) {
+	function matchPendingSupplyLiberation(project: TCommercialProjectDTO) {
 		if (!filters.pendingSupplyLiberation) return true;
 		return !project.compra.liberacao;
 	}
-	function matchSignaturePendency(project: TProjectDTO) {
+	function matchSignaturePendency(project: TCommercialProjectDTO) {
 		if (!filters.signaturePendency) return true;
 		return !!project.contrato.dataLiberacao && !project.contrato.dataAssinatura;
 	}
-	function matchNoCRMVinculation(project: TProjectDTO) {
+	function matchNoCRMVinculation(project: TCommercialProjectDTO) {
 		if (!filters.noCRMVinculation) return true;
 		return !project.idProjetoCRM;
 	}
-	function matchNoAnalysisVinculation(project: TProjectDTO) {
+	function matchNoAnalysisVinculation(project: TCommercialProjectDTO) {
 		if (!filters.noAnalysisVinculation) return true;
 		return !project.idVisitaTecnica;
 	}
 
-	function matchTagIds(project: TProjectDTO) {
+	function matchTagIds(project: TCommercialProjectDTO) {
 		if (filters.tagIds.length === 0) return true;
 		const projectTagIds = (project.etiquetas ?? []).map((e) => e.id);
 		return filters.tagIds.some((t) => projectTagIds.includes(t));
 	}
-	function matchDate(project: TProjectDTO) {
+	function matchDate(project: TCommercialProjectDTO) {
 		if (!filters.date.after || !filters.date.before || !filters.date.field) return true;
 		const fieldValue = getProjectNestedFieldValue(project, filters.date.field);
 		return (
@@ -121,7 +123,7 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
 			fieldValue <= filters.date.before
 		);
 	}
-	function handleModelData(data: TProjectDTO[]) {
+	function handleModelData(data: TCommercialProjectDTO[]) {
 		return data.filter(
 			(project) =>
 				matchSearch(project) &&
@@ -152,12 +154,8 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
 }
 
 async function fetchComercialAnalyticalData({ after, before }: { after: string; before: string }) {
-	try {
-		const { data } = await axios.get(`/api/projects/analitico/comercial?after=${after}&before=${before}&field=${"contrato.dataAssinatura"}`);
-		return data.data as TComercialAnalyticalItem[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/projects/analitico/comercial?after=${after}&before=${before}&field=${"contrato.dataAssinatura"}`);
+	return data.data as TComercialAnalyticalItem[];
 }
 
 type UseComercialAnalyticalDataFilters = {

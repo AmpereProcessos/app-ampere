@@ -452,6 +452,7 @@ export const PurchaseProjectProjection = {
   'pagamento.credorNomeGerente': 1,
   'pagamento.credorContatoGerente': 1,
   'pagamento.negociacao': 1,
+  'obra.observacoes': 1,
   produtos: 1,
   idVisitaTecnica: 1,
 }
@@ -490,6 +491,9 @@ export type TPurchaseProject = Pick<
     credorNomeGerente: TProjectDTO['pagamento']['credorNomeGerente']
     credorContatoGerente: TProjectDTO['pagamento']['credorContatoGerente']
     negociacao: TProjectDTO['pagamento']['negociacao']
+  }
+  obra: {
+    observacoes: TProjectDTO['obra']['observacoes']
   }
 }
 export type TPurchaseProjectDTO = TPurchaseProject & { _id: string }

@@ -11,7 +11,6 @@ import UnauthenticatedComponent from '@/components/utils/UnauthenticatedComponen
 import type { TAuthSession } from '@/lib/authentication/types'
 import { GeneralVisibleHiddenExitMotionVariants, fileTypes, formatDate, formatLongString, getFileTypeTitle, isFileImage } from '@/utils/constants'
 import StatesAndCities from '@/utils/jsons/estados-cidades.json'
-import { uploadFile } from '@/utils/methods/firebase'
 import { formatDateAsLocale, formatLocation } from '@/utils/methods/formatting'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { updateProject } from '@/utils/methods/mutation/clients'

@@ -83,6 +83,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
             'projetoDados.pagamento.credorNomeGerente': 1,
             'projetoDados.pagamento.credorContatoGerente': 1,
             'projetoDados.pagamento.negociacao': 1,
+            'projetoDados.obra.observacoes': 1,
             'projetoDados.produtos': 1,
             'projetoDados.idVisitaTecnica': 1,
           },

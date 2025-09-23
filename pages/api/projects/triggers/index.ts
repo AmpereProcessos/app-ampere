@@ -6,7 +6,7 @@ import type { TProject } from "@/utils/schemas/projects";
 import { type Collection, ObjectId } from "mongodb";
 import createHttpError from "http-errors";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
-import { getServiceOrderInverterMetadataFromProject, getServiceOrderModulesMetadataFromProject, getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
+import { getServiceObservationsFromObras, getServiceOrderInverterMetadataFromProject, getServiceOrderModulesMetadataFromProject, getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
@@ -123,9 +123,9 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				responsabilidadePadrao: project.padrao?.respInstalacao,
 				topologia: project.sistema?.topologia,
 			},
-			observacoes: [],
+			observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
 			dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
+			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(), 
 			dataInsercao: new Date().toISOString(),
 		};
 

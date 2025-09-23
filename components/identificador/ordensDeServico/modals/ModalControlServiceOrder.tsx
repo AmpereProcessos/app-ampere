@@ -128,19 +128,6 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
 	async function handleUpdateServiceOrder({ id, changes }: { id: string; changes: Partial<TServiceOrder> }) {
 		try {
 			await updateServiceOrder({ id, changes });
-			const projectId = serviceOrder?.projeto?.id;
-			if (projectId) {
-				await updateProject({
-					id: projectId,
-					changes: {
-						"obra.entrada": osInfo.periodo.inicio,
-						"obra.saida": osInfo.periodo.fim,
-						"obra.statusDaObra": osInfo.status,
-						"obra.equipeResp": osInfo.responsavel.nome,
-						"obra.observacoes": osInfo.observacoes.map((obs) => `${obs.topico}: ${obs.descricao}`).join("/ \n"),
-					},
-				});
-			}
 			return "Ordem de serviço atualizada com sucesso !";
 		} catch (error) {
 			const msg = getErrorMessage(error);

@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from "react";
 import PosVendaCard from "../../components/PosVendaCard";
 import LoadingPage from "../../components/utils/LoadingPage";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiTime } from "react-icons/bi";
 import { FaListCheck } from "react-icons/fa6";
@@ -59,9 +60,10 @@ function Posvenda() {
 export default Posvenda;
 
 function PosvendaContent({ session }: { session: TAuthSession }) {
+	const queryClient = useQueryClient();
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-	const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useAfterSalesProjects();
+	const { data: projects, queryKey, isSuccess, isLoading, isError, filters, setFilters } = useAfterSalesProjects();
 
 	const [mode, setMode] = useState<"CARD" | "SIMPLIFIED">("CARD");
 
@@ -119,6 +121,13 @@ function PosvendaContent({ session }: { session: TAuthSession }) {
 			entregaSemana: deliveries.thisWeek,
 		};
 	}
+	const handleOnMutate = async () => {
+		await queryClient.cancelQueries({ queryKey: queryKey });
+	};
+
+	const handleOnSettled = async () => {
+		await queryClient.invalidateQueries({ queryKey: queryKey });
+	};
 
 	return (
 		<div className="grow p-6">
@@ -527,7 +536,19 @@ function PosvendaContent({ session }: { session: TAuthSession }) {
 				{isLoading ? <LoadingPage /> : null}
 				{isError ? <ErrorComponent msg={"Erro ao buscar projetos em jornada."} /> : null}
 				{isSuccess
-					? projects.map((project) => <PosVendaCard session={session} key={project._id} projectId={project._id} project={project} mode={mode} />)
+					? projects.map((project) => (
+							<PosVendaCard
+								session={session}
+								key={project._id}
+								projectId={project._id}
+								project={project}
+								mode={mode}
+								callbacks={{
+									onMutate: handleOnMutate,
+									onSettled: handleOnSettled,
+								}}
+							/>
+						))
 					: null}
 			</div>
 		</div>

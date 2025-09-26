@@ -1,61 +1,54 @@
-'use server'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
+"use server";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-import React from 'react'
-import Image from 'next/image'
-import AmpereWhiteLogo from '@/utils/svgs/logo-azul-bordas.svg'
-import AmpereHorizontalLogo from '@/utils/svgs/logo-texto-azul-horizontal.svg'
-import FullScreenWrapper from '@/components/layout/FullScreenWrapper'
-import { login } from '@/lib/authentication/actions'
+import FullScreenWrapper from "@/components/layout/FullScreenWrapper";
+import { login } from "@/lib/authentication/actions";
+import AmpereWhiteLogo from "@/utils/svgs/logo-azul-bordas.svg";
+import AmpereHorizontalLogo from "@/utils/svgs/logo-texto-azul-horizontal.svg";
+import Image from "next/image";
+import React from "react";
 type LoginProps = {
-  searchParams?: {
-    error?: string
-  }
-}
+	searchParams?: {
+		error?: string;
+	};
+};
 
 function Login({ searchParams }: LoginProps) {
-  return (
-    <FullScreenWrapper>
-      <div className="grid h-full w-full lg:grid-cols-2">
-        <div className="flex flex-col gap-4 p-6 md:p-10">
-          <div className="flex justify-center gap-2 md:justify-start">
-            <div className="relative h-24 w-24">
-              <Image src={AmpereHorizontalLogo} alt="Logo da Ampère Energias" fill className="object-contain" />
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="w-full max-w-xs lg:max-w-md">
-              <form action={login} className={cn('flex flex-col gap-6')}>
-                <div className="flex flex-col items-center gap-2 text-center">
-                  <h1 className="text-2xl font-bold">Acesse sua conta Ampère Energias</h1>
-                  <p className="text-muted-foreground text-sm text-balance">Preencha as suas credenciais para acessar ao app.</p>
-                </div>
-                <div className="grid gap-6">
-                  <div className="grid gap-3">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="seu@email.com"
-                      required
-                      className="dark:bg-background dark:border-primary/20 dark:placeholder:text-primary/60 dark:text-black"
-                    />
-                  </div>
-                  <div className="grid gap-3">
-                    <div className="flex items-center">
-                      <Label htmlFor="password">Senha</Label>
-                    </div>
-                    <Input id="password" name="password" type="password" placeholder="suasenha123" required className="dark:bg-background" />
-                  </div>
-                  {searchParams?.error && <p className="w-full text-center text-red-500">{searchParams.error}</p>}
-                  <Button type="submit" className="w-full font-bold">
-                    Acessar
-                  </Button>
-                  {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+	return (
+		<FullScreenWrapper>
+			<div className="grid h-full w-full lg:grid-cols-2">
+				<div className="flex flex-col gap-4 p-6 md:p-10">
+					<div className="flex justify-center gap-2 md:justify-start">
+						<div className="relative h-24 w-24">
+							<Image src={AmpereHorizontalLogo} alt="Logo da Ampère Energias" fill className="object-contain" />
+						</div>
+					</div>
+					<div className="flex flex-1 items-center justify-center">
+						<div className="w-full max-w-xs lg:max-w-md">
+							<form action={login} className={cn("flex flex-col gap-6")}>
+								<div className="flex flex-col items-center gap-2 text-center">
+									<h1 className="text-2xl font-bold">Acesse sua conta Ampère Energias</h1>
+									<p className="text-muted-foreground text-sm text-balance">Preencha as suas credenciais para acessar ao app.</p>
+								</div>
+								<div className="grid gap-6">
+									<div className="grid gap-3">
+										<Label htmlFor="email">Email</Label>
+										<Input id="email" name="email" type="email" placeholder="seu@email.com" required />
+									</div>
+									<div className="grid gap-3">
+										<div className="flex items-center">
+											<Label htmlFor="password">Senha</Label>
+										</div>
+										<Input id="password" name="password" type="password" placeholder="suasenha123" required />
+									</div>
+									{searchParams?.error && <p className="w-full text-center text-red-500">{searchParams.error}</p>}
+									<Button type="submit" className="w-full font-bold">
+										Acessar
+									</Button>
+									{/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
 										<span className="bg-background text-muted-foreground relative z-10 px-2">Ou continue com</span>
 									</div>
 									<Button variant="outline" className="w-full flex items-center justify-center gap-2 font-medium">
@@ -68,19 +61,19 @@ function Login({ searchParams }: LoginProps) {
 										</svg>
 										Acessar com Google
 									</Button> */}
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div className="bg-muted hidden items-center justify-center lg:flex">
-          <div className="relative h-64 w-64">
-            <Image src={AmpereWhiteLogo} alt="Logo da Ampère Energias" fill className="object-contain" />
-          </div>
-        </div>
-      </div>
-    </FullScreenWrapper>
-  )
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div className="bg-muted hidden items-center justify-center lg:flex">
+					<div className="relative h-64 w-64">
+						<Image src={AmpereWhiteLogo} alt="Logo da Ampère Energias" fill className="object-contain" />
+					</div>
+				</div>
+			</div>
+		</FullScreenWrapper>
+	);
 }
 
-export default Login
+export default Login;

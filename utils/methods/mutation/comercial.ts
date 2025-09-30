@@ -1,16 +1,16 @@
-import axios from "axios";
-import { updateProject } from "./clients";
-import { getContractValue } from "../util/projects";
-import { createRevenue } from "../../../utils/methods/mutation/revenues";
-import type { TProjectDTO } from "@/utils/schemas/projects";
-import { notifySeller, updateCRMProject } from "../crm-integration";
-import type { QueryClient } from "@tanstack/react-query";
-import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
-import { updateOpportunity } from "./crm/opportunities";
-import dayjs from "dayjs";
-import { ContractRequestPaymentOptions } from "@/utils/select-options";
-import type { TRevenue } from "@/utils/schemas/revenues";
 import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import type { TProjectDTO } from "@/utils/schemas/projects";
+import type { TRevenue } from "@/utils/schemas/revenues";
+import { ContractRequestPaymentOptions } from "@/utils/select-options";
+import type { QueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import dayjs from "dayjs";
+import { createRevenue } from "../../../utils/methods/mutation/revenues";
+import { notifySeller, updateCRMProject } from "../crm-integration";
+import { getContractValue } from "../util/projects";
+import { updateProject } from "./clients";
+import { updateOpportunity } from "./crm/opportunities";
 import { createNotification } from "./notifications";
 
 type HandleComercialUpdateProps = {
@@ -177,9 +177,6 @@ async function handleCRMAutomation({ previousData, newData }: HandleCRMAutomatio
 			},
 		};
 		await updateOpportunity({ id: idCRMProject, changes: changes });
-		// await notifySeller({ sellerName, idCRMProject, message: 'CONTRATO ATUALIZADO COMO ASSINADO.' })
-		const rdSaleNotification = { operation: "SALE", email: email, value: contractValue };
-		if (email) await notifyRDStationWin({ info: rdSaleNotification });
 
 		return "Automações de assinatura realizadas.";
 	}
@@ -201,14 +198,6 @@ async function handleCRMAutomation({ previousData, newData }: HandleCRMAutomatio
 		return "Automações de dessasinatura realizadas.";
 	}
 	return "Automações de CRM concluídas.";
-}
-
-async function notifyRDStationWin({ info }: { info: any }) {
-	try {
-		await axios.put("/api/integracao/rd-station/opportunities", info);
-	} catch (error) {
-		throw error;
-	}
 }
 
 // async function notifySellerInCRM(sellerName, idCRMProject, message) {

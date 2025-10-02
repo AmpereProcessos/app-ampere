@@ -1,4 +1,5 @@
 import AllocatorsBlock from "@/components/identificador/configuracoes/AllocatorsBlock";
+import ContractTemplatesBlock from "@/components/identificador/configuracoes/ContractTemplatesBlock";
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
@@ -17,7 +18,7 @@ function ConfigurationsMainPage() {
 
 export default ConfigurationsMainPage;
 
-type ConfigurationPageModes = "profile" | "users" | "allocators" | "contract-templates-variables";
+type ConfigurationPageModes = "profile" | "users" | "allocators" | "contract-templates" | "contract-templates-variables";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -58,6 +59,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{userHasContractTemplatesVariablesPermission && (
 						<button
 							type="button"
+							onClick={() => setMode("contract-templates")}
+							className={`${
+								mode === "contract-templates" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Templates de Contrato
+						</button>
+					)}
+					{userHasContractTemplatesVariablesPermission && (
+						<button
+							type="button"
 							onClick={() => setMode("contract-templates-variables")}
 							className={`${
 								mode === "contract-templates-variables" ? "bg-secondary" : ""
@@ -80,6 +92,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
 					{mode === "allocators" ? <AllocatorsBlock session={session} /> : null}
 					{mode === "users" ? <UsersBlock session={session} /> : null}
+					{mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 				</div>
 			</div>

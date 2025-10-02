@@ -45,7 +45,7 @@ function ContractTemplatesVariablesBlock({ session }: ContractTemplatesVariables
 					) : null}
 				</div>
 			</div>
-			{isLoading ? <h3 className="text-sm text-primary/60 animate-pulse">Carregando perfil...</h3> : null}
+			{isLoading ? <h3 className="text-sm text-primary/60 animate-pulse">Carregando variáveis...</h3> : null}
 			{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 			{isSuccess ? (
 				<div className="flex w-full flex-col gap-2 py-2">

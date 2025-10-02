@@ -1,0 +1,360 @@
+[{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df77"
+  },
+  "titulo": "NOME DO CLIENTE",
+  "categoria": "NATIVA",
+  "descricao": "Nome completo do cliente/contratante",
+  "identificador": "nome-do-cliente"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df78"
+  },
+  "titulo": "TELEFONE DO CLIENTE",
+  "categoria": "NATIVA",
+  "descricao": "Número de telefone do cliente",
+  "identificador": "telefone-do-cliente"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df79"
+  },
+  "titulo": "EMAIL DO CLIENTE",
+  "categoria": "NATIVA",
+  "descricao": "Endereço de email do cliente",
+  "identificador": "email-do-cliente"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7a"
+  },
+  "titulo": "ESTADO CIVIL",
+  "categoria": "NATIVA",
+  "descricao": "Estado civil do cliente",
+  "identificador": "estado-civil"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7b"
+  },
+  "titulo": "CPF/CNPJ",
+  "categoria": "NATIVA",
+  "descricao": "CPF ou CNPJ do cliente",
+  "identificador": "cpfcnpj"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7c"
+  },
+  "titulo": "RG",
+  "categoria": "NATIVA",
+  "descricao": "RG do cliente",
+  "identificador": "rg"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7d"
+  },
+  "titulo": "ENDEREÇO",
+  "categoria": "NATIVA",
+  "descricao": "Endereço de cobrança do cliente",
+  "identificador": "endereco"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7e"
+  },
+  "titulo": "NÚMERO DO ENDEREÇO",
+  "categoria": "NATIVA",
+  "descricao": "Número da residência de correspondência do cliente,",
+  "identificador": "numero-do-endereco"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df7f"
+  },
+  "titulo": "COMPLEMENTO",
+  "categoria": "NATIVA",
+  "descricao": "Complemento do endereço de correspondência do cliente,",
+  "identificador": "complemento"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df80"
+  },
+  "titulo": "BAIRRO",
+  "categoria": "NATIVA",
+  "descricao": "Bairro de correspondência do cliente,",
+  "identificador": "bairro"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df81"
+  },
+  "titulo": "CEP",
+  "categoria": "NATIVA",
+  "descricao": "CEP de correspondência do cliente,",
+  "identificador": "cep"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df82"
+  },
+  "titulo": "CIDADE",
+  "categoria": "NATIVA",
+  "descricao": "Cidade de correspondência do cliente,",
+  "identificador": "cidade"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df83"
+  },
+  "titulo": "ESTADO",
+  "categoria": "NATIVA",
+  "descricao": "Estado de correspondência do cliente,",
+  "identificador": "estado"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df84"
+  },
+  "titulo": "TOPOLOGIA DO SISTEMA",
+  "categoria": "NATIVA",
+  "descricao": "Tipo de inversor (INVERSOR ou MICRO-INVERSOR)",
+  "identificador": "topologia-do-sistema"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df85"
+  },
+  "titulo": "POTÊNCIA TOTAL",
+  "categoria": "NATIVA",
+  "descricao": "Potência total instalada em kWp",
+  "identificador": "potencia-total"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df86"
+  },
+  "titulo": "ENDEREÇO DE INSTALAÇÃO",
+  "categoria": "NATIVA",
+  "descricao": "Endereço/Rua do endereço de instalação do projeto.",
+  "identificador": "endereco-de-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df87"
+  },
+  "titulo": "NÚMERO (INSTALAÇÃO)",
+  "categoria": "NATIVA",
+  "descricao": "Número da residência de instalação do projeto.",
+  "identificador": "numero-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df88"
+  },
+  "titulo": "BAIRRO (INSTALAÇÃO)",
+  "categoria": "NATIVA",
+  "descricao": "Bairro do endereço de instalação do projeto.",
+  "identificador": "bairro-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df89"
+  },
+  "titulo": "CEP (INSTALAÇÃO)",
+  "categoria": "NATIVA",
+  "descricao": "CEP do endereço de instalação do projeto.",
+  "identificador": "cep-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8a"
+  },
+  "titulo": "CIDADE (INSTALAÇÃO)",
+  "categoria": "NATIVA",
+  "descricao": "Cidade do endereço de instalação do projeto.",
+  "identificador": "cidade-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8b"
+  },
+  "titulo": "ESTADO (INSTALAÇÃO)",
+  "categoria": "NATIVA",
+  "descricao": "Estado do endereço de instalação do projeto.",
+  "identificador": "estado-instalacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8c"
+  },
+  "titulo": "LISTA DE MÓDULOS",
+  "categoria": "NATIVA",
+  "descricao": "Lista formatada dos módulos fotovoltaicos",
+  "identificador": "lista-de-modulos"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8d"
+  },
+  "titulo": "LISTA DE INVERSORES",
+  "categoria": "NATIVA",
+  "descricao": "Lista formatada dos inversores",
+  "identificador": "lista-de-inversores"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8e"
+  },
+  "titulo": "GARANTIA DOS MÓDULOS",
+  "categoria": "NATIVA",
+  "descricao": "Garantia mínima dos módulos em anos",
+  "identificador": "garantia-dos-modulos"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df8f"
+  },
+  "titulo": "GARANTIA DOS INVERSORES",
+  "categoria": "NATIVA",
+  "descricao": "Garantia mínima dos inversores em anos",
+  "identificador": "garantia-dos-inversores"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df90"
+  },
+  "titulo": "VALOR TOTAL",
+  "categoria": "NATIVA",
+  "descricao": "Valor total do contrato",
+  "identificador": "valor-total"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df91"
+  },
+  "titulo": "VALOR POR EXTENSO",
+  "categoria": "NATIVA",
+  "descricao": "Valor total do contrato escrito por extenso",
+  "identificador": "valor-por-extenso"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df92"
+  },
+  "titulo": "ORIGEM DO RECURSO",
+  "categoria": "NATIVA",
+  "descricao": "Forma de pagamento (capital próprio ou financiamento)",
+  "identificador": "origem-do-recurso"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df93"
+  },
+  "titulo": "FORMA DE NEGOCIAÇÃO",
+  "categoria": "NATIVA",
+  "descricao": "100% ou 80-20",
+  "identificador": "forma-de-negociacao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df94"
+  },
+  "titulo": "ADEQUAÇÃO DE PADRÃO",
+  "categoria": "NATIVA",
+  "descricao": "Projeto possui adequação do padrão de entrada (SIM ou NÃO)",
+  "identificador": "adequacao-de-padrao"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df95"
+  },
+  "titulo": "ADEQUAÇÃO DE ESTRUTURA",
+  "categoria": "NATIVA",
+  "descricao": "Projeto possui adequação de estrutura (SIM ou NÃO)",
+  "identificador": "adequacao-de-estrutura"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df97"
+  },
+  "titulo": "NOME DA EMPRESA",
+  "categoria": "NATIVA",
+  "descricao": "Nome da empresa contratada",
+  "identificador": "nome-da-empresa"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df98"
+  },
+  "titulo": "CNPJ DA EMPRESA",
+  "categoria": "NATIVA",
+  "descricao": "CNPJ da empresa contratada",
+  "identificador": "cnpj-da-empresa"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df99"
+  },
+  "titulo": "ENDEREÇO DA EMPRESA",
+  "categoria": "NATIVA",
+  "descricao": "Endereço da empresa contratada",
+  "identificador": "endereco-da-empresa"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df9a"
+  },
+  "titulo": "DATA DO CONTRATO",
+  "categoria": "NATIVA",
+  "descricao": "Data de geração do contrato",
+  "identificador": "data-do-contrato"
+},
+{
+  "_id": {
+    "$oid": "68debe9ee3a025351eb1df9b"
+  },
+  "titulo": "DATA ATUAL",
+  "categoria": "NATIVA",
+  "descricao": "Data de hoje",
+  "identificador": "data-atual"
+},
+{
+  "_id": {
+    "$oid": "68dec6c5e3a025351eb1df9c"
+  },
+  "titulo": "ISENÇÃO DA ADEQUAÇÃO DE PADRÃO",
+  "identificador": "isencao-da-adequacao-de-padrao",
+  "descricao": "Texto específico para projetos com adequação de padrão.",
+  "categoria": "COMPUTADA",
+  "fallback": "",
+  "condicionais": [
+    {
+      "tipo": "IGUAL_TEXTO",
+      "variavelId": "68debe9ee3a025351eb1df94",
+      "igual": "NÃO",
+      "valor": "- Contrato não abrange a adequação do padrão de energia;"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68dec748e3a025351eb1df9d"
+  },
+  "titulo": "ISENÇÃO DA ADEQUAÇÃO DE ESTRUTURA",
+  "identificador": "isencao-da-adequacao-de-estrutura",
+  "descricao": "Texto específico para projetos com adequação de padrão.",
+  "categoria": "COMPUTADA",
+  "fallback": "",
+  "condicionais": [
+    {
+      "tipo": "IGUAL_TEXTO",
+      "variavelId": "68debe9ee3a025351eb1df95",
+      "igual": "NÃO",
+      "valor": "O contrato não abrange o fornecimento de estruturas de inclinação, ou construção de barracões ou estruturas avulsas para instalações dos módulos fotovoltaicos;"
+    }
+  ]
+}]

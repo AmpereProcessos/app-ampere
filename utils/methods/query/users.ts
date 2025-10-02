@@ -1,16 +1,18 @@
+import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetProfileOutput } from "@/pages/api/colaboradores/perfil";
+import type { TEmployeeSearchInput, TEmployeeSearchOutput } from "@/pages/api/colaboradores/pesquisa-vinculacao";
 import type { TEmployeeDTO, TUserDTO } from "@/utils/schemas/users";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { formatWithoutDiacritics } from "../formatting";
-import type { TEmployeeSearchInput, TEmployeeSearchOutput } from "@/pages/api/colaboradores/pesquisa-vinculacao";
-import { useDebounceMemo } from "@/lib/hooks/debounce";
 
 async function fetchUsers() {
 	try {
 		const { data } = await axios.get("/api/usuarios");
 		return data.data as TUserDTO[];
 	} catch (error) {
+		console.log("Error fetching users", error);
 		throw error;
 	}
 }
@@ -32,6 +34,7 @@ export function useUsers() {
 			queryFn: fetchUsers,
 			select: (data) => handleModelData(data),
 		}),
+		queryKey: ["users-simplified"],
 		filters,
 		setFilters,
 	};
@@ -40,19 +43,26 @@ async function fetchUserById({ id }: { id: string }) {
 	try {
 		const { data } = await axios.get(`/api/usuarios?id=${id}`);
 		return data.data as TUserDTO;
-	} catch (error) {}
+	} catch (error) {
+		console.log("Error fetching user by id", error);
+		throw error;
+	}
 }
 export function useUserById({ id }: { id: string }) {
-	return useQuery({
+	return {
+		...useQuery({
+			queryKey: ["user-by-id", id],
+			queryFn: async () => await fetchUserById({ id }),
+		}),
 		queryKey: ["user-by-id", id],
-		queryFn: async () => await fetchUserById({ id }),
-	});
+	};
 }
 async function fetchEmployees({ active }: { active: boolean }) {
 	try {
 		const { data } = await axios.get(`/api/colaboradores?active=${active}`);
 		return data.data as TEmployeeDTO[];
 	} catch (error) {
+		console.log("Error fetching employees", error);
 		throw error;
 	}
 }
@@ -85,15 +95,19 @@ async function fetchEmployeeById({ id }: { id: string }) {
 		const { data } = await axios.get(`/api/colaboradores?id=${id}`);
 		return data.data as TEmployeeDTO;
 	} catch (error) {
+		console.log("Error fetching employee by id", error);
 		throw error;
 	}
 }
 
 export function useEmployeeById({ id }: { id: string }) {
-	return useQuery({
+	return {
+		...useQuery({
+			queryKey: ["employee-by-id", id],
+			queryFn: async () => fetchEmployeeById({ id }),
+		}),
 		queryKey: ["employee-by-id", id],
-		queryFn: async () => fetchEmployeeById({ id }),
-	});
+	};
 }
 
 export async function fetchEmployeeBySearch({ input }: { input: TEmployeeSearchInput }) {
@@ -101,6 +115,7 @@ export async function fetchEmployeeBySearch({ input }: { input: TEmployeeSearchI
 		const { data }: { data: TEmployeeSearchOutput } = await axios.get(`/api/colaboradores/pesquisa-vinculacao?cpf=${input.cpf}&email=${input.email}`);
 		return data.data;
 	} catch (error) {
+		console.log("Error fetching employee by search", error);
 		throw error;
 	}
 }
@@ -124,5 +139,25 @@ export function useEmployeeBySearch({ initialQueryParams }: UseEmployeeBySearchP
 
 		queryParams,
 		updateQueryParams,
+	};
+}
+
+async function fetchProfile() {
+	try {
+		const { data } = await axios.get<TGetProfileOutput>("/api/colaboradores/perfil");
+		return data.data;
+	} catch (error) {
+		console.log("Error fetching profile", error);
+		throw error;
+	}
+}
+
+export function useProfile() {
+	return {
+		...useQuery({
+			queryKey: ["profile"],
+			queryFn: fetchProfile,
+		}),
+		queryKey: ["profile"],
 	};
 }

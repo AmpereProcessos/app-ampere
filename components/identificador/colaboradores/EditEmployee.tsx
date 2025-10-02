@@ -1,34 +1,31 @@
-import CheckboxInput from "@/components/inputs/Checkbox";
-import DateInput from "@/components/inputs/Date";
-import TextInput from "@/components/inputs/Text";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import LoadingPage from "@/components/utils/LoadingPage";
+import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import type { TAuthSession } from "@/lib/authentication/types";
-import { formatDate, formatToPhone } from "@/utils/constants";
-import { formatToCPForCNPJ } from "@/utils/methods/formatting";
+import { uploadFile } from "@/utils/methods/firebase";
+import { formatAsSlug } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { updateEmployee } from "@/utils/methods/mutation/employees";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { useEmployeeById } from "@/utils/methods/query/users";
-import { formatDateInputChange } from "@/utils/methods/shared";
-import { TEmployee, type TEmployeeDTO } from "@/utils/schemas/users";
-import { useQueryClient } from "@tanstack/react-query";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
+import type { TEmployee } from "@/utils/schemas/users";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { VscChromeClose } from "react-icons/vsc";
-import AvatarAttachment from "./AvatarAttachment";
+import toast from "react-hot-toast";
+
 import CorporativeInformation from "./blocos/CorporativeInformation";
 import Documents from "./blocos/Documents";
+import EmployeeGeneral from "./blocos/General";
 import SystemAccess from "./blocos/SystemAccess";
 
 type EditEmployeeProps = {
 	userId: string;
 	session: TAuthSession;
 	closeModal: () => void;
+	callbacks?: { onMutate?: () => void; onSettled?: () => void; onSuccess?: () => void; onError?: (error: Error) => void };
 };
-function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
+function EditEmployee({ userId, session, closeModal, callbacks }: EditEmployeeProps) {
 	const queryClient = useQueryClient();
-	const [infoHolder, setInfoHolder] = useState<TEmployeeDTO>({
-		_id: "id-holder",
+	const [infoHolder, setInfoHolder] = useState<TEmployee>({
 		acessoAtivo: true,
 		colaboradorAtivo: true,
 		nome: "",
@@ -87,6 +84,7 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
 			},
 			gestao: {
 				visualizarResultados: false,
+				restringirProjetos: false,
 			},
 			ordensDeServico: {
 				criar: false,
@@ -133,131 +131,70 @@ function EditEmployee({ userId, session, closeModal }: EditEmployeeProps) {
 		},
 		dataInsercao: new Date().toISOString(),
 	});
-	const { data: employee, isLoading, isSuccess, isError } = useEmployeeById({ id: userId });
+	function updateInfoHolder(changes: Partial<TEmployee>) {
+		setInfoHolder((prev) => ({ ...prev, ...changes }));
+	}
+	const [avatarHolder, setAvatarHolder] = useState<TSimpleAttachment>({
+		file: null,
+		previewUrl: null,
+	});
+	function updateAvatarHolder(avatar: TSimpleAttachment) {
+		setAvatarHolder((prev) => ({ ...prev, ...avatar }));
+	}
+	const { data: employee, queryKey, isLoading, isSuccess, isError } = useEmployeeById({ id: userId });
 
-	const { mutate: handleUpdateEmployee, isPending: updateLoading } = useMutationWithFeedback({
-		mutationKey: ["create-employee"],
-		mutationFn: updateEmployee,
-		queryClient: queryClient,
-		affectedQueryKey: ["employees"],
+	async function handleUpdateEmployee({ id, changes, file }: { id: string; changes: TEmployee; file: TSimpleAttachment["file"] }) {
+		let imageUrl = changes.avatar_url;
+		if (file) {
+			const { url } = await uploadFile({
+				vinculationId: changes.nome,
+				fileName: `${formatAsSlug(changes.nome)}-avatar`,
+				file: file,
+				prefix: "usuarios",
+			});
+			imageUrl = url;
+		}
+		return await updateEmployee({ id, changes: { ...changes, avatar_url: imageUrl } });
+	}
+	const { mutate: handleUpdateEmployeeMutation, isPending: updateLoading } = useMutation({
+		mutationKey: ["update-employee", userId],
+		mutationFn: handleUpdateEmployee,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: queryKey });
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: async (data) => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			return toast.success(data.message);
+		},
+		onSettled: async () => {
+			if (callbacks?.onSettled) callbacks.onSettled();
+		},
+		onError: async (error) => {
+			if (callbacks?.onError) callbacks.onError(error);
+			return toast.error(getErrorMessage(error));
+		},
 	});
 	useEffect(() => {
 		if (employee) setInfoHolder(employee);
 	}, [employee]);
-	return (
-		<div id="new-warehouse-form" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[60%]">
-				<div className="flex h-full flex-col">
-					<div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-xl font-bold text-primary dark:text-white">CADASTRO DE COLABORADOR</h3>
-						<button
-							onClick={() => closeModal()}
-							type="button"
-							className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-						>
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg={"Erro ao buscar informações do "} /> : null}
-					{isSuccess ? (
-						<>
-							<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
-								<h1 className="bg-primary/80 w-full rounded py-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
-								<div className="flex w-full items-center justify-center">
-									<CheckboxInput
-										checked={infoHolder.colaboradorAtivo}
-										handleChange={(value) =>
-											setInfoHolder((prev) => ({
-												...prev,
-												colaboradorAtivo: value,
-											}))
-										}
-										labelFalse="COLABORADOR ATIVO"
-										labelTrue="COLABORADOR ATIVO"
-										justify="justify-center"
-									/>
-								</div>
-								<AvatarAttachment userId={userId} userName={employee.usuario} avatar_url={employee.avatar_url || null} />
-								<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="NOME DO COLABORADOR"
-											placeholder="Preencha aqui o nome do colaborador..."
-											value={infoHolder.nome}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nome: value }))}
-											width="100%"
-										/>
-									</div>
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="CPF DO COLABORADOR"
-											placeholder="Preencha aqui o CPF do colaborador..."
-											value={infoHolder.cpf}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, cpf: formatToCPForCNPJ(value) }))}
-											width="100%"
-										/>
-									</div>
-								</div>
-								<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="EMAIL DO COLABORADOR"
-											placeholder="Preencha aqui o email do colaborador..."
-											value={infoHolder.email}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, email: value }))}
-											width="100%"
-										/>
-									</div>
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="TELEFONE DO COLABORADOR"
-											placeholder="Preencha aqui o telefone do colaborador..."
-											value={infoHolder.telefone}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, telefone: formatToPhone(value) }))}
-											width="100%"
-										/>
-									</div>
-								</div>
-								<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-									<div className="w-full lg:w-1/2">
-										<DateInput
-											label="DATA DE NASCIMENTO"
-											value={infoHolder.dataNascimento ? formatDate(infoHolder.dataNascimento) : undefined}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataNascimento: formatDateInputChange(value) }))}
-											width="100%"
-										/>
-									</div>
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="NACIONALIDADE"
-											placeholder="Preencha aqui a nacionalidade do colaborador..."
-											value={infoHolder.nacionalidade}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nacionalidade: value }))}
-											width="100%"
-										/>
-									</div>
-								</div>
-								<SystemAccess initialMode={true} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-								<CorporativeInformation infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TEmployeeDTO>>} />
 
-								<Documents employeeId={userId} session={session} />
-							</div>
-							<div className="my-1 flex w-full items-center justify-end">
-								<button
-									disabled={updateLoading}
-									// @ts-ignore
-									onClick={() => handleUpdateEmployee({ id: userId, changes: infoHolder })}
-									className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
-								>
-									ATUALIZAR COLABORADOR
-								</button>
-							</div>
-						</>
-					) : null}
-				</div>
-			</div>
-		</div>
+	return (
+		<ResponsiveDialogDrawer
+			menuTitle="EDITAR FUNCIONÁRIO"
+			menuDescription="Preencha os campos abaixo para atualizar o funcionário."
+			menuActionButtonText="ATUALIZAR FUNCIONÁRIO"
+			menuCancelButtonText="CANCELAR"
+			actionFunction={() => handleUpdateEmployeeMutation({ id: userId, changes: infoHolder, file: avatarHolder.file })}
+			actionIsPending={updateLoading}
+			stateIsLoading={isLoading}
+			closeMenu={closeModal}
+		>
+			<EmployeeGeneral infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} avatarHolder={avatarHolder} updateAvatarHolder={updateAvatarHolder} />
+			<SystemAccess initialMode={true} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<CorporativeInformation infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+			<Documents employeeId={userId} session={session} />
+		</ResponsiveDialogDrawer>
 	);
 }
 

@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
+import type { TProductItem } from "../schemas/crm/kits.schema";
 import { TProjectDTO } from "../schemas/projects";
-import { TLocation } from "../schemas/useful";
-import { TProductItem } from "../schemas/crm/kits.schema";
+import type { TLocation } from "../schemas/useful";
+import { getAgeFromBirthdayDate } from "./dates";
 import { isValidNumber } from "./validating";
 
 export function formatDateTimeForInput(value: any) {
@@ -18,10 +19,15 @@ export function formatNameAsInitials(name: string) {
 	else secondLetter = splittedName[1] ? splittedName[1][0] : "";
 	return firstLetter + secondLetter;
 }
-export function formatDateAsLocale(date: string | Date | null | undefined, showHours: boolean = false) {
+export function formatDateAsLocale(date: string | Date | null | undefined, showHours = false) {
 	if (!date) return null;
 	if (showHours) return dayjs(date).format("DD/MM/YYYY HH:mm");
 	return dayjs(date).add(3, "hour").format("DD/MM/YYYY");
+}
+export function formatDateBirthdayAsLocale(date?: string | Date | null, showAge = false) {
+	if (!date) return null;
+	if (showAge) return `${formatDateAsLocale(date)} (${getAgeFromBirthdayDate(date)} anos)`;
+	return formatDateAsLocale(date);
 }
 
 export function formatDateTime(value: any) {
@@ -30,7 +36,7 @@ export function formatDateTime(value: any) {
 	return dayjs(value).format("YYYY-MM-DDTHH:mm");
 }
 export function formatToCEP(value: string) {
-	let cep = value
+	const cep = value
 		.replace(/\D/g, "")
 		.replace(/(\d{5})(\d)/, "$1-$2")
 		.replace(/(-\d{3})\d+?$/, "$1");

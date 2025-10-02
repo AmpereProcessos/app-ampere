@@ -354,7 +354,7 @@ function EquipmentsComposition({ infoHolder, setInfoHolder, changes, setChanges 
 			</div>
 
 			<div className="flex w-full items-center justify-between gap-2">
-				<h1 className="font-Inter mb-2 text-start leading-none font-bold tracking-tight">EQUIPAMENTOS A SEREM HOMOLOGADOS</h1>
+				<h1 className="font-raleway mb-2 text-start leading-none font-bold tracking-tight">EQUIPAMENTOS A SEREM HOMOLOGADOS</h1>
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-1 rounded-md bg-[#15599a] px-2 py-1 text-white">
 						<FaSolarPanel />

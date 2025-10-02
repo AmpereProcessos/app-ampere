@@ -58,7 +58,7 @@ function UsersBlock({ session }: UsersBlockProps) {
 					<UserBlockFiltersMenu search={filters.search} updateSearch={(value) => setFilters((prev) => ({ ...prev, search: value }))} />
 				) : null}
 			</AnimatePresence>
-			{isLoading ? <h3 className="text-sm text-primary/60 animate-pulse">Carregando perfil...</h3> : null}
+			{isLoading ? <h3 className="text-sm text-center my-4 text-primary/60 animate-pulse">Carregando usuários...</h3> : null}
 			{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 			{isSuccess ? (
 				<div className="flex w-full flex-col gap-2 py-2">

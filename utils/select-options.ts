@@ -1,9 +1,57 @@
 import { BsCart, BsFillHouseFill } from "react-icons/bs";
 import { FaSolarPanel } from "react-icons/fa";
-import { MdEast, MdElectricMeter, MdNorth, MdNorthEast, MdNorthWest, MdOutlineSettingsInputComponent, MdSouth, MdSouthEast, MdSouthWest, MdWest } from "react-icons/md";
+import {
+	MdEast,
+	MdElectricMeter,
+	MdNorth,
+	MdNorthEast,
+	MdNorthWest,
+	MdOutlineSettingsInputComponent,
+	MdSouth,
+	MdSouthEast,
+	MdSouthWest,
+	MdWest,
+} from "react-icons/md";
 import { TbTopologyFull } from "react-icons/tb";
+import type { TConditionTypesEnum } from "./schemas/enums";
 import type { TPurchaseControl } from "./schemas/purchases";
 
+export const ConditionTypes: {
+	id: number;
+	label: string;
+	value: TConditionTypesEnum;
+}[] = [
+	{
+		id: 1,
+		label: "IGUAL A (TEXTUAL)",
+		value: "IGUAL_TEXTO",
+	},
+	{
+		id: 2,
+		label: "IGUAL A (NÚMERICO)",
+		value: "IGUAL_NÚMERICO",
+	},
+	{
+		id: 3,
+		label: "MAIOR QUE",
+		value: "MAIOR_QUE_NÚMERICO",
+	},
+	{
+		id: 4,
+		label: "MENOR QUE",
+		value: "MENOR_QUE_NÚMERICO",
+	},
+	{
+		id: 5,
+		label: "INTERVALO",
+		value: "INTERVALO_NÚMERICO",
+	},
+	{
+		id: 6,
+		label: "INCLUI LISTA",
+		value: "INCLUI_LISTA",
+	},
+];
 export const ComissionableItems = ["SISTEMA", "PADRÃO", "ESTRUTURA PERSONALIZADA", "OEM", "SEGURO"];
 export type TComissionableItemsEnum = "SISTEMA" | "PADRÃO" | "ESTRUTURA PERSONALIZADA" | "OEM" | "SEGURO";
 
@@ -966,7 +1014,8 @@ export const engineeringAnalysts = [
 		id: 2,
 		nome: "Tulio Medeiros",
 		apelido: "TULIO",
-		avatar_url: "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c",
+		avatar_url:
+			"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c",
 	},
 ];
 export const accessGrantingStatus = [

@@ -88,7 +88,7 @@ function UpdatesInformation({ session, infoHolder, setInfoHolder, setChanges }: 
 			</div>
 
 			<div className="mt-2 flex w-full flex-col gap-1">
-				<h1 className="font-Inter mb-2 text-start leading-none font-bold tracking-tight">ATUALIZAÇÕES DA HOMOLOGAÇÃO</h1>
+				<h1 className="font-raleway mb-2 text-start leading-none font-bold tracking-tight">ATUALIZAÇÕES DA HOMOLOGAÇÃO</h1>
 				{infoHolder.homologacao.atualizacoes.length > 0 ? (
 					infoHolder.homologacao.atualizacoes.map((update, index) => (
 						<div key={`${update.data}-${index}`} className="border-primary/60 flex w-full flex-col gap-1 rounded-md border p-3">

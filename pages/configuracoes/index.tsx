@@ -1,4 +1,5 @@
 import AllocatorsBlock from "@/components/identificador/configuracoes/AllocatorsBlock";
+import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
 import { useSession } from "@/components/providers/SessionProvider";
@@ -16,12 +17,16 @@ function ConfigurationsMainPage() {
 
 export default ConfigurationsMainPage;
 
-type ConfigurationPageModes = "profile" | "users" | "allocators";
+type ConfigurationPageModes = "profile" | "users" | "allocators" | "contract-templates-variables";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
 function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 	const [mode, setMode] = useState<ConfigurationPageModes>("profile");
+
+	const userHasUsersViewPermission = session.user.permissoes.usuarios.visualizar;
+	const userHasContractTemplatesVariablesPermission =
+		session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
 			<div className="border-primary/20 flex w-full flex-col border-b px-6 pb-2">
@@ -39,7 +44,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					>
 						Perfil
 					</button>
-					{session.user.permissoes.usuarios.visualizar && (
+					{userHasUsersViewPermission && (
 						<button
 							type="button"
 							onClick={() => setMode("users")}
@@ -48,6 +53,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
 						>
 							Usuários
+						</button>
+					)}
+					{userHasContractTemplatesVariablesPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("contract-templates-variables")}
+							className={`${
+								mode === "contract-templates-variables" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Variáveis de Template de Contrato
 						</button>
 					)}
 					<button
@@ -64,6 +80,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
 					{mode === "allocators" ? <AllocatorsBlock session={session} /> : null}
 					{mode === "users" ? <UsersBlock session={session} /> : null}
+					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 				</div>
 			</div>
 		</div>

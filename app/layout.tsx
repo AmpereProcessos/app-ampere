@@ -1,25 +1,30 @@
-import '@/styles/globals.css'
-import type { Metadata } from 'next'
-import ProvidersWrapper from './Providers/ProvidersWrapper'
-import AppRouterHead from '@/components/Head/AppRouterHead'
+import "@/styles/globals.css";
+import AppRouterHead from "@/components/Head/AppRouterHead";
+import type { Metadata } from "next";
+import { Raleway } from "next/font/google";
+import ProvidersWrapper from "./Providers/ProvidersWrapper";
 
+const raleway = Raleway({
+	subsets: ["latin"],
+	variable: "--font-raleway",
+});
 export const metadata: Metadata = {
-  title: 'App Ampère',
-  description: 'Bem vindo ao App Ampère !',
-}
+	title: "App Ampère",
+	description: "Bem vindo ao App Ampère !",
+};
 export default function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
-  children,
+	// Layouts must accept a children prop.
+	// This will be populated with nested layouts or pages
+	children,
 }: {
-  children: React.ReactNode
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="pt-BR">
-      <AppRouterHead />
-      <body>
-        <ProvidersWrapper>{children}</ProvidersWrapper>
-      </body>
-    </html>
-  )
+	return (
+		<html lang="pt-BR" className={raleway.variable}>
+			<AppRouterHead />
+			<body>
+				<ProvidersWrapper>{children}</ProvidersWrapper>
+			</body>
+		</html>
+	);
 }

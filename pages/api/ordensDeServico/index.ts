@@ -1,11 +1,7 @@
-import createHttpError from "http-errors";
-import { type Collection, type Db, type Filter, ObjectId } from "mongodb";
-import type { NextApiHandler } from "next";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { formatLocation } from "@/utils/methods/formatting";
-import { getConfiguredGoogleOAuth2Client } from "@/utils/services/google/oauth";
-import connectToDatabase from "../../../utils/services/mongodb/projects";
-import connectToAuxiliariesDatabase from "../../../utils/services/mongodb/auxiliaries";
+import type { TCalendar } from "@/utils/schemas/calendars";
+import type { TProject } from "@/utils/schemas/projects";
 import {
 	ServiceOrderSchema,
 	ServiceOrderSimplifiedProjection,
@@ -13,9 +9,13 @@ import {
 	type TServiceOrderSimplified,
 	type TServiceOrderWithProjectDTO,
 } from "@/utils/schemas/service-order";
-import type { TCalendar } from "@/utils/schemas/calendars";
-import type { TProject } from "@/utils/schemas/projects";
+import { getConfiguredGoogleOAuth2Client } from "@/utils/services/google/oauth";
 import { type calendar_v3, google as googleApis } from "googleapis";
+import createHttpError from "http-errors";
+import { type Collection, type Db, type Filter, ObjectId } from "mongodb";
+import type { NextApiHandler } from "next";
+import connectToAuxiliariesDatabase from "../../../utils/services/mongodb/auxiliaries";
+import connectToDatabase from "../../../utils/services/mongodb/projects";
 
 type PostResponse = {
 	data: { insertedId: string };
@@ -23,7 +23,8 @@ type PostResponse = {
 };
 const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	if (!session.user.permissoes.ordensDeServico.criar) throw new createHttpError.Unauthorized("Usuário não possui permissão para criar ordens de serviço.");
+	if (!session.user.permissoes.ordensDeServico.criar)
+		throw new createHttpError.Unauthorized("Usuário não possui permissão para criar ordens de serviço.");
 	const db: Db = await connectToDatabase();
 	const auxiliariesDb: Db = await connectToAuxiliariesDatabase(process.env.DB_KEY);
 
@@ -34,7 +35,10 @@ const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) =
 	if (!serviceOrder) throw new createHttpError.BadRequest("Nenhuma informações provida.");
 
 	let googleCalendarEventId: string | null = null;
-	if (serviceOrder.calendarioId && ((serviceOrder.agendamento?.inicio && serviceOrder.agendamento?.fim) || (serviceOrder.periodo.inicio && serviceOrder.periodo.fim))) {
+	if (
+		serviceOrder.calendarioId &&
+		((serviceOrder.agendamento?.inicio && serviceOrder.agendamento?.fim) || (serviceOrder.periodo.inicio && serviceOrder.periodo.fim))
+	) {
 		// In case the service order has a calendar and a period defined, we need to integrate with the calendar
 		const calendar = await callendarsCollection.findOne({ _id: new ObjectId(serviceOrder.calendarioId) });
 		if (!calendar) throw new createHttpError.NotFound("Calendário não encontrado.");
@@ -115,7 +119,8 @@ const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
 	}
 
 	if (technicalAnalysisId) {
-		if (typeof technicalAnalysisId !== "string" || !ObjectId.isValid(technicalAnalysisId)) throw new createHttpError.BadRequest("ID da análise técnica inválido.");
+		if (typeof technicalAnalysisId !== "string" || !ObjectId.isValid(technicalAnalysisId))
+			throw new createHttpError.BadRequest("ID da análise técnica inválido.");
 		const orders = await getServiceOrdersByTechnicalAnalysis({ collection, technicalAnalysisId });
 		return res.json({ data: orders });
 	}
@@ -134,7 +139,9 @@ const getServiceOrdersRoute: NextApiHandler<GetResponse> = async (req, res) => {
 
 	// Else, we need to get all service orders with the given tags and pending conclusion status
 
-	const serviceOrders = await collection.find({ ...queryTagsQuery, ...queryPendingConclusionQuery }, { projection: ServiceOrderSimplifiedProjection }).toArray();
+	const serviceOrders = await collection
+		.find({ ...queryTagsQuery, ...queryPendingConclusionQuery }, { projection: ServiceOrderSimplifiedProjection })
+		.toArray();
 
 	return res.json({ data: serviceOrders as TServiceOrderSimplified[] });
 };
@@ -151,6 +158,10 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const { id } = req.query;
 	const changes = req.body;
+	console.log("[INFO] [SERVICE ORDER UPDATE] Updating service order:", {
+		id,
+		user: session?.user.nome,
+	});
 
 	delete changes._id;
 	// Validating the request
@@ -163,7 +174,6 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 
 	// In case the service order has no calendar, we can return the response
 	const updatedServiceOrder = await collection.findOne({ _id: new ObjectId(id) });
-	if (!updatedServiceOrder?.calendarioId) return res.status(201).json({ message: "Ordem de serviço atualizada com sucesso !" });
 	// Else, we gotta handle the integration with Google Calendar
 	if (updatedServiceOrder?.googleCalendarEventId && updatedServiceOrder?.googleCalendarId) {
 		const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) });
@@ -176,9 +186,12 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 		if (eventStart && eventEnd) {
 			// In case the service order has a calendar and calendar event defined, we need to update the event with the new information
 
-			const googleCalendarEventResponsiblesStr = updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
+			const googleCalendarEventResponsiblesStr =
+				updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
 			const googleCalendarEventInstructionsStr =
-				updatedServiceOrder.observacoes.length > 0 ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n") : "Sem instruções";
+				updatedServiceOrder.observacoes.length > 0
+					? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n")
+					: "Sem instruções";
 			const googleCalendarEventLocationStr = formatLocation({
 				location: {
 					cep: updatedServiceOrder.localizacao.cep,
@@ -224,7 +237,8 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 	} else {
 		if (
 			updatedServiceOrder?.googleCalendarId &&
-			((updatedServiceOrder.agendamento?.inicio && updatedServiceOrder.agendamento?.fim) || (updatedServiceOrder.periodo.inicio && updatedServiceOrder.periodo.fim))
+			((updatedServiceOrder.agendamento?.inicio && updatedServiceOrder.agendamento?.fim) ||
+				(updatedServiceOrder.periodo.inicio && updatedServiceOrder.periodo.fim))
 		) {
 			// In case the service order has a defined calendar id and a period defined but calendar event is not defined, we need to create the event
 			const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) });
@@ -235,9 +249,12 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 			const eventStart = updatedServiceOrder.agendamento?.inicio || updatedServiceOrder.periodo.inicio;
 			const eventEnd = updatedServiceOrder.agendamento?.fim || updatedServiceOrder.periodo.fim;
 
-			const googleCalendarEventResponsiblesStr = updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
+			const googleCalendarEventResponsiblesStr =
+				updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
 			const googleCalendarEventInstructionsStr =
-				updatedServiceOrder.observacoes.length > 0 ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n") : "Sem instruções";
+				updatedServiceOrder.observacoes.length > 0
+					? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n")
+					: "Sem instruções";
 			const googleCalendarEventLocationStr = formatLocation({
 				location: {
 					cep: updatedServiceOrder.localizacao.cep,
@@ -275,10 +292,16 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 			await collection.updateOne({ _id: new ObjectId(id) }, { $set: { googleCalendarEventId: googleCalendarEvent.data.id } });
 		}
 	}
-
+	console.log("[INFO] [SERVICE ORDER UPDATE] Handling project automations...");
 	// Searching for service order project linked project
 	const project = await projectsCollection.findOne({ idOrdemServico: id });
+
 	if (project) {
+		console.log("[INFO] [SERVICE ORDER UPDATE] Project found: ", {
+			id: project._id.toString(),
+			nome: project.nomeDoContrato,
+			qtde: project.qtde,
+		});
 		// If project found, updating its execution related data with the most recent service order update
 
 		const updatedServiceOrder = await collection.findOne({ _id: new ObjectId(id) });
@@ -292,7 +315,7 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 					"obra.saida": updatedServiceOrder.periodo.fim,
 					"obra.statusDaObra": updatedServiceOrder.status,
 					"obra.equipeResp": updatedServiceOrder.responsavel.nome,
-					"obra.observacoes": updatedServiceOrder.observacoes.join("/"),
+					"obra.observacoes": updatedServiceOrder.observacoes.map((p) => `(${p.topico}):${p.descricao}`).join("/"),
 				},
 			},
 		);
@@ -356,7 +379,9 @@ type GetServiceOrdersByResponsibleNameParams = {
 };
 async function getServiceOrdersByResponsibleName({ collection, responsibleName }: GetServiceOrdersByResponsibleNameParams) {
 	try {
-		const orders = await collection.find({ "responsavel.nome": responsibleName, dataEfetivacao: null }, { projection: ServiceOrderSimplifiedProjection }).toArray();
+		const orders = await collection
+			.find({ "responsavel.nome": responsibleName, dataEfetivacao: null }, { projection: ServiceOrderSimplifiedProjection })
+			.toArray();
 		return orders as TServiceOrderSimplified[];
 	} catch (error) {
 		throw error;

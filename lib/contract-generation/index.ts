@@ -1,11 +1,11 @@
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-// @ts-ignore
-import numeroPorExtenso from "numero-por-extenso";
 import dayjs from "dayjs";
 import ptBr from "dayjs/locale/pt-br";
+// @ts-ignore
+import numeroPorExtenso from "numero-por-extenso";
 dayjs.locale(ptBr);
 
-type TGetContractModelDataParams = {
+export type TGetContractModelDataParams = {
 	customer: {
 		name: string;
 		phone: string;
@@ -72,7 +72,9 @@ export function getContractModelData({ customer, system, additionalServices, pay
 	const modules = system.equipments?.filter((r) => r.type === "MÓDULO") || [];
 	const inverters = system.equipments?.filter((r) => r.type === "INVERSOR") || [];
 	const modulesText = modules.map((r) => `- ${r.quantity} módulos ${r.model} ${r.power}W`).join("\n");
-	const invertersText = inverters.map((r) => `- ${r.quantity} ${system.topology === "INVERSOR" ? "inversores" : "micro-inversores"} ${r.model} ${r.power}W`).join("\n");
+	const invertersText = inverters
+		.map((r) => `- ${r.quantity} ${system.topology === "INVERSOR" ? "inversores" : "micro-inversores"} ${r.model} ${r.power}W`)
+		.join("\n");
 	const modulesMinWarranty = modules.reduce((acc, r) => acc + r.warranty, 0);
 	const invertersMinWarranty = inverters.reduce((acc, r) => acc + r.warranty, 0);
 
@@ -139,8 +141,8 @@ export function getContractModelData({ customer, system, additionalServices, pay
 		`A CONTRATANTE pagará a CONTRATADA o valor total de ${formatToMoney(payment.value)} (${numeroPorExtenso.porExtenso(payment.value, numeroPorExtenso.estilo.monetario)}), o qual será pago da seguinte forma:\n\n` +
 		`1. **A CONTRATANTE realizará o pagamento ${payment.negotiation} do valor total do contrato via ${payment.resourceSource === "OWN" ? "capital próprio" : "financiamento bancário"}.**\n\n` +
 		paymentFormText +
-		"Pagamento deverá ser a vista, via pix, boleto ou transferência. Em seguida será iniciada negociação com o fornecedor do kit fotovoltaico o qual informará os valores exatos para faturamento e emissão dos dados bancários para pagamento. " +
-		"Após o pagamento o CONTRATANTE deverá enviar comprovante para a CONTRATADA , ao que está solicitará ao fornecedor do equipamento a nota fiscal do CONTRATANTE\n\n" +
+		"Pagamento deverá ser a vista, via pix, boleto ou transferência." +
+		"Após o pagamento o CONTRATANTE deverá enviar comprovante para a CONTRATADA.\n\n" +
 		"2. O preço acima ajustado compreende além da remuneração da mão-de-obra, o fornecimento pela **CONTRATADA**, dos materiais, equipamentos e ferramentas necessárias à perfeita execução dos serviços de instalação do sistema fotovoltaico, " +
 		"incluídos também no valor supracitado, todos os custos e remunerações diretas e indiretas, impostos, contribuições trabalhistas, previdenciárias e sociais, de qualquer natureza, obrigações fiscais e seguros, inclusive encargos sociais. " +
 		"Compreende, por fim, os objetos necessários para instalação, sem ônus para o **CONTRATANTE,** com exceção das disposições inseridas no item seguinte,\n\n" +

@@ -1,18 +1,23 @@
+import { getContractModelData, getContractViaHtml } from "@/lib/contract-generation";
+import { getTemplateProcessed } from "@/lib/contract-templates/processing";
+import { getContractTemplateNativeVariablesValues, getContractTemplateVariablesValues } from "@/lib/contract-templates/variables";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { formatDecimalPlaces } from "@/utils/constants";
 import { formatAsNumber, formatWithoutDiacritics } from "@/utils/methods/formatting";
 import type { TContractRequest } from "@/utils/schemas/contract-requests";
-import type { TProject } from "@/utils/schemas/projects";
-import { ObjectId, type WithId, type Collection, type Db } from "mongodb";
-import connectToRequestsDatabase from "@/utils/services/mongodb/requests";
-import type { NextApiHandler } from "next";
-// @ts-ignore
-import numeroPorExtenso from "numero-por-extenso";
-import createHttpError from "http-errors";
-import axios from "axios";
-import { getContractModelData } from "@/lib/contract-generation";
-import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import type { TContractTemplate } from "@/utils/schemas/contract-templates";
+import type { TContractTemplateVariable } from "@/utils/schemas/contract-templates-variables";
 import type { TProposal } from "@/utils/schemas/crm/proposal.schema";
+import type { TProject } from "@/utils/schemas/projects";
+import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import connectToRequestsDatabase from "@/utils/services/mongodb/requests";
+import axios from "axios";
+import dayjs from "dayjs";
+import createHttpError from "http-errors";
+import { type Collection, type Db, ObjectId, type WithId } from "mongodb";
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+// @ts-ignore
 
 export type TContractModel = {
 	contratanteTexto: string;
@@ -60,12 +65,7 @@ export type TContractModel = {
 	};
 };
 
-function getContractFinalValue(request: TContractRequest) {
-	const { valorContrato, valorSeguro, valorPadrao, valorEstrutura, valorOeMOuSeguro } = request;
-	return formatAsNumber(valorContrato) + formatAsNumber(valorSeguro) + formatAsNumber(valorPadrao) + formatAsNumber(valorEstrutura) + formatAsNumber(valorOeMOuSeguro);
-}
-
-const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
+async function handleContractGenerationViaHtml(req: NextApiRequest, res: NextApiResponse) {
 	const session = await validateAuthenticationWithSession(req, res);
 
 	const isUserAllowed = session.user.permissoes.comercial.editar;
@@ -73,10 +73,24 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 	if (!isUserAllowed) {
 		throw new createHttpError.Forbidden("Usuário não tem permissão para gerar contratos");
 	}
-	const { contractRequestId, contractFormat } = req.query;
+	const { contractRequestId, contractFormat, templateId } = req.query;
 	if (!contractRequestId || typeof contractRequestId !== "string" || !ObjectId.isValid(contractRequestId)) {
 		throw new createHttpError.BadRequest("ID do contrato inválido");
 	}
+	if (!templateId || typeof templateId !== "string" || !ObjectId.isValid(templateId)) {
+		throw new createHttpError.BadRequest("ID do template de contrato inválido");
+	}
+
+	const admDb = await connectToAdministrationDatabase();
+	const contractTemplateVariablesCollection = admDb.collection<TContractTemplateVariable>("templates-contrato-variaveis");
+	const contractTemplateVariables = await contractTemplateVariablesCollection.find({}).toArray();
+	const contractTemplateCollection = admDb.collection<TContractTemplate>("templates-contrato");
+	// Getting the first one (fow now)
+	const contractTemplate = await contractTemplateCollection.findOne({});
+	if (!contractTemplate) {
+		throw new createHttpError.NotFound("Template de contrato não encontrado");
+	}
+
 	const db: Db = await connectToRequestsDatabase();
 	const crbDm = await connectToCRMDatabase();
 	const projectsCollection: Collection<TContractRequest> = db.collection("contrato");
@@ -85,112 +99,51 @@ const handleContractGeneration: NextApiHandler<any> = async (req, res) => {
 	if (!contractRequest) {
 		throw new createHttpError.NotFound("Solicitação de contrato não encontrada");
 	}
-	const salesProposalId = contractRequest.idPropostaCRM;
-	if (!salesProposalId) {
-		throw new createHttpError.BadRequest("Proposta não encontrada");
-	}
 
-	const proposal = await proposalsCollection.findOne({ _id: new ObjectId(salesProposalId) });
-
-	const totalPower = (proposal?.produtos || []).filter((p) => p.categoria === "MÓDULO").reduce((acc, p) => acc + p.qtde * (p.potencia || 0), 0) / 1000;
-	const contractData = getContractModelData({
-		customer: {
-			name: contractRequest.nomeDoContrato,
-			phone: contractRequest.telefone,
-			email: contractRequest.email,
-			maritalStatus: contractRequest.estadoCivil || "",
-			documents: {
-				cpfCnpj: contractRequest.cpf_cnpj?.toString() || "",
-				rg: contractRequest.rg?.toString() || "",
-			},
-			location: {
-				address: contractRequest.enderecoCobranca,
-				number: contractRequest.numeroResCobranca,
-				complement: "",
-				neighborhood: contractRequest.bairro,
-				cep: contractRequest.cep,
-				city: contractRequest.cidade || "",
-				state: contractRequest.uf || "",
-			},
-		},
-		system: {
-			topology: contractRequest.topologia || "INVERSOR",
-			equipments:
-				proposal?.produtos
-					.filter((p) => ["MÓDULO", "INVERSOR"].includes(p.categoria))
-					.map((p) => ({
-						model: p.modelo,
-						power: p.potencia || 0,
-						quantity: p.qtde,
-						warranty: p.garantia || 0,
-						type: p.categoria as "MÓDULO" | "INVERSOR",
-					})) || [],
-			installationLocation: {
-				address: contractRequest.enderecoInstalacao,
-				number: contractRequest.numeroResInstalacao?.toString() || "",
-				complement: "",
-				neighborhood: contractRequest.bairroInstalacao,
-				cep: contractRequest.cepInstalacao,
-				city: contractRequest.cidadeInstalacao || "",
-				state: contractRequest.ufInstalacao || "",
-			},
-			totalPower: totalPower,
-		},
-		additionalServices: {
-			serviceEntranceAdequacy: contractRequest.aumentoDeCarga === "SIM",
-			operationAndMaintenance: contractRequest.planoOeM && contractRequest.planoOeM !== "NÃO SE APLICA",
-			structureAdequacy: contractRequest.estruturaAmpere === "SIM",
-		},
-		payment: {
-			negotiation: contractRequest.formaDePagamento === "80% A VISTA NA ENTRADA + 20% NA FINALIZAÇÃO DA INSTALAÇÃO" ? "80-20" : "100%",
-			value: getContractFinalValue(contractRequest),
-			resourceSource: contractRequest.origemRecurso === "CAPITAL PRÓPRIO" ? "OWN" : "BANK FINANCING",
-		},
+	const nativeContractTemplateVariables = getContractTemplateNativeVariablesValues({
+		contractRequest: { ...contractRequest, _id: contractRequest._id.toString() },
 	});
 
-	// In here, split in two cases:
-	// 1. contractFormat is "pdf"
-	// 2. contractFormat is "docx"
-	if (contractFormat === "pdf") {
-		const response = await axios.post("https://contract-generation-api-496303969093.southamerica-east1.run.app/generate-contract-pdf", contractData, {
-			headers: {
-				"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
-			},
-			responseType: "arraybuffer", // <- ESSENCIAL!
-		});
+	const allContractTemplateVariables = getContractTemplateVariablesValues({
+		definitions: contractTemplateVariables.map((v) => ({ ...v, _id: v._id.toString() })),
+		nativeVariablesValues: nativeContractTemplateVariables,
+	});
 
-		// Pega o nome sugerido do arquivo, se vier no header
-		const disposition = response.headers["content-disposition"];
-		let filename = `CONTRATO ${formatWithoutDiacritics(contractData.contratanteDados.nome)}.pdf`;
-		if (disposition || disposition.includes("filename=")) {
-			filename = disposition.split("filename=")[1].replace(/"/g, "");
-		}
+	const contractTemplateContent = getTemplateProcessed({ templateContent: contractTemplate.conteudo, variables: allContractTemplateVariables });
 
-		// Seta os headers para download
-		res.setHeader("Content-Type", "application/pdf");
-		res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-		return res.status(200).send(Buffer.from(response.data, "binary"));
-	}
-	if (contractFormat === "docx") {
-		const response = await axios.post("https://contract-generation-api-496303969093.southamerica-east1.run.app/generate-contract", contractData, {
-			headers: {
-				"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
+	const { buffer, filename } = await getContractViaHtml({
+		content: contractTemplateContent,
+		personalization: {
+			fontFamily: "Raleway",
+		},
+		signatures: {
+			contractor: {
+				name: contractRequest.nomeDoContrato,
+				identifier: contractRequest.cpf_cnpj?.toString() || "",
 			},
-			responseType: "arraybuffer",
-		});
-		// Pega o nome sugerido do arquivo, se vier no header
-		const disposition = response.headers["content-disposition"];
-		let filename = `CONTRATO ${formatWithoutDiacritics(contractData.contratanteDados.nome)}.docx`;
-		if (disposition || disposition.includes("filename=")) {
-			filename = disposition.split("filename=")[1].replace(/"/g, "");
-		}
-		// Seta os headers para download
-		res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-		res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-		return res.status(200).send(Buffer.from(response.data, "binary"));
-	}
-};
+			company: {
+				name: "AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA",
+				identifier: "27.901.968/0001-45",
+			},
+			firstWitness: {
+				name: "",
+				identifier: "",
+			},
+			secondWitness: {
+				name: "",
+				identifier: "",
+			},
+		},
+		date: `Ituiutaba/MG, ${dayjs().format("DD [de] MMMM [de] YYYY")}`,
+		returnType: contractFormat === "pdf" ? "pdf" : "docx",
+	});
+
+	// Setting headers for download
+	res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+	res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+	return res.status(200).send(Buffer.from(buffer, "binary"));
+}
 
 export default apiHandler({
-	GET: handleContractGeneration,
+	GET: handleContractGenerationViaHtml,
 });

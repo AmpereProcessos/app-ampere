@@ -1,10 +1,14 @@
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
+import { formatWithoutDiacritics } from "@/utils/methods/formatting";
+import axios from "axios";
 import dayjs from "dayjs";
 import ptBr from "dayjs/locale/pt-br";
+import createHttpError from "http-errors";
 // @ts-ignore
 import numeroPorExtenso from "numero-por-extenso";
 dayjs.locale(ptBr);
 
+const CONTRACT_GENERATION_API_BASE_URL = "https://contract-generation-api-496303969093.southamerica-east1.run.app";
 export type TGetContractModelDataParams = {
 	customer: {
 		name: string;
@@ -237,4 +241,71 @@ export function getContractModelData({ customer, system, additionalServices, pay
 			},
 		},
 	};
+}
+
+type TGetContractViaHtml = {
+	content: string;
+	date: string;
+	personalization: {
+		fontFamily?: string;
+		marginTop?: number;
+		marginBottom?: number;
+		marginLeft?: number;
+		marginRight?: number;
+		spacingBetweenLines?: number;
+		indentationOnFirstLine?: number;
+	};
+	signatures: {
+		contractor: {
+			name: string;
+			identifier: string;
+		};
+		company: {
+			name: string;
+			identifier: string;
+		};
+		firstWitness: {
+			name: string;
+			identifier: string;
+		};
+		secondWitness: {
+			name: string;
+			identifier: string;
+		};
+	};
+	returnType: "pdf" | "docx";
+};
+
+export async function getContractViaHtml({ content, date, personalization, signatures, returnType = "docx" }: TGetContractViaHtml) {
+	try {
+		const url = `${CONTRACT_GENERATION_API_BASE_URL}/${returnType === "docx" ? "docx-generate-contract-via-html" : "pdf-generate-contract-via-html"}`;
+
+		const response = await axios.post(
+			url,
+			{
+				content,
+				date: date,
+				personalization,
+				signatures,
+			},
+			{
+				headers: {
+					"x-api-key": process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN,
+				},
+				responseType: "arraybuffer", // <- ESSENCIAL!
+			},
+		);
+		const disposition = response.headers["content-disposition"];
+		let filename = `CONTRATO ${formatWithoutDiacritics(signatures.contractor.name)}.pdf`;
+		if (disposition || disposition.includes("filename=")) {
+			filename = disposition.split("filename=")[1].replace(/"/g, "");
+		}
+		return {
+			buffer: response.data,
+			filename,
+		};
+	} catch (error) {
+		console.log("ERROR", error);
+		throw new createHttpError.InternalServerError("Oops, algo deu errado ao gerar o contrato.");
+	}
 }

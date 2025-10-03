@@ -11,9 +11,14 @@ export async function editContractRequest({ id, changes }: { id: string; changes
 	}
 }
 
-export async function generateContract({ requestId, contractName, contractFormat }: { requestId: string; contractName: string; contractFormat: "pdf" | "docx" }) {
+export async function generateContract({
+	requestId,
+	contractName,
+	contractFormat,
+	templateId,
+}: { requestId: string; contractName: string; contractFormat: "pdf" | "docx"; templateId: string }) {
 	try {
-		const response = await fetch(`/api/integracao/contrato?contractRequestId=${requestId}&contractFormat=${contractFormat}`, {
+		const response = await fetch(`/api/integracao/contrato?contractRequestId=${requestId}&contractFormat=${contractFormat}&templateId=${templateId}`, {
 			method: "GET",
 		});
 		const blob = await response.blob();

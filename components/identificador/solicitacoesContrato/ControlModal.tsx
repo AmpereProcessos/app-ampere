@@ -1,14 +1,24 @@
+import SelectInput from "@/components/inputs/Select";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
+import LoadingComponent from "@/components/utils/LoadingComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
+import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { useMediaQuery } from "@/lib/hooks/media-query";
+import { cn } from "@/lib/utils";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import { editContractRequest, generateContract } from "@/utils/methods/mutation/contract-requests";
 import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
 import { updateOpportunity } from "@/utils/methods/mutation/crm/opportunities";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { useContractRequestById } from "@/utils/methods/query/contract-requests";
+import { useContractTemplates } from "@/utils/methods/query/contract-templates";
 import {
 	getProjectHomologationInformation,
 	getProjectInformationFromRequest,
@@ -17,10 +27,11 @@ import {
 } from "@/utils/methods/util/contract-requests";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import type { TFileReference } from "@/utils/schemas/file-reference.schema";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BsCalendarCheck, BsCode, BsPatchCheck } from "react-icons/bs";
 import { FaFile } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -43,9 +54,11 @@ type ContractRequestControlModalProps = {
 	closeModal: () => void;
 };
 function ContractRequestControlModal({ requestId, session, closeModal }: ContractRequestControlModalProps) {
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const queryClient = useQueryClient();
 	const userHasEditPermission = session.user.permissoes.comercial.editar || session.user.permissoes.rotas.includes("PPS");
-	const { data: request, isLoading, isError, isSuccess } = useContractRequestById({ id: requestId });
+	const { data: request, isLoading, isError, isSuccess, error } = useContractRequestById({ id: requestId });
+	const [generateContractMenuIsOpen, setGenerateContractMenuIsOpen] = useState(false);
 	const [infoHolder, setInfoHolder] = useState<TContractRequestDTO>({
 		_id: "",
 		nomeVendedor: "",
@@ -153,81 +166,73 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 		dataSolicitacao: new Date().toISOString(),
 	});
 	async function approveFormulary(info: TContractRequestDTO) {
-		try {
-			// Adding a new operational projecy
-			let insertObject = getProjectInformationFromRequest({ request: info });
+		// Adding a new operational projecy
+		let insertObject = getProjectInformationFromRequest({ request: info });
 
-			// Getting homologation information in case idHomologacao is defined
-			if (info.idHomologacao) {
-				const { projectHomologation, projectHomologationFiles } = await getProjectHomologationInformation({
-					homologationId: info.idHomologacao,
-				});
-				insertObject = {
-					...insertObject,
-					homologacao: projectHomologation,
-					links: { ...insertObject.links, projetos: projectHomologationFiles },
-				};
-			}
-			const { data } = await axios.post("/api/projects/add", insertObject);
-			const insertedProjectId = data.data.insertedId;
-
-			const fileReferences: TFileReference[] =
-				insertObject.links.documentos?.map((file) => ({
-					titulo: file.title,
-					url: file.link,
-					formato: file.format,
-					idProjeto: insertedProjectId,
-					categorias: ["DOCUMENTOS"],
-					autor: { id: "holder", nome: "MIGRAÇÃO" },
-					dataInsercao: new Date().toISOString(),
-				})) || [];
-			if (fileReferences.length > 0) await createManyFileReferences({ info: fileReferences });
-			// Updating the contract request instance
-			await editContractRequest({
-				id: requestId,
-				changes: {
-					...info,
-					idProjetoApp: insertedProjectId,
-					aprovacao: true,
-					dataAprovacao: new Date().toISOString(),
-				},
+		// Getting homologation information in case idHomologacao is defined
+		if (info.idHomologacao) {
+			const { projectHomologation, projectHomologationFiles } = await getProjectHomologationInformation({
+				homologationId: info.idHomologacao,
 			});
-			// Notifying and emailing cobrancas sector
-			if (info.tipoDeServico !== "CONSÓRCIO DE ENERGIA")
-				await handleSendEmailToCobrancas({
-					requestId: requestId,
-					contractName: info?.nomeDoContrato,
-				});
-			await handleSendNotificationToCobrancas({
-				contractName: info.nomeDoContrato,
-			});
-			return "Novo projeto adicionado com sucesso !";
-		} catch (error) {
-			throw error;
+			insertObject = {
+				...insertObject,
+				homologacao: projectHomologation,
+				links: { ...insertObject.links, projetos: projectHomologationFiles },
+			};
 		}
+		const { data } = await axios.post("/api/projects/add", insertObject);
+		const insertedProjectId = data.data.insertedId;
+
+		const fileReferences: TFileReference[] =
+			insertObject.links.documentos?.map((file) => ({
+				titulo: file.title,
+				url: file.link,
+				formato: file.format,
+				idProjeto: insertedProjectId,
+				categorias: ["DOCUMENTOS"],
+				autor: { id: "holder", nome: "MIGRAÇÃO" },
+				dataInsercao: new Date().toISOString(),
+			})) || [];
+		if (fileReferences.length > 0) await createManyFileReferences({ info: fileReferences });
+		// Updating the contract request instance
+		await editContractRequest({
+			id: requestId,
+			changes: {
+				...info,
+				idProjetoApp: insertedProjectId,
+				aprovacao: true,
+				dataAprovacao: new Date().toISOString(),
+			},
+		});
+		// Notifying and emailing cobrancas sector
+		if (info.tipoDeServico !== "CONSÓRCIO DE ENERGIA")
+			await handleSendEmailToCobrancas({
+				requestId: requestId,
+				contractName: info?.nomeDoContrato,
+			});
+		await handleSendNotificationToCobrancas({
+			contractName: info.nomeDoContrato,
+		});
+		return "Novo projeto adicionado com sucesso !";
 	}
 	async function rejectFormulary(info: TContractRequestDTO) {
-		try {
-			const formularyId = info._id;
-			const formularyOpportunityId = info.idProjetoCRM;
+		const formularyId = info._id;
+		const formularyOpportunityId = info.idProjetoCRM;
 
-			if (formularyOpportunityId)
-				await updateOpportunity({
-					id: formularyOpportunityId,
-					changes: {
-						"ganho.idSolicitacao": null,
-						"ganho.dataSolicitacao": null,
-					},
-				});
-			await editContractRequest({
-				id: formularyId,
-				changes: { aprovacao: false },
+		if (formularyOpportunityId)
+			await updateOpportunity({
+				id: formularyOpportunityId,
+				changes: {
+					"ganho.idSolicitacao": null,
+					"ganho.dataSolicitacao": null,
+				},
 			});
+		await editContractRequest({
+			id: formularyId,
+			changes: { aprovacao: false },
+		});
 
-			return "Formulário de contrato atualizado com sucesso !";
-		} catch (error) {
-			throw error;
-		}
+		return "Formulário de contrato atualizado com sucesso !";
 	}
 	const { mutate: handleApproveRequest, isPending: approvalLoading } = useMutationWithFeedback({
 		mutationKey: ["add-new-project", requestId],
@@ -255,224 +260,438 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 				queryKey: ["contract-request-by-id", requestId],
 			}),
 	});
-	const { mutate: handleGetContractDcoument, isPending: isGeneratingContractDocument } = useMutationWithFeedback({
-		mutationKey: ["generate-contract-pdf", requestId],
-		mutationFn: generateContract,
-		queryClient: queryClient,
-		affectedQueryKey: ["contract-requests"],
-	});
+
 	useEffect(() => {
 		if (request) setInfoHolder(request);
 	}, [request]);
-	return (
-		<div id="edit-expense" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[75%]">
-				<div className="flex h-full w-full flex-col">
-					<div className="border-primary/20 flex items-center justify-between border-b px-2 pb-2">
-						<div className="flex flex-col gap-1">
-							<h3 className="text-base font-bold text-primary dark:text-white">CONTROLE DE FORMULÁRIO</h3>
-							<div className="flex items-center gap-1">
-								<BsCode />
-								<h1 className="text-xxs text-primary/60 leading-none tracking-tight">#{requestId}</h1>
-							</div>
-						</div>
-						<button
-							type="button"
-							onClick={() => closeModal()}
-							className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-						>
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg={"Houve um erro ao buscar informações do formulário de contrato."} /> : null}
-					{isSuccess && !!infoHolder._id ? (
-						<>
-							<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-4 overflow-y-auto overscroll-y-auto px-2 py-1">
-								<div className="flex w-full items-center justify-end gap-2">
-									<Link href={`/comercial/pdfProcuracao/${requestId}`}>
-										<button
-											type="button"
-											className="border-primary/80 text-primary/80 flex items-center gap-2 rounded border px-4 py-2 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
-										>
-											<FaFile />
-											<p className="text-xs font-bold tracking-tight">PROCURAÇÃO EM PDF</p>
-										</button>
-									</Link>
-									<Link href={`/comercial/publicoFormulario/${requestId}`}>
-										<button
-											type="button"
-											className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
-										>
-											<FaFile />
-											<p className="text-xs font-bold tracking-tight">FORMULÁRIO EM PDF</p>
-										</button>
-									</Link>
-								</div>
-								<GeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
 
-								<ContactInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+	const TITLE = "GERAR CONTRATO";
+	const DESCRIPTION = "Gere o contrato do formulário de contrato.";
+	const CTA_BUTTON_TEXT = "GERAR CONTRATO";
+	const CANCEL_BUTTON_TEXT = "FECHAR";
 
-								<ElectricalInstallationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<SystemInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<StructureInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<EnergyPAInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<OeMInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<InsuranceInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<PaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<ElectricalInstallationDependentsInformationBlock
-									infoHolder={infoHolder}
-									setInfoHolder={setInfoHolder}
-									userHasEditPermission={userHasEditPermission}
-								/>
-
-								<TechnicalAnalysisBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
-
-								<FilesBlock
-									files={infoHolder.links}
-									tag={`${infoHolder.nomeDoContrato}`}
-									vinculateFiles={(newLinks) =>
-										//@ts-ignore
-										handleRequestUpdate({
-											id: requestId,
-											changes: { links: newLinks },
-										})
-									}
-									vinculationPending={updateLoading}
-								/>
-								<div className="flex w-full flex-wrap items-center justify-center gap-2">
-									<LoadingButton
-										onClick={() =>
-											handleGetContractDcoument({
-												requestId: requestId,
-												contractName: infoHolder.nomeDoContrato,
-												contractFormat: "docx",
-											})
-										}
-										loading={isGeneratingContractDocument}
-									>
-										GERAR CONTRATO EM DOCX
-									</LoadingButton>
-									<LoadingButton
-										onClick={() =>
-											handleGetContractDcoument({
-												requestId: requestId,
-												contractName: infoHolder.nomeDoContrato,
-												contractFormat: "pdf",
-											})
-										}
-										loading={isGeneratingContractDocument}
-									>
-										GERAR CONTRATO EM PDF
-									</LoadingButton>
-								</div>
-							</div>
-							<div className="flex w-full items-center justify-between gap-2">
-								<div className="flex items-center gap-2">
-									{infoHolder.aprovacao ? (
-										<>
-											<div className="flex items-center gap-1">
-												<BsCalendarCheck color="rgb(34,197,94)" />
-												<h1 className="text-primary/60 text-sm font-medium tracking-tight">APROVADO EM: {formatDateAsLocale(infoHolder.dataAprovacao, true)}</h1>
-											</div>
-											{infoHolder.confeccionado ? (
-												<div className="flex items-center gap-1">
-													<BsPatchCheck color="rgb(34,197,94)" />
-													<h1 className="text-primary/60 text-sm font-medium tracking-tight">CONFECCIONADO</h1>
-												</div>
-											) : (
-												<button
-													type="button"
-													disabled={updateLoading}
-													onClick={async () => {
-														// @ts-ignore
-														handleRequestUpdate({
-															id: requestId,
-															changes: { confeccionado: true },
-														});
-
-														if (infoHolder.idProjetoApp)
-															await updateProject({
-																id: infoHolder.idProjetoApp,
-																changes: {
-																	"contrato.dataLiberacao": new Date().toISOString(),
-																},
-															});
-													}}
-													className="disabled:bg-primary/60 flex h-9 items-center gap-1 rounded bg-cyan-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-cyan-600 enabled:hover:text-white disabled:text-white"
-												>
-													<BsPatchCheck />
-													<p className="">VALIDAR CONFECÇÃO</p>
-												</button>
-											)}
-										</>
-									) : (
-										<>
-											<button
-												type="button"
-												disabled={approvalLoading || updateLoading || rejectLoading}
-												onClick={() => {
-													// @ts-ignore
-													handleApproveRequest(infoHolder);
-												}}
-												className="disabled:bg-primary/60 h-9 rounded bg-green-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-green-800 enabled:hover:text-white disabled:text-white"
-											>
-												APROVAR FORMULÁRIO
-											</button>
-											<button
-												type="button"
-												disabled={rejectLoading || approvalLoading || updateLoading}
-												onClick={() => {
-													// @ts-ignore
-													handleRejectRequest(infoHolder);
-												}}
-												className="disabled:bg-primary/60 h-9 rounded bg-red-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-red-800 enabled:hover:text-white disabled:text-white"
-											>
-												REPROVAR FORMULÁRIO
-											</button>
-										</>
-									)}
-									{infoHolder.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO" ? (
-										<Link href={`/adm/contratos/pdf/${requestId}`}>
-											<button
-												type="button"
-												className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
-											>
-												<FaFile />
-												<p className="text-xs font-bold tracking-tight">TEMPLATE DE CONTRATO</p>
-											</button>
-										</Link>
-									) : null}
-								</div>
-
+	return isDesktop ? (
+		<Dialog onOpenChange={(v) => (v ? null : closeModal())} open>
+			<DialogContent className={"h-[90%] min-h-[90%] max-h-[90%] lg:max-h-[90%] w-[80%] min-w-[80%] max-w-[80%] lg:max-w-[80%]"}>
+				<DialogHeader>
+					<DialogTitle>GERAR CONTRATO</DialogTitle>
+					<DialogDescription>Gere o contrato do formulário de contrato.</DialogDescription>
+				</DialogHeader>
+				{isLoading ? (
+					<LoadingComponent />
+				) : isError ? (
+					<ErrorComponent msg={getErrorMessage(error)} />
+				) : (
+					<div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex flex-1 flex-col gap-3 overflow-auto px-4 py-2 lg:px-0">
+						<div className="flex w-full items-center justify-end gap-2">
+							<Link href={`/comercial/pdfProcuracao/${requestId}`}>
 								<button
 									type="button"
-									disabled={updateLoading || approvalLoading || rejectLoading}
+									className="border-primary/80 text-primary/80 flex items-center gap-2 rounded border px-4 py-2 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">PROCURAÇÃO EM PDF</p>
+								</button>
+							</Link>
+							<Link href={`/comercial/publicoFormulario/${requestId}`}>
+								<button
+									type="button"
+									className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">FORMULÁRIO EM PDF</p>
+								</button>
+							</Link>
+						</div>
+						<GeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ContactInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ElectricalInstallationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<SystemInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<StructureInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<EnergyPAInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<OeMInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<InsuranceInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<PaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ElectricalInstallationDependentsInformationBlock
+							infoHolder={infoHolder}
+							setInfoHolder={setInfoHolder}
+							userHasEditPermission={userHasEditPermission}
+						/>
+
+						<TechnicalAnalysisBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<FilesBlock
+							files={infoHolder.links}
+							tag={`${infoHolder.nomeDoContrato}`}
+							vinculateFiles={(newLinks) =>
+								//@ts-ignore
+								handleRequestUpdate({
+									id: requestId,
+									changes: { links: newLinks },
+								})
+							}
+							vinculationPending={updateLoading}
+						/>
+						<div className="flex w-full flex-wrap items-center justify-center gap-2">
+							<Button onClick={() => setGenerateContractMenuIsOpen(true)}>GERAR CONTRATO</Button>
+						</div>
+					</div>
+				)}
+				<DialogFooter>
+					<div className="flex items-center gap-2">
+						{infoHolder.aprovacao ? (
+							<>
+								<div className="flex items-center gap-1">
+									<BsCalendarCheck color="rgb(34,197,94)" />
+									<h1 className="text-primary/60 text-sm font-medium tracking-tight">APROVADO EM: {formatDateAsLocale(infoHolder.dataAprovacao, true)}</h1>
+								</div>
+								{infoHolder.confeccionado ? (
+									<div className="flex items-center gap-1">
+										<BsPatchCheck color="rgb(34,197,94)" />
+										<h1 className="text-primary/60 text-sm font-medium tracking-tight">CONFECCIONADO</h1>
+									</div>
+								) : (
+									<button
+										type="button"
+										disabled={updateLoading}
+										onClick={async () => {
+											// @ts-ignore
+											handleRequestUpdate({
+												id: requestId,
+												changes: { confeccionado: true },
+											});
+
+											if (infoHolder.idProjetoApp)
+												await updateProject({
+													id: infoHolder.idProjetoApp,
+													changes: {
+														"contrato.dataLiberacao": new Date().toISOString(),
+													},
+												});
+										}}
+										className="disabled:bg-primary/60 flex h-9 items-center gap-1 rounded bg-cyan-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-cyan-600 enabled:hover:text-white disabled:text-white"
+									>
+										<BsPatchCheck />
+										<p className="">VALIDAR CONFECÇÃO</p>
+									</button>
+								)}
+							</>
+						) : (
+							<>
+								<button
+									type="button"
+									disabled={approvalLoading || updateLoading || rejectLoading}
 									onClick={() => {
 										// @ts-ignore
-										handleRequestUpdate({
-											id: requestId,
-											changes: { ...infoHolder },
-										});
+										handleApproveRequest(infoHolder);
 									}}
-									className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
+									className="disabled:bg-primary/60 h-9 rounded bg-green-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-green-800 enabled:hover:text-white disabled:text-white"
 								>
-									ATUALIZAR FORMULÁRIO
+									APROVAR FORMULÁRIO
 								</button>
-							</div>
-						</>
-					) : null}
-				</div>
-			</div>
-		</div>
+								<button
+									type="button"
+									disabled={rejectLoading || approvalLoading || updateLoading}
+									onClick={() => {
+										// @ts-ignore
+										handleRejectRequest(infoHolder);
+									}}
+									className="disabled:bg-primary/60 h-9 rounded bg-red-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-red-800 enabled:hover:text-white disabled:text-white"
+								>
+									REPROVAR FORMULÁRIO
+								</button>
+							</>
+						)}
+						{infoHolder.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO" ? (
+							<Link href={`/adm/contratos/pdf/${requestId}`}>
+								<button
+									type="button"
+									className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">TEMPLATE DE CONTRATO</p>
+								</button>
+							</Link>
+						) : null}
+					</div>
+
+					<button
+						type="button"
+						disabled={updateLoading || approvalLoading || rejectLoading}
+						onClick={() => {
+							// @ts-ignore
+							handleRequestUpdate({
+								id: requestId,
+								changes: { ...infoHolder },
+							});
+						}}
+						className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
+					>
+						ATUALIZAR FORMULÁRIO
+					</button>
+				</DialogFooter>
+				{generateContractMenuIsOpen && (
+					<GenerateContractMenu
+						requestContractName={infoHolder.nomeDoContrato}
+						requestId={requestId}
+						closeMenu={() => setGenerateContractMenuIsOpen(false)}
+					/>
+				)}
+			</DialogContent>
+		</Dialog>
+	) : (
+		<Drawer onOpenChange={(v) => (v ? null : closeModal())} open>
+			<DrawerContent className={"h-fit max-h-[80vh] flex flex-col"}>
+				<DrawerHeader className="text-left">
+					<DrawerTitle>{TITLE}</DrawerTitle>
+					<DrawerDescription>{DESCRIPTION}</DrawerDescription>
+				</DrawerHeader>
+				{isLoading ? (
+					<LoadingComponent />
+				) : isError ? (
+					<ErrorComponent msg={getErrorMessage(error)} />
+				) : (
+					<div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex flex-1 flex-col gap-3 overflow-auto px-4 py-2 lg:px-0">
+						<div className="flex w-full items-center justify-end gap-2">
+							<Link href={`/comercial/pdfProcuracao/${requestId}`}>
+								<button
+									type="button"
+									className="border-primary/80 text-primary/80 flex items-center gap-2 rounded border px-4 py-2 duration-300 ease-in-out hover:border-gray-400 hover:text-gray-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">PROCURAÇÃO EM PDF</p>
+								</button>
+							</Link>
+							<Link href={`/comercial/publicoFormulario/${requestId}`}>
+								<button
+									type="button"
+									className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">FORMULÁRIO EM PDF</p>
+								</button>
+							</Link>
+						</div>
+						<GeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ContactInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ElectricalInstallationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<SystemInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<StructureInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<EnergyPAInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<OeMInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<InsuranceInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<PaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<ElectricalInstallationDependentsInformationBlock
+							infoHolder={infoHolder}
+							setInfoHolder={setInfoHolder}
+							userHasEditPermission={userHasEditPermission}
+						/>
+
+						<TechnicalAnalysisBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} userHasEditPermission={userHasEditPermission} />
+
+						<FilesBlock
+							files={infoHolder.links}
+							tag={`${infoHolder.nomeDoContrato}`}
+							vinculateFiles={(newLinks) =>
+								//@ts-ignore
+								handleRequestUpdate({
+									id: requestId,
+									changes: { links: newLinks },
+								})
+							}
+							vinculationPending={updateLoading}
+						/>
+						<div className="flex w-full flex-wrap items-center justify-center gap-2">
+							<Button onClick={() => setGenerateContractMenuIsOpen(true)}>GERAR CONTRATO</Button>
+						</div>
+					</div>
+				)}
+				<DrawerFooter>
+					<div className="flex items-center gap-2">
+						{infoHolder.aprovacao ? (
+							<>
+								<div className="flex items-center gap-1">
+									<BsCalendarCheck color="rgb(34,197,94)" />
+									<h1 className="text-primary/60 text-sm font-medium tracking-tight">APROVADO EM: {formatDateAsLocale(infoHolder.dataAprovacao, true)}</h1>
+								</div>
+								{infoHolder.confeccionado ? (
+									<div className="flex items-center gap-1">
+										<BsPatchCheck color="rgb(34,197,94)" />
+										<h1 className="text-primary/60 text-sm font-medium tracking-tight">CONFECCIONADO</h1>
+									</div>
+								) : (
+									<Button
+										type="button"
+										disabled={updateLoading}
+										onClick={async () => {
+											// @ts-ignore
+											handleRequestUpdate({
+												id: requestId,
+												changes: { confeccionado: true },
+											});
+
+											if (infoHolder.idProjetoApp)
+												await updateProject({
+													id: infoHolder.idProjetoApp,
+													changes: {
+														"contrato.dataLiberacao": new Date().toISOString(),
+													},
+												});
+										}}
+										className="flex items-center gap-2"
+									>
+										<BsPatchCheck className="h-4 w-4 min-w-4 min-h-4" />
+										<p className="">VALIDAR CONFECÇÃO</p>
+									</Button>
+								)}
+							</>
+						) : (
+							<>
+								<LoadingButton
+									type="button"
+									disabled={approvalLoading || updateLoading || rejectLoading}
+									onClick={() => {
+										// @ts-ignore
+										handleApproveRequest(infoHolder);
+									}}
+									className="flex items-center gap-2 bg-green-800 hover:bg-green-600"
+								>
+									APROVAR FORMULÁRIO
+								</LoadingButton>
+								<LoadingButton
+									type="button"
+									disabled={rejectLoading || approvalLoading || updateLoading}
+									onClick={() => {
+										// @ts-ignore
+										handleRejectRequest(infoHolder);
+									}}
+									className="flex items-center gap-2 bg-red-800 hover:bg-red-600"
+								>
+									REPROVAR FORMULÁRIO
+								</LoadingButton>
+							</>
+						)}
+						{infoHolder.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO" ? (
+							<Link href={`/adm/contratos/pdf/${requestId}`}>
+								<Button
+									type="button"
+									className="flex items-center gap-2 rounded border border-orange-600 px-4 py-2 text-orange-600 duration-300 ease-in-out hover:border-orange-400 hover:text-orange-400"
+								>
+									<FaFile />
+									<p className="text-xs font-bold tracking-tight">TEMPLATE DE CONTRATO</p>
+								</Button>
+							</Link>
+						) : null}
+					</div>
+
+					<LoadingButton
+						type="button"
+						disabled={updateLoading || approvalLoading || rejectLoading}
+						onClick={() => {
+							// @ts-ignore
+							handleRequestUpdate({
+								id: requestId,
+								changes: { ...infoHolder },
+							});
+						}}
+						className="disabled:bg-primary/60 h-9 rounded bg-blue-800 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm enabled:hover:bg-blue-800 enabled:hover:text-white disabled:text-white"
+					>
+						ATUALIZAR FORMULÁRIO
+					</LoadingButton>
+				</DrawerFooter>
+				{generateContractMenuIsOpen && (
+					<GenerateContractMenu
+						requestContractName={infoHolder.nomeDoContrato}
+						requestId={requestId}
+						closeMenu={() => setGenerateContractMenuIsOpen(false)}
+					/>
+				)}
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
 export default ContractRequestControlModal;
+
+function GenerateContractMenu({
+	requestContractName,
+	requestId,
+	closeMenu,
+}: { requestContractName: string; requestId: string; closeMenu: () => void }) {
+	const [infoHolder, setInfoHolder] = useState<{
+		templateId: string | null;
+		format: "pdf" | "docx";
+	}>({
+		templateId: null,
+		format: "pdf",
+	});
+	const { data: contractTemplates } = useContractTemplates();
+	const { mutate: handleGetContractDcoument, isPending: isGeneratingContractDocument } = useMutation({
+		mutationKey: ["generate-contract-pdf", requestId],
+		mutationFn: generateContract,
+		onSuccess: (data) => {
+			toast.success(data);
+		},
+		onError: (error) => {
+			toast.error(getErrorMessage(error));
+		},
+	});
+
+	return (
+		<ResponsiveDialogDrawer
+			menuTitle="GERAR CONTRATO"
+			menuDescription="Selecione um template de contrato para gerar o contrato."
+			menuActionButtonText="GERAR CONTRATO"
+			menuCancelButtonText="CANCELAR"
+			actionFunction={() => {
+				if (!infoHolder.templateId) return toast.error("Selecione um template de contrato para gerar o contrato.");
+				handleGetContractDcoument({
+					requestId: requestId,
+					contractName: requestContractName,
+					contractFormat: infoHolder.format,
+					templateId: infoHolder.templateId,
+				});
+			}}
+			actionIsPending={isGeneratingContractDocument}
+			stateIsLoading={false}
+			stateError={null}
+			closeMenu={closeMenu}
+		>
+			<SelectInput
+				label="TEMPLATE DE CONTRATO"
+				value={infoHolder.templateId}
+				options={contractTemplates?.map((template) => ({ id: template._id, label: template.titulo, value: template._id })) ?? []}
+				selectedItemLabel="NÃO DEFINIDO"
+				handleChange={(value) => setInfoHolder({ ...infoHolder, templateId: value })}
+				onReset={() => setInfoHolder({ ...infoHolder, templateId: null })}
+				width="100%"
+			/>
+			<div className="w-full flex items-center justify-center gap-2">
+				<Button variant={infoHolder.format === "pdf" ? "default" : "ghost"} onClick={() => setInfoHolder({ ...infoHolder, format: "pdf" })}>
+					PDF
+				</Button>
+				<Button variant={infoHolder.format === "docx" ? "default" : "ghost"} onClick={() => setInfoHolder({ ...infoHolder, format: "docx" })}>
+					DOCX
+				</Button>
+			</div>
+		</ResponsiveDialogDrawer>
+	);
+}

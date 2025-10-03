@@ -111,7 +111,11 @@ function ContractTemplateEditor({ content, contentChangeCallback, contractVariab
 		content: content,
 		immediatelyRender: false,
 		onUpdate: ({ editor }) => {
-			console.log("[DEBUG] Editor Updated", editor.getHTML());
+			console.log("[DEBUG] Editor Updated", {
+				html: editor.getHTML(),
+				json: editor.getJSON(),
+				text: editor.getText(),
+			});
 			const html = editor.getHTML();
 			contentChangeCallback(html);
 		},

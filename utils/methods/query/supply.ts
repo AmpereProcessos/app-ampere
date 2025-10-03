@@ -1,10 +1,10 @@
-import axios from "axios";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { formatWithoutDiacritics, getProjectNestedFieldValue } from "../formatting";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import type { TPurchaseControlDeliveryTrackingDTO } from "@/utils/schemas/purchases";
-import { useDebounceMemo } from "@/lib/hooks/debounce";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
+import { formatWithoutDiacritics, getProjectNestedFieldValue } from "../formatting";
 
 async function fetchProjects() {
 	try {
@@ -68,7 +68,12 @@ export function useSupplyProjects({ enabled }: { enabled: boolean }) {
 	function handleModelData(data: TProjectDTO[]) {
 		return data.filter(
 			(project: TProjectDTO) =>
-				matchSupplyStatus(project) && matchDeliveryStatus(project) && matchYetToBuy(project) && matchAccessGrantingStatus(project) && matchDate(project) && matchSearch(project),
+				matchSupplyStatus(project) &&
+				matchDeliveryStatus(project) &&
+				matchYetToBuy(project) &&
+				matchAccessGrantingStatus(project) &&
+				matchDate(project) &&
+				matchSearch(project),
 		);
 	}
 	return {
@@ -122,7 +127,10 @@ export function useProjectsInDelivery({ initialFilters }: UseProjectsInDeliveryP
 	});
 
 	const querParamsDebounced = useDebounceMemo(filters, 500);
-	const query = useQuery({ queryKey: ["projects-in-delivery", querParamsDebounced], queryFn: async () => await fetchProjectsInDelivery(querParamsDebounced) });
+	const query = useQuery({
+		queryKey: ["projects-in-delivery", querParamsDebounced],
+		queryFn: async () => await fetchProjectsInDelivery(querParamsDebounced),
+	});
 
-	return { ...query, filters, setFilters };
+	return { ...query, queryKey: ["projects-in-delivery", querParamsDebounced], filters, setFilters };
 }

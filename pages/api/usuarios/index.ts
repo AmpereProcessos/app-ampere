@@ -1,9 +1,11 @@
+import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { InsertUserSchema, type TUser } from "@/utils/schemas/users";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
-import { type Collection, ObjectId } from "mongodb";
+import { type Collection, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
+import z from "zod";
 
 type GetResponse = {
 	data: TUser | TUser[];
@@ -23,24 +25,122 @@ const projection = {
 	dataInsercao: 1,
 	autor: 1,
 };
-const getUsers: NextApiHandler<GetResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
-	const { id } = req.query;
+
+const GetUsersInputSchema = z.object({
+	id: z.string({ invalid_type_error: "Tipo não válido para ID." }).optional().nullable(),
+
+	search: z.string({ invalid_type_error: "Tipo não válido para filtro de pesquisa." }).optional().nullable(),
+	activeOnly: z
+		.string({
+			invalid_type_error: "Tipo não válido para filtro de usuários ativos.",
+		})
+		.optional()
+		.nullable()
+		.transform((val) => val === "true"),
+	activeEmployeesOnly: z
+		.string({
+			invalid_type_error: "Tipo não válido para filtro de colaboradores ativos.",
+		})
+		.optional()
+		.nullable()
+		.transform((val) => val === "true"),
+});
+export type TGetUsersInput = z.infer<typeof GetUsersInputSchema>;
+export type TGetUsersDefaultInput = Omit<TGetUsersInput, "id">;
+export type TGetUsersByIdInput = Pick<TGetUsersInput, "id">;
+
+async function getUsers({ session, input }: { session: TAuthSession; input: TGetUsersInput }) {
+	if (!session.user.permissoes.usuarios.visualizar) throw new createHttpError.Unauthorized("Usuário não possui permissão para essa requisição.");
 
 	const db = await connectToAdministrationDatabase();
 	const usersCollection: Collection<TUser> = db.collection("colaboradores");
 
-	if (id) {
-		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+	if ("id" in input) {
+		if (typeof input.id !== "string" || !ObjectId.isValid(input.id)) throw new createHttpError.BadRequest("ID inválido.");
 
-		const user = await usersCollection.findOne({ _id: new ObjectId(id) }, { projection: projection });
+		const user = await usersCollection.findOne({ _id: new ObjectId(input.id) }, { projection: projection });
 		if (!user) throw new createHttpError.NotFound("Usuário não encontrado.");
-		return res.status(200).json({ data: user });
+		return {
+			data: {
+				byId: {
+					_id: user._id.toString(),
+					acessoAtivo: user.acessoAtivo,
+					nome: user.nome,
+					usuario: user.usuario,
+					email: user.email,
+					telefone: user.telefone,
+					avatar_url: user.avatar_url,
+					visualizacao: user.visualizacao,
+					permissoes: user.permissoes,
+					empresaVinculada: user.empresaVinculada,
+					cargos: user.cargos,
+					dataInsercao: user.dataInsercao,
+					autor: user.autor,
+				},
+				default: undefined,
+			},
+		};
 	}
 
-	const users = await usersCollection.find({ acessoAtivo: true }, { projection: projection, sort: { nome: 1 } }).toArray();
+	const activeOnlyQuery: Filter<TUser> = input.activeOnly ? { acessoAtivo: true } : {};
+	const activeEmployeesOnlyQuery: Filter<TUser> = input.activeEmployeesOnly ? { colaboradorAtivo: true } : {};
+	const searchQuery: Filter<TUser> = input.search
+		? {
+				$or: [
+					{
+						nome: { $regex: input.search, $options: "i" },
+					},
+					{
+						nome: input.search,
+					},
+					{
+						cpf: { $regex: input.search, $options: "i" },
+					},
+					{
+						cpf: input.search,
+					},
+					{
+						email: { $regex: input.search, $options: "i" },
+					},
+					{
+						email: input.search,
+					},
+				],
+			}
+		: {};
+	const query: Filter<TUser> = { ...activeOnlyQuery, ...activeEmployeesOnlyQuery, ...searchQuery };
+	const users = await usersCollection.find(query, { sort: { nome: 1 } }).toArray();
+	const usersFormatted = users.map((user) => ({
+		_id: user._id.toString(),
+		acessoAtivo: user.acessoAtivo,
+		nome: user.nome,
+		usuario: user.usuario,
+		email: user.email,
+		telefone: user.telefone,
+		avatar_url: user.avatar_url,
+		visualizacao: user.visualizacao,
+		permissoes: user.permissoes,
+		empresaVinculada: user.empresaVinculada,
+		cargos: user.cargos,
+		dataInsercao: user.dataInsercao,
+		autor: user.autor,
+	}));
+	return {
+		data: {
+			default: usersFormatted,
+			byId: undefined,
+		},
+	};
+}
+export type TGetUsersOutput = Awaited<ReturnType<typeof getUsers>>;
+export type TGetUsersOutputById = Exclude<Awaited<ReturnType<typeof getUsers>>["data"]["byId"], undefined>;
+export type TGetUsersOutputDefault = Exclude<Awaited<ReturnType<typeof getUsers>>["data"]["default"], undefined>;
 
-	return res.status(200).json({ data: users });
+const getUsersHandler: NextApiHandler<TGetUsersOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const input = GetUsersInputSchema.parse(req.query);
+	const response = await getUsers({ session, input });
+	return res.status(200).json(response);
 };
 
 type PostResponse = {
@@ -90,7 +190,7 @@ const editUser: NextApiHandler<PutResponse> = async (req, res) => {
 };
 
 export default apiHandler({
-	GET: getUsers,
+	GET: getUsersHandler,
 	POST: createUser,
 	PUT: editUser,
 });

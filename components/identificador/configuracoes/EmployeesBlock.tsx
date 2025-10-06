@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
-import type { TGetEmployeesDefaultInput } from "@/pages/api/colaboradores";
+import type { TGetEmployeesDefaultInput, TGetEmployeesOutputDefault } from "@/pages/api/colaboradores";
 import { SlideMotionVariants } from "@/utils/constants";
 import { formatDateAsLocale, formatDateBirthdayAsLocale } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
@@ -102,7 +102,7 @@ function EmployeeBlockCard({
 	user,
 	handleEditClick,
 	userHasEditUsersPermission,
-}: { user: TUserDTO; handleEditClick: (id: string) => void; userHasEditUsersPermission: boolean }) {
+}: { user: TGetEmployeesOutputDefault[number]; handleEditClick: (id: string) => void; userHasEditUsersPermission: boolean }) {
 	return (
 		<div className="border-primary bg-background flex w-full flex-col gap-3 rounded border p-2 shadow-xs sm:flex-row dark:bg-[#121212]">
 			<div className="flex items-center justify-center">
@@ -121,13 +121,23 @@ function EmployeeBlockCard({
 					<div className="flex flex-wrap items-center gap-2">
 						<p className="text-sm leading-none font-bold tracking-tight">{user.nome}</p>
 					</div>
-					<div
-						className={cn("px-2 py-0.5 rounded-lg text-[0.65rem] font-bold", {
-							"bg-blue-500 text-white": user.acessoAtivo,
-							"bg-primary/20 text-primary": !user.acessoAtivo,
-						})}
-					>
-						{user.acessoAtivo ? "ACESSO ATIVO" : "ACESSO INATIVO"}
+					<div className="flex items-center gap-2">
+						<div
+							className={cn("px-2 py-0.5 rounded-lg text-[0.65rem] font-bold", {
+								"bg-blue-500 text-white": user.acessoAtivo,
+								"bg-primary/20 text-primary": !user.acessoAtivo,
+							})}
+						>
+							{user.acessoAtivo ? "ACESSO ATIVO" : "ACESSO INATIVO"}
+						</div>
+						<div
+							className={cn("px-2 py-0.5 rounded-lg text-[0.65rem] font-bold", {
+								"bg-blue-500 text-white": user.colaboradorAtivo,
+								"bg-primary/20 text-primary": !user.colaboradorAtivo,
+							})}
+						>
+							{user.colaboradorAtivo ? "COLABORADOR ATIVO" : "COLABORADOR INATIVO"}
+						</div>
 					</div>
 				</div>
 				<div className="w-full flex flex-col gap-2 grow">
@@ -138,7 +148,7 @@ function EmployeeBlockCard({
 						</div>
 						<div className="flex items-center gap-1">
 							<Phone className="w-4 h-4 min-w-4 min-h-4" />
-							<p className="text-xs font-medium text-primary/80">{user.telefone ?? "NÃO DEFINIDO"}</p>
+							<p className="text-xs font-medium text-primary/80">{user.telefone ? user.telefone : "NÃO DEFINIDO"}</p>
 						</div>
 					</div>
 				</div>

@@ -1,3 +1,4 @@
+import CheckboxInput from "@/components/inputs/Checkbox";
 import DateInput from "@/components/inputs/Date";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
@@ -53,6 +54,21 @@ function EmployeeCorporativeInformation({ infoHolder, updateInfoHolder }: Corpor
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-1 rounded w-fit">
 				<Building2 size={15} />
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES CORPORATIVAS</h1>
+			</div>
+			<div className="flex w-full items-center justify-center">
+				<div className="w-fit">
+					<CheckboxInput
+						checked={infoHolder.colaboradorAtivo}
+						handleChange={(value) =>
+							updateInfoHolder({
+								colaboradorAtivo: value,
+							})
+						}
+						labelFalse="COLABORADOR ATIVO"
+						labelTrue="COLABORADOR ATIVO"
+						justify="justify-center"
+					/>
+				</div>
 			</div>
 			<SelectInput
 				label="EMPRESA"
@@ -303,44 +319,6 @@ function PositionsMenu({ infoHolder, updateInfoHolder }: PositionsMenuProps) {
 	return (
 		<>
 			<h1 className="w-full pt-2 text-start text-sm font-medium">CARGOS</h1>
-			<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-				<div className="w-full lg:w-2/6">
-					<TextInput
-						label="CARGO"
-						placeholder="Preencha o nome do cargo..."
-						value={positionHolder.cargo}
-						handleChange={(value) => setPositionHolder((prev) => ({ ...prev, cargo: value }))}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-2/6">
-					<TextInput
-						label="CBO"
-						placeholder="Preencha o CBO do cargo..."
-						value={positionHolder.cbo}
-						handleChange={(value) => setPositionHolder((prev) => ({ ...prev, cbo: value }))}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/6">
-					<DateInput
-						label="DATA DE INÍCIO"
-						value={positionHolder.dataInicio ? formatDate(positionHolder.dataInicio) : undefined}
-						handleChange={(value) =>
-							setPositionHolder((prev) => ({ ...prev, dataInicio: formatDateInputChange(value, "string") || new Date().toISOString() }))
-						}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/6">
-					<DateInput
-						label="DATA DE TÉRMINO"
-						value={positionHolder.dataFinal ? formatDate(positionHolder.dataFinal) : undefined}
-						handleChange={(value) => setPositionHolder((prev) => ({ ...prev, dataFinal: formatDateInputChange(value, "string") }))}
-						width="100%"
-					/>
-				</div>
-			</div>
 			<div className="flex w-full items-center justify-end">
 				<Button onClick={() => setNewPositionModalIsOpen(true)} size="xs" variant="ghost">
 					ADICIONAR CARGO

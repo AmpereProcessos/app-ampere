@@ -2,48 +2,62 @@ import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetEmployeesDefaultInput, TGetEmployeesOutput } from "@/pages/api/colaboradores";
 import type { TGetProfileOutput } from "@/pages/api/colaboradores/perfil";
 import type { TEmployeeSearchInput, TEmployeeSearchOutput } from "@/pages/api/colaboradores/pesquisa-vinculacao";
+import { type TGetUsersDefaultInput, TGetUsersInput, type TGetUsersOutput } from "@/pages/api/usuarios";
 import type { TEmployeeDTO, TUserDTO } from "@/utils/schemas/users";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { formatWithoutDiacritics } from "../formatting";
 
-async function fetchUsers() {
+async function fetchUsers(input: TGetUsersDefaultInput) {
 	try {
-		const { data } = await axios.get("/api/usuarios");
-		return data.data as TUserDTO[];
+		const searchParams = new URLSearchParams();
+		if (input.search) searchParams.set("search", input.search);
+		if (input.activeOnly) searchParams.set("activeOnly", input.activeOnly.toString());
+		if (input.activeEmployeesOnly) searchParams.set("activeEmployeesOnly", input.activeEmployeesOnly.toString());
+		const url = `/api/usuarios?${searchParams.toString()}`;
+		const { data } = await axios.get<TGetUsersOutput>(url);
+		if (!data.data.default) throw new Error("Usuários não encontrados.");
+		return data.data.default;
 	} catch (error) {
 		console.log("Error fetching users", error);
 		throw error;
 	}
 }
-export function useUsers() {
-	const [filters, setFilters] = useState({
-		search: "",
+
+export type UseUsersParams = {
+	initialFilters?: Partial<TGetUsersDefaultInput>;
+};
+export function useUsers({ initialFilters }: UseUsersParams = {}) {
+	const [filters, setFilters] = useState<TGetUsersDefaultInput>({
+		search: initialFilters?.search ?? "",
+		activeOnly: initialFilters?.activeOnly ?? true,
+		activeEmployeesOnly: initialFilters?.activeEmployeesOnly ?? false,
 	});
 
-	function matchSearch(user: TUserDTO) {
-		if (filters.search.trim().length === 0) return true;
-		return formatWithoutDiacritics(user.nome, true).includes(formatWithoutDiacritics(filters.search, true));
+	function updateFilters(filters: Partial<TGetUsersDefaultInput>) {
+		setFilters((prev) => ({
+			...prev,
+			...filters,
+		}));
 	}
-	function handleModelData(data: TUserDTO[]) {
-		return data.filter((user) => matchSearch(user));
-	}
+	const debouncedFilters = useDebounceMemo(filters, 1000);
 	return {
 		...useQuery({
-			queryKey: ["users-simplified"],
-			queryFn: fetchUsers,
-			select: (data) => handleModelData(data),
+			queryKey: ["users-simplified", debouncedFilters],
+			queryFn: async () => await fetchUsers(debouncedFilters),
 		}),
-		queryKey: ["users-simplified"],
+		queryKey: ["users-simplified", debouncedFilters],
 		filters,
 		setFilters,
+		updateFilters,
 	};
 }
 async function fetchUserById({ id }: { id: string }) {
 	try {
-		const { data } = await axios.get(`/api/usuarios?id=${id}`);
-		return data.data as TUserDTO;
+		const { data } = await axios.get<TGetUsersOutput>(`/api/usuarios?id=${id}`);
+		if (!data.data.byId) throw new Error("Usuário não encontrado.");
+		return data.data.byId;
 	} catch (error) {
 		console.log("Error fetching user by id", error);
 		throw error;

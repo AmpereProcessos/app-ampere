@@ -1,6 +1,7 @@
 import AllocatorsBlock from "@/components/identificador/configuracoes/AllocatorsBlock";
 import ContractTemplatesBlock from "@/components/identificador/configuracoes/ContractTemplatesBlock";
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
+import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
 import { useSession } from "@/components/providers/SessionProvider";
@@ -18,7 +19,7 @@ function ConfigurationsMainPage() {
 
 export default ConfigurationsMainPage;
 
-type ConfigurationPageModes = "profile" | "users" | "allocators" | "contract-templates" | "contract-templates-variables";
+type ConfigurationPageModes = "profile" | "users" | "employees" | "allocators" | "contract-templates" | "contract-templates-variables";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -54,6 +55,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
 						>
 							Usuários
+						</button>
+					)}
+					{userHasUsersViewPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("employees")}
+							className={`${
+								mode === "users" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Colaboradores
 						</button>
 					)}
 					{userHasContractTemplatesVariablesPermission && (
@@ -92,6 +104,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
 					{mode === "allocators" ? <AllocatorsBlock session={session} /> : null}
 					{mode === "users" ? <UsersBlock session={session} /> : null}
+					{mode === "employees" ? <EmployeesBlock session={session} /> : null}
 					{mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 				</div>

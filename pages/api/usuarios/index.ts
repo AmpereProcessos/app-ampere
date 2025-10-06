@@ -27,7 +27,7 @@ const getUsers: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 	const { id } = req.query;
 
-	const db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db = await connectToAdministrationDatabase();
 	const usersCollection: Collection<TUser> = db.collection("colaboradores");
 
 	if (id) {
@@ -38,7 +38,7 @@ const getUsers: NextApiHandler<GetResponse> = async (req, res) => {
 		return res.status(200).json({ data: user });
 	}
 
-	const users = await usersCollection.find({}, { projection: projection, sort: { nome: 1 } }).toArray();
+	const users = await usersCollection.find({ acessoAtivo: true }, { projection: projection, sort: { nome: 1 } }).toArray();
 
 	return res.status(200).json({ data: users });
 };
@@ -56,7 +56,7 @@ const createUser: NextApiHandler<PostResponse> = async (req, res) => {
 	if (!session.user.permissoes.usuarios.criar) throw new createHttpError.Unauthorized("Você não possui permissão para criação de usuários.");
 	const user = InsertUserSchema.parse(req.body);
 
-	const db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db = await connectToAdministrationDatabase();
 	const usersCollection: Collection<TUser> = db.collection("colaboradores");
 
 	const insertResponse = await usersCollection.insertOne({ ...user, autor: { id, nome, avatar_url } });
@@ -78,7 +78,7 @@ const editUser: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const user = InsertUserSchema.partial().parse(req.body);
 
-	const db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db = await connectToAdministrationDatabase();
 	const usersCollection: Collection<TUser> = db.collection("colaboradores");
 
 	const updateResponse = await usersCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...user } });

@@ -1,4 +1,5 @@
 import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetEmployeesDefaultInput, TGetEmployeesOutput } from "@/pages/api/colaboradores";
 import type { TGetProfileOutput } from "@/pages/api/colaboradores/perfil";
 import type { TEmployeeSearchInput, TEmployeeSearchOutput } from "@/pages/api/colaboradores/pesquisa-vinculacao";
 import type { TEmployeeDTO, TUserDTO } from "@/utils/schemas/users";
@@ -57,43 +58,55 @@ export function useUserById({ id }: { id: string }) {
 		queryKey: ["user-by-id", id],
 	};
 }
-async function fetchEmployees({ active }: { active: boolean }) {
+async function fetchEmployees(input: TGetEmployeesDefaultInput) {
 	try {
-		const { data } = await axios.get(`/api/colaboradores?active=${active}`);
-		return data.data as TEmployeeDTO[];
+		const searchParams = new URLSearchParams();
+		if (input.search) searchParams.set("search", input.search);
+		if (input.activeOnly) searchParams.set("activeOnly", input.activeOnly.toString());
+		if (input.accessActiveOnly) searchParams.set("accessActiveOnly", input.accessActiveOnly.toString());
+		const url = `/api/colaboradores?${searchParams.toString()}`;
+		const { data } = await axios.get<TGetEmployeesOutput>(url);
+		if (!data.data.default) throw new Error("Colaboradores não encontrados.");
+		return data.data.default;
 	} catch (error) {
 		console.log("Error fetching employees", error);
 		throw error;
 	}
 }
 
-export function useEmployees({ active }: { active: boolean }) {
-	const [filters, setFilters] = useState({
-		search: "",
+type UseEmployeesParams = {
+	initialFilters?: Partial<TGetEmployeesDefaultInput>;
+};
+export function useEmployees({ initialFilters }: UseEmployeesParams = {}) {
+	const [filters, setFilters] = useState<TGetEmployeesDefaultInput>({
+		search: initialFilters?.search ?? "",
+		activeOnly: initialFilters?.activeOnly ?? true,
+		accessActiveOnly: initialFilters?.accessActiveOnly ?? false,
 	});
 
-	function matchSearch(employee: TEmployeeDTO) {
-		if (filters.search.trim().length === 0) return true;
-		return formatWithoutDiacritics(employee.nome, true).includes(formatWithoutDiacritics(filters.search, true));
+	function updateFilters(filters: Partial<TGetEmployeesDefaultInput>) {
+		setFilters((prev) => ({
+			...prev,
+			...filters,
+		}));
 	}
-	function handleModelData(data: TEmployeeDTO[]) {
-		return data.filter((employee) => matchSearch(employee));
-	}
+	const debouncedFilters = useDebounceMemo(filters, 1000);
 	return {
 		...useQuery({
-			queryKey: ["employees", active],
-			queryFn: async () => await fetchEmployees({ active }),
-			select: (data) => handleModelData(data),
+			queryKey: ["employees", debouncedFilters],
+			queryFn: async () => await fetchEmployees(debouncedFilters),
 		}),
+		queryKey: ["employees", debouncedFilters],
 		filters,
-		setFilters,
+		updateFilters,
 	};
 }
 
 async function fetchEmployeeById({ id }: { id: string }) {
 	try {
-		const { data } = await axios.get(`/api/colaboradores?id=${id}`);
-		return data.data as TEmployeeDTO;
+		const { data } = await axios.get<TGetEmployeesOutput>(`/api/colaboradores?id=${id}`);
+		if (!data.data.byId) throw new Error("Colaborador não encontrado.");
+		return data.data.byId;
 	} catch (error) {
 		console.log("Error fetching employee by id", error);
 		throw error;

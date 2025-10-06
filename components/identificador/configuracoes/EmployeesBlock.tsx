@@ -1,12 +1,14 @@
+import CheckboxInput from "@/components/inputs/Checkbox";
 import TextInput from "@/components/inputs/Text";
 import { Button } from "@/components/ui/button";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
+import type { TGetEmployeesDefaultInput } from "@/pages/api/colaboradores";
 import { SlideMotionVariants } from "@/utils/constants";
 import { formatDateAsLocale, formatDateBirthdayAsLocale } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import { useUsers } from "@/utils/methods/query/users";
+import { useEmployees, useUsers } from "@/utils/methods/query/users";
 import type { TUserDTO } from "@/utils/schemas/users";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,20 +16,20 @@ import { Cake, IdCard, ListFilter, Mail, Pencil, Phone, UserRound, X } from "luc
 import Image from "next/image";
 import { useState } from "react";
 import { BsCalendarPlus } from "react-icons/bs";
-import EditUser from "../usuarios/EditUser";
-import NewUser from "../usuarios/NewUser";
+import EditEmployee from "../colaboradores/EditEmployee";
+import NewEmployee from "../colaboradores/NewEmployee";
 
-type UsersBlockProps = {
+type EmployeesBlockProps = {
 	session: TAuthSession;
 };
-function UsersBlock({ session }: UsersBlockProps) {
+function EmployeesBlock({ session }: EmployeesBlockProps) {
 	const queryClient = useQueryClient();
 	const [newUserModalIsOpen, setNewUserModalIsOpen] = useState(false);
 	const [editUserModalId, setEditUserModalId] = useState<string | null>(null);
 	const [filtersMenuIsOpen, setFiltersMenuIsOpen] = useState(false);
 	const userHasAddUsersPermission = !!session.user.permissoes.usuarios.criar;
 	const userHasEditUsersPermission = !!session.user.permissoes.usuarios.editar;
-	const { data: users, queryKey, isLoading, isError, isSuccess, error, filters, setFilters } = useUsers();
+	const { data: users, queryKey, isLoading, isError, isSuccess, error, filters, updateFilters } = useEmployees({});
 
 	const handleOnMutate = async () => {
 		await queryClient.cancelQueries({ queryKey: queryKey });
@@ -36,11 +38,11 @@ function UsersBlock({ session }: UsersBlockProps) {
 		await queryClient.invalidateQueries({ queryKey: queryKey });
 	};
 	return (
-		<div className="flex h-full grow flex-col">
+		<div className="flex h-full grow flex-col gap-3">
 			<div className="border-primary/20 flex w-full flex-col items-center justify-between border-b pb-2 lg:flex-row">
 				<div className="flex flex-col">
-					<h1 className="text-lg font-bold">Usuários</h1>
-					<p className="text-sm text-primary/60">Gerencie os usuários da plataforma</p>
+					<h1 className="text-lg font-bold">Colaboradores</h1>
+					<p className="text-sm text-primary/60">Gerencie os colaboradores da plataforma</p>
 				</div>
 				<div className="flex items-center gap-2">
 					<Button onClick={() => setFiltersMenuIsOpen(true)} type="button" variant={"ghost"}>
@@ -48,23 +50,22 @@ function UsersBlock({ session }: UsersBlockProps) {
 					</Button>
 					{userHasAddUsersPermission ? (
 						<Button onClick={() => setNewUserModalIsOpen(true)} type="button">
-							NOVO USUÁRIO
+							NOVO COLABORADOR
 						</Button>
 					) : null}
 				</div>
 			</div>
 			<AnimatePresence>
-				{filtersMenuIsOpen ? (
-					<UserBlockFiltersMenu search={filters.search} updateSearch={(value) => setFilters((prev) => ({ ...prev, search: value }))} />
-				) : null}
+				{filtersMenuIsOpen ? <UserBlockFiltersMenu filters={filters} updateFilters={(value) => updateFilters(value)} /> : null}
 			</AnimatePresence>
+			<EmployeesBlockFiltersShowcase filters={filters} updateFilters={(value) => updateFilters(value)} />
 			{isLoading ? <h3 className="text-sm text-center my-4 text-primary/60 animate-pulse">Carregando usuários...</h3> : null}
 			{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
 			{isSuccess ? (
 				<div className="flex w-full flex-col gap-2 py-2">
 					{users.length > 0 ? (
 						users.map((user) => (
-							<UserBlockCard
+							<EmployeeBlockCard
 								key={user._id}
 								user={user}
 								handleEditClick={() => setEditUserModalId(user._id)}
@@ -72,15 +73,19 @@ function UsersBlock({ session }: UsersBlockProps) {
 							/>
 						))
 					) : (
-						<div className="text-primary/80 w-full text-center font-medium italic">Nenhum usuário encontrado.</div>
+						<div className="text-primary/80 w-full text-center font-medium italic">Nenhum colaborador encontrado.</div>
 					)}
 				</div>
 			) : null}
 			{newUserModalIsOpen ? (
-				<NewUser session={session} closeModal={() => setNewUserModalIsOpen(false)} callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }} />
+				<NewEmployee
+					session={session}
+					closeModal={() => setNewUserModalIsOpen(false)}
+					callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }}
+				/>
 			) : null}
 			{editUserModalId ? (
-				<EditUser
+				<EditEmployee
 					session={session}
 					userId={editUserModalId}
 					closeModal={() => setEditUserModalId(null)}
@@ -91,9 +96,9 @@ function UsersBlock({ session }: UsersBlockProps) {
 	);
 }
 
-export default UsersBlock;
+export default EmployeesBlock;
 
-function UserBlockCard({
+function EmployeeBlockCard({
 	user,
 	handleEditClick,
 	userHasEditUsersPermission,
@@ -155,10 +160,10 @@ function UserBlockCard({
 }
 
 type UserBlockFiltersMenuProps = {
-	search: string;
-	updateSearch: (search: string) => void;
+	filters: TGetEmployeesDefaultInput;
+	updateFilters: (filters: Partial<TGetEmployeesDefaultInput>) => void;
 };
-function UserBlockFiltersMenu({ search, updateSearch }: UserBlockFiltersMenuProps) {
+function UserBlockFiltersMenu({ filters, updateFilters }: UserBlockFiltersMenuProps) {
 	return (
 		<motion.div variants={SlideMotionVariants} initial="initial" animate="animate" exit="exit" className="flex w-full flex-col gap-2">
 			<TextInput
@@ -166,10 +171,56 @@ function UserBlockFiltersMenu({ search, updateSearch }: UserBlockFiltersMenuProp
 				labelClassName="text-[0.6rem]"
 				holderClassName="text-xs p-2 min-h-[34px]"
 				placeholder="Pesquise pelo nome do usuário..."
-				value={search}
-				handleChange={(value) => updateSearch(value)}
+				value={filters.search ?? ""}
+				handleChange={(value) => updateFilters({ search: value })}
 				width="100%"
 			/>
+
+			<CheckboxInput
+				labelTrue="APENAS COLABORADORES ATIVOS"
+				labelFalse="APENAS COLABORADORES ATIVOS"
+				labelClassName="text-[0.6rem]"
+				checked={filters.activeOnly}
+				handleChange={(value) => updateFilters({ activeOnly: value })}
+			/>
+			<CheckboxInput
+				labelTrue="APENAS COLABORADORES COM ACESSO ATIVO"
+				labelFalse="APENAS COLABORADORES COM ACESSO ATIVO"
+				labelClassName="text-[0.6rem]"
+				checked={filters.accessActiveOnly}
+				handleChange={(value) => updateFilters({ accessActiveOnly: value })}
+			/>
 		</motion.div>
+	);
+}
+
+function EmployeesBlockFiltersShowcase({
+	filters,
+	updateFilters,
+}: { filters: TGetEmployeesDefaultInput; updateFilters: (filters: Partial<TGetEmployeesDefaultInput>) => void }) {
+	const FilterTag = ({ label, value, onRemove }: { label: string; value: string; onRemove?: () => void }) => (
+		<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-0.5 text-[0.65rem]">
+			<p className="text-primary/80">
+				{label}: <strong>{value}</strong>
+			</p>
+			{onRemove && (
+				<button type="button" onClick={onRemove} className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1">
+					<X size={12} />
+				</button>
+			)}
+		</div>
+	);
+
+	return (
+		<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:justify-end">
+			<h1 className="text-[0.65rem] font-medium tracking-tight uppercase">FILTROS APLICADOS</h1>
+			{filters.search && filters.search.trim().length > 0 ? (
+				<FilterTag label="PESQUISA" value={filters.search} onRemove={() => updateFilters({ search: "" })} />
+			) : null}
+			{filters.activeOnly ? <FilterTag label="APENAS COLABORADORES ATIVOS" value="SIM" onRemove={() => updateFilters({ activeOnly: false })} /> : null}
+			{filters.accessActiveOnly ? (
+				<FilterTag label="APENAS COLABORADORES COM ACESSO ATIVO" value="SIM" onRemove={() => updateFilters({ accessActiveOnly: false })} />
+			) : null}
+		</div>
 	);
 }

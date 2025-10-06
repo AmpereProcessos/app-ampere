@@ -25,6 +25,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BsCalendarPlus } from "react-icons/bs";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import type { TGetEmployeesDefaultInput } from "../api/colaboradores";
 type TEditModal = {
 	isOpen: boolean;
 	id: string | null;
@@ -44,7 +45,7 @@ type EmployeesContentProps = {
 function EmployeesContent({ session }: EmployeesContentProps) {
 	const [activeOnly, setActiveOnly] = useState<boolean>(true);
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
-	const { data: employees, isLoading, isSuccess, isError, filters, setFilters } = useEmployees({ active: activeOnly });
+	const { data: employees, isLoading, isSuccess, isError, filters, updateFilters } = useEmployees({ initialFilters: { activeOnly } });
 
 	const userHasCreateUsersPermission = session.user.permissoes.usuarios.criar;
 	const userHasViewUsersPermission = session.user.permissoes.usuarios.visualizar;
@@ -71,14 +72,7 @@ function EmployeesContent({ session }: EmployeesContentProps) {
 					</div>
 
 					<AnimatePresence>
-						{dropdownMenuVisible ? (
-							<EmployeesFiltersMenu
-								search={filters.search}
-								updateSearch={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-								activeOnly={activeOnly}
-								updateActiveOnly={(value) => setActiveOnly(value)}
-							/>
-						) : null}
+						{dropdownMenuVisible ? <EmployeesFiltersMenu filters={filters} updateFilters={(value) => updateFilters(value)} /> : null}
 					</AnimatePresence>
 					<div className="flex w-full items-center justify-end gap-2">
 						<Button variant={"link"} asChild>
@@ -114,12 +108,10 @@ function EmployeesContent({ session }: EmployeesContentProps) {
 export default Employees;
 
 type EmployeesFiltersMenuProps = {
-	activeOnly: boolean;
-	updateActiveOnly: (activeOnly: boolean) => void;
-	search: string;
-	updateSearch: (search: string) => void;
+	filters: TGetEmployeesDefaultInput;
+	updateFilters: (filters: Partial<TGetEmployeesDefaultInput>) => void;
 };
-function EmployeesFiltersMenu({ search, updateSearch, activeOnly, updateActiveOnly }: EmployeesFiltersMenuProps) {
+function EmployeesFiltersMenu({ filters, updateFilters }: EmployeesFiltersMenuProps) {
 	return (
 		<motion.div
 			variants={SlideMotionVariants}
@@ -130,19 +122,26 @@ function EmployeesFiltersMenu({ search, updateSearch, activeOnly, updateActiveOn
 		>
 			<h1 className="text-sm font-medium">FILTROS</h1>
 			<CheckboxInput
-				labelTrue="APENAS ATIVOS"
-				labelFalse="APENAS ATIVOS"
+				labelTrue="APENAS COLABORADORES ATIVOS"
+				labelFalse="APENAS COLABORADORES ATIVOS"
 				labelClassName="text-[0.6rem]"
-				checked={activeOnly}
-				handleChange={(value) => updateActiveOnly(value)}
+				checked={filters.activeOnly}
+				handleChange={(value) => updateFilters({ activeOnly: value })}
+			/>
+			<CheckboxInput
+				labelTrue="APENAS COLABORADORES COM ACESSO ATIVO"
+				labelFalse="APENAS COLABORADORES COM ACESSO ATIVO"
+				labelClassName="text-[0.6rem]"
+				checked={filters.accessActiveOnly}
+				handleChange={(value) => updateFilters({ accessActiveOnly: value })}
 			/>
 			<TextInput
 				label="PESQUISA"
 				labelClassName="text-[0.6rem]"
 				holderClassName="text-xs p-2 min-h-[34px]"
 				placeholder="Pesquise pelo nome do usuário..."
-				value={search}
-				handleChange={(value) => updateSearch(value)}
+				value={filters.search ?? ""}
+				handleChange={(value) => updateFilters({ search: value })}
 				width="100%"
 			/>
 		</motion.div>

@@ -1,18 +1,16 @@
+import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
+import { useDebounce } from "@/lib/hooks/debounce";
+import type { TGetProjectAllocationsGroupedInput, TGetProjectAllocationsGroupedOutput } from "@/pages/api/projects/alocacoes/grouped";
 import type { TProjectsByFiltersResult } from "@/pages/api/projects/search";
 import type { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from "@/utils/schemas/projects";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
 
 async function fetchProjectsByPersonalizedFilters({ page, filters }: { page: number; filters: TPersonalizedProjectsFilter }) {
-	try {
-		const { data } = await axios.post(`/api/projects/search?page=${page}`, filters);
+	const { data } = await axios.post(`/api/projects/search?page=${page}`, filters);
 
-		return data.data as TProjectsByFiltersResult;
-	} catch (error) {
-		throw error;
-	}
+	return data.data as TProjectsByFiltersResult;
 }
 
 export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
@@ -49,13 +47,9 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
 }
 
 async function fetchVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
-	try {
-		if (query.search.trim().length === 0) return [];
-		const { data } = await axios.post("/api/projects/pesquisa-vinculacao", query);
-		return data.data as TProjectDTODBSimplified[];
-	} catch (error) {
-		throw error;
-	}
+	if (query.search.trim().length === 0) return [];
+	const { data } = await axios.post("/api/projects/pesquisa-vinculacao", query);
+	return data.data as TProjectDTODBSimplified[];
 }
 
 export function useVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
@@ -66,11 +60,28 @@ export function useVinculationProjectsSearch(query: TQueryVinculationProjectsFil
 }
 
 export async function fetchProjectsExportation(payload: TGetProjectsExportRoutePayload) {
-	try {
-		const { data } = await axios.post("/api/projects/personalized-export", payload);
-		return data.data;
-	} catch (error) {
-		console.log("Error on projects exportation", error);
-		throw error;
-	}
+	const { data } = await axios.post("/api/projects/personalized-export", payload);
+	return data.data;
+}
+
+export async function fetchProjectsAllocationsGrouped(input: TGetProjectAllocationsGroupedInput) {
+	const searchParams = new URLSearchParams();
+	if (input.projectIds) searchParams.set("projectIds", input.projectIds.join(","));
+	if (input.search) searchParams.set("search", input.search);
+	if (input.ufs) searchParams.set("ufs", input.ufs.join(","));
+	if (input.cities) searchParams.set("cities", input.cities.join(","));
+	const url = `/api/projects/alocacoes/grouped?${searchParams.toString()}`;
+	const { data } = await axios.get<TGetProjectAllocationsGroupedOutput>(url);
+	return data.data.default;
+}
+
+export function useProjectsAllocationsGrouped(input: TGetProjectAllocationsGroupedInput) {
+	const debouncedSearch = useDebounce(input.search, 500);
+	return {
+		...useQuery({
+			queryKey: ["projects-allocations-grouped", { ...input, search: debouncedSearch }],
+			queryFn: async () => await fetchProjectsAllocationsGrouped({ ...input, search: debouncedSearch }),
+		}),
+		queryKey: ["projects-allocations-grouped", { ...input, search: debouncedSearch }],
+	};
 }

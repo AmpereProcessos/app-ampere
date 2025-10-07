@@ -1,4 +1,5 @@
 import AllocatorsBlock from "@/components/identificador/configuracoes/AllocatorsBlock";
+import CompositionKitsBlock from "@/components/identificador/configuracoes/CompositionKitsBlock";
 import ContractTemplatesBlock from "@/components/identificador/configuracoes/ContractTemplatesBlock";
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
 import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
@@ -19,7 +20,14 @@ function ConfigurationsMainPage() {
 
 export default ConfigurationsMainPage;
 
-type ConfigurationPageModes = "profile" | "users" | "employees" | "allocators" | "contract-templates" | "contract-templates-variables";
+type ConfigurationPageModes =
+	| "profile"
+	| "users"
+	| "employees"
+	| "allocators"
+	| "composition-kits"
+	| "contract-templates"
+	| "contract-templates-variables";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -27,6 +35,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 	const [mode, setMode] = useState<ConfigurationPageModes>("profile");
 
 	const userHasUsersViewPermission = session.user.permissoes.usuarios.visualizar;
+	const userHasCompositionKitsViewPermission = session.user.permissoes.suprimentos.visualizar;
 	const userHasContractTemplatesVariablesPermission =
 		session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
 	return (
@@ -68,6 +77,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							Colaboradores
 						</button>
 					)}
+
 					{userHasContractTemplatesVariablesPermission && (
 						<button
 							type="button"
@@ -99,6 +109,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					>
 						Alocadores de Ativos
 					</button>
+					{userHasCompositionKitsViewPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("composition-kits")}
+							className={`${
+								mode === "composition-kits" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Kits de Composição
+						</button>
+					)}
 				</div>
 				<div className="flex h-full w-full flex-col gap-1 px-2 py-2 lg:w-4/5">
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
@@ -107,6 +128,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "employees" ? <EmployeesBlock session={session} /> : null}
 					{mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
+					{mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}
 				</div>
 			</div>
 		</div>

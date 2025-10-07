@@ -1,30 +1,18 @@
 import TextInput from "@/components/inputs/Text";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger,
-} from "@/components/ui/drawer";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { useMediaQuery } from "@/lib/hooks/media-query";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { createPurchaseControlCompositionKit } from "@/utils/methods/mutation/purchase-controls";
+import { usePurchaseControlCompositionKitById } from "@/utils/methods/query/purchase-controls";
 import type { TPurchaseControlCompositionKit } from "@/utils/schemas/purchases";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import PurchaseControlCompositionKitItemBlock from "./ItensBlock";
 
 type NewPurchaseControlCompositionKitProps = {
+	purchaseControlCompositionKitId: string;
 	session: TAuthSession;
 	closeModal: () => void;
 	callbacks?: {
@@ -34,10 +22,18 @@ type NewPurchaseControlCompositionKitProps = {
 		onSettled?: () => void;
 	};
 };
-function NewPurchaseControlCompositionKit({ callbacks, closeModal }: NewPurchaseControlCompositionKitProps) {
+function NewPurchaseControlCompositionKit({ purchaseControlCompositionKitId, callbacks, closeModal }: NewPurchaseControlCompositionKitProps) {
 	const queryClient = useQueryClient();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
+	const {
+		data: purchaseControlCompositionKit,
+		queryKey,
+		isLoading,
+		isError,
+		isSuccess,
+		error,
+	} = usePurchaseControlCompositionKitById({ id: purchaseControlCompositionKitId });
 	const initialInfoHolder = {
 		titulo: "",
 		itens: [],
@@ -76,6 +72,7 @@ function NewPurchaseControlCompositionKit({ callbacks, closeModal }: NewPurchase
 		mutationKey: ["create-composition-kit"],
 		mutationFn: createPurchaseControlCompositionKit,
 		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: queryKey });
 			if (callbacks?.onMutate) callbacks.onMutate();
 		},
 		onSuccess: async (data) => {
@@ -84,12 +81,18 @@ function NewPurchaseControlCompositionKit({ callbacks, closeModal }: NewPurchase
 			return toast.success(data);
 		},
 		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: queryKey });
 			if (callbacks?.onSettled) callbacks.onSettled();
 		},
 		onError: async (error) => {
 			if (callbacks?.onError) callbacks.onError(error);
 		},
 	});
+	useEffect(() => {
+		if (purchaseControlCompositionKit) {
+			setInfoHolder(purchaseControlCompositionKit);
+		}
+	}, [purchaseControlCompositionKit]);
 	const TITLE = "NOVO KIT";
 	const DESCRIPTION = "Preencha alguns dados sobre o kit.";
 	const BUTTON_TEXT = "ADICIONAR KIT";
@@ -101,8 +104,8 @@ function NewPurchaseControlCompositionKit({ callbacks, closeModal }: NewPurchase
 			menuCancelButtonText="FECHAR"
 			closeMenu={closeModal}
 			actionFunction={() => handleCreatePurchaseControlCompositionKit(infoHolder)}
-			stateIsLoading={false}
-			stateError={null}
+			stateIsLoading={isLoading}
+			stateError={error ? getErrorMessage(error) : null}
 			actionIsPending={isPending}
 			dialogVariant="md"
 		>

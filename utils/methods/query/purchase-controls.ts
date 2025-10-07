@@ -1,26 +1,22 @@
+import type { TGetPurchaseControlCompositionKitsOutput } from "@/pages/api/controles-compras/kits";
+import type { TPurchaseControlsByFiltersResult } from "@/pages/api/controles-compras/search";
 import type {
 	TPurchaseControlCompositionKitDTO,
 	TPurchaseControlKanbanSimplifiedDTO,
 	TPurchaseControlSimplifiedDTO,
-	TPurchaseControlsQueryFilters,
 	TPurchaseControlTagDTO,
 	TPurchaseControlWithProjectDTO,
+	TPurchaseControlsQueryFilters,
 	TPurchaseProjectDTO,
 } from "@/utils/schemas/purchases";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { formatWithoutDiacritics } from "../formatting";
-import { useQuery } from "@tanstack/react-query";
-import type { TPurchaseControlsByFiltersResult } from "@/pages/api/controles-compras/search";
-import type { TGetPurchaseControlCompositionKitsOutput } from "@/pages/api/controles-compras/kits";
 
 async function fetchPurchasesControls({ queryTags, queryPendingConclusion }: TPurchaseControlQueryParams) {
-	try {
-		const { data } = await axios.get(`/api/controles-compras?queryTags=${queryTags}&queryPendingConclusion=${queryPendingConclusion}`);
-		return data.data as TPurchaseControlKanbanSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/controles-compras?queryTags=${queryTags}&queryPendingConclusion=${queryPendingConclusion}`);
+	return data.data as TPurchaseControlKanbanSimplifiedDTO[];
 }
 
 type TPurchaseControlQueryParams = {
@@ -82,13 +78,9 @@ export function usePurchaseControls() {
 }
 
 async function fetchPurchaseControlsByFilters({ page, filters }: { page: number; filters: TPurchaseControlsQueryFilters }) {
-	try {
-		const { data } = await axios.post(`/api/controles-compras/search?page=${page}`, filters);
+	const { data } = await axios.post(`/api/controles-compras/search?page=${page}`, filters);
 
-		return data.data as TPurchaseControlsByFiltersResult;
-	} catch (error) {
-		throw error;
-	}
+	return data.data as TPurchaseControlsByFiltersResult;
 }
 
 export type TUsePurchaseControlsByFiltersFilters = { page: number } & TPurchaseControlsQueryFilters;
@@ -120,12 +112,8 @@ export function usePurchaseControlsByFilters() {
 	};
 }
 async function fetchPurchaseControlById({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get(`/api/controles-compras?id=${id}`);
-		return data.data as TPurchaseControlWithProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/controles-compras?id=${id}`);
+	return data.data as TPurchaseControlWithProjectDTO;
 }
 
 export function usePurchaseControlByProjectId({ projectId }: { projectId: string }) {
@@ -135,12 +123,8 @@ export function usePurchaseControlByProjectId({ projectId }: { projectId: string
 	});
 }
 async function fetchPurchaseControlByProjectId({ projectId }: { projectId: string }) {
-	try {
-		const { data } = await axios.get(`/api/controles-compras?projectId=${projectId}`);
-		return data.data as TPurchaseControlSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/controles-compras?projectId=${projectId}`);
+	return data.data as TPurchaseControlSimplifiedDTO[];
 }
 
 export function usePurchaseControlById({ id }: { id: string }) {
@@ -151,12 +135,8 @@ export function usePurchaseControlById({ id }: { id: string }) {
 }
 
 async function fetchPurchasesControlTags() {
-	try {
-		const { data } = await axios.get("/api/controles-compras/tags");
-		return data.data as TPurchaseControlTagDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/controles-compras/tags");
+	return data.data as TPurchaseControlTagDTO[];
 }
 
 export function usePurchaseControlsTags() {
@@ -167,13 +147,9 @@ export function usePurchaseControlsTags() {
 }
 
 async function fetchPurchaseProject({ projectId }: { projectId: string | null }) {
-	try {
-		if (!projectId) return null;
-		const { data } = await axios.get(`/api/controles-compras/projeto?projectId=${projectId}`);
-		return data.data as TPurchaseProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	if (!projectId) return null;
+	const { data } = await axios.get(`/api/controles-compras/projeto?projectId=${projectId}`);
+	return data.data as TPurchaseProjectDTO;
 }
 
 export function usePurchaseProject({ projectId }: { projectId: string | null }) {
@@ -184,32 +160,28 @@ export function usePurchaseProject({ projectId }: { projectId: string | null }) 
 }
 
 async function fetchPurchaseControlCompositionKitById({ id }: { id: string }) {
-	try {
-		const { data }: { data: TGetPurchaseControlCompositionKitsOutput } = await axios.get(`/api/controles-compras/kits?id=${id}`);
-		return data.data as Exclude<TGetPurchaseControlCompositionKitsOutput["data"], TPurchaseControlCompositionKitDTO[]>;
-	} catch (error) {
-		console.log("Error running fetchPurchaseControlCompositionKitById", error);
-		throw error;
-	}
+	const { data }: { data: TGetPurchaseControlCompositionKitsOutput } = await axios.get(`/api/controles-compras/kits?id=${id}`);
+	return data.data as Exclude<TGetPurchaseControlCompositionKitsOutput["data"], TPurchaseControlCompositionKitDTO[]>;
 }
 export function usePurchaseControlCompositionKitById({ id }: { id: string }) {
-	return useQuery({
+	return {
+		...useQuery({
+			queryKey: ["purchase-control-composition-kit-by-id", id],
+			queryFn: async () => await fetchPurchaseControlCompositionKitById({ id }),
+		}),
 		queryKey: ["purchase-control-composition-kit-by-id", id],
-		queryFn: async () => await fetchPurchaseControlCompositionKitById({ id }),
-	});
+	};
 }
 async function fetchPurchaseControlCompositionKits() {
-	try {
-		const { data }: { data: TGetPurchaseControlCompositionKitsOutput } = await axios.get("/api/controles-compras/kits");
-		return data.data as Exclude<TGetPurchaseControlCompositionKitsOutput["data"], TPurchaseControlCompositionKitDTO>;
-	} catch (error) {
-		console.log("Error running fetchPurchaseControlCompositionKitById", error);
-		throw error;
-	}
+	const { data }: { data: TGetPurchaseControlCompositionKitsOutput } = await axios.get("/api/controles-compras/kits");
+	return data.data as Exclude<TGetPurchaseControlCompositionKitsOutput["data"], TPurchaseControlCompositionKitDTO>;
 }
 export function usePurchaseControlCompositionKits() {
-	return useQuery({
+	return {
+		...useQuery({
+			queryKey: ["purchase-control-composition-kits"],
+			queryFn: fetchPurchaseControlCompositionKits,
+		}),
 		queryKey: ["purchase-control-composition-kits"],
-		queryFn: fetchPurchaseControlCompositionKits,
-	});
+	};
 }

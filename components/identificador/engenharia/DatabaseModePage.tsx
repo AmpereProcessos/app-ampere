@@ -91,11 +91,6 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 				</div>
 				<EngineeringStats />
 				<div className="my-2 flex w-full items-center justify-end gap-2">
-					<Link href="/projetos/igreen-analises-tecnicas">
-						<button type="button" className="rounded-md bg-green-400 px-4 py-1 text-sm font-bold text-white">
-							ANÁLISES TÉCNICAS IGREEN
-						</button>
-					</Link>
 					<Link href="/projetos/analises-tecnicas">
 						<button type="button" className="rounded-md bg-[#15599a] px-4 py-1 text-sm font-bold text-white">
 							ANÁLISES TÉCNICAS

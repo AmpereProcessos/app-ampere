@@ -148,7 +148,7 @@ export const sendWhatsappTemplate = internalAction({
 	},
 });
 
-export const downloadAndStoreWhatsappMedia = internalAction({
+export const downloadAndStoreWhatsappMedia = action({
 	args: {
 		mediaId: v.string(),
 		mimeType: v.string(),

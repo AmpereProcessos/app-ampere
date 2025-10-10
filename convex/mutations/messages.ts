@@ -1,6 +1,7 @@
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
-import { mutation } from "../_generated/server";
+import { internalMutation, mutation } from "../_generated/server";
 
 export const createMessage = mutation({
 	args: {
@@ -61,6 +62,7 @@ export const createMessage = mutation({
 			const insertChatResponse = await ctx.db.insert("chats", {
 				clienteId: clientId,
 				mensagensNaoLidas: 0,
+				status: "ABERTA",
 			});
 			chatId = insertChatResponse;
 		} else {
@@ -144,6 +146,134 @@ export const createMessage = mutation({
 				insertedId: insertMessageResponse,
 			},
 			message: "Mensagem criada com sucesso.",
+		};
+	},
+});
+
+export const createTemplateMessage = mutation({
+	args: {
+		chatId: v.id("chats"),
+		userAppId: v.string(),
+		templateId: v.string(),
+		templatePayloadData: v.any(),
+		templatePayloadContent: v.string(),
+	},
+	handler: async (ctx, args) => {
+		const { chatId, templateId, templatePayloadData, templatePayloadContent, userAppId } = args;
+		console.log("[SEND_TEMPLATE_MESSAGE] Sending template message:", args);
+		// Get chat and user
+		const chat = await ctx.db.get(chatId);
+		if (!chat) throw new Error("Chat não encontrado.");
+
+		const user = await ctx.db
+			.query("users")
+			.filter((q) => q.eq(q.field("idApp"), userAppId))
+			.first();
+		if (!user) throw new Error("Usuário não encontrado.");
+
+		const client = await ctx.db.get(chat.clienteId);
+		if (!client) throw new Error("Cliente não encontrado.");
+
+		// Insert message record
+		const messageId = await ctx.db.insert("messages", {
+			chatId: args.chatId,
+			autorTipo: "usuario",
+			autorId: user._id,
+			conteudoTexto: templatePayloadContent,
+			status: "ENVIADO",
+			whatsappStatus: "PENDENTE",
+			dataEnvio: Date.now(),
+		});
+
+		// Update chat
+		await ctx.db.patch(args.chatId, {
+			ultimaMensagemId: messageId,
+			ultimaMensagemData: Date.now(),
+			ultimaMensagemConteudoTexto: templatePayloadContent,
+			status: "ABERTA", // Reopen conversation after template
+			ultimaInteracaoClienteData: Date.now(), // Reset 24h timer
+		});
+
+		// Schedule template send via action
+		await ctx.scheduler.runAfter(1000, internal.actions.whatsapp.sendWhatsappTemplate, {
+			messageId: messageId,
+			phoneNumber: client.telefone,
+			templatePayload: args.templatePayloadData,
+		});
+
+		return {
+			data: {
+				messageId,
+			},
+			message: "Template agendado para envio.",
+		};
+	},
+});
+
+export const updateMessageAfterSend = internalMutation({
+	args: {
+		messageId: v.id("messages"),
+		whatsappMessageId: v.optional(v.string()),
+		success: v.boolean(),
+	},
+	handler: async (ctx, args) => {
+		console.log(`[INFO] [MESSAGES] [UPDATE_MESSAGE_AFTER_SEND] Updating message ${args.messageId}.`);
+		const message = await ctx.db.get(args.messageId);
+		if (!message) {
+			throw new Error("Mensagem não encontrada.");
+		}
+
+		if (args.success && args.whatsappMessageId) {
+			// Update message with WhatsApp message ID and mark as sent
+			console.log(`[INFO] [MESSAGES] [UPDATE_MESSAGE_AFTER_SEND] Message ${args.messageId} sent successfully.`);
+			await ctx.db.patch(args.messageId, {
+				whatsappMessageId: args.whatsappMessageId,
+				whatsappStatus: "ENVIADO",
+			});
+		} else {
+			console.log(`[INFO] [MESSAGES] [UPDATE_MESSAGE_AFTER_SEND] Message ${args.messageId} failed to send.`);
+			// Mark message as failed
+			await ctx.db.patch(args.messageId, {
+				whatsappStatus: "FALHOU",
+			});
+		}
+
+		return { success: true };
+	},
+});
+
+export const updateMessageStatus = mutation({
+	args: {
+		whatsappMessageId: v.string(),
+		status: v.union(v.literal("ENVIADO"), v.literal("RECEBIDO"), v.literal("LIDO")),
+		whatsappStatus: v.union(v.literal("PENDENTE"), v.literal("ENVIADO"), v.literal("ENTREGUE"), v.literal("FALHOU")),
+	},
+	handler: async (ctx, args) => {
+		// Find message by WhatsApp message ID
+		const message = await ctx.db
+			.query("messages")
+			.withIndex("by_whatsapp_message_id", (q) => q.eq("whatsappMessageId", args.whatsappMessageId))
+			.first();
+
+		if (!message) {
+			console.log("[INFO] [MESSAGES] [UPDATE_MESSAGE_STATUS] Message not found for WhatsApp ID:", args.whatsappMessageId);
+			return {
+				success: false,
+				message: "Mensagem não encontrada.",
+			};
+		}
+
+		// Update message status
+		await ctx.db.patch(message._id, {
+			status: args.status,
+			whatsappStatus: args.whatsappStatus,
+		});
+
+		console.log("[INFO] [MESSAGES] [UPDATE_MESSAGE_STATUS] Updated message:", message._id, "to status:", args.status);
+
+		return {
+			success: true,
+			message: "Status da mensagem atualizado com sucesso.",
 		};
 	},
 });

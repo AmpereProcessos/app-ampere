@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
-import { mutation } from "../_generated/server";
+import { internalMutation, mutation } from "../_generated/server";
 
 export const getChatByClientAppId = mutation({
 	args: {
@@ -43,6 +43,7 @@ export const getChatByClientAppId = mutation({
 			const insertChatResponse = await ctx.db.insert("chats", {
 				clienteId: clientId,
 				mensagensNaoLidas: 0,
+				status: "ABERTA",
 			});
 			chatId = insertChatResponse;
 		}
@@ -52,6 +53,42 @@ export const getChatByClientAppId = mutation({
 		return {
 			chatId: chatId,
 			clientId: clientId,
+		};
+	},
+});
+
+const TWENTY_FOUR_HOURS_IN_MS = 24 * 60 * 60 * 1000;
+
+export const updateExpiredChats = internalMutation({
+	args: {},
+	handler: async (ctx, args) => {
+		const now = Date.now();
+		const expirationThreshold = now - TWENTY_FOUR_HOURS_IN_MS;
+
+		// Get all chats that are currently ABERTA
+		const openChats = await ctx.db
+			.query("chats")
+			.filter((q) => q.eq(q.field("status"), "ABERTA"))
+			.collect();
+
+		let expiredCount = 0;
+
+		for (const chat of openChats) {
+			// If the last client interaction was more than 24h ago, expire the chat
+			if (chat.ultimaInteracaoClienteData && chat.ultimaInteracaoClienteData < expirationThreshold) {
+				await ctx.db.patch(chat._id, {
+					status: "EXPIRADA",
+				});
+				expiredCount++;
+				console.log("[INFO][CHATS] Expired chat:", chat._id);
+			}
+		}
+
+		console.log(`[INFO][CHATS] Checked ${openChats.length} chats, expired ${expiredCount}`);
+
+		return {
+			checked: openChats.length,
+			expired: expiredCount,
 		};
 	},
 });

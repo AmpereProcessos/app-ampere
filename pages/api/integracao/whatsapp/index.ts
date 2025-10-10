@@ -1,6 +1,10 @@
+import { api } from "@/convex/_generated/api";
+import { isMessageEvent, isStatusUpdate, mapWhatsAppStatusToAppStatus, parseStatusUpdate, parseWebhookIncomingMessage } from "@/lib/whatsapp/parsing";
+import { ConvexHttpClient } from "convex/browser";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Webhook verification (GET request)
@@ -34,13 +38,64 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		// Log incoming messages
 		console.log("[INFO] [WHATSAPP_WEBHOOK] [POST] Incoming webhook message:", JSON.stringify(body, null, 2));
 
-		// Check if this is a message event
+		// Check if this is a WhatsApp Business Account event
 		if (body.object === "whatsapp_business_account") {
-			// Process the webhook payload here
-			// For now, just acknowledge receipt
+			// Initialize Convex client
+			if (!CONVEX_URL) {
+				console.error("[WHATSAPP_WEBHOOK] Convex URL not configured");
+				return res.status(500).json({ error: "Internal server error" });
+			}
 
-			// Return a '200 OK' response to all events
-			return res.status(200).json({ success: true });
+			const convex = new ConvexHttpClient(CONVEX_URL);
+
+			try {
+				// Check if this is a status update
+				if (isStatusUpdate(body)) {
+					const statusUpdate = parseStatusUpdate(body);
+					if (statusUpdate) {
+						const { status, whatsappStatus } = mapWhatsAppStatusToAppStatus(statusUpdate.status);
+
+						await convex.mutation(api.mutations.messages.updateMessageStatus, {
+							whatsappMessageId: statusUpdate.whatsappMessageId,
+							status,
+							whatsappStatus,
+						});
+
+						console.log("[WHATSAPP_WEBHOOK] Status updated for message:", statusUpdate.whatsappMessageId);
+					}
+				}
+				// Check if this is an incoming message
+				else if (isMessageEvent(body)) {
+					const incomingMessage = parseWebhookIncomingMessage(body);
+					if (incomingMessage?.textContent) {
+						// Create message in Convex
+						await convex.mutation(api.mutations.messages.createMessage, {
+							cliente: {
+								idApp: incomingMessage.fromPhoneNumber,
+								nome: incomingMessage.profileName,
+								telefone: incomingMessage.fromPhoneNumber,
+							},
+							autor: {
+								idApp: incomingMessage.fromPhoneNumber,
+								tipo: "cliente",
+							},
+							conteudo: {
+								texto: incomingMessage.textContent,
+							},
+							whatsappMessageId: incomingMessage.whatsappMessageId,
+						});
+
+						console.log("[WHATSAPP_WEBHOOK] Message created from:", incomingMessage.fromPhoneNumber);
+					}
+				}
+
+				// Always return 200 OK to acknowledge receipt (must be within 20 seconds)
+				return res.status(200).json({ success: true });
+			} catch (error) {
+				console.error("[WHATSAPP_WEBHOOK] Error processing webhook:", error);
+				// Still return 200 to prevent WhatsApp from retrying
+				return res.status(200).json({ success: true });
+			}
 		}
 
 		// Return a '404 Not Found' if event is not from a WhatsApp Business Account

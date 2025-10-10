@@ -22,7 +22,9 @@ export default defineSchema({
 		ultimaMensagemId: v.optional(v.id("messages")),
 		ultimaMensagemData: v.optional(v.number()),
 		ultimaMensagemConteudoTexto: v.optional(v.string()),
-	}),
+		status: v.union(v.literal("ABERTA"), v.literal("EXPIRADA")),
+		ultimaInteracaoClienteData: v.optional(v.number()),
+	}).index("by_client_id", ["clienteId"]),
 	messages: defineTable({
 		chatId: v.id("chats"),
 		autorTipo: v.union(v.literal("cliente"), v.literal("usuario")),
@@ -32,12 +34,13 @@ export default defineSchema({
 		conteudoMidiaTipo: v.optional(v.union(v.literal("IMAGEM"), v.literal("VIDEO"), v.literal("AUDIO"), v.literal("DOCUMENTO"))),
 		status: v.union(v.literal("ENVIADO"), v.literal("RECEBIDO"), v.literal("LIDO")),
 		whatsappMessageId: v.optional(v.string()),
-
+		whatsappStatus: v.optional(v.union(v.literal("PENDENTE"), v.literal("ENVIADO"), v.literal("ENTREGUE"), v.literal("FALHOU"))),
 		servicoId: v.optional(v.id("services")),
 		dataEnvio: v.number(),
 	})
 		.index("by_chat_id", ["chatId"])
-		.index("by_author_id", ["autorId"]),
+		.index("by_author_id", ["autorId"])
+		.index("by_whatsapp_message_id", ["whatsappMessageId"]),
 	services: defineTable({
 		chatId: v.id("chats"),
 		clienteId: v.id("clients"),

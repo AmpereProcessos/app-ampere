@@ -5,12 +5,13 @@ import LoadingComponent from "@/components/utils/LoadingComponent";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { useMediaQuery } from "@/lib/hooks/media-query";
 import { cn } from "@/lib/utils";
 import { WHATSAPP_TEMPLATES } from "@/lib/whatsapp/templates";
 import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
-import { AlertCircle, AlertTriangle, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
+import { AlertCircle, AlertTriangle, ArrowLeft, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
@@ -23,78 +24,170 @@ type ChatsHubProps = {
 function ChatsHub({ session }: ChatsHubProps) {
 	console.log(session);
 	const chats = useQuery(api.queries.chat.getChats);
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const getChatByClientAppId = useMutation(api.mutations.chats.getChatByClientAppId);
 
 	const [newChatMenuIsOpen, setNewChatMenuIsOpen] = useState<boolean>(false);
 	const [selectedChatId, setSelectedChatId] = useState<Id<"chats"> | null>(null);
+
+	// Para mobile, usamos um estado para controlar se estamos mostrando a lista ou o chat
+	const showingChatList = !selectedChatId || isDesktop;
+
 	return (
-		<div className="w-full max-h-[calc(100vh-200px)] grow flex flex-col items-center justify-center lg:flex-row rounded-lg shadow-lg border border-primary/20">
-			<div className="flex flex-col gap-3 w-1/3 h-full border-r border-primary/20">
-				<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2 px-3 py-3">
-					<MessageCircleIcon className="w-5 h-5'" />
-					<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
-						<Plus className="w-5 h-5" />
-					</Button>
-				</div>
-				<div className="grow w-full flex flex-col gap-3 p-3">
-					{chats ? (
-						chats.map((chat) => (
-							<button
-								type="button"
-								key={chat._id}
-								onClick={() => setSelectedChatId(chat._id)}
-								className={cn("w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg", selectedChatId === chat._id && "bg-primary/10")}
-							>
-								<div className="flex items-center justify-center">
-									<Avatar className="w-12 h-12 min-w-12 min-h-12">
-										<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
-										<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
-									</Avatar>
-								</div>
-								{/* Informações do Chat */}
-								<div className="grow flex flex-col">
-									<div className="flex items-center justify-between">
-										<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
-										{chat.ultimaMensagemData && (
-											<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
-												{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
-													hour: "2-digit",
-													minute: "2-digit",
-												})}
-											</span>
-										)}
-									</div>
-									<div className="flex items-center justify-between">
-										{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-											<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
-										) : (
-											<div className="flex items-center gap-1">
-												<ImageIcon className="w-4 h-4" />
-												<p className="text-sm text-primary/60 truncate">MIDIA</p>
+		<div className="w-full max-h-[calc(100vh-200px)] grow flex flex-col items-center justify-center rounded-lg shadow-lg border border-primary/20 overflow-hidden">
+			{/* Layout Desktop - duas colunas lado a lado */}
+			{isDesktop ? (
+				<div className="w-full h-full flex">
+					<div className="flex flex-col gap-3 w-1/3 h-full border-r border-primary/20">
+						<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2 px-3 py-3">
+							<MessageCircleIcon className="w-5 h-5'" />
+							<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
+								<Plus className="w-5 h-5" />
+							</Button>
+						</div>
+						<div className="grow w-full flex flex-col gap-3 p-3 overflow-y-auto">
+							{chats ? (
+								chats.map((chat) => (
+									<button
+										type="button"
+										key={chat._id}
+										onClick={() => setSelectedChatId(chat._id)}
+										className={cn("w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg", selectedChatId === chat._id && "bg-primary/10")}
+									>
+										<div className="flex items-center justify-center">
+											<Avatar className="w-12 h-12 min-w-12 min-h-12">
+												<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
+												<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
+											</Avatar>
+										</div>
+										{/* Informações do Chat */}
+										<div className="grow flex flex-col">
+											<div className="flex items-center justify-between">
+												<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
+												{chat.ultimaMensagemData && (
+													<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
+														{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
+															hour: "2-digit",
+															minute: "2-digit",
+														})}
+													</span>
+												)}
 											</div>
-										)}
-										{(chat.mensagensNaoLidas || 0) > 0 && (
-											<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
-										)}
-									</div>
-								</div>
-							</button>
-						))
-					) : (
-						<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+											<div className="flex items-center justify-between">
+												{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
+													<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+												) : (
+													<div className="flex items-center gap-1">
+														<ImageIcon className="w-4 h-4" />
+														<p className="text-sm text-primary/60 truncate">MÍDIA</p>
+													</div>
+												)}
+												{(chat.mensagensNaoLidas || 0) > 0 && (
+													<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
+												)}
+											</div>
+										</div>
+									</button>
+								))
+							) : (
+								<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+							)}
+						</div>
+					</div>
+					<div className="flex flex-col gap-3 w-2/3 h-full">
+						{selectedChatId ? (
+							<ChatHubContent chatId={selectedChatId} session={session} onBack={() => setSelectedChatId(null)} isDesktop={isDesktop} />
+						) : (
+							<div className="h-full w-full flex items-center flex-col justify-center">
+								<MessageCircleIcon className="w-12 h-12 text-primary/40 mb-2" />
+								<p className="text-primary/60 text-center text-sm italic">Selecione um chat para ver as mensagens</p>
+							</div>
+						)}
+					</div>
+				</div>
+			) : (
+				/* Layout Mobile - uma tela por vez com animações */
+				<div className="relative w-full h-full overflow-hidden">
+					{/* Lista de Chats - Mobile */}
+					<div
+						className={cn(
+							"absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out",
+							showingChatList ? "translate-x-0" : "-translate-x-full",
+						)}
+					>
+						<div className="flex flex-col gap-3 w-full h-full">
+							<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2 px-3 py-3">
+								<MessageCircleIcon className="w-5 h-5'" />
+								<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
+									<Plus className="w-5 h-5" />
+								</Button>
+							</div>
+							<div className="grow w-full flex flex-col gap-3 p-3 overflow-y-auto">
+								{chats ? (
+									chats.map((chat) => (
+										<button
+											type="button"
+											key={chat._id}
+											onClick={() => setSelectedChatId(chat._id)}
+											className="w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg"
+										>
+											<div className="flex items-center justify-center">
+												<Avatar className="w-12 h-12 min-w-12 min-h-12">
+													<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
+													<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
+												</Avatar>
+											</div>
+											{/* Informações do Chat */}
+											<div className="grow flex flex-col">
+												<div className="flex items-center justify-between">
+													<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
+													{chat.ultimaMensagemData && (
+														<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
+															{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
+																hour: "2-digit",
+																minute: "2-digit",
+															})}
+														</span>
+													)}
+												</div>
+												<div className="flex items-center justify-between">
+													{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
+														<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+													) : (
+														<div className="flex items-center gap-1">
+															<ImageIcon className="w-4 h-4" />
+															<p className="text-sm text-primary/60 truncate">MÍDIA</p>
+														</div>
+													)}
+													{(chat.mensagensNaoLidas || 0) > 0 && (
+														<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
+													)}
+												</div>
+											</div>
+										</button>
+									))
+								) : (
+									<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+								)}
+							</div>
+						</div>
+					</div>
+
+					{/* Chat Ativo - Mobile */}
+					{selectedChatId && (
+						<div
+							className={cn(
+								"flex flex-col grow absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out",
+								showingChatList ? "translate-x-full" : "translate-x-0",
+							)}
+						>
+							<ChatHubContent chatId={selectedChatId} session={session} onBack={() => setSelectedChatId(null)} isDesktop={isDesktop} />
+						</div>
 					)}
 				</div>
-			</div>
-			<div className="flex flex-col gap-3 w-2/3 h-full">
-				{selectedChatId ? (
-					<ChatHubContent chatId={selectedChatId} session={session} />
-				) : (
-					<div className="h-full w-full flex items-center flex-col justify-center">
-						<p className="text-primary/60 text-center text-sm italic">Selecione um chat para ver as mensagens</p>
-					</div>
-				)}
-			</div>
+			)}
+
 			{newChatMenuIsOpen ? (
 				<ProjectVinculationMenu
 					closeModal={() => setNewChatMenuIsOpen(false)}
@@ -122,7 +215,12 @@ function ChatsHub({ session }: ChatsHubProps) {
 
 export default ChatsHub;
 
-function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAuthSession }) {
+function ChatHubContent({
+	chatId,
+	session,
+	onBack,
+	isDesktop,
+}: { chatId: Id<"chats">; session: TAuthSession; onBack: () => void; isDesktop: boolean }) {
 	const chat = useQuery(api.queries.chat.getChat, {
 		chatId,
 	});
@@ -195,6 +293,13 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 			{/* Header do Chat */}
 			<div className="p-3 bg-card border-b border-primary/10 flex items-center justify-between">
 				<div className="flex items-center gap-3">
+					{/* Botão de voltar para mobile */}
+					{!isDesktop && (
+						<Button variant="ghost" size="sm" onClick={onBack} className="p-2 hover:bg-primary/10 rounded-full">
+							<ArrowLeft className="w-5 h-5 text-primary" />
+						</Button>
+					)}
+
 					{/* Avatar do Cliente */}
 					<Avatar className="w-10 h-10 min-w-10 min-h-10">
 						<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
@@ -209,7 +314,7 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 				</div>
 			</div>
 			{/* Área de Mensagens */}
-			<div className="flex flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20">
+			<div className="flex grow flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20">
 				{chatMessages && chatMessages.length > 0 ? (
 					chatMessages.map((message, index) => {
 						const isUser = message.autorTipo === "usuario";

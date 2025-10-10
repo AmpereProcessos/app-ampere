@@ -12,7 +12,7 @@ import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
 import { AlertCircle, AlertTriangle, ArrowLeft, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
 import FileUploadComponent from "./FileUploadComponent";
@@ -232,9 +232,36 @@ function ChatHubContent({
 	const [messageText, setMessageText] = useState("");
 	const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 	const [isSendingTemplate, setIsSendingTemplate] = useState(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const handleSendMessage = useMutation(api.mutations.messages.createMessage);
 	const handleSendTemplate = useMutation(api.mutations.messages.createTemplateMessage);
+	const markMessagesAsRead = useMutation(api.mutations.messages.markMessagesAsRead);
+
+	// Auto-scroll para última mensagem
+	const messagesLength = chatMessages?.length || 0;
+	useEffect(() => {
+		if (messagesLength > 0) {
+			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		}
+	}, [messagesLength]);
+
+	// Marcar mensagens como lidas quando visualizar o chat
+	useEffect(() => {
+		if (chatId && session.user.id) {
+			// Marcar como lidas após um pequeno delay para garantir que o usuário realmente viu
+			const timer = setTimeout(() => {
+				markMessagesAsRead({
+					chatId,
+					userId: session.user.id,
+				}).catch((error) => {
+					console.error("Erro ao marcar mensagens como lidas:", error);
+				});
+			}, 500);
+
+			return () => clearTimeout(timer);
+		}
+	}, [chatId, session.user.id, markMessagesAsRead]);
 
 	if (!chat || !chatMessages) return <LoadingComponent />;
 
@@ -393,7 +420,7 @@ function ChatHubContent({
 						<p className="text-primary/400 text-sm mt-1">Envie a primeira mensagem para iniciar a conversa</p>
 					</div>
 				)}
-				{/* <div ref={messagesEndRef} /> */}
+				<div ref={messagesEndRef} />
 			</div>
 
 			{/* Footer - Input de Mensagem */}

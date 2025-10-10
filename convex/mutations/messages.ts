@@ -330,3 +330,53 @@ export const updateMessageStatus = mutation({
 		};
 	},
 });
+
+export const markMessagesAsRead = mutation({
+	args: {
+		chatId: v.id("chats"),
+		userId: v.string(),
+	},
+	handler: async (ctx, args) => {
+		console.log("[INFO] [MESSAGES] [MARK_AS_READ] Marking messages as read for chat:", args.chatId, "user:", args.userId);
+
+		// Get the chat to verify it exists
+		const chat = await ctx.db.get(args.chatId);
+		if (!chat) {
+			console.log("[INFO] [MESSAGES] [MARK_AS_READ] Chat not found:", args.chatId);
+			return {
+				success: false,
+				message: "Chat não encontrado.",
+			};
+		}
+
+		// Get all unread messages from clients in this chat
+		const messages = await ctx.db
+			.query("messages")
+			.filter((q) => q.eq(q.field("chatId"), args.chatId))
+			.filter((q) => q.eq(q.field("autorTipo"), "cliente"))
+			.filter((q) => q.neq(q.field("status"), "LIDO"))
+			.collect();
+
+		// Mark all client messages as read
+		const updatePromises = messages.map((message) =>
+			ctx.db.patch(message._id, {
+				status: "LIDO",
+			}),
+		);
+
+		await Promise.all(updatePromises);
+
+		// Reset unread messages count in chat
+		await ctx.db.patch(args.chatId, {
+			mensagensNaoLidas: 0,
+		});
+
+		console.log("[INFO] [MESSAGES] [MARK_AS_READ] Marked", messages.length, "messages as read for chat:", args.chatId);
+
+		return {
+			success: true,
+			message: `${messages.length} mensagens marcadas como lidas.`,
+			markedCount: messages.length,
+		};
+	},
+});

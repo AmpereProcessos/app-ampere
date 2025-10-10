@@ -16,6 +16,7 @@ import type {
 import type * as actions_whatsapp from "../actions/whatsapp.js";
 import type * as crons from "../crons.js";
 import type * as mutations_chats from "../mutations/chats.js";
+import type * as mutations_files from "../mutations/files.js";
 import type * as mutations_messages from "../mutations/messages.js";
 import type * as queries_chat from "../queries/chat.js";
 
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   "actions/whatsapp": typeof actions_whatsapp;
   crons: typeof crons;
   "mutations/chats": typeof mutations_chats;
+  "mutations/files": typeof mutations_files;
   "mutations/messages": typeof mutations_messages;
   "queries/chat": typeof queries_chat;
 }>;

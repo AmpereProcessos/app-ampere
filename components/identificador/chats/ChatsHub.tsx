@@ -10,10 +10,12 @@ import { WHATSAPP_TEMPLATES } from "@/lib/whatsapp/templates";
 import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
-import { AlertCircle, AlertTriangle, Check, CheckCheck, Clock, FileText, MessageCircleIcon, Plus, Send, X } from "lucide-react";
+import { AlertCircle, AlertTriangle, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
+import FileUploadComponent from "./FileUploadComponent";
+import MediaMessageDisplay from "./MediaMessageDisplay";
 
 type ChatsHubProps = {
 	session: TAuthSession;
@@ -27,15 +29,15 @@ function ChatsHub({ session }: ChatsHubProps) {
 	const [newChatMenuIsOpen, setNewChatMenuIsOpen] = useState<boolean>(false);
 	const [selectedChatId, setSelectedChatId] = useState<Id<"chats"> | null>(null);
 	return (
-		<div className="w-full grow flex flex-col items-center justify-center gap-3 lg:flex-row rounded-lg shadow-lg border border-primary/20 p-3">
-			<div className="flex flex-col gap-3 w-1/3 h-full">
-				<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2">
+		<div className="w-full max-h-[calc(100vh-200px)] grow flex flex-col items-center justify-center lg:flex-row rounded-lg shadow-lg border border-primary/20">
+			<div className="flex flex-col gap-3 w-1/3 h-full border-r border-primary/20">
+				<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2 px-3 py-3">
 					<MessageCircleIcon className="w-5 h-5'" />
 					<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
 						<Plus className="w-5 h-5" />
 					</Button>
 				</div>
-				<div className="grow w-full flex flex-col gap-3">
+				<div className="grow w-full flex flex-col gap-3 p-3">
 					{chats ? (
 						chats.map((chat) => (
 							<button
@@ -64,7 +66,14 @@ function ChatsHub({ session }: ChatsHubProps) {
 										)}
 									</div>
 									<div className="flex items-center justify-between">
-										<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+										{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
+											<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+										) : (
+											<div className="flex items-center gap-1">
+												<ImageIcon className="w-4 h-4" />
+												<p className="text-sm text-primary/60 truncate">MIDIA</p>
+											</div>
+										)}
 										{(chat.mensagensNaoLidas || 0) > 0 && (
 											<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
 										)}
@@ -184,7 +193,7 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 	return (
 		<>
 			{/* Header do Chat */}
-			<div className="p-3 bg-card border-b border-primary/10 flex items-center justify-between shadow-sm">
+			<div className="p-3 bg-card border-b border-primary/10 flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					{/* Avatar do Cliente */}
 					<Avatar className="w-10 h-10 min-w-10 min-h-10">
@@ -200,7 +209,7 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 				</div>
 			</div>
 			{/* Área de Mensagens */}
-			<div className="flex flex-col flex-1 overflow-y-auto p-3 bg-background">
+			<div className="flex flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20">
 				{chatMessages && chatMessages.length > 0 ? (
 					chatMessages.map((message, index) => {
 						const isUser = message.autorTipo === "usuario";
@@ -236,7 +245,21 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 									})}
 								>
 									{/* Conteúdo da mensagem */}
-									<p className="text-sm break-words whitespace-pre-wrap">{message.conteudoTexto}</p>
+									{message.conteudoMidiaTipo ? (
+										<div className="space-y-2">
+											<MediaMessageDisplay
+												storageId={message.conteudoMidiaStorageId}
+												mediaUrl={message.conteudoMidiaUrl}
+												mediaType={message.conteudoMidiaTipo}
+												fileName={message.conteudoMidiaFileName}
+												fileSize={message.conteudoMidiaFileSize}
+												mimeType={message.conteudoMidiaMimeType}
+												caption={message.conteudoTexto}
+											/>
+										</div>
+									) : (
+										<p className="text-sm break-words whitespace-pre-wrap">{message.conteudoTexto}</p>
+									)}
 
 									{/* Timestamp e status - apenas na última mensagem do grupo */}
 									{shouldShowTimestamp && (
@@ -269,30 +292,37 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 			</div>
 
 			{/* Footer - Input de Mensagem */}
-			<div className="flex flex-col gap-2 p-4 bg-card border-t border-primary/10 shadow-sm">
-				{/* Alert quando conversa expirada */}
-				{isConversationExpired && (
-					<div className="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-						<AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0" />
-						<p className="text-xs text-amber-800 dark:text-amber-200">Janela de 24h expirada. Envie um template aprovado para reiniciar a conversa.</p>
-					</div>
-				)}
+			<div className="flex items-center justify-center w-full p-3">
+				<div className="flex flex-col gap-2 px-4 py-2 bg-card border-t border-primary/10 shadow-sm w-[98%] self-center rounded-full">
+					{/* Alert quando conversa expirada */}
+					{isConversationExpired && (
+						<div className="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+							<AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0" />
+							<p className="text-xs text-amber-800 dark:text-amber-200">Janela de 24h expirada. Envie um template aprovado para reiniciar a conversa.</p>
+						</div>
+					)}
+					{/* Input e botões */}
+					<div className="flex items-end gap-2">
+						<FileUploadComponent
+							onFileSelect={({ file, fileName, storageId }) => {
+								// Determine media type based on file type
+								let midiaTipo: "IMAGEM" | "DOCUMENTO" = "DOCUMENTO";
+								if (file.type.startsWith("image/")) {
+									midiaTipo = "IMAGEM";
+								}
 
-				{/* Input e botões */}
-				<div className="flex items-end gap-2">
-					<textarea
-						value={messageText}
-						onChange={(e) => setMessageText(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" && !e.shiftKey && !isConversationExpired) {
-								e.preventDefault();
 								handleSendMessage({
 									autor: {
 										tipo: "usuario",
 										idApp: session.user.id,
 									},
 									conteudo: {
-										texto: messageText,
+										texto: undefined,
+										midiaTipo,
+										midiaStorageId: storageId as Id<"_storage">,
+										midiaMimeType: file.type,
+										midiaFileName: fileName,
+										midiaFileSize: file.size,
 									},
 									cliente: {
 										idApp: chat.cliente?.idApp,
@@ -304,85 +334,108 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 									},
 								});
 								setMessageText("");
-							}
-						}}
-						placeholder={isConversationExpired ? "Envie um template para continuar..." : "Digite uma mensagem..."}
-						className={cn(
-							"flex-1 px-4 py-2 border rounded-lg resize-none focus:outline-none text-sm transition-colors",
-							isConversationExpired
-								? "border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/10 cursor-not-allowed opacity-60"
-								: "border-primary/10 focus:ring-1 focus:ring-blue-500",
-						)}
-						rows={1}
-						style={{ maxHeight: "120px" }}
-						disabled={isConversationExpired}
-					/>
-					<Button
-						type="button"
-						size="icon"
-						onClick={() => {
-							handleSendMessage({
-								autor: {
-									tipo: "usuario",
-									idApp: session.user.id,
-								},
-								conteudo: {
-									texto: messageText,
-								},
-								cliente: {
-									idApp: chat.cliente?.idApp,
-									nome: chat.cliente?.nome,
-									telefone: formatPhoneAsWhatsappId(chat.cliente.telefone),
-									avatar_url: chat.cliente?.avatar_url,
-									email: chat.cliente?.email,
-									cpfCnpj: chat.cliente?.cpfCnpj,
-								},
-							});
-							setMessageText("");
-						}}
-						disabled={!messageText.trim() || isConversationExpired}
-						className="bg-blue-500 hover:bg-blue-600"
-					>
-						<Send className="w-4 h-4" />
-					</Button>
+							}}
+							disabled={isConversationExpired}
+						/>
+						<textarea
+							value={messageText}
+							onChange={(e) => setMessageText(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" && !e.shiftKey && !isConversationExpired) {
+									e.preventDefault();
+									handleSendMessage({
+										autor: {
+											tipo: "usuario",
+											idApp: session.user.id,
+										},
+										conteudo: {
+											texto: messageText,
+										},
+										cliente: {
+											idApp: chat.cliente?.idApp,
+											nome: chat.cliente?.nome,
+											telefone: formatPhoneAsWhatsappId(chat.cliente?.telefone),
+											avatar_url: chat.cliente?.avatar_url,
+											email: chat.cliente?.email,
+											cpfCnpj: chat.cliente?.cpfCnpj,
+										},
+									});
+									setMessageText("");
+								}
+							}}
+							placeholder={isConversationExpired ? "Envie um template para continuar..." : "Digite uma mensagem..."}
+							className={cn("flex-1 px-4 py-2 rounded-lg resize-none text-sm transition-colors focus:outline-none")}
+							rows={1}
+							style={{ maxHeight: "120px" }}
+							disabled={isConversationExpired}
+						/>
+						<Button
+							type="button"
+							size="icon"
+							onClick={() => {
+								handleSendMessage({
+									autor: {
+										tipo: "usuario",
+										idApp: session.user.id,
+									},
+									conteudo: {
+										texto: messageText,
+									},
+									cliente: {
+										idApp: chat.cliente?.idApp,
+										nome: chat.cliente?.nome,
+										telefone: formatPhoneAsWhatsappId(chat.cliente.telefone),
+										avatar_url: chat.cliente?.avatar_url,
+										email: chat.cliente?.email,
+										cpfCnpj: chat.cliente?.cpfCnpj,
+									},
+								});
+								setMessageText("");
+							}}
+							disabled={!messageText.trim() || isConversationExpired}
+							className="bg-blue-500 hover:bg-blue-600"
+						>
+							<Send className="w-4 h-4" />
+						</Button>
 
-					{/* Template Selector Popover */}
-					<Popover open={showTemplateSelector} onOpenChange={setShowTemplateSelector}>
-						<PopoverTrigger asChild>
-							<Button type="button" size="icon" className="bg-green-500 hover:bg-green-600">
-								<FileText className="w-4 h-4" />
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent align="end" side="top" className="w-80 p-0">
-							<div className="flex items-center justify-between p-3 border-b border-primary/10">
-								<h3 className="font-semibold text-sm">Selecionar Template</h3>
-								<Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowTemplateSelector(false)}>
-									<X className="w-4 h-4" />
+						{/* Template Selector Popover */}
+						<Popover open={showTemplateSelector} onOpenChange={setShowTemplateSelector}>
+							<PopoverTrigger asChild>
+								<Button type="button" size="icon" variant="ghost" className={cn({ "bg-green-500 hover:bg-green-600": isConversationExpired })}>
+									<FileText className="w-4 h-4" />
 								</Button>
-							</div>
-							<div className="p-2 max-h-64 overflow-y-auto">
-								{Object.entries(WHATSAPP_TEMPLATES).map(([key, template]) => (
-									<Button
-										key={key}
-										variant="ghost"
-										className="w-full justify-start h-auto p-3"
-										onClick={() => sendTemplate(key as keyof typeof WHATSAPP_TEMPLATES)}
-										disabled={isSendingTemplate}
-									>
-										<div className="flex items-start gap-2 w-full">
-											<FileText className="w-4 h-4 mt-0.5 text-green-600 flex-shrink-0" />
-											<div className="flex-1 min-w-0 text-left">
-												<p className="font-medium text-sm">{template.title}</p>
-												<p className="text-xs text-muted-foreground mt-0.5">
-													{template.type === "marketing" ? "Marketing" : "Utilitário"} • {template.language}
-												</p>
-											</div>
-										</div>
+							</PopoverTrigger>
+							<PopoverContent align="end" side="top" className="w-80 p-0">
+								<div className="flex items-center justify-between p-3 border-b border-primary/10">
+									<h3 className="font-semibold text-sm">Selecionar Template</h3>
+									<Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowTemplateSelector(false)}>
+										<X className="w-4 h-4" />
 									</Button>
-								))}
-							</div>
-						</PopoverContent>
-					</Popover>
+								</div>
+								<div className="p-2 max-h-64 overflow-y-auto">
+									{Object.entries(WHATSAPP_TEMPLATES).map(([key, template]) => (
+										<Button
+											key={key}
+											variant="ghost"
+											className="w-full justify-start h-auto p-3"
+											onClick={() => sendTemplate(key as keyof typeof WHATSAPP_TEMPLATES)}
+											disabled={isSendingTemplate}
+										>
+											<div className="flex items-start gap-2 w-full">
+												<FileText className="w-4 h-4 mt-0.5 text-green-600 flex-shrink-0" />
+												<div className="flex-1 min-w-0 text-left">
+													<p className="font-medium text-sm">{template.title}</p>
+													<p className="text-xs text-muted-foreground mt-0.5">
+														{template.type === "marketing" ? "Marketing" : "Utilitário"} • {template.language}
+													</p>
+												</div>
+											</div>
+										</Button>
+									))}
+								</div>
+							</PopoverContent>
+						</Popover>
+					</div>
 				</div>
 			</div>
 		</>

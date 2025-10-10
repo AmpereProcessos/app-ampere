@@ -21,6 +21,11 @@ export const createMessage = mutation({
 			texto: v.optional(v.string()),
 			midiaUrl: v.optional(v.string()),
 			midiaTipo: v.optional(v.union(v.literal("IMAGEM"), v.literal("VIDEO"), v.literal("AUDIO"), v.literal("DOCUMENTO"))),
+			midiaStorageId: v.optional(v.id("_storage")),
+			midiaMimeType: v.optional(v.string()),
+			midiaFileName: v.optional(v.string()),
+			midiaFileSize: v.optional(v.number()),
+			midiaWhatsappId: v.optional(v.string()),
 		}),
 		whatsappMessageId: v.optional(v.string()),
 	},
@@ -128,6 +133,11 @@ export const createMessage = mutation({
 			conteudoTexto: args.conteudo.texto,
 			conteudoMidiaUrl: args.conteudo.midiaUrl,
 			conteudoMidiaTipo: args.conteudo.midiaTipo,
+			conteudoMidiaStorageId: args.conteudo.midiaStorageId,
+			conteudoMidiaMimeType: args.conteudo.midiaMimeType,
+			conteudoMidiaFileName: args.conteudo.midiaFileName,
+			conteudoMidiaFileSize: args.conteudo.midiaFileSize,
+			conteudoMidiaWhatsappId: args.conteudo.midiaWhatsappId,
 			status: "ENVIADO",
 			whatsappMessageId: args.whatsappMessageId,
 			servicoId: serviceId ?? undefined,
@@ -139,10 +149,11 @@ export const createMessage = mutation({
 			ultimaMensagemId: insertMessageResponse,
 			ultimaMensagemData: Date.now(),
 			ultimaMensagemConteudoTexto: args.conteudo.texto,
+			ultimaMensagemConteudoTipo: args.conteudo.midiaTipo ?? "TEXTO",
 			mensagensNaoLidas: args.autor.tipo === "cliente" ? (chat?.mensagensNaoLidas ?? 0) + 1 : (chat?.mensagensNaoLidas ?? 0),
 		});
 		// Schedule WhatsApp message send for user messages
-		if (args.autor.tipo === "usuario" && args.conteudo.texto) {
+		if (args.autor.tipo === "usuario" && (args.conteudo.texto || args.conteudo.midiaStorageId)) {
 			const currentChat = await ctx.db.get(chatId);
 			if (!currentChat) {
 				throw new Error("Chat não encontrado após criação.");
@@ -150,21 +161,37 @@ export const createMessage = mutation({
 
 			// Check conversation state to decide message type
 			if (currentChat.status === "ABERTA") {
-				// Send regular message
-				await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
-					messageId: insertMessageResponse,
-					phoneNumber: args.cliente.telefone,
-					content: args.conteudo.texto,
-				});
+				// Send regular message (text or media)
+				if (args.conteudo.midiaStorageId) {
+					// Send media message
+					await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMediaMessage, {
+						messageId: insertMessageResponse,
+						phoneNumber: args.cliente.telefone,
+						storageId: args.conteudo.midiaStorageId,
+						mediaType: args.conteudo.midiaTipo,
+						mimeType: args.conteudo.midiaMimeType,
+						filename: args.conteudo.midiaFileName,
+						caption: args.conteudo.texto,
+					});
+				} else if (args.conteudo.texto) {
+					// Send text message
+					await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
+						messageId: insertMessageResponse,
+						phoneNumber: args.cliente.telefone,
+						content: args.conteudo.texto,
+					});
+				}
 			} else {
 				// Conversation is expired, would need to send template
 				// For now, we'll log this case - in production, you'd implement template sending
-				console.log("[CREATE_MESSAGE] Conversation expired for chat:", chatId, "- template message would be needed but sending regular for now");
-				await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
-					messageId: insertMessageResponse,
-					phoneNumber: args.cliente.telefone,
-					content: args.conteudo.texto,
-				});
+				console.log("[CREATE_MESSAGE] Conversation expired for chat:", chatId, "- template message would be needed");
+				if (args.conteudo.texto) {
+					await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
+						messageId: insertMessageResponse,
+						phoneNumber: args.cliente.telefone,
+						content: args.conteudo.texto,
+					});
+				}
 			}
 		}
 		return {

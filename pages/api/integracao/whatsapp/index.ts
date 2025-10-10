@@ -101,7 +101,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						});
 						clientId = insertClientResponse.insertedId.toString();
 					}
-					if (incomingMessage?.textContent) {
+					if (incomingMessage) {
+						let mediaStorageData = null;
+
+						// Handle media messages
+						if (incomingMessage.mediaId && incomingMessage.mimeType) {
+							try {
+								// Download and store media
+								mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+									mediaId: incomingMessage.mediaId,
+									mimeType: incomingMessage.mimeType,
+									filename: incomingMessage.filename,
+								});
+								console.log("[WHATSAPP_WEBHOOK] Media downloaded and stored:", mediaStorageData.storageId);
+							} catch (error) {
+								console.error("[WHATSAPP_WEBHOOK] Error downloading media:", error);
+								// Continue without media if download fails
+							}
+						}
+
+						// Determine media type
+						let midiaTipo: "IMAGEM" | "DOCUMENTO" | "VIDEO" | "AUDIO" | undefined;
+						if (incomingMessage.messageType === "image") {
+							midiaTipo = "IMAGEM";
+						} else if (incomingMessage.messageType === "document") {
+							midiaTipo = "DOCUMENTO";
+						} else if (incomingMessage.messageType === "video") {
+							midiaTipo = "VIDEO";
+						} else if (incomingMessage.messageType === "audio") {
+							midiaTipo = "AUDIO";
+						}
+
 						// Create message in Convex
 						await convex.mutation(api.mutations.messages.createMessage, {
 							cliente: {
@@ -114,12 +144,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 								tipo: "cliente",
 							},
 							conteudo: {
-								texto: incomingMessage.textContent,
+								texto: incomingMessage.textContent || incomingMessage.caption,
+								midiaTipo,
+								midiaStorageId: mediaStorageData?.storageId,
+								midiaMimeType: mediaStorageData?.mimeType,
+								midiaFileName: mediaStorageData?.filename,
+								midiaFileSize: mediaStorageData?.fileSize,
+								midiaWhatsappId: incomingMessage.mediaId,
 							},
 							whatsappMessageId: incomingMessage.whatsappMessageId,
 						});
 
-						console.log("[WHATSAPP_WEBHOOK] Message created from:", incomingMessage.fromPhoneNumber);
+						console.log("[WHATSAPP_WEBHOOK] Message created from:", incomingMessage.fromPhoneNumber, "Type:", incomingMessage.messageType);
 					}
 				}
 

@@ -21,6 +21,9 @@ export default defineSchema({
 		mensagensNaoLidas: v.number(),
 		ultimaMensagemId: v.optional(v.id("messages")),
 		ultimaMensagemData: v.optional(v.number()),
+		ultimaMensagemConteudoTipo: v.optional(
+			v.union(v.literal("TEXTO"), v.literal("IMAGEM"), v.literal("VIDEO"), v.literal("AUDIO"), v.literal("DOCUMENTO")),
+		),
 		ultimaMensagemConteudoTexto: v.optional(v.string()),
 		status: v.union(v.literal("ABERTA"), v.literal("EXPIRADA")),
 		ultimaInteracaoClienteData: v.optional(v.number()),
@@ -30,8 +33,14 @@ export default defineSchema({
 		autorTipo: v.union(v.literal("cliente"), v.literal("usuario")),
 		autorId: v.union(v.id("clients"), v.id("users")),
 		conteudoTexto: v.optional(v.string()),
+		// Media content fields
 		conteudoMidiaUrl: v.optional(v.string()),
 		conteudoMidiaTipo: v.optional(v.union(v.literal("IMAGEM"), v.literal("VIDEO"), v.literal("AUDIO"), v.literal("DOCUMENTO"))),
+		conteudoMidiaStorageId: v.optional(v.id("_storage")), // Convex file storage reference
+		conteudoMidiaMimeType: v.optional(v.string()),
+		conteudoMidiaFileName: v.optional(v.string()),
+		conteudoMidiaFileSize: v.optional(v.number()),
+		conteudoMidiaWhatsappId: v.optional(v.string()), // WhatsApp media ID for incoming files
 		status: v.union(v.literal("ENVIADO"), v.literal("RECEBIDO"), v.literal("LIDO")),
 		whatsappMessageId: v.optional(v.string()),
 		whatsappStatus: v.optional(v.union(v.literal("PENDENTE"), v.literal("ENVIADO"), v.literal("ENTREGUE"), v.literal("FALHOU"))),

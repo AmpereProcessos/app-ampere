@@ -76,6 +76,10 @@ export type ParsedIncomingMessage = {
 	profileName: string;
 	messageType: "text" | "image" | "video" | "audio" | "document";
 	textContent?: string;
+	mediaId?: string;
+	mimeType?: string;
+	filename?: string;
+	caption?: string;
 	timestamp: number;
 };
 
@@ -97,21 +101,60 @@ export function parseWebhookIncomingMessage(webhookPayload: unknown): ParsedInco
 		const contacts = value?.contacts as unknown[] | undefined;
 		const contact = (Array.isArray(contacts) ? contacts[0] : undefined) as Record<string, unknown> | undefined;
 
-		// For now, we only support text messages
-		if (message.type !== "text") {
-			console.log("[WHATSAPP_WEBHOOK] Non-text message received, skipping for now:", message.type);
-			return null;
-		}
-
 		const profile = contact?.profile as Record<string, unknown> | undefined;
-		const textObj = message.text as Record<string, unknown> | undefined;
+		const messageType = message.type as string;
+
+		let textContent: string | undefined;
+		let mediaId: string | undefined;
+		let mimeType: string | undefined;
+		let filename: string | undefined;
+		let caption: string | undefined;
+
+		// Handle different message types
+		switch (messageType) {
+			case "text":
+				const textObj = message.text as Record<string, unknown> | undefined;
+				textContent = textObj?.body as string | undefined;
+				break;
+
+			case "image":
+				const imageObj = message.image as Record<string, unknown> | undefined;
+				mediaId = imageObj?.id as string | undefined;
+				mimeType = imageObj?.mime_type as string | undefined;
+				caption = imageObj?.caption as string | undefined;
+				break;
+
+			case "document":
+				const documentObj = message.document as Record<string, unknown> | undefined;
+				mediaId = documentObj?.id as string | undefined;
+				mimeType = documentObj?.mime_type as string | undefined;
+				filename = documentObj?.filename as string | undefined;
+				caption = documentObj?.caption as string | undefined;
+				break;
+
+			case "audio":
+			case "video":
+				// For audio and video, we'll handle them similarly to documents for now
+				const mediaObj = message[messageType] as Record<string, unknown> | undefined;
+				mediaId = mediaObj?.id as string | undefined;
+				mimeType = mediaObj?.mime_type as string | undefined;
+				break;
+
+			default:
+				console.log("[WHATSAPP_WEBHOOK] Unsupported message type received:", messageType);
+				return null;
+		}
 
 		return {
 			whatsappMessageId: message.id as string,
 			fromPhoneNumber: formatWhatsappIdAsPhone(message.from as string),
 			profileName: (profile?.name as string) || "Cliente",
-			messageType: message.type as "text",
-			textContent: textObj?.body as string | undefined,
+			messageType: messageType as "text" | "image" | "video" | "audio" | "document",
+			textContent,
+			mediaId,
+			mimeType,
+			filename,
+			caption,
 			timestamp: message.timestamp ? Number.parseInt(message.timestamp as string) * 1000 : Date.now(),
 		};
 	} catch (error) {

@@ -24,6 +24,7 @@ export async function sendBasicWhatsappMessage({
 	content,
 }: SendBasicWhatsappMessageParams): Promise<SendBasicWhatsappMessageResponse> {
 	try {
+		console.log("[INFO] [WHATSAPP_BASIC_SEND] Sending message:", toPhoneNumber, content);
 		if (!WHATSAPP_AUTH_TOKEN) {
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
@@ -59,9 +60,9 @@ export async function sendBasicWhatsappMessage({
 			whatsappMessageId,
 		};
 	} catch (error) {
-		console.error("[WHATSAPP_SEND_ERROR]", error);
+		console.error("[ERROR] [WHATSAPP_BASIC_SEND_ERROR]", error);
 		if (axios.isAxiosError(error)) {
-			console.error("[WHATSAPP_SEND_ERROR_RESPONSE]", error.response?.data);
+			console.error("[ERROR] [WHATSAPP_BASIC_SEND_ERROR_RESPONSE]", error.response?.data);
 		}
 		throw new createHttpError.InternalServerError("Oops, algo deu errado ao enviar a mensagem.");
 	}
@@ -106,7 +107,7 @@ export async function sendTemplateWhatsappMessage({
 		if (!WHATSAPP_AUTH_TOKEN) {
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
-
+		console.log("[INFO] [WHATSAPP_TEMPLATE_SEND] Sending template:", templatePayload);
 		const response = await axios.post(GRAPH_MESSAGES_API_URL, templatePayload, {
 			headers: {
 				Authorization: `Bearer ${WHATSAPP_AUTH_TOKEN}`,
@@ -125,9 +126,9 @@ export async function sendTemplateWhatsappMessage({
 			whatsappMessageId,
 		};
 	} catch (error) {
-		console.error("[WHATSAPP_TEMPLATE_SEND_ERROR]", error);
+		console.error("[ERROR] [WHATSAPP_TEMPLATE_SEND_ERROR]", error);
 		if (axios.isAxiosError(error)) {
-			console.error("[WHATSAPP_TEMPLATE_SEND_ERROR_RESPONSE]", error.response?.data);
+			console.error("[ERROR] [WHATSAPP_TEMPLATE_SEND_ERROR_RESPONSE]", error.response?.data);
 		}
 		throw new createHttpError.InternalServerError("Oops, algo deu errado ao enviar o template.");
 	}

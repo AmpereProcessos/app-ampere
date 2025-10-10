@@ -1,3 +1,5 @@
+import { formatWhatsappIdAsPhone } from "./utils";
+
 type WhatsAppMessageStatus = "sent" | "delivered" | "read" | "failed";
 
 type AppMessageStatus = "ENVIADO" | "RECEBIDO" | "LIDO";
@@ -106,7 +108,7 @@ export function parseWebhookIncomingMessage(webhookPayload: unknown): ParsedInco
 
 		return {
 			whatsappMessageId: message.id as string,
-			fromPhoneNumber: message.from as string,
+			fromPhoneNumber: formatWhatsappIdAsPhone(message.from as string),
 			profileName: (profile?.name as string) || "Cliente",
 			messageType: message.type as "text",
 			textContent: textObj?.body as string | undefined,

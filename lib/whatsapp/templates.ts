@@ -1,4 +1,5 @@
 import z from "zod";
+import { formatPhoneAsWhatsappId } from "./utils";
 
 const DefaultTemplatePayloadSchema = z.object({
 	toPhoneNumber: z.string({
@@ -28,7 +29,7 @@ export const WHATSAPP_TEMPLATES = {
 				content: `Olá ${clientName}, tudo bem?`,
 				data: {
 					messaging_product: "whatsapp",
-					to: toPhoneNumber,
+					to: formatPhoneAsWhatsappId(toPhoneNumber),
 					type: "template",
 					template: {
 						name: "generic_initiation",

@@ -1,13 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
+import { WHATSAPP_TEMPLATES } from "@/lib/whatsapp/templates";
+import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
-import { MessageCircleIcon, Plus, Send } from "lucide-react";
+import { AlertCircle, AlertTriangle, Check, CheckCheck, Clock, FileText, MessageCircleIcon, Plus, Send, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
@@ -120,29 +123,84 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 	});
 
 	const [messageText, setMessageText] = useState("");
+	const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+	const [isSendingTemplate, setIsSendingTemplate] = useState(false);
+
 	const handleSendMessage = useMutation(api.mutations.messages.createMessage);
+	const handleSendTemplate = useMutation(api.mutations.messages.createTemplateMessage);
+
 	if (!chat || !chatMessages) return <LoadingComponent />;
+
+	const isConversationExpired = chat.status === "EXPIRADA";
+
+	const getMessageStatusIcon = (whatsappStatus?: string | null) => {
+		switch (whatsappStatus) {
+			case "PENDENTE":
+				return <Clock className="w-3 h-3" />;
+			case "ENVIADO":
+				return <Check className="w-3 h-3" />;
+			case "ENTREGUE":
+				return <CheckCheck className="w-3 h-3" />;
+			case "FALHOU":
+				return <AlertCircle className="w-3 h-3 text-red-400" />;
+			default:
+				return null;
+		}
+	};
+
+	const sendTemplate = async (templateKey: keyof typeof WHATSAPP_TEMPLATES) => {
+		if (!chat.cliente?.telefone) {
+			toast.error("Telefone do cliente não encontrado");
+			return;
+		}
+
+		setIsSendingTemplate(true);
+		try {
+			const template = WHATSAPP_TEMPLATES[templateKey];
+			const payload = template.getPayload({
+				templateKey,
+				toPhoneNumber: formatPhoneAsWhatsappId(chat.cliente.telefone),
+				clientName: chat.cliente?.nome ?? "Cliente",
+			});
+
+			await handleSendTemplate({
+				chatId: chatId,
+				userAppId: session.user.id,
+				templateId: template.id,
+				templatePayloadData: payload.data,
+				templatePayloadContent: payload.content,
+			});
+
+			toast.success("Template enviado com sucesso!");
+			setShowTemplateSelector(false);
+		} catch (error) {
+			console.error("Error sending template:", error);
+			toast.error("Erro ao enviar template");
+		} finally {
+			setIsSendingTemplate(false);
+		}
+	};
 
 	return (
 		<>
 			{/* Header do Chat */}
-			<div className="p-4 bg-card border-b border-primary/10 flex items-center justify-between shadow-sm">
+			<div className="p-3 bg-card border-b border-primary/10 flex items-center justify-between shadow-sm">
 				<div className="flex items-center gap-3">
 					{/* Avatar do Cliente */}
-					<Avatar className="w-12 h-12 min-w-12 min-h-12">
+					<Avatar className="w-10 h-10 min-w-10 min-h-10">
 						<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
 						<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
 					</Avatar>
 
 					{/* Informações do Cliente */}
-					<div>
+					<div className="flex items-center gap-2">
 						<h2 className="font-semibold text-primary">{chat.cliente?.nome || "Cliente desconhecido"}</h2>
 						<div className="flex items-center gap-2 text-xs text-primary/600">{chat.cliente?.telefone && <span>{chat.cliente.telefone}</span>}</div>
 					</div>
 				</div>
 			</div>
 			{/* Área de Mensagens */}
-			<div className="flex flex-col flex-1 overflow-y-auto p-4 bg-background">
+			<div className="flex flex-col flex-1 overflow-y-auto p-3 bg-background">
 				{chatMessages && chatMessages.length > 0 ? (
 					chatMessages.map((message, index) => {
 						const isUser = message.autorTipo === "usuario";
@@ -180,19 +238,22 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 									{/* Conteúdo da mensagem */}
 									<p className="text-sm break-words whitespace-pre-wrap">{message.conteudoTexto}</p>
 
-									{/* Timestamp - apenas na última mensagem do grupo */}
+									{/* Timestamp e status - apenas na última mensagem do grupo */}
 									{shouldShowTimestamp && (
-										<p
-											className={cn("text-[10px] mt-1 text-right", {
+										<div
+											className={cn("flex items-center gap-1 mt-1 justify-end", {
 												"text-blue-100": isUser,
 												"text-primary/60": !isUser,
 											})}
 										>
-											{new Date(message.dataEnvio).toLocaleTimeString("pt-BR", {
-												hour: "2-digit",
-												minute: "2-digit",
-											})}
-										</p>
+											<p className="text-[10px]">
+												{new Date(message.dataEnvio).toLocaleTimeString("pt-BR", {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
+											</p>
+											{isUser && getMessageStatusIcon(message.whatsappStatus)}
+										</div>
 									)}
 								</div>
 							</div>
@@ -208,13 +269,58 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 			</div>
 
 			{/* Footer - Input de Mensagem */}
-			<div className="flex items-end gap-2 p-4 bg-card border-t border-primary/10 shadow-sm">
-				<textarea
-					value={messageText}
-					onChange={(e) => setMessageText(e.target.value)}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" && !e.shiftKey) {
-							e.preventDefault();
+			<div className="flex flex-col gap-2 p-4 bg-card border-t border-primary/10 shadow-sm">
+				{/* Alert quando conversa expirada */}
+				{isConversationExpired && (
+					<div className="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+						<AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0" />
+						<p className="text-xs text-amber-800 dark:text-amber-200">Janela de 24h expirada. Envie um template aprovado para reiniciar a conversa.</p>
+					</div>
+				)}
+
+				{/* Input e botões */}
+				<div className="flex items-end gap-2">
+					<textarea
+						value={messageText}
+						onChange={(e) => setMessageText(e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && !e.shiftKey && !isConversationExpired) {
+								e.preventDefault();
+								handleSendMessage({
+									autor: {
+										tipo: "usuario",
+										idApp: session.user.id,
+									},
+									conteudo: {
+										texto: messageText,
+									},
+									cliente: {
+										idApp: chat.cliente?.idApp,
+										nome: chat.cliente?.nome,
+										telefone: chat.cliente?.telefone,
+										avatar_url: chat.cliente?.avatar_url,
+										email: chat.cliente?.email,
+										cpfCnpj: chat.cliente?.cpfCnpj,
+									},
+								});
+								setMessageText("");
+							}
+						}}
+						placeholder={isConversationExpired ? "Envie um template para continuar..." : "Digite uma mensagem..."}
+						className={cn(
+							"flex-1 px-4 py-2 border rounded-lg resize-none focus:outline-none text-sm transition-colors",
+							isConversationExpired
+								? "border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/10 cursor-not-allowed opacity-60"
+								: "border-primary/10 focus:ring-1 focus:ring-blue-500",
+						)}
+						rows={1}
+						style={{ maxHeight: "120px" }}
+						disabled={isConversationExpired}
+					/>
+					<Button
+						type="button"
+						size="icon"
+						onClick={() => {
 							handleSendMessage({
 								autor: {
 									tipo: "usuario",
@@ -226,46 +332,58 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 								cliente: {
 									idApp: chat.cliente?.idApp,
 									nome: chat.cliente?.nome,
-									telefone: chat.cliente?.telefone,
+									telefone: formatPhoneAsWhatsappId(chat.cliente.telefone),
 									avatar_url: chat.cliente?.avatar_url,
 									email: chat.cliente?.email,
 									cpfCnpj: chat.cliente?.cpfCnpj,
 								},
 							});
-						}
-					}}
-					placeholder="Digite uma mensagem..."
-					className="flex-1 px-4 py-3 border border-primary/10 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-					rows={1}
-					style={{ maxHeight: "120px" }}
-				/>
-				<button
-					type="button"
-					onClick={() =>
-						handleSendMessage({
-							autor: {
-								tipo: "usuario",
-								idApp: session.user.id,
-							},
-							conteudo: {
-								texto: messageText,
-							},
-							cliente: {
-								idApp: chat.cliente?.idApp,
-								nome: chat.cliente?.nome,
-								telefone: chat.cliente?.telefone,
-								avatar_url: chat.cliente?.avatar_url,
-								email: chat.cliente?.email,
-								cpfCnpj: chat.cliente?.cpfCnpj,
-							},
-						})
-					}
-					disabled={!messageText.trim()}
-					className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-primary/30 disabled:cursor-not-allowed transition-colors"
-					aria-label="Enviar mensagem"
-				>
-					<Send className="w-5 h-5" />
-				</button>
+							setMessageText("");
+						}}
+						disabled={!messageText.trim() || isConversationExpired}
+						className="bg-blue-500 hover:bg-blue-600"
+					>
+						<Send className="w-4 h-4" />
+					</Button>
+
+					{/* Template Selector Popover */}
+					<Popover open={showTemplateSelector} onOpenChange={setShowTemplateSelector}>
+						<PopoverTrigger asChild>
+							<Button type="button" size="icon" className="bg-green-500 hover:bg-green-600">
+								<FileText className="w-4 h-4" />
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent align="end" side="top" className="w-80 p-0">
+							<div className="flex items-center justify-between p-3 border-b border-primary/10">
+								<h3 className="font-semibold text-sm">Selecionar Template</h3>
+								<Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowTemplateSelector(false)}>
+									<X className="w-4 h-4" />
+								</Button>
+							</div>
+							<div className="p-2 max-h-64 overflow-y-auto">
+								{Object.entries(WHATSAPP_TEMPLATES).map(([key, template]) => (
+									<Button
+										key={key}
+										variant="ghost"
+										className="w-full justify-start h-auto p-3"
+										onClick={() => sendTemplate(key as keyof typeof WHATSAPP_TEMPLATES)}
+										disabled={isSendingTemplate}
+									>
+										<div className="flex items-start gap-2 w-full">
+											<FileText className="w-4 h-4 mt-0.5 text-green-600 flex-shrink-0" />
+											<div className="flex-1 min-w-0 text-left">
+												<p className="font-medium text-sm">{template.title}</p>
+												<p className="text-xs text-muted-foreground mt-0.5">
+													{template.type === "marketing" ? "Marketing" : "Utilitário"} • {template.language}
+												</p>
+											</div>
+										</div>
+									</Button>
+								))}
+							</div>
+						</PopoverContent>
+					</Popover>
+				</div>
 			</div>
 		</>
 	);

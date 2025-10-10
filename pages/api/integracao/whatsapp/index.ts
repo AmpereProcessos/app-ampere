@@ -1,5 +1,7 @@
 import { api } from "@/convex/_generated/api";
 import { isMessageEvent, isStatusUpdate, mapWhatsAppStatusToAppStatus, parseStatusUpdate, parseWebhookIncomingMessage } from "@/lib/whatsapp/parsing";
+import type { TClient } from "@/utils/schemas/crm/client.schema";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import { ConvexHttpClient } from "convex/browser";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -66,17 +68,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				}
 				// Check if this is an incoming message
 				else if (isMessageEvent(body)) {
+					console.log("[INFO] [WHATSAPP_WEBHOOK] Handling incoming message:", body);
 					const incomingMessage = parseWebhookIncomingMessage(body);
+					const crmDb = await connectToCRMDatabase();
+					const clientsCollection = crmDb.collection<TClient>("clients");
+
+					let clientId: string | null = null;
+					const existingClient = await clientsCollection.findOne({ telefonePrimario: incomingMessage?.fromPhoneNumber });
+					if (existingClient) {
+						console.log("[INFO] [WHATSAPP_WEBHOOK] Client already exists:", existingClient);
+						clientId = existingClient._id.toString();
+					} else {
+						console.log("[INFO] [WHATSAPP_WEBHOOK] Client does not exist, inserting new client:", incomingMessage?.fromPhoneNumber);
+						const insertClientResponse = await clientsCollection.insertOne({
+							telefonePrimario: incomingMessage?.fromPhoneNumber as string,
+							nome: incomingMessage?.profileName as string,
+							autor: {
+								id: "6463ccaa8c5e3e227af54d89",
+								nome: "LUCAS FERNANDES",
+								avatar_url:
+									"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/saas-crm%2Fusuarios%2FLUCAS%20FERNANDES?alt=media&token=4a2959af-2fd0-4448-92f6-57af64a3bae1",
+							},
+							canalAquisicao: "WHATSAPP",
+							idParceiro: "65454ba15cf3e3ecf534b308",
+							uf: "",
+							cidade: "",
+							cep: "",
+							bairro: "",
+							endereco: "",
+							dataInsercao: new Date().toISOString(),
+							indicador: {},
+						});
+						clientId = insertClientResponse.insertedId.toString();
+					}
 					if (incomingMessage?.textContent) {
 						// Create message in Convex
 						await convex.mutation(api.mutations.messages.createMessage, {
 							cliente: {
-								idApp: incomingMessage.fromPhoneNumber,
+								idApp: clientId,
 								nome: incomingMessage.profileName,
 								telefone: incomingMessage.fromPhoneNumber,
 							},
 							autor: {
-								idApp: incomingMessage.fromPhoneNumber,
+								idApp: clientId,
 								tipo: "cliente",
 							},
 							conteudo: {

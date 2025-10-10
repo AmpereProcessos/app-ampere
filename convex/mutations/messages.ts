@@ -25,6 +25,7 @@ export const createMessage = mutation({
 		whatsappMessageId: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
+		console.log("[INFO] [MESSAGES] [CREATE_MESSAGE] Creating message:", args);
 		let autorId: Id<"clients"> | Id<"users"> | null = null;
 
 		let clientId: Id<"clients"> | null = null;
@@ -140,7 +141,32 @@ export const createMessage = mutation({
 			ultimaMensagemConteudoTexto: args.conteudo.texto,
 			mensagensNaoLidas: args.autor.tipo === "cliente" ? (chat?.mensagensNaoLidas ?? 0) + 1 : (chat?.mensagensNaoLidas ?? 0),
 		});
-		// [TODO] Schedule the Whatsapp message to be send in case we came from user
+		// Schedule WhatsApp message send for user messages
+		if (args.autor.tipo === "usuario" && args.conteudo.texto) {
+			const currentChat = await ctx.db.get(chatId);
+			if (!currentChat) {
+				throw new Error("Chat não encontrado após criação.");
+			}
+
+			// Check conversation state to decide message type
+			if (currentChat.status === "ABERTA") {
+				// Send regular message
+				await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
+					messageId: insertMessageResponse,
+					phoneNumber: args.cliente.telefone,
+					content: args.conteudo.texto,
+				});
+			} else {
+				// Conversation is expired, would need to send template
+				// For now, we'll log this case - in production, you'd implement template sending
+				console.log("[CREATE_MESSAGE] Conversation expired for chat:", chatId, "- template message would be needed but sending regular for now");
+				await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
+					messageId: insertMessageResponse,
+					phoneNumber: args.cliente.telefone,
+					content: args.conteudo.texto,
+				});
+			}
+		}
 		return {
 			data: {
 				insertedId: insertMessageResponse,
@@ -195,7 +221,7 @@ export const createTemplateMessage = mutation({
 		});
 
 		// Schedule template send via action
-		await ctx.scheduler.runAfter(1000, internal.actions.whatsapp.sendWhatsappTemplate, {
+		await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappTemplate, {
 			messageId: messageId,
 			phoneNumber: client.telefone,
 			templatePayload: args.templatePayloadData,

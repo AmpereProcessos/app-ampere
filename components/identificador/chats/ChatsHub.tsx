@@ -297,7 +297,7 @@ function ChatHubContent({ chatId, session }: { chatId: Id<"chats">; session: TAu
 									cliente: {
 										idApp: chat.cliente?.idApp,
 										nome: chat.cliente?.nome,
-										telefone: chat.cliente?.telefone,
+										telefone: formatPhoneAsWhatsappId(chat.cliente?.telefone),
 										avatar_url: chat.cliente?.avatar_url,
 										email: chat.cliente?.email,
 										cpfCnpj: chat.cliente?.cpfCnpj,

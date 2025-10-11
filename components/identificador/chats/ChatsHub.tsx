@@ -152,13 +152,17 @@ function ChatsHub({ session }: ChatsHubProps) {
 													)}
 												</div>
 												<div className="flex items-center justify-between">
-													{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-														<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+													{chat.ultimaMensagemConteudoTipo ? (
+														chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
+															<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+														) : (
+															<div className="flex items-center gap-1">
+																<ImageIcon className="w-4 h-4" />
+																<p className="text-sm text-primary/60 truncate">MÍDIA</p>
+															</div>
+														)
 													) : (
-														<div className="flex items-center gap-1">
-															<ImageIcon className="w-4 h-4" />
-															<p className="text-sm text-primary/60 truncate">MÍDIA</p>
-														</div>
+														<p className="text-sm text-primary/60 truncate">{"Nenhuma mensagem ainda"}</p>
 													)}
 													{(chat.mensagensNaoLidas || 0) > 0 && (
 														<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
@@ -233,18 +237,23 @@ function ChatHubContent({
 	const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 	const [isSendingTemplate, setIsSendingTemplate] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-
+	// 👇 1. Create a ref for the message container DIV
+	const messagesContainerRef = useRef<HTMLDivElement>(null);
 	const handleSendMessage = useMutation(api.mutations.messages.createMessage);
 	const handleSendTemplate = useMutation(api.mutations.messages.createTemplateMessage);
 	const markMessagesAsRead = useMutation(api.mutations.messages.markMessagesAsRead);
 
-	// Auto-scroll para última mensagem
-	const messagesLength = chatMessages?.length || 0;
-	useEffect(() => {
-		if (messagesLength > 0) {
-			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	const scrollToBottom = () => {
+		const container = messagesContainerRef.current;
+		if (container) {
+			container.scrollTop = container.scrollHeight;
 		}
-	}, [messagesLength]);
+	};
+	// This handles the initial load and new text messages perfectly.
+	// It runs when messages change, ensuring text messages and initial load scroll correctly.
+	useEffect(() => {
+		scrollToBottom();
+	}, [chatMessages]);
 
 	// Marcar mensagens como lidas quando visualizar o chat
 	useEffect(() => {
@@ -314,7 +323,6 @@ function ChatHubContent({
 			setIsSendingTemplate(false);
 		}
 	};
-
 	return (
 		<>
 			{/* Header do Chat */}
@@ -341,7 +349,10 @@ function ChatHubContent({
 				</div>
 			</div>
 			{/* Área de Mensagens */}
-			<div className="flex grow flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20">
+			<div
+				ref={messagesContainerRef}
+				className="flex grow flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20"
+			>
 				{chatMessages && chatMessages.length > 0 ? (
 					chatMessages.map((message, index) => {
 						const isUser = message.autorTipo === "usuario";
@@ -387,6 +398,10 @@ function ChatHubContent({
 												fileSize={message.conteudoMidiaFileSize}
 												mimeType={message.conteudoMidiaMimeType}
 												caption={message.conteudoTexto}
+												onImageLoad={() => {
+													console.log("Image loaded");
+													scrollToBottom();
+												}}
 											/>
 										</div>
 									) : (
@@ -420,7 +435,6 @@ function ChatHubContent({
 						<p className="text-primary/400 text-sm mt-1">Envie a primeira mensagem para iniciar a conversa</p>
 					</div>
 				)}
-				<div ref={messagesEndRef} />
 			</div>
 
 			{/* Footer - Input de Mensagem */}
@@ -496,7 +510,7 @@ function ChatHubContent({
 								}
 							}}
 							placeholder={isConversationExpired ? "Envie um template para continuar..." : "Digite uma mensagem..."}
-							className={cn("flex-1 px-4 py-2 rounded-lg resize-none text-sm transition-colors focus:outline-none")}
+							className={cn("flex-1 px-4 py-2 rounded-lg resize-none text-sm transition-colors focus:outline-none align-top")}
 							rows={1}
 							style={{ maxHeight: "120px" }}
 							disabled={isConversationExpired}

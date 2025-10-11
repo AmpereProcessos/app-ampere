@@ -43,7 +43,7 @@ export const getChatByClientAppId = mutation({
 			const insertChatResponse = await ctx.db.insert("chats", {
 				clienteId: clientId,
 				mensagensNaoLidas: 0,
-				status: "ABERTA",
+				status: "EXPIRADA",
 			});
 			chatId = insertChatResponse;
 		}

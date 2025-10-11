@@ -4,6 +4,7 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Download, FileImage, FileText, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -15,9 +16,10 @@ type MediaMessageDisplayProps = {
 	fileSize?: number;
 	mimeType?: string;
 	caption?: string;
+	onImageLoad?: () => void;
 };
 
-function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSize, mimeType, caption }: MediaMessageDisplayProps) {
+function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSize, mimeType, caption, onImageLoad }: MediaMessageDisplayProps) {
 	const [fileUrl, setFileUrl] = useState<string | null>(mediaUrl || null);
 	const [isLoading, setIsLoading] = useState(false);
 	const getFileUrl = useMutation(api.mutations.files.getFileUrl);
@@ -100,7 +102,7 @@ function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSiz
 					</DialogTrigger>
 					<DialogContent className="max-w-4xl max-h-[90vh] p-0">
 						<div className="relative">
-							<img src={fileUrl} alt={fileName || "Imagem"} className="w-full h-auto max-h-[80vh] object-contain" />
+							<Image src={fileUrl} alt={fileName || "Imagem"} className="w-full h-auto max-h-[80vh] object-contain" onLoad={onImageLoad} />
 							<div className="absolute top-4 right-4">
 								<Button variant="secondary" size="sm" onClick={handleDownload} className="bg-black bg-opacity-50 hover:bg-opacity-70 text-white">
 									<Download className="w-4 h-4 mr-2" />

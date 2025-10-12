@@ -1,5 +1,6 @@
 "use node";
 import { v } from "convex/values";
+import type { TGenerateAIResponseOutput } from "../../pages/api/integracao/ai/gerar-resposta";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
 
@@ -37,7 +38,7 @@ export const generateAIResponse = internalAction({
 				throw new Error(`API request failed with status ${response.status}`);
 			}
 
-			const result: any = await response.json();
+			const result: TGenerateAIResponseOutput = await response.json();
 			console.log("[AI_ACTION] AI response result:", result);
 
 			if (!result.success) {

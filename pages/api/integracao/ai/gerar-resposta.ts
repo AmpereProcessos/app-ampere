@@ -34,6 +34,35 @@ const GenerateAIResponseInputSchema = z.object({
 
 export type GenerateAIResponseInput = z.infer<typeof GenerateAIResponseInputSchema>;
 
+const GenerateAIResponseOutputSchema = z.union([
+	z.object({
+		success: z.literal(true, {
+			required_error: "A flag de sucesso é obrigatória",
+			invalid_type_error: "A flag de sucesso deve ser um booleano",
+		}),
+		message: z.string({
+			required_error: "A mensagem é obrigatória",
+			invalid_type_error: "A mensagem deve ser uma string",
+		}),
+	}),
+	z.object({
+		success: z.literal(false, {
+			required_error: "A flag de sucesso é obrigatória",
+			invalid_type_error: "A flag de sucesso deve ser um booleano",
+		}),
+		error: z.string({
+			required_error: "O erro é obrigatório",
+			invalid_type_error: "O erro deve ser uma string",
+		}),
+		details: z.array(
+			z.string({
+				required_error: "Os detalhes são obrigatórios",
+				invalid_type_error: "Os detalhes devem ser uma array de strings",
+			}),
+		),
+	}),
+]);
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	// Only allow POST requests
 	if (req.method !== "POST") {
@@ -58,16 +87,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const aiResponse = await getAgentResponse({ chatSummary: chatSummary as any });
 
-		return res.status(200).json({
+		const validatedResponse = GenerateAIResponseOutputSchema.parse({
 			success: true,
 			message: aiResponse,
 		});
+		return res.status(200).json(validatedResponse);
 	} catch (error) {
 		console.error("[API] [GERAR_RESPOSTA] Error:", error);
-		return res.status(500).json({
+		const validatedResponse = GenerateAIResponseOutputSchema.parse({
 			success: false,
-			error: "Erro ao gerar resposta de IA",
+			error: error instanceof Error ? error.message : "Erro desconhecido",
 			details: error instanceof Error ? error.message : "Erro desconhecido",
 		});
+		return res.status(500).json(validatedResponse);
 	}
 }
+export type TGenerateAIResponseOutput = z.infer<typeof GenerateAIResponseOutputSchema>;

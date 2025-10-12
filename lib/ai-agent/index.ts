@@ -1,7 +1,8 @@
 import type { Id } from "@/convex/_generated/dataModel";
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { Output, generateText } from "ai";
 import { Experimental_Agent as Agent } from "ai";
+import z from "zod";
 
 const AI_GATEWAY_KEY = process.env.AI_GATEWAY_API_KEY;
 
@@ -59,17 +60,17 @@ Diretrizes de resposta:
 - Use linguagem clara e acessível
 - Seja educado e empático
 - Não invente informações que você não tem
-
-Formato de resposta:
-Você deve responder em JSON com a seguinte estrutura:
-{
-  "message": "sua mensagem para o cliente (se houver)",
-}`;
+`;
 
 export const agent = new Agent({
 	model: "openai/gpt-4o",
 	system: SYSTEM_PROMPT,
 	tools: {},
+	experimental_output: Output.object({
+		schema: z.object({
+			message: z.string(),
+		}),
+	}),
 	toolChoice: "none",
 });
 
@@ -119,11 +120,11 @@ ${
 Analise a conversa e responda apropriadamente. Lembre-se de retornar apenas JSON válido.`;
 
 		// Generate response using AI
-		const { text } = await agent.generate({
+		const { text, experimental_output } = await agent.generate({
 			prompt: userPrompt,
 		});
 
-		return text;
+		return experimental_output.message;
 	} catch (error) {
 		console.error("[AI_AGENT] Error generating response:", error);
 		// Return a safe fallback

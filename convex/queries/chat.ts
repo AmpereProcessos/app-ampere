@@ -145,6 +145,7 @@ export const getChatSummary = internalQuery({
 			atendimentoAberto: chatOpenService
 				? {
 						id: chatOpenService._id,
+						descricao: chatOpenService.descricao,
 						status: chatOpenService.status,
 					}
 				: false,

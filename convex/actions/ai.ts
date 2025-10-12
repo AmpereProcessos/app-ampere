@@ -1,8 +1,18 @@
 "use node";
 import { v } from "convex/values";
-import type { TGenerateAIResponseOutput } from "../../pages/api/integracao/ai/gerar-resposta";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
+
+type TGenerateAIResponseOutput =
+	| {
+			success: true;
+			message: string;
+	  }
+	| {
+			success: false;
+			error: string;
+			details: string[];
+	  };
 
 const NEXT_API_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

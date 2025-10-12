@@ -19,9 +19,6 @@ export default function Chats() {
 }
 
 function ChatsContent({ session }: { session: TAuthSession }) {
-	const chats = useQuery(api.queries.chat.getChats);
-	const [openNewChatModalIsOpen, setOpenNewChatModalIsOpen] = useState(false);
-	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 	return (
 		<div className="flex flex-col gap-6 grow p-6">
 			<div className="border-primary/20 flex items-center justify-between border-b p-1">

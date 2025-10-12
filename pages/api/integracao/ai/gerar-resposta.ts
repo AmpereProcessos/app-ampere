@@ -1,4 +1,4 @@
-import { generateResponse } from "@/lib/ai-agent";
+import { getAgentResponse } from "@/lib/ai-agent";
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 
@@ -56,13 +56,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		// Generate AI response (type casting is safe as validated by zod schema)
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const aiResponse = await generateResponse({ chatSummary: chatSummary as any });
+		const aiResponse = await getAgentResponse({ chatSummary: chatSummary as any });
 
 		return res.status(200).json({
 			success: true,
-			shouldTransferToHuman: aiResponse.shouldTransferToHuman,
-			message: aiResponse.message,
-			reason: aiResponse.reason,
+			message: aiResponse,
 		});
 	} catch (error) {
 		console.error("[API] [GERAR_RESPOSTA] Error:", error);

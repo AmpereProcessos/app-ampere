@@ -11,7 +11,21 @@ import { WHATSAPP_TEMPLATES } from "@/lib/whatsapp/templates";
 import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
-import { AlertCircle, AlertTriangle, ArrowDown, ArrowLeft, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
+import {
+	AlertCircle,
+	AlertTriangle,
+	ArrowDown,
+	ArrowLeft,
+	Check,
+	CheckCheck,
+	Clock,
+	FileText,
+	ImageIcon,
+	MessageCircleIcon,
+	Plus,
+	Send,
+	X,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
@@ -502,7 +516,7 @@ function ChatHubContentMessages({ chatMessages }: ChatHubContentMessagesProps) {
 			<StickToBottom.Content className="p-3">
 				{chatMessages && chatMessages.length > 0 ? (
 					chatMessages.map((message, index) => {
-						const isUser = message.autorTipo === "usuario";
+						const isUser = message.autorTipo === "usuario" || message.autorTipo === "ai";
 						const previousMessage = index > 0 ? chatMessages[index - 1] : null;
 						const nextMessage = index < chatMessages.length - 1 ? chatMessages[index + 1] : null;
 						const messageAuthor = message.autor;

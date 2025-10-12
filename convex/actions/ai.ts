@@ -45,7 +45,7 @@ export const generateAIResponse = internalAction({
 			}
 
 			// Get chat details
-			const chat: any = await ctx.runQuery(internal.queries.chat.getChat, {
+			const chat = await ctx.runQuery(internal.queries.chat.getChatInternal, {
 				chatId: args.chatId,
 			});
 
@@ -53,49 +53,56 @@ export const generateAIResponse = internalAction({
 				throw new Error("Chat not found");
 			}
 
-			if (result.shouldTransferToHuman) {
-				// Transfer to human
-				console.log("[AI_ACTION] Transferring chat", args.chatId, "to human:", result.reason);
+			await ctx.runMutation(internal.mutations.messages.createAIMessage, {
+				chatId: args.chatId,
+				conteudo: {
+					texto: result.message,
+				},
+			});
 
-				if (!chatSummary.atendimentoAberto) {
-					// Create a service record
-					await ctx.runMutation(internal.mutations.services.createService, {
-						chatId: args.chatId,
-						clienteId: chat.clienteId,
-						descricao: result.reason || "Cliente solicitou atendimento humano",
-						status: "PENDENTE",
-					});
-				}
+			// if (result.shouldTransferToHuman) {
+			// 	// Transfer to human
+			// 	console.log("[AI_ACTION] Transferring chat", args.chatId, "to human:", result.reason);
 
-				// Send a message indicating transfer
-				if (result.message) {
-					await ctx.runMutation(internal.mutations.messages.createAIMessage, {
-						chatId: args.chatId,
-						conteudo: {
-							texto: result.message,
-						},
-					});
-				}
+			// 	if (!chatSummary.atendimentoAberto) {
+			// 		// Create a service record
+			// 		await ctx.runMutation(internal.mutations.services.createService, {
+			// 			chatId: args.chatId,
+			// 			clienteId: chat.clienteId,
+			// 			descricao: result.reason || "Cliente solicitou atendimento humano",
+			// 			status: "PENDENTE",
+			// 		});
+			// 	}
 
-				// Clear AI schedule
-				await ctx.runMutation(internal.mutations.ai.clearAISchedule, {
-					chatId: args.chatId,
-				});
-			} else if (result.message) {
-				// Send AI response message
-				console.log("[AI_ACTION] Sending AI message to chat", args.chatId);
+			// 	// Send a message indicating transfer
+			// 	if (result.message) {
+			// 		await ctx.runMutation(internal.mutations.messages.createAIMessage, {
+			// 			chatId: args.chatId,
+			// 			conteudo: {
+			// 				texto: result.message,
+			// 			},
+			// 		});
+			// 	}
 
-				await ctx.runMutation(internal.mutations.messages.createAIMessage, {
-					chatId: args.chatId,
-					conteudo: {
-						texto: result.message,
-					},
-				});
-			}
+			// 	// Clear AI schedule
+			// 	await ctx.runMutation(internal.mutations.ai.clearAISchedule, {
+			// 		chatId: args.chatId,
+			// 	});
+			// } else if (result.message) {
+			// 	// Send AI response message
+			// 	console.log("[AI_ACTION] Sending AI message to chat", args.chatId);
+
+			// 	await ctx.runMutation(internal.mutations.messages.createAIMessage, {
+			// 		chatId: args.chatId,
+			// 		conteudo: {
+			// 			texto: result.message,
+			// 		},
+			// 	});
+			// }
 
 			return {
 				success: true,
-				transferred: result.shouldTransferToHuman,
+				transferred: false,
 			};
 		} catch (error) {
 			console.error("[AI_ACTION] Error generating AI response for chat", args.chatId, ":", error);

@@ -23,7 +23,23 @@ export const getChats = query({
 	},
 });
 
-export const getChat = internalQuery({
+export const getChat = query({
+	args: {
+		chatId: v.id("chats"),
+	},
+	handler: async (ctx, args) => {
+		const chat = await ctx.db.get(args.chatId);
+		if (!chat) throw new Error("Chat não encontrado.");
+		const chatClient = await ctx.db.get(chat.clienteId);
+		if (!chatClient) throw new Error("Cliente não encontrado.");
+		const enrichedChat = {
+			...chat,
+			cliente: chatClient,
+		};
+		return enrichedChat;
+	},
+});
+export const getChatInternal = internalQuery({
 	args: {
 		chatId: v.id("chats"),
 	},
@@ -45,6 +61,7 @@ export const getChatMessages = query({
 		chatId: v.id("chats"),
 	},
 	handler: async (ctx, args) => {
+		console.log("[INFO] [CHAT] [GET_CHAT_MESSAGES] Getting chat messages for chat:", args.chatId);
 		const messages = await ctx.db
 			.query("messages")
 			.filter((q) => q.eq(q.field("chatId"), args.chatId))
@@ -60,12 +77,19 @@ export const getChatMessages = query({
 						nome: client.nome,
 						avatar_url: client.avatar_url ?? null,
 					};
-				} else {
+				}
+				if (message.autorTipo === "usuario") {
 					const user = await ctx.db.get(message.autorId as Id<"users">);
 					if (!user) throw new Error("Usuário não encontrado.");
 					messageAuthor = {
 						nome: user.nome,
 						avatar_url: user.avatar_url ?? null,
+					};
+				}
+				if (message.autorTipo === "ai") {
+					messageAuthor = {
+						nome: "AI",
+						avatar_url: null,
 					};
 				}
 				return {

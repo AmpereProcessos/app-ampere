@@ -11,9 +11,10 @@ import { WHATSAPP_TEMPLATES } from "@/lib/whatsapp/templates";
 import { formatPhoneAsWhatsappId } from "@/lib/whatsapp/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useMutation, useQuery } from "convex/react";
-import { AlertCircle, AlertTriangle, ArrowLeft, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { AlertCircle, AlertTriangle, ArrowDown, ArrowLeft, Check, CheckCheck, Clock, FileText, ImageIcon, MessageCircleIcon, Plus, Send, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
 import FileUploadComponent from "./FileUploadComponent";
 import MediaMessageDisplay from "./MediaMessageDisplay";
@@ -236,24 +237,9 @@ function ChatHubContent({
 	const [messageText, setMessageText] = useState("");
 	const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 	const [isSendingTemplate, setIsSendingTemplate] = useState(false);
-	const messagesEndRef = useRef<HTMLDivElement>(null);
-	// 👇 1. Create a ref for the message container DIV
-	const messagesContainerRef = useRef<HTMLDivElement>(null);
 	const handleSendMessage = useMutation(api.mutations.messages.createMessage);
 	const handleSendTemplate = useMutation(api.mutations.messages.createTemplateMessage);
 	const markMessagesAsRead = useMutation(api.mutations.messages.markMessagesAsRead);
-
-	const scrollToBottom = () => {
-		const container = messagesContainerRef.current;
-		if (container) {
-			container.scrollTop = container.scrollHeight;
-		}
-	};
-	// This handles the initial load and new text messages perfectly.
-	// It runs when messages change, ensuring text messages and initial load scroll correctly.
-	useEffect(() => {
-		scrollToBottom();
-	}, [chatMessages]);
 
 	// Marcar mensagens como lidas quando visualizar o chat
 	useEffect(() => {
@@ -275,21 +261,6 @@ function ChatHubContent({
 	if (!chat || !chatMessages) return <LoadingComponent />;
 
 	const isConversationExpired = chat.status === "EXPIRADA";
-
-	const getMessageStatusIcon = (whatsappStatus?: string | null) => {
-		switch (whatsappStatus) {
-			case "PENDENTE":
-				return <Clock className="w-3 h-3" />;
-			case "ENVIADO":
-				return <Check className="w-3 h-3" />;
-			case "ENTREGUE":
-				return <CheckCheck className="w-3 h-3" />;
-			case "FALHOU":
-				return <AlertCircle className="w-3 h-3 text-red-400" />;
-			default:
-				return null;
-		}
-	};
 
 	const sendTemplate = async (templateKey: keyof typeof WHATSAPP_TEMPLATES) => {
 		if (!chat.cliente?.telefone) {
@@ -349,100 +320,13 @@ function ChatHubContent({
 				</div>
 			</div>
 			{/* Área de Mensagens */}
-			<div
-				ref={messagesContainerRef}
-				className="flex grow flex-col flex-1 overflow-y-auto p-3 bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20"
-			>
-				{chatMessages && chatMessages.length > 0 ? (
-					chatMessages.map((message, index) => {
-						const isUser = message.autorTipo === "usuario";
-						const previousMessage = index > 0 ? chatMessages[index - 1] : null;
-						const nextMessage = index < chatMessages.length - 1 ? chatMessages[index + 1] : null;
-						const messageAuthor = message.autor;
-						// Verifica se é do mesmo autor que a mensagem anterior
-						const isSameAuthorAsPrevious = previousMessage?.autorTipo === message.autorTipo;
-
-						// Verifica se é do mesmo autor que a próxima mensagem
-						const isSameAuthorAsNext = nextMessage?.autorTipo === message.autorTipo;
-
-						// Define se deve mostrar o timestamp (apenas na última mensagem do grupo)
-						const shouldShowTimestamp = !isSameAuthorAsNext;
-
-						// Define o espaçamento
-						const marginTop = isSameAuthorAsPrevious ? "mt-0.5" : "mt-4";
-
-						// Define bordas arredondadas baseado no agrupamento
-						const roundedClasses = cn({
-							"rounded-lg": !isSameAuthorAsPrevious && !isSameAuthorAsNext, // Mensagem única
-							"rounded-t-lg rounded-b-md": !isSameAuthorAsPrevious && isSameAuthorAsNext, // Primeira do grupo
-							"rounded-md": isSameAuthorAsPrevious && isSameAuthorAsNext, // Meio do grupo
-							"rounded-t-md rounded-b-lg": isSameAuthorAsPrevious && !isSameAuthorAsNext, // Última do grupo
-						});
-
-						return (
-							<div key={message._id} className={cn("flex", marginTop, { "justify-end": isUser, "justify-start": !isUser })}>
-								<div
-									className={cn("max-w-[70%] px-3 py-2", roundedClasses, {
-										"bg-blue-500 text-white": isUser,
-										"bg-card border border-primary/10 text-primary": !isUser,
-									})}
-								>
-									{/* Conteúdo da mensagem */}
-									{message.conteudoMidiaTipo ? (
-										<div className="space-y-2">
-											<MediaMessageDisplay
-												storageId={message.conteudoMidiaStorageId}
-												mediaUrl={message.conteudoMidiaUrl}
-												mediaType={message.conteudoMidiaTipo}
-												fileName={message.conteudoMidiaFileName}
-												fileSize={message.conteudoMidiaFileSize}
-												mimeType={message.conteudoMidiaMimeType}
-												caption={message.conteudoTexto}
-												onImageLoad={() => {
-													console.log("Image loaded");
-													scrollToBottom();
-												}}
-											/>
-										</div>
-									) : (
-										<p className="text-sm break-words whitespace-pre-wrap">{message.conteudoTexto}</p>
-									)}
-
-									{/* Timestamp e status - apenas na última mensagem do grupo */}
-									{shouldShowTimestamp && (
-										<div
-											className={cn("flex items-center gap-1 mt-1 justify-end", {
-												"text-blue-100": isUser,
-												"text-primary/60": !isUser,
-											})}
-										>
-											<p className="text-[10px]">
-												{new Date(message.dataEnvio).toLocaleTimeString("pt-BR", {
-													hour: "2-digit",
-													minute: "2-digit",
-												})}
-											</p>
-											{isUser && getMessageStatusIcon(message.whatsappStatus)}
-										</div>
-									)}
-								</div>
-							</div>
-						);
-					})
-				) : (
-					<div className="flex flex-col items-center justify-center h-full">
-						<p className="text-primary/600">Nenhuma mensagem ainda</p>
-						<p className="text-primary/400 text-sm mt-1">Envie a primeira mensagem para iniciar a conversa</p>
-					</div>
-				)}
-			</div>
-
+			<ChatHubContentMessages chatMessages={chatMessages} />
 			{/* Footer - Input de Mensagem */}
 			<div className="flex items-center justify-center w-full p-3">
 				<div className="flex flex-col gap-2 px-4 py-2 bg-card border-t border-primary/10 shadow-sm w-[98%] self-center rounded-full">
 					{/* Alert quando conversa expirada */}
 					{isConversationExpired && (
-						<div className="flex items-center gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+						<div className="flex items-center gap-2 px-3 py-1 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg w-[90%] self-center">
 							<AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0" />
 							<p className="text-xs text-amber-800 dark:text-amber-200">Janela de 24h expirada. Envie um template aprovado para reiniciar a conversa.</p>
 						</div>
@@ -585,5 +469,139 @@ function ChatHubContent({
 				</div>
 			</div>
 		</>
+	);
+}
+
+type ChatHubContentMessagesProps = {
+	chatMessages: typeof api.queries.chat.getChatMessages._returnType;
+};
+
+function ChatHubContentMessages({ chatMessages }: ChatHubContentMessagesProps) {
+	const getMessageStatusIcon = (whatsappStatus?: string | null) => {
+		switch (whatsappStatus) {
+			case "PENDENTE":
+				return <Clock className="w-3 h-3" />;
+			case "ENVIADO":
+				return <Check className="w-3 h-3" />;
+			case "ENTREGUE":
+				return <CheckCheck className="w-3 h-3" />;
+			case "FALHOU":
+				return <AlertCircle className="w-3 h-3 text-red-400" />;
+			default:
+				return null;
+		}
+	};
+
+	return (
+		<StickToBottom
+			className="relative flex grow flex-col flex-1 overflow-y-auto bg-background scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-primary/20"
+			initial="smooth"
+			resize="smooth"
+			role="log"
+		>
+			<StickToBottom.Content className="p-3">
+				{chatMessages && chatMessages.length > 0 ? (
+					chatMessages.map((message, index) => {
+						const isUser = message.autorTipo === "usuario";
+						const previousMessage = index > 0 ? chatMessages[index - 1] : null;
+						const nextMessage = index < chatMessages.length - 1 ? chatMessages[index + 1] : null;
+						const messageAuthor = message.autor;
+						// Verifica se é do mesmo autor que a mensagem anterior
+						const isSameAuthorAsPrevious = previousMessage?.autorTipo === message.autorTipo;
+
+						// Verifica se é do mesmo autor que a próxima mensagem
+						const isSameAuthorAsNext = nextMessage?.autorTipo === message.autorTipo;
+
+						// Define se deve mostrar o timestamp (apenas na última mensagem do grupo)
+						const shouldShowTimestamp = !isSameAuthorAsNext;
+
+						// Define o espaçamento
+						const marginTop = isSameAuthorAsPrevious ? "mt-0.5" : "mt-4";
+
+						// Define bordas arredondadas baseado no agrupamento
+						const roundedClasses = cn({
+							"rounded-lg": !isSameAuthorAsPrevious && !isSameAuthorAsNext, // Mensagem única
+							"rounded-t-lg rounded-b-md": !isSameAuthorAsPrevious && isSameAuthorAsNext, // Primeira do grupo
+							"rounded-md": isSameAuthorAsPrevious && isSameAuthorAsNext, // Meio do grupo
+							"rounded-t-md rounded-b-lg": isSameAuthorAsPrevious && !isSameAuthorAsNext, // Última do grupo
+						});
+
+						return (
+							<div key={message._id} className={cn("flex", marginTop, { "justify-end": isUser, "justify-start": !isUser })}>
+								<div
+									className={cn("max-w-[70%] px-3 py-2", roundedClasses, {
+										"bg-blue-500 text-white": isUser,
+										"bg-card border border-primary/10 text-primary": !isUser,
+									})}
+								>
+									{/* Conteúdo da mensagem */}
+									{message.conteudoMidiaTipo ? (
+										<div className="space-y-2">
+											<MediaMessageDisplay
+												storageId={message.conteudoMidiaStorageId}
+												mediaUrl={message.conteudoMidiaUrl}
+												mediaType={message.conteudoMidiaTipo}
+												fileName={message.conteudoMidiaFileName}
+												fileSize={message.conteudoMidiaFileSize}
+												mimeType={message.conteudoMidiaMimeType}
+												caption={message.conteudoTexto}
+											/>
+										</div>
+									) : (
+										<p className="text-sm break-words whitespace-pre-wrap">{message.conteudoTexto}</p>
+									)}
+
+									{/* Timestamp e status - apenas na última mensagem do grupo */}
+									{shouldShowTimestamp && (
+										<div
+											className={cn("flex items-center gap-1 mt-1 justify-end", {
+												"text-blue-100": isUser,
+												"text-primary/60": !isUser,
+											})}
+										>
+											<p className="text-[10px]">
+												{new Date(message.dataEnvio).toLocaleTimeString("pt-BR", {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
+											</p>
+											{isUser && getMessageStatusIcon(message.whatsappStatus)}
+										</div>
+									)}
+								</div>
+							</div>
+						);
+					})
+				) : (
+					<div className="flex flex-col items-center justify-center h-full">
+						<p className="text-primary/600">Nenhuma mensagem ainda</p>
+						<p className="text-primary/400 text-sm mt-1">Envie a primeira mensagem para iniciar a conversa</p>
+					</div>
+				)}
+			</StickToBottom.Content>
+			<ChatScrollButton />
+		</StickToBottom>
+	);
+}
+
+function ChatScrollButton() {
+	const { isAtBottom, scrollToBottom } = useStickToBottomContext();
+
+	const handleScrollToBottom = useCallback(() => {
+		scrollToBottom();
+	}, [scrollToBottom]);
+
+	return (
+		!isAtBottom && (
+			<Button
+				className="absolute bottom-4 left-[50%] translate-x-[-50%] rounded-full shadow-lg"
+				onClick={handleScrollToBottom}
+				size="icon"
+				type="button"
+				variant="outline"
+			>
+				<ArrowDown className="size-4" />
+			</Button>
+		)
 	);
 }

@@ -1,4 +1,10 @@
 import { getAgentResponse } from "@/lib/ai-agent";
+import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
+import type { TClient } from "@/utils/schemas/crm/client.schema";
+import type { TProject } from "@/utils/schemas/projects";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import connectToDatabase from "@/utils/services/mongodb/projects";
+import { ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 
@@ -6,6 +12,7 @@ const GenerateAIResponseInputSchema = z.object({
 	chatSummary: z.object({
 		id: z.string(),
 		cliente: z.object({
+			idApp: z.string(),
 			nome: z.string(),
 			telefone: z.string(),
 			email: z.string().optional(),
@@ -25,6 +32,7 @@ const GenerateAIResponseInputSchema = z.object({
 		atendimentoAberto: z.union([
 			z.object({
 				id: z.string(),
+				descricao: z.string(),
 				status: z.union([z.literal("PENDENTE"), z.literal("EM_ANDAMENTO"), z.literal("CONCLUIDO")]),
 			}),
 			z.literal(false),
@@ -83,9 +91,92 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		const { chatSummary } = validationResult.data;
 
+		const crmDb = await connectToCRMDatabase();
+		const clientsCollection = crmDb.collection<TClient>("clients");
+		const client = await clientsCollection.findOne({ _id: new ObjectId(chatSummary.cliente.idApp) });
+		if (!client) {
+			return res.status(400).json({
+				success: false,
+				error: "Cliente não encontrado",
+				details: ["Cliente não encontrado"],
+			});
+		}
+
+		const projectsDb = await connectToDatabase();
+		const projectsCollection = projectsDb.collection<TProject>("dados");
+		const projects = await projectsCollection.find({ idClienteCRM: client._id.toString() }).toArray();
+
+		const projectsFormatted = projects.map((p) => {
+			let status: "EM_ANDAMENTO" | "CONCLUIDO" = "EM_ANDAMENTO";
+
+			if (p.tipoDeServico === "OPERAÇÃO E MANUTENÇAO") {
+				if (p.obra.saida) status = "CONCLUIDO";
+			}
+			if (p.tipoDeServico === "MONTAGEM E DESMONTAGEM") {
+				if (p.obra.saida) status = "CONCLUIDO";
+			}
+			if (p.tipoDeServico === "SISTEMA FOTOVOLTAICO") {
+				if (p.homologacao.vistoria.dataEfetivacao) status = "CONCLUIDO";
+			}
+			if (p.tipoDeServico === "SEGURO DE SISTEMA FOTOVOLTAICO") {
+				if (p.seguro.dataFim && new Date() > new Date(p.seguro.dataFim)) status = "CONCLUIDO";
+			}
+			return {
+				id: p._id.toString(),
+				codigo: p.qtde,
+				status,
+				nome: p.nomeDoContrato,
+				tipo: p.tipoDeServico,
+				localizacao: formatLocation({
+					location: {
+						uf: p.uf || "N/A",
+						cidade: p.cidade || "N/A",
+						cep: p.cep?.toString() || "N/A",
+						bairro: p.bairro || "N/A",
+						endereco: p.logradouro || "N/A",
+						numeroOuIdentificador: p.numeroResidencia?.toString() || "N/A",
+						latitude: p.latitude || "N/A",
+						longitude: p.longitude || "N/A",
+					},
+					includeCity: true,
+					includeUf: true,
+					includeCEP: true,
+				}),
+				datas: {
+					"ASSINATURA DO CONTRATO": formatDateAsLocale(p.contrato.dataAssinatura) || "N/A",
+					"SOLICITAÇÃO DE ACESSO DE HOMOLOGAÇÃO": formatDateAsLocale(p.homologacao.acesso.dataSolicitacao) || "N/A",
+					"APROVAÇÃO DE ACESSO DE HOMOLOGAÇÃO": formatDateAsLocale(p.homologacao.acesso.dataResposta) || "N/A",
+					"PEDIDO DOS EQUIPAMENTOS": formatDateAsLocale(p.compra.dataPedido) || "N/A",
+					"ENTREGA DOS EQUIPAMENTOS": formatDateAsLocale(p.compra.dataEntrega) || "N/A",
+					"INÍCIO DA EXECUÇÃO DO SERVIÇO": formatDateAsLocale(p.obra.entrada) || "N/A",
+					"TÉRMINO DA EXECUÇÃO DO SERVIÇO": formatDateAsLocale(p.obra.saida) || "N/A",
+					"SOLICITAÇÃO DA VISTORIA": formatDateAsLocale(p.homologacao.vistoria.dataSolicitacao) || "N/A",
+					"APROVAÇÃO DA VISTORIA": formatDateAsLocale(p.homologacao.vistoria.dataEfetivacao) || "N/A",
+				},
+				produtos: p.produtos || [],
+				servicos: p.servicos || [],
+			};
+		});
+		console.log("[INFO] [GENERATE_AI_RESPONSE] Projetos formatados:", projectsFormatted);
 		// Generate AI response (type casting is safe as validated by zod schema)
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const aiResponse = await getAgentResponse({ chatSummary: chatSummary as any });
+		const aiResponse = await getAgentResponse({
+			details: {
+				id: chatSummary.id,
+				cliente: {
+					...chatSummary.cliente,
+					cidade: client.cidade,
+					uf: client.uf,
+					cep: client.cep ?? undefined,
+					bairro: client.bairro ?? undefined,
+					endereco: client.endereco ?? undefined,
+					numeroOuIdentificador: client.numeroOuIdentificador ?? undefined,
+				},
+				ultimasMensagens: chatSummary.ultimasMensagens,
+				atendimentoAberto: chatSummary.atendimentoAberto,
+				projetos: projectsFormatted,
+			},
+		});
 
 		const validatedResponse = GenerateAIResponseOutputSchema.parse({
 			success: true,

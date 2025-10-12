@@ -127,6 +127,7 @@ export const getChatSummary = internalQuery({
 		return {
 			id: chat._id,
 			cliente: {
+				idApp: chatClient.idApp,
 				nome: chatClient.nome,
 				telefone: chatClient.telefone,
 				email: chatClient.email,

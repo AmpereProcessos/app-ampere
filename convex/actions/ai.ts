@@ -15,7 +15,7 @@ export const generateAIResponse = internalAction({
 			console.log("[AI_ACTION] Generating AI response for chat", args.chatId);
 
 			// Get chat summary
-			const chatSummary: any = await ctx.runQuery(internal.queries.chat.getChatSummary, {
+			const chatSummary = await ctx.runQuery(internal.queries.chat.getChatSummary, {
 				chatId: args.chatId,
 			});
 

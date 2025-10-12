@@ -1,4 +1,5 @@
 import type { Id } from "@/convex/_generated/dataModel";
+import type { TProjectDTO } from "@/utils/schemas/projects";
 import { createOpenAI } from "@ai-sdk/openai";
 import { Output, generateText } from "ai";
 import { Experimental_Agent as Agent } from "ai";
@@ -12,31 +13,48 @@ const openai = createOpenAI({
 	baseURL: "https://gateway.ai.cloudflare.com/v1/YOUR_ACCOUNT_ID/YOUR_GATEWAY_ID/openai", // Update with your gateway URL
 });
 
-interface ChatSummary {
-	id: Id<"chats">;
+type TDetails = {
+	id: string;
 	cliente: {
 		nome: string;
 		telefone: string;
 		email?: string;
 		cpfCnpj?: string;
+		cidade?: string;
+		uf?: string;
+		cep?: string;
+		bairro?: string;
+		endereco?: string;
+		numeroOuIdentificador?: string;
 	};
 	ultimasMensagens: Array<{
-		id: Id<"messages">;
+		id: string;
 		autorTipo: "cliente" | "usuario" | "ai";
 		conteudoTipo?: "IMAGEM" | "DOCUMENTO" | "VIDEO" | "AUDIO";
 		conteudoTexto?: string;
 		conteudoMidiaUrl?: string;
 		dataEnvio: number;
-		atendimentoId?: Id<"services">;
+		atendimentoId?: string;
 	}>;
 	atendimentoAberto:
 		| {
-				id: Id<"services">;
+				id: string;
 				descricao: string;
 				status: "PENDENTE" | "EM_ANDAMENTO" | "CONCLUIDO";
 		  }
 		| false;
-}
+	projetos: Array<{
+		id: string;
+		codigo: number;
+		status: "EM_ANDAMENTO" | "CONCLUIDO";
+		nome: string;
+		tipo: string;
+		localizacao: string;
+		datas: Record<string, string>;
+		produtos: Exclude<TProjectDTO["produtos"], undefined | null>;
+		servicos: Exclude<TProjectDTO["servicos"], undefined | null>;
+	}>;
+};
 
 type AIResponse = string;
 
@@ -74,16 +92,16 @@ export const agent = new Agent({
 	toolChoice: "none",
 });
 
-export async function getAgentResponse({ chatSummary }: { chatSummary: ChatSummary }): Promise<AIResponse> {
+export async function getAgentResponse({ details }: { details: TDetails }): Promise<AIResponse> {
 	try {
-		if (!chatSummary) {
-			throw new Error("Chat não encontrado");
+		if (!details) {
+			throw new Error("Detalhes não encontrados");
 		}
 
 		// Build conversation context
-		const conversationHistory = chatSummary.ultimasMensagens
+		const conversationHistory = details.ultimasMensagens
 			.reverse() // Oldest first
-			.map((msg: ChatSummary["ultimasMensagens"][0]) => {
+			.map((msg: TDetails["ultimasMensagens"][0]) => {
 				const role = msg.autorTipo === "cliente" ? "Cliente" : msg.autorTipo === "ai" ? "Você (AI)" : "Atendente Humano";
 				let content = msg.conteudoTexto || "";
 
@@ -98,24 +116,48 @@ export async function getAgentResponse({ chatSummary }: { chatSummary: ChatSumma
 		const userPrompt = `Você está encarregando de responder ao cliente.
 
 ### INFORMAÇÕES DO CLIENTE
-- Nome: ${chatSummary.cliente.nome}
-- Telefone: ${chatSummary.cliente.telefone}
-${chatSummary.cliente.email ? `- Email: ${chatSummary.cliente.email}` : ""}
-${chatSummary.cliente.cpfCnpj ? `- CPF/CNPJ: ${chatSummary.cliente.cpfCnpj}` : ""}
+- Nome: ${details.cliente.nome}
+- Telefone: ${details.cliente.telefone}
+${details.cliente.email ? `- Email: ${details.cliente.email}` : ""}
+${details.cliente.cpfCnpj ? `- CPF/CNPJ: ${details.cliente.cpfCnpj}` : ""}
+${details.cliente.cidade ? `- Cidade: ${details.cliente.cidade}` : ""}
+${details.cliente.uf ? `- UF: ${details.cliente.uf}` : ""}
+${details.cliente.cep ? `- CEP: ${details.cliente.cep}` : ""}
+${details.cliente.bairro ? `- Bairro: ${details.cliente.bairro}` : ""}
+${details.cliente.endereco ? `- Endereço: ${details.cliente.endereco}` : ""}
+${details.cliente.numeroOuIdentificador ? `- Número ou identificador: ${details.cliente.numeroOuIdentificador}` : ""}
 
 ### HISTÓRICO DA CONVERSA
 ${conversationHistory}
 
 ${
-	chatSummary.atendimentoAberto
+	details.atendimentoAberto
 		? `
 ### ATENDIMENTO EM ABERTO
-- ID: ${chatSummary.atendimentoAberto.id}
-- Descrição: ${chatSummary.atendimentoAberto.descricao}
-- Status: ${chatSummary.atendimentoAberto.status}
+- ID: ${details.atendimentoAberto.id}
+- Descrição: ${details.atendimentoAberto.descricao}
+- Status: ${details.atendimentoAberto.status}
 `
 		: ""
 }
+
+### PROJETOS DO CLIENTE
+${details.projetos
+	.map(
+		(projeto) => `- ID: ${projeto.id}
+- Código: ${projeto.codigo}
+- Status: ${projeto.status}
+- Nome: ${projeto.nome}
+- Tipo: ${projeto.tipo}
+- Localização: ${projeto.localizacao}
+- Produtos: ${projeto.produtos.map((produto) => `- ${produto.qtde}x ${produto.modelo} (${produto.potencia}W)`).join(", ")}
+- Serviços: ${projeto.servicos.map((servico) => `- ${servico.descricao}`).join(", ")}
+- Datas relevantes: ${Object.entries(projeto.datas)
+			.map(([chave, valor]) => `- ${chave}: ${valor}`)
+			.join(", ")}
+`,
+	)
+	.join("\n")}
 
 Analise a conversa e responda apropriadamente. Lembre-se de retornar apenas JSON válido.`;
 

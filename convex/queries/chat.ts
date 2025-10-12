@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
-import { query } from "../_generated/server";
+import { internalQuery, query } from "../_generated/server";
 
 export const getChats = query({
 	args: {},
@@ -23,7 +23,7 @@ export const getChats = query({
 	},
 });
 
-export const getChat = query({
+export const getChat = internalQuery({
 	args: {
 		chatId: v.id("chats"),
 	},
@@ -75,5 +75,54 @@ export const getChatMessages = query({
 			}),
 		);
 		return enrichedMessages;
+	},
+});
+
+export const getChatSummary = internalQuery({
+	args: {
+		chatId: v.id("chats"),
+	},
+	handler: async (ctx, args) => {
+		const chat = await ctx.db.get(args.chatId);
+		if (!chat) throw new Error("Chat não encontrado.");
+
+		const chatClient = await ctx.db.get(chat.clienteId);
+		if (!chatClient) throw new Error("Cliente não encontrado.");
+
+		const chatLastOneHundredMessages = await ctx.db
+			.query("messages")
+			.filter((q) => q.eq(q.field("chatId"), args.chatId))
+			.order("desc")
+			.take(100);
+
+		const chatOpenService = await ctx.db
+			.query("services")
+			.filter((q) => q.eq(q.field("chatId"), args.chatId) && q.eq(q.field("status"), "PENDENTE"))
+			.first();
+
+		return {
+			id: chat._id,
+			cliente: {
+				nome: chatClient.nome,
+				telefone: chatClient.telefone,
+				email: chatClient.email,
+				cpfCnpj: chatClient.cpfCnpj,
+			},
+			ultimasMensagens: chatLastOneHundredMessages.map((m) => ({
+				id: m._id,
+				autorTipo: m.autorTipo,
+				conteudoTipo: m.conteudoMidiaTipo,
+				conteudoTexto: m.conteudoTexto,
+				conteudoMidiaUrl: m.conteudoMidiaUrl,
+				dataEnvio: m.dataEnvio,
+				atendimentoId: m.servicoId,
+			})),
+			atendimentoAberto: chatOpenService
+				? {
+						id: chatOpenService._id,
+						status: chatOpenService.status,
+					}
+				: false,
+		};
 	},
 });

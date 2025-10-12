@@ -10,4 +10,11 @@ crons.interval(
 	internal.mutations.chats.updateExpiredChats,
 );
 
+// Process scheduled AI responses every minute
+crons.interval(
+	"process-ai-responses",
+	{ minutes: 1 }, // Run every minute
+	internal.mutations.ai.processScheduledAIResponses,
+);
+
 export default crons;

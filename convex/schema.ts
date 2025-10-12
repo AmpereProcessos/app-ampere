@@ -27,11 +27,12 @@ export default defineSchema({
 		ultimaMensagemConteudoTexto: v.optional(v.string()),
 		status: v.union(v.literal("ABERTA"), v.literal("EXPIRADA")),
 		ultimaInteracaoClienteData: v.optional(v.number()),
+		aiAgendamentoRespostaData: v.optional(v.number()),
 	}).index("by_client_id", ["clienteId"]),
 	messages: defineTable({
 		chatId: v.id("chats"),
-		autorTipo: v.union(v.literal("cliente"), v.literal("usuario")),
-		autorId: v.union(v.id("clients"), v.id("users")),
+		autorTipo: v.union(v.literal("cliente"), v.literal("usuario"), v.literal("ai")),
+		autorId: v.union(v.id("clients"), v.id("users"), v.string()),
 		conteudoTexto: v.optional(v.string()),
 		// Media content fields
 		conteudoMidiaUrl: v.optional(v.string()),

@@ -145,13 +145,25 @@ export const createMessage = mutation({
 		});
 
 		// Updating chat embedded data
-		await ctx.db.patch(chatId, {
+		const baseUpdateData = {
 			ultimaMensagemId: insertMessageResponse,
 			ultimaMensagemData: Date.now(),
 			ultimaMensagemConteudoTexto: args.conteudo.texto,
-			ultimaMensagemConteudoTipo: args.conteudo.midiaTipo ?? "TEXTO",
+			ultimaMensagemConteudoTipo: args.conteudo.midiaTipo ?? ("TEXTO" as const),
 			mensagensNaoLidas: args.autor.tipo === "cliente" ? (chat?.mensagensNaoLidas ?? 0) + 1 : (chat?.mensagensNaoLidas ?? 0),
-		});
+		};
+
+		// If message is from client, schedule AI response
+		if (args.autor.tipo === "cliente") {
+			await ctx.db.patch(chatId, {
+				...baseUpdateData,
+				ultimaInteracaoClienteData: Date.now(),
+				aiAgendamentoRespostaData: Date.now() + 5000, // 5 seconds from now
+				status: "ABERTA" as const,
+			});
+		} else {
+			await ctx.db.patch(chatId, baseUpdateData);
+		}
 		// Schedule WhatsApp message send for user messages
 		if (args.autor.tipo === "usuario" && (args.conteudo.texto || args.conteudo.midiaStorageId)) {
 			const currentChat = await ctx.db.get(chatId);
@@ -377,6 +389,76 @@ export const markMessagesAsRead = mutation({
 			success: true,
 			message: `${messages.length} mensagens marcadas como lidas.`,
 			markedCount: messages.length,
+		};
+	},
+});
+
+export const createAIMessage = internalMutation({
+	args: {
+		chatId: v.id("chats"),
+		conteudo: v.object({
+			texto: v.optional(v.string()),
+		}),
+	},
+	handler: async (ctx, args) => {
+		console.log("[INFO] [MESSAGES] [CREATE_AI_MESSAGE] Creating AI message for chat:", args.chatId);
+
+		// Get chat to get client info
+		const chat = await ctx.db.get(args.chatId);
+		if (!chat) {
+			throw new Error("Chat não encontrado.");
+		}
+
+		const client = await ctx.db.get(chat.clienteId);
+		if (!client) {
+			throw new Error("Cliente não encontrado.");
+		}
+
+		// Find or get service
+		let serviceId: Id<"services"> | undefined;
+		const service = await ctx.db
+			.query("services")
+			.filter((q) => q.eq(q.field("chatId"), args.chatId))
+			.filter((q) => q.eq(q.field("status"), "PENDENTE"))
+			.first();
+		if (service) {
+			serviceId = service._id;
+		}
+
+		// Create the AI message
+		const messageId = await ctx.db.insert("messages", {
+			chatId: args.chatId,
+			autorTipo: "ai",
+			autorId: "ai-agent", // Special identifier for AI
+			conteudoTexto: args.conteudo.texto,
+			status: "ENVIADO",
+			whatsappStatus: "PENDENTE",
+			servicoId: serviceId,
+			dataEnvio: Date.now(),
+		});
+
+		// Update chat
+		await ctx.db.patch(args.chatId, {
+			ultimaMensagemId: messageId,
+			ultimaMensagemData: Date.now(),
+			ultimaMensagemConteudoTexto: args.conteudo.texto,
+			ultimaMensagemConteudoTipo: "TEXTO",
+		});
+
+		// Schedule WhatsApp message send
+		await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
+			messageId: messageId,
+			phoneNumber: client.telefone,
+			content: args.conteudo.texto || "",
+		});
+
+		console.log("[INFO] [MESSAGES] [CREATE_AI_MESSAGE] AI message created:", messageId);
+
+		return {
+			data: {
+				messageId,
+			},
+			message: "Mensagem de IA criada com sucesso.",
 		};
 	},
 });

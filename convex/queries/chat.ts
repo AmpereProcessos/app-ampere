@@ -126,6 +126,7 @@ export const getChatSummary = internalQuery({
 
 		return {
 			id: chat._id,
+			ultimaMensagemData: chat.ultimaMensagemData,
 			cliente: {
 				idApp: chatClient.idApp,
 				nome: chatClient.nome,

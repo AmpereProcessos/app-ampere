@@ -19,6 +19,7 @@ const NEXT_API_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 export const generateAIResponse = internalAction({
 	args: {
 		chatId: v.id("chats"),
+		scheduleAt: v.string(),
 	},
 	handler: async (ctx, args): Promise<{ success: boolean; transferred?: boolean; error?: string }> => {
 		try {
@@ -31,6 +32,16 @@ export const generateAIResponse = internalAction({
 
 			if (!chatSummary) {
 				throw new Error("Chat not found");
+			}
+
+			const lastMessageDate = chatSummary.ultimaMensagemData ? new Date(chatSummary.ultimaMensagemData) : null;
+			const scheduleAtDate = args.scheduleAt ? new Date(args.scheduleAt) : null;
+			if (lastMessageDate && scheduleAtDate && lastMessageDate > scheduleAtDate) {
+				console.log("[AI_ACTION] New messages arrived after schedule, skipping...");
+				return {
+					success: true,
+					transferred: false,
+				};
 			}
 
 			// Call the Next.js API endpoint with chat summary
@@ -52,7 +63,7 @@ export const generateAIResponse = internalAction({
 			console.log("[AI_ACTION] AI response result:", result);
 
 			if (!result.success) {
-				throw new Error(`AI generation failed: ${result.error || "Unknown error"}`);
+				throw new Error(`Falha na geração da resposta da IA: ${result.error || "Erro desconhecido"}`);
 			}
 
 			// Get chat details
@@ -61,7 +72,7 @@ export const generateAIResponse = internalAction({
 			});
 
 			if (!chat) {
-				throw new Error("Chat not found");
+				throw new Error("Chat não encontrado.");
 			}
 
 			await ctx.runMutation(internal.mutations.messages.createAIMessage, {
@@ -70,46 +81,6 @@ export const generateAIResponse = internalAction({
 					texto: result.message,
 				},
 			});
-
-			// if (result.shouldTransferToHuman) {
-			// 	// Transfer to human
-			// 	console.log("[AI_ACTION] Transferring chat", args.chatId, "to human:", result.reason);
-
-			// 	if (!chatSummary.atendimentoAberto) {
-			// 		// Create a service record
-			// 		await ctx.runMutation(internal.mutations.services.createService, {
-			// 			chatId: args.chatId,
-			// 			clienteId: chat.clienteId,
-			// 			descricao: result.reason || "Cliente solicitou atendimento humano",
-			// 			status: "PENDENTE",
-			// 		});
-			// 	}
-
-			// 	// Send a message indicating transfer
-			// 	if (result.message) {
-			// 		await ctx.runMutation(internal.mutations.messages.createAIMessage, {
-			// 			chatId: args.chatId,
-			// 			conteudo: {
-			// 				texto: result.message,
-			// 			},
-			// 		});
-			// 	}
-
-			// 	// Clear AI schedule
-			// 	await ctx.runMutation(internal.mutations.ai.clearAISchedule, {
-			// 		chatId: args.chatId,
-			// 	});
-			// } else if (result.message) {
-			// 	// Send AI response message
-			// 	console.log("[AI_ACTION] Sending AI message to chat", args.chatId);
-
-			// 	await ctx.runMutation(internal.mutations.messages.createAIMessage, {
-			// 		chatId: args.chatId,
-			// 		conteudo: {
-			// 			texto: result.message,
-			// 		},
-			// 	});
-			// }
 
 			return {
 				success: true,

@@ -30,34 +30,59 @@ export const createMessage = mutation({
 		whatsappMessageId: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		console.log("[INFO] [MESSAGES] [CREATE_MESSAGE] Creating message:", args);
-		let autorId: Id<"clients"> | Id<"users"> | null = null;
+		console.log("[INFO] [CREATE_MESSAGE] Creating message with args:", args);
 
+		// Checkings before starting the process
+		// We check if the whatsappMessageId is defined (is obligatory in case it came from a client)
+		if (args.autor.tipo === "cliente" && !args.whatsappMessageId) {
+			throw new Error("WhatsappMessageId não informado.");
+		}
+
+		let authorId: Id<"clients"> | Id<"users"> | null = null;
 		let clientId: Id<"clients"> | null = null;
-		const cliente = await ctx.db
+
+		// ## FIRST, DEFINING CLIENT AND AUTHOR DATA
+		// Getting the clientId
+		const client = await ctx.db
 			.query("clients")
 			.filter((q) => q.eq(q.field("idApp"), args.cliente.idApp))
 			.first();
-
-		if (!cliente) {
+		if (!client) {
 			// If client is not yet registered, we need to register it
 			const insertClientResponse = await ctx.db.insert("clients", {
 				...args.cliente,
 			});
 			clientId = insertClientResponse;
-			// If the author is a client, we also define the autorId
-			if (args.autor.tipo === "cliente") autorId = clientId;
+			// If the author is a client, we also define the authorId
+			if (args.autor.tipo === "cliente") authorId = clientId;
 		} else {
-			clientId = cliente._id;
-			// If the author is a client, we also define the autorId
-			if (args.autor.tipo === "cliente") autorId = clientId;
+			clientId = client._id;
+			// If the author is a client, we also define the authorId
+			if (args.autor.tipo === "cliente") authorId = clientId;
 		}
 		// If clientId was not defined by any means, we need to throw an error
 		if (!clientId) {
 			throw new Error("Cliente não encontrado.");
 		}
+		// Getting the authorId
+		if (!authorId) {
+			// If no autorId was defined, we check if the autor is a user
+			if (args.autor.tipo === "usuario") {
+				const user = await ctx.db
+					.query("users")
+					.filter((q) => q.eq(q.field("idApp"), args.autor.idApp))
+					.first();
+				if (!user) {
+					throw new Error("Usuário não encontrado.");
+				}
+				authorId = user._id;
+			} else {
+				// Else, it is a user but no user was found, them throw an error
+				throw new Error("Autor não encontrado.");
+			}
+		}
 
-		// Then, we query for the chat this cliet has
+		// ## SECOND, DEFINING CHAT DATA
 		let chatId: Id<"chats"> | null = null;
 		const chat = await ctx.db
 			.query("chats")
@@ -72,6 +97,7 @@ export const createMessage = mutation({
 			});
 			chatId = insertChatResponse;
 		} else {
+			// If chat is already registered, we get the its id
 			chatId = chat._id;
 		}
 
@@ -80,9 +106,8 @@ export const createMessage = mutation({
 			throw new Error("Chat não encontrado.");
 		}
 
+		// ## THIRD, DEFINING SERVICE DATA
 		let serviceId: Id<"services"> | null = null;
-
-		// We try finding any open service for this chat
 		const service = await ctx.db
 			.query("services")
 			.filter((q) => q.eq(q.field("chatId"), chatId))
@@ -90,46 +115,30 @@ export const createMessage = mutation({
 			.first();
 		if (!service) {
 			// If no service was found, we only create one if the autor is a user
-			if (args.autor.tipo === "usuario") {
-				const insertServiceResponse = await ctx.db.insert("services", {
-					chatId: chatId,
-					clienteId: clientId,
-					descricao: "NÃO ESPECIFICADO",
-					status: "PENDENTE",
-				});
-				serviceId = insertServiceResponse;
-			}
+			const insertServiceResponse = await ctx.db.insert("services", {
+				chatId: chatId,
+				clienteId: clientId,
+				descricao: "NÃO ESPECIFICADO",
+				status: "PENDENTE",
+				responsavel: args.autor.tipo === "usuario" ? (authorId as Id<"users">) : "ai", // Initializing the service with the correct responsible (AI if author is a client, user if author is a user)
+			});
+			serviceId = insertServiceResponse;
 		} else {
+			// If service is already registered, we get the its id
 			serviceId = service._id;
-		}
-
-		if (!autorId) {
-			// If no autorId was defined, we check if the autor is a user
+			// If the is a service and the author of the message is a user, we update the service responsible
 			if (args.autor.tipo === "usuario") {
-				const user = await ctx.db
-					.query("users")
-					.filter((q) => q.eq(q.field("idApp"), args.autor.idApp))
-					.first();
-				if (!user) {
-					throw new Error("Usuário não encontrado.");
-				}
-				autorId = user._id;
-			} else {
-				// Else, it is a user but no user was found, them throw an error
-				throw new Error("Autor não encontrado.");
+				await ctx.db.patch(serviceId, {
+					responsavel: authorId as Id<"users">,
+				});
 			}
 		}
 
-		// We check if the whatsappMessageId is defined (is obligatory in case it came from a client)
-		if (args.autor.tipo === "cliente" && !args.whatsappMessageId) {
-			throw new Error("WhatsappMessageId não informado.");
-		}
-
-		// Finally, we insert the message
+		// ## FOURTH, INSERTING MESSAGE
 		const insertMessageResponse = await ctx.db.insert("messages", {
 			chatId: chatId,
 			autorTipo: args.autor.tipo,
-			autorId: autorId,
+			autorId: authorId,
 			conteudoTexto: args.conteudo.texto,
 			conteudoMidiaUrl: args.conteudo.midiaUrl,
 			conteudoMidiaTipo: args.conteudo.midiaTipo,
@@ -144,6 +153,7 @@ export const createMessage = mutation({
 			dataEnvio: Date.now(),
 		});
 
+		// ## FIFTH, UPDATING CHAT DATA
 		// Updating chat embedded data
 		const baseUpdateData = {
 			ultimaMensagemId: insertMessageResponse,
@@ -152,25 +162,26 @@ export const createMessage = mutation({
 			ultimaMensagemConteudoTipo: args.conteudo.midiaTipo ?? ("TEXTO" as const),
 			mensagensNaoLidas: args.autor.tipo === "cliente" ? (chat?.mensagensNaoLidas ?? 0) + 1 : (chat?.mensagensNaoLidas ?? 0),
 		};
-
-		// If message is from client, schedule AI response
+		// If message is from client, we add additional data to the update
 		if (args.autor.tipo === "cliente") {
 			await ctx.db.patch(chatId, {
 				...baseUpdateData,
 				ultimaInteracaoClienteData: Date.now(),
-				aiAgendamentoRespostaData: Date.now() + 5000, // 5 seconds from now
+				aiAgendamentoRespostaData: Date.now() + 3000, // 3 seconds from now
 				status: "ABERTA" as const,
 			});
 		} else {
+			// If message is from user, we update the chat with the base data
 			await ctx.db.patch(chatId, baseUpdateData);
 		}
+
+		// ## SIXTH, SCHEDULING
 		// Schedule WhatsApp message send for user messages
 		if (args.autor.tipo === "usuario" && (args.conteudo.texto || args.conteudo.midiaStorageId)) {
 			const currentChat = await ctx.db.get(chatId);
 			if (!currentChat) {
 				throw new Error("Chat não encontrado após criação.");
 			}
-
 			// Check conversation state to decide message type
 			if (currentChat.status === "ABERTA") {
 				// Send regular message (text or media)
@@ -197,14 +208,15 @@ export const createMessage = mutation({
 				// Conversation is expired, would need to send template
 				// For now, we'll log this case - in production, you'd implement template sending
 				console.log("[CREATE_MESSAGE] Conversation expired for chat:", chatId, "- template message would be needed");
-				if (args.conteudo.texto) {
-					await ctx.scheduler.runAfter(500, internal.actions.whatsapp.sendWhatsappMessage, {
-						messageId: insertMessageResponse,
-						phoneNumber: args.cliente.telefone,
-						content: args.conteudo.texto,
-					});
-				}
+				throw new Error("Conversa expirada. Por favor, envie um template para continuar.");
 			}
+		}
+		if (args.autor.tipo === "cliente") {
+			// We schedule the AI response generation
+			await ctx.scheduler.runAfter(3000, internal.actions.ai.generateAIResponse, {
+				chatId: chatId,
+				scheduleAt: new Date().toISOString(),
+			});
 		}
 		return {
 			data: {

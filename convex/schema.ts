@@ -56,7 +56,7 @@ export default defineSchema({
 		clienteId: v.id("clients"),
 		descricao: v.string(),
 		status: v.union(v.literal("PENDENTE"), v.literal("EM_ANDAMENTO"), v.literal("CONCLUIDO")),
-		responsavel: v.optional(v.id("users")),
+		responsavel: v.optional(v.union(v.id("users"), v.literal("ai"))),
 	})
 		.index("by_chat_id", ["chatId"])
 		.index("by_client_id", ["clienteId"])

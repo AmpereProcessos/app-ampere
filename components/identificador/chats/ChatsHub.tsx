@@ -77,8 +77,8 @@ function ChatsHub({ session }: ChatsHubProps) {
 											</Avatar>
 										</div>
 										{/* Informações do Chat */}
-										<div className="grow flex flex-col">
-											<div className="flex items-center justify-between">
+										<div className="grow flex flex-col min-w-0">
+											<div className="flex items-center justify-between w-full min-w-0">
 												<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
 												{chat.ultimaMensagemData && (
 													<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
@@ -89,9 +89,9 @@ function ChatsHub({ session }: ChatsHubProps) {
 													</span>
 												)}
 											</div>
-											<div className="flex items-center justify-between">
+											<div className="flex items-center justify-between w-full min-w-0">
 												{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-													<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+													<p className="text-sm text-primary/60 truncate flex-1 min-w-0">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
 												) : (
 													<div className="flex items-center gap-1">
 														<ImageIcon className="w-4 h-4" />
@@ -145,7 +145,7 @@ function ChatsHub({ session }: ChatsHubProps) {
 											type="button"
 											key={chat._id}
 											onClick={() => setSelectedChatId(chat._id)}
-											className="w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg"
+											className="w-full max-w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg"
 										>
 											<div className="flex items-center justify-center">
 												<Avatar className="w-12 h-12 min-w-12 min-h-12">
@@ -154,8 +154,8 @@ function ChatsHub({ session }: ChatsHubProps) {
 												</Avatar>
 											</div>
 											{/* Informações do Chat */}
-											<div className="grow flex flex-col">
-												<div className="flex items-center justify-between">
+											<div className="grow flex flex-col min-w-0">
+												<div className="flex items-center justify-between w-full min-w-0">
 													<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
 													{chat.ultimaMensagemData && (
 														<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
@@ -166,10 +166,10 @@ function ChatsHub({ session }: ChatsHubProps) {
 														</span>
 													)}
 												</div>
-												<div className="flex items-center justify-between">
+												<div className="flex items-center justify-between w-full min-w-0">
 													{chat.ultimaMensagemConteudoTipo ? (
 														chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-															<p className="text-sm text-primary/60 truncate">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+															<p className="text-sm text-primary/60 truncate flex-1 min-w-0"> {chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
 														) : (
 															<div className="flex items-center gap-1">
 																<ImageIcon className="w-4 h-4" />

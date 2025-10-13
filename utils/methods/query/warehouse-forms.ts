@@ -1,91 +1,70 @@
-import { TNewWarehouseFormularyDTO, TWarehouseFormularyDTO } from '@/utils/schemas/warehouse-formularies'
-import axios from 'axios'
-import { useState } from 'react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetWarehouseFormulariesInput, TGetWarehouseFormulariesOutput } from "@/pages/api/almoxarifado/formularios/index-two";
+import type { TNewWarehouseFormularyDTO } from "@/utils/schemas/warehouse-formularies";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
 
-export async function fetchWarehouseForms({ after, before }: { after: string; before: string }) {
-  try {
-    const { data } = await axios.get(`/api/almoxarifado/formularios?after=${after}&before=${before}`)
-
-    return data.data as TWarehouseFormularyDTO[]
-  } catch (error) {
-    throw error
-  }
+export async function fetchWarehouseForms(input: TGetWarehouseFormulariesInput) {
+	const searchParams = new URLSearchParams();
+	if (input.page) searchParams.set("page", input.page.toString());
+	if (input.search) searchParams.set("search", input.search);
+	if (input.periodType) searchParams.set("periodType", input.periodType);
+	if (input.periodAfter) searchParams.set("periodAfter", input.periodAfter);
+	if (input.periodBefore) searchParams.set("periodBefore", input.periodBefore);
+	if (input.pendingOnly) searchParams.set("pendingOnly", input.pendingOnly.toString());
+	const { data } = await axios.get<TGetWarehouseFormulariesOutput>(`/api/almoxarifado/formularios/index-two?${searchParams.toString()}`);
+	if (!data.data.default) throw new Error("Não foi possível obter os formulários.");
+	return data.data.default;
 }
 
-type UseWarehouseFormsFilters = {
-  search: string
-  done: boolean
-  notDone: boolean
-  services: string[]
-}
-export function useWarehouseForms({ after, before }: { after: string; before: string }) {
-  const [filters, setFilters] = useState<UseWarehouseFormsFilters>({
-    search: '',
-    done: false,
-    notDone: false,
-    services: [],
-  })
-  function matchSearch(form: TNewWarehouseFormularyDTO) {
-    if (filters.search.trim().length == 0) return true
-    return form.titulo.toUpperCase().includes(filters.search.toUpperCase())
-  }
-  function matchDone(form: TNewWarehouseFormularyDTO) {
-    if (!filters.done) return true
-    return !!form.dataEfetivacao
-  }
-  function matchNotDone(form: TNewWarehouseFormularyDTO) {
-    if (!filters.notDone) return true
-    return !form.dataEfetivacao
-  }
-  function matchService(form: TNewWarehouseFormularyDTO) {
-    if (filters.services.length == 0) return true
-    return filters.services.includes(form.categoria)
-  }
-  function handleModelData(data: TNewWarehouseFormularyDTO[]) {
-    var modeledData = data
-    return modeledData.filter((form) => matchSearch(form) && matchDone(form) && matchNotDone(form) && matchService(form))
-  }
-  return {
-    ...useQuery({
-      queryKey: ['warehouse-forms', after, before],
-      queryFn: async () => await fetchNewWarehouseForms({ after, before }),
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+type TUseWarehouseFormsParams = {
+	initialFilters?: Partial<TGetWarehouseFormulariesInput>;
+};
+export function useWarehouseForms({ initialFilters }: TUseWarehouseFormsParams) {
+	const [filters, setFilters] = useState<TGetWarehouseFormulariesInput>({
+		page: initialFilters?.page || 1,
+		pendingOnly: initialFilters?.pendingOnly || false,
+		search: initialFilters?.search || "",
+		periodType: initialFilters?.periodType || null,
+		periodAfter: initialFilters?.periodAfter || null,
+		periodBefore: initialFilters?.periodBefore || null,
+	});
+
+	function updateFilters(filters: Partial<TGetWarehouseFormulariesInput>) {
+		setFilters((prevFilters) => ({
+			...prevFilters,
+			...filters,
+		}));
+	}
+
+	const debouncedFilters = useDebounceMemo(filters, 1000);
+	return {
+		...useQuery({
+			queryKey: ["warehouse-forms", debouncedFilters],
+			queryFn: async () => await fetchWarehouseForms(debouncedFilters),
+		}),
+		queryKey: ["warehouse-forms", debouncedFilters],
+		filters,
+		updateFilters,
+	};
 }
 
 async function fetchWarehouseFormById({ id }: { id: string }) {
-  try {
-    const { data } = await axios.get(`/api/almoxarifado/formularios?id=${id}`)
-
-    return data.data as TNewWarehouseFormularyDTO
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get<TGetWarehouseFormulariesOutput>(`/api/almoxarifado/formularios/index-two?id=${id}`);
+		if (!data.data.byId) throw new Error("Formulário não encontrado.");
+		return data.data.byId;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 }
 
 export function useWarehouseFormById({ id }: { id: string }) {
-  return useQuery({
-    queryKey: ['warehouse-form-by-id', id],
-    queryFn: async () => await fetchWarehouseFormById({ id }),
-    refetchOnWindowFocus: false,
-  })
-}
-
-async function fetchNewWarehouseForms({ after, before }: { after: string; before: string }) {
-  try {
-    const { data } = await axios.get(`/api/almoxarifado/formularios?after=${after}&before=${before}`)
-    return data.data as TNewWarehouseFormularyDTO[]
-  } catch (error) {
-    throw error
-  }
-}
-export function useNewWarehouseForms({ after, before }: { after: string; before: string }) {
-  return useQuery({
-    queryKey: ['warehouse-forms', after, before],
-    queryFn: async () => await fetchNewWarehouseForms({ after, before }),
-  })
+	return useQuery({
+		queryKey: ["warehouse-form-by-id", id],
+		queryFn: async () => await fetchWarehouseFormById({ id }),
+		refetchOnWindowFocus: false,
+	});
 }

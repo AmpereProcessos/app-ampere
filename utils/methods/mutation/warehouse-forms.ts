@@ -1,33 +1,23 @@
-import { TNewWarehouseFormulary } from '@/utils/schemas/warehouse-formularies'
-import axios from 'axios'
+import type {
+	TCreateWarehouseFormularyInput,
+	TCreateWarehouseFormularyOutput,
+	TDeleteWarehouseFormularyInput,
+	TUpdateWarehouseFormularyInput,
+} from "@/pages/api/almoxarifado/formularios/index-two";
+import type { TNewWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
+import axios from "axios";
 
-export async function createWarehouseFormulary({ info, mode }: { info: TNewWarehouseFormulary; mode: 'id' | 'message' }) {
-  try {
-    const { data } = await axios.post('/api/almoxarifado/formularios', info)
-    if (mode == 'id') return data.data.insertedId
-    if (typeof data.message != 'string') return 'Formulário criado com sucesso!'
-    return data.message
-  } catch (error) {
-    throw error
-  }
+export async function createWarehouseFormulary(input: TCreateWarehouseFormularyInput) {
+	const { data } = await axios.post<TCreateWarehouseFormularyOutput>("/api/almoxarifado/formularios/index-two", input);
+	return data;
 }
 
-export async function updateWarehouseFormulary({ id, changes }: { id: string; changes: Partial<TNewWarehouseFormulary> }) {
-  try {
-    const { data } = await axios.put(`/api/almoxarifado/formularios?id=${id}`, changes)
-    if (typeof data.message != 'string') return 'Formulário atualizado com sucesso !'
-    return data.message
-  } catch (error) {
-    throw error
-  }
+export async function updateWarehouseFormulary(input: TUpdateWarehouseFormularyInput) {
+	const { data } = await axios.put(`/api/almoxarifado/formularios/index-two?id=${input.warehouseFormularyId}`, input);
+	return data;
 }
 
-export async function deleteWarehouseFormulary({ id }: { id: string }) {
-  try {
-    const { data } = await axios.delete(`/api/almoxarifado/formularios?id=${id}`)
-    if (typeof data.message != 'string') return 'Formulário excluído com sucesso !'
-    return data.message as string
-  } catch (error) {
-    throw error
-  }
+export async function deleteWarehouseFormulary(input: TDeleteWarehouseFormularyInput) {
+	const { data } = await axios.delete(`/api/almoxarifado/formularios/index-two?warehouseFormularyId=${input.warehouseFormularyId}`);
+	return data;
 }

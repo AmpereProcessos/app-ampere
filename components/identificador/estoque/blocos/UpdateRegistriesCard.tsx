@@ -17,6 +17,7 @@ type UpdateRegistriesCardProps = {
 	showMaterialName?: boolean;
 };
 function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegistriesCardProps) {
+	console.log("REGISTRY AUTHOR", registry.autor);
 	return (
 		<div className="w-full flex flex-col gap-2 rounded-md border border-primary/20 p-3">
 			<div className="flex w-full items-center justify-between gap-2 flex-col lg:flex-row">
@@ -36,7 +37,7 @@ function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegi
 						<div className="flex items-center gap-1">
 							<Avatar className="h-5 min-h-5 w-5 min-w-5">
 								<AvatarImage src={registry.autor?.avatar_url || undefined} />
-								<AvatarFallback>{formatNameAsInitials(registry.autor?.nome)}</AvatarFallback>
+								<AvatarFallback className="text-xs">{formatNameAsInitials(registry.autor?.nome ?? "NA")}</AvatarFallback>
 							</Avatar>
 							<p className="text-primary/80 text-xs font-medium">{registry.autor?.nome}</p>
 						</div>

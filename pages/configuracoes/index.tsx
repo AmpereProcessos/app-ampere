@@ -5,6 +5,7 @@ import ContractTemplatesVariablesBlock from "@/components/identificador/configur
 import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
+import WhatsappTemplatesBlock from "@/components/identificador/configuracoes/WhatsappTemplatesBlock";
 import { useSession } from "@/components/providers/SessionProvider";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
@@ -27,7 +28,8 @@ type ConfigurationPageModes =
 	| "allocators"
 	| "composition-kits"
 	| "contract-templates"
-	| "contract-templates-variables";
+	| "contract-templates-variables"
+	| "whatsapp-templates";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -38,6 +40,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 	const userHasCompositionKitsViewPermission = session.user.permissoes.suprimentos.visualizar;
 	const userHasContractTemplatesVariablesPermission =
 		session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
+	const userHasWhatsappTemplatesPermission = session.user.permissoes.chats.enviarMensagens;
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
 			<div className="border-primary/20 flex w-full flex-col border-b px-6 pb-2">
@@ -120,6 +123,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							Kits de Composição
 						</button>
 					)}
+					{userHasWhatsappTemplatesPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("whatsapp-templates")}
+							className={`${
+								mode === "whatsapp-templates" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Templates WhatsApp
+						</button>
+					)}
 				</div>
 				<div className="flex h-full w-full flex-col gap-1 px-2 py-2 lg:w-4/5">
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
@@ -129,6 +143,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 					{mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}
+					{mode === "whatsapp-templates" ? <WhatsappTemplatesBlock session={session} /> : null}
 				</div>
 			</div>
 		</div>

@@ -121,6 +121,7 @@ export const createMessage = mutation({
 				descricao: "NÃO ESPECIFICADO",
 				status: "PENDENTE",
 				responsavel: args.autor.tipo === "usuario" ? (authorId as Id<"users">) : "ai", // Initializing the service with the correct responsible (AI if author is a client, user if author is a user)
+				dataInicio: Date.now(),
 			});
 			serviceId = insertServiceResponse;
 		} else {

@@ -6,6 +6,7 @@ import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-r
 import type { TMaterial } from "@/utils/schemas/materials";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
+import type { TEmployee } from "@/utils/schemas/users";
 import type { TNewWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
@@ -17,26 +18,23 @@ import { type AnyBulkWriteOperation, ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const warehouseDatabase = await connectToWarehouseDatabase();
-	const warehouseFormsCollection = warehouseDatabase.collection<TNewWarehouseFormulary>("formularios");
-	const materialsCollection = warehouseDatabase.collection<TMaterial>("material");
-	const logsCollection = warehouseDatabase.collection<TMaterialUpdateRegistry>("alteracoes");
+	const admDb = await connectToAdministrationDatabase();
+	const usersCollection = await admDb.collection<TEmployee>("colaboradores");
+	const users = await usersCollection.find({}).toArray();
 
-	const allWarehouseForms = await warehouseFormsCollection.find({}).toArray();
-	const allWarehouseLogs = await logsCollection.find({}).toArray();
-
-	const bulkwriteLogs: AnyBulkWriteOperation<TMaterialUpdateRegistry>[] = allWarehouseLogs
-		.map((log) => {
-			const correspondingForm = allWarehouseForms.find((form) => form._id.toString() === log.idFormulario);
-			return {
-				updateOne: {
-					filter: { _id: new ObjectId(log._id) },
-					update: { $set: { formulario: correspondingForm ? { id: correspondingForm._id.toString(), titulo: correspondingForm.titulo } : null } },
+	const bulkwriteUsers: AnyBulkWriteOperation<TEmployee>[] = users.map((user) => {
+		return {
+			updateOne: {
+				filter: { _id: new ObjectId(user._id) },
+				update: {
+					$set: {
+						permissoes: { ...user.permissoes, chats: { visualizar: false, enviarMensagens: false } },
+					},
 				},
-			};
-		})
-		.filter((b) => !!b);
+			},
+		};
+	});
 
-	const bulkwriteResponse = await logsCollection.bulkWrite(bulkwriteLogs);
+	const bulkwriteResponse = await usersCollection.bulkWrite(bulkwriteUsers);
 	return res.status(200).json({ bulkwriteResponse });
 }

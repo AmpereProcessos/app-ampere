@@ -455,6 +455,37 @@ function EmployeePermissionsPannel({ infoHolder, updateInfoHolder }: Permissions
 				}
 			/>
 
+			{/**CHATS */}
+			<h1 className="text-primary/60 w-full text-start text-sm">CHATS</h1>
+			<CheckboxInput
+				labelFalse="APTO A VISUALIZAR CHATS"
+				labelTrue="APTO A VISUALIZAR CHATS"
+				checked={infoHolder.permissoes.chats.visualizar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							chats: { ...infoHolder.permissoes.chats, visualizar: value },
+						},
+					})
+				}
+			/>
+			<CheckboxInput
+				labelFalse="APTO A ENVIAR MENSAGENS"
+				labelTrue="APTO A ENVIAR MENSAGENS"
+				checked={infoHolder.permissoes.chats.enviarMensagens}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							chats: { ...infoHolder.permissoes.chats, enviarMensagens: value },
+						},
+					})
+				}
+			/>
+
 			{/**GESTÃO */}
 			<h1 className="text-primary/60 w-full text-start text-sm">GESTÃO</h1>
 			<CheckboxInput

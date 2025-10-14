@@ -1,22 +1,13 @@
-import { TEmployee } from '@/utils/schemas/users'
-import axios from 'axios'
+import type { TCreateColaboratorInput, TCreateColaboratorOutput, TEditColaboratorInput, TEditColaboratorOutput } from "@/pages/api/colaboradores";
+import type { TEmployee } from "@/utils/schemas/users";
+import axios from "axios";
 
-export async function createEmployee({ info }: { info: TEmployee }) {
-  try {
-    const { data } = await axios.post('/api/colaboradores', info)
-    if (typeof data.message != 'string') return 'Colaborador atualizado com sucesso !'
-    return data.message
-  } catch (error) {
-    throw error
-  }
+export async function createEmployee(input: TCreateColaboratorInput) {
+	const { data } = await axios.post<TCreateColaboratorOutput>("/api/colaboradores", input);
+	return data;
 }
 
-export async function updateEmployee({ id, changes }: { id: string; changes: Partial<TEmployee> }) {
-  try {
-    const { data } = await axios.put(`/api/colaboradores?id=${id}`, changes)
-    if (typeof data.message != 'string') return 'Colaborador atualizado com sucesso !'
-    return data.message
-  } catch (error) {
-    throw error
-  }
+export async function updateEmployee(input: TEditColaboratorInput) {
+	const { data } = await axios.put<TEditColaboratorOutput>(`/api/colaboradores?id=${input.id}`, input.changes);
+	return data;
 }

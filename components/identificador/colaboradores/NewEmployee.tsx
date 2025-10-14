@@ -100,6 +100,10 @@ function NewEmployee({ session, closeModal, callbacks }: NewEmployeeProps) {
 				visualizar: false,
 				editar: false,
 			},
+			chats: {
+				visualizar: false,
+				enviarMensagens: false,
+			},
 		},
 		empresaVinculada: "", //
 		dataNascimento: null, //
@@ -162,7 +166,7 @@ function NewEmployee({ session, closeModal, callbacks }: NewEmployeeProps) {
 			});
 			imageUrl = url;
 		}
-		return await createEmployee({ info: { ...info, avatar_url: imageUrl } });
+		return await createEmployee({ ...info, avatar_url: imageUrl });
 	}
 
 	const { mutate: handleCreateEmployeeMutation, isPending } = useMutation({

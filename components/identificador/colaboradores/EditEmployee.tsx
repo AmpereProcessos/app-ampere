@@ -91,6 +91,10 @@ function EditEmployee({ userId, session, closeModal, callbacks }: EditEmployeePr
 				visualizar: false,
 				editar: false,
 			},
+			chats: {
+				visualizar: false,
+				enviarMensagens: false,
+			},
 		},
 		empresaVinculada: "", //
 		dataNascimento: "", //

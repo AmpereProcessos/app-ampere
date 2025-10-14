@@ -92,6 +92,10 @@ function EditUser({ userId, session, closeModal, callbacks }: EditUserProps) {
 				visualizar: false,
 				editar: false,
 			},
+			chats: {
+				visualizar: false,
+				enviarMensagens: false,
+			},
 		},
 		empresaVinculada: "", //
 		cargos: [], //

@@ -6,19 +6,21 @@ export const getChats = query({
 	args: {},
 	handler: async (ctx, args) => {
 		const chats = await ctx.db.query("chats").collect();
-		const enrichedChats = await Promise.all(
-			chats.map(async (chat) => {
-				const chatClient = await ctx.db
-					.query("clients")
-					.filter((q) => q.eq(q.field("_id"), chat.clienteId))
-					.first();
-				if (!chatClient) throw new Error("Cliente não encontrado.");
-				return {
-					...chat,
-					cliente: chatClient,
-				};
-			}),
-		);
+		const enrichedChats = (
+			await Promise.all(
+				chats.map(async (chat) => {
+					const chatClient = await ctx.db
+						.query("clients")
+						.filter((q) => q.eq(q.field("_id"), chat.clienteId))
+						.first();
+					if (!chatClient) throw new Error("Cliente não encontrado.");
+					return {
+						...chat,
+						cliente: chatClient,
+					};
+				}),
+			)
+		).sort((a, b) => (b.ultimaMensagemData || 0) - (a.ultimaMensagemData || 0));
 		return enrichedChats;
 	},
 });
@@ -32,9 +34,36 @@ export const getChat = query({
 		if (!chat) throw new Error("Chat não encontrado.");
 		const chatClient = await ctx.db.get(chat.clienteId);
 		if (!chatClient) throw new Error("Cliente não encontrado.");
+
+		const chatOpenService = await ctx.db
+			.query("services")
+			.filter((q) => q.eq(q.field("chatId"), args.chatId) && q.eq(q.field("status"), "PENDENTE"))
+			.first();
+		let chatOpenServiceResponsible: { nome: string; avatar_url: string | null } | "ai" | null = null;
+		if (chatOpenService) {
+			if (chatOpenService.responsavel && chatOpenService.responsavel === "ai") {
+				chatOpenServiceResponsible = "ai";
+			}
+			if (chatOpenService.responsavel && chatOpenService.responsavel !== "ai") {
+				console.log("Searching for service responsible...");
+				const user = await ctx.db.get(chatOpenService.responsavel as Id<"users">);
+				if (user) {
+					chatOpenServiceResponsible = {
+						nome: user.nome,
+						avatar_url: user.avatar_url ?? null,
+					};
+				}
+			}
+		}
 		const enrichedChat = {
 			...chat,
 			cliente: chatClient,
+			atendimentoAberto: chatOpenService
+				? {
+						...chatOpenService,
+						responsavel: chatOpenServiceResponsible,
+					}
+				: null,
 		};
 		return enrichedChat;
 	},

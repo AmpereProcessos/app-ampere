@@ -145,16 +145,19 @@ const createColaboratorHandler: NextApiHandler<TCreateColaboratorOutput> = async
 	return res.status(201).json(data);
 };
 
-type PutResponse = {
-	data: string;
-	message: string;
-};
-const editColaborator: NextApiHandler<PutResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
-	const { id } = req.query;
-	if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+const EditColaboratorInputSchema = z.object({
+	id: z.string({
+		invalid_type_error: "Tipo não válido para ID.",
+	}),
+	changes: InsertUserSchema.partial(),
+});
+export type TEditColaboratorInput = z.infer<typeof EditColaboratorInputSchema>;
 
-	const changes = InsertUserSchema.partial().parse(req.body);
+async function editColaborator({ session, input }: { session: TAuthSession; input: TEditColaboratorInput }) {
+	if (!session?.user.permissoes.usuarios.editar) throw new createHttpError.Unauthorized("Usuário não possui permissão para essa requisição.");
+
+	const { id, changes } = input;
+	if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
 	const db = await connectToAdministrationDatabase();
 	const usersCollection: Collection<TEmployee> = db.collection("colaboradores");
@@ -162,8 +165,8 @@ const editColaborator: NextApiHandler<PutResponse> = async (req, res) => {
 
 	if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao atualizar colaborador.");
 	if (updateResponse.matchedCount === 0) throw new createHttpError.NotFound("Colaborador não encontrado.");
-	// Updating subscriber in novu
 	if (changes.email || changes.telefone || changes.nome || changes.avatar_url) {
+		// Updating subscriber in novu
 		const updates: Record<string, string> = {};
 		if (changes.email) updates.email = changes.email;
 		if (changes.telefone) updates.phone = changes.telefone;
@@ -171,10 +174,25 @@ const editColaborator: NextApiHandler<PutResponse> = async (req, res) => {
 		if (changes.avatar_url) updates.avatar = changes.avatar_url;
 		if (Object.keys(updates).length > 0) await novu.subscribers.patch(updates, getNovuSubscriberId(id));
 	}
-	return res.status(201).json({ data: "Colaborador atualizado com sucesso !", message: "Colaborador atualizado com sucesso !" });
+	return {
+		data: {
+			updatedId: id,
+		},
+		message: "Colaborador atualizado com sucesso !",
+	};
+}
+export type TEditColaboratorOutput = Awaited<ReturnType<typeof editColaborator>>;
+const editColaboratorHandler: NextApiHandler<TEditColaboratorOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const input = EditColaboratorInputSchema.parse({
+		id: req.query.id,
+		changes: req.body,
+	});
+	const data = await editColaborator({ session, input });
+	return res.status(201).json(data);
 };
 export default apiHandler({
 	GET: getEmployeesHandler,
 	POST: createColaboratorHandler,
-	PUT: editColaborator,
+	PUT: editColaboratorHandler,
 });

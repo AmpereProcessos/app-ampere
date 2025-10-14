@@ -198,6 +198,7 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 							precoNovo: correspondingMaterial.preco,
 							tipo: listMaterialLiquidDecreaseQty > 0 ? "RETIRADA" : "DEVOLUÇÃO",
 							idFormulario: insertResponse.insertedId.toString(),
+							formulario: { id: insertResponse.insertedId.toString(), titulo: warehouseFormulary.titulo },
 							material: { id: correspondingMaterial._id.toString(), nome: correspondingMaterial.nome },
 							projeto: { id: warehouseFormulary.projeto.id, nome: warehouseFormulary.projeto.nome },
 						},
@@ -363,6 +364,7 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 								alteracao: listMaterialLiquidDecreaseQty, // Positive, since we are returning to stock
 								tipo: "DEVOLUÇÃO",
 								idFormulario: warehouseFormularyId,
+								formulario: { id: warehouseFormularyId, titulo: updatedWarehouseFormulary.titulo },
 								material: { id: correspondingMaterial._id.toString(), nome: correspondingMaterial.nome },
 								projeto: { id: updatedWarehouseFormulary.projeto.id, nome: updatedWarehouseFormulary.projeto.nome },
 								autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },
@@ -414,6 +416,7 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 							alteracao: -listMaterialLiquidDecreaseQty, // Negative, since our base operation is "taking away"
 							tipo: listMaterialLiquidDecreaseQty > 0 ? "RETIRADA" : "DEVOLUÇÃO",
 							idFormulario: warehouseFormularyId,
+							formulario: { id: warehouseFormularyId, titulo: updatedWarehouseFormulary.titulo },
 							material: { id: correspondingMaterial._id.toString(), nome: correspondingMaterial.nome },
 							projeto: { id: updatedWarehouseFormulary.projeto.id, nome: updatedWarehouseFormulary.projeto.nome },
 							autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },
@@ -573,6 +576,7 @@ async function deleteWarehouseFormulary({ input, session }: { input: TDeleteWare
 							alteracao: liquidTakenAwayQuantity,
 							tipo: "DEVOLUÇÃO",
 							idFormulario: warehouseFormularyId,
+							formulario: { id: warehouseFormularyId, titulo: warehouseFormulary.titulo },
 							material: { id: correspondingMaterial._id.toString(), nome: correspondingMaterial.nome },
 							projeto: { id: warehouseFormulary.projeto.id, nome: warehouseFormulary.projeto.nome },
 							autor: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },

@@ -7,7 +7,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import MaterialListItem from "./MaterialListItem";
 
+import { Button } from "@/components/ui/button";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { useQueryClient } from "@tanstack/react-query";
+import { Package, Plus } from "lucide-react";
 
 type MaterialsBlockProps = {
 	formularyId?: string;
@@ -70,10 +73,10 @@ function MaterialsBlock({
 
 	const isFormularyFinished = !!formHolder.dataEfetivacao;
 	return (
-		<div className="flex w-full flex-col">
-			<h1 className="mb-2 w-full rounded-md bg-[#15599a] p-1 text-center text-sm font-bold text-white">MATERIAIS</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="MATERIAIS" sectionTitleIcon={<Package className="h-4 w-4 min-h-4 min-w-4" />}>
 			{!isFormularyFinished ? (
-				<>
+				<div className="flex w-full flex-col gap-1 p-2 rounded-md border border-primary/20 bg-card">
+					<h1 className="text-xs font-bold">MENU DE NOVOS MATERIAIS</h1>
 					<div className="flex w-full items-center gap-2">
 						<div className="w-full lg:w-3/4">
 							<SelectVirtualizedInput
@@ -104,27 +107,29 @@ function MaterialsBlock({
 							/>
 						</div>
 					</div>
-					<div className="my-1 flex w-full items-center justify-end">
-						<button
-							type="button"
+					<div className="flex w-full items-center justify-end">
+						<Button
+							size={"sm"}
+							variant={"ghost"}
 							onClick={() => {
 								// @ts-ignore
 								addMaterial({ id: materialHolder.id, qtde: materialHolder.qtde });
 							}}
-							className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
+							className="flex items-center gap-1"
 						>
+							<Plus className="h-4 w-4 min-h-4 min-w-4" />
 							ADICIONAR MATERIAL
-						</button>
+						</Button>
 					</div>
-				</>
+				</div>
 			) : null}
 
 			{formHolder.materiais.length > 0 ? (
 				<div className="flex w-full flex-col gap-1">
-					<div className="bg-primary/80 flex w-full items-center gap-1">
-						<h1 className="w-[40%] text-center font-bold text-white">MATERIAL</h1>
-						<h1 className="w-[30%] text-center font-bold text-white">RETIRADO</h1>
-						<h1 className="w-[30%] text-center font-bold text-white">DEVOLVIDO</h1>
+					<div className="bg-primary/80 text-primary-foreground flex w-full items-center gap-1">
+						<h1 className="w-[40%] text-center font-bold">MATERIAL</h1>
+						<h1 className="w-[30%] text-center font-bold">RETIRADO</h1>
+						<h1 className="w-[30%] text-center font-bold">DEVOLVIDO</h1>
 					</div>
 					{formHolder.materiais.map((material, index) => (
 						<MaterialListItem
@@ -142,7 +147,7 @@ function MaterialsBlock({
 					))}
 				</div>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

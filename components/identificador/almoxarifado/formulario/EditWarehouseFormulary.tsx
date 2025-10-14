@@ -4,6 +4,7 @@ import TextInput from "@/components/inputs/Text";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { equipesTecnicas, serviceOrdersCategories } from "@/utils/constants";
 import { formatToCEP } from "@/utils/methods/formatting";
@@ -16,6 +17,7 @@ import { getCEPInfo } from "@/utils/methods/shared";
 import type { TExpense } from "@/utils/schemas/expenses";
 import type { TNewWarehouseFormularyDTO, TTransactionalWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Code, LayoutGrid, UserRound } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -25,6 +27,7 @@ import { FaUser } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { estadosECidades } from "../../../../utils/estados_cidades";
 import MaterialsBlock from "./MaterialsBlock";
+import WarehouseFormularyLocation from "./blocos/WarehouseFormularyLocation";
 
 function getExpensesFromFormulary({ session, info }: { session: TAuthSession; info: TNewWarehouseFormularyDTO }): TExpense {
 	const items = info.materiais.map((material) => {
@@ -111,30 +114,7 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 		dataEfetivacao: null,
 		dataInsercao: new Date().toISOString(),
 	});
-	async function setAddressDataByCEP(cep: string) {
-		const addressInfo = await getCEPInfo(cep);
-		const toastID = toast.loading("Buscando informações sobre o CEP...", {
-			duration: 2000,
-		});
-		setTimeout(() => {
-			if (addressInfo) {
-				toast.dismiss(toastID);
-				toast.success("Dados do CEP buscados com sucesso.", {
-					duration: 1000,
-				});
-				setInfoHolder((prev) => ({
-					...prev,
-					localizacao: {
-						...prev.localizacao,
-						endereco: addressInfo.logradouro,
-						bairro: addressInfo.bairro,
-						uf: addressInfo.uf as keyof typeof estadosECidades,
-						cidade: addressInfo.localidade.toUpperCase(),
-					},
-				}));
-			}
-		}, 1000);
-	}
+
 	async function handleFormularyConclusion() {
 		// Formatting updates for material devolution
 		const updates = infoHolder.materiais
@@ -247,6 +227,12 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 			dialogVariant="md"
 		>
 			<div className="w-full flex flex-col items-center justify-center">
+				<div className="flex items-center gap-2 px-2 py-1 rounded-md bg-primary/20">
+					<Code className="h-4 w-4 min-h-4 min-w-4" />
+					<p className="text-xs font-medium">{formularyId}</p>
+				</div>
+			</div>
+			<div className="w-full flex flex-col items-center justify-center">
 				<div className="w-fit">
 					<CheckboxInput
 						labelFalse="FINALIZADO"
@@ -266,16 +252,18 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 				width="100%"
 			/>
 			{infoHolder.projeto ? (
-				<div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
-					<div className="flex items-center gap-2">
-						<BsCode size={"20px"} color="rgb(31,41,55)" />
-						<p className="font-raleway text-sm font-medium">#{infoHolder.projeto.id || "N/A"}</p>
+				<ResponsiveDialogDrawerSection sectionTitleText="PROJETO" sectionTitleIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}>
+					<div className="flex flex-col gap-2">
+						<div className="flex items-center gap-1">
+							<Code className="h-4 w-4 min-h-4 min-w-4" />
+							<p className="text-sm font-semibold tracking-tight">#{infoHolder.projeto.id || "N/A"}</p>
+						</div>
+						<div className="flex items-center gap-1">
+							<UserRound className="h-4 w-4 min-h-4 min-w-4" />
+							<p className="text-sm font-semibold tracking-tight">{infoHolder.projeto.nome || "N/A"}</p>
+						</div>
 					</div>
-					<div className="flex items-center gap-2">
-						<FaUser size={"20px"} color="rgb(31,41,55)" />
-						<p className="font-raleway text-sm font-medium">{infoHolder.projeto.nome || "N/A"}</p>
-					</div>
-				</div>
+				</ResponsiveDialogDrawerSection>
 			) : null}
 			<div className="my-2 flex w-full items-center justify-center">
 				<CheckboxInput
@@ -331,187 +319,9 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 				allowPostFinishEditing={userHasOverallEditingPermission}
 			/>
 
-			<h1 className="mb-2 w-full rounded-md bg-[#15599a] p-1 text-center text-sm font-bold text-white">LOCALIZAÇÃO</h1>
-			<div className="grid grid-cols-1 grid-rows-3 items-center gap-6 px-2 lg:grid-cols-3 lg:grid-rows-1">
-				<TextInput
-					label="CEP"
-					value={(infoHolder.localizacao.cep as string) || ""}
-					placeholder="Preencha aqui o CEP do cliente."
-					handleChange={(value) => {
-						if (value.length === 9) {
-							setAddressDataByCEP(value);
-						}
-						setInfoHolder((prev) => ({
-							...prev,
-							localizacao: {
-								...prev.localizacao,
-								cep: formatToCEP(value),
-							},
-						}));
-					}}
-					width="100%"
-				/>
-
-				<SelectInput
-					label="ESTADO"
-					value={infoHolder.localizacao.uf}
-					handleChange={(value) =>
-						setInfoHolder((prev) => ({
-							...prev,
-							localizacao: { ...prev.localizacao, uf: value, cidade: estadosECidades[value as keyof typeof estadosECidades][0] as string },
-						}))
-					}
-					selectedItemLabel="NÃO DEFINIDO"
-					onReset={() => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, uf: "", cidade: "" } }))}
-					options={Object.keys(estadosECidades).map((state, index) => ({
-						id: index + 1,
-						label: state,
-						value: state,
-					}))}
-					width="100%"
-				/>
-
-				<SelectInput
-					label="CIDADE"
-					value={infoHolder.localizacao.cidade}
-					handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, cidade: value } }))}
-					options={
-						infoHolder.localizacao.uf
-							? estadosECidades[infoHolder.localizacao.uf as keyof typeof estadosECidades].map((city, index) => ({
-									id: index + 1,
-									value: city,
-									label: city,
-								}))
-							: null
-					}
-					selectedItemLabel="NÃO DEFINIDO"
-					onReset={() => setInfoHolder((prev) => ({ ...prev, cidade: "" }))}
-					width="100%"
-				/>
-			</div>
-			<div className="grid grid-cols-1 grid-rows-2 items-center gap-6 px-2 lg:grid-cols-2 lg:grid-rows-1">
-				<TextInput
-					label="BAIRRO"
-					value={infoHolder.localizacao.bairro || ""}
-					placeholder="Preencha aqui o bairro do cliente."
-					handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, bairro: value } }))}
-					width="100%"
-				/>
-
-				<TextInput
-					label="LOGRADOURO/RUA"
-					value={infoHolder.localizacao.endereco || ""}
-					placeholder="Preencha aqui o logradouro do cliente."
-					handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, endereco: value } }))}
-					width="100%"
-				/>
-			</div>
-			<div className="mb-2 grid grid-cols-1 grid-rows-2 items-center gap-6 px-2 lg:grid-cols-2 lg:grid-rows-1">
-				<TextInput
-					label="NÚMERO/IDENTIFICADOR"
-					value={infoHolder.localizacao.numeroOuIdentificador || ""}
-					placeholder="Preencha aqui o número ou identificador da residência do cliente."
-					handleChange={(value) =>
-						setInfoHolder((prev) => ({
-							...prev,
-							localizacao: {
-								...prev.localizacao,
-								numeroOuIdentificador: value,
-							},
-						}))
-					}
-					width="100%"
-				/>
-
-				<TextInput
-					label="COMPLEMENTO"
-					value={infoHolder.localizacao.complemento || ""}
-					placeholder="Preencha aqui algum complemento do endereço."
-					handleChange={(value) =>
-						setInfoHolder((prev) => ({
-							...prev,
-							localizacao: { ...prev.localizacao, complemento: value },
-						}))
-					}
-					width="100%"
-				/>
-			</div>
+			<WarehouseFormularyLocation infoHolder={infoHolder} updateInfoHolder={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))} />
 		</ResponsiveDialogDrawer>
 	);
-	// return (
-	// 	<div id="new-warehouse-form" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-	// 		<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[60%]">
-	// 			<div className="flex h-full flex-col">
-	// 				<div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-	// 					<div className="flex flex-col">
-	// 						<h3 className="text-xl font-bold text-primary dark:text-white">EDITAR FORMULÁRIO</h3>
-	// 						<p className="text-primary/60 text-xs">#{formularyId}</p>
-	// 					</div>
-
-	// 					<button
-	// 						onClick={() => closeModal()}
-	// 						type="button"
-	// 						className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-	// 					>
-	// 						<VscChromeClose style={{ color: "red" }} />
-	// 					</button>
-	// 				</div>
-	// 				{isLoading ? <LoadingPage /> : null}
-	// 				{isError ? <ErrorComponent msg={"Erro ao buscar informações do formulário."} /> : null}
-	// 				{isSuccess ? (
-	// 					<>
-	// 						<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
-
-	// 						</div>
-	// 						{!infoHolder.dataEfetivacao ? (
-	// 							<div className="my-1 flex w-full items-center justify-end gap-2">
-	// 								<Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-	// 									<div className="disabled:bg-primary/60 rounded bg-[#fead41] px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500">
-	// 										DOCUMENTO (PDF)
-	// 									</div>
-	// 								</Link>
-	// 								<button
-	// 									disabled={loadingConclusion || loadingUpdate}
-	// 									type="button"
-	// 									// @ts-ignore
-	// 									onClick={() => handleUpdate({ id: formularyId, changes: infoHolder })}
-	// 									className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
-	// 								>
-	// 									SALVAR
-	// 								</button>
-	// 								<button
-	// 									disabled={loadingConclusion || loadingUpdate}
-	// 									onClick={() => handleConclusion()}
-	// 									type="button"
-	// 									className="disabled:bg-primary/60 rounded bg-green-600 px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-green-700"
-	// 								>
-	// 									FINALIZAR
-	// 								</button>
-	// 							</div>
-	// 						) : (
-	// 							<div className="my-1 flex w-full items-center justify-start gap-2">
-	// 								<button
-	// 									disabled={loadingDelete}
-	// 									type="button"
-	// 									// @ts-ignore
-	// 									onClick={() => handleDelete({ id: formularyId })}
-	// 									className="disabled:bg-primary/60 rounded bg-red-600 px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500"
-	// 								>
-	// 									EXCLUIR FORMULÁRIO
-	// 								</button>
-	// 								<Link href={`/almoxarifado/pdfFormulario/${formularyId}`}>
-	// 									<div className="disabled:bg-primary/60 rounded bg-[#fead41] px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-red-500">
-	// 										DOCUMENTO (PDF)
-	// 									</div>
-	// 								</Link>
-	// 							</div>
-	// 						)}
-	// 					</>
-	// 				) : null}
-	// 			</div>
-	// 		</div>
-	// 	</div>
-	// );
 }
 
 export default EditForm;

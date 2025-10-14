@@ -1,4 +1,5 @@
 import NumberInput from "@/components/inputs/Number";
+import { Button } from "@/components/ui/button";
 import { isEmpty } from "@/utils/methods/shared";
 import type { TTransactionalWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
 import { useQueryClient } from "@tanstack/react-query";
@@ -58,17 +59,17 @@ function MaterialListItem({
 		<div className="flex w-full flex-col">
 			<div className="border-primary/20 flex w-full flex-col items-center justify-between gap-1 rounded border p-2 lg:flex-row">
 				<div className="flex w-full flex-row gap-1 lg:w-[40%] lg:flex-col lg:gap-0">
-					<h1 className="text-primary/60 text-sm font-medium">{material.nome}</h1>
+					<h1 className="text-primary text-sm font-bold">{material.nome}</h1>
 					<div className="flex items-center gap-1">
 						<TbRulerMeasure />
-						<p className="text-primary/60 text-xs italic">{material.grandeza}</p>
+						<p className="text-primary/80 text-xs italic">{material.grandeza}</p>
 						<BsCode />
-						<p className="text-primary/60 text-xs italic">#{material.id || "NÃO DEFIDO"}</p>
+						<p className="text-primary/80 text-xs italic">#{material.id || "NÃO DEFIDO"}</p>
 						{!isFormularyFinished ? (
 							<button
 								type="button"
 								onClick={() => removeMaterial({ id: material.id, index })}
-								className="text-xxs rounded-lg border border-red-500 bg-red-100 p-1 text-center font-medium text-red-500"
+								className="text-xxs rounded-lg border border-red-600 bg-red-100 p-1 text-center font-bold text-red-600"
 							>
 								EXCLUIR
 							</button>
@@ -77,7 +78,7 @@ function MaterialListItem({
 							<button
 								type="button"
 								onClick={() => setEditMaterialMenuIsOpen(true)}
-								className="text-xxs rounded-lg border border-orange-500 bg-orange-100 p-1 text-center font-medium text-red-500"
+								className="text-xxs rounded-lg border border-orange-600 bg-orange-100 p-1 text-center font-bold text-orange-600"
 							>
 								EDITAR
 							</button>
@@ -98,7 +99,7 @@ function MaterialListItem({
 							min={0}
 							id={"qtdeRetirada"}
 							type="number"
-							className="border-primary/20 bg-primary/20 h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-gray-400"
+							className="border-primary/20 h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-primary/80 disabled:text-primary-foreground"
 						/>
 					</div>
 					<div className="w-[50%]">
@@ -123,7 +124,7 @@ function MaterialListItem({
 							min={0}
 							id={"qtdeDevolucao"}
 							type="number"
-							className="border-primary/20 bg-primary/20 h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-gray-400"
+							className="border-primary/20 h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-primary/80 disabled:text-primary-foreground"
 						/>
 					</div>
 				</div>
@@ -160,13 +161,9 @@ function MaterialListItem({
 						</div>
 					</div>
 					<div className="flex w-full items-center justify-end">
-						<button
-							type="button"
-							onClick={() => handleUpdateMaterial(editMaterialHolder)}
-							className="disabled:bg-primary/60 rounded bg-blue-600 px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out enabled:hover:bg-blue-500"
-						>
+						<Button onClick={() => handleUpdateMaterial(editMaterialHolder)} variant={"ghost"} size={"sm"}>
 							ATUALIZAR MATERIAL
-						</button>
+						</Button>
 					</div>
 				</div>
 			) : null}

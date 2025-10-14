@@ -7,14 +7,14 @@ import { isValidNumber } from "./validating";
 
 export function formatDateTimeForInput(value: any) {
 	if (!value) return undefined;
-	if (isNaN(new Date(value).getMilliseconds())) return undefined;
+	if (Number.isNaN(new Date(value).getMilliseconds())) return undefined;
 	return dayjs(value).format("YYYY-MM-DDTHH:mm");
 }
 
 export function formatNameAsInitials(name: string) {
 	const splittedName = name.replace("-", "").split(" ");
 	const firstLetter = splittedName[0][0];
-	var secondLetter;
+	let secondLetter: string | undefined;
 	if (["DE", "DA", "DO", "DOS", "DAS"].includes(splittedName[1])) secondLetter = splittedName[2] ? splittedName[2][0] : "";
 	else secondLetter = splittedName[1] ? splittedName[1][0] : "";
 	return firstLetter + secondLetter;
@@ -32,7 +32,7 @@ export function formatDateBirthdayAsLocale(date?: string | Date | null, showAge 
 
 export function formatDateTime(value: any) {
 	if (!value) return undefined;
-	if (isNaN(new Date(value).getMilliseconds())) return undefined;
+	if (Number.isNaN(new Date(value).getMilliseconds())) return undefined;
 	return dayjs(value).format("YYYY-MM-DDTHH:mm");
 }
 export function formatToCEP(value: string) {
@@ -62,11 +62,10 @@ export function formatToPhone(value: string) {
 
 export function formatWithoutDiacritics(string: string, useUpperCase?: boolean) {
 	if (!useUpperCase) return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-	else
-		return string
-			.toUpperCase()
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "");
+	return string
+		.toUpperCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "");
 }
 export function formatAsSlug(string: string) {
 	return string
@@ -78,7 +77,7 @@ export function formatAsSlug(string: string) {
 }
 export function getProjectNestedFieldValue(project: Record<string, any>, path: string) {
 	// @ts-ignore
-	return path.split(".").reduce((acc, part) => acc && acc[part as keyof Record<string, any>], project);
+	return path.split(".").reduce((acc, part) => (acc || acc[part as keyof Record<string, any>]) ?? null, project);
 }
 
 export function formatAsNumber(value: unknown) {
@@ -97,7 +96,7 @@ export function formatLocation({
 	includeCity?: boolean;
 	includeCEP?: boolean;
 }) {
-	var addressStr = "";
+	let addressStr = "";
 	if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`;
 	if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`;
 	if (!location.endereco && !includeUf && !includeCity) return "";
@@ -117,7 +116,7 @@ export function formatProductStr(product: TProductItem, showModel?: boolean) {
 	return `${product.qtde}x ${product.fabricante} ${product.potencia}W`;
 }
 export function getProductsStr(products: TProductItem[]) {
-	var str = "";
+	let str = "";
 	for (let i = 0; i < products.length; i++) {
 		if (i < products.length - 1) {
 			str = str + `${products[i].qtde}x ${products[i].modelo} (${products[i].potencia}W) & `; // `${products[i].qtde}x PAINÉIS PROMOCIONAIS DE ${products[i].potencia}W & `

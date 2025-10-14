@@ -104,6 +104,12 @@ export const GeneralClientSchema = z.object({
 		required_error: "Telefone primário do cliente não informado.",
 		invalid_type_error: "Tipo não válido para nome do cliente.",
 	}),
+	telefonePrimarioBase: z
+		.string({
+			invalid_type_error: "Tipo não válido para telefone primário base do cliente.",
+		})
+		.optional()
+		.nullable(),
 	// .min(14, 'Formato inválido para telefone primário. O mínimo de caracteres é 14.')
 	telefoneSecundario: z.string().optional().nullable(),
 	email: z.string({ invalid_type_error: "Tipo não válido para email do cliente." }).optional().nullable(),
@@ -192,11 +198,35 @@ export type TClientDTO = TClient & { _id: string };
 
 export type TSimilarClientSimplifiedDTO = Pick<
 	TClientDTO,
-	"_id" | "nome" | "autor" | "telefonePrimario" | "email" | "cpfCnpj" | "cep" | "uf" | "cidade" | "bairro" | "endereco" | "numeroOuIdentificador" | "complemento" | "dataInsercao"
+	| "_id"
+	| "nome"
+	| "autor"
+	| "telefonePrimario"
+	| "email"
+	| "cpfCnpj"
+	| "cep"
+	| "uf"
+	| "cidade"
+	| "bairro"
+	| "endereco"
+	| "numeroOuIdentificador"
+	| "complemento"
+	| "dataInsercao"
 >;
 export type TSimilarClientSimplified = Pick<
 	TClient,
-	"nome" | "autor" | "telefonePrimario" | "email" | "cpfCnpj" | "cep" | "uf" | "cidade" | "bairro" | "endereco" | "numeroOuIdentificador" | "complemento"
+	| "nome"
+	| "autor"
+	| "telefonePrimario"
+	| "email"
+	| "cpfCnpj"
+	| "cep"
+	| "uf"
+	| "cidade"
+	| "bairro"
+	| "endereco"
+	| "numeroOuIdentificador"
+	| "complemento"
 >;
 export type TClientSimplified = Pick<
 	TClient,

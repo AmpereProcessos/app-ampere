@@ -33,6 +33,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { BsRobot } from "react-icons/bs";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
+import ClientsVinculationMenu from "../crm-clientes/ClientsVinculationMenu";
 import ProjectVinculationMenu from "../projects/ProjectVinculationMenu";
 import FileUploadComponent from "./FileUploadComponent";
 import MediaMessageDisplay from "./MediaMessageDisplay";
@@ -230,19 +231,19 @@ function ChatsHub({ session, userHasMessageSendingPermission }: ChatsHubProps) {
 			)}
 
 			{newChatMenuIsOpen ? (
-				<ProjectVinculationMenu
+				<ClientsVinculationMenu
 					closeModal={() => setNewChatMenuIsOpen(false)}
-					handleSelect={async (project) => {
-						const clientId = project.idClienteCRM;
+					handleSelect={async (client) => {
+						const clientId = client._id;
 						if (!clientId)
 							return toast.error("Oops, aparentemente esse cliente não possui um cadastro, tente vincular um projeto ao cliente para criar um chat.");
 						const selectedChat = await getChatByClientAppId({
 							cliente: {
 								idApp: clientId,
-								nome: project.nomeDoContrato,
-								telefone: project.telefone || "",
-								email: project.email || "",
-								cpfCnpj: project.cpf_cnpj?.toString() || "",
+								nome: client.nome,
+								telefone: client.telefonePrimario || "",
+								email: client.email || "",
+								cpfCnpj: client.cpfCnpj || "",
 								avatar_url: undefined,
 							},
 						});

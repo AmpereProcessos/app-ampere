@@ -66,7 +66,10 @@ const WhatsAppConnectButton = () => {
 			},
 		);
 	};
-
+	console.log("[INFO] [WHATSAPP_CONNECT_BUTTON] Params", {
+		appId: process.env.NEXT_PUBLIC_META_APP_ID,
+		embeddedSignupConfigId: process.env.META_EMBEDDED_SIGNUP_CONFIG_ID,
+	});
 	return (
 		<>
 			<Script src="https://connect.facebook.net/en_US/sdk.js" onLoad={handleSdkLoad} strategy="lazyOnload" />

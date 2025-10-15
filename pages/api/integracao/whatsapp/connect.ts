@@ -28,6 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/configuracoes`; // A página onde o usuário iniciou o fluxo
 
 	try {
+		console.log("[INFO] [WHATSAPP_CONNECT] Connecting to WhatsApp...");
+		console.log("[INFO] [WHATSAPP_CONNECT] Params:", { appId, appSecret, redirectUri, code });
 		// --- PASSO 1: Trocar o código por um token de acesso de curta duração ---
 		const tokenUrl = `https://graph.facebook.com/v19.0/oauth/access_token?client_id=${appId}&redirect_uri=${redirectUri}&client_secret=${appSecret}&code=${code}`;
 		const tokenResponse = await fetch(tokenUrl);

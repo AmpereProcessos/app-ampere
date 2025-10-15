@@ -79,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						});
 
 						const updateResult = await templatesCollection.updateOne(
-							{ whatsappTemplateId: statusUpdate.messageTemplateId },
+							{ whatsappTemplateId: statusUpdate.messageTemplateId.toString() },
 							{
 								$set: {
 									status: statusUpdate.status,

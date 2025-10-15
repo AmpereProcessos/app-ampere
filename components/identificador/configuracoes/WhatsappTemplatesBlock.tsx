@@ -3,11 +3,12 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import ControlWhatsappTemplate from "@/components/whatsapp-templates/ControlWhatsappTemplate";
 import NewWhatsappTemplate from "@/components/whatsapp-templates/NewWhatsappTemplate";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { cn } from "@/lib/utils";
 import type { TGetWhatsappTemplatesOutputDefault } from "@/pages/api/whatsapp/templates";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useWhatsappTemplates } from "@/utils/methods/query/whatsapp-templates";
 import { useQueryClient } from "@tanstack/react-query";
-import { MessageCircle, Pencil } from "lucide-react";
+import { CircleGauge, Diamond, Languages, MessageCircle, Pencil, Variable } from "lucide-react";
 import { useState } from "react";
 
 type WhatsappTemplatesBlockProps = {
@@ -96,31 +97,14 @@ type WhatsappTemplatesBlockCardProps = {
 };
 
 function WhatsappTemplatesBlockCard({ template, userHasEditPermission, handleEditClick }: WhatsappTemplatesBlockCardProps) {
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "APROVADO":
-				return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
-			case "PENDENTE":
-				return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300";
-			case "REJEITADO":
-				return "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300";
-			case "PAUSADO":
-				return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
-			case "DESABILITADO":
-				return "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300";
-			default:
-				return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
-		}
-	};
-
 	const getCategoryLabel = (categoria: string) => {
 		switch (categoria) {
 			case "authentication":
-				return "Autenticação";
+				return "AUTENTICAÇÃO";
 			case "marketing":
-				return "Marketing";
+				return "MARKETING";
 			case "utility":
-				return "Utilidade";
+				return "UTILIDADE";
 			default:
 				return categoria;
 		}
@@ -141,15 +125,37 @@ function WhatsappTemplatesBlockCard({ template, userHasEditPermission, handleEdi
 					<div className="flex flex-wrap items-center gap-2">
 						<span className={"text-sm leading-none font-bold tracking-tight font-mono"}>TEMPLATE</span>
 						<p className="text-xs px-2 py-1 rounded-lg bg-primary/10">{template.nome}</p>
-						<span className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(template.status)}`}>{template.status}</span>
+					</div>
+					<div
+						className={cn("px-2 py-0.5 rounded-lg text-[0.65rem] font-bold", {
+							"bg-blue-500 text-white": template.status === "APROVADO",
+							"bg-primary/20 text-primary": template.status === "PENDENTE",
+							"bg-yellow-500 text-white": template.status === "REJEITADO",
+							"bg-orange-500 text-white": template.status === "PAUSADO",
+							"bg-gray-500 text-white": template.status === "DESABILITADO",
+						})}
+					>
+						{template.status}
 					</div>
 				</div>
 
-				<div className="flex flex-wrap items-center gap-2 text-xs text-primary/60">
-					<span className="bg-primary/5 px-2 py-1 rounded">{getCategoryLabel(template.categoria)}</span>
-					<span className="bg-primary/5 px-2 py-1 rounded">{LANGUAGE_MAP[template.idioma as keyof typeof LANGUAGE_MAP]}</span>
-					<span className="bg-primary/5 px-2 py-1 rounded capitalize">{template.formatoParametros === "positional" ? "POSICIONAL" : "NOMEADO"}</span>
-					{template.qualidade && <span className="bg-primary/5 px-2 py-1 rounded">QUALIDADE: {template.qualidade}</span>}
+				<div className="flex flex-wrap items-center gap-2">
+					<div className="flex items-center gap-1">
+						<Diamond className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium text-primary/80">{getCategoryLabel(template.categoria)}</p>
+					</div>
+					<div className="flex items-center gap-1">
+						<Languages className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium text-primary/80">{LANGUAGE_MAP[template.idioma as keyof typeof LANGUAGE_MAP]}</p>
+					</div>
+					<div className="flex items-center gap-1">
+						<Variable className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium text-primary/80">{template.formatoParametros === "positional" ? "POSICIONAL" : "NOMEADO"}</p>
+					</div>
+					<div className="flex items-center gap-1">
+						<CircleGauge className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium text-primary/80">{template.qualidade}</p>
+					</div>
 				</div>
 			</div>
 

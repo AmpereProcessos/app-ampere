@@ -1,4 +1,5 @@
 import ChatsHub from "@/components/identificador/chats/ChatsHub";
+import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { useSession } from "@/components/providers/SessionProvider";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
@@ -24,6 +25,7 @@ function ChatsContent({ session, userHasMessageSendingPermission }: { session: T
 			<div className="border-primary/20 flex items-center justify-between border-b p-1">
 				<h1 className="text-start text-2xl font-black text-[#15599a] uppercase">Chats</h1>
 			</div>
+			<WhatsAppConnectButton />
 			<ChatsHub session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} />
 		</div>
 	);

@@ -58,7 +58,7 @@ const WhatsAppConnectButton = () => {
 			},
 			{
 				// Este é o ID de configuração do Embedded Signup
-				config_id: process.env.META_EMBEDDED_SIGNUP_CONFIG_ID,
+				config_id: process.env.NEXT_PUBLIC_META_EMBEDDED_SIGNUP_CONFIG_ID,
 				// O 'code' é o tipo de resposta que precisamos para o fluxo de servidor
 				response_type: "code",
 				// Você pode adicionar um estado para segurança (CSRF)
@@ -68,7 +68,7 @@ const WhatsAppConnectButton = () => {
 	};
 	console.log("[INFO] [WHATSAPP_CONNECT_BUTTON] Params", {
 		appId: process.env.NEXT_PUBLIC_META_APP_ID,
-		embeddedSignupConfigId: process.env.META_EMBEDDED_SIGNUP_CONFIG_ID,
+		embeddedSignupConfigId: process.env.NEXT_PUBLIC_META_EMBEDDED_SIGNUP_CONFIG_ID,
 	});
 	return (
 		<>

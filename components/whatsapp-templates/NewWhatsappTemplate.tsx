@@ -83,7 +83,7 @@ function NewWhatsappTemplate({ session, closeMenu, callbacks }: NewWhatsappTempl
 		{ id: "positional", value: "positional", label: "Posicional ({{1}}, {{2}})" },
 		{ id: "named", value: "named", label: "Nomeado ({{cliente_nome}})" },
 	];
-
+	console.log("STATE", state);
 	return (
 		<ResponsiveDialogDrawer
 			menuTitle="NOVO TEMPLATE WHATSAPP"

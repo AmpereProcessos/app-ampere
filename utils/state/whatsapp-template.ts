@@ -4,7 +4,7 @@ import type {
 	TWhatsappTemplateButton,
 	TWhatsappTemplateComponents,
 } from "@/utils/schemas/whatsapp-templates";
-import { create } from "zustand";
+import { useState } from "react";
 
 type WhatsappTemplateState = {
 	template: Omit<TWhatsappTemplate, "_id" | "autor" | "dataInsercao" | "status" | "whatsappTemplateId" | "qualidade">;
@@ -23,143 +23,155 @@ type WhatsappTemplateActions = {
 	resetState: () => void;
 };
 
-const initialState: WhatsappTemplateState = {
-	template: {
-		nome: "",
-		categoria: "utility",
-		idioma: "pt_BR",
-		formatoParametros: "positional",
-		componentes: {
-			cabecalho: null,
-			corpo: {
-				conteudo: "",
-				parametros: [],
-			},
-			rodape: null,
-			botoes: null,
-		},
-	},
-};
-
 type UseWhatsappTemplateStateProps = {
 	initialState?: Partial<WhatsappTemplateState>;
 };
 
-export const useWhatsappTemplateState = (props?: UseWhatsappTemplateStateProps) => {
-	const store = create<WhatsappTemplateState & WhatsappTemplateActions>((set) => ({
-		...(props?.initialState ? { ...initialState, ...props.initialState } : initialState),
+type TUseWhatsappTemplateState = {
+	state: WhatsappTemplateState;
+} & WhatsappTemplateActions;
+export const useWhatsappTemplateState = ({ initialState }: UseWhatsappTemplateStateProps) => {
+	const [state, setState] = useState<WhatsappTemplateState>({
+		template: initialState?.template || {
+			nome: "",
+			categoria: "utility",
+			idioma: "pt_BR",
+			formatoParametros: "positional",
+			componentes: {
+				cabecalho: null,
+				corpo: {
+					conteudo: "",
+					parametros: [],
+				},
+				rodape: null,
+				botoes: null,
+			},
+		},
+	});
 
-		updateTemplate: (update) =>
-			set((state) => ({
-				template: { ...state.template, ...update },
-			})),
+	function updateTemplate(changes: Partial<WhatsappTemplateState["template"]>) {
+		return setState((prev) => ({ ...prev, template: { ...prev.template, ...changes } as WhatsappTemplateState["template"] }));
+	}
 
-		updateComponents: (update) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						...update,
+	function updateComponents(changes: Partial<WhatsappTemplateState["template"]["componentes"]>) {
+		return setState((prev) => ({
+			...prev,
+			template: { ...prev.template, componentes: { ...prev.template.componentes, ...changes } as WhatsappTemplateState["template"]["componentes"] },
+		}));
+	}
+
+	function updateBodyParameters(parameters: TWhatsappTemplateBodyParameter[]) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: { ...prev.template.componentes, corpo: { ...prev.template.componentes.corpo, parametros: parameters } },
+			},
+		}));
+	}
+
+	function addBodyParameter(parameter: TWhatsappTemplateBodyParameter) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: {
+					...prev.template.componentes,
+					corpo: {
+						...prev.template.componentes.corpo,
+						parametros: [...prev.template.componentes.corpo.parametros, parameter] as TWhatsappTemplateBodyParameter[],
 					},
 				},
-			})),
+			},
+		}));
+	}
 
-		updateBodyParameters: (parameters) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						corpo: {
-							...state.template.componentes.corpo,
-							parametros: parameters,
-						},
+	function removeBodyParameter(index: number) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: {
+					...prev.template.componentes,
+					corpo: {
+						...prev.template.componentes.corpo,
+						parametros: prev.template.componentes.corpo.parametros.filter((_, i) => i !== index) as TWhatsappTemplateBodyParameter[],
 					},
 				},
-			})),
+			},
+		}));
+	}
 
-		addBodyParameter: (parameter) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						corpo: {
-							...state.template.componentes.corpo,
-							parametros: [...state.template.componentes.corpo.parametros, parameter],
-						},
-					},
+	function updateButton(index: number, button: TWhatsappTemplateButton) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: {
+					...prev.template.componentes,
+					botoes: prev.template.componentes.botoes?.map((b, i) => (i === index ? button : b)) as TWhatsappTemplateButton[],
 				},
-			})),
+			},
+		}));
+	}
 
-		removeBodyParameter: (index) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						corpo: {
-							...state.template.componentes.corpo,
-							parametros: state.template.componentes.corpo.parametros.filter((_, i) => i !== index),
-						},
-					},
+	function addButton(button: TWhatsappTemplateButton) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: { ...prev.template.componentes, botoes: [...(prev.template.componentes.botoes || []), button] as TWhatsappTemplateButton[] },
+			},
+		}));
+	}
+
+	function removeButton(index: number) {
+		return setState((prev) => ({
+			...prev,
+			template: {
+				...prev.template,
+				componentes: {
+					...prev.template.componentes,
+					botoes: prev.template.componentes.botoes?.filter((_, i) => i !== index) as TWhatsappTemplateButton[],
 				},
-			})),
+			},
+		}));
+	}
 
-		updateButton: (index, button) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						botoes: state.template.componentes.botoes?.map((b, i) => (i === index ? button : b)) || null,
+	function resetState() {
+		return setState({
+			template: {
+				nome: "",
+				categoria: "utility",
+				idioma: "pt_BR",
+				formatoParametros: "positional",
+				componentes: {
+					cabecalho: null,
+					corpo: {
+						conteudo: "",
+						parametros: [],
 					},
+					rodape: null,
+					botoes: null,
 				},
-			})),
-
-		addButton: (button) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						botoes: [...(state.template.componentes.botoes || []), button],
-					},
-				},
-			})),
-
-		removeButton: (index) =>
-			set((state) => ({
-				template: {
-					...state.template,
-					componentes: {
-						...state.template.componentes,
-						botoes: state.template.componentes.botoes?.filter((_, i) => i !== index) || null,
-					},
-				},
-			})),
-
-		redefineState: (newState) => set(newState),
-
-		resetState: () => set(initialState),
-	}));
-
-	const storeState = store();
+			},
+		});
+	}
+	function redefineState(state: WhatsappTemplateState) {
+		return setState(state);
+	}
 
 	return {
-		state: {
-			template: storeState.template,
-		},
-		updateTemplate: storeState.updateTemplate,
-		updateComponents: storeState.updateComponents,
-		updateBodyParameters: storeState.updateBodyParameters,
-		addBodyParameter: storeState.addBodyParameter,
-		removeBodyParameter: storeState.removeBodyParameter,
-		updateButton: storeState.updateButton,
-		addButton: storeState.addButton,
-		removeButton: storeState.removeButton,
-		redefineState: storeState.redefineState,
-		resetState: storeState.resetState,
+		state,
+		updateTemplate,
+		updateComponents,
+		updateBodyParameters,
+		addBodyParameter,
+		removeBodyParameter,
+		updateButton,
+		addButton,
+		removeButton,
+		redefineState,
+		resetState,
 	};
 };

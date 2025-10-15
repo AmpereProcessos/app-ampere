@@ -12,10 +12,10 @@ type TemplateHeaderConfigProps = {
 
 function TemplateHeaderConfig({ header, onHeaderChange }: TemplateHeaderConfigProps) {
 	const headerTypeOptions = [
-		{ id: "text", nome: "Texto", value: "text", label: "Texto" },
-		{ id: "image", nome: "Imagem", value: "image", label: "Imagem" },
-		{ id: "video", nome: "Vídeo", value: "video", label: "Vídeo" },
-		{ id: "document", nome: "Documento", value: "document", label: "Documento" },
+		{ id: "text", nome: "Texto", value: "text", label: "TEXTO" },
+		{ id: "image", nome: "Imagem", value: "image", label: "IMAGEM" },
+		{ id: "video", nome: "Vídeo", value: "video", label: "VÍDEO" },
+		{ id: "document", nome: "Documento", value: "document", label: "DOCUMENTO" },
 	];
 
 	const handleAddHeader = () => {
@@ -68,21 +68,22 @@ function TemplateHeaderConfig({ header, onHeaderChange }: TemplateHeaderConfigPr
 
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="CABEÇALHO" sectionTitleIcon={<ImageIcon size={15} />}>
-			<div className="space-y-3">
-				<div className="flex items-center justify-between">
-					<SelectInput
-						label="TIPO DE CABEÇALHO"
-						value={header.tipo}
-						options={headerTypeOptions}
-						selectedItemLabel="label"
-						onReset={() => handleHeaderTypeChange("text")}
-						handleChange={(value) => handleHeaderTypeChange(value as "text" | "image" | "video" | "document")}
-						width="70%"
-					/>
+			<div className="w-full flex flex-col gap-3 p-2 rounded-lg border border-primary/10">
+				<div className="w-full flex items-center justify-end">
+					<h1 className="text-sm font-medium tracking-tight text-primary/80">CONFIGURAÇÃO DO CABEÇALHO</h1>
 					<Button type="button" variant="ghost" size="sm" onClick={handleRemoveHeader}>
 						<X className="w-4 h-4" />
 					</Button>
 				</div>
+				<SelectInput
+					label="TIPO DE CABEÇALHO"
+					value={header.tipo}
+					options={headerTypeOptions}
+					selectedItemLabel="NÃO DEFINIDO"
+					onReset={() => handleHeaderTypeChange("text")}
+					handleChange={(value) => handleHeaderTypeChange(value as "text" | "image" | "video" | "document")}
+					width="70%"
+				/>
 
 				{header.tipo === "text" ? (
 					<TextInput

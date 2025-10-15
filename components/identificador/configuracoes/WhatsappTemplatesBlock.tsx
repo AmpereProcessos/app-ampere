@@ -126,31 +126,30 @@ function WhatsappTemplatesBlockCard({ template, userHasEditPermission, handleEdi
 		}
 	};
 
+	const LANGUAGE_MAP = {
+		pt_BR: "Português",
+		en_US: "Inglês",
+		es_ES: "Espanhol",
+		fr_FR: "Francês",
+		de_DE: "Alemão",
+	};
+
 	return (
 		<div className="border-primary bg-background flex w-full flex-col gap-3 rounded border p-3 shadow-xs dark:bg-[#121212]">
 			<div className="w-full flex flex-col gap-2">
 				<div className="w-full flex items-center justify-between gap-2">
 					<div className="flex flex-wrap items-center gap-2">
-						<p className="text-sm leading-none font-bold tracking-tight font-mono">{template.nome}</p>
+						<span className={"text-sm leading-none font-bold tracking-tight font-mono"}>TEMPLATE</span>
+						<p className="text-xs px-2 py-1 rounded-lg bg-primary/10">{template.nome}</p>
 						<span className={`text-xs px-2 py-1 rounded font-medium ${getStatusColor(template.status)}`}>{template.status}</span>
 					</div>
 				</div>
 
 				<div className="flex flex-wrap items-center gap-2 text-xs text-primary/60">
 					<span className="bg-primary/5 px-2 py-1 rounded">{getCategoryLabel(template.categoria)}</span>
-					<span className="bg-primary/5 px-2 py-1 rounded">{template.idioma === "pt_BR" ? "Português" : template.idioma}</span>
-					<span className="bg-primary/5 px-2 py-1 rounded capitalize">{template.formatoParametros === "positional" ? "Posicional" : "Nomeado"}</span>
-					{template.qualidade && <span className="bg-primary/5 px-2 py-1 rounded">Qualidade: {template.qualidade}</span>}
-				</div>
-
-				{/* Components Summary */}
-				<div className="flex flex-wrap items-center gap-2 text-xs">
-					{template.componentes.cabecalho && <span className="text-primary/60">📋 Cabeçalho</span>}
-					<span className="text-primary/60">📝 Corpo ({template.componentes.corpo.parametros.length} variáveis)</span>
-					{template.componentes.rodape && <span className="text-primary/60">📄 Rodapé</span>}
-					{template.componentes.botoes && template.componentes.botoes.length > 0 && (
-						<span className="text-primary/60">🔘 {template.componentes.botoes.length} botão(ões)</span>
-					)}
+					<span className="bg-primary/5 px-2 py-1 rounded">{LANGUAGE_MAP[template.idioma as keyof typeof LANGUAGE_MAP]}</span>
+					<span className="bg-primary/5 px-2 py-1 rounded capitalize">{template.formatoParametros === "positional" ? "POSICIONAL" : "NOMEADO"}</span>
+					{template.qualidade && <span className="bg-primary/5 px-2 py-1 rounded">QUALIDADE: {template.qualidade}</span>}
 				</div>
 			</div>
 

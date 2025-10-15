@@ -21,58 +21,93 @@ function TemplatePreview({ components }: TemplatePreviewProps) {
 		bodyWithExamples = bodyWithExamples.replace(new RegExp(placeholder, "g"), exemplo);
 	}
 
+	// Get current time for timestamp
+	const currentTime = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="PREVIEW" sectionTitleIcon={<Eye size={15} />}>
-			<div className="max-w-md mx-auto grow w-full h-full flex items-center justify-center">
-				{/* WhatsApp-style message bubble */}
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-					{/* Header */}
-					{cabecalho && (
-						<div className="bg-gray-50 dark:bg-gray-700 p-3 border-b border-gray-200 dark:border-gray-600">
-							{cabecalho.tipo === "text" ? (
-								<p className="font-semibold text-sm">{cabecalho.conteudo || "Texto do cabeçalho"}</p>
-							) : (
-								<div className="flex items-center gap-2 text-sm text-primary/60">
-									{cabecalho.tipo === "image" && <ImageIcon className="w-4 h-4" />}
-									{cabecalho.tipo === "video" && <VideoIcon className="w-4 h-4" />}
-									{cabecalho.tipo === "document" && <FileTextIcon className="w-4 h-4" />}
-									<span className="capitalize">{cabecalho.tipo}</span>
+			<div className="w-full h-full flex flex-col items-center justify-center gap-4 pb-4">
+				{/* WhatsApp Background */}
+				<div className="relative w-full max-w-md min-w-[300px] rounded-lg overflow-hidden bg-[#e5ddd5]">
+					{/* Background pattern - similar to WhatsApp */}
+					<div
+						className="absolute inset-0 opacity-10"
+						style={{
+							backgroundImage:
+								"url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+						}}
+					/>
+
+					{/* WhatsApp Message Bubble */}
+					<div className="relative p-4 min-h-[300px] flex items-center justify-center">
+						<div className="bg-white rounded-lg shadow-md overflow-hidden max-w-[85%] relative">
+							{/* Header */}
+							{cabecalho && (
+								<div className="w-full">
+									{cabecalho.tipo === "text" ? (
+										<div className="px-3 pt-3">
+											<p className="font-semibold text-sm text-gray-900">{cabecalho.conteudo || "Texto do cabeçalho"}</p>
+										</div>
+									) : cabecalho.tipo === "image" ? (
+										<div className="w-full aspect-video bg-gray-500 flex items-center justify-center">
+											<ImageIcon className="w-16 h-16 text-white" strokeWidth={1.5} />
+										</div>
+									) : cabecalho.tipo === "video" ? (
+										<div className="w-full aspect-video bg-gray-500 flex items-center justify-center">
+											<VideoIcon className="w-16 h-16 text-white" strokeWidth={1.5} />
+										</div>
+									) : cabecalho.tipo === "document" ? (
+										<div className="px-3 pt-3">
+											<div className="flex items-center gap-2 p-2 bg-gray-500 rounded">
+												<FileTextIcon className="w-8 h-8 text-white" />
+												<div className="flex-1">
+													<p className="text-sm font-medium text-white">Documento</p>
+													<p className="text-xs text-white">PDF</p>
+												</div>
+											</div>
+										</div>
+									) : null}
+								</div>
+							)}
+
+							{/* Body */}
+							<div className="px-3 py-2 pt-3">
+								<div className="whitespace-pre-wrap text-sm text-gray-900 break-words">{bodyWithExamples || "Digite o conteúdo da mensagem..."}</div>
+
+								{/* Footer */}
+								{rodape && (
+									<div className="mt-2">
+										<p className="text-xs text-[#00a884]">{rodape.conteudo}</p>
+									</div>
+								)}
+
+								{/* Timestamp */}
+								<div className="flex items-center justify-end gap-1 mt-1">
+									<span className="text-[10px] text-gray-500">{currentTime}</span>
+								</div>
+							</div>
+
+							{/* Buttons */}
+							{botoes && botoes.length > 0 && (
+								<div className="border-t border-gray-200">
+									{botoes.map((botao, index) => (
+										<div key={index.toString()} className="border-b border-gray-200 last:border-b-0 py-2.5 px-4 text-center">
+											<button type="button" className="text-sm font-medium text-[#00a884] disabled:cursor-default w-full" disabled>
+												{botao.tipo === "quick_reply" && "↩️ "}
+												{botao.tipo === "url" && "🔗 "}
+												{botao.tipo === "phone_number" && "📞 "}
+												{botao.texto || "Texto do botão"}
+											</button>
+										</div>
+									))}
 								</div>
 							)}
 						</div>
-					)}
-
-					{/* Body */}
-					<div className="p-4">
-						<div className="whitespace-pre-wrap text-sm">{bodyWithExamples || "Digite o conteúdo da mensagem..."}</div>
 					</div>
-
-					{/* Footer */}
-					{rodape && (
-						<div className="px-4 pb-2">
-							<p className="text-xs text-gray-500 dark:text-gray-400">{rodape.conteudo}</p>
-						</div>
-					)}
-
-					{/* Buttons */}
-					{botoes && botoes.length > 0 && (
-						<div className="border-t border-gray-200 dark:border-gray-600">
-							{botoes.map((botao, index) => (
-								<div key={index.toString()} className="border-b border-gray-200 dark:border-gray-600 last:border-b-0 py-2 px-4 text-center">
-									<button type="button" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline disabled:cursor-default" disabled>
-										{botao.tipo === "quick_reply" && "↩️ "}
-										{botao.tipo === "url" && "🔗 "}
-										{botao.tipo === "phone_number" && "📞 "}
-										{botao.texto || "Texto do botão"}
-									</button>
-								</div>
-							))}
-						</div>
-					)}
 				</div>
 
 				{/* Info */}
-				<div className="mt-4 space-y-2">
+				<div className="w-full max-w-md space-y-2 mt-2">
 					<div className="flex items-center justify-between text-xs">
 						<span className="text-primary/60">Caracteres no corpo:</span>
 						<span className={bodyText.length > 1024 ? "text-red-500 font-semibold" : "text-primary/80"}>{bodyText.length} / 1024</span>

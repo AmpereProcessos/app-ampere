@@ -87,16 +87,16 @@ function ControlWhatsappTemplate({ whatsappTemplateId, session, closeMenu, callb
 			closeMenu={closeMenu}
 			dialogVariant="xl"
 		>
-			{/* Status Information */}
-			<TemplateStatus
-				whatsappTemplateId={templateData?.whatsappTemplateId ?? null}
-				status={templateData?.status ?? null}
-				quality={templateData?.qualidade ?? null}
-			/>
-			{/* Basic Information */}
-			<TemplateGeneral template={state.template} updateTemplate={updateTemplate} whatsappTemplateId={templateData?.whatsappTemplateId ?? null} />
-			<div className="w-full flex items-start gap-2 flex-col lg:flex-row">
-				<div className="w-full lg:w-2/3 flex flex-col flex-1">
+			<div className="w-full flex items-start gap-2 flex-col lg:flex-row lg:max-h-full lg:h-full">
+				<div className="w-full lg:w-2/3 flex flex-col gap-3 p-2 rounded-lg border border-primary/30 shadow-sm overflow-y-auto lg:h-full scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30">
+					{/* Status Information */}
+					<TemplateStatus
+						whatsappTemplateId={templateData?.whatsappTemplateId ?? null}
+						status={templateData?.status ?? null}
+						quality={templateData?.qualidade ?? null}
+					/>
+					{/* Basic Information */}
+					<TemplateGeneral template={state.template} updateTemplate={updateTemplate} whatsappTemplateId={templateData?.whatsappTemplateId ?? null} />
 					<TemplateHeaderConfig
 						header={state.template.componentes.cabecalho ?? null}
 						onHeaderChange={(header) => updateComponents({ cabecalho: header })}
@@ -124,7 +124,7 @@ function ControlWhatsappTemplate({ whatsappTemplateId, session, closeMenu, callb
 						onButtonsChange={(buttons) => updateComponents({ botoes: buttons })}
 					/>
 				</div>
-				<div className="w-full lg:w-1/3">
+				<div className="w-full lg:w-1/3 p-2 rounded-lg border border-primary/30 shadow-sm flex flex-col lg:h-full lg:sticky lg:top-0">
 					<TemplatePreview components={state.template.componentes} />
 				</div>
 			</div>

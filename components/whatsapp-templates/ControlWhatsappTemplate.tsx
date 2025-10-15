@@ -94,6 +94,7 @@ function ControlWhatsappTemplate({ whatsappTemplateId, session, closeMenu, callb
 						whatsappTemplateId={templateData?.whatsappTemplateId ?? null}
 						status={templateData?.status ?? null}
 						quality={templateData?.qualidade ?? null}
+						motivoRejeicao={templateData?.motivoRejeicao ?? null}
 					/>
 					{/* Basic Information */}
 					<TemplateGeneral template={state.template} updateTemplate={updateTemplate} whatsappTemplateId={templateData?.whatsappTemplateId ?? null} />

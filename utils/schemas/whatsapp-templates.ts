@@ -119,6 +119,12 @@ export const WhatsappTemplateSchema = z.object({
 		})
 		.optional()
 		.nullable(),
+	motivoRejeicao: z
+		.string({
+			invalid_type_error: "Tipo inválido para motivo de rejeição.",
+		})
+		.optional()
+		.nullable(),
 	autor: AuthorSchema,
 	dataInsercao: z
 		.string({

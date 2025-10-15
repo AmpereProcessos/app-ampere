@@ -1,14 +1,15 @@
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { cn } from "@/lib/utils";
 import type { TGetWhatsappTemplatesOutputById } from "@/pages/api/whatsapp/templates";
-import { CheckCircle, Code } from "lucide-react";
+import { AlertCircle, CheckCircle, Code } from "lucide-react";
 
 type TemplateStatusProps = {
 	whatsappTemplateId: string | null;
 	status: TGetWhatsappTemplatesOutputById["status"] | null;
 	quality: TGetWhatsappTemplatesOutputById["qualidade"] | null;
+	motivoRejeicao?: TGetWhatsappTemplatesOutputById["motivoRejeicao"] | null;
 };
-export default function TemplateStatus({ whatsappTemplateId, status, quality }: TemplateStatusProps) {
+export default function TemplateStatus({ whatsappTemplateId, status, quality, motivoRejeicao }: TemplateStatusProps) {
 	if (!whatsappTemplateId) return null;
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="STATUS DE SINCRONIZAÇÃO" sectionTitleIcon={<CheckCircle size={15} />}>
@@ -32,6 +33,15 @@ export default function TemplateStatus({ whatsappTemplateId, status, quality }: 
 					{status}
 				</span>
 			</div>
+			{status === "REJEITADO" && motivoRejeicao && (
+				<div className="w-full flex items-start gap-2 p-2 rounded bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800">
+					<AlertCircle className="w-4 h-4 min-w-4 min-h-4 text-red-600 dark:text-red-400 mt-0.5" />
+					<div className="flex flex-col gap-1">
+						<span className="text-sm font-medium text-red-800 dark:text-red-200">MOTIVO DA REJEIÇÃO:</span>
+						<span className="text-xs text-red-700 dark:text-red-300">{motivoRejeicao}</span>
+					</div>
+				</div>
+			)}
 			<div className="w-full flex items-center gap-2">
 				<CheckCircle className="w-4 h-4 min-w-4 min-h-4" />
 				<span className="text-sm font-medium">QUALIDADE:</span>

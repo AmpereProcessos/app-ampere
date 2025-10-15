@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const appId = process.env.NEXT_PUBLIC_META_APP_ID;
 	const appSecret = process.env.WHATSAPP_SYSTEM_USER_TOKEN;
 	// O redirect_uri deve ser um dos URIs configurados no seu painel da Meta
-	const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/configuracoes`; // A página onde o usuário iniciou o fluxo
+	const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/integracao/whatsapp/connect`; // A página onde o usuário iniciou o fluxo
 
 	try {
 		console.log("[INFO] [WHATSAPP_CONNECT] Connecting to WhatsApp...");

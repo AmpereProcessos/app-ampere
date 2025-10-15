@@ -23,7 +23,7 @@ function TemplatePreview({ components }: TemplatePreviewProps) {
 
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="PREVIEW" sectionTitleIcon={<Eye size={15} />}>
-			<div className="max-w-md mx-auto">
+			<div className="max-w-md mx-auto grow w-full h-full flex items-center justify-center">
 				{/* WhatsApp-style message bubble */}
 				<div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
 					{/* Header */}

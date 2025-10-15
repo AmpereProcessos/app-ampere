@@ -14,8 +14,10 @@ import toast from "react-hot-toast";
 import TemplateBodyEditor from "./blocks/TemplateBodyEditor";
 import TemplateButtonsConfig from "./blocks/TemplateButtonsConfig";
 import TemplateFooterConfig from "./blocks/TemplateFooterConfig";
+import TemplateGeneral from "./blocks/TemplateGeneral";
 import TemplateHeaderConfig from "./blocks/TemplateHeaderConfig";
 import TemplatePreview from "./blocks/TemplatePreview";
+import TemplateStatus from "./blocks/TemplateStatus";
 
 type NewWhatsappTemplateProps = {
 	session: TAuthSession;
@@ -24,27 +26,8 @@ type NewWhatsappTemplateProps = {
 };
 
 function NewWhatsappTemplate({ session, closeMenu, callbacks }: NewWhatsappTemplateProps) {
-	const [mode, setMode] = useState<"editor" | "preview">("editor");
-	const [syncToWhatsapp, setSyncToWhatsapp] = useState(true);
-
 	const { state, updateTemplate, updateComponents, updateBodyParameters, resetState } = useWhatsappTemplateState({
-		initialState: {
-			template: {
-				nome: "",
-				categoria: "utility",
-				idioma: "pt_BR",
-				formatoParametros: "positional",
-				componentes: {
-					cabecalho: null,
-					corpo: {
-						conteudo: "<p>Digite sua mensagem aqui...</p>",
-						parametros: [],
-					},
-					rodape: null,
-					botoes: null,
-				},
-			},
-		},
+		initialState: {},
 	});
 
 	const { mutate: handleCreateTemplate, isPending } = useMutation({
@@ -67,22 +50,6 @@ function NewWhatsappTemplate({ session, closeMenu, callbacks }: NewWhatsappTempl
 		},
 	});
 
-	const categoryOptions = [
-		{ id: "authentication", value: "authentication", label: "Autenticação" },
-		{ id: "marketing", value: "marketing", label: "Marketing" },
-		{ id: "utility", value: "utility", label: "Utilidade" },
-	];
-
-	const languageOptions = [
-		{ id: "pt_BR", value: "pt_BR", label: "Português (Brasil)" },
-		{ id: "en_US", value: "en_US", label: "Inglês (EUA)" },
-		{ id: "es_ES", value: "es_ES", label: "Espanhol" },
-	];
-
-	const parameterFormatOptions = [
-		{ id: "positional", value: "positional", label: "Posicional ({{1}}, {{2}})" },
-		{ id: "named", value: "named", label: "Nomeado ({{cliente_nome}})" },
-	];
 	console.log("STATE", state);
 	return (
 		<ResponsiveDialogDrawer
@@ -93,111 +60,50 @@ function NewWhatsappTemplate({ session, closeMenu, callbacks }: NewWhatsappTempl
 			actionFunction={() => {
 				handleCreateTemplate({
 					template: state.template,
-					syncToWhatsapp,
+					syncToWhatsapp: true,
 				});
 			}}
 			actionIsPending={isPending}
 			stateIsLoading={false}
 			closeMenu={closeMenu}
-			dialogVariant="lg"
+			dialogVariant="xl"
 		>
-			<div className="space-y-4">
-				{/* Basic Information */}
-				<div className="space-y-3">
-					<h3 className="text-sm font-semibold border-b border-primary/10 pb-2">INFORMAÇÕES BÁSICAS</h3>
-
-					<TextInput
-						label="NOME DO TEMPLATE"
-						value={state.template.nome}
-						placeholder="nome_do_template (apenas minúsculas, números e underscore)"
-						handleChange={(value) => updateTemplate({ nome: value.toLowerCase().replace(/[^a-z0-9_]/g, "_") })}
-						width="100%"
+			{/* Status Information */}
+			<TemplateStatus whatsappTemplateId={null} status={null} quality={null} />
+			{/* Basic Information */}
+			<TemplateGeneral template={state.template} updateTemplate={updateTemplate} whatsappTemplateId={null} />
+			<div className="w-full flex items-start gap-2 flex-col lg:flex-row grow">
+				<div className="grow w-full lg:w-2/3 flex flex-col gap-3 flex-1 p-2 rounded-lg border border-primary/30 shadow-sm">
+					<TemplateHeaderConfig
+						header={state.template.componentes.cabecalho ?? null}
+						onHeaderChange={(header) => updateComponents({ cabecalho: header })}
 					/>
 
-					<SelectInput
-						label="CATEGORIA"
-						value={state.template.categoria}
-						options={categoryOptions}
-						selectedItemLabel="label"
-						handleChange={(value) => updateTemplate({ categoria: value as "authentication" | "marketing" | "utility" })}
-						onReset={() => updateTemplate({ categoria: "utility" })}
-						width="100%"
+					<TemplateBodyEditor
+						content={state.template.componentes.corpo.conteudo}
+						contentChangeCallback={(content) =>
+							updateComponents({
+								corpo: {
+									...state.template.componentes.corpo,
+									conteudo: content,
+								},
+							})
+						}
+						formatoParametros={state.template.formatoParametros}
+						parametros={state.template.componentes.corpo.parametros}
+						onParametrosChange={updateBodyParameters}
 					/>
 
-					<div className="grid grid-cols-2 gap-3">
-						<SelectInput
-							label="IDIOMA"
-							value={state.template.idioma}
-							options={languageOptions}
-							selectedItemLabel="label"
-							handleChange={(value) => updateTemplate({ idioma: value as string })}
-							onReset={() => updateTemplate({ idioma: "pt_BR" })}
-							width="100%"
-						/>
+					<TemplateFooterConfig footer={state.template.componentes.rodape ?? null} onFooterChange={(footer) => updateComponents({ rodape: footer })} />
 
-						<SelectInput
-							label="FORMATO DE PARÂMETROS"
-							value={state.template.formatoParametros}
-							options={parameterFormatOptions}
-							selectedItemLabel="label"
-							handleChange={(value) => updateTemplate({ formatoParametros: value as "named" | "positional" })}
-							onReset={() => updateTemplate({ formatoParametros: "positional" })}
-							width="100%"
-						/>
-					</div>
-
-					<div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded">
-						<Checkbox checked={syncToWhatsapp} onCheckedChange={(checked) => setSyncToWhatsapp(checked as boolean)} id="sync" />
-						<label htmlFor="sync" className="text-sm cursor-pointer">
-							Sincronizar com WhatsApp Business API (criar template para uso imediato)
-						</label>
-					</div>
+					<TemplateButtonsConfig
+						buttons={state.template.componentes.botoes ?? null}
+						onButtonsChange={(buttons) => updateComponents({ botoes: buttons })}
+					/>
 				</div>
-
-				{/* Mode Toggle */}
-				<div className="w-full flex items-center justify-center gap-2 border-y border-primary/10 py-3">
-					<Button variant={mode === "editor" ? "default" : "ghost"} size="sm" onClick={() => setMode("editor")}>
-						EDITOR
-					</Button>
-					<Button variant={mode === "preview" ? "default" : "ghost"} size="sm" onClick={() => setMode("preview")}>
-						PREVIEW
-					</Button>
+				<div className="grow w-full lg:w-1/3 p-2 rounded-lg border border-primary/30 shadow-sm flex flex-col flex-1">
+					<TemplatePreview components={state.template.componentes} />
 				</div>
-
-				{/* Editor Mode */}
-				{mode === "editor" && (
-					<div className="space-y-4">
-						<TemplateHeaderConfig
-							header={state.template.componentes.cabecalho ?? null}
-							onHeaderChange={(header) => updateComponents({ cabecalho: header })}
-						/>
-
-						<TemplateBodyEditor
-							content={state.template.componentes.corpo.conteudo}
-							contentChangeCallback={(content) =>
-								updateComponents({
-									corpo: {
-										...state.template.componentes.corpo,
-										conteudo: content,
-									},
-								})
-							}
-							formatoParametros={state.template.formatoParametros}
-							parametros={state.template.componentes.corpo.parametros}
-							onParametrosChange={updateBodyParameters}
-						/>
-
-						<TemplateFooterConfig footer={state.template.componentes.rodape ?? null} onFooterChange={(footer) => updateComponents({ rodape: footer })} />
-
-						<TemplateButtonsConfig
-							buttons={state.template.componentes.botoes ?? null}
-							onButtonsChange={(buttons) => updateComponents({ botoes: buttons })}
-						/>
-					</div>
-				)}
-
-				{/* Preview Mode */}
-				{mode === "preview" && <TemplatePreview components={state.template.componentes} />}
 			</div>
 		</ResponsiveDialogDrawer>
 	);

@@ -1,39 +1,33 @@
-import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
 import { Button } from "@/components/ui/button";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { TemplateButtonTypeOptions } from "@/lib/whatsapp/templates";
+import { SlideMotionVariants } from "@/utils/constants";
 import type { TWhatsappTemplateButton } from "@/utils/schemas/whatsapp-templates";
-import { MousePointerClick, Trash2, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { LinkIcon, MousePointerClick, Phone, PlusIcon, Trash2, X } from "lucide-react";
 
+const ButtonTypeIconsMap = {
+	quick_reply: <MousePointerClick className="w-4 h-4" />,
+	url: <LinkIcon className="w-4 h-4" />,
+	phone_number: <Phone className="w-4 h-4" />,
+};
 type TemplateButtonsConfigProps = {
 	buttons: TWhatsappTemplateButton[] | null;
 	onButtonsChange: (buttons: TWhatsappTemplateButton[] | null) => void;
 };
 
 function TemplateButtonsConfig({ buttons, onButtonsChange }: TemplateButtonsConfigProps) {
-	const buttonTypeOptions = [
-		{ id: "quick_reply", nome: "Resposta Rápida", value: "quick_reply", label: "Resposta Rápida" },
-		{ id: "url", nome: "URL", value: "url", label: "URL" },
-		{ id: "phone_number", nome: "Número de Telefone", value: "phone_number", label: "Número de Telefone" },
-	];
-
-	const handleAddButtons = () => {
-		onButtonsChange([
-			{
-				tipo: "quick_reply",
-				texto: "",
-				dados: null,
-			},
-		]);
-	};
-
-	const handleRemoveButtons = () => {
-		onButtonsChange(null);
-	};
-
 	const handleAddButton = () => {
-		if (!buttons) return;
-		onButtonsChange([
+		if (!buttons)
+			return onButtonsChange([
+				{
+					tipo: "quick_reply",
+					texto: "",
+					dados: null,
+				},
+			]);
+		return onButtonsChange([
 			...buttons,
 			{
 				tipo: "quick_reply",
@@ -59,101 +53,90 @@ function TemplateButtonsConfig({ buttons, onButtonsChange }: TemplateButtonsConf
 		newButtons[index] = button;
 		onButtonsChange(newButtons);
 	};
-
-	if (!buttons) {
-		return (
-			<ResponsiveDialogDrawerSection sectionTitleText="BOTÕES (OPCIONAL)" sectionTitleIcon={<MousePointerClick size={15} />}>
-				<Button type="button" variant="outline" onClick={handleAddButtons}>
-					+ ADICIONAR BOTÕES
-				</Button>
-			</ResponsiveDialogDrawerSection>
-		);
-	}
-
+	console.log("BUTTONS", buttons);
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="BOTÕES" sectionTitleIcon={<MousePointerClick size={15} />}>
-			<div className="space-y-3">
-				<div className="flex items-center justify-between">
-					<p className="text-sm text-primary/60">Configure até 10 botões para seu template</p>
-					<Button type="button" variant="ghost" size="sm" onClick={handleRemoveButtons}>
-						<X className="w-4 h-4" />
-					</Button>
-				</div>
+			<AnimatePresence>
+				<Button type="button" variant="ghost" onClick={handleAddButton} className="flex items-center gap-1 w-fit self-center">
+					<PlusIcon className="w-4 h-4" />
+					ADICIONAR BOTÃO
+				</Button>
+				{buttons && buttons.length > 0
+					? buttons.map((button, index) => (
+							<motion.div
+								key={index.toString()}
+								className="w-full flex flex-col gap-3 p-2 rounded-lg border border-primary/30"
+								variants={SlideMotionVariants}
+								initial="initial"
+								animate="animate"
+								exit="exit"
+							>
+								<div className="flex items-center justify-between">
+									<h4 className="text-sm font-semibold">BOTÃO {index + 1}</h4>
+									<Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveButton(index)}>
+										<Trash2 className="w-4 h-4" />
+									</Button>
+								</div>
 
-				{buttons.map((button, index) => (
-					<div key={index.toString()} className="border border-primary/10 rounded-lg p-3 space-y-2">
-						<div className="flex items-center justify-between">
-							<h4 className="text-sm font-semibold">Botão {index + 1}</h4>
-							<Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveButton(index)}>
-								<Trash2 className="w-4 h-4" />
-							</Button>
-						</div>
+								<div className="w-full flex items-center justify-center gap-x-3 gap-y-1 flex-wrap">
+									{TemplateButtonTypeOptions.map((option) => (
+										<Button
+											key={option.id}
+											type="button"
+											variant={button.tipo === option.value ? "default" : "ghost"}
+											size="fit"
+											className="flex items-center gap-1 text-xs px-2 py-1"
+											onClick={() => handleButtonChange(index, { ...button, tipo: option.value as "quick_reply" | "url" | "phone_number" })}
+										>
+											{ButtonTypeIconsMap[option.value as "quick_reply" | "url" | "phone_number"]}
+											{option.label}
+										</Button>
+									))}
+								</div>
 
-						<SelectInput
-							label="TIPO DE BOTÃO"
-							value={button.tipo}
-							options={buttonTypeOptions}
-							selectedItemLabel="label"
-							onReset={() => handleButtonChange(index, { ...button, tipo: "quick_reply" })}
-							handleChange={(value) => {
-								const newButton = {
-									...button,
-									tipo: value as "quick_reply" | "url" | "phone_number",
-									dados: value === "quick_reply" ? null : { url: null, telefone: null },
-								};
-								handleButtonChange(index, newButton);
-							}}
-							width="100%"
-						/>
+								<TextInput
+									label="TEXTO DO BOTÃO"
+									value={button.texto}
+									placeholder="Digite o texto do botão (máx. 25 caracteres)"
+									handleChange={(value) => handleButtonChange(index, { ...button, texto: value })}
+									width="100%"
+								/>
 
-						<TextInput
-							label="TEXTO DO BOTÃO"
-							value={button.texto}
-							placeholder="Digite o texto do botão (máx. 25 caracteres)"
-							handleChange={(value) => handleButtonChange(index, { ...button, texto: value })}
-							width="100%"
-						/>
+								{button.tipo === "url" && (
+									<TextInput
+										label="URL"
+										value={button.dados?.url || ""}
+										placeholder="https://exemplo.com"
+										handleChange={(value) =>
+											handleButtonChange(index, {
+												...button,
+												dados: { ...button.dados, url: value },
+											})
+										}
+										width="100%"
+									/>
+								)}
 
-						{button.tipo === "url" && (
-							<TextInput
-								label="URL"
-								value={button.dados?.url || ""}
-								placeholder="https://exemplo.com"
-								handleChange={(value) =>
-									handleButtonChange(index, {
-										...button,
-										dados: { ...button.dados, url: value },
-									})
-								}
-								width="100%"
-							/>
-						)}
+								{button.tipo === "phone_number" && (
+									<TextInput
+										label="NÚMERO DE TELEFONE"
+										value={button.dados?.telefone || ""}
+										placeholder="+5534999999999"
+										handleChange={(value) =>
+											handleButtonChange(index, {
+												...button,
+												dados: { ...button.dados, telefone: value },
+											})
+										}
+										width="100%"
+									/>
+								)}
 
-						{button.tipo === "phone_number" && (
-							<TextInput
-								label="NÚMERO DE TELEFONE"
-								value={button.dados?.telefone || ""}
-								placeholder="+5534999999999"
-								handleChange={(value) =>
-									handleButtonChange(index, {
-										...button,
-										dados: { ...button.dados, telefone: value },
-									})
-								}
-								width="100%"
-							/>
-						)}
-
-						{button.texto.length > 25 && <p className="text-xs text-red-500">Atenção: O texto do botão deve ter no máximo 25 caracteres.</p>}
-					</div>
-				))}
-
-				{buttons.length < 10 && (
-					<Button type="button" variant="outline" onClick={handleAddButton} className="w-full">
-						+ ADICIONAR MAIS UM BOTÃO
-					</Button>
-				)}
-			</div>
+								{button.texto.length > 25 && <p className="text-xs text-red-500">Atenção: O texto do botão deve ter no máximo 25 caracteres.</p>}
+							</motion.div>
+						))
+					: null}
+			</AnimatePresence>
 		</ResponsiveDialogDrawerSection>
 	);
 }

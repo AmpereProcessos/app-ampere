@@ -27,16 +27,13 @@ type UseWhatsappTemplateStateProps = {
 	initialState?: Partial<WhatsappTemplateState>;
 };
 
-type TUseWhatsappTemplateState = {
-	state: WhatsappTemplateState;
-} & WhatsappTemplateActions;
 export const useWhatsappTemplateState = ({ initialState }: UseWhatsappTemplateStateProps) => {
 	const [state, setState] = useState<WhatsappTemplateState>({
 		template: initialState?.template || {
 			nome: "",
-			categoria: "utility",
+			categoria: "marketing",
 			idioma: "pt_BR",
-			formatoParametros: "positional",
+			formatoParametros: "named",
 			componentes: {
 				cabecalho: null,
 				corpo: {
@@ -175,3 +172,4 @@ export const useWhatsappTemplateState = ({ initialState }: UseWhatsappTemplateSt
 		resetState,
 	};
 };
+export type TUseWhatsappTemplateState = ReturnType<typeof useWhatsappTemplateState>;

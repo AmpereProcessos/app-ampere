@@ -54,3 +54,31 @@ export const WHATSAPP_TEMPLATES = {
 		},
 	},
 };
+
+export const TemplateCategoryOptions = [
+	{ id: "authentication", nome: "AUTENTICAÇÃO", value: "authentication", label: "AUTENTICAÇÃO" },
+	{ id: "marketing", nome: "MARKETING", value: "marketing", label: "MARKETING" },
+	{ id: "utility", nome: "UTILIDADE", value: "utility", label: "UTILIDADE" },
+];
+export const TemplateLanguageOptions = [
+	{ id: "pt_BR", nome: "PORTUGUÊS (BRASIL)", value: "pt_BR", label: "PORTUGUÊS (BRASIL)" },
+	{ id: "en_US", nome: "INGLÊS (EUA)", value: "en_US", label: "INGLÊS (EUA)" },
+	{ id: "es_ES", nome: "ESPANHOL", value: "es_ES", label: "ESPANHOL" },
+];
+export const TemplateParameterFormatOptions = [
+	{ id: "positional", nome: "POSICIONAL ({{1}}, {{2}})", value: "positional", label: "POSICIONAL ({{1}}, {{2}})" },
+	{ id: "named", nome: "NOMEADO ({{cliente_nome}})", value: "named", label: "NOMEADO ({{cliente_nome}})" },
+];
+
+export const TemplateHeaderTypeOptions = [
+	{ id: "text", nome: "Texto", value: "text", label: "TEXTO" },
+	{ id: "image", nome: "Imagem", value: "image", label: "IMAGEM" },
+	{ id: "video", nome: "Vídeo", value: "video", label: "VÍDEO" },
+	{ id: "document", nome: "Documento", value: "document", label: "DOCUMENTO" },
+];
+
+export const TemplateButtonTypeOptions = [
+	{ id: "quick_reply", nome: "Resposta Rápida", value: "quick_reply", label: "RESPOSTA RÁPIDA" },
+	{ id: "url", nome: "URL", value: "url", label: "URL" },
+	{ id: "phone_number", nome: "Número de Telefone", value: "phone_number", label: "NÚMERO DE TELEFONE" },
+];

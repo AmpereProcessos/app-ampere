@@ -222,10 +222,12 @@ async function updateCertification({ session, input }: { session: TAuthSession; 
 					// In case there is no document id, we gotta create the file reference for it
 					documentId = await insertFileReferenceForDocumentHelper({ session, document: r.documento });
 				}
-				return await certificationReferencesCollection.updateOne(
-					{ _id: new ObjectId(r._id) },
-					{ $set: { ...r, documento: { id: documentId, ...r.documento } } },
-				);
+				const certificationReference = CertificationReferenceSchema.parse({
+					...r,
+					certificacao: { id: certificationId, titulo: certification.titulo },
+					documento: { id: documentId, ...r.documento },
+				});
+				return await certificationReferencesCollection.updateOne({ _id: new ObjectId(r._id) }, { $set: certificationReference });
 			}
 			let documentId = r.documento.id;
 			if (!documentId) {
@@ -235,6 +237,7 @@ async function updateCertification({ session, input }: { session: TAuthSession; 
 			// New to create
 			const certificationReference = CertificationReferenceSchema.parse({
 				...r,
+				certificacao: { id: certificationId, titulo: certification.titulo },
 				documento: { id: documentId, ...r.documento },
 			});
 			return await certificationReferencesCollection.insertOne(certificationReference);

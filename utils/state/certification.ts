@@ -58,8 +58,8 @@ export function useCertificationState({ initialState }: UseCertificationStatePro
 	function addCertificationReference(reference: TCertificationState["references"][number]) {
 		return setState((prev) => ({ ...prev, references: [...prev.references, reference] }));
 	}
-	function updateCertificationReference(index: number, reference: TCertificationState["references"][number]) {
-		return setState((prev) => ({ ...prev, references: prev.references.map((r, i) => (i === index ? reference : r)) }));
+	function updateCertificationReference(index: number, changes: Partial<TCertificationState["references"][number]>) {
+		return setState((prev) => ({ ...prev, references: prev.references.map((r, i) => (i === index ? { ...r, ...changes } : r)) }));
 	}
 	function removeCertificationReference(index: number) {
 		// Validating existence (id defined)

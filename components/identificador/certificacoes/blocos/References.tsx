@@ -5,15 +5,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
 import { cn } from "@/lib/utils";
-import { isFileImage } from "@/utils/constants";
+import { formatLongString, isFileImage } from "@/utils/constants";
 import { TIME_UNITS_MANIPULATION_MAP } from "@/utils/methods/dates";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useUsers } from "@/utils/methods/query/users";
 import { formatDateInputChange } from "@/utils/methods/shared";
+import { isValidNumber } from "@/utils/methods/validating";
 import type { TUseCertificationState } from "@/utils/state/certification";
 import dayjs from "dayjs";
-import { LinkIcon, PlusIcon, Trash } from "lucide-react";
+import { LinkIcon, Pencil, PlusIcon, Trash } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsCloudUploadFill } from "react-icons/bs";
@@ -33,6 +35,7 @@ export default function CertificationReferences({
 	removeCertificationReference,
 }: CertificationReferencesProps) {
 	const [newReferenceMenuIsOpen, setNewReferenceMenuIsOpen] = useState(false);
+	const [editReferenceMenuIndex, setEditReferenceMenuIndex] = useState<number | null>(null);
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="REFERÊNCIAS" sectionTitleIcon={<LinkIcon size={15} />}>
 			<div className="w-full flex items-center justify-center">
@@ -48,6 +51,7 @@ export default function CertificationReferences({
 							key={`${reference._id ?? ""}-${index}`}
 							reference={reference}
 							removeCertificationReference={() => removeCertificationReference(index)}
+							editCertificationReference={() => setEditReferenceMenuIndex(index)}
 						/>
 					))}
 				</div>
@@ -59,6 +63,13 @@ export default function CertificationReferences({
 					certificationValidConfig={certification.validade}
 					addCertificationReference={addCertificationReference}
 					closeMenu={() => setNewReferenceMenuIsOpen(false)}
+				/>
+			) : null}
+			{isValidNumber(editReferenceMenuIndex) ? (
+				<ControlCertificationReferenceMenu
+					certificationReference={references[editReferenceMenuIndex as number]}
+					updateCertificationReference={(info) => updateCertificationReference(editReferenceMenuIndex as number, info)}
+					closeMenu={() => setEditReferenceMenuIndex(null)}
 				/>
 			) : null}
 		</ResponsiveDialogDrawerSection>
@@ -131,6 +142,7 @@ function NewCertificationReferenceMenu({ certificationValidConfig, addCertificat
 							if (file) {
 								setNewReferenceHolder((prev) => ({
 									...prev,
+									documento: { ...prev.documento, id: undefined, url: "" },
 									anexo: { arquivo: file, previewUrl: isFileImage(file.type) ? URL.createObjectURL(file) : null },
 								}));
 							}
@@ -190,12 +202,126 @@ function NewCertificationReferenceMenu({ certificationValidConfig, addCertificat
 	);
 }
 
+type ControlCertificationReferenceMenuProps = {
+	certificationReference: TUseCertificationState["state"]["references"][number];
+	updateCertificationReference: (info: Partial<TUseCertificationState["state"]["references"][number]>) => void;
+	closeMenu: () => void;
+};
+function ControlCertificationReferenceMenu({
+	certificationReference,
+	updateCertificationReference,
+	closeMenu,
+}: ControlCertificationReferenceMenuProps) {
+	const { data: users } = useUsers();
+
+	return (
+		<ResponsiveDialogDrawerViewOnly
+			menuTitle="EDITAR REFERÊNCIA"
+			menuDescription="Preencha os campos abaixo para editar uma referência."
+			menuCancelButtonText="CANCELAR"
+			closeMenu={closeMenu}
+			stateIsLoading={false}
+			stateError={null}
+		>
+			<TextInput
+				label="TÍTULO DO DOCUMENTO"
+				placeholder="Preencha o título do documento da referência"
+				value={certificationReference.documento.titulo}
+				handleChange={(value) => updateCertificationReference({ documento: { ...certificationReference.documento, titulo: value } })}
+				width="100%"
+			/>
+			<div className="relative flex h-full w-full flex-col items-center justify-center">
+				<label
+					htmlFor="dropzone-file"
+					className="dark:hover:bg-primary/80 border-primary/20 bg-background hover:bg-primary/10 flex h-full min-h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed"
+				>
+					<div className="text-primary flex flex-col items-center justify-center px-2 pt-5 pb-6">
+						<BsCloudUploadFill
+							className={cn("size-10", {
+								"text-primary": !certificationReference.anexo.arquivo && !certificationReference.documento.url,
+								"text-green-500": certificationReference.anexo.arquivo || certificationReference.documento.url,
+							})}
+						/>
+						<p className="text-center text-xs lg:text-base tracking-tight">
+							{certificationReference.documento.url
+								? formatLongString(certificationReference.documento.url, 30)
+								: certificationReference.anexo.arquivo
+									? formatLongString(certificationReference.anexo.arquivo.name, 30)
+									: "Clique para escolher o documento da referência."}
+						</p>
+					</div>
+					<input
+						onChange={(e) => {
+							const file = e.target.files ? e.target.files[0] : null;
+							if (file) {
+								updateCertificationReference({
+									documento: { ...certificationReference.documento, id: undefined, url: "" },
+									anexo: { arquivo: file, previewUrl: isFileImage(file.type) ? URL.createObjectURL(file) : null },
+								});
+							}
+							return;
+						}}
+						id="dropzone-file"
+						type="file"
+						className="absolute h-full w-full opacity-0"
+					/>
+				</label>
+			</div>
+
+			<MultipleSelectWithImages
+				label="NOTIFICADOS"
+				editable={true}
+				options={
+					users?.map((user) => ({
+						id: user._id,
+						label: user.nome,
+						value: user._id,
+						url: user.avatar_url ?? undefined,
+					})) || []
+				}
+				selected={certificationReference.notificados.map((user) => user.id)}
+				handleChange={(value) => {
+					const notifiedUsers = value
+						.map((userId) => {
+							const user = users?.find((user) => user._id === userId);
+							if (!user) return null;
+							return {
+								id: user._id,
+								nome: user.nome,
+								email: user.email,
+								avatar_url: user.avatar_url,
+							};
+						})
+						.filter((user) => user !== null);
+					updateCertificationReference({ notificados: notifiedUsers });
+				}}
+				resetOptionLabel="NÃO DEFINIDO"
+				onReset={() => updateCertificationReference({ notificados: [] })}
+				width="100%"
+			/>
+			<DatetimeInput
+				label="DATA INÍCIO"
+				value={certificationReference.dataInicio}
+				handleChange={(value) => updateCertificationReference({ dataInicio: formatDateInputChange(value, "string", false) as string })}
+				width="100%"
+			/>
+			<DatetimeInput
+				label="DATA FIM"
+				value={certificationReference.dataFim}
+				handleChange={(value) => updateCertificationReference({ dataFim: formatDateInputChange(value, "string", false) as string })}
+				width="100%"
+			/>
+		</ResponsiveDialogDrawerViewOnly>
+	);
+}
+
 type CertificationReferenceCardProps = {
 	reference: TUseCertificationState["state"]["references"][number];
 	removeCertificationReference: () => void;
+	editCertificationReference: () => void;
 };
 
-function CertificationReferenceCard({ reference, removeCertificationReference }: CertificationReferenceCardProps) {
+function CertificationReferenceCard({ reference, removeCertificationReference, editCertificationReference }: CertificationReferenceCardProps) {
 	return (
 		<div className="border-primary/20 bg-card flex w-full flex-col gap-1 rounded border p-2 shadow-xs">
 			<div className="w-full flex items-center justify-between">
@@ -203,9 +329,14 @@ function CertificationReferenceCard({ reference, removeCertificationReference }:
 					<LinkIcon className="w-4 h-4" />
 					<h1 className="text-sm leading-none font-bold tracking-tight">{reference.documento.titulo}</h1>
 				</div>
-				<Button className="hover:bg-red-200 hover:text-red-700 p-1" size={"fit"} variant={"ghost"} onClick={() => removeCertificationReference()}>
-					<Trash className="w-4 h-4" />
-				</Button>
+				<div className="flex items-center gap-1">
+					<Button className="hover:bg-blue-200 hover:text-blue-700 p-1" size={"fit"} variant={"ghost"} onClick={() => editCertificationReference()}>
+						<Pencil className="w-4 h-4" />
+					</Button>
+					<Button className="hover:bg-red-200 hover:text-red-700 p-1" size={"fit"} variant={"ghost"} onClick={() => removeCertificationReference()}>
+						<Trash className="w-4 h-4" />
+					</Button>
+				</div>
 			</div>
 			<div className="w-full flex flex-col gap-1">
 				<p className="text-primary/80 text-[0.65rem] font-medium tracking-tight">NOTIFICADOS</p>

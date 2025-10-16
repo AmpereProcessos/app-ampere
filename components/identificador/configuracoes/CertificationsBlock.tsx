@@ -1,10 +1,13 @@
 import TextInput from "@/components/inputs/Text";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TGetCertificationsInput, TGetCertificationsOutputDefault } from "@/pages/api/certificacoes";
 import { SlideMotionVariants } from "@/utils/constants";
-import { formatDateAsLocale, formatTimeDurationUnit } from "@/utils/methods/formatting";
+import { formatDateAsLocale, formatNameAsInitials, formatTimeDurationUnit } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useCertifications } from "@/utils/methods/query/certifications";
 import { useQueryClient } from "@tanstack/react-query";
@@ -128,8 +131,59 @@ function CertificationBlockCard({ certification, handleEditClick, userHasEditCer
 				</div>
 			</div>
 			<div className="flex h-full grow flex-col gap-1">
-				<div className="flex w-full flex-col ">
-					<p className="text-sm leading-none font-bold tracking-tight">{certification.titulo}</p>
+				<div className="flex w-full flex-col">
+					<div className="w-full flex items-center justify-between gap-2">
+						<p className="text-sm leading-none font-bold tracking-tight">{certification.titulo}</p>
+
+						{certification.referencias.length > 0 ? (
+							<HoverCard>
+								<HoverCardTrigger asChild>
+									<Button variant={"ghost"} size={"fit"} className="text-xs">
+										{certification.referencias.length} DOCUMENTOS
+									</Button>
+								</HoverCardTrigger>
+								<HoverCardContent className="w-80">
+									<h1 className="text-[0.65rem] font-medium">DOCUMENTOS</h1>
+									<div className="flex flex-col gap-3">
+										{certification.referencias.map((usage) => (
+											<div key={usage._id} className="bg-primary/10 flex w-full flex-col gap-1 rounded-lg p-2">
+												<div className="flex w-full items-center gap-2">
+													<Badge className="rounded-full text-[0.65rem] w-fit">{usage.documento.formato}</Badge>
+													<p className="text-xs font-medium tracking-tight">{usage.documento.titulo}</p>
+												</div>
+												<div className="flex items-center gap-2">
+													<p className="text-xs font-medium tracking-tight text-primary/80">DATA INÍCIO</p>
+													<p className="text-xs font-bold tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
+												</div>
+												<div className="flex items-center gap-2">
+													<p className="text-xs font-medium tracking-tight text-primary/80">DATA FIM</p>
+													<p className="text-xs font-bold tracking-tight">{formatDateAsLocale(usage.dataFim) || "N/A"}</p>
+												</div>
+												<p className="text-xs font-medium tracking-tight text-primary/80">NOTIFICADOS</p>
+												<div className="flex items-center gap-2">
+													{usage.notificados.length > 0 ? (
+														usage.notificados.map((user) => (
+															<div key={user.id} className="flex items-center gap-1">
+																<Avatar className="w-4 h-4 min-w-4 min-h-4">
+																	<AvatarImage src={user.avatar_url ?? undefined} />
+																	<AvatarFallback>{formatNameAsInitials(user.nome ?? "")}</AvatarFallback>
+																</Avatar>
+																<p className="text-xs font-bold tracking-tight">{user.nome}</p>
+															</div>
+														))
+													) : (
+														<p className="text-xs font-bold tracking-tight">NENHUM USUÁRIO NOTIFICADO</p>
+													)}
+												</div>
+											</div>
+										))}
+									</div>
+								</HoverCardContent>
+							</HoverCard>
+						) : (
+							<div />
+						)}
+					</div>
 					<p className="text-sm leading-none font-bold tracking-tight">{certification.descricao}</p>
 				</div>
 				<div className="w-full flex flex-col gap-2 grow">

@@ -1,4 +1,5 @@
 import AllocatorsBlock from "@/components/identificador/configuracoes/AllocatorsBlock";
+import CertificationsBlock from "@/components/identificador/configuracoes/CertificationsBlock";
 import CompositionKitsBlock from "@/components/identificador/configuracoes/CompositionKitsBlock";
 import ContractTemplatesBlock from "@/components/identificador/configuracoes/ContractTemplatesBlock";
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
@@ -26,6 +27,7 @@ type ConfigurationPageModes =
 	| "users"
 	| "employees"
 	| "allocators"
+	| "certifications"
 	| "composition-kits"
 	| "contract-templates"
 	| "contract-templates-variables"
@@ -40,6 +42,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 	const userHasCompositionKitsViewPermission = session.user.permissoes.suprimentos.visualizar;
 	const userHasContractTemplatesVariablesPermission =
 		session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
+	const userHasCertificationsPermission = session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
 	const userHasWhatsappTemplatesPermission = session.user.permissoes.chats.enviarMensagens;
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
@@ -81,6 +84,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 						</button>
 					)}
 
+					{userHasCertificationsPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("certifications")}
+							className={`${
+								mode === "certifications" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Certificações
+						</button>
+					)}
 					{userHasContractTemplatesVariablesPermission && (
 						<button
 							type="button"
@@ -140,6 +154,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "allocators" ? <AllocatorsBlock session={session} /> : null}
 					{mode === "users" ? <UsersBlock session={session} /> : null}
 					{mode === "employees" ? <EmployeesBlock session={session} /> : null}
+					{mode === "certifications" ? <CertificationsBlock session={session} /> : null}
 					{mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 					{mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}

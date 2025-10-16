@@ -11,6 +11,15 @@ export function formatDateTimeForInput(value: any) {
 	return dayjs(value).format("YYYY-MM-DDTHH:mm");
 }
 
+export function formatTimeDurationUnit({ value, unit, upperCase }: { value: number; unit: string; upperCase?: boolean }) {
+	let returnStr = "";
+	if (unit === "DIAS") returnStr = `${value} dia${value > 1 ? "s" : ""}`;
+	if (unit === "SEMANAS") returnStr = `${value} semana${value > 1 ? "s" : ""}`;
+	if (unit === "MESES") returnStr = `${value} ${value > 1 ? "meses" : "mês"}`;
+	if (unit === "ANOS") returnStr = `${value} ano${value > 1 ? "s" : ""}`;
+	if (upperCase) return returnStr.toUpperCase();
+	return returnStr;
+}
 export function formatNameAsInitials(name: string) {
 	const splittedName = name.replace("-", "").split(" ");
 	const firstLetter = splittedName[0][0];

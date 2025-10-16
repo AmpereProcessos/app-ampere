@@ -2,6 +2,12 @@ import dayjs, { type ManipulateType } from "dayjs";
 import { formatDecimalPlaces } from "../constants";
 import type { TTimeUnitEnum } from "../schemas/crm/enum.schema";
 
+export const TIME_UNITS_MANIPULATION_MAP: Record<string, ManipulateType> = {
+	DIAS: "day",
+	SEMANAS: "week",
+	MESES: "month",
+	ANOS: "year",
+};
 export function getAgeFromBirthdayDate(date: string | Date) {
 	const age = dayjs().diff(date, "years");
 	return age;

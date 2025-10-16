@@ -3,6 +3,10 @@
 		{
 			"path": "/api/cron/sync-revenues-with-conta-azul",
 			"schedule": "0 0 * * 0"
+		},
+		{
+			"path": "/api/cron/notify-expiring-certification-references",
+			"schedule": "0 0 * * 0"
 		}
 	]
 }

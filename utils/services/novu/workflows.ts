@@ -79,12 +79,7 @@ export const generalNoficationWorkflow = workflow(
 				},
 			};
 		});
-		await step.sms("sms", async () => {
-			console.log("[NOVU WORKFLOW] Running SMS workflow...");
-			return {
-				body: payload.body,
-			};
-		});
+
 		await step.email("email", async () => {
 			console.log("[NOVU WORKFLOW] Running email workflow...");
 			return {

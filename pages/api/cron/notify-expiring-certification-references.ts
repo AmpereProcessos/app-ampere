@@ -42,7 +42,7 @@ const handleNotifyExpiringCertificationReferences = async () => {
 						? "DOCUMENTO VENCENDO HOJE"
 						: "DOCUMENTO PRÓXIMO DA DATA DE EXPIRAÇÃO",
 				body: certificationIsExpired
-					? `$O documento ${reference.documento.titulo} expirou em ${formatDateAsLocale(certificationExpirationDate, true)}`
+					? `O documento ${reference.documento.titulo} expirou em ${formatDateAsLocale(certificationExpirationDate, true)}`
 					: certificationExpiresToday
 						? `O documento ${reference.documento.titulo} vence hoje`
 						: `O documento ${reference.documento.titulo} expira em ${certificationDaysUntilExpiration} dias`,
@@ -53,7 +53,7 @@ const handleNotifyExpiringCertificationReferences = async () => {
 						: `O documento ${reference.documento.titulo} expira em ${certificationDaysUntilExpiration} dias`,
 				primaryAction: {
 					label: "CONFERIR",
-					redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/configuracoes`,
+					redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/configuracoes?mode=certifications`,
 				},
 			};
 			const novuResponse = await novu.trigger({

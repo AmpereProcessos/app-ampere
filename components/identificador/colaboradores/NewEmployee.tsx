@@ -104,6 +104,11 @@ function NewEmployee({ session, closeModal, callbacks }: NewEmployeeProps) {
 				visualizar: false,
 				enviarMensagens: false,
 			},
+			certificacoes: {
+				visualizar: false,
+				editar: false,
+				criar: false,
+			},
 		},
 		empresaVinculada: "", //
 		dataNascimento: null, //

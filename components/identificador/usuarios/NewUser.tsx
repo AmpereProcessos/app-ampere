@@ -104,6 +104,11 @@ function NewUser({ session, closeModal, callbacks }: NewUserProps) {
 				visualizar: false,
 				enviarMensagens: false,
 			},
+			certificacoes: {
+				visualizar: false,
+				editar: false,
+				criar: false,
+			},
 		},
 		empresaVinculada: "", //
 		dataNascimento: "", //

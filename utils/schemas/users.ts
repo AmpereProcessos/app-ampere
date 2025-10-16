@@ -146,6 +146,20 @@ const PermissionsSchema = z.object({
 			invalid_type_error: "Tipo não válido para permissão de envio de mensagens.",
 		}),
 	}),
+	certificacoes: z.object({
+		visualizar: z.boolean({
+			required_error: "Ativação da permissão de visualização de certificações não informada.",
+			invalid_type_error: "Tipo não válido para permissão de visualização de certificações.",
+		}),
+		editar: z.boolean({
+			required_error: "Ativação da permissão de edição de certificações não informada.",
+			invalid_type_error: "Tipo não válido para permissão de edição de certificações.",
+		}),
+		criar: z.boolean({
+			required_error: "Ativação da permissão de criação de certificações não informada.",
+			invalid_type_error: "Tipo não válido para permissão de criação de certificações.",
+		}),
+	}),
 });
 
 const PositionSchema = z.object({

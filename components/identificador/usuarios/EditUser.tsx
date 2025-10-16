@@ -96,6 +96,11 @@ function EditUser({ userId, session, closeModal, callbacks }: EditUserProps) {
 				visualizar: false,
 				enviarMensagens: false,
 			},
+			certificacoes: {
+				visualizar: false,
+				editar: false,
+				criar: false,
+			},
 		},
 		empresaVinculada: "", //
 		cargos: [], //

@@ -95,6 +95,11 @@ function EditEmployee({ userId, session, closeModal, callbacks }: EditEmployeePr
 				visualizar: false,
 				enviarMensagens: false,
 			},
+			certificacoes: {
+				visualizar: false,
+				editar: false,
+				criar: false,
+			},
 		},
 		empresaVinculada: "", //
 		dataNascimento: "", //

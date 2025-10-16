@@ -454,6 +454,55 @@ function EmployeePermissionsPannel({ infoHolder, updateInfoHolder }: Permissions
 					})
 				}
 			/>
+			{/**CERTIFICAÇÕES */}
+			<h1 className="text-primary/60 w-full text-start text-sm">CERTIFICAÇÕES</h1>
+			<CheckboxInput
+				labelFalse="APTO A CRIAR CERTIFICAÇÕES"
+				labelTrue="APTO A CRIAR CERTIFICAÇÕES"
+				checked={infoHolder.permissoes.certificacoes.criar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							certificacoes: { ...infoHolder.permissoes.certificacoes, criar: value },
+						},
+					})
+				}
+			/>
+
+			<CheckboxInput
+				labelFalse="APTO A EDITAR CERTIFICAÇÕES"
+				labelTrue="APTO A EDITAR CERTIFICAÇÕES"
+				checked={infoHolder.permissoes.certificacoes.editar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							certificacoes: { ...infoHolder.permissoes.certificacoes, editar: value },
+						},
+					})
+				}
+			/>
+
+			<CheckboxInput
+				labelFalse="APTO A VISUALIZAR TODOS AS CERTIFICAÇÕES"
+				labelTrue="APTO A VISUALIZAR TODOS AS CERTIFICAÇÕES"
+				checked={infoHolder.permissoes.certificacoes.visualizar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							certificacoes: {
+								...infoHolder.permissoes.certificacoes,
+								visualizar: value,
+							},
+						},
+					})
+				}
+			/>
 
 			{/**CHATS */}
 			<h1 className="text-primary/60 w-full text-start text-sm">CHATS</h1>

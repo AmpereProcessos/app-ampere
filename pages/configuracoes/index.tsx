@@ -11,7 +11,8 @@ import { useSession } from "@/components/providers/SessionProvider";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
-import React, { useState } from "react";
+import { useQueryState } from "@/lib/hooks/query-state";
+import React from "react";
 
 function ConfigurationsMainPage() {
 	const { session, status } = useSession();
@@ -36,13 +37,13 @@ type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
 function ConfigurationBlock({ session }: ConfigurationBlockProps) {
-	const [mode, setMode] = useState<ConfigurationPageModes>("profile");
+	const [mode, setMode] = useQueryState<ConfigurationPageModes>("mode", "profile");
 
 	const userHasUsersViewPermission = session.user.permissoes.usuarios.visualizar;
 	const userHasCompositionKitsViewPermission = session.user.permissoes.suprimentos.visualizar;
 	const userHasContractTemplatesVariablesPermission =
 		session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
-	const userHasCertificationsPermission = session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
+	const userHasCertificationsPermission = session.user.permissoes.certificacoes.visualizar;
 	const userHasWhatsappTemplatesPermission = session.user.permissoes.chats.enviarMensagens;
 	return (
 		<div className="flex grow flex-col gap-2 p-6">
@@ -77,7 +78,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							type="button"
 							onClick={() => setMode("employees")}
 							className={`${
-								mode === "users" ? "bg-secondary" : ""
+								mode === "employees" ? "bg-secondary" : ""
 							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
 						>
 							Colaboradores

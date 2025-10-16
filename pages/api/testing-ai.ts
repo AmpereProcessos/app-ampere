@@ -18,23 +18,5 @@ import { type AnyBulkWriteOperation, ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const admDb = await connectToAdministrationDatabase();
-	const usersCollection = await admDb.collection<TEmployee>("colaboradores");
-	const users = await usersCollection.find({}).toArray();
-
-	const bulkwriteUsers: AnyBulkWriteOperation<TEmployee>[] = users.map((user) => {
-		return {
-			updateOne: {
-				filter: { _id: new ObjectId(user._id) },
-				update: {
-					$set: {
-						permissoes: { ...user.permissoes, chats: { visualizar: false, enviarMensagens: false } },
-					},
-				},
-			},
-		};
-	});
-
-	const bulkwriteResponse = await usersCollection.bulkWrite(bulkwriteUsers);
-	return res.status(200).json({ bulkwriteResponse });
+	return res.status(200).json({ message: "Hello, world!" });
 }

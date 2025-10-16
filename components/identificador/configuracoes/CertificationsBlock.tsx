@@ -32,7 +32,8 @@ export default function CertificationsBlock({ session }: CertificationsBlockProp
 	const handleOnSettled = async () => {
 		await queryClient.invalidateQueries({ queryKey: queryKey });
 	};
-	const userHasAddAndEditCertificationsPermission = !!session.user.permissoes.administrativo.editar;
+	const userHasToCreateCertificationsPermission = !!session.user.permissoes.certificacoes.criar;
+	const userHasToEditCertificationsPermission = !!session.user.permissoes.certificacoes.editar;
 	return (
 		<div className="flex h-full grow flex-col gap-3">
 			<div className="border-primary/20 flex w-full flex-col items-center justify-between border-b pb-2 lg:flex-row">
@@ -44,7 +45,7 @@ export default function CertificationsBlock({ session }: CertificationsBlockProp
 					<Button onClick={() => setFiltersMenuIsOpen(true)} type="button" variant={"ghost"}>
 						<ListFilter className="w-4 h-4 min-w-4 min-h-4" />
 					</Button>
-					{userHasAddAndEditCertificationsPermission ? (
+					{userHasToCreateCertificationsPermission ? (
 						<Button onClick={() => setNewCertificationMenuIsOpen(true)} type="button">
 							NOVA CERTIFICAÇÃO
 						</Button>
@@ -62,7 +63,7 @@ export default function CertificationsBlock({ session }: CertificationsBlockProp
 								key={certification._id}
 								certification={certification}
 								handleEditClick={() => setEditCertificationId(certification._id)}
-								userHasEditCertificationsPermission={userHasAddAndEditCertificationsPermission}
+								userHasEditCertificationsPermission={userHasToEditCertificationsPermission}
 							/>
 						))
 					) : (

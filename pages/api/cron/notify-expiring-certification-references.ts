@@ -3,6 +3,7 @@ import { formatDateAsLocale } from "@/utils/methods/formatting";
 import type { TCertification, TCertificationReference } from "@/utils/schemas/certifications";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import { novu } from "@/utils/services/novu";
+import { getNovuSubscriberId } from "@/utils/services/novu/config";
 import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/workflows";
 import dayjs from "dayjs";
 import type { NextApiHandler } from "next";
@@ -56,7 +57,7 @@ const handleNotifyExpiringCertificationReferences = async () => {
 				},
 			};
 			const novuResponse = await novu.trigger({
-				to: user.id,
+				to: getNovuSubscriberId(user.id),
 				workflowId: NOVU_WORKFLOW_IDS.NOTIFY_GENERAL_NOTIFICATION,
 				payload: novuPayload,
 			});

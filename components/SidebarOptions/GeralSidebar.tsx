@@ -169,6 +169,14 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 							</div>
 						</Link>
 					) : null}
+					{session.user.permissoes.certificacoes.visualizar ? (
+						<Link href="/certificacoes">
+							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+								<BsFillPatchCheckFill className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+								<p className="text-primary/80 pl-3 text-xs">Certificações</p>
+							</div>
+						</Link>
+					) : null}
 					<Link href="/calls">
 						<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 							<FaTasks className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />

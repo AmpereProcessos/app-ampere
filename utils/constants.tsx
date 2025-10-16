@@ -278,6 +278,11 @@ export const fileTypes: FileTypes = {
 		extension: ".tiff",
 		icon: BsImage,
 	},
+	"image/webp": {
+		title: "IMAGEM(.WEBP)",
+		extension: ".webp",
+		icon: BsImage,
+	},
 	"application/pdf": {
 		title: "PDF",
 		extension: ".pdf",
@@ -322,8 +327,8 @@ export function getFileTypeTitle(type: string) {
 	return fileTypes[type]?.title || "NÃO DEFINIDO";
 }
 export function getTitleFileType(title: string) {
-	const equivalent = Object.entries(fileTypes).find(([key, value]) => title == value.title);
-	const type = !!equivalent ? equivalent[0] : "";
+	const equivalent = Object.entries(fileTypes).find(([key, value]) => title === value.title);
+	const type = equivalent ? equivalent[0] : "";
 	return type;
 }
 export function isFileFormatImage(format: string) {
@@ -2634,22 +2639,22 @@ export function formatCPFCpnj(value: string) {
 }
 export function formatDate(value: any) {
 	if (!value) return undefined;
-	if (isNaN(new Date(value).getMilliseconds())) return undefined;
+	if (Number.isNaN(new Date(value).getMilliseconds())) return undefined;
 	return new Date(value).toISOString().slice(0, 10);
 }
 export function formatPersonalName(value: string) {
-	if (typeof value == "string") {
+	if (typeof value === "string") {
 		const splittedStr = value.split(" ");
 		const formattedNameArr = splittedStr.map((x) => x.charAt(0).toUpperCase() + x.slice(1));
 		return formattedNameArr.join(" ");
-	} else return "";
+	}
+	return "";
 }
 export function formatLongString(str: string, size = 35) {
 	if (str && str.length > size) {
 		return str.substring(0, size) + "\u2026";
-	} else {
-		return str;
 	}
+	return str;
 }
 export async function getDistanceBetweenCities(destination: string, origin: string) {
 	console.log(process.env.DB_KEY);

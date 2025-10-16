@@ -7,12 +7,13 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TGetCertificationsInput, TGetCertificationsOutputDefault } from "@/pages/api/certificacoes";
 import { SlideMotionVariants } from "@/utils/constants";
+import { handleDownload } from "@/utils/methods/firebase";
 import { formatDateAsLocale, formatNameAsInitials, formatTimeDurationUnit } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useCertifications } from "@/utils/methods/query/certifications";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { Hourglass, ListFilter, Lock, Pencil } from "lucide-react";
+import { DownloadIcon, Hourglass, ListFilter, Lock, Pencil } from "lucide-react";
 import { useState } from "react";
 import { BsCalendarPlus } from "react-icons/bs";
 import ControlCertification from "../certificacoes/ControlCertification";
@@ -175,6 +176,20 @@ function CertificationBlockCard({ certification, handleEditClick, userHasEditCer
 														<p className="text-xs font-bold tracking-tight">NENHUM USUÁRIO NOTIFICADO</p>
 													)}
 												</div>
+												<Button
+													size={"fit"}
+													variant={"ghost"}
+													className="w-fit flex items-center gap-1 px-2 py-1 bg-blue-600 text-white hover:text-white hover:bg-blue-500 self-center"
+													onClick={() =>
+														handleDownload({
+															fileName: usage.documento.titulo,
+															fileUrl: usage.documento.url,
+														})
+													}
+												>
+													<DownloadIcon className="w-4 h-4 min-w-4 min-h-4" />
+													<p className="text-xs font-bold tracking-tight">DOWNLOAD</p>
+												</Button>
 											</div>
 										))}
 									</div>

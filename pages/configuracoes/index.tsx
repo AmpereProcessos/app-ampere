@@ -6,6 +6,7 @@ import ContractTemplatesVariablesBlock from "@/components/identificador/configur
 import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
+import WhatsappConnectionBlock from "@/components/identificador/configuracoes/WhatsappConnectionBlock";
 import WhatsappTemplatesBlock from "@/components/identificador/configuracoes/WhatsappTemplatesBlock";
 import { useSession } from "@/components/providers/SessionProvider";
 import LoadingPage from "@/components/utils/LoadingPage";
@@ -32,7 +33,8 @@ type ConfigurationPageModes =
 	| "composition-kits"
 	| "contract-templates"
 	| "contract-templates-variables"
-	| "whatsapp-templates";
+	| "whatsapp-templates"
+	| "whatsapp-connection";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -149,6 +151,17 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							Templates WhatsApp
 						</button>
 					)}
+					{userHasWhatsappTemplatesPermission && (
+						<button
+							type="button"
+							onClick={() => setMode("whatsapp-connection")}
+							className={`${
+								mode === "whatsapp-connection" ? "bg-secondary" : ""
+							} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+						>
+							Conexão WhatsApp
+						</button>
+					)}
 				</div>
 				<div className="flex h-full w-full flex-col gap-1 px-2 py-2 lg:w-4/5">
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
@@ -160,6 +173,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
 					{mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}
 					{mode === "whatsapp-templates" ? <WhatsappTemplatesBlock session={session} /> : null}
+					{mode === "whatsapp-connection" ? <WhatsappConnectionBlock session={session} /> : null}
 				</div>
 			</div>
 		</div>

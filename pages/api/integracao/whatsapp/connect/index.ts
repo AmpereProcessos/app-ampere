@@ -40,6 +40,28 @@ const getWhatsappIntegrationHandler: NextApiHandler<TGetWhatsappIntegrationOutpu
 	return res.status(200).json(result);
 };
 
+async function disconnectWhatsappIntegration({ session }: { session: TAuthSession }) {
+	const db = await connectToDatabase();
+	const collection = db.collection<TIntegration>("integracoes");
+	const integration = await collection.findOne({ identificador: "WHATSAPP" });
+	if (!integration || integration.identificador !== "WHATSAPP" || integration.dados.tipo !== "WHATSAPP")
+		throw new createHttpError.NotFound("Integração não encontrada.");
+	await collection.deleteOne({ _id: integration._id });
+	return {
+		data: {
+			deletedId: integration._id.toString(),
+		},
+		message: "Integração desconectada com sucesso.",
+	};
+}
+export type TDisconnectWhatsappIntegrationOutput = Awaited<ReturnType<typeof disconnectWhatsappIntegration>>;
+const disconnectWhatsappIntegrationHandler: NextApiHandler<TDisconnectWhatsappIntegrationOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const result = await disconnectWhatsappIntegration({ session });
+	return res.status(200).json(result);
+};
+
 export default apiHandler({
 	GET: getWhatsappIntegrationHandler,
+	DELETE: disconnectWhatsappIntegrationHandler,
 });

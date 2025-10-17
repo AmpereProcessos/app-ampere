@@ -1,13 +1,13 @@
-import { NextApiHandler } from "next";
-import connectToDatabase from "../../../utils/services/mongodb/projects";
-import { Collection, Db } from "mongodb";
 import { apiHandler } from "@/utils/api";
-import { TProject } from "@/utils/schemas/projects";
+import type { TProject } from "@/utils/schemas/projects";
+import type { Collection, Db } from "mongodb";
+import type { NextApiHandler } from "next";
+import connectToDatabase from "../../../utils/services/mongodb/projects";
 
 type GetResponse = any;
 
 const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 	const projects = await collection
 		.aggregate([

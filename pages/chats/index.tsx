@@ -25,7 +25,6 @@ function ChatsContent({ session, userHasMessageSendingPermission }: { session: T
 			<div className="border-primary/20 flex items-center justify-between border-b p-1">
 				<h1 className="text-start text-2xl font-black text-[#15599a] uppercase">Chats</h1>
 			</div>
-			<WhatsAppConnectButton />
 			<ChatsHub session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} />
 		</div>
 	);

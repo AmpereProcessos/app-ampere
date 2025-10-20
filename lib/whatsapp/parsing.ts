@@ -71,6 +71,7 @@ export function parseStatusUpdate(statusPayload: unknown): ParsedStatusUpdate | 
 }
 
 export type ParsedIncomingMessage = {
+	whatsappPhoneNumberId: string;
 	whatsappMessageId: string;
 	fromPhoneNumber: string;
 	profileName: string;
@@ -97,6 +98,8 @@ export function parseWebhookIncomingMessage(webhookPayload: unknown): ParsedInco
 			return null;
 		}
 
+		const metadata = value?.metadata as Record<string, unknown> | undefined;
+		const whatsappPhoneNumberId = metadata?.phone_number_id as string;
 		const message = messages[0] as Record<string, unknown>;
 		const contacts = value?.contacts as unknown[] | undefined;
 		const contact = (Array.isArray(contacts) ? contacts[0] : undefined) as Record<string, unknown> | undefined;
@@ -150,6 +153,7 @@ export function parseWebhookIncomingMessage(webhookPayload: unknown): ParsedInco
 		}
 
 		return {
+			whatsappPhoneNumberId: whatsappPhoneNumberId || "",
 			whatsappMessageId: message.id as string,
 			fromPhoneNumber: formatWhatsappIdAsPhone(message.from as string),
 			profileName: (profile?.name as string) || "Cliente",

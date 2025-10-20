@@ -1,52 +1,24 @@
+import { api } from "@/convex/_generated/api";
 import { FacebookOAuth } from "@/lib/oauth";
-import type { TIntegration, TWhatsappIntegrationData } from "@/utils/schemas/integrations";
-import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
-import connectToDatabase from "@/utils/services/mongodb/projects";
-import * as arctic from "arctic";
-import dayjs from "dayjs";
+import { validateAuthentication } from "@/utils/api";
+import type { TWhatsappIntegrationData } from "@/utils/schemas/integrations";
+
+import { ConvexHttpClient } from "convex/browser";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type TWhatsappConnection = {
-	token: string;
-	dataExpiracao: string;
-	metaAutorId: string;
-	metaEscopo: string[];
-	telefones: {
-		whatsappNome: string;
-		whatsappBusinessAccountId: string;
-		whatsappTelefoneId: string;
-		numero: string;
-	}[];
-};
+const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL as string;
 // Este é um pseudo-código para o banco de dados. Adapte para sua implementação (Prisma, etc.)
 async function saveCredentialsToDB(whatsappConnection: TWhatsappIntegrationData) {
 	console.log("Salvando no DB:", { whatsappConnection });
+	const convex = new ConvexHttpClient(CONVEX_URL);
 	// LÓGICA DO SEU BANCO DE DADOS AQUI
-	const db = await connectToDatabase();
-	const collection = db.collection<TIntegration>("integracoes");
-	const existingIntegration = await collection.findOne({ identificador: "WHATSAPP" });
-	if (existingIntegration) {
-		await collection.updateOne(
-			{ _id: existingIntegration._id },
-			{
-				$set: {
-					dados: whatsappConnection,
-				},
-			},
-		);
-	} else {
-		await collection.insertOne({
-			identificador: "WHATSAPP",
-			dados: whatsappConnection,
-			autor: {
-				id: "6463ccaa8c5e3e227af54d89",
-				nome: "LUCAS FERNANDES",
-				avatar_url:
-					"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/saas-crm%2Fusuarios%2FLUCAS%20FERNANDES?alt=media&token=4a2959af-2fd0-4448-92f6-57af64a3bae1",
-			},
-			dataInsercao: new Date().toISOString(),
-		});
-	}
+	await convex.mutation(api.mutations.connections.syncWhatsappConnection, {
+		token: whatsappConnection.token,
+		dataExpiracao: new Date(whatsappConnection.dataExpiracao).getTime(),
+		metaAutorAppId: whatsappConnection.metaAutorAppId,
+		metaEscopo: whatsappConnection.metaEscopo,
+		telefones: whatsappConnection.telefones,
+	});
 	return true;
 }
 
@@ -58,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return res.status(400).json({ error: "Authorization code is missing." });
 	}
 
+	const session = await validateAuthentication(req, res);
 	const appId = process.env.NEXT_PUBLIC_META_APP_ID;
 	const appSecret = process.env.META_APP_SECRET;
 	// O redirect_uri deve ser um dos URIs configurados no seu painel da Meta
@@ -100,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		tipo: "WHATSAPP",
 		token: accessToken,
 		dataExpiracao: accessTokenExpiresAt.toISOString(),
-		metaAutorId: debugData.data?.user_id,
+		metaAutorAppId: debugData.data?.user_id,
 		metaEscopo: debugData.data?.scopes,
 		telefones: phones,
 	};

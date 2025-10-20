@@ -2,6 +2,20 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+	whatsappConnections: defineTable({
+		token: v.string(),
+		dataExpiracao: v.number(),
+		metaAutorAppId: v.string(),
+		metaEscopo: v.array(v.string()),
+		telefones: v.array(
+			v.object({
+				nome: v.string(),
+				whatsappBusinessAccountId: v.string(),
+				whatsappTelefoneId: v.string(),
+				numero: v.string(),
+			}),
+		),
+	}),
 	users: defineTable({
 		nome: v.string(),
 		email: v.string(),
@@ -18,6 +32,7 @@ export default defineSchema({
 	}),
 	chats: defineTable({
 		clienteId: v.id("clients"),
+		whatsappTelefoneId: v.string(),
 		mensagensNaoLidas: v.number(),
 		ultimaMensagemId: v.optional(v.id("messages")),
 		ultimaMensagemData: v.optional(v.number()),

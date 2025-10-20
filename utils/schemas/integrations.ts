@@ -14,7 +14,7 @@ export const WhatsappIntegrationDataSchema = z.object({
 	tipo: z.enum(["WHATSAPP"]),
 	token: z.string({ required_error: "Token não informado.", invalid_type_error: "Tipo não válido para token." }),
 	dataExpiracao: z.string({ required_error: "Expiração do token não informada.", invalid_type_error: "Tipo não válido para a expiração do token." }),
-	metaAutorId: z.string({ required_error: "ID do autor não informado.", invalid_type_error: "Tipo não válido para ID do autor." }),
+	metaAutorAppId: z.string({ required_error: "ID do autor não informado.", invalid_type_error: "Tipo não válido para ID do autor." }),
 	metaEscopo: z.array(z.string({ required_error: "Escopo não informado.", invalid_type_error: "Tipo não válido para escopo." })),
 	telefones: z.array(
 		z.object({

@@ -12,6 +12,7 @@ import { action, internalAction } from "../_generated/server";
 
 export const sendWhatsappMessage = internalAction({
 	args: {
+		fromPhoneNumberId: v.string(),
 		messageId: v.id("messages"),
 		phoneNumber: v.string(),
 		content: v.string(),
@@ -20,6 +21,7 @@ export const sendWhatsappMessage = internalAction({
 		try {
 			console.log("[WHATSAPP_ACTION] Sending text message:", args.messageId);
 			const response = await sendBasicWhatsappMessage({
+				fromPhoneNumberId: args.fromPhoneNumberId,
 				toPhoneNumber: args.phoneNumber,
 				content: args.content,
 			});
@@ -48,6 +50,7 @@ export const sendWhatsappMessage = internalAction({
 
 export const sendWhatsappMediaMessage = internalAction({
 	args: {
+		fromPhoneNumberId: v.string(),
 		messageId: v.id("messages"),
 		phoneNumber: v.string(),
 		storageId: v.id("_storage"),
@@ -77,6 +80,7 @@ export const sendWhatsappMediaMessage = internalAction({
 
 			// Upload media to WhatsApp
 			const uploadResponse = await uploadMediaToWhatsapp({
+				fromPhoneNumberId: args.fromPhoneNumberId,
 				fileBuffer,
 				mimeType: args.mimeType || "application/octet-stream",
 				filename: args.filename || "arquivo",
@@ -84,6 +88,7 @@ export const sendWhatsappMediaMessage = internalAction({
 
 			// Send media message
 			const sendResponse = await sendMediaWhatsappMessage({
+				fromPhoneNumberId: args.fromPhoneNumberId,
 				toPhoneNumber: args.phoneNumber,
 				mediaId: uploadResponse.mediaId,
 				mediaType: whatsappMediaType,
@@ -115,6 +120,7 @@ export const sendWhatsappMediaMessage = internalAction({
 
 export const sendWhatsappTemplate = internalAction({
 	args: {
+		fromPhoneNumberId: v.string(),
 		messageId: v.id("messages"),
 		phoneNumber: v.string(),
 		templatePayload: v.any(),
@@ -123,6 +129,7 @@ export const sendWhatsappTemplate = internalAction({
 		try {
 			console.log("[WHATSAPP_ACTION] Sending template message:", args.messageId);
 			const response = await sendTemplateWhatsappMessage({
+				fromPhoneNumberId: args.fromPhoneNumberId,
 				templatePayload: args.templatePayload,
 			});
 
@@ -164,7 +171,7 @@ export const downloadAndStoreWhatsappMedia = action({
 			});
 
 			// Store in Convex storage
-			const blob = new Blob([downloadResponse.fileBuffer], { type: downloadResponse.mimeType });
+			const blob = new Blob([downloadResponse.fileBuffer as unknown as ArrayBuffer], { type: downloadResponse.mimeType });
 			const storageId = await ctx.storage.store(blob);
 
 			return {

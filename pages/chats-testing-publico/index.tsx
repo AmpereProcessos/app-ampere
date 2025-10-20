@@ -1,42 +1,117 @@
+import ChatsHubTesting from "@/components/identificador/chats/ChatsHubTesting";
 import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/convex/utils";
 import type { TAuthSession } from "@/lib/authentication/types";
-import type { TGetWhatsappIntegrationOutput } from "@/pages/api/integracao/whatsapp/connect";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
-
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import dayjs from "dayjs";
 import { BadgeCheck, Calendar, Code, Key, Phone } from "lucide-react";
-import toast from "react-hot-toast";
-import { useConvexQuery } from "../../../convex/utils";
 
-type WhatsappConnectionBlockProps = {
-	session: TAuthSession;
-};
-export default function WhatsappConnectionBlock({ session }: WhatsappConnectionBlockProps) {
-	const {data: whatsappConnection, isPending, isError, isSuccess} = useConvexQuery(api.queries.connections.getWhatsappConnection);
+export default function ChatsTesting() {
+	const META_TESTING_SESSION: TAuthSession = {
+		session: {
+			sessaoId: "123",
+			usuarioId: "123",
+			dataExpiracao: dayjs().add(1, "month").toISOString(),
+		},
+		user: {
+			id: "68f629694ceea6519925696a",
+			nome: "USUÁRIO TESTE - META",
+			email: "testing@meta.com",
+			avatar_url:
+				"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2F(USU%C3%81RIO%20TESTE%20-%20META)%20usuario-teste---meta-avatar%20-%202025-10-20T12%3A22%3A04.809Z?alt=media&token=43951f13-60fc-41b6-9535-495e18f940c8",
+			telefone: "",
+			permissoes: {
+				rotas: [],
+				usuarios: {
+					escopo: null,
+					visualizar: false,
+					editar: false,
+					criar: false,
+				},
+				comercial: {
+					visualizar: false,
+					editar: false,
+				},
+				posVenda: {
+					visualizar: false,
+					editar: false,
+				},
+				suprimentos: {
+					visualizar: false,
+					editar: false,
+				},
+				engenharia: {
+					visualizar: false,
+					editar: false,
+				},
+				execucao: {
+					visualizar: false,
+					editar: false,
+				},
+				suporte: {
+					visualizar: false,
+					editar: false,
+				},
+				administrativo: {
+					visualizar: false,
+					editar: false,
+				},
+				financeiro: {
+					visualizar: false,
+					editar: false,
+				},
+				recursosHumanos: {
+					visualizar: false,
+					editar: false,
+				},
+				gestao: {
+					visualizarResultados: false,
+					restringirProjetos: false,
+				},
+				ordensDeServico: {
+					visualizar: false,
+					editar: false,
+					criar: false,
+				},
+				chats: {
+					visualizar: true,
+					enviarMensagens: true,
+				},
+				certificacoes: {
+					visualizar: false,
+					editar: false,
+					criar: false,
+				},
+			},
+			visualizacao: {
+				tipo: "OPERACIONAL",
+			},
+		},
+	};
+
+	const { data: whatsappConnection, isPending, isError, isSuccess } = useConvexQuery(api.queries.connections.getWhatsappConnection);
 
 	return (
-		<div className="flex h-full grow flex-col">
-			<div className="border-primary/20 flex w-full flex-col items-center justify-between border-b pb-2 lg:flex-row">
-				<div className="flex flex-col">
-					<h1 className="text-lg font-bold">Conexão WhatsApp</h1>
-					<p className="text-sm text-primary/60">Gerencie a conexão do WhatsApp Business</p>
-				</div>
+		<div className="flex flex-col gap-6 grow p-6">
+			<div className="border-primary/20 flex items-center justify-between border-b p-1">
+				<h1 className="text-start text-2xl font-black text-[#15599a] uppercase">Chats</h1>
 			</div>
 			{isPending ? <h3 className="text-sm text-primary/60 animate-pulse py-4">Carregando conexão...</h3> : null}
 			{isError ? <ErrorComponent msg="Erro ao carregar conexão do WhatsApp Business." /> : null}
 			{isSuccess ? (
 				whatsappConnection ? (
-					<WhatsappConnectionBlockConnected whatsappConnection={whatsappConnection} />
+					<>
+						<WhatsappConnectionBlockConnected whatsappConnection={whatsappConnection} />
+
+						<ChatsHubTesting session={META_TESTING_SESSION} userHasMessageSendingPermission={true} />
+					</>
 				) : (
-					<div className="flex w-full flex-col gap-2 py-2">
-						<p className="text-sm text-primary/60">Oops, parece que você não está conectado ao WhatsApp Business.</p>
-						<WhatsAppConnectButton />
-					</div>
+					<WhatsappConnectionBlockDisconnected />
 				)
 			) : null}
 		</div>
@@ -119,6 +194,15 @@ function WhatsappConnectionBlockConnected({ whatsappConnection }: WhatsappConnec
 					</div>
 				</div>
 			</div>
+		</div>
+	);
+}
+
+function WhatsappConnectionBlockDisconnected() {
+	return (
+		<div className="flex w-full flex-col gap-2 py-2">
+			<p className="text-sm text-primary/60">Oops, parece que você não está conectado ao WhatsApp Business.</p>
+			<WhatsAppConnectButton />
 		</div>
 	);
 }

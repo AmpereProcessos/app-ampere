@@ -27,6 +27,7 @@ export const createMessage = mutation({
 			midiaFileSize: v.optional(v.number()),
 			midiaWhatsappId: v.optional(v.string()),
 		}),
+		whatsappPhoneNumberId: v.string(),
 		whatsappMessageId: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
@@ -94,6 +95,7 @@ export const createMessage = mutation({
 				clienteId: clientId,
 				mensagensNaoLidas: 0,
 				status: "ABERTA",
+				whatsappTelefoneId: args.whatsappPhoneNumberId,
 			});
 			chatId = insertChatResponse;
 		} else {
@@ -196,6 +198,7 @@ export const createMessage = mutation({
 						mimeType: args.conteudo.midiaMimeType,
 						filename: args.conteudo.midiaFileName,
 						caption: args.conteudo.texto,
+						fromPhoneNumberId: args.whatsappPhoneNumberId,
 					});
 				} else if (args.conteudo.texto) {
 					// Send text message
@@ -203,6 +206,7 @@ export const createMessage = mutation({
 						messageId: insertMessageResponse,
 						phoneNumber: args.cliente.telefone,
 						content: args.conteudo.texto,
+						fromPhoneNumberId: args.whatsappPhoneNumberId,
 					});
 				}
 			} else {
@@ -277,6 +281,7 @@ export const createTemplateMessage = mutation({
 			messageId: messageId,
 			phoneNumber: client.telefone,
 			templatePayload: args.templatePayloadData,
+			fromPhoneNumberId: chat.whatsappTelefoneId,
 		});
 
 		return {
@@ -463,6 +468,7 @@ export const createAIMessage = internalMutation({
 			messageId: messageId,
 			phoneNumber: client.telefone,
 			content: args.conteudo.texto || "",
+			fromPhoneNumberId: chat.whatsappTelefoneId,
 		});
 
 		console.log("[INFO] [MESSAGES] [CREATE_AI_MESSAGE] AI message created:", messageId);

@@ -12,6 +12,7 @@ export const getChatByClientAppId = mutation({
 			telefone: v.string(),
 			avatar_url: v.optional(v.string()),
 		}),
+		whatsappPhoneNumberId: v.string(),
 	},
 	handler: async (ctx, args) => {
 		let clientId: Id<"clients"> | null = null;
@@ -44,6 +45,7 @@ export const getChatByClientAppId = mutation({
 				clienteId: clientId,
 				mensagensNaoLidas: 0,
 				status: "EXPIRADA",
+				whatsappTelefoneId: args.whatsappPhoneNumberId,
 			});
 			chatId = insertChatResponse;
 		}

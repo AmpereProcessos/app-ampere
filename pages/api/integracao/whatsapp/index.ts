@@ -179,7 +179,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					const incomingMessage = parseWebhookIncomingMessage(body);
 					const crmDb = await connectToCRMDatabase();
 					const clientsCollection = crmDb.collection<TClient>("clients");
-
 					let clientId: string | null = null;
 					const existingClient = await clientsCollection.findOne({ telefonePrimario: incomingMessage?.fromPhoneNumber });
 					if (existingClient) {
@@ -260,6 +259,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 								midiaWhatsappId: incomingMessage.mediaId,
 							},
 							whatsappMessageId: incomingMessage.whatsappMessageId,
+							whatsappPhoneNumberId: incomingMessage.whatsappPhoneNumberId,
 						});
 
 						console.log("[WHATSAPP_WEBHOOK] Message created from:", incomingMessage.fromPhoneNumber, "Type:", incomingMessage.messageType);

@@ -3,9 +3,15 @@ import type { Id } from "../_generated/dataModel";
 import { internalQuery, query } from "../_generated/server";
 
 export const getChats = query({
-	args: {},
+	args: {
+		whatsappPhoneNumberId: v.string(),
+	},
+
 	handler: async (ctx, args) => {
-		const chats = await ctx.db.query("chats").collect();
+		const chats = await ctx.db
+			.query("chats")
+			.filter((q) => q.eq(q.field("whatsappTelefoneId"), args.whatsappPhoneNumberId))
+			.collect();
 		const enrichedChats = (
 			await Promise.all(
 				chats.map(async (chat) => {

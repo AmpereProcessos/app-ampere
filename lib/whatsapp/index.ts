@@ -1,12 +1,17 @@
 import axios from "axios";
 import createHttpError from "http-errors";
 
-const GRAPH_MESSAGES_API_URL = `https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
-const GRAPH_MEDIA_API_URL = `https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/media`;
 const GRAPH_API_BASE_URL = "https://graph.facebook.com/v22.0";
 const WHATSAPP_AUTH_TOKEN = process.env.WHATSAPP_SYSTEM_USER_TOKEN;
 
+function getMetaGraphAPIUrl(whatsappPhoneNumberId: string) {
+	return {
+		GRAPH_MESSAGES_API_URL: `https://graph.facebook.com/v22.0/${whatsappPhoneNumberId}/messages`,
+		GRAPH_MEDIA_API_URL: `https://graph.facebook.com/v22.0/${whatsappPhoneNumberId}/media`,
+	};
+}
 type SendBasicWhatsappMessageParams = {
+	fromPhoneNumberId: string;
 	toPhoneNumber: string;
 	content: string;
 };
@@ -22,6 +27,7 @@ type SendBasicWhatsappMessageResponse = {
 };
 
 export async function sendBasicWhatsappMessage({
+	fromPhoneNumberId,
 	toPhoneNumber,
 	content,
 }: SendBasicWhatsappMessageParams): Promise<SendBasicWhatsappMessageResponse> {
@@ -30,6 +36,7 @@ export async function sendBasicWhatsappMessage({
 		if (!WHATSAPP_AUTH_TOKEN) {
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
+		const { GRAPH_MESSAGES_API_URL } = getMetaGraphAPIUrl(fromPhoneNumberId);
 
 		const response = await axios.post(
 			GRAPH_MESSAGES_API_URL,
@@ -71,6 +78,7 @@ export async function sendBasicWhatsappMessage({
 }
 
 type SendTemplateWhatsappMessageParams = {
+	fromPhoneNumberId: string;
 	templatePayload: {
 		messaging_product: string;
 		to: string;
@@ -103,12 +111,15 @@ type SendTemplateWhatsappMessageResponse = {
 };
 
 export async function sendTemplateWhatsappMessage({
+	fromPhoneNumberId,
 	templatePayload,
 }: SendTemplateWhatsappMessageParams): Promise<SendTemplateWhatsappMessageResponse> {
 	try {
 		if (!WHATSAPP_AUTH_TOKEN) {
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
+
+		const { GRAPH_MESSAGES_API_URL } = getMetaGraphAPIUrl(fromPhoneNumberId);
 		console.log("[INFO] [WHATSAPP_TEMPLATE_SEND] Sending template:", templatePayload);
 		const response = await axios.post(GRAPH_MESSAGES_API_URL, templatePayload, {
 			headers: {
@@ -137,6 +148,7 @@ export async function sendTemplateWhatsappMessage({
 }
 
 type SendMediaWhatsappMessageParams = {
+	fromPhoneNumberId: string;
 	toPhoneNumber: string;
 	mediaId: string;
 	mediaType: "image" | "document";
@@ -155,6 +167,7 @@ type SendMediaWhatsappMessageResponse = {
 };
 
 export async function sendMediaWhatsappMessage({
+	fromPhoneNumberId,
 	toPhoneNumber,
 	mediaId,
 	mediaType,
@@ -167,6 +180,7 @@ export async function sendMediaWhatsappMessage({
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
 
+		const { GRAPH_MESSAGES_API_URL } = getMetaGraphAPIUrl(fromPhoneNumberId);
 		const payload: any = {
 			messaging_product: "whatsapp",
 			recipient_type: "individual",
@@ -214,6 +228,7 @@ export async function sendMediaWhatsappMessage({
 }
 
 type UploadMediaToWhatsappParams = {
+	fromPhoneNumberId: string;
 	fileBuffer: Buffer;
 	mimeType: string;
 	filename: string;
@@ -224,16 +239,22 @@ type UploadMediaToWhatsappResponse = {
 	message: string;
 };
 
-export async function uploadMediaToWhatsapp({ fileBuffer, mimeType, filename }: UploadMediaToWhatsappParams): Promise<UploadMediaToWhatsappResponse> {
+export async function uploadMediaToWhatsapp({
+	fromPhoneNumberId,
+	fileBuffer,
+	mimeType,
+	filename,
+}: UploadMediaToWhatsappParams): Promise<UploadMediaToWhatsappResponse> {
 	try {
 		console.log("[INFO] [WHATSAPP_MEDIA_UPLOAD] Uploading media:", filename, mimeType);
 		if (!WHATSAPP_AUTH_TOKEN) {
 			throw new createHttpError.InternalServerError("WhatsApp auth token não configurado.");
 		}
 
+		const { GRAPH_MEDIA_API_URL } = getMetaGraphAPIUrl(fromPhoneNumberId);
 		const formData = new FormData();
 		formData.append("messaging_product", "whatsapp");
-		formData.append("file", new Blob([fileBuffer], { type: mimeType }), filename);
+		formData.append("file", new Blob([fileBuffer as unknown as ArrayBuffer], { type: mimeType }), filename);
 		formData.append("type", mimeType);
 
 		const response = await axios.post(GRAPH_MEDIA_API_URL, formData, {

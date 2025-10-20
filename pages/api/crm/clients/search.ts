@@ -1,6 +1,6 @@
 import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { formatPhoneAsBase, formatToPhone } from "@/utils/methods/formatting";
+import { formatPhoneAsBase, formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
 import type { TClient } from "@/utils/schemas/crm/client.schema";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import type { Filter } from "mongodb";
@@ -32,8 +32,8 @@ async function getClientsSearch({ input }: { input: TGetClientsSearchInput; sess
 					$or: [
 						{ nome: { $regex: search, $options: "i" } },
 						{ nome: search },
-						{ cpf_cnpj: { $regex: search, $options: "i" } },
-						{ cpf_cnpj: search },
+						{ cpfCnpj: { $regex: formatToCPForCNPJ(search), $options: "i" } },
+						{ cpfCnpj: formatToCPForCNPJ(search) },
 						{ email: { $regex: search, $options: "i" } },
 						{ email: search },
 						{ telefonePrimarioBase: { $regex: formatPhoneAsBase(search), $options: "i" } },
@@ -45,6 +45,8 @@ async function getClientsSearch({ input }: { input: TGetClientsSearchInput; sess
 	const onlyValidPhonesQuery: Filter<TClient> = onlyValidPhones ? { telefonePrimario: { $nin: ["", null, undefined] } } : {};
 
 	const query: Filter<TClient> = { ...searchQuery, ...onlyValidPhonesQuery };
+
+	console.log("QUERY", JSON.stringify(query, null, 2));
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
 	const projection: Partial<Record<keyof TClient, 1>> = {

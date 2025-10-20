@@ -108,7 +108,7 @@ export default function ChatsTesting() {
 					<>
 						<WhatsappConnectionBlockConnected whatsappConnection={whatsappConnection} />
 
-						<ChatsHubTesting session={META_TESTING_SESSION} userHasMessageSendingPermission={true} />
+						<ChatsHubTesting session={META_TESTING_SESSION} userHasMessageSendingPermission={true} whatsappConnection={whatsappConnection} />
 					</>
 				) : (
 					<WhatsappConnectionBlockDisconnected />

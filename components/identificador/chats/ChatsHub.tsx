@@ -43,8 +43,9 @@ import MediaMessageDisplay from "./MediaMessageDisplay";
 type ChatsHubProps = {
 	session: TAuthSession;
 	userHasMessageSendingPermission: boolean;
+	whatsappConnection: typeof api.queries.connections.getWhatsappConnection._returnType;
 };
-function ChatsHub({ session, userHasMessageSendingPermission }: ChatsHubProps) {
+function ChatsHub({ session, userHasMessageSendingPermission, whatsappConnection }: ChatsHubProps) {
 	console.log(session);
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
@@ -52,7 +53,7 @@ function ChatsHub({ session, userHasMessageSendingPermission }: ChatsHubProps) {
 	const getChatByClientAppId = useMutation(api.mutations.chats.getChatByClientAppId);
 
 	const [newChatMenuIsOpen, setNewChatMenuIsOpen] = useState<boolean>(false);
-	const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(null);
+	const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(whatsappConnection?.telefones[0]?.whatsappTelefoneId ?? null);
 	const [selectedChatId, setSelectedChatId] = useState<Id<"chats"> | null>(null);
 
 	// Para mobile, usamos um estado para controlar se estamos mostrando a lista ou o chat
@@ -127,9 +128,23 @@ function ChatsHub({ session, userHasMessageSendingPermission }: ChatsHubProps) {
 						<div className="flex flex-col gap-3 w-full h-full">
 							<div className="w-full flex items-center justify-between border-b border-primary/20 pb-2 px-3 py-3">
 								<MessageCircleIcon className="w-5 h-5'" />
-								<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
-									<Plus className="w-5 h-5" />
-								</Button>
+								<div className="flex items-center gap-2">
+									<Select value={selectedPhoneNumber ?? undefined} onValueChange={(value) => setSelectedPhoneNumber(value)}>
+										<SelectTrigger>
+											<SelectValue placeholder="Selecione o número.." />
+										</SelectTrigger>
+										<SelectContent>
+											{(whatsappConnections?.telefones ?? [])?.map((phone) => (
+												<SelectItem key={phone.numero} value={phone.whatsappTelefoneId}>
+													{phone.nome}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+									<Button onClick={() => setNewChatMenuIsOpen(true)} variant={"ghost"} size={"fit"} className="p-2 rounded-full">
+										<Plus className="w-5 h-5" />
+									</Button>
+								</div>
 							</div>
 							<div className="grow w-full flex flex-col gap-3 p-3 overflow-y-auto">
 								{selectedPhoneNumber ? (

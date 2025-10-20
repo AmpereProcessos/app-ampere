@@ -44,15 +44,16 @@ import MediaMessageDisplay from "./MediaMessageDisplay";
 type ChatsHubProps = {
 	session: TAuthSession;
 	userHasMessageSendingPermission: boolean;
+	whatsappConnection: typeof api.queries.connections.getWhatsappConnection._returnType;
 };
-function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubProps) {
+function ChatsHubTesting({ session, userHasMessageSendingPermission, whatsappConnection }: ChatsHubProps) {
 	console.log(session);
-	const chats = useQuery(api.queries.chat.getChats);
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const getChatByClientAppId = useMutation(api.mutations.chats.getChatByClientAppId);
 
 	const [newChatMenuIsOpen, setNewChatMenuIsOpen] = useState<boolean>(false);
+	const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(whatsappConnection?.telefones[0]?.whatsappTelefoneId ?? null);
 	const [selectedChatId, setSelectedChatId] = useState<Id<"chats"> | null>(null);
 
 	// Para mobile, usamos um estado para controlar se estamos mostrando a lista ou o chat
@@ -71,60 +72,22 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 							</Button>
 						</div>
 						<div className="grow w-full flex flex-col gap-3 p-3 overflow-y-auto">
-							{chats ? (
-								chats.map((chat) => (
-									<button
-										type="button"
-										key={chat._id}
-										onClick={() => setSelectedChatId(chat._id)}
-										className={cn("w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg", selectedChatId === chat._id && "bg-primary/10")}
-									>
-										<div className="flex items-center justify-center">
-											<Avatar className="w-12 h-12 min-w-12 min-h-12">
-												<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
-												<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
-											</Avatar>
-										</div>
-										{/* Informações do Chat */}
-										<div className="grow flex flex-col min-w-0">
-											<div className="flex items-center justify-between w-full min-w-0">
-												<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
-												{chat.ultimaMensagemData && (
-													<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
-														{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
-															hour: "2-digit",
-															minute: "2-digit",
-														})}
-													</span>
-												)}
-											</div>
-											<div className="flex items-center justify-between w-full min-w-0">
-												{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-													<p className="text-start text-sm text-primary/60 truncate flex-1 min-w-0">
-														{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}
-													</p>
-												) : (
-													<div className="flex items-center gap-1">
-														<ImageIcon className="w-4 h-4" />
-														<p className="text-sm text-primary/60 truncate">MÍDIA</p>
-													</div>
-												)}
-												{(chat.mensagensNaoLidas || 0) > 0 && (
-													<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
-												)}
-											</div>
-										</div>
-									</button>
-								))
+							{selectedPhoneNumber ? (
+								<ChatHubList
+									selectedPhoneNumber={selectedPhoneNumber}
+									selectedChatId={selectedChatId}
+									handleSelectChat={(chatId) => setSelectedChatId(chatId)}
+								/>
 							) : (
-								<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+								<p className="text-primary/60 text-center text-sm italic">Selecione o número de telefone !</p>
 							)}
 						</div>
 					</div>
 					<div className="flex flex-col gap-3 w-2/3 h-full">
-						{selectedChatId ? (
+						{selectedChatId && selectedPhoneNumber ? (
 							<ChatHubContent
 								chatId={selectedChatId}
+								whatsappPhoneNumberId={selectedPhoneNumber}
 								session={session}
 								onBack={() => setSelectedChatId(null)}
 								isDesktop={isDesktop}
@@ -156,65 +119,21 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 								</Button>
 							</div>
 							<div className="grow w-full flex flex-col gap-3 p-3 overflow-y-auto">
-								{chats ? (
-									chats.map((chat) => (
-										<button
-											type="button"
-											key={chat._id}
-											onClick={() => setSelectedChatId(chat._id)}
-											className="w-full max-w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg"
-										>
-											<div className="flex items-center justify-center">
-												<Avatar className="w-12 h-12 min-w-12 min-h-12">
-													<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
-													<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
-												</Avatar>
-											</div>
-											{/* Informações do Chat */}
-											<div className="grow flex flex-col min-w-0">
-												<div className="flex items-center justify-between w-full min-w-0">
-													<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
-													{chat.ultimaMensagemData && (
-														<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
-															{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
-																hour: "2-digit",
-																minute: "2-digit",
-															})}
-														</span>
-													)}
-												</div>
-												<div className="flex items-center justify-between w-full min-w-0">
-													{chat.ultimaMensagemConteudoTipo ? (
-														chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
-															<p className="text-start text-sm text-primary/60 truncate flex-1 min-w-0">
-																{" "}
-																{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}
-															</p>
-														) : (
-															<div className="flex items-center gap-1">
-																<ImageIcon className="w-4 h-4" />
-																<p className="text-sm text-primary/60 truncate">MÍDIA</p>
-															</div>
-														)
-													) : (
-														<p className="text-start text-sm text-primary/60 truncate">{"Nenhuma mensagem ainda"}</p>
-													)}
-													{(chat.mensagensNaoLidas || 0) > 0 && (
-														<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
-													)}
-												</div>
-											</div>
-										</button>
-									))
+								{selectedPhoneNumber ? (
+									<ChatHubList
+										selectedPhoneNumber={selectedPhoneNumber}
+										selectedChatId={selectedChatId}
+										handleSelectChat={(chatId) => setSelectedChatId(chatId)}
+									/>
 								) : (
-									<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+									<p className="text-primary/60 text-center text-sm italic">Selecione o número de telefone !</p>
 								)}
 							</div>
 						</div>
 					</div>
 
 					{/* Chat Ativo - Mobile */}
-					{selectedChatId && (
+					{selectedChatId && selectedPhoneNumber ? (
 						<div
 							className={cn(
 								"flex flex-col grow absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out",
@@ -223,13 +142,14 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 						>
 							<ChatHubContent
 								chatId={selectedChatId}
+								whatsappPhoneNumberId={selectedPhoneNumber}
 								session={session}
 								onBack={() => setSelectedChatId(null)}
 								isDesktop={isDesktop}
 								userHasMessageSendingPermission={userHasMessageSendingPermission}
 							/>
 						</div>
-					)}
+					) : null}
 				</div>
 			)}
 
@@ -237,6 +157,7 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 				<ChatsHubTestingVinculation
 					closeMenu={() => setNewChatMenuIsOpen(false)}
 					handleSelect={async (client) => {
+						if (!selectedPhoneNumber) return toast.error("Selecione um número de telefone.");
 						const clientId = (Math.random() * 10000).toFixed(0);
 						const selectedChat = await getChatByClientAppId({
 							cliente: {
@@ -247,6 +168,7 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 								cpfCnpj: "",
 								avatar_url: undefined,
 							},
+							whatsappPhoneNumberId: selectedPhoneNumber,
 						});
 						return setSelectedChatId(selectedChat.chatId);
 					}}
@@ -257,6 +179,62 @@ function ChatsHubTesting({ session, userHasMessageSendingPermission }: ChatsHubP
 }
 
 export default ChatsHubTesting;
+
+type ChatHubListProps = {
+	selectedPhoneNumber: string;
+	selectedChatId: Id<"chats"> | null;
+	handleSelectChat: (chatId: Id<"chats">) => void;
+};
+function ChatHubList({ selectedPhoneNumber, selectedChatId, handleSelectChat }: ChatHubListProps) {
+	const chats = useQuery(api.queries.chat.getChats, { whatsappPhoneNumberId: selectedPhoneNumber });
+
+	return chats ? (
+		chats.map((chat) => (
+			<button
+				type="button"
+				key={chat._id}
+				onClick={() => handleSelectChat(chat._id)}
+				className={cn("w-full flex gap-3 p-3 hover:bg-primary/10 rounded-lg", selectedChatId === chat._id && "bg-primary/10")}
+			>
+				<div className="flex items-center justify-center">
+					<Avatar className="w-12 h-12 min-w-12 min-h-12">
+						<AvatarImage src={undefined} alt={chat.cliente?.nome ?? ""} />
+						<AvatarFallback>{formatNameAsInitials(chat.cliente?.nome ?? "")}</AvatarFallback>
+					</Avatar>
+				</div>
+				{/* Informações do Chat */}
+				<div className="grow flex flex-col min-w-0">
+					<div className="flex items-center justify-between w-full min-w-0">
+						<h3 className="font-semibold truncate">{chat.cliente?.nome || "Cliente desconhecido"}</h3>
+						{chat.ultimaMensagemData && (
+							<span className="text-xs text-primary/60 ml-2 flex-shrink-0">
+								{new Date(chat.ultimaMensagemData).toLocaleTimeString("pt-BR", {
+									hour: "2-digit",
+									minute: "2-digit",
+								})}
+							</span>
+						)}
+					</div>
+					<div className="flex items-center justify-between w-full min-w-0">
+						{chat.ultimaMensagemConteudoTipo === "TEXTO" ? (
+							<p className="text-start text-sm text-primary/60 truncate flex-1 min-w-0">{chat.ultimaMensagemConteudoTexto || "Nenhuma mensagem ainda"}</p>
+						) : (
+							<div className="flex items-center gap-1">
+								<ImageIcon className="w-4 h-4" />
+								<p className="text-sm text-primary/60 truncate">MÍDIA</p>
+							</div>
+						)}
+						{(chat.mensagensNaoLidas || 0) > 0 && (
+							<span className="ml-2 bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1 flex-shrink-0">{chat.mensagensNaoLidas}</span>
+						)}
+					</div>
+				</div>
+			</button>
+		))
+	) : (
+		<p className="text-primary/60 text-center text-sm italic">Carregando...</p>
+	);
+}
 
 type ChatsHubTestingVinculationProps = {
 	handleSelect: (info: { nome: string; telefone: string }) => void;
@@ -305,11 +283,19 @@ function ChatsHubTestingVinculation({ handleSelect, closeMenu }: ChatsHubTesting
 
 function ChatHubContent({
 	chatId,
+	whatsappPhoneNumberId,
 	session,
 	onBack,
 	isDesktop,
 	userHasMessageSendingPermission,
-}: { chatId: Id<"chats">; session: TAuthSession; onBack: () => void; isDesktop: boolean; userHasMessageSendingPermission: boolean }) {
+}: {
+	chatId: Id<"chats">;
+	whatsappPhoneNumberId: string;
+	session: TAuthSession;
+	onBack: () => void;
+	isDesktop: boolean;
+	userHasMessageSendingPermission: boolean;
+}) {
 	const chat = useQuery(api.queries.chat.getChat, {
 		chatId,
 	});
@@ -426,6 +412,7 @@ function ChatHubContent({
 											email: chat.cliente?.email,
 											cpfCnpj: chat.cliente?.cpfCnpj,
 										},
+										whatsappPhoneNumberId,
 									});
 									setMessageText("");
 								}}
@@ -453,6 +440,7 @@ function ChatHubContent({
 												email: chat.cliente?.email,
 												cpfCnpj: chat.cliente?.cpfCnpj,
 											},
+											whatsappPhoneNumberId,
 										});
 										setMessageText("");
 									}
@@ -483,6 +471,7 @@ function ChatHubContent({
 											email: chat.cliente?.email,
 											cpfCnpj: chat.cliente?.cpfCnpj,
 										},
+										whatsappPhoneNumberId,
 									});
 									setMessageText("");
 								}}

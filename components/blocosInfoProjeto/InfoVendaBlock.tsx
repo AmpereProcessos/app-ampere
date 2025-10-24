@@ -26,6 +26,7 @@ import SelectInputVirtualized from "../inputs/SelectVirtualized";
 import SelectWithImages from "../inputs/SelectWithImages";
 import TextInput from "../inputs/Text";
 import TextareaInput from "../inputs/TextareaInput";
+import ProjectCoverImage from "./Utils/ProjectCoverImage";
 import { InfoBlockSection } from "./Utils/SectionBlock";
 
 type InfoClientBlockProps = {
@@ -72,6 +73,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 		}, 1000);
 	}
 
+	console.log("INFOVENDABLOCK", project);
 	return (
 		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-2 rounded w-full justify-center">
@@ -79,6 +81,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES DA VENDA</h1>
 			</div>
 			<UpdateLogsBlock logs={updateLogs} SectionElement={<Client logs={updateLogs} />} />
+			<ProjectCoverImage projectId={project._id} projectName={project.nomeDoContrato} projectCoverImage={project.imagemCapaUrl} />
 			<div className="w-full flex flex-col gap-2 px-2">
 				<InfoBlockSection headerTitle="DADOS GERAIS" headerIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}>
 					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">

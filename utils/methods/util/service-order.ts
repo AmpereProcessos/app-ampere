@@ -43,7 +43,10 @@ export function getObservationsGroupedByTopic(observations: TServiceOrderDTO["ob
 }
 
 export function getServiceObservationsFromObras(str: string): TServiceOrderDTO["observacoes"] {
-	return str.split("/").map((obs) => ({ topico: "OBRA", descricao: obs }));
+	return str
+		.split("/")
+		.map((obs) => ({ topico: "OBRA", descricao: obs }))
+		.filter((obs) => obs.descricao.trim().length > 0);
 }
 
 export function getAvailableProjectMaterials(str: string) {

@@ -1,6 +1,11 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { formatDateQuery } from "@/utils/methods/dates";
-import { PersonalizedFiltersSchema, ServiceOrderSimplifiedProjection, type TServiceOrder, type TServiceOrderSimplifiedDTO } from "@/utils/schemas/service-order";
+import {
+	PersonalizedFiltersSchema,
+	ServiceOrderSimplifiedProjection,
+	type TServiceOrder,
+	type TServiceOrderSimplifiedDTO,
+} from "@/utils/schemas/service-order";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
 import type { Collection, Db, Filter } from "mongodb";
@@ -34,7 +39,9 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const nameOrQuery: Filter<TServiceOrder>[] =
 		filters.name.trim().length > 0 ? [{ "favorecido.nome": { $regex: filters.name, $options: "i" } }, { "favorecido.nome": filters.name }] : [];
 	const responsibleOrQuery: Filter<TServiceOrder>[] =
-		filters.responsible.trim().length > 0 ? [{ "responsavel.nome": { $regex: filters.responsible, $options: "i" } }, { "responsavel.nome": filters.responsible }] : [];
+		filters.responsible.trim().length > 0
+			? [{ "responsavel.nome": { $regex: filters.responsible, $options: "i" } }, { "responsavel.nome": filters.responsible }]
+			: [];
 
 	const orQueries = [...nameOrQuery, ...responsibleOrQuery];
 
@@ -49,18 +56,25 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 			: {};
 	const stateQuery: Filter<TServiceOrder> = filters.state.length > 0 ? { "localizacao.uf": { $in: filters.state } } : {};
 	const cityQuery: Filter<TServiceOrder> = filters.city.length > 0 ? { "localizacao.cidade": { $in: filters.city } } : {};
-	const categoryQuery: Filter<TServiceOrder> = filters.category.length > 0 ? { categoria: { $in: filters.category as TServiceOrder["categoria"][] } } : {};
+	const categoryQuery: Filter<TServiceOrder> =
+		filters.category.length > 0 ? { categoria: { $in: filters.category as TServiceOrder["categoria"][] } } : {};
 	const urgencyQuery: Filter<TServiceOrder> = filters.urgency.length > 0 ? { urgencia: { $in: filters.urgency as TServiceOrder["urgencia"][] } } : {};
-	const authorsQuery: Filter<TServiceOrder> = filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
+	const authorsQuery: Filter<TServiceOrder> =
+		filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
 	const tagsQuery: Filter<TServiceOrder> = filters.tags.length > 0 ? { "etiquetas.id": { $in: filters.tags } } : {};
 	const pendingQuery: Filter<TServiceOrder> = filters.pending ? { dataEfetivacao: null } : {};
 	const releasedQuery: Filter<TServiceOrder> = filters.released ? { dataLiberacao: { $ne: null } } : {};
 	const notReleasedQuery: Filter<TServiceOrder> = filters.notReleased ? { dataLiberacao: null } : {};
 	const topologiesQuery: Filter<TServiceOrder> =
 		filters.topologies.length > 0 ? { "detalhes.topologia": { $in: filters.topologies as TServiceOrder["detalhes"]["topologia"][] } } : {};
-	const roofTypesQuery: Filter<TServiceOrder> = filters.roofTypes.length > 0 ? { "detalhes.tipoTelha": { $in: filters.roofTypes as TServiceOrder["detalhes"]["tipoTelha"][] } } : {};
-	const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered ? { "projeto.compraEntregaDataEfetivacao": { $ne: null } } : {};
-	const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered ? { "projeto.compraEntregaDataEfetivacao": null } : {};
+	const roofTypesQuery: Filter<TServiceOrder> =
+		filters.roofTypes.length > 0 ? { "detalhes.tipoTelha": { $in: filters.roofTypes as TServiceOrder["detalhes"]["tipoTelha"][] } } : {};
+	const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered
+		? { "projeto.compraEntregaDataEfetivacao": { $ne: null } }
+		: {};
+	const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered
+		? { "projeto.compraEntregaDataEfetivacao": null }
+		: {};
 	const missingObservationsQuery: Filter<TServiceOrder> = filters.missingObservations ? { "observacoes.descricao": { $exists: false } } : {};
 
 	const orderByParam = filters.orderBy.field ? { [filters.orderBy.field]: filters.orderBy.direction === "asc" ? 1 : -1 } : { _id: -1 };
@@ -104,25 +118,21 @@ type GetServiceOrdersByFilterParams = {
 	orderByParam: { [key: string]: number };
 };
 async function getServiceOrdersByFilter({ collection, query, skip, limit, orderByParam }: GetServiceOrdersByFilterParams) {
-	try {
-		const serviceOrdersMatched = await collection.countDocuments({ ...query });
-		const sort = orderByParam;
-		const match = { ...query };
+	const serviceOrdersMatched = await collection.countDocuments({ ...query });
+	const sort = orderByParam;
+	const match = { ...query };
 
-		// Add a default value for missing fields before sorting
-		const serviceOrders = (await collection
-			.aggregate([
-				{ $addFields: { sortField: { $ifNull: [`$${Object.keys(orderByParam)[0]}`, new Date(0)] } } }, // Use a default date for missing fields
-				{ $sort: { sortField: sort[Object.keys(orderByParam)[0]], _id: -1 } }, // Sort by the new field and then by _id
-				{ $match: match },
-				{ $skip: skip },
-				{ $project: ServiceOrderSimplifiedProjection },
-				{ $limit: limit },
-			])
-			.toArray()) as TServiceOrderSimplifiedDTO[];
+	// Add a default value for missing fields before sorting
+	const serviceOrders = (await collection
+		.aggregate([
+			{ $addFields: { sortField: { $ifNull: [`$${Object.keys(orderByParam)[0]}`, new Date(0)] } } }, // Use a default date for missing fields
+			{ $sort: { sortField: sort[Object.keys(orderByParam)[0]], _id: -1 } }, // Sort by the new field and then by _id
+			{ $match: match },
+			{ $skip: skip },
+			{ $project: ServiceOrderSimplifiedProjection },
+			{ $limit: limit },
+		])
+		.toArray()) as TServiceOrderSimplifiedDTO[];
 
-		return { serviceOrders, serviceOrdersMatched } as { serviceOrders: TServiceOrderSimplifiedDTO[]; serviceOrdersMatched: number };
-	} catch (error) {
-		throw error;
-	}
+	return { serviceOrders, serviceOrdersMatched } as { serviceOrders: TServiceOrderSimplifiedDTO[]; serviceOrdersMatched: number };
 }

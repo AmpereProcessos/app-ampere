@@ -673,7 +673,7 @@ const GeneralProjectSchema = z.object({
 	}),
 	restricao: RestrictionSchema.optional().nullable(),
 });
-
+export const PROJECTS_COLLECTION_NAME = "dados";
 export type TProject = z.infer<typeof GeneralProjectSchema>;
 export type TProjectWithClient = TProject & { cliente?: TClientDTO };
 export type TProjectEntity = TProject & { _id: string };

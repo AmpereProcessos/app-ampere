@@ -1,4 +1,5 @@
 import type { TServiceOrdersByFiltersResult } from "@/pages/api/ordensDeServico/search";
+import type { TServiceOrderStatsInput, TServiceOrderStatsOutput } from "@/pages/api/ordensDeServico/stats";
 import type {
 	TPersonalizedServiceOrderFilter,
 	TServiceOrderDTO,
@@ -8,11 +9,10 @@ import type {
 	TServiceOrderTagDTO,
 	TServiceOrderWithProjectDTO,
 } from "@/utils/schemas/service-order";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import type { TServiceOrderStatsInput, TServiceOrderStatsOutput } from "@/pages/api/ordensDeServico/stats";
 
 type FetchServiceOrdersParams = {
 	after: string;
@@ -28,12 +28,8 @@ export type TServiceOrderQueryParams = {
 };
 
 async function fetchServiceOrders({ queryTags, queryPendingConclusion }: TServiceOrderQueryParams) {
-	try {
-		const { data } = await axios.get(`/api/ordensDeServico?queryTags=${queryTags}&queryPendingConclusion=${queryPendingConclusion}`);
-		return data.data as TServiceOrderSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/ordensDeServico?queryTags=${queryTags}&queryPendingConclusion=${queryPendingConclusion}`);
+	return data.data as TServiceOrderSimplifiedDTO[];
 }
 
 export function useServiceOrders() {
@@ -55,12 +51,8 @@ export function useServiceOrders() {
 	};
 }
 async function fetchServiceOrdersByProject({ projectId }: { projectId: string }) {
-	try {
-		const { data } = await axios.get(`/api/ordensDeServico?projectId=${projectId}`);
-		return data.data as TServiceOrderSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/ordensDeServico?projectId=${projectId}`);
+	return data.data as TServiceOrderSimplifiedDTO[];
 }
 
 export function useProjectServiceOrders({ projectId }: { projectId: string }) {
@@ -72,12 +64,8 @@ export function useProjectServiceOrders({ projectId }: { projectId: string }) {
 }
 
 async function fetchServiceOrderById({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get(`/api/ordensDeServico?id=${id}`);
-		return data.data as TServiceOrderWithProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/ordensDeServico?id=${id}`);
+	return data.data as TServiceOrderWithProjectDTO;
 }
 export function useServiceOrderById({ id }: { id: string }) {
 	return useQuery({
@@ -88,13 +76,9 @@ export function useServiceOrderById({ id }: { id: string }) {
 }
 
 async function fetchServiceOrdersByPersonalizedFilters({ page, filters }: { page: number; filters: TPersonalizedServiceOrderFilter }) {
-	try {
-		const { data } = await axios.post(`/api/ordensDeServico/search?page=${page}`, filters);
+	const { data } = await axios.post(`/api/ordensDeServico/search?page=${page}`, filters);
 
-		return data.data as TServiceOrdersByFiltersResult;
-	} catch (error) {
-		throw error;
-	}
+	return data.data as TServiceOrdersByFiltersResult;
 }
 
 type UseServiceOrdersByPersonalizedFiltersParams = {
@@ -145,12 +129,8 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
 }
 
 async function getServiceOrderTags() {
-	try {
-		const { data } = await axios.get("/api/ordensDeServico/tags");
-		return data.data as TServiceOrderTagDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/ordensDeServico/tags");
+	return data.data as TServiceOrderTagDTO[];
 }
 
 export function useServiceOrderTags() {
@@ -161,13 +141,9 @@ export function useServiceOrderTags() {
 }
 
 async function fetchServiceOrderProject({ projectId }: { projectId: string | null }) {
-	try {
-		if (!projectId) return null;
-		const { data } = await axios.get(`/api/ordensDeServico/projeto?projectId=${projectId}`);
-		return data.data as TServiceOrderProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	if (!projectId) return null;
+	const { data } = await axios.get(`/api/ordensDeServico/projeto?projectId=${projectId}`);
+	return data.data as TServiceOrderProjectDTO;
 }
 
 export function useServiceOrderProject({ projectId }: { projectId: string | null }) {
@@ -179,12 +155,8 @@ export function useServiceOrderProject({ projectId }: { projectId: string | null
 }
 
 async function fetchServiceOrdersByResponsible({ responsibleName }: { responsibleName: string }) {
-	try {
-		const { data } = await axios.get(`/api/ordensDeServico?responsibleName=${responsibleName}&queryPendingConclusion=true`);
-		return data.data as TServiceOrderSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/ordensDeServico?responsibleName=${responsibleName}&queryPendingConclusion=true`);
+	return data.data as TServiceOrderSimplifiedDTO[];
 }
 
 export function useServiceOrdersByResponsible({ responsibleName }: { responsibleName: string }) {
@@ -195,12 +167,8 @@ export function useServiceOrdersByResponsible({ responsibleName }: { responsible
 }
 
 async function fetchServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { technicalAnalysisId: string }) {
-	try {
-		const { data } = await axios.get(`/api/ordensDeServico?technicalAnalysisId=${technicalAnalysisId}`);
-		return data.data as TServiceOrderSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/ordensDeServico?technicalAnalysisId=${technicalAnalysisId}`);
+	return data.data as TServiceOrderSimplifiedDTO[];
 }
 
 export function useServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { technicalAnalysisId: string }) {
@@ -211,12 +179,8 @@ export function useServiceOrdersByTechnicalAnalysis({ technicalAnalysisId }: { t
 }
 
 async function fetchServiceOrdersStats(input: TServiceOrderStatsInput) {
-	try {
-		const { data }: { data: TServiceOrderStatsOutput } = await axios.post("/api/ordensDeServico/stats", input);
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const { data }: { data: TServiceOrderStatsOutput } = await axios.post("/api/ordensDeServico/stats", input);
+	return data.data;
 }
 
 export function useServiceOrdersStats() {

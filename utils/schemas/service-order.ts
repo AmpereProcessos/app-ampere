@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AuthorSchema } from "./users";
 import type { TProject, TProjectDTO } from "./projects";
+import { AuthorSchema } from "./users";
 
 export const ServiceOrderTagSchema = z.object({
 	titulo: z.string({ required_error: "Título da tag de compra não informado.", invalid_type_error: "Tipo não válido para o título da tag." }),
@@ -85,8 +85,14 @@ export const ServiceOrderSchema = z.object({
 		contratoDataAssinatura: z.string({ invalid_type_error: "Tipo não válido para a data de assinatura do contrato." }).optional().nullable(),
 		compraDataPagamento: z.string({ invalid_type_error: "Tipo não válido para a data de pagamento da compra." }).optional().nullable(),
 		compraEntregaDataPrevisao: z.string({ invalid_type_error: "Tipo não válido para a data de previsão de entrega da compra." }).optional().nullable(),
-		compraEntregaDataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a data de efetivação de entrega da compra." }).optional().nullable(),
-		homologacaoAcessoDataResposta: z.string({ invalid_type_error: "Tipo não válido para a data de resposta da homologação de acesso." }).optional().nullable(),
+		compraEntregaDataEfetivacao: z
+			.string({ invalid_type_error: "Tipo não válido para a data de efetivação de entrega da compra." })
+			.optional()
+			.nullable(),
+		homologacaoAcessoDataResposta: z
+			.string({ invalid_type_error: "Tipo não válido para a data de resposta da homologação de acesso." })
+			.optional()
+			.nullable(),
 		homologacaoVistoriaDataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a data de efetivação da vistoria." }).optional().nullable(),
 	}),
 	etiquetas: z
@@ -215,6 +221,7 @@ export const ServiceOrderSchema = z.object({
 	dataEfetivacao: z.string({ invalid_type_error: "Tipo não válido para a data de efetivação." }).datetime().optional().nullable(),
 	dataInsercao: z.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção." }), // fix undefined
 });
+export const SERVICE_ORDERS_COLLECTION_NAME = "ordensDeServico";
 
 export type TServiceOrder = z.infer<typeof ServiceOrderSchema>;
 export type TServiceOrderDTO = TServiceOrder & { _id: string };
@@ -316,10 +323,13 @@ export const PersonalizedFiltersSchema = z.object({
 		required_error: "Lista de cidades de filtro não informada.",
 		invalid_type_error: "Tipo não válido para lista de cidades de filtro.",
 	}),
-	category: z.array(z.string({ required_error: "Categoria de filtro não informada.", invalid_type_error: "Tipo não válido para categoria de filtro." }), {
-		required_error: "Lista de categorias de filtro não informada.",
-		invalid_type_error: "Tipo não válido para lista de categorias de filtro.",
-	}),
+	category: z.array(
+		z.string({ required_error: "Categoria de filtro não informada.", invalid_type_error: "Tipo não válido para categoria de filtro." }),
+		{
+			required_error: "Lista de categorias de filtro não informada.",
+			invalid_type_error: "Tipo não válido para lista de categorias de filtro.",
+		},
+	),
 	urgency: z.array(z.string({ required_error: "Urgência de filtro não informada.", invalid_type_error: "Tipo não válido para urgência de filtro." }), {
 		required_error: "Lista de urgências de filtro não informada.",
 		invalid_type_error: "Tipo não válido para lista de urgências de filtro.",
@@ -328,11 +338,21 @@ export const PersonalizedFiltersSchema = z.object({
 		required_error: "Lista de autores de filtro não informada.",
 		invalid_type_error: "Tipo não válido para lista de autores de filtro.",
 	}),
-	topologies: z.array(z.string({ required_error: "Topologia de filtro não informada.", invalid_type_error: "Tipo não válido para topologia de filtro." })),
-	roofTypes: z.array(z.string({ required_error: "Tipo de telha de filtro não informada.", invalid_type_error: "Tipo não válido para tipo de telha de filtro." })),
+	topologies: z.array(
+		z.string({ required_error: "Topologia de filtro não informada.", invalid_type_error: "Tipo não válido para topologia de filtro." }),
+	),
+	roofTypes: z.array(
+		z.string({ required_error: "Tipo de telha de filtro não informada.", invalid_type_error: "Tipo não válido para tipo de telha de filtro." }),
+	),
 	period: z.object({
-		after: z.string({ required_error: "Filtro de depois de não informado.", invalid_type_error: "Tipo não válido para o filtro de depois de." }).optional().nullable(),
-		before: z.string({ required_error: "Filtro de antes de não informado.", invalid_type_error: "Tipo não válido para o filtro de antes de." }).optional().nullable(),
+		after: z
+			.string({ required_error: "Filtro de depois de não informado.", invalid_type_error: "Tipo não válido para o filtro de depois de." })
+			.optional()
+			.nullable(),
+		before: z
+			.string({ required_error: "Filtro de antes de não informado.", invalid_type_error: "Tipo não válido para o filtro de antes de." })
+			.optional()
+			.nullable(),
 		field: PersonalizedFieldFilters.optional().nullable(),
 	}),
 	orderBy: z.object({

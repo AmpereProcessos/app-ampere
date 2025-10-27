@@ -1,22 +1,28 @@
-import connectToDatabase from "@/utils/services/mongodb/projects";
-import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import type { NextApiHandler } from "next";
-import { z } from "zod";
-import type { TProject } from "@/utils/schemas/projects";
-import { type Collection, ObjectId } from "mongodb";
-import createHttpError from "http-errors";
-import type { TServiceOrder } from "@/utils/schemas/service-order";
-import { getServiceObservationsFromObras, getServiceOrderInverterMetadataFromProject, getServiceOrderModulesMetadataFromProject, getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
-import type { TPurchaseControl } from "@/utils/schemas/purchases";
-import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
-import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
-import type { TUser } from "@/utils/schemas/crm/user.schema";
-import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
-import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
+import { handleProjectUpdateJourneyStepsTracking } from "@/lib/project-journeys/tracking";
 import { insertFunnelReference } from "@/repositories/crm-funnel-references/mutations";
-import dayjs from "dayjs";
+import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
+import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { getProductsStr } from "@/utils/methods/formatting";
 import { getPurchaseControlTagsFromProject } from "@/utils/methods/util/purchase-controls";
+import {
+	getServiceObservationsFromObras,
+	getServiceOrderInverterMetadataFromProject,
+	getServiceOrderModulesMetadataFromProject,
+	getServiceOrderTagsFromProject,
+} from "@/utils/methods/util/service-order";
+import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
+import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
+import type { TUser } from "@/utils/schemas/crm/user.schema";
+import type { TProject } from "@/utils/schemas/projects";
+import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { TServiceOrder } from "@/utils/schemas/service-order";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import connectToDatabase from "@/utils/services/mongodb/projects";
+import dayjs from "dayjs";
+import createHttpError from "http-errors";
+import { type Collection, ObjectId } from "mongodb";
+import type { NextApiHandler } from "next";
+import { z } from "zod";
 
 type PostResponse = {
 	data: { insertedId?: string; updatedId?: string };
@@ -125,7 +131,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			},
 			observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
 			dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(), 
+			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
 			dataInsercao: new Date().toISOString(),
 		};
 
@@ -198,6 +204,10 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 
 		const isSolarUFVSale = ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"].includes(project.tipoDeServico);
 
+		const previousProjectData = await projectscollection.findOne({ _id: new ObjectId(projectId) });
+		if (!previousProjectData) {
+			throw new createHttpError.NotFound("Projeto não encontrado.");
+		}
 		// Now, updating the project with the new allocations and other data
 		await projectscollection.updateOne(
 			{ _id: new ObjectId(projectId) },
@@ -224,6 +234,11 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				},
 			},
 		);
+		const updatedProjectData = await projectscollection.findOne({ _id: new ObjectId(projectId) });
+		if (!updatedProjectData) {
+			throw new createHttpError.NotFound("Projeto não encontrado.");
+		}
+		handleProjectUpdateJourneyStepsTracking({ previous: previousProjectData, updated: updatedProjectData });
 
 		if (project.idOrdemServico) {
 			await serviceOrdersCollection.updateOne(
@@ -251,7 +266,8 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 	if (triggerType === "create-opportunity-on-project-journey-end") {
 		console.log("WENT THIS WAY");
 		const projectCRMClientId = project.idClienteCRM;
-		if (!projectCRMClientId) throw new createHttpError.BadRequest("Oops, parece que o projeto não possui vinculação com o CRM. Não é possível prosseguir com a automação.");
+		if (!projectCRMClientId)
+			throw new createHttpError.BadRequest("Oops, parece que o projeto não possui vinculação com o CRM. Não é possível prosseguir com a automação.");
 		const crmDb = await connectToCRMDatabase();
 		const usersCollection = crmDb.collection<TUser>("users");
 		const opportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
@@ -331,9 +347,14 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			proximaInteracao: dayjs().toISOString(),
 			dataInsercao: new Date().toISOString(),
 		};
-		const insertOpportunityResponse = await insertOpportunity({ collection: opportunitiesCollection, info: newOpportunity, partnerId: newOpportunity.idParceiro });
+		const insertOpportunityResponse = await insertOpportunity({
+			collection: opportunitiesCollection,
+			info: newOpportunity,
+			partnerId: newOpportunity.idParceiro,
+		});
 
-		if (!insertOpportunityResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
+		if (!insertOpportunityResponse.acknowledged)
+			throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
 		const insertedOpportunityId = insertOpportunityResponse.insertedId.toString();
 
 		const newFunnelReference: TFunnelReference = {
@@ -353,7 +374,8 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 			info: newFunnelReference,
 			partnerId: partnerId || "",
 		});
-		if (!insertFunnelReferenceResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
+		if (!insertFunnelReferenceResponse.acknowledged)
+			throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar oportunidade.");
 		const insertedFunnelReferenceId = insertFunnelReferenceResponse.insertedId.toString();
 
 		return res.status(201).json({

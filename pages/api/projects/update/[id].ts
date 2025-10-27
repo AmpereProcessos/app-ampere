@@ -3,6 +3,7 @@ import { validateAuthenticationWithSession } from "../../../../utils/api";
 import { errorHandler } from "../../../../utils/methods/handlers";
 import connectToDatabase from "../../../../utils/services/mongodb/projects";
 
+import { handleProjectUpdateJourneyStepsTracking } from "@/lib/project-journeys/tracking";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -18,8 +19,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		delete req.body._id;
 
 		const { id } = req.query;
+
 		if (!id || typeof id !== "string" || !ObjectId.isValid(id)) return res.status(400).json({ message: "ID do projeto inválido" });
-		// logging changes in changes collections
+		const updateKeys = Object.keys(req.body);
+
+		if (updateKeys.length === 0) return res.status(400).json({ message: "Nenhuma alteração foi realizada" });
+
+		const previousProjectData = await collection.findOne({ _id: new ObjectId(id) });
+		if (!previousProjectData) return res.status(404).json({ message: "Projeto não encontrado" });
+
+		// Now, handling the project update
+		const updateProjectResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...req.body } });
+		// Checking for possible update errors
+		if (!updateProjectResponse.acknowledged) return res.status(500).json({ message: "Oops, houve um erro desconhecido ao atualizar projeto" });
+		if (updateProjectResponse.matchedCount === 0) return res.status(404).json({ message: "Projeto não encontrado" });
+		// Inserting the log for the changes in the log collections
 		const logObject = {
 			autor: {
 				id: session?.user?.id,
@@ -31,15 +45,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			dataAlteracao: new Date().toISOString(),
 			dataAlteracaoFormatada: new Date().toLocaleString("pt-br"),
 		};
+		await logCollection.insertOne(logObject);
 
-		const updateKeys = Object.keys(req.body);
+		const updatedProjectData = await collection.findOne({ _id: new ObjectId(id) });
+		if (!updatedProjectData) return res.status(404).json({ message: "Projeto não encontrado" });
 
-		const newObj = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...req.body } });
-
-		// Validating for non empty update objects
-		if (session && updateKeys.length > 0) {
-			await logCollection.insertOne(logObject);
-		}
 		// Checking for update on service order trackable fields
 		if (
 			[
@@ -109,7 +119,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				await collection.updateOne({ _id: new ObjectId(id) }, { $set: { "comissoes.dataReferencia": comissionDateReference } });
 			}
 		}
-		return res.json(newObj);
+
+		handleProjectUpdateJourneyStepsTracking({ previous: previousProjectData, updated: updatedProjectData });
+		return res.json({
+			data: {
+				updatedId: id,
+			},
+			message: "Projeto atualizado com sucesso !",
+		});
 	}
 	if (req.method === "PUT") {
 		try {

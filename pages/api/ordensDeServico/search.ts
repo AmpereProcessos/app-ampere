@@ -125,9 +125,9 @@ async function getServiceOrdersByFilter({ collection, query, skip, limit, orderB
 	// Add a default value for missing fields before sorting
 	const serviceOrders = (await collection
 		.aggregate([
+			{ $match: match },
 			{ $addFields: { sortField: { $ifNull: [`$${Object.keys(orderByParam)[0]}`, new Date(0)] } } }, // Use a default date for missing fields
 			{ $sort: { sortField: sort[Object.keys(orderByParam)[0]], _id: -1 } }, // Sort by the new field and then by _id
-			{ $match: match },
 			{ $skip: skip },
 			{ $project: ServiceOrderSimplifiedProjection },
 			{ $limit: limit },

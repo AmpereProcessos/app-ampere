@@ -461,14 +461,16 @@ const GeneralProjectSchema = z.object({
 			.union([z.literal("SIM"), z.literal("NÃO")])
 			.optional()
 			.nullable(),
+		agendamentoEntrada: z.string().optional().nullable(),
+		agendamentoSaida: z.string().optional().nullable(),
 		entrada: z.string().optional().nullable(),
+		saida: z.string().optional().nullable(),
 		equipeResp: z.string().optional().nullable(),
 		laudo: z
 			.union([z.literal("EMITIDO"), z.literal("EM ESTUDO"), z.literal("NÃO DEFINIDO")])
 			.optional()
 			.nullable(),
 		observacoes: z.string(),
-		saida: z.string().optional().nullable(),
 		statusDaObra: z.string().optional().nullable(), // select-options
 		statusSolicitacao: z.string().optional().nullable(),
 		pendencias: z.string().optional().nullable(),

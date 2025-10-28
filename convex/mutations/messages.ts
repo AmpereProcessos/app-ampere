@@ -156,7 +156,20 @@ export const createMessage = mutation({
 			dataEnvio: Date.now(),
 		});
 
-		// ## FIFTH, UPDATING CHAT DATA
+		// ## FIFTH, SCHEDULE AI MEDIA PROCESSING
+		// If message has media, schedule AI processing for both incoming and outgoing messages
+		if (args.conteudo.midiaStorageId && args.conteudo.midiaTipo) {
+			console.log("[CREATE_MESSAGE] Scheduling AI media processing for message:", insertMessageResponse);
+			await ctx.scheduler.runAfter(1000, internal.actions.ai.processMediaWithAI, {
+				messageId: insertMessageResponse,
+				storageId: args.conteudo.midiaStorageId,
+				mediaType: args.conteudo.midiaTipo,
+				mimeType: args.conteudo.midiaMimeType || "application/octet-stream",
+				filename: args.conteudo.midiaFileName,
+			});
+		}
+
+		// ## SIXTH, UPDATING CHAT DATA
 		// Updating chat embedded data
 		const baseUpdateData = {
 			ultimaMensagemId: insertMessageResponse,
@@ -178,7 +191,7 @@ export const createMessage = mutation({
 			await ctx.db.patch(chatId, baseUpdateData);
 		}
 
-		// ## SIXTH, SCHEDULING
+		// ## SEVENTH, SCHEDULING
 		// Schedule WhatsApp message send for user messages
 		if (args.autor.tipo === "usuario" && (args.conteudo.texto || args.conteudo.midiaStorageId)) {
 			const currentChat = await ctx.db.get(chatId);
@@ -478,6 +491,36 @@ export const createAIMessage = internalMutation({
 				messageId,
 			},
 			message: "Mensagem de IA criada com sucesso.",
+		};
+	},
+});
+
+export const updateMessageMediaProcessing = internalMutation({
+	args: {
+		messageId: v.id("messages"),
+		conteudoMidiaTextoProcessado: v.optional(v.string()),
+		conteudoMidiaTextoProcessadoResumo: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		console.log("[INFO] [MESSAGES] [UPDATE_MEDIA_PROCESSING] Updating message:", args.messageId);
+
+		// Get message to verify it exists
+		const message = await ctx.db.get(args.messageId);
+		if (!message) {
+			throw new Error("Mensagem não encontrada.");
+		}
+
+		// Update message with AI-processed content
+		await ctx.db.patch(args.messageId, {
+			conteudoMidiaTextoProcessado: args.conteudoMidiaTextoProcessado,
+			conteudoMidiaTextoProcessadoResumo: args.conteudoMidiaTextoProcessadoResumo,
+		});
+
+		console.log("[INFO] [MESSAGES] [UPDATE_MEDIA_PROCESSING] Message updated successfully:", args.messageId);
+
+		return {
+			success: true,
+			message: "Conteúdo de mídia processado com sucesso.",
 		};
 	},
 });

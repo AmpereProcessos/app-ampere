@@ -11,6 +11,7 @@ const AI_GATEWAY_KEY = process.env.AI_GATEWAY_API_KEY;
 
 const openai = createOpenAI({
 	apiKey: AI_GATEWAY_KEY,
+	baseURL: "https://ai-gateway.vercel.sh/v1",
 });
 
 type TGenerateAIResponseOutput =

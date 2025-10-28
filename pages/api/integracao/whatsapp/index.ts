@@ -1,15 +1,22 @@
 import { api } from "@/convex/_generated/api";
 import {
+	isAppStateSyncEvent,
+	isHistoryEvent,
+	isMessageEchoEvent,
 	isMessageEvent,
 	isStatusUpdate,
 	isTemplateEvent,
 	mapWhatsAppStatusToAppStatus,
+	parseAppStateSyncEvent,
+	parseHistoryEvent,
+	parseMessageEchoEvent,
 	parseStatusUpdate,
 	parseTemplateCategoryUpdate,
 	parseTemplateQualityUpdate,
 	parseTemplateStatusUpdate,
 	parseWebhookIncomingMessage,
 } from "@/lib/whatsapp/parsing";
+import { formatPhoneAsBase } from "@/utils/methods/formatting";
 import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TWhatsappTemplate } from "@/utils/schemas/whatsapp-templates";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
@@ -180,7 +187,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					const crmDb = await connectToCRMDatabase();
 					const clientsCollection = crmDb.collection<TClient>("clients");
 					let clientId: string | null = null;
-					const existingClient = await clientsCollection.findOne({ telefonePrimario: incomingMessage?.fromPhoneNumber });
+					const existingClient = await clientsCollection.findOne({ telefonePrimarioBase: formatPhoneAsBase(incomingMessage?.fromPhoneNumber ?? "") });
 					if (existingClient) {
 						console.log("[INFO] [WHATSAPP_WEBHOOK] Client already exists:", existingClient);
 						clientId = existingClient._id.toString();
@@ -263,6 +270,295 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						});
 
 						console.log("[WHATSAPP_WEBHOOK] Message created from:", incomingMessage.fromPhoneNumber, "Type:", incomingMessage.messageType);
+					}
+				}
+				// Check if this is a history sync event (Coexistence)
+				else if (isHistoryEvent(body)) {
+					console.log("[INFO] [WHATSAPP_WEBHOOK] [COEXISTENCE] Handling history sync event");
+					const historyData = parseHistoryEvent(body);
+
+					if (historyData) {
+						if (historyData.hasError) {
+							console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] History sharing declined:", {
+								errorCode: historyData.errorCode,
+								errorMessage: historyData.errorMessage,
+							});
+						} else {
+							console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Processing ${historyData.messages.length} historical messages`);
+
+							// Process each historical message
+							for (const historicalMessage of historyData.messages) {
+								try {
+									const crmDb = await connectToCRMDatabase();
+									const clientsCollection = crmDb.collection<TClient>("clients");
+
+									// Determine the client phone number (always the customer, not the business)
+									const clientPhone =
+										historicalMessage.fromPhoneNumber === historyData.businessPhoneNumber ? historicalMessage.toPhoneNumber : historicalMessage.fromPhoneNumber;
+
+									const isFromBusiness = historicalMessage.fromPhoneNumber === historyData.businessPhoneNumber;
+
+									// Find or create client
+									let clientId: string | null = null;
+									const existingClient = await clientsCollection.findOne({ telefonePrimarioBase: formatPhoneAsBase(clientPhone) });
+
+									if (existingClient) {
+										clientId = existingClient._id.toString();
+									} else {
+										// Create new client for historical contact
+										const insertClientResponse = await clientsCollection.insertOne({
+											telefonePrimario: clientPhone,
+											telefonePrimarioBase: formatPhoneAsBase(clientPhone),
+											nome: `Cliente ${clientPhone}`,
+											autor: {
+												id: "6463ccaa8c5e3e227af54d89",
+												nome: "LUCAS FERNANDES",
+												avatar_url:
+													"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/saas-crm%2Fusuarios%2FLUCAS%20FERNANDES?alt=media&token=4a2959af-2fd0-4448-92f6-57af64a3bae1",
+											},
+											canalAquisicao: "WHATSAPP",
+											idParceiro: "65454ba15cf3e3ecf534b308",
+											uf: "",
+											cidade: "",
+											cep: "",
+											bairro: "",
+											endereco: "",
+											dataInsercao: new Date().toISOString(),
+											indicador: {},
+										});
+										clientId = insertClientResponse.insertedId.toString();
+									}
+
+									// Handle media if present
+									let mediaStorageData = null;
+									if (historicalMessage.mediaId && historicalMessage.mimeType) {
+										try {
+											mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+												mediaId: historicalMessage.mediaId,
+												mimeType: historicalMessage.mimeType,
+												filename: historicalMessage.filename,
+											});
+											console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Historical media downloaded:", mediaStorageData.storageId);
+										} catch (error) {
+											console.error("[WHATSAPP_WEBHOOK] [COEXISTENCE] Error downloading historical media:", error);
+										}
+									}
+
+									// Determine media type
+									let midiaTipo: "IMAGEM" | "DOCUMENTO" | "VIDEO" | "AUDIO" | undefined;
+									if (historicalMessage.messageType === "image") {
+										midiaTipo = "IMAGEM";
+									} else if (historicalMessage.messageType === "document") {
+										midiaTipo = "DOCUMENTO";
+									} else if (historicalMessage.messageType === "video") {
+										midiaTipo = "VIDEO";
+									} else if (historicalMessage.messageType === "audio") {
+										midiaTipo = "AUDIO";
+									}
+
+									// Create historical message in Convex
+									await convex.mutation(api.mutations.messages.createMessage, {
+										cliente: {
+											idApp: clientId,
+											nome: existingClient?.nome || `Cliente ${clientPhone}`,
+											telefone: clientPhone,
+										},
+										autor: {
+											idApp: isFromBusiness ? "6463ccaa8c5e3e227af54d89" : clientId,
+											tipo: isFromBusiness ? "usuario" : "cliente",
+										},
+										conteudo: {
+											texto: historicalMessage.textContent || historicalMessage.caption,
+											midiaTipo,
+											midiaStorageId: mediaStorageData?.storageId,
+											midiaMimeType: mediaStorageData?.mimeType,
+											midiaFileName: mediaStorageData?.filename,
+											midiaFileSize: mediaStorageData?.fileSize,
+											midiaWhatsappId: historicalMessage.mediaId,
+										},
+										whatsappMessageId: historicalMessage.whatsappMessageId,
+										whatsappPhoneNumberId: historicalMessage.whatsappPhoneNumberId,
+									});
+
+									console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Historical message created:", historicalMessage.whatsappMessageId);
+								} catch (error) {
+									console.error("[WHATSAPP_WEBHOOK] [COEXISTENCE] Error processing historical message:", error);
+								}
+							}
+
+							console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Finished processing historical messages");
+						}
+					}
+				}
+				// Check if this is a contact sync event (Coexistence)
+				else if (isAppStateSyncEvent(body)) {
+					console.log("[INFO] [WHATSAPP_WEBHOOK] [COEXISTENCE] Handling contact sync event");
+					const stateSyncData = parseAppStateSyncEvent(body);
+
+					if (stateSyncData) {
+						console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Processing ${stateSyncData.contacts.length} contact updates`);
+
+						const crmDb = await connectToCRMDatabase();
+						const clientsCollection = crmDb.collection<TClient>("clients");
+
+						for (const contact of stateSyncData.contacts) {
+							try {
+								if (contact.action === "add") {
+									// Find or create client
+									const existingClient = await clientsCollection.findOne({ telefonePrimarioBase: formatPhoneAsBase(contact.phoneNumber) });
+
+									if (existingClient) {
+										// Update existing client with name if we have one
+										if (contact.fullName && existingClient.nome !== contact.fullName) {
+											await clientsCollection.updateOne(
+												{ _id: existingClient._id },
+												{
+													$set: {
+														nome: contact.fullName,
+													},
+												},
+											);
+											console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Updated contact: ${contact.fullName}`);
+										}
+									} else {
+										// Create new client
+										await clientsCollection.insertOne({
+											telefonePrimario: contact.phoneNumber,
+											telefonePrimarioBase: formatPhoneAsBase(contact.phoneNumber),
+											nome: contact.fullName || contact.firstName || `Cliente ${contact.phoneNumber}`,
+											autor: {
+												id: "6463ccaa8c5e3e227af54d89",
+												nome: "LUCAS FERNANDES",
+												avatar_url:
+													"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/saas-crm%2Fusuarios%2FLUCAS%20FERNANDES?alt=media&token=4a2959af-2fd0-4448-92f6-57af64a3bae1",
+											},
+											canalAquisicao: "WHATSAPP",
+											idParceiro: "65454ba15cf3e3ecf534b308",
+											uf: "",
+											cidade: "",
+											cep: "",
+											bairro: "",
+											endereco: "",
+											dataInsercao: new Date().toISOString(),
+											indicador: {},
+										});
+										console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Created new contact: ${contact.fullName || contact.phoneNumber}`);
+									}
+								} else if (contact.action === "remove") {
+									// Optionally mark contact as removed or handle deletion
+									// For now, we'll just log it
+									console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Contact removed from WhatsApp Business app: ${contact.phoneNumber}`);
+								}
+							} catch (error) {
+								console.error("[WHATSAPP_WEBHOOK] [COEXISTENCE] Error processing contact sync:", error);
+							}
+						}
+
+						console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Finished processing contact syncs");
+					}
+				}
+				// Check if this is a message echo event (Coexistence)
+				else if (isMessageEchoEvent(body)) {
+					console.log("[INFO] [WHATSAPP_WEBHOOK] [COEXISTENCE] Handling message echo event");
+					const messageEchoes = parseMessageEchoEvent(body);
+
+					if (messageEchoes) {
+						console.log(`[WHATSAPP_WEBHOOK] [COEXISTENCE] Processing ${messageEchoes.length} message echoes`);
+
+						const crmDb = await connectToCRMDatabase();
+						const clientsCollection = crmDb.collection<TClient>("clients");
+
+						for (const echo of messageEchoes) {
+							try {
+								// Find or create client (customer who received the message)
+								let clientId: string | null = null;
+								const existingClient = await clientsCollection.findOne({ telefonePrimarioBase: formatPhoneAsBase(echo.toPhoneNumber) });
+
+								if (existingClient) {
+									clientId = existingClient._id.toString();
+								} else {
+									// Create new client
+									const insertClientResponse = await clientsCollection.insertOne({
+										telefonePrimario: echo.toPhoneNumber,
+										telefonePrimarioBase: formatPhoneAsBase(echo.toPhoneNumber),
+										nome: `Cliente ${echo.toPhoneNumber}`,
+										autor: {
+											id: "6463ccaa8c5e3e227af54d89",
+											nome: "LUCAS FERNANDES",
+											avatar_url:
+												"https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/saas-crm%2Fusuarios%2FLUCAS%20FERNANDES?alt=media&token=4a2959af-2fd0-4448-92f6-57af64a3bae1",
+										},
+										canalAquisicao: "WHATSAPP",
+										idParceiro: "65454ba15cf3e3ecf534b308",
+										uf: "",
+										cidade: "",
+										cep: "",
+										bairro: "",
+										endereco: "",
+										dataInsercao: new Date().toISOString(),
+										indicador: {},
+									});
+									clientId = insertClientResponse.insertedId.toString();
+								}
+
+								// Handle media if present
+								let mediaStorageData = null;
+								if (echo.mediaId && echo.mimeType) {
+									try {
+										mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+											mediaId: echo.mediaId,
+											mimeType: echo.mimeType,
+											filename: echo.filename,
+										});
+										console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Echo media downloaded:", mediaStorageData.storageId);
+									} catch (error) {
+										console.error("[WHATSAPP_WEBHOOK] [COEXISTENCE] Error downloading echo media:", error);
+									}
+								}
+
+								// Determine media type
+								let midiaTipo: "IMAGEM" | "DOCUMENTO" | "VIDEO" | "AUDIO" | undefined;
+								if (echo.messageType === "image") {
+									midiaTipo = "IMAGEM";
+								} else if (echo.messageType === "document") {
+									midiaTipo = "DOCUMENTO";
+								} else if (echo.messageType === "video") {
+									midiaTipo = "VIDEO";
+								} else if (echo.messageType === "audio") {
+									midiaTipo = "AUDIO";
+								}
+
+								// Create message echo in Convex (from business user via WhatsApp Business app)
+								await convex.mutation(api.mutations.messages.createMessage, {
+									cliente: {
+										idApp: clientId,
+										nome: existingClient?.nome || `Cliente ${echo.toPhoneNumber}`,
+										telefone: echo.toPhoneNumber,
+									},
+									autor: {
+										idApp: "6463ccaa8c5e3e227af54d89", // Special ID for business app user
+										tipo: "usuario",
+									},
+									conteudo: {
+										texto: echo.textContent || echo.caption,
+										midiaTipo,
+										midiaStorageId: mediaStorageData?.storageId,
+										midiaMimeType: mediaStorageData?.mimeType,
+										midiaFileName: mediaStorageData?.filename,
+										midiaFileSize: mediaStorageData?.fileSize,
+										midiaWhatsappId: echo.mediaId,
+									},
+									whatsappMessageId: echo.whatsappMessageId,
+									whatsappPhoneNumberId: echo.whatsappPhoneNumberId,
+								});
+
+								console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Message echo created:", echo.whatsappMessageId);
+							} catch (error) {
+								console.error("[WHATSAPP_WEBHOOK] [COEXISTENCE] Error processing message echo:", error);
+							}
+						}
+
+						console.log("[WHATSAPP_WEBHOOK] [COEXISTENCE] Finished processing message echoes");
 					}
 				}
 

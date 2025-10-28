@@ -74,8 +74,20 @@ export function formatStringAsOnlyDigits(s: string) {
 }
 // Retorna sempre a “base” comparável: DDD (2) + últimos 8 dígitos
 export function formatPhoneAsBase(phone: string) {
-	const d = formatStringAsOnlyDigits(phone);
+	let d = formatStringAsOnlyDigits(phone);
+
+	// Remove Brazilian country code if present
+	if (d.startsWith("55") && d.length > 11) {
+		d = d.slice(2);
+	}
+
+	// Remove leading zeros that may exist after country code removal
+	while (d.length > 10 && d[0] === "0") {
+		d = d.slice(1);
+	}
+
 	if (d.length < 10) return ""; // inválido
+
 	// Se 11 dígitos e tiver '9' logo após o DDD, remove esse '9'
 	if (d.length === 11 && d[2] === "9") {
 		return d.slice(0, 2) + d.slice(3); // remove o 3º dígito

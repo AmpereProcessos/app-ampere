@@ -420,3 +420,369 @@ export function parseTemplateCategoryUpdate(webhookPayload: unknown): ParsedTemp
 		return null;
 	}
 }
+
+// ===== COEXISTENCE WEBHOOK EVENT TYPES =====
+
+// Type for historical message from WhatsApp Business app
+export type ParsedHistoricalMessage = {
+	whatsappPhoneNumberId: string;
+	whatsappMessageId: string;
+	fromPhoneNumber: string;
+	toPhoneNumber: string;
+	timestamp: number;
+	messageType: "text" | "image" | "video" | "audio" | "document" | "location" | "contacts" | "sticker";
+	textContent?: string;
+	mediaId?: string;
+	mimeType?: string;
+	filename?: string;
+	caption?: string;
+	sha256?: string;
+	context?: {
+		from: string;
+		id: string;
+	};
+};
+
+export type ParsedHistoryEvent = {
+	businessPhoneNumber: string;
+	whatsappPhoneNumberId: string;
+	messages: ParsedHistoricalMessage[];
+	hasError: boolean;
+	errorCode?: number;
+	errorMessage?: string;
+};
+
+// Type for contact sync from WhatsApp Business app
+export type ParsedContact = {
+	fullName?: string;
+	firstName?: string;
+	phoneNumber: string;
+	action: "add" | "remove";
+	timestamp: number;
+};
+
+export type ParsedAppStateSync = {
+	businessPhoneNumber: string;
+	whatsappPhoneNumberId: string;
+	contacts: ParsedContact[];
+};
+
+// Type for message echo (message sent by business via WhatsApp Business app)
+export type ParsedMessageEcho = {
+	whatsappPhoneNumberId: string;
+	whatsappMessageId: string;
+	fromPhoneNumber: string; // business phone
+	toPhoneNumber: string; // customer phone
+	timestamp: number;
+	messageType: "text" | "image" | "video" | "audio" | "document" | "location" | "contacts" | "sticker";
+	textContent?: string;
+	mediaId?: string;
+	mimeType?: string;
+	filename?: string;
+	caption?: string;
+};
+
+// Type guards for Coexistence events
+export function isHistoryEvent(webhookPayload: unknown): boolean {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const field = change?.field as string | undefined;
+
+		return field === "history";
+	} catch (error) {
+		return false;
+	}
+}
+
+export function isAppStateSyncEvent(webhookPayload: unknown): boolean {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const field = change?.field as string | undefined;
+
+		return field === "smb_app_state_sync";
+	} catch (error) {
+		return false;
+	}
+}
+
+export function isMessageEchoEvent(webhookPayload: unknown): boolean {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const field = change?.field as string | undefined;
+
+		return field === "smb_message_echoes";
+	} catch (error) {
+		return false;
+	}
+}
+
+// Parser for history event
+export function parseHistoryEvent(webhookPayload: unknown): ParsedHistoryEvent | null {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const value = change?.value as Record<string, unknown> | undefined;
+
+		const metadata = value?.metadata as Record<string, unknown> | undefined;
+		const whatsappPhoneNumberId = metadata?.phone_number_id as string;
+		const businessPhoneNumber = metadata?.display_phone_number as string;
+
+		const history = value?.history as unknown[] | undefined;
+		if (!history || !Array.isArray(history)) {
+			console.error("[WHATSAPP_HISTORY_PARSE_ERROR] No history array found");
+			return null;
+		}
+
+		const historyItem = history[0] as Record<string, unknown>;
+
+		// Check for errors (history sharing declined)
+		const errors = historyItem?.errors as unknown[] | undefined;
+		if (errors && Array.isArray(errors) && errors.length > 0) {
+			const error = errors[0] as Record<string, unknown>;
+			return {
+				businessPhoneNumber,
+				whatsappPhoneNumberId,
+				messages: [],
+				hasError: true,
+				errorCode: error.code as number,
+				errorMessage: error.message as string,
+			};
+		}
+
+		// Parse messages
+		const conversations = historyItem?.conversations as unknown[] | undefined;
+		const messages: ParsedHistoricalMessage[] = [];
+
+		if (conversations && Array.isArray(conversations)) {
+			for (const conversation of conversations) {
+				const conv = conversation as Record<string, unknown>;
+				const messagesArray = conv.messages as unknown[] | undefined;
+
+				if (messagesArray && Array.isArray(messagesArray)) {
+					for (const msg of messagesArray) {
+						const message = msg as Record<string, unknown>;
+						const messageType = message.type as string;
+
+						let textContent: string | undefined;
+						let mediaId: string | undefined;
+						let mimeType: string | undefined;
+						let filename: string | undefined;
+						let caption: string | undefined;
+						let sha256: string | undefined;
+
+						// Parse based on message type
+						switch (messageType) {
+							case "text": {
+								const textObj = message.text as Record<string, unknown> | undefined;
+								textContent = textObj?.body as string | undefined;
+								break;
+							}
+							case "image": {
+								const imageObj = message.image as Record<string, unknown> | undefined;
+								mediaId = imageObj?.id as string | undefined;
+								mimeType = imageObj?.mime_type as string | undefined;
+								caption = imageObj?.caption as string | undefined;
+								sha256 = imageObj?.sha256 as string | undefined;
+								break;
+							}
+							case "document": {
+								const docObj = message.document as Record<string, unknown> | undefined;
+								mediaId = docObj?.id as string | undefined;
+								mimeType = docObj?.mime_type as string | undefined;
+								filename = docObj?.filename as string | undefined;
+								caption = docObj?.caption as string | undefined;
+								sha256 = docObj?.sha256 as string | undefined;
+								break;
+							}
+							case "audio":
+							case "video":
+							case "sticker": {
+								const mediaObj = message[messageType] as Record<string, unknown> | undefined;
+								mediaId = mediaObj?.id as string | undefined;
+								mimeType = mediaObj?.mime_type as string | undefined;
+								sha256 = mediaObj?.sha256 as string | undefined;
+								break;
+							}
+						}
+
+						// Parse context (for replies)
+						let context: { from: string; id: string } | undefined;
+						const contextObj = message.context as Record<string, unknown> | undefined;
+						if (contextObj) {
+							context = {
+								from: contextObj.from as string,
+								id: contextObj.id as string,
+							};
+						}
+
+						messages.push({
+							whatsappPhoneNumberId,
+							whatsappMessageId: message.id as string,
+							fromPhoneNumber: formatWhatsappIdAsPhone(message.from as string),
+							toPhoneNumber: formatWhatsappIdAsPhone(message.to as string),
+							timestamp: message.timestamp ? Number.parseInt(message.timestamp as string) * 1000 : Date.now(),
+							messageType: messageType as ParsedHistoricalMessage["messageType"],
+							textContent,
+							mediaId,
+							mimeType,
+							filename,
+							caption,
+							sha256,
+							context,
+						});
+					}
+				}
+			}
+		}
+
+		return {
+			businessPhoneNumber,
+			whatsappPhoneNumberId,
+			messages,
+			hasError: false,
+		};
+	} catch (error) {
+		console.error("[WHATSAPP_HISTORY_PARSE_ERROR]", error);
+		return null;
+	}
+}
+
+// Parser for smb_app_state_sync event (contacts)
+export function parseAppStateSyncEvent(webhookPayload: unknown): ParsedAppStateSync | null {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const value = change?.value as Record<string, unknown> | undefined;
+
+		const metadata = value?.metadata as Record<string, unknown> | undefined;
+		const whatsappPhoneNumberId = metadata?.phone_number_id as string;
+		const businessPhoneNumber = metadata?.display_phone_number as string;
+
+		const stateSync = value?.state_sync as unknown[] | undefined;
+		if (!stateSync || !Array.isArray(stateSync)) {
+			console.error("[WHATSAPP_STATE_SYNC_PARSE_ERROR] No state_sync array found");
+			return null;
+		}
+
+		const contacts: ParsedContact[] = [];
+
+		for (const syncItem of stateSync) {
+			const item = syncItem as Record<string, unknown>;
+			if (item.type === "contact") {
+				const contact = item.contact as Record<string, unknown> | undefined;
+				const metadataObj = item.metadata as Record<string, unknown> | undefined;
+				const action = item.action as string;
+
+				if (contact) {
+					contacts.push({
+						fullName: contact.full_name as string | undefined,
+						firstName: contact.first_name as string | undefined,
+						phoneNumber: formatWhatsappIdAsPhone(contact.phone_number as string),
+						action: action === "remove" ? "remove" : "add",
+						timestamp: metadataObj?.timestamp ? Number.parseInt(metadataObj.timestamp as string) * 1000 : Date.now(),
+					});
+				}
+			}
+		}
+
+		return {
+			businessPhoneNumber,
+			whatsappPhoneNumberId,
+			contacts,
+		};
+	} catch (error) {
+		console.error("[WHATSAPP_STATE_SYNC_PARSE_ERROR]", error);
+		return null;
+	}
+}
+
+// Parser for smb_message_echoes event
+export function parseMessageEchoEvent(webhookPayload: unknown): ParsedMessageEcho[] | null {
+	try {
+		const payload = webhookPayload as Record<string, unknown>;
+		const entry = (payload.entry as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const change = (entry?.changes as unknown[])?.[0] as Record<string, unknown> | undefined;
+		const value = change?.value as Record<string, unknown> | undefined;
+
+		const metadata = value?.metadata as Record<string, unknown> | undefined;
+		const whatsappPhoneNumberId = metadata?.phone_number_id as string;
+
+		const messageEchoes = value?.message_echoes as unknown[] | undefined;
+		if (!messageEchoes || !Array.isArray(messageEchoes)) {
+			console.error("[WHATSAPP_MESSAGE_ECHO_PARSE_ERROR] No message_echoes array found");
+			return null;
+		}
+
+		const echoes: ParsedMessageEcho[] = [];
+
+		for (const echoMsg of messageEchoes) {
+			const message = echoMsg as Record<string, unknown>;
+			const messageType = message.type as string;
+
+			let textContent: string | undefined;
+			let mediaId: string | undefined;
+			let mimeType: string | undefined;
+			let filename: string | undefined;
+			let caption: string | undefined;
+
+			// Parse based on message type
+			switch (messageType) {
+				case "text": {
+					const textObj = message.text as Record<string, unknown> | undefined;
+					textContent = textObj?.body as string | undefined;
+					break;
+				}
+				case "image": {
+					const imageObj = message.image as Record<string, unknown> | undefined;
+					mediaId = imageObj?.id as string | undefined;
+					mimeType = imageObj?.mime_type as string | undefined;
+					caption = imageObj?.caption as string | undefined;
+					break;
+				}
+				case "document": {
+					const docObj = message.document as Record<string, unknown> | undefined;
+					mediaId = docObj?.id as string | undefined;
+					mimeType = docObj?.mime_type as string | undefined;
+					filename = docObj?.filename as string | undefined;
+					caption = docObj?.caption as string | undefined;
+					break;
+				}
+				case "audio":
+				case "video":
+				case "sticker": {
+					const mediaObj = message[messageType] as Record<string, unknown> | undefined;
+					mediaId = mediaObj?.id as string | undefined;
+					mimeType = mediaObj?.mime_type as string | undefined;
+					break;
+				}
+			}
+
+			echoes.push({
+				whatsappPhoneNumberId,
+				whatsappMessageId: message.id as string,
+				fromPhoneNumber: formatWhatsappIdAsPhone(message.from as string),
+				toPhoneNumber: formatWhatsappIdAsPhone(message.to as string),
+				timestamp: message.timestamp ? Number.parseInt(message.timestamp as string) * 1000 : Date.now(),
+				messageType: messageType as ParsedMessageEcho["messageType"],
+				textContent,
+				mediaId,
+				mimeType,
+				filename,
+				caption,
+			});
+		}
+
+		return echoes;
+	} catch (error) {
+		console.error("[WHATSAPP_MESSAGE_ECHO_PARSE_ERROR]", error);
+		return null;
+	}
+}

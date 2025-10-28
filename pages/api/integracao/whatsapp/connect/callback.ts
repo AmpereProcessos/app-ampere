@@ -4,6 +4,7 @@ import { validateAuthentication } from "@/utils/api";
 import type { TWhatsappIntegrationData } from "@/utils/schemas/integrations";
 
 import { ConvexHttpClient } from "convex/browser";
+import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL as string;
@@ -36,8 +37,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// O redirect_uri deve ser um dos URIs configurados no seu painel da Meta
 	const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/integracao/whatsapp/connect`; // A página onde o usuário iniciou o fluxo
 	const tokens = await FacebookOAuth.validateAuthorizationCode(code as string);
-	const accessToken = tokens.accessToken();
-	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	let accessToken: string | undefined;
+	let accessTokenExpiresAt: Date | undefined;
+	try {
+		accessToken = tokens.accessToken();
+		accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	} catch (error) {
+		console.error("[ERROR] [WHATSAPP_CONNECT_CALLBACK] Error validating authorization code:", error);
+	}
+
 	console.log("[INFO] [WHATSAPP_CONNECT_CALLBACK] Tokens:", { tokens, accessToken, accessTokenExpiresAt });
 
 	const debugUrl = `https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${appId}|${appSecret}`;
@@ -71,8 +79,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	const whatsappConnection: TWhatsappIntegrationData = {
 		tipo: "WHATSAPP",
-		token: accessToken,
-		dataExpiracao: accessTokenExpiresAt.toISOString(),
+		token: accessToken ?? "",
+		dataExpiracao: accessTokenExpiresAt?.toISOString() ?? dayjs().add(1, "month").toISOString(),
 		metaAutorAppId: debugData.data?.user_id,
 		metaEscopo: debugData.data?.scopes,
 		telefones: phones,

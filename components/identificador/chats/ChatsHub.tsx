@@ -59,6 +59,7 @@ function ChatsHub({ session, userHasMessageSendingPermission, whatsappConnection
 	// Para mobile, usamos um estado para controlar se estamos mostrando a lista ou o chat
 	const showingChatList = !selectedChatId || isDesktop;
 
+	console.log("SELECTED PHONE NUMBER", selectedPhoneNumber);
 	return (
 		<div className="w-full max-h-[calc(100vh-200px)] grow flex flex-col items-center justify-center rounded-lg shadow-lg border border-primary/20 overflow-hidden">
 			{/* Layout Desktop - duas colunas lado a lado */}

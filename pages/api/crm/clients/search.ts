@@ -26,19 +26,21 @@ async function getClientsSearch({ input }: { input: TGetClientsSearchInput; sess
 	const crmDb = await connectToCRMDatabase();
 	const clientsCollection = crmDb.collection<TClient>("clients");
 
+	const phoneAsBase = formatPhoneAsBase(search ?? "");
+	const cpfCnpjFormatted = formatToCPForCNPJ(search ?? "");
 	const searchQuery: Filter<TClient> =
 		search && search.trim().length > 0
 			? {
 					$or: [
 						{ nome: { $regex: search, $options: "i" } },
 						{ nome: search },
-						{ cpfCnpj: { $regex: formatToCPForCNPJ(search), $options: "i" } },
-						{ cpfCnpj: formatToCPForCNPJ(search) },
+						cpfCnpjFormatted ? { cpfCnpj: { $regex: cpfCnpjFormatted, $options: "i" } } : {},
+						cpfCnpjFormatted ? { cpfCnpj: cpfCnpjFormatted } : {},
 						{ email: { $regex: search, $options: "i" } },
 						{ email: search },
-						{ telefonePrimarioBase: { $regex: formatPhoneAsBase(search), $options: "i" } },
-						{ telefonePrimarioBase: formatPhoneAsBase(search) },
-					],
+						phoneAsBase ? { telefonePrimarioBase: { $regex: phoneAsBase, $options: "i" } } : {},
+						phoneAsBase ? { telefonePrimarioBase: phoneAsBase } : {},
+					].filter((v) => Object.keys(v).length > 0),
 				}
 			: {};
 

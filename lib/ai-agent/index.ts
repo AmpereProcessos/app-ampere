@@ -1,17 +1,8 @@
 import type { Id } from "@/convex/_generated/dataModel";
 import type { TProjectDTO } from "@/utils/schemas/projects";
-import { createOpenAI } from "@ai-sdk/openai";
 import { Output, generateText } from "ai";
 import { Experimental_Agent as Agent } from "ai";
 import z from "zod";
-
-const AI_GATEWAY_KEY = process.env.AI_GATEWAY_API_KEY;
-
-// Configure OpenAI with Vercel AI Gateway
-const openai = createOpenAI({
-	apiKey: AI_GATEWAY_KEY,
-	baseURL: "https://ai-gateway.vercel.sh/v1",
-});
 
 type TDetails = {
 	id: string;

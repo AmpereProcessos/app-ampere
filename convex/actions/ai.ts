@@ -1,5 +1,5 @@
 "use node";
-import { createOpenAI } from "@ai-sdk/openai";
+import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import { experimental_transcribe as transcribe } from "ai";
 
@@ -8,11 +8,6 @@ import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
 
 const AI_GATEWAY_KEY = process.env.AI_GATEWAY_API_KEY;
-
-const openai = createOpenAI({
-	apiKey: AI_GATEWAY_KEY,
-	baseURL: "https://ai-gateway.vercel.sh/v1",
-});
 
 type TGenerateAIResponseOutput =
 	| {

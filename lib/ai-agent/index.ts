@@ -10,7 +10,6 @@ const AI_GATEWAY_KEY = process.env.AI_GATEWAY_API_KEY;
 // Configure OpenAI with Vercel AI Gateway
 const openai = createOpenAI({
 	apiKey: AI_GATEWAY_KEY,
-	baseURL: "https://gateway.ai.cloudflare.com/v1/YOUR_ACCOUNT_ID/YOUR_GATEWAY_ID/openai", // Update with your gateway URL
 });
 
 type TDetails = {

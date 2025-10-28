@@ -1,10 +1,14 @@
 "use node";
-import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import { experimental_transcribe as transcribe } from "ai";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { internalAction } from "../_generated/server";
+
+const openai = createOpenAI({
+	apiKey: AI_GATEWAY_KEY,
+});
+
 type TGenerateAIResponseOutput =
 	| {
 			success: true;

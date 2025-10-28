@@ -96,16 +96,13 @@ export async function getAgentResponse({ details }: { details: TDetails }): Prom
 			.reverse() // Oldest first
 			.map((msg: TDetails["ultimasMensagens"][0]) => {
 				const role = msg.autorTipo === "cliente" ? "Cliente" : msg.autorTipo === "ai" ? "Você (AI)" : "Atendente Humano";
-				let content = msg.conteudoTexto || "";
-
-				if (msg.conteudoTipo && !content) {
-					content = `[${msg.conteudoTipo}]`;
-				}
+				const content = msg.conteudoTexto || "";
 
 				return `${role}: ${content}`;
 			})
 			.join("\n");
 
+		console.log("[GET_AGENT_RESPONSE] Conversation history:", conversationHistory);
 		const userPrompt = `Você está encarregando de responder ao cliente.
 
 ### INFORMAÇÕES DO CLIENTE

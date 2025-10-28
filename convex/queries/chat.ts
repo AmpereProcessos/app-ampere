@@ -173,7 +173,7 @@ export const getChatSummary = internalQuery({
 				id: m._id,
 				autorTipo: m.autorTipo,
 				conteudoTipo: m.conteudoMidiaTipo,
-				conteudoTexto: m.conteudoTexto ?? `[${m.conteudoMidiaTipo}]: ${m.conteudoMidiaTextoProcessadoResumo}`,
+				conteudoTexto: m.conteudoTexto || `[${m.conteudoMidiaTipo}]: ${m.conteudoMidiaTextoProcessadoResumo}`,
 				conteudoMidiaUrl: m.conteudoMidiaUrl,
 				dataEnvio: m.dataEnvio,
 				atendimentoId: m.servicoId,

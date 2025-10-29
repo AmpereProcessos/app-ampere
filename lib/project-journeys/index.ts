@@ -1,6 +1,7 @@
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import type { TProjectJourneyStageWorkflow } from "@/utils/schemas/project-journey";
 import type { TProject } from "@/utils/schemas/projects";
+import dayjs from "dayjs";
 import { formatPhoneAsWhatsappId } from "../whatsapp/utils";
 
 export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG = [
@@ -104,8 +105,15 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, {{nome_cliente}}. Sou a Ana Julia do pós-venda da Ampère Energias 😊</p><p><strong><em>Que bom ter você com a gente aqui na Ampère!</em></strong> 🤩⚡</p><p><br>Estou à disposição para te acompanhar em cada passo do seu projeto solar. Se precisar de algo, é só me chamar. 😁🤝<br><br><strong><em>Estamos na 1° etapa da construção do seu projeto.</em></strong> Vamos seguir juntos para garantir que tudo saia perfeito! 🚀☀️<br><br>Nessa etapa vamos organizar todas as documentações do seu projeto para enviar e homologar as informações no sistema da concessionária de energia. Após a resposta dela, entro em contato com você novamente para te informar!<br><br><strong>*Agora é só aguardar*</strong> e obrigada por confiar no nosso trabalho!! 💙</p>",
+				content: `Olá, ${project.nomeDoContrato}. Sou a Ana Julia do pós-venda da Ampère Energias 😊
+Que bom ter você com a gente aqui na Ampère! 🤩⚡
+
+Estou à disposição para te acompanhar em cada passo do seu projeto solar. Se precisar de algo, é só me chamar. 😁🤝
+Estamos na 1° etapa da construção do seu projeto. Vamos seguir juntos para garantir que tudo saia perfeito! 🚀☀️
+
+Nessa etapa vamos organizar todas as documentações do seu projeto para enviar e homologar as informações no sistema da concessionária de energia. Após a resposta dela, entro em contato com você novamente para te informar!
+
+*Agora é só aguardar* e obrigada por confiar no nosso trabalho!! 💙`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -152,8 +160,16 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Boa notícia, <strong>{{nome_cliente}}</strong> </p><p> </p><p> Seu projeto foi <strong><em>aprovado</em></strong> pela concessionária de energia (CEMIG/Equatorial).<br>Agora seguimos para a compra dos equipamentos.<br></p><p><strong><em>Importante:</em> </strong>Em alguns casos, o setor financeiro pode entrar em contato para alinhamentos finais através deste número <strong><em>(34) 9.8406-5016</em></strong>.</p><p> <strong><em>Após o pagamento</em></strong>, iremos realizar a compra dos seus equipamentos e assim que estivermos a previsão da entrega, volto a falar com você por aqui. </p><p><br>Obrigada por escolher a Ampère Energias! 💙</p>",
+				content: `Boa notícia, ${project.nomeDoContrato}.
+
+Seu projeto foi aprovado pela concessionária de energia (CEMIG/Equatorial).
+Agora seguimos para a compra dos equipamentos.
+
+Importante: Em alguns casos, o setor financeiro pode entrar em contato para alinhamentos finais através deste número (34) 9.8406-5016.
+
+Após o pagamento, iremos realizar a compra dos seus equipamentos e assim que estivermos com a previsão da entrega, volto a falar com você por aqui.
+
+Obrigada por escolher a Ampère Energias! 💙`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -200,8 +216,13 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}</strong><br><br>Passando aqui só para confirmar a efetivação do seu pagamento. ✅<br><br>Agora iremos realizar a <strong><em>compra dos seus equipamentos</em></strong> e assim que estivermos a previsão da entrega, volto a falar com você por aqui.<br><br><strong><em>Agora é só aguardar</em></strong>e obrigada por confiar no nosso trabalho!! 💙</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Passando aqui só para confirmar a efetivação do seu pagamento. ✅
+
+Agora iremos realizar a compra dos seus equipamentos e assim que estivermos com a previsão da entrega, volto a falar com você por aqui.
+
+Agora é só aguardar e obrigada por confiar no nosso trabalho!! 💙`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -248,8 +269,11 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}</strong>!<br><br>Passando para te avisar que a entrega do seu sistema solar está confirmada e será realizada dia {{data_previsao_entrega}}</p><p><br>Podemos confirmar ?</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Passando para te avisar que a entrega do seu sistema solar está confirmada e será realizada dia ${formatDateAsLocale(project.compra.previsaoEntrega)}.
+
+Podemos confirmar ?`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -301,8 +325,16 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}!</strong> </p><p>Seus equipamentos foram entregues com sucesso!</p><p>Agora, estamos organizando o agendamento da instalação.</p><p>Prazo estimado para instalação é de 2 a 3 semanas após a entrega.<br><br>Assim que a nossa equipe definir a data da sua instalação, venho aqui novamente te avisar com antecedência para você se organizar e receber nossos técnicos de montagem.</p><p><br><strong><em>Agora é só aguardar</em></strong> e fique tranquilo que entraremos em contato o mais breve !</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Seus equipamentos foram entregues com sucesso!
+Agora, estamos organizando o agendamento da instalação.
+
+Prazo estimado para instalação é de 2 a 3 semanas após a entrega.
+
+Assim que a nossa equipe definir a data da sua instalação, venho aqui novamente te avisar com antecedência para você se organizar e receber nossos técnicos de montagem.
+
+Agora é só aguardar e fique tranquilo que entraremos em contato o mais breve !`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -397,8 +429,15 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}</strong>!<br><br>Sua instalação foi agendada para <strong>{{data}}</strong>.</p><p>A equipe chegará ao local no horário combinado.</p><p>Em caso de imprevistos como problemas técnicos ou climáticos, poderemos precisar reagendar. <strong><em>Se chover no dia agendado, remarcaremos para outra data.</em></strong><br></p><p><strong>Podemos confirmar?</strong></p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Sua instalação foi agendada para ${formatDateAsLocale(project.obra.agendamentoEntrada)}.
+
+A equipe chegará ao local no horário combinado.
+
+Em caso de imprevistos como problemas técnicos ou climáticos, poderemos precisar reagendar. Se chover no dia agendado, remarcaremos para outra data.
+
+Podemos confirmar?`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -450,8 +489,20 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}!</strong> <br></p><p>A <strong><em>instalação</em></strong> do seu sistema solar foi <strong><em>concluída com sucesso!</em></strong><br><br>Em breve, ele será <strong><em>vistoriado e liberado</em></strong> para operação pela concessionária.<br><strong><em>Agora é só aguardar</em></strong> e aguardar a CEMIG ir até o local da instalação para trocar o medidor do seu padrão!<br>A CEMIG tem até dia <strong>{{previsao_vistoria}}</strong> para realizar a vistoria e trocar seu medidor.<br><br><strong>*Aviso importante:*</strong> É essencial que alguém esteja no local no momento da vistoria.<br><br>Assim que for realizada, <strong><em>por favor, nos avise</em></strong> para darmos sequência no seu projeto.<br><br>Obrigada por escolher a Ampère Energias! 💙</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+A instalação do seu sistema solar foi concluída com sucesso!
+
+Em breve, ele será vistoriado e liberado para operação pela concessionária.
+
+Agora é só aguardar e aguardar a CEMIG ir até o local da instalação para trocar o medidor do seu padrão!
+A CEMIG tem até dia ${formatDateAsLocale(dayjs(project.homologacao.vistoria.dataSolicitacao).add(7, "days").toDate())} para realizar a vistoria e trocar seu medidor.
+
+*Aviso importante:* É essencial que alguém esteja no local no momento da vistoria.
+
+Assim que for realizada, por favor, nos avise para darmos sequência no seu projeto.
+
+Obrigada por escolher a Ampère Energias! 💙`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -469,6 +520,11 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 										type: "text",
 										parameter_name: "nome_cliente",
 										text: project.nomeDoContrato,
+									},
+									{
+										type: "text",
+										parameter_name: "previsao_vistoria",
+										text: formatDateAsLocale(dayjs(project.homologacao.vistoria.dataSolicitacao).add(7, "days").toDate()),
 									},
 								],
 							},
@@ -498,8 +554,16 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}!</strong> <br> </p><p> Agora que seu medidor foi substituído, vamos realizar os testes finais:<br><strong><em>1)</em></strong><em> </em><strong><em>Envie uma foto do disjuntor do sistema solar</em></strong> (geralmente está em uma caixa branca com nosso adesivo, ou dentro do seu quadro de disjuntores).<br><strong><em>2)</em></strong><em> Depois, </em><strong><em>envie um vídeo de até 20 segundos do seu medidor</em></strong> de energia no padrão.<br><br>Com isso, conseguimos garantir que seu sistema solar está tudo funcionando como o esperado!!<br><br><strong>Fico no aguardo da sua resposta!!</strong> (da foto do vídeo)</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Agora que seu medidor foi substituído, vamos realizar os testes finais:
+
+1) Envie uma foto do disjuntor do sistema solar (geralmente está em uma caixa branca com nosso adesivo, ou dentro do seu quadro de disjuntores).
+2) Depois, envie um vídeo de até 20 segundos do seu medidor de energia no padrão.
+
+Com isso, conseguimos garantir que seu sistema solar está funcionando como o esperado!!
+
+Fico no aguardo da sua resposta!! (da foto ou do vídeo)`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -546,8 +610,25 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}!</strong><br><br>Seu sistema está ligado e gerando energia !<br>Para acompanhar a geração você precisa do aplicativo de acompanhamento. Abaixo estão instruções de como instalá-lo.<br><br><strong><em>INSTRUÇÕES PARA BAIXAR APLICATIVO</em></strong><br>Para BAIXAR O APLICATIVO basta acessar um dos links abaixos (dependendo do modelo do seu telefone).<br><br>Para dispositivos&amp;amp;nbsp;<strong><em>Android:</em></strong><br><strong>{{link_android}}</strong><br><br>Para dispositivos&amp;amp;nbsp;<strong><em>IOS:</em></strong><br><strong>{{link_ios}}</strong><br><br>Observação: Todas as letras do login e senha são minúsculas.<br><br>Obrigada por escolher a Ampère Energias!&amp;amp;nbsp; 💙</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Seu sistema está ligado e gerando energia!
+
+Para acompanhar a geração você precisa do aplicativo de acompanhamento. Abaixo estão instruções de como instalá-lo.
+
+INSTRUÇÕES PARA BAIXAR APLICATIVO
+
+Para BAIXAR O APLICATIVO basta acessar um dos links abaixo (dependendo do modelo do seu telefone).
+
+Para dispositivos Android:
+${"https://apps.apple.com/br/app/s-miles-enduser/id1544760866"}
+
+Para dispositivos IOS:
+${"https://apps.apple.com/br/app/s-miles-enduser/id1544760866"}
+
+Observação: Todas as letras do login e senha são minúsculas.
+
+Obrigada por escolher a Ampère Energias! 💙`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),
@@ -604,8 +685,19 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: (TProjectJourney
 		},
 		payload: (project) => {
 			return {
-				content:
-					"<p>Olá, <strong>{{nome_cliente}}</strong>!</p><p>Temos uma excelente notícia para você: <strong>Seu projeto de energia solar está oficialmente concluído e em pleno funcionamento!</strong> ☀️🚀<br><strong>Parabéns por essa importante conquista!</strong><br></p><p>Gostaríamos de expressar nossa sincera gratidão por ter <strong>confiado na Ampère Energias</strong> para realizar este sonho.<br>Foi um prazer e uma honra ser a sua parceira neste projeto. <br>Nossa missão é oferecer a melhor experiência, e esperamos ter superado suas expectativas em todas as etapas.<br></p><p><strong>Sua Opinião é a Nossa Energia! </strong>💙</p><p>Baseado na sua experiência, <strong>de 0 a 10</strong>, qual a probabilidade de você recomendar a Ampère Energias para um amigo ou familiar?</p>",
+				content: `Olá, ${project.nomeDoContrato}!
+
+Temos uma excelente notícia para você: Seu projeto de energia solar está oficialmente concluído e em pleno funcionamento! ☀️🚀
+
+Parabéns por essa importante conquista!
+
+Gostaríamos de expressar nossa sincera gratidão por ter confiado na Ampère Energias para realizar este sonho.
+Foi um prazer e uma honra ser a sua parceira neste projeto.
+Nossa missão é oferecer a melhor experiência, e esperamos ter superado suas expectativas em todas as etapas.
+
+Sua opinião é a nossa energia! 💙
+
+Baseado na sua experiência, de 0 a 10, qual a probabilidade de você recomendar a Ampère Energias para um amigo ou familiar?`,
 				data: {
 					messaging_product: "whatsapp",
 					to: "553496626855", //formatPhoneAsWhatsappId(project.telefone as string),

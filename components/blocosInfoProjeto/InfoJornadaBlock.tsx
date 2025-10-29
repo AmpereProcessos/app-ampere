@@ -21,7 +21,7 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">JORNADA DO CLIENTE</h1>
 			</div>
 			<div className="flex w-full px-2">
-				<div className="flex w-full flex-wrap items-center justify-around gap-3 rounded border border-cyan-500 p-2">
+				<div className="flex w-full flex-col items-center justify-around gap-3 rounded border border-cyan-500 p-2">
 					<div className="flex w-full items-center justify-between gap-2">
 						<h1 className="text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
 						<div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
@@ -30,174 +30,28 @@ function InfoJornadaBlock({ editor, infoHolder, setInfo, changes, setChanges, up
 							</Link>
 						</div>
 					</div>
-					<CheckboxInput
-						labelFalse={"BOAS VINDAS"}
-						labelTrue={"BOAS VINDAS"}
-						checked={!!infoHolder.jornada.boasVindas}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, boasVindas: value },
-							}));
-							setChanges((prev) => ({ ...prev, "jornada.boasVindas": value }));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"ASSINATURA DAS DOCUMENTAÇÕES"}
-						labelTrue={"ASSINATURA DAS DOCUMENTAÇÕES"}
-						checked={!!infoHolder.jornada.assDocumentacoes}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, assDocumentacoes: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.assDocumentacoes": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"COMPRA DO KIT"}
-						labelTrue={"COMPRA DO KIT"}
-						checked={!!infoHolder.jornada.compraDoKit}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, compraDoKit: value },
-							}));
-							setChanges((prev) => ({ ...prev, "jornada.compraDoKit": value }));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"NF FATURADA"}
-						labelTrue={"NF FATURADA"}
-						checked={!!infoHolder.jornada.nfFaturada}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, nfFaturada: value },
-							}));
-							setChanges((prev) => ({ ...prev, "jornada.nfFaturada": value }));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"PREVISÃO DE ENTREGA"}
-						labelTrue={"PREVISÃO DE ENTREGA"}
-						checked={!!infoHolder.jornada.prevChegada}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, prevChegada: value },
-							}));
-							setChanges((prev) => ({ ...prev, "jornada.prevChegada": value }));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"RESPOSTA DA CONCESSIONÁRIA"}
-						labelTrue={"RESPOSTA DA CONCESSIONÁRIA"}
-						checked={!!infoHolder.jornada.respConcessionaria}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, respConcessionaria: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.respConcessionaria": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"KIT ENTREGUE"}
-						labelTrue={"KIT ENTREGUE"}
-						checked={!!infoHolder.jornada.entregaDoKit}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, entregaDoKit: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.entregaDoKit": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"INSTALAÇÃO AGENDADA"}
-						labelTrue={"INSTALAÇÃO AGENDADA"}
-						checked={!!infoHolder.jornada.instalacaoAgendada}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, instalacaoAgendada: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.instalacaoAgendada": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"INSTALAÇÃO REALIZADA"}
-						labelTrue={"INSTALAÇÃO REALIZADA"}
-						checked={!!infoHolder.jornada.instalacaoRealizada}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, instalacaoRealizada: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.instalacaoRealizada": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"VISTORIA DA CONCESSIONÁRIA"}
-						labelTrue={"VISTORIA DA CONCESSIONÁRIA"}
-						checked={!!infoHolder.jornada.vistoriaConcessionaria}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, vistoriaConcessionaria: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.vistoriaConcessionaria": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"SISTEMA LIGADO"}
-						labelTrue={"SISTEMA LIGADO"}
-						checked={!!infoHolder.jornada.sistemaLigado}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, sistemaLigado: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.sistemaLigado": value,
-							}));
-						}}
-					/>
-					<CheckboxInput
-						labelFalse={"JORNADA CONCLUIDA"}
-						labelTrue={"JORNADA CONCLUIDA"}
-						checked={!!infoHolder.jornada.jornadaConcluida}
-						handleChange={(value) => {
-							setInfo((prev) => ({
-								...prev,
-								jornada: { ...prev.jornada, jornadaConcluida: value },
-							}));
-							setChanges((prev) => ({
-								...prev,
-								"jornada.jornadaConcluida": value,
-							}));
-						}}
-					/>
+					<div className="flex w-full flex-wrap justify-around gap-3">
+						{infoHolder.jornada.estagios.map((stage, index) => (
+							<div key={stage.ordem} className="w-fit">
+								<CheckboxInput
+									editable={editor}
+									labelFalse={stage.titulo}
+									labelTrue={stage.titulo}
+									checked={!!stage.concluido}
+									handleChange={(value) => {
+										const updatedStages = infoHolder.jornada.estagios.map((s, i) =>
+											i === index ? { ...s, concluido: value, dataConclusao: value ? new Date().toISOString() : null } : s,
+										);
+										setInfo((prev) => ({
+											...prev,
+											jornada: { ...prev.jornada, estagios: updatedStages },
+										}));
+										setChanges((prev) => ({ ...prev, "jornada.estagios": updatedStages }));
+									}}
+								/>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 		</div>

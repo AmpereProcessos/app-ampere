@@ -1,54 +1,47 @@
+import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG } from "@/lib/project-journeys";
+import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import type { THomologation } from "@/utils/schemas/partial/homologation";
 import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
 import dayjs from "dayjs";
+import { createNotification } from "../mutation/notifications";
 import { fetchFileReferencesByHomologationId } from "../query/crm/file-references";
 import { fetchHomologationById } from "../query/crm/homologations";
-import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
-import { createNotification } from "../mutation/notifications";
 
 type HandleSendNotificationToCobrancasParams = {
 	contractName: string;
 };
 export async function handleSendNotificationToCobrancas({ contractName }: HandleSendNotificationToCobrancasParams) {
-	try {
-		const notification: TCreateNotificationInput = {
-			notificadosIds: ["678560fb2ec7aa25e918151e"],
-			assunto: "NOVA APROVAÇÃO DE CONTRATO",
-			corpo: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Desde já agradeço, Volts.`,
-			enviarEmail: true,
-			enviarSMS: true,
-		};
-		await createNotification({ info: notification });
-		return "Notificação enviada com sucesso !";
-	} catch (error) {
-		throw error;
-	}
+	const notification: TCreateNotificationInput = {
+		notificadosIds: ["678560fb2ec7aa25e918151e"],
+		assunto: "NOVA APROVAÇÃO DE CONTRATO",
+		corpo: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Desde já agradeço, Volts.`,
+		enviarEmail: true,
+		enviarSMS: true,
+	};
+	await createNotification({ info: notification });
+	return "Notificação enviada com sucesso !";
 }
 type HandleSendEmailToCobrancasParams = {
 	requestId: string;
 	contractName: string;
 };
 export async function handleSendEmailToCobrancas({ requestId, contractName }: HandleSendEmailToCobrancasParams) {
-	try {
-		await axios.post("/api/integracao/email", {
-			emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
-			subject: "SOLICITAÇÃO DE CONTRATO",
-			message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${requestId} . Desde já agradeço, Volts.`,
-			copy: [
-				"comercial@ampereenergias.com.br",
-				// 'adm02@ampereenergias.com.br',
-				// 'estagioadm@ampereenergias.com.br',
-				"estagioadmampere@outlook.com",
-				"amperecontasareceber@outlook.com",
-				"felipe.tadeu@ampereenergias.com.br",
-			],
-		});
-		return "Email enviado com sucesso !";
-	} catch (error) {
-		throw error;
-	}
+	await axios.post("/api/integracao/email", {
+		emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
+		subject: "SOLICITAÇÃO DE CONTRATO",
+		message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${contractName}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${requestId} . Desde já agradeço, Volts.`,
+		copy: [
+			"comercial@ampereenergias.com.br",
+			// 'adm02@ampereenergias.com.br',
+			// 'estagioadm@ampereenergias.com.br',
+			"estagioadmampere@outlook.com",
+			"amperecontasareceber@outlook.com",
+			"felipe.tadeu@ampereenergias.com.br",
+		],
+	});
+	return "Email enviado com sucesso !";
 }
 
 function getObservationsForInstallationLocationChange({ willChange }: { willChange: boolean }) {
@@ -99,7 +92,8 @@ function getInverterInformation({ model, qty, power }: { model: number | string;
 function getOeMInformation({ applicable, plan }: { applicable: boolean; plan: string }) {
 	if (!applicable) return { duracao: 0, qtdeManutencoes: 0, manutencoes: [] };
 
-	if (plan === "MANUTENÇÃO SIMPLES" || plan === "MANUTENÇÃO SIMLES") return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: "MANUTENÇÃO", dataEfetivacao: null }] };
+	if (plan === "MANUTENÇÃO SIMPLES" || plan === "MANUTENÇÃO SIMLES")
+		return { duracao: 0, qtdeManutencoes: 1, manutencoes: [{ titulo: "MANUTENÇÃO", dataEfetivacao: null }] };
 
 	if (plan === "PLANO SOL")
 		return {
@@ -391,12 +385,17 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			dataFim: OeMInfo.dataFim,
 			plano: request.planoOeM,
 			qtdeModulos: request.qtdeModulosOem ? getProductInformation({ qty: request.qtdeModulosOem, power: request.potModulosOem || "" }).totalQty : null,
-			qtdeInversores: request.qtdeInversorOem ? getProductInformation({ qty: request.qtdeInversorOem, power: request.potInversorOem || "" }).totalQty : null,
+			qtdeInversores: request.qtdeInversorOem
+				? getProductInformation({ qty: request.qtdeInversorOem, power: request.potInversorOem || "" }).totalQty
+				: null,
 			valor: Number(request.valorOeMOuSeguro) || 0,
 		},
 		obra: {
 			laudo: request.laudo ? (request.laudo as TProjectDTO["obra"]["laudo"]) : "NÃO DEFINIDO",
-			observacoes: request.tipoDeServico === "MONTAGEM E DESMONTAGEM" ? getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal === "SIM" }) : "", // possibilidade de substituir \n por /, e quebrar textp em pontos
+			observacoes:
+				request.tipoDeServico === "MONTAGEM E DESMONTAGEM"
+					? getObservationsForInstallationLocationChange({ willChange: request.mudancaLocal === "SIM" })
+					: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
 			statusSolicitacao: "NÃO SOLICITADA",
 			entrada: undefined, // formatar como data
 			saida: undefined, // formatar como data.
@@ -444,24 +443,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 		},
 		ondeTrabalha: request.ondeTrabalha,
 		jornada: {
-			dataUltimoContato: undefined,
-			boasVindas: false,
-			assDocumentacoes: false,
-			compraDoKit: false,
-			nfFaturada: false,
-			prevChegada: false,
-			respConcessionaria: false,
-			entregaDoKit: false,
-			instalacaoAgendada: false,
-			vistoriaConcessionaria: false,
-			sistemaLigado: false,
-			jornadaConcluida: false,
-			dataNps: undefined,
-			cuidados: request.cuidadosContatoJornada,
-			contatos: request.nomeContatoJornadaDois
-				? `1º CONTATO - ${request.nomeContatoJornadaUm} (${request.telefoneContatoUm}) 2º CONTATO - ${request.nomeContatoJornadaDois} (${request.telefoneContatoDois})`
-				: `1º CONTATO - ${request.nomeContatoJornadaUm} (${request.telefoneContatoUm})`,
-			tipoEntregaTecnica: "REMOTO",
+			anotacoes: "",
+			estagios: UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG,
 		},
 		possuiDeficiencia: request.possuiDeficiencia,
 		qualDeficiencia: request.qualDeficiencia,
@@ -482,36 +465,32 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 }
 
 export async function getProjectHomologationInformation({ homologationId }: { homologationId: string }) {
-	try {
-		const homologation = await fetchHomologationById({ id: homologationId });
-		const homologationFileReferences = await fetchFileReferencesByHomologationId({ homologationId });
+	const homologation = await fetchHomologationById({ id: homologationId });
+	const homologationFileReferences = await fetchFileReferencesByHomologationId({ homologationId });
 
-		const projectHomologation: TProject["homologacao"] = {
-			homologar: true,
-			status: homologation.status,
-			potencia: homologation.potencia,
-			distribuidora: homologation.distribuidora,
-			pendencias: homologation.pendencias,
-			oportunidade: homologation.oportunidade,
-			titular: homologation.titular,
-			equipamentos: homologation.equipamentos,
-			localizacao: homologation.localizacao,
-			instalacao: homologation.instalacao,
-			documentacao: homologation.documentacao,
-			acesso: homologation.acesso,
-			atualizacoes: homologation.atualizacoes,
-			vistoria: homologation.vistoria,
-			dataEfetivacao: homologation.dataEfetivacao,
-			dataLiberacao: homologation.dataInsercao,
-		};
-		const projectHomologationFiles: TProject["links"]["projetos"] = homologationFileReferences.map((f) => ({
-			title: f.titulo.toUpperCase(),
-			format: f.formato,
-			link: f.url,
-			category: "HOMOLOGAÇÃO",
-		}));
-		return { projectHomologation, projectHomologationFiles };
-	} catch (error) {
-		throw error;
-	}
+	const projectHomologation: TProject["homologacao"] = {
+		homologar: true,
+		status: homologation.status,
+		potencia: homologation.potencia,
+		distribuidora: homologation.distribuidora,
+		pendencias: homologation.pendencias,
+		oportunidade: homologation.oportunidade,
+		titular: homologation.titular,
+		equipamentos: homologation.equipamentos,
+		localizacao: homologation.localizacao,
+		instalacao: homologation.instalacao,
+		documentacao: homologation.documentacao,
+		acesso: homologation.acesso,
+		atualizacoes: homologation.atualizacoes,
+		vistoria: homologation.vistoria,
+		dataEfetivacao: homologation.dataEfetivacao,
+		dataLiberacao: homologation.dataInsercao,
+	};
+	const projectHomologationFiles: TProject["links"]["projetos"] = homologationFileReferences.map((f) => ({
+		title: f.titulo.toUpperCase(),
+		format: f.formato,
+		link: f.url,
+		category: "HOMOLOGAÇÃO",
+	}));
+	return { projectHomologation, projectHomologationFiles };
 }

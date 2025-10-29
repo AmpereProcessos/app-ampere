@@ -79,12 +79,12 @@ function PosvendaContent({ session }: { session: TAuthSession }) {
 			};
 		const projectsQty = info.length;
 		const pendingContacts = info.reduce((acc, current) => {
-			const lastContact = current.jornada.dataUltimoContato;
+			const lastContact = current.jornada.dataUltimaInteracao;
 			// In case there's no contact
-			if (!lastContact) return (acc += 1);
+			if (!lastContact) return acc + 1;
 			// In case there's more than 7 days since contact
 			const sinceLastContact = dayjs().diff(lastContact, "day");
-			if (sinceLastContact >= 7) return (acc += 1);
+			if (sinceLastContact >= 7) return acc + 1;
 			return acc;
 		}, 0);
 		const docsToElaborate = info.reduce((acc, current) => {

@@ -45,6 +45,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 	const [activitiesMenuIsOpen, setActivitiesMenuIsOpen] = useState<boolean>(false);
 	const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false);
 
+	const stages = "estagios" in project.jornada ? project.jornada.estagios : [];
 	function getBarColor(lastContact: string | undefined | null) {
 		if (!lastContact) return "bg-red-500";
 		const sinceLastContact = dayjs().diff(lastContact, "day");
@@ -108,7 +109,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 	if (mode === "CARD")
 		return (
 			<div className="font border-primary/20 flex w-full gap-2 rounded-md border shadow-xs">
-				<div className={`h-full w-[7px] ${getBarColor(infoHolder.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
+				<div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimaInteracao)} rounded-tl-md rounded-bl-md`} />
 				<div className="flex w-full grow flex-col p-3">
 					<div className="flex w-full flex-col items-start justify-between lg:flex-row lg:items-center">
 						<div className="flex min-w-fit flex-wrap items-center gap-2">
@@ -124,15 +125,15 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 							<div className="text-primary/60 flex items-center gap-2">
 								<BsCalendarFill />
 								<p className="text-xs font-medium">
-									{project.jornada.dataUltimoContato ? formatDateAsLocale(project.jornada.dataUltimoContato) : "SEM CONTATO"}
+									{project.jornada.dataUltimaInteracao ? formatDateAsLocale(project.jornada.dataUltimaInteracao) : "SEM CONTATO"}
 								</p>
 							</div>
 							<button
 								type="button"
 								onClick={() => {
 									// @ts-ignore
-									handleUpdateProject({ id: projectId, changes: { "jornada.dataUltimoContato": new Date().toISOString() } });
-									setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, dataUltimoContato: new Date().toISOString() } }));
+									handleUpdateProject({ id: projectId, changes: { "jornada.dataUltimaInteracao": new Date().toISOString() } });
+									setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, dataUltimaInteracao: new Date().toISOString() } }));
 								}}
 								className="hover:bg-primary/70 flex items-center gap-1 rounded bg-black px-4 py-2 text-xs font-medium text-white duration-300 ease-in-out"
 							>
@@ -243,14 +244,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 									</div>
 								</>
 							) : null}
-							<div className="flex flex-col items-center lg:items-start">
-								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CONTATOS DA JORNADA</h1>
-								<h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.contatos || "NÃO DEFINIDO"}</h1>
-							</div>
-							<div className="flex flex-col items-center lg:items-start">
-								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">CUIDADOS NA JORNADA</h1>
-								<h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || "NÃO DEFINIDO"}</h1>
-							</div>
 						</div>
 						<div className="mt-3 flex w-full flex-col items-center justify-around gap-3 border border-cyan-500 p-2">
 							<div className="flex w-full items-center justify-between gap-2">
@@ -262,210 +255,31 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								</div>
 							</div>
 							<div className="flex w-full flex-wrap justify-around gap-3">
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"BOAS VINDAS"}
-										labelTrue={"BOAS VINDAS"}
-										checked={!!infoHolder.jornada.boasVindas}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.boasVindas": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, boasVindas: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"ASSINATURA DAS DOCUMENTAÇÕES"}
-										labelTrue={"ASSINATURA DAS DOCUMENTAÇÕES"}
-										checked={!!infoHolder.jornada.assDocumentacoes}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.assDocumentacoes": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, assDocumentacoes: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"COMPRA DO KIT"}
-										labelTrue={"COMPRA DO KIT"}
-										checked={!!infoHolder.jornada.compraDoKit}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.compraDoKit": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, compraDoKit: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"NF FATURADA"}
-										labelTrue={"NF FATURADA"}
-										checked={!!infoHolder.jornada.nfFaturada}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.nfFaturada": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, nfFaturada: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"PREVISÃO DE ENTREGA"}
-										labelTrue={"PREVISÃO DE ENTREGA"}
-										checked={!!infoHolder.jornada.prevChegada}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.prevChegada": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, prevChegada: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"RESPOSTA DA CONCESSIONÁRIA"}
-										labelTrue={"RESPOSTA DA CONCESSIONÁRIA"}
-										checked={!!infoHolder.jornada.respConcessionaria}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.respConcessionaria": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, respConcessionaria: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"KIT ENTREGUE"}
-										labelTrue={"KIT ENTREGUE"}
-										checked={!!infoHolder.jornada.entregaDoKit}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.entregaDoKit": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaDoKit: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"INSTALAÇÃO AGENDADA"}
-										labelTrue={"INSTALAÇÃO AGENDADA"}
-										checked={!!infoHolder.jornada.instalacaoAgendada}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.instalacaoAgendada": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoAgendada: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"INSTALAÇÃO REALIZADA"}
-										labelTrue={"INSTALAÇÃO REALIZADA"}
-										checked={!!infoHolder.jornada.instalacaoRealizada}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.instalacaoRealizada": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, instalacaoRealizada: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"VISTORIA DA CONCESSIONÁRIA"}
-										labelTrue={"VISTORIA DA CONCESSIONÁRIA"}
-										checked={!!infoHolder.jornada.vistoriaConcessionaria}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.vistoriaConcessionaria": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, vistoriaConcessionaria: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"SISTEMA LIGADO"}
-										labelTrue={"SISTEMA LIGADO"}
-										checked={!!infoHolder.jornada.sistemaLigado}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.sistemaLigado": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, sistemaLigado: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"ENTREGA TÉCNICA"}
-										labelTrue={"ENTREGA TÉCNICA"}
-										checked={!!infoHolder.jornada.entregaTecnica}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({ id: projectId, changes: { "jornada.entregaTecnica": value } });
-											setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaTecnica: value } }));
-										}}
-									/>
-								</div>
-								<div className="w-fit">
-									<CheckboxInput
-										editable={!isPending}
-										labelFalse={"JORNADA CONCLUIDA"}
-										labelTrue={"JORNADA CONCLUIDA"}
-										checked={!!infoHolder.jornada.jornadaConcluida}
-										handleChange={(value) => {
-											// @ts-ignore
-											handleUpdateProject({
-												id: projectId,
-												changes: {
-													"jornada.jornadaConcluida": value,
-													"jornada.dataConclusao": new Date().toISOString(),
-													"conferencias.energiaInjetada": {
-														data: new Date().toISOString(),
-														status: "REALIZADO",
-													},
-													"conferencias.usinaLigada": {
-														data: new Date().toISOString(),
-														status: "REALIZADO",
-													},
-												},
-											});
-											setInfo((prev) => ({
-												...prev,
-												conferencias: {
-													...prev.conferencias,
-													energiaInjetada: {
-														data: new Date().toISOString(),
-														status: "REALIZADO",
-													},
-													usinaLigada: {
-														data: new Date().toISOString(),
-														status: "REALIZADO",
-													},
-												},
-												jornada: { ...prev.jornada, jornadaConcluida: value, dataConclusao: new Date().toISOString() },
-											}));
-										}}
-									/>
-								</div>
+								{stages.map((stage, index) => (
+									<div key={stage.ordem} className="w-fit">
+										<CheckboxInput
+											editable={!isPending}
+											labelFalse={stage.titulo}
+											labelTrue={stage.titulo}
+											checked={!!stage.concluido}
+											handleChange={(value) => {
+												const updatedStages = stages.map((s, i) =>
+													i === index ? { ...s, concluido: value, dataConclusao: value ? new Date().toISOString() : null } : s,
+												);
+												handleUpdateProject({ id: projectId, changes: { "jornada.estagios": updatedStages } });
+											}}
+										/>
+									</div>
+								))}
 							</div>
 						</div>
 						<h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">ANOTAÇÕES</h1>
 						<textarea
-							value={infoHolder.jornada.obsJornada || undefined}
+							value={project.jornada.anotacoes || undefined}
 							placeholder="Preencha aqui anotações da jornada do cliente..."
-							onChange={(e) => setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, obsJornada: e.target.value } }))}
+							onChange={(e) => {
+								handleUpdateProject({ id: projectId, changes: { "jornada.anotacoes": e.target.value } });
+							}}
 							className="border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
 						/>
 
@@ -534,7 +348,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 	if (mode === "SIMPLIFIED")
 		return (
 			<div className="font border-primary/20 flex w-full gap-2 rounded-md border shadow-xs">
-				<div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`} />
+				<div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimaInteracao)} rounded-tl-md rounded-bl-md`} />
 				<div className="flex w-full grow flex-col p-3">
 					<div className="flex w-full items-center justify-between gap-2">
 						<div className="flex flex-wrap items-center gap-2">
@@ -556,8 +370,8 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 							<div className="text-primary/60 flex items-center gap-2">
 								<BsCalendarFill />
 								<p className="text-sm font-medium">
-									{project.jornada.dataUltimoContato
-										? `ÚLTIMO CONTATO EM: ${formatDateAsLocale(project.jornada.dataUltimoContato)}`
+									{project.jornada.dataUltimaInteracao
+										? `ÚLTIMO CONTATO EM: ${formatDateAsLocale(project.jornada.dataUltimaInteracao)}`
 										: "SEM REGISTRO DE CONTATO"}
 								</p>
 							</div>

@@ -4,6 +4,7 @@ import type { TClientDTO } from "./crm/client.schema";
 import { ProductItemSchema, ServiceItemSchema } from "./crm/kits.schema";
 import type { THomologation } from "./partial/homologation";
 import { GeneralHomologationSchema } from "./partial/homologation";
+import { ProjectJourneyLegacySchema, ProjectJourneySchema } from "./project-journey";
 import { PurchaseUpdateItemSchema } from "./purchases";
 
 export const RestrictionSchema = z.object({
@@ -276,32 +277,8 @@ const GeneralProjectSchema = z.object({
 		quemIndicou: z.string().optional().nullable(),
 	}),
 	insider: z.string().optional().nullable(),
-	jornada: z.object({
-		assDocumentacoes: z.boolean().optional().nullable(),
-		boasVindas: z.boolean().optional().nullable(),
-		compraDoKit: z.boolean().optional().nullable(),
-		dataEntregaTecnicaPresencial: z.string().optional().nullable(),
-		dataEntregaTecnicaRemota: z.string().optional().nullable(),
-		dataNps: z.string().optional().nullable(),
-		dataUltimoContato: z.string().optional().nullable(),
-		entregaDoKit: z.boolean().optional().nullable(),
-		entregaTecnica: z.boolean().optional().nullable(),
-		entregaTecnicaPresencial: z.boolean().optional().nullable(),
-		instalacaoAgendada: z.boolean().optional().nullable(),
-		instalacaoRealizada: z.boolean().optional().nullable(),
-		jornadaConcluida: z.boolean().optional().nullable(),
-		nfFaturada: z.boolean().optional().nullable(),
-		obsJornada: z.string().optional().nullable(),
-		obsNps: z.string().optional().nullable(),
-		prevChegada: z.boolean().optional().nullable(),
-		respConcessionaria: z.boolean().optional().nullable(),
-		sistemaLigado: z.boolean().optional().nullable(),
-		tipoEntregaTecnica: z.union([z.literal("REMOTO"), z.literal("PRESENCIAL")]),
-		vistoriaConcessionaria: z.boolean().optional().nullable(),
-		contatos: z.string().optional().nullable(),
-		cuidados: z.string().optional().nullable(),
-		dataConclusao: z.string().optional().nullable(),
-	}),
+	// jornada: z.union([ProjectJourneyLegacySchema, ProjectJourneySchema]),
+	jornada: ProjectJourneySchema,
 	linkDrive: z.string(),
 	links: z.object({
 		chamadosSuporte: z

@@ -1,5 +1,32 @@
 import z from "zod";
 
+export const ProjectJourneyLegacySchema = z.object({
+	assDocumentacoes: z.boolean().optional().nullable(),
+	boasVindas: z.boolean().optional().nullable(),
+	compraDoKit: z.boolean().optional().nullable(),
+	dataEntregaTecnicaPresencial: z.string().optional().nullable(),
+	dataEntregaTecnicaRemota: z.string().optional().nullable(),
+	dataNps: z.string().optional().nullable(),
+	dataUltimoContato: z.string().optional().nullable(),
+	entregaDoKit: z.boolean().optional().nullable(),
+	entregaTecnica: z.boolean().optional().nullable(),
+	entregaTecnicaPresencial: z.boolean().optional().nullable(),
+	instalacaoAgendada: z.boolean().optional().nullable(),
+	instalacaoRealizada: z.boolean().optional().nullable(),
+	jornadaConcluida: z.boolean().optional().nullable(),
+	nfFaturada: z.boolean().optional().nullable(),
+	obsJornada: z.string().optional().nullable(),
+	obsNps: z.string().optional().nullable(),
+	prevChegada: z.boolean().optional().nullable(),
+	respConcessionaria: z.boolean().optional().nullable(),
+	sistemaLigado: z.boolean().optional().nullable(),
+	tipoEntregaTecnica: z.union([z.literal("REMOTO"), z.literal("PRESENCIAL")]),
+	vistoriaConcessionaria: z.boolean().optional().nullable(),
+	contatos: z.string().optional().nullable(),
+	cuidados: z.string().optional().nullable(),
+	dataConclusao: z.string().optional().nullable(),
+});
+
 export const ProjectJourneyStageLegacySchema = z.object({
 	ordem: z.number({
 		required_error: "Ordem do estágio não informada.",
@@ -125,6 +152,10 @@ export const ProjectJourneyStageWorkflowSchema = z.object({
 		}),
 	),
 	gatilho: ProjectJourneyStageWorkflowActionTriggerNativeSchema,
+	concluido: z.boolean({
+		required_error: "Status de conclusão do estágio não informado.",
+		invalid_type_error: "Status de conclusão do estágio inválido.",
+	}),
 	dataConclusao: z
 		.string({
 			required_error: "Data de ativação não informada.",
@@ -137,20 +168,6 @@ export const ProjectJourneyStageWorkflowSchema = z.object({
 export type TProjectJourneyStageWorkflow = z.infer<typeof ProjectJourneyStageWorkflowSchema>;
 
 export const ProjectJourneySchema = z.object({
-	projeto: z.object({
-		id: z.string({
-			required_error: "ID do projeto é obrigatório",
-		}),
-		identificador: z.string({
-			required_error: "Identificador do projeto é obrigatório",
-		}),
-		nome: z.string({
-			required_error: "Nome do projeto é obrigatório",
-		}),
-		tipo: z.string({
-			required_error: "Tipo do projeto é obrigatório",
-		}),
-	}),
 	anotacoes: z.string({
 		required_error: "Anotações do projeto não informadas.",
 		invalid_type_error: "Anotações do projeto inválidas.",

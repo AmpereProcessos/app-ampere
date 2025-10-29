@@ -1,5 +1,85 @@
 import type { TProjectJourneyStageWorkflow } from "@/utils/schemas/project-journey";
 
+export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG = [
+	{
+		ordem: 1,
+		titulo: "BOAS VINDAS !",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 2,
+		titulo: "ASSINATURA DAS DOCUMENTAÇÕES",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 3,
+		titulo: "RESPOSTA DA CONCESSIONÁRIA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 4,
+		titulo: "COMPRA DO KIT",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 5,
+		titulo: "NF FATURADA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 6,
+		titulo: "PREVISÃO DE ENTREGA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 7,
+		titulo: "ENTREGA DO KIT",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 8,
+		titulo: "INSTALAÇÃO AGENDADA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 9,
+		titulo: "INSTALAÇÃO REALIZADA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 10,
+		titulo: "VISTORIA REALIZADA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 11,
+		titulo: "SISTEMA OPERANTE",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 12,
+		titulo: "ENTREGA TÉCNICA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+	{
+		ordem: 13,
+		titulo: "JORNADA CONCLUÍDA",
+		versao: "LEGADO" as const,
+		concluido: false,
+	},
+];
 export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 	id: string;
 	stages: TProjectJourneyStageWorkflow[];
@@ -20,6 +100,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "CONTRATO_ASSINADO",
@@ -38,6 +119,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "HOMOLOGACAO_ACESSO_LIBERADO",
@@ -56,6 +138,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "HOMOLOGACAO_ACESSO_LIBERADO",
@@ -74,6 +157,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "PAGAMENTO_EFETIVADO",
@@ -92,6 +176,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "ENTREGA_PREVISTA",
@@ -110,6 +195,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "ENTREGA_REALIZADA",
@@ -128,6 +214,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "ENTREGA_REALIZADA",
@@ -146,6 +233,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "EXECUCAO_AGENDADA",
@@ -164,6 +252,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "VISTORIA_SOLICITADA",
@@ -182,6 +271,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "VISTORIA_REALIZADA",
@@ -200,6 +290,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "ENERGIA_INJETADA",
@@ -218,6 +309,7 @@ export const UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG: {
 						},
 					},
 				],
+				concluido: false,
 				gatilho: {
 					tipo: "NATIVO",
 					evento: "JORNADA_CONCLUIDA",

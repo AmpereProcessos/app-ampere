@@ -19,6 +19,7 @@ import {
 import { formatPhoneAsBase } from "@/utils/methods/formatting";
 import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TWhatsappTemplate } from "@/utils/schemas/whatsapp-templates";
+import { convexClient } from "@/utils/services/convex/client";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import { ConvexHttpClient } from "convex/browser";
@@ -66,8 +67,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				console.error("[WHATSAPP_WEBHOOK] Convex URL not configured");
 				return res.status(500).json({ error: "Internal server error" });
 			}
-
-			const convex = new ConvexHttpClient(CONVEX_URL);
 
 			try {
 				// Check if this is a template event
@@ -171,7 +170,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					if (statusUpdate) {
 						const { status, whatsappStatus } = mapWhatsAppStatusToAppStatus(statusUpdate.status);
 
-						await convex.mutation(api.mutations.messages.updateMessageStatus, {
+						await convexClient.mutation(api.mutations.messages.updateMessageStatus, {
 							whatsappMessageId: statusUpdate.whatsappMessageId,
 							status,
 							whatsappStatus,
@@ -221,7 +220,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						if (incomingMessage.mediaId && incomingMessage.mimeType) {
 							try {
 								// Download and store media
-								mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+								mediaStorageData = await convexClient.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
 									mediaId: incomingMessage.mediaId,
 									mimeType: incomingMessage.mimeType,
 									filename: incomingMessage.filename,
@@ -246,7 +245,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						}
 
 						// Create message in Convex
-						await convex.mutation(api.mutations.messages.createMessage, {
+						await convexClient.mutation(api.mutations.messages.createMessage, {
 							cliente: {
 								idApp: clientId,
 								nome: incomingMessage.profileName,
@@ -333,7 +332,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 									let mediaStorageData = null;
 									if (historicalMessage.mediaId && historicalMessage.mimeType) {
 										try {
-											mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+											mediaStorageData = await convexClient.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
 												mediaId: historicalMessage.mediaId,
 												mimeType: historicalMessage.mimeType,
 												filename: historicalMessage.filename,
@@ -357,7 +356,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 									}
 
 									// Create historical message in Convex
-									await convex.mutation(api.mutations.messages.createMessage, {
+									await convexClient.mutation(api.mutations.messages.createMessage, {
 										cliente: {
 											idApp: clientId,
 											nome: existingClient?.nome || `Cliente ${clientPhone}`,
@@ -505,7 +504,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 								let mediaStorageData = null;
 								if (echo.mediaId && echo.mimeType) {
 									try {
-										mediaStorageData = await convex.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
+										mediaStorageData = await convexClient.action(api.actions.whatsapp.downloadAndStoreWhatsappMedia, {
 											mediaId: echo.mediaId,
 											mimeType: echo.mimeType,
 											filename: echo.filename,
@@ -529,7 +528,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 								}
 
 								// Create message echo in Convex (from business user via WhatsApp Business app)
-								await convex.mutation(api.mutations.messages.createMessage, {
+								await convexClient.mutation(api.mutations.messages.createMessage, {
 									cliente: {
 										idApp: clientId,
 										nome: existingClient?.nome || `Cliente ${echo.toPhoneNumber}`,

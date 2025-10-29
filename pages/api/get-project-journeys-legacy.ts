@@ -21,8 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const projects = await projectsCollection
 		.find(
 			{
-				"contrato.status": "ASSINADO",
-				tipoDeServico: { $nin: ["OPERAÇÃO E MANUTENÇÃO", "CONSÓRCIO DE ENERGIA", "MONITORAMENTO"] },
+				"jornada.estagios": null,
 			},
 			{
 				sort: {

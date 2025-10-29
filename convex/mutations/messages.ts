@@ -110,10 +110,11 @@ export const createMessage = mutation({
 
 		// ## THIRD, DEFINING SERVICE DATA
 		let serviceId: Id<"services"> | null = null;
+		let responsible: "ai" | Id<"users"> | undefined;
+
 		const service = await ctx.db
 			.query("services")
-			.filter((q) => q.eq(q.field("chatId"), chatId))
-			.filter((q) => q.eq(q.field("status"), "PENDENTE"))
+			.filter((q) => q.and(q.eq(q.field("chatId"), chatId), q.eq(q.field("status"), "PENDENTE")))
 			.first();
 		if (!service) {
 			// If no service was found, we only create one if the autor is a user
@@ -126,6 +127,7 @@ export const createMessage = mutation({
 				dataInicio: Date.now(),
 			});
 			serviceId = insertServiceResponse;
+			responsible = args.autor.tipo === "usuario" ? (authorId as Id<"users">) : "ai";
 		} else {
 			// If service is already registered, we get the its id
 			serviceId = service._id;
@@ -134,6 +136,9 @@ export const createMessage = mutation({
 				await ctx.db.patch(serviceId, {
 					responsavel: authorId as Id<"users">,
 				});
+				responsible = authorId as Id<"users">;
+			} else {
+				responsible = service.responsavel;
 			}
 		}
 
@@ -156,20 +161,7 @@ export const createMessage = mutation({
 			dataEnvio: Date.now(),
 		});
 
-		// ## FIFTH, SCHEDULE AI MEDIA PROCESSING
-		// If message has media, schedule AI processing for both incoming and outgoing messages
-		if (args.conteudo.midiaStorageId && args.conteudo.midiaTipo) {
-			console.log("[CREATE_MESSAGE] Scheduling AI media processing for message:", insertMessageResponse);
-			await ctx.scheduler.runAfter(1000, internal.actions.ai.processMediaWithAI, {
-				messageId: insertMessageResponse,
-				storageId: args.conteudo.midiaStorageId,
-				mediaType: args.conteudo.midiaTipo,
-				mimeType: args.conteudo.midiaMimeType || "application/octet-stream",
-				filename: args.conteudo.midiaFileName,
-			});
-		}
-
-		// ## SIXTH, UPDATING CHAT DATA
+		// ## FIFTH, UPDATING CHAT DATA
 		// Updating chat embedded data
 		const baseUpdateData = {
 			ultimaMensagemId: insertMessageResponse,
@@ -191,7 +183,7 @@ export const createMessage = mutation({
 			await ctx.db.patch(chatId, baseUpdateData);
 		}
 
-		// ## SEVENTH, SCHEDULING
+		// ## SIXTH, SCHEDULING
 		// Schedule WhatsApp message send for user messages
 		if (args.autor.tipo === "usuario" && (args.conteudo.texto || args.conteudo.midiaStorageId)) {
 			const currentChat = await ctx.db.get(chatId);
@@ -229,7 +221,23 @@ export const createMessage = mutation({
 				throw new Error("Conversa expirada. Por favor, envie um template para continuar.");
 			}
 		}
-		if (args.autor.tipo === "cliente") {
+
+		// # AI RELATED TASKS
+		// ## SEVENTH, SCHEDULE AI MEDIA PROCESSING
+		// If message has media, schedule AI processing for both incoming and outgoing messages
+		if (args.conteudo.midiaStorageId && args.conteudo.midiaTipo) {
+			console.log("[CREATE_MESSAGE] Scheduling AI media processing for message:", insertMessageResponse);
+			await ctx.scheduler.runAfter(1000, internal.actions.ai.processMediaWithAI, {
+				messageId: insertMessageResponse,
+				storageId: args.conteudo.midiaStorageId,
+				mediaType: args.conteudo.midiaTipo,
+				mimeType: args.conteudo.midiaMimeType || "application/octet-stream",
+				filename: args.conteudo.midiaFileName,
+			});
+		}
+		// ## EIGHTH, SCHEDULE AI RESPONSE GENERATION
+		// If message is from client and the responsible is AI, we schedule the AI response generation
+		if (args.autor.tipo === "cliente" && responsible === "ai") {
 			// We schedule the AI response generation
 			await ctx.scheduler.runAfter(3000, internal.actions.ai.generateAIResponse, {
 				chatId: chatId,

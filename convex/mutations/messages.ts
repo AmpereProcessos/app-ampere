@@ -225,15 +225,14 @@ export const createMessage = mutation({
 
 		// # AI WORKFLOW
 		// Start AI processing workflow for both media and response generation
-		const shouldGenerateAIResponse = args.autor.tipo === "cliente" && responsible === "ai";
+		const sendAIResponse = args.autor.tipo === "cliente" && responsible === "ai";
 		const hasMedia = Boolean(args.conteudo.midiaStorageId && args.conteudo.midiaTipo);
 
-		if (hasMedia || shouldGenerateAIResponse) {
+		if (hasMedia || sendAIResponse) {
 			await workflow.start(ctx, internal.workflows.aiProcessing.aiMessageProcessingWorkflow, {
 				messageId: insertMessageResponse,
 				chatId: chatId,
-				hasMedia,
-				mediaData:
+				media:
 					hasMedia && args.conteudo.midiaStorageId && args.conteudo.midiaTipo
 						? {
 								storageId: args.conteudo.midiaStorageId,
@@ -242,8 +241,7 @@ export const createMessage = mutation({
 								filename: args.conteudo.midiaFileName,
 							}
 						: undefined,
-				shouldGenerateAIResponse,
-				autorTipo: args.autor.tipo,
+				sendAIResponse: sendAIResponse,
 			});
 		}
 		return {

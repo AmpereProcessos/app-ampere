@@ -5,8 +5,7 @@ export const aiMessageProcessingWorkflow = workflow.define({
 	args: {
 		messageId: v.id("messages"),
 		chatId: v.id("chats"),
-		hasMedia: v.boolean(),
-		mediaData: v.optional(
+		media: v.optional(
 			v.object({
 				storageId: v.id("_storage"),
 				mediaType: v.union(v.literal("IMAGEM"), v.literal("VIDEO"), v.literal("AUDIO"), v.literal("DOCUMENTO")),
@@ -14,8 +13,7 @@ export const aiMessageProcessingWorkflow = workflow.define({
 				filename: v.optional(v.string()),
 			}),
 		),
-		shouldGenerateAIResponse: v.boolean(),
-		autorTipo: v.string(),
+		sendAIResponse: v.boolean(),
 	},
 	returns: v.object({ success: v.boolean() }),
 	handler: async (step, args): Promise<{ success: boolean }> => {
@@ -24,17 +22,17 @@ export const aiMessageProcessingWorkflow = workflow.define({
 		let mediaProcessingFailed = false;
 
 		// STEP 1: Process media if present
-		if (args.hasMedia && args.mediaData) {
+		if (args.media) {
 			console.log("[AI_WORKFLOW] Processing media for message:", args.messageId);
 
 			const mediaResult = await step.runAction(
 				internal.actions.ai.processMediaWithAI,
 				{
 					messageId: args.messageId,
-					storageId: args.mediaData.storageId,
-					mediaType: args.mediaData.mediaType,
-					mimeType: args.mediaData.mimeType || "application/octet-stream",
-					filename: args.mediaData.filename,
+					storageId: args.media.storageId,
+					mediaType: args.media.mediaType,
+					mimeType: args.media.mimeType || "application/octet-stream",
+					filename: args.media.filename,
 				},
 				{
 					name: "process-media",
@@ -58,10 +56,10 @@ export const aiMessageProcessingWorkflow = workflow.define({
 
 		// STEP 2: Generate AI response if needed
 		// Only if:
-		// - shouldGenerateAIResponse is true
+		// - requiresAIResponse is true
 		// - author is a client
 		// - media processing didn't fail
-		if (args.shouldGenerateAIResponse && args.autorTipo === "cliente" && !mediaProcessingFailed) {
+		if (args.sendAIResponse && !mediaProcessingFailed) {
 			console.log("[AI_WORKFLOW] Scheduling AI response generation for chat:", args.chatId);
 
 			const aiResponseResult = await step.runAction(

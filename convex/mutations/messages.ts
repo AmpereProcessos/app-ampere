@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import { internalMutation, mutation } from "../_generated/server";
+import { workflow } from "../workflows";
 
 export const createMessage = mutation({
 	args: {
@@ -222,26 +223,27 @@ export const createMessage = mutation({
 			}
 		}
 
-		// # AI RELATED TASKS
-		// ## SEVENTH, SCHEDULE AI MEDIA PROCESSING
-		// If message has media, schedule AI processing for both incoming and outgoing messages
-		if (args.conteudo.midiaStorageId && args.conteudo.midiaTipo) {
-			console.log("[CREATE_MESSAGE] Scheduling AI media processing for message:", insertMessageResponse);
-			await ctx.scheduler.runAfter(1000, internal.actions.ai.processMediaWithAI, {
+		// # AI WORKFLOW
+		// Start AI processing workflow for both media and response generation
+		const shouldGenerateAIResponse = args.autor.tipo === "cliente" && responsible === "ai";
+		const hasMedia = Boolean(args.conteudo.midiaStorageId && args.conteudo.midiaTipo);
+
+		if (hasMedia || shouldGenerateAIResponse) {
+			await workflow.start(ctx, internal.workflows.aiProcessing.aiMessageProcessingWorkflow, {
 				messageId: insertMessageResponse,
-				storageId: args.conteudo.midiaStorageId,
-				mediaType: args.conteudo.midiaTipo,
-				mimeType: args.conteudo.midiaMimeType || "application/octet-stream",
-				filename: args.conteudo.midiaFileName,
-			});
-		}
-		// ## EIGHTH, SCHEDULE AI RESPONSE GENERATION
-		// If message is from client and the responsible is AI, we schedule the AI response generation
-		if (args.autor.tipo === "cliente" && responsible === "ai") {
-			// We schedule the AI response generation
-			await ctx.scheduler.runAfter(3000, internal.actions.ai.generateAIResponse, {
 				chatId: chatId,
-				scheduleAt: new Date().toISOString(),
+				hasMedia,
+				mediaData:
+					hasMedia && args.conteudo.midiaStorageId && args.conteudo.midiaTipo
+						? {
+								storageId: args.conteudo.midiaStorageId,
+								mediaType: args.conteudo.midiaTipo,
+								mimeType: args.conteudo.midiaMimeType,
+								filename: args.conteudo.midiaFileName,
+							}
+						: undefined,
+				shouldGenerateAIResponse,
+				autorTipo: args.autor.tipo,
 			});
 		}
 		return {

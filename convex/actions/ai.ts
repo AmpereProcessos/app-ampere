@@ -252,7 +252,7 @@ export const processMediaWithAI = internalAction({
 		mimeType: v.string(),
 		filename: v.optional(v.string()),
 	},
-	handler: async (ctx, args) => {
+	handler: async (ctx, args): Promise<{ success: boolean; processedText?: string; summary?: string; error?: string }> => {
 		console.log("[AI_MEDIA] Processing media for message:", args.messageId, "Type:", args.mediaType);
 
 		try {

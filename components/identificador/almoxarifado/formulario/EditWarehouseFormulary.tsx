@@ -8,6 +8,7 @@ import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDr
 import type { TAuthSession } from "@/lib/authentication/types";
 import { equipesTecnicas, serviceOrdersCategories } from "@/utils/constants";
 import { formatToCEP } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { createExpense } from "@/utils/methods/mutation/expenses";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { updateManyMaterials } from "@/utils/methods/mutation/materials";
@@ -195,6 +196,7 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 		},
 		onError: async (error) => {
 			if (callbacks?.onError) callbacks.onError(error);
+			return toast.error(getErrorMessage(error));
 		},
 	});
 	const { mutate: handleDelete, isPending: loadingDelete } = useMutationWithFeedback({

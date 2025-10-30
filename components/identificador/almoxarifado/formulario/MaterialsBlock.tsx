@@ -50,14 +50,9 @@ function MaterialsBlock({
 		// In case it isnt in the list, pushing it to the list holder
 		if (!materialInList) materialsList.push({ id, nome, preco, grandeza: grandeza || "UN", qtdeRetirada: qtde, qtdeDevolucao: 0 });
 
-		// Checking if qty in the list plus additional qty surpasses the qty in stock
-		if (!!materialInList && materialInList.qtdeRetirada + qtde > currentQty)
-			return toast.error(`Quantidade adicional excede o estoque atual contabilizado de ${currentQty}`);
 		if (materialInListIndex !== -1) materialsList[materialInListIndex].qtdeRetirada += qtde;
 
-		// In case formulary isnt created yet, just updating materials list array
-		if (!formularyId) return setFormHolder((prev) => ({ ...prev, materiais: materialsList }));
-
+		toast.success(`Material ${nome} adicionado com sucesso`);
 		return setFormHolder((prev) => ({ ...prev, materiais: materialsList }));
 	}
 	async function removeMaterial({ id, index }: { id?: string | null; index: number }) {

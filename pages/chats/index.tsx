@@ -1,4 +1,5 @@
 import ChatsHubComposable from "@/components/identificador/chats/ChatsHub.Composable";
+import ChatsHubImproved from "@/components/identificador/chats/ChatsHub.Improved";
 import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { useSession } from "@/components/providers/SessionProvider";
 import ErrorComponent from "@/components/utils/ErrorComponent";

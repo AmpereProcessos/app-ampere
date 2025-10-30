@@ -10,24 +10,96 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useQuery } from "convex/react";
-import { ImageIcon, MessageCircle } from "lucide-react";
+import { ImageIcon, Loader2, MessageCircle } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDebounce, useLoadMoreChats } from "../hooks/usePaginatedChats";
 import { useChatHub } from "./context";
 
 export type ChatHubListProps = {
 	className?: string;
 	onChatSelect?: (chatId: string) => void;
+	searchQuery?: string;
 };
 
-export function List({ className, onChatSelect }: ChatHubListProps) {
+export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListProps) {
 	const { selectedPhoneNumber, selectedChatId, setSelectedChatId } = useChatHub();
+	const debouncedSearchQuery = useDebounce(searchQuery, 300);
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const [allChats, setAllChats] = useState<any[]>([]);
+	const [nextCursor, setNextCursor] = useState<string | null>(null);
+	const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-	const chats = useQuery(api.queries.chat.getChats, selectedPhoneNumber ? { whatsappPhoneNumberId: selectedPhoneNumber } : "skip");
+	// Initial load
+	const initialResult = useQuery(
+		api.queries.chat.getChats,
+		selectedPhoneNumber
+			? {
+					whatsappPhoneNumberId: selectedPhoneNumber,
+					paginationOpts: {
+						cursor: null,
+						numItems: 20,
+					},
+					searchQuery: debouncedSearchQuery || undefined,
+			  }
+			: "skip"
+	);
+
+	// Load more chats
+	const moreChatsResult = useLoadMoreChats(selectedPhoneNumber, isLoadingMore ? nextCursor : null, debouncedSearchQuery);
+
+	// Reset when search changes or phone number changes
+	useEffect(() => {
+		setAllChats([]);
+		setNextCursor(null);
+		setIsLoadingMore(false);
+	}, [debouncedSearchQuery, selectedPhoneNumber]);
+
+	// Update chats when initial result loads
+	useEffect(() => {
+		if (initialResult) {
+			setAllChats(initialResult.items);
+			setNextCursor(initialResult.nextCursor);
+		}
+	}, [initialResult]);
+
+	// Append more chats when loading more
+	useEffect(() => {
+		if (moreChatsResult && isLoadingMore) {
+			setAllChats((prev) => [...prev, ...moreChatsResult.items]);
+			setNextCursor(moreChatsResult.nextCursor);
+			setIsLoadingMore(false);
+		}
+	}, [moreChatsResult, isLoadingMore]);
+
+	// Infinite scroll handler
+	const handleScroll = useCallback(() => {
+		if (!scrollRef.current || isLoadingMore || !nextCursor) return;
+
+		const container = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+		if (!container) return;
+
+		const { scrollTop, scrollHeight, clientHeight } = container;
+		const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+
+		if (isNearBottom && initialResult?.hasMore) {
+			setIsLoadingMore(true);
+		}
+	}, [isLoadingMore, nextCursor, initialResult?.hasMore]);
+
+	useEffect(() => {
+		const container = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+		if (container) {
+			container.addEventListener("scroll", handleScroll);
+			return () => container.removeEventListener("scroll", handleScroll);
+		}
+	}, [handleScroll]);
 
 	const handleSelectChat = (chatId: string) => {
 		setSelectedChatId(chatId as Id<"chats">);
 		onChatSelect?.(chatId);
 	};
 
+	// No phone number selected
 	if (!selectedPhoneNumber) {
 		return (
 			<div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
@@ -37,7 +109,8 @@ export function List({ className, onChatSelect }: ChatHubListProps) {
 		);
 	}
 
-	if (!chats) {
+	// Initial loading
+	if (!initialResult) {
 		return (
 			<div className={cn("flex flex-col gap-3 p-3", className)}>
 				{Array.from({ length: 5 }).map((_, i) => (
@@ -47,29 +120,52 @@ export function List({ className, onChatSelect }: ChatHubListProps) {
 		);
 	}
 
-	if (chats.length === 0) {
+	// No chats found
+	if (allChats.length === 0) {
 		return (
 			<div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
 				<MessageCircle className="w-12 h-12 text-primary/20 mb-3" />
-				<p className="text-sm text-primary/60 font-medium">Nenhum chat ainda</p>
-				<p className="text-xs text-primary/40 mt-1">Inicie uma nova conversa clicando no botão +</p>
+				<p className="text-sm text-primary/60 font-medium">
+					{debouncedSearchQuery ? "Nenhum chat encontrado" : "Nenhum chat ainda"}
+				</p>
+				<p className="text-xs text-primary/40 mt-1">
+					{debouncedSearchQuery ? "Tente outro termo de busca" : "Inicie uma nova conversa clicando no botão +"}
+				</p>
 			</div>
 		);
 	}
 
 	return (
-		<ScrollArea className={cn("flex-1 w-full", className)}>
+		<ScrollArea ref={scrollRef} className={cn("flex-1 w-full", className)}>
 			<div className="flex flex-col gap-2 p-3">
-				{chats.map((chat) => (
+				{allChats.map((chat) => (
 					<ChatItem key={chat._id} chat={chat} isSelected={selectedChatId === chat._id} onSelect={() => handleSelectChat(chat._id)} />
 				))}
+
+				{/* Loading More Indicator */}
+				{isLoadingMore && (
+					<div className="flex items-center justify-center py-4">
+						<Loader2 className="w-5 h-5 animate-spin text-primary/60" />
+					</div>
+				)}
+
+				{/* Load More Button (alternative to infinite scroll) */}
+				{!isLoadingMore && nextCursor && initialResult?.hasMore && (
+					<Button
+						variant="ghost"
+						onClick={() => setIsLoadingMore(true)}
+						className="w-full mt-2 text-primary/60 hover:text-primary hover:bg-primary/5"
+					>
+						Carregar mais conversas
+					</Button>
+				)}
 			</div>
 		</ScrollArea>
 	);
 }
 
 type ChatItemProps = {
-	chat: NonNullable<ReturnType<typeof useQuery<typeof api.queries.chat.getChats>>>[number];
+	chat: any;
 	isSelected: boolean;
 	onSelect: () => void;
 };

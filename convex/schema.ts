@@ -29,7 +29,12 @@ export default defineSchema({
 		telefone: v.string(),
 		avatar_url: v.optional(v.string()),
 		idApp: v.string(),
-	}),
+	})
+		.index("by_idApp", ["idApp"])
+		.searchIndex("search_by_name", {
+			searchField: "nome",
+			filterFields: ["idApp"],
+		}),
 	chats: defineTable({
 		clienteId: v.id("clients"),
 		whatsappTelefoneId: v.string(),
@@ -43,7 +48,13 @@ export default defineSchema({
 		status: v.union(v.literal("ABERTA"), v.literal("EXPIRADA")),
 		ultimaInteracaoClienteData: v.optional(v.number()),
 		aiAgendamentoRespostaData: v.optional(v.number()),
-	}).index("by_client_id", ["clienteId"]),
+	})
+		.index("by_client_id", ["clienteId"])
+		.index("by_whatsapp_phone_and_date", ["whatsappTelefoneId", "ultimaMensagemData"])
+		.searchIndex("search_by_content", {
+			searchField: "ultimaMensagemConteudoTexto",
+			filterFields: ["whatsappTelefoneId", "status"],
+		}),
 	messages: defineTable({
 		chatId: v.id("chats"),
 		autorTipo: v.union(v.literal("cliente"), v.literal("usuario"), v.literal("ai")),
@@ -66,6 +77,7 @@ export default defineSchema({
 		dataEnvio: v.number(),
 	})
 		.index("by_chat_id", ["chatId"])
+		.index("by_chat_and_date", ["chatId", "dataEnvio"])
 		.index("by_author_id", ["autorId"])
 		.index("by_whatsapp_message_id", ["whatsappMessageId"]),
 	services: defineTable({

@@ -51,6 +51,7 @@ export default function ChatsHubComposable({
 function ChatHubContent() {
 	const { selectedPhoneNumber, setSelectedChatId } = ChatHub.useChatHub();
 	const [newChatMenuIsOpen, setNewChatMenuIsOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 	const getChatByClientAppId = useMutation(api.mutations.chats.getChatByClientAppId);
 
 	const handleNewChat = () => {
@@ -98,10 +99,15 @@ function ChatHubContent() {
 				listPanel={
 					<>
 						{/* List Header - Phone selector and new chat button */}
-						<ChatHub.Header onNewChat={handleNewChat} />
+						<ChatHub.Header
+							onNewChat={handleNewChat}
+							showSearch={true}
+							searchQuery={searchQuery}
+							onSearchChange={setSearchQuery}
+						/>
 
 						{/* Chat List - Displays all conversations */}
-						<ChatHub.List />
+						<ChatHub.List searchQuery={searchQuery} />
 					</>
 				}
 				contentPanel={

@@ -1,14 +1,15 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
-import { AlertCircle, ArrowDown, Check, CheckCheck, Clock } from "lucide-react";
-import { useCallback } from "react";
+import { AlertCircle, ArrowDown, Check, CheckCheck, Clock, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import MediaMessageDisplay from "../MediaMessageDisplay";
+import { useLoadOlderMessages } from "../hooks/usePaginatedChats";
 import { useChatHub } from "./context";
-import { Button } from "@/components/ui/button";
 
 export type ChatHubMessagesProps = {
 	className?: string;
@@ -17,23 +18,72 @@ export type ChatHubMessagesProps = {
 
 export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 	const { selectedChatId } = useChatHub();
+	const [allMessages, setAllMessages] = useState<any[]>([]);
+	const [nextCursor, setNextCursor] = useState<string | null>(null);
+	const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+	const previousChatId = useRef(selectedChatId);
 
-	const chatMessages = useQuery(
+	// Initial load (most recent messages)
+	const initialResult = useQuery(
 		api.queries.chat.getChatMessages,
-		selectedChatId ? { chatId: selectedChatId } : "skip",
+		selectedChatId
+			? {
+					chatId: selectedChatId,
+					paginationOpts: {
+						cursor: null,
+						numItems: 30,
+					},
+			  }
+			: "skip"
 	);
 
-	if (!chatMessages) {
+	// Load older messages
+	const olderMessagesResult = useLoadOlderMessages(
+		selectedChatId ? (selectedChatId as string) : null,
+		isLoadingOlder ? nextCursor : null
+	);
+
+	// Reset when chat changes
+	useEffect(() => {
+		if (selectedChatId !== previousChatId.current) {
+			previousChatId.current = selectedChatId;
+			setAllMessages([]);
+			setNextCursor(null);
+			setIsLoadingOlder(false);
+		}
+	}, [selectedChatId]);
+
+	// Update messages when initial result loads
+	useEffect(() => {
+		if (initialResult && selectedChatId === previousChatId.current) {
+			setAllMessages(initialResult.items);
+			setNextCursor(initialResult.nextCursor);
+		}
+	}, [initialResult, selectedChatId]);
+
+	// Prepend older messages when loading more
+	useEffect(() => {
+		if (olderMessagesResult && isLoadingOlder) {
+			setAllMessages((prev) => [...olderMessagesResult.items, ...prev]);
+			setNextCursor(olderMessagesResult.nextCursor);
+			setIsLoadingOlder(false);
+		}
+	}, [olderMessagesResult, isLoadingOlder]);
+
+	// Initial loading state
+	if (!initialResult) {
 		return (
 			<div className={cn("flex-1 flex items-center justify-center bg-background/50", className)}>
 				<div className="flex flex-col items-center gap-2">
-					<div className="animate-pulse text-primary/40">Carregando mensagens...</div>
+					<Loader2 className="w-8 h-8 animate-spin text-primary/40" />
+					<div className="text-sm text-primary/60">Carregando mensagens...</div>
 				</div>
 			</div>
 		);
 	}
 
-	if (chatMessages.length === 0) {
+	// Empty state
+	if (allMessages.length === 0) {
 		return (
 			<div className={cn("flex-1 flex items-center justify-center bg-background/50", className)}>
 				{emptyState || (
@@ -55,7 +105,7 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 				"relative flex-1 flex flex-col overflow-y-auto",
 				"bg-gradient-to-b from-background/50 to-background",
 				"scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent",
-				className,
+				className
 			)}
 			initial="smooth"
 			resize="smooth"
@@ -63,9 +113,31 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 			aria-live="polite"
 		>
 			<StickToBottom.Content className="p-4 space-y-1">
-				{chatMessages.map((message, index) => {
-					const previousMessage = index > 0 ? chatMessages[index - 1] : null;
-					const nextMessage = index < chatMessages.length - 1 ? chatMessages[index + 1] : null;
+				{/* Load Older Messages Button */}
+				{nextCursor && initialResult?.hasMore && (
+					<div className="flex items-center justify-center mb-4">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setIsLoadingOlder(true)}
+							disabled={isLoadingOlder}
+							className="shadow-sm"
+						>
+							{isLoadingOlder ? (
+								<>
+									<Loader2 className="w-4 h-4 animate-spin mr-2" />
+									Carregando...
+								</>
+							) : (
+								"Carregar mensagens anteriores"
+							)}
+						</Button>
+					</div>
+				)}
+
+				{allMessages.map((message, index) => {
+					const previousMessage = index > 0 ? allMessages[index - 1] : null;
+					const nextMessage = index < allMessages.length - 1 ? allMessages[index + 1] : null;
 
 					const isUser = message.autorTipo === "usuario" || message.autorTipo === "ai";
 					const isSameAuthorAsPrevious = previousMessage?.autorTipo === message.autorTipo;
@@ -88,7 +160,7 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 }
 
 type MessageBubbleProps = {
-	message: NonNullable<ReturnType<typeof useQuery<typeof api.queries.chat.getChatMessages>>>[number];
+	message: any;
 	isUser: boolean;
 	isSameAuthorAsPrevious: boolean;
 	isSameAuthorAsNext: boolean;
@@ -111,7 +183,7 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 			className={cn(
 				"flex w-full animate-in fade-in slide-in-from-bottom-2 duration-300",
 				marginTop,
-				isUser ? "justify-end" : "justify-start",
+				isUser ? "justify-end" : "justify-start"
 			)}
 		>
 			<div
@@ -121,7 +193,7 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 					roundedClasses,
 					isUser
 						? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-						: "bg-card border border-primary/10 text-primary",
+						: "bg-card border border-primary/10 text-primary"
 				)}
 			>
 				{/* Message Content */}
@@ -147,7 +219,7 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 					<div
 						className={cn(
 							"flex items-center gap-1.5 mt-1.5 justify-end",
-							isUser ? "text-blue-100/90" : "text-primary/60",
+							isUser ? "text-blue-100/90" : "text-primary/60"
 						)}
 					>
 						<time className="text-[10px] font-medium">
@@ -171,34 +243,14 @@ type MessageStatusIconProps = {
 function MessageStatusIcon({ status }: MessageStatusIconProps) {
 	switch (status) {
 		case "PENDENTE":
-			return (
-				<Clock
-					className="w-3.5 h-3.5 animate-pulse"
-					aria-label="Pendente"
-				/>
-			);
+			return <Clock className="w-3.5 h-3.5 animate-pulse" aria-label="Pendente" />;
 		case "ENVIADO":
-			return (
-				<Check
-					className="w-3.5 h-3.5"
-					aria-label="Enviado"
-				/>
-			);
+			return <Check className="w-3.5 h-3.5" aria-label="Enviado" />;
 		case "ENTREGUE":
 		case "LIDO":
-			return (
-				<CheckCheck
-					className="w-3.5 h-3.5"
-					aria-label="Entregue"
-				/>
-			);
+			return <CheckCheck className="w-3.5 h-3.5" aria-label="Entregue" />;
 		case "FALHOU":
-			return (
-				<AlertCircle
-					className="w-3.5 h-3.5 text-red-300"
-					aria-label="Falhou"
-				/>
-			);
+			return <AlertCircle className="w-3.5 h-3.5 text-red-300" aria-label="Falhou" />;
 		default:
 			return null;
 	}
@@ -220,7 +272,7 @@ function ScrollToBottomButton() {
 				"rounded-full shadow-lg border-2 border-background",
 				"bg-card hover:bg-card/90 text-primary",
 				"animate-in fade-in slide-in-from-bottom-2 duration-300",
-				"transition-transform hover:scale-105",
+				"transition-transform hover:scale-105"
 			)}
 			onClick={handleScrollToBottom}
 			size="icon"

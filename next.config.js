@@ -38,6 +38,10 @@ const nextConfig = {
 				hostname: "gkbkgoyxtxdvxfomwijd.supabase.co",
 			},
 			{
+				protocol: "https",
+				hostname: "fortunate-dotterel-211.convex.cloud",
+			},
+			{
 				protocol: "http",
 				hostname: "localhost",
 			},

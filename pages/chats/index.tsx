@@ -1,4 +1,4 @@
-import ChatsHub from "@/components/identificador/chats/ChatsHub";
+import ChatsHubComposable from "@/components/identificador/chats/ChatsHub.Composable";
 import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { useSession } from "@/components/providers/SessionProvider";
 import ErrorComponent from "@/components/utils/ErrorComponent";
@@ -26,14 +26,15 @@ function ChatsContent({ session, userHasMessageSendingPermission }: { session: T
 	const { data: whatsappConnection, isPending, isError, isSuccess } = useConvexQuery(api.queries.connections.getWhatsappConnection);
 	return (
 		<div className="flex flex-col gap-6 grow p-6">
-			<div className="border-primary/20 flex items-center justify-between border-b p-1">
-				<h1 className="text-start text-2xl font-black text-[#15599a] uppercase">Chats</h1>
-			</div>
 			{isPending ? <h3 className="text-sm text-primary/60 animate-pulse py-4 text-center">Carregando conexão...</h3> : null}
 			{isError ? <ErrorComponent msg="Erro ao carregar conexão do WhatsApp Business." /> : null}
 			{isSuccess ? (
 				whatsappConnection ? (
-					<ChatsHub session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} whatsappConnection={whatsappConnection} />
+					<ChatsHubComposable
+						session={session}
+						userHasMessageSendingPermission={userHasMessageSendingPermission}
+						whatsappConnection={whatsappConnection}
+					/>
 				) : (
 					<WhatsAppConnectButton />
 				)

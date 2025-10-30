@@ -135,6 +135,7 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 							fileSize={message.conteudoMidiaFileSize}
 							mimeType={message.conteudoMidiaMimeType}
 							caption={message.conteudoTexto}
+							variant={isUser ? "sent" : "received"}
 						/>
 					</div>
 				) : (

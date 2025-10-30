@@ -8,6 +8,7 @@ import { Download, FileImage, FileText, Image as ImageIcon } from "lucide-react"
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { AudioPlayer } from "./AudioPlayer";
 
 type MediaMessageDisplayProps = {
 	storageId?: string;
@@ -18,9 +19,10 @@ type MediaMessageDisplayProps = {
 	mimeType?: string;
 	caption?: string;
 	onImageLoad?: () => void;
+	variant?: "sent" | "received";
 };
 
-function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSize, mimeType, caption, onImageLoad }: MediaMessageDisplayProps) {
+function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSize, mimeType, caption, onImageLoad, variant = "received" }: MediaMessageDisplayProps) {
 	const [fileUrl, setFileUrl] = useState<string | null>(mediaUrl || null);
 	const [isLoading, setIsLoading] = useState(false);
 	const getFileUrl = useMutation(api.mutations.files.getFileUrl);
@@ -122,6 +124,16 @@ function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSiz
 					)}
 				</DialogContent>
 			</Dialog>
+		);
+	}
+
+	// Audio display with custom player
+	if (mediaType === "AUDIO" && fileUrl) {
+		return (
+			<div className="flex flex-col gap-2">
+				<AudioPlayer audioUrl={fileUrl} variant={variant} showDownload={false} />
+				{caption && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{caption}</p>}
+			</div>
 		);
 	}
 

@@ -275,10 +275,10 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 						</div>
 						<h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">ANOTAÇÕES</h1>
 						<textarea
-							value={project.jornada.anotacoes || undefined}
+							value={infoHolder.jornada.anotacoes || undefined}
 							placeholder="Preencha aqui anotações da jornada do cliente..."
 							onChange={(e) => {
-								handleUpdateProject({ id: projectId, changes: { "jornada.anotacoes": e.target.value } });
+								setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, anotacoes: e.target.value } }));
 							}}
 							className="border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
 						/>
@@ -315,8 +315,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								type="button"
 								loading={isPending}
 								onClick={() => {
-									// @ts-ignore
-									handleUpdateProject({ id: projectId, changes: { "jornada.obsJornada": infoHolder.jornada.obsJornada } });
+									handleUpdateProject({ id: projectId, changes: { "jornada.anotacoes": infoHolder.jornada.anotacoes } });
 								}}
 								className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
 							>
@@ -361,12 +360,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 						</div>
 
 						<div className="mt-2 flex items-center gap-3 lg:mt-0">
-							{/* <div className="flex items-center gap-2 text-primary/60">
-              <TbTruckDelivery />
-              <p className="text-sm font-medium">
-               {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'SEM PREVISÃO'}
-              </p>
-              </div> */}
 							<div className="text-primary/60 flex items-center gap-2">
 								<BsCalendarFill />
 								<p className="text-sm font-medium">
@@ -397,12 +390,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 						<div className="flex items-center gap-1">
 							<TbTruckDelivery />
 							{renderDeliveryInfo({ deliveredAt: project.compra.dataEntrega, expectedAt: project.compra.previsaoEntrega })}
-							{/* <h1 className="text-center text-[0.65rem] leading-none tracking-tight text-primary/60 lg:text-xs">
-              {project.compra.dataEntrega
-               ? `ENTREGUE EM: ${formatDateAsLocale(project.compra.dataEntrega)} (HÁ 
-              ${getDifferenceBetweenDates({ start: project.compra.dataEntrega, end: new Date() })} DIAS)`
-               : `PREVISTO PARA: ${project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}`}
-              </h1> */}
 						</div>
 						<div className="flex items-center gap-1">
 							<BsUnlockFill />

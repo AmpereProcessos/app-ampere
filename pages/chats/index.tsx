@@ -1,5 +1,5 @@
 import ChatsHubComposable from "@/components/identificador/chats/ChatsHub.Composable";
-import ChatsHubImproved from "@/components/identificador/chats/ChatsHub.Improved";
+import ChatsHubMigrated from "@/components/identificador/chats/WSChatsHub";
 import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { useSession } from "@/components/providers/SessionProvider";
 import ErrorComponent from "@/components/utils/ErrorComponent";
@@ -31,11 +31,7 @@ function ChatsContent({ session, userHasMessageSendingPermission }: { session: T
 			{isError ? <ErrorComponent msg="Erro ao carregar conexão do WhatsApp Business." /> : null}
 			{isSuccess ? (
 				whatsappConnection ? (
-					<ChatsHubComposable
-						session={session}
-						userHasMessageSendingPermission={userHasMessageSendingPermission}
-						whatsappConnection={whatsappConnection}
-					/>
+					<ChatsHubMigrated session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} whatsappConnection={whatsappConnection} />
 				) : (
 					<WhatsAppConnectButton />
 				)

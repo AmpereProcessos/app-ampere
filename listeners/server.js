@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4001;
 const CLIENT_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 if (!MONGODB_URI || !CLIENT_URL) {
-	throw new Error("MONGODB_URI e CLIENT_URL devem ser definidos nas variáveis de ambiente.");
+	throw new Error("MONGODB_URI e CLIENT_URL devem ser definidos nas variáveis de ambiente do projeto.");
 }
 
 const httpServer = createServer();

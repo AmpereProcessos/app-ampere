@@ -64,7 +64,7 @@ async function validateSessionToken(token) {
 	if (!token) return null;
 
 	try {
-		const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+		const sessionId = token;
 
 		const db = mongoClient.db("administration");
 		const session = await db.collection("sessoes-usuarios").findOne({ sessaoId: sessionId });

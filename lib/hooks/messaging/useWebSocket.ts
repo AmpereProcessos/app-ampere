@@ -18,6 +18,7 @@ type WebSocketMessage = {
 };
 
 type UseWebSocketOptions = {
+	sessionId: string;
 	onNewMessage?: (message: WebSocketMessage) => void;
 	onMessageUpdate?: (message: WebSocketMessage) => void;
 	onChatUpdate?: (chat: WebSocketMessage) => void;
@@ -25,7 +26,7 @@ type UseWebSocketOptions = {
 	onServiceUpdate?: (service: WebSocketMessage) => void;
 };
 
-export function useWebSocket(options: UseWebSocketOptions = {}) {
+export function useWebSocket(options: UseWebSocketOptions) {
 	console.log("WebSocket URL", WS_URL);
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
@@ -38,13 +39,15 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 	}, [options]);
 
 	useEffect(() => {
-		// Get session token from cookies
-		const token = getCookie(SESSION_COOKIE_NAME);
+		// Get session token from props or cookies
+		const token = options.sessionId;
 
 		if (!token) {
 			setError("Sem token de autenticação");
 			return;
 		}
+
+		console.log("Connecting to WebSocket with token:", token ? "✓" : "✗");
 
 		// Connect to WebSocket server
 		const newSocket = io(WS_URL, {
@@ -108,7 +111,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 		return () => {
 			newSocket.close();
 		};
-	}, []); // Empty deps - only connect once
+	}, [options.sessionId]); // Reconnect if sessionId changes
 
 	const joinChatRoom = useCallback(
 		(chatId: string) => {
@@ -128,6 +131,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 		[socket, isConnected],
 	);
 
+	console.log("socket", socket);
 	return {
 		socket,
 		isConnected,

@@ -70,6 +70,7 @@ function ChatsHub({ session, userHasMessageSendingPermission, whatsappConnection
 
 	// Setup WebSocket
 	const { isConnected, joinChatRoom, leaveChatRoom } = useWebSocket({
+		sessionId: session.session.sessaoId,
 		onNewMessage: (message) => {
 			console.log("New message from WebSocket:", message);
 			// The useChatMessages hook will handle adding this

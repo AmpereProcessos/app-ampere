@@ -160,6 +160,20 @@ const PermissionsSchema = z.object({
 			invalid_type_error: "Tipo não válido para permissão de criação de certificações.",
 		}),
 	}),
+	almoxarifado: z.object({
+		visualizar: z.boolean({
+			required_error: "Ativação da permissão de visualização de almoxarifado não informada.",
+			invalid_type_error: "Tipo não válido para permissão de visualização de almoxarifado.",
+		}),
+		editar: z.boolean({
+			required_error: "Ativação da permissão de edição de almoxarifado não informada.",
+			invalid_type_error: "Tipo não válido para permissão de edição de almoxarifado.",
+		}),
+		criar: z.boolean({
+			required_error: "Ativação da permissão de criação de almoxarifado não informada.",
+			invalid_type_error: "Tipo não válido para permissão de criação de almoxarifado.",
+		}),
+	}),
 });
 
 const PositionSchema = z.object({

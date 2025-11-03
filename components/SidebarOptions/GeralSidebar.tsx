@@ -1,56 +1,219 @@
-import React, { useContext, useState } from "react";
-import { AiOutlineForm, AiOutlinePercentage } from "react-icons/ai";
+import type React from "react";
+import { useContext, useState } from "react";
+import { AiOutlinePercentage } from "react-icons/ai";
 import { BiSupport } from "react-icons/bi";
 import { BsBank2, BsCalendar2Week, BsFillPatchCheckFill, BsFolderPlus, BsShieldFillCheck, BsSpeedometer2 } from "react-icons/bs";
-import { FaBox, FaDatabase, FaShoppingCart, FaSolarPanel, FaTasks, FaTools, FaWarehouse } from "react-icons/fa";
-import { ImCheckboxChecked, ImFolderOpen } from "react-icons/im";
-import { IoIosCalendar } from "react-icons/io";
-import {
-	MdAddIcCall,
-	MdAddShoppingCart,
-	MdDesignServices,
-	MdEngineering,
-	MdOutlineBuildCircle,
-	MdOutlinePayments,
-	MdPeople,
-	MdSentimentSatisfiedAlt,
-} from "react-icons/md";
-import { RiDashboardFill } from "react-icons/ri";
-import { SiCashapp } from "react-icons/si";
-import { TbDashboard, TbRecharging } from "react-icons/tb";
-import { TbReportAnalytics, TbTruckDelivery } from "react-icons/tb";
-import { VscWorkspaceTrusted } from "react-icons/vsc";
+import { FaShoppingCart, FaSolarPanel, FaTasks, FaTools } from "react-icons/fa";
+import { ImCheckboxChecked } from "react-icons/im";
+import { MdAddShoppingCart, MdDesignServices, MdEngineering, MdOutlineBuildCircle, MdPeople } from "react-icons/md";
+import { TbRecharging, TbTruckDelivery } from "react-icons/tb";
 
 import type { TAuthSession } from "@/lib/authentication/types";
-import { MessageCircle } from "lucide-react";
+import { BadgeDollarSign, Database, Diamond, FolderTree, LayoutGrid, List, MessageCircle, ShoppingCart, Warehouse } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
+type TAppRouteGroup = {
+	title: string;
+	icon: React.ReactNode;
+	items: {
+		title: string;
+		path: string;
+		checkUserAccess: (session: TAuthSession) => boolean;
+		icon: React.ReactNode;
+	}[];
+};
+export const AppRoutes: TAppRouteGroup[] = [
+	{
+		title: "PRINCIPAL",
+		icon: <Diamond className="h-4 min-h-4 w-4 min-w-4 text-primary/60" />,
+		items: [
+			{
+				title: "Dashboard",
+				path: "/",
+				checkUserAccess: (session: TAuthSession) => true,
+				icon: <LayoutGrid className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Projetos em Andamento",
+				path: "/gestao-de-projetos/emAndamento",
+				checkUserAccess: (session: TAuthSession) => true,
+				icon: <TbRecharging className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Banco de Dados",
+				path: "/gestao-de-projetos/banco-de-dados",
+				checkUserAccess: (session: TAuthSession) => true,
+				icon: <Database className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+		],
+	},
+	{
+		title: "SETORES",
+		icon: <FolderTree className="h-4 min-h-4 w-4 min-w-4 text-primary/60" />,
+		items: [
+			{
+				title: "Comercial",
+				path: "/comercial",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.comercial.visualizar,
+				icon: <BadgeDollarSign className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Suprimentos",
+				path: "/suprimentos",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suprimentos.visualizar,
+				icon: <ShoppingCart className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Projetos",
+				path: "/projetos",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.engenharia.visualizar,
+				icon: <MdEngineering className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Obras",
+				path: "/obras",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.execucao.visualizar,
+				icon: <FaTools className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "O&M",
+				path: "/oem",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suporte.visualizar,
+				icon: <FaSolarPanel className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Pós-Venda",
+				path: "/posvenda",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
+				icon: <BiSupport className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "RH",
+				path: "/rh",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.recursosHumanos.visualizar,
+				icon: <MdPeople className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "ADM",
+				path: "/adm",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.administrativo.visualizar,
+				icon: <BsFolderPlus className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Almoxarifado",
+				path: "/almoxarifado",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.almoxarifado.visualizar,
+				icon: <Warehouse className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+		],
+	},
+	{
+		title: "OUTROS",
+		icon: <List className="h-4 min-h-4 w-4 min-w-4 text-primary/60" />,
+		items: [
+			{
+				title: "Chats",
+				path: "/chats",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.chats.visualizar,
+				icon: <MessageCircle className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Chamados",
+				path: "/chamados",
+				checkUserAccess: (session: TAuthSession) => true,
+				icon: <FaTasks className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Auditoria Financeira",
+				path: "/auditoria-financeira",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.administrativo.visualizar,
+				icon: <BsBank2 className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Solicitações de Compra",
+				path: "/solicitacoes-compra",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suprimentos.visualizar,
+				icon: <MdAddShoppingCart className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Comissões",
+				path: "/comissoes",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.administrativo.visualizar,
+				icon: <AiOutlinePercentage className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Entregas",
+				path: "/entregas",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suprimentos.visualizar || session.user.permissoes.posVenda.visualizar,
+				icon: <TbTruckDelivery className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Banco de OS",
+				path: "/banco-os",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.ordensDeServico.visualizar || session.user.permissoes.execucao.visualizar,
+				icon: <MdDesignServices className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+
+			{
+				title: "Seguro Fotovoltaico",
+				path: "/seguro-fotovoltaico",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
+				icon: <BsShieldFillCheck className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Monitoramento",
+				path: "/monitoramento",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suporte.visualizar,
+				icon: <BsSpeedometer2 className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Gestão de Obras",
+				path: "/gestao-obras",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.execucao.visualizar || session.user.permissoes.ordensDeServico.visualizar,
+				icon: <MdOutlineBuildCircle className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "Nutrição Pós-Venda",
+				path: "/nutricao-pos-venda",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
+				icon: <BsCalendar2Week className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+			{
+				title: "NPS",
+				path: "/nps",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
+				icon: <BsFillPatchCheckFill className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
+		],
+	},
+];
 type GeralSidebarProps = {
 	session: TAuthSession;
-	userAccessibleRoutes: string[];
-	userIsManager: boolean;
-	userIsController: boolean;
 };
-function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsController }: GeralSidebarProps) {
-	function checkRoute(route: string) {
-		return userAccessibleRoutes?.includes(route);
-	}
-	function checkRouteEitherAccess(routes: string[]) {
-		return routes.some((route) => userAccessibleRoutes?.includes(route));
-	}
-
+function GeralSidebar({ session }: GeralSidebarProps) {
 	return (
-		<>
-			<div>
-				<h2 className="text-primary/60 text-xs">PRINCIPAL</h2>
-				<Link href="/">
-					<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-						<RiDashboardFill className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-						<p className="text-primary/80 pl-3 text-xs">Dashboard</p>
+		<div className="flex flex-col gap-4">
+			{AppRoutes.map((group) => (
+				<div key={group.title} className="flex flex-col gap-2">
+					<div className="flex items-center gap-1">
+						{group.icon}
+						<h2 className="text-primary/60 text-xs">{group.title}</h2>
 					</div>
-				</Link>
-			</div>
-			<div className="mt-6">
+					{group.items
+						.filter((item) => item.checkUserAccess(session))
+						.map((item) => (
+							<Button key={item.title} asChild variant="ghost">
+								<Link href={item.path} className="w-full flex items-center justify-start gap-2 hover:bg-primary/10">
+									{item.icon}
+									<p className="text-primary/80 text-xs">{item.title}</p>
+								</Link>
+							</Button>
+						))}
+				</div>
+			))}
+
+			{/* <div className="mt-6">
 				<h2 className="text-primary/60 text-xs">GESTÃO DE PROJETOS</h2>
 				<Link href="/gestao-de-projetos/emAndamento">
 					<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -112,11 +275,11 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{checkRouteEitherAccess(["O&M", "Pós-Venda"]) ? (
-						<Link href={"/oem/comissionamento"}>
+					{checkRoute("O&M") ? (
+						<Link href="/oem">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-								<ImCheckboxChecked className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-								<p className="text-primary/80 pl-3 text-xs">Comissionamento Pós-Obra</p>
+								<FaSolarPanel className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+								<p className="text-primary/80 pl-3 text-xs">O&M</p>
 							</div>
 						</Link>
 					) : (
@@ -132,16 +295,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{checkRouteEitherAccess(["O&M", "Pós-Venda"]) ? (
-						<Link href="/posvenda/nutricao">
-							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-								<BsCalendar2Week className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-								<p className="text-primary/80 pl-3 text-xs">Nutrição Pós-Venda</p>
-							</div>
-						</Link>
-					) : (
-						false
-					)}
+
 					{session.user.permissoes.recursosHumanos.visualizar ? (
 						<Link href="/adm/colaboradores">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -161,6 +315,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 				</div>
 				<div className="mt-6">
 					<h2 className="text-primary/60 text-xs">OUTROS</h2>
+
 					{session.user.permissoes.chats.visualizar ? (
 						<Link href="/chats">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -169,6 +324,26 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 							</div>
 						</Link>
 					) : null}
+					{session.user.permissoes.suporte.visualizar || session.user.permissoes.posVenda.visualizar ? (
+						<Link href={"/oem/comissionamento"}>
+							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+								<ImCheckboxChecked className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+								<p className="text-primary/80 pl-3 text-xs">Comissionamento Pós-Obra</p>
+							</div>
+						</Link>
+					) : (
+						false
+					)}
+					{session.user.permissoes.suporte.visualizar || session.user.permissoes.posVenda.visualizar ? (
+						<Link href="/posvenda/nutricao">
+							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
+								<BsCalendar2Week className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
+								<p className="text-primary/80 pl-3 text-xs">Nutrição Pós-Venda</p>
+							</div>
+						</Link>
+					) : (
+						false
+					)}
 					{session.user.permissoes.certificacoes.visualizar ? (
 						<Link href="/certificacoes">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
@@ -183,7 +358,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 							<p className="text-primary/80 pl-3 text-xs">Chamados</p>
 						</div>
 					</Link>
-					{checkRoute("ADM") ? (
+					{session.user.permissoes.administrativo.visualizar ? (
 						<Link href="/admin/auditoria-financeira">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<BsBank2 className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -192,7 +367,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 						</Link>
 					) : null}
 
-					{checkRoute("Suprimentos") ? (
+					{session.user.permissoes.suprimentos.visualizar ? (
 						<Link href="/suprimentos/solicitacoesCompra">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<MdAddShoppingCart className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -202,7 +377,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{(userIsManager || checkRoute("ADM") || checkRoute("RH")) && (
+					{(userIsManager || session.user.permissoes.administrativo.visualizar || session.user.permissoes.recursosHumanos.visualizar) && (
 						<Link href="/admin/comissao">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<AiOutlinePercentage className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -210,7 +385,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 							</div>
 						</Link>
 					)}
-					{checkRoute("Suprimentos") || checkRoute("Pós-Venda") ? (
+					{session.user.permissoes.suprimentos.visualizar || session.user.permissoes.posVenda.visualizar ? (
 						<Link href="/suprimentos/entregas">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<TbTruckDelivery className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -220,7 +395,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{userIsController ? (
+					{session.user.permissoes.ordensDeServico.visualizar ? (
 						<Link href={"/ordens-de-servico"}>
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<MdDesignServices className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -230,7 +405,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{checkRoute("Almoxarifado") ? (
+					{session.user.permissoes.almoxarifado.visualizar ? (
 						<Link href={"/almoxarifado"}>
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<FaWarehouse className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -240,27 +415,8 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{checkRoute("Projetos") ? (
-						<Link href={"/projetos/comissionamento"}>
-							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-								<VscWorkspaceTrusted className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-								<p className="text-primary/80 pl-3 text-xs">Comissionamento</p>
-							</div>
-						</Link>
-					) : (
-						false
-					)}
-					{checkRoute("O&M") ? (
-						<Link href="/oem">
-							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-								<FaSolarPanel className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-								<p className="text-primary/80 pl-3 text-xs">O&M</p>
-							</div>
-						</Link>
-					) : (
-						false
-					)}
-					{checkRoute("Pós-Venda") ? (
+
+					{session.user.permissoes.posVenda.visualizar ? (
 						<Link href="/seguro-fotovoltaico">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<BsShieldFillCheck className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -270,7 +426,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{checkRoute("O&M") ? (
+					{session.user.permissoes.suporte.visualizar ? (
 						<Link href="/oem/monitoramento">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<BsSpeedometer2 className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -280,20 +436,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{/* {userIsManager ? (
-               <Link  href={`/vendas/leads`}>
-                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-primary/10">
-                   <MdAddIcCall
-                     style={{
-                       color: '#15599a',
-                       fontSize: '20px',
-                     }}
-                   />
-                   <p className="pl-3 text-xs 80xt-primary/60">Leads</p>
-                 </div>
-               </Link>
-              ) : null} */}
-					{checkRoute("Obras") ? (
+					{session.user.permissoes.execucao.visualizar || session.user.permissoes.ordensDeServico.visualizar ? (
 						<Link href="/obras/gestao-obras">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<MdOutlineBuildCircle className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -303,17 +446,7 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 					) : (
 						false
 					)}
-					{/* {userIsManager ? (
-               <Link  href="/admin/gestaoTimeVendas">
-                 <div className="mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100 dark:hover:bg-primary/10">
-                   <TbDashboard className='text-[#15599a] w-4 h-4 min-w-4 min-h dark:text-blue-500-4'/>
-                   <p className="pl-3 text-xs 80xt-primary/60">Gestão - Time de Vendas</p>
-                 </div>
-               </Link>
-              ) : (
-               false
-              )} */}
-					{checkRoute("Pós-Venda") ? (
+					{session.user.permissoes.posVenda.visualizar ? (
 						<Link href="/posvenda/nps">
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
 								<MdSentimentSatisfiedAlt className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
@@ -324,8 +457,8 @@ function GeralSidebar({ session, userAccessibleRoutes, userIsManager, userIsCont
 						false
 					)}
 				</div>
-			</>
-		</>
+			</> */}
+		</div>
 	);
 }
 

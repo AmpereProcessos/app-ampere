@@ -55,7 +55,7 @@ function CertificationsContent({ session }: { session: TAuthSession }) {
 			<div className="border-primary/20 flex flex-col justify-between border-b p-1 pb-2 gap-2">
 				<div className="flex w-full items-center justify-between">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
-						<p className="text-center text-2xl font-black text-[#15599a] uppercase">Projetos no estágio de suprimentos</p>
+						<p className="text-center text-2xl font-black text-[#15599a] uppercase">CERTIFICAÇÕES</p>
 					</div>
 					<div className="flex items-center gap-2">
 						{userHasToCreateCertificationsPermission ? (

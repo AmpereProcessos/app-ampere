@@ -26,6 +26,78 @@ import { LoadingButton } from "./utils/Buttons/LoadingButton";
 import ProjectCardsTags from "./utils/ProjectCardsTags";
 import ResponsiveDialogDrawer from "./utils/ResponsiveDialogDrawer";
 
+function getBarColor(lastContact: string | undefined | null) {
+	if (!lastContact) return "bg-red-500";
+	const sinceLastContact = dayjs().diff(lastContact, "day");
+	if (sinceLastContact >= 7) return "bg-red-500";
+	return "bg-blue-500";
+}
+
+function DeliveryInfo({ expectedAt, deliveredAt }: { expectedAt?: string | null; deliveredAt?: string | null }) {
+	if (deliveredAt)
+		return (
+			<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
+				ENTREGUE EM: <strong className="text-cyan-500">{formatDateAsLocale(deliveredAt)}</strong> (HÁ{" "}
+				<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: deliveredAt, end: new Date() })} DIAS</strong> )
+			</h1>
+		);
+
+	if (expectedAt)
+		return (
+			<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
+				PREVISTO PARA: {formatDateAsLocale(expectedAt)} (EM{" "}
+				<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: expectedAt, end: new Date() })} DIAS</strong> )
+			</h1>
+		);
+
+	return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">ENTREGA INDEFINIDA</h1>;
+}
+
+function AccessInfo({ approvedAt }: { approvedAt?: string | null }) {
+	if (approvedAt)
+		return (
+			<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
+				PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(approvedAt)}</strong> (HÁ{" "}
+				<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: approvedAt, end: new Date() })} DIAS</strong> )
+			</h1>
+		);
+
+	return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">PARECER NÃO APROVADO</h1>;
+}
+
+type JourneyStage = { ordem: number; titulo: string; concluido?: boolean | null; dataConclusao?: string | null };
+
+function JourneySection({
+	stages,
+	isPending,
+	onUpdateStages,
+}: {
+	stages: JourneyStage[];
+	isPending: boolean;
+	onUpdateStages: (updated: JourneyStage[]) => void;
+}) {
+	return (
+		<div className="flex w-full flex-wrap justify-around gap-3">
+			{stages.map((stage, index) => (
+				<div key={`${stage.ordem}-${stage.titulo}`} className="w-fit">
+					<CheckboxInput
+						editable={!isPending}
+						labelFalse={stage.titulo}
+						labelTrue={stage.titulo}
+						checked={!!stage.concluido}
+						handleChange={(value) => {
+							const updatedStages = stages.map((s, i) =>
+								i === index ? { ...s, concluido: value, dataConclusao: value ? new Date().toISOString() : null } : s,
+							);
+							onUpdateStages(updatedStages);
+						}}
+					/>
+				</div>
+			))}
+		</div>
+	);
+}
+
 type PosVendaCardProps = {
 	session: TAuthSession;
 	projectId: string;
@@ -39,52 +111,16 @@ type PosVendaCardProps = {
 	};
 };
 function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVendaCardProps) {
-	const queryClient = useQueryClient();
 	const [infoHolder, setInfo] = useState(project);
 
 	const [activitiesMenuIsOpen, setActivitiesMenuIsOpen] = useState<boolean>(false);
 	const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false);
 	const [conclusionMenuIsOpen, setConclusionMenuIsOpen] = useState<boolean>(false);
 	const stages = "estagios" in project.jornada ? project.jornada.estagios : [];
-	function getBarColor(lastContact: string | undefined | null) {
-		if (!lastContact) return "bg-red-500";
-		const sinceLastContact = dayjs().diff(lastContact, "day");
-		if (sinceLastContact >= 7) return "bg-red-500";
-		return "bg-blue-500";
-	}
-	function renderDeliveryInfo({ expectedAt, deliveredAt }: { expectedAt?: string | null; deliveredAt?: string | null }) {
-		if (deliveredAt)
-			return (
-				<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
-					ENTREGUE EM: <strong className="text-cyan-500">{formatDateAsLocale(deliveredAt)}</strong> (HÁ{" "}
-					<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: deliveredAt, end: new Date() })} DIAS</strong> )
-				</h1>
-			);
-
-		if (expectedAt)
-			return (
-				<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
-					PREVISTO PARA: {formatDateAsLocale(expectedAt)} (EM{" "}
-					<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: expectedAt, end: new Date() })} DIAS</strong> )
-				</h1>
-			);
-
-		return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">ENTREGA INDEFINIDA</h1>;
-	}
-	function renderAccessInfo({ approvedAt }: { approvedAt?: string | null }) {
-		if (approvedAt)
-			return (
-				<h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">
-					PARECER APROVADO EM: <strong className="text-cyan-500">{formatDateAsLocale(approvedAt)}</strong> (HÁ{" "}
-					<strong className="text-cyan-500">{getDifferenceBetweenDates({ start: approvedAt, end: new Date() })} DIAS</strong> )
-				</h1>
-			);
-
-		return <h1 className="text-primary/60 text-center text-[0.65rem] leading-none tracking-tight lg:text-xs">PARECER NÃO APROVADO</h1>;
-	}
+	type ProjectPatch = Record<string, unknown>;
 	const { mutate: handleUpdateProject, isPending } = useMutation({
 		mutationKey: ["update-after-sales-project"],
-		mutationFn: async ({ id, changes }: { id: string; changes: { [key: string]: any } }) => {
+		mutationFn: async ({ id, changes }: { id: string; changes: ProjectPatch }) => {
 			await updateProject({ id, changes });
 			if (changes["jornada.dataEfetivacao"]) await handleOpportunityOnJourneyEndTrigger({ projectId: id });
 			return "Projeto atualizado com sucesso !";
@@ -254,24 +290,11 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 									</Button>
 								</div>
 							</div>
-							<div className="flex w-full flex-wrap justify-around gap-3">
-								{stages.map((stage, index) => (
-									<div key={stage.ordem} className="w-fit">
-										<CheckboxInput
-											editable={!isPending}
-											labelFalse={stage.titulo}
-											labelTrue={stage.titulo}
-											checked={!!stage.concluido}
-											handleChange={(value) => {
-												const updatedStages = stages.map((s, i) =>
-													i === index ? { ...s, concluido: value, dataConclusao: value ? new Date().toISOString() : null } : s,
-												);
-												handleUpdateProject({ id: projectId, changes: { "jornada.estagios": updatedStages } });
-											}}
-										/>
-									</div>
-								))}
-							</div>
+							<JourneySection
+								stages={stages}
+								isPending={isPending}
+								onUpdateStages={(updated) => handleUpdateProject({ id: projectId, changes: { "jornada.estagios": updated } })}
+							/>
 						</div>
 						<div className="flex w-full flex-col items-center justify-around gap-3 border border-primary/20 p-2">
 							<h1 className="w-full text-start text-xs leading-none font-bold tracking-tight text-primary/80">ANOTAÇÕES</h1>
@@ -331,7 +354,9 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 											key={activity._id}
 											activity={activity}
 											projectId={projectId}
-											mutateCallback={() => queryClient.invalidateQueries({ queryKey: ["after-sales-projects"] })}
+											mutateCallback={() => {
+												callbacks?.onSettled?.();
+											}}
 										/>
 									))}
 								</div>
@@ -393,11 +418,11 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 
 						<div className="flex items-center gap-1">
 							<TbTruckDelivery />
-							{renderDeliveryInfo({ deliveredAt: project.compra.dataEntrega, expectedAt: project.compra.previsaoEntrega })}
+							<DeliveryInfo deliveredAt={project.compra.dataEntrega} expectedAt={project.compra.previsaoEntrega} />
 						</div>
 						<div className="flex items-center gap-1">
 							<BsUnlockFill />
-							{renderAccessInfo({ approvedAt: project.homologacao.acesso.dataResposta })}
+							<AccessInfo approvedAt={project.homologacao.acesso.dataResposta} />
 						</div>
 						<div className="flex items-center gap-1">
 							<FaSolarPanel />
@@ -426,7 +451,7 @@ type ConclusionMenuProps = {
 };
 function ConclusionMenu({ projectId, project, callbacks, closeMenu }: ConclusionMenuProps) {
 	const { mutate, isPending } = useMutation({
-		mutationKey: ["update-project"],
+		mutationKey: ["update-after-sales-project"],
 		mutationFn: async () => {
 			const updatedStages = project.jornada.estagios.map((stage) => ({
 				...stage,
@@ -442,6 +467,7 @@ function ConclusionMenu({ projectId, project, callbacks, closeMenu }: Conclusion
 		onSuccess: (data) => {
 			if (callbacks?.onSuccess) callbacks.onSuccess();
 			toast.success(data);
+			return closeMenu();
 		},
 		onError: (error) => {
 			if (callbacks?.onError) callbacks.onError();

@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-import SelectInput from "./SelectInput";
-
 import { updateProject } from "@/utils/methods/mutation/clients";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import ModalDatabase from "./ModalDatabase";
 
@@ -16,6 +13,7 @@ import { getDifferenceBetweenDates } from "@/utils/methods/dates";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { handleOpportunityOnJourneyEndTrigger } from "@/utils/methods/mutation/triggers";
 import dayjs from "dayjs";
+import { Check } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { BsCalendarFill, BsCheckAll, BsUnlockFill } from "react-icons/bs";
@@ -23,8 +21,10 @@ import { FaExpandArrowsAlt, FaSignature, FaSolarPanel, FaStore } from "react-ico
 import { MdOutlineCheckBox } from "react-icons/md";
 import { TbTruckDelivery } from "react-icons/tb";
 import ProjectActivityCard from "./identificador/atividades/ProjectActivityCard";
+import { Button } from "./ui/button";
 import { LoadingButton } from "./utils/Buttons/LoadingButton";
 import ProjectCardsTags from "./utils/ProjectCardsTags";
+import ResponsiveDialogDrawer from "./utils/ResponsiveDialogDrawer";
 
 type PosVendaCardProps = {
 	session: TAuthSession;
@@ -44,7 +44,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 
 	const [activitiesMenuIsOpen, setActivitiesMenuIsOpen] = useState<boolean>(false);
 	const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false);
-
+	const [conclusionMenuIsOpen, setConclusionMenuIsOpen] = useState<boolean>(false);
 	const stages = "estagios" in project.jornada ? project.jornada.estagios : [];
 	function getBarColor(lastContact: string | undefined | null) {
 		if (!lastContact) return "bg-red-500";
@@ -86,7 +86,7 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 		mutationKey: ["update-after-sales-project"],
 		mutationFn: async ({ id, changes }: { id: string; changes: { [key: string]: any } }) => {
 			await updateProject({ id, changes });
-			if (changes["jornada.dataConclusao"]) await handleOpportunityOnJourneyEndTrigger({ projectId: id });
+			if (changes["jornada.dataEfetivacao"]) await handleOpportunityOnJourneyEndTrigger({ projectId: id });
 			return "Projeto atualizado com sucesso !";
 		},
 		onMutate: () => {
@@ -131,7 +131,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 							<button
 								type="button"
 								onClick={() => {
-									// @ts-ignore
 									handleUpdateProject({ id: projectId, changes: { "jornada.dataUltimaInteracao": new Date().toISOString() } });
 									setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, dataUltimaInteracao: new Date().toISOString() } }));
 								}}
@@ -142,9 +141,9 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 							</button>
 						</div>
 					</div>
-					<div className="flex w-full flex-col">
-						<h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
-						<div className="mt-1 flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
+					<div className="flex w-full flex-col gap-2">
+						<h1 className="w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
+						<div className="flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
 							<div className="flex flex-col items-center rounded p-1 lg:items-start">
 								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TELEFONE</h1>
 								<h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.telefone}</h1>
@@ -152,10 +151,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 							<div className="flex flex-col items-center rounded p-1 lg:items-start">
 								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">VENDEDOR</h1>
 								<h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.vendedor.nome}</h1>
-							</div>
-							<div className="flex flex-col items-center rounded p-1 lg:items-start">
-								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TIPO DE SERVIÇO</h1>
-								<h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
 							</div>
 							<div className="flex flex-col items-center rounded p-1 lg:items-start">
 								<h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">TIPO DE SERVIÇO</h1>
@@ -234,7 +229,6 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								</h1>
 							</div>
 						</div>
-						<h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">INFORMAÇÕES DA JORNADA</h1>
 						<div className="flex w-full flex-wrap items-center justify-around">
 							{project.possuiDeficiencia === "SIM" ? (
 								<>
@@ -245,13 +239,19 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								</>
 							) : null}
 						</div>
-						<div className="mt-3 flex w-full flex-col items-center justify-around gap-3 border border-cyan-500 p-2">
+						<div className="flex w-full flex-col items-center justify-around gap-3 border border-cyan-500 p-2">
 							<div className="flex w-full items-center justify-between gap-2">
 								<h1 className="text-start text-xs leading-none font-bold tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
-								<div className="flex items-center gap-1 rounded-full border border-blue-500 px-2 py-1 text-blue-500 duration-300 ease-in-out hover:bg-blue-500 hover:text-white">
-									<Link href={`/publico/jornada-do-cliente/${project._id}`}>
-										<div className="text-[0.65rem] font-bold">LINK DA JORNADA</div>
-									</Link>
+								<div className="flex items-center gap-2">
+									<Button size="xs" variant={"ghost"} onClick={() => setConclusionMenuIsOpen((prev) => !prev)} className="flex items-center gap-1">
+										<Check className="h-4 w-4" />
+										<p className="text-xs font-medium">CONCLUIR JORNADA</p>
+									</Button>
+									<Button asChild size="xs" variant={"ghost"}>
+										<Link href={`/publico/jornada-do-cliente/${project._id}`}>
+											<div className="text-xs font-medium">LINK DA JORNADA</div>
+										</Link>
+									</Button>
 								</div>
 							</div>
 							<div className="flex w-full flex-wrap justify-around gap-3">
@@ -273,17 +273,19 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								))}
 							</div>
 						</div>
-						<h1 className="mt-1 w-full text-start text-xs leading-none font-bold tracking-tight text-cyan-500">ANOTAÇÕES</h1>
-						<textarea
-							value={infoHolder.jornada.anotacoes || undefined}
-							placeholder="Preencha aqui anotações da jornada do cliente..."
-							onChange={(e) => {
-								setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, anotacoes: e.target.value } }));
-							}}
-							className="border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
-						/>
+						<div className="flex w-full flex-col items-center justify-around gap-3 border border-primary/20 p-2">
+							<h1 className="w-full text-start text-xs leading-none font-bold tracking-tight text-primary/80">ANOTAÇÕES</h1>
+							<textarea
+								value={infoHolder.jornada.anotacoes || ""}
+								placeholder="Preencha aqui anotações da jornada do cliente..."
+								onChange={(e) => {
+									setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, anotacoes: e.target.value } }));
+								}}
+								className="field-sizing-content border-primary/20 bg-primary/20 text-primary/80 mt-2 min-h-[50px] w-full resize-none rounded border p-3 text-center text-sm shadow-xs outline-hidden"
+							/>
+						</div>
 
-						<div className="mt-1 flex w-full items-center justify-between">
+						<div className="flex w-full items-center justify-between">
 							<div className="flex items-center gap-2">
 								<button
 									type="button"
@@ -312,12 +314,11 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 								</div>
 							</div>
 							<LoadingButton
-								type="button"
+								size="sm"
 								loading={isPending}
 								onClick={() => {
 									handleUpdateProject({ id: projectId, changes: { "jornada.anotacoes": infoHolder.jornada.anotacoes } });
 								}}
-								className="disabled:bg-primary/60 enabled:hover:bg-primary/70 rounded bg-black px-4 py-1 text-xs font-medium text-white duration-300 ease-in-out"
 							>
 								SALVAR ANOTAÇÕES
 							</LoadingButton>
@@ -341,6 +342,9 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 					</div>
 				</div>
 				{modalProjectIsOpen ? <ModalDatabase session={session} projectId={projectId} closeModal={() => setModalProjectIsOpen(false)} /> : null}
+				{conclusionMenuIsOpen ? (
+					<ConclusionMenu projectId={projectId} project={project} callbacks={callbacks} closeMenu={() => setConclusionMenuIsOpen(false)} />
+				) : null}
 			</div>
 		);
 
@@ -408,3 +412,56 @@ function PosVendaCard({ session, projectId, project, mode, callbacks }: PosVenda
 }
 
 export default PosVendaCard;
+
+type ConclusionMenuProps = {
+	projectId: string;
+	project: TProjectDTO;
+	callbacks?: {
+		onMutate?: () => void;
+		onSuccess?: () => void;
+		onSettled?: () => void;
+		onError?: () => void;
+	};
+	closeMenu: () => void;
+};
+function ConclusionMenu({ projectId, project, callbacks, closeMenu }: ConclusionMenuProps) {
+	const { mutate, isPending } = useMutation({
+		mutationKey: ["update-project"],
+		mutationFn: async () => {
+			const updatedStages = project.jornada.estagios.map((stage) => ({
+				...stage,
+				concluido: true,
+				dataConclusao: stage.dataConclusao || new Date().toISOString(),
+			}));
+			await updateProject({ id: projectId, changes: { "jornada.estagios": updatedStages, "jornada.dataEfetivacao": new Date().toISOString() } });
+			return "Projeto atualizado com sucesso !";
+		},
+		onMutate: () => {
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: (data) => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			toast.success(data);
+		},
+		onError: (error) => {
+			if (callbacks?.onError) callbacks.onError();
+			toast.error(getErrorMessage(error));
+		},
+	});
+	return (
+		<ResponsiveDialogDrawer
+			menuTitle="CONCLUSÃO DA JORNADA"
+			menuDescription="Selecione as etapas que foram concluídas para concluir a jornada do cliente."
+			menuActionButtonText="CONCLUIR JORNADA"
+			menuCancelButtonText="CANCELAR"
+			closeMenu={closeMenu}
+			actionFunction={() => mutate()}
+			actionIsPending={isPending}
+			stateIsLoading={false}
+			stateError={null}
+		>
+			<p>Você está prestes a concluir a jornada do cliente. Essa ação é irreversível e não poderá ser desfeita.</p>
+			<p>As etapas pendentes serão marcadas como concluídas e a jornada será concluída.</p>
+		</ResponsiveDialogDrawer>
+	);
+}

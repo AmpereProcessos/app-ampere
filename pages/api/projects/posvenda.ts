@@ -17,7 +17,7 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
 						$in: ["ASSINADO"],
 					},
 					tipoDeServico: { $nin: ["OPERAÇÃO E MANUTENÇÃO", "CONSÓRCIO DE ENERGIA", "MONITORAMENTO"] },
-					"jornada.jornadaConcluida": { $ne: true },
+					"jornada.dataEfetivacao": null,
 				},
 			},
 			{

@@ -86,11 +86,11 @@ export function useNPS(enabled: boolean) {
 	}
 	function matchWithObs(project: TProjectDTO) {
 		if (!filters.withObs) return true;
-		return project.jornada.obsNps !== undefined && project.jornada.obsNps != null && project.jornada.obsNps?.trim().length > 2;
+		return project.jornada.anotacoes !== undefined && project.jornada.anotacoes != null && project.jornada.anotacoes?.trim().length > 2;
 	}
 	function matchWithoutObs(project: TProjectDTO) {
 		if (!filters.withoutObs) return true;
-		return project.jornada.obsNps === undefined || project.jornada.obsNps === null || project.jornada.obsNps?.trim().length < 2;
+		return project.jornada.anotacoes === undefined || project.jornada.anotacoes === null || project.jornada.anotacoes?.trim().length < 2;
 	}
 	function matchNpsRange(project: TProjectDTO) {
 		if (filters.npsRange.min === null || !filters.npsRange.max) return true;
@@ -244,7 +244,7 @@ export function useAfterSalesProjects() {
 	}
 	function matchPendingContact(project: TProjectDTO) {
 		if (!filters.pendingContact) return true;
-		const lastContact = project.jornada.dataUltimoContato;
+		const lastContact = project.jornada.dataUltimaInteracao;
 		// In case there's no contact
 		if (!lastContact) return true;
 		// In case there's more than 7 days since contact
@@ -263,8 +263,8 @@ export function useAfterSalesProjects() {
 		);
 	}
 	function orderByContact(projects: TProjectDTO[]) {
-		const nulls = projects.filter((p) => !p.jornada.dataUltimoContato);
-		const filtered = projects.filter((p) => !!p.jornada.dataUltimoContato);
+		const nulls = projects.filter((p) => !p.jornada.dataUltimaInteracao);
+		const filtered = projects.filter((p) => !!p.jornada.dataUltimaInteracao);
 		switch (filters.contactOrder) {
 			case "ASC":
 				// @ts-ignore

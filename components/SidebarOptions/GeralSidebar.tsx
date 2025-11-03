@@ -138,7 +138,7 @@ export const AppRoutes: TAppRouteGroup[] = [
 			},
 			{
 				title: "Comissões",
-				path: "/comissoes",
+				path: "/admin/comissao",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.administrativo.visualizar,
 				icon: <AiOutlinePercentage className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},

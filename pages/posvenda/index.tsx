@@ -195,7 +195,7 @@ function PosvendaContent({ session }: { session: TAuthSession }) {
 					</div>
 				</div>
 				<div className="my-2 flex w-full items-center justify-end gap-2">
-					<Link href="/calls/chamadosPosVenda">
+					<Link href="/chamados/chamadosPosVenda">
 						<button type="button" className="bg-primary/20 rounded-md px-4 py-1 text-sm font-bold text-black">
 							CHAMADOS
 						</button>

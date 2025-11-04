@@ -86,10 +86,14 @@ export const WarehouseFormularySchema = z.object({
 		})
 		.datetime({
 			message: "Formato inválido para data de inserção.",
-		}),
+		})
+		.optional()
+		.nullable(),
 });
 
-export const TransactionalWarehouseFormularySchema = WarehouseFormularySchema.extend({
+export const TransactionalWarehouseFormularySchema = WarehouseFormularySchema.omit({
+	autor: true,
+}).extend({
 	materiais: z.array(
 		WarehouseFormularyMaterialSchema.omit({
 			qtdeDevolucaoEfetivada: true,

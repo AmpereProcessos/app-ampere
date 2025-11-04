@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 
 import DateInput from "@/components/inputs/Date";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
 import TextInput from "@/components/inputs/Text";
 
 import ModalEditFormulary from "../../../components/identificador/almoxarifado/formulario/EditWarehouseFormulary";
@@ -16,25 +15,23 @@ import LoadingPage from "../../../components/utils/LoadingPage";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 
 import FormularyCard from "@/components/identificador/almoxarifado/formulario/FormularyCard";
+import ViewWarehouseFormularyDraft from "@/components/identificador/almoxarifado/formulario/ViewWarehouseFormularyDraft";
 import CheckboxInput from "@/components/inputs/Checkbox";
 import SelectInput from "@/components/inputs/Select";
 import { Button } from "@/components/ui/button";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
-import type { TGetWarehouseFormulariesInput } from "@/pages/api/almoxarifado/formularios/index-two";
+import type { TGetWarehouseFormulariesInput, TGetWarehouseFormulariesOutputDrafts } from "@/pages/api/almoxarifado/formularios/index-two";
 import { SlideMotionVariants, formatDate } from "@/utils/constants";
-import { getPeriodDateParamsByReferenceDate } from "@/utils/methods/dates";
-import { useWarehouseForms } from "@/utils/methods/query/warehouse-forms";
+import { useWarehouseForms, useWarehouseFormsDrafts } from "@/utils/methods/query/warehouse-forms";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Box, NotepadText, X } from "lucide-react";
 type TEditModal = {
 	isOpen: boolean;
 	id: string | null;
 };
 
-const currentDate = new Date();
-const { start, end } = getPeriodDateParamsByReferenceDate({ reference: currentDate, type: "year" });
 function WarehouseFormularies() {
 	const { session, status } = useSession();
 
@@ -60,6 +57,7 @@ function WarehouseFormulariesContent({ session }: { session: TAuthSession }) {
 		updateFilters,
 	} = useWarehouseForms({ initialFilters: { pendingOnly: true } });
 
+	const [viewDraftModalIsOpen, setViewDraftModalIsOpen] = useState<string | null>(null);
 	const [newFormModalIsOpen, setNewFormModalIsOpen] = useState(false);
 	const [modalForm, setModalForm] = useState<TEditModal>({ isOpen: false, id: null });
 
@@ -100,6 +98,7 @@ function WarehouseFormulariesContent({ session }: { session: TAuthSession }) {
 
 				<WarehouseFormulariesFiltersShowcase filters={filters} updateFilters={updateFilters} />
 			</div>
+			<WarehouseFormulariesDrafts session={session} callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }} />
 			<GeneralPaginationComponent
 				activePage={filters.page}
 				queryLoading={isLoading}
@@ -261,6 +260,69 @@ function WarehouseFormulariesFiltersShowcase({ filters, updateFilters }: Warehou
 					onRemove={() => updateFilters({ periodType: null, periodAfter: null, periodBefore: null })}
 				/>
 			) : null}
+		</div>
+	);
+}
+
+function WarehouseFormulariesDrafts({ session, callbacks }: { session: TAuthSession; callbacks: { onMutate: () => void; onSettled: () => void } }) {
+	const queryClient = useQueryClient();
+	const [viewDraftModalIsOpen, setViewDraftModalIsOpen] = useState<string | null>(null);
+	const { data: warehouseFormulariesDraftsResult, queryKey, isLoading, isError, isSuccess } = useWarehouseFormsDrafts();
+	const handleOnMutate = async () => {
+		if (callbacks?.onMutate) callbacks.onMutate();
+		await queryClient.cancelQueries({ queryKey });
+	};
+	const handleOnSettled = async () => {
+		if (callbacks?.onSettled) callbacks.onSettled();
+		await queryClient.invalidateQueries({ queryKey });
+	};
+	if (!isSuccess) return null;
+	return (
+		<div className="w-full flex flex-col gap-2 p-3 bg-orange-200 rounded-lg">
+			<p className="text-xs font-medium tracking-tight text-orange-600">FORMULÁRIOS EM RASCUNHO</p>
+			{warehouseFormulariesDraftsResult.length > 0 ? (
+				warehouseFormulariesDraftsResult.map((form) => (
+					<WarehouseFormulariesDraftsCard key={form._id} form={form} handleViewDetailsClick={() => setViewDraftModalIsOpen(form._id ?? null)} />
+				))
+			) : (
+				<p className="text-orange-600 w-full text-center font-medium italic">Nenhum formulário em rascunho encontrado.</p>
+			)}
+			{viewDraftModalIsOpen ? (
+				<ViewWarehouseFormularyDraft
+					formularyId={viewDraftModalIsOpen}
+					session={session}
+					closeModal={() => setViewDraftModalIsOpen(null)}
+					callbacks={{
+						onMutate: handleOnMutate,
+						onSettled: handleOnSettled,
+					}}
+				/>
+			) : null}
+		</div>
+	);
+}
+
+function WarehouseFormulariesDraftsCard({
+	form,
+	handleViewDetailsClick,
+}: { form: TGetWarehouseFormulariesOutputDrafts[number]; handleViewDetailsClick: () => void }) {
+	return (
+		<div className="w-full flex items-center justify-between gap-2 text-orange-800 rounded-lg">
+			<div className="flex items-center gap-2 min-w-0 truncate">
+				<div className="flex items-center gap-1">
+					<NotepadText className="w-4 h-4 min-w-4 min-h-4" />
+					<p className="text-xs font-bold tracking-tight truncate">{form.titulo}</p>
+				</div>
+				<div className="hidden lg:flex items-center gap-1">
+					<Box className="w-4 h-4 min-w-4 min-h-4" />
+					<p className="text-primary/50 text-xs font-medium tracking-tight">{form.materiais.length} materiais</p>
+				</div>
+			</div>
+			<div className="flex items-center gap-2 min-w-fit">
+				<Button variant={"ghost"} size={"xs"} onClick={handleViewDetailsClick}>
+					VER DETALHES
+				</Button>
+			</div>
 		</div>
 	);
 }

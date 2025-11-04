@@ -20,6 +20,12 @@ const GetWarehouseFormulariesSchema = z.object({
 		})
 		.optional()
 		.nullable(),
+	projectId: z
+		.string({
+			invalid_type_error: "Tipo inválido para o ID do projeto.",
+		})
+		.optional()
+		.nullable(),
 	page: z
 		.string({
 			invalid_type_error: "Tipo inválido para a página.",
@@ -59,16 +65,34 @@ const GetWarehouseFormulariesSchema = z.object({
 		.optional()
 		.nullable()
 		.transform((val) => val === "true"),
+	draftsOnly: z
+		.string({
+			invalid_type_error: "Tipo inválido para o flag de formulários rascunhos.",
+		})
+		.optional()
+		.nullable()
+		.transform((val) => val === "true"),
 });
 export type TGetWarehouseFormulariesInput = z.infer<typeof GetWarehouseFormulariesSchema>;
 
 async function getWarehouseFormularies({ input, session }: { input: TGetWarehouseFormulariesInput; session: TAuthSession }) {
 	const PAGE_SIZE = 50;
-	const { id, search, periodType, periodAfter, periodBefore, pendingOnly, page } = input;
+	const { id, search, periodType, periodAfter, periodBefore, pendingOnly, page, projectId, draftsOnly } = input;
 
 	const warehouseDb = await connectToWarehouseDatabase();
 	const warehouseFormsCollection = warehouseDb.collection<TNewWarehouseFormulary>("formularios");
 
+	if (draftsOnly) {
+		const warehouseForms = await warehouseFormsCollection.find({ dataEfetivacao: null, dataInsercao: null }).toArray();
+		return {
+			data: {
+				default: undefined,
+				byId: undefined,
+				byProjectId: undefined,
+				drafts: warehouseForms.map((wf) => ({ ...wf, _id: wf._id.toString() })),
+			},
+		};
+	}
 	if (id) {
 		if (!ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
@@ -79,18 +103,33 @@ async function getWarehouseFormularies({ input, session }: { input: TGetWarehous
 			data: {
 				default: undefined,
 				byId: { ...warehouseForm, _id: warehouseForm._id.toString() },
+				byProjectId: undefined,
+				drafts: undefined,
 			},
 		};
 	}
+	if (projectId) {
+		if (!ObjectId.isValid(projectId)) throw new createHttpError.BadRequest("ID do projeto inválido.");
+		const project = await warehouseFormsCollection.find({ "projeto.id": projectId }).toArray();
+		if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+		return {
+			data: {
+				default: undefined,
+				byId: undefined,
+				byProjectId: project.map((wf) => ({ ...wf, _id: wf._id.toString() })),
+				drafts: undefined,
+			},
+		};
+	}
+	const searchQuery: Filter<TNewWarehouseFormulary> | null = search && search.trim().length > 0 ? { titulo: { $regex: search, $options: "i" } } : null;
 
-	const searchQuery: Filter<TNewWarehouseFormulary> = search && search.trim().length > 0 ? { titulo: { $regex: search, $options: "i" } } : {};
+	const periodQuery: Filter<TNewWarehouseFormulary> | null =
+		periodType && periodAfter && periodBefore ? { [periodType]: { $gte: periodAfter, $lte: periodBefore } } : null;
 
-	const periodQuery: Filter<TNewWarehouseFormulary> =
-		periodType && periodAfter && periodBefore ? { [periodType]: { $gte: periodAfter, $lte: periodBefore } } : {};
+	const pendingOnlyQuery: Filter<TNewWarehouseFormulary> | null = pendingOnly ? { dataEfetivacao: null } : null;
 
-	const pendingOnlyQuery: Filter<TNewWarehouseFormulary> = pendingOnly ? { dataEfetivacao: null } : {};
-
-	const query: Filter<TNewWarehouseFormulary> = { ...searchQuery, ...periodQuery, ...pendingOnlyQuery };
+	const andQuery = [searchQuery, periodQuery, pendingOnlyQuery].filter((q) => q !== null);
+	const query: Filter<TNewWarehouseFormulary> = { $and: [...andQuery, { dataInsercao: { $ne: null } }] };
 
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
@@ -107,10 +146,16 @@ async function getWarehouseFormularies({ input, session }: { input: TGetWarehous
 				totalPages,
 			},
 			byId: undefined,
+			byProjectId: undefined,
+			drafts: undefined,
 		},
 	};
 }
 export type TGetWarehouseFormulariesOutput = Awaited<ReturnType<typeof getWarehouseFormularies>>;
+export type TGetWarehouseFormulariesOutputDefault = Exclude<TGetWarehouseFormulariesOutput["data"]["default"], undefined>;
+export type TGetWarehouseFormulariesOutputById = Exclude<TGetWarehouseFormulariesOutput["data"]["byId"], undefined>;
+export type TGetWarehouseFormulariesOutputByProjectId = Exclude<TGetWarehouseFormulariesOutput["data"]["byProjectId"], undefined>;
+export type TGetWarehouseFormulariesOutputDrafts = Exclude<TGetWarehouseFormulariesOutput["data"]["drafts"], undefined>;
 const getWarehouseFormulariesHandler: NextApiHandler<TGetWarehouseFormulariesOutput> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 	console.log("[INFO][WAREHOUSE_FORM_GET] Getting warehouse forms", {
@@ -143,11 +188,26 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 			// Insert warehouse formulary
 			const insertWarehouseFormulary: TNewWarehouseFormulary = {
 				...warehouseFormulary,
-				materiais: warehouseFormulary.materiais.map((m) => ({ ...m, qtdeRetiradaEfetivada: m.qtdeRetirada, qtdeDevolucaoEfetivada: m.qtdeDevolucao })),
+				materiais: warehouseFormulary.materiais.map((m) => ({ ...m, qtdeRetiradaEfetivada: 0, qtdeDevolucaoEfetivada: 0 })),
+				autor: {
+					id: session.user.id,
+					nome: session.user.nome,
+					avatar_url: session.user.avatar_url,
+				},
 			};
 			const insertResponse = await warehouseFormsCollection.insertOne(insertWarehouseFormulary, { session: session_mongo });
 			if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro na inserção do formulário.");
 
+			// In case no insertion date was provided, we must insert it as a draft, so no material updates for now
+			if (!warehouseFormulary.dataInsercao) {
+				console.log("[INFO][WAREHOUSE_FORM_CREATION] No insertion date provided, creating warehouse form as a draft");
+				return {
+					data: {
+						insertedId: insertResponse.insertedId.toString(),
+					},
+					message: "Formulário criado com sucesso !",
+				};
+			}
 			// Handling materials update
 			const warehouseFormularyMaterialsList = warehouseFormulary.materiais;
 			const warehouseFormularyMaterialsListIds = warehouseFormularyMaterialsList
@@ -286,6 +346,7 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 						qtdeDevolucaoEfetivada: previousMaterialInfo?.qtdeDevolucaoEfetivada || 0,
 					};
 				}),
+				autor: previousWarehouseFormulary.autor,
 			};
 			const updateResponse = await warehouseFormsCollection.updateOne(
 				{ _id: new ObjectId(warehouseFormularyId) },
@@ -338,10 +399,11 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 
 			for (const listMaterial of materialsListMap.values()) {
 				const { newMaterial, previousMaterial } = listMaterial;
-				// If none of the materials exist (theorically not possible), continuing
+
+				// If none of the materials exist (before and after) (theorically not possible), continuing
 				if (!newMaterial && !previousMaterial) continue;
 
-				// If the material existed, but does not exist anymore, we need to increase the quantity of the material
+				// If the material existed before, but does not exist anymore (meaning it was removed from the warehouse form) we need to increase the quantity of the material in stock
 				if (!newMaterial && !!previousMaterial) {
 					const correspondingMaterial = warehouseFormularyMaterials.find((mi) => mi._id.toString() === previousMaterial.id);
 					if (!correspondingMaterial) throw new createHttpError.NotFound("Material não encontrado.");

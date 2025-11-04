@@ -413,6 +413,7 @@ export const ServiceOrderProjectProjection = {
 	"obra.pendencias": 1,
 	idVisitaTecnica: 1,
 	idOrdemServico: 1,
+	alocacoes: 1,
 };
 
 export type TServiceOrderProject = Pick<
@@ -433,6 +434,7 @@ export type TServiceOrderProject = Pick<
 	| "servicos"
 	| "idVisitaTecnica"
 	| "idOrdemServico"
+	| "alocacoes"
 > & {
 	vendedor: TProject["vendedor"];
 	compra: {

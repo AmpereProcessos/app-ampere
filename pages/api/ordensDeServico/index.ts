@@ -175,7 +175,7 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 	// In case the service order has no calendar, we can return the response
 	const updatedServiceOrder = await collection.findOne({ _id: new ObjectId(id) });
 	// Else, we gotta handle the integration with Google Calendar
-	if (updatedServiceOrder?.googleCalendarEventId && updatedServiceOrder?.googleCalendarId) {
+	if (updatedServiceOrder?.googleCalendarEventId && updatedServiceOrder?.googleCalendarId && updatedServiceOrder?.calendarioId) {
 		const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) });
 		if (!calendar) throw new createHttpError.NotFound("Calendário não encontrado.");
 		const googleOAuth2Client = getConfiguredGoogleOAuth2Client(calendar.googleRefreshToken);
@@ -238,7 +238,8 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
 		if (
 			updatedServiceOrder?.googleCalendarId &&
 			((updatedServiceOrder.agendamento?.inicio && updatedServiceOrder.agendamento?.fim) ||
-				(updatedServiceOrder.periodo.inicio && updatedServiceOrder.periodo.fim))
+				(updatedServiceOrder.periodo.inicio && updatedServiceOrder.periodo.fim)) &&
+			updatedServiceOrder?.calendarioId
 		) {
 			// In case the service order has a defined calendar id and a period defined but calendar event is not defined, we need to create the event
 			const calendar = await callendarsCollection.findOne({ _id: new ObjectId(updatedServiceOrder.calendarioId) });
@@ -352,12 +353,8 @@ type GetServiceOrdersByProjectParams = {
 	projectId: string;
 };
 async function getServiceOrdersByProject({ collection, projectId }: GetServiceOrdersByProjectParams) {
-	try {
-		const orders = await collection.find({ "projeto.id": projectId }, { projection: ServiceOrderSimplifiedProjection }).toArray();
-		return orders as TServiceOrderSimplified[];
-	} catch (error) {
-		throw error;
-	}
+	const orders = await collection.find({ "projeto.id": projectId }, { projection: ServiceOrderSimplifiedProjection }).toArray();
+	return orders as TServiceOrderSimplified[];
 }
 
 type GetServiceOrdersByTechnicalAnalysisParams = {
@@ -365,12 +362,8 @@ type GetServiceOrdersByTechnicalAnalysisParams = {
 	technicalAnalysisId: string;
 };
 export async function getServiceOrdersByTechnicalAnalysis({ collection, technicalAnalysisId }: GetServiceOrdersByTechnicalAnalysisParams) {
-	try {
-		const orders = await collection.find({ idAnaliseTecnica: technicalAnalysisId }, { projection: ServiceOrderSimplifiedProjection }).toArray();
-		return orders as TServiceOrderSimplified[];
-	} catch (error) {
-		throw error;
-	}
+	const orders = await collection.find({ idAnaliseTecnica: technicalAnalysisId }, { projection: ServiceOrderSimplifiedProjection }).toArray();
+	return orders as TServiceOrderSimplified[];
 }
 
 type GetServiceOrdersByResponsibleNameParams = {
@@ -378,14 +371,10 @@ type GetServiceOrdersByResponsibleNameParams = {
 	responsibleName: string;
 };
 async function getServiceOrdersByResponsibleName({ collection, responsibleName }: GetServiceOrdersByResponsibleNameParams) {
-	try {
-		const orders = await collection
-			.find({ "responsavel.nome": responsibleName, dataEfetivacao: null }, { projection: ServiceOrderSimplifiedProjection })
-			.toArray();
-		return orders as TServiceOrderSimplified[];
-	} catch (error) {
-		throw error;
-	}
+	const orders = await collection
+		.find({ "responsavel.nome": responsibleName, dataEfetivacao: null }, { projection: ServiceOrderSimplifiedProjection })
+		.toArray();
+	return orders as TServiceOrderSimplified[];
 }
 
 type GetServiceOrderByIdParams = {
@@ -393,81 +382,79 @@ type GetServiceOrderByIdParams = {
 	id: string;
 };
 async function getServiceOrderById({ collection, id }: GetServiceOrderByIdParams) {
-	try {
-		const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };
-		const lookup = { from: "dados", localField: "projectIdAsObjectId", foreignField: "_id", as: "projetoDados" };
-		const serviceOrderArr = await collection
-			.aggregate([
-				{ $match: { _id: new ObjectId(id) } },
-				{ $addFields: addFields },
-				{ $lookup: lookup },
-				{
-					$project: {
-						descricao: 1,
-						categoria: 1,
-						status: 1,
-						pendencias: 1,
-						favorecido: 1,
-						idAnaliseTecnica: 1,
-						projeto: 1,
-						etiquetas: 1,
-						localizacao: 1,
-						responsavel: 1,
-						urgencia: 1,
-						anotacoes: 1,
-						detalhes: 1,
-						autor: 1,
-						cobranca: 1,
-						pagamento: 1,
-						observacoes: 1,
-						equipamentos: 1,
-						agendamento: 1,
-						periodo: 1,
-						calendarioId: 1,
-						googleCalendarId: 1,
-						googleCalendarEventId: 1,
-						dataPrevisaoLiberacao: 1,
-						dataLiberacao: 1,
-						dataEfetivacao: 1,
-						dataInsercao: 1,
-						"projetoDados._id": 1,
-						"projetoDados.nomeDoContrato": 1,
-						"projetoDados.cpf_cnpj": 1,
-						"projetoDados.tipoDeServico": 1,
-						"projetoDados.vendedor": 1,
-						"projetoDados.cep": 1,
-						"projetoDados.uf": 1,
-						"projetoDados.cidade": 1,
-						"projetoDados.bairro": 1,
-						"projetoDados.logradouro": 1,
-						"projetoDados.numeroResidencia": 1,
-						"projetoDados.produtos": 1,
-						"projetoDados.servicos": 1,
-						"projetoDados.compra.kitInfo": 1,
-						"projetoDados.compra.dataPagamento": 1,
-						"projetoDados.compra.previsaoEntrega": 1,
-						"projetoDados.compra.dataEntrega": 1,
-						"projetoDados.homologacao.acesso.dataResposta": 1,
-						"projetoDados.homologacao.vistoria.dataEfetivacao": 1,
-						"projetoDados.material.materialFaltante": 1,
-						"projetoDados.obra.entrada": 1,
-						"projetoDados.obra.saida": 1,
-						"projetoDados.obra.statusDaObra": 1,
-						"projetoDados.obra.equipeResp": 1,
-						"projetoDados.obra.observacoes": 1,
-						"projetoDados.obra.pendencias": 1,
-						"projetoDados.idVisitaTecnica": 1,
-					},
+	const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };
+	const lookup = { from: "dados", localField: "projectIdAsObjectId", foreignField: "_id", as: "projetoDados" };
+	const serviceOrderArr = await collection
+		.aggregate([
+			{ $match: { _id: new ObjectId(id) } },
+			{ $addFields: addFields },
+			{ $lookup: lookup },
+			{
+				$project: {
+					descricao: 1,
+					categoria: 1,
+					status: 1,
+					pendencias: 1,
+					favorecido: 1,
+					idAnaliseTecnica: 1,
+					projeto: 1,
+					etiquetas: 1,
+					localizacao: 1,
+					responsavel: 1,
+					urgencia: 1,
+					anotacoes: 1,
+					detalhes: 1,
+					autor: 1,
+					cobranca: 1,
+					pagamento: 1,
+					observacoes: 1,
+					equipamentos: 1,
+					agendamento: 1,
+					periodo: 1,
+					calendarioId: 1,
+					googleCalendarId: 1,
+					googleCalendarEventId: 1,
+					dataPrevisaoLiberacao: 1,
+					dataLiberacao: 1,
+					dataEfetivacao: 1,
+					dataInsercao: 1,
+					"projetoDados._id": 1,
+					"projetoDados.qtde": 1,
+					"projetoDados.nomeDoContrato": 1,
+					"projetoDados.cpf_cnpj": 1,
+					"projetoDados.tipoDeServico": 1,
+					"projetoDados.vendedor": 1,
+					"projetoDados.cep": 1,
+					"projetoDados.uf": 1,
+					"projetoDados.cidade": 1,
+					"projetoDados.bairro": 1,
+					"projetoDados.logradouro": 1,
+					"projetoDados.numeroResidencia": 1,
+					"projetoDados.produtos": 1,
+					"projetoDados.servicos": 1,
+					"projetoDados.compra.kitInfo": 1,
+					"projetoDados.compra.dataPagamento": 1,
+					"projetoDados.compra.previsaoEntrega": 1,
+					"projetoDados.compra.dataEntrega": 1,
+					"projetoDados.homologacao.acesso.dataResposta": 1,
+					"projetoDados.homologacao.vistoria.dataEfetivacao": 1,
+					"projetoDados.material.materialFaltante": 1,
+					"projetoDados.obra.entrada": 1,
+					"projetoDados.obra.saida": 1,
+					"projetoDados.obra.statusDaObra": 1,
+					"projetoDados.obra.equipeResp": 1,
+					"projetoDados.obra.observacoes": 1,
+					"projetoDados.obra.pendencias": 1,
+					"projetoDados.idVisitaTecnica": 1,
+					"projetoDados.alocacoes": 1,
 				},
-			])
-			.toArray();
-		const serviceOrder = serviceOrderArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0];
-		if (!serviceOrder) throw new createHttpError.NotFound("Ordem de serviço não encontrada.");
+			},
+		])
+		.toArray();
+	const serviceOrder = serviceOrderArr.map((p) => ({ ...p, projetoDados: p.projetoDados[0] }))[0];
+	if (!serviceOrder) throw new createHttpError.NotFound("Ordem de serviço não encontrada.");
 
-		return serviceOrder as TServiceOrderWithProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	return serviceOrder as TServiceOrderWithProjectDTO;
 }
 
 type InsertServiceOrderParams = {
@@ -475,10 +462,6 @@ type InsertServiceOrderParams = {
 	info: TServiceOrder;
 };
 async function insertServiceOrder({ collection, info }: InsertServiceOrderParams) {
-	try {
-		const dbResponse = await collection.insertOne({ ...info, dataInsercao: new Date().toISOString() });
-		return dbResponse;
-	} catch (error) {
-		throw error;
-	}
+	const dbResponse = await collection.insertOne({ ...info, dataInsercao: new Date().toISOString() });
+	return dbResponse;
 }

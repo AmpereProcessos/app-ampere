@@ -29,6 +29,7 @@ export function useWarehouseForms({ initialFilters }: TUseWarehouseFormsParams) 
 		periodType: initialFilters?.periodType || null,
 		periodAfter: initialFilters?.periodAfter || null,
 		periodBefore: initialFilters?.periodBefore || null,
+		draftsOnly: initialFilters?.draftsOnly || false,
 	});
 
 	function updateFilters(filters: Partial<TGetWarehouseFormulariesInput>) {
@@ -67,4 +68,48 @@ export function useWarehouseFormById({ id }: { id: string }) {
 		queryFn: async () => await fetchWarehouseFormById({ id }),
 		refetchOnWindowFocus: false,
 	});
+}
+
+async function fetchWarehouseFormsByProjectId({ projectId }: { projectId: string }) {
+	try {
+		const { data } = await axios.get<TGetWarehouseFormulariesOutput>(`/api/almoxarifado/formularios/index-two?projectId=${projectId}`);
+		if (!data.data.byProjectId) throw new Error("Formulários não encontrados.");
+		return data.data.byProjectId;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+export function useWarehouseFormsByProjectId({ projectId }: { projectId: string }) {
+	return {
+		...useQuery({
+			queryKey: ["warehouse-forms-by-project-id", projectId],
+			queryFn: async () => await fetchWarehouseFormsByProjectId({ projectId }),
+			refetchOnWindowFocus: false,
+		}),
+		queryKey: ["warehouse-forms-by-project-id", projectId],
+	};
+}
+
+async function fetchWarehouseFormsDrafts() {
+	try {
+		const { data } = await axios.get<TGetWarehouseFormulariesOutput>("/api/almoxarifado/formularios/index-two?draftsOnly=true");
+		if (!data.data.drafts) throw new Error("Formulários não encontrados.");
+		return data.data.drafts;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+export function useWarehouseFormsDrafts() {
+	return {
+		...useQuery({
+			queryKey: ["warehouse-forms-drafts"],
+			queryFn: async () => await fetchWarehouseFormsDrafts(),
+			refetchOnWindowFocus: false,
+		}),
+		queryKey: ["warehouse-forms-drafts"],
+	};
 }

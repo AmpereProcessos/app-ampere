@@ -85,7 +85,7 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 	const queryClient = useQueryClient();
 	const [externalResponsible, setExternalResponsible] = useState<boolean>(false);
 
-	const { data: formulary, isLoading, isError, isSuccess } = useWarehouseFormById({ id: formularyId });
+	const { data: formulary, isLoading, isError, isSuccess, error } = useWarehouseFormById({ id: formularyId });
 
 	const [infoHolder, setInfoHolder] = useState<TNewWarehouseFormularyDTO>({
 		_id: "holder",
@@ -116,69 +116,6 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 		dataInsercao: new Date().toISOString(),
 	});
 
-	async function handleFormularyConclusion() {
-		// Formatting updates for material devolution
-		const updates = infoHolder.materiais
-			.filter((m) => !!m.id)
-			.map((material) => {
-				return {
-					id: material.id as string,
-					nome: material.nome,
-					diferenca: material.qtdeDevolucao,
-				};
-			});
-		// Getting an expense object to create expense from materials take away
-		const expense = getExpensesFromFormulary({ session, info: infoHolder });
-		const project = infoHolder.projeto;
-
-		// Calling method for stock quantities update
-		await updateManyMaterials({ formularyId, project, updates });
-		// Calling method to generate a expense from formulary
-		await createExpense({ ...expense });
-		// Calling method for the update of the formulary itself
-		await updateWarehouseFormulary({
-			warehouseFormularyId: formularyId,
-			warehouseFormulary: { ...infoHolder, dataEfetivacao: new Date().toISOString() },
-		});
-
-		return "Formulário de saída de materiais finalizado com sucesso !";
-	}
-
-	async function handleFormularyDelete() {
-		try {
-			const project = infoHolder.projeto;
-
-			const devolutionLoadingToastId = toast.loading("Devolvendo todos os materiais usados.");
-			// Formatting updates for material devolution
-			const updates = infoHolder.materiais
-				.filter((m) => !!m.id)
-				.map((material) => {
-					return {
-						id: material.id as string,
-						nome: material.nome,
-						diferenca: material.qtdeRetirada - material.qtdeDevolucao, // returning to stock only what wasnt already returned (qtdeDevolucao) in a finished formulary
-					};
-				})
-				.filter((u) => u.diferenca !== 0);
-			await updateManyMaterials({ formularyId, project, updates });
-			toast.dismiss(devolutionLoadingToastId);
-
-			const deleteLoadingToastId = toast.loading("Excluindo formulário.");
-			const deleteResponse = await deleteWarehouseFormulary({ warehouseFormularyId: formularyId });
-			toast.dismiss(deleteLoadingToastId);
-			return deleteResponse;
-		} catch (error) {
-			toast.dismiss();
-			throw error;
-		}
-	}
-	const { mutate: handleConclusion, isPending: loadingConclusion } = useMutationWithFeedback({
-		mutationKey: ["conclude-warehouse-formulary", formularyId],
-		mutationFn: handleFormularyConclusion,
-		queryClient: queryClient,
-		affectedQueryKey: ["warehouse-form-by-id", formularyId],
-		callbackFn: () => callbacks?.onSettled?.(),
-	});
 	const { mutate: handleUpdate, isPending: loadingUpdate } = useMutation({
 		mutationKey: ["edit-warehouse-formulary", formularyId],
 		mutationFn: updateWarehouseFormulary,
@@ -199,16 +136,6 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 			return toast.error(getErrorMessage(error));
 		},
 	});
-	const { mutate: handleDelete, isPending: loadingDelete } = useMutationWithFeedback({
-		mutationKey: ["delete-warehouse-formulary", formularyId],
-		mutationFn: handleFormularyDelete,
-		queryClient: queryClient,
-		affectedQueryKey: ["warehouse-form-by-id", formularyId],
-		callbackFn: () => {
-			if (callbacks?.onSettled) callbacks.onSettled();
-			closeModal();
-		},
-	});
 
 	const isFormularyFinished = !!infoHolder.dataEfetivacao;
 	const userHasOverallEditingPermission = session.user.permissoes.execucao.editar;
@@ -225,6 +152,7 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 			actionFunction={() => handleUpdate({ warehouseFormularyId: formularyId, warehouseFormulary: infoHolder })}
 			actionIsPending={loadingUpdate}
 			stateIsLoading={isLoading}
+			stateError={isError ? getErrorMessage(error) : null}
 			closeMenu={closeModal}
 			dialogVariant="md"
 		>

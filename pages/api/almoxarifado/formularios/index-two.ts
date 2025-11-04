@@ -270,6 +270,7 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 			if (bulkwriteMaterials.length > 0) {
 				await warehouseMaterialsCollection.bulkWrite(bulkwriteMaterials, { session: session_mongo });
 			}
+			// Inserting the logs
 			if (bulkwriteLogs.length > 0) {
 				await warehouseLogsCollection.bulkWrite(bulkwriteLogs, { session: session_mongo });
 			}

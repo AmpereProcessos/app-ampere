@@ -518,6 +518,10 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 				{ session: session_mongo },
 			);
 
+			if (!finalUpdatedWarehouseFormulary) {
+				throw new createHttpError.NotFound("Formulário não encontrado.");
+			}
+
 			if (!previousWarehouseFormulary?.dataEfetivacao && !!finalUpdatedWarehouseFormulary?.dataEfetivacao) {
 				// Checking for possible effectivation of the warehouse form
 				// If, checking for possible project associated to the warehouse form
@@ -561,6 +565,92 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 					};
 					await expensesCollection.insertOne(newExpense, { session: session_mongo });
 				}
+			}
+
+			if (finalUpdatedWarehouseFormulary.projeto.id) {
+				console.log("[INFO][WAREHOUSE_FORM_UPDATE] Updating project allocations.", {
+					warehouseFormularyId,
+					projectId: finalUpdatedWarehouseFormulary.projeto.id,
+				});
+				const project = await projectsCollection.findOne({ _id: new ObjectId(finalUpdatedWarehouseFormulary.projeto.id) }, { session: session_mongo });
+				if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+
+				const allocations = project.alocacoes || [];
+				const allocationsMap = new Map(allocations.map((a) => [a.idMaterial, a]));
+
+				const wrMaterials = finalUpdatedWarehouseFormulary.materiais.filter((m) => !!m.id);
+				for (const wfMaterial of wrMaterials) {
+					const existingAllocationForMaterial = allocationsMap.get(wfMaterial.id as string);
+
+					// If no existing allocation for the material is defined:
+					// Pretty straight forward, we gotta create a new allocation for the material with a new movement from the warehouse form
+					if (!existingAllocationForMaterial) {
+						allocationsMap.set(wfMaterial.id as string, {
+							idMaterial: wfMaterial.id as string,
+							nome: wfMaterial.nome,
+							unidade: wfMaterial.grandeza || "UN",
+							quantidade: wfMaterial.qtdeRetiradaEfetivada - wfMaterial.qtdeDevolucaoEfetivada,
+							quantidadePrevista: wfMaterial.qtdeRetiradaEfetivada - wfMaterial.qtdeDevolucaoEfetivada,
+							precoUnitario: wfMaterial.preco,
+							movimentacoes: [
+								{
+									data: new Date().toISOString(),
+									titulo: finalUpdatedWarehouseFormulary.titulo,
+									quantidade: wfMaterial.qtdeRetiradaEfetivada - wfMaterial.qtdeDevolucaoEfetivada,
+									precoUnitario: wfMaterial.preco,
+									idFormularioSaida: warehouseFormularyId,
+								},
+							],
+						});
+					} else {
+						// If an existing allocation for the material is defined:
+						// We gotta add/update the movement from the warehouse form
+
+						let updatedMovements: Exclude<TProject["alocacoes"], undefined | null>[number]["movimentacoes"] = existingAllocationForMaterial.movimentacoes;
+
+						const hasMovementsFromWarehouseForm = existingAllocationForMaterial.movimentacoes.some((m) => m.idFormularioSaida === warehouseFormularyId);
+						if (!hasMovementsFromWarehouseForm) {
+							updatedMovements.push({
+								data: new Date().toISOString(),
+								titulo: finalUpdatedWarehouseFormulary.titulo,
+								quantidade: wfMaterial.qtdeRetiradaEfetivada - wfMaterial.qtdeDevolucaoEfetivada,
+								precoUnitario: wfMaterial.preco,
+								idFormularioSaida: warehouseFormularyId,
+							});
+						} else {
+							updatedMovements = updatedMovements.map((m) => {
+								if (m.idFormularioSaida === warehouseFormularyId) {
+									return {
+										idFormularioSaida: warehouseFormularyId,
+										titulo: finalUpdatedWarehouseFormulary.titulo,
+										data: new Date().toISOString(),
+										quantidade: wfMaterial.qtdeRetiradaEfetivada - wfMaterial.qtdeDevolucaoEfetivada,
+										precoUnitario: wfMaterial.preco,
+									};
+								}
+								return m;
+							});
+						}
+
+						const newAllocationQty = updatedMovements.reduce((acc, curr) => acc + curr.quantidade, 0);
+						const newAllocationPrice = updatedMovements.reduce((acc, curr) => acc + curr.quantidade * curr.precoUnitario, 0) / newAllocationQty;
+
+						allocationsMap.set(wfMaterial.id as string, {
+							...existingAllocationForMaterial,
+							quantidade: newAllocationQty,
+							precoUnitario: newAllocationPrice,
+							movimentacoes: updatedMovements,
+						});
+					}
+				}
+
+				const newAllocations = Array.from(allocationsMap.values());
+				console.log("[INFO][WAREHOUSE_FORM_UPDATE] Project allocations updated.", { newAllocations });
+				await projectsCollection.updateOne(
+					{ _id: new ObjectId(finalUpdatedWarehouseFormulary.projeto.id) },
+					{ $set: { alocacoes: newAllocations } },
+					{ session: session_mongo },
+				);
 			}
 		});
 

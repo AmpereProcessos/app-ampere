@@ -88,12 +88,12 @@ export const AppRoutes: TAppRouteGroup[] = [
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
 				icon: <BiSupport className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
-			{
-				title: "RH",
-				path: "/rh",
-				checkUserAccess: (session: TAuthSession) => session.user.permissoes.recursosHumanos.visualizar,
-				icon: <MdPeople className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
-			},
+			// {
+			// 	title: "RH",
+			// 	path: "/rh",
+			// 	checkUserAccess: (session: TAuthSession) => session.user.permissoes.recursosHumanos.visualizar,
+			// 	icon: <MdPeople className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			// },
 			{
 				title: "ADM",
 				path: "/adm",
@@ -126,15 +126,9 @@ export const AppRoutes: TAppRouteGroup[] = [
 			},
 			{
 				title: "Auditoria Financeira",
-				path: "/auditoria-financeira",
+				path: "/admin/auditoria-financeira",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.administrativo.visualizar,
 				icon: <BsBank2 className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
-			},
-			{
-				title: "Solicitações de Compra",
-				path: "/solicitacoes-compra",
-				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suprimentos.visualizar,
-				icon: <MdAddShoppingCart className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
 			{
 				title: "Comissões",
@@ -144,13 +138,13 @@ export const AppRoutes: TAppRouteGroup[] = [
 			},
 			{
 				title: "Entregas",
-				path: "/entregas",
+				path: "/suprimentos/entregas",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suprimentos.visualizar || session.user.permissoes.posVenda.visualizar,
 				icon: <TbTruckDelivery className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
 			{
 				title: "Banco de OS",
-				path: "/banco-os",
+				path: "/ordens-servico",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.ordensDeServico.visualizar || session.user.permissoes.execucao.visualizar,
 				icon: <MdDesignServices className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
@@ -163,25 +157,25 @@ export const AppRoutes: TAppRouteGroup[] = [
 			},
 			{
 				title: "Monitoramento",
-				path: "/monitoramento",
+				path: "/oem/monitoramento",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.suporte.visualizar,
 				icon: <BsSpeedometer2 className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
 			{
 				title: "Gestão de Obras",
-				path: "/gestao-obras",
+				path: "/obras/gestao-obras",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.execucao.visualizar || session.user.permissoes.ordensDeServico.visualizar,
 				icon: <MdOutlineBuildCircle className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
 			{
 				title: "Nutrição Pós-Venda",
-				path: "/nutricao-pos-venda",
+				path: "/posvenda/nutricao",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
 				icon: <BsCalendar2Week className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
 			{
 				title: "NPS",
-				path: "/nps",
+				path: "/posvenda/nps",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
 				icon: <BsFillPatchCheckFill className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},

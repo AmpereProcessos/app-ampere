@@ -88,12 +88,12 @@ export const AppRoutes: TAppRouteGroup[] = [
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,
 				icon: <BiSupport className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},
-			// {
-			// 	title: "RH",
-			// 	path: "/rh",
-			// 	checkUserAccess: (session: TAuthSession) => session.user.permissoes.recursosHumanos.visualizar,
-			// 	icon: <MdPeople className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
-			// },
+			{
+				title: "RH",
+				path: "/recursos-humanos",
+				checkUserAccess: (session: TAuthSession) => session.user.permissoes.recursosHumanos.visualizar,
+				icon: <MdPeople className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+			},
 			{
 				title: "ADM",
 				path: "/adm",

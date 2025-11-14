@@ -1,9 +1,9 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { TIntegration } from "@/utils/schemas/integrations";
+import type { TIntegration } from "@/utils/schemas/integrations";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import axios from "axios";
 import dayjs from "dayjs";
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 
 const handleAccessTokenRefresh: NextApiHandler<any> = async (req, res) => {
 	const currentDayJs = dayjs();

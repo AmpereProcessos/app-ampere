@@ -4,6 +4,7 @@ import CompositionKitsBlock from "@/components/identificador/configuracoes/Compo
 import ContractTemplatesBlock from "@/components/identificador/configuracoes/ContractTemplatesBlock";
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
 import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
+import IntegrationsBlock from "@/components/identificador/configuracoes/IntegrationsBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
 import WhatsappConnectionBlock from "@/components/identificador/configuracoes/WhatsappConnectionBlock";
@@ -34,7 +35,8 @@ type ConfigurationPageModes =
 	| "contract-templates"
 	| "contract-templates-variables"
 	| "whatsapp-templates"
-	| "whatsapp-connection";
+	| "whatsapp-connection"
+	| "integrations";
 type ConfigurationBlockProps = {
 	session: TAuthSession;
 };
@@ -162,6 +164,15 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 							Conexão WhatsApp
 						</button>
 					)}
+					<button
+						type="button"
+						onClick={() => setMode("integrations")}
+						className={`${
+							mode === "integrations" ? "bg-secondary" : ""
+						} text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+					>
+						Integrações
+					</button>
 				</div>
 				<div className="flex h-full w-full flex-col gap-1 px-2 py-2 lg:w-4/5">
 					{mode === "profile" ? <ProfileBlock session={session} /> : null}
@@ -174,6 +185,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 					{mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}
 					{mode === "whatsapp-templates" ? <WhatsappTemplatesBlock session={session} /> : null}
 					{mode === "whatsapp-connection" ? <WhatsappConnectionBlock session={session} /> : null}
+					{mode === "integrations" ? <IntegrationsBlock session={session} /> : null}
 				</div>
 			</div>
 		</div>

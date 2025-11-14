@@ -1,10 +1,17 @@
 import { z } from "zod";
 import { AuthorSchema } from "./users";
 
-const IntegrationIdentifierEnumSchema = z.enum(["CONTA_AZUL", "WHATSAPP"]);
+const IntegrationIdentifierEnumSchema = z.enum(["CONTA_AZUL", "WHATSAPP", "CONTA_AZUL_V2"]);
 
 export const ContaAzulIntegrationDataSchema = z.object({
 	tipo: z.enum(["CONTA_AZUL"]),
+	tokenRefresh: z.string({ required_error: "Token de atualização não informado.", invalid_type_error: "Tipo não válido para token de atualização." }),
+	tokenAcesso: z.string({ required_error: "Token de acesso não informado.", invalid_type_error: "Tipo não válido para token de acesso." }),
+	dataExpiracao: z.string({ required_error: "Expiração do token não informada.", invalid_type_error: "Tipo não válido para a expiração do token." }),
+});
+
+export const ContaAzulV2IntegrationDataSchema = z.object({
+	tipo: z.enum(["CONTA_AZUL_V2"]),
 	tokenRefresh: z.string({ required_error: "Token de atualização não informado.", invalid_type_error: "Tipo não válido para token de atualização." }),
 	tokenAcesso: z.string({ required_error: "Token de acesso não informado.", invalid_type_error: "Tipo não válido para token de acesso." }),
 	dataExpiracao: z.string({ required_error: "Expiração do token não informada.", invalid_type_error: "Tipo não válido para a expiração do token." }),
@@ -34,7 +41,7 @@ export const WhatsappIntegrationDataSchema = z.object({
 export type TWhatsappIntegrationData = z.infer<typeof WhatsappIntegrationDataSchema>;
 export const IntegrationSchema = z.object({
 	identificador: IntegrationIdentifierEnumSchema,
-	dados: z.discriminatedUnion("tipo", [ContaAzulIntegrationDataSchema, WhatsappIntegrationDataSchema]),
+	dados: z.discriminatedUnion("tipo", [ContaAzulIntegrationDataSchema, WhatsappIntegrationDataSchema, ContaAzulV2IntegrationDataSchema]),
 	autor: AuthorSchema,
 	dataInsercao: z
 		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção." })

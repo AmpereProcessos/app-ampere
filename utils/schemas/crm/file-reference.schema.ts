@@ -37,7 +37,10 @@ export const InsertFileReferenceSchema = z.object({
 	idReceita: z.string({ invalid_type_error: "Tipo não válido para a referência de receita." }).optional().nullable(),
 	idDespesa: z.string({ invalid_type_error: "Tipo não válido para a referência de despesa." }).optional().nullable(),
 	idOrdemServico: z.string({ invalid_type_error: "Tipo não válido para a referência da ordem de serviço." }).optional().nullable(),
-	idParceiro: z.string({ required_error: "Referência a parceiro não informada.", invalid_type_error: "Tipo não válida para referência a parceiro." }).optional().nullable(),
+	idParceiro: z
+		.string({ required_error: "Referência a parceiro não informada.", invalid_type_error: "Tipo não válida para referência a parceiro." })
+		.optional()
+		.nullable(),
 	idAnaliseTecnica: z
 		.string({
 			required_error: "Referência de análise técnica não informada.",
@@ -75,7 +78,11 @@ export const InsertFileReferenceSchema = z.object({
 		}),
 		avatar_url: z.string().optional().nullable(),
 	}),
-	dataExclusao: z.string({ invalid_type_error: "Tipo não válido para data de exclusão." }).datetime({ message: "Tipo não válido para data de exclusão." }).optional().nullable(),
+	dataExclusao: z
+		.string({ invalid_type_error: "Tipo não válido para data de exclusão." })
+		.datetime({ message: "Tipo não válido para data de exclusão." })
+		.optional()
+		.nullable(),
 	autorIdExclusao: z.string({ invalid_type_error: "Tipo não válido para o autor da exclusão." }).optional().nullable(),
 
 	dataInsercao: z.string().datetime(),

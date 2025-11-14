@@ -144,7 +144,8 @@ const getEnergyPAExecutionWithFilters: NextApiHandler<TEnergyPAExecutionWithFilt
 	const session = await validateAuthenticationWithSession(req, res);
 	const isAuthorized = !!session?.user.permissoes.execucao.visualizar;
 	if (!isAuthorized) throw new createHttpError.Unauthorized("Oops, seu usuário não possui acesso a esse módulo.");
-	const { page, search, segments, homologationStatus, responsabilityTypes, pendingExecutionOnly, paidOnly, period } = EnergyPAExecutionWithFiltersInput.parse(req.body);
+	const { page, search, segments, homologationStatus, responsabilityTypes, pendingExecutionOnly, paidOnly, period } =
+		EnergyPAExecutionWithFiltersInput.parse(req.body);
 
 	console.log({ page, search, segments, homologationStatus, responsabilityTypes, pendingExecutionOnly, paidOnly, period });
 	const db: Db = await connectToDatabase();
@@ -174,7 +175,8 @@ const getEnergyPAExecutionWithFilters: NextApiHandler<TEnergyPAExecutionWithFilt
 
 	const paidOnlyQuery: Filter<TProject> = paidOnly ? { "compra.dataPagamento": { $ne: null } } : {};
 
-	const periodQuery: Filter<TProject> = period.field && period.after && period.before ? { [period.field]: { $gte: period.after, $lte: period.before } } : {};
+	const periodQuery: Filter<TProject> =
+		period.field && period.after && period.before ? { [period.field]: { $gte: period.after, $lte: period.before } } : {};
 	const query: Filter<TProject> = {
 		"padrao.aumentoCarga.aplicavel": true,
 		...searchQuery,

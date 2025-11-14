@@ -62,7 +62,9 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 				<div className="flex flex-col">
 					<h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
 					<div className="flex">
-						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">DESCRIÇÃO DO SISTEMA FOTOVOLTAICO</div>
+						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
+							DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
+						</div>
 						<div className="flex w-[80%] flex-col">
 							<div className="flex w-full items-center">
 								<div className="w-1/2 border border-b-0  border-black bg-[#fead61] text-center  font-raleway text-sm font-bold text-white">TOPOLOGIA</div>
@@ -87,7 +89,9 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 										</div>
 									))}
 							</div>
-							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">MÓDULOS FOTOVOLTÁICOS</h1>
+							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
+								MÓDULOS FOTOVOLTÁICOS
+							</h1>
 							<div className="flex w-full flex-col border border-black">
 								<div className="flex w-full items-center">
 									<div className="w-1/3 bg-gray-200 p-1 text-center text-[0.6rem] font-bold">QUANTIDADE</div>
@@ -298,7 +302,9 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 					</div>
 					<div className="grid grid-cols-2">
 						<div className="flex border border-r-0 border-t-0 border-black">
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs font-bold">ADAPTAÇÃO NO QGBT</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs font-bold">
+								ADAPTAÇÃO NO QGBT
+							</div>
 							<div className="grid w-[40%] grid-cols-3">
 								<div className="flex items-center justify-center border-r border-black text-center text-xs">TRILHO</div>
 								<div className="flex items-center justify-center border-r border-black text-center text-xs">CORTE</div>
@@ -362,7 +368,9 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">5</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">FOTO DO LOCAL DO EQUIPAMENTO</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								FOTO DO LOCAL DO EQUIPAMENTO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-xs"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -372,7 +380,9 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">7</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">FOTO DA ESTRUTURA DO TELHADO</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								FOTO DA ESTRUTURA DO TELHADO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-xs"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -382,22 +392,30 @@ function LaudoFormularioVisitaUrbano({ analysis }: LaudoFormularioVisitaUrbanoPr
 						</div>
 						<div className="flex border-b border-r-0 border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">9</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">LOCALIZAÇÃO DO TRANSFORMADOR</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								LOCALIZAÇÃO DO TRANSFORMADOR
+							</div>
 							<div className="w-[20%] text-center text-xs"></div>
 						</div>
 					</div>
 					<h1 className="border border-t-0 border-black bg-[#15599a] text-center text-xs font-bold text-white">GOIÁS</h1>
 					<div className="grid grid-cols-3">
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">FOTO DO POSTE DE DERIVAÇÃO</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								FOTO DO POSTE DE DERIVAÇÃO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-xs"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">NÚMERO E LOCALIZAÇÃO DO POSTE</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								NÚMERO E LOCALIZAÇÃO DO POSTE
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-xs"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">FOTO DO LOCAL DE ATERRAMENTO</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-xs">
+								FOTO DO LOCAL DE ATERRAMENTO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-xs"></div>
 						</div>
 					</div>

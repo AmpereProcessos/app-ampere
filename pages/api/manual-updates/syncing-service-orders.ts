@@ -5,7 +5,11 @@ import type { Db } from "mongodb";
 import type { NextApiHandler } from "next";
 import type { TProject } from "@/utils/schemas/projects";
 import { apiHandler } from "@/utils/api";
-import { getServiceOrderModulesMetadataFromProject, getServiceOrderInverterMetadataFromProject, getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
+import {
+	getServiceOrderModulesMetadataFromProject,
+	getServiceOrderInverterMetadataFromProject,
+	getServiceOrderTagsFromProject,
+} from "@/utils/methods/util/service-order";
 
 const handleSyncServiceOrders: NextApiHandler<any> = async (req, res) => {
 	const db: Db = await connectToDatabase();

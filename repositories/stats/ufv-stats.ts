@@ -51,7 +51,11 @@ export async function getUFVSaleStats({ collection, partialQuery }: GetUFVSaleSt
 	const [saleStats] = stats;
 
 	const totalSold =
-		saleStats.valorProjetoVendido + saleStats.valorOeMVendido + saleStats.valorPadraoVendido + saleStats.valorEstruturaPersonalizadaVendido + saleStats.valorSeguroVendido;
+		saleStats.valorProjetoVendido +
+		saleStats.valorOeMVendido +
+		saleStats.valorPadraoVendido +
+		saleStats.valorEstruturaPersonalizadaVendido +
+		saleStats.valorSeguroVendido;
 	return {
 		qtdeVendida: (saleStats.qtdeVendida ?? 0) as number,
 		potenciaVendida: (saleStats.potenciaVendida ?? 0) as number,

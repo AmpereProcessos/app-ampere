@@ -2,8 +2,14 @@ import { z } from "zod";
 
 const StagesInformationSchema = z.record(
 	z.object({
-		entrada: z.string({ required_error: "Data de entrada no estágio não informada.", invalid_type_error: "Tipo não válido para data de entrada no estágio." }).optional().nullable(),
-		saida: z.string({ required_error: "Data de saída no estágio não informada.", invalid_type_error: "Tipo não válido para data de saída no estágio." }).optional().nullable(),
+		entrada: z
+			.string({ required_error: "Data de entrada no estágio não informada.", invalid_type_error: "Tipo não válido para data de entrada no estágio." })
+			.optional()
+			.nullable(),
+		saida: z
+			.string({ required_error: "Data de saída no estágio não informada.", invalid_type_error: "Tipo não válido para data de saída no estágio." })
+			.optional()
+			.nullable(),
 	}),
 );
 

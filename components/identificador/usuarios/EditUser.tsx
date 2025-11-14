@@ -34,6 +34,8 @@ function EditUser({ userId, session, closeModal, callbacks }: EditUserProps) {
 		nome: "",
 		email: "",
 		telefone: "",
+		cpf: "",
+		dataNascimento: "",
 		avatar_url: "",
 		visualizacao: {
 			tipo: null,
@@ -97,6 +99,11 @@ function EditUser({ userId, session, closeModal, callbacks }: EditUserProps) {
 				enviarMensagens: false,
 			},
 			certificacoes: {
+				visualizar: false,
+				editar: false,
+				criar: false,
+			},
+			almoxarifado: {
 				visualizar: false,
 				editar: false,
 				criar: false,

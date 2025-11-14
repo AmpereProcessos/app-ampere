@@ -22,7 +22,17 @@ type MediaMessageDisplayProps = {
 	variant?: "sent" | "received";
 };
 
-function MediaMessageDisplay({ storageId, mediaUrl, mediaType, fileName, fileSize, mimeType, caption, onImageLoad, variant = "received" }: MediaMessageDisplayProps) {
+function MediaMessageDisplay({
+	storageId,
+	mediaUrl,
+	mediaType,
+	fileName,
+	fileSize,
+	mimeType,
+	caption,
+	onImageLoad,
+	variant = "received",
+}: MediaMessageDisplayProps) {
 	const [fileUrl, setFileUrl] = useState<string | null>(mediaUrl || null);
 	const [isLoading, setIsLoading] = useState(false);
 	const getFileUrl = useMutation(api.mutations.files.getFileUrl);

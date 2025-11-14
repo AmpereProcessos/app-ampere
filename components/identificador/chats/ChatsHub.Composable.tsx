@@ -29,17 +29,9 @@ type ChatsHubComposableProps = {
  * - 🎯 Type-safe with TypeScript
  * - 🧩 Composable architecture
  */
-export default function ChatsHubComposable({
-	session,
-	userHasMessageSendingPermission,
-	whatsappConnection,
-}: ChatsHubComposableProps) {
+export default function ChatsHubComposable({ session, userHasMessageSendingPermission, whatsappConnection }: ChatsHubComposableProps) {
 	return (
-		<ChatHub.Root
-			session={session}
-			userHasMessageSendingPermission={userHasMessageSendingPermission}
-			whatsappConnection={whatsappConnection}
-		>
+		<ChatHub.Root session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} whatsappConnection={whatsappConnection}>
 			<ChatHubContent />
 		</ChatHub.Root>
 	);
@@ -99,12 +91,7 @@ function ChatHubContent() {
 				listPanel={
 					<>
 						{/* List Header - Phone selector and new chat button */}
-						<ChatHub.Header
-							onNewChat={handleNewChat}
-							showSearch={true}
-							searchQuery={searchQuery}
-							onSearchChange={setSearchQuery}
-						/>
+						<ChatHub.Header onNewChat={handleNewChat} showSearch={true} searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
 						{/* Chat List - Displays all conversations */}
 						<ChatHub.List searchQuery={searchQuery} />
@@ -118,22 +105,14 @@ function ChatHubContent() {
 							<ChatHub.Messages />
 
 							{/* Input - Message composition area */}
-							<ChatHub.Input
-								placeholder="Digite uma mensagem..."
-								maxRows={4}
-							/>
+							<ChatHub.Input placeholder="Digite uma mensagem..." maxRows={4} />
 						</ChatHub.Content>
 					</>
 				}
 			/>
 
 			{/* New Chat Modal */}
-			{newChatMenuIsOpen && (
-				<ClientsVinculationMenu
-					closeModal={() => setNewChatMenuIsOpen(false)}
-					handleSelect={handleSelectClient}
-				/>
-			)}
+			{newChatMenuIsOpen && <ClientsVinculationMenu closeModal={() => setNewChatMenuIsOpen(false)} handleSelect={handleSelectClient} />}
 		</>
 	);
 }

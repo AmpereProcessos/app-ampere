@@ -43,7 +43,11 @@ function ServiceOrderProjectVinculation({ serviceOrderId, queryClient, affectedQ
 		if (serviceOrderId) {
 			const msg = await updateServiceOrder({
 				id: serviceOrderId,
-				changes: { ...infoHolder, projeto: { id: projectSimplified._id, nome: projectSimplified.nomeDoContrato }, idAnaliseTecnica: projectSimplified.idVisitaTecnica },
+				changes: {
+					...infoHolder,
+					projeto: { id: projectSimplified._id, nome: projectSimplified.nomeDoContrato },
+					idAnaliseTecnica: projectSimplified.idVisitaTecnica,
+				},
 			});
 			return msg;
 		}
@@ -62,7 +66,9 @@ function ServiceOrderProjectVinculation({ serviceOrderId, queryClient, affectedQ
 					<FaLink />
 					<h1>VINCULAR</h1>
 				</button>
-				{vinculationModalIsOpen ? <ProjectVinculationMenu handleSelect={(projectSimplified) => mutate(projectSimplified)} closeModal={() => setVinculationModalIsOpen(false)} /> : null}
+				{vinculationModalIsOpen ? (
+					<ProjectVinculationMenu handleSelect={(projectSimplified) => mutate(projectSimplified)} closeModal={() => setVinculationModalIsOpen(false)} />
+				) : null}
 			</div>
 		</div>
 	);

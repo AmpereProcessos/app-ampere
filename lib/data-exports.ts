@@ -87,23 +87,23 @@ export const ProjectExportablesSchema = z.object({
 		required_error: "Necessidade de exportação da longitude não informada",
 		invalid_type_error: "Necessidade de exportação da longitude não é um booleano",
 	}),
-	'pagamento.forma': z.boolean({
+	"pagamento.forma": z.boolean({
 		required_error: "Necessidade de exportação da forma de pagamento não informada",
 		invalid_type_error: "Necessidade de exportação da forma de pagamento não é um booleano",
 	}),
-	'pagamento.credor': z.boolean({
+	"pagamento.credor": z.boolean({
 		required_error: "Necessidade de exportação do credor não informada",
 		invalid_type_error: "Necessidade de exportação do credor não é um booleano",
 	}),
-	'pagamento.pagador': z.boolean({
+	"pagamento.pagador": z.boolean({
 		required_error: "Necessidade de exportação do pagador não informada",
 		invalid_type_error: "Necessidade de exportação do pagador não é um booleano",
 	}),
-	'pagamento.contatoPagador': z.boolean({
+	"pagamento.contatoPagador": z.boolean({
 		required_error: "Necessidade de exportação do contato do pagador não informada",
 		invalid_type_error: "Necessidade de exportação do contato do pagador não é um booleano",
 	}),
-	'pagamento.cpf_cnpjPagador': z.boolean({
+	"pagamento.cpf_cnpjPagador": z.boolean({
 		required_error: "Necessidade de exportação do CPF/CNPJ do pagador não informada",
 		invalid_type_error: "Necessidade de exportação do CPF/CNPJ do pagador não é um booleano",
 	}),
@@ -263,23 +263,23 @@ export const ProjectExportableFieldsConfig: TProjectExportableFieldsConfig = {
 		label: "LONGITUDE",
 		formattingFunction: (value: TProject["longitude"]) => value?.toString() ?? "",
 	},
-	'pagamento.forma': {
+	"pagamento.forma": {
 		label: "FORMA DE PAGAMENTO",
 		formattingFunction: (value: TProject["pagamento"]["forma"]) => value ?? "",
 	},
-	'pagamento.credor': {
+	"pagamento.credor": {
 		label: "CREDOR",
 		formattingFunction: (value: TProject["pagamento"]["credor"]) => value ?? "",
 	},
-	'pagamento.pagador': {
+	"pagamento.pagador": {
 		label: "PAGADOR",
 		formattingFunction: (value: TProject["pagamento"]["pagador"]) => value ?? "",
 	},
-	'pagamento.contatoPagador': {
+	"pagamento.contatoPagador": {
 		label: "CONTATO DO PAGADOR",
 		formattingFunction: (value: TProject["pagamento"]["contatoPagador"]) => value ?? "",
 	},
-	'pagamento.cpf_cnpjPagador': {
+	"pagamento.cpf_cnpjPagador": {
 		label: "CPF/CNPJ DO PAGADOR",
 		formattingFunction: (value: TProject["pagamento"]["cpf_cnpjPagador"]) => value?.toString() ?? "",
 	},
@@ -387,14 +387,19 @@ export const GetProjectsExportRoutePayloadSchema = z.object({
 		contractNamesearch: z.string({ required_error: "Filtro de nome não informado", invalid_type_error: "Filtro de nome não é uma string" }),
 		neighborhoodSearch: z.string({ required_error: "Filtro de bairro não informado", invalid_type_error: "Filtro de bairro não é uma string" }),
 		streetSearch: z.string({ required_error: "Filtro de logradouro não informado", invalid_type_error: "Filtro de logradouro não é uma string" }),
-		contractStatus: z.array(z.string({ required_error: "Status do contrato não informado", invalid_type_error: "Status do contrato não é uma string" })),
+		contractStatus: z.array(
+			z.string({ required_error: "Status do contrato não informado", invalid_type_error: "Status do contrato não é uma string" }),
+		),
 		serviceType: z.array(z.string({ required_error: "Tipo de serviço não informado", invalid_type_error: "Tipo de serviço não é uma string" })),
 		sellers: z.array(z.string({ required_error: "Vendedor não informado", invalid_type_error: "Vendedor não é uma string" })),
 		insiders: z.array(z.string({ required_error: "Insider não informado", invalid_type_error: "Insider não é uma string" })),
 		cities: z.array(z.string({ required_error: "Cidade não informada", invalid_type_error: "Cidade não é uma string" })),
 		states: z.array(z.string({ required_error: "Estado não informado", invalid_type_error: "Estado não é uma string" })),
 		period: z.object({
-			field: z.string({ required_error: "Campo de período não informado", invalid_type_error: "Campo de período não é uma string" }).optional().nullable(),
+			field: z
+				.string({ required_error: "Campo de período não informado", invalid_type_error: "Campo de período não é uma string" })
+				.optional()
+				.nullable(),
 			after: z.string({ required_error: "Data de início não informada", invalid_type_error: "Data de início não é uma string" }).optional().nullable(),
 			before: z.string({ required_error: "Data de fim não informada", invalid_type_error: "Data de fim não é uma string" }).optional().nullable(),
 		}),

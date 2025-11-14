@@ -1,33 +1,33 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 const OptionSchema = z.object({
-  descricao: z.string(),
-  parcelas: z.object({
-    '1': z.number(),
-    '2': z.number(),
-    '3': z.number(),
-    '4': z.number(),
-    '5': z.number(),
-    '6': z.number(),
-    '7': z.number(),
-    '8': z.number(),
-    '9': z.number(),
-    '10': z.number(),
-    '11': z.number(),
-    '12': z.number(),
-  }),
-})
+	descricao: z.string(),
+	parcelas: z.object({
+		"1": z.number(),
+		"2": z.number(),
+		"3": z.number(),
+		"4": z.number(),
+		"5": z.number(),
+		"6": z.number(),
+		"7": z.number(),
+		"8": z.number(),
+		"9": z.number(),
+		"10": z.number(),
+		"11": z.number(),
+		"12": z.number(),
+	}),
+});
 const GeneralCreditCardOptionSchema = z.object({
-  empresa: z.string(),
-  modalidade: z.enum(['SEM ANTECIPAÇÃO', 'COM ANTECIPAÇÃO']),
-  opcoes: z.array(OptionSchema),
-})
+	empresa: z.string(),
+	modalidade: z.enum(["SEM ANTECIPAÇÃO", "COM ANTECIPAÇÃO"]),
+	opcoes: z.array(OptionSchema),
+});
 export const InsertCreditCardOptionSchema = z.object({
-  empresa: z.string(),
-  modalidade: z.enum(['SEM ANTECIPAÇÃO', 'COM ANTECIPAÇÃO']),
-  opcoes: z.array(OptionSchema),
-})
-export type TCreditCardOption = z.infer<typeof GeneralCreditCardOptionSchema>
+	empresa: z.string(),
+	modalidade: z.enum(["SEM ANTECIPAÇÃO", "COM ANTECIPAÇÃO"]),
+	opcoes: z.array(OptionSchema),
+});
+export type TCreditCardOption = z.infer<typeof GeneralCreditCardOptionSchema>;
 // export type TCreditCardOption = {
 //   empresa: string
 //   modalidade: 'SEM ANTECIPAÇÃO' | 'COM ANTECIPAÇÃO'
@@ -49,4 +49,4 @@ export type TCreditCardOption = z.infer<typeof GeneralCreditCardOptionSchema>
 //     }
 //   }[]
 // }
-export type TCreditCardOptionDTO = TCreditCardOption & { _id: string }
+export type TCreditCardOptionDTO = TCreditCardOption & { _id: string };

@@ -101,7 +101,8 @@ async function getProjectsInPeriodScope({ afterDate, beforeDate, collection }: G
 				const wasConcludedWithinPeriod = executionConclusion && executionConclusion >= afterDate && executionConclusion <= beforeDate;
 				if (wasConcludedWithinPeriod) acc.executados += 1;
 				// Updating time related information
-				const timeToPlanExecution = !!deliveryEfectivation && !!executionEntry && wasStartedWithinPeriod ? getHoursDiff({ start: deliveryEfectivation, finish: executionEntry }) : 0;
+				const timeToPlanExecution =
+					!!deliveryEfectivation && !!executionEntry && wasStartedWithinPeriod ? getHoursDiff({ start: deliveryEfectivation, finish: executionEntry }) : 0;
 				const timeToConcludedExecution =
 					!!executionEntry && !!executionConclusion && wasConcludedWithinPeriod ? getHoursDiff({ start: executionEntry, finish: executionConclusion }) : 0;
 				acc.tempoTotalPlanejamento += timeToPlanExecution;
@@ -144,7 +145,9 @@ type GetPendingPAAdequationsParams = {
 async function getPendingPAAdequations({ collection }: GetPendingPAAdequationsParams) {
 	try {
 		const project = { "compra.dataPagamento": 1 };
-		const pendingAdequations = await collection.find({ "padrao.aumentoCarga.aplicavel": true, "padrao.aumentoCarga.dataEfetivacao": null }, { projection: project }).toArray();
+		const pendingAdequations = await collection
+			.find({ "padrao.aumentoCarga.aplicavel": true, "padrao.aumentoCarga.dataEfetivacao": null }, { projection: project })
+			.toArray();
 
 		const pendingAdequationsPaid = pendingAdequations.filter((p) => !!p.compra.dataPagamento);
 

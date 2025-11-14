@@ -1,13 +1,13 @@
-import { Db, MongoClient } from 'mongodb'
-import clientPromise from '../mongo-client'
+import { Db, MongoClient } from "mongodb";
+import clientPromise from "../mongo-client";
 
-let cachedDb: Db | null = null
+let cachedDb: Db | null = null;
 export default async function connectToCRMDatabase() {
-  if (cachedDb) {
-    return cachedDb
-  }
-  const client = await clientPromise
-  const db = client.db('crm')
-  cachedDb = db
-  return db
+	if (cachedDb) {
+		return cachedDb;
+	}
+	const client = await clientPromise;
+	const db = client.db("crm");
+	cachedDb = db;
+	return db;
 }

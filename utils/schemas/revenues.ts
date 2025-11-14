@@ -5,7 +5,10 @@ import type { TProject, TProjectDTO } from "./projects";
 
 export const RevenueReceiptItemSchema = z.object({
 	titulo: z.string({ required_error: "Titulo do recebimento não informado.", invalid_type_error: "Tipo não válido para o titulo do recebimento." }),
-	valor: z.number({ required_error: "Valor do recebimento não informado.", invalid_type_error: "Tipo não válido para o valor do recebimento." }).optional().nullable(),
+	valor: z
+		.number({ required_error: "Valor do recebimento não informado.", invalid_type_error: "Tipo não válido para o valor do recebimento." })
+		.optional()
+		.nullable(),
 	porcentagem: z.number({
 		required_error: "Porcentagem do recebimento não informada.",
 		invalid_type_error: "Tipo não válido para a porcentagem do recebimento.",
@@ -21,12 +24,17 @@ export const RevenueReceiptItemSchema = z.object({
 });
 
 export const GeneralRevenueSchema = z.object({
-	nome: z.string({ required_error: "Nome da receita não informada.", invalid_type_error: "Tipo não o nome da receita." }).min(5, "Preencha um nome de ao menos 5 caracteres."),
+	nome: z
+		.string({ required_error: "Nome da receita não informada.", invalid_type_error: "Tipo não o nome da receita." })
+		.min(5, "Preencha um nome de ao menos 5 caracteres."),
 	tipo: z.string({ required_error: "Tipo da receita não informada.", invalid_type_error: "Tipo não válido para o tipo da receita." }),
 	autor: AuthorSchema,
 	projeto: z.object({
 		id: z.string({ required_error: "ID do projeto não informado.", invalid_type_error: "Tipo não válido para o ID do projeto." }).optional().nullable(),
-		nome: z.string({ required_error: "Nome do projeto não informado.", invalid_type_error: "Tipo não válido para o nome do projeto." }).optional().nullable(),
+		nome: z
+			.string({ required_error: "Nome do projeto não informado.", invalid_type_error: "Tipo não válido para o nome do projeto." })
+			.optional()
+			.nullable(),
 		identificador: z
 			.union([
 				z.string({
@@ -44,8 +52,15 @@ export const GeneralRevenueSchema = z.object({
 	total: z.number({ required_error: "Total da receita não informado." }).min(0, "Valor de receita inválido."),
 	metodo: z.string({ required_error: "Método de recebimento não informado.", invalid_type_error: "Tipo não válido para o método de recebimento." }),
 	efetivacao: z.object({
-		efetivado: z.boolean({ required_error: "Status de efetivação não informado.", invalid_type_error: "Tipo não válido para o status de efetivação." }).optional().nullable(),
-		data: z.string({ required_error: "Data de efetivação não informada.", invalid_type_error: "Tipo não válido para a data de efetivação." }).datetime().optional().nullable(),
+		efetivado: z
+			.boolean({ required_error: "Status de efetivação não informado.", invalid_type_error: "Tipo não válido para o status de efetivação." })
+			.optional()
+			.nullable(),
+		data: z
+			.string({ required_error: "Data de efetivação não informada.", invalid_type_error: "Tipo não válido para a data de efetivação." })
+			.datetime()
+			.optional()
+			.nullable(),
 	}),
 	fracionamento: z.array(RevenueReceiptItemSchema),
 	idContaAzulVenda: z.string({ invalid_type_error: "Tipo não válido para ID de referência da venda em Conta Azul." }).optional().nullable(),
@@ -63,11 +78,16 @@ export const GeneralRevenueSchema = z.object({
 		})
 		.optional()
 		.nullable(),
-	dataInsercao: z.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção." }).datetime(),
+	dataInsercao: z
+		.string({ required_error: "Data de inserção não informada.", invalid_type_error: "Tipo não válido para a data de inserção." })
+		.datetime(),
 });
 
 export type TRevenue = z.infer<typeof GeneralRevenueSchema>;
-export type TRevenueSimplified = Pick<TRevenue, "nome" | "projeto" | "tipo" | "total" | "fracionamento" | "efetivacao" | "metodo" | "autor" | "dataInsercao">;
+export type TRevenueSimplified = Pick<
+	TRevenue,
+	"nome" | "projeto" | "tipo" | "total" | "fracionamento" | "efetivacao" | "metodo" | "autor" | "dataInsercao"
+>;
 export type TRevenueDTO = TRevenue & { _id: string };
 export type TRevenueSimplifiedDTO = TRevenueSimplified & { _id: string };
 

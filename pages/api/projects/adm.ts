@@ -63,7 +63,9 @@ const getADMProjectsRoute: NextApiHandler<any> = async (req, res) => {
 		"receitas.fracionamento": 1,
 	};
 	const sort = { qtde: -1 };
-	const projects = await collection.aggregate([{ $match: match }, { $addFields: addFields }, { $lookup: lookup }, { $project: projection }, { $sort: sort }]).toArray();
+	const projects = await collection
+		.aggregate([{ $match: match }, { $addFields: addFields }, { $lookup: lookup }, { $project: projection }, { $sort: sort }])
+		.toArray();
 
 	const formattedProjects = projects.map((project) => ({ ...project, receita: project.receitas[0] })) as TProjectADMSimplifiedWithRevenue[];
 

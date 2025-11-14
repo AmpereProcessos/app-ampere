@@ -71,7 +71,9 @@ function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
 							</div>
 							<div className="row-span-2 grid grid-cols-5">
 								<p className="text-xs text-center col-span-2 font-semibold uppercase">TIPO DE TELHA:</p>
-								<p className="text-xs text-center col-span-3 border border-black border-t-0">{info.visitaTecnica?.tipoDaTelha ? info.visitaTecnica?.tipoDaTelha : "-"} </p>
+								<p className="text-xs text-center col-span-3 border border-black border-t-0">
+									{info.visitaTecnica?.tipoDaTelha ? info.visitaTecnica?.tipoDaTelha : "-"}{" "}
+								</p>
 							</div>
 						</div>
 						<div className="grid grid-rows-4">

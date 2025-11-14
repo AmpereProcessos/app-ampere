@@ -123,7 +123,8 @@ const getEnergyPAStatsRoute: NextApiHandler<TEnergyPAStatsOutput> = async (req, 
 			acc.totalAdequacoesPendentes += curr.overallPendingEnergyPAAdequationsCount;
 			acc.totalAdequacoesPendentesPagas += curr.paidPendingEnergyPAAdequationsCount;
 			acc.adequacoesConcluidas += curr.completedEnergyPAAdequationsCount;
-			if (!acc.porResponsabilidade[responsability]) acc.porResponsabilidade[responsability] = { totalAdequacoes: 0, totalAdequacoesPendentes: 0, totalAdequacoesPendentesPagas: 0 };
+			if (!acc.porResponsabilidade[responsability])
+				acc.porResponsabilidade[responsability] = { totalAdequacoes: 0, totalAdequacoesPendentes: 0, totalAdequacoesPendentesPagas: 0 };
 
 			acc.porResponsabilidade[responsability].totalAdequacoes += curr.overallEnergyPAAdequationsCount;
 			acc.porResponsabilidade[responsability].totalAdequacoesPendentes += curr.overallPendingEnergyPAAdequationsCount;

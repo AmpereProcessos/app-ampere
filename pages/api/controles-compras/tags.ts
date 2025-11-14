@@ -42,7 +42,8 @@ const createPurchaseControlTagRoute: NextApiHandler<PostResponse> = async (req, 
 	const collection = db.collection<TPurchaseControlTag>("etiquetas-compras");
 
 	const insertResponse = await collection.insertOne(purchaseControl);
-	if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao inserir etiqueta de controle de compra.");
+	if (!insertResponse.acknowledged)
+		throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao inserir etiqueta de controle de compra.");
 	const insertedId = insertResponse.insertedId.toString();
 
 	return res.status(200).json({ data: { insertedId }, message: "Etiqueta de controle de compra criado com sucesso !" });
@@ -64,7 +65,8 @@ const updatePurchaseControlTagRoute: NextApiHandler<PutResponse> = async (req, r
 	const collection = db.collection<TPurchaseControlTag>("etiquetas-compras");
 
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });
-	if (!updateResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao atualizar etiqueta de controle de compra.");
+	if (!updateResponse.acknowledged)
+		throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao atualizar etiqueta de controle de compra.");
 };
 
 export default apiHandler({ GET: getPurchasesControlsTagsRoute, POST: createPurchaseControlTagRoute, PUT: updatePurchaseControlTagRoute });

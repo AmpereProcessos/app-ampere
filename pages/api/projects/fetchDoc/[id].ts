@@ -25,7 +25,9 @@ const getProjectById: NextApiHandler<GetResponse> = async (req, res) => {
 	// Checking for any project restrictions
 	const isProjectRestricted = !!project.restricao?.aplicavel;
 	if (isProjectRestricted && !userHasRestrictionPermission)
-		throw new createHttpError.Unauthorized(`Projeto restrito em ${project.restricao?.data} por ${project.restricao?.autor?.nome || "gestor"}. Entre em contato para mais detalhes.`);
+		throw new createHttpError.Unauthorized(
+			`Projeto restrito em ${project.restricao?.data} por ${project.restricao?.autor?.nome || "gestor"}. Entre em contato para mais detalhes.`,
+		);
 
 	// Getting the associated client
 	let client: WithId<TClient> | undefined;

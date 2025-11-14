@@ -134,7 +134,12 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 			userComissionConfig: userComissionConfig.comissionamento,
 			definitions: comissionDefinitions,
 		});
-		console.log("[INFO] [ADD PROJECT] Comission for responsible user:", { name: responsible.nome, comissionValue, comissionFormula, comissionFormulaPopulated });
+		console.log("[INFO] [ADD PROJECT] Comission for responsible user:", {
+			name: responsible.nome,
+			comissionValue,
+			comissionFormula,
+			comissionFormulaPopulated,
+		});
 		return {
 			nome: responsible.nome,
 			papel: responsible.papel as TProjectComissionedUser["papel"],

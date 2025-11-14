@@ -62,7 +62,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 				<div className="mt-4 flex flex-col">
 					<h1 className="bg-[#15599a] text-center text-sm font-bold text-white">ESTRUTURA FOTOVOLTAICA</h1>
 					<div className="flex">
-						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">DESCRIÇÃO DO SISTEMA FOTOVOLTAICO</div>
+						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
+							DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
+						</div>
 						<div className="flex w-[80%] flex-col">
 							<div className="flex w-full items-center">
 								<div className="w-1/2 border border-b-0  border-black bg-[#fead61] text-center  font-raleway text-sm font-bold text-white">TOPOLOGIA</div>
@@ -87,7 +89,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 										</div>
 									))}
 							</div>
-							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">MÓDULOS FOTOVOLTÁICOS</h1>
+							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
+								MÓDULOS FOTOVOLTÁICOS
+							</h1>
 							<div className="flex w-full flex-col border border-black">
 								<div className="flex w-full items-center">
 									<div className="w-1/3 bg-gray-200 p-1 text-center text-[0.6rem] font-bold">QUANTIDADE</div>
@@ -176,7 +180,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 					</div>
 					<div className="flex border border-t-0 border-black">
-						<div className="flex w-[30%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">TIPO DA TELHA</div>
+						<div className="flex w-[30%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">
+							TIPO DA TELHA
+						</div>
 						<div className="grid w-[70%] grid-cols-7 grid-rows-2">
 							<h1 className="border-b border-r border-black text-center text-[0.65rem]">AMERICANA</h1>
 							<h1 className="border-b border-r border-black text-center text-[0.65rem]">ETHERNIT</h1>
@@ -195,7 +201,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 					</div>
 					<div className="flex border border-t-0 border-black">
-						<h1 className="flex w-[30%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">TIPO DE EDIFICAÇÃO</h1>
+						<h1 className="flex w-[30%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">
+							TIPO DE EDIFICAÇÃO
+						</h1>
 						<div className="grid w-[70%] grid-cols-11">
 							<div className="col-span-2 flex items-center justify-center border-r border-black text-center text-[0.65rem]">COLONIAL</div>
 							<div className="col-span-2 flex items-center justify-center border-r border-black text-center text-[0.65rem]">BARRACÃO</div>
@@ -207,7 +215,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 					<h1 className="border-x border-black bg-[#fead61] text-center text-[0.65rem] font-bold text-white">INFRAESTRUTURA ELÉTRICA</h1>
 					<div className="grid grid-cols-2">
 						<div className="flex border border-r-0 border-t-0 border-black">
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">ADAPTAÇÃO NO QGBT</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem] font-bold">
+								ADAPTAÇÃO NO QGBT
+							</div>
 							<div className="grid w-[40%] grid-cols-3">
 								<div className="flex items-center justify-center border-r border-black text-center text-[0.65rem]">TRILHO</div>
 								<div className="flex items-center justify-center border-r border-black text-center text-[0.65rem]">CORTE</div>
@@ -277,7 +287,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 					<div className="grid grid-cols-3 grid-rows-2 border border-b-0 border-black">
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">1</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO DO PADRÃO DE ENTRADA</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO DO PADRÃO DE ENTRADA
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -287,17 +299,23 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">3</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO DO RAMAL DE ENTRADA</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO DO RAMAL DE ENTRADA
+							</div>
 							<div className="w-[20%] text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">4</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">LOCALIZAÇÃO DO PADRÃO</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								LOCALIZAÇÃO DO PADRÃO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">5</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO GERAL DO PADRÃO ATÉ A RESIDÊNCIA</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO GERAL DO PADRÃO ATÉ A RESIDÊNCIA
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -315,12 +333,16 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">2</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">Nº DO TRANSFORMADOR</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								Nº DO TRANSFORMADOR
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">3</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO DO TRANSFORMADOR</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO DO TRANSFORMADOR
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 					</div>
@@ -333,7 +355,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">2</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO DO LOCAL DE MONTAGEM(SOLO)</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO DO LOCAL DE MONTAGEM(SOLO)
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -348,17 +372,23 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">5</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">LOCALIZAÇÃO DA RESIDÊNCIA</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								LOCALIZAÇÃO DA RESIDÊNCIA
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">6</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">LOCALIZAÇÃO DAS PLACAS(SOLO)</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								LOCALIZAÇÃO DAS PLACAS(SOLO)
+							</div>
 							<div className="w-[20%] text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">7</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTO LOCAL DO INVERSOR</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTO LOCAL DO INVERSOR
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -368,26 +398,36 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 						</div>
 						<div className="flex border-b border-r-0 border-black">
 							<div className="flex w-[20%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">9</div>
-							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">FOTOS DA ESTRUTURA TELHADO</div>
+							<div className="flex w-[60%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								FOTOS DA ESTRUTURA TELHADO
+							</div>
 							<div className="w-[20%] text-center text-[0.65rem]"></div>
 						</div>
 					</div>
 					<h1 className="border border-t-0 border-black bg-[#15599a] text-center text-[0.65rem] font-bold text-white">GOIÁS</h1>
 					<div className="grid grid-cols-3 grid-rows-2">
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">Nº POSTE DE DERIVAÇÃO</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								Nº POSTE DE DERIVAÇÃO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">LOCAL DE ATERRAMENTO</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								LOCAL DE ATERRAMENTO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">POTÊNCIA DO TRANSFORMADOR</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								POTÊNCIA DO TRANSFORMADOR
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">LOCALIZAÇÃO POSTE DERIVAÇÃO</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								LOCALIZAÇÃO POSTE DERIVAÇÃO
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
@@ -395,7 +435,9 @@ function LaudoFormularioVisitaRural({ analysis }: LaudoFormularioVisitaRuralProp
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 						<div className="flex border-b border-black">
-							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">NºPOSTE DO TRANSFORMADOR</div>
+							<div className="flex w-[80%] items-center justify-center border-r border-black bg-gray-200 text-center text-[0.65rem]">
+								NºPOSTE DO TRANSFORMADOR
+							</div>
 							<div className="w-[20%] border-r border-black text-center text-[0.65rem]"></div>
 						</div>
 					</div>

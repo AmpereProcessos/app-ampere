@@ -1,38 +1,38 @@
-import { TProjectUpdateLogDTO } from '@/utils/schemas/project-updates-logs'
-import React, { useState } from 'react'
-import { FaClipboardList } from 'react-icons/fa'
-import { MdVisibility } from 'react-icons/md'
+import { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
+import React, { useState } from "react";
+import { FaClipboardList } from "react-icons/fa";
+import { MdVisibility } from "react-icons/md";
 
 type UpdateLogsBlockProps = {
-  logs: TProjectUpdateLogDTO[]
-  SectionElement: React.JSX.Element
-}
+	logs: TProjectUpdateLogDTO[];
+	SectionElement: React.JSX.Element;
+};
 function UpdateLogsBlock({ logs, SectionElement }: UpdateLogsBlockProps) {
-  const [showMenu, setShowMenu] = useState<boolean>(false)
-  return (
-    <div className="flex w-full flex-col gap-2 px-2">
-      <div className="flex w-full items-center justify-end">
-        {showMenu ? (
-          <button
-            onClick={() => setShowMenu((prev) => !prev)}
-            className="flex items-center gap-1 rounded-full border border-red-500 bg-red-100 px-2 py-1 text-red-500"
-          >
-            <FaClipboardList />
-            <p className="text-[0.65rem] font-medium">FECHAR REGISTRO DE ALTERAÇÕES</p>
-          </button>
-        ) : (
-          <button
-            onClick={() => setShowMenu((prev) => !prev)}
-            className="flex items-center gap-1 rounded-full border border-cyan-500 bg-cyan-100 px-2 py-1 text-cyan-500"
-          >
-            <FaClipboardList />
-            <p className="text-[0.65rem] font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
-          </button>
-        )}
-      </div>
-      {showMenu ? SectionElement : null}
-    </div>
-  )
+	const [showMenu, setShowMenu] = useState<boolean>(false);
+	return (
+		<div className="flex w-full flex-col gap-2 px-2">
+			<div className="flex w-full items-center justify-end">
+				{showMenu ? (
+					<button
+						onClick={() => setShowMenu((prev) => !prev)}
+						className="flex items-center gap-1 rounded-full border border-red-500 bg-red-100 px-2 py-1 text-red-500"
+					>
+						<FaClipboardList />
+						<p className="text-[0.65rem] font-medium">FECHAR REGISTRO DE ALTERAÇÕES</p>
+					</button>
+				) : (
+					<button
+						onClick={() => setShowMenu((prev) => !prev)}
+						className="flex items-center gap-1 rounded-full border border-cyan-500 bg-cyan-100 px-2 py-1 text-cyan-500"
+					>
+						<FaClipboardList />
+						<p className="text-[0.65rem] font-medium">MOSTRAR REGISTRO DE ALTERAÇÕES</p>
+					</button>
+				)}
+			</div>
+			{showMenu ? SectionElement : null}
+		</div>
+	);
 }
 
-export default UpdateLogsBlock
+export default UpdateLogsBlock;

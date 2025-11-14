@@ -100,7 +100,10 @@ const deleteFileReferenceRoute: NextApiHandler<DeleteResponse> = async (req, res
 	const db = await connectToCRMDatabase();
 	const collection: Collection<TFileReference> = db.collection("file-references");
 
-	const deleteResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { dataExclusao: new Date().toISOString(), autorIdExclusao: session.user.id } });
+	const deleteResponse = await collection.updateOne(
+		{ _id: new ObjectId(id) },
+		{ $set: { dataExclusao: new Date().toISOString(), autorIdExclusao: session.user.id } },
+	);
 	if (!deleteResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro ao deletar o arquivo.");
 	if (deleteResponse.matchedCount === 0) throw new createHttpError.NotFound("Arquivo não encontrado.");
 

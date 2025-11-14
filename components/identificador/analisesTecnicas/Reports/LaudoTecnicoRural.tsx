@@ -70,7 +70,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 				<div className="flex flex-col">
 					<h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
 					<div className="flex">
-						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">DESCRIÇÃO DO SISTEMA FOTOVOLTAICO</div>
+						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
+							DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
+						</div>
 						<div className="flex w-[80%] flex-col">
 							<div className="flex w-full items-center">
 								<div className="w-1/2 border border-b-0  border-black bg-[#fead61] text-center  font-raleway text-sm font-bold text-white">TOPOLOGIA</div>
@@ -95,7 +97,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 										</div>
 									))}
 							</div>
-							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">MÓDULOS FOTOVOLTÁICOS</h1>
+							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
+								MÓDULOS FOTOVOLTÁICOS
+							</h1>
 							<div className="flex w-full flex-col border border-black">
 								<div className="flex w-full items-center">
 									<div className="w-1/3 bg-gray-200 p-1 text-center text-[0.6rem] font-bold">QUANTIDADE</div>
@@ -170,37 +174,53 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 						<div className="grid w-[50%] grid-rows-4">
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CASA DE MÁQUINAS</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.casaDeMaquinas ? analysis.servicosAdicionais.casaDeMaquinas : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.casaDeMaquinas ? analysis.servicosAdicionais.casaDeMaquinas : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">INSTALAÇÃO INTERNET</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.roteador ? analysis.servicosAdicionais.roteador : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.roteador ? analysis.servicosAdicionais.roteador : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">INSTALAÇÃO DE ALAMBRADO</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.alambrado ? analysis.servicosAdicionais.alambrado : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.alambrado ? analysis.servicosAdicionais.alambrado : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">TERRAPLANAGEM USINA DE SOLO</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.terraplanagem ? analysis.servicosAdicionais.terraplanagem : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.terraplanagem ? analysis.servicosAdicionais.terraplanagem : "-"}
+								</p>
 							</div>
 						</div>
 						<div className="grid w-[50%] grid-rows-4">
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CONSTRUÇÃO DE BARRACÃO</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.barracao ? analysis.servicosAdicionais.barracao : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.barracao ? analysis.servicosAdicionais.barracao : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">REDE PARA INTERLIGAR FAZENDA</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.redeReligacao ? analysis.servicosAdicionais.redeReligacao : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.redeReligacao ? analysis.servicosAdicionais.redeReligacao : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">BRITAGEM</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.britagem ? analysis.servicosAdicionais.britagem : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.britagem ? analysis.servicosAdicionais.britagem : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">LIMPEZA DO LOCAL USINA DE SOLO</p>
-								<p className="border-r border-black text-center text-xxs">{analysis.servicosAdicionais.limpezaLocal ? analysis.servicosAdicionais.limpezaLocal : "-"}</p>
+								<p className="border-r border-black text-center text-xxs">
+									{analysis.servicosAdicionais.limpezaLocal ? analysis.servicosAdicionais.limpezaLocal : "-"}
+								</p>
 							</div>
 						</div>
 					</div>
@@ -239,7 +259,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 					<div className="flex">
 						<div className="grid w-[50%] grid-cols-2 border-b border-black">
 							<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">CONCESSIONÁRIA</p>
-							<p className="border-r border-black text-center text-xxs font-bold">{analysis.detalhes.concessionaria ? analysis.detalhes.concessionaria : "-"}</p>
+							<p className="border-r border-black text-center text-xxs font-bold">
+								{analysis.detalhes.concessionaria ? analysis.detalhes.concessionaria : "-"}
+							</p>
 						</div>
 						<div className="grid w-[50%] grid-cols-2 border-b border-black">
 							<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">TOPOLOGIA</p>
@@ -250,7 +272,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 						<h1 className="border border-t-0 border-black bg-[#fead61] text-center text-xs font-bold text-white">PADRÃO</h1>
 						{analysis.padrao.map((paInfo, index) => (
 							<div key={index} className="flex w-full flex-col">
-								{analysis.padrao?.length > 1 ? <h1 className="border border-t-0 border-black bg-[#fead41] text-center text-xs font-bold text-white">PADRÃO Nº {index + 1}</h1> : null}
+								{analysis.padrao?.length > 1 ? (
+									<h1 className="border border-t-0 border-black bg-[#fead41] text-center text-xs font-bold text-white">PADRÃO Nº {index + 1}</h1>
+								) : null}
 								<div className="flex w-full">
 									<div className="flex w-[50%] flex-col">
 										<div className="grid grid-cols-2 border-b border-black">
@@ -313,7 +337,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 						<div className="grid grid-rows-2">
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">POTÊNCIA DO TRANSFORMADOR</p>
-								<p className="border-r border-black text-center text-xxs font-bold">{analysis.transformador.potencia ? analysis.transformador.potencia : "-"}</p>
+								<p className="border-r border-black text-center text-xxs font-bold">
+									{analysis.transformador.potencia ? analysis.transformador.potencia : "-"}
+								</p>
 							</div>
 							<div className="grid grid-cols-2 border-b border-black">
 								<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">Nº DO TRANSFORMADOR</p>
@@ -331,7 +357,9 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 							<div className="grid w-[50%] grid-rows-2">
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">FOTO DO DRONE</p>
-									<p className="border-r border-black text-center text-xxs font-bold">{analysis.detalhes.imagensDrone ? analysis.detalhes.imagensDrone : "-"}</p>
+									<p className="border-r border-black text-center text-xxs font-bold">
+										{analysis.detalhes.imagensDrone ? analysis.detalhes.imagensDrone : "-"}
+									</p>
 								</div>
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">MEDIDAS NO LOCAL</p>
@@ -341,11 +369,15 @@ function LaudoTecnicoRural({ analysis }: LaudoTecnicoRuralProps) {
 							<div className="grid w-[50%] grid-rows-2">
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">FOTO DA FACHADA</p>
-									<p className="border-r border-black text-center text-xxs font-bold">{analysis.detalhes.imagensFachada ? analysis.detalhes.imagensFachada : "-"}</p>
+									<p className="border-r border-black text-center text-xxs font-bold">
+										{analysis.detalhes.imagensFachada ? analysis.detalhes.imagensFachada : "-"}
+									</p>
 								</div>
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">GOOGLE EARTH</p>
-									<p className="border-r border-black text-center text-xxs font-bold">{analysis.detalhes.imagensSatelite ? analysis.detalhes.imagensSatelite : "-"}</p>
+									<p className="border-r border-black text-center text-xxs font-bold">
+										{analysis.detalhes.imagensSatelite ? analysis.detalhes.imagensSatelite : "-"}
+									</p>
 								</div>
 							</div>
 						</div>

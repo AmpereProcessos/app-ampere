@@ -23,8 +23,8 @@ export function usePaginatedChats(whatsappPhoneNumberId: string | null, searchQu
 						numItems: 20,
 					},
 					searchQuery: searchQuery || undefined,
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	// Reset when search query changes
@@ -67,11 +67,7 @@ export function usePaginatedChats(whatsappPhoneNumberId: string | null, searchQu
 /**
  * Hook for loading more chats with a specific cursor
  */
-export function useLoadMoreChats(
-	whatsappPhoneNumberId: string | null,
-	cursor: string | null,
-	searchQuery: string = ""
-) {
+export function useLoadMoreChats(whatsappPhoneNumberId: string | null, cursor: string | null, searchQuery: string = "") {
 	const result = useQuery(
 		api.queries.chat.getChats,
 		whatsappPhoneNumberId && cursor
@@ -82,8 +78,8 @@ export function useLoadMoreChats(
 						numItems: 20,
 					},
 					searchQuery: searchQuery || undefined,
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	return result;
@@ -109,8 +105,8 @@ export function usePaginatedMessages(chatId: string | null) {
 						cursor: null,
 						numItems: 30, // Initial load
 					},
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	// Reset when chat changes
@@ -164,8 +160,8 @@ export function useLoadOlderMessages(chatId: string | null, cursor: string | nul
 						cursor,
 						numItems: 50, // Load more messages
 					},
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	return result;

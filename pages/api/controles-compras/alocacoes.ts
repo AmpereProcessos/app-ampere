@@ -15,7 +15,8 @@ const handlePurchaseControlAllocations: NextApiHandler<HandlePurchaseControlAllo
 	const { purchaseControlId } = req.query;
 	const session = await validateAuthenticationWithSession(req, res);
 
-	if (!purchaseControlId || typeof purchaseControlId !== "string" || !ObjectId.isValid(purchaseControlId)) throw new createHttpError.BadRequest("ID inválido.");
+	if (!purchaseControlId || typeof purchaseControlId !== "string" || !ObjectId.isValid(purchaseControlId))
+		throw new createHttpError.BadRequest("ID inválido.");
 
 	const dbClient = await clientPromise;
 
@@ -38,7 +39,9 @@ const handlePurchaseControlAllocations: NextApiHandler<HandlePurchaseControlAllo
 	const dbSession = dbClient.startSession();
 	try {
 		await dbSession.withTransaction(async () => {
-			const currentMaterials = await materialStockCollection.find({ _id: { $in: pendingAllocations.map((item) => new ObjectId(item.materialId as string)) } }).toArray();
+			const currentMaterials = await materialStockCollection
+				.find({ _id: { $in: pendingAllocations.map((item) => new ObjectId(item.materialId as string)) } })
+				.toArray();
 			// Updating the allocations
 			for (const allocation of pendingAllocations) {
 				// an allocation could have two types:
@@ -51,8 +54,13 @@ const handlePurchaseControlAllocations: NextApiHandler<HandlePurchaseControlAllo
 				if (!allocation.alocadorOrigemId) {
 					// Case 1: item purchase for an allocator - for this case, we need to update the material stock quantity and its price
 					const newQtde = currentMaterial.qtde + allocation.qtde;
-					const newPrice = (currentMaterial.qtde * currentMaterial.preco + allocation.qtde * (allocation.valor || 0)) / (currentMaterial.qtde + allocation.qtde);
-					await materialStockCollection.updateOne({ _id: new ObjectId(allocation.materialId as string) }, { $set: { preco: newPrice, qtde: newQtde } }, { session: dbSession });
+					const newPrice =
+						(currentMaterial.qtde * currentMaterial.preco + allocation.qtde * (allocation.valor || 0)) / (currentMaterial.qtde + allocation.qtde);
+					await materialStockCollection.updateOne(
+						{ _id: new ObjectId(allocation.materialId as string) },
+						{ $set: { preco: newPrice, qtde: newQtde } },
+						{ session: dbSession },
+					);
 					await materialStockLogsCollection.insertOne(
 						{
 							alteracao: allocation.qtde,
@@ -83,7 +91,10 @@ const handlePurchaseControlAllocations: NextApiHandler<HandlePurchaseControlAllo
 					// Case 2: internal transfer between two allocators - for this case, we need to update the material stock quantity and its price in both allocators
 
 					// updating the origin allocator
-					await materialStockCollection.updateOne({ _id: new ObjectId(allocation.materialId as string) }, { $inc: { qtde: -allocation.qtde }, $set: { preco: newPrice } });
+					await materialStockCollection.updateOne(
+						{ _id: new ObjectId(allocation.materialId as string) },
+						{ $inc: { qtde: -allocation.qtde }, $set: { preco: newPrice } },
+					);
 				}
 			}
 		});

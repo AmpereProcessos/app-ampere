@@ -1,22 +1,22 @@
-import { deleteSessionTokenCookie, getCurrentSessionUncached } from '@/lib/authentication/session'
-import type { NextRequest } from 'next/server'
+import { deleteSessionTokenCookie, getCurrentSessionUncached } from "@/lib/authentication/session";
+import type { NextRequest } from "next/server";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const { session, user } = await getCurrentSessionUncached()
-  if (!session && !user) {
-    return new Response(null, {
-      status: 400,
-      headers: { Location: '/auth/signin' },
-    })
-  }
+	const { session, user } = await getCurrentSessionUncached();
+	if (!session && !user) {
+		return new Response(null, {
+			status: 400,
+			headers: { Location: "/auth/signin" },
+		});
+	}
 
-  // Deleting the session token cookie
-  await deleteSessionTokenCookie()
+	// Deleting the session token cookie
+	await deleteSessionTokenCookie();
 
-  return new Response(null, {
-    status: 302,
-    headers: { Location: '/auth/signin' },
-  })
+	return new Response(null, {
+		status: 302,
+		headers: { Location: "/auth/signin" },
+	});
 }

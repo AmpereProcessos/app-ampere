@@ -58,7 +58,8 @@ async function getComissionDataHandler(req: NextApiRequest, res: NextApiResponse
 	const session = await validateAuthenticationWithSession(req, res);
 	const userHasAdministrativeViewPermission = !!session?.user.permissoes.administrativo.visualizar;
 	const userHasFinancesViewPermission = !!session?.user.permissoes.financeiro.visualizar;
-	if (!userHasAdministrativeViewPermission && !userHasFinancesViewPermission) throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
+	if (!userHasAdministrativeViewPermission && !userHasFinancesViewPermission)
+		throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
 
 	const params = QueryParamsSchema.parse(req.query as unknown);
 	const comissionData = await getComissionData(params);
@@ -97,7 +98,8 @@ async function updateComissionDataHandler(req: NextApiRequest, res: NextApiRespo
 	const session = await validateAuthenticationWithSession(req, res);
 	const userHasAdministrativeEditPermission = !!session?.user.permissoes.administrativo.editar;
 	const userHasFinancesEditPermission = !!session?.user.permissoes.financeiro.editar;
-	if (!userHasAdministrativeEditPermission || !userHasFinancesEditPermission) throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
+	if (!userHasAdministrativeEditPermission || !userHasFinancesEditPermission)
+		throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
 
 	const params = UpdateComissionDataSchema.parse(req.body);
 

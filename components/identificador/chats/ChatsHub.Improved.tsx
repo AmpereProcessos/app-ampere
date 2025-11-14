@@ -344,9 +344,7 @@ function ChatHubList({ selectedPhoneNumber, selectedChatId, handleSelectChat, se
 		return (
 			<div className="flex flex-col items-center justify-center py-8">
 				<MessageCircleIcon className="w-12 h-12 text-primary/20 mb-2" />
-				<p className="text-primary/60 text-center text-sm italic">
-					{debouncedSearchQuery ? "Nenhum chat encontrado" : "Nenhum chat ainda"}
-				</p>
+				<p className="text-primary/60 text-center text-sm italic">{debouncedSearchQuery ? "Nenhum chat encontrado" : "Nenhum chat ainda"}</p>
 			</div>
 		);
 	}

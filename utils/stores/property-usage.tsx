@@ -82,7 +82,8 @@ export const createPropertyUsageStore = (initProps?: PropertyUsageInitProps) => 
 		updatePropertyUsageMetadata: (propertyUsageMetadata) =>
 			set({ propertyUsage: { ...get().propertyUsage, metadados: { ...get().propertyUsage.metadados, ...propertyUsageMetadata } } }),
 		addAttachment: ({ attachment }) => set({ attachments: [...get().attachments, attachment] }),
-		updateAttachment: ({ index, changes }) => set({ attachments: get().attachments.map((attachment, i) => (i === index ? { ...attachment, ...changes } : attachment)) }),
+		updateAttachment: ({ index, changes }) =>
+			set({ attachments: get().attachments.map((attachment, i) => (i === index ? { ...attachment, ...changes } : attachment)) }),
 		removeAttachment: ({ index }) => set({ attachments: get().attachments.filter((_, i) => i !== index) }),
 		clearAttachments: () => set({ attachments: [] }),
 		clearPropertyUsage: () => set(defaultState),

@@ -1,15 +1,15 @@
-import React from 'react'
-import { MdOutlineSecurity } from 'react-icons/md'
+import React from "react";
+import { MdOutlineSecurity } from "react-icons/md";
 
 function UnauthorizedPage() {
-  return (
-    <div className="flex grow items-center justify-center">
-      <div className="flex items-center gap-1">
-        <MdOutlineSecurity color=" rgb(220,38,38)" />
-        <p className="text-primary/60 font-medium tracking-tight">Oops, seu usuário não possui permissão para acessar essa página.</p>
-      </div>
-    </div>
-  )
+	return (
+		<div className="flex grow items-center justify-center">
+			<div className="flex items-center gap-1">
+				<MdOutlineSecurity color=" rgb(220,38,38)" />
+				<p className="text-primary/60 font-medium tracking-tight">Oops, seu usuário não possui permissão para acessar essa página.</p>
+			</div>
+		</div>
+	);
 }
 
-export default UnauthorizedPage
+export default UnauthorizedPage;

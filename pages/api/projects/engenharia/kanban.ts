@@ -154,10 +154,23 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 	const db = await connectToDatabase();
 	const projectsCollection = db.collection<TProject>("dados");
 
-	const { search, projectTypes, cities, ufs, deliveryStatus, tagIds, sellerNames, accessGrantingStatus, pendingVistoryOnly, pendingDrawingOnly, pendingDiagramOnly, period } =
-		EngineeringProjectsKanbanInputSchema.parse(req.body);
+	const {
+		search,
+		projectTypes,
+		cities,
+		ufs,
+		deliveryStatus,
+		tagIds,
+		sellerNames,
+		accessGrantingStatus,
+		pendingVistoryOnly,
+		pendingDrawingOnly,
+		pendingDiagramOnly,
+		period,
+	} = EngineeringProjectsKanbanInputSchema.parse(req.body);
 
-	const searchQueries: Filter<TProject>[] = search.trim().length > 0 ? [{ nomeDoContrato: { $regex: search, $options: "i" } }, { nomeDoContrato: search }] : [];
+	const searchQueries: Filter<TProject>[] =
+		search.trim().length > 0 ? [{ nomeDoContrato: { $regex: search, $options: "i" } }, { nomeDoContrato: search }] : [];
 
 	const searchQuery = searchQueries.length > 0 ? { $or: searchQueries } : {};
 	const projectTypesQuery: Filter<TProject> = projectTypes.length > 0 ? { tipoDeServico: { $in: projectTypes } } : {};
@@ -179,7 +192,8 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 	const pendingDrawingOnlyQuery: Filter<TProject> = pendingDrawingOnly ? { "homologacao.pendencias.desenhos": null } : {};
 	const pendingDiagramOnlyQuery: Filter<TProject> = pendingDiagramOnly ? { "homologacao.pendencias.diagramas": null } : {};
 
-	const periodQuery: Filter<TProject> = period.field && period.after && period.before ? { [period.field]: { $gte: period.after, $lte: period.before } } : {};
+	const periodQuery: Filter<TProject> =
+		period.field && period.after && period.before ? { [period.field]: { $gte: period.after, $lte: period.before } } : {};
 	const query: Filter<TProject> = {
 		"contrato.status": { $ne: "RESCISÃO DE CONTRATO" },
 		"homologacao.dataEfetivacao": null,

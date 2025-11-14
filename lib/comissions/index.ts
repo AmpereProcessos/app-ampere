@@ -137,7 +137,9 @@ export function getComissionValue({ userComissionConfig, projectTypeId, userRole
 	const comissionConfig = userComissionConfig.find((c) => c.tipoProjeto.id === projectTypeId && c.papel === userRole);
 	if (!comissionConfig) return { comissionValue: 0, comissionFormula: [], comissionFormulaPopulated: "" };
 
-	const orderedPossibleResults = comissionConfig.resultados.sort((a, b) => (a.condicao.aplicavel === b.condicao.aplicavel ? 0 : a.condicao.aplicavel ? -1 : 1));
+	const orderedPossibleResults = comissionConfig.resultados.sort((a, b) =>
+		a.condicao.aplicavel === b.condicao.aplicavel ? 0 : a.condicao.aplicavel ? -1 : 1,
+	);
 
 	const applicableResult = orderedPossibleResults.find((r) => {
 		// Since general formulas are last, if condicao aplicavel equals false, either:

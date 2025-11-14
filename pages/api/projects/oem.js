@@ -89,7 +89,11 @@ export default async function handler(req, res) {
 				},
 				{
 					$match: {
-						$or: [{ "medidor.data": { $gte: "2021-06-01T00:00:00.000Z" } }, { "medidor.data": null }, { "manutencaoPreventiva.data": { $ne: "REALIZADO" } }],
+						$or: [
+							{ "medidor.data": { $gte: "2021-06-01T00:00:00.000Z" } },
+							{ "medidor.data": null },
+							{ "manutencaoPreventiva.data": { $ne: "REALIZADO" } },
+						],
 					},
 				},
 				{

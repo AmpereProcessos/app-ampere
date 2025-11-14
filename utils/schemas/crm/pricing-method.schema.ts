@@ -1,9 +1,12 @@
 import z from "zod";
 
-export const PricingMethodConditionTypes = z.enum(["IGUAL_TEXTO", "IGUAL_NÚMERICO", "MAIOR_QUE_NÚMERICO", "MENOR_QUE_NÚMERICO", "INTERVALO_NÚMERICO", "INCLUI_LISTA"], {
-	required_error: "Tipo de condicional não informado.",
-	invalid_type_error: "Tipo não válido para tipo de condicional.",
-});
+export const PricingMethodConditionTypes = z.enum(
+	["IGUAL_TEXTO", "IGUAL_NÚMERICO", "MAIOR_QUE_NÚMERICO", "MENOR_QUE_NÚMERICO", "INTERVALO_NÚMERICO", "INCLUI_LISTA"],
+	{
+		required_error: "Tipo de condicional não informado.",
+		invalid_type_error: "Tipo não válido para tipo de condicional.",
+	},
+);
 export type TPricingMethodConditionType = z.infer<typeof PricingMethodConditionTypes>;
 
 const PricingMethodItemResultItem = z.object({

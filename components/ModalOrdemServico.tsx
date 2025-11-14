@@ -1,331 +1,326 @@
-import dayjs from 'dayjs'
-import React, { useEffect, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-import { VscChromeClose } from 'react-icons/vsc'
+import { VscChromeClose } from "react-icons/vsc";
 
-import { BsCalendarCheckFill, BsCalendarFill } from 'react-icons/bs'
-import { MdEngineering } from 'react-icons/md'
-import { IoMdAlert } from 'react-icons/io'
+import { BsCalendarCheckFill, BsCalendarFill } from "react-icons/bs";
+import { MdEngineering } from "react-icons/md";
+import { IoMdAlert } from "react-icons/io";
 
-import FavoredModalBlock from './identificador/ordensDeServico/FavoredModalBlock'
-import ObservationModalBlock from './identificador/ordensDeServico/modals/blocos/utils/Observations'
-import EquipmentModalBlock from './identificador/ordensDeServico/EquipmentModalBlock'
-import DetailsModalBlock from './identificador/ordensDeServico/DetailsModalBlock'
-import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
-import ExecutionDiary from './identificador/ordensDeServico/execucao/ExecutionDiary'
+import FavoredModalBlock from "./identificador/ordensDeServico/FavoredModalBlock";
+import ObservationModalBlock from "./identificador/ordensDeServico/modals/blocos/utils/Observations";
+import EquipmentModalBlock from "./identificador/ordensDeServico/EquipmentModalBlock";
+import DetailsModalBlock from "./identificador/ordensDeServico/DetailsModalBlock";
+import FinishOrderBlock from "./identificador/ordensDeServico/FinishOrderBlock";
+import ExecutionDiary from "./identificador/ordensDeServico/execucao/ExecutionDiary";
 
-import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
-import LoadingPage from './utils/LoadingPage'
-import Avatar from './utils/Avatar'
+import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import LoadingPage from "./utils/LoadingPage";
+import Avatar from "./utils/Avatar";
 
-import { getErrorMessage } from '../utils/methods/handlers'
-import { getObjectDifference } from '../utils/methods/util/service-order'
-import { useServiceOrderById } from '../utils/methods/query/service-orders'
-import { deleteServiceOrder, updateServiceOrder } from '../utils/methods/mutation/service-orders'
+import { getErrorMessage } from "../utils/methods/handlers";
+import { getObjectDifference } from "../utils/methods/util/service-order";
+import { useServiceOrderById } from "../utils/methods/query/service-orders";
+import { deleteServiceOrder, updateServiceOrder } from "../utils/methods/mutation/service-orders";
 
-import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
+import { equipesTecnicas, serviceOrdersCategories } from "../utils/constants";
 
-import Select from './inputs/Select'
-import TextInput from './inputs/Text'
-import NotificationCreationBlock from './NotificationCreationBlock'
-import { formatDateAsLocale } from '../utils/methods/formatting'
-import type { TServiceOrderDTO } from '@/utils/schemas/service-order'
-import { useSession } from '../components/providers/SessionProvider'
+import Select from "./inputs/Select";
+import TextInput from "./inputs/Text";
+import NotificationCreationBlock from "./NotificationCreationBlock";
+import { formatDateAsLocale } from "../utils/methods/formatting";
+import type { TServiceOrderDTO } from "@/utils/schemas/service-order";
+import { useSession } from "../components/providers/SessionProvider";
 
 type ModalOrdemServicoProps = {
-  orderId: string
-  closeModal: () => void
-  modalIsOpen: boolean
-}
+	orderId: string;
+	closeModal: () => void;
+	modalIsOpen: boolean;
+};
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }: ModalOrdemServicoProps) {
-  const { session } = useSession({})
-  const queryClient = useQueryClient()
-  const { data: order, isSuccess, isError } = useServiceOrderById({ id: orderId })
+	const { session } = useSession({});
+	const queryClient = useQueryClient();
+	const { data: order, isSuccess, isError } = useServiceOrderById({ id: orderId });
 
-  const [infoHolder, setInfoHolder] = useState<TServiceOrderDTO>({
-    _id: 'id-holder',
-    categoria: 'MONTAGEM',
-    favorecido: {
-      nome: '',
-      contato: '',
-    },
-    projeto: {
-      id: '', // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
-      nome: '', // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
-      identificador: 1, // identificador QTDE do projeto no banco de projetos
-      tipo: '', // tipo do projeto
-    },
-    descricao: '', // servico executado
-    localizacao: {
-      cep: '',
-      uf: '',
-      cidade: '',
-      bairro: '',
-      endereco: '',
-      numeroOuIdentificador: '',
-    },
-    responsavel: {
-      nome: '',
-      tipo: 'EXTERNO',
-    },
-    // configurar: false,
-    urgencia: 'POUCO URGENTE',
-    periodo: {
-      inicio: null,
-      fim: null,
-      historico: [],
-    },
-    pagamento: {
-      recebedor: null,
-      valor: null,
-    },
-    cobranca: {
-      pagador: null,
-      valor: null,
-    },
-    autor: {
-      id: '',
-      nome: '',
-      avatar_url: null,
-    },
-    equipamentos: {
-      modulos: {
-        modelo: '',
-        qtde: 0,
-        potencia: 0,
-      },
-      inversor: {
-        modelo: '',
-        qtde: 0,
-        potencia: 0,
-      },
-      disponivel: [],
-      retirada: [],
-    },
-    detalhes: {
-      pontoAgua: '',
-      senhaWifi: '',
-      configuracaoMonitoramento: false,
-      possuiTrafo: false,
-      tipoEstrutura: '',
-      tipoTelha: undefined,
-      tipoPadrao: '',
-      tipoSaidaPadrao: 'N/A',
-      amperagemPadrao: '',
-      responsabilidadePadrao: 'NÃO SE APLICA',
-      topologia: '',
-    },
-    observacoes: [],
-    anotacoes: '',
-    dataInsercao: new Date().toISOString(),
-  })
-  async function handleOrderUpdate() {
-    const loadingToastId = toast.loading('Processando...')
-    const changesObject = getObjectDifference(order, infoHolder)
-    console.log('CHANGES', changesObject)
-    try {
-      const msg = await updateServiceOrder({
-        changes: changesObject,
-        id: orderId,
-      })
-      toast.dismiss(loadingToastId)
-      toast.success(msg || 'Ordem atualizada com sucesso !')
-    } catch (error) {
-      toast.dismiss(loadingToastId)
-      const msg = getErrorMessage(error)
-      toast.error(msg)
-    }
-  }
-  async function handleOrderDelete(id: string) {
-    const loadingToastId = toast.loading('Processando...')
-    try {
-      const msg = await deleteServiceOrder({ id })
-      toast.dismiss(loadingToastId)
-      toast.success(msg || 'Ordem excluída com sucesso !')
-      return closeModal()
-    } catch (error) {
-      toast.dismiss(loadingToastId)
-      const msg = getErrorMessage(error)
-      toast.error(msg)
-    }
-  }
-  useEffect(() => {
-    if (order) setInfoHolder(order)
-  }, [order])
-  if (!session) return null
-  return (
-    <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'90%'} height={'87%'}>
-      <div className="flex h-full flex-col">
-        <div className="border-primary/20 flex items-center justify-between border-b px-2 pb-2 text-lg">
-          <div className="flex flex-col items-center gap-2 lg:flex-row">
-            <h1 className="pl-6 text-xs font-bold text-[#15599a] lg:text-base">{order?.favorecido?.nome || '...'}</h1>
-            <p className="text-primary/60 text-center text-xs">#{order?._id || '...'}</p>
-          </div>
-          <button type="button">
-            <VscChromeClose
-              onClick={() => {
-                closeModal()
-              }}
-              style={{ color: 'red' }}
-            />
-          </button>
-        </div>
-        {isSuccess && infoHolder ? (
-          <>
-            <div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex flex-col overflow-y-auto px-2 py-2 lg:px-0">
-              <div className="flex w-full items-center justify-center">
-                <h1 className="rounded border border-[#15599a] p-1 text-sm font-black text-[#15599a]">{order.categoria}</h1>
-              </div>
-              <h1 className="mt-2 w-full text-center font-black">{order.descricao}</h1>
-              <div className="mt-2 flex items-center justify-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Avatar fallback={'U'} height={25} width={25} url={order?.autor?.avatar_url} />
-                  <p className="text-primary/60 text-xs font-medium">{order?.autor?.nome || 'Autor não identificado'}</p>
-                </div>
-                <div className="text-primary/60 flex items-center gap-2">
-                  <BsCalendarFill />
-                  <p className="text-xs font-medium">{formatDateAsLocale(order?.dataInsercao, true)}</p>
-                </div>
-              </div>
-              <div className="mt-2 flex w-full items-center justify-center gap-2">
-                <div className="flex items-center gap-2">
-                  <MdEngineering />
-                  <p className="text-primary/60 text-xs font-medium uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <IoMdAlert />
-                  <p className="text-primary/60 text-xs font-medium uppercase">{order?.urgencia}</p>
-                </div>
-              </div>
-              {order?.dataEfetivacao ? (
-                <div className="mt-4 flex w-full items-center justify-center gap-2 text-green-500">
-                  <BsCalendarCheckFill />
-                  <p className="text-xs font-medium">{formatDateAsLocale(order.dataEfetivacao)}</p>
-                </div>
-              ) : (
-                <FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              )}
-              <NotificationCreationBlock
-                session={session}
-                nomeDoProjeto={infoHolder.projeto.nome || ''}
-                codProjeto={infoHolder.projeto.identificador?.toString() || ''}
-              />
-              <div className="bg-primary/80 mt-4 flex w-full items-center justify-center gap-2 rounded-md p-2">
-                <h1 className="font-bold text-white">EXECUÇÃO</h1>
-              </div>
-              <div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-[25%]">
-                  <Select
-                    label={'CATEGORIA'}
-                    value={infoHolder.categoria}
-                    options={serviceOrdersCategories}
-                    selectedItemLabel={'NÃO DEFINIDO'}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
-                    onReset={() => setInfoHolder((prev) => ({ ...prev, categoria: 'OUTROS' }))}
-                    width={'100%'}
-                  />
-                </div>
-                <div className="w-full lg:w-[25%]">
-                  <TextInput
-                    label={'DESCRIÇÃO DO SERVIÇO'}
-                    placeholder={'Preencha a descrição do serviço a ser executado...'}
-                    value={infoHolder.descricao}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, descricao: value }))}
-                    width={'100%'}
-                  />
-                </div>
-                <div className="w-full lg:w-[25%]">
-                  <Select
-                    label={'TIPO DE RESPONSÁVEL'}
-                    value={infoHolder.responsavel.tipo}
-                    options={[
-                      { id: 1, label: 'INTERNO', value: 'INTERNO' },
-                      { id: 2, label: 'EXTERNO', value: 'EXTERNO' },
-                    ]}
-                    selectedItemLabel={'NÃO DEFINIDO'}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: value } }))}
-                    onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: 'EXTERNO' } }))}
-                    width={'100%'}
-                  />
-                </div>
-                <div className="w-full lg:w-[25%]">
-                  {infoHolder.responsavel.tipo === 'EXTERNO' ? (
-                    <TextInput
-                      label={'NOME DO RESPONSÁVEL'}
-                      placeholder={'Preencha o nome do responsável pela execução...'}
-                      value={infoHolder.responsavel.nome || ''}
-                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
-                      width={'100%'}
-                    />
-                  ) : (
-                    <Select
-                      label={'NOME DE RESPONSÁVEL'}
-                      value={infoHolder.responsavel.nome}
-                      options={equipesTecnicas.map((team, index) => ({ ...team, id: index + 1 }))}
-                      selectedItemLabel={'NÃO DEFINIDO'}
-                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
-                      onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: '' } }))}
-                      width={'100%'}
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="mt-1 flex w-full items-center justify-center">
-                <div className="w-full lg:w-1/2">
-                  <Select
-                    label={'URGÊNCIA'}
-                    value={infoHolder.urgencia}
-                    options={[
-                      { id: 1, label: 'POUCO URGENTE', value: 'POUCO URGENTE' },
-                      { id: 2, label: 'URGENTE', value: 'URGENTE' },
-                      { id: 3, label: 'EMERGÊNCIA', value: 'EMERGÊNCIA' },
-                    ]}
-                    selectedItemLabel={'NÃO DEFINIDO'}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, urgencia: value }))}
-                    onReset={() => setInfoHolder((prev) => ({ ...prev, urgencia: 'NÃO DEFINIDO' }))}
-                    width={'100%'}
-                  />
-                </div>
-              </div>
-              <FavoredModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <DetailsModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-              <ExecutionDiary
-                orderId={orderId}
-                entryDatetime={order.periodo?.inicio}
-                exitDatetime={order.periodo?.fim}
-                history={order.periodo.historico}
-              />
-            </div>
-            <div className="border-primary/20 mt-2 flex w-full items-center justify-between border-t px-4 py-1">
-              {session?.user.permissoes.ordensDeServico.editar ? (
-                <button
-                  onClick={() => handleOrderDelete(orderId)}
-                  className="py-1 font-bold text-red-500 duration-300 ease-in-out hover:scale-105 hover:text-red-700"
-                >
-                  EXCLUIR
-                </button>
-              ) : (
-                <></>
-              )}
+	const [infoHolder, setInfoHolder] = useState<TServiceOrderDTO>({
+		_id: "id-holder",
+		categoria: "MONTAGEM",
+		favorecido: {
+			nome: "",
+			contato: "",
+		},
+		projeto: {
+			id: "", // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+			nome: "", // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+			identificador: 1, // identificador QTDE do projeto no banco de projetos
+			tipo: "", // tipo do projeto
+		},
+		descricao: "", // servico executado
+		localizacao: {
+			cep: "",
+			uf: "",
+			cidade: "",
+			bairro: "",
+			endereco: "",
+			numeroOuIdentificador: "",
+		},
+		responsavel: {
+			nome: "",
+			tipo: "EXTERNO",
+		},
+		// configurar: false,
+		urgencia: "POUCO URGENTE",
+		periodo: {
+			inicio: null,
+			fim: null,
+			historico: [],
+		},
+		pagamento: {
+			recebedor: null,
+			valor: null,
+		},
+		cobranca: {
+			pagador: null,
+			valor: null,
+		},
+		autor: {
+			id: "",
+			nome: "",
+			avatar_url: null,
+		},
+		equipamentos: {
+			modulos: {
+				modelo: "",
+				qtde: 0,
+				potencia: 0,
+			},
+			inversor: {
+				modelo: "",
+				qtde: 0,
+				potencia: 0,
+			},
+			disponivel: [],
+			retirada: [],
+		},
+		detalhes: {
+			pontoAgua: "",
+			senhaWifi: "",
+			configuracaoMonitoramento: false,
+			possuiTrafo: false,
+			tipoEstrutura: "",
+			tipoTelha: undefined,
+			tipoPadrao: "",
+			tipoSaidaPadrao: "N/A",
+			amperagemPadrao: "",
+			responsabilidadePadrao: "NÃO SE APLICA",
+			topologia: "",
+		},
+		observacoes: [],
+		anotacoes: "",
+		dataInsercao: new Date().toISOString(),
+	});
+	async function handleOrderUpdate() {
+		const loadingToastId = toast.loading("Processando...");
+		const changesObject = getObjectDifference(order, infoHolder);
+		console.log("CHANGES", changesObject);
+		try {
+			const msg = await updateServiceOrder({
+				changes: changesObject,
+				id: orderId,
+			});
+			toast.dismiss(loadingToastId);
+			toast.success(msg || "Ordem atualizada com sucesso !");
+		} catch (error) {
+			toast.dismiss(loadingToastId);
+			const msg = getErrorMessage(error);
+			toast.error(msg);
+		}
+	}
+	async function handleOrderDelete(id: string) {
+		const loadingToastId = toast.loading("Processando...");
+		try {
+			const msg = await deleteServiceOrder({ id });
+			toast.dismiss(loadingToastId);
+			toast.success(msg || "Ordem excluída com sucesso !");
+			return closeModal();
+		} catch (error) {
+			toast.dismiss(loadingToastId);
+			const msg = getErrorMessage(error);
+			toast.error(msg);
+		}
+	}
+	useEffect(() => {
+		if (order) setInfoHolder(order);
+	}, [order]);
+	if (!session) return null;
+	return (
+		<AnimatedModalWrapper modalIsOpen={modalIsOpen} width={"90%"} height={"87%"}>
+			<div className="flex h-full flex-col">
+				<div className="border-primary/20 flex items-center justify-between border-b px-2 pb-2 text-lg">
+					<div className="flex flex-col items-center gap-2 lg:flex-row">
+						<h1 className="pl-6 text-xs font-bold text-[#15599a] lg:text-base">{order?.favorecido?.nome || "..."}</h1>
+						<p className="text-primary/60 text-center text-xs">#{order?._id || "..."}</p>
+					</div>
+					<button type="button">
+						<VscChromeClose
+							onClick={() => {
+								closeModal();
+							}}
+							style={{ color: "red" }}
+						/>
+					</button>
+				</div>
+				{isSuccess && infoHolder ? (
+					<>
+						<div className="overscroll-y scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex flex-col overflow-y-auto px-2 py-2 lg:px-0">
+							<div className="flex w-full items-center justify-center">
+								<h1 className="rounded border border-[#15599a] p-1 text-sm font-black text-[#15599a]">{order.categoria}</h1>
+							</div>
+							<h1 className="mt-2 w-full text-center font-black">{order.descricao}</h1>
+							<div className="mt-2 flex items-center justify-center gap-4">
+								<div className="flex items-center gap-2">
+									<Avatar fallback={"U"} height={25} width={25} url={order?.autor?.avatar_url} />
+									<p className="text-primary/60 text-xs font-medium">{order?.autor?.nome || "Autor não identificado"}</p>
+								</div>
+								<div className="text-primary/60 flex items-center gap-2">
+									<BsCalendarFill />
+									<p className="text-xs font-medium">{formatDateAsLocale(order?.dataInsercao, true)}</p>
+								</div>
+							</div>
+							<div className="mt-2 flex w-full items-center justify-center gap-2">
+								<div className="flex items-center gap-2">
+									<MdEngineering />
+									<p className="text-primary/60 text-xs font-medium uppercase">{order?.responsavel?.nome || "RESPONSÁVEL NÃO DEFINIDO"}</p>
+								</div>
+								<div className="flex items-center gap-2">
+									<IoMdAlert />
+									<p className="text-primary/60 text-xs font-medium uppercase">{order?.urgencia}</p>
+								</div>
+							</div>
+							{order?.dataEfetivacao ? (
+								<div className="mt-4 flex w-full items-center justify-center gap-2 text-green-500">
+									<BsCalendarCheckFill />
+									<p className="text-xs font-medium">{formatDateAsLocale(order.dataEfetivacao)}</p>
+								</div>
+							) : (
+								<FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+							)}
+							<NotificationCreationBlock
+								session={session}
+								nomeDoProjeto={infoHolder.projeto.nome || ""}
+								codProjeto={infoHolder.projeto.identificador?.toString() || ""}
+							/>
+							<div className="bg-primary/80 mt-4 flex w-full items-center justify-center gap-2 rounded-md p-2">
+								<h1 className="font-bold text-white">EXECUÇÃO</h1>
+							</div>
+							<div className="mt-2 flex w-full flex-col items-center gap-2 lg:flex-row">
+								<div className="w-full lg:w-[25%]">
+									<Select
+										label={"CATEGORIA"}
+										value={infoHolder.categoria}
+										options={serviceOrdersCategories}
+										selectedItemLabel={"NÃO DEFINIDO"}
+										handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
+										onReset={() => setInfoHolder((prev) => ({ ...prev, categoria: "OUTROS" }))}
+										width={"100%"}
+									/>
+								</div>
+								<div className="w-full lg:w-[25%]">
+									<TextInput
+										label={"DESCRIÇÃO DO SERVIÇO"}
+										placeholder={"Preencha a descrição do serviço a ser executado..."}
+										value={infoHolder.descricao}
+										handleChange={(value) => setInfoHolder((prev) => ({ ...prev, descricao: value }))}
+										width={"100%"}
+									/>
+								</div>
+								<div className="w-full lg:w-[25%]">
+									<Select
+										label={"TIPO DE RESPONSÁVEL"}
+										value={infoHolder.responsavel.tipo}
+										options={[
+											{ id: 1, label: "INTERNO", value: "INTERNO" },
+											{ id: 2, label: "EXTERNO", value: "EXTERNO" },
+										]}
+										selectedItemLabel={"NÃO DEFINIDO"}
+										handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: value } }))}
+										onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: "EXTERNO" } }))}
+										width={"100%"}
+									/>
+								</div>
+								<div className="w-full lg:w-[25%]">
+									{infoHolder.responsavel.tipo === "EXTERNO" ? (
+										<TextInput
+											label={"NOME DO RESPONSÁVEL"}
+											placeholder={"Preencha o nome do responsável pela execução..."}
+											value={infoHolder.responsavel.nome || ""}
+											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+											width={"100%"}
+										/>
+									) : (
+										<Select
+											label={"NOME DE RESPONSÁVEL"}
+											value={infoHolder.responsavel.nome}
+											options={equipesTecnicas.map((team, index) => ({ ...team, id: index + 1 }))}
+											selectedItemLabel={"NÃO DEFINIDO"}
+											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+											onReset={() => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: "" } }))}
+											width={"100%"}
+										/>
+									)}
+								</div>
+							</div>
+							<div className="mt-1 flex w-full items-center justify-center">
+								<div className="w-full lg:w-1/2">
+									<Select
+										label={"URGÊNCIA"}
+										value={infoHolder.urgencia}
+										options={[
+											{ id: 1, label: "POUCO URGENTE", value: "POUCO URGENTE" },
+											{ id: 2, label: "URGENTE", value: "URGENTE" },
+											{ id: 3, label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
+										]}
+										selectedItemLabel={"NÃO DEFINIDO"}
+										handleChange={(value) => setInfoHolder((prev) => ({ ...prev, urgencia: value }))}
+										onReset={() => setInfoHolder((prev) => ({ ...prev, urgencia: "NÃO DEFINIDO" }))}
+										width={"100%"}
+									/>
+								</div>
+							</div>
+							<FavoredModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+							<ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+							<EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+							<DetailsModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+							<ExecutionDiary orderId={orderId} entryDatetime={order.periodo?.inicio} exitDatetime={order.periodo?.fim} history={order.periodo.historico} />
+						</div>
+						<div className="border-primary/20 mt-2 flex w-full items-center justify-between border-t px-4 py-1">
+							{session?.user.permissoes.ordensDeServico.editar ? (
+								<button
+									onClick={() => handleOrderDelete(orderId)}
+									className="py-1 font-bold text-red-500 duration-300 ease-in-out hover:scale-105 hover:text-red-700"
+								>
+									EXCLUIR
+								</button>
+							) : (
+								<></>
+							)}
 
-              <button
-                onClick={() => handleOrderUpdate()}
-                className="py-1 font-bold text-[#15599a] duration-300 ease-in-out hover:scale-105 hover:text-[#15599a]"
-              >
-                SALVAR
-              </button>
-            </div>
-          </>
-        ) : (
-          <LoadingPage />
-        )}
-      </div>
-    </AnimatedModalWrapper>
-  )
+							<button
+								onClick={() => handleOrderUpdate()}
+								className="py-1 font-bold text-[#15599a] duration-300 ease-in-out hover:scale-105 hover:text-[#15599a]"
+							>
+								SALVAR
+							</button>
+						</div>
+					</>
+				) : (
+					<LoadingPage />
+				)}
+			</div>
+		</AnimatedModalWrapper>
+	);
 }
 
-export default ModalOrdemServico
+export default ModalOrdemServico;

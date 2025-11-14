@@ -67,7 +67,7 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 			cidade: true,
 			bairro: false,
 			logradouro: false,
-			numeroResidencia: false, 
+			numeroResidencia: false,
 			latitude: false,
 			longitude: false,
 			"pagamento.forma": false,
@@ -126,7 +126,11 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 				</DialogHeader>
 
 				<div className="flex-1 overflow-auto">
-					<ExportationMenuContent payloadHolder={payloadHolder} updatePayloadFilters={updatePayloadFilters} updatePayloadProjection={updatePayloadProjection} />
+					<ExportationMenuContent
+						payloadHolder={payloadHolder}
+						updatePayloadFilters={updatePayloadFilters}
+						updatePayloadProjection={updatePayloadProjection}
+					/>
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
@@ -149,7 +153,11 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 				</DrawerHeader>
 
 				<div className="flex-1 overflow-auto">
-					<ExportationMenuContent payloadHolder={payloadHolder} updatePayloadFilters={updatePayloadFilters} updatePayloadProjection={updatePayloadProjection} />
+					<ExportationMenuContent
+						payloadHolder={payloadHolder}
+						updatePayloadFilters={updatePayloadFilters}
+						updatePayloadProjection={updatePayloadProjection}
+					/>
 				</div>
 				<DrawerFooter>
 					<DrawerClose asChild>
@@ -350,14 +358,24 @@ function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePay
 			<div className="w-full flex flex-col gap-3">
 				<h1 className="text-sm font-bold leading-none tracking-tight">CAMPOS A SEREM EXPORTADOS</h1>
 				<div className="w-full flex flex-col gap-1">
-					<CheckboxInput labelFalse="QTDE" labelTrue="QTDE" checked={payloadHolder.projection.qtde} handleChange={(v) => updatePayloadProjection({ qtde: v })} />
+					<CheckboxInput
+						labelFalse="QTDE"
+						labelTrue="QTDE"
+						checked={payloadHolder.projection.qtde}
+						handleChange={(v) => updatePayloadProjection({ qtde: v })}
+					/>
 					<CheckboxInput
 						labelFalse="NOME DO CONTRATO"
 						labelTrue="NOME DO CONTRATO"
 						checked={payloadHolder.projection.nomeDoContrato}
 						handleChange={(v) => updatePayloadProjection({ nomeDoContrato: v })}
 					/>
-					<CheckboxInput labelFalse="CPF/CNPJ" labelTrue="CPF/CNPJ" checked={payloadHolder.projection.cpf_cnpj} handleChange={(v) => updatePayloadProjection({ cpf_cnpj: v })} />
+					<CheckboxInput
+						labelFalse="CPF/CNPJ"
+						labelTrue="CPF/CNPJ"
+						checked={payloadHolder.projection.cpf_cnpj}
+						handleChange={(v) => updatePayloadProjection({ cpf_cnpj: v })}
+					/>
 					<CheckboxInput
 						labelFalse="INSCRIÇÃO RURAL"
 						labelTrue="INSCRIÇÃO RURAL"
@@ -370,8 +388,18 @@ function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePay
 						checked={payloadHolder.projection.tipoDeServico}
 						handleChange={(v) => updatePayloadProjection({ tipoDeServico: v })}
 					/>
-					<CheckboxInput labelFalse="TELEFONE" labelTrue="TELEFONE" checked={payloadHolder.projection.telefone} handleChange={(v) => updatePayloadProjection({ telefone: v })} />
-					<CheckboxInput labelFalse="EMAIL" labelTrue="EMAIL" checked={payloadHolder.projection.email} handleChange={(v) => updatePayloadProjection({ email: v })} />
+					<CheckboxInput
+						labelFalse="TELEFONE"
+						labelTrue="TELEFONE"
+						checked={payloadHolder.projection.telefone}
+						handleChange={(v) => updatePayloadProjection({ telefone: v })}
+					/>
+					<CheckboxInput
+						labelFalse="EMAIL"
+						labelTrue="EMAIL"
+						checked={payloadHolder.projection.email}
+						handleChange={(v) => updatePayloadProjection({ email: v })}
+					/>
 					<CheckboxInput
 						labelFalse="DATA DE NASCIMENTO"
 						labelTrue="DATA DE NASCIMENTO"
@@ -384,33 +412,103 @@ function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePay
 						checked={payloadHolder.projection.canalVenda}
 						handleChange={(v) => updatePayloadProjection({ canalVenda: v })}
 					/>
-					<CheckboxInput labelFalse="CÓDIGO CRM" labelTrue="CÓDIGO CRM" checked={payloadHolder.projection.codigoSVB} handleChange={(v) => updatePayloadProjection({ codigoSVB: v })} />
+					<CheckboxInput
+						labelFalse="CÓDIGO CRM"
+						labelTrue="CÓDIGO CRM"
+						checked={payloadHolder.projection.codigoSVB}
+						handleChange={(v) => updatePayloadProjection({ codigoSVB: v })}
+					/>
 					<CheckboxInput
 						labelFalse="VENDEDOR"
 						labelTrue="VENDEDOR"
 						checked={payloadHolder.projection["vendedor.nome"]}
 						handleChange={(v) => updatePayloadProjection({ "vendedor.nome": v })}
 					/>
-					<CheckboxInput labelFalse="INSIDER" labelTrue="INSIDER" checked={payloadHolder.projection.insider} handleChange={(v) => updatePayloadProjection({ insider: v })} />
-					<CheckboxInput labelFalse="NPS" labelTrue="NPS" checked={payloadHolder.projection.nps} handleChange={(v) => updatePayloadProjection({ nps: v })} />
-					<CheckboxInput labelFalse="CEP" labelTrue="CEP" checked={payloadHolder.projection.cep} handleChange={(v) => updatePayloadProjection({ cep: v })} />
+					<CheckboxInput
+						labelFalse="INSIDER"
+						labelTrue="INSIDER"
+						checked={payloadHolder.projection.insider}
+						handleChange={(v) => updatePayloadProjection({ insider: v })}
+					/>
+					<CheckboxInput
+						labelFalse="NPS"
+						labelTrue="NPS"
+						checked={payloadHolder.projection.nps}
+						handleChange={(v) => updatePayloadProjection({ nps: v })}
+					/>
+					<CheckboxInput
+						labelFalse="CEP"
+						labelTrue="CEP"
+						checked={payloadHolder.projection.cep}
+						handleChange={(v) => updatePayloadProjection({ cep: v })}
+					/>
 					<CheckboxInput labelFalse="UF" labelTrue="UF" checked={payloadHolder.projection.uf} handleChange={(v) => updatePayloadProjection({ uf: v })} />
-					<CheckboxInput labelFalse="CIDADE" labelTrue="CIDADE" checked={payloadHolder.projection.cidade} handleChange={(v) => updatePayloadProjection({ cidade: v })} />
-					<CheckboxInput labelFalse="BAIRRO" labelTrue="BAIRRO" checked={payloadHolder.projection.bairro} handleChange={(v) => updatePayloadProjection({ bairro: v })} />
-					<CheckboxInput labelFalse="LOGRADOURO" labelTrue="LOGRADOURO" checked={payloadHolder.projection.logradouro} handleChange={(v) => updatePayloadProjection({ logradouro: v })} />
+					<CheckboxInput
+						labelFalse="CIDADE"
+						labelTrue="CIDADE"
+						checked={payloadHolder.projection.cidade}
+						handleChange={(v) => updatePayloadProjection({ cidade: v })}
+					/>
+					<CheckboxInput
+						labelFalse="BAIRRO"
+						labelTrue="BAIRRO"
+						checked={payloadHolder.projection.bairro}
+						handleChange={(v) => updatePayloadProjection({ bairro: v })}
+					/>
+					<CheckboxInput
+						labelFalse="LOGRADOURO"
+						labelTrue="LOGRADOURO"
+						checked={payloadHolder.projection.logradouro}
+						handleChange={(v) => updatePayloadProjection({ logradouro: v })}
+					/>
 					<CheckboxInput
 						labelFalse="NÚMERO"
 						labelTrue="NÚMERO"
 						checked={payloadHolder.projection.numeroResidencia}
 						handleChange={(v) => updatePayloadProjection({ numeroResidencia: v })}
 					/>
-					<CheckboxInput labelFalse="LATITUDE" labelTrue="LATITUDE" checked={payloadHolder.projection.latitude} handleChange={(v) => updatePayloadProjection({ latitude: v })} />
-					<CheckboxInput labelFalse="LONGITUDE" labelTrue="LONGITUDE" checked={payloadHolder.projection.longitude} handleChange={(v) => updatePayloadProjection({ longitude: v })} />
-					<CheckboxInput labelFalse="FORMA DE PAGAMENTO" labelTrue="FORMA DE PAGAMENTO" checked={payloadHolder.projection["pagamento.forma"]} handleChange={(v) => updatePayloadProjection({ "pagamento.forma": v })} />
-					<CheckboxInput labelFalse="CREDOR" labelTrue="CREDOR" checked={payloadHolder.projection["pagamento.credor"]} handleChange={(v) => updatePayloadProjection({ "pagamento.credor": v })} />
-					<CheckboxInput labelFalse="PAGADOR" labelTrue="PAGADOR" checked={payloadHolder.projection["pagamento.pagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.pagador": v })} />
-					<CheckboxInput labelFalse="CONTATO DO PAGADOR" labelTrue="CONTATO DO PAGADOR" checked={payloadHolder.projection["pagamento.contatoPagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.contatoPagador": v })} />
-					<CheckboxInput labelFalse="CPF/CNPJ DO PAGADOR" labelTrue="CPF/CNPJ DO PAGADOR" checked={payloadHolder.projection["pagamento.cpf_cnpjPagador"]} handleChange={(v) => updatePayloadProjection({ "pagamento.cpf_cnpjPagador": v })} />
+					<CheckboxInput
+						labelFalse="LATITUDE"
+						labelTrue="LATITUDE"
+						checked={payloadHolder.projection.latitude}
+						handleChange={(v) => updatePayloadProjection({ latitude: v })}
+					/>
+					<CheckboxInput
+						labelFalse="LONGITUDE"
+						labelTrue="LONGITUDE"
+						checked={payloadHolder.projection.longitude}
+						handleChange={(v) => updatePayloadProjection({ longitude: v })}
+					/>
+					<CheckboxInput
+						labelFalse="FORMA DE PAGAMENTO"
+						labelTrue="FORMA DE PAGAMENTO"
+						checked={payloadHolder.projection["pagamento.forma"]}
+						handleChange={(v) => updatePayloadProjection({ "pagamento.forma": v })}
+					/>
+					<CheckboxInput
+						labelFalse="CREDOR"
+						labelTrue="CREDOR"
+						checked={payloadHolder.projection["pagamento.credor"]}
+						handleChange={(v) => updatePayloadProjection({ "pagamento.credor": v })}
+					/>
+					<CheckboxInput
+						labelFalse="PAGADOR"
+						labelTrue="PAGADOR"
+						checked={payloadHolder.projection["pagamento.pagador"]}
+						handleChange={(v) => updatePayloadProjection({ "pagamento.pagador": v })}
+					/>
+					<CheckboxInput
+						labelFalse="CONTATO DO PAGADOR"
+						labelTrue="CONTATO DO PAGADOR"
+						checked={payloadHolder.projection["pagamento.contatoPagador"]}
+						handleChange={(v) => updatePayloadProjection({ "pagamento.contatoPagador": v })}
+					/>
+					<CheckboxInput
+						labelFalse="CPF/CNPJ DO PAGADOR"
+						labelTrue="CPF/CNPJ DO PAGADOR"
+						checked={payloadHolder.projection["pagamento.cpf_cnpjPagador"]}
+						handleChange={(v) => updatePayloadProjection({ "pagamento.cpf_cnpjPagador": v })}
+					/>
 					<CheckboxInput
 						labelFalse="STATUS DO CONTRATO"
 						labelTrue="STATUS DO CONTRATO"

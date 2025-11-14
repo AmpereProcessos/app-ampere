@@ -81,7 +81,9 @@ function LaudoSimplesUrbano({ analysis }: LaudoSimplesUrbanoProps) {
 				<div className="flex flex-col">
 					<h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
 					<div className="flex">
-						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">DESCRIÇÃO DO SISTEMA FOTOVOLTAICO</div>
+						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
+							DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
+						</div>
 						<div className="flex w-[80%] flex-col">
 							<div className="flex w-full items-center">
 								<div className="w-1/2 border border-b-0  border-black bg-[#fead61] text-center  font-raleway text-sm font-bold text-white">TOPOLOGIA</div>
@@ -106,7 +108,9 @@ function LaudoSimplesUrbano({ analysis }: LaudoSimplesUrbanoProps) {
 										</div>
 									))}
 							</div>
-							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">MÓDULOS FOTOVOLTÁICOS</h1>
+							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
+								MÓDULOS FOTOVOLTÁICOS
+							</h1>
 							<div className="flex w-full flex-col border border-black">
 								<div className="flex w-full items-center">
 									<div className="w-1/3 bg-gray-200 p-1 text-center text-[0.6rem] font-bold">QUANTIDADE</div>
@@ -144,7 +148,9 @@ function LaudoSimplesUrbano({ analysis }: LaudoSimplesUrbanoProps) {
 									<p className="col-span-3 border-r border-black p-1 text-center text-xs font-bold">{cost.descricao}</p>
 									<p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">{cost.qtde}</p>
 									<p className="col-span-1 border-r border-black p-1 text-center text-xs font-bold">{cost.grandeza}</p>
-									<p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">{formatToMoney((cost.totalVendaSimples || 0) / cost.qtde)}</p>
+									<p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
+										{formatToMoney((cost.totalVendaSimples || 0) / cost.qtde)}
+									</p>
 									<p className="col-span-2 border-r border-black p-1 text-center text-xs font-bold">
 										{cost.total ? formatToMoney(cost.totalVendaSimples || 0) : formatToMoney(cost.totalVendaSimples || 0)}
 									</p>
@@ -189,7 +195,9 @@ function LaudoSimplesUrbano({ analysis }: LaudoSimplesUrbanoProps) {
 								</div>
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-[#fead61] py-1 text-center text-sm font-bold text-white">ESTRUTURA DE INCLINAÇÃO</p>
-									<p className="border-r border-black py-1 text-center text-sm font-bold">{analysis.conclusao.inclinacao ? analysis.conclusao.inclinacao : "-"}</p>
+									<p className="border-r border-black py-1 text-center text-sm font-bold">
+										{analysis.conclusao.inclinacao ? analysis.conclusao.inclinacao : "-"}
+									</p>
 								</div>
 							</div>
 							<div className="grid grid-rows-3">
@@ -199,7 +207,9 @@ function LaudoSimplesUrbano({ analysis }: LaudoSimplesUrbanoProps) {
 								</div>
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-[#fead61] py-1 text-center text-sm font-bold text-white">ESTRUTURA CIVIL</p>
-									<p className="border-r border-black py-1 text-center text-sm font-bold">{analysis.conclusao.estrutura ? analysis.conclusao.estrutura : "-"}</p>
+									<p className="border-r border-black py-1 text-center text-sm font-bold">
+										{analysis.conclusao.estrutura ? analysis.conclusao.estrutura : "-"}
+									</p>
 								</div>
 							</div>
 						</div>

@@ -1,82 +1,82 @@
-import { insertManyFileReferences } from '@/repositories/crm-file-references/mutation'
-import { getFileReferencesByQuery } from '@/repositories/crm-file-references/queries'
-import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
-import { FileReferencesQueryParamsSchema, InsertFileReferenceSchema, TFileReference } from '@/utils/schemas/crm/file-reference.schema'
-import connectToCRMDatabase from '@/utils/services/mongodb/crm/main'
-import createHttpError from 'http-errors'
-import { Collection, Filter } from 'mongodb'
-import { NextApiHandler } from 'next'
-import { z } from 'zod'
+import { insertManyFileReferences } from "@/repositories/crm-file-references/mutation";
+import { getFileReferencesByQuery } from "@/repositories/crm-file-references/queries";
+import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { FileReferencesQueryParamsSchema, InsertFileReferenceSchema, TFileReference } from "@/utils/schemas/crm/file-reference.schema";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
+import createHttpError from "http-errors";
+import { Collection, Filter } from "mongodb";
+import { NextApiHandler } from "next";
+import { z } from "zod";
 
 type GetResponse = {
-  data: TFileReference[]
-}
+	data: TFileReference[];
+};
 
 const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
-  const session = await validateAuthenticationWithSession(req, res)
+	const session = await validateAuthenticationWithSession(req, res);
 
-  const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId, serviceOrderId, callId } =
-    FileReferencesQueryParamsSchema.parse(req.query)
+	const { clientId, opportunityId, analysisId, homologationId, projectId, purchaseId, revenueId, serviceOrderId, callId } =
+		FileReferencesQueryParamsSchema.parse(req.query);
 
-  console.log(req.query)
-  const clientQuery: Filter<TFileReference> = clientId ? { idCliente: clientId } : {}
-  const opportunityQuery: Filter<TFileReference> = opportunityId ? { idOportunidade: opportunityId } : {}
-  const analysisQuery: Filter<TFileReference> = analysisId ? { idAnaliseTecnica: analysisId } : {}
-  const homologationQuery: Filter<TFileReference> = homologationId ? { idHomologacao: homologationId } : {}
-  const projectQuery: Filter<TFileReference> = projectId ? { idProjeto: projectId } : {}
-  const purchaseQuery: Filter<TFileReference> = purchaseId ? { idCompra: purchaseId } : {}
-  const revenueQuery: Filter<TFileReference> = revenueId ? { idReceita: revenueId } : {}
-  const serviceOrderQuery: Filter<TFileReference> = serviceOrderId ? { idOrdemServico: serviceOrderId } : {}
-  const callQuery: Filter<TFileReference> = callId ? { idChamado: callId } : {}
+	console.log(req.query);
+	const clientQuery: Filter<TFileReference> = clientId ? { idCliente: clientId } : {};
+	const opportunityQuery: Filter<TFileReference> = opportunityId ? { idOportunidade: opportunityId } : {};
+	const analysisQuery: Filter<TFileReference> = analysisId ? { idAnaliseTecnica: analysisId } : {};
+	const homologationQuery: Filter<TFileReference> = homologationId ? { idHomologacao: homologationId } : {};
+	const projectQuery: Filter<TFileReference> = projectId ? { idProjeto: projectId } : {};
+	const purchaseQuery: Filter<TFileReference> = purchaseId ? { idCompra: purchaseId } : {};
+	const revenueQuery: Filter<TFileReference> = revenueId ? { idReceita: revenueId } : {};
+	const serviceOrderQuery: Filter<TFileReference> = serviceOrderId ? { idOrdemServico: serviceOrderId } : {};
+	const callQuery: Filter<TFileReference> = callId ? { idChamado: callId } : {};
 
-  const nonEmptyQueries = [
-    clientQuery,
-    opportunityQuery,
-    analysisQuery,
-    homologationQuery,
-    projectQuery,
-    purchaseQuery,
-    revenueQuery,
-    serviceOrderQuery,
-    callQuery,
-  ].filter((r) => Object.keys(r).length > 0)
+	const nonEmptyQueries = [
+		clientQuery,
+		opportunityQuery,
+		analysisQuery,
+		homologationQuery,
+		projectQuery,
+		purchaseQuery,
+		revenueQuery,
+		serviceOrderQuery,
+		callQuery,
+	].filter((r) => Object.keys(r).length > 0);
 
-  console.log(nonEmptyQueries)
-  const orQuery = { $or: nonEmptyQueries }
-  const query = { ...orQuery }
+	console.log(nonEmptyQueries);
+	const orQuery = { $or: nonEmptyQueries };
+	const query = { ...orQuery };
 
-  const db = await connectToCRMDatabase()
-  const collection: Collection<TFileReference> = db.collection('file-references')
-  // const db = await connectToDatabase(process.env.DB_KEY)
-  // const collection: Collection<TFileReference> = db.collection('referencias-arquivos')
+	const db = await connectToCRMDatabase();
+	const collection: Collection<TFileReference> = db.collection("file-references");
+	// const db = await connectToDatabase(process.env.DB_KEY)
+	// const collection: Collection<TFileReference> = db.collection('referencias-arquivos')
 
-  const fileReferences = await getFileReferencesByQuery({ collection, query })
-  return res.status(200).json({ data: fileReferences })
-}
+	const fileReferences = await getFileReferencesByQuery({ collection, query });
+	return res.status(200).json({ data: fileReferences });
+};
 
 type PostResponse = {
-  data: {
-    insertedIds: string[]
-  }
-  message: string
-}
+	data: {
+		insertedIds: string[];
+	};
+	message: string;
+};
 const createManyFileReferences: NextApiHandler<PostResponse> = async (req, res) => {
-  const partnerId = '65454ba15cf3e3ecf534b308'
+	const partnerId = "65454ba15cf3e3ecf534b308";
 
-  const manyAnalysis = z.array(InsertFileReferenceSchema).parse(req.body)
+	const manyAnalysis = z.array(InsertFileReferenceSchema).parse(req.body);
 
-  const db = await connectToCRMDatabase()
-  const fileReferencesCollection: Collection<TFileReference> = db.collection('file-references')
+	const db = await connectToCRMDatabase();
+	const fileReferencesCollection: Collection<TFileReference> = db.collection("file-references");
 
-  const insertResponse = await insertManyFileReferences({ collection: fileReferencesCollection, info: manyAnalysis, partnerId: partnerId || '' })
-  if (!insertResponse.acknowledged)
-    throw new createHttpError.InternalServerError('Oops, houve um erro desconhecido na criação das referências de arquivo.')
-  const insertedIds = Object.values(insertResponse.insertedIds).map((i) => i.toString())
+	const insertResponse = await insertManyFileReferences({ collection: fileReferencesCollection, info: manyAnalysis, partnerId: partnerId || "" });
+	if (!insertResponse.acknowledged)
+		throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido na criação das referências de arquivo.");
+	const insertedIds = Object.values(insertResponse.insertedIds).map((i) => i.toString());
 
-  return res.status(201).json({ data: { insertedIds }, message: 'Referências de arquivo criadas com sucesso !' })
-}
+	return res.status(201).json({ data: { insertedIds }, message: "Referências de arquivo criadas com sucesso !" });
+};
 
 export default apiHandler({
-  GET: getMultipleSourcesFileReferences,
-  POST: createManyFileReferences,
-})
+	GET: getMultipleSourcesFileReferences,
+	POST: createManyFileReferences,
+});

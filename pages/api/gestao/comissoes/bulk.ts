@@ -57,7 +57,9 @@ async function handleBulkUpdateProjectsComission(input: TBulkUpdateProjectsComis
 	console.log(`[BULKWRITE UPDATE PROJECTS COMISSION] Updating ${bulkwriteAppUpdate.length} projects...`);
 	console.log("[BULKWRITE UPDATE PROJECTS COMISSION] Operations:");
 	for (const p of input) {
-		console.log(`ProjectId: ${p.projectId}\n  - Seller Commission: ${p.sellerComissionPercentage}%\n  - Insider Commission: ${p.insiderComissionPercentage}%`);
+		console.log(
+			`ProjectId: ${p.projectId}\n  - Seller Commission: ${p.sellerComissionPercentage}%\n  - Insider Commission: ${p.insiderComissionPercentage}%`,
+		);
 	}
 	const db = await connectToDatabase();
 	const projectsCollection = db.collection<TProject>("projects");
@@ -74,7 +76,8 @@ async function handleBulkUpdateProjectsComissionHandler(req: NextApiRequest, res
 	const session = await validateAuthenticationWithSession(req, res);
 	const userHasAdministrativeViewPermission = !!session?.user.permissoes.administrativo.visualizar;
 	const userHasFinancesViewPermission = !!session?.user.permissoes.financeiro.visualizar;
-	if (!userHasAdministrativeViewPermission && !userHasFinancesViewPermission) throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
+	if (!userHasAdministrativeViewPermission && !userHasFinancesViewPermission)
+		throw new createHttpError.Forbidden("Você não tem permissão para acessar esta página.");
 
 	const author = { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url };
 

@@ -108,7 +108,11 @@ export async function getGeneralSalesStats({ collection, partialQuery }: GetGene
 	const [saleStats] = stats;
 
 	const totalSold =
-		saleStats.valorProjetoVendido + saleStats.valorOeMVendido + saleStats.valorPadraoVendido + saleStats.valorEstruturaPersonalizadaVendido + saleStats.valorSeguroVendido;
+		saleStats.valorProjetoVendido +
+		saleStats.valorOeMVendido +
+		saleStats.valorPadraoVendido +
+		saleStats.valorEstruturaPersonalizadaVendido +
+		saleStats.valorSeguroVendido;
 	return {
 		qtdeVendida: (saleStats.qtdeVendida ?? 0) as number,
 		valorVendido: totalSold as number,

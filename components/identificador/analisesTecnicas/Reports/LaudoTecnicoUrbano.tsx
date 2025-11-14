@@ -70,7 +70,9 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
 				<div className="flex flex-col">
 					<h1 className="bg-[#15599a] text-center text-sm font-bold text-white">EQUIPAMENTOS</h1>
 					<div className="flex">
-						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">DESCRIÇÃO DO SISTEMA FOTOVOLTAICO</div>
+						<div className="flex h-full w-[20%] items-center justify-center bg-[#15599a] text-center font-bold text-white">
+							DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
+						</div>
 						<div className="flex w-[80%] flex-col">
 							<div className="flex w-full items-center">
 								<div className="w-1/2 border border-b-0  border-black bg-[#fead61] text-center  font-raleway text-sm font-bold text-white">TOPOLOGIA</div>
@@ -95,7 +97,9 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
 										</div>
 									))}
 							</div>
-							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">MÓDULOS FOTOVOLTÁICOS</h1>
+							<h1 className="border border-b-0 border-t-0 border-black  bg-[#fead61] text-center font-raleway  text-sm font-bold text-white">
+								MÓDULOS FOTOVOLTÁICOS
+							</h1>
 							<div className="flex w-full flex-col border border-black">
 								<div className="flex w-full items-center">
 									<div className="w-1/3 bg-gray-200 p-1 text-center text-[0.6rem] font-bold">QUANTIDADE</div>
@@ -136,7 +140,9 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
 								</div>
 								<div className="grid grid-cols-2 border-b border-black">
 									<p className="border-r border-black bg-gray-200 text-center text-xxs font-bold">ESTRUTURA DE FIXAÇÃO DO INVERSOR</p>
-									<p className="border-r border-black text-center text-xxs">{analysis.detalhes.fixacaoInversores ? analysis.detalhes.fixacaoInversores : "-"}</p>
+									<p className="border-r border-black text-center text-xxs">
+										{analysis.detalhes.fixacaoInversores ? analysis.detalhes.fixacaoInversores : "-"}
+									</p>
 								</div>
 							</div>
 							<div className="grid w-[50%] grid-rows-3">
@@ -161,7 +167,9 @@ function LaudoTecnicoUrbano({ analysis }: LaudoTecnicoUrbanoProps) {
 							{/* <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">CAIXA CLIENTE</h1> */}
 							{analysis.padrao.map((paInfo, index) => (
 								<div key={index} className="flex w-full flex-col">
-									{analysis.padrao?.length > 1 ? <h1 className="border border-t-0 border-black bg-[#fead41] text-center text-xs font-bold text-white">PADRÃO Nº {index + 1}</h1> : null}
+									{analysis.padrao?.length > 1 ? (
+										<h1 className="border border-t-0 border-black bg-[#fead41] text-center text-xs font-bold text-white">PADRÃO Nº {index + 1}</h1>
+									) : null}
 									<div className="flex w-full">
 										<div className="flex w-[50%] flex-col">
 											<div className="grid grid-cols-2 border-b border-black">

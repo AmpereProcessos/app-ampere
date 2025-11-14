@@ -36,9 +36,10 @@ export function getVehicleReviewAlertLevelByKmDifference(kmDifference: number) {
 	return null;
 }
 
-export const PropertyTemporaryUsageMetadataTypeByPropertyType: Record<TProperty["metadados"]["tipo"], TPropertyTemporaryUsage["metadados"]["tipo"]> = {
-	VEÍCULO: "USO DE VEÍCULO",
-};
+export const PropertyTemporaryUsageMetadataTypeByPropertyType: Record<TProperty["metadados"]["tipo"], TPropertyTemporaryUsage["metadados"]["tipo"]> =
+	{
+		VEÍCULO: "USO DE VEÍCULO",
+	};
 
 type TDocumentConfig = {
 	identifier: string;

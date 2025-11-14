@@ -17,7 +17,7 @@ type WhatsappConnectionBlockProps = {
 	session: TAuthSession;
 };
 export default function WhatsappConnectionBlock({ session }: WhatsappConnectionBlockProps) {
-	const {data: whatsappConnection, isPending, isError, isSuccess} = useConvexQuery(api.queries.connections.getWhatsappConnection);
+	const { data: whatsappConnection, isPending, isError, isSuccess } = useConvexQuery(api.queries.connections.getWhatsappConnection);
 
 	return (
 		<div className="flex h-full grow flex-col">

@@ -4,10 +4,13 @@ import type { TSaleGoalDTO } from "./sale-goal.schema";
 import type { TPartner } from "./partner.schema";
 import { PricingMethodConditionTypes } from "./pricing-method.schema";
 
-const ComissionScenarioConditionTypes = z.enum(["IGUAL_TEXTO", "IGUAL_NÚMERICO", "MAIOR_QUE_NÚMERICO", "MENOR_QUE_NÚMERICO", "INTERVALO_NÚMERICO", "INCLUI_LISTA"], {
-	required_error: "Tipo de condicional não informado.",
-	invalid_type_error: "Tipo não válido para tipo de condicional.",
-});
+const ComissionScenarioConditionTypes = z.enum(
+	["IGUAL_TEXTO", "IGUAL_NÚMERICO", "MAIOR_QUE_NÚMERICO", "MENOR_QUE_NÚMERICO", "INTERVALO_NÚMERICO", "INCLUI_LISTA"],
+	{
+		required_error: "Tipo de condicional não informado.",
+		invalid_type_error: "Tipo não válido para tipo de condicional.",
+	},
+);
 export type TComissionScenarioConditionType = z.infer<typeof ComissionScenarioConditionTypes>;
 export const AuthorSchema = z.object({
 	id: z.string({ required_error: "ID de referência do autor não fornecido.", invalid_type_error: "Tipo não válido para o ID do autor." }),
@@ -502,7 +505,10 @@ export type TUserEntity = TUser & { _id: ObjectId };
 export type TUserSimplified = Pick<TUser, "nome" | "email" | "telefone" | "avatar_url">;
 export type TUserDTOSimplified = Pick<TUserDTO, "_id" | "nome" | "email" | "telefone" | "avatar_url">;
 
-export type TSessionUser = Pick<TUser, "administrador" | "nome" | "telefone" | "email" | "nome" | "avatar_url" | "idParceiro" | "idGrupo" | "permissoes"> & {
+export type TSessionUser = Pick<
+	TUser,
+	"administrador" | "nome" | "telefone" | "email" | "nome" | "avatar_url" | "idParceiro" | "idGrupo" | "permissoes"
+> & {
 	id: string;
 	parceiro: {
 		nome: TPartner["nome"];

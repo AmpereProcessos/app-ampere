@@ -1,36 +1,36 @@
-import { TProjectDTO } from '@/utils/schemas/projects'
-import { QueryClient } from '@tanstack/react-query'
-import { formatDateAsLocale } from '../formatting'
-import { sendEmail } from '../email'
-import { updateProject } from './clients'
+import { TProjectDTO } from "@/utils/schemas/projects";
+import { QueryClient } from "@tanstack/react-query";
+import { formatDateAsLocale } from "../formatting";
+import { sendEmail } from "../email";
+import { updateProject } from "./clients";
 
 type HandleOeMUpdateParams = {
-  previousData: TProjectDTO
-  newData: TProjectDTO
-  changes: { [key: string]: any }
-  queryClient: QueryClient
-}
+	previousData: TProjectDTO;
+	newData: TProjectDTO;
+	changes: { [key: string]: any };
+	queryClient: QueryClient;
+};
 export async function handleOeMUpdate({ previousData, newData, changes, queryClient }: HandleOeMUpdateParams) {
-  const projectId = previousData._id
+	const projectId = previousData._id;
 
-  const hasOeMPlan =
-    previousData.oem.aplicavel && !['NÃO SE APLICA', 'INCLUSO NO CONTRATO', 'NÃO DEFINIDO', null].includes(previousData.oem.plano || '')
+	const hasOeMPlan =
+		previousData.oem.aplicavel && !["NÃO SE APLICA", "INCLUSO NO CONTRATO", "NÃO DEFINIDO", null].includes(previousData.oem.plano || "");
 
-  const previousMaintenanceDate = previousData.manutencaoPreventiva.data
-  const newMaintenanceDate = newData.manutencaoPreventiva.data
+	const previousMaintenanceDate = previousData.manutencaoPreventiva.data;
+	const newMaintenanceDate = newData.manutencaoPreventiva.data;
 
-  if (hasOeMPlan && !!newMaintenanceDate && previousMaintenanceDate != newMaintenanceDate) {
-    const emailMessage = {
-      emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
-      subject: 'EXECUÇÃO DE MANUTENÇÃO',
-      message: `Olá, passando para te informar que o cliente ${
-        newData.nomeDoContrato
-      } teve uma manutenção executada pela nossa equipe no dia ${formatDateAsLocale(newData.manutencaoPreventiva.data)}. Desde já agradeço, Volts.`,
-    }
-    await sendEmail(emailMessage)
-  }
-  // Update project
-  await updateProject({ id: projectId, changes: changes })
+	if (hasOeMPlan && !!newMaintenanceDate && previousMaintenanceDate != newMaintenanceDate) {
+		const emailMessage = {
+			emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
+			subject: "EXECUÇÃO DE MANUTENÇÃO",
+			message: `Olá, passando para te informar que o cliente ${
+				newData.nomeDoContrato
+			} teve uma manutenção executada pela nossa equipe no dia ${formatDateAsLocale(newData.manutencaoPreventiva.data)}. Desde já agradeço, Volts.`,
+		};
+		await sendEmail(emailMessage);
+	}
+	// Update project
+	await updateProject({ id: projectId, changes: changes });
 
-  return 'Atualizações feitas com sucesso'
+	return "Atualizações feitas com sucesso";
 }

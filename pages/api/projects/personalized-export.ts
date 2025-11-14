@@ -9,9 +9,20 @@ import createHttpError from "http-errors";
 
 const handleProjectsPersonalizedExport: NextApiHandler<any> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const userHasOverallAccess = ["Projetos", "Obras", "Suprimentos", "O&M", "Marketing", "Vendas", "Pós-Venda", "PPS", "InsideSales", "Financeiro", "ADM", "RH"].every((el) =>
-		session?.user.permissoes.rotas.includes(el),
-	);
+	const userHasOverallAccess = [
+		"Projetos",
+		"Obras",
+		"Suprimentos",
+		"O&M",
+		"Marketing",
+		"Vendas",
+		"Pós-Venda",
+		"PPS",
+		"InsideSales",
+		"Financeiro",
+		"ADM",
+		"RH",
+	].every((el) => session?.user.permissoes.rotas.includes(el));
 	if (!userHasOverallAccess) throw new createHttpError.Forbidden("Você não tem permissão para exportar projetos.");
 	const { filters, projection } = GetProjectsExportRoutePayloadSchema.parse(req.body);
 

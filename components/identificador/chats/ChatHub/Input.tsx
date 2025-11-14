@@ -24,10 +24,7 @@ export type ChatHubInputProps = {
 export function Input({ className, placeholder = "Digite uma mensagem...", maxRows = 4, onMessageSent }: ChatHubInputProps) {
 	const { selectedChatId, selectedPhoneNumber, session, userHasMessageSendingPermission } = useChatHub();
 
-	const chat = useQuery(
-		api.queries.chat.getChat,
-		selectedChatId ? { chatId: selectedChatId } : "skip",
-	);
+	const chat = useQuery(api.queries.chat.getChat, selectedChatId ? { chatId: selectedChatId } : "skip");
 
 	const [messageText, setMessageText] = useState("");
 	const [isSending, setIsSending] = useState(false);
@@ -215,12 +212,8 @@ export function Input({ className, placeholder = "Digite uma mensagem...", maxRo
 					<div className="flex items-start gap-2 px-3 py-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
 						<AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
 						<div className="flex-1 min-w-0">
-							<p className="text-xs font-medium text-amber-800 dark:text-amber-200 mb-0.5">
-								Janela de conversação expirada
-							</p>
-							<p className="text-xs text-amber-700 dark:text-amber-300/80">
-								A janela de 24h expirou. Envie um template aprovado para reiniciar a conversa.
-							</p>
+							<p className="text-xs font-medium text-amber-800 dark:text-amber-200 mb-0.5">Janela de conversação expirada</p>
+							<p className="text-xs text-amber-700 dark:text-amber-300/80">A janela de 24h expirou. Envie um template aprovado para reiniciar a conversa.</p>
 						</div>
 					</div>
 				)}
@@ -278,11 +271,7 @@ export function Input({ className, placeholder = "Digite uma mensagem...", maxRo
 							"hover:scale-105 active:scale-95",
 						)}
 					>
-						{isSending ? (
-							<Loader2 className="w-4 h-4 animate-spin" />
-						) : (
-							<Send className="w-4 h-4" />
-						)}
+						{isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
 					</Button>
 
 					{/* Template Selector */}
@@ -296,8 +285,7 @@ export function Input({ className, placeholder = "Digite uma mensagem...", maxRo
 								className={cn(
 									"h-10 w-10 rounded-full flex-shrink-0 transition-all duration-200",
 									"hover:scale-105 active:scale-95",
-									isConversationExpired &&
-										"bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md",
+									isConversationExpired && "bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md",
 								)}
 								title="Enviar template"
 							>
@@ -311,12 +299,7 @@ export function Input({ className, placeholder = "Digite uma mensagem...", maxRo
 									<FileText className="w-4 h-4 text-primary" />
 									<h3 className="font-semibold text-sm">Templates WhatsApp</h3>
 								</div>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="h-7 w-7"
-									onClick={() => setShowTemplateSelector(false)}
-								>
+								<Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowTemplateSelector(false)}>
 									<X className="w-4 h-4" />
 								</Button>
 							</div>
@@ -328,10 +311,7 @@ export function Input({ className, placeholder = "Digite uma mensagem...", maxRo
 										<Button
 											key={key}
 											variant="ghost"
-											className={cn(
-												"w-full justify-start h-auto p-3 rounded-lg",
-												"hover:bg-primary/5 transition-colors duration-200",
-											)}
+											className={cn("w-full justify-start h-auto p-3 rounded-lg", "hover:bg-primary/5 transition-colors duration-200")}
 											onClick={() => sendTemplate(key as keyof typeof WHATSAPP_TEMPLATES)}
 											disabled={isSending}
 										>

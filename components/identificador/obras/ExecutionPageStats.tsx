@@ -1,50 +1,50 @@
-import { cn } from '@/lib/utils'
-import type { TServiceOrderStatsOutput } from '@/pages/api/ordensDeServico/stats'
-import { SlideMotionVariants } from '@/utils/constants'
-import { useServiceOrdersStats } from '@/utils/methods/query/service-orders'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Building2, Check, ChevronDown, ChevronUp, CircleDot, Contact } from 'lucide-react'
-import type { TAuthSession } from '@/lib/authentication/types'
-import { useState } from 'react'
-import { FaPlay } from 'react-icons/fa'
+import { cn } from "@/lib/utils";
+import type { TServiceOrderStatsOutput } from "@/pages/api/ordensDeServico/stats";
+import { SlideMotionVariants } from "@/utils/constants";
+import { useServiceOrdersStats } from "@/utils/methods/query/service-orders";
+import { AnimatePresence, motion } from "framer-motion";
+import { Building2, Check, ChevronDown, ChevronUp, CircleDot, Contact } from "lucide-react";
+import type { TAuthSession } from "@/lib/authentication/types";
+import { useState } from "react";
+import { FaPlay } from "react-icons/fa";
 
 type ExecutionPageStatsProps = {
-  session: TAuthSession
-}
+	session: TAuthSession;
+};
 export default function ExecutionPageStats({ session }: ExecutionPageStatsProps) {
-  const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats()
-  return (
-    // <div className="w-full flex flex-col gap-2 p-3 border border-primary/20 shadow-xs rounded-md">
-    <div className="flex w-full flex-col gap-4 lg:flex-row">
-      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
-        <div className="flex items-center justify-start gap-2">
-          <FaPlay />
-          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS INICIADOS</h1>
-        </div>
-        <h1 className="leading-none font-black">{serviceOrdersStats?.iniciadas || 0}</h1>
-      </div>
-      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
-        <div className="flex items-center justify-start gap-2">
-          <div className={'border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-blue-500 text-white'}>
-            <CircleDot size={12} />
-          </div>
-          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
-        </div>
-        <h1 className="leading-none font-black">{serviceOrdersStats?.emAndamento || 0}</h1>
-      </div>
-      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-[400px] lg:flex-row dark:bg-[#121212]">
-        <div className="flex items-center justify-start gap-2">
-          <div className={'border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-green-500 text-white'}>
-            <Check size={12} />
-          </div>
-          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EXECUTADOS</h1>
-        </div>
-        <h1 className="leading-none font-black">{serviceOrdersStats?.concluidas || 0}</h1>
-      </div>
-    </div>
+	const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats();
+	return (
+		// <div className="w-full flex flex-col gap-2 p-3 border border-primary/20 shadow-xs rounded-md">
+		<div className="flex w-full flex-col gap-4 lg:flex-row">
+			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
+				<div className="flex items-center justify-start gap-2">
+					<FaPlay />
+					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS INICIADOS</h1>
+				</div>
+				<h1 className="leading-none font-black">{serviceOrdersStats?.iniciadas || 0}</h1>
+			</div>
+			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
+				<div className="flex items-center justify-start gap-2">
+					<div className={"border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-blue-500 text-white"}>
+						<CircleDot size={12} />
+					</div>
+					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
+				</div>
+				<h1 className="leading-none font-black">{serviceOrdersStats?.emAndamento || 0}</h1>
+			</div>
+			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-[400px] lg:flex-row dark:bg-[#121212]">
+				<div className="flex items-center justify-start gap-2">
+					<div className={"border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-green-500 text-white"}>
+						<Check size={12} />
+					</div>
+					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EXECUTADOS</h1>
+				</div>
+				<h1 className="leading-none font-black">{serviceOrdersStats?.concluidas || 0}</h1>
+			</div>
+		</div>
 
-    // </div>
-  )
+		// </div>
+	);
 }
 
 // type ResultsByCityProps = {

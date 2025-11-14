@@ -4,11 +4,21 @@ import { PurchaseCompositionItemCategoryEnum } from "./purchases";
 
 const EquipmentSchema = z.object({
 	id: z.string({ invalid_type_error: "Tipo não válido para ID do módulo." }).optional().nullable(),
-	categoria: z.union([z.literal("MÓDULO"), z.literal("INVERSOR"), z.literal("INSUMO"), z.literal("ESTRUTURA"), z.literal("PADRÃO"), z.literal("OUTROS")]),
+	categoria: z.union([
+		z.literal("MÓDULO"),
+		z.literal("INVERSOR"),
+		z.literal("INSUMO"),
+		z.literal("ESTRUTURA"),
+		z.literal("PADRÃO"),
+		z.literal("OUTROS"),
+	]),
 	fabricante: z.string({ required_error: "Fabricante do módulo não informado.", invalid_type_error: "Tipo não válido para o fabricante do módulo." }),
 	modelo: z.string({ required_error: "Modelo do módulo não informado.", invalid_type_error: "Tipo não válido para o modelo do módulo." }),
 	qtde: z.number({ required_error: "Quantidade do módulo não informada.", invalid_type_error: "Tipo não válido para a quantidade do módulo." }),
-	potencia: z.number({ required_error: "Potência do módulo não informada.", invalid_type_error: "Tipo não válido para a potência do módulo." }).optional().nullable(),
+	potencia: z
+		.number({ required_error: "Potência do módulo não informada.", invalid_type_error: "Tipo não válido para a potência do módulo." })
+		.optional()
+		.nullable(),
 });
 export type TEquipment = z.infer<typeof EquipmentSchema>;
 
@@ -53,7 +63,10 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 					})
 					.optional()
 					.nullable(),
-				nome: z.string({ required_error: "Nome do responsável não fornecido.", invalid_type_error: "Tipo não válido para o nome do responsável." }).optional().nullable(),
+				nome: z
+					.string({ required_error: "Nome do responsável não fornecido.", invalid_type_error: "Tipo não válido para o nome do responsável." })
+					.optional()
+					.nullable(),
 				avatar_url: z.string({ invalid_type_error: "Avatar do responsável não fornecido." }).optional().nullable(),
 			}),
 			finalizado: z.boolean({
@@ -396,7 +409,10 @@ export const GeneralTechnicalAnalysisSchema = z.object({
 	}),
 	// [ANALISTS OR APPLICANT INPUT] the description of the locations for equipments or infrastructure of the system being analyzed
 	locais: z.object({
-		aterramento: z.string({ required_error: "Local de aterramento não informado.", invalid_type_error: "Tipo não válido para o local de aterramento." }).optional().nullable(),
+		aterramento: z
+			.string({ required_error: "Local de aterramento não informado.", invalid_type_error: "Tipo não válido para o local de aterramento." })
+			.optional()
+			.nullable(),
 		inversor: z.string({
 			required_error: "Local de instalação do inversor não informado.",
 			invalid_type_error: "Tipo não válido para o local de instalação do inversor.",
@@ -543,7 +559,16 @@ export type TTechnicalAnalysisDTO = TTechnicalAnalysis & { _id: string };
 
 export type TTechnicalAnalysisSimplified = Pick<
 	TTechnicalAnalysis,
-	"nome" | "status" | "tipoSolicitacao" | "complexidade" | "oportunidade" | "requerente" | "localizacao" | "dataEfetivacao" | "dataInsercao" | "analista"
+	| "nome"
+	| "status"
+	| "tipoSolicitacao"
+	| "complexidade"
+	| "oportunidade"
+	| "requerente"
+	| "localizacao"
+	| "dataEfetivacao"
+	| "dataInsercao"
+	| "analista"
 >;
 export type TTechnicalAnalysisDTOSimplified = TTechnicalAnalysisSimplified & { _id: string };
 
@@ -599,7 +624,9 @@ export const PersonalizedTechnicalAnalysisFiltersSchema = z.object({
 });
 export type TPersonalizedTechnicalAnalysisFilter = z.infer<typeof PersonalizedTechnicalAnalysisFiltersSchema>;
 export const PersonalizedTechnicalAnalysisQuerySchema = z.object({
-	applicants: z.array(z.string({ required_error: "Requerentes não informados ou inválidos.", invalid_type_error: "Requerentes inválidos." })).nullable(),
+	applicants: z
+		.array(z.string({ required_error: "Requerentes não informados ou inválidos.", invalid_type_error: "Requerentes inválidos." }))
+		.nullable(),
 	partners: z.array(z.string({ required_error: "Parceiros não informados ou inválidos.", invalid_type_error: "Parceiros inválidos." })).nullable(),
 	analysts: z.array(z.string({ required_error: "Analistas não informados ou inválidos.", invalid_type_error: "Analistas inválidos." })).nullable(),
 	filters: PersonalizedTechnicalAnalysisFiltersSchema,

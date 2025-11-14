@@ -94,20 +94,23 @@ const editTechnicalAnalysis: NextApiHandler<PutResponse> = async (req, res) => {
 		const analysis = await getTechnicalAnalysisById({ analysisId: id, collection: collection, query: {} });
 		if (!analysis) throw new createHttpError.NotFound("Análise técnica não encontrada.");
 
-		const crmReturn = await axios.post(`https://crm.ampereenergias.com.br/api/notifications?apiKey=${process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN}`, {
-			tipo: "TECHNICAL_ANALYSIS_CONCLUDED",
-			payload: {
-				autor: {
-					nome: session.user.nome,
-					avatar_url: session.user.avatar_url,
-				},
-				oportunidade: {
-					id: analysis.oportunidade.id,
-					nome: analysis.oportunidade.nome,
-					identificador: analysis.oportunidade.identificador,
+		const crmReturn = await axios.post(
+			`https://crm.ampereenergias.com.br/api/notifications?apiKey=${process.env.SECRET_INTERNAL_COMMUNICATION_API_TOKEN}`,
+			{
+				tipo: "TECHNICAL_ANALYSIS_CONCLUDED",
+				payload: {
+					autor: {
+						nome: session.user.nome,
+						avatar_url: session.user.avatar_url,
+					},
+					oportunidade: {
+						id: analysis.oportunidade.id,
+						nome: analysis.oportunidade.nome,
+						identificador: analysis.oportunidade.identificador,
+					},
 				},
 			},
-		});
+		);
 		console.log("[UPDATE TECHNICAL ANALYSIS] Notification sent to CRM API response: ", crmReturn.data);
 	}
 	return res.status(201).json({ data: "Análise técnica atualizada com sucesso !", message: "Análise técnica atualizada com sucesso !" });

@@ -1,5 +1,9 @@
 import { apiHandler } from "@/utils/api";
-import { PurchaseControlCompositionKitSchema, type TPurchaseControlCompositionKit, type TPurchaseControlCompositionKitDTO } from "@/utils/schemas/purchases";
+import {
+	PurchaseControlCompositionKitSchema,
+	type TPurchaseControlCompositionKit,
+	type TPurchaseControlCompositionKitDTO,
+} from "@/utils/schemas/purchases";
 import { MongoDbIdSchema } from "@/utils/schemas/useful-server";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
@@ -51,7 +55,9 @@ const createPurchaseControlCompositionKit: NextApiHandler<TCreatePurchaseControl
 
 	const insertedPurchaseControlCompositionKitId = insertPurchaseControlCompositionKitResponse.insertedId.toString();
 
-	return res.status(201).json({ data: { insertedId: insertedPurchaseControlCompositionKitId }, message: "Kit de composição de compra criado com sucesso !" });
+	return res
+		.status(201)
+		.json({ data: { insertedId: insertedPurchaseControlCompositionKitId }, message: "Kit de composição de compra criado com sucesso !" });
 };
 
 export default apiHandler({ GET: getPurchaseControlCompositionKits, POST: createPurchaseControlCompositionKit });

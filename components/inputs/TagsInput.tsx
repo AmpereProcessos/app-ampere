@@ -15,7 +15,18 @@ type TagsInputProps = {
 	handleOnBlur?: () => void;
 };
 
-function TagsInput({ width, label, labelClassName, holderClassName, showLabel = true, values, placeholder, editable = true, handleChange, handleOnBlur }: TagsInputProps) {
+function TagsInput({
+	width,
+	label,
+	labelClassName,
+	holderClassName,
+	showLabel = true,
+	values,
+	placeholder,
+	editable = true,
+	handleChange,
+	handleOnBlur,
+}: TagsInputProps) {
 	const [inputValue, setInputValue] = useState("");
 	const inputIdentifier = label.toLowerCase().replace(" ", "_");
 
@@ -59,7 +70,11 @@ function TagsInput({ width, label, labelClassName, holderClassName, showLabel = 
 					<span key={tag} className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
 						{tag}
 						{editable && (
-							<button type="button" onClick={() => removeTag(tag)} className="ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full hover:bg-primary/20">
+							<button
+								type="button"
+								onClick={() => removeTag(tag)}
+								className="ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full hover:bg-primary/20"
+							>
 								<span className="text-xs">×</span>
 							</button>
 						)}

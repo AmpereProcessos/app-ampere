@@ -135,29 +135,17 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 	const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
 	// Theme styles based on variant
-	const bgStyles = variant === "sent"
-		? "bg-green-500/20 dark:bg-green-500/30"
-		: "bg-primary/10";
+	const bgStyles = variant === "sent" ? "bg-green-500/20 dark:bg-green-500/30" : "bg-primary/10";
 
-	const buttonStyles = variant === "sent"
-		? "bg-green-600/30 hover:bg-green-600/40"
-		: "bg-primary/20 hover:bg-primary/30";
+	const buttonStyles = variant === "sent" ? "bg-green-600/30 hover:bg-green-600/40" : "bg-primary/20 hover:bg-primary/30";
 
-	const progressBg = variant === "sent"
-		? "bg-green-600/30"
-		: "bg-primary/20";
+	const progressBg = variant === "sent" ? "bg-green-600/30" : "bg-primary/20";
 
-	const progressFill = variant === "sent"
-		? "bg-green-100 dark:bg-green-300"
-		: "bg-primary/80";
+	const progressFill = variant === "sent" ? "bg-green-100 dark:bg-green-300" : "bg-primary/80";
 
-	const waveformPlayed = variant === "sent"
-		? "bg-green-100/80 dark:bg-green-300/80"
-		: "bg-primary";
+	const waveformPlayed = variant === "sent" ? "bg-green-100/80 dark:bg-green-300/80" : "bg-primary";
 
-	const waveformUnplayed = variant === "sent"
-		? "bg-green-600/30"
-		: "bg-primary/20";
+	const waveformUnplayed = variant === "sent" ? "bg-green-600/30" : "bg-primary/20";
 
 	return (
 		<div className={cn("flex items-center gap-2 p-3 rounded-2xl backdrop-blur-sm min-w-[280px] max-w-[320px]", bgStyles, className)}>
@@ -176,7 +164,7 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 					"h-10 w-10 rounded-full flex-shrink-0 transition-all duration-200",
 					buttonStyles,
 					"hover:scale-105 active:scale-95",
-					isPlaying && "ring-2 ring-white/30"
+					isPlaying && "ring-2 ring-white/30",
 				)}
 			>
 				{isLoading ? (
@@ -202,17 +190,14 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 					<div className="absolute inset-0 flex items-center">
 						<div className={cn("w-full h-1 rounded-full overflow-hidden", progressBg)}>
 							{/* Progress Fill */}
-							<div
-								className={cn("h-full transition-all duration-100 rounded-full relative", progressFill)}
-								style={{ width: `${progress}%` }}
-							>
+							<div className={cn("h-full transition-all duration-100 rounded-full relative", progressFill)} style={{ width: `${progress}%` }}>
 								{/* Progress Handle */}
 								<div
 									className={cn(
 										"absolute right-0 top-1/2 -translate-y-1/2",
 										"w-3 h-3 bg-primary rounded-full shadow-lg",
 										"opacity-0 group-hover:opacity-100 transition-opacity",
-										isDragging && "opacity-100 scale-125"
+										isDragging && "opacity-100 scale-125",
 									)}
 								/>
 							</div>
@@ -227,10 +212,7 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 							return (
 								<div
 									key={i}
-									className={cn(
-										"flex-1 rounded-full transition-all duration-100 bg-primary",
-										isPlayed ? waveformPlayed : waveformUnplayed
-									)}
+									className={cn("flex-1 rounded-full transition-all duration-100 bg-primary", isPlayed ? waveformPlayed : waveformUnplayed)}
 									style={{
 										height: `${height}%`,
 										minHeight: "2px",
@@ -242,10 +224,9 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 				</div>
 
 				{/* Time Display */}
-				<div className={cn(
-					"flex items-center justify-between text-[10px] font-medium px-0.5",
-					variant === "sent" ? "text-green-100/80" : "text-primary"
-				)}>
+				<div
+					className={cn("flex items-center justify-between text-[10px] font-medium px-0.5", variant === "sent" ? "text-green-100/80" : "text-primary")}
+				>
 					<span>{formatTime(currentTime)}</span>
 					<span>{formatTime(duration)}</span>
 				</div>
@@ -260,7 +241,8 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 					"h-8 px-2 rounded-full flex-shrink-0 text-xs font-semibold transition-all",
 					variant === "sent" ? "bg-green-600/30 hover:bg-green-600/40" : "bg-primary-foreground/10 hover:bg-primary-foreground/20",
 					"hover:scale-105",
-					playbackRate !== 1 && (variant === "sent" ? "bg-green-600/40 ring-2 ring-green-100/30" : "bg-primary-foreground/20 ring-2 ring-primary-foreground/30")
+					playbackRate !== 1 &&
+						(variant === "sent" ? "bg-green-600/40 ring-2 ring-green-100/30" : "bg-primary-foreground/20 ring-2 ring-primary-foreground/30"),
 				)}
 			>
 				{playbackRate}x
@@ -275,7 +257,7 @@ export function AudioPlayer({ audioUrl, className, variant = "received", onDownl
 					className={cn(
 						"h-8 w-8 rounded-full flex-shrink-0 transition-all",
 						variant === "sent" ? "bg-green-600/30 hover:bg-green-600/40" : "bg-primary-foreground/10 hover:bg-primary-foreground/20",
-						"hover:scale-105"
+						"hover:scale-105",
 					)}
 					title="Download audio"
 				>

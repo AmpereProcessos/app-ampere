@@ -200,7 +200,9 @@ export function usePAExecutionProjects() {
 	}
 
 	function handleModelData(data: TEnergyPAExecution[]) {
-		return data.filter((project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPending(project) && matchPendingReady(project));
+		return data.filter(
+			(project) => matchSearch(project) && matchSegments(project) && matchAccessStatus(project) && matchPending(project) && matchPendingReady(project),
+		);
 	}
 	return {
 		...useQuery({
@@ -294,7 +296,10 @@ export function useInstallationStructureExecutionProjects() {
 	function matchPendingDelivery(project: TInstallationStructureExecution) {
 		if (!filters.pendingDelivery) return true;
 		return (
-			!project.estruturaPersonalizada.dataMontagem && project.estruturaPersonalizada.status !== "PRONTA" && !!project.compra.dataPedido && !project.estruturaPersonalizada.dataEntrega
+			!project.estruturaPersonalizada.dataMontagem &&
+			project.estruturaPersonalizada.status !== "PRONTA" &&
+			!!project.compra.dataPedido &&
+			!project.estruturaPersonalizada.dataEntrega
 		);
 	}
 	function matchPendingReady(project: TInstallationStructureExecution) {
@@ -308,7 +313,10 @@ export function useInstallationStructureExecutionProjects() {
 	}
 
 	function handleModelData(data: TInstallationStructureExecution[]) {
-		return data.filter((project) => matchSearch(project) && matchSegments(project) && matchPendingPayment(project) && matchPendingDelivery(project) && matchPendingReady(project));
+		return data.filter(
+			(project) =>
+				matchSearch(project) && matchSegments(project) && matchPendingPayment(project) && matchPendingDelivery(project) && matchPendingReady(project),
+		);
 	}
 	return {
 		...useQuery({

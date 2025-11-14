@@ -1,6 +1,6 @@
 import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { InsertUserSchema, type TUser } from "@/utils/schemas/users";
+import { InsertUserSchema, TEmployee, type TUser } from "@/utils/schemas/users";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
 import { type Collection, type Filter, ObjectId } from "mongodb";
@@ -15,6 +15,8 @@ const projection = {
 	acessoAtivo: 1,
 	nome: 1,
 	usuario: 1,
+	cpf: 1,
+	dataNascimento: 1,
 	email: 1,
 	telefone: 1,
 	avatar_url: 1,
@@ -53,7 +55,7 @@ async function getUsers({ session, input }: { session: TAuthSession; input: TGet
 	if (!session.user.permissoes.usuarios.visualizar) throw new createHttpError.Unauthorized("Usuário não possui permissão para essa requisição.");
 
 	const db = await connectToAdministrationDatabase();
-	const usersCollection: Collection<TUser> = db.collection("colaboradores");
+	const usersCollection: Collection<TEmployee> = db.collection("colaboradores");
 
 	if ("id" in input) {
 		if (typeof input.id !== "string" || !ObjectId.isValid(input.id)) throw new createHttpError.BadRequest("ID inválido.");
@@ -68,6 +70,8 @@ async function getUsers({ session, input }: { session: TAuthSession; input: TGet
 					nome: user.nome,
 					usuario: user.usuario,
 					email: user.email,
+					cpf: user.cpf,
+					dataNascimento: user.dataNascimento,
 					telefone: user.telefone,
 					avatar_url: user.avatar_url,
 					visualizacao: user.visualizacao,
@@ -116,6 +120,8 @@ async function getUsers({ session, input }: { session: TAuthSession; input: TGet
 		nome: user.nome,
 		usuario: user.usuario,
 		email: user.email,
+		cpf: user.cpf,
+		dataNascimento: user.dataNascimento,
 		telefone: user.telefone,
 		avatar_url: user.avatar_url,
 		visualizacao: user.visualizacao,

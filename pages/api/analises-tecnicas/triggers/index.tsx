@@ -11,7 +11,10 @@ import { z } from "zod";
 
 const TriggerType = z.enum(["create-technical-analysis-service-order"]);
 const HandleTriggerPayload = z.object({
-	technicalAnalysisId: z.string({ required_error: "ID da análise técnica não informado.", invalid_type_error: "Tipo não válido para o ID da análise técnica." }),
+	technicalAnalysisId: z.string({
+		required_error: "ID da análise técnica não informado.",
+		invalid_type_error: "Tipo não válido para o ID da análise técnica.",
+	}),
 	triggerType: TriggerType,
 });
 export type THandleTechnicalAnalysisTriggerInput = z.infer<typeof HandleTriggerPayload>;

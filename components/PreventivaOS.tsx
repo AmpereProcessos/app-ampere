@@ -85,14 +85,17 @@ function PreventivaOSPDF({ order }: PreventivaOSPDFProps) {
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 font-semibold">NºMódulos:</p>
 							<p className="col-span-3 border border-t-0 border-black text-center text-xs">
-								{order.equipamentos.modulos.qtde ? order.equipamentos.modulos.qtde : "-"} - {order.equipamentos.modulos.potencia ? order.equipamentos.modulos.potencia : "-"}W
+								{order.equipamentos.modulos.qtde ? order.equipamentos.modulos.qtde : "-"} -{" "}
+								{order.equipamentos.modulos.potencia ? order.equipamentos.modulos.potencia : "-"}W
 							</p>
 						</div>
 					</div>
 					<div className="flex items-center">
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 font-semibold">Marca/Modelo:</p>
-							<p className="col-span-3 w-48 border border-black text-center">{order.equipamentos.inversor.modelo ? order.equipamentos.inversor.modelo : "-"}</p>
+							<p className="col-span-3 w-48 border border-black text-center">
+								{order.equipamentos.inversor.modelo ? order.equipamentos.inversor.modelo : "-"}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -107,7 +110,9 @@ function PreventivaOSPDF({ order }: PreventivaOSPDFProps) {
 						</div>
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 text-center font-semibold">PONTO DE ÁGUA:</p>
-							<div className="col-span-3 flex items-center justify-center border border-t-0 border-black">{order.detalhes.pontoAgua ? order.detalhes.pontoAgua : "-"}</div>
+							<div className="col-span-3 flex items-center justify-center border border-t-0 border-black">
+								{order.detalhes.pontoAgua ? order.detalhes.pontoAgua : "-"}
+							</div>
 						</div>
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 font-semibold">SENHA DO WI-FI:</p>
@@ -121,7 +126,9 @@ function PreventivaOSPDF({ order }: PreventivaOSPDFProps) {
 						</div>
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 text-center font-semibold">TIPO DE ESTRUTURA:</p>
-							<div className="col-span-3 flex items-center justify-center border border-t-0 border-black">{order.detalhes.tipoEstrutura ? order.detalhes.tipoEstrutura : "-"}</div>
+							<div className="col-span-3 flex items-center justify-center border border-t-0 border-black">
+								{order.detalhes.tipoEstrutura ? order.detalhes.tipoEstrutura : "-"}
+							</div>
 						</div>
 						<div className="grid grid-cols-5">
 							<p className="col-span-2 text-center font-semibold">TRAFO?:</p>

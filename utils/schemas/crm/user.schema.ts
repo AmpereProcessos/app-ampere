@@ -374,7 +374,10 @@ export type TUserEntity = TUser & { _id: ObjectId };
 
 export type TUserDTOSimplified = Pick<TUserDTO, "_id" | "nome" | "email" | "telefone" | "avatar_url">;
 
-export type TSessionUser = Pick<TUser, "administrador" | "nome" | "telefone" | "email" | "nome" | "avatar_url" | "idParceiro" | "idGrupo" | "permissoes"> & {
+export type TSessionUser = Pick<
+	TUser,
+	"administrador" | "nome" | "telefone" | "email" | "nome" | "avatar_url" | "idParceiro" | "idGrupo" | "permissoes"
+> & {
 	id: string;
 	parceiro: {
 		nome: TPartner["nome"];

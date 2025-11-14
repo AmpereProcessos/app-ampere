@@ -3,7 +3,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatWithoutDiacritics } from "../formatting";
-import type { TGetPropertyTemporaryUsagesOutput, TPropertyTemporaryUsagesByPeriodInput, TPropertyTemporaryUsagesInput } from "@/pages/api/propriedades/uso-temporario";
+import type {
+	TGetPropertyTemporaryUsagesOutput,
+	TPropertyTemporaryUsagesByPeriodInput,
+	TPropertyTemporaryUsagesInput,
+} from "@/pages/api/propriedades/uso-temporario";
 import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetTemporaryUsageByPropertyOutput, TTemporaryUsageByPropertyInput } from "@/pages/api/propriedades/uso-temporario/propriedade";
@@ -134,7 +138,9 @@ export function usePropertyTemporaryUsageById({ id }: { id: string }) {
 
 async function fetchOpenPropertyTemporaryUsageByPropertyId(input: TTemporaryUsageByPropertyInput) {
 	try {
-		const { data } = await axios.get<TGetTemporaryUsageByPropertyOutput>(`/api/propriedades/uso-temporario/propriedade?openUsagePropertyId=${input.openUsagePropertyId}`);
+		const { data } = await axios.get<TGetTemporaryUsageByPropertyOutput>(
+			`/api/propriedades/uso-temporario/propriedade?openUsagePropertyId=${input.openUsagePropertyId}`,
+		);
 		return data.data;
 	} catch (error) {
 		throw error;

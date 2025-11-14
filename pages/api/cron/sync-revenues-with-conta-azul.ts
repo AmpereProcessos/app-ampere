@@ -14,7 +14,9 @@ const handleSyncRevenuesWithContaAzul: NextApiHandler<any> = async (req, res) =>
 	const integrationsCollection = db.collection<TIntegration>("integracoes");
 
 	// Getting revenues with _id and idContaAzulVenda only for query performance
-	const revenues = await revenuesCollection.find({ idContaAzulVenda: { $ne: null } }, { projection: { _id: 1, idContaAzulVenda: 1, total: 1 } }).toArray();
+	const revenues = await revenuesCollection
+		.find({ idContaAzulVenda: { $ne: null } }, { projection: { _id: 1, idContaAzulVenda: 1, total: 1 } })
+		.toArray();
 
 	// Getting ContaAzul sales
 	const accessToken = await getContaAzulAccessToken({ collection: integrationsCollection });

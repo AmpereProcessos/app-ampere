@@ -218,7 +218,12 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 										"bg-primary/50  text-primary-foreground hover:bg-primary/40": queryParamsHolder.orderBy.field === option.value,
 										"bg-transparent text-primary hover:bg-primary/20": queryParamsHolder.orderBy.field !== option.value,
 									})}
-									onClick={() => setQueryParamsHolder((prev) => ({ ...prev, orderBy: { ...prev.orderBy, field: option.value as TPersonalizedServiceOrderFilter["orderBy"]["field"] } }))}
+									onClick={() =>
+										setQueryParamsHolder((prev) => ({
+											...prev,
+											orderBy: { ...prev.orderBy, field: option.value as TPersonalizedServiceOrderFilter["orderBy"]["field"] },
+										}))
+									}
 								>
 									<h1>{option.label}</h1>
 								</button>
@@ -229,20 +234,26 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 							<DateInput
 								label="DEPOIS DE"
 								value={formatDate(queryParamsHolder.period.after)}
-								handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, after: formatDateInputChange(value) as string } }))}
+								handleChange={(value) =>
+									setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, after: formatDateInputChange(value) as string } }))
+								}
 								width="100%"
 							/>
 							<DateInput
 								label="ANTES DE"
 								value={formatDate(queryParamsHolder.period.before)}
-								handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, before: formatDateInputChange(value) as string } }))}
+								handleChange={(value) =>
+									setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, before: formatDateInputChange(value) as string } }))
+								}
 								width="100%"
 							/>
 							<SelectInput
 								label="PARÂMETRO"
 								value={queryParamsHolder.period.field}
 								options={PeriodRelatedField}
-								handleChange={(value) => setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, field: value as TPersonalizedServiceOrderFilter["period"]["field"] } }))}
+								handleChange={(value) =>
+									setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, field: value as TPersonalizedServiceOrderFilter["period"]["field"] } }))
+								}
 								selectedItemLabel="NÃO DEFINIDO"
 								onReset={() => setQueryParamsHolder((prev) => ({ ...prev, period: { ...prev.period, field: null } }))}
 								width={"100%"}

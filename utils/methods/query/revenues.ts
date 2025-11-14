@@ -1,229 +1,229 @@
-import { TRevenuesByFiltersResult } from '@/pages/api/receitas/search'
+import { TRevenuesByFiltersResult } from "@/pages/api/receitas/search";
 import {
-  TReceiptUnwindSimplifiedDTO,
-  TRevenueDTO,
-  TRevenueProject,
-  TRevenueProjectDTO,
-  TRevenueQueryFilters,
-  TRevenueWithProjectDTO,
-} from '@/utils/schemas/revenues'
-import axios from 'axios'
-import dayjs from 'dayjs'
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { formatWithoutDiacritics } from '../formatting'
-import { TRevenueStatsResult } from '@/pages/api/receitas/estatisticas'
+	TReceiptUnwindSimplifiedDTO,
+	TRevenueDTO,
+	TRevenueProject,
+	TRevenueProjectDTO,
+	TRevenueQueryFilters,
+	TRevenueWithProjectDTO,
+} from "@/utils/schemas/revenues";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { formatWithoutDiacritics } from "../formatting";
+import { TRevenueStatsResult } from "@/pages/api/receitas/estatisticas";
 
 // Expenses by Project
 async function fetchProjectRevenues({ projectId }: { projectId: string }) {
-  try {
-    const { data } = await axios.get(`/api/receitas?projectId=${projectId}`)
-    return data.data as TRevenueDTO[]
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get(`/api/receitas?projectId=${projectId}`);
+		return data.data as TRevenueDTO[];
+	} catch (error) {
+		throw error;
+	}
 }
 export function useProjectRevenues({ projectId }: { projectId: string }) {
-  return useQuery({
-    queryKey: ['project-revenues', projectId],
-    queryFn: async () => await fetchProjectRevenues({ projectId }),
-  })
+	return useQuery({
+		queryKey: ["project-revenues", projectId],
+		queryFn: async () => await fetchProjectRevenues({ projectId }),
+	});
 }
 
 // General Revenues
 async function fetchRevenues() {
-  try {
-    const { data } = await axios.get('/api/receitas')
-    return data.data as TRevenueDTO[]
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get("/api/receitas");
+		return data.data as TRevenueDTO[];
+	} catch (error) {
+		throw error;
+	}
 }
 export function useRevenues() {
-  const [filters, setFilters] = useState({
-    search: '',
-    types: [] as string[],
-    received: false,
-    notReceived: false,
-    dueToday: false,
-    dueThisWeek: false,
-    dueThisMonth: false,
-    dueOverall: false,
-    overDue: false,
-  })
+	const [filters, setFilters] = useState({
+		search: "",
+		types: [] as string[],
+		received: false,
+		notReceived: false,
+		dueToday: false,
+		dueThisWeek: false,
+		dueThisMonth: false,
+		dueOverall: false,
+		overDue: false,
+	});
 
-  function matchSearch(revenue: TRevenueDTO) {
-    if (filters.search.trim().length == 0) return true
-    return revenue.nome.toUpperCase().includes(filters.search.toUpperCase())
-  }
-  function matchReceived(revenue: TRevenueDTO) {
-    if (!filters.received) return true
-    const hasPendencies = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento)
-    return !hasPendencies
-  }
-  function matchNotReceived(revenue: TRevenueDTO) {
-    if (!filters.notReceived) return true
-    const hasPendencies = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento)
-    return hasPendencies
-  }
-  function matchDueToday(revenue: TRevenueDTO) {
-    if (!filters.dueToday) return true
-    const isSame = (date: string) => dayjs(date).add(3, 'hour').isSame(dayjs(), 'day')
-    const hasPendenciesToday = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento && isSame(fraction.dataPrevisaoRecebimento))
-    return hasPendenciesToday
-  }
-  function matchOverDue(revenue: TRevenueDTO) {
-    if (!filters.overDue) return true
-    const isAfter = (date: string) => dayjs().isAfter(dayjs(date).add(3, 'hour'), 'day')
-    const hasPendenciesOverdue = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento && isAfter(fraction.dataPrevisaoRecebimento))
-    return hasPendenciesOverdue
-  }
-  function matchTypes(revenue: TRevenueDTO) {
-    if (filters.types.length == 0) return true
-    return filters.types.includes(revenue.tipo)
-  }
-  function handleModelData(data: TRevenueDTO[]) {
-    var modeledData = data
-    return modeledData.filter(
-      (revenue) =>
-        matchSearch(revenue) &&
-        matchReceived(revenue) &&
-        matchNotReceived(revenue) &&
-        matchDueToday(revenue) &&
-        matchOverDue(revenue) &&
-        matchTypes(revenue)
-    )
-  }
-  return {
-    ...useQuery({
-      queryKey: ['revenues'],
-      queryFn: async () => await fetchRevenues(),
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+	function matchSearch(revenue: TRevenueDTO) {
+		if (filters.search.trim().length == 0) return true;
+		return revenue.nome.toUpperCase().includes(filters.search.toUpperCase());
+	}
+	function matchReceived(revenue: TRevenueDTO) {
+		if (!filters.received) return true;
+		const hasPendencies = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento);
+		return !hasPendencies;
+	}
+	function matchNotReceived(revenue: TRevenueDTO) {
+		if (!filters.notReceived) return true;
+		const hasPendencies = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento);
+		return hasPendencies;
+	}
+	function matchDueToday(revenue: TRevenueDTO) {
+		if (!filters.dueToday) return true;
+		const isSame = (date: string) => dayjs(date).add(3, "hour").isSame(dayjs(), "day");
+		const hasPendenciesToday = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento && isSame(fraction.dataPrevisaoRecebimento));
+		return hasPendenciesToday;
+	}
+	function matchOverDue(revenue: TRevenueDTO) {
+		if (!filters.overDue) return true;
+		const isAfter = (date: string) => dayjs().isAfter(dayjs(date).add(3, "hour"), "day");
+		const hasPendenciesOverdue = revenue.fracionamento.some((fraction) => !fraction.dataRecebimento && isAfter(fraction.dataPrevisaoRecebimento));
+		return hasPendenciesOverdue;
+	}
+	function matchTypes(revenue: TRevenueDTO) {
+		if (filters.types.length == 0) return true;
+		return filters.types.includes(revenue.tipo);
+	}
+	function handleModelData(data: TRevenueDTO[]) {
+		var modeledData = data;
+		return modeledData.filter(
+			(revenue) =>
+				matchSearch(revenue) &&
+				matchReceived(revenue) &&
+				matchNotReceived(revenue) &&
+				matchDueToday(revenue) &&
+				matchOverDue(revenue) &&
+				matchTypes(revenue),
+		);
+	}
+	return {
+		...useQuery({
+			queryKey: ["revenues"],
+			queryFn: async () => await fetchRevenues(),
+			select: (data) => handleModelData(data),
+		}),
+		filters,
+		setFilters,
+	};
 }
 
 async function fetchRevenueById({ id }: { id: string }) {
-  try {
-    const { data } = await axios.get(`/api/receitas?id=${id}`)
-    return data.data as TRevenueWithProjectDTO
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get(`/api/receitas?id=${id}`);
+		return data.data as TRevenueWithProjectDTO;
+	} catch (error) {
+		throw error;
+	}
 }
 export function useRevenueById({ id }: { id: string }) {
-  return useQuery({
-    queryKey: ['revenue-by-id', id],
-    queryFn: () => fetchRevenueById({ id }),
-  })
+	return useQuery({
+		queryKey: ["revenue-by-id", id],
+		queryFn: () => fetchRevenueById({ id }),
+	});
 }
 
 async function fetchRevenueByFilters({ page, ...filters }: TRevenueQueryFilters & { page: number }) {
-  try {
-    const { data } = await axios.post(`/api/receitas/search?page=${page}`, filters)
-    return data.data as TRevenuesByFiltersResult
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.post(`/api/receitas/search?page=${page}`, filters);
+		return data.data as TRevenuesByFiltersResult;
+	} catch (error) {
+		throw error;
+	}
 }
 
 type UseRevenueByFiltersParams = {
-  initialQueryParams: TRevenueQueryFilters & { page: number }
-}
+	initialQueryParams: TRevenueQueryFilters & { page: number };
+};
 export function useRevenueByFilters({ initialQueryParams }: UseRevenueByFiltersParams) {
-  const [queryParams, setQueryParams] = useState<TRevenueQueryFilters & { page: number }>(initialQueryParams)
+	const [queryParams, setQueryParams] = useState<TRevenueQueryFilters & { page: number }>(initialQueryParams);
 
-  function updateQueryParams(params: Partial<TRevenueQueryFilters & { page: number }>) {
-    setQueryParams((prev) => ({ ...prev, ...params }))
-  }
+	function updateQueryParams(params: Partial<TRevenueQueryFilters & { page: number }>) {
+		setQueryParams((prev) => ({ ...prev, ...params }));
+	}
 
-  const query = useQuery({
-    queryKey: ['revenues-by-filters', queryParams],
-    queryFn: async () => await fetchRevenueByFilters(queryParams),
-  })
+	const query = useQuery({
+		queryKey: ["revenues-by-filters", queryParams],
+		queryFn: async () => await fetchRevenueByFilters(queryParams),
+	});
 
-  return { ...query, queryParams, updateQueryParams }
+	return { ...query, queryParams, updateQueryParams };
 }
 
 async function fetchPendingReceipts() {
-  try {
-    const { data } = await axios.get('/api/receitas/recebimentos')
-    return data.data as TReceiptUnwindSimplifiedDTO[]
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get("/api/receitas/recebimentos");
+		return data.data as TReceiptUnwindSimplifiedDTO[];
+	} catch (error) {
+		throw error;
+	}
 }
 
 type UsePendingReceiptsParams = {
-  initialFilters: { search: string; types: string[]; previewPeriod: { after?: string | null; before?: string | null } }
-}
+	initialFilters: { search: string; types: string[]; previewPeriod: { after?: string | null; before?: string | null } };
+};
 export function usePendingReceipts({ initialFilters }: UsePendingReceiptsParams) {
-  const [filters, setFilters] = useState(initialFilters)
+	const [filters, setFilters] = useState(initialFilters);
 
-  function matchSearch(receipt: TReceiptUnwindSimplifiedDTO) {
-    if (filters.search.trim.length == 0) return true
-    return formatWithoutDiacritics(receipt.nome, true).includes(formatWithoutDiacritics(filters.search, true))
-  }
-  function matchTypes(receipt: TReceiptUnwindSimplifiedDTO) {
-    if (filters.types.length == 0) return true
-    return filters.types.includes(receipt.tipo)
-  }
-  function matchReceiptPreviewDate(receipt: TReceiptUnwindSimplifiedDTO) {
-    const afterFilterDate = filters.previewPeriod.after ? new Date(filters.previewPeriod.after) : null
-    const beforeFilterDate = filters.previewPeriod.before ? new Date(filters.previewPeriod.before) : null
-    const receiptPreviewDate = new Date(receipt.fracionamento.dataPrevisaoRecebimento)
-    if (!afterFilterDate && !beforeFilterDate) return true
-    if (afterFilterDate && !beforeFilterDate) return receiptPreviewDate >= afterFilterDate
-    if (!afterFilterDate && beforeFilterDate) return receiptPreviewDate <= beforeFilterDate
-    if (!!afterFilterDate && !!beforeFilterDate) return receiptPreviewDate >= afterFilterDate && receiptPreviewDate <= beforeFilterDate
-    return false
-  }
-  function handleModelData(data: TReceiptUnwindSimplifiedDTO[]) {
-    return data.filter((receipt) => matchSearch(receipt) && matchTypes(receipt) && matchReceiptPreviewDate(receipt))
-  }
+	function matchSearch(receipt: TReceiptUnwindSimplifiedDTO) {
+		if (filters.search.trim.length == 0) return true;
+		return formatWithoutDiacritics(receipt.nome, true).includes(formatWithoutDiacritics(filters.search, true));
+	}
+	function matchTypes(receipt: TReceiptUnwindSimplifiedDTO) {
+		if (filters.types.length == 0) return true;
+		return filters.types.includes(receipt.tipo);
+	}
+	function matchReceiptPreviewDate(receipt: TReceiptUnwindSimplifiedDTO) {
+		const afterFilterDate = filters.previewPeriod.after ? new Date(filters.previewPeriod.after) : null;
+		const beforeFilterDate = filters.previewPeriod.before ? new Date(filters.previewPeriod.before) : null;
+		const receiptPreviewDate = new Date(receipt.fracionamento.dataPrevisaoRecebimento);
+		if (!afterFilterDate && !beforeFilterDate) return true;
+		if (afterFilterDate && !beforeFilterDate) return receiptPreviewDate >= afterFilterDate;
+		if (!afterFilterDate && beforeFilterDate) return receiptPreviewDate <= beforeFilterDate;
+		if (!!afterFilterDate && !!beforeFilterDate) return receiptPreviewDate >= afterFilterDate && receiptPreviewDate <= beforeFilterDate;
+		return false;
+	}
+	function handleModelData(data: TReceiptUnwindSimplifiedDTO[]) {
+		return data.filter((receipt) => matchSearch(receipt) && matchTypes(receipt) && matchReceiptPreviewDate(receipt));
+	}
 
-  return {
-    ...useQuery({
-      queryKey: ['receipts'],
-      queryFn: fetchPendingReceipts,
-      select: (data) => handleModelData(data),
-    }),
-    filters,
-    setFilters,
-  }
+	return {
+		...useQuery({
+			queryKey: ["receipts"],
+			queryFn: fetchPendingReceipts,
+			select: (data) => handleModelData(data),
+		}),
+		filters,
+		setFilters,
+	};
 }
 
 async function fetchRevenueStats() {
-  try {
-    const { data } = await axios.get('/api/receitas/estatisticas')
-    return data.data as TRevenueStatsResult
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.get("/api/receitas/estatisticas");
+		return data.data as TRevenueStatsResult;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export function useRevenueStats() {
-  return useQuery({
-    queryKey: ['revenue-stats'],
-    queryFn: fetchRevenueStats,
-  })
+	return useQuery({
+		queryKey: ["revenue-stats"],
+		queryFn: fetchRevenueStats,
+	});
 }
 
 async function fetchRevenueProject({ projectId }: { projectId: string | null }) {
-  try {
-    if (!projectId) return null
-    const { data } = await axios.get(`/api/receitas/projeto?projectId=${projectId}`)
-    return data.data as TRevenueProjectDTO
-  } catch (error) {
-    throw error
-  }
+	try {
+		if (!projectId) return null;
+		const { data } = await axios.get(`/api/receitas/projeto?projectId=${projectId}`);
+		return data.data as TRevenueProjectDTO;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export function useRevenueProject({ projectId }: { projectId: string | null }) {
-  return useQuery({
-    queryKey: ['revenue-project', projectId],
-    queryFn: async () => fetchRevenueProject({ projectId }),
-  })
+	return useQuery({
+		queryKey: ["revenue-project", projectId],
+		queryFn: async () => fetchRevenueProject({ projectId }),
+	});
 }

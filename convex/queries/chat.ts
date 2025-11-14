@@ -89,11 +89,8 @@ export const getChats = query({
 				query = query.filter((q) =>
 					q.or(
 						q.lt(q.field("ultimaMensagemData"), cursorData!.timestamp),
-						q.and(
-							q.eq(q.field("ultimaMensagemData"), cursorData!.timestamp),
-							q.lt(q.field("_id"), cursorData!.id)
-						)
-					)
+						q.and(q.eq(q.field("ultimaMensagemData"), cursorData!.timestamp), q.lt(q.field("_id"), cursorData!.id)),
+					),
 				);
 			}
 
@@ -238,11 +235,8 @@ export const getChatMessages = query({
 			query = query.filter((q) =>
 				q.or(
 					q.lt(q.field("dataEnvio"), cursorData!.timestamp),
-					q.and(
-						q.eq(q.field("dataEnvio"), cursorData!.timestamp),
-						q.lt(q.field("_id"), cursorData!.id)
-					)
-				)
+					q.and(q.eq(q.field("dataEnvio"), cursorData!.timestamp), q.lt(q.field("_id"), cursorData!.id)),
+				),
 			);
 		}
 

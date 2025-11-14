@@ -33,15 +33,12 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 						cursor: null,
 						numItems: 30,
 					},
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	// Load older messages
-	const olderMessagesResult = useLoadOlderMessages(
-		selectedChatId ? (selectedChatId as string) : null,
-		isLoadingOlder ? nextCursor : null
-	);
+	const olderMessagesResult = useLoadOlderMessages(selectedChatId ? (selectedChatId as string) : null, isLoadingOlder ? nextCursor : null);
 
 	// Reset when chat changes
 	useEffect(() => {
@@ -105,7 +102,7 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 				"relative flex-1 flex flex-col overflow-y-auto",
 				"bg-gradient-to-b from-background/50 to-background",
 				"scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent",
-				className
+				className,
 			)}
 			initial="smooth"
 			resize="smooth"
@@ -116,13 +113,7 @@ export function Messages({ className, emptyState }: ChatHubMessagesProps) {
 				{/* Load Older Messages Button */}
 				{nextCursor && initialResult?.hasMore && (
 					<div className="flex items-center justify-center mb-4">
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={() => setIsLoadingOlder(true)}
-							disabled={isLoadingOlder}
-							className="shadow-sm"
-						>
+						<Button variant="outline" size="sm" onClick={() => setIsLoadingOlder(true)} disabled={isLoadingOlder} className="shadow-sm">
 							{isLoadingOlder ? (
 								<>
 									<Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -179,21 +170,13 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 	});
 
 	return (
-		<div
-			className={cn(
-				"flex w-full animate-in fade-in slide-in-from-bottom-2 duration-300",
-				marginTop,
-				isUser ? "justify-end" : "justify-start"
-			)}
-		>
+		<div className={cn("flex w-full animate-in fade-in slide-in-from-bottom-2 duration-300", marginTop, isUser ? "justify-end" : "justify-start")}>
 			<div
 				className={cn(
 					"max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] px-4 py-2.5",
 					"shadow-sm transition-all duration-200 hover:shadow-md",
 					roundedClasses,
-					isUser
-						? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-						: "bg-card border border-primary/10 text-primary"
+					isUser ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white" : "bg-card border border-primary/10 text-primary",
 				)}
 			>
 				{/* Message Content */}
@@ -216,12 +199,7 @@ function MessageBubble({ message, isUser, isSameAuthorAsPrevious, isSameAuthorAs
 
 				{/* Timestamp and Status */}
 				{shouldShowTimestamp && (
-					<div
-						className={cn(
-							"flex items-center gap-1.5 mt-1.5 justify-end",
-							isUser ? "text-blue-100/90" : "text-primary/60"
-						)}
-					>
+					<div className={cn("flex items-center gap-1.5 mt-1.5 justify-end", isUser ? "text-blue-100/90" : "text-primary/60")}>
 						<time className="text-[10px] font-medium">
 							{new Date(message.dataEnvio).toLocaleTimeString("pt-BR", {
 								hour: "2-digit",
@@ -272,7 +250,7 @@ function ScrollToBottomButton() {
 				"rounded-full shadow-lg border-2 border-background",
 				"bg-card hover:bg-card/90 text-primary",
 				"animate-in fade-in slide-in-from-bottom-2 duration-300",
-				"transition-transform hover:scale-105"
+				"transition-transform hover:scale-105",
 			)}
 			onClick={handleScrollToBottom}
 			size="icon"

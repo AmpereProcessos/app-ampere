@@ -1,7 +1,10 @@
+import DateInput from "@/components/inputs/Date";
 import TextInput from "@/components/inputs/Text";
-import { formatToPhone } from "@/utils/methods/formatting";
+import { formatDate } from "@/utils/constants";
+import { formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
+import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TSimpleAttachment } from "@/utils/methods/uploading";
-import type { TUser } from "@/utils/schemas/users";
+import type { TEmployee, TUser } from "@/utils/schemas/users";
 import { LayoutGrid } from "lucide-react";
 import Image from "next/image";
 import { MdAttachFile } from "react-icons/md";
@@ -41,6 +44,19 @@ function EmployeeGeneral({ infoHolder, updateInfoHolder, avatarHolder, updateAva
 					value={infoHolder.telefone}
 					placeholder="Preencha o telefone do usuário..."
 					handleChange={(value) => updateInfoHolder({ telefone: formatToPhone(value) })}
+					width="100%"
+				/>
+				<TextInput
+					label="CPF"
+					value={infoHolder.cpf}
+					placeholder="Preencha o CPF do usuário..."
+					handleChange={(value) => updateInfoHolder({ cpf: formatToCPForCNPJ(value) })}
+					width="100%"
+				/>
+				<DateInput
+					label="DATA DE NASCIMENTO"
+					value={formatDate(infoHolder.dataNascimento)}
+					handleChange={(value) => updateInfoHolder({ dataNascimento: formatDateInputChange(value, "string") })}
 					width="100%"
 				/>
 			</div>

@@ -1,34 +1,34 @@
-import { TFileReference } from '@/utils/schemas/crm/file-reference.schema'
-import axios from 'axios'
+import { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
+import axios from "axios";
 
 export async function createFileReference({ info }: { info: TFileReference }) {
-  try {
-    const { data } = await axios.post('/api/crm/file-references', info)
-    if (typeof data.data != 'string') return 'Arquivo anexado com sucesso !'
-    return data.data as string
-  } catch (error) {
-    throw error
-  }
+	try {
+		const { data } = await axios.post("/api/crm/file-references", info);
+		if (typeof data.data != "string") return "Arquivo anexado com sucesso !";
+		return data.data as string;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function createManyFileReferences({ info }: { info: TFileReference[] }) {
-  try {
-    if (info.length == 0) return 'Nenhum arquivo anexado.'
-    const { data } = await axios.post('/api/crm/file-references/many', info)
-    if (typeof data.data != 'string') return 'Arquivos anexados com sucesso !'
-    return data.data as string
-  } catch (error) {
-    throw error
-  }
+	try {
+		if (info.length == 0) return "Nenhum arquivo anexado.";
+		const { data } = await axios.post("/api/crm/file-references/many", info);
+		if (typeof data.data != "string") return "Arquivos anexados com sucesso !";
+		return data.data as string;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function deleteFileReference({ id }: { id: string }) {
-  try {
-    const { data } = await axios.delete(`/api/crm/file-references?id=${id}`)
+	try {
+		const { data } = await axios.delete(`/api/crm/file-references?id=${id}`);
 
-    if (typeof data.message != 'string') return 'Arquivo deletado com sucesso !'
-    return data.message as string
-  } catch (error) {
-    throw error
-  }
+		if (typeof data.message != "string") return "Arquivo deletado com sucesso !";
+		return data.message as string;
+	} catch (error) {
+		throw error;
+	}
 }

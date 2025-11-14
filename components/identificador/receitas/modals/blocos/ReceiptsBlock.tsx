@@ -1,176 +1,172 @@
-import type React from 'react'
-import { useEffect, useState } from 'react'
+import type React from "react";
+import { useEffect, useState } from "react";
 
-import DateInput from '@/components/inputs/Date'
-import NumberInput from '@/components/inputs/Number'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { formatDate, GeneralVisibleHiddenExitMotionVariants } from '@/utils/constants'
-import { formatDateInputChange } from '@/utils/methods/shared'
-import type { TRevenue } from '@/utils/schemas/revenues'
-import { AnimatePresence, motion } from 'framer-motion'
-import toast from 'react-hot-toast'
-import { MdAddBox } from 'react-icons/md'
-import RevenueReceiptsTable from './utils/ReceiptsTable'
-import TextInput from '@/components/inputs/Text'
+import DateInput from "@/components/inputs/Date";
+import NumberInput from "@/components/inputs/Number";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { formatDate, GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
+import { formatDateInputChange } from "@/utils/methods/shared";
+import type { TRevenue } from "@/utils/schemas/revenues";
+import { AnimatePresence, motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { MdAddBox } from "react-icons/md";
+import RevenueReceiptsTable from "./utils/ReceiptsTable";
+import TextInput from "@/components/inputs/Text";
 
-function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue['fracionamento'] }) {
-  const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0)
-  return 100 - currentTotal
+function getMissingPercentage({ fractionnement }: { fractionnement: TRevenue["fracionamento"] }) {
+	const currentTotal = fractionnement.reduce((acc, current) => current.porcentagem + acc, 0);
+	return 100 - currentTotal;
 }
 type RevenueReceiptsBlockProps = {
-  revenueId?: string
-  infoHolder: TRevenue
-  setInfoHolder: React.Dispatch<React.SetStateAction<TRevenue>>
-}
+	revenueId?: string;
+	infoHolder: TRevenue;
+	setInfoHolder: React.Dispatch<React.SetStateAction<TRevenue>>;
+};
 function RevenueReceiptsBlock({ revenueId, infoHolder, setInfoHolder }: RevenueReceiptsBlockProps) {
-  const [newReceiptMenuIsOpen, setNewReceiptMenuIsOpen] = useState<boolean>(false)
+	const [newReceiptMenuIsOpen, setNewReceiptMenuIsOpen] = useState<boolean>(false);
 
-  const missingPercentage = getMissingPercentage({ fractionnement: infoHolder.fracionamento })
+	const missingPercentage = getMissingPercentage({ fractionnement: infoHolder.fracionamento });
 
-  function addReceipt(info: TRevenue['fracionamento'][number]) {
-    if (info.porcentagem > missingPercentage) return toast.error('Porcentagem excede o máximo permitido.')
-    if (!info.dataPrevisaoRecebimento) return toast.error('Preencha uma data de previsão de recebimento.')
+	function addReceipt(info: TRevenue["fracionamento"][number]) {
+		if (info.porcentagem > missingPercentage) return toast.error("Porcentagem excede o máximo permitido.");
+		if (!info.dataPrevisaoRecebimento) return toast.error("Preencha uma data de previsão de recebimento.");
 
-    setInfoHolder((prev) => ({ ...prev, fracionamento: [...prev.fracionamento, info] }))
-  }
-  function updateReceipt(info: { index: number; item: Partial<TRevenue['fracionamento'][number]> }) {
-    setInfoHolder((prev) => ({
-      ...prev,
-      fracionamento: prev.fracionamento.map((item, index) => (index === info.index ? { ...item, ...info.item } : item)),
-    }))
-  }
-  function removeReceipt(index: number) {
-    setInfoHolder((prev) => ({ ...prev, fracionamento: prev.fracionamento.filter((f, i) => i !== index) }))
-  }
+		setInfoHolder((prev) => ({ ...prev, fracionamento: [...prev.fracionamento, info] }));
+	}
+	function updateReceipt(info: { index: number; item: Partial<TRevenue["fracionamento"][number]> }) {
+		setInfoHolder((prev) => ({
+			...prev,
+			fracionamento: prev.fracionamento.map((item, index) => (index === info.index ? { ...item, ...info.item } : item)),
+		}));
+	}
+	function removeReceipt(index: number) {
+		setInfoHolder((prev) => ({ ...prev, fracionamento: prev.fracionamento.filter((f, i) => i !== index) }));
+	}
 
-  return (
-    <div className="flex w-full grow flex-col gap-4">
-      <h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">RECEBIMENTOS DA RECEITA</h1>
-      <div className="flex w-full flex-col gap-2">
-        <p className="text-primary w-full text-center text-sm tracking-tight">
-          Gerencie aqui os recebimentos da receita através do controle de previsões e da efetivação dos recebimentos.
-        </p>
-        <div className="flex w-full items-center justify-end">
-          <button
-            type="button"
-            onClick={() => setNewReceiptMenuIsOpen((prev) => !prev)}
-            className={cn('flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out', {
-              'bg-primary/20 hover:bg-red-300': newReceiptMenuIsOpen,
-              'bg-green-300 hover:bg-green-400': !newReceiptMenuIsOpen,
-            })}
-          >
-            <MdAddBox />
-            <h1 className="text-xs font-medium tracking-tight">
-              {!newReceiptMenuIsOpen ? 'ABRIR MENU DE NOVO RECEBIMENTO' : 'FECHAR MENU DE NOVO RECEBIMENTO'}
-            </h1>
-          </button>
-        </div>
-        {newReceiptMenuIsOpen ? (
-          <NewReceiptMenu revenueTotal={infoHolder.total} missingPercentage={missingPercentage} addReceipt={addReceipt} />
-        ) : null}
-        <RevenueReceiptsTable
-          receipts={infoHolder.fracionamento}
-          revenueId={revenueId}
-          revenueTotal={infoHolder.total}
-          updateReceipt={updateReceipt}
-          removeReceipt={removeReceipt}
-        />
-      </div>
-    </div>
-  )
+	return (
+		<div className="flex w-full grow flex-col gap-4">
+			<h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">RECEBIMENTOS DA RECEITA</h1>
+			<div className="flex w-full flex-col gap-2">
+				<p className="text-primary w-full text-center text-sm tracking-tight">
+					Gerencie aqui os recebimentos da receita através do controle de previsões e da efetivação dos recebimentos.
+				</p>
+				<div className="flex w-full items-center justify-end">
+					<button
+						type="button"
+						onClick={() => setNewReceiptMenuIsOpen((prev) => !prev)}
+						className={cn("flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out", {
+							"bg-primary/20 hover:bg-red-300": newReceiptMenuIsOpen,
+							"bg-green-300 hover:bg-green-400": !newReceiptMenuIsOpen,
+						})}
+					>
+						<MdAddBox />
+						<h1 className="text-xs font-medium tracking-tight">
+							{!newReceiptMenuIsOpen ? "ABRIR MENU DE NOVO RECEBIMENTO" : "FECHAR MENU DE NOVO RECEBIMENTO"}
+						</h1>
+					</button>
+				</div>
+				{newReceiptMenuIsOpen ? <NewReceiptMenu revenueTotal={infoHolder.total} missingPercentage={missingPercentage} addReceipt={addReceipt} /> : null}
+				<RevenueReceiptsTable
+					receipts={infoHolder.fracionamento}
+					revenueId={revenueId}
+					revenueTotal={infoHolder.total}
+					updateReceipt={updateReceipt}
+					removeReceipt={removeReceipt}
+				/>
+			</div>
+		</div>
+	);
 }
 
-export default RevenueReceiptsBlock
+export default RevenueReceiptsBlock;
 
 type NewReceiptMenuProps = {
-  revenueTotal: number
-  missingPercentage: number
-  addReceipt: (info: TRevenue['fracionamento'][number]) => void
-}
+	revenueTotal: number;
+	missingPercentage: number;
+	addReceipt: (info: TRevenue["fracionamento"][number]) => void;
+};
 function NewReceiptMenu({ revenueTotal, missingPercentage, addReceipt }: NewReceiptMenuProps) {
-  const [receiptHolder, setReceiptHolder] = useState<TRevenue['fracionamento'][number]>({
-    titulo: '',
-    valor: 0,
-    porcentagem: missingPercentage,
-    dataPrevisaoRecebimento: new Date().toISOString(),
-  })
+	const [receiptHolder, setReceiptHolder] = useState<TRevenue["fracionamento"][number]>({
+		titulo: "",
+		valor: 0,
+		porcentagem: missingPercentage,
+		dataPrevisaoRecebimento: new Date().toISOString(),
+	});
 
-  useEffect(() => {
-    setReceiptHolder((prev) => ({ ...prev, porcentagem: missingPercentage }))
-  }, [missingPercentage])
+	useEffect(() => {
+		setReceiptHolder((prev) => ({ ...prev, porcentagem: missingPercentage }));
+	}, [missingPercentage]);
 
-  return (
-    <AnimatePresence>
-      <motion.div
-        key={'menu-open'}
-        variants={GeneralVisibleHiddenExitMotionVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
-      >
-        <h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO RECEBIMENTO</h1>
-        <div className="flex w-full grow flex-col gap-2 p-3">
-          <div className="flex w-full flex-col items-center gap-2 tracking-tight lg:flex-row">
-            <div className="w-full lg:w-[30%]">
-              <TextInput
-                label="TÍTULO"
-                labelClassName="text-xs tracking-tight"
-                value={receiptHolder.titulo}
-                placeholder="Preencha aqui um titulo para o recebimento..."
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, titulo: value }))}
-                width="100%"
-              />
-            </div>
-            <div className="w-full lg:w-[20%]">
-              <NumberInput
-                label="VALOR"
-                labelClassName="text-xs tracking-tight"
-                placeholder="Preencha aqui o valor do fracionamento..."
-                value={receiptHolder.valor || null}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / revenueTotal) * 100 }))}
-                width="100%"
-              />
-            </div>
-            <div className="w-full lg:w-[10%]">
-              <NumberInput
-                label="PORCENTAGEM"
-                labelClassName="text-xs tracking-tight"
-                placeholder="Preencha aqui a porcentagem do fracionamento..."
-                value={receiptHolder.porcentagem}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * revenueTotal) / 100 }))}
-                width="100%"
-              />
-            </div>
-            <div className="w-full lg:w-[20%]">
-              <DateInput
-                label="PREV. DE RECEBIMENTO"
-                labelClassName="text-xs tracking-tight"
-                value={receiptHolder.dataPrevisaoRecebimento ? formatDate(receiptHolder.dataPrevisaoRecebimento) : undefined}
-                handleChange={(value) =>
-                  setReceiptHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value, 'string') as string }))
-                }
-                width="100%"
-              />
-            </div>
-            <div className="w-full lg:w-[20%]">
-              <DateInput
-                label="DATA DE RECEBIMENTO"
-                labelClassName="text-xs tracking-tight"
-                value={receiptHolder.dataRecebimento ? formatDate(receiptHolder.dataRecebimento) : undefined}
-                handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value, 'string') as string }))}
-                width="100%"
-              />
-            </div>
-          </div>
-          <div className="flex w-full items-center justify-end">
-            <Button onClick={() => addReceipt(receiptHolder)} size={'xs'}>
-              ADICIONAR RECEBIMENTO
-            </Button>
-          </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  )
+	return (
+		<AnimatePresence>
+			<motion.div
+				key={"menu-open"}
+				variants={GeneralVisibleHiddenExitMotionVariants}
+				initial="hidden"
+				animate="visible"
+				exit="exit"
+				className="bg-background flex w-full flex-col gap-2 rounded border border-green-600 shadow-xs dark:bg-[#121212]"
+			>
+				<h1 className="rounded-tl rounded-tr bg-green-600 p-1 text-center text-xs text-white">NOVO RECEBIMENTO</h1>
+				<div className="flex w-full grow flex-col gap-2 p-3">
+					<div className="flex w-full flex-col items-center gap-2 tracking-tight lg:flex-row">
+						<div className="w-full lg:w-[30%]">
+							<TextInput
+								label="TÍTULO"
+								labelClassName="text-xs tracking-tight"
+								value={receiptHolder.titulo}
+								placeholder="Preencha aqui um titulo para o recebimento..."
+								handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, titulo: value }))}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[20%]">
+							<NumberInput
+								label="VALOR"
+								labelClassName="text-xs tracking-tight"
+								placeholder="Preencha aqui o valor do fracionamento..."
+								value={receiptHolder.valor || null}
+								handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, valor: value, porcentagem: (value / revenueTotal) * 100 }))}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[10%]">
+							<NumberInput
+								label="PORCENTAGEM"
+								labelClassName="text-xs tracking-tight"
+								placeholder="Preencha aqui a porcentagem do fracionamento..."
+								value={receiptHolder.porcentagem}
+								handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, porcentagem: value, valor: (value * revenueTotal) / 100 }))}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[20%]">
+							<DateInput
+								label="PREV. DE RECEBIMENTO"
+								labelClassName="text-xs tracking-tight"
+								value={receiptHolder.dataPrevisaoRecebimento ? formatDate(receiptHolder.dataPrevisaoRecebimento) : undefined}
+								handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataPrevisaoRecebimento: formatDateInputChange(value, "string") as string }))}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[20%]">
+							<DateInput
+								label="DATA DE RECEBIMENTO"
+								labelClassName="text-xs tracking-tight"
+								value={receiptHolder.dataRecebimento ? formatDate(receiptHolder.dataRecebimento) : undefined}
+								handleChange={(value) => setReceiptHolder((prev) => ({ ...prev, dataRecebimento: formatDateInputChange(value, "string") as string }))}
+								width="100%"
+							/>
+						</div>
+					</div>
+					<div className="flex w-full items-center justify-end">
+						<Button onClick={() => addReceipt(receiptHolder)} size={"xs"}>
+							ADICIONAR RECEBIMENTO
+						</Button>
+					</div>
+				</div>
+			</motion.div>
+		</AnimatePresence>
+	);
 }

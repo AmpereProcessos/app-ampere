@@ -27,9 +27,9 @@ function TermPDF({ serviceOrderJSON, error }: TermPDFProps) {
 			<div className="mt-8 px-4">
 				<p className="text-center font-raleway">
 					Eu, {serviceOrder.favorecido.nome}, inscrito sob o número de CPF/CNPJ{" "}
-					<strong>{serviceOrder.projetoDados?.cpf_cnpj ? formatToCPForCNPJ(serviceOrder.projetoDados?.cpf_cnpj.toString()) : "-"}</strong>, declaro que a equipe técnica da empresa{" "}
-					<strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>, inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no dia ____/____/_____ à manutenção preventiva, prevista em
-					contrato, do sistema fotovoltaico instalado na{" "}
+					<strong>{serviceOrder.projetoDados?.cpf_cnpj ? formatToCPForCNPJ(serviceOrder.projetoDados?.cpf_cnpj.toString()) : "-"}</strong>, declaro que a
+					equipe técnica da empresa <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>, inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no
+					dia ____/____/_____ à manutenção preventiva, prevista em contrato, do sistema fotovoltaico instalado na{" "}
 					<strong>
 						{serviceOrder.localizacao.endereco ? serviceOrder.localizacao.endereco : "-"}, Nº{" "}
 						{serviceOrder.localizacao.numeroOuIdentificador ? serviceOrder.localizacao.numeroOuIdentificador : "-"},{" "}

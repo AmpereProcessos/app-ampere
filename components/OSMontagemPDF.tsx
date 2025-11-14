@@ -87,7 +87,8 @@ function OSMontagemPDF({ order }: OSMontagemPDFProps) {
 						<div className="row-span-1 grid grid-cols-5">
 							<p className="col-span-2 text-center text-xs font-semibold uppercase">Módulos:</p>
 							<p className="col-span-3 border border-t-0 border-black text-center text-xs">
-								{order.equipamentos.modulos.qtde ? order.equipamentos.modulos.qtde : "-"} - {order.equipamentos.modulos.potencia ? order.equipamentos.modulos.potencia : "N/A"}W
+								{order.equipamentos.modulos.qtde ? order.equipamentos.modulos.qtde : "-"} -{" "}
+								{order.equipamentos.modulos.potencia ? order.equipamentos.modulos.potencia : "N/A"}W
 							</p>
 						</div>
 						<div className="row-span-3 grid min-h-[80px] grid-cols-5">

@@ -4,7 +4,13 @@ import type { NextApiHandler } from "next";
 import type { Collection, Filter } from "mongodb";
 import { z } from "zod";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { getGeneralSalesStats, getGeneralServiceExecutionStats, getGeneralHomologationStats, getGeneralSupplyStats, getGeneralNPS } from "@/repositories/stats/general";
+import {
+	getGeneralSalesStats,
+	getGeneralServiceExecutionStats,
+	getGeneralHomologationStats,
+	getGeneralSupplyStats,
+	getGeneralNPS,
+} from "@/repositories/stats/general";
 import { getUFVSaleStats, getUFVInstallationStats, getUFVHomologationStats } from "@/repositories/stats/ufv-stats";
 
 export const OverallReportSchema = z.object({

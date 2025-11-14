@@ -4,13 +4,7 @@ import { fileTypes } from "@/utils/constants";
 import type { TContractRequest } from "@/utils/schemas/contract-requests";
 import { storage } from "@/utils/services/firebase/firebase-storage";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-	type UploadResult,
-	deleteObject,
-	getDownloadURL,
-	ref,
-	uploadBytes,
-} from "firebase/storage";
+import { type UploadResult, deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BsCloudUploadFill } from "react-icons/bs";
@@ -22,12 +16,7 @@ type FilesBlockProps = {
 	vinculateFiles: (files: TContractRequest["links"]) => void;
 	vinculationPending: boolean;
 };
-function FilesBlock({
-	tag,
-	files,
-	vinculateFiles,
-	vinculationPending,
-}: FilesBlockProps) {
+function FilesBlock({ tag, files, vinculateFiles, vinculationPending }: FilesBlockProps) {
 	const queryClient = useQueryClient();
 	const [fileHolder, setFileHolder] = useState<TFileHolder>({
 		title: "",
@@ -40,49 +29,33 @@ function FilesBlock({
 			link: string;
 			format: string;
 		}[] = [];
-		if (fileHolder.title.trim().length < 2)
-			return toast.error(
-				"Preencha um nome de ao menos 2 caractéres para o arquivo.",
-			);
-		if (!fileHolder.files || fileHolder.files.length == 0)
-			return toast.error("Anexe ao menos um arquivo.");
+		if (fileHolder.title.trim().length < 2) return toast.error("Preencha um nome de ao menos 2 caractéres para o arquivo.");
+		if (!fileHolder.files || fileHolder.files.length == 0) return toast.error("Anexe ao menos um arquivo.");
 		// In case was attached more than one file
 		if (fileHolder.files.length > 0) {
 			const promises = Array.from(fileHolder.files).map(async (file, index) => {
-				const fileAttachmentName = fileHolder.title
-					.toLocaleLowerCase()
-					.replaceAll(" ", "_");
+				const fileAttachmentName = fileHolder.title.toLocaleLowerCase().replaceAll(" ", "_");
 				const storageStr = `formSolicitacao/${tag}/${fileAttachmentName} ${index + 1} - ${new Date().toISOString()}`;
 				const fileRef = ref(storage, storageStr);
 				const firebaseUploadResponse = await uploadBytes(fileRef, file);
 				const uploadResult = firebaseUploadResponse as UploadResult;
 				const fileTitle = `${fileHolder.title.toUpperCase()} (${index + 1})`;
-				const fileUrl = await getDownloadURL(
-					ref(storage, firebaseUploadResponse.metadata.fullPath),
-				);
-				const fileFormat =
-					fileTypes[uploadResult.metadata.contentType || ""]?.title ||
-					"NÃO DEFINIDO";
+				const fileUrl = await getDownloadURL(ref(storage, firebaseUploadResponse.metadata.fullPath));
+				const fileFormat = fileTypes[uploadResult.metadata.contentType || ""]?.title || "NÃO DEFINIDO";
 				links.push({ title: fileTitle, format: fileFormat, link: fileUrl });
 			});
 			await Promise.all(promises);
 		} else {
 			// In case only one file was attached
 			const file = fileHolder.files[0];
-			const fileAttachmentName = fileHolder.title
-				.toLocaleLowerCase()
-				.replaceAll(" ", "_");
+			const fileAttachmentName = fileHolder.title.toLocaleLowerCase().replaceAll(" ", "_");
 			const storageStr = `formSolicitacao/${tag}/${fileAttachmentName} - ${new Date().toISOString()}`;
 			const fileRef = ref(storage, storageStr);
 			const firebaseUploadResponse = await uploadBytes(fileRef, file);
 			const uploadResult = firebaseUploadResponse as UploadResult;
 			const fileTitle = fileHolder.title.toUpperCase();
-			const fileUrl = await getDownloadURL(
-				ref(storage, firebaseUploadResponse.metadata.fullPath),
-			);
-			const fileFormat =
-				fileTypes[uploadResult.metadata.contentType || ""]?.title ||
-				"NÃO DEFINIDO";
+			const fileUrl = await getDownloadURL(ref(storage, firebaseUploadResponse.metadata.fullPath));
+			const fileFormat = fileTypes[uploadResult.metadata.contentType || ""]?.title || "NÃO DEFINIDO";
 			links.push({ title: fileTitle, format: fileFormat, link: fileUrl });
 		}
 		const newLinks = [...(files || []), ...links];
@@ -103,9 +76,7 @@ function FilesBlock({
 	}
 	return (
 		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
-			<span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">
-				DOCUMENTAÇÃO
-			</span>
+			<span className="mb-2 w-full rounded-tl-md rounded-tr-md bg-[#15599a] py-2 text-center font-bold text-white">DOCUMENTAÇÃO</span>
 			<div className="flex w-full grow flex-wrap items-start justify-around gap-2 px-2">
 				{files?.map((x, index) => (
 					<div key={index} className="w-full lg:w-[450px]">
@@ -121,17 +92,13 @@ function FilesBlock({
 				))}
 			</div>
 			<div className="mt-2 flex w-full flex-col items-center px-2">
-				<h1 className="text-sm font-bold tracking-tight">
-					ANEXE NOVOS ARQUIVOS
-				</h1>
+				<h1 className="text-sm font-bold tracking-tight">ANEXE NOVOS ARQUIVOS</h1>
 				<div className="mb-2 w-full">
 					<TextInput
 						label="TITULO DO ARQUIVO"
 						placeholder="Preencha aqui o nome a ser dado ao arquivo..."
 						value={fileHolder.title}
-						handleChange={(value) =>
-							setFileHolder((prev) => ({ ...prev, title: value }))
-						}
+						handleChange={(value) => setFileHolder((prev) => ({ ...prev, title: value }))}
 						width="100%"
 					/>
 				</div>
@@ -145,16 +112,11 @@ function FilesBlock({
 
 							{fileHolder.files ? (
 								<p className="text-primary/60 mb-2 text-sm dark:text-gray-400">
-									{fileHolder.files.length > 0
-										? `${fileHolder.files[0]?.name}, outros...`
-										: fileHolder.files[0].name}
+									{fileHolder.files.length > 0 ? `${fileHolder.files[0]?.name}, outros...` : fileHolder.files[0].name}
 								</p>
 							) : (
 								<p className="text-primary/60 mb-2 px-2 text-center text-sm dark:text-gray-400">
-									<span className="font-semibold">
-										Clique para escolher um arquivo
-									</span>{" "}
-									ou o arraste para a àrea demarcada
+									<span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
 								</p>
 							)}
 						</div>

@@ -40,8 +40,8 @@ export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListP
 						numItems: 20,
 					},
 					searchQuery: debouncedSearchQuery || undefined,
-			  }
-			: "skip"
+				}
+			: "skip",
 	);
 
 	// Load more chats
@@ -75,7 +75,7 @@ export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListP
 	const handleScroll = useCallback(() => {
 		if (!scrollRef.current || isLoadingMore || !nextCursor) return;
 
-		const container = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+		const container = scrollRef.current.querySelector("[data-radix-scroll-area-viewport]");
 		if (!container) return;
 
 		const { scrollTop, scrollHeight, clientHeight } = container;
@@ -87,7 +87,7 @@ export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListP
 	}, [isLoadingMore, nextCursor, initialResult?.hasMore]);
 
 	useEffect(() => {
-		const container = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+		const container = scrollRef.current?.querySelector("[data-radix-scroll-area-viewport]");
 		if (container) {
 			container.addEventListener("scroll", handleScroll);
 			return () => container.removeEventListener("scroll", handleScroll);
@@ -125,9 +125,7 @@ export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListP
 		return (
 			<div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
 				<MessageCircle className="w-12 h-12 text-primary/20 mb-3" />
-				<p className="text-sm text-primary/60 font-medium">
-					{debouncedSearchQuery ? "Nenhum chat encontrado" : "Nenhum chat ainda"}
-				</p>
+				<p className="text-sm text-primary/60 font-medium">{debouncedSearchQuery ? "Nenhum chat encontrado" : "Nenhum chat ainda"}</p>
 				<p className="text-xs text-primary/40 mt-1">
 					{debouncedSearchQuery ? "Tente outro termo de busca" : "Inicie uma nova conversa clicando no botão +"}
 				</p>
@@ -151,11 +149,7 @@ export function List({ className, onChatSelect, searchQuery = "" }: ChatHubListP
 
 				{/* Load More Button (alternative to infinite scroll) */}
 				{!isLoadingMore && nextCursor && initialResult?.hasMore && (
-					<Button
-						variant="ghost"
-						onClick={() => setIsLoadingMore(true)}
-						className="w-full mt-2 text-primary/60 hover:text-primary hover:bg-primary/5"
-					>
+					<Button variant="ghost" onClick={() => setIsLoadingMore(true)} className="w-full mt-2 text-primary/60 hover:text-primary hover:bg-primary/5">
 						Carregar mais conversas
 					</Button>
 				)}

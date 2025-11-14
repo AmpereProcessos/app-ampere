@@ -1,5 +1,11 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { InsertPropertySchema, PropertyMetadataVehicleSchema, type TPropertyTemporaryUsageDTO, type TProperty, type TPropertyTemporaryUsage } from "@/utils/schemas/properties";
+import {
+	InsertPropertySchema,
+	PropertyMetadataVehicleSchema,
+	type TPropertyTemporaryUsageDTO,
+	type TProperty,
+	type TPropertyTemporaryUsage,
+} from "@/utils/schemas/properties";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
 import { type Collection, type Filter, ObjectId } from "mongodb";
@@ -69,7 +75,9 @@ const getProperties = async ({ id, includeOpenUsages, search, metadataTypes }: T
 		const openUsagesFoundProperties = await temporaryUsagesCollection.find({ dataFim: null, "propriedade.id": { $in: propertyIds } }).toArray();
 		openUsagesByPropertyId = new Map(
 			properties.map((p) => {
-				const equivalentUsages = openUsagesFoundProperties.filter((u) => u.propriedade.id === p._id.toString()).map((u) => ({ ...u, _id: u._id.toString() }));
+				const equivalentUsages = openUsagesFoundProperties
+					.filter((u) => u.propriedade.id === p._id.toString())
+					.map((u) => ({ ...u, _id: u._id.toString() }));
 				return [p._id.toString(), equivalentUsages];
 			}),
 		);

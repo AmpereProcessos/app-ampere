@@ -1,53 +1,53 @@
-import React, { useState } from 'react'
-import Link from 'next/link'
-import ServiceOrderPDF from '../../../components/OSMontagemPDF'
-import PadraoOS from '../../../components/PadraoOS'
-import PreventivaOS from '../../../components/PreventivaOS'
-import Logo from '../../../utils/images/logo-texto-azul-vertical.png'
-import Image from 'next/image'
-import EstruturaOS from '../../../components/EstruturaOS'
-import OSCorretiva from '../../../components/OSCorretivaPDF'
-import { useRouter } from 'next/router'
-import { useServiceOrderById } from '../../../utils/methods/query/service-orders'
-import LoadingPage from '../../../components/utils/LoadingPage'
+import React, { useState } from "react";
+import Link from "next/link";
+import ServiceOrderPDF from "../../../components/OSMontagemPDF";
+import PadraoOS from "../../../components/PadraoOS";
+import PreventivaOS from "../../../components/PreventivaOS";
+import Logo from "../../../utils/images/logo-texto-azul-vertical.png";
+import Image from "next/image";
+import EstruturaOS from "../../../components/EstruturaOS";
+import OSCorretiva from "../../../components/OSCorretivaPDF";
+import { useRouter } from "next/router";
+import { useServiceOrderById } from "../../../utils/methods/query/service-orders";
+import LoadingPage from "../../../components/utils/LoadingPage";
 function OSInfo({ info, index }) {
-  const router = useRouter()
-  const { data, isLoading, isSuccess, isError } = useServiceOrderById({ id: router?.query?.id, enabled: !!router?.query?.id })
-  const [osInfo, setosInfo] = useState(info)
-  const [urgency, setUrgency] = useState('NÃO DEFINIDO')
-  console.log(data)
-  if (isLoading) return <LoadingPage />
-  if (isError)
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        <h1 className="text-primary/60 w-full text-center italic">Oops, um erro ocorreu.</h1>
-        <Link href="/">
-          <p className="text-primary/70 cursor-pointer font-bold hover:text-cyan-500">Voltar à página principal</p>
-        </Link>
-      </div>
-    )
-  if (isSuccess && data)
-    return (
-      <>
-        {data.categoria == 'PADRÃO' && <PadraoOS order={data} />}
-        {data.categoria == 'MONTAGEM' && <ServiceOrderPDF order={data} />}
-        {data.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={data} />}
-        {/* {data.categoria == 'ESTRUTURA' && (
+	const router = useRouter();
+	const { data, isLoading, isSuccess, isError } = useServiceOrderById({ id: router?.query?.id, enabled: !!router?.query?.id });
+	const [osInfo, setosInfo] = useState(info);
+	const [urgency, setUrgency] = useState("NÃO DEFINIDO");
+	console.log(data);
+	if (isLoading) return <LoadingPage />;
+	if (isError)
+		return (
+			<div className="flex h-full w-full flex-col items-center justify-center">
+				<h1 className="text-primary/60 w-full text-center italic">Oops, um erro ocorreu.</h1>
+				<Link href="/">
+					<p className="text-primary/70 cursor-pointer font-bold hover:text-cyan-500">Voltar à página principal</p>
+				</Link>
+			</div>
+		);
+	if (isSuccess && data)
+		return (
+			<>
+				{data.categoria == "PADRÃO" && <PadraoOS order={data} />}
+				{data.categoria == "MONTAGEM" && <ServiceOrderPDF order={data} />}
+				{data.categoria == "MANUTENÇÃO PREVENTIVA" && <PreventivaOS order={data} />}
+				{/* {data.categoria == 'ESTRUTURA' && (
           <EstruturaOS
             info={osInfo}
             observacoesOS={osInfo.ordensDeServico[index].observacoes}
             servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
           />
         )} */}
-        {(data.categoria == 'MANUTENÇÃO CORRETIVA' || data.categoria == 'OUTROS') && <OSCorretiva order={data} />}
-      </>
-    )
+				{(data.categoria == "MANUTENÇÃO CORRETIVA" || data.categoria == "OUTROS") && <OSCorretiva order={data} />}
+			</>
+		);
 }
 
-export default OSInfo
+export default OSInfo;
 
 {
-  /**
+	/**
         <div className="flex flex-col p-6 grow bg-background">
           <div>
             <Link href={"/"}>

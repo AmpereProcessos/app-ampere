@@ -23,7 +23,10 @@ export const ComissionDataByProjectIdQueryParamsInputSchema = z.object({
 	projectId: z.string({ required_error: "ID do projeto é obrigatório.", invalid_type_error: "ID do projeto é obrigatório." }),
 });
 
-export const ComissionDataQueryParamsInputSchema = z.union([ComissionDataGeneralQueryParamsInputSchema, ComissionDataByProjectIdQueryParamsInputSchema]);
+export const ComissionDataQueryParamsInputSchema = z.union([
+	ComissionDataGeneralQueryParamsInputSchema,
+	ComissionDataByProjectIdQueryParamsInputSchema,
+]);
 
 export const GeneralComissionDataOutputSchema = z.object({
 	_id: z.string(),

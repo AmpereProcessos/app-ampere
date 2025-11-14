@@ -1,72 +1,72 @@
-import SelectInput from '@/components/inputs/Select'
-import TextInput from '@/components/inputs/Text'
-import { formatToCPForCNPJ, formatToPhone } from '@/utils/methods/formatting'
-import { THomologation } from '@/utils/schemas/crm/homologation.schema'
-import { SigningForms } from '@/utils/select-options'
-import React from 'react'
+import SelectInput from "@/components/inputs/Select";
+import TextInput from "@/components/inputs/Text";
+import { formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
+import { THomologation } from "@/utils/schemas/crm/homologation.schema";
+import { SigningForms } from "@/utils/select-options";
+import React from "react";
 
 type HolderInformationProps = {
-  infoHolder: THomologation
-  setInfoHolder: React.Dispatch<React.SetStateAction<THomologation>>
-}
+	infoHolder: THomologation;
+	setInfoHolder: React.Dispatch<React.SetStateAction<THomologation>>;
+};
 function HolderInformation({ infoHolder, setInfoHolder }: HolderInformationProps) {
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DO TITULAR DA INSTALAÇÃO ELÉTRICA</h1>
-      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-        <div className="w-full lg:w-1/3">
-          <TextInput
-            label="NOME DO TITULAR"
-            placeholder="Preencha o nome do titular da instalação..."
-            value={infoHolder.titular.nome}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, nome: value } }))}
-            width="100%"
-          />
-        </div>
-        <div className="w-full lg:w-1/3">
-          <TextInput
-            label="CPF/CNPJ DO TITULAR"
-            placeholder="Preencha o cpf ou cpnj do titular da instalação..."
-            value={infoHolder.titular.identificador}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, identificador: formatToCPForCNPJ(value) } }))}
-            width="100%"
-          />
-        </div>
-        <div className="w-full lg:w-1/3">
-          <TextInput
-            label="TELEFONE DO TITULAR"
-            placeholder="Preencha o telefone do titular da instalação..."
-            value={infoHolder.titular.contato}
-            handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, contato: formatToPhone(value) } }))}
-            width="100%"
-          />
-        </div>
-      </div>
-      <div className="flex w-full items-center justify-center">
-        <div className="w-full lg:w-1/3">
-          <SelectInput
-            label="FORMA DE ASSINATURA"
-            selectedItemLabel="NÃO DEFINIDO"
-            options={SigningForms}
-            value={infoHolder.documentacao.formaAssinatura}
-            handleChange={(value) =>
-              setInfoHolder((prev) => ({
-                ...prev,
-                documentacao: { ...prev.documentacao, formaAssinatura: value },
-              }))
-            }
-            onReset={() => {
-              setInfoHolder((prev) => ({
-                ...prev,
-                documentacao: { ...prev.documentacao, formaAssinatura: 'FÍSICA' },
-              }))
-            }}
-            width="100%"
-          />
-        </div>
-      </div>
-    </div>
-  )
+	return (
+		<div className="flex w-full flex-col gap-2">
+			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DO TITULAR DA INSTALAÇÃO ELÉTRICA</h1>
+			<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+				<div className="w-full lg:w-1/3">
+					<TextInput
+						label="NOME DO TITULAR"
+						placeholder="Preencha o nome do titular da instalação..."
+						value={infoHolder.titular.nome}
+						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, nome: value } }))}
+						width="100%"
+					/>
+				</div>
+				<div className="w-full lg:w-1/3">
+					<TextInput
+						label="CPF/CNPJ DO TITULAR"
+						placeholder="Preencha o cpf ou cpnj do titular da instalação..."
+						value={infoHolder.titular.identificador}
+						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, identificador: formatToCPForCNPJ(value) } }))}
+						width="100%"
+					/>
+				</div>
+				<div className="w-full lg:w-1/3">
+					<TextInput
+						label="TELEFONE DO TITULAR"
+						placeholder="Preencha o telefone do titular da instalação..."
+						value={infoHolder.titular.contato}
+						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titular: { ...prev.titular, contato: formatToPhone(value) } }))}
+						width="100%"
+					/>
+				</div>
+			</div>
+			<div className="flex w-full items-center justify-center">
+				<div className="w-full lg:w-1/3">
+					<SelectInput
+						label="FORMA DE ASSINATURA"
+						selectedItemLabel="NÃO DEFINIDO"
+						options={SigningForms}
+						value={infoHolder.documentacao.formaAssinatura}
+						handleChange={(value) =>
+							setInfoHolder((prev) => ({
+								...prev,
+								documentacao: { ...prev.documentacao, formaAssinatura: value },
+							}))
+						}
+						onReset={() => {
+							setInfoHolder((prev) => ({
+								...prev,
+								documentacao: { ...prev.documentacao, formaAssinatura: "FÍSICA" },
+							}));
+						}}
+						width="100%"
+					/>
+				</div>
+			</div>
+		</div>
+	);
 }
 
-export default HolderInformation
+export default HolderInformation;

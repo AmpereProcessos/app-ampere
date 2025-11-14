@@ -53,7 +53,9 @@ const handleGetMostUsedCompositionItems: NextApiHandler<any> = async (req, res) 
 		.sort((a, b) => b[1] - a[1])
 		.filter((m) => m[1] > 1)
 		.map(([name, count]) => {
-			const mostLikelyMaterial = materials.find((material) => calculateStringSimilarity(formatWithoutDiacritics(name, true), formatWithoutDiacritics(material.nome, true)) > 80);
+			const mostLikelyMaterial = materials.find(
+				(material) => calculateStringSimilarity(formatWithoutDiacritics(name, true), formatWithoutDiacritics(material.nome, true)) > 80,
+			);
 			return { NOME: name, VEZES_UTILIZADO: count, MATERIAL_EQUIVALENTE: mostLikelyMaterial?.nome };
 		});
 	res.status(200).json({ sortedCompositionItems, sortedCompositions });

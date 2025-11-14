@@ -152,7 +152,11 @@ export async function updateSaleInstallment({ saleId, saleInstallmentIndex, sale
 			"Content-Type": "application/json",
 		};
 
-		const { data } = await axios.put(url, { status: saleInstallmentPaymentDate ? "ACQUITTED" : "PENDING", due_date: saleInstallmentPaymentDate }, { headers });
+		const { data } = await axios.put(
+			url,
+			{ status: saleInstallmentPaymentDate ? "ACQUITTED" : "PENDING", due_date: saleInstallmentPaymentDate },
+			{ headers },
+		);
 		console.log("CONTA AZUL UPDATE INSTALLMENT RESPONSE", data);
 		return { data: "Recebimento atualizado." };
 	} catch (error) {

@@ -140,7 +140,10 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	}
 
 	if (project) {
-		await projectsCollection.updateOne({ _id: new ObjectId(project._id) }, { $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } });
+		await projectsCollection.updateOne(
+			{ _id: new ObjectId(project._id) },
+			{ $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } },
+		);
 	}
 	const revenueReceivedCompletely = revenue.fracionamento.length > 0 ? revenue.fracionamento.every((f) => !!f.dataRecebimento) : false;
 	const insertResponse = await revenuesCollection.insertOne({

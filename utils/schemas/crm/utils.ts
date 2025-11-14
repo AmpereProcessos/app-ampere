@@ -21,7 +21,10 @@ const EquipmentSchema = z.object({
 		invalid_type_error: "Tipo não válido para o fabricante do produto.",
 	}),
 	modelo: z.string({ required_error: "Modelo do produto não informado.", invalid_type_error: "Tipo não válido para o modelo do produto." }),
-	potencia: z.number({ required_error: "Potência do produto não informada.", invalid_type_error: "Tipo não válido para a potência do produto." }).optional().nullable(),
+	potencia: z
+		.number({ required_error: "Potência do produto não informada.", invalid_type_error: "Tipo não válido para a potência do produto." })
+		.optional()
+		.nullable(),
 	garantia: z.number({ required_error: "Garantia do produto não informada.", invalid_type_error: "Tipo não válido para a garantia do produto." }),
 	autor: AuthorSchema,
 	dataInsercao: z

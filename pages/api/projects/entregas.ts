@@ -58,7 +58,9 @@ const getProjectsInDeliveryProcessRoute: NextApiHandler<any> = async (req, res) 
 	const ufsQuery: Filter<TPurchaseControl> = ufs && ufs?.length > 0 ? { "entrega.localizacao.uf": { $in: ufs } } : {};
 	const tagIdsQuery: Filter<TPurchaseControl> = tagIds && tagIds?.length > 0 ? { "etiquetas.id": { $in: tagIds } } : {};
 	const purchasedOnlyQuery: Filter<TPurchaseControl> = purchasedOnly ? { dataPedido: { $ne: null } } : {};
-	const deliveredOnlyQuery: Filter<TPurchaseControl> = deliveredRecentOnly ? { "entrega.dataEfetivacao": { $gt: afterDateWithMargin } } : { "entrega.dataEfetivacao": null };
+	const deliveredOnlyQuery: Filter<TPurchaseControl> = deliveredRecentOnly
+		? { "entrega.dataEfetivacao": { $gt: afterDateWithMargin } }
+		: { "entrega.dataEfetivacao": null };
 	const query = {
 		...searchQuery,
 		...deliveryStatusQuery,

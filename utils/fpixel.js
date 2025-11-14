@@ -1,8 +1,8 @@
 export const FB_PIXEL_ID = process.env.PIXEL_ID;
 
 export const pageview = () => {
-  window.fbq("track", "PageView");
+	window.fbq("track", "PageView");
 };
 export const event = (name, options = {}) => {
-  window.fbq("track", name, options);
+	window.fbq("track", name, options);
 };

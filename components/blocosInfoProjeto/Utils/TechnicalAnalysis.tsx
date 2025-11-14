@@ -12,21 +12,12 @@ import { IoMdAdd } from "react-icons/io";
 import { MdTopic } from "react-icons/md";
 import { TbRulerMeasure } from "react-icons/tb";
 
-function getViewPermissions({ routes }: { routes?: string[] }) {
-	if (!routes) {
-		return {
-			suprimentos: false,
-			projetos: false,
-			obras: false,
-		};
-	}
-	const permission = {
-		suprimentos: routes.includes("Suprimentos"),
-		projetos: routes.includes("Projetos"),
-		obras: routes.includes("Obras"),
+function getViewPermissions({ session }: { session: TAuthSession }) {
+	return {
+		suprimentos: session.user.permissoes.suprimentos.visualizar,
+		projetos: session.user.permissoes.engenharia.visualizar,
+		obras: session.user.permissoes.execucao.visualizar,
 	};
-
-	return permission;
 }
 type TechnicalAnalysisProps = {
 	analysisId: string;
@@ -37,9 +28,7 @@ type TechnicalAnalysisProps = {
 	setChanges: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>;
 };
 function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, setChanges }: TechnicalAnalysisProps) {
-	const viewPermissions = getViewPermissions({
-		routes: session?.user?.permissoes.rotas,
-	});
+	const viewPermissions = getViewPermissions({ session });
 	const { data: analysis, isLoading, isError, isSuccess } = useTechnicalAnalysisById({ id: analysisId });
 	return (
 		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
@@ -88,7 +77,7 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 								</div>
 							</div>
 							{analysis.suprimentos?.itens?.map((item, index) => (
-								<div key={index} className="flex w-full items-center justify-between">
+								<div key={`${index.toString()}-${item.descricao}`} className="flex w-full items-center justify-between">
 									<div className="flex flex-col">
 										<h1 className="text-primary/60 text-sm font-medium">
 											<strong>{item.qtde}</strong> x {item.descricao} <strong className="text-[#fead41]">({item.tipo})</strong>
@@ -100,6 +89,7 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 									</div>
 									<div className="flex items-center justify-end gap-1">
 										<button
+											type="button"
 											onClick={() => {
 												setChanges({
 													...changes,
@@ -123,6 +113,7 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 											<p>KIT</p>
 										</button>
 										<button
+											type="button"
 											onClick={() => {
 												setChanges({
 													...changes,
@@ -162,7 +153,10 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 							<h1 className="text-primary/60 mt-2 text-sm leading-none font-medium tracking-tight">PENDÊNCIAS</h1>
 							{analysis.pendencias && analysis.pendencias.length > 0 ? (
 								analysis.pendencias.map((pendency, index) => (
-									<div key={index} className="border-primary/20 mt-2 flex w-full flex-col rounded-md border p-3 shadow-xs">
+									<div
+										key={`${index.toString()}-${pendency.categoria}`}
+										className="border-primary/20 mt-2 flex w-full flex-col rounded-md border p-3 shadow-xs"
+									>
 										<h1 className="w-full text-start leading-none font-bold tracking-tight">{pendency.categoria}</h1>
 										<div className="mt-1 flex w-full items-center justify-start gap-2">
 											<Avatar fallback={"R"} url={null} height={20} width={20} />
@@ -171,12 +165,12 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 										<h1 className="text-primary/60 bg-primary/20 my-2 rounded-md p-2 text-center text-sm">{pendency.descricao}</h1>
 										<div className="flex w-full items-center justify-start">
 											<div className="flex items-center gap-2">
-												<div className={`text-primary/60 flex items-center gap-2`}>
+												<div className="text-primary/60 flex items-center gap-2">
 													<BsCalendarFill />
 													<p className="text-xs font-medium">{formatDateAsLocale(pendency.dataInsercao)}</p>
 												</div>
 												{pendency.dataFinalizacao ? (
-													<div className={`text-primary/60 flex items-center gap-2`}>
+													<div className="text-primary/60 flex items-center gap-2">
 														<BsCalendarCheckFill color="rgb(34,197,94)" />
 														<p className="text-xs font-medium">{formatDateAsLocale(pendency.dataFinalizacao, true)}</p>
 													</div>
@@ -192,7 +186,7 @@ function TechnicalAnalysis({ analysisId, session, infoHolder, setInfo, changes, 
 								<h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">DESCRITIVO</h1>
 								{analysis.descritivo?.length ? (
 									analysis.descritivo.map((item, index) => (
-										<div key={index} className="flex w-full flex-col">
+										<div key={`${index.toString()}-${item.topico}`} className="flex w-full flex-col">
 											<div className="flex items-center gap-2">
 												<MdTopic />
 												<h1 className="text-sm leading-none tracking-tight">{item.topico}</h1>

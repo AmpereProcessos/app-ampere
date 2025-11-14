@@ -2596,11 +2596,6 @@ export const tiposEstruturaCRM = [
 	{ label: "Solo", value: "Solo" },
 	{ label: "Sem estrutura", value: "Sem estrutura" },
 ];
-export function validateAuthorization(session: TAuthSession, paramRoute: string) {
-	if (!session) return false;
-	if (session?.user.permissoes.rotas?.includes(paramRoute)) return true;
-	return false;
-}
 
 export function formatProjectCode(value: string) {
 	if (value) {

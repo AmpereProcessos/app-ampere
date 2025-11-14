@@ -32,18 +32,3 @@ export function useClickOutside(ref: React.MutableRefObject<any>, cb: () => void
 		};
 	}, [cb]);
 }
-
-type UseUnauthorizedRedirectProps = {
-	session: TAuthSession | null;
-	routes: string[];
-};
-export function useUnauthorizedRedirect({ session, routes }: UseUnauthorizedRedirectProps) {
-	const router = useRouter();
-
-	useEffect(() => {
-		if (session) {
-			const userRoutes = session?.user.permissoes.rotas;
-			if (!userRoutes?.some((r) => routes.includes(r))) router.push("/");
-		}
-	}, [session, router]);
-}

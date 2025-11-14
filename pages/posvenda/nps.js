@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { ImSad } from "react-icons/im";
 import { useSession } from "../../components/providers/SessionProvider";
 
-import { formatDecimalPlaces, validateAuthorization } from "../../utils/constants";
+import { formatDecimalPlaces } from "../../utils/constants";
 import { useNPS } from "../../utils/methods/query/aftersales";
 
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
@@ -30,7 +30,7 @@ export default NPS;
 function NPSContent({ session }) {
 	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-	const { data, isLoading, isSuccess, isError, filters, setFilters } = useNPS(validateAuthorization(session, "Pós-Venda"));
+	const { data, isLoading, isSuccess, isError, filters, setFilters } = useNPS(session.user.permissoes.posVenda.visualizar);
 
 	function getStats({ info }) {
 		if (!info)

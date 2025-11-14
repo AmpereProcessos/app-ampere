@@ -6,7 +6,6 @@ export const AuthorSchema = z.object({
 });
 
 const PermissionsSchema = z.object({
-	rotas: z.array(z.string(), { required_error: "Rotas de acesso não informadas.", invalid_type_error: "Tipo não válido para rotas de acesso." }),
 	usuarios: z.object({
 		escopo: z.array(z.string()).optional().nullable(),
 		visualizar: z.boolean({

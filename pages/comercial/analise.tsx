@@ -99,11 +99,6 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
 			vendido: value,
 		};
 	}
-	useEffect(() => {
-		if (session) {
-			const userRoutes = session?.user.permissoes.rotas;
-		}
-	}, [session]);
 	return (
 		<div className="flex grow flex-col p-6">
 			<div className="border-primary/20 mb-2 flex flex-col items-center justify-between border-b p-1">

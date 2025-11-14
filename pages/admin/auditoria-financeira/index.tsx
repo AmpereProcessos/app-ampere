@@ -35,7 +35,7 @@ function FinancesAuditing() {
 	const router = useRouter();
 	const { session, status } = useSession();
 
-	const isADM = !!session?.user?.permissoes.rotas?.includes("ADM");
+	const isADM = !!session?.user?.permissoes.administrativo.visualizar;
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 	if (!isADM) return <UnauthorizedComponent />;

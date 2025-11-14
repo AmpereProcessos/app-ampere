@@ -42,7 +42,6 @@ function EditUser({ userId, session, closeModal, callbacks }: EditUserProps) {
 			referencia: null,
 		},
 		permissoes: {
-			rotas: [],
 			usuarios: {
 				escopo: null,
 				visualizar: false,

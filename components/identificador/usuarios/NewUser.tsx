@@ -48,7 +48,6 @@ function NewUser({ session, closeModal, callbacks }: NewUserProps) {
 			referencia: null,
 		},
 		permissoes: {
-			rotas: [],
 			usuarios: {
 				escopo: null,
 				visualizar: false,

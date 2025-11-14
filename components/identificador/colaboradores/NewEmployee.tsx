@@ -48,7 +48,6 @@ function NewEmployee({ session, closeModal, callbacks }: NewEmployeeProps) {
 			referencia: null,
 		},
 		permissoes: {
-			rotas: [],
 			usuarios: {
 				escopo: null,
 				visualizar: false,

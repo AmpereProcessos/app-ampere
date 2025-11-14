@@ -1,15 +1,12 @@
-import dayjs from "dayjs";
 import React from "react";
-import { BsCalendarFill } from "react-icons/bs";
-import { FaUserAlt } from "react-icons/fa";
 import { useSession } from "../../components/providers/SessionProvider";
-import { formatToMoney, validateAuthorization } from "../../utils/constants";
+import { formatToMoney } from "../../utils/constants";
 import { useProjectExpenses } from "../../utils/methods/query/expenses";
 import ExpenseItem from "../identificador/despesas/ExpenseItem";
 import LoadingPage from "../utils/LoadingPage";
 function InfoDespesasBlock({ projectId }) {
 	const { session } = useSession();
-	const { data: expenses, isSuccess, isFetching } = useProjectExpenses(projectId, validateAuthorization(session, "ADM"));
+	const { data: expenses, isSuccess, isFetching } = useProjectExpenses(projectId, session.user.permissoes.financeiro.visualizar);
 	function getTotalExpenses(expensesArr) {
 		const total = expensesArr.reduce((accumulator, current) => {
 			const toBeSummed = current.total;

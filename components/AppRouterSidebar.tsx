@@ -40,21 +40,7 @@ function AppRouterSidebar({ sidebarVisible }: SidebarProps) {
 				style={{ maxHeight: "calc(100vh - 70px)" }}
 				className="overscroll-y bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 border-primary/20 sticky top-[70px] flex w-full flex-col overflow-y-auto border-r px-2 py-4 lg:w-[250px]"
 			>
-				{session.user?.visualizacao.tipo === "OPERACIONAL" ? (
-					<GeralSidebar
-						session={session}
-						userAccessibleRoutes={session.user?.permissoes.rotas}
-						userIsManager={session.user?.permissoes.comercial.editar}
-						userIsController={session.user?.permissoes.ordensDeServico.visualizar}
-					/>
-				) : null}
-				{session.user?.visualizacao.tipo === "VENDAS" ? (
-					<VendedorSidebar
-						userAccessibleRoutes={(session.user?.permissoes.rotas || []) as never[]}
-						userVisualization={session.user?.visualizacao}
-						sellerName={session.user?.visualizacao.referencia}
-					/>
-				) : null}
+				{session.user?.visualizacao.tipo === "OPERACIONAL" ? <GeralSidebar session={session} /> : null}
 				{session.user?.visualizacao.tipo === "EXECUÇÃO" ? <ObrasSidebar technicalTeam={session.user?.visualizacao.referencia} /> : null}
 			</motion.div>
 		</AnimatePresence>

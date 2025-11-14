@@ -93,7 +93,7 @@ type DeleteResponse = {
 
 const deleteForm: NextApiHandler<DeleteResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const userAuthorized = session?.user.permissoes.rotas?.includes("Almoxarifado");
+	const userAuthorized = session?.user.permissoes.almoxarifado.editar;
 
 	if (!userAuthorized) throw new createHttpError.BadRequest("Usuário não possui autorização para exclusão de formulários.");
 

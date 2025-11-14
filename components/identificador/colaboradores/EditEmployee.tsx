@@ -39,7 +39,6 @@ function EditEmployee({ userId, session, closeModal, callbacks }: EditEmployeePr
 			referencia: null,
 		},
 		permissoes: {
-			rotas: [],
 			usuarios: {
 				escopo: null,
 				visualizar: false,

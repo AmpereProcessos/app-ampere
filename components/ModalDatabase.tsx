@@ -1,45 +1,45 @@
-import React, { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { useMediaQuery } from "@/lib/hooks/media-query";
 
-import { useClientById } from "../utils/methods/query/clients";
-import { useProjectUpdateLogs } from "@/utils/methods/query/project-update-logs";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import { handleUpdateClientPersonalized } from "@/utils/methods/mutation/crm/clients";
-import { getErrorMessage } from "@/utils/methods/handlers";
+import { useProjectUpdateLogs } from "@/utils/methods/query/project-update-logs";
+import { useClientById } from "../utils/methods/query/clients";
 
 import NotificationCreationBlock from "./NotificationCreationBlock";
+import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
-import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
-import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
-import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
-import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
-import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
-import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
-import InfoJornadaBlock from "./blocosInfoProjeto/InfoJornadaBlock";
-import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 import InfoHomologacaoBlock from "./blocosInfoProjeto/InfoHomologacaoBlock";
-import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoJornadaBlock from "./blocosInfoProjeto/InfoJornadaBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
-import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
+import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoOeMBlock from "./blocosInfoProjeto/InfoOeMBlock";
+import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import RestrictionBlock from "./blocosInfoProjeto/RestrictionBlock";
 import ProjectServiceOrders from "./identificador/ordensDeServico/ProjectServiceOrders";
-import InfoOeMBlock from "./blocosInfoProjeto/InfoOeMBlock";
 
+import type { TAuthSession } from "@/lib/authentication/types";
 import type { TProjectDTO } from "@/utils/schemas/projects";
-import ErrorPage from "./utils/ErrorPage";
+import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import InfoComissionamentoBlock from "./blocosInfoProjeto/InfoComissionamentoBlock";
-import { Loader2 } from "lucide-react";
-import type { TAuthSession } from "@/lib/authentication/types";
+import ErrorPage from "./utils/ErrorPage";
 
 type ModalDatabaseProps = {
 	session: TAuthSession;
@@ -65,15 +65,25 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 	const permissions = useMemo(() => (session?.user as any)?.permissoes || {}, [session]);
 	const userHasOverallAccess = useMemo(
 		() =>
-			["Projetos", "Obras", "Suprimentos", "O&M", "Marketing", "Vendas", "Pós-Venda", "PPS", "InsideSales", "Financeiro", "ADM", "RH"].every((el) =>
-				permissions?.rotas?.includes(el),
-			),
+			session.user.permissoes.comercial.visualizar &&
+			session.user.permissoes.posVenda.visualizar &&
+			session.user.permissoes.suprimentos.visualizar &&
+			session.user.permissoes.engenharia.visualizar &&
+			session.user.permissoes.execucao.visualizar &&
+			session.user.permissoes.suporte.visualizar &&
+			session.user.permissoes.administrativo.visualizar &&
+			session.user.permissoes.financeiro.visualizar &&
+			session.user.permissoes.recursosHumanos.visualizar,
 		[permissions],
 	);
 	const userHasOeMAccess = !!permissions?.suporte?.visualizar;
 	const userHasRestrictionPermission = !!permissions?.gestao?.restringirProjetos;
 	const userHasComissionValuesAccess = useMemo(
-		() => ["PPS", "Financeiro", "ADM", "RH"].every((el) => permissions?.rotas?.includes(el)),
+		() =>
+			!!permissions.comercial.visualizar &&
+			!!permissions?.financeiro?.visualizar &&
+			!!permissions?.administrativo?.visualizar &&
+			!!permissions?.recursosHumanos?.visualizar,
 		[permissions],
 	);
 

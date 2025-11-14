@@ -40,7 +40,7 @@ function StockPage() {
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 
-	const isAuthorized = !!session?.user.permissoes.rotas?.includes("Almoxarifado") || !!session?.user.permissoes.rotas?.includes("Obras");
+	const isAuthorized = !!session?.user.permissoes.almoxarifado.visualizar || !!session?.user.permissoes.execucao.visualizar;
 	if (!isAuthorized) return <UnauthorizedComponent />;
 
 	return <StockPageComponent session={session} />;

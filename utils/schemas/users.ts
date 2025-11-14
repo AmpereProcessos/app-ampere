@@ -112,16 +112,6 @@ const PermissionsSchema = z.object({
 			invalid_type_error: "Tipo não válido para permissão de edição de recursos humanos.",
 		}),
 	}),
-	gestao: z.object({
-		visualizarResultados: z.boolean({
-			required_error: "Ativação da permissão de visualização de resultados.",
-			invalid_type_error: "Tipo não válido para permissão de visualização de resultados.",
-		}),
-		restringirProjetos: z.boolean({
-			required_error: "Ativação da permissão de restrição de projetos.",
-			invalid_type_error: "Tipo não válido para permissão de restrição de projetos.",
-		}),
-	}),
 	ordensDeServico: z.object({
 		visualizar: z.boolean({
 			required_error: "Ativação da permissão de visualização de ordens de serviço não informada.",
@@ -134,16 +124,6 @@ const PermissionsSchema = z.object({
 		criar: z.boolean({
 			required_error: "Ativação da permissão de criação de ordens de serviço não informada.",
 			invalid_type_error: "Tipo não válido para permissão de criação de ordens de serviço.",
-		}),
-	}),
-	chats: z.object({
-		visualizar: z.boolean({
-			required_error: "Ativação da permissão de visualização de chats não informada.",
-			invalid_type_error: "Tipo não válido para permissão de visualização de chats.",
-		}),
-		enviarMensagens: z.boolean({
-			required_error: "Ativação da permissão de envio de mensagens não informada.",
-			invalid_type_error: "Tipo não válido para permissão de envio de mensagens.",
 		}),
 	}),
 	certificacoes: z.object({
@@ -160,6 +140,16 @@ const PermissionsSchema = z.object({
 			invalid_type_error: "Tipo não válido para permissão de criação de certificações.",
 		}),
 	}),
+	chats: z.object({
+		visualizar: z.boolean({
+			required_error: "Ativação da permissão de visualização de chats não informada.",
+			invalid_type_error: "Tipo não válido para permissão de visualização de chats.",
+		}),
+		enviarMensagens: z.boolean({
+			required_error: "Ativação da permissão de envio de mensagens não informada.",
+			invalid_type_error: "Tipo não válido para permissão de envio de mensagens.",
+		}),
+	}),
 	almoxarifado: z.object({
 		visualizar: z.boolean({
 			required_error: "Ativação da permissão de visualização de almoxarifado não informada.",
@@ -172,6 +162,16 @@ const PermissionsSchema = z.object({
 		criar: z.boolean({
 			required_error: "Ativação da permissão de criação de almoxarifado não informada.",
 			invalid_type_error: "Tipo não válido para permissão de criação de almoxarifado.",
+		}),
+	}),
+	gestao: z.object({
+		visualizarResultados: z.boolean({
+			required_error: "Ativação da permissão de visualização de resultados.",
+			invalid_type_error: "Tipo não válido para permissão de visualização de resultados.",
+		}),
+		restringirProjetos: z.boolean({
+			required_error: "Ativação da permissão de restrição de projetos.",
+			invalid_type_error: "Tipo não válido para permissão de restrição de projetos.",
 		}),
 	}),
 });

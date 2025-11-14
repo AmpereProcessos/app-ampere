@@ -535,6 +535,38 @@ function EmployeePermissionsPannel({ infoHolder, updateInfoHolder }: Permissions
 				}
 			/>
 
+			{/**ALMOXARIFADO */}
+			<h1 className="text-primary/60 w-full text-start text-sm">ALMOXARIFADO</h1>
+			<CheckboxInput
+				labelFalse="APTO A VISUALIZAR ALMOXARIFADO"
+				labelTrue="APTO A VISUALIZAR ALMOXARIFADO"
+				checked={infoHolder.permissoes.almoxarifado.visualizar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							almoxarifado: { ...infoHolder.permissoes.almoxarifado, visualizar: value },
+						},
+					})
+				}
+			/>
+
+			<CheckboxInput
+				labelFalse="APTO A EDITAR ALMOXARIFADO"
+				labelTrue="APTO A EDITAR ALMOXARIFADO"
+				checked={infoHolder.permissoes.almoxarifado.editar}
+				justify="justify-start"
+				handleChange={(value) =>
+					updateInfoHolder({
+						permissoes: {
+							...infoHolder.permissoes,
+							almoxarifado: { ...infoHolder.permissoes.almoxarifado, editar: value },
+						},
+					})
+				}
+			/>
+
 			{/**GESTÃO */}
 			<h1 className="text-primary/60 w-full text-start text-sm">GESTÃO</h1>
 			<CheckboxInput

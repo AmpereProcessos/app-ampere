@@ -39,7 +39,7 @@ const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({
 function Comissionamento() {
 	const { session, status } = useSession();
 
-	const isAuthorized = session?.user.permissoes.rotas.includes("O&M") || session?.user.permissoes.rotas.includes("Pós-Venda");
+	const isAuthorized = session?.user.permissoes.suporte.visualizar || session?.user.permissoes.posVenda.visualizar;
 
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;

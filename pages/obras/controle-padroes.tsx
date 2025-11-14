@@ -19,7 +19,7 @@ import type { TEnergyPAExecutionWithFiltersInput } from "../api/gestao-obras/pad
 
 function EnergyPAControls() {
 	const { session, status } = useSession();
-	const isAuthorized = session?.user.permissoes.rotas.includes("Obras") || session?.user.permissoes.rotas.includes("Pós-Venda");
+	const isAuthorized = session?.user.permissoes.execucao.visualizar;
 
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;

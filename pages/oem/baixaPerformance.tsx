@@ -3,17 +3,17 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
 
-import { HiPencilAlt } from "react-icons/hi";
-import { TbLicenseOff } from "react-icons/tb";
-import { BsGraphDown } from "react-icons/bs";
-import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
-import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
-import { useSession } from "../../components/providers/SessionProvider";
-import LoadingPage from "../../components/utils/LoadingPage";
-import SelectInput from "../../components/SelectInput";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { BsGraphDown } from "react-icons/bs";
+import { HiPencilAlt } from "react-icons/hi";
+import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
+import { TbLicenseOff } from "react-icons/tb";
+import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
+import SelectInput from "../../components/SelectInput";
+import { useSession } from "../../components/providers/SessionProvider";
+import LoadingPage from "../../components/utils/LoadingPage";
 
 function getProblemsNotBooked(badPerformers, monitoramentoBook) {
 	const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina));
@@ -25,7 +25,7 @@ function BaixaPerformance() {
 	const router = useRouter();
 	const { session, status } = useSession();
 
-	const isAuthorized = session?.user.permissoes.rotas.includes("O&M");
+	const isAuthorized = session?.user.permissoes.suporte.visualizar;
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 	if (!isAuthorized) return <UnauthorizedPage />;
@@ -66,7 +66,7 @@ function BaixaPerformance() {
 		if (token.trim().length > 15) {
 			setInProgress(true);
 			try {
-				let { data } = await axios.post(
+				const { data } = await axios.post(
 					"https://api-v2.solarview.com.br/unitList?page=1",
 					{
 						pageSize: 942,
@@ -77,19 +77,19 @@ function BaixaPerformance() {
 						},
 					},
 				);
-				var arr = [];
+				const arr = [];
 				data.data.map((user) => {
-					var parsed = JSON.parse(user.consumerUnit30dPerformance);
-					if (parsed != null && typeof parsed == "object") {
-						let dados30d = JSON.parse(user.consumerUnit30dPerformance);
-						let reg = dados30d[4];
-						let nomeUsina = user.consumerUnitName;
+					const parsed = JSON.parse(user.consumerUnit30dPerformance);
+					if (parsed !== null && typeof parsed === "object") {
+						const dados30d = JSON.parse(user.consumerUnit30dPerformance);
+						const reg = dados30d[4];
+						const nomeUsina = user.consumerUnitName;
 						if (Number(reg) <= 80) {
 							arr.push({ nomeUsina: nomeUsina, performance: Number(reg) });
 						}
 					}
 				});
-				let filteredArr = getProblemsNotBooked(arr, monitoramentoBook);
+				const filteredArr = getProblemsNotBooked(arr, monitoramentoBook);
 				setBadPerformers(filteredArr);
 				setInProgress(false);
 			} catch (error) {
@@ -107,7 +107,7 @@ function BaixaPerformance() {
 			try {
 				const { data } = await axios.get(`/api/o&m/deyeBadPerformers?authorization=${authorization}`);
 				const arr = data.data;
-				var formattedArr = arr.map((item) => {
+				let formattedArr = arr.map((item) => {
 					const station = item.station;
 					return {
 						nomeUsina: station.name,
@@ -130,7 +130,7 @@ function BaixaPerformance() {
 	}
 	async function getMonitoramentoBook() {
 		try {
-			let { data } = await axios.get("/api/o&m/monitoramento");
+			const { data } = await axios.get("/api/o&m/monitoramento");
 			setMonitoramentoBook(data);
 			setFilteredMonitoramentoBook(data);
 		} catch (error) {
@@ -145,7 +145,7 @@ function BaixaPerformance() {
 	function handleSearchFilter(value) {
 		setFilters((prev) => ({ ...prev, searchFilter: value }));
 		if (value != "" || " ") {
-			let filtered = monitoramentoBook.filter((item) => item.nomeUsina.toUpperCase().includes(value.toUpperCase()));
+			const filtered = monitoramentoBook.filter((item) => item.nomeUsina.toUpperCase().includes(value.toUpperCase()));
 			setFilteredMonitoramentoBook(filtered);
 			return filtered;
 		} else {

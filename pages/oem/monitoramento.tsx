@@ -19,7 +19,7 @@ import { MdEmail, MdOutlineCheckBox } from "react-icons/md";
 
 function Monitoring() {
 	const { session, status } = useSession();
-	const isAuthorized = session?.user.permissoes.rotas.includes("O&M") || session?.user.permissoes.rotas.includes("Pós-Venda");
+	const isAuthorized = session?.user.permissoes.suporte.visualizar || session?.user.permissoes.posVenda.visualizar;
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 	if (!isAuthorized) return <UnauthorizedPage />;

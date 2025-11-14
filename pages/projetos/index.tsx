@@ -19,7 +19,7 @@ function Projetos() {
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 
-	const isAuthorized = session?.user.permissoes.rotas.includes("Projetos") || session.user.permissoes.engenharia.visualizar;
+	const isAuthorized = session?.user.permissoes.engenharia.visualizar;
 	if (!isAuthorized) return <UnauthorizedComponent />;
 	return <ProjectsPageContent session={session} />;
 }

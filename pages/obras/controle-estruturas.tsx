@@ -15,7 +15,7 @@ import type { TInstallationStructureExecution } from "../api/gestao-obras/estrut
 
 function InstallationStructureControls() {
 	const { session, status } = useSession();
-	const isAuthorized = session?.user.permissoes.rotas.includes("Obras");
+	const isAuthorized = session?.user.permissoes.execucao.visualizar;
 
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;

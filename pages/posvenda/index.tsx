@@ -50,7 +50,7 @@ function Posvenda() {
 	const router = useRouter();
 	const { session, status } = useSession();
 
-	const isAuthorized = session?.user.permissoes.rotas.includes("Pós-Venda");
+	const isAuthorized = session?.user.permissoes.posVenda.visualizar;
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 	if (!isAuthorized) return <UnauthorizedPage />;

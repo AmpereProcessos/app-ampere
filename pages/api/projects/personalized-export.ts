@@ -1,28 +1,25 @@
-import { getProjectExportFormatted, GetProjectsExportRoutePayloadSchema, getProjectProjection } from "@/lib/data-exports";
+import { GetProjectsExportRoutePayloadSchema, getProjectExportFormatted, getProjectProjection } from "@/lib/data-exports";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { formatDateQuery } from "@/utils/methods/dates";
 import type { TProject } from "@/utils/schemas/projects";
 import connectToDatabase from "@/utils/services/mongodb/projects";
+import createHttpError from "http-errors";
 import type { Filter } from "mongodb";
 import type { NextApiHandler } from "next";
-import createHttpError from "http-errors";
 
 const handleProjectsPersonalizedExport: NextApiHandler<any> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const userHasOverallAccess = [
-		"Projetos",
-		"Obras",
-		"Suprimentos",
-		"O&M",
-		"Marketing",
-		"Vendas",
-		"Pós-Venda",
-		"PPS",
-		"InsideSales",
-		"Financeiro",
-		"ADM",
-		"RH",
-	].every((el) => session?.user.permissoes.rotas.includes(el));
+	const userHasOverallAccess =
+		session.user.permissoes.comercial.visualizar &&
+		session.user.permissoes.posVenda.visualizar &&
+		session.user.permissoes.suprimentos.visualizar &&
+		session.user.permissoes.engenharia.visualizar &&
+		session.user.permissoes.execucao.visualizar &&
+		session.user.permissoes.suporte.visualizar &&
+		session.user.permissoes.administrativo.visualizar &&
+		session.user.permissoes.financeiro.visualizar &&
+		session.user.permissoes.recursosHumanos.visualizar;
+
 	if (!userHasOverallAccess) throw new createHttpError.Forbidden("Você não tem permissão para exportar projetos.");
 	const { filters, projection } = GetProjectsExportRoutePayloadSchema.parse(req.body);
 

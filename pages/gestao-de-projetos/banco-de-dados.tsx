@@ -41,20 +41,16 @@ function MainDatebasePageContent({ session }: { session: TAuthSession }) {
 	const projects = data?.projects;
 	const projectsMatched = data?.projectsMatched;
 	const totalPages = data?.totalPages;
-	const userHasOverallAccess = [
-		"Projetos",
-		"Obras",
-		"Suprimentos",
-		"O&M",
-		"Marketing",
-		"Vendas",
-		"Pós-Venda",
-		"PPS",
-		"InsideSales",
-		"Financeiro",
-		"ADM",
-		"RH",
-	].every((el) => session?.user.permissoes.rotas.includes(el));
+	const userHasOverallAccess =
+		session.user.permissoes.comercial.visualizar &&
+		session.user.permissoes.posVenda.visualizar &&
+		session.user.permissoes.suprimentos.visualizar &&
+		session.user.permissoes.engenharia.visualizar &&
+		session.user.permissoes.execucao.visualizar &&
+		session.user.permissoes.suporte.visualizar &&
+		session.user.permissoes.administrativo.visualizar &&
+		session.user.permissoes.financeiro.visualizar &&
+		session.user.permissoes.recursosHumanos.visualizar;
 
 	return (
 		<div className="grow p-6">

@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { useSession } from "../../components/providers/SessionProvider";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import dayjsBusinessDays from "dayjs-business-days";
 import { AnimatePresence, motion } from "framer-motion";
-import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useSession } from "../../components/providers/SessionProvider";
 
 import { formatDate, formatDecimalPlaces } from "../../utils/constants";
-import { accessGrantingStatus, HomologationControlStatus, PurchaseControlStatus, PurchaseDeliveryStatus } from "../../utils/select-options";
 import { useSupplyProjects } from "../../utils/methods/query/supply";
 import { formatDateInputChange } from "../../utils/methods/shared";
+import { HomologationControlStatus, PurchaseControlStatus, PurchaseDeliveryStatus, accessGrantingStatus } from "../../utils/select-options";
 
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
-import SuprimentosSkeleton from "../../components/skeletons/SuprimentosSkeleton";
-import LoadingPage from "../../components/utils/LoadingPage";
 import DateInput from "../../components/inputs/Date";
+import MultipleSelectInput from "../../components/inputs/MultipleSelect";
 import SelectInput from "../../components/inputs/Select";
 import TextInput from "../../components/inputs/Text";
-import MultipleSelectInput from "../../components/inputs/MultipleSelect";
+import SuprimentosSkeleton from "../../components/skeletons/SuprimentosSkeleton";
+import LoadingPage from "../../components/utils/LoadingPage";
 
-import { MdAttachMoney } from "react-icons/md";
-import { VscDiffAdded } from "react-icons/vsc";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { TbTruckDelivery } from "react-icons/tb";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
-import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
+import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { MdAttachMoney } from "react-icons/md";
+import { TbTruckDelivery } from "react-icons/tb";
+import { VscDiffAdded } from "react-icons/vsc";
+import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
 dayjs.extend(dayjsBusinessDays);
 
 function getDateDiff(date1: Date, date2: Date) {
@@ -40,7 +40,7 @@ function getDateDiff(date1: Date, date2: Date) {
 
 function Suprimentos() {
 	const { session, status } = useSession();
-	const isAuthorized = session?.user.permissoes.rotas.includes("Suprimentos");
+	const isAuthorized = session?.user.permissoes.suprimentos.visualizar;
 	if (status === "loading") return <LoadingPage />;
 	if (status === "unauthenticated") return <UnauthenticatedComponent />;
 	if (!isAuthorized) return <UnauthorizedPage />;

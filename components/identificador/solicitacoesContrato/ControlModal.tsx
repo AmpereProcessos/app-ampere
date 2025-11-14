@@ -56,7 +56,7 @@ type ContractRequestControlModalProps = {
 function ContractRequestControlModal({ requestId, session, closeModal }: ContractRequestControlModalProps) {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const queryClient = useQueryClient();
-	const userHasEditPermission = session.user.permissoes.comercial.editar || session.user.permissoes.rotas.includes("PPS");
+	const userHasEditPermission = session.user.permissoes.comercial.editar;
 	const { data: request, isLoading, isError, isSuccess, error } = useContractRequestById({ id: requestId });
 	const [generateContractMenuIsOpen, setGenerateContractMenuIsOpen] = useState(false);
 	const [infoHolder, setInfoHolder] = useState<TContractRequestDTO>({

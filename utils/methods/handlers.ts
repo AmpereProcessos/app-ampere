@@ -18,13 +18,16 @@ export function errorHandler(err: unknown, res: NextApiResponse) {
 	});
 }
 export function getErrorMessage(error: unknown) {
-	if (createHttpError.isHttpError(error) && error.expose) return error.message;
+	if (createHttpError.isHttpError(error) && error.expose) {
+		return error.message;
+	}
 	if (error instanceof ZodError) {
 		const issues = error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join(", ");
 		return issues || "Erro de validação";
 	}
 	if (error instanceof AxiosError) {
 		const personalizedHttpError = error.response?.data?.error;
+
 		if (personalizedHttpError) return personalizedHttpError.message as string;
 		return error.message;
 	}

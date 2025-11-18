@@ -73,7 +73,6 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 		}, 1000);
 	}
 
-	console.log("INFOVENDABLOCK", project);
 	return (
 		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-2 rounded w-full justify-center">

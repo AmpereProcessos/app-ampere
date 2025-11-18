@@ -124,7 +124,9 @@ export default function ModalDatabase({ session, projectId, closeModal, callback
 			callbacks?.onSuccess?.();
 		},
 		onError: (err) => {
-			toast.error(getErrorMessage(err));
+			const errorMessage = getErrorMessage(err);
+			console.log("ERROR MESSAGE", errorMessage);
+			toast.error(errorMessage);
 			callbacks?.onError?.();
 		},
 		onSettled: handleOnSettled,

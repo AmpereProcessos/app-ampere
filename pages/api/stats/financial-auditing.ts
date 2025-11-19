@@ -1,13 +1,13 @@
 import { getFinancesByProjectId } from "@/repositories/finances-auditing/queries";
 import { apiHandler } from "@/utils/api";
-import { TExpense } from "@/utils/schemas/expenses";
-import { TProject, TProjectDTO } from "@/utils/schemas/projects";
-import { TSolarSystemPropose } from "@/utils/schemas/proposes/solar-system.schema";
+import type { TExpense } from "@/utils/schemas/expenses";
+import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
+import type { TSolarSystemPropose } from "@/utils/schemas/proposes/solar-system.schema";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
-import { Collection, ObjectId } from "mongodb";
-import { NextApiHandler } from "next";
+import { type Collection, ObjectId } from "mongodb";
+import type { NextApiHandler } from "next";
 import { z } from "zod";
 
 export type ExpenseRevenueList = {
@@ -67,10 +67,10 @@ const FieldStringSchema = z.string({ required_error: "Campo de filtro não forne
 type GetResponse = TProjectFinances[] | TProjectFinances;
 
 const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
-	const { after, before, field, id } = req.query;
+	const { after, before, field, id, projectTypes } = req.query;
 
-	const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToDatabase();
+	const crmDb = await connectToCRMDatabase();
 
 	const projectsCollection: Collection<TProject> = db.collection("dados");
 	const expensesCollection: Collection<TExpense> = db.collection("despesas");
@@ -78,7 +78,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 
 	// In case query is for project especific finances
 	if (id) {
-		if (typeof id != "string" || !ObjectId.isValid(id)) throw createHttpError.BadRequest("ID inválido.");
+		if (typeof id !== "string" || !ObjectId.isValid(id)) throw createHttpError.BadRequest("ID inválido.");
 		const projectFinances = await getFinancesByProjectId({ projectId: id, projectsCollection, expensesCollection, proposesCollection });
 		return res.json(projectFinances);
 	}
@@ -86,13 +86,20 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 	const validatedAfter = DatetimeStringSchema.parse(after);
 	const validatedBefore = DatetimeStringSchema.parse(before);
 	const validatedField = FieldStringSchema.parse(field);
+	const validatedProjectTypes = z
+		.string({ required_error: "Tipos de projetos não fornecidos.", invalid_type_error: "Tipo inválido para os tipos de projetos." })
+		.transform((value) => value.split(","))
+		.parse(projectTypes)
+		.filter((type) => type.trim().length > 0);
 
+	const periodQuery = { [validatedField]: { $gte: validatedAfter, $lte: validatedBefore } };
+	const projectTypesQuery = validatedProjectTypes.length > 0 ? { tipoDeServico: { $in: validatedProjectTypes } } : {};
+	const query = { ...periodQuery, ...projectTypesQuery };
+	console.log("[INFO] [GET_FINANCIAL_AUDITING_DATA] [QUERY]", JSON.stringify(query, null, 2));
 	const projects = (await projectsCollection
 		.aggregate([
 			{
-				$match: {
-					$and: [{ [validatedField]: { $gte: validatedAfter } }, { [validatedField]: { $lte: validatedBefore } }],
-				},
+				$match: query,
 			},
 			{
 				$project: {
@@ -140,7 +147,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 		const idPropostaCRM = project.idPropostaCRM || "";
 		const identificador = project.codigoSVB || "";
 		// Formatting the project expenses
-		const projectExpenses = expenses.filter((exp) => exp.projeto?.id == project._id);
+		const projectExpenses = expenses.filter((exp) => exp.projeto?.id === project._id);
 		const kitCost = project.compra.valorDoKit || 0;
 		const expensesFormatted = projectExpenses.reduce(
 			(acc: { [key: string]: number }, current) => {
@@ -187,7 +194,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 		const insiderComission = (saleTotal * (project.comissoes?.porcentagemInsider || 0)) / 100;
 		const managersComission = (saleTotal * 0.75) / 100;
 		const comissionCost = sellerComission + insiderComission + managersComission;
-		expensesFormatted["COMISSÕES"] = comissionCost;
+		expensesFormatted.COMISSÕES = comissionCost;
 		return {
 			_id: project._id,
 			nome,

@@ -26,7 +26,7 @@ import { VscDiffAdded } from "react-icons/vsc";
 import NumberInput from "@/components/inputs/Number";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import UnauthorizedComponent from "@/components/utils/UnauthorizedComponent";
-import { allSellers } from "@/utils/select-options";
+import { allSellers, serviceTypes } from "@/utils/select-options";
 
 const currentDate = new Date();
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString();
@@ -58,6 +58,7 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 		after: afterDateParam,
 		before: beforeDateParam,
 	});
+	const [projectTypes, setProjectTypes] = useState<string[]>([]);
 	const {
 		data: auditing,
 		isLoading,
@@ -65,7 +66,7 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 		isSuccess,
 		filters,
 		setFilters,
-	} = useFinancialAuditing({ after: dateFilter.after, before: dateFilter.before, field: dateFilter.field });
+	} = useFinancialAuditing({ after: dateFilter.after, before: dateFilter.before, field: dateFilter.field, projectTypes });
 
 	function getStats({ info }: { info?: TProjectFinances[] }) {
 		if (!info)
@@ -111,21 +112,35 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black text-[#15599a] uppercase">AUDITORIA FINANCEIRA</p>
 					</div>
-					<div className="flex flex-wrap items-center justify-center gap-x-2">
-						<SelectInput
-							label="PARÂMETRO"
-							showLabel={false}
-							value={dateFilter.field}
-							options={[
-								{ id: 1, label: "ASSINATURA DE CONTRATO", value: "contrato.dataAssinatura" },
-								{ id: 2, label: "CONCLUSÃO DE OBRA", value: "obra.saida" },
-							]}
-							selectedItemLabel="CAMPO PADRÃO"
-							handleChange={(value) => setDateFilter((prev) => ({ ...prev, field: value }))}
-							onReset={() => setDateFilter((prev) => ({ ...prev, field: "contrato.dataAssinatura" }))}
-						/>
-
-						<div className="mt-2 w-full lg:mt-0 lg:w-[250px]">
+					<div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+						<div className="w-full lg:w-[250px]">
+							<MultipleSelectInput
+								label="TIPO DE SERVIÇO"
+								showLabel={false}
+								selected={projectTypes}
+								options={serviceTypes}
+								selectedItemLabel="SEM FILTRO"
+								handleChange={(value) => setProjectTypes(value as string[])}
+								onReset={() => setProjectTypes([])}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[250px]">
+							<SelectInput
+								label="PARÂMETRO"
+								showLabel={false}
+								value={dateFilter.field}
+								options={[
+									{ id: 1, label: "ASSINATURA DE CONTRATO", value: "contrato.dataAssinatura" },
+									{ id: 2, label: "CONCLUSÃO DE OBRA", value: "obra.saida" },
+								]}
+								selectedItemLabel="CAMPO PADRÃO"
+								handleChange={(value) => setDateFilter((prev) => ({ ...prev, field: value }))}
+								onReset={() => setDateFilter((prev) => ({ ...prev, field: "contrato.dataAssinatura" }))}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-[250px]">
 							<DateInput
 								width={"100%"}
 								label={"DEPOIS DE"}

@@ -1,16 +1,16 @@
+import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetDashboardStatsOutput } from "@/pages/api/stats";
+import type { TGetGraphStatsInput, TGetGraphsStatsOutput } from "@/pages/api/stats/graph";
+import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
+import type { TGetSalesRankingInput, TGetSalesRankingOutput } from "@/pages/api/stats/sales-ranking";
+import type { TGetSDRRankingInput, TGetSDRRankingOutput } from "@/pages/api/stats/sdr-ranking";
+import type { TEngineeringSectorStatsInput, TEngineeringSectorStatsOutput } from "@/pages/api/stats/sector-reports/engineering";
 import type { TExecutionStats } from "@/pages/api/stats/sector-reports/execution";
 import type { TDashboardStats, TSaleGraphStat, TSalesRakingInput, TSalesRakingOutput } from "@/utils/schemas/stats";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
-import { useState } from "react";
-import { useDebounceMemo } from "@/lib/hooks/debounce";
-import type { TEngineeringSectorStatsInput, TEngineeringSectorStatsOutput } from "@/pages/api/stats/sector-reports/engineering";
+import axios from "axios";
 import dayjs from "dayjs";
-import { TGetDashboardStatsOutput } from "@/pages/api/stats";
-import { TGetGraphsStatsOutput, TGetGraphStatsInput } from "@/pages/api/stats/graph";
-import { TGetSalesRankingInput, TGetSalesRankingOutput } from "@/pages/api/stats/sales-ranking";
-import { TGetSDRRankingInput, TGetSDRRankingOutput } from "@/pages/api/stats/sdr-ranking";
+import { useState } from "react";
 
 async function fetchDashboardStats() {
 	const { data } = await axios.get<TGetDashboardStatsOutput>("/api/stats");
@@ -25,12 +25,8 @@ export function useDashboardStats() {
 }
 
 async function fetchSalesGraphStats({ year }: { year: number }) {
-	try {
-		const { data } = await axios.get(`/api/stats/getByYear/${year}`);
-		return data as TSaleGraphStat[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/stats/getByYear/${year}`);
+	return data as TSaleGraphStat[];
 }
 
 export function useSalesGraphStats({ year }: { year: number }) {
@@ -41,12 +37,8 @@ export function useSalesGraphStats({ year }: { year: number }) {
 }
 
 async function fetchExecutionStats() {
-	try {
-		const { data } = await axios.get("/api/stats/sector-reports/execution");
-		return data.data as TExecutionStats;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/stats/sector-reports/execution");
+	return data.data as TExecutionStats;
 }
 
 export function useExecutionStats() {
@@ -66,6 +58,7 @@ type TUseOverallReportParams = {
 };
 export function useOverallReport({ initialParams }: TUseOverallReportParams) {
 	const [queryParams, setQueryParams] = useState<TOverallReportInput>({
+		projectTypes: initialParams?.projectTypes ?? [],
 		period: {
 			after: initialParams?.period?.after ?? undefined,
 			before: initialParams?.period?.before ?? undefined,
@@ -126,15 +119,11 @@ export function useSalesRanking({ initialParams }: TUseSalesRankingParams) {
 }
 
 async function fetchSDRRanking(payload: TGetSDRRankingInput) {
-	try {
-		const params = new URLSearchParams();
-		params.append("type", payload.type);
-		params.append("rankBy", payload.rankBy);
-		const { data } = await axios.get<TGetSDRRankingOutput>("/api/stats/sdr-ranking", { params });
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const params = new URLSearchParams();
+	params.append("type", payload.type);
+	params.append("rankBy", payload.rankBy);
+	const { data } = await axios.get<TGetSDRRankingOutput>("/api/stats/sdr-ranking", { params });
+	return data.data;
 }
 
 type TUseSDRRankingParams = {
@@ -162,15 +151,11 @@ export function useSDRRanking({ initialParams }: TUseSDRRankingParams) {
 }
 
 async function fetchEngineeringSectorStats(info: TEngineeringSectorStatsInput) {
-	try {
-		const urlParams = new URLSearchParams();
-		urlParams.append("after", info.after);
-		urlParams.append("before", info.before);
-		const { data }: { data: TEngineeringSectorStatsOutput } = await axios.get(`/api/stats/sector-reports/engineering?${urlParams.toString()}`);
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const urlParams = new URLSearchParams();
+	urlParams.append("after", info.after);
+	urlParams.append("before", info.before);
+	const { data }: { data: TEngineeringSectorStatsOutput } = await axios.get(`/api/stats/sector-reports/engineering?${urlParams.toString()}`);
+	return data.data;
 }
 
 type UseEngineeringSectorStatsParams = {

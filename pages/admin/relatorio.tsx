@@ -8,10 +8,12 @@ import { useOverallReport } from "@/utils/methods/query/stats";
 import { BarChart3 } from "lucide-react";
 
 import OverallReportGeneralStats from "@/components/identificador/estatisticas/overall-report/General";
+import MultipleSelectInput from "@/components/inputs/MultipleSelect";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
+import { serviceTypes } from "@/utils/select-options";
 import dayjs from "dayjs";
 
 function ReportPage() {
@@ -51,7 +53,7 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
 		}),
 	];
 	return (
-		<div className="flex min-h-screen grow flex-col bg-gray-50 p-6">
+		<div className="flex min-h-screen grow flex-col p-6">
 			{/* Header */}
 			<div className="bg-background border-primary/20 mb-6 flex flex-col items-center rounded-lg border-b px-6 py-4 shadow-xs">
 				<div className="flex w-full items-center justify-between">
@@ -61,24 +63,35 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
 							<p className="text-center text-2xl font-black text-[#15599a] uppercase">RELATÓRIO GERAL</p>
 						</div>
 					</div>
-					<DateIntervalInput
-						label="Período"
-						labelClassName="text-xs font-medium leading-none tracking-tight"
-						className="h-fit border-none p-0 px-2 py-0.5 shadow-none"
-						value={{
-							after: queryParams.period?.after ? new Date(queryParams.period.after) : undefined,
-							before: queryParams.period?.before ? new Date(queryParams.period.before) : undefined,
-						}}
-						handleChange={(v) =>
-							updateQueryParams({
-								period: {
-									after: v.after ? v.after.toISOString() : undefined,
-									before: v.before ? v.before.toISOString() : undefined,
-								},
-							})
-						}
-						presets={reportPeriodPresets}
-					/>
+					<div className="flex items-center gap-2">
+						<div className="w-full lg:w-[250px]">
+							<MultipleSelectInput
+								label="TIPOS DE SERVIÇO"
+								selected={queryParams.projectTypes}
+								handleChange={(v) => updateQueryParams({ projectTypes: v as string[] })}
+								options={serviceTypes}
+								selectedItemLabel="SEM FILTRO"
+								onReset={() => updateQueryParams({ projectTypes: [] })}
+								width="100%"
+							/>
+						</div>
+						<DateIntervalInput
+							label="PERÍODO"
+							value={{
+								after: queryParams.period?.after ? new Date(queryParams.period.after) : undefined,
+								before: queryParams.period?.before ? new Date(queryParams.period.before) : undefined,
+							}}
+							handleChange={(v) =>
+								updateQueryParams({
+									period: {
+										after: v.after ? v.after.toISOString() : undefined,
+										before: v.before ? v.before.toISOString() : undefined,
+									},
+								})
+							}
+							presets={reportPeriodPresets}
+						/>
+					</div>
 				</div>
 			</div>
 			{isLoading ? <LoadingComponent /> : null}

@@ -1,15 +1,18 @@
-import { TProjectFinances } from "@/pages/api/stats/financial-auditing";
+import type { TProjectFinances } from "@/pages/api/stats/financial-auditing";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-async function fetchFinancialAuditingData({ after, before, field }: { after: string; before: string; field: string }) {
-	try {
-		const { data } = await axios.get(`/api/stats/financial-auditing?after=${after}&before=${before}&field=${field}`);
-		return data as TProjectFinances[];
-	} catch (error) {
-		throw error;
-	}
+async function fetchFinancialAuditingData({
+	after,
+	before,
+	field,
+	projectTypes,
+}: { after: string; before: string; field: string; projectTypes: string[] }) {
+	const { data } = await axios.get(
+		`/api/stats/financial-auditing?after=${after}&before=${before}&field=${field}&projectTypes=${projectTypes.join(",")}`,
+	);
+	return data as TProjectFinances[];
 }
 
 type TFilters = {
@@ -22,7 +25,12 @@ type TFilters = {
 		max: number | null;
 	};
 };
-export function useFinancialAuditing({ after, before, field }: { after: string; before: string; field: string }) {
+export function useFinancialAuditing({
+	after,
+	before,
+	field,
+	projectTypes,
+}: { after: string; before: string; field: string; projectTypes: string[] }) {
 	const [filters, setFilters] = useState<TFilters>({
 		search: "",
 		sellerName: [],
@@ -35,19 +43,19 @@ export function useFinancialAuditing({ after, before, field }: { after: string; 
 	});
 
 	function matchSearch(project: TProjectFinances) {
-		if (filters.search.trim().length == 0) return true;
+		if (filters.search.trim().length === 0) return true;
 		return project.nome.toUpperCase().includes(filters.search.toUpperCase());
 	}
 	function matchCity(project: TProjectFinances) {
-		if (filters.city.length == 0) return true;
+		if (filters.city.length === 0) return true;
 		return filters.city.includes(project.cidade);
 	}
 	function matchSeller(project: TProjectFinances) {
-		if (filters.sellerName.length == 0) return true;
+		if (filters.sellerName.length === 0) return true;
 		return filters.sellerName.includes(project.vendedor);
 	}
 	function matchTopology(project: TProjectFinances) {
-		if (filters.topology.length == 0) return true;
+		if (filters.topology.length === 0) return true;
 		return filters.topology.includes(project.topologia);
 	}
 	function matchModuleQty(project: TProjectFinances) {
@@ -56,15 +64,14 @@ export function useFinancialAuditing({ after, before, field }: { after: string; 
 		return projectModulesQty >= filters.moduleQty.min && projectModulesQty <= filters.moduleQty.max;
 	}
 	function handleModelData(data: TProjectFinances[]) {
-		var modeledData = data;
-		return modeledData.filter(
+		return data.filter(
 			(project) => matchSearch(project) && matchCity(project) && matchSeller(project) && matchTopology(project) && matchModuleQty(project),
 		);
 	}
 	return {
 		...useQuery({
-			queryKey: ["financial-auditing", after, before, field],
-			queryFn: async () => await fetchFinancialAuditingData({ after, before, field }),
+			queryKey: ["financial-auditing", after, before, field, projectTypes],
+			queryFn: async () => await fetchFinancialAuditingData({ after, before, field, projectTypes }),
 			select: (data) => handleModelData(data),
 		}),
 		filters,
@@ -73,12 +80,8 @@ export function useFinancialAuditing({ after, before, field }: { after: string; 
 }
 
 async function fetchFinancesByProjectId({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get(`/api/stats/financial-auditing?id=${id}`);
-		return data as TProjectFinances;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/stats/financial-auditing?id=${id}`);
+	return data as TProjectFinances;
 }
 
 export function useProjectFinances({ id }: { id: string }) {

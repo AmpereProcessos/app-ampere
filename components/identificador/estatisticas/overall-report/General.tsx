@@ -122,7 +122,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 					<div className="flex w-full flex-wrap items-center justify-start gap-2">
 						{generalData.instalacoes.porEstado.map((state) => (
 							<div key={`estado-servico-${state.titulo}`} className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1">
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{state.titulo}</p>
 								</div>
 								<p className="text-xs font-medium">{state.qtdeExecutada}</p>
@@ -138,7 +138,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 					<div className="flex w-full flex-wrap items-center justify-start gap-2">
 						{generalData.instalacoes.porCidade.map((city) => (
 							<div key={`cidade-servico-${city.titulo}`} className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1">
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{city.titulo}</p>
 								</div>
 								<p className="text-xs font-medium">{city.qtdeExecutada}</p>
@@ -205,7 +205,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 								key={`estado-homologacao-${state.titulo}`}
 								className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1"
 							>
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{state.titulo}</p>
 								</div>
 								<div className="flex items-center justify-end gap-2">
@@ -230,7 +230,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 					<div className="flex w-full flex-wrap items-center justify-start gap-2">
 						{generalData.homologacoes.porCidade.map((city) => (
 							<div key={`cidade-homologacao-${city.titulo}`} className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1">
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{city.titulo}</p>
 								</div>
 								<div className="flex items-center justify-end gap-2">
@@ -303,7 +303,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 					<div className="flex w-full flex-wrap items-center justify-start gap-2">
 						{generalData.suprimentos.porEstado.map((state) => (
 							<div key={`estado-suprimento-${state.titulo}`} className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1">
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{state.titulo}</p>
 								</div>
 								<div className="flex items-center justify-end gap-2">
@@ -328,7 +328,7 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
 					<div className="flex w-full flex-wrap items-center justify-start gap-2">
 						{generalData.suprimentos.porCidade.map((city) => (
 							<div key={`cidade-suprimento-${city.titulo}`} className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1">
-								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-white">
+								<div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
 									<p className="text-[0.65rem] font-medium">{city.titulo}</p>
 								</div>
 								<div className="flex items-center justify-end gap-2">

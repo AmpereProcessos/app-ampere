@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
-import { CalendarIcon, ChevronDownIcon } from "lucide-react";
-import { Calendar } from "../ui/calendar";
-import { format, subDays, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear } from "date-fns";
+import { endOfDay, endOfMonth, endOfWeek, endOfYear, format, startOfDay, startOfMonth, startOfWeek, startOfYear, subDays, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 type Preset = {
@@ -63,9 +63,9 @@ function DateIntervalInput({ label, labelClassName, className, value, handleChan
 				<PopoverTrigger asChild>
 					<Button
 						id="date"
-						variant={"outline-solid"}
+						variant={"outline"}
 						className={cn(
-							"border-primary/20 bg-background focus:border-primary w-full justify-start rounded-md border text-left text-sm font-normal ease-in-out dark:bg-[#121212]",
+							"min-h-[46.6px] border-primary/20 bg-background focus:border-primary w-full justify-start rounded-md border text-left text-sm font-normal ease-in-out dark:bg-[#121212]",
 							!value.after && !value.before && "text-muted-foreground",
 							className,
 						)}

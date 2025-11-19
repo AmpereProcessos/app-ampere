@@ -1,19 +1,20 @@
-import type { TProject } from "@/utils/schemas/projects";
-import connectToDatabase from "@/utils/services/mongodb/projects";
-import type { NextApiHandler } from "next";
-import type { Collection, Filter } from "mongodb";
-import { z } from "zod";
-import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import {
+	getGeneralHomologationStats,
+	getGeneralNPS,
 	getGeneralSalesStats,
 	getGeneralServiceExecutionStats,
-	getGeneralHomologationStats,
 	getGeneralSupplyStats,
-	getGeneralNPS,
 } from "@/repositories/stats/general";
-import { getUFVSaleStats, getUFVInstallationStats, getUFVHomologationStats } from "@/repositories/stats/ufv-stats";
+import { getUFVHomologationStats, getUFVInstallationStats, getUFVSaleStats } from "@/repositories/stats/ufv-stats";
+import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import type { TProject } from "@/utils/schemas/projects";
+import connectToDatabase from "@/utils/services/mongodb/projects";
+import type { Collection, Filter } from "mongodb";
+import type { NextApiHandler } from "next";
+import { z } from "zod";
 
 export const OverallReportSchema = z.object({
+	projectTypes: z.array(z.string({ required_error: "Tipos de projetos são obrigatórios", invalid_type_error: "Tipos de projetos inválidos" })),
 	period: z.object({
 		after: z
 			.string({
@@ -41,6 +42,12 @@ async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
 	const db = await connectToDatabase();
 	const projectsCollection = db.collection<TProject>("dados");
 
+	const genericQuery: Filter<TProject> =
+		payload.projectTypes.length > 0
+			? {
+					tipoDeServico: { $in: payload.projectTypes },
+				}
+			: {};
 	const signingPeriodQuery: Filter<TProject> = {
 		"contrato.status": "ASSINADO",
 		"contrato.dataAssinatura":
@@ -128,25 +135,25 @@ async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
 	// GENERAL STATS
 	const generalNPS = await getGeneralNPS({
 		collection: projectsCollection,
-		partialQuery: {},
+		partialQuery: { ...genericQuery },
 	});
 	const generalSaleStats = await getGeneralSalesStats({
 		collection: projectsCollection,
-		partialQuery: signingPeriodQuery,
+		partialQuery: { ...genericQuery, ...signingPeriodQuery },
 	});
 
 	const generalServiceExecutionStats = await getGeneralServiceExecutionStats({
 		collection: projectsCollection,
-		partialQuery: installationPeriodQuery,
+		partialQuery: { ...genericQuery, ...installationPeriodQuery },
 	});
 
 	const generalHomologationStats = await getGeneralHomologationStats({
 		collection: projectsCollection,
-		partialQuery: homologationPeriodQuery,
+		partialQuery: { ...genericQuery, ...homologationPeriodQuery },
 	});
 	const generalSupplyStats = await getGeneralSupplyStats({
 		collection: projectsCollection,
-		partialQuery: supplyPeriodQuery,
+		partialQuery: { ...genericQuery, ...supplyPeriodQuery },
 		orderCondition,
 		deliveryCondition,
 	});

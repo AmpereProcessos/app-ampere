@@ -1,6 +1,8 @@
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { isEmpty } from "../shared";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from "@/pages/api/almoxarifado/estoque/database";
+import type { TGetStockAnalyticsOutput } from "@/pages/api/almoxarifado/estoque/estatisticas";
+import type { TMaterialDeletionDataOutput } from "@/pages/api/almoxarifado/materiais/exclusao";
+import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import type {
 	TMaterial,
 	TMaterialDTO,
@@ -9,29 +11,19 @@ import type {
 	TMaterialSupplierDTO,
 	TQueryVinculationMaterialsFilter,
 } from "@/utils/schemas/materials";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useState } from "react";
-import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import { formatWithoutDiacritics } from "../formatting";
-import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from "@/pages/api/almoxarifado/estoque/database";
-import type { TGetStockAnalyticsOutput } from "@/pages/api/almoxarifado/estoque/estatisticas";
-import { useDebounceMemo } from "@/lib/hooks/debounce";
-import { TMaterialDeletionDataOutput } from "@/pages/api/almoxarifado/materiais/exclusao";
+import { isEmpty } from "../shared";
 
 export async function fetchMaterials() {
-	try {
-		const { data } = await axios.get("/api/almoxarifado/estoque");
-		return data.data as TMaterialDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/almoxarifado/estoque");
+	return data.data as TMaterialDTO[];
 }
 async function fetchMaterialLogsByMaterialId(materialId: string) {
-	try {
-		const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?materialId=${materialId}`);
-		return data.data as TMaterialUpdateRegistryDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?materialId=${materialId}`);
+	return data.data as TMaterialUpdateRegistryDTO[];
 }
 
 type UseMaterialsFilters = {
@@ -106,12 +98,8 @@ export function useMaterials() {
 }
 
 async function fetchMaterialById({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get(`/api/almoxarifado/estoque?id=${id}`);
-		return data.data as TMaterialDTO;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/almoxarifado/estoque?id=${id}`);
+	return data.data as TMaterialDTO;
 }
 export function useMaterialById({ id }: { id: string }) {
 	return {
@@ -151,12 +139,8 @@ export function useMaterialLogs(materialId: string) {
 }
 
 async function fetchMaterialLogsBy({ type }: { type: string }) {
-	try {
-		const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?type=${type}`);
-		return data.data as TMaterialUpdateRegistryDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/almoxarifado/estoque/registros-atualizacao?type=${type}`);
+	return data.data as TMaterialUpdateRegistryDTO[];
 }
 
 export function useMaterialLogsByType({ type }: { type: string }) {
@@ -168,13 +152,9 @@ export function useMaterialLogsByType({ type }: { type: string }) {
 }
 
 async function fetchVinculationMaterialsBySearch(query: TQueryVinculationMaterialsFilter) {
-	try {
-		if (query.search.trim().length === 0) return [];
-		const { data } = await axios.post("/api/almoxarifado/materiais/pesquisa-vinculacao", query);
-		return data.data as TMaterialSimplifiedWithAlocatorDTO[];
-	} catch (error) {
-		throw error;
-	}
+	if (query.search.trim().length === 0) return [];
+	const { data } = await axios.post("/api/almoxarifado/materiais/pesquisa-vinculacao", query);
+	return data.data as TMaterialSimplifiedWithAlocatorDTO[];
 }
 
 export function useVinculationMaterialsBySearch(query: TQueryVinculationMaterialsFilter) {
@@ -185,13 +165,8 @@ export function useVinculationMaterialsBySearch(query: TQueryVinculationMaterial
 }
 
 async function fetchMaterialsWithFilters(input: TGetMaterialsDatabaseInput) {
-	try {
-		const { data } = await axios.post("/api/almoxarifado/estoque/database", input);
-
-		return data.data as TGetMaterialsDatabaseOutput;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.post("/api/almoxarifado/estoque/database", input);
+	return data.data as TGetMaterialsDatabaseOutput;
 }
 
 export function useMaterialsDatabase() {
@@ -227,12 +202,8 @@ export function useMaterialsDatabase() {
 }
 
 async function fetchStockAnalytics() {
-	try {
-		const { data }: { data: TGetStockAnalyticsOutput } = await axios.get("/api/almoxarifado/estoque/estatisticas");
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const { data }: { data: TGetStockAnalyticsOutput } = await axios.get("/api/almoxarifado/estoque/estatisticas");
+	return data.data;
 }
 
 export function useStockAnalytics() {
@@ -243,12 +214,8 @@ export function useStockAnalytics() {
 }
 
 async function fetchMaterialSuppliers() {
-	try {
-		const { data } = await axios.get("/api/almoxarifado/fornecedores");
-		return data.data as TMaterialSupplierDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/almoxarifado/fornecedores");
+	return data.data as TMaterialSupplierDTO[];
 }
 
 export function useMaterialSuppliers() {
@@ -259,12 +226,8 @@ export function useMaterialSuppliers() {
 }
 
 async function fetchMaterialDeletionData({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get<TMaterialDeletionDataOutput>(`/api/almoxarifado/materiais/exclusao?id=${id}`);
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get<TMaterialDeletionDataOutput>(`/api/almoxarifado/materiais/exclusao?id=${id}`);
+	return data.data;
 }
 
 export function useMaterialDeletionData({ id }: { id: string }) {

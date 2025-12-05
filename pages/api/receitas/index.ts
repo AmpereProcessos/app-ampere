@@ -124,27 +124,27 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 			console.log(`[INFO] [CREATE REVENUE] Revenue attached to client ${clientResponse?._id.toString()}.`);
 		}
 	}
-	const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection });
+	// const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection });
 
-	let contaAzulSaleId: string | null = null;
-	let contaAzulClientId: string | null = null;
-	if (client) {
-		const contaAzulResponse = await createSaleFromRevenue({
-			revenue,
-			client: client,
-			accessToken: contaAzulAccessToken,
-		});
-		contaAzulSaleId = contaAzulResponse.contaAzulSaleId;
-		contaAzulClientId = contaAzulResponse.contaAzulCustomerId;
-		await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulClientId } });
-	}
+	// let contaAzulSaleId: string | null = null;
+	// let contaAzulClientId: string | null = null;
+	// if (client) {
+	// 	const contaAzulResponse = await createSaleFromRevenue({
+	// 		revenue,
+	// 		client: client,
+	// 		accessToken: contaAzulAccessToken,
+	// 	});
+	// 	contaAzulSaleId = contaAzulResponse.contaAzulSaleId;
+	// 	contaAzulClientId = contaAzulResponse.contaAzulCustomerId;
+	// 	await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulClientId } });
+	// }
 
-	if (project) {
-		await projectsCollection.updateOne(
-			{ _id: new ObjectId(project._id) },
-			{ $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } },
-		);
-	}
+	// if (project) {
+	// 	await projectsCollection.updateOne(
+	// 		{ _id: new ObjectId(project._id) },
+	// 		{ $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } },
+	// 	);
+	// }
 	const revenueReceivedCompletely = revenue.fracionamento.length > 0 ? revenue.fracionamento.every((f) => !!f.dataRecebimento) : false;
 	const insertResponse = await revenuesCollection.insertOne({
 		...revenue,

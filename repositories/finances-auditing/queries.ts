@@ -1,10 +1,10 @@
-import { ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing";
-import { TExpense } from "@/utils/schemas/expenses";
-import { TProject, TProjectDTO, TProjectEntity } from "@/utils/schemas/projects";
+import type { ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing";
+import type { TExpense } from "@/utils/schemas/expenses";
+import { type TProject, TProjectDTO, TProjectEntity } from "@/utils/schemas/projects";
 import { TMonitoringPropose } from "@/utils/schemas/proposes/monitoring.schema";
-import { TSolarSystemPropose } from "@/utils/schemas/proposes/solar-system.schema";
+import type { TSolarSystemPropose } from "@/utils/schemas/proposes/solar-system.schema";
 import createHttpError from "http-errors";
-import { Collection, ObjectId, WithId } from "mongodb";
+import { type Collection, ObjectId, type WithId } from "mongodb";
 
 const PriceDescription = {
 	kit: "KIT FOTOVOLTAICO",
@@ -48,85 +48,79 @@ export async function getFinancesByProjectId({
 	expensesCollection,
 	proposesCollection,
 }: GetFinancesByProjectIdParams) {
-	try {
-		const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) }, { projection: projection });
-		if (!project) throw createHttpError.NotFound("Projeto não encontrado.");
-		const projectExpenses = await expensesCollection.find({ "projeto.id": projectId }).toArray();
-		var propose: WithId<TSolarSystemPropose> | null = null;
-		if (project.idPropostaCRM) propose = await proposesCollection.findOne({ _id: new ObjectId(project.idPropostaCRM) });
+	const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) }, { projection: projection });
+	if (!project) throw createHttpError.NotFound("Projeto não encontrado.");
+	const projectExpenses = await expensesCollection.find({ "projeto.id": projectId }).toArray();
+	let propose: WithId<TSolarSystemPropose> | null = null;
+	if (project.idPropostaCRM) propose = await proposesCollection.findOne({ _id: new ObjectId(project.idPropostaCRM) });
 
-		// Defining project info]
-		const _id = project._id.toString();
-		const nome = project.nomeDoContrato;
-		const potencia = project.sistema.potPico;
-		const tipoDeServico = project.tipoDeServico;
-		const cidade = project.cidade;
-		const vendedor = project.vendedor.nome;
-		const dataAssinatura = project.contrato.dataAssinatura;
-		const dataConclusaoObra = project.obra.saida;
-		const topologia = project.sistema.topologia || "";
-		const qtdeModulos = project.sistema.qtdeModulos || 0;
-		const idProjetoCRM = project.idProjetoCRM || "";
-		const idPropostaCRM = project.idPropostaCRM || "";
-		const identificador = project.codigoSVB || "";
+	// Defining project info]
+	const _id = project._id.toString();
+	const nome = project.nomeDoContrato;
+	const potencia = project.sistema.potPico;
+	const tipoDeServico = project.tipoDeServico;
+	const cidade = project.cidade;
+	const vendedor = project.vendedor.nome;
+	const dataAssinatura = project.contrato.dataAssinatura;
+	const dataConclusaoObra = project.obra.saida;
+	const topologia = project.sistema.topologia || "";
+	const qtdeModulos = project.sistema.qtdeModulos || 0;
+	const idProjetoCRM = project.idProjetoCRM || "";
+	const idPropostaCRM = project.idPropostaCRM || "";
+	const identificador = project.codigoSVB || "";
 
-		const systemRevenue = project.sistema.valorProjeto;
-		const energyPaRevenue = project.padrao.valor || 0;
-		const structureRevenue = project.estruturaPersonalizada.valor || 0;
-		const saleTotal = systemRevenue + energyPaRevenue + structureRevenue;
+	const systemRevenue = project.sistema.valorProjeto;
+	const energyPaRevenue = project.padrao.valor || 0;
+	const structureRevenue = project.estruturaPersonalizada.valor || 0;
+	const saleTotal = systemRevenue + energyPaRevenue + structureRevenue;
 
-		const sellerComission = project.comissoes?.porcentagemVendedor || 0;
-		const insiderComission = project.comissoes?.porcentagemInsider || 0;
-		const totalComissionPercentage = sellerComission + insiderComission + 0.75; // 0.75 for managers
-		// Formatting project expenses
-		const expenses: ExpenseRevenueList = projectExpenses.map((expense) => {
-			return {
-				id: expense._id.toString(),
-				categoria: expense.categoria,
-				itens: expense.itens,
-				total: expense.total,
-			};
-		});
-
-		// Getting expenses prevision
-		const pricingPreview = project.tipoDeServico == "SISTEMA FOTOVOLTAICO" ? propose?.precificacao || undefined : undefined;
-		// Pushing cost of the kit generator, if it exists
-		const kitCost = project.compra.valorDoKit || 0;
-		if (kitCost) expenses.push({ id: undefined, categoria: "CUSTO DO KIT GERADOR", itens: [], total: kitCost });
-
-		// Pushing comission costs, if they exist
-		var comissionCost = 0;
-		const comissionWasPaid = !!project.comissoes?.pagamentoRealizado;
-		if (comissionWasPaid) comissionCost = (totalComissionPercentage / 100) * saleTotal;
-		if (comissionCost) expenses.push({ id: undefined, categoria: "COMISSÕES", itens: [], total: comissionCost });
-
-		// Formatting project revenues
-		var revenues = [];
-		if (systemRevenue) revenues.push({ categoria: tipoDeServico, itens: [], total: systemRevenue });
-		if (energyPaRevenue) revenues.push({ categoria: "PADRÃO DE ENERGIA", itens: [], total: energyPaRevenue });
-		if (structureRevenue) revenues.push({ categoria: "ESTRUTURA", itens: [], total: structureRevenue });
-
-		const projectFinances: TProjectFinances = {
-			_id,
-			nome,
-			potencia,
-			identificador,
-			idProjetoCRM,
-			idPropostaCRM,
-			cidade,
-			vendedor,
-			topologia,
-			qtdeModulos,
-			dataAssinatura,
-			dataConclusaoObra,
-			previsaoDespesas: pricingPreview,
-			despesas: {},
-			despesasLista: expenses,
-			receitas: {},
-			receitasLista: revenues,
+	const sellerComission = project.comissoes?.porcentagemVendedor || 0;
+	const insiderComission = project.comissoes?.porcentagemInsider || 0;
+	const totalComissionPercentage = sellerComission + insiderComission + 0.75; // 0.75 for managers
+	// Formatting project expenses
+	const expenses: ExpenseRevenueList = projectExpenses.map((expense) => {
+		return {
+			id: expense._id.toString(),
+			categoria: expense.categoria,
+			itens: expense.itens,
+			total: expense.total,
 		};
-		return projectFinances;
-	} catch (error) {
-		throw error;
-	}
+	});
+
+	// Getting expenses prevision
+	const pricingPreview = project.tipoDeServico === "SISTEMA FOTOVOLTAICO" ? propose?.precificacao || undefined : undefined;
+	// Pushing cost of the kit generator, if it exists
+	const kitCost = project.compra.valorDoKit || 0;
+	if (kitCost) expenses.push({ id: undefined, categoria: "CUSTO DO KIT GERADOR", itens: [], total: kitCost });
+
+	// Pushing comission costs, if they exist
+	const totalComissionCost = project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) || 0;
+	if (totalComissionCost) expenses.push({ id: undefined, categoria: "COMISSÕES", itens: [], total: totalComissionCost });
+
+	// Formatting project revenues
+	const revenues: ExpenseRevenueList = [];
+	if (systemRevenue) revenues.push({ categoria: tipoDeServico, itens: [], total: systemRevenue });
+	if (energyPaRevenue) revenues.push({ categoria: "PADRÃO DE ENERGIA", itens: [], total: energyPaRevenue });
+	if (structureRevenue) revenues.push({ categoria: "ESTRUTURA", itens: [], total: structureRevenue });
+
+	const projectFinances: TProjectFinances = {
+		_id,
+		nome,
+		potencia,
+		identificador,
+		idProjetoCRM,
+		idPropostaCRM,
+		cidade,
+		vendedor,
+		topologia,
+		qtdeModulos,
+		dataAssinatura,
+		dataConclusaoObra,
+		previsaoDespesas: pricingPreview,
+		despesas: {},
+		despesasLista: expenses,
+		receitas: {},
+		receitasLista: revenues,
+	};
+	return projectFinances;
 }

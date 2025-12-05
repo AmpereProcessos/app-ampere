@@ -137,7 +137,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 												<RxDownload />
 											</div>
 											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM RECEITAS</h1>
-											<div className="col-span-1"></div>
+											<div className="col-span-1" />
 										</div>
 										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM RECEITAS</h1>
 
@@ -149,7 +149,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 												<RxUpload />
 											</div>
 											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM DESPESAS</h1>
-											<div className="col-span-1"></div>
+											<div className="col-span-1" />
 										</div>
 										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM DESPESAS</h1>
 										<p className="mt-2 w-full text-center text-2xl font-medium text-[#ff0054]">R$ {formatDecimalPlaces(despesas)} </p>
@@ -162,7 +162,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 												<GoGoal />
 											</div>
 											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">RESULTADOS</h1>
-											<div className="col-span-1"></div>
+											<div className="col-span-1" />
 										</div>
 										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">RESULTADOS</h1>
 										<p className="w-full text-center text-2xl font-black">R$ {formatDecimalPlaces(resultado)}</p>
@@ -183,7 +183,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 							</div>
 							<div className="flex w-full flex-col gap-1">
 								{finances.receitasLista && finances.receitasLista.length > 0 ? (
-									finances.receitasLista.map((revenue, index) => <ExpenseRevenueListItem key={index} finance={revenue} tag="REVENUE" />)
+									finances.receitasLista.map((revenue, index) => <ExpenseRevenueListItem key={index.toString()} finance={revenue} tag="REVENUE" />)
 								) : (
 									<p className="text-primary/60 w-full text-center text-sm italic">Não há receitas vinculadas ao projeto.</p>
 								)}
@@ -193,7 +193,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 							</div>
 							<div className="flex w-full flex-col gap-1">
 								{finances.despesasLista && finances.despesasLista.length > 0 ? (
-									finances.despesasLista.map((expense, index) => <ExpenseRevenueListItem key={index} finance={expense} tag="EXPENSE" />)
+									finances.despesasLista.map((expense, index) => <ExpenseRevenueListItem key={index.toString()} finance={expense} tag="EXPENSE" />)
 								) : (
 									<p className="text-primary/60 w-full text-center text-sm italic">Não há despesas vinculadas ao projeto.</p>
 								)}
@@ -203,7 +203,7 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 							</div>
 							<div className="flex w-full flex-wrap justify-around gap-2">
 								{costForecasts.map((forecast, index) => (
-									<div key={index} className="border-primary/20 flex w-full flex-col rounded-md border p-4 lg:w-[450px]">
+									<div key={index.toString()} className="border-primary/20 flex w-full flex-col rounded-md border p-4 lg:w-[450px]">
 										<div className="flex w-full items-center justify-between gap-2">
 											<h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{forecast.identificador}</h1>
 											<div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">

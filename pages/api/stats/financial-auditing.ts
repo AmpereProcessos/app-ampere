@@ -131,7 +131,8 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 		])
 		.toArray()) as PartialTProject[];
 
-	const expenses = await expensesCollection.find({}).toArray();
+	const projectIds = projects.map((project) => project._id.toString());
+	const expenses = await expensesCollection.find({ "projeto.id": { $in: projectIds } }).toArray();
 	const projectFinances: TProjectFinances[] = projects.map((project) => {
 		// Defining project info
 		const nome = project.nomeDoContrato;
@@ -147,7 +148,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 		const idPropostaCRM = project.idPropostaCRM || "";
 		const identificador = project.codigoSVB || "";
 		// Formatting the project expenses
-		const projectExpenses = expenses.filter((exp) => exp.projeto?.id === project._id);
+		const projectExpenses = expenses.filter((exp) => exp.projeto?.id === project._id.toString());
 		const kitCost = project.compra.valorDoKit || 0;
 		const expensesFormatted = projectExpenses.reduce(
 			(acc: { [key: string]: number }, current) => {
@@ -168,33 +169,9 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 			"PADRÃO DE ENERGIA": energyPaRevenue,
 			ESTRUTURA: structureRevenue,
 		};
-		// If comission was paid, adding comission cost
-		const comissionWasPaid = !!project.comissoes?.pagamentoRealizado;
-		// If wasn't paid, returning info
-		if (!comissionWasPaid)
-			return {
-				_id: project._id,
-				nome,
-				identificador,
-				idProjetoCRM,
-				idPropostaCRM,
-				potencia,
-				cidade,
-				vendedor,
-				topologia,
-				qtdeModulos,
-				dataAssinatura,
-				dataConclusaoObra,
-				despesas: expensesFormatted,
-				receitas: revenuesFormatted,
-			};
-		// If it was, adding new expense and retuning info
-		const saleTotal = systemRevenue + (energyPaRevenue || 0) + (structureRevenue || 0);
-		const sellerComission = (saleTotal * (project.comissoes?.porcentagemVendedor || 0)) / 100;
-		const insiderComission = (saleTotal * (project.comissoes?.porcentagemInsider || 0)) / 100;
-		const managersComission = (saleTotal * 0.75) / 100;
-		const comissionCost = sellerComission + insiderComission + managersComission;
-		expensesFormatted.COMISSÕES = comissionCost;
+
+		const totalComissionCost = project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) || 0;
+		expensesFormatted.COMISSÕES = totalComissionCost;
 		return {
 			_id: project._id,
 			nome,

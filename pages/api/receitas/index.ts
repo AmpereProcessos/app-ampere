@@ -149,7 +149,7 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	const insertResponse = await revenuesCollection.insertOne({
 		...revenue,
 		// idContaAzulVenda: contaAzulSaleId,
-		idContaAzulCliente: contaAzulClientId,
+		// idContaAzulCliente: contaAzulClientId,
 		autor: author,
 		dataEfetivacao: revenueReceivedCompletely ? new Date().toISOString() : null,
 		dataInsercao: new Date().toISOString(),

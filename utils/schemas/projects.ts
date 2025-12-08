@@ -201,6 +201,7 @@ const GeneralProjectSchema = z.object({
 		statusLiberacao: z.string().optional().nullable(), // select-options,
 		tipoDoKit: z.string().optional().nullable(), // select-options,
 		valorDoKit: z.number().optional().nullable(),
+		valorFrete: z.number().optional().nullable(),
 	}),
 	alocacoes: z.array(ResourceItemSchema).optional().nullable(),
 	conferencias: z.object({

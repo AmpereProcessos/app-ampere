@@ -115,6 +115,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 					"vendedor.nome": 1,
 					comissoes: 1,
 					"compra.valorDoKit": 1,
+					"compra.valorFrete": 1,
 					"sistema.valorProjeto": 1,
 					"sistema.topologia": 1,
 					"sistema.qtdeModulos": 1,
@@ -158,7 +159,7 @@ const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 				else acc[expenseCategory] += expenseTotal;
 				return acc;
 			},
-			{ "CUSTO DO KIT GERADOR": kitCost },
+			{ "CUSTO DO KIT GERADOR": kitCost, "CUSTO DO FRETE": project.compra.valorFrete || 0 },
 		);
 		// Formatting the project revenues
 		const systemRevenue = project.sistema.valorProjeto;

@@ -91,7 +91,9 @@ export async function getFinancesByProjectId({
 	const pricingPreview = project.tipoDeServico === "SISTEMA FOTOVOLTAICO" ? propose?.precificacao || undefined : undefined;
 	// Pushing cost of the kit generator, if it exists
 	const kitCost = project.compra.valorDoKit || 0;
+	const transportationCost = project.compra.valorFrete || 0;
 	if (kitCost) expenses.push({ id: undefined, categoria: "CUSTO DO KIT GERADOR", itens: [], total: kitCost });
+	if (transportationCost) expenses.push({ id: undefined, categoria: "CUSTO DO FRETE", itens: [], total: transportationCost });
 
 	// Pushing comission costs, if they exist
 	const totalComissionCost = project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) || 0;

@@ -220,6 +220,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 					"compra.fornecedor": purchaseControl.fornecedor.nome,
 					"compra.dataPedido": purchaseControl.dataPedido,
 					"compra.valorDoKit": purchaseControl.total,
+					"compra.valorFrete": purchaseControl.transporte.valor || 0,
 					"compra.rastreio": purchaseControl.transporte.linkRastreio,
 					"compra.dataRequisicaoPagamento": purchaseControl.dataRequisicaoPagamento,
 					"compra.dataPagamento": purchaseControl.dataLiberacaoPagamento,

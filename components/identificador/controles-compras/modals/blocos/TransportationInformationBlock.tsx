@@ -1,8 +1,10 @@
+import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
-import { formatToPhone } from "@/utils/methods/formatting";
-import { TPurchaseControl } from "@/utils/schemas/purchases";
 import type { TAuthSession } from "@/lib/authentication/types";
-import React, { useState } from "react";
+import { formatToPhone } from "@/utils/methods/formatting";
+import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type React from "react";
+import { useState } from "react";
 
 type PurchaseControlTransportationInformationBlockProps = {
 	infoHolder: TPurchaseControl;
@@ -14,7 +16,7 @@ function PurchaseControlTransportationInformationBlock({ infoHolder, setInfoHold
 			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO TRANSPORTE</h1>
 			<div className="flex w-full grow flex-col gap-2">
 				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-					<div className="w-full lg:w-1/3">
+					<div className="w-full lg:w-1/2">
 						<TextInput
 							label="NOME DA TRANSPORTADORA"
 							placeholder="Preencha o nome da transportadora..."
@@ -28,7 +30,7 @@ function PurchaseControlTransportationInformationBlock({ infoHolder, setInfoHold
 							width="100%"
 						/>
 					</div>
-					<div className="w-full lg:w-1/3">
+					<div className="w-full lg:w-1/2">
 						<TextInput
 							label="CONTATO DA TRANSPORTADORA"
 							placeholder="Preencha o telefone de contato da transportadora..."
@@ -42,12 +44,23 @@ function PurchaseControlTransportationInformationBlock({ infoHolder, setInfoHold
 							width="100%"
 						/>
 					</div>
-					<div className="w-full lg:w-1/3">
+				</div>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/2">
 						<TextInput
 							label="LINK DE RASTREIO (SE HOUVER)"
 							placeholder="Preencha, se houver, o link de rastreio..."
 							value={infoHolder.transporte.linkRastreio || ""}
 							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, transporte: { ...prev.transporte, linkRastreio: value } }))}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<NumberInput
+							label="VALOR DO FRETE"
+							placeholder="Preencha aqui o valor do frete..."
+							value={infoHolder.transporte.valor || 0}
+							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, transporte: { ...prev.transporte, valor: value } }))}
 							width="100%"
 						/>
 					</div>

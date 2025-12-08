@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AuthorSchema } from "./users";
 import type { TProject, TProjectDTO } from "./projects";
+import { AuthorSchema } from "./users";
 
 const PurchaseStatus = z.enum(
 	[
@@ -200,6 +200,7 @@ export const GeneralPurchaseControlSchema = z.object({
 			contato: z.string({ invalid_type_error: "Tipo não válido para o contato da transportadora." }).optional().nullable(),
 		}),
 		linkRastreio: z.string({ invalid_type_error: "Tipo não válido para o link de rastreio." }).optional().nullable(),
+		valor: z.number({ invalid_type_error: "Tipo não válido para o valor do transporte." }).optional().nullable(),
 	}),
 	faturamentos: z.array(
 		z.object({

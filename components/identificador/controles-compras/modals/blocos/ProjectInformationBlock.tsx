@@ -76,6 +76,7 @@ function PurchaseControlProjectInformationBlock({
 				"compra.fornecedor": purchase.fornecedor.nome,
 				"compra.dataPedido": purchase.dataPedido,
 				"compra.valorDoKit": purchase.total,
+				"compra.valorFrete": purchase.transporte.valor,
 				"compra.rastreio": purchase.transporte.linkRastreio,
 				"compra.dataRequisicaoPagamento": purchase.dataRequisicaoPagamento,
 				"compra.dataPagamento": purchase.dataLiberacaoPagamento,

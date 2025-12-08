@@ -81,6 +81,7 @@ function NewExpense({ session, closeModal, callbacks, initialState }: NewExpense
 			return toast.error(msg);
 		},
 	});
+	console.log('INITIAL HOLDER', initialState)
 	console.log('DESPESA HOLDER', infoHolder) 
 	console.log('DESPESA PROJECT', project)
 	return (

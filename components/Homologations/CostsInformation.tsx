@@ -110,7 +110,7 @@ export default function CostsInformation({
 					<p className="w-full text-center text-sm font-medium text-primary/80">Nenhum custo encontrado.</p>
 				)
 			) : null}
-			{newExpenseMenuIsOpen ? <NewExpense session={sessionUser} initialHolder={{ projeto: {  id: projectId, nome: projectName, identificador: projectIdentifier }}} closeModal={() => setNewExpenseMenuIsOpen(false)} /> : null}
+			{newExpenseMenuIsOpen ? <NewExpense session={sessionUser} initialState={{ projeto: {  id: projectId, nome: projectName, identificador: projectIdentifier }}} closeModal={() => setNewExpenseMenuIsOpen(false)} /> : null}
 		</ResponsiveDialogDrawerSection>
 	);
 }

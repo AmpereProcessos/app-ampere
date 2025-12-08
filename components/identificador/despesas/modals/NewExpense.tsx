@@ -81,6 +81,8 @@ function NewExpense({ session, closeModal, callbacks, initialState }: NewExpense
 			return toast.error(msg);
 		},
 	});
+	console.log('DESPESA HOLDER', infoHolder) 
+	console.log('DESPESA PROJECT', project)
 	return (
 		<div id="defaultModal" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
 			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[75%]">

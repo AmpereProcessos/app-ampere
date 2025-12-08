@@ -478,6 +478,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 				<ModalProjetos
 					projectId={editProjectModal.projectId}
 					modalIsOpen={editProjectModal.isOpen}
+					session={session}
 					closeModal={() => setEditProjectModal({ isOpen: false, projectId: null })}
 				/>
 			)}

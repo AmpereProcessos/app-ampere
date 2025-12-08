@@ -1,10 +1,10 @@
-import createHttpError from "http-errors";
-import connectToDatabase from "../../../utils/services/mongodb/projects";
-import { errorHandler } from "../../../utils/methods/handlers";
-import { Collection, Db, ObjectId } from "mongodb";
-import { TExpense, TExpenseWithProjectDTO } from "@/utils/schemas/expenses";
-import { NextApiHandler } from "next";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import type { TExpense, TExpenseWithProjectDTO } from "@/utils/schemas/expenses";
+import createHttpError from "http-errors";
+import { type Collection, type Db, type Filter, ObjectId } from "mongodb";
+import type { NextApiHandler } from "next";
+import { errorHandler } from "../../../utils/methods/handlers";
+import connectToDatabase from "../../../utils/services/mongodb/projects";
 
 type GetResponse = {
 	data: TExpense | TExpense[];
@@ -12,14 +12,14 @@ type GetResponse = {
 const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
-	const { id, projectId } = req.query;
+	const { id, projectId, identifier } = req.query;
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
 
 	// Query for specific expense
 	if (id) {
-		if (typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
 		const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };
 		const lookup = { from: "dados", localField: "projectIdAsObjectId", foreignField: "_id", as: "projetoDados" };
@@ -80,8 +80,11 @@ const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
 
 	// Query for a given project expenses
 	if (projectId) {
-		if (typeof projectId != "string") throw new createHttpError.BadRequest("ID de projeto inválido.");
-		const expenses = await collection.find({ "projeto.id": projectId }, { sort: { _id: -1 } }).toArray();
+		if (typeof projectId !== "string") throw new createHttpError.BadRequest("ID de projeto inválido.");
+
+		const byIdentifier = identifier ? { identificador: identifier } : {};
+		const query: Filter<TExpense> = { "projeto.id": projectId, ...byIdentifier };
+		const expenses = await collection.find(query, { sort: { _id: -1 } }).toArray();
 		return res.status(200).json({ data: expenses });
 	}
 
@@ -101,7 +104,7 @@ const createExpense: NextApiHandler<PostResponse> = async (req, res) => {
 	const info = req.body.data;
 	if (!info) throw new createHttpError.BadRequest("Informações para criação da despesas não fornecidas.");
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
 
 	const insertResponse = await collection.insertOne({ ...info, dataInsercao: new Date().toISOString() });
@@ -120,7 +123,7 @@ const editExpense: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const { changes } = req.body;
 	const { id } = req.query;
-	if (typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+	if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
 	delete changes._id;
 	const db: Db = await connectToDatabase();

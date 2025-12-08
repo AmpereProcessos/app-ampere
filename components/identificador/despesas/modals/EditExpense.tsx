@@ -33,23 +33,7 @@ import ExpensePaymentsBlock from "./blocos/PaymentsBlock";
 import ExpenseProjectInformationBlock from "./blocos/ProjectInformationBlock";
 import ExpenseProjectVinculation from "./blocos/utils/ProjectVinculation";
 
-function getMissingPercentage({ payments }: { payments: TExpenseDTO["pagamentos"] }) {
-	const currentTotal = payments.reduce((acc, current) => current.porcentagem + acc, 0);
-	return 100 - currentTotal;
-}
-
-function getExpenseCategories(costApportionment: string) {
-	if (!costApportionment) return [];
-	const costApportionmentsObj = centrosDeCusto.find((center) => center.nome == costApportionment);
-	if (!costApportionmentsObj) return [];
-
-	const options = costApportionmentsObj.categorias.map((category, index) => ({
-		id: index + 1,
-		...category,
-	}));
-	return options;
-}
-type ExpenseModalProps = {
+type EditExpenseProps = {
 	expenseId: string;
 	session: TAuthSession;
 	closeModal: () => void;
@@ -59,7 +43,7 @@ type ExpenseModalProps = {
 		onSettled?: () => void;
 	};
 };
-function ExpenseModal({ expenseId, session, closeModal, callbacks }: ExpenseModalProps) {
+function EditExpense({ expenseId, session, closeModal, callbacks }: EditExpenseProps) {
 	const queryClient = useQueryClient();
 	const { data: expense, isLoading, isError, isSuccess } = useExpenseById({ id: expenseId });
 	const [infoHolder, setInfoHolder] = useState<TExpenseDTO>({
@@ -122,15 +106,15 @@ function ExpenseModal({ expenseId, session, closeModal, callbacks }: ExpenseModa
 		mutationFn: updateExpense,
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: ["expense-by-id", expenseId] });
-			if (!!callbacks?.onMutate) callbacks.onMutate();
+			if (callbacks?.onMutate) callbacks.onMutate();
 		},
 		onSuccess: async (data) => {
-			if (!!callbacks?.onSuccess) callbacks.onSuccess();
+			if (callbacks?.onSuccess) callbacks.onSuccess();
 			return toast.success(data);
 		},
 		onSettled: async () => {
 			await queryClient.invalidateQueries({ queryKey: ["expense-by-id", expenseId] });
-			if (!!callbacks?.onSettled) callbacks.onSettled();
+			if (callbacks?.onSettled) callbacks.onSettled();
 			resetInfoHolder();
 		},
 		onError: (error) => {
@@ -202,4 +186,4 @@ function ExpenseModal({ expenseId, session, closeModal, callbacks }: ExpenseModa
 	);
 }
 
-export default ExpenseModal;
+export default EditExpense;

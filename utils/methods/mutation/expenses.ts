@@ -1,3 +1,4 @@
+import type { TExpense } from "@/utils/schemas/expenses";
 import axios from "axios";
 import { centrosDeCusto } from "../../constants";
 
@@ -131,29 +132,17 @@ export async function insertExpensesFromPurchaseRequests({
 		criterioReferencia: referenceCriteria,
 		dataInsercao: new Date().toISOString(), // data de inserção do documento
 	};
-	try {
-		await axios.post("/api/despesas", { data: costObj });
-		return "Despesa gerada com sucesso!";
-	} catch (error) {
-		throw error;
-	}
+	await axios.post("/api/despesas", { data: costObj });
+	return "Despesa gerada com sucesso!";
 }
-export async function createExpense(info) {
-	try {
-		await axios.post("/api/despesas", { data: info });
-		return "Despesa adicionada com sucesso !";
-	} catch (error) {
-		throw error;
-	}
+export async function createExpense(info: TExpense) {
+	await axios.post("/api/despesas", { data: info });
+	return "Despesa adicionada com sucesso !";
 }
-export async function updateExpense({ id, changes }) {
-	try {
-		const response = await axios.put(`/api/despesas?id=${id}`, {
-			changes,
-		});
+export async function updateExpense({ id, changes }: { id: string; changes: Partial<TExpense> }) {
+	const response = await axios.put(`/api/despesas?id=${id}`, {
+		changes,
+	});
 
-		return "Objeto de gastos atualizado com sucesso!";
-	} catch (error) {
-		throw error;
-	}
+	return "Objeto de gastos atualizado com sucesso!";
 }

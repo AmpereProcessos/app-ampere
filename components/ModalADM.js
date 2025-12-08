@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { equipesTecnicas, fornecedores, vendedores, cidadesAtendidas } from "../utils/constants";
-import { FaSave } from "react-icons/fa";
-import { VscChromeClose } from "react-icons/vsc";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import DateInput from "./DateInput";
-import NumberInput from "./NumberInput";
-import NotificationCreationBlock from "./NotificationCreationBlock";
+import { useKey } from "@/utils/hooks";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { updateProject } from "@/utils/methods/mutation/clients";
+import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
+import { useClientById } from "@/utils/methods/query/clients";
+import { useProjectUpdateLogs } from "@/utils/methods/query/project-update-logs";
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
-import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
-import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
-import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
-import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
-import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
-import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
-import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
-import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
-import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
-import SaveButton from "./utils/Buttons/SaveButton";
-import InfoDespesasBlock from "./blocosInfoProjeto/InfoDespesasBlock";
-import { useClientById } from "@/utils/methods/query/clients";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { updateProject } from "@/utils/methods/mutation/clients";
-import { useKey } from "@/utils/hooks";
-import { useQueryClient } from "@tanstack/react-query";
-import LoadingPage from "./utils/LoadingPage";
-import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
+import React, { useEffect, useState } from "react";
+import { FaSave } from "react-icons/fa";
+import { VscChromeClose } from "react-icons/vsc";
 import { useSession } from "../components/providers/SessionProvider";
-import { useProjectUpdateLogs } from "@/utils/methods/query/project-update-logs";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import InfoReceitasBlock from "./blocosInfoProjeto/InfoReceitasBlock";
+import { cidadesAtendidas, equipesTecnicas, fornecedores, vendedores } from "../utils/constants";
+import DateInput from "./DateInput";
+import NotificationCreationBlock from "./NotificationCreationBlock";
+import NumberInput from "./NumberInput";
+import SelectInput from "./SelectInput";
+import TextInput from "./TextInput";
 import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
+import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
+import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
+import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
+import InfoDespesasBlock from "./blocosInfoProjeto/InfoDespesasBlock";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
+import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
+import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
+import InfoReceitasBlock from "./blocosInfoProjeto/InfoReceitasBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
+import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import SaveButton from "./utils/Buttons/SaveButton";
+import LoadingPage from "./utils/LoadingPage";
 
 function ModalADM({ projectId, modalIsOpen, closeModal }) {
 	useKey("Escape", () => closeModal());
@@ -101,7 +101,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
 								projectName={infoHolder.nomeDoContrato}
 								projectIdentificator={project.qtde}
 							/>
-							<InfoDespesasBlock projectId={infoHolder._id} />
+							<InfoDespesasBlock projectId={infoHolder._id} projectName={infoHolder.nomeDoContrato} projectIdentifier={project.qtde.toString()} />
 							{!["OPERAÇÃO E MANUTENÇÃO", "BOMBA SOLAR", "SISTEMA FOTOVOLTAICO (OFF GRID)"].includes(infoHolder.tipoDeServico) ? (
 								<InfoPadraoBlock
 									comercialEdition={false}
@@ -147,7 +147,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
 								updateLogs={updateLogs || []}
 								showADMOnly={true}
 							/>
-							{infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+							{infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" && (
 								<InfoCompraBlock
 									editor={true}
 									session={session}
@@ -188,17 +188,6 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
 								updateLogs={updateLogs || []}
 							/>
 							<InfoAnexosBlock projectId={projectId} project={infoHolder} session={session} />
-							{/* <InfoArquivosBlock
-                project={project}
-                infoHolder={infoHolder}
-                categories={[
-                  { label: 'DOCUMENTOS', value: 'links.documentos' },
-                  { label: 'CONTRATOS', value: 'links.contratos' },
-                  { label: 'EQUIPAMENTOS', value: 'links.equipamentos' },
-                  { label: 'PROJETOS', value: 'links.projetos' },
-                ]}
-                handleUpdates={() => console.log()}
-              /> */}
 						</div>
 					) : null}
 				</div>

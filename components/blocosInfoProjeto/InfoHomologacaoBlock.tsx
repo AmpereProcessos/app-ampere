@@ -3,6 +3,7 @@ import type { TProjectDTOWithHomologation } from "@/utils/schemas/projects";
 import { GitBranchPlus } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
 import AccessInformation from "../Homologations/AccessInformation";
+import CostsInformation from "../Homologations/CostsInformation";
 import DocumentationInformation from "../Homologations/DocumentationInformation";
 import EquipmentsComposition from "../Homologations/EquipmentsComposition";
 import HolderInformation from "../Homologations/HolderInformation";
@@ -72,6 +73,15 @@ function InfoHomologacaoBlock({ session, infoHolder, setInfo, changes, setChange
 						<UpdatesInformation session={session} infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
 
 						<StatusInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
+						{infoHolder._id ? (
+							<CostsInformation
+								sessionUser={session}
+								projectName={infoHolder.nomeDoContrato}
+								projectId={infoHolder._id}
+								projectIdentifier={infoHolder.qtde}
+							/>
+						) : null}
+
 						{/* <ApplicantBlock infoHolder={infoHolder} setInfoHolder={setInfo } /> */}
 						<HolderInformation infoHolder={infoHolder} setInfoHolder={setInfo} changes={changes} setChanges={setChanges} />
 						{/* <HomologationFiles session={session} homologationId={homologationId} /> */}

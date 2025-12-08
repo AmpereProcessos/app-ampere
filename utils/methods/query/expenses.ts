@@ -1,44 +1,40 @@
-import { TExpenseStatsResult } from "@/pages/api/despesas/estatisticas";
-import { TExpensesByFiltersResult } from "@/pages/api/despesas/search";
+import type { TExpenseStatsResult } from "@/pages/api/despesas/estatisticas";
+import type { TExpensesByFiltersResult } from "@/pages/api/despesas/search";
 import {
 	TExpense,
-	TExpenseDTO,
-	TExpenseProjectDTO,
-	TExpenseQueryFilters,
-	TExpenseWithProjectDTO,
-	TPaymentUnwindSimplifiedDTO,
+	type TExpenseDTO,
+	type TExpenseProjectDTO,
+	type TExpenseQueryFilters,
+	type TExpenseWithProjectDTO,
+	type TPaymentUnwindSimplifiedDTO,
 } from "@/utils/schemas/expenses";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 // Expenses by Project
-async function fetchProjectExpenses(projectId: string) {
-	try {
-		const { data } = await axios.get(`/api/despesas?projectId=${projectId}`);
-		return data.data as TExpenseDTO[];
-	} catch (error) {
-		throw error;
-	}
+async function fetchProjectExpenses({ projectId, identifier }: { projectId: string; identifier: string | null }) {
+	const query = new URLSearchParams();
+	query.set("projectId", projectId);
+	if (identifier) query.set("identifier", identifier);
+	const { data } = await axios.get(`/api/despesas?${query.toString()}`);
+	return data.data as TExpenseDTO[];
 }
-export function useProjectExpenses(projectId: string, enabled: boolean) {
-	return useQuery({
-		queryKey: ["projectExpenses", projectId],
-		queryFn: async () => await fetchProjectExpenses(projectId),
-		enabled: !!enabled,
-		refetchOnWindowFocus: false,
-	});
+export function useProjectExpenses({ projectId, enabled, identifier }: { projectId: string; enabled: boolean; identifier: string | null }) {
+	return {
+		...useQuery({
+			queryKey: ["projectExpenses", projectId, identifier],
+			queryFn: async () => await fetchProjectExpenses({ projectId, identifier }),
+		}),
+		queryKey: ["projectExpenses", projectId, identifier],
+	};
 }
 
 // General expenses
 async function fetchExpenses() {
-	try {
-		const { data } = await axios.get("/api/despesas");
-		return data.data as TExpenseDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/despesas");
+	return data.data as TExpenseDTO[];
 }
 export function useExpenses() {
 	const [filters, setFilters] = useState({
@@ -53,7 +49,7 @@ export function useExpenses() {
 	});
 
 	function matchSearch(expense: TExpenseDTO) {
-		if (filters.search.trim().length == 0) return true;
+		if (filters.search.trim().length === 0) return true;
 		return expense.projeto?.nome?.toUpperCase().includes(filters.search.toUpperCase());
 	}
 	function matchPaid(expense: TExpenseDTO) {
@@ -75,8 +71,7 @@ export function useExpenses() {
 		return isOverdue;
 	}
 	function handleModelData(data: TExpenseDTO[]) {
-		var modeledData = data;
-		return modeledData.filter(
+		return data.filter(
 			(expense) => matchSearch(expense) && matchPaid(expense) && matchNotPaid(expense) && matchDueToday(expense) && matchOverDue(expense),
 		);
 	}
@@ -92,12 +87,8 @@ export function useExpenses() {
 }
 
 async function fetchExpenseById({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get(`/api/despesas?id=${id}`);
-		return data.data as TExpenseWithProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get(`/api/despesas?id=${id}`);
+	return data.data as TExpenseWithProjectDTO;
 }
 
 export function useExpenseById({ id }: { id: string }) {
@@ -108,12 +99,8 @@ export function useExpenseById({ id }: { id: string }) {
 }
 
 async function fetchExpenseByFilters({ page, ...filters }: TExpenseQueryFilters & { page: number }) {
-	try {
-		const { data } = await axios.post(`/api/despesas/search?page=${page}`, filters);
-		return data.data as TExpensesByFiltersResult;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.post(`/api/despesas/search?page=${page}`, filters);
+	return data.data as TExpensesByFiltersResult;
 }
 
 type UseExpensesByFiltersParams = {
@@ -135,12 +122,8 @@ export function useExpensesByFilters({ initialQueryParams }: UseExpensesByFilter
 }
 
 async function fetchPendingPayments() {
-	try {
-		const { data } = await axios.get("/api/despesas/pagamentos");
-		return data.data as TPaymentUnwindSimplifiedDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/despesas/pagamentos");
+	return data.data as TPaymentUnwindSimplifiedDTO[];
 }
 
 type UsePendingPaymentsParams = {
@@ -150,11 +133,11 @@ export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams)
 	const [filters, setFilters] = useState(initialFilters);
 
 	function matchApportionments(payment: TPaymentUnwindSimplifiedDTO) {
-		if (filters.apportionments.length == 0) return true;
+		if (filters.apportionments.length === 0) return true;
 		return filters.apportionments.includes(payment.rateio);
 	}
 	function matchCategories(payment: TPaymentUnwindSimplifiedDTO) {
-		if (filters.categories.length == 0) return true;
+		if (filters.categories.length === 0) return true;
 		return filters.categories.includes(payment.categoria);
 	}
 	function matchPaymentPreviewDate(payment: TPaymentUnwindSimplifiedDTO) {
@@ -184,12 +167,8 @@ export function usePendingPayments({ initialFilters }: UsePendingPaymentsParams)
 }
 
 async function fetchExpenseStats() {
-	try {
-		const { data } = await axios.get("/api/despesas/estatisticas");
-		return data.data as TExpenseStatsResult;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/despesas/estatisticas");
+	return data.data as TExpenseStatsResult;
 }
 
 export function useExpenseStats() {
@@ -200,18 +179,26 @@ export function useExpenseStats() {
 }
 
 async function fetchExpenseProject({ projectId }: { projectId: string | null }) {
-	try {
-		if (!projectId) return null;
-		const { data } = await axios.get(`/api/despesas/projeto?projectId=${projectId}`);
-		return data.data as TExpenseProjectDTO;
-	} catch (error) {
-		throw error;
-	}
+	if (!projectId) return null;
+	const { data } = await axios.get(`/api/despesas/projeto?projectId=${projectId}`);
+	return data.data as TExpenseProjectDTO;
 }
 
 export function useExpenseProject({ projectId }: { projectId: string | null }) {
 	return useQuery({
 		queryKey: ["expense-project", projectId],
 		queryFn: async () => fetchExpenseProject({ projectId }),
+	});
+}
+
+async function fetchExpenseByIdentifier({ identifier }: { identifier: string }) {
+	const { data } = await axios.get(`/api/despesas?identifier=${identifier}`);
+	return data.data as TExpenseDTO[];
+}
+
+export function useExpenseByIdentifier({ identifier }: { identifier: string }) {
+	return useQuery({
+		queryKey: ["expense-by-identifier", identifier],
+		queryFn: async () => fetchExpenseByIdentifier({ identifier }),
 	});
 }

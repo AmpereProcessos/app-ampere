@@ -1,24 +1,24 @@
-import type { TAuthSession } from "@/lib/authentication/types";
-import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
-import { useState } from "react";
-import { FaRotate } from "react-icons/fa6";
-import LoadingComponent from "@/components/utils/LoadingComponent";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import { useEngineeringProjectsKanban } from "@/utils/methods/query/engineering";
 import ModalProjetos from "@/components/ModalProjetos";
-import type { TEngineeringProjectsKanbanOutput } from "@/pages/api/projects/engenharia/kanban";
-import { MdDashboard } from "react-icons/md";
-import { Tag, Pencil, ListFilter } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
-import dayjs from "dayjs";
-import { useViewModesStore } from "@/utils/stores/view-modes-store";
 import { getServiceTypeTagColor } from "@/components/TagTipoDeServico";
-import EngineeringProjectsKanbanModePageFilters from "./KanbanModePageFilters";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ErrorComponent from "@/components/utils/ErrorComponent";
+import LoadingComponent from "@/components/utils/LoadingComponent";
+import type { TAuthSession } from "@/lib/authentication/types";
+import { cn } from "@/lib/utils";
+import type { TEngineeringProjectsKanbanOutput } from "@/pages/api/projects/engenharia/kanban";
+import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { updateProject } from "@/utils/methods/mutation/clients";
+import { useEngineeringProjectsKanban } from "@/utils/methods/query/engineering";
+import { useViewModesStore } from "@/utils/stores/view-modes-store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { ListFilter, Pencil, Tag } from "lucide-react";
+import { useState } from "react";
+import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
+import { FaRotate } from "react-icons/fa6";
+import { MdDashboard } from "react-icons/md";
+import EngineeringProjectsKanbanModePageFilters from "./KanbanModePageFilters";
 
 const CurrentDate = dayjs().toDate();
 
@@ -143,6 +143,7 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
 			</DragDropContext>
 			{editProjectModal.isOpen && editProjectModal.id && (
 				<ModalProjetos
+					session={session}
 					projectId={editProjectModal.id}
 					modalIsOpen={editProjectModal.isOpen}
 					closeModal={() => setEditProjectModal({ id: null, isOpen: false })}

@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { AuthorSchema } from "./users";
 import { ObjectId } from "mongodb";
-import { TProject, TProjectDTO } from "./projects";
+import { z } from "zod";
+import type { TProject, TProjectDTO } from "./projects";
+import { AuthorSchema } from "./users";
 
 const PaymentItemSchema = z.object({
 	titulo: z.string({ required_error: "Titulo do pagamento não informado.", invalid_type_error: "Tipo não válido para o titulo do recebimento." }),
@@ -46,6 +46,7 @@ export type TExpenseItem = z.infer<typeof ExpenseItemSchema>;
 
 const GeneralExpenseSchema = z.object({
 	rateio: z.string(),
+	identificador: z.string({ invalid_type_error: "Tipo não válido para o identificador da despesa." }).optional().nullable(),
 	categoria: z.string(),
 	descricao: z.string(),
 	projeto: z.object({

@@ -20,6 +20,7 @@ import ExpenseProjectInformationBlock from "./blocos/ProjectInformationBlock";
 import ExpenseProjectVinculation from "./blocos/utils/ProjectVinculation";
 
 type NewExpenseProps = {
+	initialState?: Partial<TExpense>;
 	session: TAuthSession;
 	closeModal: () => void;
 	callbacks?: {
@@ -28,26 +29,26 @@ type NewExpenseProps = {
 		onSettled?: () => void;
 	};
 };
-function NewExpense({ session, closeModal, callbacks }: NewExpenseProps) {
+function NewExpense({ session, closeModal, callbacks, initialState }: NewExpenseProps) {
 	const queryClient = useQueryClient();
 
 	const initialInfoHolder: TExpense = {
-		rateio: "",
-		categoria: "",
-		descricao: "",
+		rateio: initialState?.rateio || "",
+		categoria: initialState?.categoria || "",
+		descricao: initialState?.descricao || "",
 		projeto: {
-			id: null,
-			nome: null,
-			identificador: null,
-			tipo: null,
+			id: initialState?.projeto?.id || null,
+			nome: initialState?.projeto?.nome || null,
+			identificador: initialState?.projeto?.identificador || null,
+			tipo: initialState?.projeto?.tipo || null,
 		},
 		autor: {
-			id: session.user?.id,
-			nome: session.user.nome,
-			avatar_url: session.user.avatar_url,
+			id: initialState?.autor?.id || session.user?.id,
+			nome: initialState?.autor?.nome || session.user.nome,
+			avatar_url: initialState?.autor?.avatar_url || session.user.avatar_url,
 		},
-		itens: [],
-		total: 0,
+		itens: initialState?.itens || [],
+		total: initialState?.total || 0,
 		efetivacao: {
 			efetivado: false,
 			data: null,
@@ -65,14 +66,14 @@ function NewExpense({ session, closeModal, callbacks }: NewExpenseProps) {
 		mutationKey: ["create-expense"],
 		mutationFn: createExpense,
 		onMutate: async () => {
-			if (!!callbacks?.onMutate) callbacks.onMutate();
+			if (callbacks?.onMutate) callbacks.onMutate();
 		},
 		onSuccess: async (data) => {
-			if (!!callbacks?.onSuccess) callbacks.onSuccess();
+			if (callbacks?.onSuccess) callbacks.onSuccess();
 			return toast.success(data);
 		},
 		onSettled: async () => {
-			if (!!callbacks?.onSettled) callbacks.onSettled();
+			if (callbacks?.onSettled) callbacks.onSettled();
 			setInfoHolder(initialInfoHolder);
 		},
 		onError: (error) => {

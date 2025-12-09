@@ -1,5 +1,7 @@
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
+import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
+import type { TAuthSession } from "@/lib/authentication/types";
 import financialAuditing, { type TProjectFinances } from "@/pages/api/stats/financial-auditing";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
@@ -31,13 +33,9 @@ const PriceDescription = {
 type ProjectFinancesModalProps = {
 	projectId: string;
 	closeModal: () => void;
+	session: TAuthSession;
 };
 
-function getBarColor(margin: number) {
-	if (margin >= 0.1) return "text-green-500";
-	if (margin > 0.05 && margin < 1) return "text-orange-500";
-	return "text-red-500";
-}
 function getResults({ expenses, revenues }: { expenses: TProjectFinances["despesasLista"]; revenues: TProjectFinances["receitasLista"] }) {
 	if (!expenses || !revenues) return { receitas: 0, despesas: 0, resultado: 0, margem: 0 };
 	const totalRevenues = revenues.reduce((acc, current) => acc + current.total, 0);
@@ -50,7 +48,7 @@ function getResults({ expenses, revenues }: { expenses: TProjectFinances["despes
 	};
 }
 
-function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalProps) {
+function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinancesModalProps) {
 	const { data: finances, isLoading, isSuccess, isError } = useProjectFinances({ id: projectId });
 	const { receitas, despesas, resultado, margem } = getResults({ expenses: finances?.despesasLista, revenues: finances?.receitasLista });
 	const costForecasts = finances?.previsaoDespesas
@@ -59,179 +57,173 @@ function ProjectFinancesModal({ projectId, closeModal }: ProjectFinancesModalPro
 				...value,
 			}))
 		: [];
-	return (
-		<div id="defaultModal" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:h-[80%] lg:w-[60%]">
-				{isLoading ? <LoadingPage /> : null}
-				{isError ? <ErrorComponent msg={"Erro ao buscar finanças do projeto."} /> : null}
-				{isSuccess ? (
-					<div className="flex h-full flex-col">
-						<div className="border-primary/20 flex flex-wrap items-center justify-between border-b px-2 pb-2 text-lg">
-							<div className="flex flex-col gap-0.5">
-								<h3 className="text-sm font-bold text-primary lg:text-xl dark:text-white">
-									FINANÇAS DE <strong className="text-cyan-500">{finances.nome}</strong>
-								</h3>
-								<p className="text-xxs text-primary/60 lg:text-xs">#{finances._id}</p>
-							</div>
-							<button
-								onClick={() => closeModal()}
-								type="button"
-								className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-							>
-								<VscChromeClose style={{ color: "red" }} />
-							</button>
-						</div>
-						<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-2 overflow-y-auto overscroll-y-auto px-2 py-4">
-							<div className="flex w-full flex-col rounded-xl bg-[#222831] p-2">
-								<div className="my-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
-									<div className="flex items-center gap-2 text-white">
-										<FaSignature />
-										<h1 className="text-xs">ASSINADO EM: {formatDateAsLocale(finances.dataAssinatura)}</h1>
-									</div>
-									<div className="flex items-center gap-2 text-white">
-										<FaTools />
-										<h1 className="text-xs">CONCLUIDO EM: {finances.dataConclusaoObra ? formatDateAsLocale(finances.dataConclusaoObra) : "NÃO DEFINIDO"}</h1>
-									</div>
-								</div>
-								<div className="my-2 flex w-full items-center justify-center gap-2">
-									<div className="flex items-center gap-2 text-white">
-										<BsCode color={finances.idProjetoCRM ? "rgb(6,182,212)" : "black"} />
-										{finances.idProjetoCRM ? (
-											<a
-												href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${finances.idProjetoCRM}`}
-												className="text-[0.65rem] leading-none font-medium tracking-tight text-white hover:text-cyan-500 lg:text-xs"
-											>
-												{finances.identificador}
-											</a>
-										) : (
-											<p className="text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{finances.identificador}</p>
-										)}
-									</div>
-									<div className="flex items-center gap-2 text-white">
-										<ImPower />
-										<p className="text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{finances.potencia} kWp</p>
-									</div>
-								</div>
-								<div className="my-2 flex w-full flex-wrap items-center justify-center gap-4">
-									<div className="flex items-center justify-center gap-2 text-white">
-										<FaUser />
-										<h1 className="text-sm leading-none font-bold tracking-tight">{finances.vendedor}</h1>
-									</div>
-									<div className="flex items-center justify-center gap-2 text-white">
-										<FaCity />
-										<h1 className="text-sm leading-none font-bold tracking-tight">{finances.cidade}</h1>
-									</div>
-									<div className="flex items-center justify-center gap-2 text-white">
-										<TbTopologyFull />
-										<h1 className="text-sm leading-none font-bold tracking-tight">{finances.topologia}</h1>
-									</div>
-									<div className="flex items-center justify-center gap-2 text-white">
-										<FaSolarPanel />
-										<h1 className="text-sm leading-none font-bold tracking-tight">{finances.qtdeModulos} MÓDULOS</h1>
-									</div>
-								</div>
-								<div className="my-4 flex w-full items-center justify-around gap-2">
-									<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
-										<div className="grid w-full grid-cols-6 items-center">
-											<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
-												<RxDownload />
-											</div>
-											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM RECEITAS</h1>
-											<div className="col-span-1" />
-										</div>
-										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM RECEITAS</h1>
 
-										<p className="mt-2 w-full text-center text-2xl font-medium text-green-500">R$ {formatDecimalPlaces(receitas)}</p>
-									</div>
-									<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
-										<div className="grid w-full grid-cols-6 items-center">
-											<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
-												<RxUpload />
-											</div>
-											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM DESPESAS</h1>
-											<div className="col-span-1" />
-										</div>
-										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM DESPESAS</h1>
-										<p className="mt-2 w-full text-center text-2xl font-medium text-[#ff0054]">R$ {formatDecimalPlaces(despesas)} </p>
-									</div>
-								</div>
-								<div className="flex w-full items-center justify-center">
-									<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
-										<div className="grid w-full grid-cols-6 items-center">
-											<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
-												<GoGoal />
-											</div>
-											<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">RESULTADOS</h1>
-											<div className="col-span-1" />
-										</div>
-										<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">RESULTADOS</h1>
-										<p className="w-full text-center text-2xl font-black">R$ {formatDecimalPlaces(resultado)}</p>
-										<p className="w-full text-center text-sm font-black text-cyan-500">MARGEM DE {formatDecimalPlaces(margem * 100)}%</p>
-									</div>
-								</div>
-								<div className="flex w-full items-center justify-end">
-									<Link href={`/admin/auditoria-financeira/pdf/${projectId}`}>
-										<div className="hover:text-primary/80 flex items-center gap-1 rounded-md px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-50">
-											<FaExternalLinkAlt />
-											<p className="text-xs tracking-tight">IR À PÁGINA DE RELATÓRIO</p>
-										</div>
-									</Link>
-								</div>
+	return (
+		<ResponsiveDialogDrawerViewOnly
+			menuTitle="FINANÇAS DO PROJETO"
+			menuDescription="Veja as finanças do projeto."
+			menuCancelButtonText="FECHAR"
+			stateIsLoading={isLoading}
+			stateError={isError ? "Erro ao buscar finanças do projeto." : null}
+			closeMenu={closeModal}
+			dialogVariant="md"
+		>
+			{isLoading ? <LoadingPage /> : null}
+			{isError ? <ErrorComponent msg={"Erro ao buscar finanças do projeto."} /> : null}
+			{isSuccess ? (
+				<>
+					<div className="flex w-full flex-col rounded-xl bg-[#222831] p-2">
+						<div className="my-2 flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+							<div className="flex items-center gap-2 text-white">
+								<FaSignature />
+								<h1 className="text-xs">ASSINADO EM: {formatDateAsLocale(finances.dataAssinatura)}</h1>
 							</div>
-							<div className="flex w-full items-center justify-center">
-								<h1 className="text-lg leading-none font-black tracking-tight text-[#70e000]">RECEITAS</h1>
+							<div className="flex items-center gap-2 text-white">
+								<FaTools />
+								<h1 className="text-xs">CONCLUIDO EM: {finances.dataConclusaoObra ? formatDateAsLocale(finances.dataConclusaoObra) : "NÃO DEFINIDO"}</h1>
 							</div>
-							<div className="flex w-full flex-col gap-1">
-								{finances.receitasLista && finances.receitasLista.length > 0 ? (
-									finances.receitasLista.map((revenue, index) => <ExpenseRevenueListItem key={index.toString()} finance={revenue} tag="REVENUE" />)
+						</div>
+						<div className="flex w-full items-center justify-center gap-2">
+							<div className="flex items-center gap-2 text-white">
+								<BsCode color={finances.idProjetoCRM ? "rgb(6,182,212)" : "black"} />
+								{finances.idProjetoCRM ? (
+									<a
+										href={`https://crm.ampereenergias.com.br/comercial/oportunidades/id/${finances.idProjetoCRM}`}
+										className="text-[0.65rem] leading-none font-medium tracking-tight text-white hover:text-cyan-500 lg:text-xs"
+									>
+										{finances.identificador}
+									</a>
 								) : (
-									<p className="text-primary/60 w-full text-center text-sm italic">Não há receitas vinculadas ao projeto.</p>
+									<p className="text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{finances.identificador}</p>
 								)}
 							</div>
-							<div className="flex w-full items-center justify-center">
-								<h1 className="text-lg leading-none font-black tracking-tight text-[#ed174c]">DESPESAS</h1>
+							<div className="flex items-center gap-2 text-white">
+								<ImPower />
+								<p className="text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">{finances.potencia} kWp</p>
 							</div>
-							<div className="flex w-full flex-col gap-1">
-								{finances.despesasLista && finances.despesasLista.length > 0 ? (
-									finances.despesasLista.map((expense, index) => <ExpenseRevenueListItem key={index.toString()} finance={expense} tag="EXPENSE" />)
-								) : (
-									<p className="text-primary/60 w-full text-center text-sm italic">Não há despesas vinculadas ao projeto.</p>
-								)}
+						</div>
+						<div className="my-2 flex w-full flex-wrap items-center justify-center gap-4">
+							<div className="flex items-center justify-center gap-2 text-white">
+								<FaUser />
+								<h1 className="text-sm leading-none font-bold tracking-tight">{finances.vendedor}</h1>
 							</div>
-							<div className="flex w-full items-center justify-center">
-								<h1 className="text-primary/80 text-lg leading-none font-black tracking-tight">PREVISÃO DE CUSTOS</h1>
+							<div className="flex items-center justify-center gap-2 text-white">
+								<FaCity />
+								<h1 className="text-sm leading-none font-bold tracking-tight">{finances.cidade}</h1>
 							</div>
-							<div className="flex w-full flex-wrap justify-around gap-2">
-								{costForecasts.map((forecast, index) => (
-									<div key={index.toString()} className="border-primary/20 flex w-full flex-col rounded-md border p-4 lg:w-[450px]">
-										<div className="flex w-full items-center justify-between gap-2">
-											<h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{forecast.identificador}</h1>
-											<div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">
-												<h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(forecast.custo)}</h1>
-											</div>
-										</div>
-										<div className="mt-1 flex w-full flex-wrap items-center justify-between">
-											<div className="flex items-center gap-2">
-												<TbPercentage size={15} color="#15599a" />
-												<p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
-													IMPOSTO: {formatDecimalPlaces(forecast.imposto * 100)}%
-												</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<MdSignalCellularAlt size={15} color="#fead41" />
-												<p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
-													MARGEM: {formatDecimalPlaces(forecast.margemLucro * 100)}%
-												</p>
-											</div>
-										</div>
+							<div className="flex items-center justify-center gap-2 text-white">
+								<TbTopologyFull />
+								<h1 className="text-sm leading-none font-bold tracking-tight">{finances.topologia}</h1>
+							</div>
+							<div className="flex items-center justify-center gap-2 text-white">
+								<FaSolarPanel />
+								<h1 className="text-sm leading-none font-bold tracking-tight">{finances.qtdeModulos} MÓDULOS</h1>
+							</div>
+						</div>
+						<div className="my-4 flex w-full items-center justify-around gap-2">
+							<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
+								<div className="grid w-full grid-cols-6 items-center">
+									<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
+										<RxDownload />
 									</div>
-								))}
+									<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM RECEITAS</h1>
+									<div className="col-span-1" />
+								</div>
+								<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM RECEITAS</h1>
+
+								<p className="mt-2 w-full text-center text-2xl font-medium text-green-500">R$ {formatDecimalPlaces(receitas)}</p>
 							</div>
+							<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
+								<div className="grid w-full grid-cols-6 items-center">
+									<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
+										<RxUpload />
+									</div>
+									<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">TOTAL EM DESPESAS</h1>
+									<div className="col-span-1" />
+								</div>
+								<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">TOTAL EM DESPESAS</h1>
+								<p className="mt-2 w-full text-center text-2xl font-medium text-[#ff0054]">R$ {formatDecimalPlaces(despesas)} </p>
+							</div>
+						</div>
+						<div className="flex w-full items-center justify-center">
+							<div className="bg-background flex w-1/2 flex-col rounded-xl p-2 lg:w-1/3">
+								<div className="grid w-full grid-cols-6 items-center">
+									<div className="bg-primary/80 col-span-1 flex h-[30px] w-[30px] items-center justify-center rounded-full text-white lg:h-[40px] lg:w-[40px]">
+										<GoGoal />
+									</div>
+									<h1 className="text-primary/60 col-span-4 hidden text-center font-medium lg:block">RESULTADOS</h1>
+									<div className="col-span-1" />
+								</div>
+								<h1 className="text-primary/60 mt-2 block text-center text-xs font-light lg:hidden">RESULTADOS</h1>
+								<p className="w-full text-center text-2xl font-black">R$ {formatDecimalPlaces(resultado)}</p>
+								<p className="w-full text-center text-sm font-black text-cyan-500">MARGEM DE {formatDecimalPlaces(margem * 100)}%</p>
+							</div>
+						</div>
+						<div className="flex w-full items-center justify-end">
+							<Link href={`/admin/auditoria-financeira/pdf/${projectId}`}>
+								<div className="hover:text-primary/80 flex items-center gap-1 rounded-md px-2 py-1 text-white duration-300 ease-in-out hover:bg-gray-50">
+									<FaExternalLinkAlt />
+									<p className="text-xs tracking-tight">IR À PÁGINA DE RELATÓRIO</p>
+								</div>
+							</Link>
 						</div>
 					</div>
-				) : null}
-			</div>
-		</div>
+					<div className="flex w-full items-center justify-center">
+						<h1 className="text-lg leading-none font-black tracking-tight text-[#70e000]">RECEITAS</h1>
+					</div>
+					<div className="flex w-full flex-col gap-1">
+						{finances.receitasLista && finances.receitasLista.length > 0 ? (
+							finances.receitasLista.map((revenue, index) => (
+								<ExpenseRevenueListItem key={index.toString()} session={session} finance={revenue} tag="REVENUE" />
+							))
+						) : (
+							<p className="text-primary/60 w-full text-center text-sm italic">Não há receitas vinculadas ao projeto.</p>
+						)}
+					</div>
+					<div className="flex w-full items-center justify-center">
+						<h1 className="text-lg leading-none font-black tracking-tight text-[#ed174c]">DESPESAS</h1>
+					</div>
+					<div className="flex w-full flex-col gap-1">
+						{finances.despesasLista && finances.despesasLista.length > 0 ? (
+							finances.despesasLista.map((expense, index) => (
+								<ExpenseRevenueListItem key={index.toString()} session={session} finance={expense} tag="EXPENSE" />
+							))
+						) : (
+							<p className="text-primary/60 w-full text-center text-sm italic">Não há despesas vinculadas ao projeto.</p>
+						)}
+					</div>
+					<div className="flex w-full items-center justify-center">
+						<h1 className="text-primary/80 text-lg leading-none font-black tracking-tight">PREVISÃO DE CUSTOS</h1>
+					</div>
+					<div className="flex w-full flex-wrap justify-around gap-2">
+						{costForecasts.map((forecast, index) => (
+							<div key={index.toString()} className="border-primary/20 flex w-full flex-col rounded-md border p-4 lg:w-[450px]">
+								<div className="flex w-full items-center justify-between gap-2">
+									<h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">{forecast.identificador}</h1>
+									<div className="bg-primary/80 flex min-w-fit items-center gap-2 rounded-full px-2 py-1">
+										<h1 className="text-[0.65rem] font-medium text-white lg:text-xs">{formatToMoney(forecast.custo)}</h1>
+									</div>
+								</div>
+								<div className="mt-1 flex w-full flex-wrap items-center justify-between">
+									<div className="flex items-center gap-2">
+										<TbPercentage size={15} color="#15599a" />
+										<p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+											IMPOSTO: {formatDecimalPlaces(forecast.imposto * 100)}%
+										</p>
+									</div>
+									<div className="flex items-center gap-2">
+										<MdSignalCellularAlt size={15} color="#fead41" />
+										<p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+											MARGEM: {formatDecimalPlaces(forecast.margemLucro * 100)}%
+										</p>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</>
+			) : null}
+		</ResponsiveDialogDrawerViewOnly>
 	);
 }
 

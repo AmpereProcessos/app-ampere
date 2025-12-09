@@ -84,6 +84,12 @@ export async function getFinancesByProjectId({
 			categoria: expense.categoria,
 			itens: expense.itens,
 			total: expense.total,
+			autor: {
+				id: expense.autor.id,
+				nome: expense.autor.nome,
+				avatar_url: expense.autor.avatar_url,
+			},
+			dataInsercao: expense.dataInsercao,
 		};
 	});
 
@@ -92,18 +98,63 @@ export async function getFinancesByProjectId({
 	// Pushing cost of the kit generator, if it exists
 	const kitCost = project.compra.valorDoKit || 0;
 	const transportationCost = project.compra.valorFrete || 0;
-	if (kitCost) expenses.push({ id: undefined, categoria: "CUSTO DO KIT GERADOR", itens: [], total: kitCost });
-	if (transportationCost) expenses.push({ id: undefined, categoria: "CUSTO DO FRETE", itens: [], total: transportationCost });
+	if (kitCost)
+		expenses.push({
+			id: undefined,
+			categoria: "CUSTO DO KIT GERADOR",
+			itens: [],
+			total: kitCost,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
+	if (transportationCost)
+		expenses.push({
+			id: undefined,
+			categoria: "CUSTO DO FRETE",
+			itens: [],
+			total: transportationCost,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
 
 	// Pushing comission costs, if they exist
 	const totalComissionCost = project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) || 0;
-	if (totalComissionCost) expenses.push({ id: undefined, categoria: "COMISSÕES", itens: [], total: totalComissionCost });
+	if (totalComissionCost)
+		expenses.push({
+			id: undefined,
+			categoria: "COMISSÕES",
+			itens: [],
+			total: totalComissionCost,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
 
 	// Formatting project revenues
 	const revenues: ExpenseRevenueList = [];
-	if (systemRevenue) revenues.push({ categoria: tipoDeServico, itens: [], total: systemRevenue });
-	if (energyPaRevenue) revenues.push({ categoria: "PADRÃO DE ENERGIA", itens: [], total: energyPaRevenue });
-	if (structureRevenue) revenues.push({ categoria: "ESTRUTURA", itens: [], total: structureRevenue });
+	if (systemRevenue)
+		revenues.push({
+			categoria: tipoDeServico,
+			itens: [],
+			total: systemRevenue,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
+	if (energyPaRevenue)
+		revenues.push({
+			categoria: "PADRÃO DE ENERGIA",
+			itens: [],
+			total: energyPaRevenue,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
+	if (structureRevenue)
+		revenues.push({
+			categoria: "ESTRUTURA",
+			itens: [],
+			total: structureRevenue,
+			autor: { id: "N/A", nome: "AUTOMÁTICO", avatar_url: null },
+			dataInsercao: "",
+		});
 
 	const projectFinances: TProjectFinances = {
 		_id,

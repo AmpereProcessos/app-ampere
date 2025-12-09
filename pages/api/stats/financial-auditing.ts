@@ -21,6 +21,12 @@ export type ExpenseRevenueList = {
 		idMaterial?: string | null | undefined;
 	}[];
 	total: number;
+	autor: {
+		id: string;
+		nome: string;
+		avatar_url: string | null | undefined;
+	};
+	dataInsercao: string;
 }[];
 export type TProjectFinances = {
 	_id: string;

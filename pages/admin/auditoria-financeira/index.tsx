@@ -306,7 +306,11 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 					: null}
 			</div>
 			{projectFinancesModal.isOpen && projectFinancesModal.projectId ? (
-				<ProjectFinancesModal projectId={projectFinancesModal.projectId} closeModal={() => setProjectFinancesModal({ isOpen: false, projectId: null })} />
+				<ProjectFinancesModal
+					projectId={projectFinancesModal.projectId}
+					session={session}
+					closeModal={() => setProjectFinancesModal({ isOpen: false, projectId: null })}
+				/>
 			) : null}
 		</div>
 	);

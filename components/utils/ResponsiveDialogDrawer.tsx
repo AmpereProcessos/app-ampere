@@ -45,6 +45,9 @@ type ResponsiveDialogDrawerProps = PropsWithChildren & {
 	menuDescription: string;
 	menuActionButtonText: string;
 	menuCancelButtonText: string;
+	menuSecondaryActionButtonText?: string;
+	secondaryActionFunction?: () => void;
+	menuSecondaryActionButtonClassName?: string;
 	actionFunction: () => void;
 	actionIsPending: boolean;
 	stateIsLoading: boolean;
@@ -59,6 +62,9 @@ function ResponsiveDialogDrawer({
 	menuDescription,
 	menuActionButtonText,
 	menuCancelButtonText,
+	menuSecondaryActionButtonText,
+	secondaryActionFunction,
+	menuSecondaryActionButtonClassName,
 	closeMenu,
 	actionFunction,
 	stateIsLoading,
@@ -90,6 +96,15 @@ function ResponsiveDialogDrawer({
 					<DialogClose asChild>
 						<Button variant="outline">{menuCancelButtonText}</Button>
 					</DialogClose>
+					{menuSecondaryActionButtonText && secondaryActionFunction && (
+						<LoadingButton
+							loading={actionIsPending || stateIsLoading}
+							onClick={() => secondaryActionFunction()}
+							className={menuSecondaryActionButtonClassName}
+						>
+							{menuSecondaryActionButtonText}
+						</LoadingButton>
+					)}
 					<LoadingButton loading={actionIsPending || stateIsLoading} onClick={() => actionFunction()}>
 						{menuActionButtonText}
 					</LoadingButton>
@@ -116,6 +131,15 @@ function ResponsiveDialogDrawer({
 					<DrawerClose asChild>
 						<Button variant="outline">{menuCancelButtonText}</Button>
 					</DrawerClose>
+					{menuSecondaryActionButtonText && secondaryActionFunction && (
+						<LoadingButton
+							loading={actionIsPending || stateIsLoading}
+							onClick={() => secondaryActionFunction()}
+							className={menuSecondaryActionButtonClassName}
+						>
+							{menuSecondaryActionButtonText}
+						</LoadingButton>
+					)}
 					<LoadingButton loading={actionIsPending || stateIsLoading} onClick={() => actionFunction()}>
 						{menuActionButtonText}
 					</LoadingButton>

@@ -146,3 +146,8 @@ export async function updateExpense({ id, changes }: { id: string; changes: Part
 
 	return "Objeto de gastos atualizado com sucesso!";
 }
+
+export async function deleteExpense({ id }: { id: string }) {
+	const response = await axios.delete(`/api/despesas?id=${id}`);
+	return "Despesa excluída com sucesso!";
+}

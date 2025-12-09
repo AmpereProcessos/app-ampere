@@ -136,6 +136,25 @@ const editExpense: NextApiHandler<PutResponse> = async (req, res) => {
 	return res.status(201).json({ data: "Despesa atualizada com sucesso!", message: "Despesa atualizada com sucesso!" });
 };
 
+type DeleteResponse = {
+	data: string;
+	message: string;
+};
+const deleteExpense: NextApiHandler<DeleteResponse> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+
+	const { id } = req.query;
+	if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+
+	const db: Db = await connectToDatabase();
+
+	const collection: Collection<TExpense> = db.collection("despesas");
+
+	await collection.deleteOne({ _id: new ObjectId(id) });
+
+	return res.status(200).json({ data: "Despesa excluída com sucesso!", message: "Despesa excluída com sucesso!" });
+};
+
 export default apiHandler({
 	GET: getExpenses,
 	POST: createExpense,

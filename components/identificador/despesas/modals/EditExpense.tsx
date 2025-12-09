@@ -4,6 +4,7 @@ import Avatar from "@/components/utils/Avatar";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
+import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
@@ -20,7 +21,7 @@ import { FaUser, FaUserAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { centrosDeCusto, formatDate, formatToMoney } from "../../../../utils/constants";
 import { getErrorMessage } from "../../../../utils/methods/handlers";
-import { updateExpense } from "../../../../utils/methods/mutation/expenses";
+import { deleteExpense, updateExpense } from "../../../../utils/methods/mutation/expenses";
 import CheckboxInput from "../../../inputs/Checkbox";
 import DateInput from "../../../inputs/Date";
 import EditExpenseFinalPriceMenu from "../EditExpenseFinalPriceMenu";
@@ -122,67 +123,63 @@ function EditExpense({ expenseId, session, closeModal, callbacks }: EditExpenseP
 			return toast.error(msg);
 		},
 	});
+	const { mutate: handleDeleteExpense, isPending: isDeleting } = useMutation({
+		mutationKey: ["delete-expense", expenseId],
+		mutationFn: deleteExpense,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ["expense-by-id", expenseId] });
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: async (data) => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			return closeModal();
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["expense-by-id", expenseId] });
+			if (callbacks?.onSettled) callbacks.onSettled();
+		},
+		onError: (error) => {
+			const msg = getErrorMessage(error);
+			return toast.error(msg);
+		},
+	});
 	useEffect(() => {
 		if (expense) setInfoHolder(expense);
 	}, [expense]);
 
 	return (
-		<div id="edit-expense" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[75%]">
-				<div className="flex h-full w-full flex-col">
-					<div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-						<div className="flex flex-col gap-1">
-							<h3 className="text-xl font-bold text-primary dark:text-white">ATUALIZAR DESPESA</h3>
-							<h1 className="text-xxs text-primary/60">#{expenseId}</h1>
-						</div>
-						<button
-							onClick={() => closeModal()}
-							type="button"
-							className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-						>
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg={"Houve um erro ao buscar informações da despesa."} /> : null}
-					{isSuccess ? (
-						<>
-							<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
-								<ExpenseGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
+		<ResponsiveDialogDrawer
+			menuTitle="ATUALIZAR DESPESA"
+			menuDescription="Preencha os campos abaixo para atualizar a despesa."
+			menuActionButtonText="ATUALIZAR DESPESA"
+			menuCancelButtonText="CANCELAR"
+			actionFunction={() => handleUpdateExpense({ id: expenseId, changes: infoHolder })}
+			actionIsPending={isPending}
+			menuSecondaryActionButtonText="EXCLUIR DESPESA"
+			secondaryActionFunction={() => handleDeleteExpense({ id: expenseId })}
+			menuSecondaryActionButtonClassName="bg-red-500 text-white hover:bg-red-600"
+			stateIsLoading={isLoading || isDeleting}
+			closeMenu={closeModal}
+			dialogVariant="md"
+		>
+			<ExpenseGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
+			{expense ? (
+				expense.projetoDados ? (
+					<ExpenseProjectInformationBlock expense={infoHolder} project={expense.projetoDados} />
+				) : (
+					<ExpenseProjectVinculation
+						expenseId={expenseId}
+						infoHolder={infoHolder}
+						setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
+						affectedQueryKey={["expenses"]}
+						queryClient={queryClient}
+					/>
+				)
+			) : null}
+			<ExpenseItemsInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
 
-								{expense.projetoDados ? (
-									<ExpenseProjectInformationBlock expense={infoHolder} project={expense.projetoDados} />
-								) : (
-									<ExpenseProjectVinculation
-										expenseId={undefined}
-										infoHolder={infoHolder}
-										setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>}
-										affectedQueryKey={["expenses"]}
-										queryClient={queryClient}
-									/>
-								)}
-								<ExpenseItemsInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
-
-								<ExpensePaymentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
-							</div>
-							<div className="mt-2 flex w-full items-center justify-end">
-								<LoadingButton
-									loading={isPending}
-									onClick={() =>
-										//@ts-ignore
-										handleUpdateExpense({ id: expenseId, changes: infoHolder })
-									}
-									type="button"
-									className="bg-blue-800 hover:bg-blue-700"
-								>
-									ATUALIZAR DESPESA
-								</LoadingButton>
-							</div>
-						</>
-					) : null}
-				</div>
-			</div>
-		</div>
+			<ExpensePaymentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TExpense>>} />
+		</ResponsiveDialogDrawer>
 	);
 }
 

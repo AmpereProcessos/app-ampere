@@ -1,17 +1,13 @@
-import axios from "axios";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getProjectNestedFieldValue } from "../formatting";
 import type { TProjectADMSimplifiedWithRevenue } from "@/pages/api/projects/adm";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import dayjs from "dayjs";
+import { useState } from "react";
+import { getProjectNestedFieldValue } from "../formatting";
 
 async function fetchProjects() {
-	try {
-		const { data } = await axios.get("/api/projects/adm");
-		return data as TProjectADMSimplifiedWithRevenue[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/projects/adm");
+	return data as TProjectADMSimplifiedWithRevenue[];
 }
 
 export type TUseADMProjectsFilters = {
@@ -140,13 +136,19 @@ export function useADMProjects() {
 
 	function matchDate(project: TProjectADMSimplifiedWithRevenue) {
 		if (!filters.date.after || !filters.date.before || !filters.date.field) return true;
-		const fieldValue = getProjectNestedFieldValue(project, filters.date.field);
-		return (
-			// @ts-ignore
-			fieldValue >= filters.date.after &&
-			// @ts-ignore
-			fieldValue <= filters.date.before
-		);
+		if (filters.date.field === "obra.saida") {
+			return dayjs(project.obra.saida).isAfter(dayjs(filters.date.after)) && dayjs(project.obra.saida).isBefore(dayjs(filters.date.before));
+		}
+		if (filters.date.field === "medidor.data") {
+			return dayjs(project.medidor.data).isAfter(dayjs(filters.date.after)) && dayjs(project.medidor.data).isBefore(dayjs(filters.date.before));
+		}
+		if (filters.date.field === "contrato.dataAssinatura") {
+			return (
+				dayjs(project.contrato.dataAssinatura).isAfter(dayjs(filters.date.after)) &&
+				dayjs(project.contrato.dataAssinatura).isBefore(dayjs(filters.date.before))
+			);
+		}
+		return false;
 	}
 	function handleModelData(data: TProjectADMSimplifiedWithRevenue[]) {
 		return data.filter(

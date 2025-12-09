@@ -54,31 +54,41 @@ export default function ExecutionPageFilters({ filters, updateFilters, closeMenu
 		},
 		{
 			id: 5,
+			label: "DATA DE INÍCIO DO SERVIÇO",
+			value: "periodo.inicio",
+		},
+		{
+			id: 6,
+			label: "DATA DE FIM DO SERVIÇO",
+			value: "periodo.fim",
+		},
+		{
+			id: 7,
 			label: "DATA DE PAGAMENTO DA COMPRA",
 			value: "projeto.compraDataPagamento",
 		},
 		{
-			id: 6,
+			id: 8,
 			label: "DATA DE ASSINATURA DO CONTRATO",
 			value: "projeto.contratoDataAssinatura",
 		},
 		{
-			id: 7,
+			id: 9,
 			label: "DATA DE PREVISÃO DE ENTREGA DA COMPRA",
 			value: "projeto.compraEntregaDataPrevisao",
 		},
 		{
-			id: 8,
+			id: 10,
 			label: "DATA DE EFETIVAÇÃO DA ENTREGA DA COMPRA",
 			value: "projeto.compraEntregaDataEfetivacao",
 		},
 		{
-			id: 9,
+			id: 11,
 			label: "DATA DE RESPOSTA DA HOMOLOGACAO DE ACESSO",
 			value: "projeto.homologacaoAcessoDataResposta",
 		},
 		{
-			id: 10,
+			id: 12,
 			label: "DATA DE EFETIVAÇÃO DA VISTORIA",
 			value: "projeto.homologacaoVistoriaDataEfetivacao",
 		},

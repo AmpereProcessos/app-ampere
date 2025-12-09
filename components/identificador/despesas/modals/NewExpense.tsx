@@ -33,6 +33,7 @@ function NewExpense({ session, closeModal, callbacks, initialState }: NewExpense
 	const queryClient = useQueryClient();
 
 	const initialInfoHolder: TExpense = {
+		identificador: initialState?.identificador ?? null,
 		rateio: initialState?.rateio || "",
 		categoria: initialState?.categoria || "",
 		descricao: initialState?.descricao || "",

@@ -1,14 +1,10 @@
-import { TCreditorDTO } from "@/utils/schemas/crm/utils";
-import axios from "axios";
+import type { TCreditorDTO } from "@/utils/schemas/crm/utils";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 async function fetchCreditors() {
-	try {
-		const { data } = await axios.get(`/api/crm/utils?identifier=CREDITOR`);
-		return data.data as TCreditorDTO[];
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get("/api/crm/utils?identifier=CREDITOR");
+	return data.data as TCreditorDTO[];
 }
 
 export function useCreditors() {

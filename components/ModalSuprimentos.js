@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -9,30 +9,30 @@ import NotificationCreationBlock from "./NotificationCreationBlock";
 
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import SaveButton from "./utils/Buttons/SaveButton";
-import LoadingPage from "./utils/LoadingPage";
 import ErrorPage from "./utils/ErrorPage";
+import LoadingPage from "./utils/LoadingPage";
 
 import { useKey } from "../utils/hooks";
+import { updateProject } from "../utils/methods/mutation/clients";
+import { useMutationWithFeedback } from "../utils/methods/mutation/general-hook";
 import { useClientById } from "../utils/methods/query/clients";
 import { useProjectUpdateLogs } from "../utils/methods/query/project-update-logs";
-import { useMutationWithFeedback } from "../utils/methods/mutation/general-hook";
-import { updateProject } from "../utils/methods/mutation/clients";
 
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
-import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
-import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
-import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 
-import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
-import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
-import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import { useSession } from "../components/providers/SessionProvider";
 import { getErrorMessage } from "../utils/methods/handlers";
-import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
 import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
+import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
+import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
+import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
 	useKey("Escape", () => closeModal());
@@ -76,7 +76,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
 						<div className="flex items-center gap-x-2">
 							{/* {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>} */}
 							<SaveButton text={"Salvar alterações"} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
-							<button>
+							<button type="button">
 								<VscChromeClose onClick={() => closeModal(false)} style={{ color: "red" }} />
 							</button>
 						</div>
@@ -123,7 +123,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
 								updateLogs={updateLogs || []}
 							/>
 							{!["TROCA DE PADRÃO", "REFORMA DE PADRÃO", "SUBESTAÇÃO DE ENERGIA"].includes(infoHolder.tipoDeServico) &&
-								infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+								infoHolder.estruturaPersonalizada.aplicavel === "SIM" && (
 									<InfoEstruturaBlock
 										comercialEdition={true}
 										technicalEdition={false}
@@ -151,6 +151,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
 
 							<InfoPagamentoBlock
 								editor={true}
+								sessionUser={session}
 								infoHolder={infoHolder}
 								setInfo={setInfo}
 								changes={changes}

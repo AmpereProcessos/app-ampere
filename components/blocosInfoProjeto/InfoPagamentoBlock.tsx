@@ -1,15 +1,26 @@
 import type React from "react";
-import { formatDate } from "../../utils/constants";
+import { formatDate, formatToMoney } from "../../utils/constants";
 
-import { formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
+import type { TAuthSession } from "@/lib/authentication/types";
+import { formatDateAsLocale, formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { handleProjectTaxesExpenseTrigger } from "@/utils/methods/mutation/triggers";
 import { useCreditors } from "@/utils/methods/query/crm/utils";
+import { useProjectExpenses } from "@/utils/methods/query/expenses";
 import { formatDateInputChange } from "@/utils/methods/shared";
+import type { TExpenseDTO } from "@/utils/schemas/expenses";
 import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
 import type { TProjectDTO } from "@/utils/schemas/projects";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { CreditCard, LayoutGrid, Receipt, UserRound } from "lucide-react";
+import { CreditCard, DollarSign, LayoutGrid, Pencil, Plus, Receipt, UserRound } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { BsCalendar } from "react-icons/bs";
 import { MdVisibility } from "react-icons/md";
 import { ContractRequestPaymentOptions, billableCompanies } from "../../utils/select-options";
+import EditExpense from "../identificador/despesas/modals/EditExpense";
+import NewExpense from "../identificador/despesas/modals/NewExpense";
 import UpdateLogsBlock from "../identificador/registrosAlteracoesProjeto/UpdateLogsBlock";
 import Payment from "../identificador/registrosAlteracoesProjeto/secao/Payment";
 import CheckboxInput from "../inputs/Checkbox";
@@ -17,9 +28,14 @@ import DateInput from "../inputs/Date";
 import SelectInput from "../inputs/Select";
 import TextInput from "../inputs/Text";
 import TextareaInput from "../inputs/TextareaInput";
+import { Button } from "../ui/button";
+import { LoadingButton } from "../utils/Buttons/LoadingButton";
+import ErrorComponent from "../utils/ErrorComponent";
+import ResponsiveDialogDrawerSection from "../utils/ResponsiveDialogDrawerSection";
 import { InfoBlockSection } from "./Utils/SectionBlock";
 
 type InfoPagamentoBlockProps = {
+	sessionUser: TAuthSession;
 	editor: boolean;
 	infoHolder: TProjectDTO;
 	setInfo: React.Dispatch<React.SetStateAction<TProjectDTO>>;
@@ -28,7 +44,16 @@ type InfoPagamentoBlockProps = {
 	updateLogs: TProjectUpdateLogDTO[];
 	showADMOnly: boolean;
 };
-function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, updateLogs = [], showADMOnly = false }: InfoPagamentoBlockProps) {
+function InfoPagamentoBlock({
+	sessionUser,
+	editor,
+	infoHolder,
+	setInfo,
+	changes,
+	setChanges,
+	updateLogs = [],
+	showADMOnly = false,
+}: InfoPagamentoBlockProps) {
 	const { data: creditors } = useCreditors();
 
 	return (
@@ -39,6 +64,12 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
 			</div>
 			<div className="w-full flex flex-col gap-2 px-2">
 				<UpdateLogsBlock logs={updateLogs} SectionElement={<Payment logs={updateLogs} />} />
+				<CostsInformation
+					sessionUser={sessionUser}
+					projectName={infoHolder.nomeDoContrato}
+					projectId={infoHolder._id}
+					projectIdentifier={infoHolder.qtde.toString()}
+				/>
 				<InfoBlockSection headerTitle="DETALHES" headerIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}>
 					<div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
 						<div className="w-full lg:w-1/2">
@@ -495,3 +526,114 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
 }
 
 export default InfoPagamentoBlock;
+
+function CostsInformation({
+	sessionUser,
+	projectName,
+	projectId,
+	projectIdentifier,
+}: { sessionUser: TAuthSession; projectName: string; projectId: string; projectIdentifier: string }) {
+	const [newExpenseMenuIsOpen, setNewExpenseMenuIsOpen] = useState(false);
+	const queryClient = useQueryClient();
+	const {
+		data: expenses,
+		queryKey,
+		isLoading,
+		isSuccess,
+		isFetching,
+		isError,
+		error,
+	} = useProjectExpenses({ projectId, enabled: true, identifier: "CUSTOS-FINANCEIROS" });
+
+	const { mutate: handleCreateProjectTaxesExpenseTrigger, isPending } = useMutation({
+		mutationKey: ["create-project-taxes-expense"],
+		mutationFn: handleProjectTaxesExpenseTrigger,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey });
+		},
+		onSuccess: async (data) => {
+			return toast.success(data);
+		},
+		onError: async (error) => {
+			return toast.error(getErrorMessage(error));
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey });
+		},
+	});
+
+	const isMissingARTCost = isSuccess && !expenses.some((expense) => expense.rateio === "IMPOSTOS");
+
+	return (
+		<ResponsiveDialogDrawerSection sectionTitleText="CUSTOS" sectionTitleIcon={<DollarSign size={15} />}>
+			<div className="w-full flex items-center justify-end gap-2">
+				{isMissingARTCost ? (
+					<LoadingButton
+						variant="ghost"
+						className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
+						size="fit"
+						loading={isPending}
+						onClick={() => handleCreateProjectTaxesExpenseTrigger({ projectId })}
+					>
+						GERAR CUSTO DE IMPOSTOS
+					</LoadingButton>
+				) : null}
+
+				<Button variant="ghost" className="flex items-center gap-1.5 px-2 py-1 rounded-lg" size="fit" onClick={() => setNewExpenseMenuIsOpen(true)}>
+					<Plus className="w-4 h-4 min-w-4 min-h-4" />
+					NOVO CUSTO
+				</Button>
+			</div>
+			{isLoading ? <p className="w-full text-center text-sm font-medium text-primary/80 animate-pulse">Carregando custos...</p> : null}
+			{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+			{isSuccess ? (
+				expenses.length > 0 ? (
+					expenses.map((expense) => <ExpenseItemCard key={expense._id} expense={expense} session={sessionUser} />)
+				) : (
+					<p className="w-full text-center text-sm font-medium text-primary/80">Nenhum custo encontrado.</p>
+				)
+			) : null}
+			{newExpenseMenuIsOpen ? (
+				<NewExpense
+					session={sessionUser}
+					initialState={{ identificador: "CUSTOS-FINANCEIROS", projeto: { id: projectId, nome: projectName, identificador: projectIdentifier } }}
+					closeModal={() => setNewExpenseMenuIsOpen(false)}
+				/>
+			) : null}
+		</ResponsiveDialogDrawerSection>
+	);
+}
+
+function ExpenseItemCard({ expense, session }: { expense: TExpenseDTO; session: TAuthSession }) {
+	const [editExpenseMenuIsOpen, setEditExpenseMenuIsOpen] = useState(false);
+	return (
+		<div className="border-primary/20 flex w-full flex-col items-center gap-1 border p-3 shadow-xs rounded">
+			<div className="w-full flex items-center justify-between gap-2">
+				<h1 className="text-sm font-bold">
+					{expense.rateio} - {expense.categoria}
+				</h1>
+				<h1 className="text-sm font-bold px-2 py-1 rounded-lg bg-primary/20">{formatToMoney(expense.total)} </h1>
+			</div>
+			<div className="w-full flex items-center justify-between gap-2 flex-col lg:flex-row">
+				<div className="flex items-center gap-2">
+					<div className="flex items-center gap-1.5">
+						<BsCalendar className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium">{formatDateAsLocale(expense.efetivacao.data, true)}</p>
+					</div>
+				</div>
+				<div className="flex items-center gap-2">
+					<Button
+						onClick={() => setEditExpenseMenuIsOpen(true)}
+						size={"fit"}
+						variant={"ghost"}
+						className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs"
+					>
+						<Pencil className="w-4 h-4 min-w-4 min-h-4" />
+						EDITAR
+					</Button>
+				</div>
+			</div>
+			{editExpenseMenuIsOpen ? <EditExpense expenseId={expense._id} session={session} closeModal={() => setEditExpenseMenuIsOpen(false)} /> : null}
+		</div>
+	);
+}

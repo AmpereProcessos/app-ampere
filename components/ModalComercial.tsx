@@ -1,39 +1,39 @@
-import React, { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 
-import NotificationCreationBlock from "./NotificationCreationBlock";
-import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
-import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
-import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
-import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
-import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
-import InfoHomologacaoBlock from "./blocosInfoProjeto/InfoHomologacaoBlock";
-import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
-import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
-import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
-import InfoReceitasBlock from "./blocosInfoProjeto/InfoReceitasBlock";
-import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
-import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
-import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
-import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
-import ErrorPage from "./utils/ErrorPage";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { useClientById } from "../utils/methods/query/clients";
+import NotificationCreationBlock from "./NotificationCreationBlock";
+import InfoAnexosBlock from "./blocosInfoProjeto/InfoAnexosBlock";
+import InfoAtividadesBlock from "./blocosInfoProjeto/InfoAtividadesBlock";
+import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
+import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoHomologacaoBlock from "./blocosInfoProjeto/InfoHomologacaoBlock";
+import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
+import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
+import InfoReceitasBlock from "./blocosInfoProjeto/InfoReceitasBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVendaBlock from "./blocosInfoProjeto/InfoVendaBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
+import ErrorPage from "./utils/ErrorPage";
 
-import { handleComercialUpdate } from "../utils/methods/mutation/comercial";
-import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
-import { useProjectUpdateLogs } from "../utils/methods/query/project-update-logs";
-import { getErrorMessage } from "../utils/methods/handlers";
-import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { useMediaQuery } from "@/lib/hooks/media-query";
 import type { TProjectDTO } from "@/utils/schemas/projects";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../utils/methods/handlers";
+import { handleComercialUpdate } from "../utils/methods/mutation/comercial";
+import { handleUpdateClientPersonalized } from "../utils/methods/mutation/crm/clients";
+import { useProjectUpdateLogs } from "../utils/methods/query/project-update-logs";
+import InfoEtiquetasBlock from "./blocosInfoProjeto/InfoEtiquetasBlock";
 import { Button } from "./ui/button";
 import { LoadingButton } from "./utils/Buttons/LoadingButton";
 import LoadingComponent from "./utils/LoadingComponent";
-import toast from "react-hot-toast";
 
 type ModalComercialProps = {
 	session: TAuthSession;
@@ -280,6 +280,7 @@ function ModalComercialContent({
 			/>
 			<InfoPagamentoBlock
 				editor={true}
+				sessionUser={session}
 				infoHolder={infoHolder}
 				setInfo={setInfoHolder}
 				changes={changes}

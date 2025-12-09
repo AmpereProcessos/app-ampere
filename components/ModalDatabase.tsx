@@ -373,6 +373,7 @@ function ModalDatabaseContent({
 
 			<InfoPagamentoBlock
 				editor={userHasOverallAccess}
+				sessionUser={session}
 				infoHolder={infoHolder}
 				setInfo={setInfoHolder}
 				changes={changes}

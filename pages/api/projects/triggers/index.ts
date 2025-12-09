@@ -3,6 +3,7 @@ import { insertFunnelReference } from "@/repositories/crm-funnel-references/muta
 import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { getProductsStr } from "@/utils/methods/formatting";
+import { getContractValue } from "@/utils/methods/util/projects";
 import { getPurchaseControlTagsFromProject } from "@/utils/methods/util/purchase-controls";
 import {
 	getServiceObservationsFromObras,
@@ -13,6 +14,7 @@ import {
 import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 import type { TUser } from "@/utils/schemas/crm/user.schema";
+import type { TExpense } from "@/utils/schemas/expenses";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
@@ -34,6 +36,7 @@ const TriggerType = z.enum([
 	"create-project-main-revenue",
 	"sync-project-with-purchase",
 	"create-opportunity-on-project-journey-end",
+	"create-project-taxes-expense",
 ]);
 
 const HandleTriggerPayload = z.object({
@@ -49,6 +52,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 	const projectscollection: Collection<TProject> = db.collection("dados");
 	const serviceOrdersCollection: Collection<TServiceOrder> = db.collection("ordensDeServico");
 	const purchaseControlsCollection: Collection<TPurchaseControl> = db.collection("controles-compras");
+	const expensesCollection: Collection<TExpense> = db.collection("despesas");
 
 	const project = await projectscollection.findOne({ _id: new ObjectId(projectId) });
 
@@ -384,6 +388,64 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				insertedId: insertedOpportunityId,
 			},
 			message: "Oportunidade criada com sucesso !",
+		});
+	}
+	if (triggerType === "create-project-taxes-expense") {
+		const isPurchaseOrdered = !!project.compra.dataPedido;
+		if (!isPurchaseOrdered)
+			throw new createHttpError.BadRequest("Oops, parece que a compra não foi realizada. Não é possível prosseguir com a automação.");
+
+		const contractValue = getContractValue({
+			projectValue: project.sistema.valorProjeto,
+			paValue: project.padrao.valor,
+			structureValue: project.estruturaPersonalizada.valor,
+			oemValue: project.oem.valor,
+			insuranceValue: project.seguro.valor,
+		});
+		const purchaseTotal = project.compra.valorDoKit || 0;
+
+		let taxAmount = 0;
+		if (["SANTANDER", "SANTANDER AYMORE", "SOL FÁCIL"].includes(project.pagamento.credor ?? "")) {
+			taxAmount = (contractValue - purchaseTotal) * 0.175; // 17.5% of the difference between the contract value and the purchase total
+		} else {
+			taxAmount = contractValue * 0.085; // 8.5% of the contract value
+		}
+
+		const newTaxExpense: TExpense = {
+			identificador: "CUSTOS-FINANCEIROS",
+			rateio: "IMPOSTOS",
+			categoria: "IMPOSTOS",
+			descricao: "Custos de impostos do projeto",
+			projeto: {
+				id: project._id.toString(),
+				nome: project.nomeDoContrato,
+				identificador: project.qtde,
+				tipo: project.tipoDeServico,
+			},
+			autor: {
+				id: session.user.id,
+				nome: session.user.nome,
+				avatar_url: session.user.avatar_url,
+			},
+			itens: [],
+			total: taxAmount,
+			efetivacao: {
+				efetivado: true,
+				data: new Date().toISOString(),
+			},
+			criterioReferencia: true,
+			criterioCompetencia: true,
+			pagamentos: [],
+			dataInsercao: new Date().toISOString(),
+		};
+
+		const insertExpenseResponse = await expensesCollection.insertOne(newTaxExpense);
+		if (!insertExpenseResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido ao criar despesa.");
+		const insertedExpenseId = insertExpenseResponse.insertedId.toString();
+
+		return res.status(201).json({
+			data: { insertedId: insertedExpenseId },
+			message: "Despesa criada com sucesso.",
 		});
 	}
 };

@@ -68,3 +68,17 @@ export async function handleProjectPurchaseControlTrigger({ projectId }: { proje
 		throw error;
 	}
 }
+
+export async function handleProjectTaxesExpenseTrigger({ projectId }: { projectId: string }) {
+	try {
+		const { data } = await axios.post("/api/projects/triggers", {
+			projectId,
+			triggerType: "create-project-taxes-expense",
+		});
+		if (typeof data.message !== "string") throw new Error("Oops, um erro desconhecido ocorreu.");
+		return data.message as string;
+	} catch (error) {
+		console.log("Error running handleProjectTaxesExpenseTrigger", error);
+		throw error;
+	}
+}

@@ -140,6 +140,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
 							/>
 							<InfoPagamentoBlock
 								editor={true}
+								sessionUser={session}
 								infoHolder={infoHolder}
 								setInfo={setInfo}
 								changes={changes}

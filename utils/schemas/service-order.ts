@@ -289,6 +289,8 @@ const PersonalizedFieldFilters = z.enum(
 		"dataPrevisaoLiberacao",
 		"dataLiberacao",
 		"dataEfetivacao",
+		"periodo.inicio",
+		"periodo.fim",
 		"projeto.contratoDataAssinatura",
 		"projeto.compraDataPagamento",
 		"projeto.compraEntregaDataPrevisao",

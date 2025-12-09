@@ -150,6 +150,7 @@ export default function CostsInformation({
 			{newExpenseMenuIsOpen ? (
 				<NewExpense
 					initialState={{
+						identificador: "CUSTOS-ORDEM-DE-SERVICO",
 						projeto: {
 							id: projectId,
 							nome: projectName,

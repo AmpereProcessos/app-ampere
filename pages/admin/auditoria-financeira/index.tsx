@@ -95,7 +95,6 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 			}
 			return acc;
 		}, {});
-		console.log(expensesByType);
 		return {
 			projetos: projects,
 			receitas: totalRevenues,

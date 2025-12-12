@@ -35,6 +35,7 @@ const projection = {
 	"vendedor.nome": 1,
 	comissoes: 1,
 	"compra.valorDoKit": 1,
+	"compra.valorFrete": 1,
 	"sistema.valorProjeto": 1,
 	"sistema.topologia": 1,
 	"sistema.qtdeModulos": 1,
@@ -98,6 +99,7 @@ export async function getFinancesByProjectId({
 	// Pushing cost of the kit generator, if it exists
 	const kitCost = project.compra.valorDoKit || 0;
 	const transportationCost = project.compra.valorFrete || 0;
+	console.log({ kitCost, transportationCost });
 	if (kitCost)
 		expenses.push({
 			id: undefined,

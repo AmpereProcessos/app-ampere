@@ -2,7 +2,7 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
 import type { TAuthSession } from "@/lib/authentication/types";
-import financialAuditing, { type TProjectFinances } from "@/pages/api/stats/financial-auditing/financial-auditing";
+import financialAuditing, { type TProjectFinances } from "@/pages/api/stats/financial-auditing";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useProjectFinances } from "@/utils/methods/query/financial-auditing";

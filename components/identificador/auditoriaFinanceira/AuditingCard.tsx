@@ -1,4 +1,4 @@
-import type { TProjectFinances } from "@/pages/api/stats/financial-auditing/financial-auditing";
+import type { TProjectFinances } from "@/pages/api/stats/financial-auditing";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import Link from "next/link";

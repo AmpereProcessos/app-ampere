@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import type { TAuthSession } from "@/lib/authentication/types";
-import { type ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing/financial-auditing";
+import { type ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { Eye, EyeOffIcon, Pencil } from "lucide-react";

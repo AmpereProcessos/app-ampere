@@ -1,4 +1,4 @@
-import type { ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing";
+import type { ExpenseRevenueList, TProjectFinances } from "@/pages/api/stats/financial-auditing/financial-auditing";
 import type { TExpense } from "@/utils/schemas/expenses";
 import { type TProject, TProjectDTO, TProjectEntity } from "@/utils/schemas/projects";
 import { TMonitoringPropose } from "@/utils/schemas/proposes/monitoring.schema";

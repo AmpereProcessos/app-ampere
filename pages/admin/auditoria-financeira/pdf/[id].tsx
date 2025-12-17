@@ -1,20 +1,20 @@
+import ExpenseRevenueListItem from "@/components/identificador/auditoriaFinanceira/ExpenseRevenueListItem";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
+import type { TProjectFinances } from "@/pages/api/stats/financial-auditing";
+import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
+import Logo from "@/utils/images/logo-semtexto-branco.png";
+import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useProjectFinances } from "@/utils/methods/query/financial-auditing";
 import { Collection, ObjectId } from "mongodb";
-import { GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Logo from "@/utils/images/logo-semtexto-branco.png";
 import { FaCity, FaSignature, FaSolarPanel, FaTools, FaUser } from "react-icons/fa";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
-import { TbTopologyFull } from "react-icons/tb";
-import ExpenseRevenueListItem from "@/components/identificador/auditoriaFinanceira/ExpenseRevenueListItem";
-import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import { TProjectFinances } from "@/pages/api/stats/financial-auditing";
 import { GoGoal } from "react-icons/go";
 import { RxDownload, RxUpload } from "react-icons/rx";
+import { TbTopologyFull } from "react-icons/tb";
 
 function getResults({ expenses, revenues }: { expenses: TProjectFinances["despesasLista"]; revenues: TProjectFinances["receitasLista"] }) {
 	if (!expenses || !revenues) return { receitas: 0, despesas: 0, resultado: 0, margem: 0 };

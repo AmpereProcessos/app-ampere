@@ -2,13 +2,16 @@ import { api } from "@/convex/_generated/api";
 import type { TProjectJourneyStageWorkflow } from "@/utils/schemas/project-journey";
 import type { TProject } from "@/utils/schemas/projects";
 import { convexClient } from "@/utils/services/convex/client";
+import { type Collection, ObjectId } from "mongodb";
 import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG } from ".";
 
 type handleProjectUpdateTrackingParams = {
+	projectId: string;
 	previous: TProject;
 	updated: TProject;
+	collection: Collection<TProject>;
 };
-export async function handleProjectUpdateJourneyStepsTracking({ previous, updated }: handleProjectUpdateTrackingParams) {
+export async function handleProjectUpdateJourneyStepsTracking({ projectId, previous, updated, collection }: handleProjectUpdateTrackingParams) {
 	const wasContractSigned = previous.contrato.status !== "ASSINADO" && updated.contrato.status === "ASSINADO";
 	const wasHomologationAccessApproved = !previous.homologacao.acesso.dataResposta && updated.homologacao.acesso.dataResposta;
 	const wasPaymentConfirmed = !previous.compra.dataPagamento && updated.compra.dataPagamento;
@@ -32,6 +35,8 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				console.log("[INFO] [PROJECT_UPDATE_TRACKING] [CONTRATO_ASSINADO] Workflow stage already completed");
 				return;
 			}
+			const contractSigningWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === contractSigningWorkflowStage.ordem);
+
 			const contractSigningWorkflowStageActions = contractSigningWorkflowStage.acoes;
 
 			try {
@@ -40,6 +45,19 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "CONTRATO_ASSINADO", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === contractSigningWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// 	await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [CONTRATO_ASSINADO] Error handling actions:", error);
 				throw new Error("Error handling CONTRATO_ASSINADO actions");
@@ -55,13 +73,28 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const homologationAccessApprovedWorkflowStageActions = homologationAccessApprovedWorkflowStage.acoes;
-
+			const homologationAccessApprovedWorkflowStageIndex = updated.jornada.estagios.findIndex(
+				(s) => s.ordem === homologationAccessApprovedWorkflowStage.ordem,
+			);
 			try {
 				await Promise.all(
 					homologationAccessApprovedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "HOMOLOGACAO_ACESSO_LIBERADO", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === homologationAccessApprovedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [HOMOLOGACAO_ACESSO_LIBERADO] Error handling actions:", error);
 				throw new Error("Error handling HOMOLOGACAO_ACESSO_LIBERADO actions");
@@ -77,13 +110,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const paymentConfirmedWorkflowStageActions = paymentConfirmedWorkflowStage.acoes;
-
+			const paymentConfirmedWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === paymentConfirmedWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					paymentConfirmedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "PAGAMENTO_EFETIVADO", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === paymentConfirmedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [PAGAMENTO_EFETIVADO] Error handling actions:", error);
 				throw new Error("Error handling PAGAMENTO_EFETIVADO actions");
@@ -99,13 +145,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const deliveryScheduledWorkflowStageActions = deliveryScheduledWorkflowStage.acoes;
-
+			const deliveryScheduledWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === deliveryScheduledWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					deliveryScheduledWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "ENTREGA_PREVISTA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === deliveryScheduledWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [ENTREGA_PREVISTA] Error handling actions:", error);
 				throw new Error("Error handling ENTREGA_PREVISTA actions");
@@ -121,13 +180,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const deliveryPerformedWorkflowStageActions = deliveryPerformedWorkflowStage.acoes;
-
+			const deliveryPerformedWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === deliveryPerformedWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					deliveryPerformedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "ENTREGA_REALIZADA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === deliveryPerformedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [ENTREGA_REALIZADA] Error handling actions:", error);
 				throw new Error("Error handling ENTREGA_REALIZADA actions");
@@ -143,13 +215,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const executionScheduledWorkflowStageActions = executionScheduledWorkflowStage.acoes;
-
+			const executionScheduledWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === executionScheduledWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					executionScheduledWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "EXECUCAO_AGENDADA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === executionScheduledWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [EXECUCAO_AGENDADA] Error handling actions:", error);
 				throw new Error("Error handling EXECUCAO_AGENDADA actions");
@@ -165,13 +250,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const inspectionRequestedWorkflowStageActions = inspectionRequestedWorkflowStage.acoes;
-
+			const inspectionRequestedWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === inspectionRequestedWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					inspectionRequestedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "VISTORIA_SOLICITADA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === inspectionRequestedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [VISTORIA_SOLICITADA] Error handling actions:", error);
 				throw new Error("Error handling VISTORIA_SOLICITADA actions");
@@ -187,13 +285,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const inspectionApprovedWorkflowStageActions = inspectionApprovedWorkflowStage.acoes;
-
+			const inspectionApprovedWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === inspectionApprovedWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					inspectionApprovedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "VISTORIA_REALIZADA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === inspectionApprovedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				// 	await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [VISTORIA_REALIZADA] Error handling actions:", error);
 				throw new Error("Error handling VISTORIA_REALIZADA actions");
@@ -209,13 +320,26 @@ export async function handleProjectUpdateJourneyStepsTracking({ previous, update
 				return;
 			}
 			const checkingPerformedWorkflowStageActions = checkingPerformedWorkflowStage.acoes;
-
+			const checkingPerformedWorkflowStageIndex = updated.jornada.estagios.findIndex((s) => s.ordem === checkingPerformedWorkflowStage.ordem);
 			try {
 				await Promise.all(
 					checkingPerformedWorkflowStageActions.map((action) =>
 						handleProjectJourneyWorkflowStageAction({ project: updated, trigger: "ENERGIA_INJETADA", action }),
 					),
 				);
+
+				const updatesProjectJourneyWorkflowStages = updated.jornada.estagios.map((s, index) => {
+					if (index === checkingPerformedWorkflowStageIndex) {
+						return {
+							...s,
+							concluido: true,
+							dataConclusao: new Date().toISOString(),
+						};
+					}
+					return s;
+				});
+
+				await collection.updateOne({ _id: new ObjectId(projectId) }, { $set: { "jornada.estagios": updatesProjectJourneyWorkflowStages } });
 			} catch (error) {
 				console.error("[ERROR] [PROJECT_UPDATE_TRACKING] [ENERGIA_INJETADA] Error handling actions:", error);
 				throw new Error("Error handling ENERGIA_INJETADA actions");
@@ -246,7 +370,7 @@ async function handleProjectJourneyWorkflowStageAction({ project, trigger, actio
 				cliente: {
 					idApp: project.idClienteCRM as string,
 					nome: project.nomeDoContrato,
-					telefone: project.telefone as string,
+					telefone: "3484063369", // FIXED FOR NOW. TODO: GET THE PHONE FROM THE PROJECT as string,
 					avatar_url: undefined,
 					email: project.email ?? undefined,
 					cpfCnpj: project.cpf_cnpj.toString(),

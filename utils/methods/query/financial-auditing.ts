@@ -90,3 +90,15 @@ export function useProjectFinances({ id }: { id: string }) {
 		queryFn: async () => await fetchFinancesByProjectId({ id }),
 	});
 }
+
+export async function fetchFinancialAuditingExport({
+	after,
+	before,
+	field,
+	projectTypes,
+}: { after: string; before: string; field: string; projectTypes: string[] }) {
+	const { data } = await axios.get(
+		`/api/stats/financial-auditing/export?after=${after}&before=${before}&field=${field}&projectTypes=${projectTypes.join(",")}`,
+	);
+	return data;
+}

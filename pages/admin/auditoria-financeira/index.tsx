@@ -14,7 +14,7 @@ import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
 
 import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import { useFinancialAuditing } from "@/utils/methods/query/financial-auditing";
+import { fetchFinancialAuditingExport, useFinancialAuditing } from "@/utils/methods/query/financial-auditing";
 import { formatDateInputChange } from "@/utils/methods/shared";
 
 import type { TProjectFinances } from "../../api/stats/financial-auditing";
@@ -24,9 +24,16 @@ import { FaDiamond, FaHandHoldingDollar } from "react-icons/fa6";
 import { VscDiffAdded } from "react-icons/vsc";
 
 import NumberInput from "@/components/inputs/Number";
+import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import UnauthorizedComponent from "@/components/utils/UnauthorizedComponent";
+import { getExcelFromJSON } from "@/lib/excel-utils";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { allSellers, serviceTypes } from "@/utils/select-options";
+import { useMutation } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 const currentDate = new Date();
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 6)).toISOString();
@@ -68,6 +75,27 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 		setFilters,
 	} = useFinancialAuditing({ after: dateFilter.after, before: dateFilter.before, field: dateFilter.field, projectTypes });
 
+	const { mutate: handleExport, isPending: isExportLoading } = useMutation({
+		mutationKey: ["financial-auditing-export", dateFilter, projectTypes],
+		mutationFn: async () => {
+			const exportData = await fetchFinancialAuditingExport({
+				after: dateFilter.after,
+				before: dateFilter.before,
+				field: dateFilter.field,
+				projectTypes,
+			});
+			const dateKey = dayjs().format("DD-MM-YYYY-HH-mm");
+			await getExcelFromJSON(exportData, `AUDITORIA FINANCEIRA ${dateKey}`);
+		},
+		onSuccess: () => {
+			toast.success("Exportação realizada com sucesso!");
+		},
+		onError: (error) => {
+			const msg = getErrorMessage(error);
+			toast.error(msg);
+		},
+	});
+
 	function getStats({ info }: { info?: TProjectFinances[] }) {
 		if (!info)
 			return {
@@ -106,7 +134,7 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 
 	return (
 		<div className="flex grow flex-col p-6">
-			<div className="border-primary/20 flex flex-col items-center border-b px-1 py-2">
+			<div className="border-primary/20 flex flex-col items-center border-b px-1 py-2 gap-1">
 				<div className="flex w-full flex-col items-center justify-between lg:flex-row">
 					<div className="flex flex-col items-center gap-2 lg:flex-row">
 						<p className="text-center text-2xl font-black text-[#15599a] uppercase">AUDITORIA FINANCEIRA</p>
@@ -292,6 +320,11 @@ function FinancesAuditingContent({ session }: { session: TAuthSession }) {
 							</p>
 						))}
 					</div>
+				</div>
+				<div className="w-full flex items-center justify-end">
+					<LoadingButton onClick={() => handleExport()} loading={isExportLoading} size={"sm"} variant="ghost">
+						EXPORTAR PARA EXCEL
+					</LoadingButton>
 				</div>
 			</div>
 

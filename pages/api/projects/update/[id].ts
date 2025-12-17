@@ -121,7 +121,7 @@ const handleProjectUpdate = async (req: NextApiRequest, res: NextApiResponse) =>
 		}
 	}
 
-	handleProjectUpdateJourneyStepsTracking({ previous: previousProjectData, updated: updatedProjectData });
+	handleProjectUpdateJourneyStepsTracking({ projectId: id, previous: previousProjectData, updated: updatedProjectData, collection });
 	return res.json({
 		data: {
 			updatedId: id,

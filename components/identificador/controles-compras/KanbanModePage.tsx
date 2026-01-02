@@ -1,34 +1,36 @@
-import { usePurchaseControls, usePurchaseControlsTags } from "@/utils/methods/query/purchase-controls";
-import type { TAuthSession } from "@/lib/authentication/types";
-import React, { useEffect, useState } from "react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle, IoMdContract, IoMdExpand } from "react-icons/io";
-import { DragDropContext, Draggable, Droppable, type DropResult } from "react-beautiful-dnd";
-import LoadingComponent from "@/components/utils/LoadingComponent";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import type { TPurchaseControl, TPurchaseControlKanbanSimplifiedDTO } from "@/utils/schemas/purchases";
-import { MdDashboard } from "react-icons/md";
-import Avatar from "@/components/utils/Avatar";
-import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from "@/utils/methods/formatting";
-import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus, BsFillFunnelFill, BsFunnel, BsFunnelFill } from "react-icons/bs";
+import MultipleSelectInput from "@/components/inputs/MultipleSelect";
+import SelectInput from "@/components/inputs/Select";
 import { Button } from "@/components/ui/button";
-import NewPurchaseControl from "./modals/NewPurchaseControl";
-import { CheckCheck, Factory, Pencil, ScrollText, Tag, Target, Truck, X } from "lucide-react";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
-import toast from "react-hot-toast";
-import ControlPurchaseControl from "./modals/ControlPurchaseControl";
+import Avatar from "@/components/utils/Avatar";
+import ErrorComponent from "@/components/utils/ErrorComponent";
+import LoadingComponent from "@/components/utils/LoadingComponent";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
 import type { TPurchaseControlKanbanListExpandedModes, TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
-import { FaLocationDot, FaRotate } from "react-icons/fa6";
-import SelectInput from "@/components/inputs/Select";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
-import { FaExpand } from "react-icons/fa";
 import { handleSetCookie } from "@/utils/methods/cookies";
+import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
+import { updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
+import { usePurchaseControls, usePurchaseControlsTags } from "@/utils/methods/query/purchase-controls";
+import type { TPurchaseControl, TPurchaseControlKanbanSimplifiedDTO } from "@/utils/schemas/purchases";
 import { PurchaseControlStatus } from "@/utils/select-options";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { CheckCheck, Factory, Pencil, ScrollText, Tag, Target, Truck, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
+import toast from "react-hot-toast";
+import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus, BsFillFunnelFill, BsFunnel, BsFunnelFill } from "react-icons/bs";
+import { FaExpand } from "react-icons/fa";
+import { FaLocationDot, FaRotate } from "react-icons/fa6";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle, IoMdContract, IoMdExpand } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
 import { TbUrgent } from "react-icons/tb";
+import NewTransportControl from "../controles-transportes/modals/NewTransportControl";
+import ControlPurchaseControl from "./modals/ControlPurchaseControl";
+import NewPurchaseControl from "./modals/NewPurchaseControl";
+import PurchaseControlVinculationMenu from "./modals/VinculationMenu";
 
 type TPurchaseControlByStatus = {
 	title: string;
@@ -45,6 +47,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 
 	const { data: tags } = usePurchaseControlsTags();
 	const { data: purchaseControls, isLoading, isError, isSuccess, error, queryParams, updateQueryParams, filters, setFilters } = usePurchaseControls();
+	const [vinculationMenuIsOpen, setVinculationMenuIsOpen] = useState<boolean>(false);
 	const [newPurchaseControlModalIsOpen, setNewPurchaseControlModalIsOpen] = useState<boolean>(false);
 	const [editPurchaseControlModal, setEditPurchaseControlModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
 	function getPurchaseControlsByStatus(purchaseControls: TPurchaseControlKanbanSimplifiedDTO[] | undefined): TPurchaseControlByStatus[] {
@@ -177,22 +180,9 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 		},
 	});
 	return (
-		<div className="flex grow flex-col gap-2 p-6">
+		<div className="w-full h-full flex flex-col gap-3">
 			<div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
-				<div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
-					<div className="flex flex-col items-center gap-1 lg:flex-row">
-						<div className="flex items-center gap-1">
-							<p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE COMPRA</p>
-						</div>
-						<button
-							type="button"
-							onClick={() => handleSetMode("card")}
-							className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
-						>
-							<FaRotate />
-							<h1 className="font-medium">ALTERAR MODO</h1>
-						</button>
-					</div>
+				<div className="flex w-full flex-col items-center justify-end gap-2 gap-y-3 lg:flex-row">
 					<div className="flex w-full flex-col items-center gap-1 lg:w-fit lg:flex-row lg:items-end">
 						<MultipleSelectInput
 							label="TAGS"
@@ -202,7 +192,6 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 							selectedItemLabel="NÃO DEFINIDO"
 							onReset={() => updateQueryParams({ queryTags: [] })}
 						/>
-
 						<button
 							type="button"
 							onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
@@ -210,6 +199,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 						>
 							{queryParams.queryPendingConclusion ? "EM ANDAMENTO" : "TODAS"}
 						</button>
+
 						<Button onClick={() => setNewPurchaseControlModalIsOpen(true)} className="min-h-[46.6px]">
 							NOVO CONTROLE
 						</Button>
@@ -252,6 +242,7 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 					closeModal={() => setEditPurchaseControlModal({ id: null, isOpen: false })}
 				/>
 			) : null}
+			{vinculationMenuIsOpen ? <NewTransportControl session={session} closeModal={() => setVinculationMenuIsOpen(false)} /> : null}
 		</div>
 	);
 }

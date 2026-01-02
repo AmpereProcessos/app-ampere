@@ -50,6 +50,7 @@ export function apiHandler(handler: ApiMethodHandlers) {
 			// Se passou pelas validações, chamar o handler
 			await methodHandler(req, res);
 		} catch (error) {
+			console.log("[API_HANDLER]", error);
 			errorHandler(error, res);
 		}
 	};

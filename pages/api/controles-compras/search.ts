@@ -1,10 +1,10 @@
 import { getPurchaseControlsByFilter } from "@/repositories/purchase-controls/queries";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { PurchaseControlsQueryFiltersSchema, TPurchaseControl, TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
+import { PurchaseControlsQueryFiltersSchema, type TPurchaseControl, type TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
-import { Db, Filter } from "mongodb";
-import { NextApiHandler } from "next";
+import type { Db, Filter } from "mongodb";
+import type { NextApiHandler } from "next";
 import { z } from "zod";
 
 export type TPurchaseControlsByFiltersResult = {

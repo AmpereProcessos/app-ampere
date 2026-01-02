@@ -3,22 +3,22 @@ import Avatar from "@/components/utils/Avatar";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
 import type { TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { usePurchaseControlsByFilters } from "@/utils/methods/query/purchase-controls";
 import type { TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCheck, Factory, ListFilter, Package, Pencil, ScrollText, Tag, Truck, X } from "lucide-react";
-import type { TAuthSession } from "@/lib/authentication/types";
 import React, { useState } from "react";
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from "react-icons/bs";
 import { FaLocationDot, FaRotate } from "react-icons/fa6";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { useQueryClient } from "@tanstack/react-query";
 import PurchaseControlsFilterMenu from "./FilterMenu";
-import NewPurchaseControl from "./modals/NewPurchaseControl";
 import ControlPurchaseControl from "./modals/ControlPurchaseControl";
+import NewPurchaseControl from "./modals/NewPurchaseControl";
 
 type PurchaseControlsCardModePageProps = {
 	session: TAuthSession;
@@ -37,32 +37,9 @@ function PurchaseControlsCardModePage({ session, handleSetMode }: PurchaseContro
 	const purchaseControlsShowing = purchaseControls?.length || 0;
 	const totalPages = purchaseControlsByFiltersResult?.totalPages || 0;
 	return (
-		<div className="flex grow flex-col gap-2 p-6">
+		<div className="w-full h-full flex flex-col gap-3">
 			<div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
-				<div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
-					<div className="flex flex-col items-center gap-1 lg:flex-row">
-						<div className="flex items-center gap-1">
-							{filterMenuIsOpen ? (
-								<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-									<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setFilterMenuIsOpen(false)} />
-								</div>
-							) : (
-								<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-									<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setFilterMenuIsOpen(true)} />
-								</div>
-							)}
-							<p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE COMPRA</p>
-						</div>
-
-						<button
-							type="button"
-							onClick={() => handleSetMode("grouped")}
-							className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
-						>
-							<FaRotate />
-							<h1 className="font-medium">ALTERAR MODO</h1>
-						</button>
-					</div>
+				<div className="flex w-full flex-col items-center justify-end gap-2 gap-y-3 lg:flex-row">
 					<div className="flex items-center gap-1">
 						<Button onClick={() => setFilterMenuIsOpen((prev) => !prev)} className="flex items-center gap-1">
 							<ListFilter height={15} width={15} />

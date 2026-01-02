@@ -10,26 +10,26 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Avatar from "@/components/utils/Avatar";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
-import { TPurchaseControlKanbanListExpandedModes, TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
+import type { TPurchaseControlKanbanListExpandedModes, TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
 import { handleSetCookie } from "@/utils/methods/cookies";
 import { formatDateAsLocale, formatNameAsInitials, formatWithoutDiacritics } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { updatePurchaseControl } from "@/utils/methods/mutation/purchase-controls";
 import { usePurchaseControls, usePurchaseControlsTags } from "@/utils/methods/query/purchase-controls";
-import { TPurchaseControlKanbanSimplifiedDTO, TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
+import { type TPurchaseControlKanbanSimplifiedDTO, TPurchaseControlSimplifiedDTO } from "@/utils/schemas/purchases";
 import { PurchaseControlStatus } from "@/utils/select-options";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Factory, Package, Pencil, ScrollText, Tag, Truck } from "lucide-react";
-import type { TAuthSession } from "@/lib/authentication/types";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent, BsCalendarPlus } from "react-icons/bs";
 import { FaLocationDot, FaRotate } from "react-icons/fa6";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import NewPurchaseControl from "./modals/NewPurchaseControl";
 import ControlPurchaseControl from "./modals/ControlPurchaseControl";
+import NewPurchaseControl from "./modals/NewPurchaseControl";
 
 type TPurchaseControlByStatus = {
 	title: string;
@@ -66,36 +66,24 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
 			}).map(([key, value]) => ({ title: key, items: value }));
 
 		return Object.entries({
-			PENDENTE: purchaseControls.filter((c) => c.status == "PENDENTE"),
-			"EM COTAÇÃO": purchaseControls.filter((c) => c.status == "EM COTAÇÃO"),
-			"AGUARDANDO APROVAÇÃO": purchaseControls.filter((c) => c.status == "AGUARDANDO APROVAÇÃO"),
-			"AGUARDANDO NOTA FUTURA": purchaseControls.filter((c) => c.status == "AGUARDANDO NOTA FUTURA"),
-			"AGUARDANDO PAGAMENTO": purchaseControls.filter((c) => c.status == "AGUARDANDO PAGAMENTO"),
-			"AGUARDANDO COMPRA": purchaseControls.filter((c) => c.status == "AGUARDANDO COMPRA"),
-			"AGUARDANDO FATURAMENTO": purchaseControls.filter((c) => c.status == "AGUARDANDO FATURAMENTO"),
-			"AGUARDANDO DESPACHE": purchaseControls.filter((c) => c.status == "AGUARDANDO DESPACHE"),
-			"AGUARDANDO ENTREGA": purchaseControls.filter((c) => c.status == "AGUARDANDO ENTREGA"),
-			CONCLUÍDA: purchaseControls.filter((c) => c.status == "CONCLUÍDA"),
-			PENDÊNCIAS: purchaseControls.filter((c) => c.status == "PENDÊNCIAS"),
+			PENDENTE: purchaseControls.filter((c) => c.status === "PENDENTE"),
+			"EM COTAÇÃO": purchaseControls.filter((c) => c.status === "EM COTAÇÃO"),
+			"AGUARDANDO APROVAÇÃO": purchaseControls.filter((c) => c.status === "AGUARDANDO APROVAÇÃO"),
+			"AGUARDANDO NOTA FUTURA": purchaseControls.filter((c) => c.status === "AGUARDANDO NOTA FUTURA"),
+			"AGUARDANDO PAGAMENTO": purchaseControls.filter((c) => c.status === "AGUARDANDO PAGAMENTO"),
+			"AGUARDANDO COMPRA": purchaseControls.filter((c) => c.status === "AGUARDANDO COMPRA"),
+			"AGUARDANDO FATURAMENTO": purchaseControls.filter((c) => c.status === "AGUARDANDO FATURAMENTO"),
+			"AGUARDANDO DESPACHE": purchaseControls.filter((c) => c.status === "AGUARDANDO DESPACHE"),
+			"AGUARDANDO ENTREGA": purchaseControls.filter((c) => c.status === "AGUARDANDO ENTREGA"),
+			CONCLUÍDA: purchaseControls.filter((c) => c.status === "CONCLUÍDA"),
+			PENDÊNCIAS: purchaseControls.filter((c) => c.status === "PENDÊNCIAS"),
 		}).map(([key, value]) => ({ title: key, items: value }));
 	}
 	const purchaseControlsByStatus = getPurchaseControlsByStatus(purchaseControls || []);
 	return (
-		<div className="flex grow flex-col gap-2 p-6">
+		<div className="w-full h-full flex flex-col gap-3">
 			<div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
-				<div className="flex w-full flex-col items-center justify-between gap-2 gap-y-3 lg:flex-row">
-					<div className="flex flex-col items-center gap-1 lg:flex-row">
-						<div className="flex items-center gap-1">
-							<p className="text-center text-2xl font-black text-[#15599a] uppercase">CONTROLES DE COMPRA</p>
-						</div>
-						<button
-							onClick={() => handleSetMode("kanban")}
-							className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
-						>
-							<FaRotate />
-							<h1 className="font-medium">ALTERAR MODO</h1>
-						</button>
-					</div>
+				<div className="flex w-full flex-col items-center justify-end gap-2 gap-y-3 lg:flex-row">
 					<div className="flex w-full flex-col items-center gap-1 lg:w-fit lg:flex-row lg:items-end">
 						<MultipleSelectInput
 							label="TAGS"
@@ -107,6 +95,7 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
 						/>
 
 						<button
+							type="button"
 							onClick={() => updateQueryParams({ queryPendingConclusion: !queryParams.queryPendingConclusion })}
 							className={cn("min-h-[46.6px] rounded p-2 text-xs font-bold text-white", queryParams.queryPendingConclusion ? "bg-blue-600" : "bg-primary/80")}
 						>
@@ -121,6 +110,7 @@ function PurchaseControlsGroupedModePage({ session, handleSetMode, initialListEx
 			<div className="flex w-full flex-col gap-2">
 				{purchaseControlsByStatus.map((item) => (
 					<PurchaseControlGroupBlock
+						key={item.title}
 						data={item}
 						affectedQueryKey={["purchase-controls", queryParams]}
 						handleItemClick={(id) => setEditPurchaseControlModal({ id, isOpen: true })}
@@ -160,12 +150,12 @@ type PurchaseControlsGroupBlockProps = {
 function PurchaseControlGroupBlock({ data, handleItemClick, affectedQueryKey, initialListExpandedModeOptions }: PurchaseControlsGroupBlockProps) {
 	const initialListExpandedMode = initialListExpandedModeOptions[data.title] || null;
 
-	const [showItems, setShowItems] = useState<boolean>(initialListExpandedMode == "inactive" ? false : true);
+	const [showItems, setShowItems] = useState<boolean>(initialListExpandedMode !== "inactive");
 	return (
 		<div className="flex w-full flex-col gap-1">
 			<div
 				className={cn("flex w-full items-center justify-between gap-2 rounded p-2 text-xs", {
-					"bg-red-600": data.title == "PENDENTE",
+					"bg-red-600": data.title === "PENDENTE",
 					"bg-primary/70": data.title === "EM COTAÇÃO",
 					"bg-teal-600": data.title === "AGUARDANDO APROVAÇÃO",
 					"bg-sky-500": data.title === "AGUARDANDO NOTA FUTURA",
@@ -266,7 +256,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
 					{purchaseControl.etiquetas.length > 0 ? (
 						purchaseControl.etiquetas.map((tag, index) => (
 							<div
-								key={index}
+								key={index.toString()}
 								style={{
 									border: "1px solid",
 									borderColor: tag.cores.primaria,
@@ -347,6 +337,7 @@ function PurchaseControlCard({ purchaseControl, handleClick, affectedQueryKey }:
 					</div>
 				</div>
 				<button
+					type="button"
 					onClick={() => handleClick(purchaseControl._id)}
 					className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
 				>
@@ -369,13 +360,13 @@ function PurchaseControlStatusController({
 		mutationKey: ["update-purchase-control-status", purchaseControl._id],
 		mutationFn: updatePurchaseControl,
 		onMutate: async (variables) => {
-			if (!!updateCallbacks?.onMutate) updateCallbacks.onMutate({ id: variables.id, updates: variables.changes });
+			if (updateCallbacks?.onMutate) updateCallbacks.onMutate({ id: variables.id, updates: variables.changes });
 		},
 		onSuccess: async (data) => {
-			if (!!updateCallbacks?.onSuccess) updateCallbacks.onSuccess();
+			if (updateCallbacks?.onSuccess) updateCallbacks.onSuccess();
 		},
 		onSettled: async () => {
-			if (!!updateCallbacks?.onSettled) updateCallbacks.onSettled();
+			if (updateCallbacks?.onSettled) updateCallbacks.onSettled();
 		},
 		onError: (error) => {
 			const msg = getErrorMessage(error);
@@ -387,8 +378,9 @@ function PurchaseControlStatusController({
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button
+						type="button"
 						className={cn("rounded-lg px-2 py-0.5 text-[0.65rem] font-medium text-white", {
-							"bg-red-600": purchaseControl.status == "PENDENTE",
+							"bg-red-600": purchaseControl.status === "PENDENTE",
 							"bg-primary/70": purchaseControl.status === "EM COTAÇÃO",
 							"bg-teal-600": purchaseControl.status === "AGUARDANDO APROVAÇÃO",
 							"bg-sky-500": purchaseControl.status === "AGUARDANDO NOTA FUTURA",
@@ -410,6 +402,8 @@ function PurchaseControlStatusController({
 					<DropdownMenuGroup>
 						{PurchaseControlStatus.map((status) => (
 							<button
+								key={status.value}
+								type="button"
 								className="w-full"
 								disabled={isPending}
 								onClick={() =>
@@ -423,7 +417,7 @@ function PurchaseControlStatusController({
 									<div className="flex items-center gap-1">
 										<div
 											className={cn("h-4 min-h-4 w-4 min-w-4 rounded-full", {
-												"bg-red-600": status.value == "PENDENTE",
+												"bg-red-600": status.value === "PENDENTE",
 												"bg-primary/70": status.value === "EM COTAÇÃO",
 												"bg-teal-600": status.value === "AGUARDANDO APROVAÇÃO",
 												"bg-sky-500": status.value === "AGUARDANDO NOTA FUTURA",
@@ -435,7 +429,7 @@ function PurchaseControlStatusController({
 												"bg-green-500": status.value === "CONCLUÍDA",
 												"bg-red-800": status.value === "PENDÊNCIAS",
 											})}
-										></div>
+										/>
 										<h1 className="text-xs">{status.label}</h1>
 									</div>
 								</DropdownMenuItem>

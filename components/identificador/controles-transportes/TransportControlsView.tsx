@@ -1,0 +1,145 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import GeneralPaginationComponent from "@/components/utils/Pagination";
+import type { TAuthSession } from "@/lib/authentication/types";
+import { cn, copyToClipboard } from "@/lib/utils";
+import type { TGetTransportControlsOutput } from "@/pages/api/controles-transportes";
+import type { TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
+import { useTransportControls } from "@/utils/methods/query/transport-controls";
+import { useQueryClient } from "@tanstack/react-query";
+import { EyeIcon, LinkIcon, Pencil, PlusIcon, Truck } from "lucide-react";
+import { useState } from "react";
+import { BsCalendarPlus } from "react-icons/bs";
+import NewTransportControl from "./modals/NewTransportControl";
+import ViewTransportControl from "./modals/ViewTransportControl";
+
+type TransportControlsViewProps = {
+	session: TAuthSession;
+	handleSetMode: (mode: TPurchasesControlPageModes) => void;
+};
+
+export default function TransportControlsView({ session, handleSetMode }: TransportControlsViewProps) {
+	const queryClient = useQueryClient();
+	const [newTransportControlModalIsOpen, setNewTransportControlModalIsOpen] = useState(false);
+	const [viewTransportControlId, setViewTransportControlId] = useState<string | null>(null);
+	const { data: transportControlsResult, queryKey, isLoading, isError, isSuccess, error, params, updateParams } = useTransportControls({});
+
+	const transportControls = transportControlsResult?.transportControls;
+	const totalPages = transportControlsResult?.totalPages;
+	const transportControlsShowing = transportControls?.length || 0;
+	const transportControlsMatched = transportControlsResult?.transportControlsMatched || 0;
+
+	const handleOnMutate = async () => {
+		await queryClient.cancelQueries({ queryKey });
+	};
+	const handleOnSettled = async () => {
+		await queryClient.invalidateQueries({ queryKey });
+	};
+	return (
+		<div className="w-full h-full flex flex-col gap-3">
+			<div className="w-full flex items-center justify-end">
+				<Button onClick={() => setNewTransportControlModalIsOpen(true)} className="flex items-center gap-1">
+					<PlusIcon className="w-4 h-4" />
+					NOVO CONTROLE
+				</Button>
+			</div>
+			<GeneralPaginationComponent
+				activePage={params.page}
+				queryLoading={isLoading}
+				selectPage={(page) => updateParams({ page })}
+				totalPages={totalPages || 0}
+				itemsMatchedText={`Foram encontrados ${transportControlsMatched} controles de transporte.`}
+				itemsShowingText={`Mostrando ${transportControlsShowing} controles de transporte.`}
+			/>
+			<div className="flex w-full flex-col gap-3">
+				{transportControls?.map((transportControl) => (
+					<TransportControlCard key={transportControl._id} transportControl={transportControl} handleClick={(id) => setViewTransportControlId(id)} />
+				))}
+			</div>
+			{newTransportControlModalIsOpen ? (
+				<NewTransportControl
+					session={session}
+					closeModal={() => setNewTransportControlModalIsOpen(false)}
+					callbacks={{ onMutate: handleOnMutate, onSettled: handleOnSettled }}
+				/>
+			) : null}
+			{viewTransportControlId ? (
+				<ViewTransportControl transportControlId={viewTransportControlId} closeModal={() => setViewTransportControlId(null)} />
+			) : null}
+		</div>
+	);
+}
+
+type TransportControlCardProps = {
+	transportControl: TGetTransportControlsOutput["data"]["transportControls"][number];
+	handleClick: (id: string) => void;
+};
+function TransportControlCard({ transportControl, handleClick }: TransportControlCardProps) {
+	return (
+		<div className="bg-background border-primary/30 relative flex w-full flex-col justify-between gap-1 rounded-lg border p-3 shadow-xs">
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+				<div className="flex items-center gap-2">
+					<div className="bg-secondary text-muted-foreground flex items-center gap-1 text-center text-xs font-bold italic px-2 py-1 rounded-lg">
+						<Truck className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs">{transportControl.identificador}</p>
+					</div>
+					<h1 className="text-sm leading-none font-bold tracking-tight">{transportControl.titulo}</h1>
+				</div>
+				<div className="flex items-center gap-2">
+					<div className="flex item-center gap-1">
+						<Truck className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-xs font-medium">
+							{transportControl.itens.length} {transportControl.itens.length > 1 ? "TRANSPORTES" : "TRANSPORTE"}
+						</p>
+					</div>
+					<h1
+						className={cn("flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium", {
+							"bg-green-200 text-green-600": !!transportControl.dataFim && new Date(transportControl.dataFim) < new Date(),
+							"bg-blue-200 text-blue-600": !!transportControl.dataInicio && new Date(transportControl.dataInicio) > new Date(),
+							"bg-yellow-200 text-yellow-600": !transportControl.dataFim && !transportControl.dataInicio,
+						})}
+					>
+						{transportControl.dataFim ? "FINALIZADO" : transportControl.dataInicio ? "EM ANDAMENTO" : "PENDENTE"}
+					</h1>
+				</div>
+			</div>
+			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+				<div className="flex flex-wrap items-center gap-2">
+					<div className="flex items-center gap-1">
+						<BsCalendarPlus className="w-4 h-4 min-w-4 min-h-4" />
+						<p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(transportControl.dataInsercao, true)}</p>
+					</div>
+
+					<div className="flex items-center gap-1">
+						<Avatar className="w-5 h-5 min-w-5 min-h-5">
+							<AvatarImage src={transportControl.autor.avatar_url || undefined} />
+							<AvatarFallback>{formatNameAsInitials(transportControl.autor.nome)}</AvatarFallback>
+						</Avatar>
+						<p className="text-primary/80 text-[0.65rem] font-medium">{transportControl.autor.nome}</p>
+					</div>
+				</div>
+				<div className="flex flex-wrap items-center gap-2">
+					<Button
+						onClick={() => handleClick(transportControl._id)}
+						variant={"ghost"}
+						size={"fit"}
+						className="flex items-center gap-1 px-2 py-1 rounded-lg"
+					>
+						<EyeIcon className="w-4 h-4 min-w-4 min-h-4" />
+						<p>VISUALIZAR</p>
+					</Button>
+					<Button
+						onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/publico/formulario-transporte/${transportControl._id}`)}
+						variant={"ghost"}
+						size={"fit"}
+						className="flex items-center gap-1 px-2 py-1 rounded-lg"
+					>
+						<LinkIcon className="w-4 h-4 min-w-4 min-h-4" />
+						<p>LINK DE CONTROLE</p>
+					</Button>
+				</div>
+			</div>
+		</div>
+	);
+}

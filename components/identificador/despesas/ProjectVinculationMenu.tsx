@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { toast } from "react-hot-toast";
 import { easeBackInOut } from "d3-ease";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
 import { FaLink } from "react-icons/fa";
 
 import SelectInput from "../../inputs/Select";
 
-import { useClients } from "../../../utils/methods/query/clients";
-import { VscChromeClose } from "react-icons/vsc";
 import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
+import { VscChromeClose } from "react-icons/vsc";
+import { useClients } from "../../../utils/methods/query/clients";
 
 const variants = {
 	hidden: {

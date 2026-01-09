@@ -54,7 +54,7 @@ export default function CostsInformation({
 					avatar_url: sessionUser.user.avatar_url,
 				},
 				itens: [],
-				total: 103.03,
+				total: 108.39,
 				efetivacao: {
 					efetivado: true,
 					data: new Date().toISOString(),
@@ -110,7 +110,13 @@ export default function CostsInformation({
 					<p className="w-full text-center text-sm font-medium text-primary/80">Nenhum custo encontrado.</p>
 				)
 			) : null}
-			{newExpenseMenuIsOpen ? <NewExpense session={sessionUser} initialState={{ identificador: "CUSTOS-HOMOLOGAÇÃO", projeto: {  id: projectId, nome: projectName, identificador: projectIdentifier }}} closeModal={() => setNewExpenseMenuIsOpen(false)} /> : null}
+			{newExpenseMenuIsOpen ? (
+				<NewExpense
+					session={sessionUser}
+					initialState={{ identificador: "CUSTOS-HOMOLOGAÇÃO", projeto: { id: projectId, nome: projectName, identificador: projectIdentifier } }}
+					closeModal={() => setNewExpenseMenuIsOpen(false)}
+				/>
+			) : null}
 		</ResponsiveDialogDrawerSection>
 	);
 }

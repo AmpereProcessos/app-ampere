@@ -271,6 +271,10 @@ const GeneralProjectSchema = z.object({
 	idClienteCRM: z.string().optional().nullable(),
 	idContaAzulVenda: z.string({ invalid_type_error: "Tipo não válido para ID de referência da venda em Conta Azul." }).optional().nullable(),
 	idContaAzulCliente: z.string({ invalid_type_error: "Tipo não válido para ID de referência do cliente em Conta Azul." }).optional().nullable(),
+	idContaAzulCentroCusto: z
+		.string({ invalid_type_error: "Tipo não válido para ID de referência do centro de custo em Conta Azul." })
+		.optional()
+		.nullable(),
 	idSolicitacaoContrato: z.string().optional().nullable(),
 	idVisitaTecnica: z.string().optional().nullable(),
 	indicacao: z.object({

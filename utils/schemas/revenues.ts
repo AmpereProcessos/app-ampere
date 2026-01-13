@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { AuthorSchema } from "./users";
 import { ObjectId } from "mongodb";
+import { z } from "zod";
 import type { TProject, TProjectDTO } from "./projects";
+import { AuthorSchema } from "./users";
 
 export const RevenueReceiptItemSchema = z.object({
 	titulo: z.string({ required_error: "Titulo do recebimento não informado.", invalid_type_error: "Tipo não válido para o titulo do recebimento." }),
@@ -65,6 +65,10 @@ export const GeneralRevenueSchema = z.object({
 	fracionamento: z.array(RevenueReceiptItemSchema),
 	idContaAzulVenda: z.string({ invalid_type_error: "Tipo não válido para ID de referência da venda em Conta Azul." }).optional().nullable(),
 	idContaAzulCliente: z.string({ invalid_type_error: "Tipo não válido para ID de referência da cliente em Conta Azul." }).optional().nullable(),
+	idContaAzulEventoFinanceiro: z
+		.string({ invalid_type_error: "Tipo não válido para ID de referência do evento financeiro em Conta Azul." })
+		.optional()
+		.nullable(),
 	dataUltimaAtualizacaoContaAzul: z
 		.string({ invalid_type_error: "Tipo não válido para data da última sincronização com a Conta Azul." })
 		.datetime({

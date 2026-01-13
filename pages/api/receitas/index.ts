@@ -1,15 +1,14 @@
-import connectToDatabase from "../../../utils/services/mongodb/projects";
-import { GeneralRevenueSchema, type TRevenue, type TRevenueWithProjectDTO } from "../../../utils/schemas/revenues";
-import type { NextApiHandler } from "next";
-import { apiHandler, validateAuthenticationWithSession } from "../../../utils/api";
+import { createSaleFromRevenueV2 } from "@/lib/integrations/conta-azul-v2";
+import type { TClient } from "@/utils/schemas/crm/client.schema";
+import type { TIntegration } from "@/utils/schemas/integrations";
+import type { TProject } from "@/utils/schemas/projects";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import createHttpError from "http-errors";
 import { type Collection, type Db, ObjectId, type WithId } from "mongodb";
-import type { TIntegration } from "@/utils/schemas/integrations";
-import { getContaAzulAccessToken } from "@/repositories/integrations/conta-azul/queries";
-import { createSaleFromRevenue } from "@/lib/integrations/conta-azul";
-import type { TClient } from "@/utils/schemas/crm/client.schema";
-import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
-import type { TProject } from "@/utils/schemas/projects";
+import type { NextApiHandler } from "next";
+import { apiHandler, validateAuthenticationWithSession } from "../../../utils/api";
+import { GeneralRevenueSchema, type TRevenue, type TRevenueWithProjectDTO } from "../../../utils/schemas/revenues";
+import connectToDatabase from "../../../utils/services/mongodb/projects";
 type GetResponse = {
 	data: TRevenue | TRevenue[];
 };
@@ -114,48 +113,178 @@ const createRevenue: NextApiHandler<PostResponse> = async (req, res) => {
 	const revenueProjectId = revenue.projeto.id;
 	let project: WithId<TProject> | null = null;
 	let client: WithId<TClient> | null = null;
+
+	console.log("[INFO] [CREATE REVENUE] Revenue details:", {
+		revenueName: revenue.nome,
+		revenueType: revenue.tipo,
+		revenueTotal: revenue.total,
+		revenueMethod: revenue.metodo,
+		revenueProjectId: revenueProjectId || "No project attached",
+		fracionamentoCount: revenue.fracionamento.length,
+	});
+
 	if (revenueProjectId) {
+		console.log("[INFO] [CREATE REVENUE] Fetching project data.", { projectId: revenueProjectId });
 		const projectResponse = await projectsCollection.findOne({ _id: new ObjectId(revenueProjectId) });
 		project = projectResponse;
-		console.log(`[INFO] [CREATE REVENUE] Revenue attached to project ${projectResponse?._id.toString()}.`);
-		if (projectResponse?.idClienteCRM) {
-			const clientResponse = await clientsCollection.findOne({ _id: new ObjectId(projectResponse.idClienteCRM) });
-			client = clientResponse;
-			console.log(`[INFO] [CREATE REVENUE] Revenue attached to client ${clientResponse?._id.toString()}.`);
+
+		if (!projectResponse) {
+			console.warn("[WARN] [CREATE REVENUE] Project not found.", { projectId: revenueProjectId });
+		} else {
+			console.log("[INFO] [CREATE REVENUE] Revenue attached to project.", {
+				projectId: projectResponse._id.toString(),
+				projectName: projectResponse.nomeDoContrato,
+				projectCpfCnpj: projectResponse.cpf_cnpj,
+				projectClientCRMId: projectResponse.idClienteCRM || "No CRM client attached",
+				existingContaAzulVenda: projectResponse.idContaAzulVenda || null,
+				existingContaAzulCliente: projectResponse.idContaAzulCliente || null,
+			});
+
+			if (projectResponse?.idClienteCRM) {
+				console.log("[INFO] [CREATE REVENUE] Fetching client data.", { clientCRMId: projectResponse.idClienteCRM });
+				const clientResponse = await clientsCollection.findOne({ _id: new ObjectId(projectResponse.idClienteCRM) });
+				client = clientResponse;
+
+				if (!clientResponse) {
+					console.warn("[WARN] [CREATE REVENUE] Client not found.", { clientCRMId: projectResponse.idClienteCRM });
+				} else {
+					console.log("[INFO] [CREATE REVENUE] Revenue attached to client.", {
+						clientId: clientResponse._id.toString(),
+						clientName: clientResponse.nome,
+						clientCpfCnpj: clientResponse.cpfCnpj || "No CPF/CNPJ",
+						clientEmail: clientResponse.email || "No email",
+						clientPhone: clientResponse.telefonePrimario,
+						existingContaAzulCliente: (clientResponse as TClient & { idContaAzulCliente?: string }).idContaAzulCliente || null,
+					});
+				}
+			} else {
+				console.log("[INFO] [CREATE REVENUE] Project has no CRM client attached, skipping client fetch.");
+			}
+		}
+	} else {
+		console.log("[INFO] [CREATE REVENUE] Revenue has no project attached, will skip Conta Azul integration.");
+	}
+	let contaAzulSaleId: string | null = null;
+	let contaAzulClientId: string | null = null;
+	let contaAzulFinancialEventId: string | null = null;
+	let contaAzulCostCenterId: string | null = null;
+	// Only run Conta Azul integration if project exists
+	if (client && project) {
+		console.log("[INFO] [CREATE REVENUE] Starting Conta Azul V2 integration.", {
+			clientId: client._id.toString(),
+			projectId: project._id.toString(),
+			projectValues: {
+				sistemaValorProjeto: project.sistema?.valorProjeto || null,
+				padraoValor: project.padrao?.valor || null,
+				estruturaPersonalizadaValor: project.estruturaPersonalizada?.valor || null,
+				seguroValor: project.seguro?.valor || null,
+				oemValor: project.oem?.valor || null,
+			},
+		});
+
+		try {
+			console.log("[INFO] [CREATE REVENUE] Calling createSaleFromRevenueV2...");
+			const contaAzulResponse = await createSaleFromRevenueV2({
+				revenue,
+				client: client,
+				project: project,
+			});
+			contaAzulSaleId = contaAzulResponse.contaAzulSaleId;
+			contaAzulClientId = contaAzulResponse.contaAzulClientId;
+			contaAzulFinancialEventId = contaAzulResponse.contaAzulFinancialEventId;
+			contaAzulCostCenterId = contaAzulResponse.contaAzulCostCenterId;
+			console.log("[INFO] [CREATE REVENUE] Conta Azul sale created successfully.", {
+				contaAzulSaleId,
+				contaAzulClientId,
+			});
+
+			// Update client with Conta Azul ID
+			console.log("[INFO] [CREATE REVENUE] Updating client with Conta Azul ID.", {
+				clientId: client._id.toString(),
+				contaAzulClientId,
+			});
+			await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulClientId } });
+
+			// Update project with Conta Azul references
+			console.log("[INFO] [CREATE REVENUE] Updating project with Conta Azul references.", {
+				projectId: project._id.toString(),
+				contaAzulSaleId,
+				contaAzulClientId,
+			});
+			await projectsCollection.updateOne(
+				{ _id: new ObjectId(project._id) },
+				{
+					$set: {
+						idContaAzulVenda: contaAzulSaleId,
+						idContaAzulCliente: contaAzulClientId,
+						idContaAzulCentroCusto: contaAzulCostCenterId,
+					},
+				},
+			);
+
+			console.log("[INFO] [CREATE REVENUE] Conta Azul integration completed successfully.");
+		} catch (error) {
+			console.error("[ERROR] [CREATE REVENUE] Conta Azul V2 integration failed:", {
+				error: error instanceof Error ? error.message : String(error),
+				stack: error instanceof Error ? error.stack : undefined,
+				clientId: client._id.toString(),
+				projectId: project._id.toString(),
+				revenueName: revenue.nome,
+			});
+			// Don't block revenue creation if Conta Azul fails
+		}
+	} else {
+		if (!client && project) {
+			console.log("[INFO] [CREATE REVENUE] Skipping Conta Azul integration: No client found.", {
+				projectId: project._id.toString(),
+				projectHasClienteCRM: !!project.idClienteCRM,
+			});
+		} else if (client && !project) {
+			console.log("[INFO] [CREATE REVENUE] Skipping Conta Azul integration: No project attached.");
+		} else {
+			console.log("[INFO] [CREATE REVENUE] Skipping Conta Azul integration: No client or project.");
 		}
 	}
-	// const contaAzulAccessToken = await getContaAzulAccessToken({ collection: integrationsCollection });
-
-	// let contaAzulSaleId: string | null = null;
-	// let contaAzulClientId: string | null = null;
-	// if (client) {
-	// 	const contaAzulResponse = await createSaleFromRevenue({
-	// 		revenue,
-	// 		client: client,
-	// 		accessToken: contaAzulAccessToken,
-	// 	});
-	// 	contaAzulSaleId = contaAzulResponse.contaAzulSaleId;
-	// 	contaAzulClientId = contaAzulResponse.contaAzulCustomerId;
-	// 	await clientsCollection.updateOne({ _id: new ObjectId(client._id) }, { $set: { idContaAzulCliente: contaAzulClientId } });
-	// }
-
-	// if (project) {
-	// 	await projectsCollection.updateOne(
-	// 		{ _id: new ObjectId(project._id) },
-	// 		{ $set: { idContaAzulVenda: contaAzulSaleId, idContaAzulCliente: contaAzulClientId } },
-	// 	);
-	// }
 	const revenueReceivedCompletely = revenue.fracionamento.length > 0 ? revenue.fracionamento.every((f) => !!f.dataRecebimento) : false;
+
+	console.log("[INFO] [CREATE REVENUE] Inserting revenue into database.", {
+		revenueName: revenue.nome,
+		revenueType: revenue.tipo,
+		revenueTotal: revenue.total,
+		revenueReceivedCompletely,
+		contaAzulSaleId: contaAzulSaleId || "Not created",
+		contaAzulClientId: contaAzulClientId || "Not created",
+		projectId: project?._id.toString() || "No project",
+		clientId: client?._id.toString() || "No client",
+	});
+
 	const insertResponse = await revenuesCollection.insertOne({
 		...revenue,
-		// idContaAzulVenda: contaAzulSaleId,
-		// idContaAzulCliente: contaAzulClientId,
+		idContaAzulVenda: contaAzulSaleId,
+		idContaAzulCliente: contaAzulClientId,
+		idContaAzulEventoFinanceiro: contaAzulFinancialEventId,
 		autor: author,
 		dataEfetivacao: revenueReceivedCompletely ? new Date().toISOString() : null,
 		dataInsercao: new Date().toISOString(),
 	});
 
-	if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro na criação da receita.");
+	if (!insertResponse.acknowledged) {
+		console.error("[ERROR] [CREATE REVENUE] Failed to insert revenue into database.", {
+			revenueName: revenue.nome,
+			acknowledged: insertResponse.acknowledged,
+		});
+		throw new createHttpError.InternalServerError("Oops, houve um erro na criação da receita.");
+	}
+
+	console.log("[INFO] [CREATE REVENUE] Revenue created successfully.", {
+		revenueId: insertResponse.insertedId.toString(),
+		revenueName: revenue.nome,
+		revenueType: revenue.tipo,
+		revenueTotal: revenue.total,
+		contaAzulIntegration: contaAzulSaleId ? "Success" : "Skipped or Failed",
+		authorId: author.id,
+		authorName: author.nome,
+	});
 
 	return res.status(201).json({ data: { insertedId: insertResponse.insertedId.toString() }, message: "Receita criada com sucesso !" });
 };

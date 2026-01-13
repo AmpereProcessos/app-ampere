@@ -1099,12 +1099,303 @@ export const GetContaAzulSaleV2ByIdOutputSchema = z.object({
 });
 export type TGetContaAzulSaleV2ByIdOutput = z.infer<typeof GetContaAzulSaleV2ByIdOutputSchema>;
 
-export const GetContaAzulNextSaleNumberV2OutputSchema = z.object({
-	numero: z
-		.number({
-			required_error: "O número da venda é obrigatório",
-			invalid_type_error: "O número da venda deve ser um número",
-		})
-		.describe("Próximo número de venda disponível"),
+export const GetContaAzulNextSaleNumberV2OutputSchema = z.number({
+	required_error: "O número da venda é obrigatório",
+	invalid_type_error: "O número da venda deve ser um número",
 });
 export type TGetContaAzulNextSaleNumberV2Output = z.infer<typeof GetContaAzulNextSaleNumberV2OutputSchema>;
+
+export const CreateCentroDeCustoV2InputSchema = z.object({
+	codigo: z
+		.string({
+			invalid_type_error: "O código deve ser uma string",
+		})
+		.describe("Código do centro de custo")
+		.optional()
+		.nullable(),
+	nome: z
+		.string({
+			required_error: "O nome é obrigatório",
+			invalid_type_error: "O nome deve ser uma string",
+		})
+		.describe("Nome do centro de custo"),
+});
+export type TCreateCentroDeCustoV2Input = z.infer<typeof CreateCentroDeCustoV2InputSchema>;
+
+export const CreateCentroDeCustoV2OutputSchema = z.object({
+	id: z
+		.string({
+			required_error: "O ID é obrigatório",
+			invalid_type_error: "O ID deve ser uma string",
+		})
+		.describe("Identificador único do centro de custo"),
+	codigo: z
+		.string({
+			invalid_type_error: "O código deve ser uma string",
+		})
+		.describe("Código do centro de custo")
+		.optional()
+		.nullable(),
+	nome: z
+		.string({
+			invalid_type_error: "O nome deve ser uma string",
+		})
+		.describe("Nome do centro de custo")
+		.optional()
+		.nullable(),
+	ativo: z
+		.boolean({
+			invalid_type_error: "O campo ativo deve ser um boolean",
+		})
+		.describe("Indica se o centro de custo está ativo")
+		.optional()
+		.nullable(),
+});
+export type TCreateCentroDeCustoV2Output = z.infer<typeof CreateCentroDeCustoV2OutputSchema>;
+
+export const SearchCentroDeCustoV2OutputSchema = z.object({
+	items: z.array(
+		z.object({
+			id: z
+				.string({
+					invalid_type_error: "O ID deve ser uma string",
+				})
+				.describe("Identificador único do centro de custo")
+				.optional()
+				.nullable(),
+			codigo: z
+				.string({
+					invalid_type_error: "O código deve ser uma string",
+				})
+				.describe("Código do centro de custo")
+				.optional()
+				.nullable(),
+			nome: z
+				.string({
+					invalid_type_error: "O nome deve ser uma string",
+				})
+				.describe("Nome do centro de custo")
+				.optional()
+				.nullable(),
+			ativo: z
+				.boolean({
+					invalid_type_error: "O campo ativo deve ser um boolean",
+				})
+				.describe("Indica se o centro de custo está ativo")
+				.optional()
+				.nullable(),
+		}),
+	),
+	totalItems: z
+		.number({
+			invalid_type_error: "O total de itens deve ser um número",
+		})
+		.describe("Total de itens encontrados")
+		.optional()
+		.nullable(),
+});
+export type TSearchCentroDeCustoV2Output = z.infer<typeof SearchCentroDeCustoV2OutputSchema>;
+
+export const SearchContaAzulClientV2ByCpfCnpjOutputSchema = z.object({
+	items: z.array(
+		z.object({
+			id: z
+				.string({
+					invalid_type_error: "O ID da pessoa deve ser uma string",
+				})
+				.describe("ID da pessoa")
+				.optional()
+				.nullable(),
+			id_legado: z
+				.number({
+					invalid_type_error: "O ID legado deve ser um número",
+				})
+				.describe("ID legado da pessoa")
+				.optional()
+				.nullable(),
+			nome: z
+				.string({
+					invalid_type_error: "O nome deve ser uma string",
+				})
+				.describe("Nome da pessoa")
+				.optional()
+				.nullable(),
+			documento: z
+				.string({
+					invalid_type_error: "O documento deve ser uma string",
+				})
+				.describe("Documento da pessoa (CPF/CNPJ)")
+				.optional()
+				.nullable(),
+			email: z
+				.string({
+					invalid_type_error: "O email deve ser uma string",
+				})
+				.describe("Email da pessoa")
+				.optional()
+				.nullable(),
+			telefone: z
+				.string({
+					invalid_type_error: "O telefone deve ser uma string",
+				})
+				.describe("Telefone da pessoa")
+				.optional()
+				.nullable(),
+			tipo_pessoa: z
+				.string({
+					invalid_type_error: "O tipo de pessoa deve ser uma string",
+				})
+				.describe("Tipo de pessoa (Física, Jurídica ou Estrangeira)")
+				.optional()
+				.nullable(),
+			ativo: z
+				.boolean({
+					invalid_type_error: "O campo ativo deve ser um boolean",
+				})
+				.describe("Indica se a pessoa está ativa ou inativa")
+				.optional()
+				.nullable(),
+			data_criacao: z
+				.string({
+					invalid_type_error: "A data de criação deve ser uma string",
+				})
+				.describe("Data/hora de criação")
+				.optional()
+				.nullable(),
+			data_alteracao: z
+				.string({
+					invalid_type_error: "A data de alteração deve ser uma string",
+				})
+				.describe("Data/hora da última alteração")
+				.optional()
+				.nullable(),
+			endereco: z
+				.object({
+					id: z.string().optional().nullable(),
+					cep: z.string().optional().nullable(),
+					logradouro: z.string().optional().nullable(),
+					numero: z.string().optional().nullable(),
+					bairro: z.string().optional().nullable(),
+					cidade: z.string().optional().nullable(),
+					estado: z.string().optional().nullable(),
+					pais: z.string().optional().nullable(),
+					complemento: z.string().optional().nullable(),
+					id_cidade: z.number().optional().nullable(),
+				})
+				.describe("Endereço da pessoa")
+				.optional()
+				.nullable(),
+			perfis: z.array(z.string()).describe("Perfis associados à pessoa").optional().nullable(),
+			observacoes_gerais: z
+				.string({
+					invalid_type_error: "As observações gerais devem ser uma string",
+				})
+				.describe("Observações gerais sobre a pessoa")
+				.optional()
+				.nullable(),
+			uuid_legado: z
+				.string({
+					invalid_type_error: "O UUID legado deve ser uma string",
+				})
+				.describe("UUID legado da pessoa")
+				.optional()
+				.nullable(),
+		}),
+	),
+	totalItems: z
+		.number({
+			invalid_type_error: "O total de itens deve ser um número",
+		})
+		.describe("Total de itens encontrados")
+		.optional()
+		.nullable(),
+});
+export type TSearchContaAzulClientV2ByCpfCnpjOutput = z.infer<typeof SearchContaAzulClientV2ByCpfCnpjOutputSchema>;
+
+export const CreateContaAzulClientV2InputSchema = z.object({
+	nome: z
+		.string({
+			required_error: "O nome do cliente é obrigatório",
+			invalid_type_error: "O nome do cliente deve ser uma string",
+		})
+		.describe("Nome do cliente"),
+	email: z
+		.string({
+			invalid_type_error: "O email deve ser uma string",
+		})
+		.describe("Email do cliente")
+		.optional()
+		.nullable(),
+	telefone: z
+		.string({
+			invalid_type_error: "O telefone deve ser uma string",
+		})
+		.describe("Telefone do cliente")
+		.optional()
+		.nullable(),
+	documento: z
+		.string({
+			required_error: "O documento é obrigatório",
+			invalid_type_error: "O documento deve ser uma string",
+		})
+		.describe("CPF/CNPJ do cliente (sem máscara)"),
+	tipo_pessoa: z
+		.enum(["NATURAL", "LEGAL"], {
+			required_error: "O tipo de pessoa é obrigatório",
+			invalid_type_error: "O tipo de pessoa deve ser NATURAL ou LEGAL",
+		})
+		.describe("Tipo de pessoa"),
+	cep: z
+		.string({
+			invalid_type_error: "O CEP deve ser uma string",
+		})
+		.describe("CEP do cliente")
+		.optional()
+		.nullable(),
+	logradouro: z
+		.string({
+			invalid_type_error: "O logradouro deve ser uma string",
+		})
+		.describe("Logradouro do cliente")
+		.optional()
+		.nullable(),
+	numero: z
+		.string({
+			invalid_type_error: "O número deve ser uma string",
+		})
+		.describe("Número do endereço")
+		.optional()
+		.nullable(),
+	bairro: z
+		.string({
+			invalid_type_error: "O bairro deve ser uma string",
+		})
+		.describe("Bairro do cliente")
+		.optional()
+		.nullable(),
+});
+export type TCreateContaAzulClientV2Input = z.infer<typeof CreateContaAzulClientV2InputSchema>;
+
+export const CreateContaAzulClientV2OutputSchema = z.object({
+	id: z
+		.string({
+			required_error: "O ID do cliente é obrigatório",
+			invalid_type_error: "O ID do cliente deve ser uma string",
+		})
+		.describe("ID do cliente criado"),
+	nome: z
+		.string({
+			invalid_type_error: "O nome deve ser uma string",
+		})
+		.describe("Nome do cliente")
+		.optional()
+		.nullable(),
+	documento: z
+		.string({
+			invalid_type_error: "O documento deve ser uma string",
+		})
+		.describe("Documento do cliente")
+		.optional()
+		.nullable(),
+});
+export type TCreateContaAzulClientV2Output = z.infer<typeof CreateContaAzulClientV2OutputSchema>;

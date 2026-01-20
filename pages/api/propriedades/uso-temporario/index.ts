@@ -1,3 +1,4 @@
+import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { PropertyTemporaryUsageSchema, type TProperty, type TPropertyTemporaryUsage } from "@/utils/schemas/properties";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
@@ -5,7 +6,6 @@ import clientPromise from "@/utils/services/mongodb/mongo-client";
 import createHttpError from "http-errors";
 import { type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
-import type { TAuthSession } from "@/lib/authentication/types";
 import { z } from "zod";
 
 const PropertyTemporaryUsagesByPeriodQueryParams = z.object({
@@ -86,7 +86,13 @@ async function getTemporaryUsagesRoute({ params, session }: { params: TPropertyT
 		...typeQuery,
 		...periodQuery,
 	};
-	const temporaryUsages = await temporaryUsagesCollection.find(query).toArray();
+	const temporaryUsages = await temporaryUsagesCollection
+		.find(query, {
+			sort: {
+				_id: -1,
+			},
+		})
+		.toArray();
 
 	return {
 		data: {

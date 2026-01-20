@@ -2,9 +2,9 @@ import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import {
 	InsertPropertySchema,
 	PropertyMetadataVehicleSchema,
-	type TPropertyTemporaryUsageDTO,
 	type TProperty,
 	type TPropertyTemporaryUsage,
+	type TPropertyTemporaryUsageDTO,
 } from "@/utils/schemas/properties";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
@@ -23,6 +23,7 @@ const PropertiesQueryParamsInputSchema = z.object({
 	id: z.string({ invalid_type_error: "Tipo não válido para o ID." }).optional().nullable(),
 	// multiple properties filter
 	search: z.string({ invalid_type_error: "Tipo não válido para o search." }).optional().nullable(),
+	status: z.enum(["all", "active-only", "inactive-only"]).optional().nullable(),
 	metadataTypes: z
 		.string({ invalid_type_error: "Tipo não válido para o metadataType." })
 		.optional()
@@ -30,7 +31,7 @@ const PropertiesQueryParamsInputSchema = z.object({
 		.transform((val) => z.array(PropertyMetadataVehicleSchema.shape.tipo).parse(val ? val.split(",") : [])),
 });
 export type TPropertiesQueryParamsInput = z.infer<typeof PropertiesQueryParamsInputSchema>;
-const getProperties = async ({ id, includeOpenUsages, search, metadataTypes }: TPropertiesQueryParamsInput) => {
+const getProperties = async ({ id, includeOpenUsages, search, metadataTypes, status }: TPropertiesQueryParamsInput) => {
 	const db = await connectToAdministrationDatabase();
 	const propertiesCollection: Collection<TProperty> = db.collection("propriedades");
 	const temporaryUsagesCollection: Collection<TPropertyTemporaryUsage> = db.collection("propriedades-uso-temporario");
@@ -66,7 +67,8 @@ const getProperties = async ({ id, includeOpenUsages, search, metadataTypes }: T
 
 	const metadataTypesQuery: Filter<TProperty> = { "metadados.tipo": { $in: metadataTypes } };
 
-	const query: Filter<TProperty> = { ...searchQuery, ...metadataTypesQuery };
+	const statusQuery: Filter<TProperty> = status === "active-only" ? { ativo: true } : status === "inactive-only" ? { ativo: false } : {};
+	const query: Filter<TProperty> = { ...searchQuery, ...metadataTypesQuery, ...statusQuery };
 	const properties = await propertiesCollection.find(query).toArray();
 
 	let openUsagesByPropertyId: Map<string, Array<TPropertyTemporaryUsageDTO>> | undefined = undefined;

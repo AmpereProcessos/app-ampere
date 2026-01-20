@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TProperty } from "@/utils/schemas/properties";
+import React, { useState } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -9,16 +9,16 @@ import { createProperty } from "@/utils/methods/mutation/properties";
 
 import { useMediaQuery } from "@/lib/hooks/media-query";
 
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
-import GeneralInfo from "./blocos/Generalnfo";
-import VehicleProperties from "./VehicleProperties";
-import type { TSimpleAttachment } from "@/utils/methods/uploading";
 import { uploadFile } from "@/utils/methods/firebase";
 import { formatAsSlug } from "@/utils/methods/formatting";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
+import VehicleProperties from "./VehicleProperties";
+import GeneralInfo from "./blocos/Generalnfo";
 
 type NewPropertyProps = {
 	session: TAuthSession;
@@ -30,6 +30,7 @@ function NewProperty({ session, closeModal }: NewPropertyProps) {
 	const queryClient = useQueryClient();
 	const [imageHolder, setImageHolder] = useState<TSimpleAttachment>({ file: null, previewUrl: null });
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
+		ativo: true,
 		nome: "",
 		identificador: "",
 		metadados: {

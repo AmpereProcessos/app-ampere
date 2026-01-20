@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TProperty } from "@/utils/schemas/properties";
+import React, { useEffect, useState } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -9,24 +9,24 @@ import { createProperty, updateProperty } from "@/utils/methods/mutation/propert
 
 import { useMediaQuery } from "@/lib/hooks/media-query";
 
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 
-import GeneralInfo from "./blocos/Generalnfo";
-import VehicleProperties from "./VehicleProperties";
-import { usePropertyById } from "@/utils/methods/query/properties";
-import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import { LinkIcon } from "lucide-react";
+import LoadingComponent from "@/components/utils/LoadingComponent";
 import { copyToClipboard } from "@/lib/utils";
-import type { TSimpleAttachment } from "@/utils/methods/uploading";
-import { formatAsSlug, formatWithoutDiacritics } from "@/utils/methods/formatting";
 import { uploadFile } from "@/utils/methods/firebase";
+import { formatAsSlug, formatWithoutDiacritics } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { usePropertyById } from "@/utils/methods/query/properties";
+import type { TSimpleAttachment } from "@/utils/methods/uploading";
+import { LinkIcon } from "lucide-react";
 import QRCode from "qrcode";
 import toast from "react-hot-toast";
+import VehicleProperties from "./VehicleProperties";
+import GeneralInfo from "./blocos/Generalnfo";
 
 type EditPropertyProps = {
 	propertyId: string;
@@ -37,6 +37,7 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const queryClient = useQueryClient();
 	const [infoHolder, setInfoHolder] = useState<TProperty>({
+		ativo: true,
 		nome: "",
 		identificador: "",
 		metadados: {
@@ -108,6 +109,9 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 								propertyId={propertyId}
 								infoHolder={infoHolder}
 								updateInfoHolder={updateInfoHolder}
+								mutateUpdateProperty={(changes) =>
+									handleUpdatePropertyMutation({ id: propertyId, changes: { ...infoHolder, ...changes }, file: imageHolder.file })
+								}
 							/>
 						</div>
 						<DialogFooter>
@@ -145,6 +149,9 @@ function EditProperty({ propertyId, session, closeModal }: EditPropertyProps) {
 								propertyId={propertyId}
 								infoHolder={infoHolder}
 								updateInfoHolder={updateInfoHolder}
+								mutateUpdateProperty={(changes) =>
+									handleUpdatePropertyMutation({ id: propertyId, changes: { ...infoHolder, ...changes }, file: imageHolder.file })
+								}
 							/>
 						</div>
 						<DrawerFooter>
@@ -174,12 +181,26 @@ type PropertyContentProps = {
 	setImageHolder: (image: TSimpleAttachment) => void;
 	infoHolder: TProperty;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
+	mutateUpdateProperty: (changes: Partial<TProperty>) => void;
 };
-function PropertyContent({ isDesktop, propertyId, imageHolder, setImageHolder, infoHolder, updateInfoHolder }: PropertyContentProps) {
+function PropertyContent({
+	isDesktop,
+	propertyId,
+	imageHolder,
+	setImageHolder,
+	infoHolder,
+	updateInfoHolder,
+	mutateUpdateProperty,
+}: PropertyContentProps) {
 	return (
 		<div className="flex h-full w-full flex-col gap-6 px-4 lg:px-0">
 			<SharableUsageLink id={propertyId} />
-			<PropertyUsageLink id={propertyId} qrCodeLinkSvgString={infoHolder.usoTemporarioLinkUrlQRCode ?? undefined} updateInfoHolder={updateInfoHolder} />
+			<PropertyUsageLink
+				id={propertyId}
+				qrCodeLinkSvgString={infoHolder.usoTemporarioLinkUrlQRCode ?? undefined}
+				updateInfoHolder={updateInfoHolder}
+				mutateUpdateProperty={mutateUpdateProperty}
+			/>
 
 			<GeneralInfo imageHolder={imageHolder} setImageHolder={setImageHolder} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
 			<VehicleProperties isDesktop={isDesktop} infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
@@ -204,10 +225,12 @@ function PropertyUsageLink({
 	id,
 	qrCodeLinkSvgString,
 	updateInfoHolder,
+	mutateUpdateProperty,
 }: {
 	id: string;
 	qrCodeLinkSvgString?: string;
 	updateInfoHolder: (info: Partial<TProperty>) => void;
+	mutateUpdateProperty: (changes: Partial<TProperty>) => void;
 }) {
 	async function generateQRCode(link: string) {
 		const svgString = await QRCode.toString(link, {
@@ -219,7 +242,7 @@ function PropertyUsageLink({
 				light: "#FFFFFF",
 			},
 		});
-		updateInfoHolder({ usoTemporarioLinkUrlQRCode: svgString });
+		mutateUpdateProperty({ usoTemporarioLinkUrlQRCode: svgString });
 		toast.success("Código QR gerado com sucesso!");
 	}
 	if (!qrCodeLinkSvgString)

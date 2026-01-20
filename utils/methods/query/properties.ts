@@ -1,32 +1,28 @@
-import type { TPropertyDTO, TPropertyTemporaryUsage } from "@/utils/schemas/properties";
-import axios from "axios";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { formatWithoutDiacritics } from "../formatting";
+import { useDebounceMemo } from "@/lib/hooks/debounce";
+import type { TGetPropertiesOutput, TPropertiesQueryParamsInput } from "@/pages/api/propriedades";
+import type { TPropertiesStatsOutput, TStatsQueryParamsInput } from "@/pages/api/propriedades/estatisticas";
 import type {
 	TGetPropertyTemporaryUsagesOutput,
 	TPropertyTemporaryUsagesByPeriodInput,
 	TPropertyTemporaryUsagesInput,
 } from "@/pages/api/propriedades/uso-temporario";
-import dayjs from "dayjs";
-import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetTemporaryUsageByPropertyOutput, TTemporaryUsageByPropertyInput } from "@/pages/api/propriedades/uso-temporario/propriedade";
-import type { TGetPropertiesOutput, TPropertiesQueryParamsInput } from "@/pages/api/propriedades";
-import type { TPropertiesStatsOutput, TStatsQueryParamsInput } from "@/pages/api/propriedades/estatisticas";
+import type { TPropertyDTO, TPropertyTemporaryUsage } from "@/utils/schemas/properties";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { formatWithoutDiacritics } from "../formatting";
 
 async function fetchProperties(queryParams: TPropertiesQueryParamsInput) {
-	try {
-		const urlParams = new URLSearchParams();
-		if ("search" in queryParams) urlParams.set("search", queryParams.search || "");
-		if ("metadataTypes" in queryParams) urlParams.set("metadataTypes", queryParams.metadataTypes.join(","));
-		if ("includeOpenUsages" in queryParams) urlParams.set("includeOpenUsages", queryParams.includeOpenUsages.toString());
-
-		const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?${urlParams.toString()}`);
-		if (!data.data.default) throw new Error("Não foi possível obter as propriedades.");
-		return data.data.default;
-	} catch (error) {
-		throw error;
-	}
+	const urlParams = new URLSearchParams();
+	if ("search" in queryParams) urlParams.set("search", queryParams.search || "");
+	if ("metadataTypes" in queryParams) urlParams.set("metadataTypes", queryParams.metadataTypes.join(","));
+	if ("includeOpenUsages" in queryParams) urlParams.set("includeOpenUsages", queryParams.includeOpenUsages.toString());
+	if ("status" in queryParams && queryParams.status) urlParams.set("status", queryParams.status);
+	const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?${urlParams.toString()}`);
+	if (!data.data.default) throw new Error("Não foi possível obter as propriedades.");
+	return data.data.default;
 }
 
 type TUsePropertiesParams = {
@@ -37,6 +33,7 @@ export function useProperties({ initialFilters }: TUsePropertiesParams) {
 		search: initialFilters?.search ?? "",
 		metadataTypes: initialFilters?.metadataTypes ?? ["VEÍCULO"],
 		includeOpenUsages: initialFilters?.includeOpenUsages ?? true,
+		status: initialFilters?.status ?? "active-only",
 	});
 
 	function updateFilters(filters: Partial<TPropertiesQueryParamsInput>) {
@@ -58,13 +55,9 @@ export function useProperties({ initialFilters }: TUsePropertiesParams) {
 }
 
 async function fetchPropertyById({ id }: { id: string }) {
-	try {
-		const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?id=${id}&includeOpenUsages=true`);
-		if (!data.data.byId) throw new Error("Propriedade não encontrada.");
-		return data.data.byId;
-	} catch (error) {
-		throw error;
-	}
+	const { data }: { data: TGetPropertiesOutput } = await axios.get(`/api/propriedades?id=${id}&includeOpenUsages=true`);
+	if (!data.data.byId) throw new Error("Propriedade não encontrada.");
+	return data.data.byId;
 }
 
 export function usePropertyById({ id }: { id: string }) {
@@ -75,19 +68,15 @@ export function usePropertyById({ id }: { id: string }) {
 }
 
 async function fetchPropertyTemporaryUsages(params: TPropertyTemporaryUsagesByPeriodInput) {
-	try {
-		const urlParams = new URLSearchParams();
-		if ("periodAfter" in params && params.periodAfter) urlParams.set("periodAfter", params.periodAfter);
-		if ("periodBefore" in params && params.periodBefore) urlParams.set("periodBefore", params.periodBefore);
-		if ("periodType" in params && params.periodType) urlParams.set("periodType", params.periodType);
-		if ("type" in params && params.type) urlParams.set("type", params.type);
+	const urlParams = new URLSearchParams();
+	if ("periodAfter" in params && params.periodAfter) urlParams.set("periodAfter", params.periodAfter);
+	if ("periodBefore" in params && params.periodBefore) urlParams.set("periodBefore", params.periodBefore);
+	if ("periodType" in params && params.periodType) urlParams.set("periodType", params.periodType);
+	if ("type" in params && params.type) urlParams.set("type", params.type);
 
-		const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?${urlParams.toString()}`);
-		if (!data.data.default) throw new Error("Não foi possível obter os usos temporários da propriedade.");
-		return data.data.default;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?${urlParams.toString()}`);
+	if (!data.data.default) throw new Error("Não foi possível obter os usos temporários da propriedade.");
+	return data.data.default;
 }
 
 type UsePropertyTemporaryUsagesParams = {
@@ -120,13 +109,9 @@ export function usePropertyTemporaryUsages({ initialParams }: UsePropertyTempora
 }
 
 async function fetchPropertyTemporaryUsageById({ id }: { id: string }) {
-	try {
-		const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?id=${id}`);
-		if (!data.data.byId) throw new Error("Uso temporário não encontrado.");
-		return data.data.byId;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get<TGetPropertyTemporaryUsagesOutput>(`/api/propriedades/uso-temporario?id=${id}`);
+	if (!data.data.byId) throw new Error("Uso temporário não encontrado.");
+	return data.data.byId;
 }
 
 export function usePropertyTemporaryUsageById({ id }: { id: string }) {
@@ -137,14 +122,10 @@ export function usePropertyTemporaryUsageById({ id }: { id: string }) {
 }
 
 async function fetchOpenPropertyTemporaryUsageByPropertyId(input: TTemporaryUsageByPropertyInput) {
-	try {
-		const { data } = await axios.get<TGetTemporaryUsageByPropertyOutput>(
-			`/api/propriedades/uso-temporario/propriedade?openUsagePropertyId=${input.openUsagePropertyId}`,
-		);
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get<TGetTemporaryUsageByPropertyOutput>(
+		`/api/propriedades/uso-temporario/propriedade?openUsagePropertyId=${input.openUsagePropertyId}`,
+	);
+	return data.data;
 }
 
 export function useOpenPropertyTemporaryUsageByPropertyId({ id }: { id: string }) {
@@ -155,16 +136,12 @@ export function useOpenPropertyTemporaryUsageByPropertyId({ id }: { id: string }
 }
 
 async function fetchPropertiesStats(payload: TStatsQueryParamsInput) {
-	try {
-		const urlParams = new URLSearchParams();
-		if ("after" in payload) urlParams.set("after", payload.after);
-		if ("before" in payload) urlParams.set("before", payload.before);
+	const urlParams = new URLSearchParams();
+	if ("after" in payload) urlParams.set("after", payload.after);
+	if ("before" in payload) urlParams.set("before", payload.before);
 
-		const { data } = await axios.get<TPropertiesStatsOutput>(`/api/propriedades/estatisticas?${urlParams.toString()}`);
-		return data.data;
-	} catch (error) {
-		throw error;
-	}
+	const { data } = await axios.get<TPropertiesStatsOutput>(`/api/propriedades/estatisticas?${urlParams.toString()}`);
+	return data.data;
 }
 
 type UsePropertiesStatsParams = {

@@ -31,6 +31,10 @@ export const PropertyMetadataVehicleSchema = z.object({
 });
 export type TPropertyMetadataVehicle = z.infer<typeof PropertyMetadataVehicleSchema>;
 const GeneralPropertySchema = z.object({
+	ativo: z.boolean({
+		required_error: "Status da propriedade não informado.",
+		invalid_type_error: "Tipo não válido para o status da propriedade.",
+	}),
 	nome: z.string(),
 	identificador: z.string(),
 	imagemUrl: z.string().optional().nullable(),
@@ -47,6 +51,10 @@ const GeneralPropertySchema = z.object({
 	dataInsercao: z.string().datetime(),
 });
 export const InsertPropertySchema = z.object({
+	ativo: z.boolean({
+		required_error: "Status da propriedade não informado.",
+		invalid_type_error: "Tipo não válido para o status da propriedade.",
+	}),
 	nome: z.string({ required_error: "Nome da propriedade não informado.", invalid_type_error: "Tipo não válido para o nome da propriedade." }),
 	identificador: z.string({
 		required_error: "Identificador da propriedade não informado.",

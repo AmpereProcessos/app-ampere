@@ -20,7 +20,13 @@ export default function GeneralInfo({ imageHolder, setImageHolder, infoHolder, u
 				<LayoutGrid size={15} />
 				<h1 className="text-xs tracking-tight font-medium text-start w-fit">INFORMAÇÕES DA PROPRIEDADE</h1>
 			</div>
+			<div className="w-full flex items-center justify-center">
+				<div className="w-fit">
+					<CheckboxInput labelFalse="ATIVO" labelTrue="ATIVO" checked={infoHolder.ativo} handleChange={(value) => updateInfoHolder({ ativo: value })} />
+				</div>
+			</div>
 			<ImageContent imageUrl={infoHolder.imagemUrl} imageHolder={imageHolder} setImageHolder={setImageHolder} />
+
 			<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 				<div className="w-full lg:w-1/2">
 					<TextInput

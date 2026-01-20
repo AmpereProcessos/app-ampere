@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { TGetPropertiesDefaultOutput } from "@/pages/api/propriedades";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { renderIconWithClassNames } from "@/utils/methods/rendering";
-import { Code, Landmark, Pencil, ScanSearch } from "lucide-react";
+import { CheckCircle2, Code, Landmark, Pencil, ScanSearch } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { BsCalendarPlus } from "react-icons/bs";
@@ -60,42 +60,53 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
 							</>
 						) : null}
 					</div>
-					{openUsages.length > 0 ? (
-						<HoverCard>
-							<HoverCardTrigger asChild>
-								<Button variant={"ghost"} size={"fit"} className="text-xs">
-									{openUsages.length} USOS EM ANDAMENTO
-								</Button>
-							</HoverCardTrigger>
-							<HoverCardContent className="w-80">
-								<h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
-								<div className="flex flex-col gap-3">
-									{openUsages.map((usage) => (
-										<div key={usage._id} className="bg-primary/10 flex w-full flex-col gap-1 rounded-lg p-2">
-											<div className="flex w-full items-center justify-between">
-												<Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
-												<div className="flex items-center gap-2">
-													<BsCalendarPlus className="h-4 w-4" />
-													<p className="text-xs font-medium tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
+					<div className="flex items-center gap-2">
+						{openUsages.length > 0 ? (
+							<HoverCard>
+								<HoverCardTrigger asChild>
+									<Button variant={"ghost"} size={"fit"} className="text-xs">
+										{openUsages.length} USOS EM ANDAMENTO
+									</Button>
+								</HoverCardTrigger>
+								<HoverCardContent className="w-80">
+									<h1 className="text-[0.65rem] font-medium">USOS EM ANDAMENTO</h1>
+									<div className="flex flex-col gap-3">
+										{openUsages.map((usage) => (
+											<div key={usage._id} className="bg-primary/10 flex w-full flex-col gap-1 rounded-lg p-2">
+												<div className="flex w-full items-center justify-between">
+													<Badge className="rounded-full text-[0.65rem]">{usage.metadados.tipo}</Badge>
+													<div className="flex items-center gap-2">
+														<BsCalendarPlus className="h-4 w-4" />
+														<p className="text-xs font-medium tracking-tight">{formatDateAsLocale(usage.dataInicio) || "N/A"}</p>
+													</div>
+												</div>
+												<div className="flex w-full items-center justify-between">
+													<div className="flex items-center gap-2">
+														<Avatar className="h-4 min-h-4 w-4 min-w-4">
+															<AvatarImage src={usage.autor.avatar_url ?? undefined} />
+															<AvatarFallback className="text-xs">{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
+														</Avatar>
+														<p className="text-xs font-medium tracking-tight">{usage.autor.nome}</p>
+													</div>
 												</div>
 											</div>
-											<div className="flex w-full items-center justify-between">
-												<div className="flex items-center gap-2">
-													<Avatar className="h-4 min-h-4 w-4 min-w-4">
-														<AvatarImage src={usage.autor.avatar_url ?? undefined} />
-														<AvatarFallback className="text-xs">{formatNameAsInitials(usage.autor.nome)}</AvatarFallback>
-													</Avatar>
-													<p className="text-xs font-medium tracking-tight">{usage.autor.nome}</p>
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							</HoverCardContent>
-						</HoverCard>
-					) : (
-						<div />
-					)}
+										))}
+									</div>
+								</HoverCardContent>
+							</HoverCard>
+						) : (
+							<div />
+						)}
+						<Badge
+							className={cn("rounded-full text-[0.65rem]", {
+								"bg-green-600 text-white": property.ativo,
+								"bg-red-600 text-white": !property.ativo,
+							})}
+						>
+							<CheckCircle2 className="h-4 w-4" />
+							{property.ativo ? "ATIVO" : "INATIVO"}
+						</Badge>
+					</div>
 				</div>
 				<div className="flex w-full items-center justify-between gap-1">
 					<div className="flex items-center gap-1">

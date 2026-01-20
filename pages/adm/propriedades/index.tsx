@@ -48,6 +48,11 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 	const [newPropertyModalIsOpen, setNewPropertyModalIsOpen] = useState<boolean>(false);
 	const [editPropertyModal, setEditPropertyModal] = useState<TEditModal>({ id: null, isOpen: false });
 
+	const statusOptions = [
+		{ label: "TODOS", value: "all" },
+		{ label: "SOMENTE ATIVOS", value: "active-only" },
+		{ label: "SOMENTE INATIVOS", value: "inactive-only" },
+	];
 	function handleExportToExcel(properties: TGetPropertiesDefaultOutput | undefined) {
 		if (!properties) return toast.error("Nenhuma propriedade encontrada para exportar.");
 		const excelData = properties.map((property) => ({
@@ -115,6 +120,27 @@ function PropertiesContent({ session }: PropertiesContentProps) {
 									>
 										{renderIconWithClassNames(config.icon, "h-4 w-4")}
 										<p className="text-sm">{config.name}</p>
+									</Button>
+								))}
+							</div>
+							<div className="flex w-full items-center justify-start gap-2">
+								<h1 className="text-primary/80 text-sm font-medium">STATUS DA PROPRIEDADE</h1>
+								{statusOptions.map((status) => (
+									<Button
+										key={status.value}
+										variant={"ghost"}
+										size={"fit"}
+										className={cn("flex items-center gap-2 px-2 py-1", {
+											"opacity-100 bg-primary text-primary-foreground": filters.status === status.value,
+											"bg-primary/20": filters.status !== status.value,
+										})}
+										onClick={() =>
+											updateFilters({
+												status: filters.status === status.value ? null : (status.value as "all" | "active-only" | "inactive-only"),
+											})
+										}
+									>
+										<p className="text-sm">{status.label}</p>
 									</Button>
 								))}
 							</div>

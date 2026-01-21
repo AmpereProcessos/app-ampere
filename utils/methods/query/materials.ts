@@ -2,6 +2,7 @@ import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetMaterialsDatabaseInput, TGetMaterialsDatabaseOutput } from "@/pages/api/almoxarifado/estoque/database";
 import type { TGetStockAnalyticsOutput } from "@/pages/api/almoxarifado/estoque/estatisticas";
 import type { TMaterialDeletionDataOutput } from "@/pages/api/almoxarifado/materiais/exclusao";
+import type { TGetMaterialsSnapshotOutput } from "@/pages/api/almoxarifado/materiais/snapshot";
 import type { TMaterialUpdateRegistryDTO } from "@/utils/schemas/material-updates-registry";
 import type {
 	TMaterial,
@@ -234,5 +235,17 @@ export function useMaterialDeletionData({ id }: { id: string }) {
 	return useQuery({
 		queryKey: ["material-deletion-data", id],
 		queryFn: async () => await fetchMaterialDeletionData({ id }),
+	});
+}
+
+export async function fetchMaterialsSnapshot(paramDate: string) {
+	const { data } = await axios.get<TGetMaterialsSnapshotOutput>(`/api/almoxarifado/materiais/snapshot?paramDate=${paramDate}`);
+	return data.data;
+}
+
+export function useMaterialsSnapshot(paramDate: string) {
+	return useQuery({
+		queryKey: ["materials-snapshot", paramDate],
+		queryFn: async () => await fetchMaterialsSnapshot(paramDate),
 	});
 }

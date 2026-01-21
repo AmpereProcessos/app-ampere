@@ -10,6 +10,7 @@ import LoadingPage from "../../../components/utils/LoadingPage";
 import NewPurchaseControlSimplified from "@/components/identificador/controles-compras/modals/NewPurchaseControlSimplified";
 import EditMaterial from "@/components/identificador/estoque/EditMaterial";
 import NewMaterial from "@/components/identificador/estoque/NewMaterial";
+import StockSnapshotExportMenu from "@/components/identificador/estoque/StockSnapshotExportMenu";
 import CheckboxInput from "@/components/inputs/Checkbox";
 import DateTimeInput from "@/components/inputs/DateTimeInput";
 import MultipleSelectInput from "@/components/inputs/MultipleSelect";
@@ -27,7 +28,7 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { Box, ChartColumn, Code, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Truck } from "lucide-react";
+import { Box, Camera, ChartColumn, Code, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Truck } from "lucide-react";
 import Image from "next/image";
 import { BsCalendarPlus } from "react-icons/bs";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
@@ -57,6 +58,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 	const [newMaterialModalIsOpen, setNewMaterialModalIsOpen] = useState<boolean>(false);
 	const [editMaterialModal, setEditMaterialModal] = useState({ id: null as string | null, isOpen: false });
 	const [newPurchaseControlModalIsOpen, setNewPurchaseControlModalIsOpen] = useState<boolean>(false);
+	const [snapshotExportMenuIsOpen, setSnapshotExportMenuIsOpen] = useState<boolean>(false);
 	const { data: materialsResult, isLoading, isError, isSuccess, error, filters, updateFilters } = useMaterialsDatabase();
 
 	const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey: ["materials-database", filters] });
@@ -95,6 +97,10 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 						<FileText className="h-4 w-4" />
 						<p className="text-xs">RELATÓRIO EM PDF</p>
 					</Link>
+					<button type="button" onClick={() => setSnapshotExportMenuIsOpen(true)} className="flex items-center gap-1 transition-colors hover:text-cyan-500">
+						<Camera className="h-4 w-4" />
+						<p className="text-xs">SNAPSHOT DO ESTOQUE</p>
+					</button>
 					<Link href={"/almoxarifado/estoque/analitico"} className="flex items-center gap-1 transition-colors hover:text-cyan-500">
 						<ChartColumn className="h-4 w-4" />
 						<p className="text-xs">ANÁLITICO</p>
@@ -172,6 +178,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 					closeModal={() => setNewPurchaseControlModalIsOpen(false)}
 				/>
 			) : null}
+			{snapshotExportMenuIsOpen ? <StockSnapshotExportMenu closeMenu={() => setSnapshotExportMenuIsOpen(false)} /> : null}
 		</div>
 	);
 }

@@ -1,18 +1,18 @@
 import { apiHandler } from "@/utils/api";
 
-import { Filter } from "mongodb";
+import type { Filter } from "mongodb";
 
-import { Db } from "mongodb";
+import type { Db } from "mongodb";
 
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 
 import { validateAuthenticationWithSession } from "@/utils/api";
 
 import {
 	MaterialSimplifiedProjection,
 	QueryVinculationMaterialsFiltersSchema,
-	TMaterial,
-	TMaterialSimplifiedWithAlocatorDTO,
+	type TMaterial,
+	type TMaterialSimplifiedWithAlocatorDTO,
 } from "@/utils/schemas/materials";
 import connectToDatabase from "@/utils/services/mongodb/warehouse";
 

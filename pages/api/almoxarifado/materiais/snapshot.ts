@@ -21,6 +21,7 @@ async function getMaterialsSnapshot({ sessionUser, input }: { sessionUser: TAuth
 		// 1. Match materials that existed at snapshot time (created before, not deleted before)
 		{
 			$match: {
+				idEquipamento: null,
 				dataInsercao: { $lte: input.paramDate },
 				$or: [{ dataExclusao: null }, { dataExclusao: { $gt: input.paramDate } }],
 			},

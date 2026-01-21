@@ -3,8 +3,8 @@ import type { TUser } from "@/utils/schemas/crm/user.schema";
 import type { TProject } from "@/utils/schemas/projects";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import type { NextApiHandler } from "next";
 import dayjs from "dayjs";
+import type { NextApiHandler } from "next";
 import { z } from "zod";
 
 const GetSalesRankingQueryParams = z.object({
@@ -76,6 +76,7 @@ async function getSalesRanking(params: TGetSalesRankingInput) {
 			{},
 			{
 				projection: {
+					_id: 1,
 					nome: 1,
 					avatar_url: 1,
 				},
@@ -93,7 +94,7 @@ async function getSalesRanking(params: TGetSalesRankingInput) {
 			},
 			{
 				$group: {
-					_id: "$vendedor.nome",
+					_id: "$vendedor.idCRM",
 					qtdeVendida: {
 						$count: {},
 					},
@@ -145,7 +146,7 @@ async function getSalesRanking(params: TGetSalesRankingInput) {
 	}[];
 
 	const ranking = aggregated.map((item, index) => {
-		const equivalentUser = users.find((user) => user.nome === item._id);
+		const equivalentUser = users.find((user) => user._id.toString() === item._id);
 		const valueMap = {
 			"sales-total-qty": item.qtdeVendida,
 			"sales-total-value": item.valorTotal,

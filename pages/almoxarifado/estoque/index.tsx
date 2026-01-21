@@ -28,7 +28,21 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { Box, Camera, ChartColumn, Code, Edit, FileText, MapPin, MoveDownRight, MoveUpRight, PackageMinus, PackagePlus, Plus, Truck } from "lucide-react";
+import {
+	Box,
+	Camera,
+	ChartColumn,
+	Code,
+	Edit,
+	FileText,
+	MapPin,
+	MoveDownRight,
+	MoveUpRight,
+	PackageMinus,
+	PackagePlus,
+	Plus,
+	Truck,
+} from "lucide-react";
 import Image from "next/image";
 import { BsCalendarPlus } from "react-icons/bs";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
@@ -88,7 +102,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 						<Button onClick={() => setNewMaterialModalIsOpen((prev) => !prev)}>NOVO MATERIAL</Button>
 					</div>
 				</div>
-				<div className="flex w-full flex-wrap items-center justify-center gap-6 gap-y-1 lg:justify-end">
+				<div className="flex w-full flex-wrap items-center justify-center gap-6 gap-y-1.5 lg:justify-end">
 					<Link href={"/suprimentos/entregas?tagIds=67113e8d1cef044a60bb7606"} className="flex items-center gap-1 transition-colors hover:text-cyan-500">
 						<FaBox className="h-4 w-4" />
 						<p className="text-xs">ACOMPANHAMENTO DE ENTREGAS</p>
@@ -97,7 +111,11 @@ function StockPageComponent({ session }: StockPageComponentProps) {
 						<FileText className="h-4 w-4" />
 						<p className="text-xs">RELATÓRIO EM PDF</p>
 					</Link>
-					<button type="button" onClick={() => setSnapshotExportMenuIsOpen(true)} className="flex items-center gap-1 transition-colors hover:text-cyan-500">
+					<button
+						type="button"
+						onClick={() => setSnapshotExportMenuIsOpen(true)}
+						className="flex items-center gap-1 transition-colors hover:text-cyan-500"
+					>
 						<Camera className="h-4 w-4" />
 						<p className="text-xs">SNAPSHOT DO ESTOQUE</p>
 					</button>

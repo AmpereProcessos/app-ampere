@@ -181,14 +181,19 @@ async function updateTemporaryUsageRoute({ payload }: { payload: TUpdateProperty
 
 			if (updatedPropertyUsage.metadados.tipo === "USO DE VEÍCULO" && updatedPropertyUsage.metadados.kmFinal) {
 				console.log("[INFO] [UPDATE TEMPORARY USAGE] Updating property cumulative kilometers");
-				const initialKilometers = payload.changes.metadados.kmInicial;
-				const finalKilometers = payload.changes.metadados.kmFinal;
+				const initialKilometers = updatedPropertyUsage.metadados.kmInicial ?? 0;
+				const finalKilometers = updatedPropertyUsage.metadados.kmFinal ?? 0;
 
 				const differenceKilometers = (finalKilometers || 0) - initialKilometers;
 
+				const currentProperty = await propertiesCollection.findOne({ _id: new ObjectId(updatedPropertyUsage.propriedade.id) }, { session: dbSession });
+				if (!currentProperty) throw new createHttpError.NotFound("Propriedade não encontrada.");
+				const currentAccumulatedKilometers = currentProperty.metadados.kmAcumulado;
+				const expectedAccumulatedKilometers = currentAccumulatedKilometers + differenceKilometers;
+
 				const updatedProperty = await propertiesCollection.updateOne(
 					{ _id: new ObjectId(updatedPropertyUsage.propriedade.id) },
-					{ $inc: { "metadados.kmAcumulado": differenceKilometers } },
+					{ $inc: { "metadados.kmAcumulado": finalKilometers } }, // using final kilometers to update the property accumulated kilometers
 					{ session: dbSession },
 				);
 				if (!updatedProperty.acknowledged) throw new createHttpError.InternalServerError("Erro ao atualizar quilometragem acumulada da propriedade.");

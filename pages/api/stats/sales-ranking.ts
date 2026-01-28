@@ -28,7 +28,7 @@ async function getSalesRanking(params: TGetSalesRankingInput) {
 	const currentDate = dayjs();
 	const currentMonth = currentDate.month();
 	const currentSemesterMonthStart = currentMonth < 6 ? 0 : 6;
-
+	console.log("[INFO} [GET SALES RANKING] Params:", params);
 	const PERIOD_MAP = {
 		"current-month": {
 			startDate: currentDate.startOf("month").subtract(3, "hours").toDate(),

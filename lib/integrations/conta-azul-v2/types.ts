@@ -1099,6 +1099,814 @@ export const GetContaAzulSaleV2ByIdOutputSchema = z.object({
 });
 export type TGetContaAzulSaleV2ByIdOutput = z.infer<typeof GetContaAzulSaleV2ByIdOutputSchema>;
 
+export const GetContaAzulSalesV2ByPeriodOutputSchema = z.object({
+	totais: z
+		.object({
+			total: z
+				.number({
+					invalid_type_error: "O total deve ser um número",
+				})
+				.describe("Valor total obtido de todas as vendas")
+				.optional()
+				.nullable(),
+			aprovado: z
+				.number({
+					invalid_type_error: "O total aprovado deve ser um número",
+				})
+				.describe("Valor obtido das vendas aprovadas")
+				.optional()
+				.nullable(),
+			cancelado: z
+				.number({
+					invalid_type_error: "O total cancelado deve ser um número",
+				})
+				.describe("Valor obtido das vendas canceladas")
+				.optional()
+				.nullable(),
+			esperando_aprovacao: z
+				.number({
+					invalid_type_error: "O total em aprovação deve ser um número",
+				})
+				.describe("Valor obtido das vendas esperando aprovação")
+				.optional()
+				.nullable(),
+		})
+		.describe("Valores de vendas por status")
+		.optional()
+		.nullable(),
+	quantidades: z
+		.object({
+			total: z
+				.number({
+					invalid_type_error: "A quantidade total deve ser um número",
+				})
+				.describe("Quantidade total de vendas realizadas")
+				.optional()
+				.nullable(),
+			aprovado: z
+				.number({
+					invalid_type_error: "A quantidade aprovada deve ser um número",
+				})
+				.describe("Quantidade de vendas aprovadas")
+				.optional()
+				.nullable(),
+			cancelado: z
+				.number({
+					invalid_type_error: "A quantidade cancelada deve ser um número",
+				})
+				.describe("Quantidade de vendas canceladas")
+				.optional()
+				.nullable(),
+			esperando_aprovacao: z
+				.number({
+					invalid_type_error: "A quantidade em aprovação deve ser um número",
+				})
+				.describe("Quantidade de vendas esperando aprovação")
+				.optional()
+				.nullable(),
+		})
+		.describe("Quantidades de vendas por status")
+		.optional()
+		.nullable(),
+	total_itens: z
+		.number({
+			invalid_type_error: "O total de itens deve ser um número",
+		})
+		.describe("Total de itens")
+		.optional()
+		.nullable(),
+	itens: z
+		.array(
+			z.object({
+				id: z
+					.string({
+						invalid_type_error: "O ID da venda deve ser uma string",
+					})
+					.describe("id da venda")
+					.optional()
+					.nullable(),
+				total: z
+					.number({
+						invalid_type_error: "O total da venda deve ser um número",
+					})
+					.describe("Total da venda")
+					.optional()
+					.nullable(),
+				id_legado: z
+					.number({
+						invalid_type_error: "O ID legado deve ser um número",
+					})
+					.describe("id legado da venda")
+					.optional()
+					.nullable(),
+				data: z
+					.string({
+						invalid_type_error: "A data da venda deve ser uma string",
+					})
+					.describe("Data da venda")
+					.optional()
+					.nullable(),
+				criado_em: z.any().describe("Data de criação da venda").optional().nullable(),
+				data_alteracao: z
+					.string({
+						invalid_type_error: "A data de alteração deve ser uma string",
+					})
+					.describe("Data de alteração da venda")
+					.optional()
+					.nullable(),
+				tipo: z
+					.string({
+						invalid_type_error: "O tipo da venda deve ser uma string",
+					})
+					.describe("Tipo da venda")
+					.optional()
+					.nullable(),
+				itens: z
+					.string({
+						invalid_type_error: "O tipo de itens deve ser uma string",
+					})
+					.describe("Tipo de itens")
+					.optional()
+					.nullable(),
+				condicao_pagamento: z
+					.boolean({
+						invalid_type_error: "A condição de pagamento deve ser um boolean",
+					})
+					.describe("Condição de pagamento")
+					.optional()
+					.nullable(),
+				numero: z
+					.number({
+						invalid_type_error: "O número da venda deve ser um número",
+					})
+					.describe("Número da venda")
+					.optional()
+					.nullable(),
+				cliente: z
+					.object({
+						id: z
+							.string({
+								invalid_type_error: "O ID do cliente deve ser uma string",
+							})
+							.describe("id do cliente")
+							.optional()
+							.nullable(),
+						nome: z
+							.string({
+								invalid_type_error: "O nome do cliente deve ser uma string",
+							})
+							.describe("Nome do cliente")
+							.optional()
+							.nullable(),
+						email: z
+							.string({
+								invalid_type_error: "O email do cliente deve ser uma string",
+							})
+							.describe("Email do cliente")
+							.optional()
+							.nullable(),
+						telefone: z
+							.string({
+								invalid_type_error: "O telefone do cliente deve ser uma string",
+							})
+							.describe("Telefone do cliente")
+							.optional()
+							.nullable(),
+						endereco: z
+							.string({
+								invalid_type_error: "O endereço do cliente deve ser uma string",
+							})
+							.describe("Endereço do cliente")
+							.optional()
+							.nullable(),
+						cidade: z
+							.string({
+								invalid_type_error: "A cidade do cliente deve ser uma string",
+							})
+							.describe("Cidade do cliente")
+							.optional()
+							.nullable(),
+						estado: z
+							.string({
+								invalid_type_error: "O estado do cliente deve ser uma string",
+							})
+							.describe("Estado do cliente")
+							.optional()
+							.nullable(),
+						pais: z
+							.string({
+								invalid_type_error: "O país do cliente deve ser uma string",
+							})
+							.describe("País do cliente")
+							.optional()
+							.nullable(),
+						cep: z
+							.string({
+								invalid_type_error: "O CEP do cliente deve ser uma string",
+							})
+							.describe("CEP do cliente")
+							.optional()
+							.nullable(),
+					})
+					.describe("Cliente")
+					.optional()
+					.nullable(),
+				situacao: z
+					.object({
+						nome: z
+							.string({
+								invalid_type_error: "O nome da situação deve ser uma string",
+							})
+							.describe("Nome da situação")
+							.optional()
+							.nullable(),
+						descricao: z
+							.string({
+								invalid_type_error: "A descrição da situação deve ser uma string",
+							})
+							.describe("Descrição da situação")
+							.optional()
+							.nullable(),
+					})
+					.describe("Situação")
+					.optional()
+					.nullable(),
+				versao: z
+					.number({
+						invalid_type_error: "A versão da venda deve ser um número",
+					})
+					.describe("Versão da venda")
+					.optional()
+					.nullable(),
+				status_email: z
+					.object({
+						status: z
+							.string({
+								invalid_type_error: "O status do email deve ser uma string",
+							})
+							.describe("Status")
+							.optional()
+							.nullable(),
+						enviado_em: z
+							.string({
+								invalid_type_error: "A data de envio deve ser uma string",
+							})
+							.describe("Data de envio")
+							.optional()
+							.nullable(),
+					})
+					.describe("Status de email")
+					.optional()
+					.nullable(),
+				id_contrato: z
+					.string({
+						invalid_type_error: "O ID do contrato deve ser uma string",
+					})
+					.describe("id do contrato")
+					.optional()
+					.nullable(),
+			}),
+		)
+		.describe("Itens das vendas")
+		.optional()
+		.nullable(),
+});
+export type TGetContaAzulSalesV2ByPeriodOutput = z.infer<typeof GetContaAzulSalesV2ByPeriodOutputSchema>;
+
+export const GetContaAzulFinancialEventV2ByIdOutputSchema = z.array(
+	z.object({
+		id: z
+			.string({
+				invalid_type_error: "O ID do evento financeiro deve ser uma string",
+			})
+			.describe("Identificador único do evento")
+			.optional()
+			.nullable(),
+		versao: z
+			.number({
+				invalid_type_error: "A versão deve ser um número",
+			})
+			.describe("Versão do evento")
+			.optional()
+			.nullable(),
+		referencia: z
+			.string({
+				invalid_type_error: "A referência deve ser uma string",
+			})
+			.describe("Referência do evento")
+			.optional()
+			.nullable(),
+		indice: z
+			.number({
+				invalid_type_error: "O índice deve ser um número",
+			})
+			.describe("Índice do evento")
+			.optional()
+			.nullable(),
+		conciliado: z
+			.boolean({
+				invalid_type_error: "O campo conciliado deve ser um boolean",
+			})
+			.describe("Indica se está conciliado")
+			.optional()
+			.nullable(),
+		status: z
+			.enum(["PENDENTE", "QUITADO", "CANCELADO", "RENEGOCIADO", "RECEBIDO_PARCIAL", "ATRASADO", "PERDIDO"], {
+				invalid_type_error: "O status deve ser uma string",
+			})
+			.describe("Status do evento financeiro")
+			.optional()
+			.nullable(),
+		valor_pago: z
+			.number({
+				invalid_type_error: "O valor pago deve ser um número",
+			})
+			.describe("Valor pago")
+			.optional()
+			.nullable(),
+		perda: z
+			.object({
+				data: z
+					.string({
+						invalid_type_error: "A data da perda deve ser uma string",
+					})
+					.describe("Data da perda")
+					.optional()
+					.nullable(),
+				valor: z
+					.number({
+						invalid_type_error: "O valor da perda deve ser um número",
+					})
+					.describe("Valor da perda")
+					.optional()
+					.nullable(),
+			})
+			.describe("Perda financeira")
+			.optional()
+			.nullable(),
+		nao_pago: z
+			.number({
+				invalid_type_error: "O valor não pago deve ser um número",
+			})
+			.describe("Valor não pago")
+			.optional()
+			.nullable(),
+		data_vencimento: z
+			.string({
+				invalid_type_error: "A data de vencimento deve ser uma string",
+			})
+			.describe("Data de vencimento")
+			.optional()
+			.nullable(),
+		data_pagamento_previsto: z
+			.string({
+				invalid_type_error: "A data de pagamento prevista deve ser uma string",
+			})
+			.describe("Data de pagamento prevista")
+			.optional()
+			.nullable(),
+		descricao: z
+			.string({
+				invalid_type_error: "A descrição deve ser uma string",
+			})
+			.describe("Descrição do evento")
+			.optional()
+			.nullable(),
+		nota: z
+			.string({
+				invalid_type_error: "A nota deve ser uma string",
+			})
+			.describe("Nota do evento")
+			.optional()
+			.nullable(),
+		conta_financeira: z
+			.object({
+				id: z
+					.string({
+						invalid_type_error: "O ID da conta financeira deve ser uma string",
+					})
+					.describe("Identificador único da conta financeira")
+					.optional()
+					.nullable(),
+				banco: z
+					.string({
+						invalid_type_error: "O banco deve ser uma string",
+					})
+					.describe("Instituição bancária")
+					.optional()
+					.nullable(),
+				codigo_banco: z
+					.number({
+						invalid_type_error: "O código do banco deve ser um número",
+					})
+					.describe("Código da instituição bancária")
+					.optional()
+					.nullable(),
+				nome: z
+					.string({
+						invalid_type_error: "O nome da conta financeira deve ser uma string",
+					})
+					.describe("Nome da conta financeira")
+					.optional()
+					.nullable(),
+				ativo: z
+					.boolean({
+						invalid_type_error: "O campo ativo deve ser um boolean",
+					})
+					.describe("Indica se a conta está ativa")
+					.optional()
+					.nullable(),
+				tipo: z
+					.string({
+						invalid_type_error: "O tipo da conta deve ser uma string",
+					})
+					.describe("Tipo da conta")
+					.optional()
+					.nullable(),
+				conta_padrao: z
+					.boolean({
+						invalid_type_error: "O campo conta_padrao deve ser um boolean",
+					})
+					.describe("Indica se é a conta padrão")
+					.optional()
+					.nullable(),
+				possui_config_boleto_bancario: z
+					.boolean({
+						invalid_type_error: "O campo possui_config_boleto_bancario deve ser um boolean",
+					})
+					.describe("Indica se possui configuração de boleto bancário")
+					.optional()
+					.nullable(),
+				agencia: z
+					.string({
+						invalid_type_error: "A agência deve ser uma string",
+					})
+					.describe("Agência da conta")
+					.optional()
+					.nullable(),
+				numero: z
+					.string({
+						invalid_type_error: "O número da conta deve ser uma string",
+					})
+					.describe("Número da conta")
+					.optional()
+					.nullable(),
+			})
+			.describe("Conta financeira")
+			.optional()
+			.nullable(),
+		id_conta_financeira: z
+			.string({
+				invalid_type_error: "O ID da conta financeira deve ser uma string",
+			})
+			.describe("ID da conta financeira")
+			.optional()
+			.nullable(),
+		valor_composicao: z
+			.object({
+				multa: z
+					.number({
+						invalid_type_error: "A multa deve ser um número",
+					})
+					.describe("Multa")
+					.optional()
+					.nullable(),
+				juros: z
+					.number({
+						invalid_type_error: "Os juros devem ser um número",
+					})
+					.describe("Juros")
+					.optional()
+					.nullable(),
+				valor_bruto: z
+					.number({
+						invalid_type_error: "O valor bruto deve ser um número",
+					})
+					.describe("Valor bruto")
+					.optional()
+					.nullable(),
+				desconto: z
+					.number({
+						invalid_type_error: "O desconto deve ser um número",
+					})
+					.describe("Desconto")
+					.optional()
+					.nullable(),
+				taxa: z
+					.number({
+						invalid_type_error: "A taxa deve ser um número",
+					})
+					.describe("Taxa")
+					.optional()
+					.nullable(),
+				valor_liquido: z
+					.number({
+						invalid_type_error: "O valor líquido deve ser um número",
+					})
+					.describe("Valor líquido")
+					.optional()
+					.nullable(),
+			})
+			.describe("Composição de valores")
+			.optional()
+			.nullable(),
+		metodo_pagamento: z
+			.string({
+				invalid_type_error: "O método de pagamento deve ser uma string",
+			})
+			.describe("Método de pagamento")
+			.optional()
+			.nullable(),
+		nsu: z
+			.string({
+				invalid_type_error: "O NSU deve ser uma string",
+			})
+			.describe("NSU")
+			.optional()
+			.nullable(),
+		baixa_agendada: z
+			.boolean({
+				invalid_type_error: "O campo baixa_agendada deve ser um boolean",
+			})
+			.describe("Baixa agendada")
+			.optional()
+			.nullable(),
+		baixas: z
+			.array(
+				z.object({
+					id: z
+						.string({
+							invalid_type_error: "O ID da baixa deve ser uma string",
+						})
+						.describe("ID da baixa")
+						.optional()
+						.nullable(),
+					versao: z
+						.number({
+							invalid_type_error: "A versão da baixa deve ser um número",
+						})
+						.describe("Versão da baixa")
+						.optional()
+						.nullable(),
+					data_pagamento: z
+						.string({
+							invalid_type_error: "A data de pagamento deve ser uma string",
+						})
+						.describe("Data de pagamento")
+						.optional()
+						.nullable(),
+					valor_composicao: z
+						.object({
+							multa: z.number().optional().nullable(),
+							juros: z.number().optional().nullable(),
+							valor_bruto: z.number().optional().nullable(),
+							desconto: z.number().optional().nullable(),
+							taxa: z.number().optional().nullable(),
+							valor_liquido: z.number().optional().nullable(),
+						})
+						.describe("Composição de valores da baixa")
+						.optional()
+						.nullable(),
+					conta_financeira: z
+						.object({
+							id: z.string().optional().nullable(),
+							banco: z.string().optional().nullable(),
+							codigo_banco: z.number().optional().nullable(),
+							nome: z.string().optional().nullable(),
+							ativo: z.boolean().optional().nullable(),
+							tipo: z.string().optional().nullable(),
+							conta_padrao: z.boolean().optional().nullable(),
+							possui_config_boleto_bancario: z.boolean().optional().nullable(),
+							agencia: z.string().optional().nullable(),
+							numero: z.string().optional().nullable(),
+						})
+						.describe("Conta financeira da baixa")
+						.optional()
+						.nullable(),
+					id_reconciliacao: z
+						.string({
+							invalid_type_error: "O ID de conciliação deve ser uma string",
+						})
+						.describe("ID de conciliação")
+						.optional()
+						.nullable(),
+					id_parcela: z
+						.string({
+							invalid_type_error: "O ID da parcela deve ser uma string",
+						})
+						.describe("ID da parcela")
+						.optional()
+						.nullable(),
+					id_solicitacao_cobranca: z
+						.string({
+							invalid_type_error: "O ID da solicitação de cobrança deve ser uma string",
+						})
+						.describe("ID da solicitação de cobrança")
+						.optional()
+						.nullable(),
+					observacao: z
+						.string({
+							invalid_type_error: "A observação deve ser uma string",
+						})
+						.describe("Observação")
+						.optional()
+						.nullable(),
+					metodo_pagamento: z
+						.string({
+							invalid_type_error: "O método de pagamento deve ser uma string",
+						})
+						.describe("Método de pagamento")
+						.optional()
+						.nullable(),
+					origem: z
+						.string({
+							invalid_type_error: "A origem deve ser uma string",
+						})
+						.describe("Origem")
+						.optional()
+						.nullable(),
+					id_recibo_digital: z
+						.string({
+							invalid_type_error: "O ID do recibo digital deve ser uma string",
+						})
+						.describe("ID do recibo digital")
+						.optional()
+						.nullable(),
+					tipo_evento_financeiro: z
+						.enum(["RECEITA", "DESPESA"], {
+							invalid_type_error: "O tipo de evento financeiro deve ser uma string",
+						})
+						.describe("Tipo de evento financeiro")
+						.optional()
+						.nullable(),
+					nsu: z
+						.string({
+							invalid_type_error: "O NSU deve ser uma string",
+						})
+						.describe("NSU")
+						.optional()
+						.nullable(),
+					id_referencia: z
+						.string({
+							invalid_type_error: "O ID de referência deve ser uma string",
+						})
+						.describe("ID de referência")
+						.optional()
+						.nullable(),
+					atualizado_em: z
+						.string({
+							invalid_type_error: "A data de atualização deve ser uma string",
+						})
+						.describe("Atualizado em")
+						.optional()
+						.nullable(),
+					anexos: z
+						.array(
+							z.object({
+								id: z.string().optional().nullable(),
+								versao: z.number().optional().nullable(),
+								descricao: z.string().optional().nullable(),
+								nome: z.string().optional().nullable(),
+								url: z.string().optional().nullable(),
+								tipo_conteudo: z.enum(["FILE", "URL"]).optional().nullable(),
+								referencia: z.string().optional().nullable(),
+								tipo_anexo: z.enum(["BOLETO_BANCARIO_RFB", "BOLETO_BANCARIO", "RECIBO", "FATURA", "OUTROS", "RECIBO_DIGITAL"]).optional().nullable(),
+								id_parcela: z.string().optional().nullable(),
+							}),
+						)
+						.describe("Anexos da baixa")
+						.optional()
+						.nullable(),
+				}),
+			)
+			.describe("Baixas do evento")
+			.optional()
+			.nullable(),
+		anexos: z
+			.array(
+				z.object({
+					id: z.string().optional().nullable(),
+					versao: z.number().optional().nullable(),
+					descricao: z.string().optional().nullable(),
+					nome: z.string().optional().nullable(),
+					url: z.string().optional().nullable(),
+					tipo_conteudo: z.enum(["FILE", "URL"]).optional().nullable(),
+					referencia: z.string().optional().nullable(),
+					tipo_anexo: z.enum(["BOLETO_BANCARIO_RFB", "BOLETO_BANCARIO", "RECIBO", "FATURA", "OUTROS", "RECIBO_DIGITAL"]).optional().nullable(),
+					id_parcela: z.string().optional().nullable(),
+				}),
+			)
+			.describe("Anexos da parcela")
+			.optional()
+			.nullable(),
+		solicitacoes_cobrancas: z
+			.array(
+				z.object({
+					id: z.string().optional().nullable(),
+					versao: z.number().optional().nullable(),
+					status_solicitacao_cobranca: z.string().optional().nullable(),
+					valor_composicao: z
+						.object({
+							multa: z.number().optional().nullable(),
+							juros: z.number().optional().nullable(),
+							valor_bruto: z.number().optional().nullable(),
+							desconto: z.number().optional().nullable(),
+							taxa: z.number().optional().nullable(),
+							valor_liquido: z.number().optional().nullable(),
+						})
+						.describe("Composição de valores da cobrança")
+						.optional()
+						.nullable(),
+					data_vencimento: z.string().optional().nullable(),
+					data_quitacao: z.string().optional().nullable(),
+					tipo_solicitacao_cobranca: z.enum(["BOLETO", "LINK_PAGAMENTO", "BOLETO_REGISTRADO", "PIX_COBRANCA"]).optional().nullable(),
+					id_cliente: z.string().optional().nullable(),
+					id_referencia: z.string().optional().nullable(),
+					url: z.string().optional().nullable(),
+					detalhe_erro: z.string().optional().nullable(),
+					conta_financeira: z
+						.object({
+							id: z.string().optional().nullable(),
+							banco: z.string().optional().nullable(),
+							codigo_banco: z.number().optional().nullable(),
+							nome: z.string().optional().nullable(),
+							ativo: z.boolean().optional().nullable(),
+							tipo: z.string().optional().nullable(),
+							conta_padrao: z.boolean().optional().nullable(),
+							possui_config_boleto_bancario: z.boolean().optional().nullable(),
+							agencia: z.string().optional().nullable(),
+							numero: z.string().optional().nullable(),
+						})
+						.describe("Conta financeira da cobrança")
+						.optional()
+						.nullable(),
+					notificacao_cobranca: z
+						.object({
+							id: z.string().optional().nullable(),
+							solicitacao_cobranca_ids: z.array(z.string()).optional().nullable(),
+							versao: z.number().optional().nullable(),
+							enviado_em: z.string().optional().nullable(),
+							aberto_em: z.string().optional().nullable(),
+							itens_notificacao_cobranca: z.array(z.any()).optional().nullable(),
+							assunto: z.string().optional().nullable(),
+							corpo: z.string().optional().nullable(),
+							respondido_para: z.string().optional().nullable(),
+							agendado: z.boolean().optional().nullable(),
+							auto_notificacao: z.boolean().optional().nullable(),
+							envio_instantaneo: z.boolean().optional().nullable(),
+						})
+						.describe("Notificação de cobrança")
+						.optional()
+						.nullable(),
+					confirmado_em: z.string().optional().nullable(),
+					descricao: z.string().optional().nullable(),
+					referencia_externa: z.string().optional().nullable(),
+					recuperado: z.boolean().optional().nullable(),
+					combinado: z.boolean().optional().nullable(),
+					atributos_personalizados: z.string().optional().nullable(),
+				}),
+			)
+			.describe("Solicitações de cobrança")
+			.optional()
+			.nullable(),
+		id_ultima_solicitacao_pagamento: z.string().optional().nullable(),
+		id_boleto_bancario_autorizado: z.string().optional().nullable(),
+		fatura: z
+			.object({
+				numero: z.number().optional().nullable(),
+				rps: z.number().optional().nullable(),
+				tipo_fatura: z.enum(["NFE", "NFSE", "NFCE"]).optional().nullable(),
+			})
+			.describe("Fatura")
+			.optional()
+			.nullable(),
+		data_alteracao: z
+			.string({
+				invalid_type_error: "A data de alteração deve ser uma string",
+			})
+			.describe("Data de alteração da parcela")
+			.optional()
+			.nullable(),
+		valor_total_liquido: z
+			.number({
+				invalid_type_error: "O valor total líquido deve ser um número",
+			})
+			.describe("Valor total líquido")
+			.optional()
+			.nullable(),
+		id_ultimo_solicitacao_cobranca: z.string().optional().nullable(),
+		renegociacao: z
+			.object({
+				id: z.string().optional().nullable(),
+				valor: z.number().optional().nullable(),
+			})
+			.describe("Renegociação")
+			.optional()
+			.nullable(),
+	}),
+);
+export type TGetContaAzulFinancialEventV2ByIdOutput = z.infer<typeof GetContaAzulFinancialEventV2ByIdOutputSchema>;
+
 export const GetContaAzulNextSaleNumberV2OutputSchema = z.number({
 	required_error: "O número da venda é obrigatório",
 	invalid_type_error: "O número da venda deve ser um número",

@@ -12,6 +12,7 @@ import TextInput from "../../components/inputs/Text";
 
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
+import { useUsers } from "@/utils/methods/query/crm/users";
 import { ImPower } from "react-icons/im";
 import { MdAttachMoney } from "react-icons/md";
 import { VscDiffAdded } from "react-icons/vsc";
@@ -36,6 +37,8 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
 		after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3).toISOString(),
 		before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1).toISOString(),
 	});
+	const { data: crmUsers } = useUsers({ includeDeleted: true });
+
 	const {
 		data: projects,
 		isSuccess,
@@ -153,7 +156,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
 								width={"100%"}
 								label={"VENDEDOR"}
 								selected={filters.sellerName}
-								options={allSellers}
+								options={crmUsers?.map((user) => ({ id: user._id, label: user.nome, value: user.nome })) || []}
 								selectedItemLabel={"SEM FILTRO"}
 								handleChange={(value) =>
 									setFilters((prev) => ({

@@ -15,8 +15,10 @@ import {
 	CreateContaAzulClientV2InputSchema,
 	CreateContaAzulClientV2OutputSchema,
 	CreateContaAzulSaleV2OutputSchema,
+	GetContaAzulFinancialEventV2ByIdOutputSchema,
 	GetContaAzulNextSaleNumberV2OutputSchema,
 	GetContaAzulSaleV2ByIdOutputSchema,
+	GetContaAzulSalesV2ByPeriodOutputSchema,
 	SearchCentroDeCustoV2OutputSchema,
 	SearchContaAzulClientV2ByCpfCnpjOutputSchema,
 	type TCreateCentroDeCustoV2Input,
@@ -27,6 +29,7 @@ import {
 	type TGetContaAzulNextSaleNumberV2Output,
 	type TGetContaAzulSaleV2ByIdInput,
 	type TGetContaAzulSaleV2ByIdOutput,
+	type TGetContaAzulSalesV2ByPeriodOutput,
 	type TSearchCentroDeCustoV2Output,
 	type TSearchContaAzulClientV2ByCpfCnpjOutput,
 } from "./types";
@@ -618,4 +621,71 @@ export async function createSaleFromRevenueV2({
 		});
 		throw error;
 	}
+}
+export async function getContaAzulSalesV2ByPeriod(period: { startDate: string; endDate: string }) {
+	const accessToken = await getContaAzulV2Token();
+	const formattedStartDate = dayjs(period.startDate).format("YYYY-MM-DDTHH:mm:ss");
+	const formattedEndDate = dayjs(period.endDate).format("YYYY-MM-DDTHH:mm:ss");
+
+	console.log("[INFO] [CONTA AZUL V2] Formatted period:", { startDate: formattedStartDate, endDate: formattedEndDate });
+	const pageSize = 100;
+	let currentPage = 1;
+	let totalItems: number | null = null;
+	let baseResult: TGetContaAzulSalesV2ByPeriodOutput | null = null;
+	const allItems: TGetContaAzulSalesV2ByPeriodOutput["itens"] = [];
+
+	while (true) {
+		console.log("[INFO] [CONTA AZUL V2] Getting sales by period. Page:", currentPage);
+		const url = `${CONTA_AZUL_V2_BASE_URL}/v1/venda/busca?pagina=${currentPage}&quantidade=${pageSize}&data_alteracao_de=${formattedStartDate}&data_alteracao_ate=${formattedEndDate}`;
+		const response = await axios.get(url, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
+		const parsedData = GetContaAzulSalesV2ByPeriodOutputSchema.parse(response.data);
+
+		if (!baseResult) {
+			baseResult = parsedData;
+		}
+
+		const pageItems = parsedData.itens ?? [];
+		allItems.push(...pageItems);
+
+		if (typeof parsedData.total_itens === "number") {
+			totalItems = parsedData.total_itens;
+		}
+
+		const reachedTotal = typeof totalItems === "number" && allItems.length >= totalItems;
+		const noMoreItems = pageItems.length === 0;
+
+		if (reachedTotal || noMoreItems) {
+			break;
+		}
+
+		currentPage += 1;
+	}
+
+	if (!baseResult) {
+		return GetContaAzulSalesV2ByPeriodOutputSchema.parse({ itens: [] });
+	}
+
+	return {
+		itens: allItems,
+		total_itens: allItems.length,
+	};
+}
+
+export async function getContaAzulFinancialEventV2ById(id: string) {
+	const accessToken = await getContaAzulV2Token();
+
+	const url = `${CONTA_AZUL_V2_BASE_URL}/v1/financeiro/eventos-financeiros/${id}/parcelas`;
+	const response = await axios.get(url, {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	const parsedData = GetContaAzulFinancialEventV2ByIdOutputSchema.parse(response.data);
+	return parsedData;
 }

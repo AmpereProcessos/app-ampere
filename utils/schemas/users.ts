@@ -461,3 +461,41 @@ export type TUserDTO = Pick<
 	| "dataInsercao"
 	| "autor"
 >;
+
+// Generate all permissions keys for UI/roles based on PermissionsSchema pattern
+export const UserPermissionsOptions = [
+	"usuarios.visualizar",
+	"usuarios.editar",
+	"usuarios.criar",
+	"comercial.visualizar",
+	"comercial.editar",
+	"posVenda.visualizar",
+	"posVenda.editar",
+	"suprimentos.visualizar",
+	"suprimentos.editar",
+	"engenharia.visualizar",
+	"engenharia.editar",
+	"execucao.visualizar",
+	"execucao.editar",
+	"suporte.visualizar",
+	"suporte.editar",
+	"administrativo.visualizar",
+	"administrativo.editar",
+	"financeiro.visualizar",
+	"financeiro.editar",
+	"recursosHumanos.visualizar",
+	"recursosHumanos.editar",
+	"ordensDeServico.visualizar",
+	"ordensDeServico.editar",
+	"ordensDeServico.criar",
+	"certificacoes.visualizar",
+	"certificacoes.editar",
+	"certificacoes.criar",
+	"chats.visualizar",
+	"chats.enviarMensagens",
+	"almoxarifado.visualizar",
+	"almoxarifado.editar",
+	"almoxarifado.criar",
+	"gestao.visualizarResultados",
+	"gestao.restringirProjetos",
+];

@@ -1,15 +1,11 @@
 import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { InsertUserSchema, TEmployee, type TUser } from "@/utils/schemas/users";
+import { InsertUserSchema, type TEmployee, type TUser, UserPermissionsOptions } from "@/utils/schemas/users";
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import createHttpError from "http-errors";
 import { type Collection, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
 import z from "zod";
-
-type GetResponse = {
-	data: TUser | TUser[];
-};
 
 const projection = {
 	acessoAtivo: 1,
@@ -46,6 +42,15 @@ const GetUsersInputSchema = z.object({
 		.optional()
 		.nullable()
 		.transform((val) => val === "true"),
+	byPermission: z
+		.string({
+			invalid_type_error: "Tipo não válido para filtro de permissão.",
+		})
+		.optional()
+		.nullable()
+		.refine((val) => (val ? UserPermissionsOptions.includes(val) : true), {
+			message: "Permissão não válida.",
+		}),
 });
 export type TGetUsersInput = z.infer<typeof GetUsersInputSchema>;
 export type TGetUsersDefaultInput = Omit<TGetUsersInput, "id">;
@@ -112,7 +117,9 @@ async function getUsers({ session, input }: { session: TAuthSession; input: TGet
 				],
 			}
 		: {};
-	const query: Filter<TUser> = { ...activeOnlyQuery, ...activeEmployeesOnlyQuery, ...searchQuery };
+	const byPermissionQuery: Filter<TUser> = input.byPermission ? { [`permissoes.${input.byPermission}`]: true } : {};
+	const query: Filter<TUser> = { ...activeOnlyQuery, ...activeEmployeesOnlyQuery, ...searchQuery, ...byPermissionQuery };
+	console.log("[INFO][GET_USERS] Query:", JSON.stringify(query, null, 2));
 	const users = await usersCollection.find(query, { sort: { nome: 1 } }).toArray();
 	const usersFormatted = users.map((user) => ({
 		_id: user._id.toString(),

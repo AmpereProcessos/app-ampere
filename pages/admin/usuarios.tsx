@@ -69,7 +69,7 @@ function UsersControlContent({ session }: { session: TAuthSession }) {
 							<div className="flex flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">
 								<TextInput
 									label={"NOME"}
-									value={filters.search}
+									value={filters.search ?? ""}
 									placeholder={"Digite o nome do colaborador..."}
 									handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
 								/>

@@ -15,6 +15,7 @@ async function fetchUsers(input: TGetUsersDefaultInput) {
 		if (input.search) searchParams.set("search", input.search);
 		if (input.activeOnly) searchParams.set("activeOnly", input.activeOnly.toString());
 		if (input.activeEmployeesOnly) searchParams.set("activeEmployeesOnly", input.activeEmployeesOnly.toString());
+		if (input.byPermission) searchParams.set("byPermission", input.byPermission);
 		const url = `/api/usuarios?${searchParams.toString()}`;
 		const { data } = await axios.get<TGetUsersOutput>(url);
 		if (!data.data.default) throw new Error("Usuários não encontrados.");
@@ -33,6 +34,7 @@ export function useUsers({ initialFilters }: UseUsersParams = {}) {
 		search: initialFilters?.search ?? "",
 		activeOnly: initialFilters?.activeOnly ?? true,
 		activeEmployeesOnly: initialFilters?.activeEmployeesOnly ?? false,
+		byPermission: initialFilters?.byPermission ?? undefined,
 	});
 
 	function updateFilters(filters: Partial<TGetUsersDefaultInput>) {

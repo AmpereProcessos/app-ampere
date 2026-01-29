@@ -1,4 +1,9 @@
-import { TCreateSupportCallInput, TCreateSupportCallOutput, TUpdateSupportCallInput, TUpdateSupportCallOutput } from "@/pages/api/chamados/suporte";
+import type {
+	TCreateSupportCallInput,
+	TCreateSupportCallOutput,
+	TUpdateSupportCallInput,
+	TUpdateSupportCallOutput,
+} from "@/pages/api/chamados/suporte";
 import axios from "axios";
 
 export async function createSupportCall({ info }: { info: TCreateSupportCallInput }) {

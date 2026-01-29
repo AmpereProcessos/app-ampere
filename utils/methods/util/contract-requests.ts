@@ -150,6 +150,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 		latitude: request.latitude,
 		uf: request.ufInstalacao || "",
 		vendedor: {
+			idCRM: request.idVendedor || "",
 			nome: request.nomeVendedor || "",
 			codigo: null,
 		},

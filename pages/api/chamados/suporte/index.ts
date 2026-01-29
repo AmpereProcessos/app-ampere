@@ -1,10 +1,10 @@
-import { TAuthSession } from "@/lib/authentication/types";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import { SupportCallSchema, TSupportCall } from "@/utils/schemas/support-calls";
+import { SupportCallSchema, type TSupportCall } from "@/utils/schemas/support-calls";
 import connectToCallsDatabase from "@/utils/services/mongodb/calls";
 import createHttpError from "http-errors";
-import { Db, Filter, ObjectId } from "mongodb";
-import { NextApiHandler } from "next";
+import { type Db, type Filter, ObjectId } from "mongodb";
+import type { NextApiHandler } from "next";
 import z from "zod";
 
 const GetManySupportCallsInputSchema = z.object({

@@ -1,6 +1,6 @@
 import type { TUserDTO, TUserDTOSimplified, TUserDTOWithSaleGoals } from "@/utils/schemas/crm/users.schema";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type UseUsersParams = {
 	includeDeleted?: boolean;

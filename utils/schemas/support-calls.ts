@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { AuthorSchema } from "./users";
 
-// ObjectId schema for MongoDB
-const ObjectIdSchema = z.object({
-	$oid: z.string().regex(/^[0-9a-fA-F]{24}$/, "ID inválido"),
-});
-
 // Schema for annotation changes
 const AnotacaoAlteracaoSchema = z.object({
 	antes: z.string().optional(),

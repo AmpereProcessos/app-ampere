@@ -1,38 +1,38 @@
 import SelectInputVirtualized from "@/components/inputs/SelectVirtualized";
 import TextInput from "@/components/inputs/Text";
 
-import { TSupportCall } from "@/utils/schemas/support-calls";
-import { Check, CloudUpload, Code, LayoutGrid, LinkIcon, Loader, Paperclip, Plus, Tag, UsersRound, X } from "lucide-react";
-import { useState } from "react";
-import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+import DateInput from "@/components/inputs/Date";
 import SelectInput from "@/components/inputs/Select";
 import TextareaInput from "@/components/inputs/TextareaInput";
-import { FaSolarPanel, FaWrench } from "react-icons/fa";
-import DateInput from "@/components/inputs/Date";
-import { formatDate, getFileTypeTitle, getTitleFileType, isFileImage, SlideMotionVariants, tiposChamadosSuporte } from "@/utils/constants";
-import { formatDateInputChange } from "@/utils/methods/shared";
 import { cn } from "@/lib/utils";
+import { SlideMotionVariants, formatDate, getFileTypeTitle, getTitleFileType, isFileImage, tiposChamadosSuporte } from "@/utils/constants";
+import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+import { formatDateInputChange } from "@/utils/methods/shared";
+import type { TSupportCall } from "@/utils/schemas/support-calls";
+import { Check, CloudUpload, Code, LayoutGrid, LinkIcon, Loader, Paperclip, Plus, Tag, UsersRound, X } from "lucide-react";
+import { useState } from "react";
+import { FaSolarPanel, FaWrench } from "react-icons/fa";
 
-import { useUsers } from "@/utils/methods/query/users";
 import SelectWithImages from "@/components/inputs/SelectWithImages";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
-import { BsCalendarCheck } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
-import ProjectVinculationMenu from "../../projects/ProjectVinculationMenu";
-import { FaCity } from "react-icons/fa6";
-import { useFileReferences } from "@/utils/methods/query/crm/file-references";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import type { TAuthSession } from "@/lib/authentication/types";
+import { uploadFile } from "@/utils/methods/firebase";
+import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import FileReferenceCard from "../../referencias-arquivos/FileReferenceCard";
-import { TAttachmentHolder } from "@/utils/schemas/useful";
+import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
+import { useFileReferences } from "@/utils/methods/query/crm/file-references";
+import { useUsers } from "@/utils/methods/query/users";
+import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
+import type { TAttachmentHolder } from "@/utils/schemas/useful";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { uploadFile } from "@/utils/methods/firebase";
-import { TAuthSession } from "@/lib/authentication/types";
-import { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
-import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import { BsCalendarCheck } from "react-icons/bs";
+import { FaCity } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
+import ProjectVinculationMenu from "../../projects/ProjectVinculationMenu";
+import FileReferenceCard from "../../referencias-arquivos/FileReferenceCard";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, value: c, label: c }));
 
@@ -42,7 +42,7 @@ type GeneralProps = {
 };
 export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 	const [vinculationModalIsOpen, setVinculationModalIsOpen] = useState(false);
-	const { data: users } = useUsers();
+	const { data: users } = useUsers({ initialFilters: { byPermission: "suporte.visualizar" } });
 	function handleEffectivationUpdate(newValue: TSupportCall["statusChamado"], previousData: TSupportCall) {
 		if (newValue === "RESOLVIDO") {
 			if (previousData.statusChamado !== "RESOLVIDO") return new Date().toISOString();
@@ -59,6 +59,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 			</div>
 			<div className="flex w-full flex-wrap items-center gap-2">
 				<button
+					type="button"
 					onClick={() => updateInfoHolder({ statusChamado: "ABERTO", fechamento: handleEffectivationUpdate("ABERTO", infoHolder) })}
 					className={cn("flex items-center gap-1 rounded-md bg-orange-300 px-3 py-1.5 text-sm text-orange-800", {
 						"opacity-100": infoHolder.statusChamado === "ABERTO",
@@ -69,6 +70,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 					ABERTO
 				</button>
 				<button
+					type="button"
 					onClick={() => updateInfoHolder({ statusChamado: "EM ANDAMENTO", fechamento: handleEffectivationUpdate("EM ANDAMENTO", infoHolder) })}
 					className={cn("flex items-center gap-1 rounded-md bg-blue-300 px-3 py-1.5 text-sm text-blue-800", {
 						"opacity-100": infoHolder.statusChamado === "EM ANDAMENTO",
@@ -79,6 +81,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 					EM ANDAMENTO
 				</button>
 				<button
+					type="button"
 					onClick={() => updateInfoHolder({ statusChamado: "RESOLVIDO", fechamento: handleEffectivationUpdate("RESOLVIDO", infoHolder) })}
 					className={cn("flex items-center gap-1 rounded-md bg-green-300 px-3 py-1.5 text-sm text-green-800", {
 						"opacity-100": infoHolder.statusChamado === "RESOLVIDO",
@@ -118,7 +121,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 				</Button>
 			)}
 			{infoHolder.fechamento ? (
-				<div className={`flex w-fit items-center gap-1 self-center rounded-md bg-green-200 px-1.5 py-0.5 text-[0.65rem] font-bold text-green-700`}>
+				<div className="flex w-fit items-center gap-1 self-center rounded-md bg-green-200 px-1.5 py-0.5 text-[0.65rem] font-bold text-green-700">
 					<BsCalendarCheck className="h-3 min-h-3 w-3 min-w-3" />
 					{formatDateAsLocale(infoHolder.fechamento, true)}
 				</div>
@@ -473,7 +476,7 @@ export function Attachments({
 				>
 					<h2 className="text-start text-sm font-medium tracking-tight">NOVOS ANEXOS</h2>
 					{attachments.map((attachment, index) => (
-						<div key={index} className="flex w-full flex-col gap-1">
+						<div key={index.toString()} className="flex w-full flex-col gap-1">
 							<TextInput
 								label="TÍTULO"
 								labelClassName="text-[0.6rem]"
@@ -554,6 +557,7 @@ export function Attachments({
 			<div className="flex w-full items-center justify-end">
 				{projectId ? (
 					<button
+						type="button"
 						onClick={() => setShowProjectFiles((prev) => !prev)}
 						className={cn("flex items-center gap-1 rounded-lg px-2 py-1 text-black duration-300 ease-in-out", {
 							"bg-cyan-400 hover:bg-gray-400": showProjectFiles,

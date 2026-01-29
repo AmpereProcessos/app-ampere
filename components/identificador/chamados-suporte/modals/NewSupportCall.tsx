@@ -1,15 +1,15 @@
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
-import { TAuthSession } from "@/lib/authentication/types";
-import { TSupportCall } from "@/utils/schemas/support-calls";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import { createSupportCall } from "@/utils/methods/mutation/support-calls";
-import { Attachments, General, PowerPlantInfo, TSupportCallAttachmentHolderItem, WarrantyInfo } from "./Content";
+import type { TAuthSession } from "@/lib/authentication/types";
 import { uploadFile } from "@/utils/methods/firebase";
-import { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
+import { getErrorMessage } from "@/utils/methods/handlers";
 import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
+import { createSupportCall } from "@/utils/methods/mutation/support-calls";
+import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
+import type { TSupportCall } from "@/utils/schemas/support-calls";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { Attachments, General, PowerPlantInfo, type TSupportCallAttachmentHolderItem, WarrantyInfo } from "./Content";
 
 type NewSupportCallProps = {
 	session: TAuthSession;
@@ -55,52 +55,48 @@ function NewSupportCall({ session, closeModal, callbacks }: NewSupportCallProps)
 	}
 
 	async function handleCreateSupportCall({ info, attachments }: { info: TSupportCall; attachments: TSupportCallAttachmentHolderItem[] }) {
-		try {
-			const supportCall = await createSupportCall({ info });
-			const insertedCallId = supportCall.data.insertedId;
+		const supportCall = await createSupportCall({ info });
+		const insertedCallId = supportCall.data.insertedId;
 
-			const uploads = attachments.flatMap((item) =>
-				item.attachments
-					.filter((a) => !!a.file)
-					.map((a, aIdx, aArr) => ({
-						title: aArr.length > 0 ? `${item.title} (${aIdx + 1})` : item.title,
-						callId: item.callId,
-						projectId: item.projectId,
-						file: a.file as File,
-					})),
-			);
-			// If no valid uploads, return early
-			if (uploads.length === 0) return { insertedCallId, message: "Nenhum arquivo enviado." };
+		const uploads = attachments.flatMap((item) =>
+			item.attachments
+				.filter((a) => !!a.file)
+				.map((a, aIdx, aArr) => ({
+					title: aArr.length > 0 ? `${item.title} (${aIdx + 1})` : item.title,
+					callId: item.callId,
+					projectId: item.projectId,
+					file: a.file as File,
+				})),
+		);
+		// If no valid uploads, return early
+		if (uploads.length === 0) return { insertedCallId, message: "Nenhum arquivo enviado." };
 
-			const uploadPromises = uploads.map(async (uploadItem) => {
-				const {
-					url,
-					format: formato,
-					size: tamanho,
-				} = await uploadFile({ file: uploadItem.file as File, fileName: uploadItem.title, vinculationId: undefined, prefix: "chamado-suporte" });
+		const uploadPromises = uploads.map(async (uploadItem) => {
+			const {
+				url,
+				format: formato,
+				size: tamanho,
+			} = await uploadFile({ file: uploadItem.file as File, fileName: uploadItem.title, vinculationId: undefined, prefix: "chamado-suporte" });
 
-				const fileReference: TFileReference = {
-					titulo: uploadItem.title,
-					formato: formato,
-					url: url,
-					autor: {
-						id: session.user.id,
-						nome: session.user.nome,
-						avatar_url: session.user.avatar_url,
-					},
-					idProjeto: uploadItem.projectId,
-					idChamado: uploadItem.callId,
-					dataInsercao: new Date().toISOString(),
-				};
-				return fileReference;
-			});
-			const fileReferences = await Promise.all(uploadPromises);
-			await createManyFileReferences({ info: fileReferences });
+			const fileReference: TFileReference = {
+				titulo: uploadItem.title,
+				formato: formato,
+				url: url,
+				autor: {
+					id: session.user.id,
+					nome: session.user.nome,
+					avatar_url: session.user.avatar_url,
+				},
+				idProjeto: uploadItem.projectId,
+				idChamado: uploadItem.callId,
+				dataInsercao: new Date().toISOString(),
+			};
+			return fileReference;
+		});
+		const fileReferences = await Promise.all(uploadPromises);
+		await createManyFileReferences({ info: fileReferences });
 
-			return { insertedCallId, message: "Chamado de suporte criado com sucesso." };
-		} catch (error) {
-			throw error;
-		}
+		return { insertedCallId, message: "Chamado de suporte criado com sucesso." };
 	}
 	const { mutate: handleCreateSupportCallMutation, isPending: createSupportCallIsPending } = useMutation({
 		mutationFn: handleCreateSupportCall,

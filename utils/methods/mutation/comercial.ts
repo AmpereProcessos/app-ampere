@@ -34,36 +34,32 @@ export async function handleComercialUpdate({ previousData, newData, changes, qu
 	const newSignatureDate = newData.contrato.dataAssinatura;
 	const isReleasedForPurchase = !!newData.compra.liberacao;
 
-	try {
-		// const wasUnsigned = previousData.contrato.status != 'ASSINADO'
-		// const isSigned = newData.contrato.status == 'ASSINADO'
-		if (wasUnsigned && isSigned) {
-			await notifyContractSigning({ projectIdentifier: newData.qtde, projectName: newData.nomeDoContrato });
-			await generateContractRevenue({ data: newData, queryClient });
-			if (["OPERAÇÃO E MANUTENÇÃO", "MONITORAMENTO"].includes(newData.tipoDeServico) && newSignatureDate)
-				updates = {
-					...updates,
-					"oem.dataInicio": newSignatureDate,
-					"oem.dataFim": dayjs(newSignatureDate).add(365, "days").toISOString(),
-				};
-			if (["SEGURO DE SISTEMA FOTOVOLTAICO"].includes(newData.tipoDeServico) && newSignatureDate)
-				updates = {
-					...updates,
-					"seguro.dataInicio": newSignatureDate,
-					"seguro.dataFim": dayjs(newSignatureDate).add(365, "days").toISOString(),
-				};
-		}
-
-		// Handle automations for CRM
-		if (idCRMProject) await handleCRMAutomation({ previousData, newData });
-
-		// Update project
-		await updateProject({ id: projectId, changes: changes });
-
-		return "Atualizações realizadas com sucesso !";
-	} catch (error) {
-		throw error;
+	// const wasUnsigned = previousData.contrato.status != 'ASSINADO'
+	// const isSigned = newData.contrato.status == 'ASSINADO'
+	if (wasUnsigned && isSigned) {
+		await notifyContractSigning({ projectIdentifier: newData.qtde, projectName: newData.nomeDoContrato });
+		await generateContractRevenue({ data: newData, queryClient });
+		if (["OPERAÇÃO E MANUTENÇÃO", "MONITORAMENTO"].includes(newData.tipoDeServico) && newSignatureDate)
+			updates = {
+				...updates,
+				"oem.dataInicio": newSignatureDate,
+				"oem.dataFim": dayjs(newSignatureDate).add(365, "days").toISOString(),
+			};
+		if (["SEGURO DE SISTEMA FOTOVOLTAICO"].includes(newData.tipoDeServico) && newSignatureDate)
+			updates = {
+				...updates,
+				"seguro.dataInicio": newSignatureDate,
+				"seguro.dataFim": dayjs(newSignatureDate).add(365, "days").toISOString(),
+			};
 	}
+
+	// Handle automations for CRM
+	if (idCRMProject) await handleCRMAutomation({ previousData, newData });
+
+	// Update project
+	await updateProject({ id: projectId, changes: changes });
+
+	return "Atualizações realizadas com sucesso !";
 }
 
 type NotifyContractSigningParams = {
@@ -86,54 +82,50 @@ type GenerateContractRevenueParams = {
 	queryClient: QueryClient;
 };
 export async function generateContractRevenue({ data, queryClient }: GenerateContractRevenueParams) {
-	try {
-		const contractValue = getContractValue({
-			projectValue: data.sistema.valorProjeto,
-			structureValue: data.estruturaPersonalizada.valor,
-			paValue: data.padrao.valor,
-		});
-		const paymentFractionnements = ContractRequestPaymentOptions.find((c) => c.value === data.pagamento.metodo)?.fractionnements;
-		const revenue: TRevenue = {
-			nome: `CONTRATO DE ${data.nomeDoContrato}`,
-			tipo: data.tipoDeServico,
-			autor: {
-				id: "",
-				nome: "SISTEMA",
-				avatar_url: null,
-			},
-			projeto: {
-				id: data._id,
-				nome: data.nomeDoContrato,
-				identificador: data.qtde,
-			},
-			total: contractValue,
-			metodo: data.pagamento.forma === "FINANCIAMENTO" ? "FINANCIAMENTO" : "À VISTA (GERAL)",
-			efetivacao: {
-				efetivado: true,
-				data: data.contrato.dataAssinatura,
-			},
-			fracionamento: paymentFractionnements
-				? paymentFractionnements.map((c) => ({
-						titulo: c.title,
-						porcentagem: c.percentage,
+	const contractValue = getContractValue({
+		projectValue: data.sistema.valorProjeto,
+		structureValue: data.estruturaPersonalizada.valor,
+		paValue: data.padrao.valor,
+	});
+	const paymentFractionnements = ContractRequestPaymentOptions.find((c) => c.value === data.pagamento.metodo)?.fractionnements;
+	const revenue: TRevenue = {
+		nome: `CONTRATO DE ${data.nomeDoContrato}`,
+		tipo: data.tipoDeServico,
+		autor: {
+			id: "",
+			nome: "SISTEMA",
+			avatar_url: null,
+		},
+		projeto: {
+			id: data._id,
+			nome: data.nomeDoContrato,
+			identificador: data.qtde,
+		},
+		total: contractValue,
+		metodo: data.pagamento.forma === "FINANCIAMENTO" ? "FINANCIAMENTO" : "À VISTA (GERAL)",
+		efetivacao: {
+			efetivado: true,
+			data: data.contrato.dataAssinatura,
+		},
+		fracionamento: paymentFractionnements
+			? paymentFractionnements.map((c) => ({
+					titulo: c.title,
+					porcentagem: c.percentage,
+					dataPrevisaoRecebimento: new Date().toISOString(),
+					valor: contractValue * (c.percentage / 100),
+				}))
+			: [
+					{
+						titulo: "RECEBIMENTO TOTAL",
+						porcentagem: 100,
 						dataPrevisaoRecebimento: new Date().toISOString(),
-						valor: contractValue * (c.percentage / 100),
-					}))
-				: [
-						{
-							titulo: "RECEBIMENTO TOTAL",
-							porcentagem: 100,
-							dataPrevisaoRecebimento: new Date().toISOString(),
-							valor: contractValue,
-						},
-					],
-			dataInsercao: new Date().toISOString(),
-		};
-		await createRevenue({ info: revenue });
-		await queryClient.invalidateQueries({ queryKey: ["project-revenues", data._id] });
-	} catch (error) {
-		throw error;
-	}
+						valor: contractValue,
+					},
+				],
+		dataInsercao: new Date().toISOString(),
+	};
+	await createRevenue({ info: revenue });
+	await queryClient.invalidateQueries({ queryKey: ["project-revenues", data._id] });
 }
 
 type HandleCRMAutomationsParams = {

@@ -57,15 +57,12 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 				PENDENTE: [],
 				"EM COTAÇÃO": [],
 				"AGUARDANDO APROVAÇÃO": [],
-				"AGUARDANDO COMPRA": [],
 				"AGUARDANDO NOTA FUTURA": [],
 				"AGUARDANDO PAGAMENTO": [],
-				"AGUARDANDO NOTA FINAL": [],
 				"AGUARDANDO SEPARAÇÃO": [],
-				"AGUARDANDO DESPACHE": [],
 				"AGUARDANDO ENTREGA": [],
-				CONCLUÍDA: [],
-				PENDÊNCIAS: [],
+				// CONCLUÍDA: [],
+				// PENDÊNCIAS: [],
 			}).map(([key, value]) => ({ title: key, items: value }));
 
 		function handleSortByStatusLog(
@@ -91,29 +88,17 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 			"AGUARDANDO PAGAMENTO": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO PAGAMENTO")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO PAGAMENTO", a, b)),
-			"AGUARDANDO NOTA FINAL": purchaseControls
-				.filter((c) => c.status === "AGUARDANDO NOTA FINAL")
-				.sort((a, b) => handleSortByStatusLog("AGUARDANDO NOTA FINAL", a, b)),
-			"AGUARDANDO COMPRA": purchaseControls
-				.filter((c) => c.status === "AGUARDANDO COMPRA")
-				.sort((a, b) => handleSortByStatusLog("AGUARDANDO COMPRA", a, b)),
 			"AGUARDANDO SEPARAÇÃO": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO SEPARAÇÃO")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO SEPARAÇÃO", a, b)),
 			"AGUARDANDO FATURAMENTO": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO FATURAMENTO")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO FATURAMENTO", a, b)),
-			"AGUARDANDO NF COR": purchaseControls
-				.filter((c) => c.status === "AGUARDANDO NF COR")
-				.sort((a, b) => handleSortByStatusLog("AGUARDANDO NF COR", a, b)),
-			"AGUARDANDO DESPACHE": purchaseControls
-				.filter((c) => c.status === "AGUARDANDO DESPACHE")
-				.sort((a, b) => handleSortByStatusLog("AGUARDANDO DESPACHE", a, b)),
 			"AGUARDANDO ENTREGA": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO ENTREGA")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO ENTREGA", a, b)),
-			CONCLUÍDA: purchaseControls.filter((c) => c.status === "CONCLUÍDA").sort((a, b) => handleSortByStatusLog("CONCLUÍDA", a, b)),
-			PENDÊNCIAS: purchaseControls.filter((c) => c.status === "PENDÊNCIAS").sort((a, b) => handleSortByStatusLog("PENDÊNCIAS", a, b)),
+			// CONCLUÍDA: purchaseControls.filter((c) => c.status === "CONCLUÍDA").sort((a, b) => handleSortByStatusLog("CONCLUÍDA", a, b)),
+			// PENDÊNCIAS: purchaseControls.filter((c) => c.status === "PENDÊNCIAS").sort((a, b) => handleSortByStatusLog("PENDÊNCIAS", a, b)),
 		}).map(([key, value]) => ({ title: key, items: value }));
 	}
 

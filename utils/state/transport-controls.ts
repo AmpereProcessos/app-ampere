@@ -85,6 +85,9 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 			identificador: initialState?.transportControl?.identificador || 0,
 			itens: initialState?.transportControl?.itens || [],
 			custos: initialState?.transportControl?.custos || [],
+			configuracoes: initialState?.transportControl?.configuracoes || {
+				custoQuilometragem: 3,
+			},
 			autor: initialState?.transportControl?.autor || {
 				id: "",
 				nome: "",

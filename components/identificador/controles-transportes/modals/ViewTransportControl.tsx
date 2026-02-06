@@ -30,6 +30,7 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 		id: transportControlId,
 	});
 
+	const totalCosts = (transportControl?.custos ?? []).reduce((acc, curr) => acc + curr.valor, 0);
 	console.log(transportControl);
 	return (
 		<ResponsiveDialogDrawerViewOnly
@@ -87,7 +88,7 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 							<div className="flex items-center gap-1">
 								<h2 className="text-sm font-medium tracking-tight">KM FINAL</h2>
 								<div className="flex items-center gap-1">
-									<h2 className="text-sm font-bold tracking-tight">{transportControl.distanciaQuilometragemInicial}</h2>
+									<h2 className="text-sm font-bold tracking-tight">{transportControl.distanciaQuilometragemFinal}</h2>
 									{transportControl.distanciaQuilometragemFinalImagemUrl ? (
 										<Button
 											variant="ghost"
@@ -148,32 +149,38 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 
 					<ResponsiveDialogDrawerSection sectionTitleText="CUSTOS" sectionTitleIcon={<DollarSign size={15} />}>
 						{transportControl.custos.length > 0 ? (
-							transportControl.custos.map((custo, index) => (
-								<div key={index.toString()} className="w-full flex flex-col gap-1.5 p-3 rounded-lg border border-primary/30 shadow-sm">
-									<div className="w-full flex items-center justify-between gap-2">
-										<div className="flex items-center gap-2">
-											<h3 className="text-xs font-bold">{custo.descricao}</h3>
+							<>
+								{transportControl.custos.map((custo, index) => (
+									<div key={index.toString()} className="w-full flex flex-col gap-1.5 p-3 rounded-lg border border-primary/30 shadow-sm">
+										<div className="w-full flex items-center justify-between gap-2">
+											<div className="flex items-center gap-2">
+												<h3 className="text-xs font-bold">{custo.descricao}</h3>
+											</div>
+
+											<div className="flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-lg">
+												<DollarSign className="w-4 h-4 min-w-4 min-h-4" />
+												<p className="text-xs font-medium tracking-tight">{formatToMoney(custo.valor)}</p>
+											</div>
 										</div>
 
-										<div className="flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-lg">
-											<DollarSign className="w-4 h-4 min-w-4 min-h-4" />
-											<p className="text-xs font-medium tracking-tight">{formatToMoney(custo.valor)}</p>
-										</div>
+										{custo.anexos.length > 0 && (
+											<div className="w-full flex items-center gap-2 flex-wrap">
+												<h2 className="text-xs font-medium tracking-tight">ANEXOS</h2>
+												{custo.anexos.map((anexo, aIdx) => (
+													<a key={aIdx.toString()} href={anexo.url} className="flex items-center gap-1 px-2 py-1 bg-blue-200 text-blue-600 rounded-lg">
+														<FileIcon className="w-4 h-4 min-w-4 min-h-4" />
+														<p className="text-xs font-medium tracking-tight">{anexo.titulo}</p>
+													</a>
+												))}
+											</div>
+										)}
 									</div>
-
-									{custo.anexos.length > 0 && (
-										<div className="w-full flex items-center gap-2 flex-wrap">
-											<h2 className="text-xs font-medium tracking-tight">ANEXOS</h2>
-											{custo.anexos.map((anexo, aIdx) => (
-												<a key={aIdx.toString()} href={anexo.url} className="flex items-center gap-1 px-2 py-1 bg-blue-200 text-blue-600 rounded-lg">
-													<FileIcon className="w-4 h-4 min-w-4 min-h-4" />
-													<p className="text-xs font-medium tracking-tight">{anexo.titulo}</p>
-												</a>
-											))}
-										</div>
-									)}
+								))}
+								<div className="flex items-center flex-col gap-1 text-primary self-center">
+									<p className="text-xs font-bold tracking-tight">TOTAL DE: {formatToMoney(totalCosts)}</p>
+									<p className="text-xs font-bold tracking-tight">{formatToMoney(totalCosts / transportControl.itens.length)} POR TRANSPORTE</p>
 								</div>
-							))
+							</>
 						) : (
 							<div className="flex items-center gap-2">
 								<Package className="w-4 h-4 min-w-4 min-h-4" />

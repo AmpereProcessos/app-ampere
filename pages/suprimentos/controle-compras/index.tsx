@@ -185,10 +185,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 			cookiesEntries,
 			title: "AGUARDANDO FATURAMENTO",
 		}),
-		"AGUARDANDO DESPACHE": getCookieDefinitionByListTitle({
-			cookiesEntries,
-			title: "AGUARDANDO DESPACHE",
-		}),
 		"AGUARDANDO ENTREGA": getCookieDefinitionByListTitle({
 			cookiesEntries,
 			title: "AGUARDANDO ENTREGA",

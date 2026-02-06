@@ -22,6 +22,7 @@ export default function GeneralBlock({
 	addTransportControlItem,
 	removeTransportControlItem,
 }: GeneralBlockProps) {
+	console.log("TRANSPORT CONTROL", transportControl);
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES GERAIS" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<TextInput
@@ -55,7 +56,18 @@ export default function GeneralBlock({
 				</div>
 			</div>
 			<div className="w-full flex items-center gap-2 flex-col lg:flex-row">
-				<div className="w-full lg:w-1/2">
+				<div className="w-full lg:w-1/3">
+					<NumberInput
+						label="CUSTO POR QUILOMÊTRO"
+						placeholder="Preencha o custo por quilomêtro..."
+						value={transportControl.configuracoes.custoQuilometragem ?? null}
+						handleChange={(value) => {
+							updateTransportControl({ configuracoes: { custoQuilometragem: value } });
+						}}
+						width="100%"
+					/>
+				</div>
+				<div className="w-full lg:w-1/3">
 					<NumberInput
 						label="QUILOMETRAGEM INICIAL"
 						placeholder="Preencha a quilometragem inicial..."
@@ -66,7 +78,7 @@ export default function GeneralBlock({
 						width="100%"
 					/>
 				</div>
-				<div className="w-full lg:w-1/2">
+				<div className="w-full lg:w-1/3">
 					<NumberInput
 						label="QUILOMETRAGEM FINAL"
 						placeholder="Preencha a quilometragem final..."

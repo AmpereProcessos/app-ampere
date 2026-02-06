@@ -162,6 +162,12 @@ export const TransportControlSchema = z.object({
 		required_error: "Itens é obrigatório",
 		invalid_type_error: "Itens deve ser um array",
 	}),
+	configuracoes: z.object({
+		custoQuilometragem: z.number({
+			required_error: "Custo quilométrico é obrigatório",
+			invalid_type_error: "Custo quilométrico deve ser um número",
+		}),
+	}),
 	distanciaQuilometragemInicial: z
 		.number({
 			invalid_type_error: "Distância quilométrica inicial deve ser um número",

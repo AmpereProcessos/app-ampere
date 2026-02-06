@@ -39,6 +39,9 @@ export default function NewTransportControl({ session, closeModal, callbacks }: 
 				titulo: "",
 				itens: [],
 				custos: [],
+				configuracoes: {
+					custoQuilometragem: 3,
+				},
 				dataInsercao: new Date().toISOString(),
 				autor: {
 					id: session.user.id,

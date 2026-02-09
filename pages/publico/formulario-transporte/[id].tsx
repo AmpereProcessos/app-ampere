@@ -668,25 +668,63 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 	closeMenu,
 }: TransportControlFormularyConcludingDeliveryConcludeMethodButtonProps) {
 	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || undefined);
-	const [attachments, setAttachments] = useState<
+	const defaultAttachmentDefinitions = [
+		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM" },
+		{ key: "materiais", title: "ENTREGA - FOTO DOS MATERIAIS ENTREGUES", label: "FOTO DOS MATERIAIS ENTREGUES" },
+		{ key: "nf", title: "ENTREGA - FOTO DA NF ASSINADA", label: "FOTO DA NF ASSINADA" },
+	] as const;
+	const [defaultAttachments, setDefaultAttachments] = useState<
+		Record<
+			(typeof defaultAttachmentDefinitions)[number]["key"],
+			{
+				file: File | null;
+				previewUrl: string | null;
+			}
+		>
+	>({
+		km: { file: null, previewUrl: null },
+		materiais: { file: null, previewUrl: null },
+		nf: { file: null, previewUrl: null },
+	});
+	const [otherAttachments, setOtherAttachments] = useState<
 		{
 			file: File | null;
 			previewUrl: string | null;
 		}[]
 	>([]);
+	const allDefaultAttachmentsReady = defaultAttachmentDefinitions.every((item) => !!defaultAttachments[item.key].file);
 
 	const { mutate: handleCompleteDelivery, isPending: isCompletingDelivery } = useMutation({
 		mutationKey: ["complete-delivery", delivery.id],
 		mutationFn: async () => {
-			const uploadPromises = attachments.map(async (attachment) => {
-				return await uploadFile({
-					vinculationId: transportControlId,
-					fileName: `entrega-${delivery.id}-${attachment.file?.name}`,
-					file: attachment.file as File,
-					prefix: "transport-controls",
-				});
-			});
-			const uploadedFiles = await Promise.all(uploadPromises);
+			if (!allDefaultAttachmentsReady) {
+				throw new Error("As fotos obrigatórias da entrega devem ser anexadas.");
+			}
+			const defaultUploads = await Promise.all(
+				defaultAttachmentDefinitions.map(async (definition) => {
+					const attachment = defaultAttachments[definition.key];
+					const uploaded = await uploadFile({
+						vinculationId: transportControlId,
+						fileName: `entrega-${delivery.id}-${definition.key}`,
+						file: attachment.file as File,
+						prefix: "transport-controls",
+					});
+					return { uploaded, title: definition.title };
+				}),
+			);
+			const otherUploads = await Promise.all(
+				otherAttachments
+					.filter((attachment) => !!attachment.file)
+					.map(async (attachment) => {
+						const uploaded = await uploadFile({
+							vinculationId: transportControlId,
+							fileName: `entrega-${delivery.id}-${attachment.file?.name}`,
+							file: attachment.file as File,
+							prefix: "transport-controls",
+						});
+						return uploaded;
+					}),
+			);
 
 			await updateTransportControl({
 				transportControlId: transportControlId,
@@ -696,14 +734,24 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 							return {
 								...item,
 								dataEfetivacao: deliveryDate,
-								anexos: uploadedFiles.map((file, index) => ({
-									idArquivoReferencia: "", // Will be set by backend
-									titulo: uploadedFiles.length > 1 ? `ENTREGA (${index + 1})` : "ENTREGA",
-									identificador: null,
-									url: file.url,
-									formato: file.format,
-									tamanho: file.size,
-								})),
+								anexos: [
+									...defaultUploads.map(({ uploaded, title }) => ({
+										idArquivoReferencia: "", // Will be set by backend
+										titulo: title,
+										identificador: null,
+										url: uploaded.url,
+										formato: uploaded.format,
+										tamanho: uploaded.size,
+									})),
+									...otherUploads.map((file, index) => ({
+										idArquivoReferencia: "", // Will be set by backend
+										titulo: `ENTREGA - ANEXO (${index + 1})`,
+										identificador: null,
+										url: file.url,
+										formato: file.format,
+										tamanho: file.size,
+									})),
+								],
 							};
 						}
 						return item;
@@ -730,7 +778,7 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 	return (
 		<ResponsiveDialogDrawer
 			menuTitle="CONCLUIR ENTREGA"
-			menuDescription="Selecione o método de conclusão da entrega."
+			menuDescription="Anexe as fotos obrigatórias da entrega e, se necessário, inclua outros anexos."
 			menuActionButtonText="CONCLUIR ENTREGA"
 			menuCancelButtonText="CANCELAR"
 			closeMenu={closeMenu}
@@ -749,11 +797,63 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 				}}
 				width="100%"
 			/>
+			<div className="w-full flex flex-col gap-2">
+				<h3 className="text-primary/80 text-xs font-medium tracking-tight">ARQUIVOS OBRIGATÓRIOS</h3>
+				<div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+					{defaultAttachmentDefinitions.map((definition) => {
+						const attachment = defaultAttachments[definition.key];
+						const inputId = `delivery-default-${delivery.id}-${definition.key}`;
+						const hasFile = !!attachment.file;
+						return (
+							<label
+								key={definition.key}
+								htmlFor={inputId}
+								className={cn(
+									"relative h-[140px] w-full rounded-lg overflow-hidden cursor-pointer border border-dashed flex items-center justify-center",
+									{
+										"border-green-500 bg-green-50": hasFile,
+										"border-primary/30 bg-primary/10": !hasFile,
+									},
+								)}
+							>
+								{attachment.previewUrl ? (
+									<Image src={attachment.previewUrl} alt={definition.label} objectFit="cover" fill={true} />
+								) : (
+									<div className="w-full h-full flex items-center justify-center gap-1 flex-col text-center px-2">
+										<MdAttachFile className="w-6 h-6" />
+										<p className="font-medium text-[0.65rem]">{definition.label}</p>
+									</div>
+								)}
+								{hasFile ? (
+									<div className="absolute right-2 top-2 rounded-full bg-green-600 p-1 text-white">
+										<CheckCircle2 className="h-4 w-4" />
+									</div>
+								) : null}
+								<input
+									onChange={(e) => {
+										const file = e.target.files?.[0] ?? null;
+										setDefaultAttachments((prev) => ({
+											...prev,
+											[definition.key]: { file, previewUrl: file ? URL.createObjectURL(file) : null },
+										}));
+									}}
+									id={inputId}
+									type="file"
+									className="absolute h-full w-full opacity-0 cursor-pointer"
+									accept=".png,.jpeg,.jpg"
+									multiple={false}
+									tabIndex={-1}
+								/>
+							</label>
+						);
+					})}
+				</div>
+			</div>
 			<div className="w-full flex flex-col gap-1">
-				<h3 className="text-primary/80 text-xs font-medium tracking-tight">ARQUIVOS</h3>
+				<h3 className="text-primary/80 text-xs font-medium tracking-tight">OUTROS ANEXOS</h3>
 				<div className="relative flex h-full w-full flex-col items-center justify-center">
 					<label
-						htmlFor="dropzone-file"
+						htmlFor={`dropzone-file-${delivery.id}`}
 						className="dark:hover:bg-bray-800 border-primary/20 bg-background hover:bg-primary/10 flex h-full min-h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed dark:bg-[#121212]"
 					>
 						<div className="text-primary flex flex-col items-center justify-center px-2 pt-5 pb-6">
@@ -768,12 +868,12 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 										file: file,
 										previewUrl: URL.createObjectURL(file),
 									}));
-									return setAttachments((prev) => [...prev, ...attachments]);
+									return setOtherAttachments((prev) => [...prev, ...attachments]);
 								}
 								return;
 							}}
 							multiple={true}
-							id="dropzone-file"
+							id={`dropzone-file-${delivery.id}`}
 							type="file"
 							accept=".png,.jpeg,.jpg"
 							className="absolute h-full w-full opacity-0"
@@ -781,8 +881,8 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 					</label>
 				</div>
 				<div className="flex w-full flex-wrap items-start justify-start gap-4">
-					{attachments.length > 0 ? (
-						attachments
+					{otherAttachments.length > 0 ? (
+						otherAttachments
 							.filter((a) => !!a.file)
 							.map((attachment) => (
 								<div key={attachment.file?.name} className="border-primary/50 flex h-[100px] max-h-[100px] w-[80px] flex-col rounded border">

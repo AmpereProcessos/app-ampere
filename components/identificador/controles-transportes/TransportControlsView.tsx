@@ -1,16 +1,22 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
+import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn, copyToClipboard } from "@/lib/utils";
 import type { TGetTransportControlsOutput } from "@/pages/api/controles-transportes";
 import type { TPurchasesControlPageModes } from "@/pages/suprimentos/controle-compras";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { deleteTransportControl } from "@/utils/methods/mutation/transport-controls";
 import { useTransportControls } from "@/utils/methods/query/transport-controls";
-import { useQueryClient } from "@tanstack/react-query";
-import { EyeIcon, LinkIcon, Pencil, PlusIcon, Truck } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { EyeIcon, LinkIcon, Pencil, PlusIcon, TrashIcon, Truck } from "lucide-react";
 import { useState } from "react";
 import { BsCalendarPlus } from "react-icons/bs";
+import toast from "react-hot-toast";
+import EditTransportControl from "./modals/EditTransportControl";
 import NewTransportControl from "./modals/NewTransportControl";
 import ViewTransportControl from "./modals/ViewTransportControl";
 
@@ -23,6 +29,8 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 	const queryClient = useQueryClient();
 	const [newTransportControlModalIsOpen, setNewTransportControlModalIsOpen] = useState(false);
 	const [viewTransportControlId, setViewTransportControlId] = useState<string | null>(null);
+	const [deleteTransportControlId, setDeleteTransportControlId] = useState<string | null>(null);
+	const [editTransportControlId, setEditTransportControlId] = useState<string | null>(null);
 	const { data: transportControlsResult, queryKey, isLoading, isError, isSuccess, error, params, updateParams } = useTransportControls({});
 
 	const transportControls = transportControlsResult?.transportControls;
@@ -36,6 +44,20 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 	const handleOnSettled = async () => {
 		await queryClient.invalidateQueries({ queryKey });
 	};
+	const { mutate: handleDeleteTransportControl, isPending: deleteTransportControlIsPending } = useMutation({
+		mutationKey: ["delete-transport-control"],
+		mutationFn: async (transportControlId: string) => await deleteTransportControl({ transportControlId }),
+		onSuccess: () => {
+			toast.success("Controle de transporte excluído com sucesso!");
+			queryClient.invalidateQueries({ queryKey });
+			setDeleteTransportControlId(null);
+		},
+		onError: (err) => {
+			toast.error(getErrorMessage(err));
+		},
+	});
+
+	const deleteTransportControlReference = transportControls?.find((control) => control._id === deleteTransportControlId);
 	return (
 		<div className="w-full h-full flex flex-col gap-3">
 			<div className="w-full flex items-center justify-end">
@@ -54,7 +76,13 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 			/>
 			<div className="flex w-full flex-col gap-3">
 				{transportControls?.map((transportControl) => (
-					<TransportControlCard key={transportControl._id} transportControl={transportControl} handleClick={(id) => setViewTransportControlId(id)} />
+					<TransportControlCard
+						key={transportControl._id}
+						transportControl={transportControl}
+						handleClick={(id) => setViewTransportControlId(id)}
+						handleDelete={(id) => setDeleteTransportControlId(id)}
+						handleEdit={(id) => setEditTransportControlId(id)}
+					/>
 				))}
 			</div>
 			{newTransportControlModalIsOpen ? (
@@ -67,6 +95,34 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 			{viewTransportControlId ? (
 				<ViewTransportControl transportControlId={viewTransportControlId} closeModal={() => setViewTransportControlId(null)} />
 			) : null}
+			{editTransportControlId ? (
+				<EditTransportControl transportControlId={editTransportControlId} closeModal={() => setEditTransportControlId(null)} />
+			) : null}
+			{deleteTransportControlId ? (
+				<ResponsiveDialogDrawerViewOnly
+					menuTitle="EXCLUIR CONTROLE DE TRANSPORTE"
+					menuDescription="Tem certeza que deseja excluir este controle de transporte? Essa ação não pode ser desfeita."
+					menuCancelButtonText="CANCELAR"
+					closeMenu={() => setDeleteTransportControlId(null)}
+					stateIsLoading={false}
+					stateError={null}
+					dialogVariant="sm"
+				>
+					<div className="flex flex-col gap-3">
+						<p className="text-sm">
+							Controle: <span className="font-semibold">#{deleteTransportControlReference?.identificador || "---"}</span>{" "}
+							{deleteTransportControlReference?.titulo ? `- ${deleteTransportControlReference.titulo}` : ""}
+						</p>
+						<LoadingButton
+							variant="destructive"
+							loading={deleteTransportControlIsPending}
+							onClick={() => handleDeleteTransportControl(deleteTransportControlId)}
+						>
+							EXCLUIR CONTROLE
+						</LoadingButton>
+					</div>
+				</ResponsiveDialogDrawerViewOnly>
+			) : null}
 		</div>
 	);
 }
@@ -74,8 +130,11 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 type TransportControlCardProps = {
 	transportControl: TGetTransportControlsOutput["data"]["transportControls"][number];
 	handleClick: (id: string) => void;
+	handleDelete: (id: string) => void;
+	handleEdit: (id: string) => void;
 };
-function TransportControlCard({ transportControl, handleClick }: TransportControlCardProps) {
+function TransportControlCard({ transportControl, handleClick, handleDelete, handleEdit }: TransportControlCardProps) {
+	const canEdit = !transportControl.dataFim;
 	return (
 		<div className="bg-background border-primary/30 relative flex w-full flex-col justify-between gap-1 rounded-lg border p-3 shadow-xs">
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
@@ -137,6 +196,26 @@ function TransportControlCard({ transportControl, handleClick }: TransportContro
 					>
 						<LinkIcon className="w-4 h-4 min-w-4 min-h-4" />
 						<p>LINK DE CONTROLE</p>
+					</Button>
+					{canEdit ? (
+						<Button
+							onClick={() => handleEdit(transportControl._id)}
+							variant={"ghost"}
+							size={"fit"}
+							className="flex items-center gap-1 px-2 py-1 rounded-lg"
+						>
+							<Pencil className="w-4 h-4 min-w-4 min-h-4" />
+							<p>EDITAR</p>
+						</Button>
+					) : null}
+					<Button
+						onClick={() => handleDelete(transportControl._id)}
+						variant={"ghost"}
+						size={"fit"}
+						className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-red-200 hover:text-red-600 transition-colors"
+					>
+						<TrashIcon className="w-4 h-4 min-w-4 min-h-4" />
+						<p>EXCLUIR</p>
 					</Button>
 				</div>
 			</div>

@@ -97,6 +97,13 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 		},
 	});
 
+	const normalizeItemsOrder = useCallback((items: TTransportControlState["transportControl"]["itens"]) => {
+		return items.map((item, index) => ({
+			...item,
+			ordem: index + 1,
+		}));
+	}, []);
+
 	const updateTransportControl = useCallback((changes: Partial<TTransportControlState["transportControl"]>) => {
 		setState((prev) => ({
 			...prev,
@@ -112,10 +119,10 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 			...prev,
 			transportControl: {
 				...prev.transportControl,
-				itens: [...prev.transportControl.itens, item],
+				itens: normalizeItemsOrder([...prev.transportControl.itens, item]),
 			},
 		}));
-	}, []);
+	}, [normalizeItemsOrder]);
 
 	const removeTransportControlItem = useCallback((index: number) => {
 		console.log("removeTransportControlItem", index);
@@ -123,10 +130,29 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 			...prev,
 			transportControl: {
 				...prev.transportControl,
-				itens: prev.transportControl.itens.filter((_, i) => i !== index),
+				itens: normalizeItemsOrder(prev.transportControl.itens.filter((_, i) => i !== index)),
 			},
 		}));
-	}, []);
+	}, [normalizeItemsOrder]);
+
+	const moveTransportControlItem = useCallback(
+		(index: number, direction: "up" | "down") => {
+			setState((prev) => {
+				const items = [...prev.transportControl.itens];
+				const targetIndex = direction === "up" ? index - 1 : index + 1;
+				if (targetIndex < 0 || targetIndex >= items.length) return prev;
+				[items[index], items[targetIndex]] = [items[targetIndex], items[index]];
+				return {
+					...prev,
+					transportControl: {
+						...prev.transportControl,
+						itens: normalizeItemsOrder(items),
+					},
+				};
+			});
+		},
+		[normalizeItemsOrder],
+	);
 
 	const addTransportControlItemAttachment = useCallback(
 		(index: number, attachment: TTransportControlState["transportControl"]["itens"][number]["anexos"][number]) => {
@@ -200,6 +226,7 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 		updateTransportControl,
 		addTransportControlItem,
 		removeTransportControlItem,
+		moveTransportControlItem,
 		addTransportControlItemAttachment,
 		removeTransportControlItemAttachment,
 		addTransportControlCost,

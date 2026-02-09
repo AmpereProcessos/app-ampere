@@ -1,6 +1,7 @@
 import type {
 	TCreateTransportControlInput,
 	TCreateTransportControlOutput,
+	TDeleteTransportControlOutput,
 	TUpdateTransportControlInput,
 	TUpdateTransportControlOutput,
 } from "@/pages/api/controles-transportes";
@@ -14,6 +15,11 @@ export async function createTransportControl(info: TCreateTransportControlInput)
 
 export async function updateTransportControl(info: TUpdateTransportControlInput) {
 	const { data } = await axios.put<TUpdateTransportControlOutput>(`/api/controles-transportes?id=${info.transportControlId}`, info);
+	return data;
+}
+
+export async function deleteTransportControl({ transportControlId }: { transportControlId: string }) {
+	const { data } = await axios.delete<TDeleteTransportControlOutput>(`/api/controles-transportes?id=${transportControlId}`);
 	return data;
 }
 

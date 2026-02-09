@@ -26,6 +26,7 @@ export default function NewTransportControl({ session, closeModal, callbacks }: 
 		updateTransportControl,
 		addTransportControlItem,
 		removeTransportControlItem,
+		moveTransportControlItem,
 		addTransportControlItemAttachment,
 		removeTransportControlItemAttachment,
 		addTransportControlCost,
@@ -92,7 +93,12 @@ export default function NewTransportControl({ session, closeModal, callbacks }: 
 				addTransportControlItem={addTransportControlItem}
 				removeTransportControlItem={removeTransportControlItem}
 			/>
-			<ItemsBlock items={state.transportControl.itens} addItem={addTransportControlItem} removeItem={removeTransportControlItem} />
+			<ItemsBlock
+				items={state.transportControl.itens}
+				addItem={addTransportControlItem}
+				removeItem={removeTransportControlItem}
+				moveItem={moveTransportControlItem}
+			/>
 			<CostsBlock costs={state.transportControl.custos} addCost={addTransportControlCost} removeCost={removeTransportControlCost} />
 		</ResponsiveDialogDrawer>
 	);

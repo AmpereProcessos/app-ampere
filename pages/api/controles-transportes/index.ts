@@ -446,8 +446,98 @@ const updateTransportControlRoute: NextApiHandler<TUpdateTransportControlOutput>
 	return res.status(200).json(result);
 };
 
+export type TDeleteTransportControlOutput = {
+	data: {
+		deletedId: string;
+	};
+	message: string;
+};
+
+async function deleteTransportControl({ transportControlId, user }: { transportControlId: string; user: TAuthSession["user"] }) {
+	const db = await connectToDatabase();
+	const crmDb = await connectToCRMDatabase();
+	const transportControlsCollection = db.collection<TTransportControl>("controles-transportes");
+	const purchaseControlsCollection = db.collection<TPurchaseControl>("controles-compras");
+	const projectsCollection = db.collection<TProject>("dados");
+	const serviceOrdersCollection = db.collection<TServiceOrder>("ordensDeServico");
+	const fileReferencesCollection = crmDb.collection<TFileReference>("file-references");
+
+	const transportControl = await transportControlsCollection.findOne({ _id: new ObjectId(transportControlId) });
+	if (!transportControl) throw new createHttpError.NotFound("Controle de transporte não encontrado.");
+
+	const totalCosts = transportControl.custos.reduce((acc, cost) => acc + cost.valor, 0);
+	const finalCostPerItem = transportControl.itens.length > 0 ? totalCosts / transportControl.itens.length : null;
+
+	for (const item of transportControl.itens) {
+		if (!ObjectId.isValid(item.id)) continue;
+		const purchaseControl = await purchaseControlsCollection.findOne({ _id: new ObjectId(item.id) });
+		const projectId = purchaseControl?.projeto?.id || item.projeto?.id || null;
+
+		if (item.dataEfetivacao) {
+			console.log("[INFO] [DELETE-TRANSPORT-CONTROL] Item effetivation detected, updating purchase control", item.id);
+			await purchaseControlsCollection.updateOne(
+				{ _id: new ObjectId(item.id) },
+				{ $set: { "entrega.dataEfetivacao": null, "entrega.status": "EM ROTA" } },
+			);
+			if (projectId && ObjectId.isValid(projectId)) {
+				console.log("[INFO] [DELETE-TRANSPORT-CONTROL] Project found, updating project", projectId);
+				const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) });
+				await projectsCollection.updateOne(
+					{ _id: new ObjectId(projectId) },
+					{ $set: { "compra.status": "EM ROTA", "compra.dataEntrega": null, idOrdemServico: null } },
+				);
+				if (project?.idOrdemServico && ObjectId.isValid(project.idOrdemServico)) {
+					const serviceOrder = await serviceOrdersCollection.findOne({ _id: new ObjectId(project.idOrdemServico) });
+					if (serviceOrder && serviceOrder.projeto?.id === projectId) {
+						await serviceOrdersCollection.deleteOne({ _id: new ObjectId(project.idOrdemServico) });
+					}
+				}
+			}
+		}
+
+		if (finalCostPerItem !== null && Number.isFinite(finalCostPerItem)) {
+			await purchaseControlsCollection.updateOne(
+				{ _id: new ObjectId(item.id), "transporte.valor": finalCostPerItem },
+				{ $set: { "transporte.valor": null } },
+			);
+			if (projectId && ObjectId.isValid(projectId)) {
+				await projectsCollection.updateOne(
+					{ _id: new ObjectId(projectId), "compra.valorFrete": finalCostPerItem },
+					{ $set: { "compra.valorFrete": null } },
+				);
+			}
+		}
+	}
+
+	await fileReferencesCollection.updateMany(
+		{ idTransporte: transportControlId },
+		{ $set: { dataExclusao: new Date().toISOString(), autorIdExclusao: user.id } },
+	);
+
+	const deleteResponse = await transportControlsCollection.deleteOne({ _id: new ObjectId(transportControlId) });
+	if (!deleteResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro ao excluir o controle de transporte.");
+	if (deleteResponse.deletedCount === 0) throw new createHttpError.NotFound("Controle de transporte não encontrado.");
+
+	return {
+		data: {
+			deletedId: transportControlId,
+		},
+		message: "Controle de transporte excluído com sucesso.",
+	};
+}
+
+const deleteTransportControlRoute: NextApiHandler<TDeleteTransportControlOutput> = async (req, res) => {
+	const session = await validateAuthenticationWithSession(req, res);
+	const { id } = req.query;
+	if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+
+	const result = await deleteTransportControl({ transportControlId: id, user: session.user });
+	return res.status(200).json(result);
+};
+
 export default apiHandler({
 	GET: getTransportControlsRoute,
 	POST: createTransportControlRoute,
 	PUT: updateTransportControlRoute,
+	DELETE: deleteTransportControlRoute,
 });

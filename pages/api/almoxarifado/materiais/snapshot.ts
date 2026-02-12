@@ -32,6 +32,8 @@ async function getMaterialsSnapshot({ sessionUser, input }: { sessionUser: TAuth
 					_id: 1,
 					nome: 1,
 					qtde: 1,
+					grandeza: 1,
+					preco: 1,
 				},
 				sort: {
 					nome: 1,
@@ -56,10 +58,20 @@ async function getMaterialsSnapshot({ sessionUser, input }: { sessionUser: TAuth
 				return acc - registry.alteracao;
 			}, 0);
 
+		// This is getting the newest price registry, since it sorts by dataInsercao descending (b - a), so the first element is the most recent.
+		const oldestPriceRegistry = materialUpdateRegistries
+			.filter((registry) => registry.material.id === material._id.toString())
+			.sort((a, b) => new Date(a.dataInsercao).getTime() - new Date(b.dataInsercao).getTime())
+			.at(0)?.precoNovo;
+
 		return {
 			ID: material._id.toString(),
 			"NOME DO MATERIAL": material.nome,
+			"GRANDEZA DO MATERIAL": material.grandeza,
+			"QUANTIDADE ATUAL": material.qtde,
+			"PREÇO UNITÁRIO ATUAL": material.preco,
 			"QUANTIDADE NO SNAPSHOT": material.qtde + changesDelta,
+			"PREÇO UNITÁRIO NO SNAPSHOT": oldestPriceRegistry,
 		};
 	});
 	// const pipeline = [

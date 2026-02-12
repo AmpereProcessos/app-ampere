@@ -694,7 +694,7 @@ async function deleteWarehouseFormulary({ input, session }: { input: TDeleteWare
 		await session_mongo.withTransaction(async () => {
 			const warehouseFormulary = await warehouseFormsCollection.findOne({ _id: new ObjectId(warehouseFormularyId) }, { session: session_mongo });
 			if (!warehouseFormulary) throw new createHttpError.NotFound("Formulário não encontrado.");
-
+			console.log("[DELETE_WAREHOUSE_FORM] Deleting warehouse form with ID:", warehouseFormularyId);
 			const warehouseFormularyMaterialsList = warehouseFormulary.materiais;
 			const warehouseFormularyMaterialsListIds = warehouseFormularyMaterialsList
 				.filter((material) => !!material.id)
@@ -716,7 +716,7 @@ async function deleteWarehouseFormulary({ input, session }: { input: TDeleteWare
 				// Checking for theorical impossible scenario
 				if (liquidTakenAwayQuantity < 0)
 					throw new createHttpError.InternalServerError("Oops, houve um erro desconhecido. Comunique o setor de tecnologia.");
-
+				console.log("[DELETE_WAREHOUSE_FORM] Updating quantity of material:", correspondingMaterial.nome, "by:", liquidTakenAwayQuantity);
 				bulkwriteMaterials.push({
 					updateOne: {
 						filter: { _id: new ObjectId(correspondingMaterial._id) },

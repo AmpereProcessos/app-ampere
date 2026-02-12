@@ -1,10 +1,12 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
 import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { equipesTecnicas, serviceOrdersCategories } from "@/utils/constants";
 import { formatToCEP } from "@/utils/methods/formatting";
@@ -18,7 +20,7 @@ import { getCEPInfo } from "@/utils/methods/shared";
 import type { TExpense } from "@/utils/schemas/expenses";
 import type { TNewWarehouseFormularyDTO, TTransactionalWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Code, LayoutGrid, UserRound } from "lucide-react";
+import { Code, CodeIcon, LayoutGrid, UserRound } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -84,6 +86,7 @@ type EditFormProps = {
 function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps) {
 	const queryClient = useQueryClient();
 	const [externalResponsible, setExternalResponsible] = useState<boolean>(false);
+	const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
 
 	const { data: formulary, isLoading, isError, isSuccess, error } = useWarehouseFormById({ id: formularyId });
 
@@ -137,6 +140,27 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 		},
 	});
 
+	const { mutate: handleDelete, isPending: loadingDelete } = useMutation({
+		mutationKey: ["delete-warehouse-formulary", formularyId],
+		mutationFn: deleteWarehouseFormulary,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ["warehouse-form-by-id", formularyId] });
+			if (callbacks?.onMutate) callbacks.onMutate();
+		},
+		onSuccess: async (data) => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+			toast.success(data.message);
+			return closeModal();
+		},
+		onSettled: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["warehouse-form-by-id", formularyId] });
+			if (callbacks?.onSettled) callbacks.onSettled();
+		},
+		onError: async (error) => {
+			if (callbacks?.onError) callbacks.onError(error);
+			return toast.error(getErrorMessage(error));
+		},
+	});
 	const isFormularyFinished = !!infoHolder.dataEfetivacao;
 	const userHasOverallEditingPermission = session.user.permissoes.execucao.editar;
 	useEffect(() => {
@@ -144,113 +168,142 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
 	}, [formulary]);
 
 	return (
-		<ResponsiveDialogDrawer
-			menuTitle="ATUALIZAR FORMULÁRIO"
-			menuDescription="Preencha os campos abaixo para atualizar o formulário."
-			menuActionButtonText="ATUALIZAR FORMULÁRIO"
-			menuCancelButtonText="CANCELAR"
-			actionFunction={() => handleUpdate({ warehouseFormularyId: formularyId, warehouseFormulary: infoHolder })}
-			actionIsPending={loadingUpdate}
-			stateIsLoading={isLoading}
-			stateError={isError ? getErrorMessage(error) : null}
-			closeMenu={closeModal}
-			dialogVariant="md"
-		>
-			<div className="w-full flex flex-col items-center justify-center">
-				<div className="flex items-center gap-2 px-2 py-1 rounded-md bg-primary/20">
-					<Code className="h-4 w-4 min-h-4 min-w-4" />
-					<p className="text-xs font-medium">{formularyId}</p>
-				</div>
-			</div>
-			<div className="w-full flex flex-col items-center justify-center">
-				<div className="w-fit">
-					<CheckboxInput
-						labelFalse="FINALIZADO"
-						labelTrue="FINALIZADO"
-						checked={infoHolder.dataEfetivacao !== null}
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataEfetivacao: value ? new Date().toISOString() : null }))}
-					/>
-				</div>
-			</div>
-
-			<TextInput
-				label="TITULO DO FORMULÁRIO"
-				editable={!isFormularyFinished}
-				placeholder="Preencha aqui um titulo para identificação e filtro desse formulário posteriomente..."
-				value={infoHolder.titulo}
-				handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titulo: value }))}
-				width="100%"
-			/>
-			{infoHolder.projeto ? (
-				<ResponsiveDialogDrawerSection sectionTitleText="PROJETO" sectionTitleIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}>
-					<div className="flex flex-col gap-2">
-						<div className="flex items-center gap-1">
-							<Code className="h-4 w-4 min-h-4 min-w-4" />
-							<p className="text-sm font-semibold tracking-tight">#{infoHolder.projeto.id || "N/A"}</p>
-						</div>
-						<div className="flex items-center gap-1">
-							<UserRound className="h-4 w-4 min-h-4 min-w-4" />
-							<p className="text-sm font-semibold tracking-tight">{infoHolder.projeto.nome || "N/A"}</p>
-						</div>
+		<>
+			<ResponsiveDialogDrawer
+				menuTitle="ATUALIZAR FORMULÁRIO"
+				menuDescription="Preencha os campos abaixo para atualizar o formulário."
+				menuActionButtonText="ATUALIZAR FORMULÁRIO"
+				menuCancelButtonText="CANCELAR"
+				actionFunction={() => handleUpdate({ warehouseFormularyId: formularyId, warehouseFormulary: infoHolder })}
+				menuSecondaryActionButtonText="EXCLUIR FORMULÁRIO"
+				menuSecondaryActionButtonClassName="bg-red-500 text-white hover:bg-red-600"
+				secondaryActionFunction={() => setDeleteConfirmationOpen(true)}
+				actionIsPending={loadingUpdate || loadingDelete}
+				stateIsLoading={isLoading}
+				stateError={isError ? getErrorMessage(error) : null}
+				closeMenu={closeModal}
+				dialogVariant="md"
+			>
+				<div className="w-full flex flex-col items-center justify-center">
+					<div className="flex items-center gap-2 px-2 py-1 rounded-md bg-primary/20">
+						<Code className="h-4 w-4 min-h-4 min-w-4" />
+						<p className="text-xs font-medium">{formularyId}</p>
 					</div>
-				</ResponsiveDialogDrawerSection>
-			) : null}
-			<div className="my-2 flex w-full items-center justify-center">
-				<CheckboxInput
-					labelFalse="RESPONSÁVEL INTERNO"
-					labelTrue="RESPONSÁVEL INTERNO"
-					checked={!externalResponsible}
-					handleChange={(value) => {
-						setExternalResponsible((prev) => !prev);
-					}}
+				</div>
+				<div className="w-full flex flex-col items-center justify-center">
+					<div className="w-fit">
+						<CheckboxInput
+							labelFalse="FINALIZADO"
+							labelTrue="FINALIZADO"
+							checked={infoHolder.dataEfetivacao !== null}
+							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, dataEfetivacao: value ? new Date().toISOString() : null }))}
+						/>
+					</div>
+				</div>
+
+				<TextInput
+					label="TITULO DO FORMULÁRIO"
+					editable={!isFormularyFinished}
+					placeholder="Preencha aqui um titulo para identificação e filtro desse formulário posteriomente..."
+					value={infoHolder.titulo}
+					handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titulo: value }))}
+					width="100%"
 				/>
-			</div>
-			<div className="flex w-full flex-col gap-2 lg:flex-row">
-				<div className="w-full lg:w-1/2">
-					<SelectInput
-						label="CATEGORIA"
-						value={infoHolder.categoria}
-						options={serviceOrdersCategories}
-						selectedItemLabel="NÃO DEFINIDO"
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
-						onReset={() => setInfoHolder((prev) => ({ ...prev, categoria: "" }))}
-						width="100%"
+				{infoHolder.projeto ? (
+					<ResponsiveDialogDrawerSection sectionTitleText="PROJETO" sectionTitleIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}>
+						<div className="flex flex-col gap-2">
+							<div className="flex items-center gap-1">
+								<Code className="h-4 w-4 min-h-4 min-w-4" />
+								<p className="text-sm font-semibold tracking-tight">#{infoHolder.projeto.id || "N/A"}</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<UserRound className="h-4 w-4 min-h-4 min-w-4" />
+								<p className="text-sm font-semibold tracking-tight">{infoHolder.projeto.nome || "N/A"}</p>
+							</div>
+						</div>
+					</ResponsiveDialogDrawerSection>
+				) : null}
+				<div className="my-2 flex w-full items-center justify-center">
+					<CheckboxInput
+						labelFalse="RESPONSÁVEL INTERNO"
+						labelTrue="RESPONSÁVEL INTERNO"
+						checked={!externalResponsible}
+						handleChange={(value) => {
+							setExternalResponsible((prev) => !prev);
+						}}
 					/>
 				</div>
-				<div className="w-full lg:w-1/2">
-					{externalResponsible ? (
-						<TextInput
-							label="RESPONSÁVEL(IS)"
-							placeholder="Preencha aqui o nome dos responsáveis pelo material.."
-							value={infoHolder.responsaveis}
-							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsaveis: value }))}
-							width="100%"
-						/>
-					) : (
+				<div className="flex w-full flex-col gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/2">
 						<SelectInput
-							label="RESPONSÁVEL(IS)"
-							value={infoHolder.responsaveis}
-							options={equipesTecnicas}
+							label="CATEGORIA"
+							value={infoHolder.categoria}
+							options={serviceOrdersCategories}
 							selectedItemLabel="NÃO DEFINIDO"
-							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsaveis: value }))}
-							onReset={() => setInfoHolder((prev) => ({ ...prev, responsaveis: "" }))}
+							handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
+							onReset={() => setInfoHolder((prev) => ({ ...prev, categoria: "" }))}
 							width="100%"
 						/>
-					)}
+					</div>
+					<div className="w-full lg:w-1/2">
+						{externalResponsible ? (
+							<TextInput
+								label="RESPONSÁVEL(IS)"
+								placeholder="Preencha aqui o nome dos responsáveis pelo material.."
+								value={infoHolder.responsaveis}
+								handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsaveis: value }))}
+								width="100%"
+							/>
+						) : (
+							<SelectInput
+								label="RESPONSÁVEL(IS)"
+								value={infoHolder.responsaveis}
+								options={equipesTecnicas}
+								selectedItemLabel="NÃO DEFINIDO"
+								handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsaveis: value }))}
+								onReset={() => setInfoHolder((prev) => ({ ...prev, responsaveis: "" }))}
+								width="100%"
+							/>
+						)}
+					</div>
 				</div>
-			</div>
 
-			<MaterialsBlock
-				formularyId={formularyId}
-				formHolder={infoHolder}
-				setFormHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TTransactionalWarehouseFormulary>>}
-				blockTakeAway={true}
-				blockDevolution={false}
-				allowPostFinishEditing={userHasOverallEditingPermission}
-			/>
+				<MaterialsBlock
+					formularyId={formularyId}
+					formHolder={infoHolder}
+					setFormHolder={setInfoHolder as React.Dispatch<React.SetStateAction<TTransactionalWarehouseFormulary>>}
+					blockTakeAway={true}
+					blockDevolution={false}
+					allowPostFinishEditing={userHasOverallEditingPermission}
+				/>
 
-			<WarehouseFormularyLocation infoHolder={infoHolder} updateInfoHolder={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))} />
-		</ResponsiveDialogDrawer>
+				<WarehouseFormularyLocation infoHolder={infoHolder} updateInfoHolder={(changes) => setInfoHolder((prev) => ({ ...prev, ...changes }))} />
+			</ResponsiveDialogDrawer>
+			{deleteConfirmationOpen ? (
+				<ResponsiveDialogDrawerViewOnly
+					menuTitle="EXCLUIR FORMULÁRIO"
+					menuDescription="Tem certeza que deseja excluir este formulário? Essa ação não pode ser desfeita."
+					menuCancelButtonText="CANCELAR"
+					closeMenu={() => setDeleteConfirmationOpen(false)}
+					stateIsLoading={false}
+					stateError={null}
+					dialogVariant="sm"
+				>
+					<div className="flex flex-col gap-3">
+						<div className="w-fit self-center bg-secondary text-primary flex items-center gap-2 px-2 py-1 rounded-lg">
+							<CodeIcon className="h-4 w-4 min-h-4 min-w-4" />
+							<p className="text-sm font-semibold tracking-tight">#{formularyId}</p>
+						</div>
+						<p className="px-2 py-1 rounded-lg bg-red-200 text-red-600 text-center self-center">
+							Ao confirmar, todos os materiais serão devolvidos ao estoque e o formulário será excluído permanentemente.
+						</p>
+						<LoadingButton variant="destructive" loading={loadingDelete} onClick={() => handleDelete({ warehouseFormularyId: formularyId })}>
+							EXCLUIR FORMULÁRIO
+						</LoadingButton>
+					</div>
+				</ResponsiveDialogDrawerViewOnly>
+			) : null}
+		</>
 	);
 }
 

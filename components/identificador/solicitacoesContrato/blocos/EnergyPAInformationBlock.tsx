@@ -1,9 +1,11 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { tiposDePadrao } from "@/utils/constants";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import React, { type Dispatch, type SetStateAction } from "react";
+import { Zap } from "lucide-react";
 
 type EnergyPAInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -12,8 +14,10 @@ type EnergyPAInformationBlockProps = {
 };
 function EnergyPAInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: EnergyPAInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PADRÃO DE ENERGIA</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES SOBRE O PADRÃO DE ENERGIA"
+			sectionTitleIcon={<Zap className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex flex-wrap items-center justify-center gap-4">
 				<div className="w-fit">
 					<CheckboxInput
@@ -100,7 +104,7 @@ function EnergyPAInformationBlock({ infoHolder, setInfoHolder, userHasEditPermis
 					</div>
 				</>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

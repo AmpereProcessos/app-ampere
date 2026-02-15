@@ -1,10 +1,12 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { formatDecimalPlaces } from "@/utils/constants";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React, { useState } from "react";
-import { MdDelete } from "react-icons/md";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { GitBranch } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 
 type ElectricalInstallationDependentsInformationBlockProps = {
@@ -33,19 +35,21 @@ function ElectricalInstallationDependentsInformationBlock({
 		setInfoHolder((prev) => ({ ...prev, distribuicoes: distributions }));
 	}
 	return (
-		<div className="flex w-full flex-col gap-2">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE DISTRIBUIÇÕES DE CRÉDITO</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES SOBRE DISTRIBUIÇÕES DE CRÉDITO"
+			sectionTitleIcon={<GitBranch className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex items-center justify-center">
 				<div className="w-fit">
 					<CheckboxInput
 						labelFalse="POSSUI DISTRIBUIÇÕES DE CRÉDITO"
 						labelTrue="POSSUI DISTRIBUIÇÕES DE CRÉDITO"
-						checked={infoHolder.possuiDistribuicao == "SIM"}
+						checked={infoHolder.possuiDistribuicao === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, possuiDistribuicao: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
 			</div>
-			{infoHolder.possuiDistribuicao == "SIM" ? (
+			{infoHolder.possuiDistribuicao === "SIM" ? (
 				<>
 					<div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
 						<div className="w-full lg:w-1/2">
@@ -70,6 +74,7 @@ function ElectricalInstallationDependentsInformationBlock({
 					<div className="flex w-full items-center justify-end">
 						<button
 							onClick={() => addDistribution(distributionHolder)}
+							type="button"
 							className="rounded bg-black px-2 py-1 font-bold text-white ease-out hover:bg-gray-900"
 						>
 							ADICIONAR
@@ -77,7 +82,7 @@ function ElectricalInstallationDependentsInformationBlock({
 					</div>
 					<div className="flex w-full items-start justify-around gap-4">
 						{infoHolder.distribuicoes.map((dist, index) => (
-							<div key={index} className="group border-primary/60 flex items-center gap-2 rounded border p-2 shadow-xs">
+							<div key={`${dist.numInstalacao}-${index}`} className="group border-primary/60 flex items-center gap-2 rounded border p-2 shadow-xs">
 								<h1 className="text-primary/60 text-xs font-medium">INSTALAÇÃO Nº {dist.numInstalacao}</h1>
 								<h1 className="rounded-lg bg-black px-2 py-1 text-[0.65rem] font-bold text-white">{formatDecimalPlaces(dist.excedente || 0)} %</h1>
 								<button
@@ -92,7 +97,7 @@ function ElectricalInstallationDependentsInformationBlock({
 					</div>
 				</>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

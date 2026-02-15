@@ -141,6 +141,16 @@ function ContractRequestControlModal({ requestId, session, closeModal }: Contrac
 		respTrocaPadrao: null,
 		formaPagamentoPadrao: null,
 		valorPadrao: 0,
+		pagador: {
+			nome: "",
+			cpfCnpj: "",
+			telefone: "",
+			email: "",
+			localizacao: {
+				uf: "",
+				cidade: "",
+			},
+		},
 		nomePagador: "",
 		contatoPagador: "",
 		necessidaInscricaoRural: null,

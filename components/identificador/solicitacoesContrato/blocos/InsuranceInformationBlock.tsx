@@ -1,8 +1,10 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { Shield } from "lucide-react";
+import type React from "react";
 
 type InsuranceInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -11,14 +13,16 @@ type InsuranceInformationBlockProps = {
 };
 function InsuranceInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: InsuranceInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE SERVIÇOS DE SEGURO</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES SOBRE SERVIÇOS DE SEGURO"
+			sectionTitleIcon={<Shield className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex items-center justify-center">
 				<div className="w-fit">
 					<CheckboxInput
 						labelFalse="POSSUI SEGURO"
 						labelTrue="POSSUI SEGURO"
-						checked={infoHolder.clienteSegurado == "SIM"}
+						checked={infoHolder.clienteSegurado === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, clienteSegurado: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
@@ -49,7 +53,7 @@ function InsuranceInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
 					/>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

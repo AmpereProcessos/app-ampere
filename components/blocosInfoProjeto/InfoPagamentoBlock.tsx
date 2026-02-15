@@ -2,18 +2,19 @@ import type React from "react";
 import { formatDate, formatToMoney } from "../../utils/constants";
 
 import type { TAuthSession } from "@/lib/authentication/types";
-import { formatDateAsLocale, formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
+import { BrazilianCitiesOptionsFromUF, BrazilianStatesOptions } from "@/utils/estados_cidades";
+import { formatDateAsLocale, formatToCEP, formatToCPForCNPJ, formatToPhone } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { handleProjectTaxesExpenseTrigger } from "@/utils/methods/mutation/triggers";
 import { useCreditors } from "@/utils/methods/query/crm/utils";
 import { useProjectExpenses } from "@/utils/methods/query/expenses";
-import { formatDateInputChange } from "@/utils/methods/shared";
+import { formatDateInputChange, getCEPInfo } from "@/utils/methods/shared";
 import type { TExpenseDTO } from "@/utils/schemas/expenses";
 import type { TProjectUpdateLogDTO } from "@/utils/schemas/project-updates-logs";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { CreditCard, DollarSign, LayoutGrid, Pencil, Plus, Receipt, UserRound } from "lucide-react";
+import { CreditCard, DollarSign, LayoutGrid, MapPin, Pencil, Plus, Receipt, UserRound } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BsCalendar } from "react-icons/bs";
@@ -55,7 +56,43 @@ function InfoPagamentoBlock({
 	showADMOnly = false,
 }: InfoPagamentoBlockProps) {
 	const { data: creditors } = useCreditors();
-
+	async function setAddressDataByCEP(cep: string) {
+		const addressInfo = await getCEPInfo(cep);
+		const toastID = toast.loading("Buscando informações sobre o CEP...", {
+			duration: 2000,
+		});
+		setTimeout(() => {
+			if (addressInfo) {
+				toast.dismiss(toastID);
+				toast.success("Dados do CEP buscados com sucesso.", {
+					duration: 1000,
+				});
+				setChanges((prev) => ({
+					...prev,
+					"pagamento.pagador.localizacao.endereco": addressInfo.logradouro,
+					"pagamento.pagador.localizacao.bairro": addressInfo.bairro,
+					"pagamento.pagador.localizacao.uf": addressInfo.uf,
+					"pagamento.pagador.localizacao.cidade": addressInfo.localidade.toUpperCase(),
+				}));
+				setInfo((prev) => ({
+					...prev,
+					pagamento: {
+						...prev.pagamento,
+						pagador: {
+							...prev.pagamento.pagador,
+							localizacao: {
+								...prev.pagamento.pagador.localizacao,
+								endereco: addressInfo.logradouro,
+								bairro: addressInfo.bairro,
+								uf: addressInfo.uf,
+								cidade: addressInfo.localidade.toUpperCase(),
+							},
+						},
+					},
+				}));
+			}
+		}, 1000);
+	}
 	return (
 		<div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
 			<div className="flex items-center gap-2 bg-primary/20 px-2 py-2 rounded w-full justify-center">
@@ -202,13 +239,13 @@ function InfoPagamentoBlock({
 									handleChange={(value) => {
 										setChanges((prev) => ({
 											...prev,
-											"pagamento.credorNomeGerente": formatToPhone(value),
+										"pagamento.credorNomeGerente": value,
 										}));
 										setInfo((prev) => ({
 											...prev,
 											pagamento: {
 												...prev.pagamento,
-												credorNomeGerente: formatToPhone(value),
+											credorNomeGerente: value,
 											},
 										}));
 									}}
@@ -254,66 +291,316 @@ function InfoPagamentoBlock({
 				</InfoBlockSection>
 				<InfoBlockSection headerTitle="PAGADOR" headerIcon={<UserRound className="h-4 w-4 min-h-4 min-w-4" />}>
 					<div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
-						<div className="w-full lg:w-1/3">
+						<div className="w-full lg:w-1/2">
 							<TextInput
 								label={"NOME DO PAGADOR"}
 								editable={editor}
-								value={infoHolder.pagamento?.pagador || ""}
+								value={infoHolder.pagamento?.pagador?.nome || ""}
 								placeholder="Preencha o nome do pagador..."
 								handleChange={(value) => {
 									setChanges((prev) => ({
 										...prev,
-										"pagamento.pagador": value,
+										"pagamento.pagador.nome": value,
 									}));
 									setInfo((prev) => ({
 										...prev,
 										pagamento: {
 											...prev.pagamento,
-											pagador: value,
+											pagador: {
+												...prev.pagamento.pagador,
+												nome: value,
+											},
 										},
 									}));
 								}}
 								width="100%"
 							/>
 						</div>
-						<div className="w-full lg:w-1/3">
-							<TextInput
-								label={"CONTATO DO PAGADOR"}
-								editable={editor}
-								value={infoHolder.pagamento?.contatoPagador || ""}
-								placeholder="Preencha o contato do pagador..."
-								handleChange={(value) => {
-									setChanges((prev) => ({
-										...prev,
-										"pagamento.contatoPagador": value,
-									}));
-									setInfo((prev) => ({
-										...prev,
-										pagamento: {
-											...prev.pagamento,
-											contatoPagador: value,
-										},
-									}));
-								}}
-								width="100%"
-							/>
-						</div>
-						<div className="w-full lg:w-1/3">
+
+						<div className="w-full lg:w-1/2">
 							<TextInput
 								label={"CPF/CNPJ DO PAGADOR"}
 								editable={editor}
-								value={infoHolder.pagamento?.cpf_cnpjPagador || ""}
+								value={infoHolder.pagamento?.pagador?.cpfCnpj || ""}
 								placeholder="Preencha o contato do pagador..."
 								handleChange={(value) => {
 									setChanges((prev) => ({
 										...prev,
-										"pagamento.cpf_cnpjPagador": formatToCPForCNPJ(value),
+										"pagamento.pagador.cpfCnpj": formatToCPForCNPJ(value),
 									}));
 									setInfo((prev) => ({
 										...prev,
 										pagamento: {
 											...prev.pagamento,
-											cpf_cnpjPagador: formatToCPForCNPJ(value),
+											pagador: {
+												...prev.pagamento.pagador,
+												cpfCnpj: formatToCPForCNPJ(value),
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+					</div>
+					<div className="flex w-full flex-col items-center justify-center gap-2 lg:flex-row">
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label={"EMAIL DO PAGADOR"}
+								editable={editor}
+								value={infoHolder.pagamento?.pagador?.email || ""}
+								placeholder="Preencha o email do pagador..."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.email": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												email: value,
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label={"CONTATO DO PAGADOR"}
+								editable={editor}
+								value={infoHolder.pagamento?.pagador?.telefone || ""}
+								placeholder="Preencha o contato do pagador..."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.telefone": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												telefone: value,
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+					</div>
+				</InfoBlockSection>
+				<InfoBlockSection headerTitle="LOCALIZAÇÃO DO PAGADOR" headerIcon={<MapPin className="w-4 h-4 min-w-4 min-h-4" />}>
+					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+						<div className="w-full lg:w-1/3">
+							<TextInput
+								label="CEP"
+								value={infoHolder.pagamento?.pagador?.localizacao?.cep || ""}
+								placeholder="Preencha aqui o CEP do pagador."
+								handleChange={(value) => {
+									if (value.length === 9) {
+										setAddressDataByCEP(value);
+									}
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.cep": formatToCEP(value),
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, cep: formatToCEP(value) },
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/3">
+							<SelectInput
+								label="ESTADO"
+								value={infoHolder.pagamento?.pagador?.localizacao?.uf || ""}
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.uf": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, uf: value },
+											},
+										},
+									}));
+								}}
+								selectedItemLabel="NÃO DEFINIDO"
+								onReset={() => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.uf": "",
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, uf: "" },
+											},
+										},
+									}));
+								}}
+								options={BrazilianStatesOptions}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/3">
+							<SelectInput
+								label="CIDADE"
+								value={infoHolder.pagamento?.pagador?.localizacao?.cidade || ""}
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.cidade": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, cidade: value },
+											},
+										},
+									}));
+								}}
+								options={BrazilianCitiesOptionsFromUF(infoHolder.pagamento?.pagador?.localizacao?.uf || "")}
+								selectedItemLabel="NÃO DEFINIDO"
+								onReset={() => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.cidade": "",
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, cidade: "" },
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+					</div>
+					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label="BAIRRO"
+								value={infoHolder.pagamento?.pagador?.localizacao.bairro || ""}
+								placeholder="Preencha aqui o bairro do cliente."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.bairro": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, bairro: value },
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label="LOGRADOURO/RUA"
+								value={infoHolder.pagamento?.pagador?.localizacao.endereco || ""}
+								placeholder="Preencha aqui o logradouro do cliente."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.endereco": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, endereco: value },
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+					</div>
+					<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label="NÚMERO/IDENTIFICADOR"
+								value={infoHolder.pagamento?.pagador?.localizacao.numeroOuIdentificador || ""}
+								placeholder="Preencha aqui o número ou identificador da residência do cliente."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.numeroOuIdentificador": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, numeroOuIdentificador: value },
+											},
+										},
+									}));
+								}}
+								width="100%"
+							/>
+						</div>
+						<div className="w-full lg:w-1/2">
+							<TextInput
+								label="COMPLEMENTO"
+								value={infoHolder.pagamento?.pagador?.localizacao.complemento || ""}
+								placeholder="Preencha aqui algum complemento do endereço."
+								handleChange={(value) => {
+									setChanges((prev) => ({
+										...prev,
+										"pagamento.pagador.localizacao.complemento": value,
+									}));
+									setInfo((prev) => ({
+										...prev,
+										pagamento: {
+											...prev.pagamento,
+											pagador: {
+												...prev.pagamento.pagador,
+												localizacao: { ...prev.pagamento.pagador.localizacao, complemento: value },
+											},
 										},
 									}));
 								}}
@@ -480,17 +767,17 @@ function InfoPagamentoBlock({
 								value={infoHolder.faturamento?.cnpjFaturamento?.toString()}
 								placeholder="Preencha o CNPJ para faturamento..."
 								handleChange={(value) => {
-									setChanges({
-										...changes,
+									setChanges((prev) => ({
+										...prev,
 										"faturamento.cnpjFaturamento": formatToCPForCNPJ(value),
-									});
-									setInfo({
-										...infoHolder,
+									}));
+									setInfo((prev) => ({
+										...prev,
 										faturamento: {
-											...infoHolder.faturamento,
+											...prev.faturamento,
 											cnpjFaturamento: formatToCPForCNPJ(value),
 										},
-									});
+									}));
 								}}
 								width="100%"
 							/>

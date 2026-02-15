@@ -128,6 +128,59 @@ const GeneralContractRequestSchema = z.object({
 	respTrocaPadrao: z.enum(["NÃO SE APLICA", "AMPERE", "CLIENTE"]).nullable().optional(),
 	formaPagamentoPadrao: z.string().nullable().optional(),
 	valorPadrao: z.number().nullable().optional(),
+	/** PAYMENT INFORMATION */
+	pagador: z.object({
+		nome: z.string({ required_error: "Nome do pagador não informado.", invalid_type_error: "Tipo não válido para o nome do pagador." }),
+		cpfCnpj: z.string({
+			required_error: "CPF ou CNPJ do pagador não informado.",
+			invalid_type_error: "Tipo não válido para o CPF ou CNPJ do pagador.",
+		}),
+		telefone: z.string({ required_error: "Telefone do pagador não informado.", invalid_type_error: "Tipo não válido para o telefone do pagador." }),
+		email: z
+			.string({ required_error: "Email do pagador não informado.", invalid_type_error: "Tipo não válido para o email do pagador." })
+			.optional()
+			.nullable(),
+		localizacao: z.object({
+			cep: z
+				.string({
+					invalid_type_error: "Tipo não válido para o CEP do pagador.",
+				})
+				.optional()
+				.nullable(),
+			uf: z.string({
+				required_error: "UF do pagador não informada.",
+				invalid_type_error: "Tipo não válido para a UF do pagador.",
+			}),
+			cidade: z.string({
+				required_error: "Cidade do pagador não informada.",
+				invalid_type_error: "Tipo não válido para a cidade do pagador.",
+			}),
+			bairro: z
+				.string({
+					invalid_type_error: "Tipo não válido para o bairro do pagador.",
+				})
+				.optional()
+				.nullable(),
+			endereco: z
+				.string({
+					invalid_type_error: "Tipo não válido para o endereço do pagador.",
+				})
+				.optional()
+				.nullable(),
+			numeroOuIdentificador: z
+				.string({
+					invalid_type_error: "Tipo não válido para o número ou identificador do pagador.",
+				})
+				.optional()
+				.nullable(),
+			complemento: z
+				.string({
+					invalid_type_error: "Tipo não válido para o complemento do endereço do pagador.",
+				})
+				.optional()
+				.nullable(),
+		}),
+	}),
 	nomePagador: z.string(),
 	contatoPagador: z.string(),
 	necessidaInscricaoRural: z.enum(["SIM", "NÃO"]).nullable().optional(),

@@ -1,18 +1,20 @@
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { Settings2 } from "lucide-react";
+import type React from "react";
 import { FaSolarPanel } from "react-icons/fa";
 import { TbTopologyFull } from "react-icons/tb";
 
 function getJoinedInfo({ marca, qtde, pot }: { marca: string; qtde: string; pot: string }) {
-	let splitMarca = marca.split("/");
-	let splitQtde = qtde.split("/");
-	let splitPot = pot.split("/");
-	let holder = [];
+	const splitMarca = marca.split("/");
+	const splitQtde = qtde.split("/");
+	const splitPot = pot.split("/");
+	const holder = [];
 	for (let i = 0; i < splitMarca.length; i++) {
-		let str = `${splitQtde[i]}x ${splitMarca[i]}(${splitPot[i]}W)`;
+		const str = `${splitQtde[i]}x ${splitMarca[i]}(${splitPot[i]}W)`;
 		holder.push(str);
 	}
 	return holder.join(" - ");
@@ -24,8 +26,10 @@ type SystemInformationBlockProps = {
 };
 function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: SystemInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DA COMPOSIÇÃO DO PROJETO</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES DA COMPOSIÇÃO DO PROJETO"
+			sectionTitleIcon={<Settings2 className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 				<div className="w-full lg:w-1/4">
 					<SelectInput
@@ -130,7 +134,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 					</p>
 				</div>
 			</div>
-			{infoHolder.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" ? (
+			{infoHolder.tipoDeServico === "SISTEMA FOTOVOLTAICO (OFF GRID)" ? (
 				<>
 					<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 						<div className="w-full lg:w-1/4">
@@ -372,7 +376,7 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 					</div>
 				</>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

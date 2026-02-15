@@ -1,8 +1,10 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { Cog } from "lucide-react";
+import type React from "react";
 
 type OeMInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -11,14 +13,13 @@ type OeMInformationBlockProps = {
 };
 function OeMInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: OeMInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE SERVIÇOS DE O&M</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES SOBRE SERVIÇOS DE O&M" sectionTitleIcon={<Cog className="h-4 w-4 min-h-4 min-w-4" />}>
 			<div className="flex items-center justify-center">
 				<div className="w-fit">
 					<CheckboxInput
 						labelFalse="POSSUI O&M"
 						labelTrue="POSSUI O&M"
-						checked={infoHolder.possuiOeM == "SIM"}
+						checked={infoHolder.possuiOeM === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, possuiOeM: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
@@ -51,7 +52,7 @@ function OeMInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission 
 					/>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

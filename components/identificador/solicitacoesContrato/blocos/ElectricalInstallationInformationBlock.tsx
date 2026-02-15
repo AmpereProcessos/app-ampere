@@ -1,15 +1,17 @@
+import CheckboxInput from "@/components/inputs/Checkbox";
 import SelectInput from "@/components/inputs/Select";
+import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
 import TextInput from "@/components/inputs/Text";
-import { getCEPInfo } from "@/utils/methods/shared";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
-import toast from "react-hot-toast";
+import TextareaInput from "@/components/inputs/TextareaInput";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { estadosECidades } from "@/utils/estados_cidades";
 import AllCities from "@/utils/jsons/cidades.json";
 import { formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
-import { estadosECidades } from "@/utils/estados_cidades";
-import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
-import CheckboxInput from "@/components/inputs/Checkbox";
-import TextareaInput from "@/components/inputs/TextareaInput";
+import { getCEPInfo } from "@/utils/methods/shared";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { MapPin } from "lucide-react";
+import type React from "react";
+import toast from "react-hot-toast";
 type ElectricalInstallationInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
 	setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>;
@@ -38,8 +40,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
 		}, 1000);
 	}
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DA INSTALAÇÃO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DA INSTALAÇÃO" sectionTitleIcon={<MapPin className="h-4 w-4 min-h-4 min-w-4" />}>
 			<div className="flex w-full items-center justify-center">
 				<TextInput
 					label="ID DE HOMOLOGAÇÃO AVULSA (SE HOUVER)"
@@ -201,7 +202,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
 						editable={userHasEditPermission}
 						value={infoHolder.cepInstalacao}
 						handleChange={(value) => {
-							if (value.length == 9) {
+							if (value.length === 9) {
 								setAddressDataByCEP(value);
 							}
 							setInfoHolder((prev) => ({
@@ -344,7 +345,7 @@ function ElectricalInstallationInformationBlock({ infoHolder, setInfoHolder, use
 					/>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

@@ -1,7 +1,9 @@
 import TextInput from "@/components/inputs/Text";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { formatToPhone } from "@/utils/methods/formatting";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { Phone } from "lucide-react";
+import type React from "react";
 
 type ContactInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -10,8 +12,7 @@ type ContactInformationBlockProps = {
 };
 function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: ContactInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DE CONTATO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DE CONTATO" sectionTitleIcon={<Phone className="h-4 w-4 min-h-4 min-w-4" />}>
 			<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 				<div className="w-1/4 lg:w-full">
 					<TextInput
@@ -85,7 +86,7 @@ function ContactInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 					</div>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

@@ -23,8 +23,8 @@ import type { TProjectDTO } from "@/utils/schemas/projects";
 import type { TPurchaseControl, TPurchaseProjectDTO } from "@/utils/schemas/purchases";
 import type { TServiceOrder, TServiceOrderSimplifiedDTO } from "@/utils/schemas/service-order";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Pencil, Tag, TextIcon, UserRound } from "lucide-react";
-import React, { useState } from "react";
+import { MapPin, Pencil, Tag, TextIcon, UserRound } from "lucide-react";
+import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineSafety } from "react-icons/ai";
 import {
@@ -67,6 +67,32 @@ function PurchaseControlProjectInformationBlock({
 	const [newExecutionObservationsMenuIsOpen, setNewExecutionObservationsMenuIsOpen] = useState<boolean>(false);
 	const [technicalAnalysisBlockIsOpen, setTechnicalAnalysisBlockIsOpen] = useState<boolean>(false);
 
+	const memoizedProjectLocation = useMemo(() => {
+		return formatLocation({
+			location: {
+				uf: project.uf || "",
+				cidade: project.cidade || "",
+				cep: project.cep?.toString() || null,
+				bairro: project.bairro,
+				endereco: project.logradouro,
+				numeroOuIdentificador: project.numeroResidencia?.toString() || "",
+				complemento: null,
+				latitude: null,
+				longitude: null,
+			},
+			includeCity: true,
+			includeUf: true,
+			includeCEP: true,
+		});
+	}, [project]);
+	const memoizedPayerLocation = useMemo(() => {
+		return formatLocation({
+			location: project?.pagamento.pagador.localizacao,
+			includeCity: true,
+			includeUf: true,
+			includeCEP: true,
+		});
+	}, [project?.pagamento.pagador.localizacao]);
 	async function handleUpdateProject() {
 		try {
 			const changes = {
@@ -141,23 +167,7 @@ function PurchaseControlProjectInformationBlock({
 							</div>
 							<div className="flex items-center gap-1">
 								<FaLocationDot />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">
-									{formatLocation({
-										location: {
-											uf: project.uf || "",
-											cidade: project.cidade || "",
-											cep: project.cep?.toString() || "",
-											bairro: project.bairro,
-											endereco: project.logradouro,
-											numeroOuIdentificador: project.numeroResidencia?.toString() || "",
-											complemento: null,
-											latitude: null,
-											longitude: null,
-										},
-										includeCity: true,
-										includeUf: true,
-									})}
-								</p>
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{memoizedProjectLocation || "NÃO DEFINIDA"}</p>
 							</div>
 						</div>
 					</div>
@@ -168,16 +178,20 @@ function PurchaseControlProjectInformationBlock({
 						<p className="text-primary/60 text-[0.65rem] font-medium">PAGADOR</p>
 						<div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
 							<div className="flex items-center gap-1">
-								<FaUserAlt />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador}</p>
+								<FaUserAlt className="w-4 h-4 min-w-4 min-h-4" />
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador.nome}</p>
 							</div>
 							<div className="flex items-center gap-1">
-								<BsPersonVcard />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.cpf_cnpjPagador || "N/A"}</p>
+								<BsPersonVcard className="w-4 h-4 min-w-4 min-h-4" />
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador.cpfCnpj || "N/A"}</p>
 							</div>
 							<div className="flex items-center gap-1">
-								<FaPhone />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.contatoPagador}</p>
+								<FaPhone className="w-4 h-4 min-w-4 min-h-4" />
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador.telefone}</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<MapPin className="w-4 h-4 min-w-4 min-h-4" />
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{memoizedPayerLocation || "NÃO DEFINIDA"}</p>
 							</div>
 						</div>
 					</div>

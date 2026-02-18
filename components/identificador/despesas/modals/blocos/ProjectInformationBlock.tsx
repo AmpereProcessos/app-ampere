@@ -1,6 +1,6 @@
 import { formatLocation } from "@/utils/methods/formatting";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
-import { TExpense, TExpenseProjectDTO } from "@/utils/schemas/expenses";
+import type { TExpense, TExpenseProjectDTO } from "@/utils/schemas/expenses";
 import { TRevenue, TRevenueProjectDTO } from "@/utils/schemas/revenues";
 import React from "react";
 import { AiOutlineSafety } from "react-icons/ai";
@@ -70,7 +70,7 @@ function ExpenseProjectInformationBlock({ expense, project }: ExpenseProjectInfo
 						<div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
 							<div className="flex items-center gap-1">
 								<FaUserAlt />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador}</p>
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador.nome}</p>
 							</div>
 							<div className="flex items-center gap-1">
 								<BsPersonVcard />
@@ -98,7 +98,7 @@ function ExpenseProjectInformationBlock({ expense, project }: ExpenseProjectInfo
 								<BsBank />
 								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.credor || "NÃO DEFINIDO"}</p>
 							</div>
-							{project!.pagamento.forma == "FINANCIAMENTO" ? (
+							{project!.pagamento.forma === "FINANCIAMENTO" ? (
 								<>
 									<div className="flex items-center gap-1">
 										<FaUserAlt />

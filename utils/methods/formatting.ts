@@ -134,19 +134,24 @@ export function formatLocation({
 	includeCity?: boolean;
 	includeCEP?: boolean;
 }) {
-	let addressStr = "";
-	if (includeCity && location.cidade) addressStr = addressStr + `${location.cidade}`;
-	if (includeUf && location.uf) addressStr = location.endereco ? addressStr + ` (${location.uf}), ` : addressStr + ` (${location.uf})`;
-	if (!location.endereco && !includeUf && !includeCity) return "";
-	if (location.endereco) addressStr = addressStr + location.endereco;
-	if (location.numeroOuIdentificador) addressStr = addressStr + `, Nº ${location.numeroOuIdentificador}`;
-	if (location.bairro) addressStr = addressStr + `, ${location.bairro}`;
-	if (location.latitude) addressStr = addressStr + `, LAT ${location.latitude}`;
-	if (location.longitude) addressStr = addressStr + `, LONG ${location.longitude}`;
-	if (includeCEP && location.cep) addressStr = addressStr + `, CEP:${location.cep}`;
+	const prefixParts: string[] = [];
+	const addressParts: string[] = [];
 
-	addressStr += ".";
-	return addressStr.toUpperCase();
+	if (includeCity && location.cidade) prefixParts.push(location.cidade);
+	if (includeUf && location.uf) prefixParts.push(`(${location.uf})`);
+
+	if (location.endereco) addressParts.push(location.endereco);
+	if (location.numeroOuIdentificador) addressParts.push(`Nº ${location.numeroOuIdentificador}`);
+	if (location.bairro) addressParts.push(location.bairro);
+	if (location.latitude !== undefined && location.latitude !== null && location.latitude !== "") addressParts.push(`LAT ${location.latitude}`);
+	if (location.longitude !== undefined && location.longitude !== null && location.longitude !== "")
+		addressParts.push(`LONG ${location.longitude}`);
+	if (includeCEP && location.cep) addressParts.push(`CEP:${location.cep}`);
+
+	const formattedLocation = [prefixParts.join(" "), addressParts.join(", ")].filter(Boolean).join(", ");
+	if (!formattedLocation) return "";
+
+	return `${formattedLocation}.`.toUpperCase();
 }
 
 export function formatProductStr(product: TProductItem, showModel?: boolean) {

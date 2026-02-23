@@ -1,18 +1,18 @@
 import ErrorComponent from "@/components/utils/ErrorComponent";
-import { TPurchaseControl, TPurchaseControlWithProjectDTO } from "@/utils/schemas/purchases";
+import { formatDecimalPlaces } from "@/utils/constants";
+import AmpereLogo from "@/utils/images/logo-semtexto-branco.png";
+import { formatLocation } from "@/utils/methods/formatting";
+import type { TPurchaseControl, TPurchaseControlWithProjectDTO } from "@/utils/schemas/purchases";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import { Db, ObjectId } from "mongodb";
-import { GetServerSidePropsContext } from "next";
+import { type Db, ObjectId } from "mongodb";
+import type { GetServerSidePropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import AmpereLogo from "@/utils/images/logo-semtexto-branco.png";
-import { FaPhone, FaUserAlt } from "react-icons/fa";
-import { MdDashboard, MdLandscape, MdOutlinePayment, MdPhone } from "react-icons/md";
 import { BsBank, BsPersonVcard } from "react-icons/bs";
+import { FaPhone, FaUserAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-import { formatLocation } from "@/utils/methods/formatting";
-import { formatDecimalPlaces } from "@/utils/constants";
+import { MdDashboard, MdLandscape, MdOutlinePayment, MdPhone } from "react-icons/md";
 type PurchaseControlPageProps = {
 	purchaseControlJSON: string;
 	error: string | null | undefined;
@@ -21,7 +21,7 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
 	const purchaseControl: TPurchaseControlWithProjectDTO = JSON.parse(purchaseControlJSON);
 	console.log(purchaseControl);
 
-	if (!!error) return <ErrorComponent msg={error} />;
+	if (error) return <ErrorComponent msg={error} />;
 
 	return (
 		<div className="flex w-full items-center justify-center">
@@ -61,15 +61,15 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
 							<div className="flex flex-wrap items-center justify-center gap-4 px-2">
 								<div className="flex items-center gap-1">
 									<FaUserAlt />
-									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.pagador}</p>
+									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.pagamento.pagador.nome}</p>
 								</div>
 								<div className="flex items-center gap-1">
 									<FaPhone />
-									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.contatoPagador}</p>
+									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados.pagamento.pagador.telefone}</p>
 								</div>
 								<div className="flex items-center gap-1">
 									<BsPersonVcard />
-									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.pagamento.cpf_cnpjPagador}</p>
+									<p className="text-xs leading-none font-medium tracking-tight">{purchaseControl.projetoDados?.pagamento.pagador.cpfCnpj}</p>
 								</div>
 								<div className="flex items-center gap-1">
 									<MdOutlinePayment />
@@ -111,8 +111,11 @@ function PurchaseControlPage({ purchaseControlJSON, error }: PurchaseControlPage
 						<h1 className="w-[30%] text-center text-sm font-bold text-white">UNIDADE</h1>
 						<h1 className="w-[30%] text-center text-sm font-bold text-white">QUANTIDADE</h1>
 					</div>
-					{purchaseControl.composicao.map((item) => (
-						<div className="flex items-center gap-2 border-x border-b border-black p-2">
+					{purchaseControl.composicao.map((item, index) => (
+						<div
+							key={`${index}-${item.descricao}-${item.categoria}-${item.unidade}-${item.qtde}`}
+							className="flex items-center gap-2 border-x border-b border-black p-2"
+						>
 							<div className="flex w-[40%] flex-col">
 								<h1 className="w-full text-start text-xs font-medium text-black">{item.descricao}</h1>
 								<div className="flex w-full items-center gap-1">
@@ -135,14 +138,14 @@ export default PurchaseControlPage;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const { query } = context;
 	const { id } = query;
-	if (!id || typeof id != "string" || !ObjectId.isValid(id))
+	if (!id || typeof id !== "string" || !ObjectId.isValid(id))
 		return {
 			props: {
 				error: "ID inválido.",
 			},
 		};
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TPurchaseControl>("controles-compras");
 
 	const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };

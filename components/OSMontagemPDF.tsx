@@ -1,9 +1,9 @@
-import React from "react";
+import type { TServiceOrderDTO } from "@/utils/schemas/service-order";
 import Image from "next/image";
 import Link from "next/link";
-import Assinatura from "../utils/images/signature-andrew.png";
+import React from "react";
 import Logo from "../utils/images/logo-texto-azul-vertical.png";
-import type { TServiceOrderDTO } from "@/utils/schemas/service-order";
+import Assinatura from "../utils/images/signature-andrew.png";
 import ObservationsDocumentBlock from "./identificador/ordensDeServico/ObservationsDocumentBlock";
 
 type OSMontagemPDFProps = {
@@ -96,7 +96,7 @@ function OSMontagemPDF({ order }: OSMontagemPDFProps) {
 							<div className="col-span-3 flex flex-col items-center justify-center border border-t-0 border-black p-2 text-xxs">
 								{order.equipamentos.disponivel
 									? order.equipamentos.disponivel.map((equip, index) => (
-											<p key={index} className="w-full text-center text-[0.6rem]">
+											<p key={index.toString()} className="w-full text-center text-[0.6rem]">
 												{equip.qtde ? `${equip.qtde}x ` : ""}
 												{equip.descricao}
 											</p>
@@ -111,7 +111,7 @@ function OSMontagemPDF({ order }: OSMontagemPDFProps) {
 							<div className="col-span-2 flex h-full w-full flex-col items-center border border-black p-2 px-2 text-xs">
 								{order.equipamentos.retirada
 									? order.equipamentos.retirada.map((equip, index) => (
-											<p key={index} className="w-full text-center text-[0.6rem]">
+											<p key={index.toString()} className="w-full text-center text-[0.6rem]">
 												{equip.qtde ? `${equip.qtde}x ` : ""}
 												{equip.descricao}
 											</p>
@@ -142,17 +142,17 @@ function OSMontagemPDF({ order }: OSMontagemPDFProps) {
 				<div className="grid grid-cols-2 pb-2">
 					<div className="grid grid-rows-2">
 						<div className="flex gap-x-2">
-							<div className="h-4 w-4 rounded-md border border-black"></div>
+							<div className="h-4 w-4 rounded-md border border-black" />
 							<p className="text-xs">CONFIGURAÇÃO DO SISTEMA FEITA ?</p>
 						</div>
 						<div className="mt-2 flex gap-x-2">
-							<div className="h-4 w-4 rounded-md border border-black"></div>
+							<div className="h-4 w-4 rounded-md border border-black" />
 							<p className="text-xs">FOTOS DA INSTALAÇÃO NO GRUPO DE OBRA ?</p>
 						</div>
 					</div>
 					<div className="grid grid-rows-2">
 						<div className="flex">
-							<div className="h-4 w-4 rounded-md border border-black"></div>
+							<div className="h-4 w-4 rounded-md border border-black" />
 							<p className="pl-2 text-center text-xs">TERMO DE RECEBIMENTO DE OBRA</p>
 						</div>
 						<div className="mt-2 flex items-center gap-x-2 uppercase">

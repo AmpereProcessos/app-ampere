@@ -144,7 +144,7 @@ export const AppRoutes: TAppRouteGroup[] = [
 			},
 			{
 				title: "Banco de OS",
-				path: "/ordens-servico",
+				path: "/ordens-de-servico",
 				checkUserAccess: (session: TAuthSession) => session.user.permissoes.ordensDeServico.visualizar || session.user.permissoes.execucao.visualizar,
 				icon: <MdDesignServices className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
 			},

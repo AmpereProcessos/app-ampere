@@ -2,12 +2,17 @@ import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
-import { estadosECidades } from "@/utils/estados_cidades";
-import { formatToCEP } from "@/utils/methods/formatting";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { formatToPhone } from "@/utils/constants";
+import { BrazilianCitiesOptionsFromUF, BrazilianStatesOptions, estadosECidades } from "@/utils/estados_cidades";
+import { formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
 import { useCreditors } from "@/utils/methods/query/crm/utils";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { getCEPInfo } from "@/utils/methods/shared";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import { ContractRequestPaymentOptions } from "@/utils/select-options";
-import React from "react";
+import { CreditCard, MapPin } from "lucide-react";
+import type React from "react";
+import { toast } from "react-hot-toast";
 
 type PaymentInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -16,47 +21,181 @@ type PaymentInformationBlockProps = {
 };
 function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: PaymentInformationBlockProps) {
 	const { data: creditors } = useCreditors();
+
+	function updatePayerData(data: Partial<TContractRequestDTO["pagador"]>) {
+		setInfoHolder((prev) => ({
+			...prev,
+			pagador: { ...prev.pagador, ...data },
+		}));
+	}
+	function updatePayerLocation(data: Partial<TContractRequestDTO["pagador"]["localizacao"]>) {
+		setInfoHolder((prev) => ({
+			...prev,
+			pagador: { ...prev.pagador, localizacao: { ...prev.pagador.localizacao, ...data } },
+		}));
+	}
+	async function setAddressDataByCEP(cep: string) {
+		const addressInfo = await getCEPInfo(cep);
+		const toastID = toast.loading("Buscando informações sobre o CEP...", {
+			duration: 2000,
+		});
+		setTimeout(() => {
+			if (addressInfo) {
+				toast.dismiss(toastID);
+				toast.success("Dados do CEP buscados com sucesso.", {
+					duration: 1000,
+				});
+				setInfoHolder((prev) => ({
+					...prev,
+					pagador: {
+						...prev.pagador,
+						localizacao: {
+							...prev.pagador.localizacao,
+							endereco: addressInfo.logradouro,
+							bairro: addressInfo.bairro,
+							uf: addressInfo.uf,
+							cidade: addressInfo.localidade.toUpperCase(),
+						},
+					},
+				}));
+			}
+		}, 1000);
+	}
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES SOBRE O PAGAMENTO</h1>
-			<div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
-				<div className="w-full lg:w-1/3">
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES SOBRE O PAGAMENTO"
+			sectionTitleIcon={<CreditCard className="w-4 h-4 min-w-4 min-h-4" />}
+		>
+			<div className="w-full flex items-center justify-center gap-2 flex-col lg:flex-row">
+				<div className="w-full lg:w-1/2">
 					<TextInput
+						width={"100%"}
 						label={"NOME DO PAGADOR"}
-						placeholder="Preencha o nome do pagador..."
-						editable={userHasEditPermission}
-						value={infoHolder.nomePagador}
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, nomePagador: value }))}
-						width="100%"
+						placeholder="Preencha aqui o nome da pessoa/empresa que realizará o pagamento"
+						editable={true}
+						value={infoHolder.pagador.nome}
+						handleChange={(value) => updatePayerData({ nome: value })}
 					/>
 				</div>
-				<div className="w-full lg:w-1/3">
+				<div className="w-full lg:w-1/2">
 					<TextInput
-						label={"TELEFONE DO PAGADOR"}
-						placeholder="Preencha o nome do pagador..."
-						editable={userHasEditPermission}
-						value={infoHolder.contatoPagador}
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, contatoPagador: value }))}
-						width="100%"
-					/>
-				</div>
-				<div className="w-full lg:w-1/3">
-					<TextInput
-						label={"CPF/CNPJ DO PAGADOR (NF)"}
-						placeholder="Preencha o CPF/CNPJ do pagador..."
-						editable={userHasEditPermission}
-						value={infoHolder.cpf_cnpjNF}
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, cpf_cnpjNF: value }))}
-						width="100%"
+						width={"100%"}
+						label={"CPF/CNPJ DO PAGADOR"}
+						placeholder="Preencha aqui o CPF/CNPJ do pagador."
+						editable={true}
+						value={infoHolder.pagador.cpfCnpj || ""}
+						handleChange={(value) => updatePayerData({ cpfCnpj: formatToCPForCNPJ(value) })}
 					/>
 				</div>
 			</div>
+			<div className="w-full flex items-center justify-center gap-2 flex-col lg:flex-row">
+				<div className="w-full lg:w-1/2">
+					<TextInput
+						width={"100%"}
+						label={"TELEFONE DO PAGADOR"}
+						placeholder="Preencha aqui o telefone da pessoa que realizará o pagamento"
+						editable={true}
+						value={infoHolder.pagador.telefone}
+						handleChange={(value) => updatePayerData({ telefone: formatToPhone(value) })}
+					/>
+				</div>
+				<div className="w-full lg:w-1/2">
+					<TextInput
+						width={"100%"}
+						label={"EMAIL DO PAGADOR"}
+						placeholder="Preencha aqui o email da pessoa que realizará o pagamento"
+						editable={true}
+						value={infoHolder.pagador.email || ""}
+						handleChange={(value) => updatePayerData({ email: value })}
+					/>
+				</div>
+			</div>
+			<ResponsiveDialogDrawerSection sectionTitleText="LOCALIZAÇÃO DO PAGADOR" sectionTitleIcon={<MapPin className="w-4 h-4 min-w-4 min-h-4" />}>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/3">
+						<TextInput
+							label="CEP"
+							value={infoHolder.pagador.localizacao?.cep || ""}
+							placeholder="Preencha aqui o CEP do pagador."
+							handleChange={(value) => {
+								if (value.length === 9) {
+									setAddressDataByCEP(value);
+								}
+								updatePayerLocation({ cep: formatToCEP(value) });
+							}}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/3">
+						<SelectInput
+							label="ESTADO"
+							value={infoHolder.pagador.localizacao?.uf || ""}
+							handleChange={(value) => updatePayerLocation({ uf: value, cidade: BrazilianCitiesOptionsFromUF(value)[0]?.value })}
+							selectedItemLabel="NÃO DEFINIDO"
+							onReset={() => updatePayerLocation({ uf: "", cidade: "" })}
+							options={BrazilianStatesOptions}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/3">
+						<SelectInput
+							label="CIDADE"
+							value={infoHolder.pagador.localizacao.cidade || ""}
+							handleChange={(value) => updatePayerLocation({ cidade: value })}
+							options={BrazilianCitiesOptionsFromUF(infoHolder.pagador.localizacao.uf || "")}
+							selectedItemLabel="NÃO DEFINIDO"
+							onReset={() => updatePayerLocation({ cidade: "" })}
+							width="100%"
+						/>
+					</div>
+				</div>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/2">
+						<TextInput
+							label="BAIRRO"
+							value={infoHolder.pagador.localizacao.bairro || ""}
+							placeholder="Preencha aqui o bairro do cliente."
+							handleChange={(value) => updatePayerLocation({ bairro: value })}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<TextInput
+							label="LOGRADOURO/RUA"
+							value={infoHolder.pagador.localizacao.endereco || ""}
+							placeholder="Preencha aqui o logradouro do cliente."
+							handleChange={(value) => updatePayerLocation({ endereco: value })}
+							width="100%"
+						/>
+					</div>
+				</div>
+				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+					<div className="w-full lg:w-1/2">
+						<TextInput
+							label="NÚMERO/IDENTIFICADOR"
+							value={infoHolder.pagador.localizacao.numeroOuIdentificador || ""}
+							placeholder="Preencha aqui o número ou identificador da residência do cliente."
+							handleChange={(value) => updatePayerLocation({ numeroOuIdentificador: value })}
+							width="100%"
+						/>
+					</div>
+					<div className="w-full lg:w-1/2">
+						<TextInput
+							label="COMPLEMENTO"
+							value={infoHolder.pagador.localizacao.complemento || ""}
+							placeholder="Preencha aqui algum complemento do endereço."
+							handleChange={(value) => updatePayerLocation({ complemento: value })}
+							width="100%"
+						/>
+					</div>
+				</div>
+			</ResponsiveDialogDrawerSection>
 			<div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
 				<div className="w-fit">
 					<CheckboxInput
 						labelFalse="NECESSÁRIO INSCRIÇÃO RURAL NA NF"
 						labelTrue="NECESSÁRIO INSCRIÇÃO RURAL NA NF"
-						checked={infoHolder.necessidaInscricaoRural == "SIM"}
+						checked={infoHolder.necessidaInscricaoRural === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, necessidaInscricaoRural: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
@@ -64,7 +203,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 					<CheckboxInput
 						labelFalse="NECESSÁRIO NF ADIANTADA"
 						labelTrue="NECESSÁRIO NF ADIANTADA"
-						checked={infoHolder.necessidadeNFAdiantada == "SIM"}
+						checked={infoHolder.necessidadeNFAdiantada === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, necessidadeNFAdiantada: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
@@ -72,7 +211,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 					<CheckboxInput
 						labelFalse="NECESSÁRIO CÓDIGO FINAME"
 						labelTrue="NECESSÁRIO CÓDIGO FINAME"
-						checked={infoHolder.necessidadeCodigoFiname == "SIM"}
+						checked={infoHolder.necessidadeCodigoFiname === "SIM"}
 						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, necessidadeCodigoFiname: value ? "SIM" : "NÃO" }))}
 					/>
 				</div>
@@ -260,7 +399,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 					/>
 				</div>
 			</div>
-			{infoHolder.origemRecurso == "FINANCIAMENTO" ? (
+			{infoHolder.origemRecurso === "FINANCIAMENTO" ? (
 				<div className="flex w-full flex-col items-center justify-center gap-4 lg:flex-row">
 					<div className="w-full lg:w-1/3">
 						<SelectInput
@@ -342,7 +481,7 @@ function PaymentInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 					}
 				/>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

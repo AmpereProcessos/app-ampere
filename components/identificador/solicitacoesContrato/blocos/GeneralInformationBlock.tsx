@@ -3,6 +3,7 @@ import DateInput from "@/components/inputs/Date";
 import SelectInput from "@/components/inputs/Select";
 import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
 import TextInput from "@/components/inputs/Text";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { formatDate, formatToPhone, tiposDeServico } from "@/utils/constants";
 import { estadosECidades } from "@/utils/estados_cidades";
 import { formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
@@ -15,6 +16,7 @@ import AllCities from "@/utils/jsons/cidades.json";
 import TextareaInput from "@/components/inputs/TextareaInput";
 import { useUsers } from "@/utils/methods/query/crm/users";
 import SelectWithImages from "@/components/inputs/SelectWithImages";
+import { FileText } from "lucide-react";
 type GeneralInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
 	setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>;
@@ -46,8 +48,10 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 		}, 1000);
 	}
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES GERAIS</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES GERAIS"
+			sectionTitleIcon={<FileText className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex items-center justify-center">
 				<div className="w-fit">
 					<CheckboxInput
@@ -477,7 +481,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 				value={infoHolder.obsComercial || ""}
 				handleChange={(value) => setInfoHolder((prev) => ({ ...prev, obsComercial: value }))}
 			/>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

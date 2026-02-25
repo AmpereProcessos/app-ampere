@@ -1,6 +1,6 @@
 import { formatLocation } from "@/utils/methods/formatting";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
-import { TRevenue, TRevenueProjectDTO } from "@/utils/schemas/revenues";
+import type { TRevenue, TRevenueProjectDTO } from "@/utils/schemas/revenues";
 import React from "react";
 import { AiOutlineSafety } from "react-icons/ai";
 import { BsBank, BsPersonVcard, BsStack } from "react-icons/bs";
@@ -69,7 +69,7 @@ function RevenueProjectInformationBlock({ revenue, project }: RevenueProjectInfo
 						<div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
 							<div className="flex items-center gap-1">
 								<FaUserAlt />
-								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador}</p>
+								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.pagador.nome}</p>
 							</div>
 							<div className="flex items-center gap-1">
 								<BsPersonVcard />
@@ -97,7 +97,7 @@ function RevenueProjectInformationBlock({ revenue, project }: RevenueProjectInfo
 								<BsBank />
 								<p className="text-[0.6rem] leading-none font-medium tracking-tight">{project?.pagamento.credor || "NÃO DEFINIDO"}</p>
 							</div>
-							{project!.pagamento.forma == "FINANCIAMENTO" ? (
+							{project!.pagamento.forma === "FINANCIAMENTO" ? (
 								<>
 									<div className="flex items-center gap-1">
 										<FaUserAlt />

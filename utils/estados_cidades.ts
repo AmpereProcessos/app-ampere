@@ -5612,3 +5612,27 @@ export const estadosECidades = {
 		"XAMBIOÁ",
 	],
 };
+
+export const BrazilianStatesOptions = Object.keys(estadosECidades).map((state, index) => ({
+	id: index + 1,
+	label: state,
+	value: state,
+}));
+
+export const BrazillianCitiesOptions = Object.values(estadosECidades)
+	.flat()
+	.map((city, index) => ({
+		id: index + 1,
+		label: city,
+		value: city,
+	}));
+export const BrazilianCitiesOptionsFromUF = (uf: string | null) => {
+	if (!uf) return [];
+	return (
+		estadosECidades[uf as keyof typeof estadosECidades]?.map((city, index) => ({
+			id: index + 1,
+			label: city,
+			value: city,
+		})) || []
+	);
+};

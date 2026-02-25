@@ -203,7 +203,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			credor: request.credor,
 			credorNomeGerente: request.nomeGerente,
 			credorContatoGerente: request.contatoGerente,
-			pagador: request.nomePagador,
+			pagador: request.pagador,
 			contatoPagador: request.contatoPagador,
 			cpf_cnpjPagador: request.cpf_cnpjNF,
 			negociacao: request.descricaoNegociacao,

@@ -1,14 +1,15 @@
 import TextInput from "@/components/inputs/Text";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { editContractRequest } from "@/utils/methods/mutation/contract-requests";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import TechnicalAnalysis from "./TechnicalAnalysis";
-
-import { z } from "zod";
 import { fetchTechnicalAnalysisById } from "@/utils/methods/query/technical-analysis";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { useQueryClient } from "@tanstack/react-query";
+import { ClipboardCheck } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import TechnicalAnalysis from "./TechnicalAnalysis";
 
 type TechnicalAnalysisBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -36,23 +37,21 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 
 			return "Análise vinculada com sucesso !";
 		} catch (error) {
-			throw error;
+			console.error("Error vinculating technical analysis", error);
+			return toast.error("Erro ao vincular análise técnica.");
 		}
 	}
-	const {
-		mutate: handleVinculate,
-		isPending,
-		isError,
-	} = useMutationWithFeedback({
+	const { mutate: handleVinculate, isPending } = useMutationWithFeedback({
 		mutationKey: ["vinculate-technical-analysis"],
 		mutationFn: handleAnalysisVinculation,
 		queryClient: queryClient,
 		affectedQueryKey: ["contract-request-by-id", infoHolder._id],
 	});
-	console.log(infoHolder.idVisitaTecnica, !!infoHolder.idVisitaTecnica, analysisIdHolder);
 	return (
-		<div className="flex w-full flex-col gap-2">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DE ANÁLISE TÉCNICA</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES DE ANÁLISE TÉCNICA"
+			sectionTitleIcon={<ClipboardCheck className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="border-primary/20 flex w-[90%] flex-col items-center gap-2 self-center rounded border p-3 md:w-[85%] lg:w-[50%]">
 				<TextInput
 					label="ID DE ANÁLISE TÉCNICA"
@@ -64,6 +63,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 
 				<div className="flex w-full items-center justify-end">
 					<button
+						type="button"
 						disabled={isPending}
 						onClick={() => {
 							// @ts-ignore
@@ -78,7 +78,7 @@ function TechnicalAnalysisBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 			{infoHolder.idVisitaTecnica && infoHolder.idVisitaTecnica?.trim().length > 12 ? (
 				<TechnicalAnalysis analysisId={infoHolder.idVisitaTecnica} />
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

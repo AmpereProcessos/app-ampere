@@ -1,8 +1,10 @@
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
 import SelectInputWithImages from "@/components/inputs/SelectWithImages";
-import { TContractRequestDTO } from "@/utils/schemas/contract-requests";
-import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { Wrench } from "lucide-react";
+import type React from "react";
 
 type StructureInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
@@ -11,8 +13,10 @@ type StructureInformationBlockProps = {
 };
 function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: StructureInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">INFORMAÇÕES DA ESTRUTURA DE INSTALAÇÃO</h1>
+		<ResponsiveDialogDrawerSection
+			sectionTitleText="INFORMAÇÕES DA ESTRUTURA DE INSTALAÇÃO"
+			sectionTitleIcon={<Wrench className="h-4 w-4 min-h-4 min-w-4" />}
+		>
 			<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 				<div className="w-full lg:w-1/2">
 					<SelectInput
@@ -80,7 +84,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
 					/>
 				</div>
 			</div>
-			{infoHolder.responsavelEstrutura == "AMPERE" ? (
+			{infoHolder.responsavelEstrutura === "AMPERE" ? (
 				<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 					<div className="w-full lg:w-1/2">
 						<SelectInput
@@ -110,7 +114,7 @@ function StructureInformationBlock({ infoHolder, setInfoHolder, userHasEditPermi
 					</div>
 				</div>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

@@ -2,8 +2,8 @@ import DateInput from "@/components/inputs/Date";
 import TextInput from "@/components/inputs/Text";
 import { formatDate, formatToPhone } from "@/utils/constants";
 import { formatDateInputChange } from "@/utils/methods/shared";
-import { TPurchaseControl } from "@/utils/schemas/purchases";
-import React from "react";
+import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type React from "react";
 
 type PurchaseControlPaymentInformationBlockProps = {
 	infoHolder: TPurchaseControl;

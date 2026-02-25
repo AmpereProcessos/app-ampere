@@ -1,4 +1,6 @@
+import { formatDecimalPlaces } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { getContractValue } from "@/utils/methods/util/projects";
 import type { TProject } from "@/utils/schemas/projects";
 import { z } from "zod";
 
@@ -348,9 +350,10 @@ export const ProjectExportableFieldsConfig: TProjectExportableFieldsConfig = {
 type TGetProjectExportFormattedParams = {
 	projects: Partial<TProject>[];
 	exportablesDefinition: TProjectExportables;
+	computed: TGetProjectsExportRoutePayload["computed"];
 };
 
-export function getProjectExportFormatted({ projects, exportablesDefinition }: TGetProjectExportFormattedParams) {
+export function getProjectExportFormatted({ projects, exportablesDefinition, computed }: TGetProjectExportFormattedParams) {
 	const formattedProjects = projects.map((project) => {
 		const formattedProject: Record<string, string> = {};
 
@@ -374,6 +377,36 @@ export function getProjectExportFormatted({ projects, exportablesDefinition }: T
 
 			// Format the value using the field's formatting function
 			formattedProject[fieldConfig.label] = fieldConfig.formattingFunction(value);
+		}
+
+		if (computed.valorTotalContrato) {
+			const totalContractValue = getContractValue({
+				projectValue: project.sistema?.valorProjeto || 0,
+				paValue: project.padrao?.valor || 0,
+				structureValue: project.estruturaPersonalizada?.valor || 0,
+				oemValue: project.oem?.valor || 0,
+				insuranceValue: project.seguro?.valor || 0,
+			});
+			formattedProject["VALOR TOTAL DO CONTRATO"] = totalContractValue.toString();
+		}
+		if (computed.qtdeModulos) {
+			const totalModulesQty = project.produtos?.reduce((acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde : acc), 0) || 0;
+			formattedProject["QTDE DE MÓDULOS"] = formatDecimalPlaces(totalModulesQty);
+		}
+		if (computed.potenciaTotalModulos) {
+			const totalModulesPower =
+				project.produtos?.reduce((acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde * (product.potencia || 0) : acc), 0) || 0;
+			formattedProject["POTÊNCIA TOTAL DOS MÓDULOS"] = formatDecimalPlaces(totalModulesPower / 1000);
+		}
+		if (computed.qtdeInversores) {
+			const totalInversoresQty = project.produtos?.reduce((acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde : acc), 0) || 0;
+			formattedProject["QTDE DE INVERSORES"] = formatDecimalPlaces(totalInversoresQty);
+		}
+
+		if (computed.potenciaTotalInversores) {
+			const totalInversoresPower =
+				project.produtos?.reduce((acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde * (product.potencia || 0) : acc), 0) || 0;
+			formattedProject["POTÊNCIA TOTAL DOS INVERSORES"] = formatDecimalPlaces(totalInversoresPower / 1000);
 		}
 
 		return formattedProject;
@@ -405,6 +438,28 @@ export const GetProjectsExportRoutePayloadSchema = z.object({
 		}),
 	}),
 	projection: ProjectExportablesSchema,
+	computed: z.object({
+		valorTotalContrato: z.boolean({
+			required_error: "Necessidade de exportação do valor total do contrato não informada",
+			invalid_type_error: "Necessidade de exportação do valor total do contrato não é um booleano",
+		}),
+		qtdeModulos: z.boolean({
+			required_error: "Necessidade de exportação da quantidade de módulos não informada",
+			invalid_type_error: "Necessidade de exportação da quantidade de módulos não é um booleano",
+		}),
+		potenciaTotalModulos: z.boolean({
+			required_error: "Necessidade de exportação da potência total dos módulos não informada",
+			invalid_type_error: "Necessidade de exportação da potência total dos módulos não é um booleano",
+		}),
+		qtdeInversores: z.boolean({
+			required_error: "Necessidade de exportação da quantidade de inversores não informada",
+			invalid_type_error: "Necessidade de exportação da quantidade de inversores não é um booleano",
+		}),
+		potenciaTotalInversores: z.boolean({
+			required_error: "Necessidade de exportação da potência total dos inversores não informada",
+			invalid_type_error: "Necessidade de exportação da potência total dos inversores não é um booleano",
+		}),
+	}),
 });
 
 export type TGetProjectsExportRoutePayload = z.infer<typeof GetProjectsExportRoutePayloadSchema>;

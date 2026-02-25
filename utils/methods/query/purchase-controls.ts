@@ -1,3 +1,4 @@
+import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetPurchaseControlCompositionKitsOutput } from "@/pages/api/controles-compras/kits";
 import type { TPurchaseControlsByFiltersResult } from "@/pages/api/controles-compras/search";
 import type {
@@ -100,9 +101,29 @@ export function usePurchaseControlsByFilters() {
 		setFilters((prev) => ({ ...prev, ...info }));
 	}
 
+	const debouncedSearch = useDebounceMemo(
+		{
+			title: filters.title,
+		},
+		1250,
+	);
+
 	const query = useQuery({
-		queryKey: ["purchase-controls-by-filters", filters],
-		queryFn: async () => await fetchPurchaseControlsByFilters({ page: filters.page, filters }),
+		queryKey: [
+			"purchase-controls-by-filters",
+			{
+				...filters,
+				...debouncedSearch,
+			},
+		],
+		queryFn: async () =>
+			await fetchPurchaseControlsByFilters({
+				page: filters.page,
+				filters: {
+					...filters,
+					...debouncedSearch,
+				},
+			}),
 	});
 
 	return {

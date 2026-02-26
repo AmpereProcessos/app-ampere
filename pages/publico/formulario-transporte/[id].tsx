@@ -24,7 +24,27 @@ import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TUser } from "@/utils/schemas/users";
 import type { TUseTransportControlState } from "@/utils/state/transport-controls";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, Calendar, CheckCircle2, Clock, DollarSign, IdCard, MapPin, Package, Phone, PlusIcon, Truck, UserRound } from "lucide-react";
+import {
+	AlertCircle,
+	ArrowLeft,
+	ArrowRight,
+	BadgeCheck,
+	Calendar,
+	CheckCircle2,
+	Clock,
+	CloudUpload,
+	DollarSign,
+	IdCard,
+	Lock,
+	MapPin,
+	Package,
+	Paperclip,
+	Phone,
+	PlusIcon,
+	Route,
+	Truck,
+	UserRound,
+} from "lucide-react";
 import { ObjectId } from "mongodb";
 import type { GetServerSidePropsContext } from "next";
 import Image from "next/image";
@@ -135,59 +155,6 @@ export default function TransportControlFormulary({ transportControlId, error }:
 						}}
 					/>
 				</div>
-				<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-4">
-					<div className="bg-primary/20 flex w-fit items-center gap-2 rounded px-2 py-1">
-						<UserRound size={15} />
-						<h1 className="w-fit text-start text-xs font-medium tracking-tight">INFORMAÇÕES DO RESPONSÁVEL</h1>
-					</div>
-					<TextInput
-						label="CPF"
-						placeholder="Preencha o seu CPF..."
-						value={formattedCpf}
-						handleChange={(value) => {
-							const cpf = formatToCPForCNPJ(value);
-							updateEmployeeByCpfQueryParams({ cpf, email: "" });
-							if (cpf.trim().length < 14) {
-								setIdentifiedResponsible(null);
-							}
-						}}
-						width="100%"
-					/>
-					{isFetchingEmployeeByCpf ? <p className="text-primary/80 text-xs font-medium">Validando CPF...</p> : null}
-					{cpfNotFound ? <p className="text-red-500 text-xs font-medium">CPF não encontrado. Identifique-se para iniciar o transporte.</p> : null}
-					{identifiedResponsible ? (
-						<div className="flex w-full flex-col items-center justify-center gap-2 gap-y-1 self-center rounded-lg bg-blue-200 px-2 py-2 lg:w-fit lg:flex-row">
-							<div className="flex items-center gap-2">
-								<Avatar className="h-8 min-h-8 w-8 min-w-8">
-									<AvatarImage src={identifiedResponsible.avatar_url ?? undefined} />
-									<AvatarFallback>{formatNameAsInitials(identifiedResponsible.nome)}</AvatarFallback>
-								</Avatar>
-								<h1 className="text-center text-sm leading-none font-medium tracking-tight">{identifiedResponsible.nome}</h1>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="flex min-w-fit items-center gap-1">
-									<IdCard className="h-3 min-h-3 w-3 min-w-3" />
-									<p className="text-primary/80 text-xs font-medium">{identifiedResponsible.cpf}</p>
-								</div>
-								<div className="flex min-w-fit items-center gap-1">
-									<Phone className="h-3 min-h-3 w-3 min-w-3" />
-									<p className="text-primary/80 text-xs font-medium">{identifiedResponsible.telefone}</p>
-								</div>
-							</div>
-						</div>
-					) : null}
-					{identifiedResponsible ? (
-						<TransportControlFormularyStarting
-							transportControlId={transportControlId}
-							transportControl={transportControl}
-							identifiedResponsible={identifiedResponsible}
-							callbacks={{
-								onMutate: handleOnMutate,
-								onSettled: handleOnSettled,
-							}}
-						/>
-					) : null}
-				</div>
 			</div>
 		);
 
@@ -268,7 +235,6 @@ type TransportControlFormularyStartingPayload = {
 type TransportControlFormularyStartingProps = {
 	transportControlId: string;
 	transportControl: TGetTransportControlByIdPublicOutput["data"];
-	identifiedResponsible: TransportControlIdentifiedResponsible;
 	callbacks?: {
 		onMutate?: () => void;
 		onSuccess?: () => void;
@@ -276,7 +242,7 @@ type TransportControlFormularyStartingProps = {
 		onSettled?: () => void;
 	};
 };
-function TransportControlFormularyStarting({ transportControlId, transportControl, identifiedResponsible, callbacks }: TransportControlFormularyStartingProps) {
+function TransportControlFormularyStarting({ transportControlId, transportControl, callbacks }: TransportControlFormularyStartingProps) {
 	const [startingPayload, setStartingPayload] = useState<TransportControlFormularyStartingPayload>({
 		initialKilometers: null,
 		initialKilometersAttachment: {
@@ -290,7 +256,6 @@ function TransportControlFormularyStarting({ transportControlId, transportContro
 		mutationFn: async (info: TransportControlFormularyStartingPayload) => {
 			if (!info.initialKilometers) throw new Error("Quilometragem inicial é obrigatória.");
 			if (!info.initialKilometersAttachment.file) throw new Error("Imagem da quilometragem inicial é obrigatória.");
-			if (!identifiedResponsible.id) throw new Error("Identifique-se para iniciar o transporte.");
 
 			const { url } = await uploadFile({
 				vinculationId: transportControlId,
@@ -298,19 +263,6 @@ function TransportControlFormularyStarting({ transportControlId, transportContro
 				file: info.initialKilometersAttachment.file,
 				prefix: "transport-controls",
 			});
-			const updatedResponsibles = Array.from(
-				new Map(
-					[
-						...transportControl.responsaveis,
-						{
-							id: identifiedResponsible.id,
-							nome: identifiedResponsible.nome,
-							avatar_url: identifiedResponsible.avatar_url ?? null,
-							telefone: identifiedResponsible.telefone,
-						},
-					].map((responsible) => [responsible.id, responsible]),
-				).values(),
-			);
 
 			return await updateTransportControl({
 				transportControlId,
@@ -318,7 +270,7 @@ function TransportControlFormularyStarting({ transportControlId, transportContro
 					dataInicio: new Date().toISOString(),
 					distanciaQuilometragemInicial: info.initialKilometers,
 					distanciaQuilometragemInicialImagemUrl: url,
-					responsaveis: updatedResponsibles,
+					responsaveis: transportControl.responsaveis,
 				},
 			});
 		},
@@ -862,7 +814,7 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 	callbacks,
 	closeMenu,
 }: TransportControlFormularyConcludingDeliveryConcludeMethodButtonProps) {
-	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || new Date());
+	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || new Date().toISOString());
 	const defaultAttachmentDefinitions = [
 		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM NA ENTREGA" },
 		{ key: "materiais", title: "ENTREGA - FOTO DOS MATERIAIS ENTREGUES", label: "FOTO DOS MATERIAIS ENTREGUES" },

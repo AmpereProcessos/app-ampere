@@ -216,6 +216,13 @@ export const TransportControlSchema = z.object({
 		invalid_type_error: "Custos deve ser um array",
 	}),
 	autor: AuthorSchema,
+	dataValidacao: z
+		.string({
+			invalid_type_error: "Data de validação deve ser uma string",
+		})
+		.optional()
+		.nullable()
+		.describe("Data de validação do transporte geral."),
 	dataInsercao: z
 		.string({
 			required_error: "Data de inserção é obrigatória",

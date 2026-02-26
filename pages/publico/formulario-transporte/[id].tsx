@@ -396,7 +396,7 @@ function TransportControlFormularyConcluding({ transportControlId, transportCont
 							<span className="w-full rounded-lg bg-secondary px-3 py-1.5 text-center text-sm font-medium">
 								{transportControl.distanciaQuilometragemInicial?.toLocaleString("pt-BR") ?? "—"} km
 							</span>
-							<div className="relative flex aspect-square h-auto w-full max-w-[120px] overflow-hidden rounded-lg border border-primary/30 bg-primary/10">
+							<div className="relative flex aspect-square h-auto w-full min-w-[120px] max-w-[120px] overflow-hidden rounded-lg border border-primary/30 bg-primary/10">
 								{transportControl.distanciaQuilometragemInicialImagemUrl ? (
 									<Image src={transportControl.distanciaQuilometragemInicialImagemUrl} alt="Quilometragem inicial" fill className="object-cover" unoptimized />
 								) : (
@@ -525,29 +525,47 @@ function TransportControlFormularyConcludingMenu({ transportControlId, closeMenu
 				handleChange={(value) => setFinalKilometers(value)}
 				width="100%"
 			/>
-			<div className="w-full flex items-center justify-center">
-				<label htmlFor="dropzone-file" className="relative h-[125px] w-[125px] rounded-lg overflow-hidden cursor-pointer">
-					{finalKilometersAttachment.previewUrl ? (
-						<Image src={finalKilometersAttachment.previewUrl} alt="Imagem da quilometragem final." objectFit="cover" fill={true} />
-					) : (
-						<div className="w-full h-full bg-primary/20 flex items-center justify-center gap-1 flex-col">
-							<MdAttachFile className="w-6 h-6" />
-							<p className="font-medium text-xs text-center">DEFINIR IMAGEM DA QUILOMETRAGEM FINAL</p>
+			<div className="border-primary/20 bg-background flex w-full grow flex-col gap-4 rounded-md border p-6 shadow-xs dark:bg-[#121212]">
+				<div className="flex w-full flex-col gap-1">
+					<div className="flex w-full flex-col items-start gap-2 lg:flex-row lg:items-center">
+						<div className="flex items-center gap-2">
+							<Paperclip className="h-4 min-h-4 w-4 min-w-4" />
+							<h1 className="text-sm leading-none font-bold tracking-tight">IMAGEM DA QUILOMETRAGEM FINAL</h1>
 						</div>
-					)}
-					<input
-						onChange={(e) => {
-							const file = e.target.files?.[0] ?? null;
-							setFinalKilometersAttachment({ ...finalKilometersAttachment, file, previewUrl: file ? URL.createObjectURL(file) : null });
-						}}
-						id="dropzone-file"
-						type="file"
-						className="absolute h-full w-full opacity-0 cursor-pointer"
-						accept=".png,.jpeg,.jpg"
-						multiple={false}
-						tabIndex={-1}
-					/>
-				</label>
+						<div className="bg-primary/20 text-primary flex items-center gap-1 rounded-lg px-2 py-1">
+							<Lock className="h-3 min-h-3 w-3 min-w-3" />
+							<p className="text-[0.6rem] font-bold tracking-tight">OBRIGATÓRIO</p>
+						</div>
+					</div>
+				</div>
+				<p className="text-primary/80 text-xs leading-none font-light">Anexe uma foto do painel do veículo.</p>
+				<div className="relative flex w-full items-center justify-center">
+					<label
+						htmlFor="dropzone-file-concluding"
+						className="relative flex aspect-square h-auto w-full max-w-[300px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-primary/20 bg-background hover:bg-primary/10 dark:bg-[#121212] dark:hover:bg-bray-800"
+					>
+						{finalKilometersAttachment.previewUrl ? (
+							<Image src={finalKilometersAttachment.previewUrl} alt="Imagem da quilometragem final." fill className="object-cover" />
+						) : (
+							<div className="text-primary flex flex-col items-center justify-center px-4 pt-5 pb-6">
+								<CloudUpload className="h-6 min-h-6 w-6 min-w-6" />
+								<p className="text-center text-xs font-medium tracking-tight">Clique aqui para selecionar os arquivos ou arraste-os para área demarcada.</p>
+							</div>
+						)}
+						<input
+							onChange={(e) => {
+								const file = e.target.files?.[0] ?? null;
+								setFinalKilometersAttachment({ ...finalKilometersAttachment, file, previewUrl: file ? URL.createObjectURL(file) : null });
+							}}
+							id="dropzone-file-concluding"
+							type="file"
+							className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+							accept=".png,.jpeg,.jpg"
+							multiple={false}
+							tabIndex={-1}
+						/>
+					</label>
+				</div>
 			</div>
 		</ResponsiveDialogDrawer>
 	);
@@ -758,9 +776,9 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 	callbacks,
 	closeMenu,
 }: TransportControlFormularyConcludingDeliveryConcludeMethodButtonProps) {
-	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || undefined);
+	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || new Date());
 	const defaultAttachmentDefinitions = [
-		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM" },
+		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM NA ENTREGA" },
 		{ key: "materiais", title: "ENTREGA - FOTO DOS MATERIAIS ENTREGUES", label: "FOTO DOS MATERIAIS ENTREGUES" },
 		{ key: "nf", title: "ENTREGA - FOTO DA NF ASSINADA", label: "FOTO DA NF ASSINADA" },
 	] as const;

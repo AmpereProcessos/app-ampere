@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn, copyToClipboard } from "@/lib/utils";
 import type { TGetTransportControlsOutput } from "@/pages/api/controles-transportes";
@@ -12,12 +12,13 @@ import { getErrorMessage } from "@/utils/methods/handlers";
 import { deleteTransportControl } from "@/utils/methods/mutation/transport-controls";
 import { useTransportControls } from "@/utils/methods/query/transport-controls";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EyeIcon, LinkIcon, Pencil, PlusIcon, TrashIcon, Truck } from "lucide-react";
+import { CheckCircle2, EyeIcon, LinkIcon, Pencil, PlusIcon, TrashIcon, Truck } from "lucide-react";
 import { useState } from "react";
-import { BsCalendarPlus } from "react-icons/bs";
 import toast from "react-hot-toast";
+import { BsCalendarPlus } from "react-icons/bs";
 import EditTransportControl from "./modals/EditTransportControl";
 import NewTransportControl from "./modals/NewTransportControl";
+import ValidateTransportControl from "./modals/ValidateTransportControl";
 import ViewTransportControl from "./modals/ViewTransportControl";
 
 type TransportControlsViewProps = {
@@ -29,6 +30,7 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 	const queryClient = useQueryClient();
 	const [newTransportControlModalIsOpen, setNewTransportControlModalIsOpen] = useState(false);
 	const [viewTransportControlId, setViewTransportControlId] = useState<string | null>(null);
+	const [validateTransportControlId, setValidateTransportControlId] = useState<string | null>(null);
 	const [deleteTransportControlId, setDeleteTransportControlId] = useState<string | null>(null);
 	const [editTransportControlId, setEditTransportControlId] = useState<string | null>(null);
 	const { data: transportControlsResult, queryKey, isLoading, isError, isSuccess, error, params, updateParams } = useTransportControls({});
@@ -80,6 +82,7 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 						key={transportControl._id}
 						transportControl={transportControl}
 						handleClick={(id) => setViewTransportControlId(id)}
+						handleValidate={(id) => setValidateTransportControlId(id)}
 						handleDelete={(id) => setDeleteTransportControlId(id)}
 						handleEdit={(id) => setEditTransportControlId(id)}
 					/>
@@ -94,6 +97,13 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 			) : null}
 			{viewTransportControlId ? (
 				<ViewTransportControl transportControlId={viewTransportControlId} closeModal={() => setViewTransportControlId(null)} />
+			) : null}
+			{validateTransportControlId ? (
+				<ValidateTransportControl
+					transportControlId={validateTransportControlId}
+					queryKey={queryKey}
+					closeModal={() => setValidateTransportControlId(null)}
+				/>
 			) : null}
 			{editTransportControlId ? (
 				<EditTransportControl transportControlId={editTransportControlId} closeModal={() => setEditTransportControlId(null)} />
@@ -130,11 +140,13 @@ export default function TransportControlsView({ session, handleSetMode }: Transp
 type TransportControlCardProps = {
 	transportControl: TGetTransportControlsOutput["data"]["transportControls"][number];
 	handleClick: (id: string) => void;
+	handleValidate: (id: string) => void;
 	handleDelete: (id: string) => void;
 	handleEdit: (id: string) => void;
 };
-function TransportControlCard({ transportControl, handleClick, handleDelete, handleEdit }: TransportControlCardProps) {
+function TransportControlCard({ transportControl, handleClick, handleValidate, handleDelete, handleEdit }: TransportControlCardProps) {
 	const canEdit = !transportControl.dataFim;
+	const canValidate = !!transportControl.dataFim && !transportControl.dataValidacao;
 	return (
 		<div className="bg-background border-primary/30 relative flex w-full flex-col justify-between gap-1 rounded-lg border p-3 shadow-xs">
 			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
@@ -154,12 +166,21 @@ function TransportControlCard({ transportControl, handleClick, handleDelete, han
 					</div>
 					<h1
 						className={cn("flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium", {
-							"bg-green-200 text-green-600": !!transportControl.dataFim && new Date(transportControl.dataFim) < new Date(),
+							"bg-green-200 text-green-600":
+								!!transportControl.dataFim && !!transportControl.dataValidacao && new Date(transportControl.dataFim) < new Date(),
+							"bg-orange-200 text-orange-600":
+								!!transportControl.dataFim && !transportControl.dataValidacao && new Date(transportControl.dataFim) < new Date(),
 							"bg-blue-200 text-blue-600": !!transportControl.dataInicio && new Date(transportControl.dataInicio) > new Date(),
 							"bg-yellow-200 text-yellow-600": !transportControl.dataFim && !transportControl.dataInicio,
 						})}
 					>
-						{transportControl.dataFim ? "FINALIZADO" : transportControl.dataInicio ? "EM ANDAMENTO" : "PENDENTE"}
+						{transportControl.dataFim
+							? transportControl.dataValidacao
+								? "FINALIZADO"
+								: "FINALIZADO SEM VALIDAÇÃO"
+							: transportControl.dataInicio
+								? "EM ANDAMENTO"
+								: "PENDENTE"}
 					</h1>
 				</div>
 			</div>
@@ -188,6 +209,17 @@ function TransportControlCard({ transportControl, handleClick, handleDelete, han
 						<EyeIcon className="w-4 h-4 min-w-4 min-h-4" />
 						<p>VISUALIZAR</p>
 					</Button>
+					{canValidate ? (
+						<Button
+							onClick={() => handleValidate(transportControl._id)}
+							variant={"ghost"}
+							size={"fit"}
+							className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-green-200 hover:text-green-600 transition-colors"
+						>
+							<CheckCircle2 className="w-4 h-4 min-w-4 min-h-4" />
+							<p>VALIDAR</p>
+						</Button>
+					) : null}
 					<Button
 						onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/publico/formulario-transporte/${transportControl._id}`)}
 						variant={"ghost"}

@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import CostsBlock from "./blocos/Costs";
 import GeneralBlock from "./blocos/General";
 import ItemsBlock from "./blocos/Items";
+import ResponsiblesBlock from "./blocos/Responsibles";
 
 type NewTransportControlProps = {
 	session: TAuthSession;
@@ -38,6 +39,7 @@ export default function NewTransportControl({ session, closeModal, callbacks }: 
 			transportControl: {
 				identificador: 0,
 				titulo: "",
+				responsaveis: [],
 				itens: [],
 				custos: [],
 				configuracoes: {
@@ -93,6 +95,7 @@ export default function NewTransportControl({ session, closeModal, callbacks }: 
 				addTransportControlItem={addTransportControlItem}
 				removeTransportControlItem={removeTransportControlItem}
 			/>
+			<ResponsiblesBlock responsaveis={state.transportControl.responsaveis} updateTransportControl={updateTransportControl} />
 			<ItemsBlock
 				items={state.transportControl.itens}
 				addItem={addTransportControlItem}

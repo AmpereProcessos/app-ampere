@@ -99,27 +99,41 @@ export default function TransportControlFormulary({ transportControlId, error }:
 	if (!isStarted)
 		return (
 			<div className="h-full w-full flex flex-col items-center justify-center gap-6 bg-background container mx-auto py-12 px-6">
-				<div className="w-full flex flex-col items-center gap-1.5 p-3 border border-primary/30 rounded-lg shadow-sm">
-					<div className="w-full flex items-center justify-center gap-2">
-						<div className="flex items-center p-1 gap-1.5 px-2 py-1 rounded-lg bg-secondary text-primary">
-							<Truck className="h-4 w-4 min-w-4 min-h-4" />
-							<p className="text-xs font-medium">TRA{transportControl.identificador}</p>
+				<div className="w-full flex flex-col gap-6 items-center w-full lg:w-[60%]">
+					<div className="w-full flex flex-col items-center gap-1.5 p-3 border border-primary/30 rounded-lg shadow-sm">
+						<div className="w-full flex items-center justify-center gap-2">
+							<div className="flex items-center p-1 gap-1.5 px-2 py-1 rounded-lg bg-secondary text-primary">
+								<Truck className="h-4 w-4 min-w-4 min-h-4" />
+								<p className="text-xs font-medium">TRA{transportControl.identificador}</p>
+							</div>
+							<h1 className="text-2xl font-black tracking-tight">{transportControl.titulo}</h1>
 						</div>
-						<h1 className="text-2xl font-black tracking-tight">{transportControl.titulo}</h1>
+						<div className="w-full flex items-center justify-center gap-2">
+							<div className="flex items-center gap-1">
+								<BsCalendarPlus className="w-4 h-4 min-w-4 min-h-4" />
+								<p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(transportControl.dataInsercao, true)}</p>
+							</div>
+							<div className="flex items-center gap-1">
+								<Avatar className="w-5 h-5 min-w-5 min-h-5">
+									<AvatarImage src={transportControl.autor.avatar_url || undefined} />
+									<AvatarFallback>{formatNameAsInitials(transportControl.autor.nome)}</AvatarFallback>
+								</Avatar>
+								<p className="text-primary/80 text-[0.65rem] font-medium">{transportControl.autor.nome}</p>
+							</div>
+						</div>
 					</div>
-					<div className="w-full flex items-center justify-center gap-2">
-						<div className="flex items-center gap-1">
-							<BsCalendarPlus className="w-4 h-4 min-w-4 min-h-4" />
-							<p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(transportControl.dataInsercao, true)}</p>
-						</div>
-						<div className="flex items-center gap-1">
-							<Avatar className="w-5 h-5 min-w-5 min-h-5">
-								<AvatarImage src={transportControl.autor.avatar_url || undefined} />
-								<AvatarFallback>{formatNameAsInitials(transportControl.autor.nome)}</AvatarFallback>
-							</Avatar>
-							<p className="text-primary/80 text-[0.65rem] font-medium">{transportControl.autor.nome}</p>
-						</div>
+					<div className={cn("flex w-fit items-center justify-center gap-1 self-center rounded bg-blue-200 px-6 py-3 text-blue-800")}>
+						<PlusIcon size={15} />
+						<h1 className="w-fit text-start text-xs font-medium tracking-tight">Você está iniciando o transporte de mercadorias.</h1>
 					</div>
+					<TransportControlFormularyStarting
+						transportControlId={transportControlId}
+						transportControl={transportControl}
+						callbacks={{
+							onMutate: handleOnMutate,
+							onSettled: handleOnSettled,
+						}}
+					/>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-4">
 					<div className="bg-primary/20 flex w-fit items-center gap-2 rounded px-2 py-1">
@@ -325,37 +339,60 @@ function TransportControlFormularyStarting({ transportControlId, transportContro
 	});
 
 	return (
-		<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-6">
+		<div className="w-full flex flex-col items-center justify-center px-6 py-6 border border-primary/30 rounded-lg shadow-sm gap-6">
 			<NumberInput
 				label="QUILOMETRAGEM INICIAL"
 				value={startingPayload.initialKilometers}
 				placeholder="Digite a quilometragem inicial..."
 				handleChange={(value) => setStartingPayload({ ...startingPayload, initialKilometers: value })}
+				width="100%"
 			/>
-			<div className="w-full flex items-center justify-center">
-				<label htmlFor="dropzone-file" className="relative h-[125px] w-[125px] rounded-lg overflow-hidden cursor-pointer">
-					{startingPayload.initialKilometersAttachment.previewUrl ? (
-						<Image src={startingPayload.initialKilometersAttachment.previewUrl} alt="Imagem da quilometragem inicial." objectFit="cover" fill={true} />
-					) : (
-						<div className="w-full h-full bg-primary/20 flex items-center justify-center gap-1 flex-col">
-							<MdAttachFile className="w-6 h-6" />
-							<p className="font-medium text-xs text-center">DEFINIR IMAGEM DA QUILOMETRAGEM INICIAL</p>
+			<div className="border-primary/20 bg-background flex w-full grow flex-col gap-4 rounded-md border p-6 shadow-xs dark:bg-[#121212]">
+				<div className="flex w-full flex-col gap-1">
+					<div className="flex w-full flex-col items-start gap-2 lg:flex-row lg:items-center">
+						<div className="flex items-center gap-2">
+							<Paperclip className="h-4 min-h-4 w-4 min-w-4" />
+							<h1 className="text-sm leading-none font-bold tracking-tight">IMAGEM DA QUILOMETRAGEM INICIAL</h1>
 						</div>
-					)}
-					<input
-						onChange={(e) => {
-							const file = e.target.files?.[0] ?? null;
-							setStartingPayload({ ...startingPayload, initialKilometersAttachment: { file, previewUrl: file ? URL.createObjectURL(file) : null } });
-						}}
-						id="dropzone-file"
-						type="file"
-						className="absolute h-full w-full opacity-0 cursor-pointer"
-						accept=".png,.jpeg,.jpg"
-						multiple={false}
-						tabIndex={-1}
-					/>
-				</label>
+						<div className="bg-primary/20 text-primary flex items-center gap-1 rounded-lg px-2 py-1">
+							<Lock className="h-3 min-h-3 w-3 min-w-3" />
+							<p className="text-[0.6rem] font-bold tracking-tight">OBRIGATÓRIO</p>
+						</div>
+					</div>
+				</div>
+				<p className="text-primary/80 text-xs leading-none font-light">Anexe um foto do painel do veículo.</p>
+				<div className="relative flex w-full items-center justify-center">
+					<label
+						htmlFor="dropzone-file"
+						className="relative flex aspect-square h-auto w-full max-w-[300px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-primary/20 bg-background hover:bg-primary/10 dark:bg-[#121212] dark:hover:bg-bray-800"
+					>
+						{startingPayload.initialKilometersAttachment.previewUrl ? (
+							<Image src={startingPayload.initialKilometersAttachment.previewUrl} alt="Imagem da quilometragem inicial." fill className="object-cover" />
+						) : (
+							<div className="text-primary flex flex-col items-center justify-center px-4 pt-5 pb-6">
+								<CloudUpload className="h-6 min-h-6 w-6 min-w-6" />
+								<p className="text-center text-xs font-medium tracking-tight">Clique aqui para selecionar os arquivos ou arraste-os para área demarcada.</p>
+							</div>
+						)}
+						<input
+							onChange={(e) => {
+								if (e.target.files) {
+									const files = Array.from(e.target.files);
+									const file = files[0] ?? null;
+									if (!file) return;
+									setStartingPayload({ ...startingPayload, initialKilometersAttachment: { file, previewUrl: URL.createObjectURL(file) } });
+								}
+								return;
+							}}
+							id="dropzone-file"
+							type="file"
+							className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+							accept=".png,.jpeg,.jpg"
+						/>
+					</label>
+				</div>
 			</div>
+
 			<LoadingButton loading={isStarting} onClick={() => handleStartTransport(startingPayload)}>
 				INICIAR TRANSPORTE
 			</LoadingButton>
@@ -379,70 +416,115 @@ function TransportControlFormularyConcluding({ transportControlId, transportCont
 	const [conclusionMenuIsOpen, setConclusionMenuIsOpen] = useState(false);
 	const [newCostMenuIsOpen, setNewCostMenuIsOpen] = useState(false);
 	return (
-		<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-6">
-			<ResponsiveDialogDrawerSection sectionTitleText="ENTREGAS" sectionTitleIcon={<Package className="h-4 w-4 min-w-4 min-h-4" />}>
-				{transportControl.itens
-					.sort((a, b) => a.ordem - b.ordem)
-					.map((item, index) => (
-						<TransportControlFormularyConcludingDeliveryCard
-							key={item.id}
-							transportControlId={transportControlId}
-							previousDeliveries={transportControl.itens}
-							deliveryIndex={index}
-							delivery={item}
-							callbacks={callbacks}
-						/>
-					))}
-			</ResponsiveDialogDrawerSection>
-			<ResponsiveDialogDrawerSection sectionTitleText="CUSTOS" sectionTitleIcon={<DollarSign className="h-4 w-4 min-w-4 min-h-4" />}>
-				<div className="w-full flex items-center justify-end">
-					<Button onClick={() => setNewCostMenuIsOpen(true)} variant="ghost" size="fit" className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs">
-						<PlusIcon className="w-4 h-4" />
-						ADICIONAR
-					</Button>
-				</div>
-				{transportControl.custos.length > 0 ? (
-					<div className="w-full flex flex-col gap-2">
-						{transportControl.custos.map((cost, index) => (
-							<div key={index.toString()} className="w-full flex items-center gap-2 justify-between p-2 rounded-lg shadow-sm border border-primary/30">
-								<h1 className="text-xs tracking-tight font-medium text-start w-fit">{cost.descricao}</h1>
+		<>
+			<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-6">
+				<ResponsiveDialogDrawerSection sectionTitleText="ENTREGAS" sectionTitleIcon={<Package className="h-4 w-4 min-w-4 min-h-4" />}>
+					{transportControl.itens
+						.sort((a, b) => a.ordem - b.ordem)
+						.map((item, index) => (
+							<TransportControlFormularyConcludingDeliveryCard
+								key={item.id}
+								transportControlId={transportControlId}
+								previousDeliveries={transportControl.itens}
+								deliveryIndex={index}
+								delivery={item}
+								callbacks={callbacks}
+							/>
+						))}
+				</ResponsiveDialogDrawerSection>
+				<ResponsiveDialogDrawerSection sectionTitleText="CUSTOS" sectionTitleIcon={<DollarSign className="h-4 w-4 min-w-4 min-h-4" />}>
+					<div className="w-full flex items-center justify-end">
+						<Button onClick={() => setNewCostMenuIsOpen(true)} variant="ghost" size="fit" className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs">
+							<PlusIcon className="w-4 h-4" />
+							ADICIONAR
+						</Button>
+					</div>
+					{transportControl.custos.length > 0 ? (
+						<div className="w-full flex flex-col gap-2">
+							{transportControl.custos.map((cost, index) => (
+								<div key={index.toString()} className="w-full flex items-center gap-2 justify-between p-2 rounded-lg shadow-sm border border-primary/30">
+									<h1 className="text-xs tracking-tight font-medium text-start w-fit">{cost.descricao}</h1>
 
-								<div className="flex items-center gap-1">
-									<h1 className={cn("flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground", {})}>
-										{formatToMoney(cost.valor)}
-									</h1>
+									<div className="flex items-center gap-1">
+										<h1 className={cn("flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-secondary text-secondary-foreground", {})}>
+											{formatToMoney(cost.valor)}
+										</h1>
+									</div>
+								</div>
+							))}
+						</div>
+					) : (
+						<p className="text-sm text-muted-foreground">Nenhum custo adicionado ainda.</p>
+					)}
+				</ResponsiveDialogDrawerSection>
+
+				{conclusionMenuIsOpen ? (
+					<TransportControlFormularyConcludingMenu
+						transportControlId={transportControlId}
+						closeMenu={() => setConclusionMenuIsOpen(false)}
+						callbacks={callbacks}
+					/>
+				) : null}
+				{newCostMenuIsOpen ? (
+					<NewCostMenu
+						transportControlId={transportControlId}
+						currentCosts={transportControl.custos}
+						closeMenu={() => setNewCostMenuIsOpen(false)}
+						callbacks={callbacks}
+					/>
+				) : null}
+			</div>
+			<div className="w-full flex flex-col items-center justify-center px-3 py-6 border border-primary/30 rounded-lg shadow-sm gap-6">
+				<ResponsiveDialogDrawerSection sectionTitleText="RESUMO DA ROTA" sectionTitleIcon={<Route className="h-4 w-4 min-w-4 min-h-4" />}>
+					<div className="flex w-full flex-wrap items-stretch justify-center gap-4">
+						{/* Bloco inicial: km + imagem */}
+						<div className="flex flex-col items-center gap-2">
+							<span className="w-full rounded-lg bg-secondary px-3 py-1.5 text-center text-sm font-medium">
+								{transportControl.distanciaQuilometragemInicial?.toLocaleString("pt-BR") ?? "—"} km
+							</span>
+							<div className="relative flex aspect-square h-auto w-full min-w-[120px] max-w-[120px] overflow-hidden rounded-lg border border-primary/30 bg-primary/10">
+								{transportControl.distanciaQuilometragemInicialImagemUrl ? (
+									<Image src={transportControl.distanciaQuilometragemInicialImagemUrl} alt="Quilometragem inicial" fill className="object-cover" unoptimized />
+								) : (
+									<div className="flex h-full w-full items-center justify-center">
+										<MdAttachFile className="h-8 w-8 text-primary/50" />
+									</div>
+								)}
+							</div>
+						</div>
+						<div className="flex shrink-0 items-center justify-center text-primary/60">
+							<ArrowRight className="h-6 w-6 min-h-6 min-w-6" />
+						</div>
+						{/* Bloco final: km + imagem (pendente) */}
+						<div className="flex flex-col items-center gap-2">
+							<span className="w-full rounded-lg border border-dashed border-primary/40 bg-primary/5 px-3 py-1.5 text-center text-sm font-medium text-primary/80">
+								{transportControl.distanciaQuilometragemFinal != null
+									? `${transportControl.distanciaQuilometragemFinal.toLocaleString("pt-BR")} km`
+									: "NÃO DEFINIDO"}
+							</span>
+							<div className="relative flex aspect-square h-auto w-full max-w-[120px] items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-primary/30 bg-primary/5">
+								<div className="flex flex-col items-center gap-1">
+									<Clock className="h-8 w-8 text-orange-500" />
+									<p className="text-[0.6rem] font-medium text-orange-600">PENDENTE</p>
 								</div>
 							</div>
-						))}
+						</div>
 					</div>
-				) : (
-					<p className="text-sm text-muted-foreground">Nenhum custo adicionado ainda.</p>
-				)}
-			</ResponsiveDialogDrawerSection>
-			{isElegibleToConclude ? (
-				<div className="w-full flex items-center justify-center">
-					<Button onClick={() => setConclusionMenuIsOpen(true)} className="flex items-center gap-1">
+				</ResponsiveDialogDrawerSection>
+				<div className="w-full flex flex-col gap-1.5 items-center justify-center">
+					<Button disabled={!isElegibleToConclude} onClick={() => setConclusionMenuIsOpen(true)} className="flex items-center gap-1">
 						<CheckCircle2 className="w-4 h-4 min-w-4 min-h-4" />
 						CONCLUIR TRANSPORTE
 					</Button>
+					{!isElegibleToConclude ? (
+						<div className={cn("flex w-fit items-center justify-center gap-1 self-center rounded bg-red-200 px-2 py-1 text-red-800")}>
+							<AlertCircle className="w-4 h-4 min-w-4 min-h-4" />
+							<h1 className="w-fit text-start text-xs font-medium tracking-tight">Você precisa concluir todas as entregas para concluir o transporte.</h1>
+						</div>
+					) : null}
 				</div>
-			) : null}
-			{conclusionMenuIsOpen ? (
-				<TransportControlFormularyConcludingMenu
-					transportControlId={transportControlId}
-					closeMenu={() => setConclusionMenuIsOpen(false)}
-					callbacks={callbacks}
-				/>
-			) : null}
-			{newCostMenuIsOpen ? (
-				<NewCostMenu
-					transportControlId={transportControlId}
-					currentCosts={transportControl.custos}
-					closeMenu={() => setNewCostMenuIsOpen(false)}
-					callbacks={callbacks}
-				/>
-			) : null}
-		</div>
+			</div>
+		</>
 	);
 }
 
@@ -529,29 +611,47 @@ function TransportControlFormularyConcludingMenu({ transportControlId, closeMenu
 				handleChange={(value) => setFinalKilometers(value)}
 				width="100%"
 			/>
-			<div className="w-full flex items-center justify-center">
-				<label htmlFor="dropzone-file" className="relative h-[125px] w-[125px] rounded-lg overflow-hidden cursor-pointer">
-					{finalKilometersAttachment.previewUrl ? (
-						<Image src={finalKilometersAttachment.previewUrl} alt="Imagem da quilometragem final." objectFit="cover" fill={true} />
-					) : (
-						<div className="w-full h-full bg-primary/20 flex items-center justify-center gap-1 flex-col">
-							<MdAttachFile className="w-6 h-6" />
-							<p className="font-medium text-xs text-center">DEFINIR IMAGEM DA QUILOMETRAGEM FINAL</p>
+			<div className="border-primary/20 bg-background flex w-full grow flex-col gap-4 rounded-md border p-6 shadow-xs dark:bg-[#121212]">
+				<div className="flex w-full flex-col gap-1">
+					<div className="flex w-full flex-col items-start gap-2 lg:flex-row lg:items-center">
+						<div className="flex items-center gap-2">
+							<Paperclip className="h-4 min-h-4 w-4 min-w-4" />
+							<h1 className="text-sm leading-none font-bold tracking-tight">IMAGEM DA QUILOMETRAGEM FINAL</h1>
 						</div>
-					)}
-					<input
-						onChange={(e) => {
-							const file = e.target.files?.[0] ?? null;
-							setFinalKilometersAttachment({ ...finalKilometersAttachment, file, previewUrl: file ? URL.createObjectURL(file) : null });
-						}}
-						id="dropzone-file"
-						type="file"
-						className="absolute h-full w-full opacity-0 cursor-pointer"
-						accept=".png,.jpeg,.jpg"
-						multiple={false}
-						tabIndex={-1}
-					/>
-				</label>
+						<div className="bg-primary/20 text-primary flex items-center gap-1 rounded-lg px-2 py-1">
+							<Lock className="h-3 min-h-3 w-3 min-w-3" />
+							<p className="text-[0.6rem] font-bold tracking-tight">OBRIGATÓRIO</p>
+						</div>
+					</div>
+				</div>
+				<p className="text-primary/80 text-xs leading-none font-light">Anexe uma foto do painel do veículo.</p>
+				<div className="relative flex w-full items-center justify-center">
+					<label
+						htmlFor="dropzone-file-concluding"
+						className="relative flex aspect-square h-auto w-full max-w-[300px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-primary/20 bg-background hover:bg-primary/10 dark:bg-[#121212] dark:hover:bg-bray-800"
+					>
+						{finalKilometersAttachment.previewUrl ? (
+							<Image src={finalKilometersAttachment.previewUrl} alt="Imagem da quilometragem final." fill className="object-cover" />
+						) : (
+							<div className="text-primary flex flex-col items-center justify-center px-4 pt-5 pb-6">
+								<CloudUpload className="h-6 min-h-6 w-6 min-w-6" />
+								<p className="text-center text-xs font-medium tracking-tight">Clique aqui para selecionar os arquivos ou arraste-os para área demarcada.</p>
+							</div>
+						)}
+						<input
+							onChange={(e) => {
+								const file = e.target.files?.[0] ?? null;
+								setFinalKilometersAttachment({ ...finalKilometersAttachment, file, previewUrl: file ? URL.createObjectURL(file) : null });
+							}}
+							id="dropzone-file-concluding"
+							type="file"
+							className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+							accept=".png,.jpeg,.jpg"
+							multiple={false}
+							tabIndex={-1}
+						/>
+					</label>
+				</div>
 			</div>
 		</ResponsiveDialogDrawer>
 	);
@@ -762,9 +862,9 @@ function TransportControlFormularyConcludingDeliveryConcludeMethodButton({
 	callbacks,
 	closeMenu,
 }: TransportControlFormularyConcludingDeliveryConcludeMethodButtonProps) {
-	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || undefined);
+	const [deliveryDate, setDeliveryDate] = useState<string | undefined>(delivery.dataEfetivacao || new Date());
 	const defaultAttachmentDefinitions = [
-		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM" },
+		{ key: "km", title: "ENTREGA - FOTO DO KM", label: "FOTO DO KM NA ENTREGA" },
 		{ key: "materiais", title: "ENTREGA - FOTO DOS MATERIAIS ENTREGUES", label: "FOTO DOS MATERIAIS ENTREGUES" },
 		{ key: "nf", title: "ENTREGA - FOTO DA NF ASSINADA", label: "FOTO DA NF ASSINADA" },
 	] as const;

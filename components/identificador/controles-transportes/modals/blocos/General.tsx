@@ -37,6 +37,7 @@ export default function GeneralBlock({
 				<div className="w-full lg:w-1/2">
 					<DateTimeInput
 						label="DATA DE INÍCIO"
+						editable={!!transportControl.dataFim}
 						value={formatDateTime(transportControl.dataInicio)}
 						handleChange={(value) => {
 							updateTransportControl({ dataInicio: formatDateInputChange(value, "string", false) });
@@ -47,6 +48,7 @@ export default function GeneralBlock({
 				<div className="w-full lg:w-1/2">
 					<DateTimeInput
 						label="DATA DE FIM"
+						editable={!!transportControl.dataInicio}
 						value={formatDateTime(transportControl.dataFim)}
 						handleChange={(value) => {
 							updateTransportControl({ dataFim: formatDateInputChange(value, "string", false) });
@@ -71,6 +73,7 @@ export default function GeneralBlock({
 					<NumberInput
 						label="QUILOMETRAGEM INICIAL"
 						placeholder="Preencha a quilometragem inicial..."
+						editable={!!transportControl.dataInicio}
 						value={transportControl.distanciaQuilometragemInicial ?? null}
 						handleChange={(value) => {
 							updateTransportControl({ distanciaQuilometragemInicial: value });
@@ -82,6 +85,7 @@ export default function GeneralBlock({
 					<NumberInput
 						label="QUILOMETRAGEM FINAL"
 						placeholder="Preencha a quilometragem final..."
+						editable={!!transportControl.dataFim}
 						value={transportControl.distanciaQuilometragemFinal ?? null}
 						handleChange={(value) => {
 							updateTransportControl({ distanciaQuilometragemFinal: value });

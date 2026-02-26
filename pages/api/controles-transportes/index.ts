@@ -191,7 +191,6 @@ export type TUpdateTransportControlInput = z.infer<typeof UpdateTransportControl
 
 async function updateTransportControl({ input, user }: { input: TUpdateTransportControlInput; user: TAuthSession["user"] | null }) {
 	// console.log("[INFO] [UPDATE-TRANSPORT-CONTROL] Starting transport control update", input);
-	const TRANSPORT_CONTROL_COST_PER_KM = 3.2;
 	const db = await connectToDatabase();
 	const crmDb = await connectToCRMDatabase();
 	const transportControlsCollection = db.collection<TTransportControl>("controles-transportes");
@@ -403,13 +402,15 @@ async function updateTransportControl({ input, user }: { input: TUpdateTransport
 
 	if (!previousTransportControl.dataFim && !!updatedTransportControl.dataFim) {
 		console.log("[INFO] [UPDATE-TRANSPORT-CONTROL] Effetivation identified, starting triggers");
-		const distanceCost = (updatedTransportControl.distanciaQuilometragemFinal || 0) - (updatedTransportControl.distanciaQuilometragemInicial || 0);
+		const distanceCost =
+			(updatedTransportControl.distanciaQuilometragemFinal || 0) -
+			(updatedTransportControl.distanciaQuilometragemInicial || 0) * updatedTransportControl.configuracoes.custoQuilometragem;
 		console.log("[INFO] [UPDATE-TRANSPORT-CONTROL] Calculated distance cost", distanceCost, "km");
 		const finalCosts: TTransportControl["custos"][number][] = [
 			...updatedTransportControl.custos,
 			{
 				descricao: "CUSTO DE TRANSPORTE",
-				valor: distanceCost * TRANSPORT_CONTROL_COST_PER_KM,
+				valor: distanceCost,
 				anexos: [],
 			},
 		];

@@ -83,6 +83,7 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 		transportControl: {
 			titulo: initialState?.transportControl?.titulo || "",
 			identificador: initialState?.transportControl?.identificador || 0,
+			responsaveis: initialState?.transportControl?.responsaveis || [],
 			itens: initialState?.transportControl?.itens || [],
 			custos: initialState?.transportControl?.custos || [],
 			configuracoes: initialState?.transportControl?.configuracoes || {
@@ -114,26 +115,32 @@ export function useTransportControlState({ initialState }: UseTransportControlSt
 		}));
 	}, []);
 
-	const addTransportControlItem = useCallback((item: TTransportControlState["transportControl"]["itens"][number]) => {
-		setState((prev) => ({
-			...prev,
-			transportControl: {
-				...prev.transportControl,
-				itens: normalizeItemsOrder([...prev.transportControl.itens, item]),
-			},
-		}));
-	}, [normalizeItemsOrder]);
+	const addTransportControlItem = useCallback(
+		(item: TTransportControlState["transportControl"]["itens"][number]) => {
+			setState((prev) => ({
+				...prev,
+				transportControl: {
+					...prev.transportControl,
+					itens: normalizeItemsOrder([...prev.transportControl.itens, item]),
+				},
+			}));
+		},
+		[normalizeItemsOrder],
+	);
 
-	const removeTransportControlItem = useCallback((index: number) => {
-		console.log("removeTransportControlItem", index);
-		setState((prev) => ({
-			...prev,
-			transportControl: {
-				...prev.transportControl,
-				itens: normalizeItemsOrder(prev.transportControl.itens.filter((_, i) => i !== index)),
-			},
-		}));
-	}, [normalizeItemsOrder]);
+	const removeTransportControlItem = useCallback(
+		(index: number) => {
+			console.log("removeTransportControlItem", index);
+			setState((prev) => ({
+				...prev,
+				transportControl: {
+					...prev.transportControl,
+					itens: normalizeItemsOrder(prev.transportControl.itens.filter((_, i) => i !== index)),
+				},
+			}));
+		},
+		[normalizeItemsOrder],
+	);
 
 	const moveTransportControlItem = useCallback(
 		(index: number, direction: "up" | "down") => {

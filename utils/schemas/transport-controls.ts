@@ -158,6 +158,29 @@ export const TransportControlSchema = z.object({
 			invalid_type_error: "Título deve ser uma string",
 		})
 		.describe("Título do controle de transporte."),
+	responsaveis: z.array(
+		z.object({
+			id: z.string({
+				required_error: "ID do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o ID do responsável.",
+			}),
+			nome: z.string({
+				required_error: "Nome do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o nome do responsável.",
+			}),
+			avatar_url: z
+				.string({
+					required_error: "Avatar do responsável não informado.",
+					invalid_type_error: "Tipo não válido para o avatar do responsável.",
+				})
+				.optional()
+				.nullable(),
+			telefone: z.string({
+				required_error: "Telefone do responsável não informado.",
+				invalid_type_error: "Tipo não válido para o telefone do responsável.",
+			}),
+		}),
+	),
 	itens: z.array(TransportControlTransportItemSchema, {
 		required_error: "Itens é obrigatório",
 		invalid_type_error: "Itens deve ser um array",

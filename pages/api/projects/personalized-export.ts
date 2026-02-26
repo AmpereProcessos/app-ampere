@@ -21,7 +21,7 @@ const handleProjectsPersonalizedExport: NextApiHandler<any> = async (req, res) =
 		session.user.permissoes.recursosHumanos.visualizar;
 
 	if (!userHasOverallAccess) throw new createHttpError.Forbidden("Você não tem permissão para exportar projetos.");
-	const { filters, projection } = GetProjectsExportRoutePayloadSchema.parse(req.body);
+	const { filters, projection, computed } = GetProjectsExportRoutePayloadSchema.parse(req.body);
 
 	const db = await connectToDatabase();
 	const projectsCollection = db.collection<TProject>("dados");
@@ -108,9 +108,21 @@ const handleProjectsPersonalizedExport: NextApiHandler<any> = async (req, res) =
 		...periodQuery,
 	};
 
-	const projects = await projectsCollection.find(finalQuery, { projection: mongoProjection }).toArray();
+	const additionalProjectionFields: Record<string, 1> = {};
+	if (computed.valorTotalContrato) {
+		additionalProjectionFields["sistema.valorProjeto"] = 1;
+		additionalProjectionFields["padrao.valor"] = 1;
+		additionalProjectionFields["estruturaPersonalizada.valor"] = 1;
+		additionalProjectionFields["oem.valor"] = 1;
+		additionalProjectionFields["seguro.valor"] = 1;
+	}
+	if (computed.qtdeModulos || computed.potenciaTotalModulos || computed.potenciaTotalInversores || computed.qtdeInversores) {
+		additionalProjectionFields.produtos = 1;
+	}
 
-	const formattedProjects = getProjectExportFormatted({ projects, exportablesDefinition: projection });
+	const projects = await projectsCollection.find(finalQuery, { projection: { ...mongoProjection, ...additionalProjectionFields } }).toArray();
+
+	const formattedProjects = getProjectExportFormatted({ projects, exportablesDefinition: projection, computed });
 
 	return res.status(200).json({ data: formattedProjects });
 };

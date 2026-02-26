@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import CostsBlock from "./blocos/Costs";
 import GeneralBlock from "./blocos/General";
 import ItemsBlock from "./blocos/Items";
+import ResponsiblesBlock from "./blocos/Responsibles";
 
 type EditTransportControlProps = {
 	transportControlId: string;
@@ -66,6 +67,7 @@ export default function EditTransportControl({ transportControlId, closeModal, o
 		return {
 			identificador: transportControl.identificador,
 			titulo: transportControl.titulo,
+			responsaveis: transportControl.responsaveis ?? [],
 			itens: normalizedItems,
 			custos: normalizedCosts,
 			configuracoes: transportControl.configuracoes,
@@ -91,6 +93,7 @@ export default function EditTransportControl({ transportControlId, closeModal, o
 			transportControl: {
 				identificador: 0,
 				titulo: "",
+				responsaveis: [],
 				itens: [],
 				custos: [],
 				configuracoes: {
@@ -159,6 +162,7 @@ export default function EditTransportControl({ transportControlId, closeModal, o
 						addTransportControlItem={addTransportControlItem}
 						removeTransportControlItem={removeTransportControlItem}
 					/>
+					<ResponsiblesBlock responsaveis={state.transportControl.responsaveis} updateTransportControl={updateTransportControl} />
 					<ItemsBlock
 						items={state.transportControl.itens}
 						addItem={addTransportControlItem}

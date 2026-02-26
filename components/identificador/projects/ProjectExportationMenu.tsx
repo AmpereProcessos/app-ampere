@@ -1,27 +1,27 @@
+import CheckboxInput from "@/components/inputs/Checkbox";
+import DateInput from "@/components/inputs/Date";
+import MultipleSelectInput from "@/components/inputs/MultipleSelect";
+import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectInputVirtualized";
+import SelectInput from "@/components/inputs/Select";
+import TextInput from "@/components/inputs/Text";
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/lib/hooks/media-query";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { fetchProjectsExportation } from "@/utils/methods/query/projects";
-import { getExcelFromJSON } from "@/lib/excel-utils";
-import dayjs from "dayjs";
-import toast from "react-hot-toast";
-import { getErrorMessage } from "@/utils/methods/handlers";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import TextInput from "@/components/inputs/Text";
-import SelectInput from "@/components/inputs/Select";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
-import { contractStatus, serviceTypes } from "@/utils/select-options";
-import { useUsers } from "@/utils/methods/query/crm/users";
-import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectInputVirtualized";
-import StatesAndCities from "@/utils/jsons/estados-cidades.json";
-import DateInput from "@/components/inputs/Date";
+import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
+import { getExcelFromJSON } from "@/lib/excel-utils";
+import { useMediaQuery } from "@/lib/hooks/media-query";
 import { formatDate } from "@/utils/constants";
+import StatesAndCities from "@/utils/jsons/estados-cidades.json";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { useUsers } from "@/utils/methods/query/crm/users";
+import { fetchProjectsExportation } from "@/utils/methods/query/projects";
 import { formatDateInputChange } from "@/utils/methods/shared";
-import CheckboxInput from "@/components/inputs/Checkbox";
+import { contractStatus, serviceTypes } from "@/utils/select-options";
+import { useMutation } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({ id: index + 1, label: c, value: c }));
 const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({ id: index + 1, label: c, value: c }));
@@ -91,6 +91,13 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 			"obra.entrada": false,
 			"obra.saida": false,
 		},
+		computed: {
+			valorTotalContrato: false,
+			qtdeModulos: false,
+			potenciaTotalModulos: false,
+			qtdeInversores: false,
+			potenciaTotalInversores: false,
+		},
 	});
 	function updatePayloadHolder(changes: Partial<TGetProjectsExportRoutePayload>) {
 		setPayloadHolder((prev) => ({ ...prev, ...changes }));
@@ -100,6 +107,9 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 	}
 	function updatePayloadProjection(changes: Partial<TGetProjectsExportRoutePayload["projection"]>) {
 		setPayloadHolder((prev) => ({ ...prev, projection: { ...prev.projection, ...changes } }));
+	}
+	function updatePayloadComputed(changes: Partial<TGetProjectsExportRoutePayload["computed"]>) {
+		setPayloadHolder((prev) => ({ ...prev, computed: { ...prev.computed, ...changes } }));
 	}
 	const { mutate: handleExportation, isPending: isExportationLoading } = useMutation({
 		mutationKey: ["projects-exportation", payloadHolder],
@@ -130,6 +140,7 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 						payloadHolder={payloadHolder}
 						updatePayloadFilters={updatePayloadFilters}
 						updatePayloadProjection={updatePayloadProjection}
+						updatePayloadComputed={updatePayloadComputed}
 					/>
 				</div>
 				<DialogFooter>
@@ -157,6 +168,7 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 						payloadHolder={payloadHolder}
 						updatePayloadFilters={updatePayloadFilters}
 						updatePayloadProjection={updatePayloadProjection}
+						updatePayloadComputed={updatePayloadComputed}
 					/>
 				</div>
 				<DrawerFooter>
@@ -180,8 +192,14 @@ type ExportationMenuContentProps = {
 	payloadHolder: TGetProjectsExportRoutePayload;
 	updatePayloadFilters: (changes: Partial<TGetProjectsExportRoutePayload["filters"]>) => void;
 	updatePayloadProjection: (changes: Partial<TGetProjectsExportRoutePayload["projection"]>) => void;
+	updatePayloadComputed: (changes: Partial<TGetProjectsExportRoutePayload["computed"]>) => void;
 };
-function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePayloadProjection }: ExportationMenuContentProps) {
+function ExportationMenuContent({
+	payloadHolder,
+	updatePayloadFilters,
+	updatePayloadProjection,
+	updatePayloadComputed,
+}: ExportationMenuContentProps) {
 	const { data: crmUsers } = useUsers({ includeDeleted: true });
 
 	return (
@@ -598,6 +616,36 @@ function ExportationMenuContent({ payloadHolder, updatePayloadFilters, updatePay
 						labelTrue="DATA DE SAÍDA DA OBRA"
 						checked={payloadHolder.projection["obra.saida"]}
 						handleChange={(v) => updatePayloadProjection({ "obra.saida": v })}
+					/>
+					<CheckboxInput
+						labelFalse="VALOR TOTAL DO CONTRATO"
+						labelTrue="VALOR TOTAL DO CONTRATO"
+						checked={payloadHolder.computed.valorTotalContrato}
+						handleChange={(v) => updatePayloadComputed({ valorTotalContrato: v })}
+					/>
+					<CheckboxInput
+						labelFalse="QTDE DE MÓDULOS"
+						labelTrue="QTDE DE MÓDULOS"
+						checked={payloadHolder.computed.qtdeModulos}
+						handleChange={(v) => updatePayloadComputed({ qtdeModulos: v })}
+					/>
+					<CheckboxInput
+						labelFalse="POTÊNCIA TOTAL DOS MÓDULOS"
+						labelTrue="POTÊNCIA TOTAL DOS MÓDULOS"
+						checked={payloadHolder.computed.potenciaTotalModulos}
+						handleChange={(v) => updatePayloadComputed({ potenciaTotalModulos: v })}
+					/>
+					<CheckboxInput
+						labelFalse="QTDE DE INVERSORES"
+						labelTrue="QTDE DE INVERSORES"
+						checked={payloadHolder.computed.qtdeInversores}
+						handleChange={(v) => updatePayloadComputed({ qtdeInversores: v })}
+					/>
+					<CheckboxInput
+						labelFalse="POTÊNCIA TOTAL DOS INVERSORES"
+						labelTrue="POTÊNCIA TOTAL DOS INVERSORES"
+						checked={payloadHolder.computed.potenciaTotalInversores}
+						handleChange={(v) => updatePayloadComputed({ potenciaTotalInversores: v })}
 					/>
 				</div>
 			</div>

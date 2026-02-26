@@ -1,25 +1,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
+import { updateTransportControl } from "@/utils/methods/mutation/transport-controls";
 import { useTransportControlByIdPublic } from "@/utils/methods/query/transport-controls";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Calendar, CheckCircle2, DollarSign, ExternalLink, FileIcon, FileText, LayoutGrid, MapPin, Package, User } from "lucide-react";
-import Link from "next/link";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CheckCircle2, DollarSign, ExternalLink, FileIcon, LayoutGrid, MapPin, Package } from "lucide-react";
+import toast from "react-hot-toast";
 
-type ViewTransportControlProps = {
+type ValidateTransportControlProps = {
 	transportControlId: string;
-
+	queryKey: unknown[];
 	closeModal: () => void;
 };
 
-export default function ViewTransportControl({ transportControlId, closeModal }: ViewTransportControlProps) {
+export default function ValidateTransportControl({ transportControlId, queryKey, closeModal }: ValidateTransportControlProps) {
+	const queryClient = useQueryClient();
 	const {
 		data: transportControl,
 		isLoading,
@@ -30,12 +32,31 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 		id: transportControlId,
 	});
 
+	const { mutate: handleValidate, isPending: validateIsPending } = useMutation({
+		mutationKey: ["validate-transport-control"],
+		mutationFn: async () =>
+			await updateTransportControl({
+				transportControlId,
+				changes: { dataValidacao: new Date().toISOString() },
+			}),
+		onSuccess: () => {
+			toast.success("Controle de transporte validado com sucesso!");
+			queryClient.invalidateQueries({ queryKey });
+			queryClient.invalidateQueries({ queryKey: ["transport-control-by-id-public", transportControlId] });
+			closeModal();
+		},
+		onError: (err) => {
+			toast.error(getErrorMessage(err));
+		},
+	});
+
 	const totalCosts = (transportControl?.custos ?? []).reduce((acc, curr) => acc + curr.valor, 0);
-	console.log(transportControl);
+	const canValidate = !!transportControl?.dataFim && !transportControl?.dataValidacao;
+
 	return (
 		<ResponsiveDialogDrawerViewOnly
-			menuTitle="VISUALIZAR CONTROLE DE TRANSPORTE"
-			menuDescription="Visualize um controle de transporte."
+			menuTitle="VALIDAR CONTROLE DE TRANSPORTE"
+			menuDescription="Confira os detalhes do transporte finalizado e valide o controle."
 			menuCancelButtonText="FECHAR"
 			closeMenu={() => closeModal()}
 			dialogVariant="md"
@@ -44,7 +65,7 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 		>
 			{isLoading ? <LoadingComponent /> : null}
 			{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
-			{isSuccess ? (
+			{isSuccess && transportControl ? (
 				<>
 					<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES GERAIS" sectionTitleIcon={<LayoutGrid size={15} />}>
 						<div className="flex flex-col gap-2">
@@ -60,7 +81,7 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 								<h2 className="text-sm font-medium tracking-tight">AUTOR</h2>
 								<Avatar className="h-5 w-5">
 									<AvatarImage src={transportControl.autor?.avatar_url ?? undefined} />
-									<AvatarFallback>{formatDecimalPlaces(transportControl.autor?.id, 2)}</AvatarFallback>
+									<AvatarFallback>{formatNameAsInitials(transportControl.autor?.nome)}</AvatarFallback>
 								</Avatar>
 								<h2 className="text-sm font-bold tracking-tight">{transportControl.autor?.nome}</h2>
 							</div>
@@ -198,10 +219,22 @@ export default function ViewTransportControl({ transportControlId, closeModal }:
 						) : (
 							<div className="flex items-center gap-2">
 								<Package className="w-4 h-4 min-w-4 min-h-4" />
-								<p className="text-xs text-muted-foreground italic">Nenhum item vinculado a este transporte.</p>
+								<p className="text-xs text-muted-foreground italic">Nenhum custo vinculado a este transporte.</p>
 							</div>
 						)}
 					</ResponsiveDialogDrawerSection>
+
+					<div className="flex flex-col gap-3 pt-2">
+						<LoadingButton
+							className="flex items-center gap-2 hover:bg-green-600 hover:text-white transition-colors"
+							loading={validateIsPending}
+							disabled={!canValidate}
+							onClick={() => handleValidate()}
+						>
+							<CheckCircle2 className="w-4 h-4 min-w-4 min-h-4" />
+							VALIDAR CONTROLE
+						</LoadingButton>
+					</div>
 				</>
 			) : null}
 		</ResponsiveDialogDrawerViewOnly>

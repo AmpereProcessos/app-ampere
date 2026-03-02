@@ -402,9 +402,10 @@ async function updateTransportControl({ input, user }: { input: TUpdateTransport
 
 	if (!previousTransportControl.dataFim && !!updatedTransportControl.dataFim) {
 		console.log("[INFO] [UPDATE-TRANSPORT-CONTROL] Effetivation identified, starting triggers");
-		const distanceCost =
-			(updatedTransportControl.distanciaQuilometragemFinal || 0) -
-			(updatedTransportControl.distanciaQuilometragemInicial || 0) * updatedTransportControl.configuracoes.custoQuilometragem;
+
+		const distance = (updatedTransportControl.distanciaQuilometragemFinal || 0) - (updatedTransportControl.distanciaQuilometragemInicial || 0);
+		const distanceCost = distance * updatedTransportControl.configuracoes.custoQuilometragem;
+
 		console.log("[INFO] [UPDATE-TRANSPORT-CONTROL] Calculated distance cost", distanceCost, "km");
 		const finalCosts: TTransportControl["custos"][number][] = [
 			...updatedTransportControl.custos,

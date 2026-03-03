@@ -59,10 +59,12 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 				"AGUARDANDO APROVAÇÃO": [],
 				"AGUARDANDO NOTA FUTURA": [],
 				"AGUARDANDO PAGAMENTO": [],
+				"AGUARDANDO FATURAMENTO": [],
 				"AGUARDANDO SEPARAÇÃO": [],
+				"AGUARDANDO DESPACHE": [],
 				"AGUARDANDO ENTREGA": [],
-				// CONCLUÍDA: [],
 				// PENDÊNCIAS: [],
+				// CONCLUÍDA: [],
 			}).map(([key, value]) => ({ title: key, items: value }));
 
 		function handleSortByStatusLog(
@@ -88,12 +90,12 @@ function PurchaseControlsKanbanModePage({ session, handleSetMode, initialKanbanL
 			"AGUARDANDO PAGAMENTO": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO PAGAMENTO")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO PAGAMENTO", a, b)),
-			"AGUARDANDO SEPARAÇÃO": purchaseControls
-				.filter((c) => c.status === "AGUARDANDO SEPARAÇÃO")
-				.sort((a, b) => handleSortByStatusLog("AGUARDANDO SEPARAÇÃO", a, b)),
 			"AGUARDANDO FATURAMENTO": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO FATURAMENTO")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO FATURAMENTO", a, b)),
+			"AGUARDANDO SEPARAÇÃO": purchaseControls
+				.filter((c) => c.status === "AGUARDANDO SEPARAÇÃO")
+				.sort((a, b) => handleSortByStatusLog("AGUARDANDO SEPARAÇÃO", a, b)),
 			"AGUARDANDO ENTREGA": purchaseControls
 				.filter((c) => c.status === "AGUARDANDO ENTREGA")
 				.sort((a, b) => handleSortByStatusLog("AGUARDANDO ENTREGA", a, b)),

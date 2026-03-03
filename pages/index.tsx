@@ -48,6 +48,7 @@ function HomeContent({ user: _user }: HomePageProps) {
 }
 
 function HomePageGeneralStats() {
+	console.log("TESTING");
 	const { data: stats, isLoading: _isLoading, isSuccess: _isSuccess, isError: _isError } = useDashboardStats();
 
 	return (

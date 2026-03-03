@@ -31,6 +31,7 @@ type HomePageProps = {
 	user: TAuthSession["user"];
 };
 function HomeContent({ user: _user }: HomePageProps) {
+	console.log("TESTE")
 	return (
 		<div className="bg-background flex grow flex-col gap-6 p-6">
 			<div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row lg:items-stretch">

@@ -12,8 +12,9 @@ import { renderIconWithClassNames, renderProductCategoryIcon, renderUnitLabel } 
 import { formatToMoney, GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
 import MaterialSelector from "@/components/identificador/almoxarifado/estoque/MaterialVinculatorSelector";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Package, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 type PurchaseControlCompositionTableProps = {
 	composition: TPurchaseControl["composicao"];
@@ -65,6 +66,22 @@ function PurchaseControlCompositionTableItem({ item, handleUpdate, handleRemove 
 				<div className="bg-background hidden w-full flex-col gap-1 lg:flex dark:bg-[#121212]">
 					<div className="flex w-full items-center gap-2 p-1">
 						<div className="flex w-[30%] items-center gap-1">
+							{item.materialImagemUrl ? (
+								<a
+									href={item.materialImagemUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="relative h-8 min-h-8 w-8 min-w-8"
+									aria-label={`Abrir imagem de ${item.descricao} em nova aba`}
+								>
+									<Image src={item.materialImagemUrl} alt={item.descricao} fill className="rounded-lg object-cover" />
+								</a>
+							) : (
+								<div className="flex h-8 min-h-8 w-8 min-w-8 items-center justify-center rounded-lg bg-primary/80 text-primary-foreground">
+									<Package className="h-4 w-4" />
+								</div>
+							)}
+
 							<div className="flex flex-col">
 								<h1 className="text-xs tracking-tight">{item.descricao}</h1>
 								<div className="flex items-center gap-2">
@@ -163,11 +180,12 @@ function PurchaseControlCompositionTableItem({ item, handleUpdate, handleRemove 
 									...prev,
 									materialId: m._id,
 									descricao: m.nome,
+									materialImagemUrl: m.imagemUrl,
 									unidade: m.grandeza || "UN",
 								}))
 							}
 							unvinculateMaterial={() =>
-								setItemHolder((prev) => ({ ...prev, materialId: null, descricao: "", unidade: "UN", categoria: "INSUMO", valor: 0, qtde: 0 }))
+								setItemHolder((prev) => ({ ...prev, materialId: null, descricao: "", materialImagemUrl: null, unidade: "UN", categoria: "INSUMO", valor: 0, qtde: 0 }))
 							}
 						/>
 						<div className="flex w-full flex-wrap items-center justify-center gap-2">

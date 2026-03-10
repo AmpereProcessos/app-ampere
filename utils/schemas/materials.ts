@@ -309,8 +309,9 @@ export const MaterialSimplifiedProjection = {
 	codigo: 1,
 	preco: 1,
 	grandeza: 1,
+	imagemUrl: 1,
 };
-export type TMaterialSimplified = Pick<TMaterial, "nome" | "alocadorId" | "qtde" | "codigo" | "preco" | "grandeza">;
+export type TMaterialSimplified = Pick<TMaterial, "nome" | "alocadorId" | "qtde" | "codigo" | "preco" | "grandeza" | "imagemUrl">;
 export type TMaterialSimplifiedDTO = TMaterialSimplified & { _id: string };
 
 export type TMaterialSimplifiedWithAlocator = TMaterialSimplified & { alocadorDados?: { _id: string; nome: string } };

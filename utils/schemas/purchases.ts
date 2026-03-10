@@ -37,6 +37,7 @@ export const PurchaseCompositionItemCategoryEnum = z.enum(["MÓDULO", "INVERSOR"
 });
 const PurchaseCompositionItemSchema = z.object({
 	materialId: z.string({ invalid_type_error: "Tipo não válido para o ID do material." }).optional().nullable(),
+	materialImagemUrl: z.string({ invalid_type_error: "Tipo não válido para a imagem do material." }).optional().nullable(),
 	// Deprecated: not using alocator ids
 	alocadorOrigemId: z.string({ invalid_type_error: "Tipo não válido para o ID do alocador de origem." }).optional().nullable(),
 	alocadorDestinoId: z.string({ invalid_type_error: "Tipo não válido para o ID do alocador de destino." }).optional().nullable(),
@@ -47,7 +48,7 @@ const PurchaseCompositionItemSchema = z.object({
 		required_error: "Descrição do item de composição da compra não informada.",
 		invalid_type_error: "Tipo não válido para a descrição do item de composição da compra.",
 	}),
-	unidade: z.string({
+	unidade: z.string({ 
 		required_error: "Unidade do item de composição da compra não informada.",
 		invalid_type_error: "Tipo não válido para a unidade do item de composição da compra.",
 	}),

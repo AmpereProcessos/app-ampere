@@ -52,10 +52,11 @@ function PurchaseNewCompositionItem({ addCompositionItem }: PurchaseNewCompositi
 						updateCompositionItemHolder({
 							materialId: m._id,
 							descricao: m.nome,
+							materialImagemUrl: m.imagemUrl,
 							unidade: m.grandeza || "UN",
 						})
 					}
-					unvinculateMaterial={() => updateCompositionItemHolder({ materialId: null, descricao: "", valor: 0 })}
+					unvinculateMaterial={() => updateCompositionItemHolder({ materialId: null, descricao: "", valor: 0, materialImagemUrl: null })}
 				/>
 				<div className="flex w-full flex-wrap items-center justify-center gap-2">
 					{PurchaseCompositionItemCategories.map((category) => (

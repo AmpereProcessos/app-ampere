@@ -1,5 +1,3 @@
-"use client";
-
 import { SESSION_COOKIE_NAME } from "@/config";
 import ClientsBirthdays from "@/components/identificador/dashboard/ClientsBirthdays";
 import SalesRanking from "@/components/identificador/resultados/SalesRanking";
@@ -16,11 +14,16 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
-import { validateSession } from "@/lib/authentication/session";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
+import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
+import type { TSession } from "@/utils/schemas/session";
+import { TEmployee } from "@/utils/schemas/users";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { useDashboardStats, useGraphsStats, useOverallReport } from "@/utils/methods/query/stats";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { encodeHexLowerCase } from "@oslojs/encoding";
+import dayjs from "dayjs";
 import {
   BadgeDollarSign,
   Check,
@@ -44,21 +47,40 @@ import {
   YAxis,
 } from "recharts";
 import type { GetServerSideProps } from "next";
+import { ObjectId } from "mongodb";
 import { RadialBar, RadialBarChart } from "recharts";
+
+async function getViewTypeFromToken(token: string) {
+  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const admDb = await connectToAdministrationDatabase();
+  const sessionsCollection = admDb.collection<TSession>("sessoes-usuarios");
+  const usersCollection = admDb.collection<TEmployee>("colaboradores");
+
+  const session = await sessionsCollection.findOne({ sessaoId: sessionId });
+  if (!session) return null;
+
+  if (Date.now() > new Date(session.dataExpiracao).getTime()) {
+    await sessionsCollection.deleteOne({ sessaoId: session.sessaoId });
+    return null;
+  }
+
+  if (dayjs().add(15, "days").isAfter(dayjs(session.dataExpiracao))) {
+    await sessionsCollection.updateOne(
+      { sessaoId: sessionId },
+      { $set: { dataExpiracao: dayjs().add(15, "days").toISOString() } },
+    );
+  }
+
+  const user = await usersCollection.findOne({ _id: new ObjectId(session.usuarioId) });
+  return user?.visualizacao?.tipo ?? null;
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const authCookie = context.req.cookies[SESSION_COOKIE_NAME];
   if (!authCookie) return { props: {} };
 
-  if (!authCookie)
-    return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
-    };
-  const session = await validateSession(authCookie);
-  if (session?.user?.visualizacao?.tipo === "EXECUÇÃO") {
+  const viewType = await getViewTypeFromToken(authCookie);
+  if (viewType === "EXECUÇÃO") {
     return {
       redirect: {
         destination: "/ordens-de-servico/roteiro",

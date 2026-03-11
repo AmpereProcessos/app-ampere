@@ -1,4 +1,5 @@
 import type { TAuthSession } from "@/lib/authentication/types";
+import { getVehicleReviewAlertLevelByKmDifference } from "@/lib/property-usage";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import {
   PropertyTemporaryUsageSchema,
@@ -10,7 +11,35 @@ import clientPromise from "@/utils/services/mongodb/mongo-client";
 import createHttpError from "http-errors";
 import { type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
+import nodemailer from "nodemailer";
 import { z } from "zod";
+
+const VEHICLE_REVIEW_ALERT_EMAIL = "comercial@ampereenergias.com.br";
+
+type TVehicleReviewAlertEmailPayload = {
+  subject: string;
+  message: string;
+};
+
+async function sendVehicleReviewAlertEmail(payload: TVehicleReviewAlertEmailPayload) {
+  const msg = {
+    from: "ampereprocessos@email.com",
+    to: VEHICLE_REVIEW_ALERT_EMAIL,
+    subject: payload.subject,
+    text: payload.message,
+  };
+  await nodemailer
+    .createTransport({
+      service: "gmail",
+      auth: {
+        user: "ampereprocessos@gmail.com",
+        pass: "ccyecqdvssayztwe",
+      },
+      port: 587,
+      host: "smtp.gmail.com",
+    })
+    .sendMail(msg);
+}
 
 const PropertyTemporaryUsagesByPeriodQueryParams = z.object({
   search: z.string({ invalid_type_error: "Tipo não válido para o search." }).optional().nullable(),
@@ -225,6 +254,7 @@ async function updateTemporaryUsageRoute({
   });
   const dbClient = await clientPromise;
   const dbSession = dbClient.startSession();
+  let vehicleReviewAlertEmailPayload: TVehicleReviewAlertEmailPayload | null = null;
 
   try {
     const transactionResult = await dbSession.withTransaction(async () => {
@@ -292,6 +322,29 @@ async function updateTemporaryUsageRoute({
             },
           );
         }
+        if (currentProperty.metadados.tipo === "VEÍCULO") {
+          const kmDifferenceUntilNextReview =
+            currentProperty.metadados.kmProximaRevisao - finalKilometers;
+          const vehicleReviewAlertLevel = getVehicleReviewAlertLevelByKmDifference(
+            kmDifferenceUntilNextReview,
+          );
+          if (vehicleReviewAlertLevel) {
+            vehicleReviewAlertEmailPayload = {
+              subject: `[ALERTA] Revisao de veiculo ${currentProperty.identificador}`,
+              message: [
+                "Atenção: a kilometragem de revisão do veículo está próxima/atingida.",
+                "",
+                `Propriedade: ${currentProperty.nome} (${currentProperty.identificador})`,
+                `Quilometragem atual: ${finalKilometers}km`,
+                `Próxima revisão: ${currentProperty.metadados.kmProximaRevisao}km`,
+                `Diferença para revisão: ${kmDifferenceUntilNextReview}km`,
+                `Nível de alerta: ${vehicleReviewAlertLevel.text}`,
+                "",
+                vehicleReviewAlertLevel.call,
+              ].join("\n"),
+            };
+          }
+        }
 
         const updatedProperty = await propertiesCollection.updateOne(
           { _id: new ObjectId(updatedPropertyUsage.propriedade.id) },
@@ -312,6 +365,20 @@ async function updateTemporaryUsageRoute({
         message: "Uso temporário atualizado com sucesso.",
       };
     });
+    if (vehicleReviewAlertEmailPayload) {
+      try {
+        await sendVehicleReviewAlertEmail(vehicleReviewAlertEmailPayload);
+      } catch (error) {
+        console.warn(
+          "[WARNING] [UPDATE TEMPORARY USAGE] Failed to send vehicle review alert email",
+          {
+            error,
+            emailTo: VEHICLE_REVIEW_ALERT_EMAIL,
+            propertyId: payload.changes.propriedade.id,
+          },
+        );
+      }
+    }
     return transactionResult as { data: { updatedId: string }; message: string };
   } catch (error) {
     console.log("[ERROR] [UPDATE TEMPORARY USAGE] Transaction failed", { error });

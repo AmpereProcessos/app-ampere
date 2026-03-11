@@ -1,54 +1,10 @@
 import ErrorPage from "@/components/utils/ErrorPage";
 import LoadingPage from "@/components/utils/LoadingPage";
-import type { TGetTemporaryUsageByPropertyOutput } from "@/pages/api/propriedades/uso-temporario/propriedade";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useOpenPropertyTemporaryUsageByPropertyId } from "@/utils/methods/query/properties";
-import type { TPropertyTemporaryUsage } from "@/utils/schemas/properties";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import Logo from "../../../utils/images/logo-sem-texto.png";
-import { useEmployeeBySearch } from "@/utils/methods/query/users";
-import TextInput from "@/components/inputs/Text";
-import { formatNameAsInitials, formatToCPForCNPJ } from "@/utils/methods/formatting";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  AlertCircle,
-  BadgeCheck,
-  Car,
-  Check,
-  CloudUpload,
-  Code,
-  FileStack,
-  IdCard,
-  Lock,
-  Paperclip,
-  Phone,
-  Plus,
-  UserRound,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import { getFileTypeTitle, isFileImage, SlideMotionVariants } from "@/utils/constants";
-import NumberInput from "@/components/inputs/Number";
-import {
-  DOCUMENTS_BY_USAGE_TYPE,
-  getVehicleReviewAlertLevelByKmDifference,
-} from "@/lib/property-usage";
-import { renderIconWithClassNames } from "@/utils/methods/rendering";
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import { useMutation } from "@tanstack/react-query";
-import { handleMultipleAttachmentsUpdate, type TAttachmentState } from "@/utils/methods/uploading";
-import { createPropertyUsage, updatePropertyUsage } from "@/utils/methods/mutation/properties";
-import toast from "react-hot-toast";
-import {
-  usePropertyUsageStore,
-  PropertyUsageProvider,
-  TPropertyUsageStore,
-} from "@/utils/stores/property-usage";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import TextareaInput from "@/components/inputs/TextareaInput";
-import VehicleUsageStart from "@/components/identificador/propriedades/usos-temporarios/VehicleUsageStart";
+
+import { PropertyUsageProvider, TPropertyUsageStore } from "@/utils/stores/property-usage";
 import VehicleUsage from "@/components/identificador/propriedades/usos-temporarios/VehicleUsage";
 
 function PublicPropertyTemporaryUsagePage() {

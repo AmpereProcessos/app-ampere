@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Html } from "next/document";
 import { Raleway } from "next/font/google";
 import { useState } from "react";
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
 
 import { Toaster } from "react-hot-toast";
 
@@ -28,24 +29,26 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
 			<AppHead />
 			<QueryClientProvider client={queryClient}>
 				<ConvexClientProvider>
-					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-						<main className={cn("bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen", raleway.variable, raleway.className)}>
-							<Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
-							<div className="flex min-h-full grow">
-								{sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
-								<div
-									style={{
-										width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
-									}}
-									data-expanded={sidebarVisible ? "true" : "false"}
-									className={`${sidebarVisible ? "hidden lg:flex lg:flex-col" : "flex flex-col"} grow`}
-								>
-									<Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible((prev) => !prev)} {...pageProps} />
-									<Toaster />
+					<NuqsAdapter>
+						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+							<main className={cn("bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen", raleway.variable, raleway.className)}>
+								<Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
+								<div className="flex min-h-full grow">
+									{sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
+									<div
+										style={{
+											width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
+										}}
+										data-expanded={sidebarVisible ? "true" : "false"}
+										className={`${sidebarVisible ? "hidden lg:flex lg:flex-col" : "flex flex-col"} grow`}
+									>
+										<Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible((prev) => !prev)} {...pageProps} />
+										<Toaster />
+									</div>
 								</div>
-							</div>
-						</main>
-					</ThemeProvider>
+							</main>
+						</ThemeProvider>
+					</NuqsAdapter>
 				</ConvexClientProvider>
 			</QueryClientProvider>
 		</>

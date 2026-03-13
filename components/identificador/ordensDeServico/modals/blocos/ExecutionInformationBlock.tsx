@@ -8,6 +8,8 @@ import { TProject } from "@/utils/schemas/projects";
 import { getServiceObservationsFromObras } from "@/utils/methods/util/service-order";
 import { toast } from "react-hot-toast";
 import ServiceOrderHistoryBlock from "./utils/History";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderExecutionInformationBlockProps = {
 	infoHolder: TServiceOrder;
@@ -22,8 +24,7 @@ function ServiceOrderExecutionInformationBlock({ infoHolder, updateInfoHolder, p
 		toast.success("Observações da obra foram adicionadas à OS.");
 	}
 	return (
-		<div className="flex w-full flex-col items-center gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DE EXECUÇÃO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DE EXECUÇÃO" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
 				Defina aqui, uma vez iniciada (ou concluída), o período de execução do serviço.
 			</p>
@@ -57,7 +58,7 @@ function ServiceOrderExecutionInformationBlock({ infoHolder, updateInfoHolder, p
 				/>
 			</div>
 			<ServiceOrderHistoryBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

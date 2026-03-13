@@ -12,6 +12,7 @@ import { BsCalendarCheck, BsCalendarEvent } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import {
   Building2,
+  CheckCheck,
   LayoutGrid,
   MapPin,
   Paperclip,
@@ -34,10 +35,16 @@ import {
   handleRenderFileIconWithClassNames,
 } from "@/utils/methods/rendering";
 import Image from "next/image";
+import { MdRoofing } from "react-icons/md";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateServiceOrder } from "@/utils/methods/mutation/service-orders";
+import toast from "react-hot-toast";
 
 function dateLabel(input: string) {
   const date = new Date(input);
-  if (Number.isNaN(date.getTime())) return "Sem data";
+  if (Number.isNaN(date.getTime())) return "SEM AGENDAMENTO";
   return new Intl.DateTimeFormat("pt-BR", {
     weekday: "short",
     day: "numeric",
@@ -104,14 +111,17 @@ function ServiceOrdersItineraryPage({
   sessionUserReferenceViewParam,
   session,
 }: ServiceOrdersItineraryPageProps) {
-  const [openedOrderId, setOpenedOrderId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const {
     data: orders,
     isLoading,
     isError,
     error,
+    filters,
+    queryKey,
+    updateFilters,
   } = useServiceOrdersItinerary({
-    params: {
+    initialFilters: {
       page: 1,
       search: "",
       responsibleNames: [sessionUserReferenceViewParam],
@@ -149,19 +159,34 @@ function ServiceOrdersItineraryPage({
     return Array.from(grouped.entries()).map(([, group]) => group);
   }, [orders?.serviceOrders]);
 
-  if (isLoading) {
-    return (
-      <div className="bg-background flex grow items-center justify-center p-6">
-        <LoadingComponent />
-      </div>
-    );
-  }
-  if (isError) return <ErrorComponent msg={getErrorMessage(error)} />;
-
+  const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey: queryKey });
+  const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey: queryKey });
   return (
     <div className="bg-background flex grow flex-col gap-4 p-4 md:p-6">
       <h1 className="text-lg font-bold md:text-xl">ITINERÁRIO DE SERVIÇOS</h1>
-
+      <div className="w-full flex flex-col gap-1">
+        <Input
+          placeholder="Pesquise pelo serviço..."
+          value={filters.search ?? ""}
+          onChange={(e) => updateFilters({ search: e.target.value })}
+          className="w-full rounded-lg text-xs"
+        />
+        <div className="w-full flex items-center justify-end">
+          <Button
+            size={"fit"}
+            variant={filters.pendingConclusionOnly ? "default" : "ghost"}
+            className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
+            onClick={() => updateFilters({ pendingConclusionOnly: !filters.pendingConclusionOnly })}
+          >
+            SOMENTE PENDENTES
+          </Button>
+        </div>
+      </div>
+      {isLoading ? (
+        <LoadingComponent />
+      ) : isError ? (
+        <ErrorComponent msg={getErrorMessage(error)} />
+      ) : null}
       {groupedByDate.length === 0 ? (
         <div className="text-primary/70 rounded-lg border border-dashed p-6 text-center">
           Nenhuma ordem de serviço encontrada para este responsável.
@@ -176,7 +201,15 @@ function ServiceOrdersItineraryPage({
 
             <div className="flex flex-col gap-3">
               {group.orders.map((order) => (
-                <ServiceOrderCard key={order._id} serviceOrder={order} />
+                <ServiceOrderCard
+                  key={order._id}
+                  sessionUserId={session.user.id}
+                  serviceOrder={order}
+                  callbacks={{
+                    onMutate: handleOnMutate,
+                    onSettled: handleOnSettled,
+                  }}
+                />
               ))}
             </div>
           </section>
@@ -187,9 +220,20 @@ function ServiceOrdersItineraryPage({
 }
 
 type ServiceOrderCardProps = {
+  sessionUserId: string;
   serviceOrder: TGetServiceOrdersItineraryOutputDefault["serviceOrders"][number];
+  callbacks?: {
+    onMutate?: () => void;
+    onSuccess?: () => void;
+    onSettled?: () => void;
+    onError?: () => void;
+  };
 };
-function ServiceOrderCard({ serviceOrder }: ServiceOrderCardProps) {
+function ServiceOrderCard({ sessionUserId, serviceOrder, callbacks }: ServiceOrderCardProps) {
+  const userResponsible = useMemo(() => {
+    return serviceOrder.responsaveis.find((r) => r.id === sessionUserId);
+  }, [serviceOrder.responsaveis, sessionUserId]);
+
   const [attachmentsViewIsOpen, setAttachmentsViewIsOpen] = useState(false);
   function getModulesString() {
     if (!serviceOrder.equipamentos.modulos.qtde) return null;
@@ -233,15 +277,60 @@ function ServiceOrderCard({ serviceOrder }: ServiceOrderCardProps) {
       ) ?? null,
     [serviceOrder.arquivos],
   );
+
+  const { mutate: handleUpdateServiceOrderMutation, isPending } = useMutation({
+    mutationKey: ["update-service-order"],
+    mutationFn: updateServiceOrder,
+    onMutate: async () => {
+      if (callbacks?.onMutate) callbacks.onMutate();
+    },
+    onSuccess: async (data) => {
+      if (callbacks?.onSuccess) callbacks.onSuccess();
+      return toast.success(data);
+    },
+    onSettled: async () => {
+      if (callbacks?.onSettled) callbacks.onSettled();
+    },
+    onError: (error) => {
+      const msg = getErrorMessage(error);
+      if (callbacks?.onError) callbacks.onError();
+      return toast.error(msg);
+    },
+  });
+
+  function handleAssumeServiceOrder() {
+    const updatedServiceOrderResponsibles = serviceOrder.responsaveis.map((r) =>
+      r.id === sessionUserId ? { ...r, dataValidacao: new Date().toISOString() } : r,
+    );
+
+    handleUpdateServiceOrderMutation({
+      id: serviceOrder._id,
+      changes: {
+        responsaveis: updatedServiceOrderResponsibles,
+      },
+    });
+  }
   return (
     <div className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full items-center justify-between gap-2 flex-col-reverse lg:flex-row">
         <div className="flex w-full items-center justify-start gap-1 lg:w-fit">
           <h1 className="text-xs font-bold tracking-tight lg:text-sm">{serviceOrder.descricao}</h1>
         </div>
-        <div className="flex min-w-fit items-center gap-1 rounded-lg bg-primary/20 text-primary px-2 py-1">
-          <Tag className="w-4 h-4 min-w-4 min-h-4" />
-          <h1 className="text-[0.65rem] font-medium">{serviceOrder.categoria}</h1>
+        <div className="flex items-center gap-1">
+          <div className="flex min-w-fit items-center gap-1 rounded-lg bg-primary/20 text-primary px-2 py-1">
+            <Tag className="w-4 h-4 min-w-4 min-h-4" />
+            <h1 className="text-[0.65rem] font-medium">{serviceOrder.categoria}</h1>
+          </div>
+          {!userResponsible?.dataValidacao ? (
+            <button
+              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-green-600 text-white"
+              onClick={handleAssumeServiceOrder}
+              disabled={isPending}
+            >
+              <CheckCheck className="w-3 h-3 min-w-3 min-h-3" />
+              <p className="text-[0.6rem] font-medium tracking-tight">ASSUMIR OBRA</p>
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="w-full flex items-center gap-x-2 gap-y-1 flex-wrap">
@@ -280,6 +369,12 @@ function ServiceOrderCard({ serviceOrder }: ServiceOrderCardProps) {
           <div className="flex items-center gap-1">
             <TbTopologyFull className="w-4 h-4 min-w-4 min-h-4" />
             <h1 className="text-[0.65rem] font-medium">{invertersString}</h1>
+          </div>
+        ) : null}
+        {serviceOrder.detalhes.tipoTelha ? (
+          <div className="flex items-center gap-1">
+            <MdRoofing className="w-4 h-4 min-w-4 min-h-4" />
+            <h1 className="text-[0.65rem] font-medium">TELHA: {serviceOrder.detalhes.tipoTelha}</h1>
           </div>
         ) : null}
       </div>

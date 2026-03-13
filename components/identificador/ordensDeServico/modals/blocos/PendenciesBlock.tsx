@@ -2,14 +2,15 @@ import React from "react";
 import { TServiceOrder } from "@/utils/schemas/service-order";
 import CheckboxInput from "@/components/inputs/Checkbox";
 import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 type ServiceOrderPendenciesBlockProps = {
 	infoHolder: TServiceOrder;
 	updateInfoHolder: (changes: Partial<TServiceOrder>) => void;
 };
 function ServiceOrderPendenciesBlock({ infoHolder, updateInfoHolder }: ServiceOrderPendenciesBlockProps) {
 	return (
-		<div className="flex w-full flex-col items-center gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">PENDÊNCIAS</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="PENDÊNCIAS" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<div className="flex w-full flex-wrap items-center justify-center gap-2">
 				<div className="w-fit">
 					<CheckboxWithDate
@@ -43,7 +44,7 @@ function ServiceOrderPendenciesBlock({ infoHolder, updateInfoHolder }: ServiceOr
 					/>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

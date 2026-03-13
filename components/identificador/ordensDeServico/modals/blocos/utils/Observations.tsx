@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 import TextInput from "@/components/inputs/Text";
 import TextareaInput from "@/components/inputs/TextareaInput";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 import { cn } from "@/lib/utils";
 import { GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
@@ -28,8 +29,7 @@ function ServiceOrderObservationsBlock({ infoHolder, updateInfoHolder, useObserv
 		updateInfoHolder({ observacoes: infoHolder.observacoes.filter((x, i) => i != index) });
 	}
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">INSTRUÇÕES PARA EXECUÇÃO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INSTRUÇÕES PARA EXECUÇÃO" sectionTitleIcon={<MdAddBox size={15} />}>
 			<div className="flex w-full items-center justify-end gap-2">
 				{useObservationsFromProject ? (
 					<button
@@ -64,7 +64,7 @@ function ServiceOrderObservationsBlock({ infoHolder, updateInfoHolder, useObserv
 					<p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhuma observação adicionada ao projeto.</p>
 				)}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

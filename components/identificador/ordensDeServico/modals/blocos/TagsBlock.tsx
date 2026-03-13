@@ -1,6 +1,8 @@
 import type { TServiceOrder, TServiceOrderTagDTO } from "@/utils/schemas/service-order";
 import { GeneralTagsHolder } from "@/components/identificador/etiquetas/TagsMenu";
 import type { TAuthSession } from "@/lib/authentication/types";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderTagsBlockProps = {
 	session: TAuthSession;
@@ -16,8 +18,7 @@ function ServiceOrderTagsBlock({ session, infoHolder, updateInfoHolder }: Servic
 		updateInfoHolder({ etiquetas: (infoHolder.etiquetas || []).filter((e) => e.id !== tagId) });
 	}
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">ETIQUETAS DA ORDEM DE SERVIÇO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="ETIQUETAS DA ORDEM DE SERVIÇO" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<GeneralTagsHolder
 				session={session}
 				applicableTagsIds={infoHolder.etiquetas?.map((c) => c.id) || []}
@@ -34,7 +35,7 @@ function ServiceOrderTagsBlock({ session, infoHolder, updateInfoHolder }: Servic
 					compras: true,
 				}}
 			/>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

@@ -489,6 +489,7 @@ async function getServiceOrderById({ collection, id }: GetServiceOrderByIdParams
           etiquetas: 1,
           localizacao: 1,
           responsavel: 1,
+          responsaveis: 1,
           urgencia: 1,
           anotacoes: 1,
           detalhes: 1,

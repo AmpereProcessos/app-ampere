@@ -12,6 +12,7 @@ import { IoMdAdd } from "react-icons/io";
 import toast from "react-hot-toast";
 import { MdContentCopy } from "react-icons/md";
 import { cn } from "@/lib/utils";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type ServiceOrderEquipmentsInformationBlockProps = {
 	infoHolder: TServiceOrder;
@@ -128,8 +129,7 @@ function ServiceOrderEquipmentsInformationBlock({
 			: false,
 	}).every((r) => r);
 	return (
-		<div className="flex w-full flex-col items-center gap-4">
-			<h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">EQUIPAMENTOS</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="EQUIPAMENTOS" sectionTitleIcon={<Box size={15} />}>
 			<div className="flex w-full flex-col gap-2">
 				<div className="flex w-full items-center justify-end">
 					{project && !isServiceOrderInformationEqualToProject ? (
@@ -164,7 +164,7 @@ function ServiceOrderEquipmentsInformationBlock({
 					</div>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

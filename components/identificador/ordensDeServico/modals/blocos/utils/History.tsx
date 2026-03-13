@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { BsCalendar } from "react-icons/bs";
 import { MdAddBox } from "react-icons/md";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type HistoryBlockProps = {
 	infoHolder: TServiceOrder;
@@ -26,8 +27,7 @@ function ServiceOrderHistoryBlock({ infoHolder, updateInfoHolder }: HistoryBlock
 		});
 	}
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="w-full rounded-md bg-blue-500 p-1 text-center text-sm font-bold text-white">REGISTRO DE ATIVIDADES</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="REGISTRO DE ATIVIDADES" sectionTitleIcon={<BsCalendar size={12} />}>
 			<p className="text-primary/80 my-1 w-full text-center text-sm font-light tracking-tighter">
 				Preencha aqui, se aplicável, o histórico detalhado de atividades executadas no serviço.
 			</p>
@@ -60,7 +60,7 @@ function ServiceOrderHistoryBlock({ infoHolder, updateInfoHolder }: HistoryBlock
 					<p className="text-primary/60 w-full text-center text-sm font-medium tracking-tight">Nenhum registro de atividade adicionado.</p>
 				)}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

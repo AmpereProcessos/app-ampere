@@ -257,9 +257,27 @@ async function fetchServiceOrdersItinerary({
   return data.data.default;
 }
 
-export function useServiceOrdersItinerary({ params }: { params: TGetServiceOrdersItineraryInput }) {
-  return useQuery({
-    queryKey: ["service-orders-itinerary", params],
-    queryFn: async () => await fetchServiceOrdersItinerary({ params }),
+export function useServiceOrdersItinerary({
+  initialFilters,
+}: {
+  initialFilters: Partial<TGetServiceOrdersItineraryInput>;
+}) {
+  const [filters, setFilters] = useState<TGetServiceOrdersItineraryInput>({
+    page: initialFilters.page || 1,
+    search: initialFilters.search || "",
+    responsibleNames: initialFilters.responsibleNames || [],
+    pendingConclusionOnly: initialFilters.pendingConclusionOnly || false,
   });
+  function updateFilters(filters: Partial<TGetServiceOrdersItineraryInput>) {
+    setFilters((prev) => ({ ...prev, ...filters }));
+  }
+  return {
+    ...useQuery({
+      queryKey: ["service-orders-itinerary", filters],
+      queryFn: async () => await fetchServiceOrdersItinerary({ params: filters }),
+    }),
+    queryKey: ["service-orders-itinerary", filters],
+    filters,
+    updateFilters,
+  };
 }

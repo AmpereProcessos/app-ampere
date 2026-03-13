@@ -3,6 +3,8 @@ import { formatDateTimeForInput } from "@/utils/methods/formatting";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { TServiceOrder } from "@/utils/schemas/service-order";
 import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderSchedulingProps = {
 	infoHolder: TServiceOrder;
@@ -10,8 +12,7 @@ type ServiceOrderSchedulingProps = {
 };
 function ServiceOrderScheduling({ infoHolder, updateInfoHolder }: ServiceOrderSchedulingProps) {
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">AGENDAMENTO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="AGENDAMENTO" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
 				Defina aqui, se desejar, uma data e horário para agendar o início e a conclusão da ordem de serviço.
 			</p>
@@ -49,7 +50,7 @@ function ServiceOrderScheduling({ infoHolder, updateInfoHolder }: ServiceOrderSc
 					</div>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

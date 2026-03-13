@@ -5,6 +5,7 @@ import { CheckCheck } from "lucide-react";
 import useCalendars from "@/utils/methods/query/calendars";
 import { TServiceOrder } from "@/utils/schemas/service-order";
 import SelectInput from "@/components/inputs/Select";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 type ServiceOrderCalendarIntegrationProps = {
 	infoHolder: TServiceOrder;
 	updateInfoHolder: (data: Partial<TServiceOrder>) => void;
@@ -18,11 +19,7 @@ function ServiceOrderCalendarIntegration({ infoHolder, updateInfoHolder }: Servi
 		updateInfoHolder({ calendarioId: value, googleCalendarId: calendar?.googleCalendarId });
 	}
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<div className="flex w-full items-center justify-center gap-2 rounded bg-primary p-1">
-				<Image src={GoogleLogo} alt="Google Logo" width={15} height={15} />
-				<h1 className="text-center font-bold text-primary-foreground">INTEGRAÇÃO COM GOOGLE CALENDAR</h1>
-			</div>
+		<ResponsiveDialogDrawerSection sectionTitleText="INTEGRAÇÃO COM GOOGLE CALENDAR" sectionTitleIcon={<Image src={GoogleLogo} alt="Google Logo" width={15} height={15} />}>
 			<p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
 				Defina aqui o calendário que será utilizado para agendar o serviço no Google Calendar.
 			</p>
@@ -47,7 +44,7 @@ function ServiceOrderCalendarIntegration({ infoHolder, updateInfoHolder }: Servi
 					</div>
 				) : null}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

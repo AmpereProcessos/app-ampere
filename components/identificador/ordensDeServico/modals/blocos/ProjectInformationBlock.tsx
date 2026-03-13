@@ -34,6 +34,7 @@ import { AiOutlineSafety } from "react-icons/ai";
 import { BsCalendar, BsCalendarCheck, BsCalendarEvent } from "react-icons/bs";
 import { FaBolt, FaIndustry, FaUser, FaUserAlt } from "react-icons/fa";
 import { MdOutlineMiscellaneousServices, MdSync } from "react-icons/md";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type ServiceOrderProjectInformationBlockProps = {
 	project: TServiceOrderProject;
@@ -63,8 +64,7 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 		onSuccess: () => toast.success("Dados sincronizados no projeto."),
 	});
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">INFORMAÇÕES DO PROJETO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DO PROJETO" sectionTitleIcon={<Building2 size={15} />}>
 			<div className="flex w-full items-center justify-center">
 				{project.idOrdemServico ? (
 					<button
@@ -255,7 +255,7 @@ function ServiceOrderProjectInformationBlock({ project, infoHolder, updateInfoHo
 					<ServiceOrderProjectAllocationsList project={project} allocations={project.alocacoes} />
 				) : null}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

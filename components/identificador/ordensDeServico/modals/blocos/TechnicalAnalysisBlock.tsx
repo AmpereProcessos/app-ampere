@@ -7,6 +7,7 @@ import { useTechnicalAnalysisById } from "@/utils/methods/query/technical-analys
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import { useState } from "react";
 import { TbReportAnalytics } from "react-icons/tb";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type ServiceOrderTechnicalAnalysisInformationBlockProps = {
 	technicalAnalysisId: TServiceOrder["idAnaliseTecnica"];
@@ -15,8 +16,7 @@ function ServiceOrderTechnicalAnalysisInformationBlock({ technicalAnalysisId }: 
 	const [technicalAnalysisBlockIsOpen, setTechnicalAnalysisBlockIsOpen] = useState<boolean>(false);
 
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">INFORMAÇÕES DA ANÁLISE TÉCNICA</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DA ANÁLISE TÉCNICA" sectionTitleIcon={<TbReportAnalytics size={15} />}>
 			{technicalAnalysisId ? (
 				<div className="flex w-full flex-col gap-2">
 					<div className="flex w-full items-center justify-center">
@@ -39,7 +39,7 @@ function ServiceOrderTechnicalAnalysisInformationBlock({ technicalAnalysisId }: 
 			) : (
 				<div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma Análise Técnica vinculada.</div>
 			)}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 export default ServiceOrderTechnicalAnalysisInformationBlock;

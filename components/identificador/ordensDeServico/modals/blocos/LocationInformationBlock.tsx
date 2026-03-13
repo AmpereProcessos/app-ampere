@@ -8,6 +8,8 @@ import { estadosECidades } from "@/utils/estados_cidades";
 import { formatToCEP } from "@/utils/methods/formatting";
 import { cn } from "@/lib/utils";
 import { MdContentCopy } from "react-icons/md";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderLocationInformationBlockProps = {
 	infoHolder: TServiceOrder;
@@ -69,8 +71,7 @@ function ServiceOrderLocationInformationBlock({ infoHolder, updateInfoHolder, pr
 	}).every((r) => r);
 
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">LOCALIZAÇÃO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="LOCALIZAÇÃO" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<div className="flex w-full flex-col gap-2">
 				<div className="flex w-full items-center justify-end">
 					{project && !isServiceOrderInformationEqualToProject ? (
@@ -195,7 +196,7 @@ function ServiceOrderLocationInformationBlock({ infoHolder, updateInfoHolder, pr
 					</div>
 				</div>
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

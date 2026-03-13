@@ -9,6 +9,7 @@ import { FaLink } from "react-icons/fa";
 import { type QueryClient, useMutation } from "@tanstack/react-query";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import { updateServiceOrder } from "@/utils/methods/mutation/service-orders";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type ProjectVinculationProps = {
 	serviceOrderId?: string;
@@ -54,8 +55,7 @@ function ServiceOrderProjectVinculation({ serviceOrderId, queryClient, affectedQ
 		return "Vinculação feita com sucesso !";
 	}
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">INFORMAÇÕES DO PROJETO</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DO PROJETO" sectionTitleIcon={<FaLink size={12} />}>
 			<div className="flex w-full flex-col items-center justify-center gap-1">
 				<h1 className="w-full text-center text-sm font-medium tracking-tight text-primary/80">Nenhum projeto vinculado.</h1>
 				<button
@@ -70,7 +70,7 @@ function ServiceOrderProjectVinculation({ serviceOrderId, queryClient, affectedQ
 					<ProjectVinculationMenu handleSelect={(projectSimplified) => mutate(projectSimplified)} closeModal={() => setVinculationModalIsOpen(false)} />
 				) : null}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

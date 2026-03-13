@@ -10,6 +10,7 @@ import type { TAuthSession } from "@/lib/authentication/types";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { MdAttachFile, MdDashboard } from "react-icons/md";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 
 type ServiceOrderFileReferencesProps = {
 	attachmentPrefix: string;
@@ -36,8 +37,7 @@ function ServiceOrderFileReferences({ attachmentPrefix, session, projectId, serv
 	}
 
 	return (
-		<div className="flex w-full grow flex-col gap-4">
-			<h1 className="bg-primary text-primary-foreground w-full rounded p-1 text-center font-bold">ARQUIVOS</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="ARQUIVOS" sectionTitleIcon={<MdAttachFile size={15} />}>
 			<div className="flex w-full items-center justify-end">
 				{projectId ? (
 					<button
@@ -90,7 +90,7 @@ function ServiceOrderFileReferences({ attachmentPrefix, session, projectId, serv
 					closeMenu={() => setNewFileReferencesMenuIsOpen(false)}
 				/>
 			) : null}
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

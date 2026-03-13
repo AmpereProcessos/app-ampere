@@ -4,6 +4,8 @@ import TextInput from "@/components/inputs/Text";
 import { tiposDeEstruturas, tiposDePadrao, tiposDeTelha } from "@/utils/constants";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import React from "react";
+import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderDetailsInformationBlockProps = {
 	infoHolder: TServiceOrder;
@@ -11,8 +13,7 @@ type ServiceOrderDetailsInformationBlockProps = {
 };
 function ServiceOrderDetailsInformationBlock({ infoHolder, updateInfoHolder }: ServiceOrderDetailsInformationBlockProps) {
 	return (
-		<div className="flex w-full flex-col items-center gap-4">
-			<h1 className="w-full rounded bg-primary p-1 text-center font-bold text-primary-foreground">DETALHES</h1>
+		<ResponsiveDialogDrawerSection sectionTitleText="DETALHES" sectionTitleIcon={<LayoutGrid size={15} />}>
 			<div className="flex w-full flex-col gap-2">
 				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
 					<div className="w-full lg:w-1/3">
@@ -151,7 +152,7 @@ function ServiceOrderDetailsInformationBlock({ infoHolder, updateInfoHolder }: S
 					</div>
 				) : null}
 			</div>
-		</div>
+		</ResponsiveDialogDrawerSection>
 	);
 }
 

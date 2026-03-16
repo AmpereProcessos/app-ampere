@@ -16,7 +16,7 @@ import {
   formatNameAsInitials,
   formatToPhone,
 } from "@/utils/methods/formatting";
-import { useEmployees } from "@/utils/methods/query/users";
+import { useEmployeesSimplified } from "@/utils/methods/query/users";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TServiceOrder, TServiceOrderProject } from "@/utils/schemas/service-order";
 import { ServiceOrderStatus } from "@/utils/select-options";
@@ -36,7 +36,6 @@ type ServiceOrderGeneralInformationBlockProps = {
 function ServiceOrderGeneralInformationBlock({
   infoHolder,
   updateInfoHolder,
-  predefinedCategories,
   project,
 }: ServiceOrderGeneralInformationBlockProps) {
   const {
@@ -44,7 +43,7 @@ function ServiceOrderGeneralInformationBlock({
     isLoading: isLoadingEmployees,
     isError: isErrorEmployees,
     error: employeesError,
-  } = useEmployees({});
+  } = useEmployeesSimplified({});
   function handleEffectivationUpdate(
     newValue: TServiceOrder["status"],
     previousData: TServiceOrder,

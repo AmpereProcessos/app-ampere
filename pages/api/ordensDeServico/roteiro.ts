@@ -82,7 +82,7 @@ async function getServiceOrdersItinerary({
 
   const responsibleQuery =
     responsibleNames && responsibleNames.length > 0
-      ? { "responsavel.nome": { $in: responsibleNames } }
+      ? { "responsavel.id": { $in: responsibleNames } }
       : {};
 
   const pendingConclusionQuery = pendingConclusionOnly ? { dataEfetivacao: null } : {};
@@ -98,8 +98,12 @@ async function getServiceOrdersItinerary({
   const totalPages = 1;
   const serviceOrdersUnsorted = await serviceOrdersCollection.find(query).toArray();
   const serviceOrders = serviceOrdersUnsorted.sort((a, b) => {
-    const dateA = a.agendamento?.inicio ? new Date(a.agendamento.inicio).getTime() : Number.POSITIVE_INFINITY;
-    const dateB = b.agendamento?.inicio ? new Date(b.agendamento.inicio).getTime() : Number.POSITIVE_INFINITY;
+    const dateA = a.agendamento?.inicio
+      ? new Date(a.agendamento.inicio).getTime()
+      : Number.POSITIVE_INFINITY;
+    const dateB = b.agendamento?.inicio
+      ? new Date(b.agendamento.inicio).getTime()
+      : Number.POSITIVE_INFINITY;
 
     if (dateA !== dateB) return dateA - dateB;
 

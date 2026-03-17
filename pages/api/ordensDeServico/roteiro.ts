@@ -21,7 +21,8 @@ const GetServiceOrdersItinerarySchema = z.object({
       invalid_type_error: "Tipo não válido para página.",
     })
     .transform((v) => Number(v)),
-  responsibleNames: z
+
+  responsibleIds: z
     .string({
       invalid_type_error: "Tipo não válido para lista de nomes de responsáveis.",
     })
@@ -45,14 +46,11 @@ async function getServiceOrdersItinerary({
   params: TGetServiceOrdersItineraryInput;
   session: TAuthSession;
 }) {
-  const { search, responsibleNames, pendingConclusionOnly } = params;
+  const { search, responsibleIds, pendingConclusionOnly } = params;
   const userViewMode = session.user.visualizacao.tipo;
 
   // Checking for attempts to see beyond user reference scope
-  if (
-    userViewMode === "EXECUÇÃO" &&
-    !responsibleNames?.includes(session.user.visualizacao.referencia ?? "")
-  )
+  if (userViewMode === "EXECUÇÃO" && !responsibleIds?.includes(session.user.id ?? ""))
     throw new createHttpError.BadRequest("Você não tem permissão para acessar esta página.");
 
   const appDb = await connectToDatabase();
@@ -74,15 +72,15 @@ async function getServiceOrdersItinerary({
             { "projeto.nome": { $regex: search, $options: "i" } },
             { "projeto.nome": search },
 
-            { "responsavel.nome": { $regex: search, $options: "i" } },
-            { "responsavel.nome": search },
+            { "responsaveis.nome": { $regex: search, $options: "i" } },
+            { "responsaveis.nome": search },
           ],
         }
       : {};
 
   const responsibleQuery =
-    responsibleNames && responsibleNames.length > 0
-      ? { "responsavel.id": { $in: responsibleNames } }
+    responsibleIds && responsibleIds.length > 0
+      ? { "responsaveis.id": { $in: responsibleIds } }
       : {};
 
   const pendingConclusionQuery = pendingConclusionOnly ? { dataEfetivacao: null } : {};
@@ -92,7 +90,7 @@ async function getServiceOrdersItinerary({
       (r) => Object.keys(r).length > 0,
     ),
   };
-
+  console.log("[SERVICE-ORDERS-ITINERARY] Query:", JSON.stringify(query, null, 2));
   const serviceOrdersMatched = await serviceOrdersCollection.countDocuments(query);
 
   const totalPages = 1;

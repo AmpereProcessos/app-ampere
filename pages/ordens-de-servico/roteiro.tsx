@@ -124,7 +124,7 @@ function ServiceOrdersItineraryPage({
     initialFilters: {
       page: 1,
       search: "",
-      responsibleNames: [sessionUserReferenceViewParam],
+      responsibleIds: [session.user.id],
       pendingConclusionOnly: true,
     },
   });

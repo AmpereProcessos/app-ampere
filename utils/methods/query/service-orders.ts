@@ -246,8 +246,7 @@ async function fetchServiceOrdersItinerary({
   const searchParams = new URLSearchParams();
   if (params.search) searchParams.set("search", params.search);
   if (params.page) searchParams.set("page", params.page.toString());
-  if (params.responsibleNames)
-    searchParams.set("responsibleNames", params.responsibleNames.join(","));
+  if (params.responsibleIds) searchParams.set("responsibleIds", params.responsibleIds.join(","));
   if (params.pendingConclusionOnly)
     searchParams.set("pendingConclusionOnly", params.pendingConclusionOnly.toString());
   const { data } = await axios.get<TGetServiceOrdersItineraryOutput>(
@@ -265,7 +264,7 @@ export function useServiceOrdersItinerary({
   const [filters, setFilters] = useState<TGetServiceOrdersItineraryInput>({
     page: initialFilters.page || 1,
     search: initialFilters.search || "",
-    responsibleNames: initialFilters.responsibleNames || [],
+    responsibleIds: initialFilters.responsibleIds || [],
     pendingConclusionOnly: initialFilters.pendingConclusionOnly || false,
   });
   function updateFilters(filters: Partial<TGetServiceOrdersItineraryInput>) {

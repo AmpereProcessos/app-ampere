@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 		console.log(info);
 		if (!dbResponse[0]) res.status(404).json({ error: "ID não fornecido." });
 		const index = dbResponse[0].ordensDeServico ? dbResponse[0].ordensDeServico.at(-1).index + 1 : 0;
-		const newOrder = { ...info, index: index };
+		const newOrder = { ...info, responsaveis: info?.responsaveis || [], index: index };
 		let dbUpdateResponse = await collection.updateOne(
 			{
 				_id: new ObjectId(id),

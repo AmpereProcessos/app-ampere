@@ -95,6 +95,7 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 				nome: project.obra?.equipeResp || "",
 				tipo: project.obra?.equipeResp ? "INTERNO" : "EXTERNO",
 			},
+			responsaveis: [],
 			// configurar: false,
 			urgencia: "POUCO URGENTE",
 			periodo: {

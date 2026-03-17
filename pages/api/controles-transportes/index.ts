@@ -278,6 +278,7 @@ async function updateTransportControl({ input, user }: { input: TUpdateTransport
 						nome: postUpdateProject.obra?.equipeResp || "",
 						tipo: postUpdateProject.obra?.equipeResp ? "INTERNO" : "EXTERNO",
 					},
+					responsaveis: [],
 					// configurar: false,
 					urgencia: "POUCO URGENTE",
 					periodo: {

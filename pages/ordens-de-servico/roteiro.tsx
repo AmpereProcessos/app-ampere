@@ -20,6 +20,7 @@ import {
   Signature,
   Tag,
   UserRound,
+  DownloadIcon,
 } from "lucide-react";
 import { useServiceOrdersItinerary } from "../../utils/methods/query/service-orders";
 import ModalOS from "../../components/ModalOS";
@@ -171,16 +172,6 @@ function ServiceOrdersItineraryPage({
           onChange={(e) => updateFilters({ search: e.target.value })}
           className="w-full rounded-lg text-xs"
         />
-        <div className="w-full flex items-center justify-end">
-          <Button
-            size={"fit"}
-            variant={filters.pendingConclusionOnly ? "default" : "ghost"}
-            className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
-            onClick={() => updateFilters({ pendingConclusionOnly: !filters.pendingConclusionOnly })}
-          >
-            SOMENTE PENDENTES
-          </Button>
-        </div>
       </div>
       {isLoading ? (
         <LoadingComponent />
@@ -474,6 +465,22 @@ function ServiceOrderAttachmentsView({ attachments, closeMenu }: ServiceOrderAtt
                   )}
                 </div>
               )}
+            </div>
+            <div className="w-full flex items-center justify-center">
+              <Button
+                size={"fit"}
+                variant="outline"
+                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
+                onClick={() =>
+                  handleDownload({
+                    fileName: attachment.titulo,
+                    fileUrl: attachment.url,
+                  })
+                }
+              >
+                <DownloadIcon className="w-3 h-3 min-w-3 min-h-3" />
+                <p className="text-[0.6rem] font-medium tracking-tight">BAIXAR</p>
+              </Button>
             </div>
           </div>
         </div>

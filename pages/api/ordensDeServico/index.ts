@@ -365,6 +365,7 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
           "obra.saida": updatedServiceOrder.periodo.fim,
           "obra.statusDaObra": updatedServiceOrder.status,
           "obra.equipeResp": updatedServiceOrder.responsavel.nome,
+          "obra.responsaveis": updatedServiceOrder.responsaveis,
           "obra.observacoes": updatedServiceOrder.observacoes
             .map((p) => `(${p.topico}):${p.descricao}`)
             .join("/"),

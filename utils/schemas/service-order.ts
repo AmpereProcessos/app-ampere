@@ -614,6 +614,7 @@ export const ServiceOrderProjectProjection = {
   "obra.equipeResp": 1,
   "obra.observacoes": 1,
   "obra.pendencias": 1,
+  "obra.responsaveis": 1,
   idVisitaTecnica: 1,
   idOrdemServico: 1,
   alocacoes: 1,
@@ -662,6 +663,7 @@ export type TServiceOrderProject = Pick<
     saida: TProject["obra"]["saida"];
     statusDaObra: TProject["obra"]["statusDaObra"];
     equipeResp: TProject["obra"]["equipeResp"];
+    responsaveis: TProject["obra"]["responsaveis"];
     observacoes: TProject["obra"]["observacoes"];
     pendencias: TProject["obra"]["pendencias"];
   };

@@ -438,7 +438,7 @@ function ServiceOrderAttachmentsView({ attachments, closeMenu }: ServiceOrderAtt
       stateIsLoading={false}
       stateError={null}
       dialogContentClassName="gap-6"
-      drawerContentClassName="gap-6"
+      drawerContentClassName="gap-6 min-h-[95vh]"
     >
       {attachments.map((attachment) => (
         <div
@@ -448,7 +448,7 @@ function ServiceOrderAttachmentsView({ attachments, closeMenu }: ServiceOrderAtt
           <h1 className="text-[0.65rem] font-medium bg-[#15599a] text-white px-2 py-1 rounded-lg rounded-bl-none rounded-br-none text-center">
             {attachment.titulo}
           </h1>
-          <div className="w-full flex items-center justify-center p-3">
+          <div className="w-full flex flex-col items-center justify-center gap-3 p-2">
             <div className="relative w-full max-w-96 aspect-square overflow-hidden rounded-md bg-linear-to-b from-sky-400 to-sky-200">
               {isFileFormatImage(attachment.formato) ? (
                 <Image
@@ -469,7 +469,7 @@ function ServiceOrderAttachmentsView({ attachments, closeMenu }: ServiceOrderAtt
             <div className="w-full flex items-center justify-center">
               <Button
                 size={"fit"}
-                variant="outline"
+                variant="default"
                 className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
                 onClick={() =>
                   handleDownload({

@@ -1,28 +1,30 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import dayjs from "dayjs";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { BsCalendarCheckFill, BsCalendarFill, BsCode, BsHouse } from "react-icons/bs";
 import { FaCity, FaHandHoldingUsd, FaMobileAlt, FaMoneyBillWave, FaSave, FaSolarPanel, FaUser } from "react-icons/fa";
+import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
+import { MdCategory, MdLocationPin, MdOutlineEmail, MdWork } from "react-icons/md";
+import { TbTopologyFullHierarchy } from "react-icons/tb";
 import { VscChromeClose } from "react-icons/vsc";
+import { useSession } from "../components/providers/SessionProvider";
 import { formatDecimalPlaces, respChamadosPPS } from "../utils/constants";
 import { useKey } from "../utils/hooks";
+import { getErrorMessage } from "../utils/methods/handlers";
+import { deletePPSCall, saveCallChanges } from "../utils/methods/mutation/ppsCalls";
+import { usePPSCall } from "../utils/methods/query/ppsCalls";
 import PPSModalCallInfo from "./PPSModalCallInfo";
+import CallFile from "./identificador/chamados/pps/CallFile";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import Avatar from "./utils/Avatar";
+import { LoadingButton } from "./utils/Buttons/LoadingButton";
 import SaveButton from "./utils/Buttons/SaveButton";
 import LoadingPage from "./utils/LoadingPage";
-import Avatar from "./utils/Avatar";
-import { BsCalendarCheckFill, BsCalendarFill, BsCode, BsHouse } from "react-icons/bs";
-import dayjs from "dayjs";
-import { usePPSCall } from "../utils/methods/query/ppsCalls";
-import { MdCategory, MdOutlineEmail, MdLocationPin, MdWork } from "react-icons/md";
-import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
-import { TbTopologyFullHierarchy } from "react-icons/tb";
-import { saveCallChanges } from "../utils/methods/mutation/ppsCalls";
-import { toast } from "react-hot-toast";
-import { getErrorMessage } from "../utils/methods/handlers";
-import { useQueryClient } from "@tanstack/react-query";
-import CallFile from "./identificador/chamados/pps/CallFile";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { useSession } from "../components/providers/SessionProvider";
+import ResponsiveDialogDrawerViewOnly from "./utils/ResponsiveDialogDrawerViewOnly";
 const MODAL_STYLES = {
 	position: "fixed",
 	top: "50%",
@@ -153,6 +155,22 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
 	const { data: call, isLoading: callLoading, isFetched: callFetched } = usePPSCall(callId, !!callId);
 	const [infoHolder, setInfoHolder] = useState(call);
 	const [changes, setChanges] = useState({});
+	const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+	const { mutate: handleDeleteCall, isPending: deleteCallIsPending } = useMutation({
+		mutationKey: ["delete-pps-call", callId],
+		mutationFn: async () => await deletePPSCall({ id: call._id }),
+		onSuccess: async (response) => {
+			toast.success(response);
+			await queryClient.invalidateQueries({ queryKey: ["open-pps-calls"] });
+			await queryClient.invalidateQueries({ queryKey: ["closed-pps-calls"] });
+			await queryClient.invalidateQueries({ queryKey: ["pps-calls", call._id] });
+			setDeleteConfirmationOpen(false);
+			closeModal();
+		},
+		onError: (error) => {
+			toast.error(getErrorMessage(error));
+		},
+	});
 
 	function renderResponsibles(current) {
 		const filtered = responsibles.filter((resp) => resp.ativo || resp.apelido == current);
@@ -257,6 +275,10 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
 	useEffect(() => {
 		setInfoHolder(call);
 	}, [call]);
+
+	useEffect(() => {
+		if (!modalIsOpen) setDeleteConfirmationOpen(false);
+	}, [modalIsOpen]);
 	return (
 		<>
 			<AnimatedModalWrapper modalIsOpen={modalIsOpen} width={"60%"} height={"87%"}>
@@ -531,12 +553,46 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
 									<SaveButton text={"SALVAR"} icon={<FaSave />} handleClick={() => handleSaveChanges()} /> {/*TODO*/}
 								</div>
 							) : null}
+							{editor && call?._id ? (
+								<div className="mt-6 flex w-full flex-col items-center gap-3 border-t border-red-200 pt-4">
+									<p className="max-w-[420px] text-center text-xs font-medium text-red-500">
+										Zona destrutiva. Exclua o chamado apenas quando tiver certeza de que ele não deve mais existir no controle.
+									</p>
+									<button
+										onClick={() => setDeleteConfirmationOpen(true)}
+										className="font-raleway w-fit rounded-lg border border-red-500 px-4 py-2 text-xs font-bold text-red-500 transition-colors hover:bg-red-500 hover:text-white"
+									>
+										EXCLUIR CHAMADO
+									</button>
+								</div>
+							) : null}
 						</div>
 					) : (
 						<LoadingPage />
 					)}
 				</div>
 			</AnimatedModalWrapper>
+			{deleteConfirmationOpen ? (
+				<ResponsiveDialogDrawerViewOnly
+					menuTitle="EXCLUIR CHAMADO DE PPS"
+					menuDescription="Tem certeza que deseja excluir este chamado? Essa ação não pode ser desfeita."
+					menuCancelButtonText="CANCELAR"
+					closeMenu={() => setDeleteConfirmationOpen(false)}
+					stateIsLoading={false}
+					stateError={null}
+					dialogVariant="sm"
+				>
+					<div className="flex flex-col items-center gap-3">
+						<div className="bg-secondary text-primary w-fit rounded-lg px-3 py-1 text-sm font-semibold tracking-tight">#{call?._id || "---"}</div>
+						<p className="self-center rounded-lg bg-red-200 px-3 py-2 text-center text-sm text-red-600">
+							Ao confirmar, o chamado sera removido permanentemente da lista de PPS.
+						</p>
+						<LoadingButton variant="destructive" loading={deleteCallIsPending} onClick={() => handleDeleteCall()} className="self-center">
+							DESEJO EXCLUIR
+						</LoadingButton>
+					</div>
+				</ResponsiveDialogDrawerViewOnly>
+			) : null}
 		</>
 	);
 }

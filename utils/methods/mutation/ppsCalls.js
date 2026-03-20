@@ -17,3 +17,14 @@ export async function createCall({ info }) {
 		throw error;
 	}
 }
+
+export async function deletePPSCall({ id }) {
+	try {
+		const { data } = await axios.delete("/api/chamados/pps/mainData", {
+			data: { id },
+		});
+		return data;
+	} catch (error) {
+		throw error;
+	}
+}

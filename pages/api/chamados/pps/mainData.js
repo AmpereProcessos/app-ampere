@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import connectToDatabase from "../../../../utils/services/mongodb/calls";
-import connectToCRMDatabase from "../../../../utils/services/mongodb/crm/main";
+import createHttpError from "http-errors";
+import { ObjectId } from "mongodb";
 import { calculateStringSimilarity, formatProjectCode } from "../../../../utils/constants";
 import { errorHandler } from "../../../../utils/methods/handlers";
 import { getFirstDayOfMonth, getLastDayOfMonth } from "../../../../utils/methods/shared";
-import { ObjectId } from "mongodb";
-import createHttpError from "http-errors";
+import connectToDatabase from "../../../../utils/services/mongodb/calls";
+import connectToCRMDatabase from "../../../../utils/services/mongodb/crm/main";
 function findSellerInCRM(seller, users) {
 	const userInCRM = users.find((user) => calculateStringSimilarity(user.nome.toUpperCase(), seller) > 80);
 	if (userInCRM)
@@ -115,6 +115,19 @@ export default async function handler(req, res) {
 			if (!changes) throw new createHttpError("Objeto de alterações não fornecido.");
 			const dbResponse = await collection.updateOne({ _id: ObjectId(id) }, { $set: { ...changes } });
 			return res.status(201).json("Alterações feitas com sucesso.");
+		} catch (error) {
+			errorHandler(error, res);
+		}
+	}
+	if (req.method === "DELETE") {
+		try {
+			const db = await connectToDatabase(process.env.DB_KEY);
+			const collection = db.collection("pps");
+			const { id } = req.body;
+			if (!id || typeof id != "string") throw new createHttpError("ID inválido!");
+			const dbResponse = await collection.deleteOne({ _id: ObjectId(id) });
+			if (!dbResponse.deletedCount) throw new createHttpError.NotFound("Chamado não encontrado.");
+			return res.status(200).json("Chamado excluído com sucesso.");
 		} catch (error) {
 			errorHandler(error, res);
 		}

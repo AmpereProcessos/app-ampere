@@ -11,195 +11,217 @@ import type { NextApiHandler } from "next";
 import { z } from "zod";
 
 export type ExpenseRevenueList = {
-	id?: string;
-	categoria: string;
-	itens: {
-		qtde: number;
-		descricao: string;
-		unidade: string;
-		preco: number;
-		idMaterial?: string | null | undefined;
-	}[];
-	total: number;
-	autor: {
-		id: string;
-		nome: string;
-		avatar_url: string | null | undefined;
-	};
-	dataInsercao: string;
+  id?: string;
+  categoria: string;
+  itens: {
+    qtde: number;
+    descricao: string;
+    unidade: string;
+    preco: number;
+    idMaterial?: string | null | undefined;
+  }[];
+  total: number;
+  autor: {
+    id: string;
+    nome: string;
+    avatar_url: string | null | undefined;
+  };
+  dataInsercao: string;
 }[];
 export type TProjectFinances = {
-	_id: string;
-	nome: string;
-	potencia: number;
-	identificador: string | number;
-	idProjetoCRM: string;
-	idPropostaCRM: string;
-	cidade: string;
-	vendedor: string;
-	topologia: string;
-	qtdeModulos: number;
-	dataAssinatura: string | null | undefined;
-	dataConclusaoObra: string | null | undefined;
-	previsaoDespesas?: TSolarSystemPropose["precificacao"];
-	despesas: { [key: string]: number };
-	despesasLista?: ExpenseRevenueList;
-	receitas: { [key: string]: number };
-	receitasLista?: ExpenseRevenueList;
+  _id: string;
+  index: number;
+  nome: string;
+  potencia: number;
+  identificador: string | number;
+  idProjetoCRM: string;
+  idPropostaCRM: string;
+  cidade: string;
+  vendedor: string;
+  topologia: string;
+  qtdeModulos: number;
+  dataAssinatura: string | null | undefined;
+  dataConclusaoObra: string | null | undefined;
+  previsaoDespesas?: TSolarSystemPropose["precificacao"];
+  despesas: { [key: string]: number };
+  despesasLista?: ExpenseRevenueList;
+  receitas: { [key: string]: number };
+  receitasLista?: ExpenseRevenueList;
 };
 type PartialTProject = Pick<
-	TProjectDTO,
-	| "_id"
-	| "nomeDoContrato"
-	| "tipoDeServico"
-	| "contrato"
-	| "comissoes"
-	| "compra"
-	| "cidade"
-	| "vendedor"
-	| "obra"
-	| "sistema"
-	| "padrao"
-	| "estruturaPersonalizada"
-	| "codigoSVB"
-	| "idProjetoCRM"
-	| "idPropostaCRM"
+  TProjectDTO,
+  | "_id"
+  | "qtde"
+  | "nomeDoContrato"
+  | "tipoDeServico"
+  | "contrato"
+  | "comissoes"
+  | "compra"
+  | "cidade"
+  | "vendedor"
+  | "obra"
+  | "sistema"
+  | "padrao"
+  | "estruturaPersonalizada"
+  | "codigoSVB"
+  | "idProjetoCRM"
+  | "idPropostaCRM"
 >;
 const DatetimeStringSchema = z
-	.string({ required_error: "Parâmetro de data não fornecido.", invalid_type_error: "Tipo inválido para o parâmetro de data." })
-	.datetime({ message: "Formato inválido para parâmetro de data." });
+  .string({
+    required_error: "Parâmetro de data não fornecido.",
+    invalid_type_error: "Tipo inválido para o parâmetro de data.",
+  })
+  .datetime({ message: "Formato inválido para parâmetro de data." });
 
-const FieldStringSchema = z.string({ required_error: "Campo de filtro não fornecido.", invalid_type_error: "Tipo inválido para o campo de filtro." });
+const FieldStringSchema = z.string({
+  required_error: "Campo de filtro não fornecido.",
+  invalid_type_error: "Tipo inválido para o campo de filtro.",
+});
 type GetResponse = TProjectFinances[] | TProjectFinances;
 
 const getAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
-	const { after, before, field, id, projectTypes } = req.query;
+  const { after, before, field, id, projectTypes } = req.query;
 
-	const db = await connectToDatabase();
-	const crmDb = await connectToCRMDatabase();
+  const db = await connectToDatabase();
+  const crmDb = await connectToCRMDatabase();
 
-	const projectsCollection: Collection<TProject> = db.collection("dados");
-	const expensesCollection: Collection<TExpense> = db.collection("despesas");
-	const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection("proposes");
+  const projectsCollection: Collection<TProject> = db.collection("dados");
+  const expensesCollection: Collection<TExpense> = db.collection("despesas");
+  const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection("proposes");
 
-	// In case query is for project especific finances
-	if (id) {
-		if (typeof id !== "string" || !ObjectId.isValid(id)) throw createHttpError.BadRequest("ID inválido.");
-		const projectFinances = await getFinancesByProjectId({ projectId: id, projectsCollection, expensesCollection, proposesCollection });
-		return res.json(projectFinances);
-	}
-	// In case query is for financial auditing of especific period
-	const validatedAfter = DatetimeStringSchema.parse(after);
-	const validatedBefore = DatetimeStringSchema.parse(before);
-	const validatedField = FieldStringSchema.parse(field);
-	const validatedProjectTypes = z
-		.string({ required_error: "Tipos de projetos não fornecidos.", invalid_type_error: "Tipo inválido para os tipos de projetos." })
-		.transform((value) => value.split(","))
-		.parse(projectTypes)
-		.filter((type) => type.trim().length > 0);
+  // In case query is for project especific finances
+  if (id) {
+    if (typeof id !== "string" || !ObjectId.isValid(id))
+      throw createHttpError.BadRequest("ID inválido.");
+    const projectFinances = await getFinancesByProjectId({
+      projectId: id,
+      projectsCollection,
+      expensesCollection,
+      proposesCollection,
+    });
+    return res.json(projectFinances);
+  }
+  // In case query is for financial auditing of especific period
+  const validatedAfter = DatetimeStringSchema.parse(after);
+  const validatedBefore = DatetimeStringSchema.parse(before);
+  const validatedField = FieldStringSchema.parse(field);
+  const validatedProjectTypes = z
+    .string({
+      required_error: "Tipos de projetos não fornecidos.",
+      invalid_type_error: "Tipo inválido para os tipos de projetos.",
+    })
+    .transform((value) => value.split(","))
+    .parse(projectTypes)
+    .filter((type) => type.trim().length > 0);
 
-	const periodQuery = { [validatedField]: { $gte: validatedAfter, $lte: validatedBefore } };
-	const projectTypesQuery = validatedProjectTypes.length > 0 ? { tipoDeServico: { $in: validatedProjectTypes } } : {};
-	const query = { ...periodQuery, ...projectTypesQuery };
-	console.log("[INFO] [GET_FINANCIAL_AUDITING_DATA] [QUERY]", JSON.stringify(query, null, 2));
-	const projects = (await projectsCollection
-		.aggregate([
-			{
-				$match: query,
-			},
-			{
-				$project: {
-					_id: 1,
-					nomeDoContrato: 1,
-					codigoSVB: 1,
-					idProjetoCRM: 1,
-					idPropostaCRM: 1,
-					tipoDeServico: 1,
-					"contrato.dataAssinatura": 1,
-					"obra.saida": 1,
-					cidade: 1,
-					"vendedor.nome": 1,
-					comissoes: 1,
-					"compra.valorDoKit": 1,
-					"compra.valorFrete": 1,
-					"sistema.valorProjeto": 1,
-					"sistema.topologia": 1,
-					"sistema.qtdeModulos": 1,
-					"sistema.potPico": 1,
-					"padrao.valor": 1,
-					"estruturaPersonalizada.valor": 1,
-				},
-			},
-			{
-				$sort: {
-					[validatedField]: -1,
-				},
-			},
-		])
-		.toArray()) as PartialTProject[];
+  const periodQuery = { [validatedField]: { $gte: validatedAfter, $lte: validatedBefore } };
+  const projectTypesQuery =
+    validatedProjectTypes.length > 0 ? { tipoDeServico: { $in: validatedProjectTypes } } : {};
+  const query = { ...periodQuery, ...projectTypesQuery };
+  console.log("[INFO] [GET_FINANCIAL_AUDITING_DATA] [QUERY]", JSON.stringify(query, null, 2));
+  const projects = (await projectsCollection
+    .aggregate([
+      {
+        $match: query,
+      },
+      {
+        $project: {
+          _id: 1,
+          qtde: 1,
+          nomeDoContrato: 1,
+          codigoSVB: 1,
+          idProjetoCRM: 1,
+          idPropostaCRM: 1,
+          tipoDeServico: 1,
+          "contrato.dataAssinatura": 1,
+          "obra.saida": 1,
+          cidade: 1,
+          "vendedor.nome": 1,
+          comissoes: 1,
+          "compra.valorDoKit": 1,
+          "compra.valorFrete": 1,
+          "sistema.valorProjeto": 1,
+          "sistema.topologia": 1,
+          "sistema.qtdeModulos": 1,
+          "sistema.potPico": 1,
+          "padrao.valor": 1,
+          "estruturaPersonalizada.valor": 1,
+        },
+      },
+      {
+        $sort: {
+          [validatedField]: -1,
+        },
+      },
+    ])
+    .toArray()) as PartialTProject[];
 
-	const projectIds = projects.map((project) => project._id.toString());
-	const expenses = await expensesCollection.find({ "projeto.id": { $in: projectIds } }).toArray();
-	const projectFinances: TProjectFinances[] = projects.map((project) => {
-		// Defining project info
-		const nome = project.nomeDoContrato;
-		const potencia = project.sistema.potPico;
-		const tipoDeServico = project.tipoDeServico;
-		const dataAssinatura = project.contrato.dataAssinatura;
-		const dataConclusaoObra = project.obra.saida;
-		const cidade = project.cidade;
-		const vendedor = project.vendedor.nome;
-		const topologia = project.sistema.topologia || "NÃO DEFINIDO";
-		const qtdeModulos = project.sistema.qtdeModulos || 0;
-		const idProjetoCRM = project.idProjetoCRM || "";
-		const idPropostaCRM = project.idPropostaCRM || "";
-		const identificador = project.codigoSVB || "";
-		// Formatting the project expenses
-		const projectExpenses = expenses.filter((exp) => exp.projeto?.id === project._id.toString());
-		const kitCost = project.compra.valorDoKit || 0;
-		const expensesFormatted = projectExpenses.reduce(
-			(acc: { [key: string]: number }, current) => {
-				const expenseCategory = current.categoria;
-				const expenseTotal = current.total;
-				if (!acc[expenseCategory]) acc[expenseCategory] = expenseTotal;
-				else acc[expenseCategory] += expenseTotal;
-				return acc;
-			},
-			{ "CUSTO DO KIT GERADOR": kitCost, "CUSTO DO FRETE": project.compra.valorFrete || 0 },
-		);
-		// Formatting the project revenues
-		const systemRevenue = project.sistema.valorProjeto;
-		const energyPaRevenue = project.padrao.valor || 0;
-		const structureRevenue = project.estruturaPersonalizada.valor || 0;
-		const revenuesFormatted: { [key: string]: number } = {
-			[tipoDeServico]: systemRevenue,
-			"PADRÃO DE ENERGIA": energyPaRevenue,
-			ESTRUTURA: structureRevenue,
-		};
+  const projectIds = projects.map((project) => project._id.toString());
+  const expenses = await expensesCollection.find({ "projeto.id": { $in: projectIds } }).toArray();
+  const projectFinances: TProjectFinances[] = projects.map((project) => {
+    // Defining project info
+    const nome = project.nomeDoContrato;
+    const potencia = project.sistema.potPico;
+    const tipoDeServico = project.tipoDeServico;
+    const dataAssinatura = project.contrato.dataAssinatura;
+    const dataConclusaoObra = project.obra.saida;
+    const cidade = project.cidade;
+    const vendedor = project.vendedor.nome;
+    const topologia = project.sistema.topologia || "NÃO DEFINIDO";
+    const qtdeModulos = project.sistema.qtdeModulos || 0;
+    const idProjetoCRM = project.idProjetoCRM || "";
+    const idPropostaCRM = project.idPropostaCRM || "";
+    const identificador = project.codigoSVB || "";
+    // Formatting the project expenses
+    const projectExpenses = expenses.filter((exp) => exp.projeto?.id === project._id.toString());
+    const kitCost = project.compra.valorDoKit || 0;
+    const expensesFormatted = projectExpenses.reduce(
+      (acc: { [key: string]: number }, current) => {
+        const expenseCategory = current.categoria;
+        const expenseTotal = current.total;
+        if (!acc[expenseCategory]) acc[expenseCategory] = expenseTotal;
+        else acc[expenseCategory] += expenseTotal;
+        return acc;
+      },
+      { "CUSTO DO KIT GERADOR": kitCost, "CUSTO DO FRETE": project.compra.valorFrete || 0 },
+    );
+    // Formatting the project revenues
+    const systemRevenue = project.sistema.valorProjeto;
+    const energyPaRevenue = project.padrao.valor || 0;
+    const structureRevenue = project.estruturaPersonalizada.valor || 0;
+    const revenuesFormatted: { [key: string]: number } = {
+      [tipoDeServico]: systemRevenue,
+      "PADRÃO DE ENERGIA": energyPaRevenue,
+      ESTRUTURA: structureRevenue,
+    };
 
-		const totalComissionCost = project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) || 0;
-		expensesFormatted.COMISSÕES = totalComissionCost;
-		return {
-			_id: project._id,
-			nome,
-			identificador,
-			idProjetoCRM,
-			idPropostaCRM,
-			potencia,
-			cidade,
-			vendedor,
-			topologia,
-			qtdeModulos,
-			dataAssinatura,
-			dataConclusaoObra,
-			despesas: expensesFormatted,
-			receitas: revenuesFormatted,
-		};
-	});
-	// @ts-ignore
-	return res.json(projectFinances);
+    const totalComissionCost =
+      project.comissoes?.comissionados?.reduce((acc, current) => acc + (current.valor || 0), 0) ||
+      0;
+    expensesFormatted.COMISSÕES = totalComissionCost;
+    return {
+      _id: project._id,
+      nome,
+      index: project.qtde,
+      identificador,
+      idProjetoCRM,
+      idPropostaCRM,
+      potencia,
+      cidade,
+      vendedor,
+      topologia,
+      qtdeModulos,
+      dataAssinatura,
+      dataConclusaoObra,
+      despesas: expensesFormatted,
+      receitas: revenuesFormatted,
+    };
+  });
+  // @ts-ignore
+  return res.json(projectFinances);
 };
 
 export default apiHandler({
-	GET: getAnalysis,
+  GET: getAnalysis,
 });

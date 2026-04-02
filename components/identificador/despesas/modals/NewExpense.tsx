@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { VscChromeClose } from "react-icons/vsc";
-
-import { centrosDeCusto, expenseCategories, formatDate, formatToMoney } from "../../../../utils/constants";
 
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TExpense } from "@/utils/schemas/expenses";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createExpense } from "../../../../utils/methods/mutation/expenses";
-
-import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import { getErrorMessage } from "@/utils/methods/handlers";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { useExpenseProject } from "@/utils/methods/query/expenses";
 import toast from "react-hot-toast";
+
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
+import { useMediaQuery } from "@/lib/hooks/media-query";
+
+import { getErrorMessage } from "@/utils/methods/handlers";
+import { createExpense } from "@/utils/methods/mutation/expenses";
+import { useExpenseProject } from "@/utils/methods/query/expenses";
 import ExpenseGeneralInformationBlock from "./blocos/GeneralInformationBlock";
 import ExpenseItemsInformationBlock from "./blocos/ItemsInformationBlock";
 import ExpensePaymentsBlock from "./blocos/PaymentsBlock";
@@ -29,7 +30,9 @@ type NewExpenseProps = {
 		onSettled?: () => void;
 	};
 };
+
 function NewExpense({ session, closeModal, callbacks, initialState }: NewExpenseProps) {
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const queryClient = useQueryClient();
 
 	const initialInfoHolder: TExpense = {
@@ -82,55 +85,93 @@ function NewExpense({ session, closeModal, callbacks, initialState }: NewExpense
 			return toast.error(msg);
 		},
 	});
-	console.log('INITIAL HOLDER', initialState)
-	console.log('DESPESA HOLDER', infoHolder) 
-	console.log('DESPESA PROJECT', project)
-	return (
-		<div id="defaultModal" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[75%]">
-				<div className="flex h-full w-full flex-col">
-					<div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-xl font-bold text-primary dark:text-white">NOVA DESPESA</h3>
-						<button
-							onClick={() => closeModal()}
-							type="button"
-							className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-						>
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-2">
-						<ExpenseGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						{project ? (
-							<ExpenseProjectInformationBlock expense={infoHolder} project={project} />
-						) : (
-							<ExpenseProjectVinculation
-								expenseId={undefined}
-								infoHolder={infoHolder}
-								setInfoHolder={setInfoHolder}
-								affectedQueryKey={["expenses"]}
-								queryClient={queryClient}
-							/>
-						)}
-						<ExpenseItemsInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-						<ExpensePaymentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-					</div>
-					<div className="mt-2 flex w-full items-center justify-end">
-						<LoadingButton
-							loading={isPending}
-							onClick={() =>
-								//@ts-ignore
-								handleCreateExpense(infoHolder)
-							}
-							type="button"
-							className="bg-green-800 hover:bg-green-700"
-						>
-							CRIAR DESPESA
-						</LoadingButton>
-					</div>
+
+	const MENU_TITLE = "NOVA DESPESA";
+	const MENU_DESCRIPTION = "Preencha os dados para cadastrar uma nova despesa.";
+
+	const formBody = (
+		<>
+			<ExpenseGeneralInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			{project ? (
+				<ExpenseProjectInformationBlock expense={infoHolder} project={project} />
+			) : (
+				<ExpenseProjectVinculation
+					expenseId={undefined}
+					infoHolder={infoHolder}
+					setInfoHolder={setInfoHolder}
+					affectedQueryKey={["expenses"]}
+					queryClient={queryClient}
+				/>
+			)}
+			<ExpenseItemsInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<ExpensePaymentsBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+		</>
+	);
+
+	const dialogFooter = (
+		<>
+			<DialogClose asChild>
+				<Button variant="outline">FECHAR</Button>
+			</DialogClose>
+			<LoadingButton
+				loading={isPending}
+				onClick={() =>
+					//@ts-ignore
+					handleCreateExpense(infoHolder)
+				}
+				type="button"
+				className="bg-green-800 hover:bg-green-700"
+			>
+				CRIAR DESPESA
+			</LoadingButton>
+		</>
+	);
+
+	const drawerFooter = (
+		<>
+			<DrawerClose asChild>
+				<Button variant="outline">FECHAR</Button>
+			</DrawerClose>
+			<LoadingButton
+				loading={isPending}
+				onClick={() =>
+					//@ts-ignore
+					handleCreateExpense(infoHolder)
+				}
+				type="button"
+				className="bg-green-800 hover:bg-green-700"
+			>
+				CRIAR DESPESA
+			</LoadingButton>
+		</>
+	);
+
+	return isDesktop ? (
+		<Dialog open onOpenChange={(v) => (!v ? closeModal() : null)}>
+			<DialogContent className="dark:bg-background flex max-h-[85vh] min-h-[70vh] min-w-[75vw] flex-col">
+				<DialogHeader>
+					<DialogTitle>{MENU_TITLE}</DialogTitle>
+					<DialogDescription>{MENU_DESCRIPTION}</DialogDescription>
+				</DialogHeader>
+				<div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex flex-1 flex-col gap-y-2 overflow-y-auto px-1 py-1">
+					{formBody}
 				</div>
-			</div>
-		</div>
+				<DialogFooter>{dialogFooter}</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	) : (
+		<Drawer shouldScaleBackground={false} open onOpenChange={(v) => (!v ? closeModal() : null)}>
+			<DrawerContent className="flex h-fit max-h-[90vh] flex-col">
+				<DrawerHeader className="text-left">
+					<DrawerTitle>{MENU_TITLE}</DrawerTitle>
+					<DrawerDescription>{MENU_DESCRIPTION}</DrawerDescription>
+				</DrawerHeader>
+				<div className="scrollbar-thin scrollbar-track-primary/10 scrollbar-thumb-primary/30 flex flex-1 flex-col gap-y-2 overflow-y-auto px-4 py-1">
+					{formBody}
+				</div>
+				<DrawerFooter>{drawerFooter}</DrawerFooter>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 

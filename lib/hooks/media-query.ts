@@ -1,19 +1,17 @@
 import * as React from "react";
 
+/** `matchMedia` síncrono no cliente (evita 1º render falso com `useEffect`). */
 export function useMediaQuery(query: string) {
-	const [value, setValue] = React.useState(false);
-
-	React.useEffect(() => {
-		function onChange(event: MediaQueryListEvent) {
-			setValue(event.matches);
-		}
-
-		const result = matchMedia(query);
-		result.addEventListener("change", onChange);
-		setValue(result.matches);
-
-		return () => result.removeEventListener("change", onChange);
-	}, [query]);
-
-	return value;
+	return React.useSyncExternalStore(
+		React.useCallback(
+			(onStoreChange) => {
+				const mq = matchMedia(query);
+				mq.addEventListener("change", onStoreChange);
+				return () => mq.removeEventListener("change", onStoreChange);
+			},
+				[query],
+		),
+		() => matchMedia(query).matches,
+		() => false,
+	);
 }

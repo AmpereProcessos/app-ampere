@@ -21,7 +21,6 @@ import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import type { PropsWithChildren } from "react";
 import { Button } from "../ui/button";
-import { LoadingButton } from "./Buttons/LoadingButton";
 import ErrorComponent from "./ErrorComponent";
 import LoadingComponent from "./LoadingComponent";
 
@@ -104,7 +103,7 @@ function ResponsiveDialogDrawerViewOnly({
       </DialogContent>
     </Dialog>
   ) : (
-    <Drawer onOpenChange={(v) => (v ? null : closeMenu())} open>
+    <Drawer shouldScaleBackground={false} onOpenChange={(v) => (v ? null : closeMenu())} open>
       <DrawerContent className={cn(drawerVariants({ drawerVariant }), drawerContentClassName)}>
         <DrawerHeader className="text-left">
           <DrawerTitle>{menuTitle}</DrawerTitle>

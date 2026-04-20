@@ -8,6 +8,7 @@ import { Filter } from "mongodb";
 import z from "zod";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import dayjs from "dayjs";
 const GetServiceOrdersItinerarySchema = z.object({
   search: z
     .string({
@@ -85,10 +86,15 @@ async function getServiceOrdersItinerary({
 
   const pendingConclusionQuery = pendingConclusionOnly ? { dataEfetivacao: null } : {};
 
+  const finishedInLastFiveDaysQuery = {
+    dataEfetivacao: { $gte: dayjs().subtract(5, "day").toISOString() },
+  };
+
+  const conclusionQuery: Filter<TServiceOrder> = {
+    $or: [pendingConclusionQuery, finishedInLastFiveDaysQuery],
+  };
   const query: Filter<TServiceOrder> = {
-    $and: [searchQuery, responsibleQuery, pendingConclusionQuery].filter(
-      (r) => Object.keys(r).length > 0,
-    ),
+    $and: [searchQuery, responsibleQuery, conclusionQuery].filter((r) => Object.keys(r).length > 0),
   };
   console.log("[SERVICE-ORDERS-ITINERARY] Query:", JSON.stringify(query, null, 2));
   const serviceOrdersMatched = await serviceOrdersCollection.countDocuments(query);

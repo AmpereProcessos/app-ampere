@@ -9,9 +9,9 @@ import {
   EmptyContent,
 } from "@/components/ui/empty";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useFinancesAccountingEntries } from "@/utils/methods/query/finances";
-import { ArrowRight, BookOpen, CalendarDays } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, PencilIcon, PlusIcon } from "lucide-react";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import { TGetAccountingEntriesOutputDefault } from "@/pages/api/financeiro/accounting-entries";
 import { formatToMoney } from "@/utils/constants";
@@ -21,8 +21,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
-export default function AccountingEntriesView() {
-  const { data, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
+import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { TAuthSession } from "@/lib/authentication/types";
+import NewAccountingEntry from "./lancamentos-contabeis/NewAccountingEntry";
+import ControlAccountingEntry from "./lancamentos-contabeis/ControlAccountingEntry";
+
+export default function AccountingEntriesView({ session }: { session: TAuthSession }) {
+  const queryClient = useQueryClient();
+  const [newAccountingEntryModalIsOpen, setNewAccountingEntryModalIsOpen] = useState(false);
+  const [editAccountingEntryModalId, setEditAccountingEntryModalId] = useState<string | null>(
+    null,
+  );
+  const { data, queryKey, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
     useFinancesAccountingEntries({
       initialParams: { page: 1, search: "" },
     });
@@ -36,8 +47,27 @@ export default function AccountingEntriesView() {
       ? `${formatDateAsLocale(queryParams.periodAfter)} - ${formatDateAsLocale(queryParams.periodBefore)}`
       : "N/A";
   }, [queryParams.periodAfter, queryParams.periodBefore]);
+
+  const handleOnMutate = async () => {
+    await queryClient.cancelQueries({ queryKey: queryKey });
+  };
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({ queryKey: queryKey });
+  };
+
   return (
     <div className="flex w-full flex-col gap-3">
+      <div className="w-full flex items-center justify-end">
+        <Button
+          size={"sm"}
+          className="flex items-center gap-1"
+          onClick={() => setNewAccountingEntryModalIsOpen(true)}
+        >
+          <PlusIcon className="w-4 h-4" />
+          NOVO LANÇAMENTO CONTÁBIL
+        </Button>
+      </div>
+
       <Input
         value={queryParams.search ?? ""}
         placeholder="Pesquisar lançamento..."
@@ -95,7 +125,13 @@ export default function AccountingEntriesView() {
       {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
       {isSuccess && entries ? (
         entries.length > 0 ? (
-          entries.map((entry) => <AccountingEntryCard key={entry.id} entry={entry} />)
+          entries.map((entry) => (
+            <AccountingEntryCard
+              key={entry.id}
+              entry={entry}
+              onEditClick={() => setEditAccountingEntryModalId(entry.id)}
+            />
+          ))
         ) : (
           <Empty>
             <EmptyHeader>
@@ -111,14 +147,39 @@ export default function AccountingEntriesView() {
           </Empty>
         )
       ) : null}
+
+      {newAccountingEntryModalIsOpen ? (
+        <NewAccountingEntry
+          session={session}
+          closeModal={() => setNewAccountingEntryModalIsOpen(false)}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+        />
+      ) : null}
+
+      {editAccountingEntryModalId ? (
+        <ControlAccountingEntry
+          session={session}
+          entryId={editAccountingEntryModalId}
+          closeModal={() => setEditAccountingEntryModalId(null)}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+        />
+      ) : null}
     </div>
   );
 }
 
 type AccountingEntryCardProps = {
   entry: TGetAccountingEntriesOutputDefault["entries"][number];
+  onEditClick: () => void;
 };
-function AccountingEntryCard({ entry }: AccountingEntryCardProps) {
+
+function AccountingEntryCard({ entry, onEditClick }: AccountingEntryCardProps) {
   return (
     <div className="bg-card border-primary/20 flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
@@ -127,7 +188,18 @@ function AccountingEntryCard({ entry }: AccountingEntryCardProps) {
             {entry.titulo || "TÍTULO NÃO DEFINIDO"}
           </h1>
         </div>
-        <span className="text-sm font-semibold">{formatToMoney(entry.valor)}</span>
+        <div className="flex items-center gap-1.5">
+          <Button
+            size={"xs"}
+            variant={"ghost"}
+            className="flex items-center gap-1"
+            onClick={onEditClick}
+          >
+            <PencilIcon className="w-4 h-4" />
+            EDITAR
+          </Button>
+          <span className="text-sm font-semibold">{formatToMoney(entry.valor)}</span>
+        </div>
       </div>
 
       <div className="flex items-center gap-1.5 text-[0.65rem] text-muted-foreground">

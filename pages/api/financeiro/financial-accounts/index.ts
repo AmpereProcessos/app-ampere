@@ -1,26 +1,56 @@
 import { TAuthSession } from "@/lib/authentication/types";
-import { TFinancialAccounts, TFinancialTransaction } from "@/utils/schemas/finances";
+import {
+  FinancialAccountsSchema,
+  TFinancialAccounts,
+  TFinancialTransaction,
+} from "@/utils/schemas/finances";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import { type Filter, type WithId, type Collection, type Db } from "mongodb";
+import { type Filter, type WithId, type Collection, type Db, ObjectId } from "mongodb";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
 import z from "zod";
+import createHttpError from "http-errors";
 
 const GetFinancialAccountsInputSchema = z.object({
-  activeOnly: z.string().transform((v) => v === "true"),
-  stats: z.string().transform((v) => v === "true"),
+  id: z
+    .string({
+      required_error: "ID não informado.",
+      invalid_type_error: "Tipo inválido para o ID.",
+    })
+    .optional()
+    .nullable(),
+  activeOnly: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => v === "true"),
+  stats: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => v === "true"),
   statsPeriodBefore: z
-    .union([
-      z.string().datetime({ message: "Tipo inválido para data (antes) das estatísticas." }),
-      z.null(),
-    ])
-    .default(null),
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v == null || v.trim() === "" ? null : v))
+    .pipe(
+      z.union([
+        z.string().datetime({ message: "Tipo inválido para data (antes) das estatísticas." }),
+        z.null(),
+      ]),
+    ),
   statsPeriodAfter: z
-    .union([
-      z.string().datetime({ message: "Tipo inválido para data (após) das estatísticas." }),
-      z.null(),
-    ])
-    .default(null),
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v == null || v.trim() === "" ? null : v))
+    .pipe(
+      z.union([
+        z.string().datetime({ message: "Tipo inválido para data (após) das estatísticas." }),
+        z.null(),
+      ]),
+    ),
 });
 export type TGetFinancialAccountsInput = z.infer<typeof GetFinancialAccountsInputSchema>;
 
@@ -60,14 +90,27 @@ async function getFinancialAccounts({
   input: TGetFinancialAccountsInput;
   session: TAuthSession;
 }) {
-  const { activeOnly, stats, statsPeriodBefore, statsPeriodAfter } = input;
+  const db: Db = await connectToDatabase();
+  const accountsCol: Collection<TFinancialAccountsDoc> = db.collection("contas-financeiras");
+
+  const { id, activeOnly, stats, statsPeriodBefore, statsPeriodAfter } = input;
+
+  if (id) {
+    if (!ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
+    const accountDoc = await accountsCol.findOne({ _id: new ObjectId(id) });
+    if (!accountDoc) throw new createHttpError.NotFound("Conta financeira não encontrada.");
+    return {
+      data: {
+        byId: mapAccountToResponse(accountDoc),
+        default: null,
+      },
+    };
+  }
+
   const filter: Filter<TFinancialAccountsDoc> = {};
   if (activeOnly) {
     filter.ativo = true;
   }
-
-  const db: Db = await connectToDatabase();
-  const accountsCol: Collection<TFinancialAccountsDoc> = db.collection("contas-financeiras");
 
   const accountDocs = await accountsCol.find(filter, { sort: { nome: 1 } }).toArray();
   const accounts = accountDocs.map(mapAccountToResponse);
@@ -91,6 +134,7 @@ async function getFinancialAccounts({
       })
       .toArray()) as TransactionStatFields[];
 
+    console.log(allTransactions);
     for (const account of accountDocs) {
       const accountId = account._id.toString();
       const accountTxs = allTransactions.filter((t) => t.contaFinanceira.id === accountId);
@@ -130,6 +174,7 @@ async function getFinancialAccounts({
 
   return {
     data: {
+      byId: null,
       default: {
         accounts: accountsWithStats,
       },
@@ -138,7 +183,14 @@ async function getFinancialAccounts({
 }
 
 export type TGetFinancialAccountsOutput = Awaited<ReturnType<typeof getFinancialAccounts>>;
-export type TGetFinancialAccountsOutputDefault = TGetFinancialAccountsOutput["data"]["default"];
+export type TGetFinancialAccountsOutputDefault = Exclude<
+  TGetFinancialAccountsOutput["data"]["default"],
+  null
+>;
+export type TGetFinancialAccountsOutputById = Exclude<
+  TGetFinancialAccountsOutput["data"]["byId"],
+  null
+>;
 
 const getFinancialAccountsRoute: NextApiHandler = async (
   req: NextApiRequest,
@@ -151,4 +203,104 @@ const getFinancialAccountsRoute: NextApiHandler = async (
   return res.status(200).json(result);
 };
 
-export default apiHandler({ GET: getFinancialAccountsRoute });
+const UpdateFinancialAccountInputSchema = z.object({
+  accountId: z.string({
+    required_error: "ID da conta financeira não informado.",
+    invalid_type_error: "Tipo inválido para o ID da conta financeira.",
+  }),
+  account: FinancialAccountsSchema,
+});
+
+export type TUpdateFinancialAccountInput = z.infer<typeof UpdateFinancialAccountInputSchema>;
+async function updateFinancialAccount({
+  input,
+  session,
+}: {
+  input: TUpdateFinancialAccountInput;
+  session: TAuthSession;
+}) {
+  const { accountId, account } = input;
+
+  const db: Db = await connectToDatabase();
+  const accountsCol: Collection<TFinancialAccounts> = db.collection("contas-financeiras");
+
+  const accountDoc = await accountsCol.findOne({ _id: new ObjectId(accountId) });
+  if (!accountDoc) {
+    throw new Error("Conta financeira não encontrada.");
+  }
+
+  const updateResponse = await accountsCol.updateOne(
+    { _id: new ObjectId(accountId) },
+    { $set: { ...account } },
+  );
+  if (!updateResponse.acknowledged) {
+    throw new Error("Oops, houve um erro desconhecido ao atualizar conta financeira.");
+  }
+
+  return {
+    data: {
+      updatedId: accountId,
+    },
+    message: "Conta financeira atualizada com sucesso!",
+  };
+}
+export type TUpdateFinancialAccountOutput = Awaited<ReturnType<typeof updateFinancialAccount>>;
+
+const updateFinancialAccountRoute: NextApiHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await validateAuthenticationWithSession(req, res);
+  const input = UpdateFinancialAccountInputSchema.parse(req.body);
+
+  const result = await updateFinancialAccount({ input, session });
+  return res.status(200).json(result);
+};
+
+const CreateFinancialAccountInputSchema = z.object({
+  account: FinancialAccountsSchema,
+});
+
+export type TCreateFinancialAccountInput = z.infer<typeof CreateFinancialAccountInputSchema>;
+async function createFinancialAccount({
+  input,
+  session,
+}: {
+  input: TCreateFinancialAccountInput;
+  session: TAuthSession;
+}) {
+  const { account } = input;
+
+  const db: Db = await connectToDatabase();
+  const accountsCol: Collection<TFinancialAccounts> = db.collection("contas-financeiras");
+
+  const accountDoc = await accountsCol.insertOne(account);
+  if (!accountDoc.acknowledged) {
+    throw new Error("Oops, houve um erro desconhecido ao criar conta financeira.");
+  }
+
+  return {
+    data: {
+      createdId: accountDoc.insertedId.toString(),
+    },
+    message: "Conta financeira criada com sucesso!",
+  };
+}
+export type TCreateFinancialAccountOutput = Awaited<ReturnType<typeof createFinancialAccount>>;
+
+const createFinancialAccountRoute: NextApiHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await validateAuthenticationWithSession(req, res);
+  const input = CreateFinancialAccountInputSchema.parse(req.body);
+
+  const result = await createFinancialAccount({ input, session });
+  return res.status(200).json(result);
+};
+
+export default apiHandler({
+  GET: getFinancialAccountsRoute,
+  PUT: updateFinancialAccountRoute,
+  POST: createFinancialAccountRoute,
+});

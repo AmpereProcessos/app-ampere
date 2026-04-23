@@ -1,4 +1,3 @@
-import DateInput from "@/components/inputs/Date";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,16 +13,13 @@ import { InteractiveFilter } from "@/components/ui/interactive-filter";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
+import { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
-import { TGetFinancialAccountsOutputDefault } from "@/pages/api/financeiro/financial-accounts";
 import { TGetFinancialTransactionsOutputDefault } from "@/pages/api/financeiro/financial-transactions";
 import { formatToMoney } from "@/utils/constants";
 import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import {
-  useFinancesFinancialAccounts,
-  useFinancesFinancialTransactions,
-} from "@/utils/methods/query/finances";
+import { useFinancesFinancialTransactions } from "@/utils/methods/query/finances";
 import {
   FinancialAccountTypeOptions,
   FinancialTransactionPaymentMethodsOptions,
@@ -38,10 +34,14 @@ import {
   Clock,
   DollarSign,
   ListFilter,
+  PencilIcon,
+  PlusIcon,
   Wallet,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BsCalendar, BsCalendarCheck } from "react-icons/bs";
+import ControlFinancialTransaction from "./transacoes-financeiras/ControlFinancialTransaction";
+import NewFinancialTransaction from "./transacoes-financeiras/NewFinancialTransaction";
 
 const TRANSACTION_STATUS_OPTIONS = [
   {
@@ -63,8 +63,15 @@ const TRANSACTION_STATUS_OPTIONS = [
     icon: <AlertCircle className="w-4 h-4 text-red-600" />,
   },
 ];
-export default function FinancialTransactionsView() {
-  const { data, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
+
+export default function FinancialTransactionsView({ session }: { session: TAuthSession }) {
+  const queryClient = useQueryClient();
+  const [newFinancialTransactionModalIsOpen, setNewFinancialTransactionModalIsOpen] =
+    useState(false);
+  const [editFinancialTransactionModalId, setEditFinancialTransactionModalId] = useState<
+    string | null
+  >(null);
+  const { data, queryKey, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
     useFinancesFinancialTransactions({
       initialParams: {
         page: 1,
@@ -76,12 +83,7 @@ export default function FinancialTransactionsView() {
         periodBefore: null,
       },
     });
-  const { data: financialAccountsData } = useFinancesFinancialAccounts({
-    initialParams: { activeOnly: true },
-  });
-
   const transactions = data?.transactions ?? [];
-  const financialAccounts = financialAccountsData?.accounts ?? [];
   const transactionsMatched = data?.transactionsMatched ?? 0;
   const totalPages = data?.totalPages ?? 0;
   const selectedTypesLabel = useMemo(
@@ -121,8 +123,26 @@ export default function FinancialTransactionsView() {
       : "N/A";
   }, [queryParams.periodAfter, queryParams.periodBefore]);
 
+  const handleOnMutate = async () => {
+    await queryClient.cancelQueries({ queryKey: queryKey });
+  };
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({ queryKey: queryKey });
+  };
+
   return (
     <div className="flex w-full flex-col gap-3">
+      <div className="w-full flex items-center justify-end">
+        <Button
+          size={"sm"}
+          className="flex items-center gap-1"
+          onClick={() => setNewFinancialTransactionModalIsOpen(true)}
+        >
+          <PlusIcon className="w-4 h-4" />
+          NOVA TRANSAÇÃO FINANCEIRA
+        </Button>
+      </div>
+
       <Input
         value={queryParams.search ?? ""}
         placeholder="Pesquisar movimentação..."
@@ -273,7 +293,11 @@ export default function FinancialTransactionsView() {
       {isSuccess && transactions ? (
         transactions.length > 0 ? (
           transactions.map((tx) => (
-            <TransactionCard key={tx.id} transaction={tx} financialAccounts={financialAccounts} />
+            <TransactionCard
+              key={tx.id}
+              transaction={tx}
+              onEditClick={() => setEditFinancialTransactionModalId(tx.id)}
+            />
           ))
         ) : (
           <Empty>
@@ -290,37 +314,47 @@ export default function FinancialTransactionsView() {
           </Empty>
         )
       ) : null}
+
+      {newFinancialTransactionModalIsOpen ? (
+        <NewFinancialTransaction
+          session={session}
+          closeModal={() => setNewFinancialTransactionModalIsOpen(false)}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+        />
+      ) : null}
+
+      {editFinancialTransactionModalId ? (
+        <ControlFinancialTransaction
+          session={session}
+          transactionId={editFinancialTransactionModalId}
+          closeModal={() => setEditFinancialTransactionModalId(null)}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+        />
+      ) : null}
     </div>
   );
 }
 
 type TransactionCardProps = {
   transaction: TGetFinancialTransactionsOutputDefault["transactions"][number];
-  financialAccounts: TGetFinancialAccountsOutputDefault["accounts"];
+  onEditClick: () => void;
 };
-function TransactionCard({ transaction, financialAccounts }: TransactionCardProps) {
+
+function TransactionCard({ transaction, onEditClick }: TransactionCardProps) {
   const typeConfig = useMemo(
     () => FinancialTransactionTypeOptions.find((o) => o.value === transaction.tipo) ?? null,
     [transaction.tipo],
   );
-  const queryClient = useQueryClient();
-  const [isEffectFormOpen, setIsEffectFormOpen] = useState(false);
-  const [effectDate, setEffectDate] = useState<string | undefined>(
-    transaction.dataPrevisao
-      ? new Date(transaction.dataPrevisao).toISOString().slice(0, 10)
-      : undefined,
-  );
-  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
-    transaction.contaFinanceira?.id ?? null,
-  );
-  const [selectedMethod, setSelectedMethod] = useState(
-    transaction.metodo === "A DEFINIR" ? "DINHEIRO" : transaction.metodo,
-  );
 
-  const now = new Date();
   const isEffective = !!transaction.dataEfetivacao;
   const isOverdue =
-    !isEffective && transaction.dataPrevisao && new Date(transaction.dataPrevisao) < now;
+    !isEffective && !!transaction.dataPrevisao && new Date(transaction.dataPrevisao) < new Date();
   const statusConfig = useMemo(() => {
     return {
       label: isEffective ? "EFETIVADA" : isOverdue ? "EM ATRASO" : "PENDENTE",
@@ -350,7 +384,6 @@ function TransactionCard({ transaction, financialAccounts }: TransactionCardProp
       FinancialAccountTypeOptions.find((o) => o.value === transaction.contaFinanceira?.tipo) ?? null
     );
   }, [transaction.contaFinanceira?.tipo]);
-  const canChangeMethod = transaction.metodo === "A DEFINIR";
 
   return (
     <div className="bg-card border-primary/20 flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
@@ -373,17 +406,24 @@ function TransactionCard({ transaction, financialAccounts }: TransactionCardProp
           </h1>
         </div>
         <div className="flex items-center gap-1.5">
-          {statusConfig ? (
-            <span
-              className={cn(
-                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
-                statusConfig.className,
-              )}
-            >
-              {statusConfig.icon}
-              {statusConfig.label}
-            </span>
-          ) : null}
+          <Button
+            size={"xs"}
+            variant={"ghost"}
+            className="flex items-center gap-1"
+            onClick={onEditClick}
+          >
+            <PencilIcon className="w-4 h-4" />
+            EDITAR
+          </Button>
+          <span
+            className={cn(
+              "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
+              statusConfig.className,
+            )}
+          >
+            {statusConfig.icon}
+            {statusConfig.label}
+          </span>
           <span className="text-sm font-semibold">{formatToMoney(transaction.valor)}</span>
         </div>
       </div>
@@ -442,75 +482,7 @@ function TransactionCard({ transaction, financialAccounts }: TransactionCardProp
             </div>
           ) : null}
         </div>
-        {!isEffective ? (
-          <Button
-            type="button"
-            size="sm"
-            variant={isEffectFormOpen ? "default" : "outline"}
-            onClick={() => setIsEffectFormOpen((prev) => !prev)}
-          >
-            Efetivar
-          </Button>
-        ) : null}
       </div>
-
-      {/* {!isEffective && isEffectFormOpen ? (
-        <div className="mt-2 grid gap-3 rounded-xl border border-primary/10 bg-background/70 p-3 md:grid-cols-3">
-          <DateInput label="Data de efetivação" value={effectDate} handleChange={setEffectDate} />
-          <div className="flex flex-col gap-1">
-            <span className="text-[0.7rem] font-medium uppercase text-muted-foreground">
-              Conta financeira
-            </span>
-            <select
-              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-              value={selectedAccountId ?? ""}
-              onChange={(event) => setSelectedAccountId(event.target.value || null)}
-            >
-              <option value="">Sem conta</option>
-              {financialAccounts.map((account) => (
-                <option key={account.id} value={account.id}>
-                  {account.nome}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-[0.7rem] font-medium uppercase text-muted-foreground">
-              Método final
-            </span>
-            <select
-              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-              value={selectedMethod}
-              onChange={(event) => setSelectedMethod(event.target.value as typeof selectedMethod)}
-              disabled={!canChangeMethod}
-            >
-              {FinancialTransactionPaymentMethodsOptions.filter(
-                (option) => option.value !== "A_DEFINIR",
-              ).map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="md:col-span-3 flex justify-end">
-            <Button
-              type="button"
-              onClick={() =>
-                mutateEffectTransaction({
-                  transactionId: transaction.id,
-                  dataEfetivacao: effectDate ?? null,
-                  contaFinanceiraId: selectedAccountId,
-                  metodo: canChangeMethod ? selectedMethod : null,
-                })
-              }
-              disabled={isEffecting}
-            >
-              {isEffecting ? "Efetivando..." : "Confirmar efetivação"}
-            </Button>
-          </div>
-        </div>
-      ) : null} */}
     </div>
   );
 }

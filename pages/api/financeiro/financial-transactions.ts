@@ -1,6 +1,7 @@
 import { TAuthSession } from "@/lib/authentication/types";
 import {
   FinancialTransactionMethodEnumSchema,
+  FinancialTransactionSchema,
   FinancialTransactionTypeEnumSchema,
   TFinancialTransaction,
   TFinancialTransactionMethodEnum,
@@ -9,7 +10,7 @@ import {
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import dayjs from "dayjs";
-import { type Filter, type WithId, type Collection, type Db } from "mongodb";
+import { type Filter, type WithId, type Collection, type Db, ObjectId } from "mongodb";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
 import z from "zod";
 
@@ -23,6 +24,7 @@ const notEfetivada: Filter<Record<string, unknown>> = {
 };
 
 const GetFinancialTransactionsInputSchema = z.object({
+  id: z.string().optional().nullable(),
   page: z.coerce.number().min(1).default(1),
   search: z.string().optional().nullable(),
   periodAfter: z
@@ -39,7 +41,13 @@ const GetFinancialTransactionsInputSchema = z.object({
     .string()
     .optional()
     .nullable()
-    .transform((v) => v?.split(",").map((v) => v.trim()) ?? [])
+    .transform((v) => {
+      if (v == null || v.trim() === "") return [];
+      return v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })
     .refine((v) => v.every((v) => FinancialTransactionTypeEnumSchema.safeParse(v).success), {
       message: "Tipos inválidos.",
     }),
@@ -47,7 +55,13 @@ const GetFinancialTransactionsInputSchema = z.object({
     .string()
     .optional()
     .nullable()
-    .transform((v) => v?.split(",").map((v) => v.trim()) ?? [])
+    .transform((v) => {
+      if (v == null || v.trim() === "") return [];
+      return v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })
     .refine((v) => v.every((v) => FinancialTransactionMethodEnumSchema.safeParse(v).success), {
       message: "Métodos de pagamento inválidos.",
     }),
@@ -55,7 +69,13 @@ const GetFinancialTransactionsInputSchema = z.object({
     .string()
     .optional()
     .nullable()
-    .transform((v) => v?.split(",").map((v) => v.trim()) ?? [])
+    .transform((v) => {
+      if (v == null || v.trim() === "") return [];
+      return v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })
     .refine((v) => v.every((v) => StatusEnumSchema.safeParse(v).success), {
       message: "Statuses inválidos.",
     }),
@@ -94,9 +114,9 @@ function mapTransactionToResponse(doc: TFinancialTransactionDoc) {
 
 function buildFilter(input: TGetFinancialTransactionsInput): Filter<TFinancialTransaction> {
   const { search, periodAfter, periodBefore, types, paymentMethods, statuses } = input;
-  const nowIso = new Date().toISOString();
 
-  const base: Filter<TFinancialTransaction> = {};
+  console.log("[INFO] [GET_FINANCIAL_TRANSACTIONS] [INPUT]", JSON.stringify(input, null, 2));
+  const nowIso = new Date().toISOString();
 
   const searchClauses: Filter<TFinancialTransaction>[] | null =
     search && search.trim().length > 0
@@ -160,11 +180,25 @@ async function getFinancialTransactions({
   input: TGetFinancialTransactionsInput;
   session: TAuthSession;
 }) {
-  const { page } = input;
-  const filter = buildFilter(input);
-  const skip = PAGE_SIZE * (page - 1);
+  const { id, page } = input;
   const db: Db = await connectToDatabase();
   const collection: Collection<TFinancialTransactionDoc> = db.collection("transacoes-financeiras");
+
+  if (id) {
+    if (!ObjectId.isValid(id)) throw new Error("ID inválido.");
+    const transactionDoc = await collection.findOne({ _id: new ObjectId(id) });
+    if (!transactionDoc) throw new Error("Transação financeira não encontrada.");
+    return {
+      data: {
+        byId: mapTransactionToResponse(transactionDoc),
+        default: null,
+      },
+    };
+  }
+
+  const filter = buildFilter(input);
+  console.log("[INFO] [GET_FINANCIAL_TRANSACTIONS] [FILTER]", JSON.stringify(filter, null, 2));
+  const skip = PAGE_SIZE * (page - 1);
 
   const [transactionsMatched, raw] = await Promise.all([
     collection.countDocuments(filter),
@@ -176,6 +210,7 @@ async function getFinancialTransactions({
 
   return {
     data: {
+      byId: null,
       default: {
         transactions,
         transactionsMatched,
@@ -187,18 +222,121 @@ async function getFinancialTransactions({
 
 export type TGetFinancialTransactionsOutput = Awaited<ReturnType<typeof getFinancialTransactions>>;
 export type TGetFinancialTransactionsOutputDefault =
-  TGetFinancialTransactionsOutput["data"]["default"];
+  Exclude<TGetFinancialTransactionsOutput["data"]["default"], null>;
+export type TGetFinancialTransactionsOutputById = Exclude<
+  TGetFinancialTransactionsOutput["data"]["byId"],
+  null
+>;
 
 const getFinancialTransactionsRoute: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
   const session = await validateAuthenticationWithSession(req, res);
-
+  console.log("[INFO] [GET_FINANCIAL_TRANSACTIONS] [REQUEST]", JSON.stringify(req.query, null, 2));
   const input = GetFinancialTransactionsInputSchema.parse(req.query);
-
+  console.log("[INFO] [GET_FINANCIAL_TRANSACTIONS] [INPUT]", JSON.stringify(input, null, 2));
   const result = await getFinancialTransactions({ input, session });
   return res.status(200).json(result);
 };
 
-export default apiHandler({ GET: getFinancialTransactionsRoute });
+const UpdateFinancialTransactionInputSchema = z.object({
+  transactionId: z.string({
+    required_error: "ID da transação financeira não informado.",
+    invalid_type_error: "Tipo inválido para o ID da transação financeira.",
+  }),
+  transaction: FinancialTransactionSchema,
+});
+export type TUpdateFinancialTransactionInput = z.infer<
+  typeof UpdateFinancialTransactionInputSchema
+>;
+async function updateFinancialTransaction({
+  input,
+  session,
+}: {
+  input: TUpdateFinancialTransactionInput;
+  session: TAuthSession;
+}) {
+  const { transactionId, transaction } = input;
+
+  const db: Db = await connectToDatabase();
+  const collection: Collection<TFinancialTransaction> = db.collection("transacoes-financeiras");
+  const transactionDoc = await collection.findOne({ _id: new ObjectId(transactionId) });
+  if (!transactionDoc) {
+    throw new Error("Transação financeira não encontrada.");
+  }
+
+  const updateResponse = await collection.updateOne(
+    { _id: new ObjectId(transactionId) },
+    { $set: { ...transaction } },
+  );
+  if (!updateResponse.acknowledged) {
+    throw new Error("Oops, houve um erro desconhecido ao atualizar transação financeira.");
+  }
+
+  return {
+    data: {
+      updatedId: transactionId,
+    },
+    message: "Transação financeira atualizada com sucesso!",
+  };
+}
+export type TUpdateFinancialTransactionOutput = Awaited<
+  ReturnType<typeof updateFinancialTransaction>
+>;
+
+const updateFinancialTransactionRoute: NextApiHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await validateAuthenticationWithSession(req, res);
+  const input = UpdateFinancialTransactionInputSchema.parse(req.body);
+  const result = await updateFinancialTransaction({ input, session });
+  return res.status(200).json(result);
+};
+
+const CreateFinancialTransactionInputSchema = z.object({
+  transaction: FinancialTransactionSchema,
+});
+export type TCreateFinancialTransactionInput = z.infer<
+  typeof CreateFinancialTransactionInputSchema
+>;
+async function createFinancialTransaction({
+  input,
+  session,
+}: {
+  input: TCreateFinancialTransactionInput;
+  session: TAuthSession;
+}) {
+  const { transaction } = input;
+
+  const db: Db = await connectToDatabase();
+  const collection: Collection<TFinancialTransaction> = db.collection("transacoes-financeiras");
+  const transactionDoc = await collection.insertOne(transaction);
+
+  return {
+    data: {
+      createdId: transactionDoc.insertedId.toString(),
+    },
+    message: "Transação financeira criada com sucesso!",
+  };
+}
+export type TCreateFinancialTransactionOutput = Awaited<
+  ReturnType<typeof createFinancialTransaction>
+>;
+
+const createFinancialTransactionRoute: NextApiHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
+  const session = await validateAuthenticationWithSession(req, res);
+  const input = CreateFinancialTransactionInputSchema.parse(req.body);
+  const result = await createFinancialTransaction({ input, session });
+  return res.status(200).json(result);
+};
+
+export default apiHandler({
+  GET: getFinancialTransactionsRoute,
+  PUT: updateFinancialTransactionRoute,
+  POST: createFinancialTransactionRoute,
+});

@@ -90,9 +90,9 @@ function FinanceiroContent({ session }: { session: TAuthSession }) {
       </div>
 
       {mode === "stats" ? <FinancesStatsView /> : null}
-      {mode === "accounting-entries" ? <AccountingEntriesView /> : null}
-      {mode === "financial-transactions" ? <FinancialTransactionsView /> : null}
-      {mode === "financial-accounts" ? <FinancialAccountsView /> : null}
+      {mode === "accounting-entries" ? <AccountingEntriesView session={session} /> : null}
+      {mode === "financial-transactions" ? <FinancialTransactionsView session={session} /> : null}
+      {mode === "financial-accounts" ? <FinancialAccountsView session={session} /> : null}
     </div>
   );
 }

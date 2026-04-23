@@ -300,14 +300,15 @@ async function getFinancesOverallStats({
 
 export type TGetFinancesOverallStatsOutput = Awaited<ReturnType<typeof getFinancesOverallStats>>;
 
-const getFinancesOverallStatsRoute: NextApiHandler<{
-  data: TGetFinancesOverallStatsOutput;
-}> = async (req, res) => {
+const getFinancesOverallStatsRoute: NextApiHandler<TGetFinancesOverallStatsOutput> = async (
+  req,
+  res,
+) => {
   const session = await validateAuthenticationWithSession(req, res);
 
   const input = GetFinancesOverallStatsInputSchema.parse(req.query);
   const data = await getFinancesOverallStats({ input, session });
-  return res.status(200).json({ data });
+  return res.status(200).json(data);
 };
 
 export default apiHandler({ GET: getFinancesOverallStatsRoute });

@@ -16,6 +16,7 @@ import { TbTopologyFull } from "react-icons/tb";
 import type { TConditionTypesEnum } from "./schemas/enums";
 import type { TPurchaseControl } from "./schemas/purchases";
 import {
+  TFinancialAccounts,
   TFinancialAccountsTypeEnum,
   TFinancialTransactionMethodEnum,
   TFinancialTransactionTypeEnum,
@@ -2038,6 +2039,37 @@ export const FinancialAccountTypeOptions: {
     className:
       "bg-purple-200 text-purple-600 border border-purple-600 hover:bg-purple-100 hover:text-purple-500 hover:border-purple-500",
     colors: { text: "text-purple-600", background: "bg-purple-200" },
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+];
+
+export const FinancialAccountMetadataBankAccountTypeOptions: {
+  id: number;
+  label: string;
+  value: Extract<TFinancialAccounts["metadados"], { tipo: "BANCO" }>["tipoConta"];
+  icon: React.ReactNode;
+  className: string;
+  colors: { text: string; background: string };
+  renderIcon: (className: string) => React.ReactNode;
+}[] = [
+  {
+    id: 1,
+    label: "CORRENTE",
+    value: "CORRENTE",
+    icon: <Wallet className="w-4 h-4" />,
+    className:
+      "bg-green-200 text-green-600 border border-green-600 hover:bg-green-100 hover:text-green-500 hover:border-green-500",
+    colors: { text: "text-green-600", background: "bg-green-200" },
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+  {
+    id: 2,
+    label: "POUPANÇA",
+    value: "POUPANÇA",
+    icon: <Wallet className="w-4 h-4" />,
+    className:
+      "bg-blue-200 text-blue-600 border border-blue-600 hover:bg-blue-100 hover:text-blue-500 hover:border-blue-500",
+    colors: { text: "text-blue-600", background: "bg-blue-200" },
     renderIcon: (className: string) => <Wallet className={className} />,
   },
 ];

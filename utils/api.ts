@@ -50,7 +50,11 @@ export function apiHandler(handler: ApiMethodHandlers) {
 			// Se passou pelas validações, chamar o handler
 			await methodHandler(req, res);
 		} catch (error) {
-			console.log("[API_HANDLER]", error);
+			if (error instanceof ZodError) {
+				console.log("[API_HANDLER] ZodError", error.flatten());
+			} else {
+				console.log("[API_HANDLER]", error instanceof Error ? error.message : error);
+			}
 			errorHandler(error, res);
 		}
 	};

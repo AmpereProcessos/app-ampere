@@ -33,7 +33,7 @@ export default function FinancesStatsView() {
     queryParams,
     updateQueryParams,
   } = useFinancesOverallStats({ initialParams: {} });
-
+  console.log("FINANCES STATS VIEW", stats);
   const totalRevenue = stats?.totalRevenue || 0;
   const totalExpense = stats?.totalExpense || 0;
   const totalCost = stats?.totalCost || 0;

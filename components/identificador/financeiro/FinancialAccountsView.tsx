@@ -5,7 +5,7 @@ import {
 } from "@/utils/methods/query/finances";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { InteractiveFilter } from "@/components/ui/interactive-filter";
-import { Banknote } from "lucide-react";
+import { Banknote, PencilIcon, PlusIcon } from "lucide-react";
 import { BadgeDollarSign } from "lucide-react";
 import {
   ArrowUp,
@@ -40,13 +40,23 @@ import {
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
+import { Button } from "@/components/ui/button";
+import NewFinancialAccount from "./contas-financeiras/NewFinancialAccount";
+import { useQueryClient } from "@tanstack/react-query";
+import { TAuthSession } from "@/lib/authentication/types";
+import ControlFinancialAccount from "./contas-financeiras/ControlFinancialAccount";
 const ACCOUNT_STATUS_OPTIONS = [
   { id: "active", value: "true", label: "Somente ativas" },
   { id: "all", value: "false", label: "Todas as contas" },
 ];
 
-export default function FinancialAccountsView() {
-  const { data, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
+export default function FinancialAccountsView({ session }: { session: TAuthSession }) {
+  const queryClient = useQueryClient();
+  const [newFinancialAccountModalIsOpen, setNewFinancialAccountModalIsOpen] = useState(false);
+  const [editFinancialAccountModalId, setEditFinancialAccountModalId] = useState<string | null>(
+    null,
+  );
+  const { data, queryKey, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
     useFinancesFinancialAccounts({ initialParams: {} });
   const accounts = data?.accounts ?? [];
 
@@ -57,8 +67,24 @@ export default function FinancialAccountsView() {
       : "N/A";
   }, [queryParams.statsPeriodAfter, queryParams.statsPeriodBefore]);
 
+  const handleOnMutate = async () => {
+    await queryClient.cancelQueries({ queryKey: queryKey });
+  };
+  const handleOnSettled = async () => {
+    await queryClient.invalidateQueries({ queryKey: queryKey });
+  };
   return (
     <div className="flex w-full flex-col gap-3">
+      <div className="w-full flex items-center justify-end">
+        <Button
+          size={"sm"}
+          className="flex items-center gap-1"
+          onClick={() => setNewFinancialAccountModalIsOpen(true)}
+        >
+          <PlusIcon className="w-4 h-4" />
+          NOVA CONTA FINANCEIRA
+        </Button>
+      </div>
       <div className="flex flex-col gap-3 justify-end lg:flex-row lg:items-end">
         <InteractiveFilter.Root className="w-fit">
           <InteractiveFilter.Trigger>
@@ -129,6 +155,7 @@ export default function FinancialAccountsView() {
                 account={account}
                 statsPeriodAfter={queryParams.statsPeriodAfter}
                 statsPeriodBefore={queryParams.statsPeriodBefore}
+                onEditClick={() => setEditFinancialAccountModalId(account.id)}
               />
             ))}
           </div>
@@ -149,6 +176,27 @@ export default function FinancialAccountsView() {
           </Empty>
         )
       ) : null}
+      {newFinancialAccountModalIsOpen ? (
+        <NewFinancialAccount
+          session={session}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+          closeModal={() => setNewFinancialAccountModalIsOpen(false)}
+        />
+      ) : null}
+      {editFinancialAccountModalId ? (
+        <ControlFinancialAccount
+          session={session}
+          accountId={editFinancialAccountModalId}
+          closeModal={() => setEditFinancialAccountModalId(null)}
+          callbacks={{
+            onMutate: handleOnMutate,
+            onSettled: handleOnSettled,
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -157,8 +205,14 @@ type AccountCardProps = {
   account: TGetFinancialAccountsOutputDefault["accounts"][number];
   statsPeriodAfter: string | null;
   statsPeriodBefore: string | null;
+  onEditClick: () => void;
 };
-function AccountCard({ account, statsPeriodAfter, statsPeriodBefore }: AccountCardProps) {
+function AccountCard({
+  account,
+  statsPeriodAfter,
+  statsPeriodBefore,
+  onEditClick,
+}: AccountCardProps) {
   const typeConfig = FinancialAccountTypeOptions.find((o) => o.value === account.tipo) ?? null;
   const stats = account.estatisticas;
 
@@ -181,14 +235,25 @@ function AccountCard({ account, statsPeriodAfter, statsPeriodBefore }: AccountCa
 
           <h2 className="text-sm font-semibold">{account.nome}</h2>
         </div>
-        <span
-          className={cn(
-            "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
-            account.ativo ? "bg-green-200 text-green-600" : "bg-gray-200 text-gray-600",
-          )}
-        >
-          {account.ativo ? "ATIVO" : "INATIVO"}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <Button
+            size={"xs"}
+            variant={"ghost"}
+            className="flex items-center gap-1"
+            onClick={onEditClick}
+          >
+            <PencilIcon className="w-4 h-4" />
+            EDITAR
+          </Button>
+          <span
+            className={cn(
+              "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
+              account.ativo ? "bg-green-200 text-green-600" : "bg-gray-200 text-gray-600",
+            )}
+          >
+            {account.ativo ? "ATIVO" : "INATIVO"}
+          </span>
+        </div>
       </div>
       <div className="w-full flex items-center flex-wrap gap-x-3 gap-y-1.5">
         <span className={cn("flex items-center gap-1.5 text-[0.65rem]")}>

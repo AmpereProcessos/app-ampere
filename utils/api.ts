@@ -56,6 +56,13 @@ export function apiHandler(handler: ApiMethodHandlers) {
 	};
 }
 
+/** Primeiro valor de `req.query` (Next: `string | string[] | undefined` → `string | undefined`). */
+export function getFirstQueryString(v: string | string[] | undefined): string | undefined {
+	if (v === undefined) return undefined;
+	if (Array.isArray(v)) return v[0];
+	return v;
+}
+
 export async function validateAuthentication(req: NextApiRequest, res: NextApiResponse) {
 	const cookies = req.cookies;
 	const authCookie = cookies[SESSION_COOKIE_NAME];

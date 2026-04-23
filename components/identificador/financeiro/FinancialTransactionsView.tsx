@@ -1,0 +1,516 @@
+import DateInput from "@/components/inputs/Date";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent,
+} from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
+import { InteractiveFilter } from "@/components/ui/interactive-filter";
+import ErrorComponent from "@/components/utils/ErrorComponent";
+import LoadingComponent from "@/components/utils/LoadingComponent";
+import GeneralPaginationComponent from "@/components/utils/Pagination";
+import { cn } from "@/lib/utils";
+import { TGetFinancialAccountsOutputDefault } from "@/pages/api/financeiro/financial-accounts";
+import { TGetFinancialTransactionsOutputDefault } from "@/pages/api/financeiro/financial-transactions";
+import { formatToMoney } from "@/utils/constants";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
+import { getErrorMessage } from "@/utils/methods/handlers";
+import {
+  useFinancesFinancialAccounts,
+  useFinancesFinancialTransactions,
+} from "@/utils/methods/query/finances";
+import {
+  FinancialAccountTypeOptions,
+  FinancialTransactionPaymentMethodsOptions,
+  FinancialTransactionTypeOptions,
+} from "@/utils/select-options";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  AlertCircle,
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  Clock,
+  DollarSign,
+  ListFilter,
+  Wallet,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { BsCalendar, BsCalendarCheck } from "react-icons/bs";
+
+const TRANSACTION_STATUS_OPTIONS = [
+  {
+    id: "pendente",
+    value: "pendente",
+    label: "PENDENTE",
+    icon: <Clock className="w-4 h-4 text-blue-600" />,
+  },
+  {
+    id: "efetivada",
+    value: "efetivada",
+    label: "EFETIVADA",
+    icon: <CheckCircle2 className="w-4 h-4 text-green-600" />,
+  },
+  {
+    id: "em-atraso",
+    value: "em-atraso",
+    label: "EM ATRASO",
+    icon: <AlertCircle className="w-4 h-4 text-red-600" />,
+  },
+];
+export default function FinancialTransactionsView() {
+  const { data, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
+    useFinancesFinancialTransactions({
+      initialParams: {
+        page: 1,
+        search: "",
+        types: [],
+        paymentMethods: [],
+        statuses: [],
+        periodAfter: null,
+        periodBefore: null,
+      },
+    });
+  const { data: financialAccountsData } = useFinancesFinancialAccounts({
+    initialParams: { activeOnly: true },
+  });
+
+  const transactions = data?.transactions ?? [];
+  const financialAccounts = financialAccountsData?.accounts ?? [];
+  const transactionsMatched = data?.transactionsMatched ?? 0;
+  const totalPages = data?.totalPages ?? 0;
+  const selectedTypesLabel = useMemo(
+    () =>
+      queryParams.types
+        .map(
+          (type) =>
+            FinancialTransactionTypeOptions.find((option) => option.value === type)?.label ?? type,
+        )
+        .join(", "),
+    [queryParams.types],
+  );
+  const selectedPaymentMethodsLabel = useMemo(
+    () =>
+      queryParams.paymentMethods
+        .map(
+          (method) =>
+            FinancialTransactionPaymentMethodsOptions.find((option) => option.value === method)
+              ?.label ?? method,
+        )
+        .join(", "),
+    [queryParams.paymentMethods],
+  );
+  const selectedStatusesLabel = useMemo(
+    () =>
+      queryParams.statuses
+        .map(
+          (status) =>
+            TRANSACTION_STATUS_OPTIONS.find((option) => option.value === status)?.label ?? status,
+        )
+        .join(", "),
+    [queryParams.statuses],
+  );
+  const selectedForecastPeriodLabel = useMemo(() => {
+    return queryParams.periodAfter && queryParams.periodBefore
+      ? `${formatDateAsLocale(queryParams.periodAfter)} - ${formatDateAsLocale(queryParams.periodBefore)}`
+      : "N/A";
+  }, [queryParams.periodAfter, queryParams.periodBefore]);
+
+  return (
+    <div className="flex w-full flex-col gap-3">
+      <Input
+        value={queryParams.search ?? ""}
+        placeholder="Pesquisar movimentação..."
+        onChange={(e) => updateQueryParams({ search: e.target.value, page: 1 })}
+        className="grow rounded-xl"
+      />
+      <div className="flex flex-col gap-3 justify-end lg:flex-row lg:items-end">
+        <InteractiveFilter.Root className="w-fit">
+          <InteractiveFilter.Trigger>
+            <InteractiveFilter.Icon>
+              <ArrowRight className="h-4 w-4 min-h-4 min-w-4" />
+              <InteractiveFilter.Label>TIPO</InteractiveFilter.Label>
+            </InteractiveFilter.Icon>
+            <InteractiveFilter.Value>
+              {selectedTypesLabel.length > 0 ? (
+                <strong>{selectedTypesLabel}</strong>
+              ) : (
+                <span>NENHUM</span>
+              )}
+            </InteractiveFilter.Value>
+            <InteractiveFilter.Clear onClear={() => updateQueryParams({ types: [], page: 1 })} />
+          </InteractiveFilter.Trigger>
+          <InteractiveFilter.Content className="w-72 p-0">
+            <InteractiveFilter.MultiContent
+              options={FinancialTransactionTypeOptions.map((option) => ({
+                ...option,
+                startContent: option.icon,
+              }))}
+              value={queryParams.types}
+              onChange={(nextTypes) => updateQueryParams({ types: nextTypes, page: 1 })}
+              onClear={() => updateQueryParams({ types: [], page: 1 })}
+              isCleared={queryParams.types.length === 0}
+              searchPlaceholder="Buscar tipo..."
+              emptyLabel="Nenhum tipo encontrado."
+              clearLabel="N/A"
+            />
+          </InteractiveFilter.Content>
+        </InteractiveFilter.Root>
+
+        <InteractiveFilter.Root className="w-fit">
+          <InteractiveFilter.Trigger>
+            <InteractiveFilter.Icon>
+              <Wallet className="h-4 w-4 min-h-4 min-w-4" />
+              <InteractiveFilter.Label>MÉTODO DE PAGAMENTO</InteractiveFilter.Label>
+            </InteractiveFilter.Icon>
+            <InteractiveFilter.Value>
+              {selectedPaymentMethodsLabel.length > 0 ? (
+                <strong>{selectedPaymentMethodsLabel}</strong>
+              ) : (
+                <span>NENHUM</span>
+              )}
+            </InteractiveFilter.Value>
+            <InteractiveFilter.Clear
+              onClear={() => updateQueryParams({ paymentMethods: [], page: 1 })}
+            />
+          </InteractiveFilter.Trigger>
+          <InteractiveFilter.Content className="w-80 p-0">
+            <InteractiveFilter.MultiContent
+              options={FinancialTransactionPaymentMethodsOptions.map((option) => ({
+                ...option,
+                startContent: option.icon,
+              }))}
+              value={queryParams.paymentMethods}
+              onChange={(nextPaymentMethods) =>
+                updateQueryParams({ paymentMethods: nextPaymentMethods, page: 1 })
+              }
+              onClear={() => updateQueryParams({ paymentMethods: [], page: 1 })}
+              isCleared={queryParams.paymentMethods.length === 0}
+              searchPlaceholder="Buscar método..."
+              emptyLabel="Nenhum método encontrado."
+              clearLabel="N/A"
+            />
+          </InteractiveFilter.Content>
+        </InteractiveFilter.Root>
+
+        <InteractiveFilter.Root className="w-fit">
+          <InteractiveFilter.Trigger>
+            <InteractiveFilter.Icon>
+              <ListFilter className="h-4 w-4 min-h-4 min-w-4" />
+              <InteractiveFilter.Label>STATUS</InteractiveFilter.Label>
+            </InteractiveFilter.Icon>
+            <InteractiveFilter.Value>
+              {selectedStatusesLabel.length > 0 ? (
+                <strong>{selectedStatusesLabel}</strong>
+              ) : (
+                <span>NENHUM</span>
+              )}
+            </InteractiveFilter.Value>
+            <InteractiveFilter.Clear onClear={() => updateQueryParams({ statuses: [], page: 1 })} />
+          </InteractiveFilter.Trigger>
+          <InteractiveFilter.Content className="w-72 p-0">
+            <InteractiveFilter.MultiContent
+              options={TRANSACTION_STATUS_OPTIONS.map((option) => ({
+                ...option,
+                startContent: option.icon,
+              }))}
+              value={queryParams.statuses}
+              onChange={(nextStatuses) => updateQueryParams({ statuses: nextStatuses, page: 1 })}
+              onClear={() => updateQueryParams({ statuses: [], page: 1 })}
+              isCleared={queryParams.statuses.length === 0}
+              searchPlaceholder="Buscar status..."
+              emptyLabel="Nenhum status encontrado."
+              clearLabel="N/A"
+            />
+          </InteractiveFilter.Content>
+        </InteractiveFilter.Root>
+
+        <InteractiveFilter.Root className="w-fit">
+          <InteractiveFilter.Trigger>
+            <InteractiveFilter.Icon>
+              <CalendarDays className="h-4 w-4 min-h-4 min-w-4" />
+              <InteractiveFilter.Label>PERÍODO DE PREVISÃO</InteractiveFilter.Label>
+            </InteractiveFilter.Icon>
+            <InteractiveFilter.Value>{selectedForecastPeriodLabel}</InteractiveFilter.Value>
+            <InteractiveFilter.Clear
+              onClear={() => updateQueryParams({ periodAfter: null, periodBefore: null, page: 1 })}
+            />
+          </InteractiveFilter.Trigger>
+          <InteractiveFilter.Content className="w-auto p-0">
+            <InteractiveFilter.DateRangeContent
+              value={{
+                from: queryParams.periodAfter ? new Date(queryParams.periodAfter) : undefined,
+                to: queryParams.periodBefore ? new Date(queryParams.periodBefore) : undefined,
+              }}
+              onChange={(nextPeriod) =>
+                updateQueryParams({
+                  periodAfter: nextPeriod.from ? nextPeriod.from.toISOString() : null,
+                  periodBefore: nextPeriod.to ? nextPeriod.to.toISOString() : null,
+                  page: 1,
+                })
+              }
+            />
+          </InteractiveFilter.Content>
+        </InteractiveFilter.Root>
+      </div>
+
+      <GeneralPaginationComponent
+        activePage={queryParams.page}
+        queryLoading={isLoading}
+        selectPage={(page) => updateQueryParams({ page })}
+        totalPages={totalPages}
+        itemsMatchedText={`${transactionsMatched} ${transactionsMatched === 1 ? "movimentação encontrada" : "movimentações encontradas"}.`}
+        itemsShowingText={`Mostrando ${transactions.length} ${transactions.length === 1 ? "movimentação" : "movimentações"}.`}
+      />
+
+      {isLoading ? <LoadingComponent /> : null}
+      {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+      {isSuccess && transactions ? (
+        transactions.length > 0 ? (
+          transactions.map((tx) => (
+            <TransactionCard key={tx.id} transaction={tx} financialAccounts={financialAccounts} />
+          ))
+        ) : (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <DollarSign />
+              </EmptyMedia>
+              <EmptyTitle>Nenhuma movimentação encontrada</EmptyTitle>
+              <EmptyDescription>
+                Não há movimentações financeiras para os filtros selecionados.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent />
+          </Empty>
+        )
+      ) : null}
+    </div>
+  );
+}
+
+type TransactionCardProps = {
+  transaction: TGetFinancialTransactionsOutputDefault["transactions"][number];
+  financialAccounts: TGetFinancialAccountsOutputDefault["accounts"];
+};
+function TransactionCard({ transaction, financialAccounts }: TransactionCardProps) {
+  const typeConfig = useMemo(
+    () => FinancialTransactionTypeOptions.find((o) => o.value === transaction.tipo) ?? null,
+    [transaction.tipo],
+  );
+  const queryClient = useQueryClient();
+  const [isEffectFormOpen, setIsEffectFormOpen] = useState(false);
+  const [effectDate, setEffectDate] = useState<string | undefined>(
+    transaction.dataPrevisao
+      ? new Date(transaction.dataPrevisao).toISOString().slice(0, 10)
+      : undefined,
+  );
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
+    transaction.contaFinanceira?.id ?? null,
+  );
+  const [selectedMethod, setSelectedMethod] = useState(
+    transaction.metodo === "A DEFINIR" ? "DINHEIRO" : transaction.metodo,
+  );
+
+  const now = new Date();
+  const isEffective = !!transaction.dataEfetivacao;
+  const isOverdue =
+    !isEffective && transaction.dataPrevisao && new Date(transaction.dataPrevisao) < now;
+  const statusConfig = useMemo(() => {
+    return {
+      label: isEffective ? "EFETIVADA" : isOverdue ? "EM ATRASO" : "PENDENTE",
+      className: isEffective
+        ? "bg-green-100 text-green-700"
+        : isOverdue
+          ? "bg-red-100 text-red-700"
+          : "bg-blue-100 text-blue-700",
+      icon: isEffective ? (
+        <CheckCircle2 className="w-3 h-3" />
+      ) : isOverdue ? (
+        <AlertCircle className="w-3 h-3" />
+      ) : (
+        <Clock className="w-3 h-3" />
+      ),
+    };
+  }, [isEffective, isOverdue]);
+
+  const paymentMethodConfig = useMemo(() => {
+    return (
+      FinancialTransactionPaymentMethodsOptions.find((o) => o.value === transaction.metodo) ?? null
+    );
+  }, [transaction.metodo]);
+
+  const financialAccountTypeConfig = useMemo(() => {
+    return (
+      FinancialAccountTypeOptions.find((o) => o.value === transaction.contaFinanceira?.tipo) ?? null
+    );
+  }, [transaction.contaFinanceira?.tipo]);
+  const canChangeMethod = transaction.metodo === "A DEFINIR";
+
+  return (
+    <div className="bg-card border-primary/20 flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
+      <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
+        <div className="flex items-center gap-2 flex-wrap">
+          {typeConfig ? (
+            <span
+              className={cn(
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
+                typeConfig.colors.background,
+                typeConfig.colors.text,
+              )}
+            >
+              {typeConfig.icon}
+              {typeConfig.label}
+            </span>
+          ) : null}
+          <h1 className="text-xs font-bold tracking-tight lg:text-sm">
+            {transaction.titulo || "TÍTULO NÃO DEFINIDO"}
+          </h1>
+        </div>
+        <div className="flex items-center gap-1.5">
+          {statusConfig ? (
+            <span
+              className={cn(
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-[0.65rem]",
+                statusConfig.className,
+              )}
+            >
+              {statusConfig.icon}
+              {statusConfig.label}
+            </span>
+          ) : null}
+          <span className="text-sm font-semibold">{formatToMoney(transaction.valor)}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        {transaction.contaFinanceira ? (
+          <span className={cn("flex items-center gap-1.5 text-[0.65rem]")}>
+            {financialAccountTypeConfig?.icon}
+            {transaction.contaFinanceira.nome}
+          </span>
+        ) : null}
+        {paymentMethodConfig ? (
+          <span className={cn("flex items-center gap-1.5 text-[0.65rem]")}>
+            {paymentMethodConfig.icon}
+            {paymentMethodConfig.label}
+          </span>
+        ) : null}
+
+        {transaction.totalParcelas && transaction.totalParcelas > 1 ? (
+          <span className="text-[0.65rem] text-muted-foreground">
+            Parcela {transaction.parcela}/{transaction.totalParcelas}
+          </span>
+        ) : null}
+      </div>
+
+      <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
+        <div className="flex flex-wrap items-center gap-2">
+          {transaction.dataEfetivacao ? (
+            <div className={cn("flex items-center gap-1.5 text-[0.65rem] font-bold text-primary")}>
+              <BsCalendarCheck className="w-3 min-w-3 h-3 min-h-3 text-green-600" />
+              <p className="text-xs font-medium tracking-tight uppercase">
+                EFETIVADA: {formatDateAsLocale(transaction.dataEfetivacao)}
+              </p>
+            </div>
+          ) : transaction.dataPrevisao ? (
+            <div className={cn("flex items-center gap-1.5 text-[0.65rem] font-bold text-primary")}>
+              <BsCalendar className="w-3 min-w-3 h-3 min-h-3 text-amber-600" />
+              <p className="text-xs font-medium tracking-tight uppercase">
+                PREVISÃO: {formatDateAsLocale(transaction.dataPrevisao)}
+              </p>
+            </div>
+          ) : null}
+
+          {transaction.autor ? (
+            <div className="flex items-center gap-1">
+              <Avatar className="h-4 w-4">
+                <AvatarImage
+                  src={transaction.autor.avatarUrl || undefined}
+                  alt={transaction.autor.nome || "N/A"}
+                />
+                <AvatarFallback className="text-[0.5rem]">
+                  {formatNameAsInitials(transaction.autor.nome || "N/A")}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-[0.65rem] text-muted-foreground">{transaction.autor.nome}</span>
+            </div>
+          ) : null}
+        </div>
+        {!isEffective ? (
+          <Button
+            type="button"
+            size="sm"
+            variant={isEffectFormOpen ? "default" : "outline"}
+            onClick={() => setIsEffectFormOpen((prev) => !prev)}
+          >
+            Efetivar
+          </Button>
+        ) : null}
+      </div>
+
+      {/* {!isEffective && isEffectFormOpen ? (
+        <div className="mt-2 grid gap-3 rounded-xl border border-primary/10 bg-background/70 p-3 md:grid-cols-3">
+          <DateInput label="Data de efetivação" value={effectDate} handleChange={setEffectDate} />
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.7rem] font-medium uppercase text-muted-foreground">
+              Conta financeira
+            </span>
+            <select
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+              value={selectedAccountId ?? ""}
+              onChange={(event) => setSelectedAccountId(event.target.value || null)}
+            >
+              <option value="">Sem conta</option>
+              {financialAccounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.7rem] font-medium uppercase text-muted-foreground">
+              Método final
+            </span>
+            <select
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+              value={selectedMethod}
+              onChange={(event) => setSelectedMethod(event.target.value as typeof selectedMethod)}
+              disabled={!canChangeMethod}
+            >
+              {FinancialTransactionPaymentMethodsOptions.filter(
+                (option) => option.value !== "A_DEFINIR",
+              ).map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="md:col-span-3 flex justify-end">
+            <Button
+              type="button"
+              onClick={() =>
+                mutateEffectTransaction({
+                  transactionId: transaction.id,
+                  dataEfetivacao: effectDate ?? null,
+                  contaFinanceiraId: selectedAccountId,
+                  metodo: canChangeMethod ? selectedMethod : null,
+                })
+              }
+              disabled={isEffecting}
+            >
+              {isEffecting ? "Efetivando..." : "Confirmar efetivação"}
+            </Button>
+          </div>
+        </div>
+      ) : null} */}
+    </div>
+  );
+}

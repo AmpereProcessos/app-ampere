@@ -1,19 +1,19 @@
 {
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"editor.defaultFormatter": "oxc.oxc-vscode",	
-	"notebook.defaultFormatter": "oxc.oxc-vscode",
-	"editor.formatOnSave": true,
-	"editor.formatOnPaste": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.oxc": "explicit",
-		"source.organizeImports.oxc": "explicit"
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "oxc.oxc-vscode"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "oxc.oxc-vscode"
-	},
-	"typescript.experimental.useTsgo": false,
-	"typescript.tsserver.maxTsServerMemory": 4096
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "notebook.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit",
+    "source.organizeImports.oxc": "explicit",
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+  },
+  "typescript.experimental.useTsgo": true,
+  "typescript.tsserver.maxTsServerMemory": 4096,
 }

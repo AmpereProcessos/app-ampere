@@ -92,6 +92,21 @@ export function getDayStringsBetweenDates({ initialDate, endDate, format }: { in
 	return strings;
 }
 
+/** Data de referência (ex.: vencimento) antes do fim do dia de comparação — usado em fluxo de caixa pendente. */
+export function isDateOverdue({
+	date,
+	inRelationTo = dayjs(),
+	useEndOfDay = true,
+}: {
+	date: string | Date;
+	inRelationTo?: dayjs.Dayjs;
+	useEndOfDay?: boolean;
+}) {
+	const d = dayjs(date);
+	if (useEndOfDay) return d.endOf("day").isBefore(inRelationTo.endOf("day"));
+	return d.isBefore(inRelationTo);
+}
+
 export function getDifferenceBetweenDates({ start, end }: { start?: string | Date | null; end?: string | Date | null }) {
 	const startDate = dayjs(start);
 	const endDate = dayjs(end);

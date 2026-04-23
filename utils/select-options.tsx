@@ -15,7 +15,44 @@ import {
 import { TbTopologyFull } from "react-icons/tb";
 import type { TConditionTypesEnum } from "./schemas/enums";
 import type { TPurchaseControl } from "./schemas/purchases";
-
+import {
+  TFinancialAccountsTypeEnum,
+  TFinancialTransactionMethodEnum,
+  TFinancialTransactionTypeEnum,
+} from "./schemas/finances";
+import {
+  Archive,
+  ArrowDown,
+  ArrowUp,
+  Banknote,
+  BookOpen,
+  Check,
+  CheckCheck,
+  ClipboardIcon,
+  Clock,
+  CreditCard,
+  FileIcon,
+  FileText,
+  Globe,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Minus,
+  Package,
+  Pencil,
+  Percent,
+  Phone,
+  QrCode,
+  ShoppingCart,
+  Stars,
+  Store,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Video,
+  Wallet,
+  X,
+} from "lucide-react";
 export const ConditionTypes: {
   id: number;
   label: string;
@@ -1853,5 +1890,154 @@ export const CostApportionments = [
       { label: "SIMPLES NACIONAL - DAS", value: "SIMPLES NACIONAL - DAS" },
       { label: "IRPJ/CSLL", value: "IRPJ/CSLL" },
     ],
+  },
+];
+
+export const FinancialTransactionPaymentMethodsOptions: {
+  id: number;
+  label: string;
+  value: TFinancialTransactionMethodEnum;
+  icon: React.ReactNode;
+  renderIcon: (className: string) => React.ReactNode;
+}[] = [
+  {
+    id: 1,
+    label: "DINHEIRO",
+    value: "DINHEIRO",
+    icon: <Banknote className="w-4 h-4" />,
+    renderIcon: (className: string) => <Banknote className={className} />,
+  },
+  {
+    id: 2,
+    label: "PIX",
+    value: "PIX",
+    icon: <QrCode className="w-4 h-4" />,
+    renderIcon: (className: string) => <QrCode className={className} />,
+  },
+  {
+    id: 3,
+    label: "CARTÃO DE CRÉDITO",
+    value: "CARTÃO DE CRÉDITO",
+    icon: <CreditCard className="w-4 h-4" />,
+    renderIcon: (className: string) => <CreditCard className={className} />,
+  },
+  {
+    id: 4,
+    label: "CARTÃO DE DÉBITO",
+    value: "CARTÃO DE DÉBITO",
+    icon: <CreditCard className="w-4 h-4" />,
+    renderIcon: (className: string) => <CreditCard className={className} />,
+  },
+  {
+    id: 5,
+    label: "BOLETO",
+    value: "BOLETO",
+    icon: <FileText className="w-4 h-4" />,
+    renderIcon: (className: string) => <FileText className={className} />,
+  },
+  {
+    id: 6,
+    label: "TRANSFERÊNCIA",
+    value: "TRANSFERÊNCIA",
+    icon: <Wallet className="w-4 h-4" />,
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+  // {
+  // 	id: 7,
+  // 	label: "CASHBACK",
+  // 	value: "CASHBACK",
+  // 	icon: <Stars className="w-4 h-4" />,
+  // 	renderIcon: (className: string) => <Stars className={className} />,
+  // },
+  {
+    id: 8,
+    label: "VALE",
+    value: "OUTRO",
+    icon: <Wallet className="w-4 h-4" />,
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+  {
+    id: 9,
+    label: "A DEFINIR",
+    value: "OUTRO",
+    icon: <Clock className="w-4 h-4" />,
+    renderIcon: (className: string) => <Clock className={className} />,
+  },
+  {
+    id: 10,
+    label: "FIADO / NOTA",
+    value: "OUTRO",
+    icon: <BookOpen className="w-4 h-4" />,
+    renderIcon: (className: string) => <BookOpen className={className} />,
+  },
+  {
+    id: 11,
+    label: "OUTRO",
+    value: "OUTRO",
+    icon: <Wallet className="w-4 h-4" />,
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+];
+
+export const FinancialTransactionTypeOptions: {
+  id: number;
+  label: string;
+  value: TFinancialTransactionTypeEnum;
+  icon: React.ReactNode;
+  colors: { text: string; background: string };
+}[] = [
+  {
+    id: 1,
+    label: "ENTRADA",
+    value: "ENTRADA",
+    icon: <ArrowUp className="w-4 h-4 text-green-600" />,
+    colors: { text: "text-green-600", background: "bg-green-200" },
+  },
+  {
+    id: 2,
+    label: "SAÍDA",
+    value: "SAÍDA",
+    icon: <ArrowDown className="w-4 h-4 text-red-600" />,
+    colors: { text: "text-red-600", background: "bg-red-200" },
+  },
+];
+export const FinancialAccountTypeOptions: {
+  id: number;
+  label: string;
+  value: TFinancialAccountsTypeEnum;
+  icon: React.ReactNode;
+  className: string;
+  colors: { text: string; background: string };
+  renderIcon: (className: string) => React.ReactNode;
+}[] = [
+  {
+    id: 1,
+    label: "CAIXA",
+    value: "CAIXA",
+    icon: <Wallet className="w-4 h-4" />,
+    className:
+      "bg-green-200 text-green-600 border border-green-600 hover:bg-green-100 hover:text-green-500 hover:border-green-500",
+    colors: { text: "text-green-600", background: "bg-green-200" },
+    renderIcon: (className: string) => <Wallet className={className} />,
+  },
+  {
+    id: 2,
+    label: "BANCO",
+    value: "BANCO",
+    icon: <Banknote className="w-4 h-4" />,
+    className:
+      "bg-blue-200 text-blue-600 border border-blue-600 hover:bg-blue-100 hover:text-blue-500 hover:border-blue-500",
+    colors: { text: "text-blue-600", background: "bg-blue-200" },
+    renderIcon: (className: string) => <Banknote className={className} />,
+  },
+  {
+    id: 3,
+    label: "CARTEIRA DIGITAL",
+    value: "CARTEIRA_DIGITAL",
+    icon: <Wallet className="w-4 h-4" />,
+    className:
+      "bg-purple-200 text-purple-600 border border-purple-600 hover:bg-purple-100 hover:text-purple-500 hover:border-purple-500",
+    colors: { text: "text-purple-600", background: "bg-purple-200" },
+    renderIcon: (className: string) => <Wallet className={className} />,
   },
 ];

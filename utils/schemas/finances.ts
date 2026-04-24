@@ -68,6 +68,23 @@ export const AccountingEntriesSchema = z.object({
       invalid_type_error: "Tipo inválido para o nome da conta crédito.",
     }),
   }),
+  projeto: z
+    .object({
+      identificador: z.string({
+        required_error: "Identificador do projeto não informado.",
+        invalid_type_error: "Tipo inválido para o identificador do projeto.",
+      }),
+      id: z.string({
+        required_error: "ID do projeto não informado.",
+        invalid_type_error: "Tipo inválido para o ID do projeto.",
+      }),
+      nome: z.string({
+        required_error: "Nome do projeto não informado.",
+        invalid_type_error: "Tipo inválido para o nome do projeto.",
+      }),
+    })
+    .optional()
+    .nullable(),
   valor: z.number({
     required_error: "Valor não informado.",
     invalid_type_error: "Tipo inválido para o valor.",
@@ -255,6 +272,31 @@ export const FinancialTransactionSchema = z.object({
     })
     .optional()
     .nullable(),
+  conciliado: z
+    .boolean({
+      invalid_type_error: "Tipo inválido para o status de conciliação.",
+    })
+    .optional()
+    .nullable(),
+  conciliacaoId: z
+    .string({
+      invalid_type_error: "Tipo inválido para o ID da conciliação.",
+    })
+    .optional()
+    .nullable(),
+  dataReconciliacao: z
+    .string({
+      invalid_type_error: "Tipo inválido para a data de reconciliação.",
+    })
+    .datetime({ message: "Tipo inválido para a data de reconciliação." })
+    .optional()
+    .nullable(),
+  referenciaExterno: z
+    .string({
+      invalid_type_error: "Tipo inválido para a referência externa.",
+    })
+    .optional()
+    .nullable(),
   autor: AuthorSchema,
   dataInsercao: z
     .string({
@@ -264,3 +306,136 @@ export const FinancialTransactionSchema = z.object({
     .datetime({ message: "Tipo inválido para a data de inserção." }),
 });
 export type TFinancialTransaction = z.infer<typeof FinancialTransactionSchema>;
+
+/**
+ * FINANCIAL RECONCILIATION
+ *
+ * Stores a "reconciliation session": user uploads a PDF bank statement, AI extracts
+ * lines, the system matches them against transactions in the selected account/period,
+ * and the user confirms. Each matched transaction is stamped with `conciliado`,
+ * `conciliacaoId`, `dataReconciliacao` and `referenciaExterno`.
+ */
+export const FinancialReconciliationStatusEnumSchema = z.enum(["RASCUNHO", "CONCLUIDA"]);
+export type TFinancialReconciliationStatus = z.infer<
+  typeof FinancialReconciliationStatusEnumSchema
+>;
+
+export const FinancialReconciliationMatchStrategyEnumSchema = z.enum([
+  "EXATA",
+  "APROXIMADA",
+  "IA",
+  "MANUAL",
+  "CRIADA",
+]);
+export type TFinancialReconciliationMatchStrategy = z.infer<
+  typeof FinancialReconciliationMatchStrategyEnumSchema
+>;
+
+export const FinancialReconciliationExtractedLineSchema = z.object({
+  id: z.string({
+    required_error: "ID da linha extraída não informado.",
+    invalid_type_error: "Tipo inválido para o ID da linha extraída.",
+  }),
+  data: z
+    .string({
+      required_error: "Data da linha extraída não informada.",
+      invalid_type_error: "Tipo inválido para a data da linha extraída.",
+    })
+    .datetime({ message: "Tipo inválido para a data da linha extraída." }),
+  descricao: z.string({
+    required_error: "Descrição da linha extraída não informada.",
+    invalid_type_error: "Tipo inválido para a descrição da linha extraída.",
+  }),
+  valor: z.number({
+    required_error: "Valor da linha extraída não informado.",
+    invalid_type_error: "Tipo inválido para o valor da linha extraída.",
+  }),
+  tipo: FinancialTransactionTypeEnumSchema,
+  documento: z
+    .string({
+      invalid_type_error: "Tipo inválido para o documento da linha extraída.",
+    })
+    .optional()
+    .nullable(),
+});
+export type TFinancialReconciliationExtractedLine = z.infer<
+  typeof FinancialReconciliationExtractedLineSchema
+>;
+
+export const FinancialReconciliationMatchSchema = z.object({
+  linhaId: z.string({
+    required_error: "ID da linha não informado.",
+    invalid_type_error: "Tipo inválido para o ID da linha.",
+  }),
+  transacaoId: z
+    .string({
+      invalid_type_error: "Tipo inválido para o ID da transação.",
+    })
+    .nullable(),
+  transacaoCriadaId: z
+    .string({
+      invalid_type_error: "Tipo inválido para o ID da transação criada.",
+    })
+    .nullable()
+    .optional(),
+  score: z
+    .number({
+      required_error: "Score não informado.",
+      invalid_type_error: "Tipo inválido para o score.",
+    })
+    .min(0)
+    .max(1),
+  estrategia: FinancialReconciliationMatchStrategyEnumSchema,
+});
+export type TFinancialReconciliationMatch = z.infer<typeof FinancialReconciliationMatchSchema>;
+
+export const FinancialReconciliationSchema = z.object({
+  contaFinanceira: z.object({
+    id: z.string({
+      required_error: "ID da conta financeira não informado.",
+      invalid_type_error: "Tipo inválido para o ID da conta financeira.",
+    }),
+    nome: z.string({
+      required_error: "Nome da conta financeira não informado.",
+      invalid_type_error: "Tipo inválido para o nome da conta financeira.",
+    }),
+    tipo: FinancialAccountsTypeEnumSchema,
+  }),
+  periodo: z.object({
+    inicio: z
+      .string({
+        required_error: "Data de início do período não informada.",
+        invalid_type_error: "Tipo inválido para a data de início do período.",
+      })
+      .datetime({ message: "Tipo inválido para a data de início do período." }),
+    fim: z
+      .string({
+        required_error: "Data de fim do período não informada.",
+        invalid_type_error: "Tipo inválido para a data de fim do período.",
+      })
+      .datetime({ message: "Tipo inválido para a data de fim do período." }),
+  }),
+  pdf: z.object({
+    url: z
+      .string({
+        required_error: "URL do PDF não informada.",
+        invalid_type_error: "Tipo inválido para a URL do PDF.",
+      })
+      .url({ message: "URL do PDF inválida." }),
+    nomeOriginal: z.string({
+      required_error: "Nome original do PDF não informado.",
+      invalid_type_error: "Tipo inválido para o nome original do PDF.",
+    }),
+  }),
+  status: FinancialReconciliationStatusEnumSchema,
+  linhasExtraidas: z.array(FinancialReconciliationExtractedLineSchema),
+  matches: z.array(FinancialReconciliationMatchSchema),
+  autor: AuthorSchema,
+  dataInsercao: z
+    .string({
+      required_error: "Data de inserção não informada.",
+      invalid_type_error: "Tipo inválido para a data de inserção.",
+    })
+    .datetime({ message: "Tipo inválido para a data de inserção." }),
+});
+export type TFinancialReconciliation = z.infer<typeof FinancialReconciliationSchema>;

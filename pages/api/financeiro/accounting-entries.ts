@@ -1,5 +1,10 @@
 import { TAuthSession } from "@/lib/authentication/types";
-import { AccountingEntriesSchema, TAccountingEntry } from "@/utils/schemas/finances";
+import {
+  AccountingEntriesSchema,
+  FinancialTransactionSchema,
+  TAccountingEntry,
+  TFinancialTransaction,
+} from "@/utils/schemas/finances";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import dayjs from "dayjs";
@@ -43,6 +48,13 @@ function mapEntryToResponse(doc: TAccountingEntryDoc) {
   };
 }
 
+function mapEntryTransaction(doc: WithId<TFinancialTransaction>) {
+  return {
+    ...doc,
+    _id: doc._id.toString(),
+  };
+}
+
 async function getAccountingEntries({
   input,
   session: _session,
@@ -53,14 +65,24 @@ async function getAccountingEntries({
   const { id, page, search, periodAfter, periodBefore } = input;
   const db: Db = await connectToDatabase();
   const collection: Collection<TAccountingEntryDoc> = db.collection("lancamentos-contabeis");
+  const financialTransactionsCollection: Collection<TFinancialTransaction> =
+    db.collection("transacoes-financeiras");
 
   if (id) {
     if (!ObjectId.isValid(id)) throw new Error("ID inválido.");
     const entryDoc = await collection.findOne({ _id: new ObjectId(id) });
     if (!entryDoc) throw new Error("Lançamento contábil não encontrado.");
+
+    const entryTransactions = await financialTransactionsCollection
+      .find({ "lancamentoContabil.id": { $eq: entryDoc._id.toString() } })
+      .toArray();
+
     return {
       data: {
-        byId: mapEntryToResponse(entryDoc),
+        byId: {
+          ...mapEntryToResponse(entryDoc),
+          transacoesFinanceiras: entryTransactions.map(mapEntryTransaction),
+        },
         default: null,
       },
     };
@@ -127,6 +149,24 @@ const UpdateAccountingEntryInputSchema = z.object({
     invalid_type_error: "Tipo inválido para o ID do lançamento contábil.",
   }),
   entry: AccountingEntriesSchema,
+  entryFinancialTransactions: z.array(
+    FinancialTransactionSchema.omit({ lancamentoContabil: true, autor: true }).extend({
+      id: z
+        .string({
+          required_error: "ID da transação financeira não informado.",
+          invalid_type_error: "Tipo inválido para o ID da transação financeira.",
+        })
+        .optional()
+        .nullable(),
+      deletar: z
+        .boolean({
+          required_error: "Deletar não informado.",
+          invalid_type_error: "Tipo inválido para o deletar.",
+        })
+        .optional()
+        .nullable(),
+    }),
+  ),
 });
 export type TUpdateAccountingEntryInput = z.infer<typeof UpdateAccountingEntryInputSchema>;
 async function updateAccountingEntry({
@@ -136,10 +176,12 @@ async function updateAccountingEntry({
   input: TUpdateAccountingEntryInput;
   session: TAuthSession;
 }) {
-  const { entryId, entry } = input;
+  const { entryId, entry, entryFinancialTransactions } = input;
 
   const db: Db = await connectToDatabase();
   const collection: Collection<TAccountingEntry> = db.collection("lancamentos-contabeis");
+  const financialTransactionsCollection: Collection<TFinancialTransaction> =
+    db.collection("transacoes-financeiras");
   const entryDoc = await collection.findOne({ _id: new ObjectId(entryId) });
   if (!entryDoc) {
     throw new Error("Lançamento contábil não encontrado.");
@@ -151,7 +193,68 @@ async function updateAccountingEntry({
   if (!updateResponse.acknowledged) {
     throw new Error("Oops, houve um erro desconhecido ao atualizar lançamento contábil.");
   }
+  const updatedEntry = await collection.findOne({ _id: new ObjectId(entryId) });
+  if (!updatedEntry) {
+    throw new Error("Oops, houve um erro desconhecido ao atualizar lançamento contábil.");
+  }
 
+  // To insert: those with no delete flag and no id
+  const toInsertFinancialTransactions = entryFinancialTransactions.filter(
+    (transaction) => !transaction.deletar && !transaction.id,
+  );
+  // To update: those with no delete flag and with id
+  const toUpdateFinancialTransactions = entryFinancialTransactions.filter(
+    (transaction) => !transaction.deletar && transaction.id,
+  );
+  // To delete: those with delete flag and with id
+  const toDeleteFinancialTransactions = entryFinancialTransactions.filter(
+    (transaction) => transaction.deletar && transaction.id,
+  );
+
+  // Insert new financial transactions
+  if (toInsertFinancialTransactions.length > 0) {
+    await financialTransactionsCollection.insertMany(
+      toInsertFinancialTransactions.map((transaction) => ({
+        ...transaction,
+        autor: {
+          id: session.user.id,
+          nome: session.user.nome,
+          avatarUrl: session.user.avatar_url ?? null,
+        },
+        lancamentoContabil: {
+          id: updatedEntry._id.toString(),
+          nome: updatedEntry.titulo,
+        },
+      })),
+    );
+  }
+  // Update existing financial transactions
+  if (toUpdateFinancialTransactions.length > 0) {
+    await Promise.all(
+      toUpdateFinancialTransactions.map(async (transaction) => {
+        await financialTransactionsCollection.updateOne(
+          { _id: new ObjectId(transaction.id as string) },
+          {
+            $set: {
+              ...transaction,
+              lancamentoContabil: { id: updatedEntry._id.toString(), nome: updatedEntry.titulo },
+            },
+          },
+        );
+      }),
+    );
+  }
+
+  // Delete existing financial transactions
+  if (toDeleteFinancialTransactions.length > 0) {
+    await financialTransactionsCollection.deleteMany({
+      _id: {
+        $in: toDeleteFinancialTransactions.map(
+          (transaction) => new ObjectId(transaction.id as string),
+        ),
+      },
+    });
+  }
   return {
     data: {
       updatedId: entryId,
@@ -173,6 +276,9 @@ const updateAccountingEntryRoute: NextApiHandler = async (
 
 const CreateAccountingEntryInputSchema = z.object({
   entry: AccountingEntriesSchema,
+  entryFinancialTransactions: z.array(
+    FinancialTransactionSchema.omit({ lancamentoContabil: true, autor: true }),
+  ),
 });
 export type TCreateAccountingEntryInput = z.infer<typeof CreateAccountingEntryInputSchema>;
 async function createAccountingEntry({
@@ -182,14 +288,36 @@ async function createAccountingEntry({
   input: TCreateAccountingEntryInput;
   session: TAuthSession;
 }) {
-  const { entry } = input;
+  const { entry, entryFinancialTransactions } = input;
   const db: Db = await connectToDatabase();
   const collection: Collection<TAccountingEntry> = db.collection("lancamentos-contabeis");
+  const financialTransactionsCollection: Collection<TFinancialTransaction> =
+    db.collection("transacoes-financeiras");
   const entryDoc = await collection.insertOne(entry);
   if (!entryDoc.acknowledged) {
     throw new Error("Oops, houve um erro desconhecido ao criar lançamento contábil.");
   }
+  const insertedEntryId = entryDoc.insertedId.toString();
+  if (!insertedEntryId) {
+    throw new Error("Oops, houve um erro desconhecido ao criar lançamento contábil.");
+  }
 
+  if (entryFinancialTransactions.length > 0) {
+    await financialTransactionsCollection.insertMany(
+      entryFinancialTransactions.map((transaction) => ({
+        ...transaction,
+        autor: {
+          id: session.user.id,
+          nome: session.user.nome,
+          avatarUrl: session.user.avatar_url ?? null,
+        },
+        lancamentoContabil: {
+          id: insertedEntryId,
+          nome: entry.titulo,
+        },
+      })),
+    );
+  }
   return {
     data: {
       createdId: entryDoc.insertedId.toString(),

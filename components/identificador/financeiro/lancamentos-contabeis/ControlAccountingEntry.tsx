@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 import AccountsBlock from "./blocos/Accounts";
 import GeneralBlock from "./blocos/General";
 import ValuesBlock from "./blocos/Values";
+import FinancialTransactionsBlock from "./blocos/FinancialTransactions";
 
 type ControlAccountingEntryProps = {
   entryId: string;
@@ -33,7 +34,15 @@ export default function ControlAccountingEntry({
     isError: isErrorEntry,
     error: entryError,
   } = useAccountingEntryById(entryId);
-  const { state, updateEntry, redefineState, resetState } = useAccountingEntryState({ session });
+  const {
+    state,
+    updateEntry,
+    redefineState,
+    resetState,
+    addFinancialTransaction,
+    updateFinancialTransaction,
+    removeFinancialTransaction,
+  } = useAccountingEntryState({ session });
 
   useEffect(() => {
     if (!entryData) return;
@@ -53,6 +62,11 @@ export default function ControlAccountingEntry({
         },
         dataInsercao: entryData.dataInsercao,
       },
+      entryFinancialTransactions: entryData.transacoesFinanceiras.map((transaction) => ({
+        id: transaction._id,
+        deletar: false,
+        ...transaction,
+      })),
     });
   }, [entryData, redefineState]);
 
@@ -89,6 +103,7 @@ export default function ControlAccountingEntry({
         handleUpdateAccountingEntry({
           entryId,
           entry: state.entry,
+          entryFinancialTransactions: state.entryFinancialTransactions,
         })
       }
       stateIsLoading={isLoadingEntry}
@@ -99,6 +114,12 @@ export default function ControlAccountingEntry({
       <GeneralBlock entry={state.entry} updateEntry={updateEntry} />
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
+      <FinancialTransactionsBlock
+        entryFinancialTransactions={state.entryFinancialTransactions}
+        addFinancialTransaction={addFinancialTransaction}
+        updateFinancialTransaction={updateFinancialTransaction}
+        removeFinancialTransaction={removeFinancialTransaction}
+      />
     </ResponsiveDialogDrawer>
   );
 }

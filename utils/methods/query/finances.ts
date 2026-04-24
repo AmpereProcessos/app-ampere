@@ -19,6 +19,10 @@ import {
   TGetFinancesOverallStatsInput,
   TGetFinancesOverallStatsOutput,
 } from "@/pages/api/financeiro/stats";
+import {
+  TGetReconciliationsInput,
+  TGetReconciliationsOutput,
+} from "@/pages/api/financeiro/reconciliation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -275,6 +279,67 @@ export function useFinancialAccountById(id: string) {
       queryFn: async () => await fetchFinancialAccountById(id),
     }),
     queryKey: ["financial-account-by-id", id],
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* RECONCILIATIONS                                                            */
+/* -------------------------------------------------------------------------- */
+
+async function fetchReconciliations(input: TGetReconciliationsInput) {
+  const searchParams = new URLSearchParams();
+  if (input.page) searchParams.set("page", input.page.toString());
+  if (input.contaFinanceiraId) searchParams.set("contaFinanceiraId", input.contaFinanceiraId);
+  const { data } = await axios.get<TGetReconciliationsOutput>(
+    `/api/financeiro/reconciliation?${searchParams.toString()}`,
+  );
+  return data.data.default;
+}
+
+type UseFinancesReconciliationsParams = {
+  initialParams?: Partial<TGetReconciliationsInput>;
+};
+export function useFinancesReconciliations({
+  initialParams,
+}: UseFinancesReconciliationsParams = {}) {
+  const [queryParams, setQueryParams] = useState<TGetReconciliationsInput>({
+    page: initialParams?.page ?? 1,
+    contaFinanceiraId: initialParams?.contaFinanceiraId ?? null,
+    id: null,
+  });
+
+  function updateQueryParams(params: Partial<TGetReconciliationsInput>) {
+    setQueryParams((prev) => ({ ...prev, ...params }));
+  }
+
+  return {
+    ...useQuery({
+      queryKey: ["reconciliations", queryParams],
+      queryFn: async () => await fetchReconciliations(queryParams),
+    }),
+    queryKey: ["reconciliations", queryParams],
+    queryParams,
+    updateQueryParams,
+  };
+}
+
+async function fetchReconciliationById(id: string) {
+  const { data } = await axios.get<TGetReconciliationsOutput>(
+    `/api/financeiro/reconciliation?id=${id}`,
+  );
+  const byId = data.data.byId;
+  if (!byId) throw new Error("Conciliação não encontrada.");
+  return byId;
+}
+
+export function useReconciliationById(id: string | null) {
+  return {
+    ...useQuery({
+      queryKey: ["reconciliation-by-id", id],
+      queryFn: async () => await fetchReconciliationById(id as string),
+      enabled: !!id,
+    }),
+    queryKey: ["reconciliation-by-id", id],
   };
 }
 

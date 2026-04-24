@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import AccountsBlock from "./blocos/Accounts";
 import GeneralBlock from "./blocos/General";
 import ValuesBlock from "./blocos/Values";
+import FinancialTransactionsBlock from "./blocos/FinancialTransactions";
 
 type NewAccountingEntryProps = {
   session: TAuthSession;
@@ -21,7 +22,14 @@ export default function NewAccountingEntry({
   closeModal,
   callbacks,
 }: NewAccountingEntryProps) {
-  const { state, updateEntry, resetState } = useAccountingEntryState({ session });
+  const {
+    state,
+    updateEntry,
+    resetState,
+    addFinancialTransaction,
+    updateFinancialTransaction,
+    removeFinancialTransaction,
+  } = useAccountingEntryState({ session });
 
   const { mutate: handleCreateAccountingEntry, isPending } = useMutation({
     mutationKey: ["create-accounting-entry"],
@@ -50,7 +58,12 @@ export default function NewAccountingEntry({
       menuDescription="Preencha os campos abaixo para criar um novo lançamento contábil."
       menuActionButtonText="CRIAR LANÇAMENTO CONTÁBIL"
       menuCancelButtonText="CANCELAR"
-      actionFunction={() => handleCreateAccountingEntry({ entry: state.entry })}
+      actionFunction={() =>
+        handleCreateAccountingEntry({
+          entry: state.entry,
+          entryFinancialTransactions: state.entryFinancialTransactions,
+        })
+      }
       stateIsLoading={false}
       closeMenu={closeModal}
       actionIsPending={isPending}
@@ -58,6 +71,12 @@ export default function NewAccountingEntry({
       <GeneralBlock entry={state.entry} updateEntry={updateEntry} />
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
+      <FinancialTransactionsBlock
+        entryFinancialTransactions={state.entryFinancialTransactions}
+        addFinancialTransaction={addFinancialTransaction}
+        updateFinancialTransaction={updateFinancialTransaction}
+        removeFinancialTransaction={removeFinancialTransaction}
+      />
     </ResponsiveDialogDrawer>
   );
 }

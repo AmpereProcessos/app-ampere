@@ -1,11 +1,11 @@
 import SelectInput from "@/components/inputs/Select";
-import SelectInputWithImages from "@/components/inputs/SelectWithImages";
 import TextInput from "@/components/inputs/Text";
+import { Avatar as AvatarUI, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Avatar from "@/components/utils/Avatar";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import type { TAuthSession } from "@/lib/authentication/types";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
 import { editTechnicalAnalysis } from "@/utils/methods/mutation/technical-analysis";
@@ -224,18 +224,32 @@ export default function ControlTechnicalAnalysis({ analysisId, session, closeMod
 											/>
 										</div>
 										<div className="w-full lg:w-[1/2]">
-											<SelectInputWithImages
+											<SelectInput
 												label={"ANALISTA RESPONSÁVEL"}
-												value={infoHolder.analista?.id}
-												options={analysts?.map((a) => ({ id: a._id, label: a.nome, value: a, url: a.avatar_url || undefined })) || []}
-												handleChange={(value: any) => {
+												value={infoHolder.analista?.id ?? null}
+												options={
+													analysts?.map((a) => ({
+														id: a._id,
+														label: a.nome,
+														value: a._id,
+														startContent: (
+															<AvatarUI className="h-5 w-5 min-h-5 min-w-5">
+																<AvatarImage src={a.avatar_url || undefined} />
+																<AvatarFallback className="text-xs">{formatNameAsInitials(a.nome)}</AvatarFallback>
+															</AvatarUI>
+														),
+													})) || []
+												}
+												handleChange={(analystId) => {
+													const a = analysts?.find((x) => x._id === analystId);
+													if (!a) return;
 													setInfoHolder((prev) => ({
 														...prev,
-														analista: { id: value._id, nome: value.nome, apelido: value.nome, avatar_url: value.avatar_url },
+														analista: { id: a._id, nome: a.nome, apelido: a.nome, avatar_url: a.avatar_url },
 													}));
 													setChanges((prev) => ({
 														...prev,
-														analista: { id: value._id, nome: value.nome, apelido: value.nome, avatar_url: value.avatar_url },
+														analista: { id: a._id, nome: a.nome, apelido: a.nome, avatar_url: a.avatar_url },
 													}));
 												}}
 												selectedItemLabel="NÃO DEFINIDO"

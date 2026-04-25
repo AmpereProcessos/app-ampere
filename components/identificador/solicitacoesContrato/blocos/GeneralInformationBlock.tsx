@@ -6,7 +6,7 @@ import TextInput from "@/components/inputs/Text";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import { formatDate, formatToPhone, tiposDeServico } from "@/utils/constants";
 import { estadosECidades } from "@/utils/estados_cidades";
-import { formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
+import { formatNameAsInitials, formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
 import { usePartnersSimplified } from "@/utils/methods/query/crm/partners";
 import { formatDateInputChange, getCEPInfo } from "@/utils/methods/shared";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
@@ -15,8 +15,8 @@ import toast from "react-hot-toast";
 import AllCities from "@/utils/jsons/cidades.json";
 import TextareaInput from "@/components/inputs/TextareaInput";
 import { useUsers } from "@/utils/methods/query/crm/users";
-import SelectWithImages from "@/components/inputs/SelectWithImages";
 import { FileText } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 type GeneralInformationBlockProps = {
 	infoHolder: TContractRequestDTO;
 	setInfoHolder: React.Dispatch<React.SetStateAction<TContractRequestDTO>>;
@@ -64,7 +64,7 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 			</div>
 			<div className="flex w-full flex-col items-center gap-4 lg:flex-row">
 				<div className="w-full lg:w-1/4">
-					<SelectWithImages
+					<SelectInput
 						label={"VENDEDOR"}
 						value={infoHolder.nomeVendedor}
 						selectedItemLabel="NÃO DEFINIDO"
@@ -73,7 +73,12 @@ function GeneralInformationBlock({ infoHolder, setInfoHolder, userHasEditPermiss
 								id: u._id,
 								label: u.nome,
 								value: u.nome,
-								url: u.avatar_url || undefined,
+								startContent: (
+									<Avatar className="h-5 w-5 min-h-5 min-w-5">
+										<AvatarImage src={u.avatar_url ?? undefined} />
+										<AvatarFallback className="text-xs">{formatNameAsInitials(u.nome)}</AvatarFallback>
+									</Avatar>
+								),
 							})) || []
 						}
 						handleChange={(value) => {

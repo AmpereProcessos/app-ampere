@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import AccountsBlock from "./blocos/Accounts";
 import GeneralBlock from "./blocos/General";
+import ProjectBlock from "./blocos/Project";
 import ValuesBlock from "./blocos/Values";
 import FinancialTransactionsBlock from "./blocos/FinancialTransactions";
 
@@ -61,6 +62,7 @@ export default function ControlAccountingEntry({
           avatar_url: entryData.autor.avatarUrl ?? null,
         },
         dataInsercao: entryData.dataInsercao,
+        projeto: entryData.projeto ?? null,
       },
       entryFinancialTransactions: entryData.transacoesFinanceiras.map((transaction) => ({
         id: transaction._id,
@@ -112,6 +114,7 @@ export default function ControlAccountingEntry({
       actionIsPending={isPending}
     >
       <GeneralBlock entry={state.entry} updateEntry={updateEntry} />
+      <ProjectBlock entry={state.entry} updateEntry={updateEntry} />
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
       <FinancialTransactionsBlock

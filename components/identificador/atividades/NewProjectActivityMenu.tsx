@@ -1,5 +1,6 @@
-import SelectInputWithImages from "@/components/inputs/SelectWithImages";
+import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
+import { Avatar as AvatarUI, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Avatar from "@/components/utils/Avatar";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
@@ -149,8 +150,7 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
 						<h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">VINCULE RESPONSÁVEIS</h1>
 						<div className="flex w-full items-center gap-2">
 							<div className="flex items-end gap-2">
-								{/**@ts-ignore */}
-								<SelectInputWithImages
+								<SelectInput
 									label={"RESPONSÁVEL"}
 									editable={true}
 									showLabel={false}
@@ -160,13 +160,18 @@ function NewProjectActivityMenu({ projectId, projectName, projectIdentifier, ses
 											id: resp._id,
 											label: resp.usuario,
 											value: resp._id,
-											url: resp.avatar_url ?? undefined,
-											fallback: formatNameAsInitials(resp.usuario),
+											startContent: (
+												<AvatarUI className="h-5 w-5 min-h-5 min-w-5">
+													<AvatarImage src={resp.avatar_url ?? undefined} />
+													<AvatarFallback className="text-xs">{formatNameAsInitials(resp.usuario)}</AvatarFallback>
+												</AvatarUI>
+											),
 										})) || []
 									}
 									handleChange={(value: any) => setNewResponsibleHolder(value)}
 									onReset={() => setNewResponsibleHolder(null)}
 									selectedItemLabel={"USUÁRIO NÃO DEFINIDO"}
+									width="100%"
 								/>
 
 								<button

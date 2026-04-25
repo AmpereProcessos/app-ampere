@@ -13,12 +13,12 @@ import { Check, CloudUpload, Code, LayoutGrid, LinkIcon, Loader, Paperclip, Plus
 import { useState } from "react";
 import { FaSolarPanel, FaWrench } from "react-icons/fa";
 
-import SelectWithImages from "@/components/inputs/SelectWithImages";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { uploadFile } from "@/utils/methods/firebase";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { createManyFileReferences } from "@/utils/methods/mutation/crm/file-references";
 import { useFileReferences } from "@/utils/methods/query/crm/file-references";
@@ -126,7 +126,7 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 					{formatDateAsLocale(infoHolder.fechamento, true)}
 				</div>
 			) : null}
-			<SelectWithImages
+			<SelectInput
 				label="RESPONSÁVEL"
 				value={infoHolder.responsavel}
 				handleChange={(value) => {
@@ -151,7 +151,12 @@ export function General({ infoHolder, updateInfoHolder }: GeneralProps) {
 						id: user._id,
 						label: user.nome,
 						value: user._id,
-						url: user.avatar_url ?? undefined,
+						startContent: (
+							<Avatar className="h-5 w-5 min-h-5 min-w-5">
+								<AvatarImage src={user.avatar_url ?? undefined} />
+								<AvatarFallback className="text-xs">{formatNameAsInitials(user.nome)}</AvatarFallback>
+							</Avatar>
+						),
 					})) || []
 				}
 				width="100%"

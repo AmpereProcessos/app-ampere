@@ -54,6 +54,7 @@ function getDefaultEntryState(session: TAuthSession): TAccountingEntryState {
         avatar_url: session.user.avatar_url,
       },
       dataInsercao: new Date().toISOString(),
+      projeto: null,
     },
     entryFinancialTransactions: [],
   };

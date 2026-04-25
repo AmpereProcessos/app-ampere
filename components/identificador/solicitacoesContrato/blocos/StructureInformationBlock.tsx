@@ -1,6 +1,5 @@
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
-import SelectInputWithImages from "@/components/inputs/SelectWithImages";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import { Wrench } from "lucide-react";

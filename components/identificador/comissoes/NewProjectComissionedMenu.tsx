@@ -5,8 +5,9 @@ import type { TGetComissionDataOutputByProjectId } from "@/app/api/comissoes/rou
 import { useUsers } from "@/utils/methods/query/crm/users";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import SelectWithImages from "@/components/inputs/SelectWithImages";
 import SelectInput from "@/components/inputs/Select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatNameAsInitials } from "@/utils/methods/formatting";
 import NumberInput from "@/components/inputs/Number";
 
 type NewProjectComissionedMenuProps = {
@@ -95,10 +96,22 @@ function ProjectComissionDataBlock({ comissionableValue, infoHolder, updateInfoH
 	const { data: crmUsers } = useUsers({ includeDeleted: false });
 	return (
 		<div className="w-full h-full flex flex-col gap-6">
-			<SelectWithImages
+			<SelectInput
 				label="VENDEDOR"
 				selectedItemLabel="NÃO DEFINIDO"
-				options={crmUsers?.map((user) => ({ id: user._id, label: user.nome, value: user._id, image: user.avatar_url ?? undefined })) || []}
+				options={
+					crmUsers?.map((user) => ({
+						id: user._id,
+						label: user.nome,
+						value: user._id,
+						startContent: (
+							<Avatar className="h-5 w-5 min-h-5 min-w-5">
+								<AvatarImage src={user.avatar_url ?? undefined} />
+								<AvatarFallback className="text-xs">{formatNameAsInitials(user.nome)}</AvatarFallback>
+							</Avatar>
+						),
+					})) || []
+				}
 				value={infoHolder.idCrm}
 				handleChange={(value) => {
 					const crmUser = crmUsers?.find((user) => user._id === value);

@@ -1,6 +1,6 @@
 import { useSession } from "@/components/providers/SessionProvider";
 import { estadosECidades } from "@/utils/estados_cidades";
-import { formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
+import { formatNameAsInitials, formatToCEP, formatToCPForCNPJ } from "@/utils/methods/formatting";
 import { usePartnersSimplified } from "@/utils/methods/query/crm/partners";
 import { useUsers } from "@/utils/methods/query/crm/users";
 import { formatDateInputChange, getCEPInfo } from "@/utils/methods/shared";
@@ -23,8 +23,8 @@ import DateInput from "../inputs/Date";
 import NumberInput from "../inputs/Number";
 import SelectInput from "../inputs/Select";
 import SelectInputVirtualized from "../inputs/SelectVirtualized";
-import SelectWithImages from "../inputs/SelectWithImages";
 import TextInput from "../inputs/Text";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import TextareaInput from "../inputs/TextareaInput";
 import ProjectCoverImage from "./Utils/ProjectCoverImage";
 import { InfoBlockSection } from "./Utils/SectionBlock";
@@ -505,7 +505,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 							/>
 						</div>
 						<div className="w-full lg:w-1/4">
-							<SelectWithImages
+							<SelectInput
 								label={"VENDEDOR"}
 								value={infoHolder.vendedor.nome}
 								selectedItemLabel="NÃO DEFINIDO"
@@ -514,7 +514,12 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 										id: u._id,
 										label: u.nome,
 										value: u.nome,
-										url: u.avatar_url || undefined,
+										startContent: (
+											<Avatar className="h-5 w-5 min-h-5 min-w-5">
+												<AvatarImage src={u.avatar_url ?? undefined} />
+												<AvatarFallback className="text-xs">{formatNameAsInitials(u.nome)}</AvatarFallback>
+											</Avatar>
+										),
 									})) || []
 								}
 								editable={editor}
@@ -557,7 +562,7 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 							/>
 						</div>
 						<div className="w-full lg:w-1/4">
-							<SelectWithImages
+							<SelectInput
 								label={"INSIDER"}
 								value={infoHolder.insider}
 								selectedItemLabel="NÃO DEFINIDO"
@@ -566,7 +571,12 @@ function InfoVendaBlock({ editor, infoHolder, setInfo, changes, setChanges, upda
 										id: u._id,
 										label: u.nome,
 										value: u.nome,
-										url: u.avatar_url || undefined,
+										startContent: (
+											<Avatar className="h-5 w-5 min-h-5 min-w-5">
+												<AvatarImage src={u.avatar_url ?? undefined} />
+												<AvatarFallback className="text-xs">{formatNameAsInitials(u.nome)}</AvatarFallback>
+											</Avatar>
+										),
 									})) || []
 								}
 								editable={editor}

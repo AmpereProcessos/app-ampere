@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import AccountsBlock from "./blocos/Accounts";
 import GeneralBlock from "./blocos/General";
+import ProjectBlock from "./blocos/Project";
 import ValuesBlock from "./blocos/Values";
 import FinancialTransactionsBlock from "./blocos/FinancialTransactions";
 
@@ -69,6 +70,7 @@ export default function NewAccountingEntry({
       actionIsPending={isPending}
     >
       <GeneralBlock entry={state.entry} updateEntry={updateEntry} />
+      <ProjectBlock entry={state.entry} updateEntry={updateEntry} />
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
       <FinancialTransactionsBlock

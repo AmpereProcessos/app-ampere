@@ -45,6 +45,13 @@ function mapEntryToResponse(doc: TAccountingEntryDoc) {
     dataCompetencia: doc.dataCompetencia,
     autor: { id: doc.autor.id, nome: doc.autor.nome, avatarUrl: doc.autor.avatar_url ?? null },
     dataInsercao: doc.dataInsercao,
+    projeto: doc.projeto
+      ? {
+          identificador: doc.projeto.identificador,
+          id: doc.projeto.id,
+          nome: doc.projeto.nome,
+        }
+      : null,
   };
 }
 

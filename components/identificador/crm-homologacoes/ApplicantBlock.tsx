@@ -1,4 +1,5 @@
-import SelectInputWithImages from "@/components/inputs/SelectWithImages";
+import SelectInput from "@/components/inputs/Select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { useUsers } from "@/utils/methods/query/crm/users";
 import type { THomologation } from "@/utils/schemas/crm/homologation.schema";
@@ -29,7 +30,7 @@ function ApplicantBlock({ infoHolder, setInfoHolder }: ApplicantBlockProps) {
 		<div className="flex w-full flex-col gap-2">
 			<h1 className="bg-primary/80 w-full rounded p-1 text-center font-bold text-white">REQUERENTE</h1>
 			<div className="flex w-full items-center justify-center">
-				<SelectInputWithImages
+				<SelectInput
 					label={"REQUERENTE"}
 					editable={true}
 					showLabel={false}
@@ -39,15 +40,18 @@ function ApplicantBlock({ infoHolder, setInfoHolder }: ApplicantBlockProps) {
 							id: resp._id,
 							label: resp.nome,
 							value: resp._id,
-							url: resp.avatar_url || undefined,
-							fallback: formatNameAsInitials(resp.nome),
+							startContent: (
+								<Avatar className="h-5 w-5 min-h-5 min-w-5">
+									<AvatarImage src={resp.avatar_url ?? undefined} />
+									<AvatarFallback className="text-xs">{formatNameAsInitials(resp.nome)}</AvatarFallback>
+								</Avatar>
+							),
 						})) || []
 					}
 					handleChange={(value: any) => handleSelect(value)}
 					onReset={() => setApplicantHolder(null)}
 					selectedItemLabel={"USUÁRIO NÃO DEFINIDO"}
-					// @ts-ignore
-					width={undefined}
+					width="100%"
 				/>
 			</div>
 		</div>

@@ -30,6 +30,7 @@ export default function NewAccountingEntry({
     addFinancialTransaction,
     updateFinancialTransaction,
     removeFinancialTransaction,
+    redefineFinancialTransactions,
   } = useAccountingEntryState({ session });
 
   const { mutate: handleCreateAccountingEntry, isPending } = useMutation({
@@ -74,10 +75,12 @@ export default function NewAccountingEntry({
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
       <FinancialTransactionsBlock
+        entryTotalValue={state.entry.valor}
         entryFinancialTransactions={state.entryFinancialTransactions}
         addFinancialTransaction={addFinancialTransaction}
         updateFinancialTransaction={updateFinancialTransaction}
         removeFinancialTransaction={removeFinancialTransaction}
+        redefineFinancialTransactions={redefineFinancialTransactions}
       />
     </ResponsiveDialogDrawer>
   );

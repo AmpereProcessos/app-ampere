@@ -105,27 +105,32 @@ export function useAccountingEntryState({ session, initialState }: UseAccounting
 
   const removeFinancialTransaction = useCallback((index: number) => {
     setState((prev) => {
-      // Validating db existence (id defined)
-      const isExistingTransaction = state.entryFinancialTransactions.find(
-        (t, index) => index === index && !!t.id,
-      );
-      // If not an existing instance, just filtering it out
-      if (!isExistingTransaction)
+      const target = prev.entryFinancialTransactions[index];
+      if (!target) return prev;
+      if (!target.id) {
         return {
-          ...state,
-          entryFinancialTransactions: state.entryFinancialTransactions.filter(
-            (_, index) => index !== index,
-          ),
+          ...prev,
+          entryFinancialTransactions: prev.entryFinancialTransactions.filter((_, i) => i !== index),
         };
-      // Else, marking it with a deletar flag
+      }
       return {
-        ...state,
-        entryFinancialTransactions: state.entryFinancialTransactions.map((item, index) =>
-          index === index ? { ...item, deletar: true } : item,
+        ...prev,
+        entryFinancialTransactions: prev.entryFinancialTransactions.map((item, i) =>
+          i === index ? { ...item, deletar: true } : item,
         ),
       };
     });
   }, []);
+
+  const redefineFinancialTransactions = useCallback(
+    (next: TAccountingEntryState["entryFinancialTransactions"]) => {
+      setState((prev) => ({
+        ...prev,
+        entryFinancialTransactions: next,
+      }));
+    },
+    [],
+  );
   const redefineState = useCallback((newState: TAccountingEntryState) => {
     setState(newState);
   }, []);
@@ -140,6 +145,7 @@ export function useAccountingEntryState({ session, initialState }: UseAccounting
     addFinancialTransaction,
     updateFinancialTransaction,
     removeFinancialTransaction,
+    redefineFinancialTransactions,
     redefineState,
     resetState,
   };

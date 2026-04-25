@@ -43,6 +43,7 @@ export default function ControlAccountingEntry({
     addFinancialTransaction,
     updateFinancialTransaction,
     removeFinancialTransaction,
+    redefineFinancialTransactions,
   } = useAccountingEntryState({ session });
 
   useEffect(() => {
@@ -118,10 +119,12 @@ export default function ControlAccountingEntry({
       <AccountsBlock entry={state.entry} updateEntry={updateEntry} />
       <ValuesBlock entry={state.entry} updateEntry={updateEntry} />
       <FinancialTransactionsBlock
+        entryTotalValue={state.entry.valor}
         entryFinancialTransactions={state.entryFinancialTransactions}
         addFinancialTransaction={addFinancialTransaction}
         updateFinancialTransaction={updateFinancialTransaction}
         removeFinancialTransaction={removeFinancialTransaction}
+        redefineFinancialTransactions={redefineFinancialTransactions}
       />
     </ResponsiveDialogDrawer>
   );

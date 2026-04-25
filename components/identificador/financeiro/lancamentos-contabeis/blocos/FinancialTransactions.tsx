@@ -21,29 +21,44 @@ import { TUseAccountingEntryState } from "@/utils/state/accounting-entry";
 import { AlertCircle, ArrowRightLeft, CheckCircle2, Clock, PencilIcon, Tags } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BsCalendar, BsCalendarCheck } from "react-icons/bs";
+import { AddMultiFinancialTransactionsMenu } from "./add-multi-financial-transactions-menu";
 
 type FinancialTransactionsBlockProps = {
+  entryTotalValue: number;
   entryFinancialTransactions: TUseAccountingEntryState["state"]["entryFinancialTransactions"];
   addFinancialTransaction: TUseAccountingEntryState["addFinancialTransaction"];
   updateFinancialTransaction: TUseAccountingEntryState["updateFinancialTransaction"];
   removeFinancialTransaction: TUseAccountingEntryState["removeFinancialTransaction"];
+  redefineFinancialTransactions: TUseAccountingEntryState["redefineFinancialTransactions"];
 };
 
 export default function FinancialTransactionsBlock({
+  entryTotalValue,
   entryFinancialTransactions,
   addFinancialTransaction,
   updateFinancialTransaction,
   removeFinancialTransaction,
+  redefineFinancialTransactions,
 }: FinancialTransactionsBlockProps) {
   const [newFinancialTransactionModalIsOpen, setNewFinancialTransactionModalIsOpen] =
     useState(false);
+  const [addMultiMenuIsOpen, setAddMultiMenuIsOpen] = useState(false);
   const [editingTransactionIndex, setEditingTransactionIndex] = useState<number | null>(null);
   return (
     <ResponsiveDialogDrawerSection
       sectionTitleText="TRANSACÕES FINANCEIRAS"
       sectionTitleIcon={<ArrowRightLeft size={15} />}
     >
-      <div className="w-full flex items-center justify-end">
+      <div className="w-full flex flex-wrap items-center justify-end gap-1">
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={() => setAddMultiMenuIsOpen(true)}
+          className="flex items-center gap-1"
+        >
+          <PlusIcon width={14} height={14} />
+          MÚLTIPLAS
+        </Button>
         <Button
           variant="ghost"
           size="xs"
@@ -72,6 +87,16 @@ export default function FinancialTransactionsBlock({
           </p>
         )}
       </div>
+      {addMultiMenuIsOpen ? (
+        <AddMultiFinancialTransactionsMenu
+          entryTotalValue={entryTotalValue}
+          onCommit={(rows) => {
+            redefineFinancialTransactions([...entryFinancialTransactions, ...rows]);
+            setAddMultiMenuIsOpen(false);
+          }}
+          closeMenu={() => setAddMultiMenuIsOpen(false)}
+        />
+      ) : null}
       {newFinancialTransactionModalIsOpen ? (
         <FinancialTransactionMenu
           initialTransaction={undefined}

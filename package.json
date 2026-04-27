@@ -99,6 +99,7 @@
     "react-select": "^5.4.0",
     "react-window": "^1.8.9",
     "recharts": "^2.12.7",
+    "resend": "^6.12.2",
     "socket.io": "^4.8.1",
     "stream": "^0.0.2",
     "tailwind-merge": "^2.4.0",

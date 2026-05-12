@@ -1,4 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { notifyMaterialBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-registry";
 import { InsertMaterialSchema, type TMaterial } from "@/utils/schemas/materials";
 import clientPromise from "@/utils/services/mongodb/mongo-client";
@@ -104,6 +105,15 @@ const updateMaterial: NextApiHandler<PutResponse> = async (req, res) => {
 		};
 		const logResponse = await logCollection.insertOne(log);
 		console.log(logResponse);
+	}
+	if (hasChangedQty && material) {
+		await notifyMaterialBelowMinimumIfCrossed({
+			materialId: id,
+			materialName: material.nome,
+			previousQuantity: material.qtde,
+			newQuantity: changes.qtde || 0,
+			minimumQuantity: material.qtdeMinima,
+		});
 	}
 	return res.status(201).json({ data: "Material atualizado com sucesso !", message: "Material atualizado com sucesso !" });
 };
@@ -353,6 +363,13 @@ const inputMaterial: NextApiHandler<PatchResponse> = async (req, res) => {
 							session: dbSession,
 						},
 					);
+					await notifyMaterialBelowMinimumIfCrossed({
+						materialId: existingMaterial._id.toString(),
+						materialName: existingMaterial.nome,
+						previousQuantity: existingMaterial.qtde,
+						newQuantity: newQty,
+						minimumQuantity: existingMaterial.qtdeMinima,
+					});
 				} else {
 					const insertMaterialResponse = await materialsCollection.insertOne(
 						{

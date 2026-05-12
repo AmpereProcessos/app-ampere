@@ -261,8 +261,13 @@ async function editColaborator({
     if (changes.telefone) updates.phone = changes.telefone;
     if (changes.nome) updates.firstName = changes.nome;
     if (changes.avatar_url) updates.avatar = changes.avatar_url;
-    if (Object.keys(updates).length > 0)
-      await novu.subscribers.patch(updates, getNovuSubscriberId(id));
+    if (Object.keys(updates).length > 0) {
+      try {
+        await novu.subscribers.patch(updates, getNovuSubscriberId(id));
+      } catch (error) {
+        console.error("Error updating subscriber in novu", error);
+      }
+    }
   }
   return {
     data: {

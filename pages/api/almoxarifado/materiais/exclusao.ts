@@ -1,3 +1,4 @@
+import { notifyMaterialBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TMaterial } from "@/utils/schemas/materials";
 import type { TProject } from "@/utils/schemas/projects";
@@ -183,6 +184,7 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 	};
 
 	const totalReferences = Object.values(references).reduce((acc, curr) => acc + curr, 0);
+	let minimumNotificationChange: Parameters<typeof notifyMaterialBelowMinimumIfCrossed>[0] | null = null;
 	try {
 		const result = await dbSession.withTransaction(async () => {
 			// Verificar dependências DENTRO da transação
@@ -252,6 +254,13 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 						{ $set: { qtde: finalQty, preco: weightedPrices } },
 						{ session: dbSession },
 					);
+					minimumNotificationChange = {
+						materialId: targetMaterial._id.toString(),
+						materialName: targetMaterial.nome,
+						previousQuantity: targetMaterial.qtde,
+						newQuantity: finalQty,
+						minimumQuantity: targetMaterial.qtdeMinima,
+					};
 					// Deleting the origin material
 					await materialsCollection.deleteOne({ _id: new ObjectId(payload.id) }, { session: dbSession });
 				}
@@ -263,6 +272,13 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 						{ $set: { qtde: originMaterial.qtde, preco: originMaterial.preco } },
 						{ session: dbSession },
 					);
+					minimumNotificationChange = {
+						materialId: targetMaterial._id.toString(),
+						materialName: targetMaterial.nome,
+						previousQuantity: targetMaterial.qtde,
+						newQuantity: originMaterial.qtde,
+						minimumQuantity: targetMaterial.qtdeMinima,
+					};
 				}
 				if (payload.mergeMethod === "keep-target") {
 					// In this case, nothing needs to be done
@@ -329,6 +345,7 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 				};
 			}
 		});
+		if (minimumNotificationChange) await notifyMaterialBelowMinimumIfCrossed(minimumNotificationChange);
 
 		return result as {
 			data: { deletedId: string };

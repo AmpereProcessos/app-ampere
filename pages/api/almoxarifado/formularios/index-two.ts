@@ -1,4 +1,5 @@
 import type { TAuthSession } from "@/lib/authentication/types";
+import { notifyMaterialsBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TExpense } from "@/utils/schemas/expenses";
 import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-registry";
@@ -184,6 +185,7 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 		const warehouseFormsCollection = warehouseDb.collection<TNewWarehouseFormulary>("formularios");
 		const warehouseMaterialsCollection = warehouseDb.collection<TMaterial>("material");
 		const warehouseLogsCollection = warehouseDb.collection<TMaterialUpdateRegistry>("alteracoes");
+		const minimumNotificationChanges: Parameters<typeof notifyMaterialsBelowMinimumIfCrossed>[0] = [];
 		const insertedWarehouseFormularyId = (await session_mongo.withTransaction(async () => {
 			// Insert warehouse formulary
 			const insertWarehouseFormulary: TNewWarehouseFormulary = {
@@ -264,6 +266,13 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 						},
 					},
 				});
+				minimumNotificationChanges.push({
+					materialId: correspondingMaterial._id.toString(),
+					materialName: correspondingMaterial.nome,
+					previousQuantity: correspondingMaterial.qtde,
+					newQuantity: correspondingMaterial.qtde - listMaterialLiquidDecreaseQty,
+					minimumQuantity: correspondingMaterial.qtdeMinima,
+				});
 			}
 
 			// Execute bulk operations within transaction
@@ -289,6 +298,7 @@ async function createWarehouseFormulary({ input, session }: { input: TCreateWare
 
 			return insertResponse.insertedId.toString();
 		})) as unknown as string;
+		await notifyMaterialsBelowMinimumIfCrossed(minimumNotificationChanges);
 
 		return {
 			data: {
@@ -331,6 +341,7 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 		const warehouseFormsCollection = warehouseDb.collection<TNewWarehouseFormulary>("formularios");
 		const warehouseMaterialsCollection = warehouseDb.collection<TMaterial>("material");
 		const warehouseLogsCollection = warehouseDb.collection<TMaterialUpdateRegistry>("alteracoes");
+		const minimumNotificationChanges: Parameters<typeof notifyMaterialsBelowMinimumIfCrossed>[0] = [];
 		await session_mongo.withTransaction(async () => {
 			const previousWarehouseFormulary = await warehouseFormsCollection.findOne({ _id: new ObjectId(warehouseFormularyId) }, { session: session_mongo });
 			if (!previousWarehouseFormulary) throw new createHttpError.NotFound("Formulário não encontrado.");
@@ -490,6 +501,13 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 							precoNovo: correspondingMaterial.preco,
 						},
 					},
+				});
+				minimumNotificationChanges.push({
+					materialId: correspondingMaterial._id.toString(),
+					materialName: correspondingMaterial.nome,
+					previousQuantity: correspondingMaterial.qtde,
+					newQuantity: correspondingMaterial.qtde - listMaterialLiquidDecreaseQty,
+					minimumQuantity: correspondingMaterial.qtdeMinima,
 				});
 			}
 
@@ -653,6 +671,7 @@ async function updateWarehouseFormulary({ input, session }: { input: TUpdateWare
 				);
 			}
 		});
+		await notifyMaterialsBelowMinimumIfCrossed(minimumNotificationChanges);
 
 		return {
 			data: {

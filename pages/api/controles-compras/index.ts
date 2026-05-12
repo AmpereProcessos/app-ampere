@@ -1,4 +1,5 @@
 import type { TAuthSession } from "@/lib/authentication/types";
+import { notifyMaterialBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-registry";
 import type { TMaterial } from "@/utils/schemas/materials";
@@ -611,6 +612,13 @@ export async function handlePurchaseControlAllocationsImproved({
 					session: dbSession,
 				},
 			);
+			await notifyMaterialBelowMinimumIfCrossed({
+				materialId: existingMaterial._id.toString(),
+				materialName: existingMaterial.nome,
+				previousQuantity: existingMaterial.qtde,
+				newQuantity: newQty,
+				minimumQuantity: existingMaterial.qtdeMinima,
+			});
 		}
 
 		// Everything dealt with, we gotta update the purchase control composition items with allocated date and allocated quantity
@@ -721,6 +729,13 @@ export async function handlePurchaseControlAllocationsImproved({
 					},
 				);
 			}
+			await notifyMaterialBelowMinimumIfCrossed({
+				materialId: existingMaterial._id.toString(),
+				materialName: existingMaterial.nome,
+				previousQuantity: existingMaterial.qtde,
+				newQuantity: newQty,
+				minimumQuantity: existingMaterial.qtdeMinima,
+			});
 		}
 
 		// Updating the purchase control composition items with allocated date and allocated quantity
@@ -756,6 +771,13 @@ export async function handlePurchaseControlAllocationsImproved({
 				{ $set: { qtde: restoredQty, preco: restoredPrice } },
 				{ session: dbSession },
 			);
+			await notifyMaterialBelowMinimumIfCrossed({
+				materialId: currentMaterialInfo._id.toString(),
+				materialName: currentMaterialInfo.nome,
+				previousQuantity: currentQuantity,
+				newQuantity: restoredQty,
+				minimumQuantity: currentMaterialInfo.qtdeMinima,
+			});
 		}
 
 		// Deleting all logs from the purchase control

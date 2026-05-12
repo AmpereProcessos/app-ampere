@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import createHttpError from "http-errors";
 import { errorHandler } from "../../../utils/methods/handlers";
 import { apiHandler, validateAuthenticationWithSession } from "../../../utils/api";
+import { notifyMaterialBelowMinimumIfCrossed, notifyMaterialsBelowMinimumIfCrossed } from "../../../lib/notifications/materials";
 
 export default async function handler(req, res) {
 	// Fetching up to date information about the materials
@@ -183,6 +184,21 @@ export default async function handler(req, res) {
 				userId: user.id,
 				userName: user.name,
 			});
+			await notifyMaterialsBelowMinimumIfCrossed(
+				changes
+					.map((change) => {
+						const material = currentStateMaterials.find((currentMaterial) => currentMaterial._id == change.id);
+						if (!material) return null;
+						return {
+							materialId: change.id,
+							materialName: material.nome,
+							previousQuantity: material.qtde,
+							newQuantity: material.qtde + change.diff,
+							minimumQuantity: material.qtdeMinima,
+						};
+					})
+					.filter((change) => !!change),
+			);
 
 			res.status(200).json(bulkwriteArr);
 		} catch (error) {
@@ -214,6 +230,16 @@ export default async function handler(req, res) {
 					$set: { ...changes },
 				},
 			);
+			const material = currentStateMaterials.find((currentMaterial) => currentMaterial._id == id);
+			if (material && typeof changes.qtde === "number") {
+				await notifyMaterialBelowMinimumIfCrossed({
+					materialId: id,
+					materialName: material.nome,
+					previousQuantity: material.qtde,
+					newQuantity: changes.qtde,
+					minimumQuantity: material.qtdeMinima,
+				});
+			}
 
 			res.status(201).json("Alterações feitas !");
 		} catch (error) {
@@ -231,6 +257,7 @@ export default async function handler(req, res) {
 			const { id, price, diff } = changes;
 			if (isNaN(diff)) throw new createHttpError.BadRequest("Valor de diferença não válido.");
 			if (isNaN(price)) throw new createHttpError.BadRequest("Valor de preço inválido.");
+			const currentStateMaterials = await getCurrentMaterials(collection);
 			const dbResponse = await collection.updateOne(
 				{
 					_id: ObjectId(id),
@@ -242,7 +269,6 @@ export default async function handler(req, res) {
 					$inc: { qtde: diff },
 				},
 			);
-			const currentStateMaterials = await getCurrentMaterials(collection);
 			await handleMaterialEntranceLogInsertion({
 				materialId: id,
 				currentMaterials: currentStateMaterials,
@@ -251,6 +277,16 @@ export default async function handler(req, res) {
 				userName: user.name,
 				logCollection: logCollection,
 			});
+			const material = currentStateMaterials.find((currentMaterial) => currentMaterial._id == id);
+			if (material) {
+				await notifyMaterialBelowMinimumIfCrossed({
+					materialId: id,
+					materialName: material.nome,
+					previousQuantity: material.qtde,
+					newQuantity: material.qtde + diff,
+					minimumQuantity: material.qtdeMinima,
+				});
+			}
 			res.status(201).json(dbResponse);
 		} catch (error) {
 			errorHandler(error, res);

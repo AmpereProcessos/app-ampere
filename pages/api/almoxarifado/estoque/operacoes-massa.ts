@@ -1,4 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { notifyMaterialsBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import { TExpense } from "@/utils/schemas/expenses";
 import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-registry";
 import type { TMaterial } from "@/utils/schemas/materials";
@@ -98,6 +99,21 @@ const updateMaterials: NextApiHandler<PutResponse> = async (req, res) => {
 
 	// @ts-ignore
 	if (logs.length > 0) await logCollection.insertMany(logs);
+	await notifyMaterialsBelowMinimumIfCrossed(
+		updates
+			.map((update) => {
+				const equivalentMaterial = materials.find((material) => material._id.toString() === update.id);
+				if (!equivalentMaterial) return null;
+				return {
+					materialId: update.id,
+					materialName: equivalentMaterial.nome,
+					previousQuantity: equivalentMaterial.qtde,
+					newQuantity: equivalentMaterial.qtde + update.diferenca,
+					minimumQuantity: equivalentMaterial.qtdeMinima,
+				};
+			})
+			.filter((change): change is NonNullable<typeof change> => !!change),
+	);
 
 	return res.status(201).json({ data: "Atualizações feitas com sucesso !", message: "Atualizações feitas com sucesso !" });
 };

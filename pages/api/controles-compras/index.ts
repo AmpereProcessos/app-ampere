@@ -13,7 +13,6 @@ import {
 } from "@/utils/schemas/purchases";
 import clientPromise from "@/utils/services/mongodb/mongo-client";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
 import createHttpError from "http-errors";
 import { type ClientSession, type Collection, type Db, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
@@ -22,7 +21,7 @@ type GetResponse = {
 	data: TPurchaseControlWithProjectDTO | TPurchaseControl[];
 };
 const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
+	await validateAuthenticationWithSession(req, res);
 	console.log(req.query);
 	const { id, projectId, queryTags, queryPendingConclusion } = req.query;
 	const db: Db = await connectToDatabase();
@@ -129,7 +128,7 @@ type PostResponse = {
 };
 
 const createPurchaseControlRoute: NextApiHandler<PostResponse> = async (req, res) => {
-	const session = await validateAuthenticationWithSession(req, res);
+	await validateAuthenticationWithSession(req, res);
 
 	const purchaseControl = GeneralPurchaseControlSchema.parse(req.body);
 
@@ -350,6 +349,59 @@ type HandlePurchaseControlAllocationsImprovedParams = {
 	userSession: TAuthSession;
 };
 
+function assertFiniteNumber(value: unknown, context: string): asserts value is number {
+	if (typeof value !== "number" || !Number.isFinite(value)) {
+		console.error(`[ERROR] [HANDLE-ALLOCATIONS] Valor numérico inválido em ${context}:`, value);
+		throw new createHttpError.BadRequest(`Valor numérico inválido em ${context}.`);
+	}
+}
+
+function calculateWeightedPrice(
+	currentQty: number,
+	currentPrice: number,
+	quantityDiff: number,
+	diffUnitPrice: number,
+	context: string,
+) {
+	assertFiniteNumber(currentQty, `${context}.quantidadeAtual`);
+	assertFiniteNumber(currentPrice, `${context}.precoAtual`);
+	assertFiniteNumber(quantityDiff, `${context}.diferencaQuantidade`);
+	assertFiniteNumber(diffUnitPrice, `${context}.precoUnitario`);
+
+	const newQty = currentQty + quantityDiff;
+	assertFiniteNumber(newQty, `${context}.novaQuantidade`);
+
+	if (newQty < 0) throw new createHttpError.BadRequest(`A operação resultaria em estoque negativo em ${context}.`);
+	if (newQty === 0) return { newQty, newPrice: 0 };
+
+	const newPrice = (currentQty * currentPrice + quantityDiff * diffUnitPrice) / newQty;
+	assertFiniteNumber(newPrice, `${context}.novoPreco`);
+
+	return { newQty, newPrice };
+}
+
+function calculateMovementsWeightedPrice(
+	movements: Exclude<TProject["alocacoes"], undefined | null>[number]["movimentacoes"],
+	context: string,
+) {
+	const quantity = movements.reduce((acc, curr, index) => {
+		assertFiniteNumber(curr.quantidade, `${context}.movimentacoes.${index}.quantidade`);
+		return acc + curr.quantidade;
+	}, 0);
+	assertFiniteNumber(quantity, `${context}.quantidade`);
+
+	if (quantity < 0) throw new createHttpError.BadRequest(`A operação resultaria em alocação negativa em ${context}.`);
+	if (quantity === 0) return { quantity, price: 0 };
+
+	const price = movements.reduce((acc, curr, index) => {
+		assertFiniteNumber(curr.precoUnitario, `${context}.movimentacoes.${index}.precoUnitario`);
+		return acc + curr.quantidade * curr.precoUnitario;
+	}, 0) / quantity;
+	assertFiniteNumber(price, `${context}.precoUnitario`);
+
+	return { quantity, price };
+}
+
 export async function handlePurchaseControlAllocationsImproved({
 	type,
 	purchaseControlId,
@@ -436,18 +488,18 @@ export async function handlePurchaseControlAllocationsImproved({
 									idCompra: purchaseControlId,
 									titulo: purchaseControlTitle,
 									data: purchaseControlDeliveryDate as string,
-									quantidade: equivalentPurchaseControlMovement?.qtde || m.quantidade,
-									precoUnitario: equivalentPurchaseControlMovement?.valor || m.precoUnitario,
+									quantidade: equivalentPurchaseControlMovement?.qtde ?? m.quantidade,
+									precoUnitario: equivalentPurchaseControlMovement?.valor ?? m.precoUnitario,
 								};
 							}
 							return m;
 						});
 					}
 
-					// Getting the new allocation quantity
-					const newAllocationQty = updatedMovements.reduce((acc, curr) => acc + curr.quantidade, 0);
-					// Getting the new allocation price from the ponderation of the movements price and quantity
-					const newAllocationPrice = updatedMovements.reduce((acc, curr) => acc + curr.quantidade * curr.precoUnitario, 0) / newAllocationQty;
+					const { quantity: newAllocationQty, price: newAllocationPrice } = calculateMovementsWeightedPrice(
+						updatedMovements,
+						`projeto.${projectId}.alocacao.${a.idMaterial}`,
+					);
 					return {
 						...a,
 						quantidade: newAllocationQty,
@@ -513,10 +565,10 @@ export async function handlePurchaseControlAllocationsImproved({
 					// Weed to update the data of the movements by filtering out the movements that came from the purchase control
 					updatedMovements = updatedMovements.filter((m) => m.idCompra !== purchaseControlId);
 
-					// Getting the new allocation quantity
-					const newAllocationQty = updatedMovements.reduce((acc, curr) => acc + curr.quantidade, 0);
-					// Getting the new allocation price from the ponderation of the movements price and quantity
-					const newAllocationPrice = updatedMovements.reduce((acc, curr) => acc + curr.quantidade * curr.precoUnitario, 0) / newAllocationQty;
+					const { quantity: newAllocationQty, price: newAllocationPrice } = calculateMovementsWeightedPrice(
+						updatedMovements,
+						`projeto.${projectId}.devolucao.${a.idMaterial}`,
+					);
 					return {
 						...a,
 						quantidade: newAllocationQty,
@@ -560,8 +612,14 @@ export async function handlePurchaseControlAllocationsImproved({
 				console.error(`[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${item.materialId} no controle ${purchaseControlId}`);
 				throw new createHttpError.NotFound("Material não encontrado.");
 			}
-			const newQty = existingMaterial.qtde + item.qtde;
-			const newPrice = (existingMaterial.qtde * existingMaterial.preco + item.qtde * item.valor) / (existingMaterial.qtde + item.qtde);
+			const diff = item.qtde;
+			const { newQty, newPrice } = calculateWeightedPrice(
+				existingMaterial.qtde,
+				existingMaterial.preco,
+				diff,
+				item.valor,
+				`estoque.alocacao.${existingMaterial._id.toString()}`,
+			);
 			console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando material:", {
 				materialId: existingMaterial._id.toString(),
 				qtdeAnterior: existingMaterial.qtde,
@@ -570,9 +628,8 @@ export async function handlePurchaseControlAllocationsImproved({
 				precoNovo: newPrice,
 				item,
 			});
-			const diff = item.qtde;
 
-			const updateMaterialResponse = await materialsCollection.updateOne(
+			await materialsCollection.updateOne(
 				{
 					_id: existingMaterial._id,
 				},
@@ -650,12 +707,21 @@ export async function handlePurchaseControlAllocationsImproved({
 			const existingAllocationLog = purchaseRelatedLogs.find((log) => log.material.id === existingMaterial._id.toString());
 
 			const isItemAllocated = !!item.dataAlocacao;
-			// If the item is allocated and the allocation log already exists and the quantity is the same, we don't need to update anything
-			if (isItemAllocated && existingAllocationLog && existingAllocationLog.qtdeNovo === item.qtdeAlocada) continue;
+			const allocatedQty = item.qtdeAlocada ?? 0;
+			assertFiniteNumber(item.qtde, `estoque.atualizacao.${existingMaterial._id.toString()}.quantidadeCompra`);
+			assertFiniteNumber(allocatedQty, `estoque.atualizacao.${existingMaterial._id.toString()}.quantidadeAlocada`);
+			assertFiniteNumber(item.valor, `estoque.atualizacao.${existingMaterial._id.toString()}.valorCompra`);
 
-			const updateQtyDiff = item.qtde - (item.qtdeAlocada || 0);
-			const newQty = existingMaterial.qtde + updateQtyDiff;
-			const newPrice = (existingMaterial.qtde * existingMaterial.preco + updateQtyDiff * item.valor) / (existingMaterial.qtde + updateQtyDiff);
+			const updateQtyDiff = item.qtde - allocatedQty;
+			if (isItemAllocated && existingAllocationLog && updateQtyDiff === 0) continue;
+
+			const { newQty, newPrice } = calculateWeightedPrice(
+				existingMaterial.qtde,
+				existingMaterial.preco,
+				updateQtyDiff,
+				item.valor,
+				`estoque.atualizacao.${existingMaterial._id.toString()}`,
+			);
 			console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando material:", {
 				materialId: existingMaterial._id.toString(),
 				diferenca: updateQtyDiff,
@@ -666,7 +732,7 @@ export async function handlePurchaseControlAllocationsImproved({
 				item,
 			});
 
-			const updateMaterialResponse = await materialsCollection.updateOne(
+			await materialsCollection.updateOne(
 				{
 					_id: existingMaterial._id,
 				},
@@ -763,8 +829,13 @@ export async function handlePurchaseControlAllocationsImproved({
 
 			const currentQuantity = currentMaterialInfo.qtde;
 			const currentPrice = currentMaterialInfo.preco;
-			const restoredQty = currentQuantity - compositionItem.qtde;
-			const restoredPrice = (currentPrice * currentQuantity - compositionItem.qtde * compositionItem.valor) / restoredQty;
+			const { newQty: restoredQty, newPrice: restoredPrice } = calculateWeightedPrice(
+				currentQuantity,
+				currentPrice,
+				-compositionItem.qtde,
+				compositionItem.valor,
+				`estoque.devolucao.${currentMaterialInfo._id.toString()}`,
+			);
 
 			await materialsCollection.updateOne(
 				{ _id: new ObjectId(compositionItem.materialId as string) },

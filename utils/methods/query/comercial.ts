@@ -7,10 +7,11 @@ import type { TCommercialProjectDTO } from "@/pages/api/projects/comercial";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { getProjectNestedFieldValue } from "../formatting";
 import dayjs from "dayjs";
 import { useDebounceMemo } from "@/lib/hooks/debounce";
+import { useUsers } from "./crm/users";
 
 async function fetchProjects() {
   try {
@@ -22,12 +23,12 @@ async function fetchProjects() {
   }
 }
 
-type UseComercialProjectsFilters = {
+export type TComercialProjectsFilters = {
   identifier: string | null;
   search: string;
   contractStatus: string[];
   serviceType: string[];
-  sellerName: string[];
+  sellerIds: string[];
   insiderName: string[];
   supplyStatus: string[];
   grantingStatus: string[];
@@ -42,13 +43,26 @@ type UseComercialProjectsFilters = {
     field: string | null;
   };
 };
+function normalizeSellerName(name: string) {
+  return name.trim().toUpperCase();
+}
+
 export function useComercialProjects({ enabled }: { enabled: boolean }) {
-  const [filters, setFilters] = useState<UseComercialProjectsFilters>({
+  const { data: crmUsers } = useUsers({ includeDeleted: true });
+  const sellerNamesById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const user of crmUsers ?? []) {
+      map.set(String(user._id), user.nome);
+    }
+    return map;
+  }, [crmUsers]);
+
+  const [filters, setFilters] = useState<TComercialProjectsFilters>({
     identifier: null,
     search: "",
     contractStatus: [],
     serviceType: [],
-    sellerName: [],
+    sellerIds: [],
     insiderName: [],
     supplyStatus: [],
     grantingStatus: [],
@@ -83,9 +97,25 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
     if (filters.serviceType.length === 0) return true;
     return filters.serviceType.includes(project.tipoDeServico);
   }
-  function matchSellerName(project: TCommercialProjectDTO) {
-    if (filters.sellerName.length === 0) return true;
-    return filters.sellerName.includes(project.vendedor?.nome);
+  function matchSellerIds(project: TCommercialProjectDTO) {
+    if (filters.sellerIds.length === 0) return true;
+
+    const normalizedFilterIds = filters.sellerIds.map((id) => String(id));
+    const projectSellerId = project.vendedor?.idCRM;
+
+    if (projectSellerId && normalizedFilterIds.includes(String(projectSellerId))) {
+      return true;
+    }
+
+    const projectSellerName = project.vendedor?.nome;
+    if (!projectSellerName) return false;
+
+    const normalizedProjectSellerName = normalizeSellerName(projectSellerName);
+    return normalizedFilterIds.some((id) => {
+      const selectedSellerName = sellerNamesById.get(id);
+      if (!selectedSellerName) return false;
+      return normalizeSellerName(selectedSellerName) === normalizedProjectSellerName;
+    });
   }
   function matchInsiderName(project: TCommercialProjectDTO) {
     if (filters.insiderName.length === 0) return true;
@@ -131,14 +161,21 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
       fieldValue <= filters.date.before
     );
   }
-  function handleModelData(data: TCommercialProjectDTO[]) {
-    return data.filter(
+  const query = useQuery({
+    queryKey: ["comercial-projects"],
+    queryFn: fetchProjects,
+    enabled,
+  });
+
+  const data = useMemo(() => {
+    if (!query.data) return undefined;
+    return query.data.filter(
       (project) =>
         matchSearch(project) &&
         matchIdentifier(project) &&
         matchContractStatus(project) &&
         matchServiceType(project) &&
-        matchSellerName(project) &&
+        matchSellerIds(project) &&
         matchInsiderName(project) &&
         matchGrantingStatus(project) &&
         matchSupplyStatus(project) &&
@@ -149,13 +186,11 @@ export function useComercialProjects({ enabled }: { enabled: boolean }) {
         matchTagIds(project) &&
         matchDate(project),
     );
-  }
+  }, [query.data, filters, sellerNamesById]);
+
   return {
-    ...useQuery({
-      queryKey: ["comercial-projects"],
-      queryFn: fetchProjects,
-      select: (data) => handleModelData(data),
-    }),
+    ...query,
+    data,
     filters,
     setFilters,
   };

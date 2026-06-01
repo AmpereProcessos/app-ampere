@@ -20,7 +20,7 @@ async function fetchProjects() {
   }
 }
 
-type UseEngineeringProjectsFilters = {
+export type TEngineeringProjectsFilters = {
   search: string;
   sellerName: string[];
   city: string[];
@@ -47,7 +47,7 @@ type UseEngineeringProjectsFilters = {
   };
 };
 export function useEngineeringProjects() {
-  const [filters, setFilters] = useState<UseEngineeringProjectsFilters>({
+  const [filters, setFilters] = useState<TEngineeringProjectsFilters>({
     search: "",
     sellerName: [],
     city: [],

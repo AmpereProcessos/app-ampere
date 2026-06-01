@@ -52,7 +52,7 @@ async function fetchProjects() {
 	}
 }
 
-type UseOeMProjectsFilters = {
+export type TOemProjectsFilters = {
 	search: string;
 	neighborhoodSearch: string;
 	city: string[];
@@ -72,7 +72,7 @@ type UseOeMProjectsFilters = {
 	};
 };
 export function useOeMProjects() {
-	const [filters, setFilters] = useState<UseOeMProjectsFilters>({
+	const [filters, setFilters] = useState<TOemProjectsFilters>({
 		search: "",
 		neighborhoodSearch: "",
 		city: [],
@@ -210,7 +210,7 @@ async function getExecutionCommissioningProjects() {
 	}
 }
 
-type UseExecutionCommissioningProjectsFilters = {
+export type TCommissioningProjectsFilters = {
 	search: string;
 	city: string[];
 	responsibleTeam: string[];
@@ -226,7 +226,7 @@ type UseExecutionCommissioningProjectsFilters = {
 	};
 };
 export function useExecutionCommissioningProjects() {
-	const [filters, setFilters] = useState<UseExecutionCommissioningProjectsFilters>({
+	const [filters, setFilters] = useState<TCommissioningProjectsFilters>({
 		search: "",
 		city: [],
 		responsibleTeam: [],

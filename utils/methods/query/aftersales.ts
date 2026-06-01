@@ -17,29 +17,30 @@ async function fetchNPSData() {
 	return data;
 }
 
-export function useNPS(enabled: boolean) {
-	type Filters = {
-		city: string[];
-		sellerName: string[];
-		search: string;
-		unCollected: boolean;
-		onlyPromoters: boolean;
-		onlyDetrators: boolean;
-		onlyNeutrals: boolean;
-		withObs: boolean;
-		withoutObs: boolean;
-		npsRange: {
-			min: number | null;
-			max: number | null;
-		};
-		date: {
-			after: string | null;
-			before: string | null;
-			field: string | null;
-		};
-		npsValue: number | null;
+export type TNPSProjectsFilters = {
+	city: string[];
+	sellerName: string[];
+	search: string;
+	unCollected: boolean;
+	onlyPromoters: boolean;
+	onlyDetrators: boolean;
+	onlyNeutrals: boolean;
+	withObs: boolean;
+	withoutObs: boolean;
+	npsRange: {
+		min: number | null;
+		max: number | null;
 	};
-	const [filters, setFilters] = useState<Filters>({
+	date: {
+		after: string | null;
+		before: string | null;
+		field: string | null;
+	};
+	npsValue: number | null;
+};
+
+export function useNPS(enabled: boolean) {
+	const [filters, setFilters] = useState<TNPSProjectsFilters>({
 		city: [],
 		sellerName: [],
 		search: "",
@@ -155,28 +156,29 @@ async function fetchProjects() {
 	}
 }
 
-export function useAfterSalesProjects() {
-	type AfterSalesFilters = {
-		search: string;
-		moduleQty: number | null;
-		city: string[];
-		deliveryStatus: string[];
-		sellerName: string[];
-		grantingStatus: string[];
-		inspectionStatus: string[];
-		executionStatus: string[];
-		journeyPendings: string[];
-		necessaryDistribution: boolean;
-		missingSignature: boolean;
-		pendingContact: boolean;
-		contactOrder: "ASC" | "DESC" | null;
-		date: {
-			after: string | null;
-			before: string | null;
-			field: string | null;
-		};
+export type TAfterSalesProjectsFilters = {
+	search: string;
+	moduleQty: number | null;
+	city: string[];
+	deliveryStatus: string[];
+	sellerName: string[];
+	grantingStatus: string[];
+	inspectionStatus: string[];
+	executionStatus: string[];
+	journeyPendings: string[];
+	necessaryDistribution: boolean;
+	missingSignature: boolean;
+	pendingContact: boolean;
+	contactOrder: "ASC" | "DESC" | null;
+	date: {
+		after: string | null;
+		before: string | null;
+		field: string | null;
 	};
-	const [filters, setFilters] = useState<AfterSalesFilters>({
+};
+
+export function useAfterSalesProjects() {
+	const [filters, setFilters] = useState<TAfterSalesProjectsFilters>({
 		search: "",
 		moduleQty: null,
 		city: [],

@@ -12,13 +12,14 @@ import { useEngineeringProjectsKanban } from "@/utils/methods/query/engineering"
 import { useViewModesStore } from "@/utils/stores/view-modes-store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { ListFilter, Pencil, Tag } from "lucide-react";
+import { Pencil, Tag } from "lucide-react";
 import { useState } from "react";
 import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
 import { FaRotate } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
-import EngineeringProjectsKanbanModePageFilters from "./KanbanModePageFilters";
+import EngineeringKanbanProjectsFilters from "./EngineeringKanbanProjectsFilters";
+import { useTags } from "@/utils/methods/query/tags";
 
 const CurrentDate = dayjs().toDate();
 
@@ -28,7 +29,7 @@ type EngineeringKanbanModePageProps = {
 function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) {
 	const queryClient = useQueryClient();
 	const updateViewMode = useViewModesStore((state) => state.updateMode);
-	const [filterMenusIsOpen, setFilterMenusIsOpen] = useState(false);
+	const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
 	const [editProjectModal, setEditProjectModal] = useState<{ id: string | null; isOpen: boolean }>({
 		id: null,
 		isOpen: false,
@@ -120,14 +121,12 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
 							<h1 className="font-medium">ALTERAR MODO</h1>
 						</button>
 					</div>
-					<button
-						type="button"
-						onClick={() => setFilterMenusIsOpen((prev) => !prev)}
-						className="bg-primary text-primary-foreground cursor-pointer rounded-full p-2 transition-colors hover:bg-blue-500 hover:text-white"
-					>
-						<ListFilter className="h-4 min-h-4 w-4 min-w-4" />
-					</button>
 				</div>
+				<EngineeringKanbanProjectsFilters
+					filters={filters}
+					updateFilters={updateFilters}
+					tagOptions={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) ?? []}
+				/>
 			</div>
 
 			<DragDropContext onDragEnd={(e) => handleUpdateProjectStatus(e)}>
@@ -147,13 +146,6 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
 					projectId={editProjectModal.id}
 					modalIsOpen={editProjectModal.isOpen}
 					closeModal={() => setEditProjectModal({ id: null, isOpen: false })}
-				/>
-			)}
-			{filterMenusIsOpen && (
-				<EngineeringProjectsKanbanModePageFilters
-					queryParams={filters}
-					updateQueryParams={(params) => updateFilters(params)}
-					closeMenu={() => setFilterMenusIsOpen(false)}
 				/>
 			)}
 		</div>

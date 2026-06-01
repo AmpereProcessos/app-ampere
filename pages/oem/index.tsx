@@ -1,49 +1,25 @@
-import DateInput from "@/components/inputs/Date";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
-import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectInputVirtualized";
-import NumberInput from "@/components/inputs/Number";
-import TextInput from "@/components/inputs/Text";
 import { useSession } from "@/components/providers/SessionProvider";
+import OemProjectsFilters from "@/components/identificador/oem/OemProjectsFilters";
 import ProjectCardsTags from "@/components/utils/ProjectCardsTags";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import type { TAuthSession } from "@/lib/authentication/types";
-import AllCities from "@/utils/jsons/cidades.json";
 import { getDifferenceBetweenDates } from "@/utils/methods/dates";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useOeMProjects } from "@/utils/methods/query/oem";
-import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TProjectDTO } from "@/utils/schemas/projects";
-import { ServiceOrderStatus, serviceTypes } from "@/utils/select-options";
-import axios from "axios";
 import dayjs from "dayjs";
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useState, useEffect, useContext } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { useState } from "react";
 import { FaList, FaSolarPanel } from "react-icons/fa";
-import { GiPoliceBadge } from "react-icons/gi";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdError } from "react-icons/md";
-import { TbAlertOctagonFilled } from "react-icons/tb";
 import { VscDiffAdded } from "react-icons/vsc";
-import Select from "react-select";
 import ModalOeM from "../../components/ModalOeM";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
-import SelectInput from "../../components/inputs/Select";
 import LoadingPage from "../../components/utils/LoadingPage";
-import { cidadesAtendidas, equipesTecnicas, formatDate, formatDecimalPlaces, oemPlans } from "../../utils/constants";
-const statusStyles = {
-	REALIZADO: {
-		textColor: "text-green-500",
-	},
-	"NÃO REALIZADO": {
-		textColor: "text-red-500",
-	},
-};
+import { formatDecimalPlaces } from "../../utils/constants";
+
 function OemPage() {
-	const router = useRouter();
 	const { session, status } = useSession();
 	const isAuthorized = session?.user.permissoes.suporte.visualizar;
 	if (status === "loading") return <LoadingPage />;
@@ -54,29 +30,34 @@ function OemPage() {
 
 export default OemPage;
 
-function OemContent({ session }: { session: TAuthSession }) {
-	const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+function OemContent({ session: _session }: { session: TAuthSession }) {
+	const { data: projects, filters, setFilters } = useOeMProjects();
+	const [modalProject, setModalProject] = useState<{ id: string | null; isOpen: boolean }>({
+		id: null,
+		isOpen: false,
+	});
 
-	const { data: projects, isLoading, isError, isFetching, isSuccess, filters, setFilters } = useOeMProjects();
-	const [modalProject, setModalProject] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
-	function checkOeMEnding(dataMedidor: string | null | undefined, tipoDeServico: string, dataAssinatura: string | null | undefined) {
+	function checkOeMEnding(
+		dataMedidor: string | null | undefined,
+		tipoDeServico: string,
+		dataAssinatura: string | null | undefined,
+	) {
 		if (tipoDeServico === "OPERAÇÃO E MANUTENÇÃO") {
 			if (dayjs().diff(dayjs(dataAssinatura), "days") > 15) {
 				return { text: "O&M VENCIDO", color: "text-red-500" };
-			} else {
-				return { text: "O&M EM ANDAMENTO", color: "text-red-500" };
 			}
-		} else {
-			if (dataMedidor) {
-				if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
-					return { text: "O&M VENCIDO", color: "text-red-500" };
-				} else if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
-					return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
-				} else {
-					return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
-				}
-			} else return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+			return { text: "O&M EM ANDAMENTO", color: "text-red-500" };
 		}
+		if (dataMedidor) {
+			if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
+				return { text: "O&M VENCIDO", color: "text-red-500" };
+			}
+			if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
+				return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
+			}
+			return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+		}
+		return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
 	}
 
 	function getStats({ info }: { info?: TProjectDTO[] }) {
@@ -91,15 +72,8 @@ function OemContent({ session }: { session: TAuthSession }) {
 		}
 
 		const projectsQty = info.length;
-		const totalPower = info.reduce((acc, current) => {
-			const currentPower = current.sistema?.potPico || 0;
-
-			return acc + currentPower;
-		}, 0);
-		const modulesQty = info.reduce((acc, current) => {
-			const currentQty = current.sistema.qtdeModulos || 0;
-			return acc + currentQty;
-		}, 0);
+		const totalPower = info.reduce((acc, current) => acc + (current.sistema?.potPico || 0), 0);
+		const modulesQty = info.reduce((acc, current) => acc + (current.sistema.qtdeModulos || 0), 0);
 		const pendingMaintenance = info.reduce((acc, current) => {
 			const isPending = current.manutencoes.some((m) => !m.dataEfetivacao);
 			if (isPending) acc += 1;
@@ -109,7 +83,10 @@ function OemContent({ session }: { session: TAuthSession }) {
 			const referenceDate = current.medidor.data ? current.medidor.data : current.contrato.dataAssinatura;
 			const isOverDue = current.manutencoes.some(
 				(m, index) =>
-					!m.dataEfetivacao && referenceDate && getDifferenceBetweenDates({ start: new Date(referenceDate), end: new Date() }) > (index + 1) * 365,
+					!m.dataEfetivacao &&
+					referenceDate &&
+					getDifferenceBetweenDates({ start: new Date(referenceDate), end: new Date() }) >
+						(index + 1) * 365,
 			);
 			if (isOverDue) acc += 1;
 			return acc;
@@ -127,19 +104,10 @@ function OemContent({ session }: { session: TAuthSession }) {
 	return (
 		<div className="grow p-6">
 			<div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
-				<div className="GAP-2 flex w-full items-center justify-between">
-					<div className="flex flex-col items-center gap-2 lg:flex-row">
-						<p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NOS ESTAGIO DE O&M</p>
-					</div>
-					{dropdownMenuVisible ? (
-						<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-							<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(false)} />
-						</div>
-					) : (
-						<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-							<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setDropdownMenuVisible(true)} />
-						</div>
-					)}
+				<div className="flex w-full items-center justify-center lg:justify-start">
+					<p className="text-center text-2xl font-black text-[#15599a] uppercase">
+						PROJETOS NOS ESTAGIO DE O&M
+					</p>
 				</div>
 				<div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
 					<div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
@@ -149,7 +117,9 @@ function OemContent({ session }: { session: TAuthSession }) {
 						</div>
 						<div className="mt-2 flex w-full flex-col">
 							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-							<p className="text-primary/60 text-xs">{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp</p>
+							<p className="text-primary/60 text-xs">
+								{formatDecimalPlaces(getStats({ info: projects }).potencia)} kWp
+							</p>
 						</div>
 					</div>
 					<div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
@@ -167,7 +137,9 @@ function OemContent({ session }: { session: TAuthSession }) {
 							<FaList />
 						</div>
 						<div className="mt-2 flex w-full flex-col">
-							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesPendentes} </div>
+							<div className="text-2xl font-bold text-[#15599a]">
+								{getStats({ info: projects }).manutencoesPendentes}{" "}
+							</div>
 						</div>
 					</div>
 					<div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
@@ -176,252 +148,13 @@ function OemContent({ session }: { session: TAuthSession }) {
 							<MdError />
 						</div>
 						<div className="mt-2 flex w-full flex-col">
-							<div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).manutencoesAtrasadas} </div>
+							<div className="text-2xl font-bold text-[#15599a]">
+								{getStats({ info: projects }).manutencoesAtrasadas}{" "}
+							</div>
 						</div>
 					</div>
 				</div>
-				<AnimatePresence>
-					{dropdownMenuVisible ? (
-						<motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
-							<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-								<TextInput
-									label={"NOME DO PROJETO"}
-									value={filters.search}
-									placeholder={"Digite o nome do projeto..."}
-									handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-								/>
-
-								<TextInput
-									label={"BAIRRO"}
-									value={filters.neighborhoodSearch}
-									placeholder={"Digite o bairro do projeto..."}
-									handleChange={(value) => setFilters((prev) => ({ ...prev, neighborhoodSearch: value }))}
-								/>
-
-								<NumberInput
-									label="NÚMERO DE MÓDULOS MAIOR QUE"
-									placeholder="Preencha um filtro para o número de módulos..."
-									value={filters.modulesQtyGte}
-									handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyGte: value }))}
-								/>
-
-								<NumberInput
-									label="NÚMERO DE MÓDULOS MENOR QUE"
-									placeholder="Preencha um filtro para o número de módulos..."
-									value={filters.modulesQtyLte}
-									handleChange={(value) => setFilters((prev) => ({ ...prev, modulesQtyLte: value }))}
-								/>
-
-								<div className="w-full lg:w-[300px]">
-									<MultipleSelectInput
-										width={"100%"}
-										label={"TIPO DE SERVIÇO"}
-										selected={filters.serviceType}
-										options={serviceTypes}
-										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) =>
-											setFilters((prev) => ({
-												...prev,
-												serviceType: value as string[],
-											}))
-										}
-										onReset={() =>
-											setFilters((prev) => ({
-												...prev,
-												serviceType: [],
-											}))
-										}
-									/>
-								</div>
-								<div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
-									<div className="flex items-center justify-center gap-x-2">
-										<div className="w-full lg:w-[300px]">
-											<DateInput
-												width={"100%"}
-												label={"DEPOIS DE"}
-												value={filters.date.after ? formatDate(filters.date.after) : undefined}
-												handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) as string } }))}
-											/>
-										</div>
-										<div className="w-full lg:w-[300px]">
-											<DateInput
-												width={"100%"}
-												label={"ANTES DE"}
-												value={filters.date.before ? formatDate(filters.date.before) : undefined}
-												handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) as string } }))}
-											/>
-										</div>
-									</div>
-									<div className="w-full lg:w-[300px]">
-										<SelectInput
-											width={"100%"}
-											label={"CAMPO DE FILTRO"}
-											value={filters.date.field || null}
-											options={[
-												{
-													id: 1,
-													label: "SAÍDA DE OBRA",
-													value: "obra.saida",
-												},
-												{
-													id: 2,
-													label: "TROCA DE MEDIDOR",
-													value: "medidor.data",
-												},
-												{
-													id: 3,
-													label: "EXECUÇÃO DA MANUTENÇÃO",
-													value: "manutencoes.dataEfetivacao",
-												},
-											]}
-											selectedItemLabel={"SEM FILTRO"}
-											handleChange={(value: string) =>
-												setFilters((prev) => ({
-													...prev,
-													date: {
-														...prev.date,
-														field: value,
-													},
-												}))
-											}
-											onReset={() =>
-												setFilters((prev) => ({
-													...prev,
-													date: {
-														after: null,
-														before: null,
-														field: null,
-													},
-												}))
-											}
-										/>
-									</div>
-								</div>
-							</div>
-							<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-								<div className="w-full lg:w-[300px]">
-									<MultipleSelectInputVirtualized
-										width={"100%"}
-										label={"CIDADE"}
-										selected={filters.city}
-										options={AllCities.map((city, index) => ({ id: index + 1, label: city, value: city }))}
-										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) =>
-											setFilters((prev) => ({
-												...prev,
-												city: value as string[],
-											}))
-										}
-										onReset={() =>
-											setFilters((prev) => ({
-												...prev,
-												city: [],
-											}))
-										}
-									/>
-								</div>
-								<div className="w-full lg:w-[300px]">
-									<MultipleSelectInput
-										width={"100%"}
-										label={"EQUIPE RESPONSÁVEL"}
-										selected={filters.technicalTeam}
-										options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
-										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) =>
-											setFilters((prev) => ({
-												...prev,
-												technicalTeam: value as string[],
-											}))
-										}
-										onReset={() =>
-											setFilters((prev) => ({
-												...prev,
-												technicalTeam: [],
-											}))
-										}
-									/>
-								</div>
-								<div className="w-full lg:w-[300px]">
-									<MultipleSelectInput
-										width={"100%"}
-										label={"STATUS DA OBRA"}
-										selected={filters.executionStatus}
-										options={ServiceOrderStatus}
-										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) =>
-											setFilters((prev) => ({
-												...prev,
-												executionStatus: value as string[],
-											}))
-										}
-										onReset={() =>
-											setFilters((prev) => ({
-												...prev,
-												executionStatus: [],
-											}))
-										}
-									/>
-								</div>
-								<div className="w-full lg:w-[300px]">
-									<MultipleSelectInput
-										width={"100%"}
-										label={"PLANO DE O&M"}
-										selected={filters.oemPlan}
-										options={oemPlans.map((plan, index) => ({ id: index + 1, label: plan.label, value: plan.value }))}
-										selectedItemLabel={"SEM FILTRO"}
-										handleChange={(value) =>
-											setFilters((prev) => ({
-												...prev,
-												oemPlan: value as string[],
-											}))
-										}
-										onReset={() =>
-											setFilters((prev) => ({
-												...prev,
-												oemPlan: [],
-											}))
-										}
-									/>
-								</div>
-							</div>
-							<div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-								<div
-									onClick={() =>
-										setFilters((prev) => ({
-											...prev,
-											pendingMaintenance: !filters.pendingMaintenance,
-										}))
-									}
-									className={`${filters.pendingMaintenance ? "bg-[#fead41]" : "bg-orange-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-								>
-									MANUTENÇÃO PENDENTE
-								</div>
-								<div
-									onClick={() =>
-										setFilters((prev) => ({
-											...prev,
-											overdueMaintenance: !filters.overdueMaintenance,
-										}))
-									}
-									className={`${filters.overdueMaintenance ? "bg-red-500" : "bg-red-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-								>
-									MANUTENÇÃO ATRASADA
-								</div>
-								<div
-									onClick={() =>
-										setFilters((prev) => ({
-											...prev,
-											systemOffline: !filters.systemOffline,
-										}))
-									}
-									className={`${filters.systemOffline ? "bg-[#fead41]" : "bg-orange-300"} flex h-[36px] cursor-pointer items-center justify-center rounded px-2 text-xs font-bold text-white`}
-								>
-									PENDENTE CONFERÊNCIA DE USINA LIGADA
-								</div>
-							</div>
-						</motion.div>
-					) : null}
-				</AnimatePresence>
+				<OemProjectsFilters filters={filters} setFilters={setFilters} />
 			</div>
 			<div className="mt-4 flex flex-wrap justify-around gap-3 overflow-y-auto overscroll-y-auto">
 				{projects ? (
@@ -453,32 +186,54 @@ function OemContent({ session }: { session: TAuthSession }) {
 								</div>
 								<div className="mt-2 flex items-center justify-between">
 									<div className="flex flex-col items-start">
-										<span className={`text-primary/60 text-[0.6rem] leading-none tracking-tight`}>STATUS DO O&M</span>
+										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+											STATUS DO O&M
+										</span>
 										<p
 											className={`text-xs font-medium tracking-tight ${checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).color}`}
 										>
-											{checkOeMEnding(project.medidor.data, project.tipoDeServico, project.contrato.dataAssinatura).text}
+											{
+												checkOeMEnding(
+													project.medidor.data,
+													project.tipoDeServico,
+													project.contrato.dataAssinatura,
+												).text
+											}
 										</p>
 									</div>
 									<div className="flex flex-col items-end">
-										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">NÚMERO DE MÓDULOS</span>
-										<p className={"text-xs font-medium tracking-tight"}>{project.sistema.qtdeModulos}</p>
+										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+											NÚMERO DE MÓDULOS
+										</span>
+										<p className="text-xs font-medium tracking-tight">{project.sistema.qtdeModulos}</p>
 									</div>
 								</div>
 								<div className="mt-2 flex items-center justify-between">
 									<div className="flex flex-col items-start">
-										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">EQUIPE TÉCNICA</span>
-										<p className={"text-xs font-medium tracking-tight"}>{project.obra.equipeResp || "NÃO DEFINIDO"}</p>
+										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+											EQUIPE TÉCNICA
+										</span>
+										<p className="text-xs font-medium tracking-tight">
+											{project.obra.equipeResp || "NÃO DEFINIDO"}
+										</p>
 									</div>
 									<div className="flex flex-col items-end">
-										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">SAÍDA DE OBRA</span>
-										<p className={"text-xs font-medium tracking-tight"}>{formatDateAsLocale(project.obra.saida)}</p>
+										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+											SAÍDA DE OBRA
+										</span>
+										<p className="text-xs font-medium tracking-tight">
+											{formatDateAsLocale(project.obra.saida)}
+										</p>
 									</div>
 								</div>
 								<div className="mt-2 flex items-center justify-center">
 									<div className="flex flex-col items-center">
-										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">PLANO DE O&M</span>
-										<p className={"text-center text-xs font-medium tracking-tight text-cyan-500"}>{project.oem?.plano || "NÃO DEFINIDO"}</p>
+										<span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+											PLANO DE O&M
+										</span>
+										<p className="text-center text-xs font-medium tracking-tight text-cyan-500">
+											{project.oem?.plano || "NÃO DEFINIDO"}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -488,14 +243,18 @@ function OemContent({ session }: { session: TAuthSession }) {
 					<LoadingPage />
 				)}
 			</div>
-			<Link href={"/oem/baixaPerformance"}>
+			<Link href="/oem/baixaPerformance">
 				<div className="fixed bottom-10 left-150 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
 					<p className="text-sm font-bold uppercase">ACOMPANHAMENTO DE PERFORMANCE</p>
 				</div>
 			</Link>
-			{modalProject.id && modalProject.isOpen && (
-				<ModalOeM closeModal={() => setModalProject({ id: null, isOpen: false })} modalIsOpen={modalProject.isOpen} projectId={modalProject.id} />
-			)}
+			{modalProject.id && modalProject.isOpen ? (
+				<ModalOeM
+					closeModal={() => setModalProject({ id: null, isOpen: false })}
+					modalIsOpen={modalProject.isOpen}
+					projectId={modalProject.id}
+				/>
+			) : null}
 		</div>
 	);
 }

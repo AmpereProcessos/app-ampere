@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-import PAAdequationsFilterMenu from "@/components/identificador/controlePadroes/FilterMenu";
+import EnergyPAProjectsFilters from "@/components/identificador/controlePadroes/EnergyPAProjectsFilters";
 import PAAdequationProjectCard from "@/components/identificador/controlePadroes/PAAdequationProjectCard";
 import DateIntervalInput from "@/components/inputs/DateIntervalInput";
 import { useSession } from "@/components/providers/SessionProvider";
@@ -9,13 +9,10 @@ import GeneralPaginationComponent from "@/components/utils/Pagination";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import type { TAuthSession } from "@/lib/authentication/types";
-import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { useEnergyPAExecutionWithFilters, usePAExecutionStats } from "@/utils/methods/query/execution";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChartArea, CircleCheck, LayoutGrid, X } from "lucide-react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { ChartArea, CircleCheck, LayoutGrid } from "lucide-react";
 import LoadingPage from "../../components/utils/LoadingPage";
-import type { TEnergyPAExecutionWithFiltersInput } from "../api/gestao-obras/padroes";
 
 function EnergyPAControls() {
 	const { session, status } = useSession();
@@ -36,30 +33,19 @@ function EnergyPAControlsContent({ session }: { session: TAuthSession }) {
 	const projectsMatched = projectsResult?.projectsMatched || 0;
 	const projectsShowing = projects.length;
 	const totalPages = projectsResult?.totalPages || 0;
-	const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false);
-
 	const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey });
 	const handleOnSettled = async () => await queryClient.invalidateQueries({ queryKey });
 
 	return (
 		<div className="grow bg-slate-50 p-6">
 			<div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
-				<div className="flex w-full items-center justify-between">
-					<div className="flex flex-col items-center gap-2 lg:flex-row">
-						<p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS COM ADEQUAÇÃO DE PADRÃO</p>
-					</div>
-					{filterMenuIsOpen ? (
-						<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-							<IoMdArrowDropupCircle style={{ fontSize: "25px" }} onClick={() => setFilterMenuIsOpen(false)} />
-						</div>
-					) : (
-						<div className="text-primary/80 cursor-pointer hover:text-blue-400">
-							<IoMdArrowDropdownCircle style={{ fontSize: "25px" }} onClick={() => setFilterMenuIsOpen(true)} />
-						</div>
-					)}
+				<div className="flex w-full items-center justify-center lg:justify-start">
+					<p className="text-center text-2xl font-black text-[#15599a] uppercase">
+						PROJETOS COM ADEQUAÇÃO DE PADRÃO
+					</p>
 				</div>
 				<EnergyPAExecutionStats />
-				<EnergyPAFiltersShowcase queryParams={queryParams} updateQueryParams={updateQueryParams} />
+				<EnergyPAProjectsFilters queryParams={queryParams} updateQueryParams={updateQueryParams} />
 			</div>
 			<GeneralPaginationComponent
 				activePage={queryParams.page}
@@ -86,123 +72,6 @@ function EnergyPAControlsContent({ session }: { session: TAuthSession }) {
 					)
 				) : null}
 			</div>
-			{filterMenuIsOpen ? (
-				<PAAdequationsFilterMenu queryParams={queryParams} updateQueryParams={updateQueryParams} closeMenu={() => setFilterMenuIsOpen(false)} />
-			) : null}
-		</div>
-	);
-}
-
-type EnergyPAFiltersShowcaseProps = {
-	queryParams: TEnergyPAExecutionWithFiltersInput;
-	updateQueryParams: (params: Partial<TEnergyPAExecutionWithFiltersInput>) => void;
-};
-function EnergyPAFiltersShowcase({ queryParams, updateQueryParams }: EnergyPAFiltersShowcaseProps) {
-	const PERIO_FIELD_MAP = {
-		"homologacao.documentacao.dataConclusaoElaboracao": "DATA DE CONCLUSÃO DA ELABORAÇÃO DA DOCUMENTAÇÃO",
-		"homologacao.documentacao.dataAssinatura": "DATA DE ASSINATURA DA DOCUMENTAÇÃO",
-		"homologacao.acesso.dataResposta": "DATA DE RESPOSTA DO PARECER DE ACESSO",
-		"homologacao.vistoria.dataEfetivacao": "DATA DE EFETIVAÇÃO DA VISTORIA",
-		"padrao.aumentoCarga.dataEfetivacao": "DATA DE SOLICITAÇÃO DO AUMENTO DE CARGA",
-	};
-	const isAnyFilterApplied =
-		queryParams.search ||
-		queryParams.segments.length > 0 ||
-		queryParams.homologationStatus.length > 0 ||
-		queryParams.responsabilityTypes.length > 0 ||
-		queryParams.pendingExecutionOnly ||
-		queryParams.paidOnly ||
-		queryParams.period.field;
-	return (
-		<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:justify-end">
-			{isAnyFilterApplied ? <p className="text-primary/80 text-xs font-medium tracking-tight">FILTROS APLICADOS</p> : null}
-			{queryParams.search && queryParams.search.length > 0 ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">
-						BUSCA: <strong>{queryParams.search}</strong>
-					</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ search: "" })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
-			{queryParams.segments.length > 0 ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">
-						SEGMENTOS: <strong>{queryParams.segments.join(", ")}</strong>
-					</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ segments: [] })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
-			{queryParams.homologationStatus.length > 0 ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">
-						STATUS DO PARECER DE ACESSO: <strong>{queryParams.homologationStatus.join(", ")}</strong>
-					</p>
-				</div>
-			) : null}
-			{queryParams.responsabilityTypes.length > 0 ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">
-						RESPONSABILIDADE: <strong>{queryParams.responsabilityTypes.join(", ")}</strong>
-					</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ responsabilityTypes: [] })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
-			{queryParams.pendingExecutionOnly ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">APENAS NÃO EXECUTADOS</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ pendingExecutionOnly: false })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
-			{queryParams.paidOnly ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">APENAS PAGOS</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ paidOnly: false })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
-			{queryParams.period.field && queryParams.period.after && queryParams.period.before ? (
-				<div className="bg-primary/10 flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-					<p className="text-primary/80">
-						{PERIO_FIELD_MAP[queryParams.period.field]} {formatDateAsLocale(queryParams.period.after)} a {formatDateAsLocale(queryParams.period.before)}
-					</p>
-					<button
-						type="button"
-						onClick={() => updateQueryParams({ period: { field: null, after: null, before: null } })}
-						className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1"
-					>
-						<X size={12} />
-					</button>
-				</div>
-			) : null}
 		</div>
 	);
 }

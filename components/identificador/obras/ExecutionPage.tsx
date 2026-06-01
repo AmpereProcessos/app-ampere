@@ -12,20 +12,17 @@ import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useServiceOrdersByPersonalizedFilters } from "@/utils/methods/query/service-orders";
-import type { TPersonalizedServiceOrderFilter } from "@/utils/schemas/service-order";
 import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { Code, Pencil, Tag, UserRound, X } from "lucide-react";
-import { ListFilter } from "lucide-react";
+import { Code, Pencil, Tag, UserRound } from "lucide-react";
 import { useState } from "react";
 import { BsCalendar, BsCalendarCheck, BsCalendarPlus, BsPatchCheckFill } from "react-icons/bs";
 import { FaRegHourglass, FaSolarPanel } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdDashboard, MdRoofing } from "react-icons/md";
 import { TbUrgent } from "react-icons/tb";
 import ModalControlServiceOrder from "../ordensDeServico/modals/ModalControlServiceOrder";
-import ExecutionPageFilters from "./ExecutionPageFilters";
+import ExecutionProjectsFilters from "./ExecutionProjectsFilters";
 import ExecutionPageStats from "./ExecutionPageStats";
 type ExecutionPageProps = {
 	session: TAuthSession;
@@ -33,7 +30,6 @@ type ExecutionPageProps = {
 export default function ExecutionPage({ session }: ExecutionPageProps) {
 	const queryClient = useQueryClient();
 	const [editServiceOrderModal, setEditServiceOrderModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
-	const [filterMenusIsOpen, setFilterMenusIsOpen] = useState<boolean>(false);
 	const {
 		data: serviceOrdersByFiltersResult,
 		isLoading,
@@ -57,20 +53,13 @@ export default function ExecutionPage({ session }: ExecutionPageProps) {
 	return (
 		<div className="grow p-6 flex flex-col gap-4">
 			<div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
-				<div className="flex w-full items-center justify-between">
-					<div className="flex flex-col items-center gap-2 lg:flex-row">
-						<p className="text-center text-2xl font-black text-[#15599a] uppercase">PROJETOS NO ESTÁGIO DE EXECUÇÃO</p>
-					</div>
-					<button
-						type="button"
-						onClick={() => setFilterMenusIsOpen((prev) => !prev)}
-						className="bg-primary text-primary-foreground cursor-pointer rounded-full p-2 transition-colors hover:bg-blue-500 hover:text-white"
-					>
-						<ListFilter className="h-4 min-h-4 w-4 min-w-4" />
-					</button>
+				<div className="flex w-full items-center justify-center lg:justify-start">
+					<p className="text-center text-2xl font-black text-[#15599a] uppercase">
+						PROJETOS NO ESTÁGIO DE EXECUÇÃO
+					</p>
 				</div>
+				<ExecutionProjectsFilters filters={filters} updateFilters={updateFilters} />
 			</div>
-			<ExecutionPageFiltersShowcase filters={filters} updateFilters={updateFilters} />
 			<ExecutionPageStats session={session} />
 			<GeneralPaginationComponent
 				activePage={filters.page}
@@ -112,7 +101,6 @@ export default function ExecutionPage({ session }: ExecutionPageProps) {
 					}}
 				/>
 			) : null}
-			{filterMenusIsOpen ? <ExecutionPageFilters filters={filters} updateFilters={updateFilters} closeMenu={() => setFilterMenusIsOpen(false)} /> : null}
 		</div>
 	);
 }
@@ -306,109 +294,3 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
 	);
 }
 
-type ExecutionPageFiltersShowcase = {
-	filters: TPersonalizedServiceOrderFilter;
-	updateFilters: (filters: Partial<TPersonalizedServiceOrderFilter>) => void;
-};
-function ExecutionPageFiltersShowcase({ filters, updateFilters }: ExecutionPageFiltersShowcase) {
-	const FilterTag = ({ label, value, onRemove }: { label: string; value: string; onRemove?: () => void }) => (
-		<div className="bg-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.65rem]">
-			<p className="text-primary/80">
-				{label}: <strong>{value}</strong>
-			</p>
-			{onRemove && (
-				<button type="button" onClick={onRemove} className="text-primary hover:bg-primary/20 rounded-lg bg-transparent p-1">
-					<X size={12} />
-				</button>
-			)}
-		</div>
-	);
-	const PERIOD_MAP = {
-		dataInsercao: "DATA DE INSERÇÃO",
-		dataPrevisaoLiberacao: "DATA DE PREVISÃO DE LIBERAÇÃO",
-		dataLiberacao: "DATA DE LIBERAÇÃO",
-		dataEfetivacao: "DATA DE EFETIVAÇÃO",
-		"periodo.inicio": "DATA DE INÍCIO DO SERVIÇO",
-		"periodo.fim": "DATA DE FIM DO SERVIÇO",
-		"projeto.contratoDataAssinatura": "DATA DE ASSINATURA DO CONTRATO",
-		"projeto.compraDataPagamento": "DATA DE PAGAMENTO DA COMPRA",
-		"projeto.compraEntregaDataPrevisao": "DATA DE PREVISÃO DE ENTREGA DA COMPRA",
-		"projeto.compraEntregaDataEfetivacao": "DATA DE EFETIVAÇÃO DA ENTREGA DA COMPRA",
-		"projeto.homologacaoAcessoDataResposta": "DATA DE RESPOSTA DA HOMOLOGACAO DE ACESSO",
-		"projeto.homologacaoVistoriaDataEfetivacao": "DATA DE EFETIVAÇÃO DA VISTORIA",
-	};
-	return (
-		<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:justify-end">
-			<h1 className="text-[0.65rem] font-medium tracking-tight uppercase">FILTROS APLICADOS</h1>
-			{filters.orderBy.direction && filters.orderBy.field ? (
-				<FilterTag
-					label="ORDEM"
-					value={`${filters.orderBy.direction === "asc" ? "CRESCENTE" : "DECRESCENTE"} - ${PERIOD_MAP[filters.orderBy.field]}`}
-					onRemove={() => updateFilters({ orderBy: { direction: null, field: null } })}
-				/>
-			) : null}
-			{filters.name && filters.name.trim().length > 0 ? (
-				<FilterTag label="NOME" value={filters.name} onRemove={() => updateFilters({ name: "" })} />
-			) : null}
-
-			{filters.responsible && filters.responsible.trim().length > 0 ? (
-				<FilterTag label="RESPONSÁVEL" value={filters.responsible} onRemove={() => updateFilters({ responsible: "" })} />
-			) : null}
-
-			{filters.tags && filters.tags.length > 0 ? (
-				<FilterTag label="TAGS" value={filters.tags.join(", ")} onRemove={() => updateFilters({ tags: [] })} />
-			) : null}
-
-			{filters.city && filters.city.length > 0 ? (
-				<FilterTag label="CIDADE" value={filters.city.join(", ")} onRemove={() => updateFilters({ city: [] })} />
-			) : null}
-			{filters.state && filters.state.length > 0 ? (
-				<FilterTag label="ESTADO" value={filters.state.join(", ")} onRemove={() => updateFilters({ state: [] })} />
-			) : null}
-			{filters.category && filters.category.length > 0 ? (
-				<FilterTag label="CATEGORIA" value={filters.category.join(", ")} onRemove={() => updateFilters({ category: [] })} />
-			) : null}
-			{filters.urgency && filters.urgency.length > 0 ? (
-				<FilterTag label="URGENCIA" value={filters.urgency.join(", ")} onRemove={() => updateFilters({ urgency: [] })} />
-			) : null}
-			{filters.authors && filters.authors.length > 0 ? (
-				<FilterTag label="AUTORES" value={filters.authors.join(", ")} onRemove={() => updateFilters({ authors: [] })} />
-			) : null}
-			{filters.topologies && filters.topologies.length > 0 ? (
-				<FilterTag label="TOPOLOGIAS" value={filters.topologies.join(", ")} onRemove={() => updateFilters({ topologies: [] })} />
-			) : null}
-			{filters.roofTypes && filters.roofTypes.length > 0 ? (
-				<FilterTag label="TIPOS DE TELHA" value={filters.roofTypes.join(", ")} onRemove={() => updateFilters({ roofTypes: [] })} />
-			) : null}
-			{filters.projectEquipmentDelivered ? (
-				<FilterTag label="EQUIPAMENTO ENTREGUE" value="EQUIPAMENTO ENTREGUE" onRemove={() => updateFilters({ projectEquipmentDelivered: false })} />
-			) : null}
-			{filters.projectEquipmentNotDelivered ? (
-				<FilterTag
-					label="EQUIPAMENTO NÃO ENTREGUE"
-					value="EQUIPAMENTO NÃO ENTREGUE"
-					onRemove={() => updateFilters({ projectEquipmentNotDelivered: false })}
-				/>
-			) : null}
-			{filters.pending ? <FilterTag label="SOMENTE EM ABERTO" value="SOMENTE EM ABERTO" onRemove={() => updateFilters({ pending: false })} /> : null}
-			{filters.released ? <FilterTag label="SOMENTE LIBERADAS" value="SOMENTE LIBERADAS" onRemove={() => updateFilters({ released: false })} /> : null}
-			{filters.notReleased ? (
-				<FilterTag label="SOMENTE NÃO LIBERADAS" value="SOMENTE NÃO LIBERADAS" onRemove={() => updateFilters({ notReleased: false })} />
-			) : null}
-			{filters.missingObservations ? (
-				<FilterTag
-					label="SOMENTE COM OBSERVAÇÕES AUSENTES"
-					value="SOMENTE COM OBSERVAÇÕES AUSENTES"
-					onRemove={() => updateFilters({ missingObservations: false })}
-				/>
-			) : null}
-			{filters.period?.after && filters.period?.before && filters.period?.field ? (
-				<FilterTag
-					label="PERÍODO"
-					value={`${PERIOD_MAP[filters.period?.field]} ${formatDateAsLocale(filters.period?.after)} a ${formatDateAsLocale(filters.period?.before)}`}
-					onRemove={() => updateFilters({ period: { field: null, after: null, before: null } })}
-				/>
-			) : null}
-		</div>
-	);
-}

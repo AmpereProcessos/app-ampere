@@ -1,37 +1,17 @@
 import dayjs from "dayjs";
-import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+import { motion } from "framer-motion";
 import React, { useState } from "react";
-
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { VscDiffAdded } from "react-icons/vsc";
 
 import ModalProjetos from "@/components/ModalProjetos";
 import TagTipoDeServico from "@/components/TagTipoDeServico";
 import ProjetosSkeleton from "@/components/skeletons/ProjetosSkeleton";
 
-import DateInput from "@/components/inputs/Date";
-import MultipleSelectInput from "@/components/inputs/MultipleSelect";
-import MultipleSelectInputVirtualized from "@/components/inputs/MultipleSelectInputVirtualized";
-import SelectInput from "@/components/inputs/Select";
-import TextInput from "@/components/inputs/Text";
-import { SlideMotionVariants, formatDate } from "@/utils/constants";
-import { useEngineeringProjects } from "@/utils/methods/query/engineering";
-import { formatDateInputChange } from "@/utils/methods/shared";
-import {
-  HomologationControlStatus,
-  ServiceOrderStatus,
-  inspectionStatus,
-  serviceTypes,
-} from "@/utils/select-options";
-
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
-import StatesAndCities from "@/utils/jsons/estados-cidades.json";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
-import { useUsers } from "@/utils/methods/query/crm/users";
 import { useTags } from "@/utils/methods/query/tags";
+import { useEngineeringProjects } from "@/utils/methods/query/engineering";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,30 +21,11 @@ import type { TEngineeringProjectDTO } from "@/pages/api/projects/engenharia";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useProjectsAllocationsGrouped } from "@/utils/methods/query/projects";
 import { useViewModesStore } from "@/utils/stores/view-modes-store";
-import {
-  Box,
-  DraftingCompass,
-  FileSignature,
-  LayoutGrid,
-  PanelsTopLeft,
-  PiggyBankIcon,
-  ShieldCheck,
-  ShieldOff,
-  Truck,
-} from "lucide-react";
+import { Box } from "lucide-react";
 import { FaRotate } from "react-icons/fa6";
+import EngineeringProjectsFilters from "./EngineeringProjectsFilters";
 import EngineeringStats from "./Stats";
 
-const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((c, index) => ({
-  id: index + 1,
-  label: c,
-  value: c,
-}));
-const AllStates = StatesAndCities.map((e) => e.sigla).map((c, index) => ({
-  id: index + 1,
-  label: c,
-  value: c,
-}));
 const CurrentDate = dayjs().toDate();
 
 type EngineeringDatabaseModePageProps = {
@@ -72,13 +33,11 @@ type EngineeringDatabaseModePageProps = {
 };
 function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePageProps) {
   const updateViewMode = useViewModesStore((state) => state.updateMode);
-  const [filtersMenuIsOpen, setFiltersMenuIsOpen] = useState(false);
   const [editProjectModal, setEditProjectModal] = useState<{
     isOpen: boolean;
     projectId: string | null;
   }>({ isOpen: false, projectId: null });
   const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
-  const { data: crmUsers } = useUsers({ includeDeleted: true });
 
   const {
     data: projects,
@@ -107,463 +66,13 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
               <h1 className="font-medium">ALTERAR MODO</h1>
             </button>
           </div>
-          {filtersMenuIsOpen ? (
-            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
-              <IoMdArrowDropupCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setFiltersMenuIsOpen(false)}
-              />
-            </div>
-          ) : (
-            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
-              <IoMdArrowDropdownCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setFiltersMenuIsOpen(true)}
-              />
-            </div>
-          )}
         </div>
         <EngineeringStats />
-        <div className="my-2 flex w-full items-center justify-end gap-2">
-          <Link href="/projetos/analises-tecnicas">
-            <button
-              type="button"
-              className="rounded-md bg-[#15599a] px-4 py-1 text-sm font-bold text-white"
-            >
-              ANÁLISES TÉCNICAS
-            </button>
-          </Link>
-          <Link href="/projetos/homologacoes">
-            <button
-              type="button"
-              className="rounded-md bg-[#fead41] px-4 py-1 text-sm font-bold text-white"
-            >
-              HOMOLOGAÇÕES AVULSAS
-            </button>
-          </Link>
-        </div>
-        <AnimatePresence>
-          {filtersMenuIsOpen ? (
-            <motion.div
-              key={"engineering-filters-menu"}
-              variants={SlideMotionVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="mt-4 flex w-full flex-col gap-y-2"
-            >
-              <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
-                <TextInput
-                  label={"NOME DO CONTRATO"}
-                  placeholder={"Digite o nome do contrato..."}
-                  value={filters.search}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
-                />
-                <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
-                  <div className="flex items-center justify-center gap-x-2">
-                    <div className="w-full lg:w-[250px]">
-                      <DateInput
-                        width={"100%"}
-                        label={"DEPOIS DE"}
-                        value={filters.date.after ? formatDate(filters.date.after) : undefined}
-                        handleChange={(value) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            date: { ...prev.date, after: formatDateInputChange(value, "string") },
-                          }))
-                        }
-                      />
-                    </div>
-                    <div className="w-full lg:w-[250px]">
-                      <DateInput
-                        width={"100%"}
-                        label={"ANTES DE"}
-                        value={filters.date.before ? formatDate(filters.date.before) : undefined}
-                        handleChange={(value) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            date: { ...prev.date, before: formatDateInputChange(value, "string") },
-                          }))
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <SelectInput
-                      width={"100%"}
-                      label={"CAMPO DE FILTRO"}
-                      value={filters.date.field || null}
-                      options={[
-                        { id: 1, label: "DATA DE PAGAMENTO", value: "compra.dataPagamento" },
-                        { id: 2, label: "DATA ASS.CONTRATO", value: "contrato.dataAssinatura" },
-                        {
-                          id: 3,
-                          label: "DATA LIB.DOCUMENTAÇÃO",
-                          value: "homologacao.documentacao.dataLiberacao",
-                        },
-                        {
-                          id: 4,
-                          label: "DATA ASS.DOCUMENTAÇÃO",
-                          value: "homologacao.documentacao.dataAssinatura",
-                        },
-                        {
-                          id: 6,
-                          label: "DATA DE SOLICITAÇÃO DO PARECER",
-                          value: "homologacao.acesso.dataSolicitacao",
-                        },
-                        {
-                          id: 7,
-                          label: "DATA DE RESPOSTA DO PARECER",
-                          value: "homologacao.acesso.dataResposta",
-                        },
-                        {
-                          id: 8,
-                          label: "DATA DE PEDIDO DA VISTORIA",
-                          value: "homologacao.vistoria.dataSolicitacao",
-                        },
-                        {
-                          id: 9,
-                          label: "TROCA DO MEDIDOR",
-                          value: "homologacao.vistoria.dataEfetivacao",
-                        },
-                        { id: 10, label: "NÃO DEFINIDO", value: null },
-                      ]}
-                      selectedItemLabel={"SEM FILTRO"}
-                      handleChange={(value) =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          date: {
-                            ...prev.date,
-                            field: value,
-                          },
-                        }))
-                      }
-                      onReset={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          date: {
-                            after: null,
-                            before: null,
-                            field: null,
-                          },
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"TIPO DE SERVIÇO"}
-                    selected={filters.serviceType}
-                    options={serviceTypes}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        serviceType: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        serviceType: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"ETIQUETAS"}
-                    selected={filters.tagIds}
-                    options={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) || []}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        tagIds: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        tagIds: [],
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"STATUS DE ENTREGA"}
-                    selected={filters.deliveryStatus}
-                    options={[
-                      { id: 1, label: "AGUARDANDO COMPRA", value: "AGUARDANDO COMPRA" },
-                      { id: 2, label: "EM ROTA", value: "EM ROTA" },
-                      { id: 3, label: "ENTREGUE", value: "ENTREGUE" },
-                      { id: 4, label: "CANCELADO", value: "CANCELADO" },
-                      { id: 5, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        deliveryStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        deliveryStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"STATUS DO PARECER"}
-                    selected={filters.grantingStatus}
-                    options={HomologationControlStatus}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        grantingStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        grantingStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"STATUS DA OBRA"}
-                    selected={filters.executionStatus}
-                    options={ServiceOrderStatus}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        executionStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        executionStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"STATUS DA VISTORIA"}
-                    selected={filters.inspectionStatus}
-                    options={inspectionStatus}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        inspectionStatus: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        inspectionStatus: [],
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInputVirtualized
-                    width={"100%"}
-                    label={"CIDADE"}
-                    selected={filters.city}
-                    options={AllCities.map((city, index) => ({
-                      id: index + 1,
-                      label: city.label,
-                      value: city.value,
-                    }))}
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        city: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        city: [],
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="w-full lg:w-[250px]">
-                  <MultipleSelectInput
-                    width={"100%"}
-                    label={"VENDEDOR"}
-                    selected={filters.sellerName}
-                    options={
-                      crmUsers?.map((seller, index) => ({
-                        id: index + 1,
-                        label: seller.nome || "",
-                        value: seller.nome,
-                      })) || []
-                    }
-                    selectedItemLabel={"SEM FILTRO"}
-                    handleChange={(value) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        sellerName: value as string[],
-                      }))
-                    }
-                    onReset={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        sellerName: [],
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      paidOnly: !filters.paidOnly,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.paidOnly ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <PiggyBankIcon className="h-4 w-4 min-h-4 min-w-4" />
-                  SOMENTE PAGOS
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      necessaryDistribution: !filters.necessaryDistribution,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.necessaryDistribution ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <Truck className="h-4 w-4 min-h-4 min-w-4" />
-                  NECESSÁRIO DISTRIBUIÇÃO
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      necessaryHomologation: !filters.necessaryHomologation,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.necessaryHomologation ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <ShieldCheck className="h-4 w-4 min-h-4 min-w-4" />
-                  NECESSÁRIO HOMOLOGAÇÃO
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      notNecessaryHomologation: !filters.notNecessaryHomologation,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.notNecessaryHomologation ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <ShieldOff className="h-4 w-4 min-h-4 min-w-4" />
-                  NÃO NECESSÁRIO HOMOLOGAÇÃO
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      drawReady: !prev.drawReady,
-                    }))
-                  }
-                  size="sm"
-                  variant={filters.drawReady ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <DraftingCompass className="h-4 w-4 min-h-4 min-w-4" />
-                  DESENHO PRONTO
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      missingDiagram: !filters.missingDiagram,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.missingDiagram ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />
-                  DIAGRAMA PENDENTE
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      missingDraw: !filters.missingDraw,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.missingDraw ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <PanelsTopLeft className="h-4 w-4 min-h-4 min-w-4" />
-                  DESENHO PENDENTE
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      missingSignature: !filters.missingSignature,
-                    })
-                  }
-                  size="sm"
-                  variant={filters.missingSignature ? "default" : "outline"}
-                  className="flex items-center gap-1.5 text-xs"
-                >
-                  <FileSignature className="h-4 w-4 min-h-4 min-w-4" />
-                  FALTANDO ASSINATURA
-                </Button>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+        <EngineeringProjectsFilters
+          filters={filters}
+          setFilters={setFilters}
+          tagOptions={tags?.map((t) => ({ id: t._id, value: t._id, label: t.titulo })) ?? []}
+        />
       </div>
 
       {projectsLoading ? <ProjetosSkeleton /> : null}

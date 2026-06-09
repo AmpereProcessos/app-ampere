@@ -23,7 +23,7 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import { type TUseADMProjectsFilters, useADMProjects } from "@/utils/methods/query/adm";
 import { useUsers } from "@/utils/methods/query/crm/users";
 import { useTags } from "@/utils/methods/query/tags";
-import { formatDateInputChange } from "@/utils/methods/shared";
+import { formatDateForInputValue, formatDateOnInputChange } from "@/utils/methods/shared";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { MdPaid } from "react-icons/md";
@@ -208,16 +208,16 @@ function ADMProjectFilters({ filters, setFilters }: ADMProjectFiltersProps) {
 							<DateInput
 								width={"100%"}
 								label={"DEPOIS DE"}
-								value={filters.date.after ? formatDate(filters.date.after) : undefined}
-								handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value, "string") } }))}
+								value={filters.date.after ? formatDateForInputValue(filters.date.after) : undefined}
+								handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateOnInputChange(value, "string", 'start') } }))}
 							/>
 						</div>
 						<div className="w-full lg:w-[250px]">
 							<DateInput
 								width={"100%"}
 								label={"ANTES DE"}
-								value={filters.date.before ? formatDate(filters.date.before) : undefined}
-								handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value, "string") } }))}
+								value={filters.date.before ? formatDateForInputValue(filters.date.before) : undefined}
+								handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateOnInputChange(value, "string", 'end') } }))}
 							/>
 						</div>
 					</div>

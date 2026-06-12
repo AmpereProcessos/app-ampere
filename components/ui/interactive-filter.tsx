@@ -745,6 +745,7 @@ type InteractiveFilterDateRangeContentProps = {
   locale?: Locale;
   numberOfMonths?: number;
   className?: string;
+  closeOnComplete?: boolean | ((range: InteractiveFilterDateRange) => boolean);
 };
 
 function InteractiveFilterDateRangeContent({
@@ -753,7 +754,22 @@ function InteractiveFilterDateRangeContent({
   locale = ptBR,
   numberOfMonths = 2,
   className,
+  closeOnComplete = false,
 }: InteractiveFilterDateRangeContentProps) {
+  const { setOpen } = useInteractiveFilterContext();
+
+  function handleSelect(selectedValue: { from?: Date; to?: Date } | undefined) {
+    const nextValue = { from: selectedValue?.from, to: selectedValue?.to };
+    onChange(nextValue);
+
+    const shouldClose =
+      typeof closeOnComplete === "function"
+        ? closeOnComplete(nextValue)
+        : closeOnComplete && !!nextValue.from && !!nextValue.to;
+
+    if (shouldClose) setOpen(false);
+  }
+
   return (
     <div className={cn("w-auto p-0", className)}>
       <Calendar
@@ -762,7 +778,7 @@ function InteractiveFilterDateRangeContent({
         locale={locale}
         defaultMonth={value.from}
         selected={{ from: value.from, to: value.to }}
-        onSelect={(selectedValue) => onChange({ from: selectedValue?.from, to: selectedValue?.to })}
+        onSelect={handleSelect}
         numberOfMonths={numberOfMonths}
         classNames={{
           weekdays: "flex items-center gap-1.5",

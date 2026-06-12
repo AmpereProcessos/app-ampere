@@ -26,7 +26,7 @@ import {
 	Wallet,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const DATE_FIELD_OPTIONS = [
 	{ id: 1, value: "obra.saida", label: "SAÍDA DE OBRA" },
@@ -52,7 +52,21 @@ function joinLabels(values: string[], options: { value: string; label: string }[
 		.join(", ");
 }
 
+function isValidPeriodDate(value: string | null | undefined) {
+	if (!value) return false;
+	return !Number.isNaN(new Date(value).getTime());
+}
+
+function isPeriodFilterComplete(date: TUseADMProjectsFilters["date"]) {
+	if (!date.field || !isValidPeriodDate(date.after) || !isValidPeriodDate(date.before)) {
+		return false;
+	}
+
+	return new Date(date.after!).getTime() <= new Date(date.before!).getTime();
+}
+
 export default function ADMProjectsFilters({ filters, setFilters, tagOptions }: ADMProjectsFiltersProps) {
+	const [periodFilterOpen, setPeriodFilterOpen] = useState(false);
 	const { data: crmUsers } = useUsers({ includeDeleted: true });
 
 	const sellerOptions = useMemo<InteractiveFilterOption<string>[]>(() => {
@@ -90,10 +104,41 @@ export default function ADMProjectsFilters({ filters, setFilters, tagOptions }: 
 	const hasReceiptThisWeek = filters.receiptThisWeek;
 	const hasReceiptThisMonth = filters.receiptThisMonth;
 
+	function applyPeriodFilter(date: TUseADMProjectsFilters["date"]) {
+		setFilters({ date });
+	}
+
+	function closePeriodFilterIfComplete(date: TUseADMProjectsFilters["date"]) {
+		if (isPeriodFilterComplete(date)) {
+			setPeriodFilterOpen(false);
+		}
+	}
+
+	function handlePeriodFieldChange(field: TUseADMProjectsFilters["date"]["field"]) {
+		const nextDate = { ...filters.date, field };
+		applyPeriodFilter(nextDate);
+		closePeriodFilterIfComplete(nextDate);
+	}
+
+	function handlePeriodRangeChange(nextPeriod: { from?: Date; to?: Date }) {
+		const nextDate = {
+			...filters.date,
+			after: nextPeriod.from ? (formatDateInputChange(nextPeriod.from) as string) : null,
+			before: nextPeriod.to ? (formatDateInputChange(nextPeriod.to) as string) : null,
+		};
+
+		applyPeriodFilter(nextDate);
+
+		if (nextPeriod.from && nextPeriod.to) {
+			closePeriodFilterIfComplete(nextDate);
+		}
+	}
+
 	function clearDateFilter() {
 		setFilters({
 			date: { after: null, before: null, field: null },
 		});
+		setPeriodFilterOpen(false);
 	}
 
 	return (
@@ -135,7 +180,7 @@ export default function ADMProjectsFilters({ filters, setFilters, tagOptions }: 
 					onClear={() => setFilters({ billingCompany: [] })}
 				/>
 
-				<InteractiveFilter.Root className="w-fit">
+				<InteractiveFilter.Root className="w-fit" open={periodFilterOpen} onOpenChange={setPeriodFilterOpen}>
 					<InteractiveFilter.Trigger>
 						<InteractiveFilter.Icon>
 							<CalendarDays className="h-4 w-4 min-h-4 min-w-4" />
@@ -149,17 +194,13 @@ export default function ADMProjectsFilters({ filters, setFilters, tagOptions }: 
 							<InteractiveFilter.SingleContent
 								options={[...DATE_FIELD_OPTIONS]}
 								value={filters.date.field}
-								onChange={(nextField) =>
-									setFilters({
-										date: { ...filters.date, field: nextField },
-									})
-								}
-								onClear={() => setFilters({ date: { ...filters.date, field: null } })}
+								onChange={handlePeriodFieldChange}
+								onClear={() => handlePeriodFieldChange(null)}
 								isCleared={!filters.date.field}
 								searchPlaceholder="Buscar campo..."
 								emptyLabel="Nenhum campo encontrado."
 								clearLabel="SEM FILTRO"
-								closeOnSelect
+								closeOnSelect={false}
 							/>
 						</div>
 						<InteractiveFilter.DateRangeContent
@@ -167,15 +208,7 @@ export default function ADMProjectsFilters({ filters, setFilters, tagOptions }: 
 								from: filters.date.after ? new Date(filters.date.after) : undefined,
 								to: filters.date.before ? new Date(filters.date.before) : undefined,
 							}}
-							onChange={(nextPeriod) =>
-								setFilters({
-									date: {
-										...filters.date,
-										after: nextPeriod.from ? (formatDateInputChange(nextPeriod.from) as string) : null,
-										before: nextPeriod.to ? (formatDateInputChange(nextPeriod.to) as string) : null,
-									},
-								})
-							}
+							onChange={handlePeriodRangeChange}
 						/>
 					</InteractiveFilter.Content>
 				</InteractiveFilter.Root>

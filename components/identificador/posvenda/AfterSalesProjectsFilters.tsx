@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/interactive-filter";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG } from "@/lib/project-journeys";
 import { cn } from "@/lib/utils";
 import { cidadesAtendidas } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
@@ -17,7 +18,6 @@ import {
   ServiceOrderStatus,
   allSellers,
   inspectionStatus,
-  journeyPendings,
 } from "@/utils/select-options";
 import {
   ArrowDownNarrowWide,
@@ -87,6 +87,16 @@ export default function AfterSalesProjectsFilters({
     [],
   );
 
+  const journeyPendingOptions = useMemo<InteractiveFilterOption<string>[]>(
+    () =>
+      UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG.map((stage) => ({
+        id: String(stage.ordem),
+        value: String(stage.ordem),
+        label: `PENDENTE ${stage.titulo}`,
+      })),
+    [],
+  );
+
   const selectedPeriodLabel = useMemo(() => {
     if (!filters.date.after || !filters.date.before || !filters.date.field) return "N/A";
     const fieldLabel =
@@ -131,7 +141,7 @@ export default function AfterSalesProjectsFilters({
         <AfterSalesMultiFilterChip
           label="PENDÊNCIAS DA JORNADA"
           icon={<Route className="h-4 w-4 min-h-4 min-w-4" />}
-          options={journeyPendings}
+          options={journeyPendingOptions}
           value={filters.journeyPendings}
           onChange={(journeyPendings) => setFilters((prev) => ({ ...prev, journeyPendings }))}
           onClear={() => setFilters((prev) => ({ ...prev, journeyPendings: [] }))}

@@ -225,8 +225,14 @@ export function useAfterSalesProjects() {
 	}
 	function matchJourneyPendings(project: TProjectDTO) {
 		if (filters.journeyPendings.length === 0) return true;
-		const matchesPendings = filters.journeyPendings.every((field) => !project.jornada[field as keyof TProjectDTO["jornada"]]);
-		return matchesPendings;
+		const stages = project.jornada?.estagios ?? [];
+		return filters.journeyPendings.every((ordemValue) => {
+			const ordem = Number(ordemValue);
+			if (Number.isNaN(ordem)) return false;
+			const stage = stages.find((item) => item.ordem === ordem);
+			if (!stage) return false;
+			return !stage.concluido;
+		});
 	}
 	function matchInspectionStatus(project: TProjectDTO) {
 		if (filters.inspectionStatus.length === 0) return true;

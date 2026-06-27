@@ -5,7 +5,7 @@ import LoadingComponent from "@/components/utils/LoadingComponent";
 import LoadingPage from "@/components/utils/LoadingPage";
 import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
-import { cn } from "@/lib/utils";
+import { cn, copyToClipboard } from "@/lib/utils";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import React, { useMemo, useState } from "react";
 import { BsCalendarCheck, BsCalendarEvent } from "react-icons/bs";
@@ -21,6 +21,7 @@ import {
   Tag,
   UserRound,
   DownloadIcon,
+  Code,
 } from "lucide-react";
 import { useServiceOrdersItinerary } from "../../utils/methods/query/service-orders";
 import ModalOS from "../../components/ModalOS";
@@ -305,6 +306,13 @@ function ServiceOrderCard({ sessionUserId, serviceOrder, callbacks }: ServiceOrd
     <div className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full items-center justify-between gap-2 flex-col-reverse lg:flex-row">
         <div className="flex w-full items-center justify-start gap-1 lg:w-fit">
+          <Button
+            size={"fit"}
+            className="flex items-center justify-center p-1 rounded-full"
+            onClick={() => copyToClipboard(serviceOrder._id)}
+          >
+            <Code className="w-3 h-3 min-w-3 min-h-3" />
+          </Button>
           <h1 className="text-xs font-bold tracking-tight lg:text-sm">{serviceOrder.descricao}</h1>
         </div>
         <div className="flex items-center gap-1">

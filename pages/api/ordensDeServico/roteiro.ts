@@ -119,9 +119,14 @@ async function getServiceOrdersItinerary({
   const technicalAnalysisIds = serviceOrders
     .map((s) => s.idAnaliseTecnica)
     .filter((id) => !!id) as string[];
-  // Enriching service orders
+  const projectIds = [
+    ...new Set(serviceOrders.map((s) => s.projeto.id).filter((id) => !!id)),
+  ];
+  const validProjectCategories = ["PROJETOS", "SERVIÇOS", "ANÁLISES TÉCNICAS"];
+
   const fileReferences = await fileReferencesCollection
     .find({
+      dataExclusao: null,
       $or: [
         {
           idAnaliseTecnica: {
@@ -133,14 +138,25 @@ async function getServiceOrdersItinerary({
             $in: serviceOrdersIds,
           },
         },
+        {
+          idProjeto: {
+            $in: projectIds,
+          },
+        },
       ],
     })
     .toArray();
 
   const serviceOrdersEnriched = serviceOrders.map((s) => {
-    const fileReferencesMatched = fileReferences.filter(
-      (f) => f.idOrdemServico === s._id.toString() || f.idAnaliseTecnica === s.idAnaliseTecnica,
-    );
+    const fileReferencesMatched = fileReferences.filter((f) => {
+      const isFromServiceOrder = f.idOrdemServico === s._id.toString();
+      const isFromTechnicalAnalysis = f.idAnaliseTecnica === s.idAnaliseTecnica;
+      const isFromProjectValidDocuments =
+        f.idProjeto === s.projeto.id &&
+        f.categorias?.some((c) => validProjectCategories.includes(c));
+
+      return isFromServiceOrder || isFromTechnicalAnalysis || isFromProjectValidDocuments;
+    });
 
     return {
       ...s,

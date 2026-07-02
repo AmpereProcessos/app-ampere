@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useSession } from "@/components/providers/SessionProvider";
 import { useRouter } from "next/router";
 
+import { Plus } from "lucide-react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 
 import LoadingPage from "../../components/utils/LoadingPage";
@@ -41,6 +42,7 @@ function MainDatebasePageContent({ session }: { session: TAuthSession }) {
 	const projects = data?.projects;
 	const projectsMatched = data?.projectsMatched;
 	const totalPages = data?.totalPages;
+	const userHasCommercialProjectCreationAccess = session.user.permissoes.comercial.editar;
 	const userHasOverallAccess =
 		session.user.permissoes.comercial.visualizar &&
 		session.user.permissoes.posVenda.visualizar &&
@@ -72,11 +74,19 @@ function MainDatebasePageContent({ session }: { session: TAuthSession }) {
 					</div>
 				</div>
 				{filterMenuIsOpen ? <FilterMenu updateFilters={updateFilters} queryLoading={isLoading} resetSelectedPage={() => setPage(1)} /> : null}
-				{userHasOverallAccess ? (
-					<div className="flex w-full items-center justify-end">
-						<Button variant={"ghost"} onClick={() => setExportationMenuIsOpen(true)} size={"xs"}>
+				{userHasOverallAccess || userHasCommercialProjectCreationAccess ? (
+					<div className="flex w-full flex-wrap items-center justify-end gap-2">
+						{userHasCommercialProjectCreationAccess ? (
+							<Button variant={"default"} onClick={() => router.push("/gestao-de-projetos/novo-projeto")} size={"xs"} className="gap-1">
+								<Plus className="h-3.5 w-3.5" />
+								NOVO PROJETO
+							</Button>
+						) : null}
+						{userHasOverallAccess ? (
+							<Button variant={"ghost"} onClick={() => setExportationMenuIsOpen(true)} size={"xs"}>
 							ABRIR MENU DE EXPORTAÇÃO
-						</Button>
+							</Button>
+						) : null}
 					</div>
 				) : null}
 			</div>

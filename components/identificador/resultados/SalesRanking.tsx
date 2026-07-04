@@ -10,6 +10,7 @@ import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useSalesRanking } from "@/utils/methods/query/stats";
 import { BadgeDollarSign, CirclePlus, Zap } from "lucide-react";
+import RankingPeriodSelect from "./RankingPeriodSelect";
 
 export default function ModernSalesRanking() {
   const { data, isLoading, isSuccess, isError, error, queryParams, updateQueryParams } =
@@ -20,11 +21,6 @@ export default function ModernSalesRanking() {
       },
     });
 
-  const PERIOD_NAMING_MAP = {
-    "current-month": "RANKING DE VENDEDORES DO MÊS",
-    "current-semester": "RANKING DE VENDEDORES DO SEMESTRE",
-    "current-year": "RANKING DE VENDEDORES DO ANO",
-  };
   const RANK_BY_MAP = {
     "sales-total-power": "POTÊNCIA VENDIDA",
     "sales-total-qty": "PROJETOS VENDIDOS",
@@ -37,11 +33,17 @@ export default function ModernSalesRanking() {
         "bg-card border-primary/20 flex w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs",
       )}
     >
-      <div className="flex items-center justify-between">
-        <h1 className="text-xs font-medium tracking-tight uppercase">
-          {PERIOD_NAMING_MAP[queryParams.type]}
-        </h1>
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <h1 className="truncate text-xs font-medium tracking-tight uppercase">
+            RANKING DE VENDEDORES
+          </h1>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <RankingPeriodSelect
+            value={queryParams.type}
+            onValueChange={(type) => updateQueryParams({ type })}
+          />
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

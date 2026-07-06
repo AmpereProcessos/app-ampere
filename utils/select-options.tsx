@@ -1761,16 +1761,17 @@ export const FileReferenceCategories = [
 ];
 
 export const ServiceOrderStatus = [
-  { id: 1, label: "PENDENTE", value: "PENDENTE" }, // add aguardando liberação
-  { id: 2, label: "AGUARDANDO PLANEJAMENTO", value: "AGUARDANDO PLANEJAMENTO" },
-  { id: 3, label: "AGUARDANDO LIBERAÇÃO", value: "AGUARDANDO LIBERAÇÃO" },
-  { id: 4, label: "AGUARDANDO AGENDAMENTO", value: "AGUARDANDO AGENDAMENTO" },
-  { id: 5, label: "AGUARDANDO EXECUÇÃO", value: "AGUARDANDO EXECUÇÃO" },
-  { id: 6, label: "EM EXECUÇÃO", value: "EM EXECUÇÃO" },
-  { id: 7, label: "CONCLUÍDA PARCIAL", value: "CONCLUÍDA PARCIAL" },
-  { id: 8, label: "CONCLUÍDA", value: "CONCLUÍDA" },
-  { id: 9, label: "CANCELADA", value: "CANCELADA" },
-  { id: 10, label: "PENDÊNCIAS", value: "PENDÊNCIAS" },
+  { id: 1, label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" }, // add aguardando liberação
+  { id: 2, label: "PENDENTE", value: "PENDENTE" }, // add aguardando liberação
+  { id: 3, label: "AGUARDANDO PLANEJAMENTO", value: "AGUARDANDO PLANEJAMENTO" },
+  { id: 4, label: "AGUARDANDO LIBERAÇÃO", value: "AGUARDANDO LIBERAÇÃO" },
+  { id: 5, label: "AGUARDANDO AGENDAMENTO", value: "AGUARDANDO AGENDAMENTO" },
+  { id: 6, label: "AGUARDANDO EXECUÇÃO", value: "AGUARDANDO EXECUÇÃO" },
+  { id: 7, label: "EM EXECUÇÃO", value: "EM EXECUÇÃO" },
+  { id: 8, label: "CONCLUÍDA PARCIAL", value: "CONCLUÍDA PARCIAL" },
+  { id: 9, label: "CONCLUÍDA", value: "CONCLUÍDA" },
+  { id: 10, label: "CANCELADA", value: "CANCELADA" },
+  { id: 11, label: "PENDÊNCIAS", value: "PENDÊNCIAS" },
 ];
 
 export const CostApportionments = [

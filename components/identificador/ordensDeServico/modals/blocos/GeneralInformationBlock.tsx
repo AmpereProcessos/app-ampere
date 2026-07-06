@@ -159,7 +159,7 @@ function ServiceOrderGeneralInformationBlock({
                   })
                 }
                 width="100%"
-                selectedItemLabel="NÃO DEFINIDO"
+                selectedItemLabel="NULO"
                 onReset={() => updateInfoHolder({ status: "PENDENTE" })}
               />
             </div>

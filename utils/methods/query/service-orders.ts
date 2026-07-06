@@ -111,6 +111,7 @@ export function useServiceOrdersByPersonalizedFilters({
     tags: initialFilters.tags || [],
     category: initialFilters.category || [],
     urgency: initialFilters.urgency || [],
+    status: initialFilters.status || [],
     authors: initialFilters.authors || [],
     period: {
       after: initialFilters.period?.after || null,

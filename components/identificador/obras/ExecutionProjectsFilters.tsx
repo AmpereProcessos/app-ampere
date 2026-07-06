@@ -13,7 +13,7 @@ import { formatDateInputChange } from "@/utils/methods/shared";
 import { useTags } from "@/utils/methods/query/tags";
 import { useUsers } from "@/utils/methods/query/users";
 import type { TPersonalizedServiceOrderFilter } from "@/utils/schemas/service-order";
-import { roofTiles, SystemTopologiesTypes } from "@/utils/select-options";
+import { roofTiles, ServiceOrderStatus, SystemTopologiesTypes } from "@/utils/select-options";
 import {
   ArrowDownNarrowWide,
   ArrowUpNarrowWide,
@@ -148,6 +148,15 @@ export default function ExecutionProjectsFilters({ filters, updateFilters }: Exe
           value={filters.urgency}
           onChange={(urgency) => patch({ urgency })}
           onClear={() => patch({ urgency: [] })}
+        />
+
+        <ExecutionMultiFilterChip
+          label="STATUS"
+          icon={<Tag className="h-4 w-4 min-h-4 min-w-4" />}
+          options={ServiceOrderStatus}
+          value={filters.status}
+          onChange={(status) => patch({ status })}
+          onClear={() => patch({ status: [] })}
         />
 
         <InteractiveFilter.Root className="w-fit">

@@ -59,6 +59,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 	const categoryQuery: Filter<TServiceOrder> =
 		filters.category.length > 0 ? { categoria: { $in: filters.category as TServiceOrder["categoria"][] } } : {};
 	const urgencyQuery: Filter<TServiceOrder> = filters.urgency.length > 0 ? { urgencia: { $in: filters.urgency as TServiceOrder["urgencia"][] } } : {};
+	const statusQuery: Filter<TServiceOrder> = buildStatusQuery(filters.status);
 	const authorsQuery: Filter<TServiceOrder> =
 		filters.authors.length > 0 ? { "autor.id": { $in: filters.authors as TServiceOrder["autor"]["id"][] } } : {};
 	const tagsQuery: Filter<TServiceOrder> = filters.tags.length > 0 ? { "etiquetas.id": { $in: filters.tags } } : {};
@@ -86,6 +87,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 		...tagsQuery,
 		...categoryQuery,
 		...urgencyQuery,
+		...statusQuery,
 		...authorsQuery,
 		...pendingQuery,
 		...releasedQuery,
@@ -110,6 +112,15 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 };
 
 export default apiHandler({ POST: getServiceOrdersByPersonalizedFilters });
+
+function buildStatusQuery(statuses: string[]): Filter<TServiceOrder> {
+	if (statuses.length === 0) return {};
+
+	const values = statuses.map((status) => (status === "NÃO DEFINIDO" ? null : status));
+
+	return { status: { $in: values as TServiceOrder["status"][] } };
+}
+
 type GetServiceOrdersByFilterParams = {
 	collection: Collection<TServiceOrder>;
 	query: Filter<TServiceOrder>;

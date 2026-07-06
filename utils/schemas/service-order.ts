@@ -519,6 +519,16 @@ export const PersonalizedFiltersSchema = z.object({
       invalid_type_error: "Tipo não válido para lista de urgências de filtro.",
     },
   ),
+  status: z.array(
+    z.string({
+      required_error: "Status de filtro não informado.",
+      invalid_type_error: "Tipo não válido para status de filtro.",
+    }),
+    {
+      required_error: "Lista de status de filtro não informada.",
+      invalid_type_error: "Tipo não válido para lista de status de filtro.",
+    },
+  ),
   authors: z.array(
     z.string({
       required_error: "Autor de filtro não informada.",

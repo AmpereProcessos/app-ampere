@@ -1,5 +1,6 @@
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetDashboardStatsOutput } from "@/pages/api/stats";
+import type { TClientProfileInput, TClientProfileOutput } from "@/pages/api/stats/client-profile";
 import type { TGetGraphStatsInput, TGetGraphsStatsOutput } from "@/pages/api/stats/graph";
 import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
 import type {
@@ -92,6 +93,24 @@ export function useOverallReport({ initialParams }: TUseOverallReportParams) {
     queryParams,
     updateQueryParams,
   };
+}
+
+async function fetchClientProfileReport(payload: TClientProfileInput) {
+  const { data } = await axios.post<TClientProfileOutput>("/api/stats/client-profile", payload);
+  return data.data;
+}
+
+type TUseClientProfileReportParams = {
+  params: TClientProfileInput;
+};
+export function useClientProfileReport({ params }: TUseClientProfileReportParams) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["client-profile-report", paramsDebounced],
+    queryFn: async () => await fetchClientProfileReport(paramsDebounced),
+    placeholderData: (prev) => prev,
+  });
 }
 
 async function fetchSalesRanking(payload: TGetSalesRankingInput) {

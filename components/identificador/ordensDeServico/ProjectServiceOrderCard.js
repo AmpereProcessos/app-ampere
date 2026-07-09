@@ -11,83 +11,91 @@ import { TbExternalLink } from "react-icons/tb";
 import { AiFillEdit } from "react-icons/ai";
 
 function ProjectServiceOrderCard({ order, projectId, handleClick }) {
-	return (
-		<div className="border-primary/20 flex h-[80px] max-h-[150px] min-h-[80px] w-full items-center rounded-md border">
-			<div className={`flex h-full w-[5px] rounded-tl-md rounded-bl-md bg-blue-400`}></div>
-			<div className="flex h-full grow flex-col p-3">
-				<div className="flex h-full w-full items-center justify-between">
-					<div className="flex flex-col gap-2">
-						<h1 className="text-center text-sm leading-none font-bold tracking-tight text-[#15599a] duration-300 ease-in-out lg:text-start">
-							{order.descricao}
-						</h1>
-						<div className="flex items-center gap-2">
-							<div className="flex items-center gap-2">
-								<Avatar url={order.autor?.avatar_url} fallback={"U"} height={20} width={20} />
-								<p className="text-primary/60 text-xs font-medium">{order.autor?.nome || "AUTOR INDEFINIDO"}</p>
-							</div>
-							<div className={`flex items-center gap-2 ${order.dataEfetivacao ? "text-green-500" : "text-primary/60"}`}>
-								{order.dataEfetivacao ? <BsFillCalendarCheckFill /> : <BsCalendarFill />}
+  return (
+    <div className="border-border flex h-[80px] max-h-[150px] min-h-[80px] w-full items-center rounded-md border">
+      <div className={`flex h-full w-[5px] rounded-tl-md rounded-bl-md bg-blue-400`}></div>
+      <div className="flex h-full grow flex-col p-3">
+        <div className="flex h-full w-full items-center justify-between">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-center text-sm leading-none font-bold tracking-tight text-[#15599a] duration-300 ease-in-out lg:text-start">
+              {order.descricao}
+            </h1>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
+                <Avatar url={order.autor?.avatar_url} fallback={"U"} height={20} width={20} />
+                <p className="text-foreground text-xs font-medium">
+                  {order.autor?.nome || "AUTOR INDEFINIDO"}
+                </p>
+              </div>
+              <div
+                className={`flex items-center gap-2 ${order.dataEfetivacao ? "text-green-500" : "text-foreground"}`}
+              >
+                {order.dataEfetivacao ? <BsFillCalendarCheckFill /> : <BsCalendarFill />}
 
-								<p className="text-xs font-medium">{dayjs(order.dataEfetivacao ? order.dataEfetivacao : order.dataInsercao).format("DD/MM/YYYY HH:mm")}</p>
-							</div>
-						</div>
-					</div>
-					<div className="flex grow items-center justify-around gap-2">
-						<div className="flex flex-col items-center gap-1">
-							<div className="flex items-center gap-2">
-								<h1 className="text-xs font-medium">CATEGORIA</h1>
-								<MdCategory />
-							</div>
-							<p className="text-primary/60 text-sm">{order.categoria}</p>
-						</div>
-						<div className="flex flex-col items-center gap-1">
-							<div className="flex items-center gap-2">
-								<h1 className="text-xs font-medium">URGÊNCIA</h1>
-								<IoMdAlert />
-							</div>
-							<p className="text-primary/60 text-sm">{order.urgencia}</p>
-						</div>
-						<div className="flex flex-col items-center gap-1">
-							<div className="flex items-center gap-2">
-								<h1 className="text-xs font-medium">CIDADE - UF</h1>
-								<FaCity />
-							</div>
-							<p className="text-primary/60 text-sm">
-								{order.localizacao.cidade}-{order.localizacao.uf}
-							</p>
-						</div>
-						<div className="flex flex-col items-center gap-1">
-							<div className="flex items-center gap-2">
-								<h1 className="text-xs font-medium">RESPONSÁVEL</h1>
-								<FaUser />
-							</div>
-							<p className="text-primary/60 text-sm">{order.responsavel.nome || "NÃO DEFINIDO"}</p>
-						</div>
-					</div>
-					<div className="flex items-center justify-center gap-2">
-						<button
-							onClick={() => handleClick(order._id)}
-							className="flex h-[30px] items-center gap-1 rounded border border-blue-500 p-1 text-blue-500 duration-300 ease-in-out hover:border-blue-800 hover:text-blue-800"
-						>
-							<AiFillEdit />
-						</button>
-						<Link href={`/ordens-de-servico/pdf/${order._id}`}>
-							<div className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
-								<TbExternalLink />
-							</div>
-						</Link>
-						{order.categoria == "MANUTENÇÃO PREVENTIVA" && projectId ? (
-							<Link href={`/oem/pdfTermo/${projectId}`}>
-								<div className="h-[30px] cursor-pointer rounded border border-cyan-500 p-1 font-bold text-cyan-500 hover:bg-cyan-500 hover:text-black">
-									<HiOutlineDocumentText />
-								</div>
-							</Link>
-						) : null}
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+                <p className="text-xs font-medium">
+                  {dayjs(order.dataEfetivacao ? order.dataEfetivacao : order.dataInsercao).format(
+                    "DD/MM/YYYY HH:mm",
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex grow items-center justify-around gap-2">
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-xs font-medium">CATEGORIA</h1>
+                <MdCategory />
+              </div>
+              <p className="text-foreground text-sm">{order.categoria}</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-xs font-medium">URGÊNCIA</h1>
+                <IoMdAlert />
+              </div>
+              <p className="text-foreground text-sm">{order.urgencia}</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-xs font-medium">CIDADE - UF</h1>
+                <FaCity />
+              </div>
+              <p className="text-foreground text-sm">
+                {order.localizacao.cidade}-{order.localizacao.uf}
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-xs font-medium">RESPONSÁVEL</h1>
+                <FaUser />
+              </div>
+              <p className="text-foreground text-sm">{order.responsavel.nome || "NÃO DEFINIDO"}</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <button
+              onClick={() => handleClick(order._id)}
+              className="flex h-[30px] items-center gap-1 rounded border border-blue-500 p-1 text-blue-500 duration-300 ease-in-out hover:border-blue-800 hover:text-blue-800"
+            >
+              <AiFillEdit />
+            </button>
+            <Link href={`/ordens-de-servico/pdf/${order._id}`}>
+              <div className="h-[30px] cursor-pointer rounded border border-[#fead61] p-1 font-bold text-[#fead61] hover:bg-[#fead61] hover:text-black">
+                <TbExternalLink />
+              </div>
+            </Link>
+            {order.categoria == "MANUTENÇÃO PREVENTIVA" && projectId ? (
+              <Link href={`/oem/pdfTermo/${projectId}`}>
+                <div className="h-[30px] cursor-pointer rounded border border-cyan-500 p-1 font-bold text-cyan-500 hover:bg-cyan-500 hover:text-black">
+                  <HiOutlineDocumentText />
+                </div>
+              </Link>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default ProjectServiceOrderCard;

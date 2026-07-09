@@ -20,7 +20,7 @@ type UpdateRegistriesCardProps = {
 function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegistriesCardProps) {
   console.log("REGISTRY AUTHOR", registry.autor);
   return (
-    <div className="w-full flex flex-col gap-2 rounded-md border border-primary/20 p-3">
+    <div className="w-full flex flex-col gap-2 rounded-md border border-border p-3">
       <div className="flex w-full items-center justify-between gap-2 flex-col lg:flex-row">
         <div className="flex items-center gap-2 flex-col lg:flex-row">
           <div className="flex items-center gap-1">
@@ -43,7 +43,7 @@ function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegi
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
               <BsCalendarPlus className="h-4 min-h-4 w-4 min-w-4" />
-              <p className="text-primary/80 text-xs font-medium">
+              <p className="text-foreground text-xs font-medium">
                 {formatDateAsLocale(registry.dataInsercao, true)}
               </p>
             </div>
@@ -54,7 +54,7 @@ function UpdateRegistriesCard({ registry, showMaterialName = false }: UpdateRegi
                   {formatNameAsInitials(registry.autor?.nome ?? "NA")}
                 </AvatarFallback>
               </Avatar>
-              <p className="text-primary/80 text-xs font-medium">{registry.autor?.nome}</p>
+              <p className="text-foreground text-xs font-medium">{registry.autor?.nome}</p>
             </div>
           </div>
         </div>

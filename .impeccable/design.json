@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-08T00:00:00Z",
+  "title": "Design System: Ampère Energias Operations Platform",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Ampère Signal Blue",
+        "canonical": "#15599a",
+        "tonalRamp": ["#0a2c4e", "#0e3d6c", "#124d87", "#15599a", "#3d76ae", "#6f9bc6", "#a6c1dd", "#d6e3f0"]
+      },
+      "accent-amber": {
+        "role": "secondary",
+        "displayName": "Attention Amber",
+        "canonical": "#fead41",
+        "tonalRamp": ["#4d3600", "#7a5600", "#a87700", "#d89b16", "#fead41", "#ffc370", "#ffd9a0", "#fff0d6"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["#0a0a0a", "#171717", "#262626", "#404040", "#737373", "#a1a1a1", "#d4d4d4", "#f5f5f5"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#0a0a0a", "#171717", "#262626", "#404040", "#737373", "#a1a1a1", "#e5e5e5", "#ffffff"]
+      },
+      "destructive": {
+        "role": "feedback",
+        "displayName": "Destructive Red",
+        "canonical": "#d81f3f",
+        "tonalRamp": ["#4d0812", "#73101f", "#9c162c", "#d81f3f", "#e5566c", "#ee8496", "#f5b3bf", "#fbe0e5"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page-level heroes and report titles. Rare." },
+      "headline": { "displayName": "Headline", "purpose": "Card titles and primary section headers. The workhorse heading." },
+      "title": { "displayName": "Title", "purpose": "Sub-section headers, dialog titles, grouped-form headings." },
+      "body": { "displayName": "Body", "purpose": "Default UI text, table cells, form values, descriptions." },
+      "label": { "displayName": "Label", "purpose": "Form labels, badges, table column headers, meta." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 3px 0 hsl(0 0% 0% / 0.05)", "purpose": "Cards and raised panels at rest. Barely there." },
+      { "name": "interactive", "value": "0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1)", "purpose": "Dropdowns, popovers, dialogs, hover-lifted elements." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default easing for color/state transitions. Fast and subtle." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The default action. Ampère blue fill, used once as the key action per view.",
+      "html": "<button class=\"ds-btn-primary\">Salvar</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 8px 16px; border: none; border-radius: 8px; background: #15599a; color: #ffffff; font-family: Raleway, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 0.15s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #124d87; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #15599a; } .ds-btn-primary:active { background: #0e3d6c; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action. Hairline border, fills subtle on hover.",
+      "html": "<button class=\"ds-btn-outline\">Cancelar</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 8px 16px; border: 1px solid #e5e5e5; border-radius: 8px; background: #ffffff; color: #0a0a0a; font-family: Raleway, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 0.15s cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background: #f5f5f5; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #15599a; }"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "Delete and irreversible actions only.",
+      "html": "<button class=\"ds-btn-destructive\">Excluir</button>",
+      "css": ".ds-btn-destructive { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 8px 16px; border: none; border-radius: 8px; background: #d81f3f; color: #ffffff; font-family: Raleway, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background 0.15s cubic-bezier(0.4,0,0.2,1); } .ds-btn-destructive:hover { background: #9c162c; } .ds-btn-destructive:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #d81f3f; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard form field. Hairline border, unmistakable blue focus ring.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Buscar ordem de serviço\" />",
+      "css": ".ds-input { display: flex; height: 40px; width: 100%; padding: 8px 12px; border: 1px solid #e5e5e5; border-radius: 8px; background: #ffffff; color: #0a0a0a; font-family: Raleway, system-ui, sans-serif; font-size: 0.875rem; } .ds-input::placeholder { color: #737373; } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #15599a; } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Primary Badge",
+      "kind": "chip",
+      "refersTo": "badge-primary",
+      "description": "Identity/status tag in Ampère blue.",
+      "html": "<span class=\"ds-badge-primary\">Homologado</span>",
+      "css": ".ds-badge-primary { display: inline-flex; align-items: center; border-radius: 8px; padding: 2px 8px; background: #15599a; color: #ffffff; font-family: Raleway, system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; white-space: nowrap; }"
+    },
+    {
+      "name": "Attention Badge",
+      "kind": "chip",
+      "refersTo": "badge-attention",
+      "description": "The one 'needs review' flag. Amber with near-black text. Use at most once per view.",
+      "html": "<span class=\"ds-badge-attention\">Pendente</span>",
+      "css": ".ds-badge-attention { display: inline-flex; align-items: center; border-radius: 8px; padding: 2px 8px; background: #fead41; color: #1a1200; font-family: Raleway, system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat-by-default surface. Hairline border, barely-there resting shadow.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Ordens de Serviço</h3><p class=\"ds-card-desc\">14 abertas, 3 aguardando revisão</p></div>",
+      "css": ".ds-card { border: 1px solid #e5e5e5; border-radius: 10px; background: #ffffff; padding: 24px; box-shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.05); } .ds-card-title { margin: 0 0 6px; font-family: Raleway, system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; color: #0a0a0a; } .ds-card-desc { margin: 0; font-family: Raleway, system-ui, sans-serif; font-size: 0.875rem; color: #737373; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Control Room",
+    "overview": "This is instrument-grade software. People sit in front of it for hours moving high-volume work through commercial, engineering, works, warehouse, monitoring, and finance. The interface behaves like a well-designed control room: calm at rest, dense with information, and completely legible under pressure. Blue is the steady signal that says 'this is Ampère and everything is nominal.' Amber is reserved, it only appears where something needs a human's attention. The system is built on shadcn/Radix with Tailwind v4 and Raleway, but explicitly rejects both the stock-shadcn-default look and the dated enterprise/SAP aesthetic. Density adapts across two hands: back-office staff on wide monitors, field technicians on smaller screens, same language either way.",
+    "keyCharacteristics": [
+      "Calm blue signal, amber strictly for attention (never decoration)",
+      "Flat-by-default surfaces that lift only on interaction",
+      "Dense but hierarchical: scale and weight do the work, not borders and boxes",
+      "Crisp, efficient components with fast, subtle state changes",
+      "WCAG AA contrast and reduced-motion respect are non-negotiable"
+    ],
+    "rules": [
+      { "name": "The Amber Scarcity Rule", "body": "Amber (#fead41) is the only attention color, and it appears on at most one thing per view. If two things are amber, nothing is. Never use amber as a decorative accent, a background wash, or a second brand color competing with blue.", "section": "colors" },
+      { "name": "The One-Hue Hover Rule", "body": "State changes shift lightness within the same hue (blue to deep blue), never swap to a different color. Hover is a darker step, never a new identity.", "section": "colors" },
+      { "name": "The Weight-Over-Size Rule", "body": "In dense views, prefer a weight step (400 to 600) over a size jump to signal hierarchy. It preserves vertical rhythm in tables and forms where every row of height counts.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Shadow appears only as a response to state (hover, open, focus, elevation). If it looks like a 2014 app, the shadow is too dark and the blur is too small.", "section": "elevation" },
+      { "name": "The No Nested Cards Rule", "body": "A card never contains another card. Group with spacing, dividers, or subtle (#f5f5f5) fills instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Ampère blue (#15599a) as the primary action color on every default button and active state. It is the brand signal.",
+      "Do reserve amber (#fead41) for attention only, at most one element per view, with near-black text on it for AA contrast.",
+      "Do keep surfaces flat at rest and let shadow respond to interaction (shadow-xs resting, heavier only when floating).",
+      "Do build hierarchy with the Raleway weight/scale steps; prefer a weight step over a size jump in dense tables.",
+      "Do give every input and interactive element a clearly visible 2px blue focus ring, and honor prefers-reduced-motion.",
+      "Do hold WCAG AA contrast in both light and dark themes."
+    ],
+    "donts": [
+      "Don't ship the stock-shadcn-default look: a near-black 'primary' with one lonely blue button. The primary is Ampère blue, on purpose.",
+      "Don't fall into dated enterprise/SAP density: cramped gray toolbars, tiny icons, and density without hierarchy are forbidden.",
+      "Don't bring flashy consumer-marketing polish into the work tool, no big gradients, hero animations, or gradient text (background-clip: text is banned).",
+      "Don't use a border-left/border-right colored stripe greater than 1px as an accent on cards, rows, or callouts. Use full hairline borders, subtle fills, or a leading badge/icon instead.",
+      "Don't nest a card inside a card, or stack decorative drop shadows.",
+      "Don't let amber compete with blue as a second brand color, and never swap hue on hover (darken the same hue instead)."
+    ]
+  }
+}

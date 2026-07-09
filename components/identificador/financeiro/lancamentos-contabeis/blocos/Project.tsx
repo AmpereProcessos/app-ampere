@@ -31,9 +31,9 @@ export default function ProjectBlock({ entry, updateEntry }: ProjectBlockProps) 
     >
       {hasProject && entry.projeto ? (
         <div className="flex w-full flex-col gap-3">
-          <div className="bg-primary/10 flex w-full flex-col gap-2 rounded-md border border-primary/20 p-3">
+          <div className="bg-primary/10 flex w-full flex-col gap-2 rounded-md border border-border p-3">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-primary/60 text-[0.65rem] font-medium uppercase">
+              <p className="text-foreground text-[0.65rem] font-medium uppercase">
                 Projeto vinculado
               </p>
               <div className="flex items-center gap-1.5">
@@ -75,7 +75,7 @@ export default function ProjectBlock({ entry, updateEntry }: ProjectBlockProps) 
         </div>
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-2">
-          <p className="text-center text-sm font-medium tracking-tight text-primary/80">
+          <p className="text-center text-sm font-medium tracking-tight text-foreground">
             Nenhum projeto (cliente) vinculado a este lançamento.
           </p>
           <button

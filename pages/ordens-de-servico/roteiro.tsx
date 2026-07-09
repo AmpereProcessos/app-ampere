@@ -180,7 +180,7 @@ function ServiceOrdersItineraryPage({
         <ErrorComponent msg={getErrorMessage(error)} />
       ) : null}
       {groupedByDate.length === 0 ? (
-        <div className="text-primary/70 rounded-lg border border-dashed p-6 text-center">
+        <div className="text-foreground rounded-lg border border-dashed p-6 text-center">
           Nenhuma ordem de serviço encontrada para este responsável.
         </div>
       ) : null}
@@ -303,7 +303,7 @@ function ServiceOrderCard({ sessionUserId, serviceOrder, callbacks }: ServiceOrd
     });
   }
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full items-center justify-between gap-2 flex-col-reverse lg:flex-row">
         <div className="flex w-full items-center justify-start gap-1 lg:w-fit">
           <Button
@@ -451,7 +451,7 @@ function ServiceOrderAttachmentsView({ attachments, closeMenu }: ServiceOrderAtt
       {attachments.map((attachment) => (
         <div
           key={attachment._id}
-          className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border shadow-2xs"
+          className="bg-card border-border flex w-full flex-col gap-1 rounded-xl border shadow-2xs"
         >
           <h1 className="text-[0.65rem] font-medium bg-[#15599a] text-white px-2 py-1 rounded-lg rounded-bl-none rounded-br-none text-center">
             {attachment.titulo}

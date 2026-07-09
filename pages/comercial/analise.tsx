@@ -99,7 +99,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
   }
   return (
     <div className="flex grow flex-col p-6">
-      <div className="border-primary/20 mb-2 flex flex-col items-center justify-between border-b p-1">
+      <div className="border-border mb-2 flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-wrap items-center justify-center gap-2 font-['Roboto']">
             <p className="text-center text-2xl font-bold text-[#15599a] uppercase">
@@ -108,7 +108,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
           </div>
         </div>
         <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
+          <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium tracking-tight uppercase">CONTAGEM DE PROJETOS</h1>
               <VscDiffAdded />
@@ -117,12 +117,12 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
               <div className="text-2xl font-bold text-[#15599a]">
                 APP: {getStats({ info: projects }).projetos.app}
               </div>
-              <p className="text-primary/60 text-sm">
+              <p className="text-foreground text-sm">
                 CRM: {getStats({ info: projects }).projetos.crm}
               </p>
             </div>
           </div>
-          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
+          <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium tracking-tight uppercase">VALOR VENDIDO</h1>
               <MdAttachMoney />
@@ -131,12 +131,12 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
               <div className="text-2xl font-bold text-[#15599a]">
                 APP: {formatToMoney(getStats({ info: projects }).vendido.app)}
               </div>
-              <p className="text-primary/60 text-sm">
+              <p className="text-foreground text-sm">
                 CRM: {formatToMoney(getStats({ info: projects }).vendido.crm)}
               </p>
             </div>
           </div>
-          <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
+          <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/3">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium tracking-tight uppercase">POTÊNCIA VENDIDA</h1>
               <ImPower />
@@ -145,7 +145,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
               <div className="text-2xl font-bold text-[#15599a]">
                 APP: {formatDecimalPlaces(getStats({ info: projects }).potencia.app)}
               </div>
-              <p className="text-primary/60 text-sm">
+              <p className="text-foreground text-sm">
                 CRM: {formatDecimalPlaces(getStats({ info: projects }).potencia.crm)}
               </p>
             </div>
@@ -157,7 +157,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
             onChange={(e) => updateFilters({ search: e.target.value })}
             type="text"
             placeholder="Filtre por nome do contrato, código CRM ou nome do vendedor..."
-            className="w-full rounded-md border border-primary/20 p-3 text-sm shadow-xs outline-hidden duration-500 ease-in-out placeholder:italic focus:border-primary"
+            className="w-full rounded-md border border-border p-3 text-sm shadow-xs outline-hidden duration-500 ease-in-out placeholder:italic focus:border-primary"
           />
           <div className="flex flex-col flex-wrap items-end justify-center gap-2 lg:flex-row">
             <div className="w-full lg:w-[250px]">
@@ -239,7 +239,7 @@ function AnaliseContent({ session }: { session: TAuthSession }) {
           </div>
         ) : (
           <div className="flex grow items-center justify-center">
-            <h1 className="text-primary/60 text-lg italic">
+            <h1 className="text-foreground text-lg italic">
               Nenhuma informação encontrada para o período de análise
             </h1>
           </div>

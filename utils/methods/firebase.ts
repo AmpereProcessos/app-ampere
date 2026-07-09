@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import toast from "react-hot-toast";
 import { fileTypes } from "../constants";
 import { storage } from "../services/firebase/firebase-storage";
@@ -8,12 +8,29 @@ type UploadFileParams = {
 	fileName: string;
 	vinculationId?: string;
 	prefix: string;
+	onProgress?: (progress: number) => void;
 };
-export async function uploadFile({ file, fileName, vinculationId, prefix }: UploadFileParams) {
+type FirebaseUploadResponse = Awaited<ReturnType<typeof uploadBytes>>;
+export async function uploadFile({ file, fileName, vinculationId, prefix, onProgress }: UploadFileParams) {
 	if (!file) throw new Error("Arquivo não fornecido.");
 	const datetime = new Date().toISOString();
 	const fileRef = ref(storage, `${prefix}/${vinculationId ? `(${vinculationId})` : ""} ${fileName} - ${datetime}`);
-	const uploadResponse = await uploadBytes(fileRef, file);
+	const uploadResponse = onProgress
+		? await new Promise<FirebaseUploadResponse>((resolve, reject) => {
+				const uploadTask = uploadBytesResumable(fileRef, file, {
+					contentType: file.type,
+				});
+				uploadTask.on(
+					"state_changed",
+					(snapshot) => {
+						const progress = snapshot.totalBytes > 0 ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100 : 0;
+						onProgress(Math.round(progress));
+					},
+					reject,
+					() => resolve(uploadTask.snapshot as FirebaseUploadResponse),
+				);
+			})
+		: await uploadBytes(fileRef, file);
 
 	const url = await getDownloadURL(ref(storage, uploadResponse.metadata.fullPath));
 	const format =

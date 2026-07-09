@@ -66,7 +66,7 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="bg-background border-primary/20 mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
+        className="bg-background border-border mt-2 flex w-full flex-col gap-2 rounded-md border p-2"
       >
         <h1 className="text-sm font-bold tracking-tight">FILTROS</h1>
         <div className="flex w-full flex-col flex-wrap items-center justify-start gap-2 lg:flex-row">

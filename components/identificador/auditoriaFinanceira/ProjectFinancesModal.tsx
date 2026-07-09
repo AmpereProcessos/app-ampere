@@ -241,7 +241,7 @@ function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinance
                   />
                 ))
               ) : (
-                <p className="text-primary/60 w-full text-center text-sm italic">
+                <p className="text-foreground w-full text-center text-sm italic">
                   Não há receitas vinculadas ao projeto.
                 </p>
               )}
@@ -276,7 +276,7 @@ function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinance
                   />
                 ))
               ) : (
-                <p className="text-primary/60 w-full text-center text-sm italic">
+                <p className="text-foreground w-full text-center text-sm italic">
                   Não há despesas vinculadas ao projeto.
                 </p>
               )}
@@ -305,7 +305,7 @@ function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinance
                 {costForecasts.map((forecast, index) => (
                   <div
                     key={index.toString()}
-                    className="border-primary/20 flex w-full flex-col rounded-md border p-4 lg:w-[450px]"
+                    className="border-border flex w-full flex-col rounded-md border p-4 lg:w-[450px]"
                   >
                     <div className="flex w-full items-center justify-between gap-2">
                       <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">
@@ -320,13 +320,13 @@ function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinance
                     <div className="mt-1 flex w-full flex-wrap items-center justify-between">
                       <div className="flex items-center gap-2">
                         <TbPercentage size={15} color="#15599a" />
-                        <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+                        <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                           IMPOSTO: {formatDecimalPlaces(forecast.imposto * 100)}%
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <MdSignalCellularAlt size={15} color="#fead41" />
-                        <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+                        <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                           MARGEM: {formatDecimalPlaces(forecast.margemLucro * 100)}%
                         </p>
                       </div>
@@ -335,7 +335,7 @@ function ProjectFinancesModal({ projectId, closeModal, session }: ProjectFinance
                 ))}
               </div>
             ) : (
-              <p className="text-primary/60 w-full text-center text-sm italic">
+              <p className="text-foreground w-full text-center text-sm italic">
                 Não há previsão de custos vinculada ao projeto.
               </p>
             )}

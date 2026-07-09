@@ -51,7 +51,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
 
   return (
     <div className="grow p-6">
-      <div className="border-primary/20 flex flex-col items-center justify-between gap-2 border-b p-1">
+      <div className="border-border flex flex-col items-center justify-between gap-2 border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
             <p className="text-center text-2xl font-black text-[#15599a] uppercase">
@@ -60,7 +60,7 @@ function EngineeringDatabaseModePage({ session }: EngineeringDatabaseModePagePro
             <button
               type="button"
               onClick={() => updateViewMode("engineering", "kanban")}
-              className="text-primary/60 hover:text-primary/80 flex items-center gap-1 px-2 text-xs duration-300 ease-out"
+              className="text-foreground hover:text-foreground flex items-center gap-1 px-2 text-xs duration-300 ease-out"
             >
               <FaRotate />
               <h1 className="font-medium">ALTERAR MODO</h1>
@@ -112,7 +112,7 @@ function getProjectAccessGrantingStatusColors({
 }: {
   accessGrantingResponseDateString?: string;
 }) {
-  if (!accessGrantingResponseDateString) return "border border-primary/20";
+  if (!accessGrantingResponseDateString) return "border border-border";
   const accessGrantingResponseDate = dayjs(accessGrantingResponseDateString).toDate();
   const daysDiff = Math.abs(dayjs(CurrentDate).diff(dayjs(accessGrantingResponseDate), "day"));
   // const timeDiff = Math.abs(CurrentDate.getTime() - accessGrantingResponseDate.getTime());
@@ -126,7 +126,7 @@ function getProjectAccessGrantingStatusColors({
   if (daysDiff > 90) {
     return "border-2 border-blue-700";
   }
-  return "border border-primary/20";
+  return "border border-border";
 }
 function getProjectFlags(project: TEngineeringProjectDTO) {
   const homologationStatusValue = project.homologacao.status;
@@ -249,14 +249,14 @@ function ProjectCard({
       <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
       <div className="flex flex-col p-2">
         <div className="flex items-center justify-between">
-          <p className="text-primary/70 text-xs">{project.nomeDoContrato}</p>
+          <p className="text-foreground text-xs">{project.nomeDoContrato}</p>
           <p className="text-xs text-[#15599a]">#{project.qtde}</p>
         </div>
         <ProjectCardsTags projectTags={project.etiquetas || []} />
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xxs">{homologationStatusFlag.label}</span>
-            <p className={cn("text-primary/80 text-xs", homologationStatusFlag.valueColor)}>
+            <p className={cn("text-foreground text-xs", homologationStatusFlag.valueColor)}>
               {homologationStatusFlag.value}
             </p>
           </div>
@@ -264,7 +264,7 @@ function ProjectCard({
             <span className="text-xxs text-end">{homologationInspectionFlag.label}</span>
             <p
               className={cn(
-                "text-primary/80 text-center text-xs",
+                "text-foreground text-center text-xs",
                 homologationInspectionFlag.valueColor,
               )}
             >
@@ -283,7 +283,7 @@ function ProjectCard({
             <span className="text-xxs text-center">{projectsDeliveryFlag.label}</span>
             <p
               className={cn(
-                "text-primary/80 text-center text-xs uppercase",
+                "text-foreground text-center text-xs uppercase",
                 projectsDeliveryFlag.valueColor,
               )}
             >
@@ -293,7 +293,7 @@ function ProjectCard({
           <div>
             <span className="text-xxs">{executiveDrawingFlag.label}</span>
             <p
-              className={cn("text-primary/80 text-center text-xs", executiveDrawingFlag.valueColor)}
+              className={cn("text-foreground text-center text-xs", executiveDrawingFlag.valueColor)}
             >
               {executiveDrawingFlag.value}
             </p>
@@ -328,7 +328,7 @@ function ProjectCard({
             <p className="text-xxs">{timeSinceAccessGrantingRequestFlag.label}</p>
             <p
               className={cn(
-                "text-primary/80 text-start text-xs",
+                "text-foreground text-start text-xs",
                 timeSinceAccessGrantingRequestFlag.valueColor,
               )}
             >
@@ -395,7 +395,7 @@ function ProjectsAllocationsGrouped({ projectIds }: ProjectsAllocationsGroupedPr
             {projectsAllocationsGrouped?.map((allocation) => (
               <div
                 key={allocation.material.id}
-                className="w-full flex flex-col gap-1 p-2 rounded border border-primary/20 shadow-xs"
+                className="w-full flex flex-col gap-1 p-2 rounded border border-border shadow-xs"
               >
                 <div className="flex items-center gap-2 justify-between">
                   <h1 className="text-primary text-sm font-bold tracking-tight">

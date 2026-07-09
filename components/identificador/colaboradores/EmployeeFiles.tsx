@@ -5,27 +5,36 @@ import React from "react";
 import FileReferenceCard from "../referencias-arquivos/FileReferenceCard";
 
 type EmployeeFilesProps = {
-	employeeId: string;
+  employeeId: string;
 };
 function EmployeeFiles({ employeeId }: EmployeeFilesProps) {
-	const { data: fileReferences, isLoading, isError, isSuccess } = useFileReferencesByUserId({ id: employeeId });
-	return (
-		<div className="flex w-full flex-wrap items-start justify-around gap-2">
-			{isLoading ? <LoadingPage /> : null}
-			{isError ? <ErrorComponent msg={"Erro ao buscar arquivos vinculados ao colaborador."} /> : null}
-			{isSuccess ? (
-				fileReferences.length > 0 ? (
-					fileReferences.map((reference) => (
-						<div className="w-full lg:w-[350px]">
-							<FileReferenceCard info={reference} />
-						</div>
-					))
-				) : (
-					<p className="text-primary/60 w-full text-center font-bold tracking-tight italic">Sem arquivos vinculados ao colaborador.</p>
-				)
-			) : null}
-		</div>
-	);
+  const {
+    data: fileReferences,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useFileReferencesByUserId({ id: employeeId });
+  return (
+    <div className="flex w-full flex-wrap items-start justify-around gap-2">
+      {isLoading ? <LoadingPage /> : null}
+      {isError ? (
+        <ErrorComponent msg={"Erro ao buscar arquivos vinculados ao colaborador."} />
+      ) : null}
+      {isSuccess ? (
+        fileReferences.length > 0 ? (
+          fileReferences.map((reference) => (
+            <div className="w-full lg:w-[350px]">
+              <FileReferenceCard info={reference} />
+            </div>
+          ))
+        ) : (
+          <p className="text-foreground w-full text-center font-bold tracking-tight italic">
+            Sem arquivos vinculados ao colaborador.
+          </p>
+        )
+      ) : null}
+    </div>
+  );
 }
 
 export default EmployeeFiles;

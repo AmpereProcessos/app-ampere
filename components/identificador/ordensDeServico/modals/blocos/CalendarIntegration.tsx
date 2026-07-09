@@ -7,45 +7,59 @@ import { TServiceOrder } from "@/utils/schemas/service-order";
 import SelectInput from "@/components/inputs/Select";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 type ServiceOrderCalendarIntegrationProps = {
-	infoHolder: TServiceOrder;
-	updateInfoHolder: (data: Partial<TServiceOrder>) => void;
+  infoHolder: TServiceOrder;
+  updateInfoHolder: (data: Partial<TServiceOrder>) => void;
 };
-function ServiceOrderCalendarIntegration({ infoHolder, updateInfoHolder }: ServiceOrderCalendarIntegrationProps) {
-	const { data: calendars } = useCalendars();
+function ServiceOrderCalendarIntegration({
+  infoHolder,
+  updateInfoHolder,
+}: ServiceOrderCalendarIntegrationProps) {
+  const { data: calendars } = useCalendars();
 
-	function handleCalendarSelect(value: string | undefined) {
-		if (!value) return updateInfoHolder({ calendarioId: null, googleCalendarId: null });
-		const calendar = calendars?.find((calendar) => calendar._id === value);
-		updateInfoHolder({ calendarioId: value, googleCalendarId: calendar?.googleCalendarId });
-	}
-	return (
-		<ResponsiveDialogDrawerSection sectionTitleText="INTEGRAÇÃO COM GOOGLE CALENDAR" sectionTitleIcon={<Image src={GoogleLogo} alt="Google Logo" width={15} height={15} />}>
-			<p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
-				Defina aqui o calendário que será utilizado para agendar o serviço no Google Calendar.
-			</p>
-			<div className="flex w-full grow flex-col gap-2">
-				<SelectInput
-					label="CALENDÁRIO"
-					value={infoHolder.calendarioId}
-					options={calendars?.map((calendar) => ({ id: calendar._id, value: calendar._id, label: calendar.nome })) || []}
-					handleChange={(value) => handleCalendarSelect(value)}
-					selectedItemLabel="NÃO DEFINIDO"
-					onReset={() => updateInfoHolder({ calendarioId: null, googleCalendarId: null })}
-					editable={!infoHolder.googleCalendarEventId}
-					width="100%"
-				/>
+  function handleCalendarSelect(value: string | undefined) {
+    if (!value) return updateInfoHolder({ calendarioId: null, googleCalendarId: null });
+    const calendar = calendars?.find((calendar) => calendar._id === value);
+    updateInfoHolder({ calendarioId: value, googleCalendarId: calendar?.googleCalendarId });
+  }
+  return (
+    <ResponsiveDialogDrawerSection
+      sectionTitleText="INTEGRAÇÃO COM GOOGLE CALENDAR"
+      sectionTitleIcon={<Image src={GoogleLogo} alt="Google Logo" width={15} height={15} />}
+    >
+      <p className="my-1 w-full text-center text-sm font-light tracking-tighter text-foreground">
+        Defina aqui o calendário que será utilizado para agendar o serviço no Google Calendar.
+      </p>
+      <div className="flex w-full grow flex-col gap-2">
+        <SelectInput
+          label="CALENDÁRIO"
+          value={infoHolder.calendarioId}
+          options={
+            calendars?.map((calendar) => ({
+              id: calendar._id,
+              value: calendar._id,
+              label: calendar.nome,
+            })) || []
+          }
+          handleChange={(value) => handleCalendarSelect(value)}
+          selectedItemLabel="NÃO DEFINIDO"
+          onReset={() => updateInfoHolder({ calendarioId: null, googleCalendarId: null })}
+          editable={!infoHolder.googleCalendarEventId}
+          width="100%"
+        />
 
-				{infoHolder.googleCalendarEventId ? (
-					<div className="flex w-fit items-center gap-4 self-center rounded border border-green-500 bg-green-200 px-2 py-1">
-						<div className="flex items-center gap-1">
-							<p className="text-[0.6rem] font-medium leading-none tracking-tight">EVENTO DEFINIDO COM SUCESSO</p>
-						</div>
-						<CheckCheck size={15} color="#22c55e" />
-					</div>
-				) : null}
-			</div>
-		</ResponsiveDialogDrawerSection>
-	);
+        {infoHolder.googleCalendarEventId ? (
+          <div className="flex w-fit items-center gap-4 self-center rounded border border-green-500 bg-green-200 px-2 py-1">
+            <div className="flex items-center gap-1">
+              <p className="text-[0.6rem] font-medium leading-none tracking-tight">
+                EVENTO DEFINIDO COM SUCESSO
+              </p>
+            </div>
+            <CheckCheck size={15} color="#22c55e" />
+          </div>
+        ) : null}
+      </div>
+    </ResponsiveDialogDrawerSection>
+  );
 }
 
 export default ServiceOrderCalendarIntegration;

@@ -130,14 +130,14 @@ function ComercialContent({ session }: { session: TAuthSession }) {
   if (projectsSuccess && projects) {
     return (
       <div className="flex flex-col gap-6 grow p-6">
-        <div className="border-primary/20 flex flex-col items-center justify-between border-b p-1">
+        <div className="border-border flex flex-col items-center justify-between border-b p-1">
           <div className="flex w-full items-center justify-center lg:justify-start">
             <p className="text-center text-2xl font-black text-[#15599a] uppercase">
               Projetos no estágio comercial
             </p>
           </div>
           <div className="flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium tracking-tight uppercase">
                   PROJETOS NO ESTÁGIO
@@ -146,10 +146,10 @@ function ComercialContent({ session }: { session: TAuthSession }) {
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats.projetos}</div>
-                <p className="text-primary/60 text-xs">{stats.potencia} kWp</p>
+                <p className="text-foreground text-xs">{stats.potencia} kWp</p>
               </div>
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium tracking-tight uppercase">FATURAMENTO</h1>
                 <MdAttachMoney />
@@ -158,7 +158,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                 <div className="text-2xl font-bold text-[#15599a]">{stats.vendido} </div>
               </div>
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium tracking-tight uppercase">EM CONFECÇÃO</h1>
                 <MdCreate />
@@ -167,14 +167,14 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                 <div className="text-2xl font-bold text-[#15599a]">{stats.confeccionar}</div>
               </div>
             </div>
-            <div className="bg-background border-primary/20 flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
+            <div className="bg-background border-border flex min-h-[110px] w-full flex-col rounded-xl border p-3 shadow-xs lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium tracking-tight uppercase">PARA ASSINAR</h1>
                 <FaSignature />
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{stats.assinar}</div>
-                <p className="text-primary/60 text-xs">{stats.vendidoAssinar} para assinar</p>
+                <p className="text-foreground text-xs">{stats.vendidoAssinar} para assinar</p>
               </div>
             </div>
           </div>
@@ -203,18 +203,18 @@ function ComercialContent({ session }: { session: TAuthSession }) {
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
-              className="border-primary/20 dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
+              className="border-border dark:hover:bg-primary/10 w-full cursor-pointer border hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2 pb-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-primary/70 text-xs font-bold">{project.nomeDoContrato}</p>
+                  <p className="text-foreground text-xs font-bold">{project.nomeDoContrato}</p>
                   <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <ProjectCardsTags projectTags={project.etiquetas} />
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       CONTRATO
                     </span>
                     <p
@@ -224,7 +224,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       VENDEDOR
                     </span>
                     <p className="text-xs font-medium tracking-tight text-[#15599a]">
@@ -234,7 +234,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       FORMA DE PAGAMENTO
                     </span>
                     <p className="text-xs font-medium tracking-tight">
@@ -242,7 +242,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       VALOR TOTAL
                     </span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
@@ -258,7 +258,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       STATUS DO PARECER
                     </span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
@@ -266,7 +266,7 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <span className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       STATUS DA COMPRA
                     </span>
                     <p className="text-xs font-medium tracking-tight">
@@ -279,19 +279,19 @@ function ComercialContent({ session }: { session: TAuthSession }) {
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {project.idProjetoCRM ? <FaCode color={"rgb(34,197,94)"} /> : null}
-                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <h1 className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       IDENTIFICADOR: <strong>{project.codigoSVB}</strong>
                     </h1>
                   </div>
                   {project.idVisitaTecnica ? (
                     <div className="flex items-center gap-2">
                       {project.idVisitaTecnica ? <FaCode color={"rgb(34,197,94)"} /> : null}
-                      <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                      <h1 className="text-foreground text-[0.6rem] leading-none tracking-tight">
                         VISITA VINCULADA
                       </h1>
                     </div>
                   ) : (
-                    <h1 className="text-primary/60 text-[0.6rem] leading-none tracking-tight">
+                    <h1 className="text-foreground text-[0.6rem] leading-none tracking-tight">
                       SEM VISITA VINCULADA
                     </h1>
                   )}

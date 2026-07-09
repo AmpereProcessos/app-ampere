@@ -59,7 +59,7 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
   const userHasSupplimentViewPermission = session.user.permissoes.suprimentos.visualizar;
   return (
     <div className="flex grow flex-col gap-2 p-6">
-      <div className="border-primary/20 flex w-full flex-col border-b px-6 pb-2">
+      <div className="border-border flex w-full flex-col border-b px-6 pb-2">
         <h1 className="text-2xl font-black tracking-tight text-[#15599a]">CONFIGURAÇÕES</h1>
         <p className="text-muted-foreground">Gerencie configurações e preferências</p>
       </div>

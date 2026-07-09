@@ -9,42 +9,50 @@ import { useState } from "react";
 import { FaPlay } from "react-icons/fa";
 
 type ExecutionPageStatsProps = {
-	session: TAuthSession;
+  session: TAuthSession;
 };
 export default function ExecutionPageStats({ session }: ExecutionPageStatsProps) {
-	const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats();
-	return (
-		// <div className="w-full flex flex-col gap-2 p-3 border border-primary/20 shadow-xs rounded-md">
-		<div className="flex w-full flex-col gap-4 lg:flex-row">
-			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
-				<div className="flex items-center justify-start gap-2">
-					<FaPlay />
-					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS INICIADOS</h1>
-				</div>
-				<h1 className="leading-none font-black">{serviceOrdersStats?.iniciadas || 0}</h1>
-			</div>
-			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
-				<div className="flex items-center justify-start gap-2">
-					<div className={"border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-blue-500 text-white"}>
-						<CircleDot size={12} />
-					</div>
-					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
-				</div>
-				<h1 className="leading-none font-black">{serviceOrdersStats?.emAndamento || 0}</h1>
-			</div>
-			<div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-[400px] lg:flex-row dark:bg-[#121212]">
-				<div className="flex items-center justify-start gap-2">
-					<div className={"border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-green-500 text-white"}>
-						<Check size={12} />
-					</div>
-					<h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EXECUTADOS</h1>
-				</div>
-				<h1 className="leading-none font-black">{serviceOrdersStats?.concluidas || 0}</h1>
-			</div>
-		</div>
+  const { data: serviceOrdersStats, isLoading, isError, isSuccess } = useServiceOrdersStats();
+  return (
+    // <div className="w-full flex flex-col gap-2 p-3 border border-border shadow-xs rounded-md">
+    <div className="flex w-full flex-col gap-4 lg:flex-row">
+      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
+        <div className="flex items-center justify-start gap-2">
+          <FaPlay />
+          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS INICIADOS</h1>
+        </div>
+        <h1 className="leading-none font-black">{serviceOrdersStats?.iniciadas || 0}</h1>
+      </div>
+      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-1/3 lg:flex-row dark:bg-[#121212]">
+        <div className="flex items-center justify-start gap-2">
+          <div
+            className={
+              "border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-blue-500 text-white"
+            }
+          >
+            <CircleDot size={12} />
+          </div>
+          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EM ANDAMENTO</h1>
+        </div>
+        <h1 className="leading-none font-black">{serviceOrdersStats?.emAndamento || 0}</h1>
+      </div>
+      <div className="border-primary/50 bg-background flex w-full flex-col items-center justify-between gap-2 rounded border p-3 shadow-xs lg:w-[400px] lg:flex-row dark:bg-[#121212]">
+        <div className="flex items-center justify-start gap-2">
+          <div
+            className={
+              "border-primary flex h-4 min-h-4 w-4 min-w-4 items-center justify-center rounded-full border bg-green-500 text-white"
+            }
+          >
+            <Check size={12} />
+          </div>
+          <h1 className="text-xs leading-none font-medium tracking-tight">SERVIÇOS EXECUTADOS</h1>
+        </div>
+        <h1 className="leading-none font-black">{serviceOrdersStats?.concluidas || 0}</h1>
+      </div>
+    </div>
 
-		// </div>
-	);
+    // </div>
+  );
 }
 
 // type ResultsByCityProps = {
@@ -80,16 +88,16 @@ export default function ExecutionPageStats({ session }: ExecutionPageStatsProps)
 // 						className="w-full flex items-center flex-wrap gap-1"
 // 					>
 // 						{serviceOrderStatsByCity.map((resultByCity) => (
-// 							<div key={resultByCity.nome} className="flex items-center gap-2 px-2 py-1 rounded-lg border border-primary/30 bg-secondary">
-// 								<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByCity.nome}</h1>
+// 							<div key={resultByCity.nome} className="flex items-center gap-2 px-2 py-1 rounded-lg border border-border bg-secondary">
+// 								<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByCity.nome}</h1>
 // 								<div className="flex items-center gap-2">
 // 									<div className="flex items-center gap-1">
 // 										<CircleDot className="w-3 h-3 min-w-3 min-h-3" />
-// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByCity.emAndamento}</h1>
+// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByCity.emAndamento}</h1>
 // 									</div>
 // 									<div className="flex items-center gap-1">
 // 										<Check className="w-3 h-3 min-w-3 min-h-3" />
-// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByCity.concluidas}</h1>
+// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByCity.concluidas}</h1>
 // 									</div>
 // 								</div>
 // 							</div>
@@ -135,16 +143,16 @@ export default function ExecutionPageStats({ session }: ExecutionPageStatsProps)
 // 						className="w-full flex items-center flex-wrap gap-1"
 // 					>
 // 						{serviceOrderStatsByResponsible.map((resultByResponsible) => (
-// 							<div key={resultByResponsible.nome} className="flex items-center gap-2 px-2 py-1 rounded-lg border border-primary/30 bg-secondary">
-// 								<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByResponsible.nome}</h1>
+// 							<div key={resultByResponsible.nome} className="flex items-center gap-2 px-2 py-1 rounded-lg border border-border bg-secondary">
+// 								<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByResponsible.nome}</h1>
 // 								<div className="flex items-center gap-2">
 // 									<div className="flex items-center gap-1">
 // 										<CircleDot className="w-3 h-3 min-w-3 min-h-3" />
-// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByResponsible.emAndamento}</h1>
+// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByResponsible.emAndamento}</h1>
 // 									</div>
 // 									<div className="flex items-center gap-1">
 // 										<Check className="w-3 h-3 min-w-3 min-h-3" />
-// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-primary/60">{resultByResponsible.concluidas}</h1>
+// 										<h1 className="text-[0.65rem] font-medium leading-none tracking-tight text-foreground">{resultByResponsible.concluidas}</h1>
 // 									</div>
 // 								</div>
 // 							</div>

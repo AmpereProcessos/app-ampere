@@ -60,7 +60,7 @@ export default function FinancesStatsView() {
         <div className="flex h-full max-h-full w-full flex-col gap-2 lg:w-[40%]">
           <div
             className={
-              "bg-card border-primary/20 flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs"
+              "bg-card border-border flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs"
             }
           >
             <div className="flex w-full flex-row items-center justify-between gap-2">
@@ -133,7 +133,7 @@ export default function FinancesStatsView() {
           </div>
           <div
             className={
-              "bg-card border-primary/20 flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs"
+              "bg-card border-border flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs"
             }
           >
             <div className="flex w-full flex-row items-center justify-between gap-2">
@@ -322,7 +322,7 @@ export default function FinancesStatsView() {
         </div>
         <div
           className={
-            "bg-card border-primary/20 flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs lg:w-[60%]"
+            "bg-card border-border flex w-full flex-col items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs lg:w-[60%]"
           }
         >
           <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
@@ -355,7 +355,7 @@ export function StatCard({ className, icon, iconWrapperClassName, label, value }
   return (
     <div
       className={cn(
-        "bg-card border-primary/20 flex w-full flex-row items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs",
+        "bg-card border-border flex w-full flex-row items-center justify-between gap-1 rounded-xl border px-3 py-4 shadow-xs",
         className,
       )}
     >

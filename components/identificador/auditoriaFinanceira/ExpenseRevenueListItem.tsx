@@ -27,7 +27,7 @@ function ExpenseRevenueListItem({
   const [showItems, setShowItems] = useState<boolean>(initialShowItems);
 
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <h1 className="cursor-pointer text-xs leading-none font-black tracking-tight lg:text-sm">
@@ -46,8 +46,8 @@ function ExpenseRevenueListItem({
       <div className="w-full flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <BsCalendarPlus className="text-primary/80 text-xs" />
-            <p className="text-primary/80 text-xs font-medium">
+            <BsCalendarPlus className="text-foreground text-xs" />
+            <p className="text-foreground text-xs font-medium">
               {formatDateAsLocale(finance.dataInsercao) ?? "N/A"}
             </p>
           </div>
@@ -58,7 +58,7 @@ function ExpenseRevenueListItem({
                 {formatNameAsInitials(finance.autor.nome)}
               </AvatarFallback>
             </Avatar>
-            <p className="text-primary/80 text-xs font-medium">{finance.autor.nome}</p>
+            <p className="text-foreground text-xs font-medium">{finance.autor.nome}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ function ExpenseRevenueListItem({
                 key={`${item.idMaterial}-${index.toString()}`}
                 className="flex w-full items-center justify-between gap-2"
               >
-                <h1 className="text-primary/70 text-xs leading-none tracking-tight font-medium">
+                <h1 className="text-foreground text-xs leading-none tracking-tight font-medium">
                   <strong className="text-primary font-black">
                     {formatDecimalPlaces(item.qtde, 1)}
                   </strong>{" "}

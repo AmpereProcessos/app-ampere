@@ -39,7 +39,7 @@ function AppRouterSidebar({ sidebarVisible }: SidebarProps) {
         initial="hidden"
         animate={sidebarVisible ? "visible" : "hidden"}
         style={{ maxHeight: "calc(100vh - 70px)" }}
-        className="overscroll-y bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 border-primary/20 sticky top-[70px] flex w-full flex-col overflow-y-auto border-r px-2 py-4 lg:w-[250px]"
+        className="overscroll-y bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 border-border sticky top-[70px] flex w-full flex-col overflow-y-auto border-r px-2 py-4 lg:w-[250px]"
       >
         {session.user?.visualizacao.tipo === "OPERACIONAL" ? (
           <GeralSidebar session={session} />

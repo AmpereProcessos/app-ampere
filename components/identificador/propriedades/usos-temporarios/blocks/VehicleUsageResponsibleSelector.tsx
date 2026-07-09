@@ -49,7 +49,7 @@ export default function VehicleUsageResponsibleSelector() {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="bg-primary/20 flex w-fit items-center gap-2 rounded px-2 py-1">
+      <div className="bg-secondary text-secondary-foreground flex w-fit items-center gap-2 rounded-md px-2 py-1">
         <UserRound size={15} />
         <h1 className="w-fit text-start text-xs font-medium tracking-tight">
           INFORMAÇÕES DO RESPONSÁVEL
@@ -75,7 +75,7 @@ export default function VehicleUsageResponsibleSelector() {
           initial="initial"
           animate="animate"
           exit="exit"
-          className="flex w-full flex-col items-center justify-center gap-2 gap-y-1 self-center rounded-lg bg-blue-200 px-2 py-2 lg:w-fit lg:flex-row"
+          className="border-primary/20 bg-primary/10 flex w-full flex-col items-center justify-center gap-2 gap-y-1 self-center rounded-lg border px-3 py-2 lg:w-fit lg:flex-row"
         >
           <div className="flex items-center gap-2">
             <Avatar className="h-8 min-h-8 w-8 min-w-8">
@@ -90,11 +90,11 @@ export default function VehicleUsageResponsibleSelector() {
             <div className="flex items-center gap-2">
               <div className="flex min-w-fit items-center gap-1">
                 <IdCard className="h-3 min-h-3 w-3 min-w-3" />
-                <p className={"text-primary/80 text-xs font-medium"}>{currentAuthor.cpf}</p>
+                <p className={"text-foreground text-xs font-medium"}>{currentAuthor.cpf}</p>
               </div>
               <div className="flex min-w-fit items-center gap-1">
                 <Phone className="h-3 min-h-3 w-3 min-w-3" />
-                <p className={"text-primary/80 text-xs font-medium"}>
+                <p className={"text-foreground text-xs font-medium"}>
                   {currentAuthor.telefone || "NÃO DEFINIDO"}
                 </p>
               </div>

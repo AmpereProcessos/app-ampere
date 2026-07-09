@@ -79,8 +79,7 @@ export default function FinancialReconciliationView({ session }: { session: TAut
     return `${formatDateAsLocale(state.periodo.inicio)} - ${formatDateAsLocale(state.periodo.fim)}`;
   }, [state.periodo.inicio, state.periodo.fim]);
 
-  const canUpload =
-    !!state.contaFinanceira && !!state.periodo.inicio && !!state.periodo.fim;
+  const canUpload = !!state.contaFinanceira && !!state.periodo.inicio && !!state.periodo.fim;
   const canRunPipeline = canUpload && !!state.pdf;
 
   /* -------------------------------------------------------------------------- */
@@ -292,9 +291,7 @@ export default function FinancialReconciliationView({ session }: { session: TAut
                 onChange={(next) =>
                   updateState({
                     periodo: {
-                      inicio: next.from
-                        ? next.from.toISOString()
-                        : state.periodo.inicio,
+                      inicio: next.from ? next.from.toISOString() : state.periodo.inicio,
                       fim: next.to ? next.to.toISOString() : state.periodo.fim,
                     },
                   })
@@ -346,13 +343,11 @@ export default function FinancialReconciliationView({ session }: { session: TAut
       ) : null}
 
       {extracting || matching ? (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-primary">
+        <div className="rounded-xl border border-border bg-primary/5 px-4 py-3 text-xs text-primary">
           {extracting ? (
             <span>Lendo o PDF com IA. Isso pode levar de 20 a 60 segundos.</span>
           ) : (
-            <span>
-              Comparando linhas extraídas com transações do sistema. Quase pronto.
-            </span>
+            <span>Comparando linhas extraídas com transações do sistema. Quase pronto.</span>
           )}
         </div>
       ) : null}
@@ -402,8 +397,8 @@ export default function FinancialReconciliationView({ session }: { session: TAut
           <div className="flex items-center justify-between gap-2 border-t pt-3">
             <span className="text-[0.65rem] text-muted-foreground">
               {sections.matched.length} corresp. · {sections.ambiguous.length} ambíguas ·{" "}
-              {sections.unmatched.length} sem correspondência ·{" "}
-              {Object.keys(createdByLine).length} criadas
+              {sections.unmatched.length} sem correspondência · {Object.keys(createdByLine).length}{" "}
+              criadas
             </span>
             <Button
               type="button"

@@ -12,14 +12,16 @@ import VehicleUsagePropertyHeader from "./blocks/VehicleUsagePropertyHeader";
 import VehicleUsageResponsibleSelector from "./blocks/VehicleUsageResponsibleSelector";
 import VehicleUsageKilometerAttachment from "./blocks/VehicleUsageKilometerAttachment";
 import VehicleUsageSuccessScreen from "./blocks/VehicleUsageSuccessScreen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import FullscreenUploadProgress from "@/components/utils/FullscreenUploadProgress";
 type VehicleUsageFinishProps = {
   usageId: string;
   property: TGetTemporaryUsageByPropertyOutput["data"]["property"];
 };
 export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFinishProps) {
   const router = useRouter();
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const attachments = usePropertyUsageStore((state) => state.attachments);
   const propertyUsage = usePropertyUsageStore((state) => state.propertyUsage);
   const updatePropertyUsage = usePropertyUsageStore((state) => state.updatePropertyUsage);
@@ -40,9 +42,11 @@ export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFi
     stateHolder: TPropertyUsageStore["propertyUsage"];
     attachments: TPropertyUsageStore["attachments"];
   }) {
+    setUploadProgress(0);
     const filesMetadata = await handleMultipleAttachmentsUpdate({
       attachments,
       vinculationId: property._id,
+      onProgress: setUploadProgress,
     });
     const mergedFilesMetadata = [...(stateHolder.arquivos ?? []), ...filesMetadata];
 
@@ -64,6 +68,7 @@ export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFi
       reset();
     },
     onError: (error) => {
+      setUploadProgress(null);
       toast.error(getErrorMessage(error));
     },
   });
@@ -86,8 +91,8 @@ export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFi
   }
 
   return (
-    <div className="bg-background flex flex-col h-full justify-center gap-4 container mx-auto py-12 px-6">
-      <div className="bg-background border-primary/20 flex w-full flex-col items-center gap-6 rounded-lg border p-3.5 shadow-xs dark:bg-[#121212]">
+    <div className="bg-background flex min-h-dvh w-full max-w-lg flex-col justify-start gap-4 mx-auto px-4 py-6 sm:py-10">
+      <div className="bg-card border-border flex w-full flex-col items-center gap-6 rounded-lg border p-4 shadow-xs sm:p-6">
         <VehicleUsagePropertyHeader title="FINALIZAÇÃO DO USO DO VEÍCULO" property={property} />
 
         <VehicleUsageResponsibleSelector />
@@ -105,6 +110,15 @@ export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFi
           placeholder="Preencha aqui qualquer detalhe relevante, como detalhes de uma possível avaria, etc..."
           value={propertyUsageNotes ?? ""}
           handleChange={(value) => updatePropertyUsage({ anotacoes: value })}
+        />
+        <FullscreenUploadProgress
+          value={isUsageMutationLoading ? uploadProgress : null}
+          title="Finalizando o uso do veículo"
+          messages={[
+            "Enviando as imagens…",
+            "Finalizando o uso…",
+            "Sincronizando os dados…",
+          ]}
         />
         <div className="flex w-full items-center justify-end">
           <LoadingButton

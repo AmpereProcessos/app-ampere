@@ -126,12 +126,12 @@ function MultipleSelectWithImages<T>({
                   {formatNameAsInitials(item.label)}
                 </AvatarFallback>
               </Avatar>
-              <p className="text-xxs text-primary font-medium">{item.label}</p>
+              <p className="text-xxs text-foreground font-medium">{item.label}</p>
             </div>
           ))}
         </div>
         {remainingCount > 0 && (
-          <div className="bg-primary/10 text-primary ml-1 flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs font-medium">
+          <div className="bg-primary/10 text-foreground ml-1 flex h-6 min-w-6 items-center justify-center rounded-full px-2 text-xs font-medium">
             +{remainingCount}
           </div>
         )}
@@ -180,7 +180,7 @@ function MultipleSelectWithImages<T>({
           <label
             htmlFor={inputIdentifier}
             className={cn(
-              "text-primary/80 text-start text-sm font-medium tracking-tight",
+              "text-foreground text-start text-sm font-medium tracking-tight",
               labelClassName,
             )}
           >
@@ -190,7 +190,7 @@ function MultipleSelectWithImages<T>({
         <div
           className={cn(
             "bg-background flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border p-3 text-sm duration-500 ease-in-out",
-            selectMenuIsOpen ? "border-primary" : "border-primary/20",
+            selectMenuIsOpen ? "border-primary" : "border-border",
             holderClassName,
           )}
         >
@@ -212,7 +212,7 @@ function MultipleSelectWithImages<T>({
                     onClick={() => {
                       if (editable) setSelectMenuIsOpen((prev) => !prev);
                     }}
-                    className="text-primary grow cursor-pointer text-start"
+                    className="text-foreground grow cursor-pointer text-start"
                   >
                     {renderSelectedAvatars()}
                   </button>
@@ -223,7 +223,7 @@ function MultipleSelectWithImages<T>({
                   onClick={() => {
                     if (editable) setSelectMenuIsOpen((prev) => !prev);
                   }}
-                  className="text-primary grow cursor-pointer text-start"
+                  className="text-foreground grow cursor-pointer text-start"
                 >
                   NÃO DEFINIDO
                 </button>
@@ -250,14 +250,14 @@ function MultipleSelectWithImages<T>({
           <div
             className={`absolute ${
               dropdownDirection === "down" ? "top-[75px]" : "bottom-[75px]"
-            } border-primary/20 bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 z-100 flex h-[250px] max-h-[250px] w-full flex-col gap-1 self-center overflow-y-auto overscroll-y-auto rounded-md border p-2 py-1 shadow-md`}
+            } border-border bg-background scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 z-100 flex h-[250px] max-h-[250px] w-full flex-col gap-1 self-center overflow-y-auto overscroll-y-auto rounded-md border p-2 py-1 shadow-md`}
           >
             <button
               type="button"
               onClick={() => resetState()}
               className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${!selectedIds ? "bg-primary/20" : ""}`}
             >
-              <p className="text-primary grow text-sm font-medium">{resetOptionLabel}</p>
+              <p className="text-foreground grow text-sm font-medium">{resetOptionLabel}</p>
               {!selectedIds ? <HiCheck style={{ color: "#fead61", fontSize: "20px" }} /> : null}
             </button>
             <div className="my-2 h-px w-full bg-gray-200" />
@@ -273,7 +273,7 @@ function MultipleSelectWithImages<T>({
                     <AvatarImage src={item.url} alt={item.label} />
                     <AvatarFallback>{formatNameAsInitials(item.label)}</AvatarFallback>
                   </Avatar>
-                  <p className="text-primary grow pl-2 text-start text-sm font-medium">
+                  <p className="text-foreground grow pl-2 text-start text-sm font-medium">
                     {item.label}
                   </p>
                   {selectedIds?.includes(item.id) ? (
@@ -282,7 +282,7 @@ function MultipleSelectWithImages<T>({
                 </button>
               ))
             ) : (
-              <p className="text-primary w-full text-center text-sm italic">
+              <p className="text-foreground w-full text-center text-sm italic">
                 Sem opções disponíveis.
               </p>
             )}
@@ -301,7 +301,7 @@ function MultipleSelectWithImages<T>({
           <label
             htmlFor={inputIdentifier}
             className={cn(
-              "text-primary/80 text-start text-sm font-medium tracking-tight",
+              "text-foreground text-start text-sm font-medium tracking-tight",
               labelClassName,
             )}
           >
@@ -311,7 +311,7 @@ function MultipleSelectWithImages<T>({
         <div
           className={cn(
             "bg-background flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border p-3 text-sm shadow-md duration-500 ease-in-out",
-            selectMenuIsOpen ? "border-primary" : "border-primary/20",
+            selectMenuIsOpen ? "border-primary" : "border-border",
             holderClassName,
           )}
         >
@@ -324,7 +324,7 @@ function MultipleSelectWithImages<T>({
                   onClick={() => {
                     if (editable) setSelectMenuIsOpen((prev) => !prev);
                   }}
-                  className="text-primary grow cursor-pointer text-start"
+                  className="text-foreground grow cursor-pointer text-start"
                 >
                   {selectedIds.length > 1
                     ? "MÚLTIPLAS SELEÇÕES"
@@ -337,7 +337,7 @@ function MultipleSelectWithImages<T>({
                 onClick={() => {
                   if (editable) setSelectMenuIsOpen((prev) => !prev);
                 }}
-                className="text-primary grow cursor-pointer text-start"
+                className="text-foreground grow cursor-pointer text-start"
               >
                 NÃO DEFINIDO
               </button>
@@ -351,7 +351,7 @@ function MultipleSelectWithImages<T>({
           />
         </div>
         <DrawerContent className="gap-2 p-2">
-          <p className="text-primary/80 w-full text-center text-xs tracking-tight">
+          <p className="text-foreground w-full text-center text-xs tracking-tight">
             {selectedIds && selectedIds.length > 0 && options
               ? options.filter((item) => selectedIds.includes(item.id)).length > 3
                 ? "Múltiplas opções selecionadas."
@@ -374,7 +374,7 @@ function MultipleSelectWithImages<T>({
             onClick={() => resetState()}
             className={`hover:bg-primary/20 flex w-full cursor-pointer items-center rounded p-1 px-2 ${!selectedIds ? "bg-primary/20" : ""}`}
           >
-            <p className="text-primary grow text-sm font-medium">{resetOptionLabel}</p>
+            <p className="text-foreground grow text-sm font-medium">{resetOptionLabel}</p>
             {!selectedIds ? <HiCheck style={{ color: "#fead61", fontSize: "20px" }} /> : null}
           </button>
           <div className="my-2 h-px w-full bg-gray-200" />
@@ -391,7 +391,7 @@ function MultipleSelectWithImages<T>({
                     <AvatarImage src={item.url} alt={item.label} />
                     <AvatarFallback>{formatNameAsInitials(item.label)}</AvatarFallback>
                   </Avatar>
-                  <p className="text-primary grow pl-2 text-start text-sm font-medium">
+                  <p className="text-foreground grow pl-2 text-start text-sm font-medium">
                     {item.label}
                   </p>
                   {selectedIds?.includes(item.id) ? (
@@ -400,7 +400,7 @@ function MultipleSelectWithImages<T>({
                 </button>
               ))
             ) : (
-              <p className="text-primary w-full text-center text-sm italic">
+              <p className="text-foreground w-full text-center text-sm italic">
                 Sem opções disponíveis.
               </p>
             )}

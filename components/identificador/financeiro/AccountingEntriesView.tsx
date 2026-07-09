@@ -30,9 +30,7 @@ import ControlAccountingEntry from "./lancamentos-contabeis/ControlAccountingEnt
 export default function AccountingEntriesView({ session }: { session: TAuthSession }) {
   const queryClient = useQueryClient();
   const [newAccountingEntryModalIsOpen, setNewAccountingEntryModalIsOpen] = useState(false);
-  const [editAccountingEntryModalId, setEditAccountingEntryModalId] = useState<string | null>(
-    null,
-  );
+  const [editAccountingEntryModalId, setEditAccountingEntryModalId] = useState<string | null>(null);
   const { data, queryKey, isLoading, isError, isSuccess, error, queryParams, updateQueryParams } =
     useFinancesAccountingEntries({
       initialParams: { page: 1, search: "" },
@@ -181,7 +179,7 @@ type AccountingEntryCardProps = {
 
 function AccountingEntryCard({ entry, onEditClick }: AccountingEntryCardProps) {
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
         <div className="flex items-center gap-2">
           <h1 className="text-xs font-bold tracking-tight lg:text-sm">

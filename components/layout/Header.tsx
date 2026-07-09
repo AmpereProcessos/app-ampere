@@ -39,11 +39,11 @@ function Header({ toggleSidebar }: HeaderProps) {
 
   if (status === "loading")
     return (
-      <div className="border-primary/30 bg-background sticky top-0 z-1 flex h-[70px] w-full animate-pulse items-center gap-2 border-b px-3 lg:px-12" />
+      <div className="border-border bg-background sticky top-0 z-1 flex h-[70px] w-full animate-pulse items-center gap-2 border-b px-3 lg:px-12" />
     );
   if (status === "unauthenticated") return null;
   return (
-    <div className="border-primary/30 bg-background sticky top-0 z-1 flex h-[70px] w-full items-center gap-2 border-b px-3 lg:px-12">
+    <div className="border-border bg-background sticky top-0 z-1 flex h-[70px] w-full items-center gap-2 border-b px-3 lg:px-12">
       <div className="flex w-1/3 items-center justify-start gap-2">
         {userView === "OPERACIONAL" ? (
           <Button variant="ghost" onClick={toggleSidebar} size={"fit"} className="p-2">

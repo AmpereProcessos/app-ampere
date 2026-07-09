@@ -22,8 +22,8 @@ export default function VehicleUsagePropertyHeader({
         </h1>
       </div>
 
-      <div className="w-fit slef-center flex items-start justify-center gap-1.5">
-        <div className="w-16 h-16 min-w-16 min-h-16 relative bg-primary/20 rounded-lg overflow-hidden">
+      <div className="w-fit self-center flex items-start justify-center gap-1.5">
+        <div className="w-16 h-16 min-w-16 min-h-16 relative bg-muted rounded-lg overflow-hidden">
           {property.imagemUrl ? (
             <Image
               src={property.imagemUrl}
@@ -32,7 +32,7 @@ export default function VehicleUsagePropertyHeader({
               className="object-cover"
             />
           ) : (
-            <div className="bg-primary/20 flex items-center justify-center h-full w-full">
+            <div className="bg-muted text-muted-foreground flex items-center justify-center h-full w-full">
               <Car className="h-6 w-6" />
             </div>
           )}
@@ -42,7 +42,7 @@ export default function VehicleUsagePropertyHeader({
             <div className="flex items-center gap-2">
               <h1 className="text-sm leading-none font-bold tracking-tight">{property.nome}</h1>
             </div>
-            <div className="bg-primary/20 flex w-fit items-center gap-2 rounded-lg px-2 py-1">
+            <div className="bg-secondary text-secondary-foreground flex w-fit items-center gap-2 rounded-md px-2 py-1">
               <Code size={15} />
               <h1 className="w-fit text-start text-[0.6rem] font-medium tracking-tight">
                 {property.identificador}

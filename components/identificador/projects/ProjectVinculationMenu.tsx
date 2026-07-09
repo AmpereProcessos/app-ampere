@@ -72,7 +72,7 @@ function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculation
               />
             ))
           ) : (
-            <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">
+            <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
               Nenhum projeto encontrado.
             </div>
           )}
@@ -93,7 +93,7 @@ function ProjectVinculationMenuItem({
   handleProjectSelection,
 }: ProjectVinculationMenuItemProps) {
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="rounded-lg bg-[#fead41] px-2 py-0.5 text-[0.6rem] font-bold text-white">
@@ -115,19 +115,19 @@ function ProjectVinculationMenuItem({
       <div className="flex w-full flex-col items-start gap-1.5">
         <div className="flex items-center gap-1">
           <UserRound className="h-4 w-4 min-h-4 min-w-4" />
-          <h1 className="text-primary/80 text-start text-[0.6rem] font-medium italic">
+          <h1 className="text-foreground text-start text-[0.6rem] font-medium italic">
             {project.nomeDoContrato}
           </h1>
         </div>
         <div className="flex items-center gap-1">
           <Phone className="h-4 w-4 min-h-4 min-w-4" />
-          <h1 className="text-primary/80 text-start text-[0.6rem] font-medium italic">
+          <h1 className="text-foreground text-start text-[0.6rem] font-medium italic">
             {project.telefone}
           </h1>
         </div>
         <div className="flex items-center gap-1">
           <MapPin className="h-4 w-4 min-h-4 min-w-4" />
-          <h1 className="text-primary/80 text-start text-[0.6rem] font-medium italic">
+          <h1 className="text-foreground text-start text-[0.6rem] font-medium italic">
             {formatLocation({
               location: {
                 uf: project.uf || "",

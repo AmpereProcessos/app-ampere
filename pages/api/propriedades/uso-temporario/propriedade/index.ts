@@ -14,7 +14,7 @@ const TemporaryUsageByPropertyQueryParams = z.object({
 });
 export type TTemporaryUsageByPropertyInput = z.infer<typeof TemporaryUsageByPropertyQueryParams>;
 
-async function getTemporaryUsageByPropertyRoute({ params }: { params: TTemporaryUsageByPropertyInput }) {
+export async function getTemporaryUsageByPropertyRoute({ params }: { params: TTemporaryUsageByPropertyInput }) {
 	const { openUsagePropertyId } = params;
 	if (!ObjectId.isValid(openUsagePropertyId)) throw new createHttpError.BadRequest("ID da propriedade inválido.");
 
@@ -23,16 +23,17 @@ async function getTemporaryUsageByPropertyRoute({ params }: { params: TTemporary
 	const propertiesCollection = db.collection<TProperty>("propriedades");
 	const temporaryUsagesCollection = db.collection<TPropertyTemporaryUsage>("propriedades-uso-temporario");
 
-	const property = await propertiesCollection.findOne({
-		_id: new ObjectId(openUsagePropertyId),
-	});
+	const [property, temporaryUsage] = await Promise.all([
+		propertiesCollection.findOne({
+			_id: new ObjectId(openUsagePropertyId),
+		}),
+		temporaryUsagesCollection.findOne({
+			"propriedade.id": openUsagePropertyId,
+			dataFim: null,
+		}),
+	]);
 
 	if (!property) throw new createHttpError.NotFound("Propriedade não encontrada.");
-
-	const temporaryUsage = await temporaryUsagesCollection.findOne({
-		"propriedade.id": openUsagePropertyId,
-		dataFim: null,
-	});
 
 	return {
 		data: {

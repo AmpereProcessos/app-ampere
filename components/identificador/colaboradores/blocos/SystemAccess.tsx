@@ -85,7 +85,7 @@ function SystemAccess({ infoHolder, updateInfoHolder, initialMode }: SystemAcces
           <h1 className="text-start font-sans font-bold text-primary">
             REFERÊNCIA DA VISUALIZAÇÃO
           </h1>
-          <h1 className="border-primary/20 h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
+          <h1 className="border-border h-[47px] w-full rounded-md border p-3 text-sm outline-hidden placeholder:italic">
             NÃO APLICÁVEL
           </h1>
         </div>

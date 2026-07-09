@@ -154,8 +154,8 @@ function NewActivityMenu({
                 />
               </div>
             </div>
-            <div className="border-primary/20 flex w-full flex-col rounded-md border p-2 shadow-xs">
-              <h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">
+            <div className="border-border flex w-full flex-col rounded-md border p-2 shadow-xs">
+              <h1 className="text-foreground text-sm leading-none font-medium tracking-tight">
                 DESCRIÇÃO DA ATIVIDADE
               </h1>
               <input
@@ -168,7 +168,7 @@ function NewActivityMenu({
                 className="w-full p-3 text-start text-sm outline-hidden"
               />
             </div>
-            <h1 className="text-primary/60 text-sm leading-none font-medium tracking-tight">
+            <h1 className="text-foreground text-sm leading-none font-medium tracking-tight">
               VINCULE RESPONSÁVEIS
             </h1>
             <div className="flex w-full items-center gap-2">
@@ -220,7 +220,7 @@ function NewActivityMenu({
                       url={resp.avatar_url || undefined}
                       fallback={formatNameAsInitials(resp.nome)}
                     />
-                    <p className="text-primary/60 text-sm font-medium tracking-tight">
+                    <p className="text-foreground text-sm font-medium tracking-tight">
                       {resp.nome}
                     </p>
                   </div>

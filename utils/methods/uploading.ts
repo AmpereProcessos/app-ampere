@@ -39,10 +39,10 @@ export async function generalFirebaseUpload({ file, path }: { file: File; path: 
 type HandleMultipleAttachmentsUpdateParams = {
 	attachments: TAttachmentState[];
 	vinculationId: string;
+	onProgress?: (progress: number) => void;
 };
-export async function handleMultipleAttachmentsUpdate({ attachments, vinculationId }: HandleMultipleAttachmentsUpdateParams) {
+export async function handleMultipleAttachmentsUpdate({ attachments, vinculationId, onProgress }: HandleMultipleAttachmentsUpdateParams) {
 	try {
-		const filesMetadata: { titulo: string; url: string; tamanho: number; formato: string }[] = [];
 		const flattenAttachments = attachments.flatMap((attachment) => {
 			return attachment.arquivos
 				.filter((a) => !!a.arquivo)
@@ -51,17 +51,32 @@ export async function handleMultipleAttachmentsUpdate({ attachments, vinculation
 					arquivo: file.arquivo as File,
 				}));
 		});
-		await Promise.all(
-			flattenAttachments.map(async (attachment) => {
+		const totalBytes = flattenAttachments.reduce((sum, attachment) => sum + attachment.arquivo.size, 0);
+		const uploadedBytesByIndex = Array.from({ length: flattenAttachments.length }, () => 0);
+
+		onProgress?.(flattenAttachments.length > 0 ? 0 : 100);
+
+		const filesMetadata = await Promise.all(
+			flattenAttachments.map(async (attachment, index) => {
 				const { url, format, size } = await uploadFile({
 					file: attachment.arquivo,
 					fileName: attachment.titulo,
 					vinculationId: vinculationId,
 					prefix: "property-usage",
+					onProgress: onProgress
+						? (fileProgress) => {
+								uploadedBytesByIndex[index] = Math.round((attachment.arquivo.size * fileProgress) / 100);
+								const uploadedBytes = uploadedBytesByIndex.reduce((sum, current) => sum + current, 0);
+								const totalProgress = totalBytes > 0 ? Math.round((uploadedBytes / totalBytes) * 100) : 100;
+								onProgress(Math.min(totalProgress, 100));
+							}
+						: undefined,
 				});
-				filesMetadata.push({ titulo: attachment.titulo, url, formato: format, tamanho: size });
+				return { titulo: attachment.titulo, url, formato: format, tamanho: size };
 			}),
 		);
+
+		onProgress?.(100);
 
 		return filesMetadata;
 	} catch (error) {

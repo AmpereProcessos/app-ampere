@@ -1,3 +1,5 @@
+"use client";
+
 import { TPropertyUsageStore, usePropertyUsageStore } from "@/utils/stores/property-usage";
 import { TGetTemporaryUsageByPropertyOutput } from "@/pages/api/propriedades/uso-temporario/propriedade";
 import { validateVehicleUsageFinishSubmission } from "@/lib/property-usage";
@@ -13,7 +15,7 @@ import VehicleUsageResponsibleSelector from "./blocks/VehicleUsageResponsibleSel
 import VehicleUsageKilometerAttachment from "./blocks/VehicleUsageKilometerAttachment";
 import VehicleUsageSuccessScreen from "./blocks/VehicleUsageSuccessScreen";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import FullscreenUploadProgress from "@/components/utils/FullscreenUploadProgress";
 type VehicleUsageFinishProps = {
   usageId: string;
@@ -76,7 +78,7 @@ export default function VehicleUsageFinish({ usageId, property }: VehicleUsageFi
   useEffect(() => {
     if (!isUsageMutationSuccess) return;
     const timeout = setTimeout(() => {
-      router.reload();
+      router.refresh();
     }, 5000);
     return () => clearTimeout(timeout);
   }, [isUsageMutationSuccess, router]);

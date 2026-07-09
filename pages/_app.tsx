@@ -16,43 +16,58 @@ import { Toaster } from "react-hot-toast";
 
 // If loading a variable font, you don't need to specify the font weight
 const raleway = Raleway({
-	variable: "--font-raleway",
-	subsets: ["latin"],
+  variable: "--font-raleway",
+  subsets: ["latin"],
 });
 
 function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageProps: any }) {
-	const queryClient = new QueryClient();
-	const [sidebarVisible, setSidebarVisible] = useState(false);
-
-	return (
-		<>
-			<AppHead />
-			<QueryClientProvider client={queryClient}>
-				<ConvexClientProvider>
-					<NuqsAdapter>
-						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-							<main className={cn("bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen", raleway.variable, raleway.className)}>
-								<Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
-								<div className="flex min-h-full grow">
-									{sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
-									<div
-										style={{
-											width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
-										}}
-										data-expanded={sidebarVisible ? "true" : "false"}
-										className={`${sidebarVisible ? "hidden lg:flex lg:flex-col" : "flex flex-col"} grow`}
-									>
-										<Component sidebarVisible={sidebarVisible} toggleSidebar={() => setSidebarVisible((prev) => !prev)} {...pageProps} />
-										<Toaster />
-									</div>
-								</div>
-							</main>
-						</ThemeProvider>
-					</NuqsAdapter>
-				</ConvexClientProvider>
-			</QueryClientProvider>
-		</>
-	);
+  const queryClient = new QueryClient();
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  console.log("TESTING");
+  return (
+    <>
+      <AppHead />
+      <QueryClientProvider client={queryClient}>
+        <ConvexClientProvider>
+          <NuqsAdapter>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main
+                className={cn(
+                  "bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen",
+                  raleway.variable,
+                  raleway.className,
+                )}
+              >
+                <Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
+                <div className="flex min-h-full grow">
+                  {sidebarVisible ? <Sidebar sidebarVisible={sidebarVisible} /> : null}
+                  <div
+                    style={{
+                      width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
+                    }}
+                    data-expanded={sidebarVisible ? "true" : "false"}
+                    className={`${sidebarVisible ? "hidden lg:flex lg:flex-col" : "flex flex-col"} grow`}
+                  >
+                    <Component
+                      sidebarVisible={sidebarVisible}
+                      toggleSidebar={() => setSidebarVisible((prev) => !prev)}
+                      {...pageProps}
+                    />
+                    <Toaster />
+                  </div>
+                </div>
+              </main>
+            </ThemeProvider>
+          </NuqsAdapter>
+        </ConvexClientProvider>
+      </QueryClientProvider>
+    </>
+  );
 }
 
 export default MyApp;

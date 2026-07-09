@@ -4,6 +4,10 @@ import type { TClientProfileInput, TClientProfileOutput } from "@/pages/api/stat
 import type { TGetGraphStatsInput, TGetGraphsStatsOutput } from "@/pages/api/stats/graph";
 import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
 import type {
+  TGeographicReportInput,
+  TGeographicReportOutput,
+} from "@/pages/api/stats/geographic-report";
+import type {
   TGetSalesRankingInput,
   TGetSalesRankingOutput,
 } from "@/pages/api/stats/sales-ranking";
@@ -93,6 +97,24 @@ export function useOverallReport({ initialParams }: TUseOverallReportParams) {
     queryParams,
     updateQueryParams,
   };
+}
+
+async function fetchGeographicReport(payload: TGeographicReportInput) {
+  const { data } = await axios.post<TGeographicReportOutput>(
+    "/api/stats/geographic-report",
+    payload,
+  );
+  return data.data;
+}
+
+export function useGeographicReport(params: TGeographicReportInput) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["geographic-report", paramsDebounced],
+    queryFn: () => fetchGeographicReport(paramsDebounced),
+    placeholderData: (previousData) => previousData,
+  });
 }
 
 async function fetchClientProfileReport(payload: TClientProfileInput) {

@@ -5,7 +5,7 @@ import UnauthorizedPage from "@/components/utils/UnauthorizedPage";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { useOverallReport } from "@/utils/methods/query/stats";
 
-import { BarChart3, ChartPie, Gauge } from "lucide-react";
+import { BarChart3, ChartPie, Gauge, Map } from "lucide-react";
 
 import ClientProfileReport from "@/components/identificador/estatisticas/overall-report/ClientProfile";
 import OverallReportGeneralStats from "@/components/identificador/estatisticas/overall-report/General";
@@ -17,6 +17,15 @@ import UnauthenticatedComponent from "@/components/utils/UnauthenticatedComponen
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { serviceTypes } from "@/utils/select-options";
 import dayjs from "dayjs";
+import dynamic from "next/dynamic";
+
+const GeographicReport = dynamic(
+  () => import("@/components/identificador/estatisticas/overall-report/Geographic"),
+  {
+    ssr: false,
+    loading: () => <LoadingComponent />,
+  },
+);
 
 function ReportPage() {
   const { session, status } = useSession();
@@ -113,6 +122,10 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
             <ChartPie className="h-4 w-4" />
             PERFIL DE CLIENTES
           </TabsTrigger>
+          <TabsTrigger value="geografia">
+            <Map className="h-4 w-4" />
+            GEOGRAFIA
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="visao-geral">
           {isLoading ? <LoadingComponent /> : null}
@@ -121,6 +134,9 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
         </TabsContent>
         <TabsContent value="perfil-clientes">
           <ClientProfileReport projectTypes={queryParams.projectTypes} period={queryParams.period} />
+        </TabsContent>
+        <TabsContent value="geografia">
+          <GeographicReport projectTypes={queryParams.projectTypes} period={queryParams.period} />
         </TabsContent>
       </Tabs>
     </div>

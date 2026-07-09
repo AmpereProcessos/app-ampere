@@ -1,7 +1,4 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Logo from "@/utils/images/logo-sem-texto.png";
 import { cn } from "@/lib/utils";
@@ -27,7 +24,8 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
  * is still resolving. The caption cycles through the provided process messages.
  *
  * Brand: blue is the progress signal (never amber — amber is reserved for
- * attention). Motion is subtle and honors `prefers-reduced-motion`.
+ * attention). Motion is subtle and honors `prefers-reduced-motion` via the
+ * `motion-safe` / `motion-reduce` Tailwind variants (no JS animation library).
  */
 export default function FullscreenUploadProgress({
   value,
@@ -35,7 +33,6 @@ export default function FullscreenUploadProgress({
   title,
   messageIntervalMs = 2400,
 }: FullscreenUploadProgressProps) {
-  const prefersReducedMotion = useReducedMotion();
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
@@ -97,10 +94,7 @@ export default function FullscreenUploadProgress({
 
         {isFinalizing ? (
           <svg
-            className={cn(
-              "absolute inset-0 h-40 w-40 -rotate-90",
-              !prefersReducedMotion && "animate-spin",
-            )}
+            className="absolute inset-0 h-40 w-40 -rotate-90 motion-safe:animate-spin"
             viewBox="0 0 120 120"
             fill="none"
             aria-hidden="true"
@@ -125,18 +119,12 @@ export default function FullscreenUploadProgress({
       </div>
 
       <div className="flex h-6 items-center justify-center">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={currentMessage}
-            initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -6 }}
-            transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
-            className="text-muted-foreground text-center text-sm font-medium tracking-tight"
-          >
-            {currentMessage}
-          </motion.p>
-        </AnimatePresence>
+        <p
+          key={messageIndex}
+          className="text-muted-foreground animate-in fade-in motion-safe:slide-in-from-bottom-2 text-center text-sm font-medium tracking-tight duration-300"
+        >
+          {currentMessage}
+        </p>
       </div>
     </div>
   );

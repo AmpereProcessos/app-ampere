@@ -7,19 +7,18 @@ import type {
   TGeographicMetric,
   TGeographicReportOutput,
 } from "@/pages/api/stats/geographic-report";
-import type { TOverallReportInput } from "@/pages/api/stats/overall-report";
 import { useGeographicReport } from "@/utils/methods/query/stats";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
-import { AlertTriangle, Building2, Crosshair, MapPinned, MapPin, PackageCheck, Zap } from "lucide-react";
+import {
+  SEGMENT_DIMENSION_LABELS,
+  type TReportSegmentDimension,
+  useReportFiltersStore,
+} from "@/utils/stores/report-filters-store";
+import { AlertTriangle, Building2, Crosshair, Filter, MapPinned, MapPin, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 type GeographicLocation = TGeographicReportOutput["data"]["locations"][number];
-
-type GeographicReportProps = {
-  projectTypes: string[];
-  period: TOverallReportInput["period"];
-};
 
 const metricOptions: Array<{
   value: TGeographicMetric;
@@ -60,60 +59,62 @@ function formatPrimaryMetric(location: GeographicLocation, metric: TGeographicMe
   }
 }
 
-export default function GeographicReport({ projectTypes, period }: GeographicReportProps) {
-  const [metric, setMetric] = useState<TGeographicMetric>("EXECUTIONS");
-  const [stateFilter, setStateFilter] = useState("__all__");
-  const [cityFilter, setCityFilter] = useState("__all__");
-  const [selectedLocationKey, setSelectedLocationKey] = useState<string | null>(null);
-  const { data, isError, error, isLoading, isFetching } = useGeographicReport({
-    metric,
-    projectTypes,
-    period,
-  });
+export default function GeographicReport() {
+  const projectTypes = useReportFiltersStore((s) => s.projectTypes);
+  const period = useReportFiltersStore((s) => s.period);
+  const location = useReportFiltersStore((s) => s.location);
+  const segment = useReportFiltersStore((s) => s.segment);
+  const hasHydrated = useReportFiltersStore((s) => s.hasHydrated);
+  const setEstado = useReportFiltersStore((s) => s.setEstado);
+  const setCidade = useReportFiltersStore((s) => s.setCidade);
+  const setLocation = useReportFiltersStore((s) => s.setLocation);
+  const clearLocation = useReportFiltersStore((s) => s.clearLocation);
 
-  const locations = data?.locations ?? [];
-  const states = useMemo(
-    () => Array.from(new Set(locations.map((location) => location.estado))).sort((a, b) => a.localeCompare(b, "pt-BR")),
-    [locations],
+  const [metric, setMetric] = useState<TGeographicMetric>("EXECUTIONS");
+  const [selectedLocationKey, setSelectedLocationKey] = useState<string | null>(null);
+  const { data, isError, error, isLoading, isFetching } = useGeographicReport(
+    { metric, projectTypes, period, location, segment },
+    { enabled: hasHydrated },
   );
-  const cities = useMemo(
-    () => locations
-      .filter((location) => stateFilter === "__all__" || location.estado === stateFilter)
-      .map((location) => location.cidade)
-      .filter((city, index, list) => list.indexOf(city) === index)
-      .sort((a, b) => a.localeCompare(b, "pt-BR")),
-    [locations, stateFilter],
-  );
-  const visibleLocations = useMemo(
-    () => locations.filter((location) =>
-      (stateFilter === "__all__" || location.estado === stateFilter) &&
-      (cityFilter === "__all__" || location.cidade === cityFilter),
-    ),
-    [cityFilter, locations, stateFilter],
-  );
-  const selectedLocation = locations.find((location) => getLocationKey(location) === selectedLocationKey) ?? null;
+
+  const activeSegments = (Object.keys(segment) as TReportSegmentDimension[]).filter((dim) => !!segment[dim]);
+
+  const locations = useMemo(() => data?.locations ?? [], [data?.locations]);
+  // A UF selecionada filtra os dados no servidor; garantimos que o valor ativo
+  // sempre exista entre as opções para o Select renderizar corretamente.
+  const states = useMemo(() => {
+    const set = new Set(locations.map((l) => l.estado));
+    if (location.estado) set.add(location.estado);
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  }, [locations, location.estado]);
+  const cities = useMemo(() => {
+    const set = new Set(locations.map((l) => l.cidade));
+    if (location.cidade) set.add(location.cidade);
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  }, [locations, location.cidade]);
+
+  const selectedLocation = locations.find((l) => getLocationKey(l) === selectedLocationKey) ?? null;
   const mapData = useMemo(() => ({
     type: "FeatureCollection" as const,
-    features: visibleLocations
-      .filter((location) => location.mapeada && location.longitude !== null && location.latitude !== null)
-      .map((location) => ({
+    features: locations
+      .filter((l) => l.mapeada && l.longitude !== null && l.latitude !== null)
+      .map((l) => ({
         type: "Feature" as const,
-        geometry: { type: "Point" as const, coordinates: [location.longitude as number, location.latitude as number] },
-        properties: { cidade: location.cidade, estado: location.estado },
+        geometry: { type: "Point" as const, coordinates: [l.longitude as number, l.latitude as number] },
+        properties: { cidade: l.cidade, estado: l.estado },
       })),
-  }), [visibleLocations]);
+  }), [locations]);
 
   const selectedMetric = metricOptions.find((option) => option.value === metric) ?? metricOptions[0];
+  const hasLocationFilter = !!location.estado || !!location.cidade;
 
-  function selectLocation(location: GeographicLocation) {
-    setStateFilter(location.estado);
-    setCityFilter(location.cidade);
-    setSelectedLocationKey(getLocationKey(location));
+  function selectLocation(loc: GeographicLocation) {
+    setLocation({ estado: loc.estado, cidade: loc.cidade });
+    setSelectedLocationKey(getLocationKey(loc));
   }
 
   function clearLocationFilters() {
-    setStateFilter("__all__");
-    setCityFilter("__all__");
+    clearLocation();
     setSelectedLocationKey(null);
   }
 
@@ -151,7 +152,7 @@ export default function GeographicReport({ projectTypes, period }: GeographicRep
                 aria-pressed={metric === option.value}
                 onClick={() => {
                   setMetric(option.value);
-                  clearLocationFilters();
+                  setSelectedLocationKey(null);
                 }}
               >
                 {option.label}
@@ -159,6 +160,20 @@ export default function GeographicReport({ projectTypes, period }: GeographicRep
             ))}
           </div>
         </div>
+
+        {/* Recorte de segmentos vindo do Perfil de Clientes */}
+        {activeSegments.length > 0 ? (
+          <div className="border-primary/40 bg-primary/5 text-primary flex flex-wrap items-center gap-2 rounded-md border px-3 py-2 text-xs">
+            <Filter className="size-3.5" aria-hidden="true" />
+            <span className="font-semibold">Recorte de perfil aplicado:</span>
+            {activeSegments.map((dim) => (
+              <span key={dim} className="bg-primary/10 rounded px-1.5 py-0.5 font-medium">
+                {SEGMENT_DIMENSION_LABELS[dim]}: {segment[dim]}
+              </span>
+            ))}
+            <span className="text-muted-foreground">— o mapa e o ranking já refletem esse recorte.</span>
+          </div>
+        ) : null}
 
         <dl className="grid gap-3 border-y py-4 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryItem icon={Building2} label="Localidades" value={summary?.localidades ?? 0} />
@@ -180,8 +195,8 @@ export default function GeographicReport({ projectTypes, period }: GeographicRep
                     pointColor="#15599a"
                     onPointClick={(feature) => {
                       const properties = feature.properties;
-                      const location = locations.find((item) => item.cidade === properties?.cidade && item.estado === properties?.estado);
-                      if (location) selectLocation(location);
+                      const loc = locations.find((item) => item.cidade === properties?.cidade && item.estado === properties?.estado);
+                      if (loc) selectLocation(loc);
                     }}
                   />
                   <MapFocus location={selectedLocation} />
@@ -201,7 +216,7 @@ export default function GeographicReport({ projectTypes, period }: GeographicRep
                 </Map>
               </div>
             ) : (
-              <EmptyMap metricLabel={selectedMetric.label} />
+              <EmptyMap metricLabel={selectedMetric.label} hasLocationFilter={hasLocationFilter} hasSegment={activeSegments.length > 0} />
             )}
           </div>
 
@@ -210,47 +225,53 @@ export default function GeographicReport({ projectTypes, period }: GeographicRep
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <h3 className="text-sm font-semibold">Ranking por localidade</h3>
-                  <p className="text-muted-foreground text-xs">Clique em uma linha para localizar no mapa.</p>
+                  <p className="text-muted-foreground text-xs">Clique em uma linha para filtrar todas as abas.</p>
                 </div>
-                {(stateFilter !== "__all__" || cityFilter !== "__all__") ? (
+                {hasLocationFilter ? (
                   <Button variant="ghost" size="xs" onClick={clearLocationFilters}>Limpar</Button>
                 ) : null}
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <Select value={stateFilter} onValueChange={(value) => { setStateFilter(value); setCityFilter("__all__"); setSelectedLocationKey(null); }}>
+                <Select
+                  value={location.estado ?? "__all__"}
+                  onValueChange={(value) => { setEstado(value === "__all__" ? undefined : value); setSelectedLocationKey(null); }}
+                >
                   <SelectTrigger className="w-full" aria-label="Filtrar por estado"><SelectValue placeholder="Todos os estados" /></SelectTrigger>
                   <SelectContent><SelectItem value="__all__">Todos os estados</SelectItem>{states.map((state) => <SelectItem key={state} value={state}>{state}</SelectItem>)}</SelectContent>
                 </Select>
-                <Select value={cityFilter} onValueChange={(value) => { setCityFilter(value); setSelectedLocationKey(null); }}>
+                <Select
+                  value={location.cidade ?? "__all__"}
+                  onValueChange={(value) => { setCidade(value === "__all__" ? undefined : value); setSelectedLocationKey(null); }}
+                >
                   <SelectTrigger className="w-full" aria-label="Filtrar por cidade"><SelectValue placeholder="Todas as cidades" /></SelectTrigger>
                   <SelectContent><SelectItem value="__all__">Todas as cidades</SelectItem>{cities.map((city) => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
             </div>
             <div className="max-h-[296px] overflow-auto">
-              {visibleLocations.length ? (
+              {locations.length ? (
                 <table className="w-full text-left text-sm">
                   <thead className="bg-muted/50 text-muted-foreground sticky top-0 text-xs">
                     <tr><th className="px-3 py-2 font-medium">Localidade</th><th className="px-3 py-2 text-right font-medium">Resumo</th></tr>
                   </thead>
                   <tbody>
-                    {visibleLocations.map((location) => {
-                      const isSelected = getLocationKey(location) === selectedLocationKey;
+                    {locations.map((loc) => {
+                      const isSelected = getLocationKey(loc) === selectedLocationKey;
                       return (
-                        <tr key={getLocationKey(location)} className={isSelected ? "bg-primary/10" : "hover:bg-muted/60"}>
+                        <tr key={getLocationKey(loc)} className={isSelected ? "bg-primary/10" : "hover:bg-muted/60"}>
                           <td className="px-3 py-2 align-top">
-                            <button type="button" className="w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => selectLocation(location)}>
-                              <span className="flex items-center gap-1.5 font-medium"><MapPin className={location.mapeada ? "size-3.5 text-primary" : "size-3.5 text-accent-amber-foreground"} />{location.cidade}</span>
-                              <span className="text-muted-foreground text-xs">{location.estado}{location.mapeada ? "" : " · sem coordenadas"}</span>
+                            <button type="button" className="w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-ring" onClick={() => selectLocation(loc)}>
+                              <span className="flex items-center gap-1.5 font-medium"><MapPin className={loc.mapeada ? "size-3.5 text-primary" : "size-3.5 text-accent-amber-foreground"} />{loc.cidade}</span>
+                              <span className="text-muted-foreground text-xs">{loc.estado}{loc.mapeada ? "" : " · sem coordenadas"}</span>
                             </button>
                           </td>
-                          <td className="px-3 py-2 text-right align-top text-xs font-medium tabular-nums">{formatPrimaryMetric(location, metric)}</td>
+                          <td className="px-3 py-2 text-right align-top text-xs font-medium tabular-nums">{formatPrimaryMetric(loc, metric)}</td>
                         </tr>
                       );
                     })}
                   </tbody>
                 </table>
-              ) : <div className="text-muted-foreground p-6 text-center text-sm">Nenhuma localidade corresponde aos filtros.</div>}
+              ) : <div className="text-muted-foreground p-6 text-center text-sm">Nenhuma localidade corresponde ao recorte atual.</div>}
             </div>
           </aside>
         </div>
@@ -270,8 +291,13 @@ function SummaryItem({ icon: Icon, label, value, description, attention = false 
   return <div className="flex items-start gap-2"><Icon className={attention ? "mt-0.5 size-4 text-accent-amber-foreground" : "mt-0.5 size-4 text-primary"} aria-hidden="true" /><div><dt className="text-muted-foreground text-xs">{label}</dt><dd className="text-base font-semibold tabular-nums">{value}</dd>{description ? <p className="text-muted-foreground text-xs">{description}</p> : null}</div></div>;
 }
 
-function EmptyMap({ metricLabel }: { metricLabel: string }) {
-  return <div className="text-muted-foreground flex h-[420px] flex-col items-center justify-center gap-2 p-6 text-center"><MapPinned className="size-7 text-primary" /><p className="font-medium text-foreground">Sem localidades mapeadas para {metricLabel.toLowerCase()}.</p><p className="max-w-sm text-sm">A listagem ao lado mostra registros sem cidade, UF ou correspondência na base de municípios.</p></div>;
+function EmptyMap({ metricLabel, hasLocationFilter, hasSegment }: { metricLabel: string; hasLocationFilter: boolean; hasSegment: boolean }) {
+  const reason = hasSegment
+    ? "Nenhum projeto atende à combinação de segmentos selecionada nesta região."
+    : hasLocationFilter
+      ? "Nenhuma localidade mapeada para o recorte de localização atual."
+      : "A listagem ao lado mostra registros sem cidade, UF ou correspondência na base de municípios.";
+  return <div className="text-muted-foreground flex h-[420px] flex-col items-center justify-center gap-2 p-6 text-center"><MapPinned className="size-7 text-primary" /><p className="font-medium text-foreground">Sem localidades mapeadas para {metricLabel.toLowerCase()}.</p><p className="max-w-sm text-sm">{reason}</p></div>;
 }
 
 function GeographicSkeleton() {

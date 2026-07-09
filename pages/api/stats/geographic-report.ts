@@ -1,21 +1,20 @@
+import { getSegmentedProjectIds } from "@/repositories/stats/client-profile";
 import { resolveMunicipalityCoordinates } from "@/utils/geography/brazil";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { ReportFilterInputSchema, hasActiveSegment } from "@/utils/schemas/report-filter.schema";
+import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TProject } from "@/utils/schemas/projects";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import type { Filter } from "mongodb";
+import type { Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
 import { z } from "zod";
 
 export const GeographicMetricSchema = z.enum(["SALES", "EXECUTIONS", "HOMOLOGATIONS", "SUPPLIES"]);
 export type TGeographicMetric = z.infer<typeof GeographicMetricSchema>;
 
-export const GeographicReportSchema = z.object({
+export const GeographicReportSchema = ReportFilterInputSchema.extend({
   metric: GeographicMetricSchema,
-  projectTypes: z.array(z.string()),
-  period: z.object({
-    after: z.string().datetime().optional().nullable(),
-    before: z.string().datetime().optional().nullable(),
-  }),
 });
 export type TGeographicReportInput = z.infer<typeof GeographicReportSchema>;
 
@@ -34,7 +33,11 @@ function getDateCondition(field: string, period: TGeographicReportInput["period"
 }
 
 function getMetricMatch(input: TGeographicReportInput): Filter<TProject> {
-  const projectTypes = input.projectTypes.length ? { tipoDeServico: { $in: input.projectTypes } } : {};
+  const projectTypes = {
+    ...(input.projectTypes.length ? { tipoDeServico: { $in: input.projectTypes } } : {}),
+    ...(input.location.estado ? { uf: input.location.estado } : {}),
+    ...(input.location.cidade ? { cidade: input.location.cidade } : {}),
+  };
   const signedContract = { "contrato.status": "ASSINADO", "contrato.dataAssinatura": { $ne: null } };
 
   switch (input.metric) {
@@ -100,8 +103,30 @@ function getGroupStage(input: TGeographicReportInput) {
 async function getGeographicReport(input: TGeographicReportInput) {
   const db = await connectToDatabase();
   const collection = db.collection<TProject>("dados");
+
+  // Recorte de segmento do Perfil: restringe o mapa e o ranking aos mesmos
+  // projetos que o Perfil considera para o segmento ativo.
+  let segmentIdFilter: Filter<TProject> = {};
+  if (hasActiveSegment(input.segment)) {
+    const crmDb = await connectToCRMDatabase();
+    const clientsCollection = crmDb.collection<TClient>("clients");
+    const ids: ObjectId[] = await getSegmentedProjectIds({
+      projectsCollection: collection,
+      clientsCollection,
+      baseQuery: {
+        "contrato.status": "ASSINADO",
+        "contrato.dataAssinatura": { $ne: null },
+        ...(input.projectTypes.length ? { tipoDeServico: { $in: input.projectTypes } } : {}),
+        ...(input.location.estado ? { uf: input.location.estado } : {}),
+        ...(input.location.cidade ? { cidade: input.location.cidade } : {}),
+      },
+      segment: input.segment,
+    });
+    segmentIdFilter = { _id: { $in: ids } };
+  }
+
   const rows = (await collection.aggregate([
-    { $match: getMetricMatch(input) },
+    { $match: { ...getMetricMatch(input), ...segmentIdFilter } },
     getGroupStage(input),
     { $sort: { quantidade: -1 } },
   ]).toArray()) as TGeographicAggregationRow[];

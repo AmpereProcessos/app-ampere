@@ -1,46 +1,15 @@
 import { getClientProfile } from "@/repositories/stats/client-profile";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { ReportFilterInputSchema } from "@/utils/schemas/report-filter.schema";
 import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TProject } from "@/utils/schemas/projects";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import type { Filter } from "mongodb";
 import type { NextApiHandler } from "next";
-import { z } from "zod";
+import type { z } from "zod";
 
-const SegmentValueSchema = z
-  .string({ invalid_type_error: "Tipo não válido para o valor de segmento." })
-  .optional()
-  .nullable();
-
-export const ClientProfileInputSchema = z.object({
-  projectTypes: z.array(z.string({ invalid_type_error: "Tipos de projetos inválidos" }), {
-    required_error: "Tipos de projetos são obrigatórios",
-    invalid_type_error: "Tipos de projetos inválidos",
-  }),
-  period: z.object({
-    after: z
-      .string({ invalid_type_error: "Tipo não válido para a data de início." })
-      .datetime({ message: "Data de início deve ser uma data válida" })
-      .optional()
-      .nullable(),
-    before: z
-      .string({ invalid_type_error: "Tipo não válido para a data de fim." })
-      .datetime({ message: "Data de fim deve ser uma data válida" })
-      .optional()
-      .nullable(),
-  }),
-  // Segmento de cruzamento: cada dimensão preenchida restringe as demais
-  segmento: z
-    .object({
-      sexo: SegmentValueSchema,
-      faixaEtaria: SegmentValueSchema,
-      faixaValor: SegmentValueSchema,
-      profissao: SegmentValueSchema,
-      formaPagamento: SegmentValueSchema,
-    })
-    .default({}),
-});
+export const ClientProfileInputSchema = ReportFilterInputSchema;
 export type TClientProfileInput = z.infer<typeof ClientProfileInputSchema>;
 
 async function getClientProfileReport(payload: TClientProfileInput) {
@@ -56,13 +25,15 @@ async function getClientProfileReport(payload: TClientProfileInput) {
         ? { $gte: payload.period.after, $lte: payload.period.before }
         : { $ne: null },
     ...(payload.projectTypes.length > 0 ? { tipoDeServico: { $in: payload.projectTypes } } : {}),
+    ...(payload.location.estado ? { uf: payload.location.estado } : {}),
+    ...(payload.location.cidade ? { cidade: payload.location.cidade } : {}),
   };
 
   const profile = await getClientProfile({
     projectsCollection,
     clientsCollection,
     projectsQuery,
-    segment: payload.segmento,
+    segment: payload.segment,
   });
   return { data: profile };
 }

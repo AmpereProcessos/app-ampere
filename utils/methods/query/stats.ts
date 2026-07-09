@@ -73,30 +73,18 @@ async function fetchOverallReport(payload: TOverallReportInput) {
 }
 
 type TUseOverallReportParams = {
-  initialParams?: Partial<TOverallReportInput>;
+  params: TOverallReportInput;
+  enabled?: boolean;
 };
-export function useOverallReport({ initialParams }: TUseOverallReportParams) {
-  const [queryParams, setQueryParams] = useState<TOverallReportInput>({
-    projectTypes: initialParams?.projectTypes ?? [],
-    period: {
-      after: initialParams?.period?.after ?? undefined,
-      before: initialParams?.period?.before ?? undefined,
-    },
+export function useOverallReport({ params, enabled = true }: TUseOverallReportParams) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["overall-report", paramsDebounced],
+    queryFn: async () => await fetchOverallReport(paramsDebounced),
+    placeholderData: (previousData) => previousData,
+    enabled,
   });
-
-  function updateQueryParams(params: Partial<TOverallReportInput>) {
-    setQueryParams((prev) => ({ ...prev, ...params }));
-  }
-  const queryParamsDebounced = useDebounceMemo(queryParams, 500);
-
-  return {
-    ...useQuery({
-      queryKey: ["overall-report", queryParamsDebounced],
-      queryFn: async () => await fetchOverallReport(queryParamsDebounced),
-    }),
-    queryParams,
-    updateQueryParams,
-  };
 }
 
 async function fetchGeographicReport(payload: TGeographicReportInput) {
@@ -107,13 +95,14 @@ async function fetchGeographicReport(payload: TGeographicReportInput) {
   return data.data;
 }
 
-export function useGeographicReport(params: TGeographicReportInput) {
+export function useGeographicReport(params: TGeographicReportInput, options?: { enabled?: boolean }) {
   const paramsDebounced = useDebounceMemo(params, 500);
 
   return useQuery({
     queryKey: ["geographic-report", paramsDebounced],
     queryFn: () => fetchGeographicReport(paramsDebounced),
     placeholderData: (previousData) => previousData,
+    enabled: options?.enabled ?? true,
   });
 }
 
@@ -124,14 +113,16 @@ async function fetchClientProfileReport(payload: TClientProfileInput) {
 
 type TUseClientProfileReportParams = {
   params: TClientProfileInput;
+  enabled?: boolean;
 };
-export function useClientProfileReport({ params }: TUseClientProfileReportParams) {
+export function useClientProfileReport({ params, enabled = true }: TUseClientProfileReportParams) {
   const paramsDebounced = useDebounceMemo(params, 500);
 
   return useQuery({
     queryKey: ["client-profile-report", paramsDebounced],
     queryFn: async () => await fetchClientProfileReport(paramsDebounced),
     placeholderData: (prev) => prev,
+    enabled,
   });
 }
 

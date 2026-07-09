@@ -56,6 +56,7 @@ export type TClientProfileSegment = {
 };
 
 type TClientProfileRow = {
+  _id: ObjectId;
   sexo: TInferredSex;
   idade: number | null;
   faixaEtaria: string;
@@ -63,6 +64,8 @@ type TClientProfileRow = {
   faixaValor: string;
   profissao: string;
   formaPagamento: string;
+  cidade: string;
+  estado: string;
 };
 
 function normalizeText(value?: string | null) {
@@ -121,20 +124,29 @@ function toDistribution(counts: Map<string, number>, orderedLabels?: string[]) {
   });
 }
 
-type TGetClientProfileParams = {
+/**
+ * Enriquece cada projeto candidato com as dimensões de perfil (sexo, idade,
+ * valor, profissão, pagamento) e a localidade. Etapa compartilhada entre o
+ * relatório de perfil e o helper que devolve os IDs segmentados para as demais
+ * abas — garante que Perfil, Visão Geral e Geografia usem exatamente o mesmo
+ * cálculo de segmento.
+ */
+type TBuildRowsParams = {
   projectsCollection: Collection<TProject>;
   clientsCollection: Collection<TClient>;
   projectsQuery: Filter<TProject>;
-  segment: TClientProfileSegment;
 };
-export async function getClientProfile({ projectsCollection, clientsCollection, projectsQuery, segment }: TGetClientProfileParams) {
+async function buildClientProfileRows({ projectsCollection, clientsCollection, projectsQuery }: TBuildRowsParams): Promise<TClientProfileRow[]> {
   const projects = (await projectsCollection
     .find(projectsQuery, {
       projection: {
+        _id: 1,
         nomeDoContrato: 1,
         cpf_cnpj: 1,
         dataNascimento: 1,
         idClienteCRM: 1,
+        cidade: 1,
+        uf: 1,
         "contrato.dataAssinatura": 1,
         "pagamento.metodo": 1,
         "sistema.valorProjeto": 1,
@@ -145,10 +157,13 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
       },
     })
     .toArray()) as unknown as {
+    _id: ObjectId;
     nomeDoContrato?: string | null;
     cpf_cnpj?: string | number | null;
     dataNascimento?: string | null;
     idClienteCRM?: string | null;
+    cidade?: string | null;
+    uf?: string | null;
     contrato?: { dataAssinatura?: string | null };
     pagamento?: { metodo?: string | null };
     sistema?: { valorProjeto?: number | null };
@@ -168,7 +183,7 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
       : [];
   const clientsById = new Map(clients.map((c) => [c._id.toString(), c]));
 
-  const rows: TClientProfileRow[] = projects.map((project) => {
+  return projects.map((project) => {
     const client = project.idClienteCRM ? clientsById.get(project.idClienteCRM) : undefined;
 
     const sexo: TInferredSex = isCorporateDocument(project.cpf_cnpj)
@@ -187,6 +202,7 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
     const formaPagamento = PAYMENT_METHOD_LABELS[project.pagamento?.metodo ?? ""] ?? normalizeText(project.pagamento?.metodo) ?? NOT_INFORMED_LABEL;
 
     return {
+      _id: project._id,
       sexo,
       idade,
       faixaEtaria: getAgeBracket(idade),
@@ -194,18 +210,78 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
       faixaValor: getValueBracket(valor),
       profissao: normalizeText(client?.profissao) ?? NOT_INFORMED_LABEL,
       formaPagamento,
+      cidade: normalizeText(project.cidade) ?? NOT_INFORMED_LABEL,
+      estado: normalizeText(project.uf) ?? NOT_INFORMED_LABEL,
     };
   });
+}
 
-  // Filtro estilo facet: cada dimensão enxerga os filtros das demais, mas não o próprio
-  const matchers: Record<keyof TClientProfileSegment, (row: TClientProfileRow) => boolean> = {
+const SEGMENT_DIMENSIONS: (keyof TClientProfileSegment)[] = ["sexo", "faixaEtaria", "faixaValor", "profissao", "formaPagamento"];
+
+/** Constrói os matchers estilo facet a partir de um segmento. */
+function buildSegmentMatchers(segment: TClientProfileSegment): Record<keyof TClientProfileSegment, (row: TClientProfileRow) => boolean> {
+  return {
     sexo: (row) => !segment.sexo || row.sexo === segment.sexo,
     faixaEtaria: (row) => !segment.faixaEtaria || row.faixaEtaria === segment.faixaEtaria,
     faixaValor: (row) => !segment.faixaValor || row.faixaValor === segment.faixaValor,
     profissao: (row) => !segment.profissao || row.profissao === segment.profissao,
     formaPagamento: (row) => !segment.formaPagamento || row.formaPagamento === segment.formaPagamento,
   };
-  const dimensions = Object.keys(matchers) as (keyof TClientProfileSegment)[];
+}
+
+type TGetSegmentedProjectIdsParams = {
+  projectsCollection: Collection<TProject>;
+  clientsCollection: Collection<TClient>;
+  baseQuery: Filter<TProject>;
+  segment: TClientProfileSegment;
+};
+/**
+ * Devolve os _ids dos projetos compatíveis com o recorte de segmento do Perfil.
+ * As rotas Geral e Geográfica acrescentam `_id: { $in: [...] }` às suas consultas
+ * para que "Feminino", "26 a 35" etc. alterem totais e pontos do mapa de maneira
+ * idêntica ao Perfil. Só deve ser chamado quando há segmento ativo.
+ */
+export async function getSegmentedProjectIds({ projectsCollection, clientsCollection, baseQuery, segment }: TGetSegmentedProjectIdsParams): Promise<ObjectId[]> {
+  const rows = await buildClientProfileRows({ projectsCollection, clientsCollection, projectsQuery: baseQuery });
+  const matchers = buildSegmentMatchers(segment);
+  return rows.filter((row) => SEGMENT_DIMENSIONS.every((d) => matchers[d](row))).map((row) => row._id);
+}
+
+/** Resumo geográfico calculado a partir da amostra final já filtrada. */
+function buildGeographySummary(rows: TClientProfileRow[]) {
+  const withLocation = rows.filter((row) => row.cidade !== NOT_INFORMED_LABEL && row.estado !== NOT_INFORMED_LABEL);
+  const estados = new Set(withLocation.map((row) => row.estado));
+  const localidades = new Map<string, { cidade: string; estado: string; qtde: number }>();
+  for (const row of withLocation) {
+    const key = `${row.cidade}::${row.estado}`;
+    const entry = localidades.get(key) ?? { cidade: row.cidade, estado: row.estado, qtde: 0 };
+    entry.qtde += 1;
+    localidades.set(key, entry);
+  }
+  const top = [...localidades.values()].sort((a, b) => b.qtde - a.qtde).slice(0, 5);
+
+  return {
+    totalCidades: localidades.size,
+    totalEstados: estados.size,
+    projetosComLocalizacao: withLocation.length,
+    projetosSemLocalizacao: rows.length - withLocation.length,
+    top,
+    coberturaPercentual: rows.length > 0 ? (withLocation.length / rows.length) * 100 : 0,
+  };
+}
+
+type TGetClientProfileParams = {
+  projectsCollection: Collection<TProject>;
+  clientsCollection: Collection<TClient>;
+  projectsQuery: Filter<TProject>;
+  segment: TClientProfileSegment;
+};
+export async function getClientProfile({ projectsCollection, clientsCollection, projectsQuery, segment }: TGetClientProfileParams) {
+  const rows = await buildClientProfileRows({ projectsCollection, clientsCollection, projectsQuery });
+
+  // Filtro estilo facet: cada dimensão enxerga os filtros das demais, mas não o próprio
+  const matchers = buildSegmentMatchers(segment);
+  const dimensions = SEGMENT_DIMENSIONS;
   const rowsForDimension = (dimension: keyof TClientProfileSegment) =>
     rows.filter((row) => dimensions.every((d) => d === dimension || matchers[d](row)));
   const fullyFilteredRows = rows.filter((row) => dimensions.every((d) => matchers[d](row)));
@@ -275,6 +351,9 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
     distribuicao: toDistribution(countBy(paymentRows, (row) => row.formaPagamento)),
   };
 
+  // GEOGRAFIA (a partir da amostra final já filtrada)
+  const geografia = buildGeographySummary(fullyFilteredRows);
+
   return {
     amostra: {
       qtdeProjetos: rows.length,
@@ -285,6 +364,7 @@ export async function getClientProfile({ projectsCollection, clientsCollection, 
     valor,
     profissoes,
     pagamento,
+    geografia,
   };
 }
 export type TClientProfile = Awaited<ReturnType<typeof getClientProfile>>;

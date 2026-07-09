@@ -5,49 +5,54 @@ import {
 	getGeneralServiceExecutionStats,
 	getGeneralSupplyStats,
 } from "@/repositories/stats/general";
+import { getSegmentedProjectIds } from "@/repositories/stats/client-profile";
 import { getUFVHomologationStats, getUFVInstallationStats, getUFVSaleStats } from "@/repositories/stats/ufv-stats";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { ReportFilterInputSchema, hasActiveSegment } from "@/utils/schemas/report-filter.schema";
+import type { TClient } from "@/utils/schemas/crm/client.schema";
 import type { TProject } from "@/utils/schemas/projects";
+import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import type { Collection, Filter } from "mongodb";
+import type { Filter } from "mongodb";
 import type { NextApiHandler } from "next";
-import { z } from "zod";
+import type { z } from "zod";
 
-export const OverallReportSchema = z.object({
-	projectTypes: z.array(z.string({ required_error: "Tipos de projetos são obrigatórios", invalid_type_error: "Tipos de projetos inválidos" })),
-	period: z.object({
-		after: z
-			.string({
-				required_error: "Data de início é obrigatória",
-			})
-			.datetime({
-				message: "Data de início deve ser uma data válida",
-			})
-			.optional()
-			.nullable(),
-		before: z
-			.string({
-				required_error: "Data de fim é obrigatória",
-			})
-			.datetime({
-				message: "Data de fim deve ser uma data válida",
-			})
-			.optional()
-			.nullable(),
-	}),
-});
+export const OverallReportSchema = ReportFilterInputSchema;
 export type TOverallReportInput = z.infer<typeof OverallReportSchema>;
 
-async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
+async function getOverallReport(payload: TOverallReportInput) {
 	const db = await connectToDatabase();
 	const projectsCollection = db.collection<TProject>("dados");
 
-	const genericQuery: Filter<TProject> =
-		payload.projectTypes.length > 0
-			? {
-					tipoDeServico: { $in: payload.projectTypes },
-				}
-			: {};
+	// Recorte de segmento do Perfil aplicado às demais abas: quando há uma
+	// dimensão ativa (sexo, faixa etária, valor, profissão ou pagamento),
+	// restringimos todas as estatísticas aos projetos compatíveis. A base
+	// ignora o período para preservar a semântica de data de cada métrica.
+	let segmentIdFilter: Filter<TProject> = {};
+	if (hasActiveSegment(payload.segment)) {
+		const crmDb = await connectToCRMDatabase();
+		const clientsCollection = crmDb.collection<TClient>("clients");
+		const ids = await getSegmentedProjectIds({
+			projectsCollection,
+			clientsCollection,
+			baseQuery: {
+				"contrato.status": "ASSINADO",
+				"contrato.dataAssinatura": { $ne: null },
+				...(payload.projectTypes.length > 0 ? { tipoDeServico: { $in: payload.projectTypes } } : {}),
+				...(payload.location.estado ? { uf: payload.location.estado } : {}),
+				...(payload.location.cidade ? { cidade: payload.location.cidade } : {}),
+			},
+			segment: payload.segment,
+		});
+		segmentIdFilter = { _id: { $in: ids } };
+	}
+
+	const genericQuery: Filter<TProject> = {
+		...(payload.projectTypes.length > 0 ? { tipoDeServico: { $in: payload.projectTypes } } : {}),
+		...(payload.location.estado ? { uf: payload.location.estado } : {}),
+		...(payload.location.cidade ? { cidade: payload.location.cidade } : {}),
+		...segmentIdFilter,
+	};
 	const signingPeriodQuery: Filter<TProject> = {
 		"contrato.status": "ASSINADO",
 		"contrato.dataAssinatura":
@@ -158,20 +163,20 @@ async function getOverallReport(payload: z.infer<typeof OverallReportSchema>) {
 		deliveryCondition,
 	});
 
-	// UFV STATS
+	// UFV STATS (também respondem à localidade e ao recorte de segmento)
 	const ufvSaleStats = await getUFVSaleStats({
 		collection: projectsCollection,
-		partialQuery: signingPeriodQuery,
+		partialQuery: { ...genericQuery, ...signingPeriodQuery },
 	});
 
 	const ufvInstallationStats = await getUFVInstallationStats({
 		collection: projectsCollection,
-		partialQuery: installationPeriodQuery,
+		partialQuery: { ...genericQuery, ...installationPeriodQuery },
 	});
 
 	const ufvHomologationStats = await getUFVHomologationStats({
 		collection: projectsCollection,
-		partialQuery: homologationPeriodQuery,
+		partialQuery: { ...genericQuery, ...homologationPeriodQuery },
 	});
 
 	return {

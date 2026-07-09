@@ -1,12 +1,15 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
-import type { TClientProfileInput } from "@/pages/api/stats/client-profile";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useClientProfileReport } from "@/utils/methods/query/stats";
-import { Briefcase, Cake, CreditCard, DollarSign, Info, Loader2, Users, Wallet, X } from "lucide-react";
-import { useState } from "react";
+import {
+  SEGMENT_DIMENSION_LABELS,
+  type TReportSegmentDimension,
+  useReportFiltersStore,
+} from "@/utils/stores/report-filters-store";
+import { Briefcase, Cake, ChevronRight, CreditCard, DollarSign, Info, Loader2, MapPin, MapPinned, Users, Wallet, X } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
 import { MdDashboard } from "react-icons/md";
 
@@ -14,19 +17,10 @@ import { MdDashboard } from "react-icons/md";
  * Relatório de perfil dos clientes (sexo, idade, valor de projeto, profissões
  * e forma de pagamento) com cruzamento interativo: clicar em uma barra de
  * qualquer gráfico restringe todos os demais àquele recorte (estilo facet).
+ * O segmento vive na store global, então o recorte reflete em todas as abas.
  */
 
-type TSegment = TClientProfileInput["segmento"];
-type TSegmentDimension = keyof TSegment;
 type TDistributionItem = { titulo: string; qtde: number; percentual: number };
-
-const SEGMENT_DIMENSION_LABELS: Record<TSegmentDimension, string> = {
-  sexo: "SEXO",
-  faixaEtaria: "FAIXA ETÁRIA",
-  faixaValor: "FAIXA DE VALOR",
-  profissao: "PROFISSÃO",
-  formaPagamento: "PAGAMENTO",
-};
 
 const chartConfig = {
   qtde: {
@@ -35,20 +29,23 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type ClientProfileReportProps = {
-  projectTypes: string[];
-  period: { after?: string | null; before?: string | null };
-};
-function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps) {
-  const [segment, setSegment] = useState<TSegment>({});
+function ClientProfileReport() {
+  const projectTypes = useReportFiltersStore((s) => s.projectTypes);
+  const period = useReportFiltersStore((s) => s.period);
+  const locationFilter = useReportFiltersStore((s) => s.location);
+  const segment = useReportFiltersStore((s) => s.segment);
+  const hasHydrated = useReportFiltersStore((s) => s.hasHydrated);
+  const toggleSegmentValue = useReportFiltersStore((s) => s.toggleSegmentValue);
+  const removeSegmentValue = useReportFiltersStore((s) => s.removeSegmentValue);
+  const clearSegment = useReportFiltersStore((s) => s.clearSegment);
+  const setLocation = useReportFiltersStore((s) => s.setLocation);
+
   const { data: profile, isLoading, isError, error, isFetching } = useClientProfileReport({
-    params: { projectTypes, period, segmento: segment },
+    params: { projectTypes, period, location: locationFilter, segment },
+    enabled: hasHydrated,
   });
 
-  function toggleSegment(dimension: TSegmentDimension, value: string) {
-    setSegment((prev) => ({ ...prev, [dimension]: prev[dimension] === value ? null : value }));
-  }
-  const activeSegments = (Object.entries(segment) as [TSegmentDimension, string | null | undefined][]).filter(
+  const activeSegments = (Object.entries(segment) as [TReportSegmentDimension, string | null | undefined][]).filter(
     ([, value]) => !!value,
   );
 
@@ -64,7 +61,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <Info className="text-muted-foreground h-4 min-h-4 w-4 min-w-4" />
           <p className="text-muted-foreground text-xs">
             Clique nas barras dos gráficos para cruzar as dimensões — os demais gráficos se adaptam ao recorte
-            selecionado.
+            selecionado e o resultado reflete em todas as abas.
           </p>
           {isFetching ? <Loader2 className="text-muted-foreground h-3.5 w-3.5 animate-spin" /> : null}
         </div>
@@ -77,7 +74,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
                 <button
                   key={dimension}
                   type="button"
-                  onClick={() => setSegment((prev) => ({ ...prev, [dimension]: null }))}
+                  onClick={() => removeSegmentValue(dimension)}
                   className="bg-primary/90 text-primary-foreground hover:bg-primary flex items-center gap-1.5 rounded-lg px-2 py-1"
                 >
                   <p className="text-[0.65rem] font-medium">
@@ -88,7 +85,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
               ))}
               <button
                 type="button"
-                onClick={() => setSegment({})}
+                onClick={() => clearSegment()}
                 className="text-muted-foreground hover:text-foreground text-xs font-medium underline-offset-2 hover:underline"
               >
                 LIMPAR
@@ -128,6 +125,13 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
         />
       </div>
 
+      {/* Resumo geográfico da amostra filtrada */}
+      <GeographySummary
+        geografia={profile.geografia}
+        totalAmostra={profile.amostra.qtdeProjetosFiltrados}
+        onSelectLocation={(cidade, estado) => setLocation({ estado, cidade })}
+      />
+
       {/* Distribuições */}
       <div className="grid w-full grid-cols-1 gap-2 lg:grid-cols-2">
         <ChartCard
@@ -138,7 +142,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <DistributionBarList
             items={profile.sexo.distribuicao}
             selected={segment.sexo}
-            onSelect={(value) => toggleSegment("sexo", value)}
+            onSelect={(value) => toggleSegmentValue("sexo", value)}
           />
         </ChartCard>
         <ChartCard
@@ -149,7 +153,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <DistributionBarList
             items={profile.pagamento.distribuicao}
             selected={segment.formaPagamento}
-            onSelect={(value) => toggleSegment("formaPagamento", value)}
+            onSelect={(value) => toggleSegmentValue("formaPagamento", value)}
           />
         </ChartCard>
         <ChartCard
@@ -160,7 +164,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <DistributionHistogram
             items={profile.idade.distribuicao}
             selected={segment.faixaEtaria}
-            onSelect={(value) => toggleSegment("faixaEtaria", value)}
+            onSelect={(value) => toggleSegmentValue("faixaEtaria", value)}
           />
         </ChartCard>
         <ChartCard
@@ -171,7 +175,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <DistributionHistogram
             items={profile.valor.distribuicao}
             selected={segment.faixaValor}
-            onSelect={(value) => toggleSegment("faixaValor", value)}
+            onSelect={(value) => toggleSegmentValue("faixaValor", value)}
           />
         </ChartCard>
       </div>
@@ -188,7 +192,7 @@ function ClientProfileReport({ projectTypes, period }: ClientProfileReportProps)
           <DistributionBarList
             items={profile.profissoes.top}
             selected={segment.profissao}
-            onSelect={(value) => toggleSegment("profissao", value)}
+            onSelect={(value) => toggleSegmentValue("profissao", value)}
           />
         )}
       </ChartCard>
@@ -214,6 +218,79 @@ function StatTile({ icon, label, value, detail }: StatTileProps) {
         <h1 className="text-lg font-bold tracking-tight">{value}</h1>
         {detail ? <p className="text-muted-foreground text-center text-[0.65rem]">{detail}</p> : null}
       </div>
+    </div>
+  );
+}
+
+type GeographySummaryProps = {
+  geografia: {
+    totalCidades: number;
+    totalEstados: number;
+    projetosComLocalizacao: number;
+    projetosSemLocalizacao: number;
+    top: { cidade: string; estado: string; qtde: number }[];
+    coberturaPercentual: number;
+  };
+  totalAmostra: number;
+  onSelectLocation: (cidade: string, estado: string) => void;
+};
+function GeographySummary({ geografia, totalAmostra, onSelectLocation }: GeographySummaryProps) {
+  return (
+    <div className="bg-background flex w-full flex-col gap-3 rounded-sm border border-gray-400 p-4 shadow-xs">
+      <div className="flex w-full flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <MapPinned className="h-4 min-h-4 w-4 min-w-4" />
+          <h2 className="text-sm font-bold tracking-tight">DISTRIBUIÇÃO GEOGRÁFICA DO RECORTE</h2>
+        </div>
+        <p className="text-muted-foreground text-xs">
+          Calculada a partir da amostra filtrada. Clique em uma localidade para aplicar o filtro em todas as abas.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <MiniStat label="CIDADES" value={`${geografia.totalCidades}`} />
+        <MiniStat label="ESTADOS" value={`${geografia.totalEstados}`} />
+        <MiniStat
+          label="COM LOCALIZAÇÃO"
+          value={`${geografia.projetosComLocalizacao}`}
+          detail={`${geografia.projetosSemLocalizacao} sem localização`}
+        />
+        <MiniStat label="COBERTURA" value={`${formatDecimalPlaces(geografia.coberturaPercentual, 0, 1)}%`} detail={`de ${totalAmostra} projetos`} />
+      </div>
+      {geografia.top.length > 0 ? (
+        <div className="flex w-full flex-col gap-1">
+          <p className="text-muted-foreground text-[0.65rem] font-semibold">TOP LOCALIDADES</p>
+          {geografia.top.map((item) => (
+            <button
+              key={`${item.cidade}::${item.estado}`}
+              type="button"
+              onClick={() => onSelectLocation(item.cidade, item.estado)}
+              className="hover:bg-muted/60 group flex w-full items-center justify-between gap-2 rounded-md p-1.5 text-left transition-colors"
+            >
+              <span className="flex items-center gap-1.5">
+                <MapPin className="text-primary h-3.5 w-3.5" />
+                <span className="text-xs font-medium">{item.cidade}</span>
+                <span className="text-muted-foreground text-[0.65rem]">{item.estado}</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="text-xs font-bold tabular-nums">{item.qtde}</span>
+                <ChevronRight className="text-muted-foreground h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground py-2 text-center text-xs">Nenhum projeto do recorte possui cidade/UF informadas.</p>
+      )}
+    </div>
+  );
+}
+
+function MiniStat({ label, value, detail }: { label: string; value: string; detail?: string }) {
+  return (
+    <div className="bg-muted/30 flex flex-col items-center gap-0.5 rounded-lg border border-gray-300 p-2 dark:border-gray-700">
+      <p className="text-muted-foreground text-[0.6rem] font-semibold">{label}</p>
+      <p className="text-base font-bold tabular-nums">{value}</p>
+      {detail ? <p className="text-muted-foreground text-center text-[0.6rem]">{detail}</p> : null}
     </div>
   );
 }

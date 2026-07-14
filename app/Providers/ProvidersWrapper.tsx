@@ -2,6 +2,7 @@
 
 import AppRouterSidebar from "@/components/AppRouterSidebar";
 import Header from "@/components/layout/Header";
+import ExecutionRouteGuard from "@/components/guards/ExecutionRouteGuard";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type React from "react";
@@ -14,7 +15,8 @@ function ProvidersWrapper({ children }: { children: React.ReactNode }) {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+			<ExecutionRouteGuard>
+				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 				<div className="font-raleway bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen">
 					<Header toggleSidebar={() => setSidebarVisible((prev) => !prev)} />
 					<div className="flex min-h-full grow">
@@ -31,7 +33,8 @@ function ProvidersWrapper({ children }: { children: React.ReactNode }) {
 						</div>
 					</div>
 				</div>
-			</ThemeProvider>
+				</ThemeProvider>
+			</ExecutionRouteGuard>
 		</QueryClientProvider>
 	);
 }

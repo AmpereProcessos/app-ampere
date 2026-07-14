@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#075892" />
+    <title>Proposta de implementação — App Ampère</title>
+    <meta
+      name="description"
+      content="Proposta técnica e comercial para centralização financeira, rastreamento digital e integração de marketing e CRM no App Ampère."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./proposal.css" />
+  </head>
+  <body>
+    <button class="print-action" type="button" onclick="window.print()" aria-label="Imprimir ou salvar a proposta em PDF">
+      <span aria-hidden="true">↗</span>
+      Salvar em PDF
+    </button>
+
+    <main class="proposal">
+      <section class="sheet cover" aria-labelledby="cover-title">
+        <div class="cover-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <header class="cover-header">
+          <img src="./ampere-logo.svg" alt="Ampère Energias" class="brand-logo" />
+          <div class="document-meta">
+            <span>Proposta técnica e comercial</span>
+            <strong>14 · 07 · 2026</strong>
+          </div>
+        </header>
+
+        <div class="cover-copy">
+          <p class="single-kicker">UM BACKOFFICE. TODO O CONTEXTO.</p>
+          <h1 id="cover-title">Gestão conectada para finanças, marketing e CRM.</h1>
+          <p class="cover-intro">
+            Finalização do núcleo financeiro e integração dos recursos de rastreamento, Meta Ads e Instagram ao ecossistema digital da Ampère.
+          </p>
+        </div>
+
+        <div class="cover-summary" aria-label="Resumo da proposta">
+          <div>
+            <span>Investimento</span>
+            <strong>R$ 2.450,00</strong>
+          </div>
+          <div>
+            <span>Prazo</span>
+            <strong>15 dias</strong>
+          </div>
+          <div>
+            <span>Responsável</span>
+            <strong>Lucas Fernandes</strong>
+          </div>
+        </div>
+
+        <footer class="cover-footer">
+          <p>Preparada para</p>
+          <strong>AMPÈRE</strong>
+          <span>Proposta válida por 10 dias</span>
+        </footer>
+      </section>
+
+      <section class="sheet context" aria-labelledby="context-title">
+        <header class="section-head">
+          <p>O ponto de partida</p>
+          <span>02 / 07</span>
+        </header>
+        <div class="context-heading">
+          <h2 id="context-title">Hoje, a informação existe. O desafio é fazê-la conversar.</h2>
+          <p>
+            O App Ampère já concentra parte relevante da operação. O financeiro permanece dividido com o Conta Azul, enquanto comportamento digital,
+            mídia e CRM vivem em superfícies diferentes. A proposta conecta esses pontos em uma única leitura operacional.
+          </p>
+        </div>
+
+        <div class="before-after" aria-label="Comparação entre cenário atual e cenário proposto">
+          <div class="fragmented">
+            <span class="state-label">CENÁRIO ATUAL</span>
+            <div class="orbit orbit-a">Conta Azul<small>Financeiro</small></div>
+            <div class="orbit orbit-b">Sites<small>Comportamento</small></div>
+            <div class="orbit orbit-c">Meta<small>Mídia e Instagram</small></div>
+            <div class="orbit orbit-d">CRM<small>Leads e vendas</small></div>
+            <p>Custos recorrentes, troca de ferramentas e decisões com contexto incompleto.</p>
+          </div>
+          <div class="connector" aria-hidden="true"><span>→</span></div>
+          <div class="unified">
+            <span class="state-label">CENÁRIO PROPOSTO</span>
+            <div class="core-logo"><img src="./ampere-logo.svg" alt="" /></div>
+            <div class="unified-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+            <ul>
+              <li><strong>Financeiro</strong><span>operação e conciliação</span></li>
+              <li><strong>Jornadas</strong><span>origem e comportamento</span></li>
+              <li><strong>Marketing</strong><span>mídia, conteúdo e conversão</span></li>
+              <li><strong>CRM</strong><span>lead, oportunidade e venda</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="outcome-line">
+          <strong>Resultado esperado</strong>
+          <p>Menos assinaturas, menos retrabalho e uma visão contínua entre investimento, operação e resultado.</p>
+        </div>
+      </section>
+
+      <section class="sheet finance" aria-labelledby="finance-title">
+        <header class="section-head light">
+          <p>Frente de implementação · Finanças</p>
+          <span>03 / 07</span>
+        </header>
+        <div class="feature-intro light-copy">
+          <div>
+            <h2 id="finance-title">O financeiro deixa de ser um cadastro paralelo e vira o núcleo da gestão.</h2>
+          </div>
+          <p>
+            Finalização e wiring do modelo já iniciado em <strong>finances.ts</strong>, substituindo o fluxo atual de receitas e despesas por uma
+            estrutura financeira conectada e auditável.
+          </p>
+        </div>
+
+        <div class="browser-frame finance-frame" aria-label="Mockup conceitual do painel financeiro">
+          <div class="browser-bar">
+            <div class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span>app.ampereenergias.com.br / financeiro</span>
+            <b>Mockup conceitual</b>
+          </div>
+          <div class="app-shell">
+            <aside class="mini-sidebar">
+              <img src="./ampere-logo.svg" alt="" />
+              <nav>
+                <span>Visão geral</span>
+                <span class="active">Financeiro</span>
+                <span>Comercial</span>
+                <span>Projetos</span>
+                <span>Marketing</span>
+              </nav>
+            </aside>
+            <div class="app-content">
+              <div class="app-title-row">
+                <div>
+                  <small>Financeiro</small>
+                  <h3>Visão geral</h3>
+                </div>
+                <button type="button" tabindex="-1">+ Novo lançamento</button>
+              </div>
+              <div class="finance-mode-tabs" aria-hidden="true">
+                <span class="active">Estatísticas</span>
+                <span>Lançamentos contábeis</span>
+                <span>Transações financeiras</span>
+                <span>Contas financeiras</span>
+              </div>
+              <div class="finance-metrics">
+                <article><span>Saldo consolidado</span><strong>R$ 284.790</strong><small>3 contas ativas</small></article>
+                <article><span>Entradas previstas</span><strong>R$ 96.400</strong><small>próximos 30 dias</small></article>
+                <article><span>Saídas previstas</span><strong>R$ 41.820</strong><small>próximos 30 dias</small></article>
+                <article><span>A conciliar</span><strong>18</strong><small>movimentos bancários</small></article>
+              </div>
+              <div class="finance-main">
+                <div class="cashflow-panel">
+                  <div class="panel-head">
+                    <div><strong>Fluxo de caixa</strong><small>Realizado × previsto</small></div>
+                    <span>Últimos 6 meses</span>
+                  </div>
+                  <svg class="cash-chart" viewBox="0 0 660 210" role="img" aria-label="Gráfico de evolução do fluxo de caixa">
+                    <g class="grid-lines"><path d="M20 35H640M20 80H640M20 125H640M20 170H640" /></g>
+                    <path class="area" d="M20 160 C90 150,110 112,170 124 S260 92,320 104 S410 55,470 74 S560 34,640 42 L640 190 L20 190Z" />
+                    <path class="line" d="M20 160 C90 150,110 112,170 124 S260 92,320 104 S410 55,470 74 S560 34,640 42" />
+                    <path class="forecast" d="M20 174 C105 130,135 146,200 116 S300 118,365 90 S455 82,520 58 S600 64,640 28" />
+                    <g class="chart-labels">
+                      <text x="20" y="205">FEV</text>
+                      <text x="140" y="205">MAR</text>
+                      <text x="260" y="205">ABR</text>
+                      <text x="380" y="205">MAI</text>
+                      <text x="500" y="205">JUN</text>
+                      <text x="620" y="205">JUL</text>
+                    </g>
+                  </svg>
+                </div>
+                <div class="account-panel">
+                  <div class="panel-head">
+                    <div><strong>Contas</strong><small>Saldos disponíveis</small></div>
+                  </div>
+                  <div class="account-row">
+                    <i>01</i>
+                    <div><strong>Banco principal</strong><small>Conta corrente</small></div>
+                    <b>R$ 210.480</b>
+                  </div>
+                  <div class="account-row">
+                    <i>02</i>
+                    <div><strong>Conta operacional</strong><small>Conta corrente</small></div>
+                    <b>R$ 68.910</b>
+                  </div>
+                  <div class="account-row">
+                    <i>03</i>
+                    <div><strong>Caixa</strong><small>Disponível</small></div>
+                    <b>R$ 5.400</b>
+                  </div>
+                </div>
+              </div>
+              <div class="transaction-strip">
+                <div class="panel-head">
+                  <div><strong>Movimentações recentes</strong><small>Lançamentos financeiros e contábeis relacionados</small></div>
+                  <span>Ver todas</span>
+                </div>
+                <div class="table-head table-row">
+                  <span>Descrição</span><span>Conta</span><span>Competência</span><span>Status</span><span>Valor</span>
+                </div>
+                <div class="table-row">
+                  <span>Recebimento · Projeto 1842</span><span>Banco principal</span><span>14 jul 2026</span><span><em>Conciliado</em></span
+                  ><strong>+ R$ 18.500</strong>
+                </div>
+                <div class="table-row">
+                  <span>Fornecedor · Equipamentos</span><span>Conta operacional</span><span>13 jul 2026</span><span><em>Previsto</em></span
+                  ><strong>− R$ 7.240</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scope-band light-copy">
+          <strong>Entregas desta frente</strong>
+          <ul>
+            <li>Contas e saldos</li>
+            <li>Plano de contas</li>
+            <li>Lançamentos contábeis</li>
+            <li>Transações e parcelas</li>
+            <li>Indicadores</li>
+            <li>Conciliação por extrato</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sheet tracking" aria-labelledby="tracking-title">
+        <header class="section-head">
+          <p>Frente de implementação · Rastreamento</p>
+          <span>04 / 07</span>
+        </header>
+        <div class="feature-intro">
+          <div><h2 id="tracking-title">Da primeira visita à identificação: cada jornada ganha contexto.</h2></div>
+          <p>
+            Criação de um SDK client side próprio para a Ampère, responsável por registrar pageviews, eventos, atribuição, localização aproximada e
+            identidade — com suporte a consentimento LGPD.
+          </p>
+        </div>
+
+        <div class="tracking-layout">
+          <div class="journey-window">
+            <div class="mock-title">
+              <div><strong>Visitantes</strong><span>Jornadas agrupadas por identidade do navegador</span></div>
+              <b>1.284 perfis</b>
+            </div>
+            <div class="visitor-list">
+              <div class="visitor active">
+                <img
+                  class="avatar"
+                  src="https://api.dicebear.com/10.x/open-peeps/svg?seed=Mariana%20Alves&amp;backgroundColor=b6e3f4&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                  alt=""
+                />
+                <div>
+                  <strong>Mariana Alves <em class="identified">Identificada</em></strong>
+                  <small
+                    ><b class="flag">🇧🇷</b> Uberlândia <b class="device desktop"></b> Desktop <b class="os windows">⊞</b> Windows
+                    <b class="browser chrome"></b> Chrome</small
+                  >
+                </div>
+                <span><b>12</b> eventos</span><time>14:42</time>
+              </div>
+              <div class="visitor">
+                <img
+                  class="avatar"
+                  src="https://api.dicebear.com/10.x/open-peeps/svg?seed=silver%20falcon&amp;backgroundColor=c0aede&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                  alt=""
+                />
+                <div>
+                  <strong>silver falcon</strong
+                  ><small
+                    ><b class="flag">🇧🇷</b> Ituiutaba <b class="device mobile"></b> Mobile <b class="os android">●</b> Android
+                    <b class="browser chrome"></b> Chrome</small
+                  >
+                </div>
+                <span><b>7</b> eventos</span><time>13:18</time>
+              </div>
+              <div class="visitor">
+                <img
+                  class="avatar"
+                  src="https://api.dicebear.com/10.x/open-peeps/svg?seed=quiet%20toucan&amp;backgroundColor=d1d4f9&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                  alt=""
+                />
+                <div>
+                  <strong>quiet toucan</strong
+                  ><small
+                    ><b class="flag">🇧🇷</b> Uberaba <b class="device mobile"></b> Mobile <b class="os apple">●</b> iOS
+                    <b class="browser safari">↗</b> Safari</small
+                  >
+                </div>
+                <span><b>4</b> eventos</span><time>11:56</time>
+              </div>
+              <div class="visitor">
+                <img
+                  class="avatar"
+                  src="https://api.dicebear.com/10.x/open-peeps/svg?seed=Lucas%20Pereira&amp;backgroundColor=c8f7d4&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                  alt=""
+                />
+                <div>
+                  <strong>Lucas Pereira <em class="identified">Identificado</em></strong>
+                  <small
+                    ><b class="flag">🇧🇷</b> Araguari <b class="device desktop"></b> Desktop <b class="os windows">⊞</b> Windows
+                    <b class="browser edge">e</b> Edge</small
+                  >
+                </div>
+                <span><b>19</b> eventos</span><time>Ontem</time>
+              </div>
+            </div>
+          </div>
+          <aside class="journey-detail">
+            <div class="identity-head">
+              <img
+                class="avatar"
+                src="https://api.dicebear.com/10.x/open-peeps/svg?seed=Mariana%20Alves&amp;backgroundColor=b6e3f4&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                alt=""
+              />
+              <div><strong>Mariana Alves</strong><span>Identificada · CRM #4821</span></div>
+            </div>
+            <div class="source-box">
+              <span>Origem da jornada</span><strong>Campanha Solar Residencial</strong><small>Instagram · conjunto Triângulo Mineiro</small>
+            </div>
+            <div class="timeline">
+              <div>
+                <time>14:31</time><i></i>
+                <p><strong>page_view</strong><span>/energia-solar-residencial</span></p>
+              </div>
+              <div>
+                <time>14:34</time><i></i>
+                <p><strong>simulacao_iniciada</strong><span>consumo: 640 kWh</span></p>
+              </div>
+              <div>
+                <time>14:38</time><i></i>
+                <p><strong>cta_whatsapp</strong><span>origem: simulador</span></p>
+              </div>
+              <div>
+                <time>14:42</time><i></i>
+                <p><strong>lead_identificado</strong><span>oportunidade criada no CRM</span></p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="tracking-capabilities">
+          <div>
+            <span>01</span><strong>Eventos e pageviews</strong>
+            <p>Ações relevantes, páginas visitadas e propriedades personalizadas.</p>
+          </div>
+          <div>
+            <span>02</span><strong>Atribuição de origem</strong>
+            <p>UTMs, referência, <code>fbclid</code>, <code>gclid</code> e landing page.</p>
+          </div>
+          <div>
+            <span>03</span><strong>Contexto do visitante</strong>
+            <p>Dispositivo, navegador, sistema e geolocalização aproximada.</p>
+          </div>
+          <div>
+            <span>04</span><strong>Identidade e CRM</strong>
+            <p>União da navegação anônima ao lead quando ele se identifica.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sheet marketing" aria-labelledby="marketing-title">
+        <header class="section-head light">
+          <p>Frente de implementação · Marketing + CRM</p>
+          <span>05 / 07</span>
+        </header>
+        <div class="feature-intro light-copy">
+          <div><h2 id="marketing-title">A mídia passa a responder à pergunta que importa: o que virou negócio?</h2></div>
+          <p>
+            Integração de Meta Ads e Instagram com o painel e conexão dos dados de campanha ao CRM Ampère, permitindo acompanhar da impressão à
+            oportunidade e ao fechamento.
+          </p>
+        </div>
+
+        <div class="marketing-dashboard" aria-label="Mockup conceitual do painel de marketing e CRM">
+          <div class="marketing-topbar">
+            <div><strong>Marketing & CRM</strong><span>01 jul — 14 jul 2026</span></div>
+            <div class="source-pills"><span>Meta Ads</span><span>Instagram</span><span>CRM Ampère</span></div>
+          </div>
+          <div class="marketing-body">
+            <div class="campaign-overview">
+              <div class="campaign-title">
+                <div><small>Campanha em destaque</small><strong>Solar Residencial · Triângulo Mineiro</strong></div>
+                <b>Ativa</b>
+              </div>
+              <div class="campaign-metrics">
+                <div><span>Investimento</span><strong>R$ 4.860</strong></div>
+                <div><span>Leads</span><strong>126</strong></div>
+                <div><span>CPL</span><strong>R$ 38,57</strong></div>
+                <div><span>Oportunidades</span><strong>34</strong></div>
+                <div><span>Vendas</span><strong>8</strong></div>
+                <div><span>Receita atribuída</span><strong>R$ 184 mil</strong></div>
+              </div>
+              <div class="campaign-chart">
+                <div class="panel-head">
+                  <div><strong>Investimento × oportunidades</strong><small>Evolução diária e retorno no CRM</small></div>
+                  <span>Comparar período</span>
+                </div>
+                <svg viewBox="0 0 760 250" role="img" aria-label="Gráfico combinando investimento e oportunidades">
+                  <g class="bars">
+                    <rect x="40" y="118" width="34" height="92" />
+                    <rect x="100" y="92" width="34" height="118" />
+                    <rect x="160" y="105" width="34" height="105" />
+                    <rect x="220" y="76" width="34" height="134" />
+                    <rect x="280" y="86" width="34" height="124" />
+                    <rect x="340" y="62" width="34" height="148" />
+                    <rect x="400" y="74" width="34" height="136" />
+                    <rect x="460" y="54" width="34" height="156" />
+                    <rect x="520" y="66" width="34" height="144" />
+                    <rect x="580" y="42" width="34" height="168" />
+                    <rect x="640" y="50" width="34" height="160" />
+                  </g>
+                  <path
+                    class="opportunity-line"
+                    d="M57 178 C115 174,140 144,177 150 S245 122,297 132 S365 96,417 108 S475 72,537 90 S615 52,657 58"
+                  />
+                  <g class="line-dots">
+                    <circle cx="57" cy="178" r="5" />
+                    <circle cx="177" cy="150" r="5" />
+                    <circle cx="297" cy="132" r="5" />
+                    <circle cx="417" cy="108" r="5" />
+                    <circle cx="537" cy="90" r="5" />
+                    <circle cx="657" cy="58" r="5" />
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <aside class="funnel-panel">
+              <div class="panel-head">
+                <div><strong>Funil atribuído</strong><small>Da mídia à receita</small></div>
+              </div>
+              <div class="funnel-stage">
+                <span><i style="--w: 100%"></i></span>
+                <div><strong>42.810</strong><small>Alcance</small></div>
+              </div>
+              <div class="funnel-stage">
+                <span><i style="--w: 78%"></i></span>
+                <div><strong>2.940</strong><small>Cliques</small></div>
+              </div>
+              <div class="funnel-stage">
+                <span><i style="--w: 56%"></i></span>
+                <div><strong>126</strong><small>Leads</small></div>
+              </div>
+              <div class="funnel-stage">
+                <span><i style="--w: 38%"></i></span>
+                <div><strong>34</strong><small>Oportunidades</small></div>
+              </div>
+              <div class="funnel-stage">
+                <span><i style="--w: 22%"></i></span>
+                <div><strong>8</strong><small>Vendas</small></div>
+              </div>
+              <div class="instagram-summary">
+                <span>Instagram</span>
+                <div><strong>+12,4%</strong><small>alcance</small></div>
+                <div><strong>6,8%</strong><small>engajamento</small></div>
+                <div><strong>418</strong><small>ações no perfil</small></div>
+              </div>
+              <div class="crm-snapshot">
+                <div class="crm-snapshot-head">
+                  <div><strong>CRM Ampère</strong><small>Funil comercial</small></div>
+                  <span>Proposta enviada · 12</span>
+                </div>
+                <div class="crm-opportunity">
+                  <i></i>
+                  <div class="crm-card-head">
+                    <span>AMP-4821 <b>●</b></span
+                    ><strong>Mariana Alves</strong><small>Energia solar residencial</small>
+                  </div>
+                  <div class="crm-proposal">
+                    <span>PROPOSTA ATIVA</span><strong>Projeto Residencial 8,4 kWp</strong>
+                    <div><b>8,4 kWp</b><b>R$ 36.800</b></div>
+                  </div>
+                  <footer>
+                    <img
+                      class="crm-avatar"
+                      src="https://api.dicebear.com/10.x/open-peeps/svg?seed=Lucas%20Fernandes&amp;backgroundColor=b6e3f4&amp;accessoriesProbability=35&amp;facialHairProbability=35"
+                      alt=""
+                    /><small>Lucas Fernandes</small><time>14 jul 2026</time>
+                  </footer>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="integration-flow light-copy" aria-label="Fluxo de dados integrado">
+          <div><strong>Meta & Instagram</strong><span>campanha · anúncio · conteúdo</span></div>
+          <i>→</i>
+          <div><strong>Rastreamento</strong><span>visita · evento · conversão</span></div>
+          <i>→</i>
+          <div><strong>CRM Ampère</strong><span>lead · oportunidade · venda</span></div>
+          <i>→</i>
+          <div><strong>Decisão</strong><span>CPL · conversão · receita</span></div>
+        </div>
+      </section>
+
+      <section class="sheet delivery" aria-labelledby="delivery-title">
+        <header class="section-head">
+          <p>Plano de execução</p>
+          <span>06 / 07</span>
+        </header>
+        <div class="delivery-heading">
+          <h2 id="delivery-title">15 dias para conectar o que já existe e colocar a operação em uso.</h2>
+          <p>O prazo começa após a aprovação, pagamento da entrada e disponibilização dos acessos necessários.</p>
+        </div>
+
+        <div class="delivery-track">
+          <div class="track-line" aria-hidden="true"></div>
+          <article>
+            <span class="day-range">DIAS 1—5</span>
+            <i>01</i>
+            <div>
+              <h3>Núcleo financeiro</h3>
+              <p>Revisão do modelo, wiring das APIs e telas, contas, plano contábil, lançamentos, transações e indicadores.</p>
+            </div>
+          </article>
+          <article>
+            <span class="day-range">DIAS 6—9</span>
+            <i>02</i>
+            <div>
+              <h3>Rastreamento e jornadas</h3>
+              <p>Adaptação do SDK, ingestão de eventos, identidade, atribuição, localização, filtros e visualização das jornadas.</p>
+            </div>
+          </article>
+          <article>
+            <span class="day-range">DIAS 10—13</span>
+            <i>03</i>
+            <div>
+              <h3>Meta, Instagram e CRM</h3>
+              <p>Conexão das contas, coleta de métricas, relacionamento de campanhas com leads e composição do painel unificado.</p>
+            </div>
+          </article>
+          <article>
+            <span class="day-range">DIAS 14—15</span>
+            <i>04</i>
+            <div>
+              <h3>Validação e entrega</h3>
+              <p>Testes dos fluxos críticos, ajustes finais, validação assistida, documentação objetiva e disponibilização.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="acceptance">
+          <div>
+            <strong>Critérios de aceite</strong>
+            <p>
+              A implementação será considerada concluída com os fluxos previstos operando no ambiente acordado, integrações autenticadas e validação
+              conjunta das telas e dados essenciais.
+            </p>
+          </div>
+          <ul>
+            <li>Fluxos financeiros principais funcionais</li>
+            <li>Eventos e jornadas chegando ao painel</li>
+            <li>Métricas Meta/Instagram disponíveis</li>
+            <li>Relação entre origem e registros do CRM</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sheet investment" aria-labelledby="investment-title">
+        <header class="section-head light">
+          <p>Investimento e condições</p>
+          <span>07 / 07</span>
+        </header>
+        <div class="investment-hero light-copy">
+          <div>
+            <h2 id="investment-title">Uma implementação para reduzir custo e recuperar contexto.</h2>
+            <p>Valor fechado para o escopo descrito nesta proposta.</p>
+          </div>
+          <strong>R$ 2.450<span>,00</span></strong>
+        </div>
+
+        <div class="payment-split">
+          <article>
+            <span>50%</span>
+            <div>
+              <strong>R$ 1.225,00</strong>
+              <p>na inicialização da implementação</p>
+            </div>
+          </article>
+          <i aria-hidden="true">+</i>
+          <article>
+            <span>50%</span>
+            <div>
+              <strong>R$ 1.225,00</strong>
+              <p>na finalização e disponibilização da entrega</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="terms-grid light-copy">
+          <div>
+            <h3>Incluído</h3>
+            <ul>
+              <li>Desenvolvimento e integração das três frentes descritas</li>
+              <li>Adaptação dos recursos existentes às codebases Ampère</li>
+              <li>Migração histórica dos dados financeiros existentes</li>
+              <li>Interface responsiva alinhada ao backoffice atual</li>
+              <li>Testes funcionais dos fluxos críticos e ajustes de entrega</li>
+              <li>Documentação técnica objetiva para continuidade interna</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Premissas e limites</h3>
+            <ul>
+              <li>A Ampère fornecerá acessos, credenciais e permissões da Meta</li>
+              <li>Taxas ou assinaturas de terceiros não integram este valor</li>
+              <li>Demandas novas após o aceite do escopo serão tratadas como evolução</li>
+              <li>O prazo depende da disponibilidade dos acessos e da validação da Ampère</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="signature-area light-copy">
+          <div class="closing-copy">
+            <span>Próximo passo</span>
+            <h3>Aprovar a proposta e liberar os acessos para o kickoff.</h3>
+          </div>
+          <div class="signature-lines">
+            <div><span></span><strong>Lucas Fernandes</strong><small>Responsável pela implementação</small></div>
+            <div><span></span><strong>Ampère</strong><small>Aprovação da proposta</small></div>
+          </div>
+        </div>
+
+        <footer class="final-footer">
+          <img src="./ampere-logo.svg" alt="Ampère Energias" />
+          <p>Proposta emitida em 14/07/2026 · validade de 10 dias</p>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

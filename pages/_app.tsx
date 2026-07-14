@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import AppHead from "@/components/Head/index";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/layout/Header";
+import ExecutionRouteGuard from "@/components/guards/ExecutionRouteGuard";
 import { ConvexClientProvider } from "@/components/providers/ConvexProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { cn } from "@/lib/utils";
@@ -28,7 +29,8 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
 		<>
 			<AppHead />
 			<QueryClientProvider client={queryClient}>
-				<ConvexClientProvider>
+				<ExecutionRouteGuard>
+					<ConvexClientProvider>
 					<NuqsAdapter>
 						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 							<main className={cn("bg-background flex min-h-screen w-screen max-w-full flex-col xl:min-h-screen", raleway.variable, raleway.className)}>
@@ -49,7 +51,8 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
 							</main>
 						</ThemeProvider>
 					</NuqsAdapter>
-				</ConvexClientProvider>
+					</ConvexClientProvider>
+				</ExecutionRouteGuard>
 			</QueryClientProvider>
 		</>
 	);

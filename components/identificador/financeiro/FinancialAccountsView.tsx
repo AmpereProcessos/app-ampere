@@ -217,7 +217,7 @@ function AccountCard({
   const stats = account.estatisticas;
 
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-2 rounded-xl border px-4 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-2 rounded-xl border px-4 py-4 shadow-2xs">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           {typeConfig ? (

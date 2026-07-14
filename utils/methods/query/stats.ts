@@ -1,7 +1,12 @@
 import { useDebounceMemo } from "@/lib/hooks/debounce";
 import type { TGetDashboardStatsOutput } from "@/pages/api/stats";
+import type { TClientProfileInput, TClientProfileOutput } from "@/pages/api/stats/client-profile";
 import type { TGetGraphStatsInput, TGetGraphsStatsOutput } from "@/pages/api/stats/graph";
 import type { TOverallReportInput, TOverallReportOutput } from "@/pages/api/stats/overall-report";
+import type {
+  TGeographicReportInput,
+  TGeographicReportOutput,
+} from "@/pages/api/stats/geographic-report";
 import type {
   TGetSalesRankingInput,
   TGetSalesRankingOutput,
@@ -68,30 +73,57 @@ async function fetchOverallReport(payload: TOverallReportInput) {
 }
 
 type TUseOverallReportParams = {
-  initialParams?: Partial<TOverallReportInput>;
+  params: TOverallReportInput;
+  enabled?: boolean;
 };
-export function useOverallReport({ initialParams }: TUseOverallReportParams) {
-  const [queryParams, setQueryParams] = useState<TOverallReportInput>({
-    projectTypes: initialParams?.projectTypes ?? [],
-    period: {
-      after: initialParams?.period?.after ?? undefined,
-      before: initialParams?.period?.before ?? undefined,
-    },
+export function useOverallReport({ params, enabled = true }: TUseOverallReportParams) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["overall-report", paramsDebounced],
+    queryFn: async () => await fetchOverallReport(paramsDebounced),
+    placeholderData: (previousData) => previousData,
+    enabled,
   });
+}
 
-  function updateQueryParams(params: Partial<TOverallReportInput>) {
-    setQueryParams((prev) => ({ ...prev, ...params }));
-  }
-  const queryParamsDebounced = useDebounceMemo(queryParams, 500);
+async function fetchGeographicReport(payload: TGeographicReportInput) {
+  const { data } = await axios.post<TGeographicReportOutput>(
+    "/api/stats/geographic-report",
+    payload,
+  );
+  return data.data;
+}
 
-  return {
-    ...useQuery({
-      queryKey: ["overall-report", queryParamsDebounced],
-      queryFn: async () => await fetchOverallReport(queryParamsDebounced),
-    }),
-    queryParams,
-    updateQueryParams,
-  };
+export function useGeographicReport(params: TGeographicReportInput, options?: { enabled?: boolean }) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["geographic-report", paramsDebounced],
+    queryFn: () => fetchGeographicReport(paramsDebounced),
+    placeholderData: (previousData) => previousData,
+    enabled: options?.enabled ?? true,
+  });
+}
+
+async function fetchClientProfileReport(payload: TClientProfileInput) {
+  const { data } = await axios.post<TClientProfileOutput>("/api/stats/client-profile", payload);
+  return data.data;
+}
+
+type TUseClientProfileReportParams = {
+  params: TClientProfileInput;
+  enabled?: boolean;
+};
+export function useClientProfileReport({ params, enabled = true }: TUseClientProfileReportParams) {
+  const paramsDebounced = useDebounceMemo(params, 500);
+
+  return useQuery({
+    queryKey: ["client-profile-report", paramsDebounced],
+    queryFn: async () => await fetchClientProfileReport(paramsDebounced),
+    placeholderData: (prev) => prev,
+    enabled,
+  });
 }
 
 async function fetchSalesRanking(payload: TGetSalesRankingInput) {

@@ -251,7 +251,7 @@ function GraphsStats() {
     },
   };
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs">
+    <div className="bg-card border-border flex w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs">
       <div className="flex items-center justify-between">
         <h1 className="text-xs font-medium tracking-tight uppercase">
           {METRIC_LABELS[queryParams.metric].title}
@@ -378,7 +378,7 @@ function NPSStat({ value }: { value: number }) {
     },
   };
   return (
-    <div className="bg-card border-primary/20 flex h-full min-h-fit w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs">
+    <div className="bg-card border-border flex h-full min-h-fit w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs">
       <div className="flex items-center justify-between">
         <h1 className="text-xs font-medium tracking-tight uppercase">SATISFAÇÃO DO CLIENTE</h1>
         <div className="flex items-center gap-2">
@@ -477,7 +477,7 @@ function CardStat({
   return (
     <div
       className={cn(
-        "bg-card border-primary/20 flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-xs",
+        "bg-card border-border flex w-full flex-col gap-1 rounded-xl border px-3 py-4 shadow-xs",
         className,
       )}
     >
@@ -506,7 +506,7 @@ function CardStat({
         <div className="text-2xl font-bold text-[#15599a] dark:text-[#fead61]">
           {formatCurrent ? formatCurrent(current) : String(current)}
         </div>
-        <p className="text-primary/60 text-xs tracking-tight">
+        <p className="text-foreground text-xs tracking-tight">
           NO MÊS ANTERIOR: {formatPrevious ? formatPrevious(previous) : String(previous || 0)}
         </p>
       </div>

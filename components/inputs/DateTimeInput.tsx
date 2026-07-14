@@ -1,37 +1,52 @@
 import { cn } from "@/lib/utils";
 import type React from "react";
 type DateTimeProps = {
-	width?: string;
-	label: string;
-	labelClassName?: string;
-	holderClassName?: string;
-	showLabel?: boolean;
-	value: string | undefined;
-	editable?: boolean;
-	handleChange: (value: string | undefined) => void;
+  width?: string;
+  label: string;
+  labelClassName?: string;
+  holderClassName?: string;
+  showLabel?: boolean;
+  value: string | undefined;
+  editable?: boolean;
+  handleChange: (value: string | undefined) => void;
 };
-function DateTimeInput({ width, label, labelClassName, holderClassName, showLabel = true, value, editable = true, handleChange }: DateTimeProps) {
-	const inputIdentifier = label.toLowerCase().replace(" ", "_");
-	return (
-		<div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : "350px"}]`}>
-			{showLabel ? (
-				<label htmlFor={inputIdentifier} className={cn("text-sm font-medium tracking-tight text-primary/80", labelClassName)}>
-					{label}
-				</label>
-			) : null}
-			<input
-				readOnly={!editable}
-				value={value}
-				onChange={(e) => {
-					handleChange(e.target.value !== "" ? e.target.value : undefined);
-				}}
-				id={inputIdentifier}
-				onReset={() => handleChange(undefined)}
-				type="datetime-local"
-				className={cn("border-primary/20 w-full rounded-md border p-3 text-sm shadow-xs outline-hidden placeholder:italic", holderClassName)}
-			/>
-		</div>
-	);
+function DateTimeInput({
+  width,
+  label,
+  labelClassName,
+  holderClassName,
+  showLabel = true,
+  value,
+  editable = true,
+  handleChange,
+}: DateTimeProps) {
+  const inputIdentifier = label.toLowerCase().replace(" ", "_");
+  return (
+    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : "350px"}]`}>
+      {showLabel ? (
+        <label
+          htmlFor={inputIdentifier}
+          className={cn("text-sm font-medium tracking-tight text-foreground", labelClassName)}
+        >
+          {label}
+        </label>
+      ) : null}
+      <input
+        readOnly={!editable}
+        value={value}
+        onChange={(e) => {
+          handleChange(e.target.value !== "" ? e.target.value : undefined);
+        }}
+        id={inputIdentifier}
+        onReset={() => handleChange(undefined)}
+        type="datetime-local"
+        className={cn(
+          "border-border w-full rounded-md border p-3 text-sm shadow-xs outline-hidden placeholder:italic",
+          holderClassName,
+        )}
+      />
+    </div>
+  );
 }
 
 export default DateTimeInput;

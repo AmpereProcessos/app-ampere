@@ -14,92 +14,108 @@ import { VscChromeClose } from "react-icons/vsc";
 import PaymentOptionsMenu from "./PaymentOptionsMenu";
 
 type EditCreditCardOptionProps = {
-	optionId: string;
-	closeModal: () => void;
+  optionId: string;
+  closeModal: () => void;
 };
 function EditCreditCardOption({ optionId, closeModal }: EditCreditCardOptionProps) {
-	const queryClient = useQueryClient();
-	const { data: option, isLoading, isSuccess, isError, error } = useCreditCardOptionById({ id: optionId });
-	const [infoHolder, setInfoHolder] = useState<TCreditCardOption>({
-		empresa: "",
-		modalidade: "SEM ANTECIPAÇÃO",
-		opcoes: [],
-	});
+  const queryClient = useQueryClient();
+  const {
+    data: option,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useCreditCardOptionById({ id: optionId });
+  const [infoHolder, setInfoHolder] = useState<TCreditCardOption>({
+    empresa: "",
+    modalidade: "SEM ANTECIPAÇÃO",
+    opcoes: [],
+  });
 
-	const { mutate: handleUpdate, isPending: updateLoading } = useMutationWithFeedback({
-		mutationKey: ["update-credit-card-option"],
-		mutationFn: updateCreditCardOption,
-		queryClient: queryClient,
-		affectedQueryKey: ["credit-card-options"],
-		callbackFn: async () => await queryClient.invalidateQueries({ queryKey: ["credit-card-option-by-id", optionId] }),
-	});
-	useEffect(() => {
-		if (option) setInfoHolder(option);
-	}, [option]);
-	return (
-		<div id="edit-credit-card-option" className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]">
-			<div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[50%]">
-				<div className="flex h-full flex-col">
-					<div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-						<h3 className="text-xl font-bold text-primary dark:text-white">EDITAR OPÇÃO</h3>
-						<button
-							onClick={() => closeModal()}
-							type="button"
-							className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
-						>
-							<VscChromeClose style={{ color: "red" }} />
-						</button>
-					</div>
-					{isLoading ? <LoadingPage /> : null}
-					{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
-					{isSuccess ? (
-						<>
-							<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
-								<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-									<div className="w-full lg:w-1/2">
-										<TextInput
-											label="NOME DA EMPRESA"
-											placeholder="Preencha aqui o nome da empresa..."
-											value={infoHolder.empresa}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, empresa: value }))}
-											width="100%"
-										/>
-									</div>
-									<div className="w-full lg:w-1/2">
-										<SelectInput
-											label="MODALIDADE"
-											value={infoHolder.modalidade}
-											options={[
-												{ id: 1, label: "SEM ANTECIPAÇÃO", value: "SEM ANTECIPAÇÃO" },
-												{ id: 2, label: "COM ANTECIPAÇÃO", value: "COM ANTECIPAÇÃO" },
-											]}
-											handleChange={(value) => setInfoHolder((prev) => ({ ...prev, modalidade: value }))}
-											onReset={() => setInfoHolder((prev) => ({ ...prev, modalidade: "SEM ANTECIPAÇÃO" }))}
-											selectedItemLabel="NÃO DEFINIDO"
-											width="100%"
-										/>
-									</div>
-								</div>
-								<PaymentOptionsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-							</div>
-							<div className="flex w-full items-center justify-end">
-								<Button
-									disabled={updateLoading}
-									onClick={() =>
-										// @ts-ignore
-										handleUpdate({ id: optionId, changes: infoHolder })
-									}
-									type="button"
-								>
-									ATUALIZAR OPÇÃO
-								</Button>
-							</div>
-						</>
-					) : null}
-				</div>
-			</div>
-		</div>
-	);
+  const { mutate: handleUpdate, isPending: updateLoading } = useMutationWithFeedback({
+    mutationKey: ["update-credit-card-option"],
+    mutationFn: updateCreditCardOption,
+    queryClient: queryClient,
+    affectedQueryKey: ["credit-card-options"],
+    callbackFn: async () =>
+      await queryClient.invalidateQueries({ queryKey: ["credit-card-option-by-id", optionId] }),
+  });
+  useEffect(() => {
+    if (option) setInfoHolder(option);
+  }, [option]);
+  return (
+    <div
+      id="edit-credit-card-option"
+      className="fixed top-0 right-0 bottom-0 left-0 z-100 bg-[rgba(0,0,0,.85)]"
+    >
+      <div className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[50%]">
+        <div className="flex h-full flex-col">
+          <div className="border-border flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+            <h3 className="text-xl font-bold text-primary dark:text-white">EDITAR OPÇÃO</h3>
+            <button
+              onClick={() => closeModal()}
+              type="button"
+              className="flex items-center justify-center rounded-lg p-1 duration-300 ease-linear hover:scale-105 hover:bg-red-200"
+            >
+              <VscChromeClose style={{ color: "red" }} />
+            </button>
+          </div>
+          {isLoading ? <LoadingPage /> : null}
+          {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+          {isSuccess ? (
+            <>
+              <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex grow flex-col gap-y-2 overflow-y-auto overscroll-y-auto px-2 py-1">
+                <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+                  <div className="w-full lg:w-1/2">
+                    <TextInput
+                      label="NOME DA EMPRESA"
+                      placeholder="Preencha aqui o nome da empresa..."
+                      value={infoHolder.empresa}
+                      handleChange={(value) =>
+                        setInfoHolder((prev) => ({ ...prev, empresa: value }))
+                      }
+                      width="100%"
+                    />
+                  </div>
+                  <div className="w-full lg:w-1/2">
+                    <SelectInput
+                      label="MODALIDADE"
+                      value={infoHolder.modalidade}
+                      options={[
+                        { id: 1, label: "SEM ANTECIPAÇÃO", value: "SEM ANTECIPAÇÃO" },
+                        { id: 2, label: "COM ANTECIPAÇÃO", value: "COM ANTECIPAÇÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setInfoHolder((prev) => ({ ...prev, modalidade: value }))
+                      }
+                      onReset={() =>
+                        setInfoHolder((prev) => ({ ...prev, modalidade: "SEM ANTECIPAÇÃO" }))
+                      }
+                      selectedItemLabel="NÃO DEFINIDO"
+                      width="100%"
+                    />
+                  </div>
+                </div>
+                <PaymentOptionsMenu infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+              </div>
+              <div className="flex w-full items-center justify-end">
+                <Button
+                  disabled={updateLoading}
+                  onClick={() =>
+                    // @ts-ignore
+                    handleUpdate({ id: optionId, changes: infoHolder })
+                  }
+                  type="button"
+                >
+                  ATUALIZAR OPÇÃO
+                </Button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default EditCreditCardOption;

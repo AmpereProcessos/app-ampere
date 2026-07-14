@@ -83,20 +83,20 @@ function ServiceOrderGeneralInformationBlock({
     <div className="flex w-full flex-col items-center gap-4">
       <div className="flex w-full flex-wrap items-center justify-center gap-2">
         <div className="flex items-center gap-2">
-          <p className="text-primary/60 text-xs font-medium">CRIADO POR:</p>
+          <p className="text-foreground text-xs font-medium">CRIADO POR:</p>
           <Avatar className="w-6 h-6 min-w-6 min-h-6">
             <AvatarImage src={infoHolder?.autor?.avatar_url ?? undefined} />
             <AvatarFallback className="text-xs font-medium">
               {formatNameAsInitials(infoHolder?.autor?.nome || "Autor não identificado")}
             </AvatarFallback>
           </Avatar>
-          <p className="text-primary/60 text-xs font-medium">
+          <p className="text-foreground text-xs font-medium">
             {infoHolder?.autor?.nome || "Autor não identificado"}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <BsCalendarPlus />
-          <p className="text-primary/60 text-xs font-medium">
+          <p className="text-foreground text-xs font-medium">
             {formatDateAsLocale(infoHolder?.dataInsercao, true)}
           </p>
         </div>
@@ -220,7 +220,7 @@ function ServiceOrderGeneralInformationBlock({
           />
           {responsiblesMissingValidation.length > 0 ? (
             <div className="w-full flex items-center flex flex-col lg:flex-row gap-2">
-              <h3 className="text-primary/60 text-xs font-medium">
+              <h3 className="text-foreground text-xs font-medium">
                 RESPONSÁVEIS COM CONFIRMAÇÃO PENDENTE
               </h3>
               <div className="flex items-center flex-wrap gap-1.5">
@@ -269,7 +269,7 @@ function ServiceOrderGeneralInformationBlock({
               />
             </div>
           </div>
-          <h1 className="text-primary/80 text-sm font-medium tracking-tight">
+          <h1 className="text-foreground text-sm font-medium tracking-tight">
             URGÊNCIA DA ORDEM DE SERVIÇO
           </h1>
           <div className="flex w-full flex-wrap items-center justify-around gap-4">

@@ -12,54 +12,71 @@ import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDr
 import { LayoutGrid } from "lucide-react";
 
 type ServiceOrderExecutionInformationBlockProps = {
-	infoHolder: TServiceOrder;
-	updateInfoHolder: (changes: Partial<TServiceOrder>) => void;
-	projectObservations?: TProject["obra"]["observacoes"];
+  infoHolder: TServiceOrder;
+  updateInfoHolder: (changes: Partial<TServiceOrder>) => void;
+  projectObservations?: TProject["obra"]["observacoes"];
 };
-function ServiceOrderExecutionInformationBlock({ infoHolder, updateInfoHolder, projectObservations }: ServiceOrderExecutionInformationBlockProps) {
-	function useObservationsFromProject() {
-		if (!projectObservations) return;
-		const observationsGrouped = getServiceObservationsFromObras(projectObservations);
-		updateInfoHolder({ observacoes: observationsGrouped });
-		toast.success("Observações da obra foram adicionadas à OS.");
-	}
-	return (
-		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES DE EXECUÇÃO" sectionTitleIcon={<LayoutGrid size={15} />}>
-			<p className="my-1 w-full text-center text-sm font-light tracking-tighter text-primary/80">
-				Defina aqui, uma vez iniciada (ou concluída), o período de execução do serviço.
-			</p>
-			<div className="flex w-full flex-col gap-2">
-				<div className="flex w-full flex-col items-center gap-2 lg:flex-row">
-					<div className="w-full lg:w-1/2">
-						<DateTimeInput
-							label="DATA-HORÁRIO DE INÍCIO"
-							value={formatDateTimeForInput(infoHolder.periodo?.inicio)}
-							handleChange={(value) =>
-								updateInfoHolder({ periodo: { ...infoHolder.periodo, inicio: formatDateInputChange(value, "string", false) as string } })
-							}
-							width="100%"
-						/>
-					</div>
-					<div className="w-full lg:w-1/2">
-						<DateTimeInput
-							label="DATA-HORÁRIO DE CONCLUSÃO"
-							value={formatDateTimeForInput(infoHolder.periodo?.fim)}
-							handleChange={(value) =>
-								updateInfoHolder({ periodo: { ...infoHolder.periodo, fim: formatDateInputChange(value, "string", false) as string } })
-							}
-							width="100%"
-						/>
-					</div>
-				</div>
-				<ServiceOrderObservationsBlock
-					infoHolder={infoHolder}
-					updateInfoHolder={updateInfoHolder}
-					useObservationsFromProject={projectObservations ? useObservationsFromProject : undefined}
-				/>
-			</div>
-			<ServiceOrderHistoryBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
-		</ResponsiveDialogDrawerSection>
-	);
+function ServiceOrderExecutionInformationBlock({
+  infoHolder,
+  updateInfoHolder,
+  projectObservations,
+}: ServiceOrderExecutionInformationBlockProps) {
+  function useObservationsFromProject() {
+    if (!projectObservations) return;
+    const observationsGrouped = getServiceObservationsFromObras(projectObservations);
+    updateInfoHolder({ observacoes: observationsGrouped });
+    toast.success("Observações da obra foram adicionadas à OS.");
+  }
+  return (
+    <ResponsiveDialogDrawerSection
+      sectionTitleText="INFORMAÇÕES DE EXECUÇÃO"
+      sectionTitleIcon={<LayoutGrid size={15} />}
+    >
+      <p className="my-1 w-full text-center text-sm font-light tracking-tighter text-foreground">
+        Defina aqui, uma vez iniciada (ou concluída), o período de execução do serviço.
+      </p>
+      <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="w-full lg:w-1/2">
+            <DateTimeInput
+              label="DATA-HORÁRIO DE INÍCIO"
+              value={formatDateTimeForInput(infoHolder.periodo?.inicio)}
+              handleChange={(value) =>
+                updateInfoHolder({
+                  periodo: {
+                    ...infoHolder.periodo,
+                    inicio: formatDateInputChange(value, "string", false) as string,
+                  },
+                })
+              }
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-1/2">
+            <DateTimeInput
+              label="DATA-HORÁRIO DE CONCLUSÃO"
+              value={formatDateTimeForInput(infoHolder.periodo?.fim)}
+              handleChange={(value) =>
+                updateInfoHolder({
+                  periodo: {
+                    ...infoHolder.periodo,
+                    fim: formatDateInputChange(value, "string", false) as string,
+                  },
+                })
+              }
+              width="100%"
+            />
+          </div>
+        </div>
+        <ServiceOrderObservationsBlock
+          infoHolder={infoHolder}
+          updateInfoHolder={updateInfoHolder}
+          useObservationsFromProject={projectObservations ? useObservationsFromProject : undefined}
+        />
+      </div>
+      <ServiceOrderHistoryBlock infoHolder={infoHolder} updateInfoHolder={updateInfoHolder} />
+    </ResponsiveDialogDrawerSection>
+  );
 }
 
 export default ServiceOrderExecutionInformationBlock;

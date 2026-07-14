@@ -82,7 +82,7 @@ export default function FinancialTransactionsBlock({
             );
           })
         ) : (
-          <p className="text-primary/60 w-full text-center text-xs font-medium italic">
+          <p className="text-foreground w-full text-center text-xs font-medium italic">
             Nenhuma transação financeira adicionada.
           </p>
         )}
@@ -169,7 +169,7 @@ function TransactionCard({ transaction, onEditClick }: TransactionCardProps) {
   }, [transaction.contaFinanceira?.tipo]);
 
   return (
-    <div className="bg-card border-primary/20 flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
+    <div className="bg-card border-border flex w-full flex-col gap-1.5 rounded-xl border px-3 py-4 shadow-2xs">
       <div className="flex w-full flex-col items-start justify-between gap-2 lg:flex-row lg:items-center">
         <div className="flex items-center gap-2 flex-wrap">
           {typeConfig ? (

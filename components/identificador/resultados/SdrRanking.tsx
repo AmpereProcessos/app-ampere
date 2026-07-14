@@ -23,7 +23,7 @@ export default function ModernSDRRanking() {
   return (
     <div
       className={cn(
-        "bg-card border-primary/20 flex w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs",
+        "bg-card border-border flex w-full flex-col gap-3 rounded-xl border px-3 py-4 shadow-xs",
       )}
     >
       <div className="flex items-center justify-between gap-2">

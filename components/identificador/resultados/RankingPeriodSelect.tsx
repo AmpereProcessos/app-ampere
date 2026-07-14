@@ -45,7 +45,7 @@ export default function RankingPeriodSelect({
         <CalendarDays className="h-3 min-h-3 w-3 min-w-3 shrink-0 lg:h-4 lg:min-h-4 lg:w-4 lg:min-w-4" />
         <SelectValue placeholder="Período" />
       </SelectTrigger>
-      <SelectContent align="start" className="border-primary/20 min-w-28">
+      <SelectContent align="start" className="border-border min-w-28">
         {PERIOD_OPTIONS.map((option) => (
           <SelectItem
             key={option.value}

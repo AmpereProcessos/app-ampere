@@ -397,7 +397,11 @@ export default function AfterSalesProjectsFilters({
               ) : null}
 
               {!hasCity ? (
-                <InteractiveFilter.AddFilterItem id="city" label="CIDADE" icon={<MapPin className="h-4 w-4" />}>
+                <InteractiveFilter.AddFilterItem
+                  id="city"
+                  label="CIDADE"
+                  icon={<MapPin className="h-4 w-4" />}
+                >
                   <InteractiveFilter.MultiContent
                     options={cityOptions}
                     value={filters.city}
@@ -543,7 +547,7 @@ export default function AfterSalesProjectsFilters({
 
         <Link
           href="/chamados/chamadosPosVenda"
-          className="inline-flex h-auto items-center rounded-lg border border-primary/30 px-3 py-2 text-xs font-medium transition-colors hover:bg-primary/10"
+          className="inline-flex h-auto items-center rounded-lg border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-primary/10"
         >
           CHAMADOS
         </Link>

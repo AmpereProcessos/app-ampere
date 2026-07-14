@@ -63,7 +63,7 @@ function InfoObrasBlock({
       {infoHolder.homologacao.vistoria.dataEfetivacao ? (
         <div className="flex items-center gap-1 self-center">
           <BsPatchCheckFill color="rgb(22,163,74)" />
-          <p className="text-primary/60 text-xs tracking-tight">
+          <p className="text-foreground text-xs tracking-tight">
             VISTORIA CONCLUÍDA EM{" "}
             {formatDateAsLocale(infoHolder.homologacao.vistoria.dataEfetivacao)}
           </p>
@@ -160,7 +160,7 @@ function InfoObrasBlock({
         />
         {responsiblesMissingValidation.length > 0 ? (
           <div className="w-full flex items-center flex flex-col lg:flex-row gap-2">
-            <h3 className="text-primary/60 text-xs font-medium">
+            <h3 className="text-foreground text-xs font-medium">
               RESPONSÁVEIS COM CONFIRMAÇÃO PENDENTE
             </h3>
             <div className="flex items-center flex-wrap gap-1.5">

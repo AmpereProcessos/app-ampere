@@ -377,7 +377,7 @@ function PositionsMenu({ infoHolder, updateInfoHolder }: PositionsMenuProps) {
           infoHolder.cargos.map((position, index) => (
             <div
               key={`${index.toString()}`}
-              className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[450px]"
+              className="border-border flex w-full flex-col rounded-md border p-3 lg:w-[450px]"
             >
               <div className="flex w-full items-center justify-between gap-2">
                 <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">
@@ -393,14 +393,14 @@ function PositionsMenu({ infoHolder, updateInfoHolder }: PositionsMenuProps) {
               </div>
               <div className="flex items-center gap-2">
                 <BsCode />
-                <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+                <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
                   {position.cbo}
                 </p>
               </div>
               <div className="mt-2 flex w-full items-center justify-between">
                 <div className={"flex items-center gap-2"}>
                   <BsCalendarPlus />
-                  <p className="text-primary/60 text-xs font-medium">
+                  <p className="text-foreground text-xs font-medium">
                     {formatDateAsLocale(position.dataInicio)}
                   </p>
                 </div>
@@ -408,7 +408,7 @@ function PositionsMenu({ infoHolder, updateInfoHolder }: PositionsMenuProps) {
                   {position.dataFinal ? (
                     <>
                       <BsCalendarMinus color={"#ed174c"} />
-                      <p className="text-primary/60 text-xs font-medium">
+                      <p className="text-foreground text-xs font-medium">
                         {formatDateAsLocale(position.dataFinal)}
                       </p>
                     </>
@@ -420,7 +420,7 @@ function PositionsMenu({ infoHolder, updateInfoHolder }: PositionsMenuProps) {
             </div>
           ))
         ) : (
-          <p className="text-primary/60 text-xs font-medium italic">
+          <p className="text-foreground text-xs font-medium italic">
             Não há registros de cargos ocupados.
           </p>
         )}
@@ -538,7 +538,7 @@ function WorkingHoursMenu({ infoHolder, updateInfoHolder }: WorkingHoursMenuProp
           infoHolder.horariosTrabalho.map((hour, index) => (
             <div
               key={`${index.toString()}`}
-              className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[350px]"
+              className="border-border flex w-full flex-col rounded-md border p-3 lg:w-[350px]"
             >
               <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">
                 TURNO {index + 1}
@@ -547,13 +547,13 @@ function WorkingHoursMenu({ infoHolder, updateInfoHolder }: WorkingHoursMenuProp
                 <div className="flex items-center gap-2">
                   <div className={"flex items-center gap-2"}>
                     <FaPlayCircle color="rgb(34,197,94)" />
-                    <p className="text-primary/60 text-xs font-medium">
+                    <p className="text-foreground text-xs font-medium">
                       INÍCIO ÀS {hour.horarioInicio}
                     </p>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <FaStopCircle color={"#ed174c"} />
-                    <p className="text-primary/60 text-xs font-medium">
+                    <p className="text-foreground text-xs font-medium">
                       TERMINO ÀS {hour.horarioFinal}
                     </p>
                   </div>
@@ -570,7 +570,7 @@ function WorkingHoursMenu({ infoHolder, updateInfoHolder }: WorkingHoursMenuProp
             </div>
           ))
         ) : (
-          <p className="text-primary/60 text-xs font-medium italic">
+          <p className="text-foreground text-xs font-medium italic">
             Não há registros de horários de trabalho.
           </p>
         )}
@@ -650,7 +650,7 @@ function AuxiliarContactsMenu({ infoHolder, updateInfoHolder }: AuxiliarContacts
           infoHolder.contatosAuxiliares.map((contact, index) => (
             <div
               key={index.toString()}
-              className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[350px]"
+              className="border-border flex w-full flex-col rounded-md border p-3 lg:w-[350px]"
             >
               <div className="flex w-full items-center justify-between">
                 <h1 className="text-xs leading-none font-black tracking-tight lg:text-sm">
@@ -667,17 +667,17 @@ function AuxiliarContactsMenu({ infoHolder, updateInfoHolder }: AuxiliarContacts
               <div className="flex w-full items-center justify-between gap-2">
                 <div className={"flex items-center gap-2"}>
                   <FaUsers />
-                  <p className="text-primary/60 text-xs font-medium">{contact.grau}</p>
+                  <p className="text-foreground text-xs font-medium">{contact.grau}</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <FaPhone color={"#15599a"} />
-                  <p className="text-primary/60 text-xs font-medium">{contact.telefone}</p>
+                  <p className="text-foreground text-xs font-medium">{contact.telefone}</p>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-primary/60 text-xs font-medium italic">
+          <p className="text-foreground text-xs font-medium italic">
             Não há contatos auxiliares cadastrados
           </p>
         )}

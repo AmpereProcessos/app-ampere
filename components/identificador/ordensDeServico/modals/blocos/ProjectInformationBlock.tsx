@@ -101,7 +101,7 @@ function ServiceOrderProjectInformationBlock({
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-primary/60 text-[0.65rem] font-medium">PROJETO</p>
+            <p className="text-foreground text-[0.65rem] font-medium">PROJETO</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <Code className="w-4 h-4 min-w-4 min-h-4" />
@@ -154,7 +154,7 @@ function ServiceOrderProjectInformationBlock({
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-primary/60 text-[0.65rem] font-medium">COMPRA</p>
+            <p className="text-foreground text-[0.65rem] font-medium">COMPRA</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <BsCalendarEvent className="w-4 h-4 min-w-4 min-h-4" />
@@ -183,7 +183,7 @@ function ServiceOrderProjectInformationBlock({
             </div>
           </div>
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-primary/60 text-[0.65rem] font-medium">HOMOLOGAÇÃO</p>
+            <p className="text-foreground text-[0.65rem] font-medium">HOMOLOGAÇÃO</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <BsCalendar className="w-4 h-4 min-w-4 min-h-4" />
@@ -211,7 +211,7 @@ function ServiceOrderProjectInformationBlock({
               <ShoppingCart className="w-4 h-4 min-w-4 min-h-4" />
               <h1 className="text-xs tracking-tight font-medium text-start w-fit">PRODUTOS</h1>
             </div>
-            <div className="w-full flex flex-col gap-3 border border-primary/20 rounded p-3 bg-card">
+            <div className="w-full flex flex-col gap-3 border border-border rounded p-3 bg-card">
               {project.produtos && project.produtos.length > 0 ? (
                 project.produtos.map((product, index) => (
                   <ServiceOrderProjectProductCard
@@ -220,7 +220,7 @@ function ServiceOrderProjectInformationBlock({
                   />
                 ))
               ) : (
-                <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">
+                <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
                   Nenhum produto adicionado
                 </div>
               )}
@@ -231,7 +231,7 @@ function ServiceOrderProjectInformationBlock({
               <MdOutlineMiscellaneousServices className="w-4 h-4 min-w-4 min-h-4" />
               <h1 className="text-xs tracking-tight font-medium text-start w-fit">SERVIÇOS</h1>
             </div>
-            <div className="w-full flex flex-col gap-3 border border-primary/20 rounded p-3 bg-card">
+            <div className="w-full flex flex-col gap-3 border border-border rounded p-3 bg-card">
               {project.servicos && project.servicos.length > 0 ? (
                 project.servicos.map((service, index) => (
                   <ServiceOrderProjectServiceCard
@@ -240,7 +240,7 @@ function ServiceOrderProjectInformationBlock({
                   />
                 ))
               ) : (
-                <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">
+                <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
                   Nenhum serviço adicionado
                 </div>
               )}
@@ -253,7 +253,7 @@ function ServiceOrderProjectInformationBlock({
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
           <div className="flex flex-col items-center gap-1 lg:items-start">
-            <p className="text-primary/60 text-[0.65rem] font-medium">EXECUÇÃO</p>
+            <p className="text-foreground text-[0.65rem] font-medium">EXECUÇÃO</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <div className="flex items-center gap-1">
                 <FaUserAlt />
@@ -275,7 +275,7 @@ function ServiceOrderProjectInformationBlock({
             </div>
           </div>
           <div className="flex flex-col items-center gap-1 lg:items-end">
-            <p className="text-primary/60 text-[0.65rem] font-medium">PENDÊNCIAS</p>
+            <p className="text-foreground text-[0.65rem] font-medium">PENDÊNCIAS</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-end">
               {project.obra.pendencias ? (
                 <h1 className="text-xxs rounded-md bg-orange-500 px-2 py-0.5 leading-none font-medium tracking-tight text-white">
@@ -326,17 +326,17 @@ function ServiceOrderProjectProductCard({
         <div className="flex items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <FaIndustry size={12} />
-            <p className="text-primary/60 text-[0.6rem] lg:text-xs">{product.fabricante}</p>
+            <p className="text-foreground text-[0.6rem] lg:text-xs">{product.fabricante}</p>
           </div>
           {product.potencia ? (
             <div className="flex items-center gap-1">
               <FaBolt size={12} />
-              <p className="text-primary/60 text-[0.6rem] lg:text-xs">{product.potencia} W</p>
+              <p className="text-foreground text-[0.6rem] lg:text-xs">{product.potencia} W</p>
             </div>
           ) : null}
           <div className="flex items-center gap-1">
             <AiOutlineSafety size={12} />
-            <p className="text-primary/60 text-[0.6rem] lg:text-xs">{product.garantia} ANOS</p>
+            <p className="text-foreground text-[0.6rem] lg:text-xs">{product.garantia} ANOS</p>
           </div>
         </div>
       </div>
@@ -359,7 +359,7 @@ function ServiceOrderProjectServiceCard({
         <div className="flex items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
           <div className="flex items-center gap-1">
             <AiOutlineSafety size={12} />
-            <p className="text-primary/50 text-[0.6rem] lg:text-xs">
+            <p className="text-muted-foreground text-[0.6rem] lg:text-xs">
               {service.garantia} {service.garantia && service.garantia > 0 ? "ANOS" : "ANO"}
             </p>
           </div>
@@ -452,7 +452,7 @@ function ServiceOrderProjectAllocationsList({
         <Box className="w-4 h-4 min-w-4 min-h-4" />
         <h1 className="text-xs tracking-tight font-medium text-start w-fit">ALOCAÇÕES</h1>
       </div>
-      <div className="w-full flex flex-col gap-3 border border-primary/20 rounded p-3 bg-card">
+      <div className="w-full flex flex-col gap-3 border border-border rounded p-3 bg-card">
         {isWarehouseFormsQuerySuccessful &&
         warehouseForms.length === 0 &&
         pendingAllocations.length > 0 ? (
@@ -542,7 +542,7 @@ function ServiceOrderProjectAllocationsList({
             />
           ))
         ) : (
-          <div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">
+          <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
             Nenhuma alocação adicionada
           </div>
         )}
@@ -622,7 +622,7 @@ function ServiceOrderProjectAllocationCard({
                 {allocation.movimentacoes.map((movement) => (
                   <p
                     key={`${movement.idCompra}-${movement.idFormularioSaida}`}
-                    className="text-primary/60 text-[0.65rem] lg:text-xs"
+                    className="text-foreground text-[0.65rem] lg:text-xs"
                   >
                     {formatDecimalPlaces(movement.quantidade)}
                     {allocation.unidade || "UN"} - VIA{" "}

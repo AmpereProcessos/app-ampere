@@ -189,7 +189,7 @@ function ModalNewServiceOrder({
         className="bg-background fixed top-[50%] left-[50%] z-100 h-[80%] w-[90%] translate-x-[-50%] translate-y-[-50%] rounded-md p-[10px] lg:w-[80%]"
       >
         <div className="flex h-full w-full flex-col">
-          <div className="border-primary/20 flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
+          <div className="border-border flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
             <h3 className="text-xl font-bold text-primary dark:text-white">
               NOVA ORDEM DE SERVIÇO
             </h3>
@@ -263,7 +263,7 @@ function ModalNewServiceOrder({
               projectObservations={project?.obra?.observacoes || undefined}
             />
           </div>
-          <div className="border-primary/20 mt-2 flex w-full items-center justify-end border-t px-4 py-1">
+          <div className="border-border mt-2 flex w-full items-center justify-end border-t px-4 py-1">
             <LoadingButton
               // @ts-ignore
               onClick={() => handleCreateServiceOrder({ info: osInfo })}

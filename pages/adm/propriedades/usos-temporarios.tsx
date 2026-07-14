@@ -53,25 +53,25 @@ function TemporaryUsagesContent({ session: _session }: TemporaryUsagesContentPro
   );
   return (
     <div className="flex h-full w-full grow flex-col gap-6 p-6">
-      <div className="border-primary/30 flex w-full flex-col gap-3 border-b pb-1">
+      <div className="border-border flex w-full flex-col gap-3 border-b pb-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col">
             <p className="text-center text-2xl font-black text-[#15599a] uppercase">
               USOS TEMPORÁRIOS DE PROPRIEDADES
             </p>
-            <p className="text-primary/60 text-sm tracking-tight">
+            <p className="text-foreground text-sm tracking-tight">
               {data?.length || "..."} registros encontrados
             </p>
           </div>
           {dropdownMenuVisible ? (
-            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+            <div className="text-foreground cursor-pointer hover:text-blue-400">
               <IoMdArrowDropupCircle
                 style={{ fontSize: "25px" }}
                 onClick={() => setDropdownMenuVisible(false)}
               />
             </div>
           ) : (
-            <div className="text-primary/80 cursor-pointer hover:text-blue-400">
+            <div className="text-foreground cursor-pointer hover:text-blue-400">
               <IoMdArrowDropdownCircle
                 style={{ fontSize: "25px" }}
                 onClick={() => setDropdownMenuVisible(true)}
@@ -199,7 +199,7 @@ function TemporaryUsagesContent({ session: _session }: TemporaryUsagesContentPro
               />
             ))
           ) : (
-            <p className="text-primary/60 w-full text-center font-medium italic">
+            <p className="text-foreground w-full text-center font-medium italic">
               Nenhum uso temporário encontrado.
             </p>
           )
@@ -307,7 +307,7 @@ function TemporaryUsageCard({
                   <AvatarImage src={resp.avatar_url ?? undefined} />
                   <AvatarFallback>{formatNameAsInitials(resp.nome)}</AvatarFallback>
                 </Avatar>
-                <p className="text-primary/80 text-xs font-medium">{resp.nome}</p>
+                <p className="text-foreground text-xs font-medium">{resp.nome}</p>
               </div>
             ))}
           </div>
@@ -319,7 +319,7 @@ function TemporaryUsageCard({
           onClick={() => handleClick(usage._id)}
         >
           <Eye size={16} />
-          <p className="text-primary/80 text-sm font-semibold">VISUALIZAR</p>
+          <p className="text-foreground text-sm font-semibold">VISUALIZAR</p>
         </Button>
       </div>
     </div>

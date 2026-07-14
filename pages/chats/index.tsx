@@ -11,35 +11,55 @@ import { useConvexQuery } from "@/convex/utils";
 import type { TAuthSession } from "@/lib/authentication/types";
 
 export default function Chats() {
-	const { session, status } = useSession();
+  const { session, status } = useSession();
 
-	if (status === "loading") return <LoadingPage />;
-	if (status === "unauthenticated") return <UnauthenticatedComponent />;
+  if (status === "loading") return <LoadingPage />;
+  if (status === "unauthenticated") return <UnauthenticatedComponent />;
 
-	const userHasViewPermission = session.user.permissoes.chats.visualizar;
-	const userHasMessageSendingPermission = session.user.permissoes.chats.enviarMensagens;
+  const userHasViewPermission = session.user.permissoes.chats.visualizar;
+  const userHasMessageSendingPermission = session.user.permissoes.chats.enviarMensagens;
 
-	if (!userHasViewPermission) return <UnauthorizedPage />;
-	return <ChatsContent session={session} userHasMessageSendingPermission={userHasMessageSendingPermission} />;
+  if (!userHasViewPermission) return <UnauthorizedPage />;
+  return (
+    <ChatsContent
+      session={session}
+      userHasMessageSendingPermission={userHasMessageSendingPermission}
+    />
+  );
 }
 
-function ChatsContent({ session, userHasMessageSendingPermission }: { session: TAuthSession; userHasMessageSendingPermission: boolean }) {
-	const { data: whatsappConnection, isPending, isError, isSuccess } = useConvexQuery(api.queries.connections.getWhatsappConnection);
-	return (
-		<div className="flex flex-col gap-6 grow p-6">
-			{isPending ? <h3 className="text-sm text-primary/60 animate-pulse py-4 text-center">Carregando conexão...</h3> : null}
-			{isError ? <ErrorComponent msg="Erro ao carregar conexão do WhatsApp Business." /> : null}
-			{isSuccess ? (
-				whatsappConnection ? (
-					<ChatsHubComposable
-						session={session}
-						userHasMessageSendingPermission={userHasMessageSendingPermission}
-						whatsappConnection={whatsappConnection}
-					/>
-				) : (
-					<WhatsAppConnectButton />
-				)
-			) : null}
-		</div>
-	);
+function ChatsContent({
+  session,
+  userHasMessageSendingPermission,
+}: {
+  session: TAuthSession;
+  userHasMessageSendingPermission: boolean;
+}) {
+  const {
+    data: whatsappConnection,
+    isPending,
+    isError,
+    isSuccess,
+  } = useConvexQuery(api.queries.connections.getWhatsappConnection);
+  return (
+    <div className="flex flex-col gap-6 grow p-6">
+      {isPending ? (
+        <h3 className="text-sm text-foreground animate-pulse py-4 text-center">
+          Carregando conexão...
+        </h3>
+      ) : null}
+      {isError ? <ErrorComponent msg="Erro ao carregar conexão do WhatsApp Business." /> : null}
+      {isSuccess ? (
+        whatsappConnection ? (
+          <ChatsHubComposable
+            session={session}
+            userHasMessageSendingPermission={userHasMessageSendingPermission}
+            whatsappConnection={whatsappConnection}
+          />
+        ) : (
+          <WhatsAppConnectButton />
+        )
+      ) : null}
+    </div>
+  );
 }

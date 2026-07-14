@@ -19,165 +19,231 @@ import EditRevenue from "../modals/EditRevenue";
 import RevenuesFilterMenu from "./RevenuesFilterMenu";
 
 type RevenuesBlockProps = {
-	session: TAuthSession;
-	storedRevenuesTypesFilter: string[];
+  session: TAuthSession;
+  storedRevenuesTypesFilter: string[];
 };
 function RevenuesBlock({ session, storedRevenuesTypesFilter }: RevenuesBlockProps) {
-	console.log("TESTE");
-	const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false);
-	const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({ id: null, isOpen: false });
+  console.log("TESTE");
+  const [filterMenuIsOpen, setFilterMenuIsOpen] = useState<boolean>(false);
+  const [editModal, setEditModal] = useState<{ id: string | null; isOpen: boolean }>({
+    id: null,
+    isOpen: false,
+  });
 
-	const {
-		data: dashboardRevenues,
-		isLoading,
-		isSuccess,
-		isError,
-		error,
-		queryParams,
-		updateQueryParams,
-	} = useRevenueByFilters({
-		initialQueryParams: { page: 1, search: "", status: [], types: storedRevenuesTypesFilter },
-	});
+  const {
+    data: dashboardRevenues,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+    queryParams,
+    updateQueryParams,
+  } = useRevenueByFilters({
+    initialQueryParams: { page: 1, search: "", status: [], types: storedRevenuesTypesFilter },
+  });
 
-	const revenues = dashboardRevenues?.revenues;
-	const revenuesShowing = revenues ? revenues.length : 0;
-	const revenuesMatched = dashboardRevenues?.revenuesMatched || 0;
-	const totalPages = dashboardRevenues?.totalPages;
-	return (
-		<div className="border-primary bg-background flex h-full max-h-full w-full flex-col gap-2 rounded border p-3 shadow-xs dark:bg-[#121212]">
-			<div className="border-primary/30 flex w-full items-center justify-between gap-2 border-b pb-3">
-				<h1 className="text-sm leading-none font-bold tracking-tight">RECEITAS</h1>
-				<div className="flex items-center gap-2">
-					<button
-						onClick={() => setFilterMenuIsOpen((prev) => !prev)}
-						className={cn(
-							"text-primary hover:bg-primary/20 flex h-6 min-h-6 w-6 min-w-6 items-center justify-center rounded-full duration-300 ease-in-out",
-							{
-								"bg-primary/30": filterMenuIsOpen,
-							},
-						)}
-					>
-						<BsFunnelFill width={14} height={14} />
-					</button>
-				</div>
-			</div>
-			<GeneralPaginationComponent
-				activePage={queryParams.page}
-				queryLoading={isLoading}
-				selectPage={(page) => updateQueryParams({ page })}
-				totalPages={totalPages || 0}
-				itemsMatchedText={revenuesMatched > 0 ? `${revenuesMatched} receitas encontradas.` : `${revenuesMatched} receita encontrada.`}
-				itemsShowingText={revenuesShowing > 0 ? `Mostrando ${revenuesShowing} receitas.` : `Mostrando ${revenuesShowing} receita.`}
-			/>
+  const revenues = dashboardRevenues?.revenues;
+  const revenuesShowing = revenues ? revenues.length : 0;
+  const revenuesMatched = dashboardRevenues?.revenuesMatched || 0;
+  const totalPages = dashboardRevenues?.totalPages;
+  return (
+    <div className="border-primary bg-background flex h-full max-h-full w-full flex-col gap-2 rounded border p-3 shadow-xs dark:bg-[#121212]">
+      <div className="border-border flex w-full items-center justify-between gap-2 border-b pb-3">
+        <h1 className="text-sm leading-none font-bold tracking-tight">RECEITAS</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setFilterMenuIsOpen((prev) => !prev)}
+            className={cn(
+              "text-primary hover:bg-primary/20 flex h-6 min-h-6 w-6 min-w-6 items-center justify-center rounded-full duration-300 ease-in-out",
+              {
+                "bg-primary/30": filterMenuIsOpen,
+              },
+            )}
+          >
+            <BsFunnelFill width={14} height={14} />
+          </button>
+        </div>
+      </div>
+      <GeneralPaginationComponent
+        activePage={queryParams.page}
+        queryLoading={isLoading}
+        selectPage={(page) => updateQueryParams({ page })}
+        totalPages={totalPages || 0}
+        itemsMatchedText={
+          revenuesMatched > 0
+            ? `${revenuesMatched} receitas encontradas.`
+            : `${revenuesMatched} receita encontrada.`
+        }
+        itemsShowingText={
+          revenuesShowing > 0
+            ? `Mostrando ${revenuesShowing} receitas.`
+            : `Mostrando ${revenuesShowing} receita.`
+        }
+      />
 
-			<div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto">
-				{isLoading ? <LoadingComponent /> : null}
-				{isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
-				{isSuccess ? (
-					revenues && revenues.length > 0 ? (
-						revenues.map((revenue) => <RevenueCard key={revenue._id} revenue={revenue} handleClick={(id) => setEditModal({ id, isOpen: true })} />)
-					) : (
-						<div className="text-primary/80 w-full text-center text-sm font-medium tracking-tight">Nenhuma receita encontrada.</div>
-					)
-				) : null}
-			</div>
-			{editModal.isOpen && editModal.id ? (
-				<EditRevenue session={session} revenueId={editModal.id} closeModal={() => setEditModal({ isOpen: false, id: null })} />
-			) : null}
-			{filterMenuIsOpen ? (
-				<RevenuesFilterMenu queryParams={queryParams} updateQueryParams={updateQueryParams} closeMenu={() => setFilterMenuIsOpen(false)} />
-			) : null}
-		</div>
-	);
+      <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex w-full grow flex-col items-center gap-3 gap-y-1 overflow-y-auto overscroll-y-auto">
+        {isLoading ? <LoadingComponent /> : null}
+        {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
+        {isSuccess ? (
+          revenues && revenues.length > 0 ? (
+            revenues.map((revenue) => (
+              <RevenueCard
+                key={revenue._id}
+                revenue={revenue}
+                handleClick={(id) => setEditModal({ id, isOpen: true })}
+              />
+            ))
+          ) : (
+            <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
+              Nenhuma receita encontrada.
+            </div>
+          )
+        ) : null}
+      </div>
+      {editModal.isOpen && editModal.id ? (
+        <EditRevenue
+          session={session}
+          revenueId={editModal.id}
+          closeModal={() => setEditModal({ isOpen: false, id: null })}
+        />
+      ) : null}
+      {filterMenuIsOpen ? (
+        <RevenuesFilterMenu
+          queryParams={queryParams}
+          updateQueryParams={updateQueryParams}
+          closeMenu={() => setFilterMenuIsOpen(false)}
+        />
+      ) : null}
+    </div>
+  );
 }
 
 export default RevenuesBlock;
 
 type RevenueCardProps = {
-	revenue: TRevenuesByFiltersResult["revenues"][number];
-	handleClick: (id: string) => void;
+  revenue: TRevenuesByFiltersResult["revenues"][number];
+  handleClick: (id: string) => void;
 };
 function RevenueCard({ revenue, handleClick }: RevenueCardProps) {
-	function getReceiptStatus({
-		receipts,
-		revenueTotal,
-	}: {
-		receipts: TRevenuesByFiltersResult["revenues"][number]["fracionamento"];
-		revenueTotal: number;
-	}) {
-		const totalReceived = receipts.reduce((acc, curr) => (!!curr.dataRecebimento ? acc + (curr.valor || curr.porcentagem * revenueTotal) : acc), 0);
-		const partionsReceived = receipts.filter((r) => !!r.dataRecebimento).length;
+  function getReceiptStatus({
+    receipts,
+    revenueTotal,
+  }: {
+    receipts: TRevenuesByFiltersResult["revenues"][number]["fracionamento"];
+    revenueTotal: number;
+  }) {
+    const totalReceived = receipts.reduce(
+      (acc, curr) =>
+        !!curr.dataRecebimento ? acc + (curr.valor || curr.porcentagem * revenueTotal) : acc,
+      0,
+    );
+    const partionsReceived = receipts.filter((r) => !!r.dataRecebimento).length;
 
-		// In case partions received are equal to the total amount of receipts
-		if (totalReceived == revenueTotal)
-			return {
-				tag: <h1 className="text-xxs rounded-lg bg-green-500 px-2 py-0.5 text-center font-medium text-white">RECEBIDO</h1>,
+    // In case partions received are equal to the total amount of receipts
+    if (totalReceived == revenueTotal)
+      return {
+        tag: (
+          <h1 className="text-xxs rounded-lg bg-green-500 px-2 py-0.5 text-center font-medium text-white">
+            RECEBIDO
+          </h1>
+        ),
 
-				fractionationStr: `${partionsReceived}/${receipts.length}`,
-			};
+        fractionationStr: `${partionsReceived}/${receipts.length}`,
+      };
 
-		if (totalReceived > 0)
-			return {
-				tag: <h1 className="text-xxs rounded-lg bg-orange-600 px-2 py-0.5 text-center font-medium text-white">RECEBIDO PARCIAL</h1>,
+    if (totalReceived > 0)
+      return {
+        tag: (
+          <h1 className="text-xxs rounded-lg bg-orange-600 px-2 py-0.5 text-center font-medium text-white">
+            RECEBIDO PARCIAL
+          </h1>
+        ),
 
-				fractionationStr: `${partionsReceived}/${receipts.length}`,
-			};
+        fractionationStr: `${partionsReceived}/${receipts.length}`,
+      };
 
-		return {
-			tag: <h1 className="text-xxs rounded-lg bg-red-600 px-2 py-0.5 text-center font-medium text-white">PENDENTE</h1>,
+    return {
+      tag: (
+        <h1 className="text-xxs rounded-lg bg-red-600 px-2 py-0.5 text-center font-medium text-white">
+          PENDENTE
+        </h1>
+      ),
 
-			fractionationStr: `${partionsReceived}/${receipts.length}`,
-		};
-	}
-	const { tag: ReceiptStatusTag, fractionationStr } = getReceiptStatus({ receipts: revenue.fracionamento, revenueTotal: revenue.total });
-	return (
-		<div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex flex-wrap items-center gap-2">
-					<p className="text-sm leading-none font-bold tracking-tight">{revenue.nome}</p>
-					{ReceiptStatusTag}
-				</div>
-				<h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">{formatToMoney(revenue.total)}</h1>
-			</div>
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex w-fit min-w-fit items-center gap-1">
-					<MdDashboard width={10} height={10} />
-					<h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{revenue.tipo}</h1>
-				</div>
+      fractionationStr: `${partionsReceived}/${receipts.length}`,
+    };
+  }
+  const { tag: ReceiptStatusTag, fractionationStr } = getReceiptStatus({
+    receipts: revenue.fracionamento,
+    revenueTotal: revenue.total,
+  });
+  return (
+    <div className="border-primary bg-background flex w-full flex-col gap-1 rounded border p-2 shadow-xs dark:bg-[#121212]">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-sm leading-none font-bold tracking-tight">{revenue.nome}</p>
+          {ReceiptStatusTag}
+        </div>
+        <h1 className="bg-primary text-secondary rounded-lg px-2 py-0.5 text-center text-[0.65rem] font-medium">
+          {formatToMoney(revenue.total)}
+        </h1>
+      </div>
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex w-fit min-w-fit items-center gap-1">
+          <MdDashboard width={10} height={10} />
+          <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
+            {revenue.tipo}
+          </h1>
+        </div>
 
-				<div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
-					<div className="flex items-center gap-1">
-						<BsCalendar width={10} height={10} />
-						<h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">COMPETÊNCIA</h1>
-						<h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
-							{revenue.efetivacao.data ? formatDateAsLocale(revenue.efetivacao.data) : "N/A"}
-						</h1>
-					</div>
-					<div className="flex items-center gap-1">
-						<BsCircleHalf width={10} height={10} />
-						<h1 className="text-primary/80 py-0.5 text-center text-[0.6rem] font-medium italic">RECEBIMENTOS</h1>
-						<h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">{fractionationStr}</h1>
-					</div>
-				</div>
-			</div>
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:min-w-fit lg:justify-end">
+          <div className="flex items-center gap-1">
+            <BsCalendar width={10} height={10} />
+            <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
+              COMPETÊNCIA
+            </h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
+              {revenue.efetivacao.data ? formatDateAsLocale(revenue.efetivacao.data) : "N/A"}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
+            <BsCircleHalf width={10} height={10} />
+            <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
+              RECEBIMENTOS
+            </h1>
+            <h1 className="text-primary py-0.5 text-center text-[0.6rem] font-bold">
+              {fractionationStr}
+            </h1>
+          </div>
+        </div>
+      </div>
 
-			<div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
-				<div className="flex flex-wrap items-center gap-2">
-					<div className="flex items-center gap-1">
-						<BsCalendarPlus />
-						<p className="text-primary/80 text-[0.65rem] font-medium">{formatDateAsLocale(revenue.dataInsercao, true)}</p>
-					</div>
-					<div className="flex items-center gap-1">
-						<Avatar url={revenue.autor.avatar_url || undefined} height={20} width={20} fallback={formatNameAsInitials(revenue.autor.nome)} />
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1">
+            <BsCalendarPlus />
+            <p className="text-foreground text-[0.65rem] font-medium">
+              {formatDateAsLocale(revenue.dataInsercao, true)}
+            </p>
+          </div>
+          <div className="flex items-center gap-1">
+            <Avatar
+              url={revenue.autor.avatar_url || undefined}
+              height={20}
+              width={20}
+              fallback={formatNameAsInitials(revenue.autor.nome)}
+            />
 
-						<p className="text-primary/80 text-[0.65rem] font-medium">{revenue.autor.nome}</p>
-					</div>
-				</div>
-				<button onClick={() => handleClick(revenue._id)} className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]">
-					<Pencil width={10} height={10} />
-					<p>EDITAR</p>
-				</button>
-			</div>
-		</div>
-	);
+            <p className="text-foreground text-[0.65rem] font-medium">{revenue.autor.nome}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => handleClick(revenue._id)}
+          className="bg-primary text-secondary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem]"
+        >
+          <Pencil width={10} height={10} />
+          <p>EDITAR</p>
+        </button>
+      </div>
+    </div>
+  );
 }

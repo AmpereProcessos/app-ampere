@@ -49,17 +49,17 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
           <div className="my-2 flex w-full items-center justify-center gap-2">
             <div className="flex items-center gap-1">
               <BsCode />
-              <h1 className="text-primary/60 text-xs tracking-tight">{formulary._id}</h1>
+              <h1 className="text-foreground text-xs tracking-tight">{formulary._id}</h1>
             </div>
             <div className="flex items-center gap-1">
               <BsCalendarPlus />
-              <h1 className="text-primary/60 text-xs tracking-tight">
+              <h1 className="text-foreground text-xs tracking-tight">
                 ABERTO EM: {formatDateAsLocale(formulary.dataInsercao, true)}
               </h1>
             </div>
             <div className="flex items-center gap-1">
               <BsCalendarCheck />
-              <h1 className="text-primary/60 text-xs tracking-tight">
+              <h1 className="text-foreground text-xs tracking-tight">
                 FINALIZADO EM:{" "}
                 {formatDateAsLocale(formulary.dataEfetivacao, true) || "NÃO FINALIZADO"}
               </h1>
@@ -87,7 +87,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
                 </h1>
                 <div className="flex w-full items-center gap-1">
                   <BsCode />
-                  <h1 className="text-primary/60 text-[0.65rem] tracking-tight">
+                  <h1 className="text-foreground text-[0.65rem] tracking-tight">
                     {material.idExterno || "CÓDIGO NÃO DEFINIDO"}
                   </h1>
                 </div>
@@ -173,7 +173,7 @@ function PDFFormulario({ formularyJSON, error }: PDFFormularioProps) {
   //               <p className="whitespace-nowrap text-center text-xs font-medium text-gray-900">{material.nome}</p>
   //               <div className="flex items-center gap-1">
   //                 <BsCode />
-  //                 <h1 className="text-[0.65rem] tracking-tight text-primary/60">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
+  //                 <h1 className="text-[0.65rem] tracking-tight text-foreground">{material.idExterno || 'CÓDIGO NÃO DEFINIDO'}</h1>
   //               </div>
   //             </div>
   //             {/* <p className="col-span-1 whitespace-nowrap px-6 py-4 text-center text-sm font-medium text-gray-900">{material.id || 'N/A'}</p> */}

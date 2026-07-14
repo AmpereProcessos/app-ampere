@@ -14,12 +14,7 @@ type PdfDropzoneProps = {
 
 const ACCEPTED_MIME = "application/pdf";
 
-export default function PdfDropzone({
-  uploadPath,
-  value,
-  onChange,
-  disabled,
-}: PdfDropzoneProps) {
+export default function PdfDropzone({ uploadPath, value, onChange, disabled }: PdfDropzoneProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -52,7 +47,7 @@ export default function PdfDropzone({
 
   if (value) {
     return (
-      <div className="flex flex-col gap-2 rounded-xl border border-primary/20 bg-card p-4 shadow-2xs">
+      <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4 shadow-2xs">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -102,7 +97,7 @@ export default function PdfDropzone({
         handleFiles(e.dataTransfer.files);
       }}
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-primary/30 bg-card px-6 py-10 text-center transition",
+        "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-card px-6 py-10 text-center transition",
         isDragging && "border-primary bg-primary/5",
         (disabled || isUploading) && "opacity-60",
       )}

@@ -101,7 +101,7 @@ function NovoProjetoPageContent() {
     <div className="flex min-h-screen w-full flex-col gap-4 bg-background p-4 lg:p-6">
       <header className="flex w-full flex-col gap-3 border-b border-primary/15 pb-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2 text-primary/70">
+          <div className="flex items-center gap-2 text-foreground">
             <Landmark className="h-4 w-4" />
             <span className="text-xs font-bold uppercase tracking-wide">Gestão de projetos</span>
           </div>

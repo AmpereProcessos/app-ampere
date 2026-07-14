@@ -17,7 +17,7 @@ type FormularyCardProps = {
 };
 function FormularyCard({ formulary, openModal }: FormularyCardProps) {
   return (
-    <div className="border-primary/20 flex w-full flex-col rounded-md border p-3 lg:w-[450px]">
+    <div className="border-border flex w-full flex-col rounded-md border p-3 lg:w-[450px]">
       <div className="flex w-full items-center justify-between gap-2">
         <button
           type="button"
@@ -41,14 +41,14 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
       <div className="mt-1 flex w-full flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <FaDiamond />
-          <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+          <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
             {formulary.categoria}
           </p>
         </div>
         {formulary.dataEfetivacao ? (
           <div className="flex items-center gap-2">
             <BsCalendar2Check color="rgb(22,101,52)" />
-            <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+            <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
               {formatDateAsLocale(formulary.dataEfetivacao, true)}
             </p>
           </div>
@@ -57,13 +57,13 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
       <div className="mt-2 flex w-full flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <FaCity />
-          <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+          <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
             {formulary.localizacao.cidade}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <FaUsers color={"rgb(30,64,175)"} />
-          <p className="text-primary/60 text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
+          <p className="text-foreground text-[0.65rem] leading-none font-medium tracking-tight lg:text-xs">
             {formulary.responsaveis}
           </p>
         </div>
@@ -71,7 +71,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
       <div className="mt-2 flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <BsCalendarPlus />
-          <p className="text-primary/60 text-xs font-medium">
+          <p className="text-foreground text-xs font-medium">
             {formatDateAsLocale(formulary.dataInsercao, true)}
           </p>
         </div>
@@ -93,7 +93,7 @@ function FormularyCard({ formulary, openModal }: FormularyCardProps) {
               height={25}
               fallback={formatNameAsInitials(formulary.autor.nome)}
             />
-            <p className="text-primary/60 text-xs font-medium">{formulary.autor.nome}</p>
+            <p className="text-foreground text-xs font-medium">{formulary.autor.nome}</p>
           </div>
         </div>
       </div>

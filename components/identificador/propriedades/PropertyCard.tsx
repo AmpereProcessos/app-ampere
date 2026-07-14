@@ -140,7 +140,7 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
         <div className="flex w-full items-center justify-between gap-1">
           <div className="flex items-center gap-1">
             <BsCalendarPlus />
-            <p className="text-primary/60 text-xs font-medium">
+            <p className="text-foreground text-xs font-medium">
               {formatDateAsLocale(property.dataInsercao, true) || "N/A"}
             </p>
           </div>
@@ -151,7 +151,7 @@ function PropertyCard({ property, openModal }: PropertyCardProps) {
             onClick={() => openModal(property._id)}
           >
             <Pencil size={16} />
-            <p className="text-primary/80 text-sm font-semibold">EDITAR</p>
+            <p className="text-foreground text-sm font-semibold">EDITAR</p>
           </Button>
         </div>
       </div>

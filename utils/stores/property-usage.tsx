@@ -128,7 +128,9 @@ export const createPropertyUsageStore = (initProps?: PropertyUsageInitProps) => 
     clearPropertyUsage: () => set(defaultState),
     getPropertyUsage: () => get().propertyUsage,
     getAttachments: () => get().attachments,
-    reset: () => set(defaultState),
+    // volta ao estado com o qual a store foi inicializada, e não ao default vazio, para não
+    // descartar os dados da propriedade vindos do servidor (vide propriedade.id, kmInicial).
+    reset: () => set(initialState),
   }));
 };
 

@@ -13,7 +13,14 @@ export default function PublicTemporaryPropertyUsagePage({
   openUsage,
 }: PublicTemporaryPropertyUsagePageProps) {
   return (
-    <PropertyUsageProvider propertyUsage={initialPropertyUsage} attachments={[]}>
+    // a key força a store a ser recriada quando o uso em aberto muda (ex.: após iniciar
+    // o uso e o router.refresh() trocar a tela de início pela de finalização), já que o
+    // provider mantém a store em um useRef e ignoraria o novo estado inicial.
+    <PropertyUsageProvider
+      key={openUsage.openUsage?._id ?? "nova-utilizacao"}
+      propertyUsage={initialPropertyUsage}
+      attachments={[]}
+    >
       {openUsage.property.metadados.tipo === "VEÍCULO" ? (
         <VehicleUsage usageId={openUsage.openUsage?._id} property={openUsage.property} />
       ) : (

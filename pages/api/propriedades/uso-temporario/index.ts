@@ -303,6 +303,12 @@ async function updateTemporaryUsageRoute({ payload, requestId }: { payload: TUpd
     propertyId: payload.changes.propriedade.id,
     propertyUsageType: payload.changes.metadados.tipo,
   })
+
+  if (!ObjectId.isValid(payload.id)) throw new createHttpError.BadRequest('ID do uso temporário inválido.')
+  // o payload sobrescreve o documento inteiro via $set, então uma propriedade inválida aqui
+  // corromperia o registro antes de estourar mais adiante ao construir o ObjectId.
+  if (!ObjectId.isValid(payload.changes.propriedade.id)) throw new createHttpError.BadRequest('ID da propriedade inválido.')
+
   const dbClient = await clientPromise
   const dbSession = dbClient.startSession()
   let vehicleReviewAlertEmailPayload: TVehicleReviewAlertEmailPayload | null = null

@@ -1,20 +1,23 @@
-import NumberInput from "@/components/inputs/Number";
-import { TGetTemporaryUsageByPropertyOutput } from "@/pages/api/propriedades/uso-temporario/propriedade";
-import { usePropertyUsageStore } from "@/utils/stores/property-usage";
-import { AlertCircle, CloudUpload, Lock, Paperclip } from "lucide-react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { getVehicleReviewAlertLevelByKmDifference } from "@/lib/property-usage";
+import NumberInput from '@/components/inputs/Number'
+import { TGetTemporaryUsageByPropertyOutput } from '@/pages/api/propriedades/uso-temporario/propriedade'
+import { usePropertyUsageStore } from '@/utils/stores/property-usage'
+import { AlertCircle, CloudUpload, LoaderCircle, Lock, Paperclip } from 'lucide-react'
+import Image from 'next/image'
+import { cn } from '@/lib/utils'
+import { getVehicleReviewAlertLevelByKmDifference } from '@/lib/property-usage'
+import { compressImageForUpload } from '@/utils/methods/image-compression'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 type VehicleUsageKilometerAttachmentProps = {
-  property: TGetTemporaryUsageByPropertyOutput["data"]["property"];
-  attachmentIdentifier: "foto_painel_inicial" | "foto_painel_final";
-  title: string;
-  helper: string;
-  previewAlt: string;
-  kmValue?: number | null;
-  onKmChange?: (value: number) => void;
-};
+  property: TGetTemporaryUsageByPropertyOutput['data']['property']
+  attachmentIdentifier: 'foto_painel_inicial' | 'foto_painel_final'
+  title: string
+  helper: string
+  previewAlt: string
+  kmValue?: number | null
+  onKmChange?: (value: number) => void
+}
 
 export default function VehicleUsageKilometerAttachment({
   property,
@@ -25,28 +28,20 @@ export default function VehicleUsageKilometerAttachment({
   kmValue,
   onKmChange,
 }: VehicleUsageKilometerAttachmentProps) {
-  const attachments = usePropertyUsageStore((state) => state.attachments);
-  const mutateAttachment = usePropertyUsageStore((state) => state.mutateAttachment);
+  const [isOptimizingImage, setIsOptimizingImage] = useState(false)
+  const attachments = usePropertyUsageStore((state) => state.attachments)
+  const mutateAttachment = usePropertyUsageStore((state) => state.mutateAttachment)
 
-  const attachment = attachments.find((item) => item.identificador === attachmentIdentifier);
-  const vehicleReviewAlertLevel = getVehicleReviewAlertLevelByKmDifference(
-    property.metadados.kmProximaRevisao - property.metadados.kmAcumulado,
-  );
-  const inputId = `dropzone-${attachmentIdentifier}`;
+  const attachment = attachments.find((item) => item.identificador === attachmentIdentifier)
+  const vehicleReviewAlertLevel = getVehicleReviewAlertLevelByKmDifference(property.metadados.kmProximaRevisao - property.metadados.kmAcumulado)
+  const inputId = `dropzone-${attachmentIdentifier}`
 
   return (
     <div className="flex w-full flex-col gap-2">
       {vehicleReviewAlertLevel ? (
-        <div
-          className={cn(
-            "flex w-fit self-center items-center justify-center gap-1 rounded px-2 py-1",
-            vehicleReviewAlertLevel.color,
-          )}
-        >
+        <div className={cn('flex w-fit items-center justify-center gap-1 self-center rounded px-2 py-1', vehicleReviewAlertLevel.color)}>
           <AlertCircle size={15} />
-          <h1 className="w-fit text-start text-xs font-medium tracking-tight">
-            {vehicleReviewAlertLevel.call}
-          </h1>
+          <h1 className="w-fit text-start text-xs font-medium tracking-tight">{vehicleReviewAlertLevel.call}</h1>
         </div>
       ) : null}
 
@@ -77,48 +72,94 @@ export default function VehicleUsageKilometerAttachment({
         <div className="relative flex w-full items-center justify-center">
           <label
             htmlFor={inputId}
-            className="relative flex aspect-square h-auto w-full max-w-[300px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-border bg-card transition-colors hover:bg-accent"
+            className="border-border bg-card hover:bg-accent relative flex aspect-square h-auto w-full max-w-[300px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed transition-colors"
           >
             {attachment?.arquivos[0]?.previewUrl ? (
-              <Image
-                src={attachment.arquivos[0].previewUrl}
-                alt={previewAlt}
-                fill
-                className="object-cover"
-              />
+              <Image src={attachment.arquivos[0].previewUrl} alt={previewAlt} fill className="object-cover" />
             ) : (
               <div className="text-muted-foreground flex flex-col items-center justify-center px-4 pt-5 pb-6">
-                <CloudUpload className="h-6 min-h-6 w-6 min-w-6" />
+                {isOptimizingImage ? (
+                  <LoaderCircle className="h-6 min-h-6 w-6 min-w-6 animate-spin" />
+                ) : (
+                  <CloudUpload className="h-6 min-h-6 w-6 min-w-6" />
+                )}
                 <p className="text-center text-xs font-medium tracking-tight">
-                  Clique aqui para selecionar os arquivos ou arraste-os para área demarcada.
+                  {isOptimizingImage ? 'Otimizando a imagem…' : 'Clique aqui para selecionar os arquivos ou arraste-os para área demarcada.'}
                 </p>
               </div>
             )}
             <input
-              onChange={(e) => {
-                if (e.target.files) {
-                  const file = Array.from(e.target.files)[0] ?? null;
-                  if (!file) return;
+              onChange={async (e) => {
+                const file = Array.from(e.target.files ?? [])[0] ?? null
+                e.target.value = ''
+                if (!file) return
+
+                setIsOptimizingImage(true)
+                try {
+                  const result = await compressImageForUpload(file)
+                  const previousPreviewUrl = attachment?.arquivos[0]?.previewUrl
+                  if (previousPreviewUrl) URL.revokeObjectURL(previousPreviewUrl)
+
                   mutateAttachment({
                     identifier: attachmentIdentifier,
                     attachment: {
                       titulo: title,
                       arquivos: [
-                        { arquivo: file, previewUrl: URL.createObjectURL(file), tipo: file.type },
+                        {
+                          arquivo: result.file,
+                          previewUrl: URL.createObjectURL(result.file),
+                          tipo: result.file.type,
+                          originalSize: result.originalSize,
+                          compressionDurationMs: result.compressionDurationMs,
+                        },
                       ],
                       identificador: attachmentIdentifier,
                     },
-                  });
+                  })
+
+                  console.info('[PROPERTY_USAGE_IMAGE_OPTIMIZED]', {
+                    attachmentIdentifier,
+                    originalBytes: result.originalSize,
+                    optimizedBytes: result.compressedSize,
+                    compressionDurationMs: result.compressionDurationMs,
+                    compressed: result.compressed,
+                    originalDimensions: [result.originalWidth, result.originalHeight],
+                    outputDimensions: [result.outputWidth, result.outputHeight],
+                  })
+                } catch (error) {
+                  console.error('[PROPERTY_USAGE_IMAGE_OPTIMIZATION_FAILED]', error)
+                  const previousPreviewUrl = attachment?.arquivos[0]?.previewUrl
+                  if (previousPreviewUrl) URL.revokeObjectURL(previousPreviewUrl)
+                  mutateAttachment({
+                    identifier: attachmentIdentifier,
+                    attachment: {
+                      titulo: title,
+                      arquivos: [
+                        {
+                          arquivo: file,
+                          previewUrl: URL.createObjectURL(file),
+                          tipo: file.type,
+                          originalSize: file.size,
+                          compressionDurationMs: 0,
+                        },
+                      ],
+                      identificador: attachmentIdentifier,
+                    },
+                  })
+                  toast('Não foi possível otimizar a foto; ela será enviada no tamanho original.')
+                } finally {
+                  setIsOptimizingImage(false)
                 }
               }}
               id={inputId}
               type="file"
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-              accept=".png,.jpeg,.jpg"
+              accept="image/png,image/jpeg"
+              disabled={isOptimizingImage}
             />
           </label>
         </div>
       </div>
     </div>
-  );
+  )
 }

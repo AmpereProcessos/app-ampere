@@ -49,6 +49,7 @@
     "@tiptap/suggestion": "^3.6.2",
     "@types/qrcode": "^1.5.5",
     "@types/react-dom": "^18.3.0",
+    "@vercel/functions": "^3.7.5",
     "ai": "^5.0.68",
     "arctic": "^3.7.0",
     "axios": "^1.7.2",

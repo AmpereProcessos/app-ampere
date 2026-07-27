@@ -2,8 +2,13 @@ import type { TGetProjectsExportRoutePayload } from "@/lib/data-exports";
 import { useDebounce } from "@/lib/hooks/debounce";
 import type { TGetProjectAllocationsGroupedInput, TGetProjectAllocationsGroupedOutput } from "@/pages/api/projects/alocacoes/grouped";
 import type { TProjectsByFiltersResult } from "@/pages/api/projects/search";
-import type { TPersonalizedProjectsFilter, TProjectDTODBSimplified, TQueryVinculationProjectsFilter } from "@/utils/schemas/projects";
-import { useQuery } from "@tanstack/react-query";
+import type {
+	TPersonalizedProjectsFilter,
+	TProjectResumeDTO,
+	TQueryVinculationProjectsFilterInput,
+	TVinculationProjectsByFiltersResult,
+} from "@/utils/schemas/projects";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 
@@ -46,16 +51,49 @@ export function useProjectsByPersonalizedFilters({ page }: { page: number }) {
 	};
 }
 
-async function fetchVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
-	if (query.search.trim().length === 0) return [];
+export async function fetchVinculationProjectsSearch(query: TQueryVinculationProjectsFilterInput) {
 	const { data } = await axios.post("/api/projects/pesquisa-vinculacao", query);
-	return data.data as TProjectDTODBSimplified[];
+	return data.data as TVinculationProjectsByFiltersResult;
 }
 
-export function useVinculationProjectsSearch(query: TQueryVinculationProjectsFilter) {
+export function useVinculationProjectsSearch(query: TQueryVinculationProjectsFilterInput) {
 	return useQuery({
 		queryKey: ["projects-vinculation-search", query],
 		queryFn: async () => await fetchVinculationProjectsSearch(query),
+	});
+}
+
+/**
+ * Busca paginada de projetos para o seletor assíncrono (components/inputs/project-picker).
+ * O debounce fica dentro do hook para manter a query key estável entre digitações.
+ */
+export function useVinculationProjectsSearchInfinite({ search }: { search: string }) {
+	const debouncedSearch = useDebounce(search, 400);
+	return {
+		...useInfiniteQuery({
+			queryKey: ["projects-vinculation-search-infinite", { search: debouncedSearch }],
+			queryFn: async ({ pageParam }) =>
+				await fetchVinculationProjectsSearch({ search: debouncedSearch, page: pageParam }),
+			initialPageParam: 1,
+			getNextPageParam: (lastPage, allPages) =>
+				allPages.length < lastPage.totalPages ? allPages.length + 1 : undefined,
+			staleTime: 60 * 1000,
+		}),
+		debouncedSearch,
+	};
+}
+
+export async function fetchProjectResume({ id }: { id: string }) {
+	const { data } = await axios.get(`/api/projects/resumo/${id}`);
+	return data.data as TProjectResumeDTO;
+}
+
+export function useProjectResume({ id, enabled = true }: { id: string | null; enabled?: boolean }) {
+	return useQuery({
+		queryKey: ["project-resume", id],
+		queryFn: async () => await fetchProjectResume({ id: id as string }),
+		enabled: !!id && enabled,
+		staleTime: 5 * 60 * 1000,
 	});
 }
 

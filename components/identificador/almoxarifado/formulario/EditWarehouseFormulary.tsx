@@ -1,40 +1,30 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
+import ProjectPicker from "@/components/inputs/project-picker/ProjectPicker";
 import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import ErrorComponent from "@/components/utils/ErrorComponent";
-import LoadingPage from "@/components/utils/LoadingPage";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
 import ResponsiveDialogDrawerViewOnly from "@/components/utils/ResponsiveDialogDrawerViewOnly";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { equipesTecnicas, serviceOrdersCategories } from "@/utils/constants";
-import { formatToCEP } from "@/utils/methods/formatting";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import { createExpense } from "@/utils/methods/mutation/expenses";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { updateManyMaterials } from "@/utils/methods/mutation/materials";
 import {
   deleteWarehouseFormulary,
   updateWarehouseFormulary,
 } from "@/utils/methods/mutation/warehouse-forms";
 import { useWarehouseFormById } from "@/utils/methods/query/warehouse-forms";
-import { getCEPInfo } from "@/utils/methods/shared";
 import type { TExpense } from "@/utils/schemas/expenses";
 import type {
   TNewWarehouseFormularyDTO,
   TTransactionalWarehouseFormulary,
 } from "@/utils/schemas/warehouse-formularies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Code, CodeIcon, FileTextIcon, LayoutGrid, UserRound } from "lucide-react";
+import { Code, CodeIcon, FileTextIcon, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { BsCode } from "react-icons/bs";
-import { FaUser } from "react-icons/fa";
-import { VscChromeClose } from "react-icons/vsc";
-import { estadosECidades } from "../../../../utils/estados_cidades";
 import MaterialsBlock from "./MaterialsBlock";
 import WarehouseFormularyLocation from "./blocos/WarehouseFormularyLocation";
 import { Button } from "@/components/ui/button";
@@ -246,27 +236,31 @@ function EditForm({ formularyId, session, closeModal, callbacks }: EditFormProps
           handleChange={(value) => setInfoHolder((prev) => ({ ...prev, titulo: value }))}
           width="100%"
         />
-        {infoHolder.projeto ? (
-          <ResponsiveDialogDrawerSection
-            sectionTitleText="PROJETO"
-            sectionTitleIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}
-          >
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1">
-                <Code className="h-4 w-4 min-h-4 min-w-4" />
-                <p className="text-sm font-semibold tracking-tight">
-                  #{infoHolder.projeto.id || "N/A"}
-                </p>
-              </div>
-              <div className="flex items-center gap-1">
-                <UserRound className="h-4 w-4 min-h-4 min-w-4" />
-                <p className="text-sm font-semibold tracking-tight">
-                  {infoHolder.projeto.nome || "N/A"}
-                </p>
-              </div>
-            </div>
-          </ResponsiveDialogDrawerSection>
-        ) : null}
+        <ResponsiveDialogDrawerSection
+          sectionTitleText="PROJETO"
+          sectionTitleIcon={<LayoutGrid className="h-4 w-4 min-h-4 min-w-4" />}
+        >
+          <ProjectPicker
+            showLabel={false}
+            editable={!isFormularyFinished}
+            value={infoHolder.projeto?.id ?? null}
+            fallbackLabel={{
+              nome: infoHolder.projeto?.nome,
+              identificador: infoHolder.projeto?.identificador,
+            }}
+            selectedItemLabel="NENHUM PROJETO VINCULADO"
+            handleChange={({ id, nome, identificador }) =>
+              setInfoHolder((prev) => ({ ...prev, projeto: { id, nome, identificador } }))
+            }
+            onReset={() =>
+              setInfoHolder((prev) => ({
+                ...prev,
+                projeto: { id: null, nome: null, identificador: null },
+              }))
+            }
+            width="100%"
+          />
+        </ResponsiveDialogDrawerSection>
         <div className="my-2 flex w-full items-center justify-center">
           <CheckboxInput
             labelFalse="RESPONSÁVEL INTERNO"

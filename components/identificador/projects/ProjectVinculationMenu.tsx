@@ -11,7 +11,7 @@ import { useVinculationProjectsSearch } from "@/utils/methods/query/projects";
 import type {
   TProjectDTO,
   TProjectDTODBSimplified,
-  TQueryVinculationProjectsFilter,
+  TQueryVinculationProjectsFilterInput,
 } from "@/utils/schemas/projects";
 import { LinkIcon, MapPin, Phone, UserRound } from "lucide-react";
 import React, { useState } from "react";
@@ -23,18 +23,19 @@ type ProjectVinculationMenuProps = {
   handleSelect: (project: TProjectDTO) => void;
 };
 function ProjectVinculationMenu({ closeModal, handleSelect }: ProjectVinculationMenuProps) {
-  const [queryParams, setQueryParams] = useState<TQueryVinculationProjectsFilter>({
+  const [queryParams, setQueryParams] = useState<TQueryVinculationProjectsFilterInput>({
     search: "",
   });
   const debouncedQueryParams = useDebounceMemo(queryParams, 350);
   const {
-    data: projects,
+    data,
     isLoading,
     isFetching,
     isError,
     isSuccess,
     error,
   } = useVinculationProjectsSearch(debouncedQueryParams);
+  const projects = data?.projects ?? [];
 
   async function handleProjectSelection(projectId: string) {
     const project = await fetchProjectById({ id: projectId });

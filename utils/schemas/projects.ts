@@ -925,6 +925,86 @@ export const ProjectDBSimplifiedProjection = {
   idVisitaTecnica: 1,
 };
 
+// Projeção enxuta usada pelo painel de resumo do seletor de projetos (components/inputs/project-picker).
+// Mantenha em sincronia com TProjectResume e com pages/api/projects/resumo/[id].ts.
+export type TProjectResume = Pick<
+  TProject,
+  | "qtde"
+  | "nomeDoContrato"
+  | "tipoDeServico"
+  | "codigoSVB"
+  | "canalVenda"
+  | "telefone"
+  | "email"
+  | "cpf_cnpj"
+  | "vendedor"
+  | "insider"
+  | "idProjetoCRM"
+  | "etiquetas"
+  | "cep"
+  | "uf"
+  | "cidade"
+  | "bairro"
+  | "logradouro"
+  | "numeroResidencia"
+> & {
+  contrato: {
+    status: TProject["contrato"]["status"];
+    dataAssinatura: TProject["contrato"]["dataAssinatura"];
+  };
+  sistema: {
+    potPico: TProject["sistema"]["potPico"];
+    valorProjeto: TProject["sistema"]["valorProjeto"];
+    inversor: TProject["sistema"]["inversor"];
+    qtdeModulos: TProject["sistema"]["qtdeModulos"];
+  };
+  pagamento: {
+    forma: TProject["pagamento"]["forma"];
+    credor: TProject["pagamento"]["credor"];
+    dataRecebimento: TProject["pagamento"]["dataRecebimento"];
+  };
+  obra: {
+    entrada: TProject["obra"]["entrada"];
+    saida: TProject["obra"]["saida"];
+    responsaveis: TProject["obra"]["responsaveis"];
+  };
+};
+export type TProjectResumeDTO = TProjectResume & { _id: string };
+
+export const ProjectResumeProjection = {
+  _id: 1,
+  qtde: 1,
+  nomeDoContrato: 1,
+  tipoDeServico: 1,
+  codigoSVB: 1,
+  canalVenda: 1,
+  telefone: 1,
+  email: 1,
+  cpf_cnpj: 1,
+  vendedor: 1,
+  insider: 1,
+  idProjetoCRM: 1,
+  etiquetas: 1,
+  cep: 1,
+  uf: 1,
+  cidade: 1,
+  bairro: 1,
+  logradouro: 1,
+  numeroResidencia: 1,
+  "contrato.status": 1,
+  "contrato.dataAssinatura": 1,
+  "sistema.potPico": 1,
+  "sistema.valorProjeto": 1,
+  "sistema.inversor": 1,
+  "sistema.qtdeModulos": 1,
+  "pagamento.forma": 1,
+  "pagamento.credor": 1,
+  "pagamento.dataRecebimento": 1,
+  "obra.entrada": 1,
+  "obra.saida": 1,
+  "obra.responsaveis": 1,
+};
+
 export type TProjectComissionSimplified = Pick<
   TProject,
   | "qtde"
@@ -1135,15 +1215,29 @@ export const PersonalizedFiltersSchema = z.object({
 export type TPersonalizedProjectsFilter = z.infer<typeof PersonalizedFiltersSchema>;
 
 export const QueryVinculationProjectsFiltersSchema = z.object({
+  // Busca vazia é válida: o seletor de projetos abre já listando os mais recentes.
   search: z
     .string({
-      required_error: "Filtro de pesquisa não informado.",
       invalid_type_error: "Tipo não válido para o filtro de pesquisa.",
     })
-    .min(1, "O filtro deve conter ao menos 1 caractere."),
+    .default(""),
+  page: z
+    .number({ invalid_type_error: "Tipo não válido para o parâmetro de paginação." })
+    .int("O parâmetro de paginação deve ser um número inteiro.")
+    .min(1, "O parâmetro de paginação deve ser maior ou igual a 1.")
+    .default(1),
 });
 
 export type TQueryVinculationProjectsFilter = z.infer<typeof QueryVinculationProjectsFiltersSchema>;
+// Payload enviado pelo client — `search` e `page` são opcionais por conta dos defaults do schema.
+export type TQueryVinculationProjectsFilterInput = z.input<
+  typeof QueryVinculationProjectsFiltersSchema
+>;
+export type TVinculationProjectsByFiltersResult = {
+  projects: TProjectDTODBSimplified[];
+  projectsMatched: number;
+  totalPages: number;
+};
 const Comissions = z.array(
   z.object({
     comissionado: z.object({

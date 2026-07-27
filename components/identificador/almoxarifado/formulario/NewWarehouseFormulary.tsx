@@ -1,22 +1,21 @@
 import CheckboxInput from "@/components/inputs/Checkbox";
+import ProjectPicker from "@/components/inputs/project-picker/ProjectPicker";
 import SelectInput from "@/components/inputs/Select";
-import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
 import TextInput from "@/components/inputs/Text";
 import ResponsiveDialogDrawer from "@/components/utils/ResponsiveDialogDrawer";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { equipesTecnicas, serviceOrdersCategories } from "@/utils/constants";
 import { formatToCEP } from "@/utils/methods/formatting";
-import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import { updateManyMaterials } from "@/utils/methods/mutation/materials";
 import { createWarehouseFormulary } from "@/utils/methods/mutation/warehouse-forms";
-import { useClients } from "@/utils/methods/query/clients";
-import { useMaterials } from "@/utils/methods/query/materials";
 import { getCEPInfo } from "@/utils/methods/shared";
-import type { TNewWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import type {
+  TNewWarehouseFormulary,
+  TTransactionalWarehouseFormulary,
+} from "@/utils/schemas/warehouse-formularies";
+import { useMutation } from "@tanstack/react-query";
+import type React from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { VscChromeClose } from "react-icons/vsc";
 import { estadosECidades } from "../../../../utils/estados_cidades";
 import MaterialsBlock from "./MaterialsBlock";
 type NewWarehouseFormularyProps = {
@@ -30,14 +29,8 @@ type NewWarehouseFormularyProps = {
   };
 };
 function NewWarehouseFormulary({ session, closeModal, callbacks }: NewWarehouseFormularyProps) {
-  const queryClient = useQueryClient();
   const [vinculateClient, setVinculateClient] = useState<boolean>(true);
   const [externalResponsible, setExternalResponsible] = useState<boolean>(false);
-  const {
-    data: clients,
-    isLoading: clientsLoading,
-    isFetching: clientsFetching,
-  } = useClients(!!session.user);
   const [infoHolder, setInfoHolder] = useState<TNewWarehouseFormulary>({
     titulo: "",
     categoria: "",
@@ -45,6 +38,7 @@ function NewWarehouseFormulary({ session, closeModal, callbacks }: NewWarehouseF
     projeto: {
       id: null,
       nome: null,
+      identificador: null,
     },
     localizacao: {
       cep: null,
@@ -172,46 +166,30 @@ function NewWarehouseFormulary({ session, closeModal, callbacks }: NewWarehouseF
             </button>{" "}
             para outros tipos de formulário.
           </p>
-          <SelectVirtualizedInput
-            label="CLIENTE"
-            options={
-              clients?.map((client) => ({
-                id: client._id,
-                label: `(${client.qtde}) ${client.nomeDoContrato}`,
-                value: client._id,
-              })) || []
-            }
-            value={infoHolder.projeto.id}
-            handleChange={(value) => {
-              const equivalent = clients?.find((client) => client._id === value);
-              if (!equivalent) return;
-              const {
-                qtde,
-                nomeDoContrato,
-                cep,
-                uf,
-                cidade,
-                bairro,
-                logradouro,
-                numeroResidencia,
-              } = equivalent;
+          <ProjectPicker
+            label="PROJETO"
+            value={infoHolder.projeto.id ?? null}
+            selectedItemLabel="NÃO DEFINIDO"
+            handleChange={({ id, nome, identificador, project }) => {
               setInfoHolder((prev) => ({
                 ...prev,
-                projeto: { id: value, nome: nomeDoContrato, identificador: qtde },
+                projeto: { id, nome, identificador },
                 localizacao: {
                   ...prev.localizacao,
-                  cep: cep as string,
-                  uf,
-                  cidade,
-                  bairro,
-                  logradouro,
-                  numeroResidencia,
+                  cep: project.cep?.toString() ?? null,
+                  uf: project.uf,
+                  cidade: project.cidade,
+                  bairro: project.bairro ?? "",
+                  endereco: project.logradouro ?? "",
+                  numeroOuIdentificador: project.numeroResidencia?.toString() ?? "",
                 },
               }));
             }}
-            selectedItemLabel="NÃO DEFINIDO"
             onReset={() =>
-              setInfoHolder((prev) => ({ ...prev, projeto: { ...prev.projeto, id: null } }))
+              setInfoHolder((prev) => ({
+                ...prev,
+                projeto: { id: null, nome: null, identificador: null },
+              }))
             }
             width="100%"
           />
@@ -285,7 +263,9 @@ function NewWarehouseFormulary({ session, closeModal, callbacks }: NewWarehouseF
 
       <MaterialsBlock
         formHolder={infoHolder}
-        setFormHolder={setInfoHolder}
+        setFormHolder={
+          setInfoHolder as React.Dispatch<React.SetStateAction<TTransactionalWarehouseFormulary>>
+        }
         blockDevolution={true}
       />
       <h1 className="mb-2 w-full rounded-md bg-[#15599a] p-1 text-center text-sm font-bold text-white">

@@ -52,6 +52,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import NumberInput from "../../../components/inputs/Number";
 import TextInput from "../../../components/inputs/Text";
 import { useMaterialSuppliers, useMaterialsDatabase } from "../../../utils/methods/query/materials";
+import { WAREHOUSE_PURCHASE_TAG_ID } from "@/utils/purchase-control-constants";
 
 function StockPage() {
   const { session, status } = useSession();
@@ -134,7 +135,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-6 gap-y-1.5 lg:justify-end">
           <Link
-            href={"/suprimentos/entregas?tagIds=67113e8d1cef044a60bb7606"}
+            href={`/suprimentos/entregas?tagIds=${WAREHOUSE_PURCHASE_TAG_ID}`}
             className="flex items-center gap-1 transition-colors hover:text-cyan-500"
           >
             <FaBox className="h-4 w-4" />
@@ -234,7 +235,7 @@ function StockPageComponent({ session }: StockPageComponentProps) {
           initialData={{
             etiquetas: [
               {
-                id: "67113e8d1cef044a60bb7606",
+                id: WAREHOUSE_PURCHASE_TAG_ID,
                 titulo: "ALMOXARIFADO",
                 cores: {
                   primaria: "#FF0000",

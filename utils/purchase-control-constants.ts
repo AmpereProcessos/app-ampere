@@ -1,0 +1,1 @@
+export const WAREHOUSE_PURCHASE_TAG_ID = "67113e8d1cef044a60bb7606";

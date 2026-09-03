@@ -212,6 +212,7 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 showPaymentInfo={true}
               />
               <InfoObrasBlock
+                session={session}
                 editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

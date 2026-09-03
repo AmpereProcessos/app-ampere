@@ -1,4 +1,5 @@
 import MaterialBlock from "@/components/identificador/almoxarifado/estoque/MaterialBlock";
+import SupplyAnalyticsView from "@/components/identificador/suprimentos/SupplyAnalyticsView";
 import DateIntervalInput from "@/components/inputs/DateIntervalInput";
 import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
@@ -13,8 +14,40 @@ import React, { useState } from "react";
 import { IoMdAlert, IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdAttachMoney } from "react-icons/md";
 import { VscDiffAdded } from "react-icons/vsc";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-function StockAnalytics() {
+function AnalyticsPage() {
+  return (
+    <main className="flex min-w-0 grow flex-col p-4 md:p-6">
+      <Tabs defaultValue="supply" className="min-w-0">
+        <div className="mb-6 flex flex-col gap-3 border-b pb-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-2xl font-black tracking-tight text-[#15599a]">ANALÍTICO</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Indicadores operacionais do estoque e de suprimentos.
+            </p>
+          </div>
+          <TabsList className="w-full md:w-auto">
+            <TabsTrigger value="supply" className="flex-1 md:flex-none">
+              Custos e compras
+            </TabsTrigger>
+            <TabsTrigger value="stock" className="flex-1 md:flex-none">
+              Posição do estoque
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        <TabsContent value="supply" className="mt-0">
+          <SupplyAnalyticsView />
+        </TabsContent>
+        <TabsContent value="stock" className="mt-0">
+          <StockPositionAnalytics />
+        </TabsContent>
+      </Tabs>
+    </main>
+  );
+}
+
+function StockPositionAnalytics() {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
   const {
     data: materialsResult,
@@ -30,7 +63,7 @@ function StockAnalytics() {
   const materialsShowing = materials.length;
   const totalPages = materialsResult?.totalPages || 0;
   return (
-    <div className="flex grow flex-col p-6">
+    <div className="flex grow flex-col">
       <div className="border-border flex flex-col items-center justify-between border-b p-1">
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col items-center gap-2 lg:flex-row">
@@ -237,4 +270,4 @@ function StockAnalytics() {
   );
 }
 
-export default StockAnalytics;
+export default AnalyticsPage;

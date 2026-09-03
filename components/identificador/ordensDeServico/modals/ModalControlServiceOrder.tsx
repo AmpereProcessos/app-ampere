@@ -10,7 +10,6 @@ import ErrorComponent from "@/components/utils/ErrorComponent";
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { cn } from "@/lib/utils";
-import { updateProject } from "@/utils/methods/mutation/clients";
 import { useServiceOrderById } from "@/utils/methods/query/service-orders";
 import type { TServiceOrder, TServiceOrderDTO } from "@/utils/schemas/service-order";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -243,9 +242,9 @@ function ModalControlServiceOrder({
                 />
                 {serviceOrder?.projetoDados ? (
                   <ServiceOrderProjectInformationBlock
+                    session={session}
                     project={serviceOrder.projetoDados}
                     infoHolder={osInfo}
-                    updateInfoHolder={updateInfoHolder}
                   />
                 ) : (
                   <ServiceOrderProjectVinculation

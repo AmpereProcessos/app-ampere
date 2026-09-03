@@ -13,7 +13,7 @@ import {
   subMonths,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -31,6 +31,7 @@ type DateIntervalInputProps = {
   value: { after?: Date; before?: Date };
   handleChange: (value: { after?: Date; before?: Date }) => void;
   presets?: Preset[];
+  numberOfMonths?: number;
 };
 
 function DateIntervalInput({
@@ -40,6 +41,7 @@ function DateIntervalInput({
   value,
   handleChange,
   presets,
+  numberOfMonths = 2,
 }: DateIntervalInputProps) {
   const defaultPresets: Preset[] = [
     {
@@ -75,10 +77,6 @@ function DateIntervalInput({
   ];
 
   const availablePresets = presets || defaultPresets;
-
-  const handlePresetSelect = (preset: Preset) => {
-    handleChange(preset.interval);
-  };
 
   return (
     <div className={cn("flex flex-col gap-1")}>
@@ -120,7 +118,7 @@ function DateIntervalInput({
             defaultMonth={value?.after}
             selected={{ from: value.after, to: value.before }}
             onSelect={(value) => handleChange({ after: value?.from, before: value?.to })}
-            numberOfMonths={2}
+            numberOfMonths={numberOfMonths}
           />
           {availablePresets.length > 0 ? (
             <div className="flex w-full items-center justify-center px-2 py-1">

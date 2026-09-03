@@ -1,4 +1,5 @@
 import MaterialBlock from "@/components/identificador/almoxarifado/estoque/MaterialBlock";
+import DateIntervalInput from "@/components/inputs/DateIntervalInput";
 import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
 import ErrorComponent from "@/components/utils/ErrorComponent";
@@ -6,7 +7,7 @@ import LoadingPage from "@/components/utils/LoadingPage";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import { formatToMoney, SlideMotionVariants } from "@/utils/constants";
 import { useMaterialsDatabase, useStockAnalytics } from "@/utils/methods/query/materials";
-import type { TMaterialDTO } from "@/utils/schemas/materials";
+import { endOfDay, startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { IoMdAlert, IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
@@ -23,12 +24,7 @@ function StockAnalytics() {
     filters,
     updateFilters,
   } = useMaterialsDatabase();
-  const {
-    data: stockAnalytics,
-    isLoading: isStockAnalyticsLoading,
-    isError: isStockAnalyticsError,
-    isSuccess: isStockAnalyticsSuccess,
-  } = useStockAnalytics();
+  const { data: stockAnalytics } = useStockAnalytics();
   const materials = materialsResult?.materials || [];
   const materialsMatched = materialsResult?.materialsMatched || 0;
   const materialsShowing = materials.length;
@@ -118,6 +114,42 @@ function StockAnalytics() {
                   placeholder={"Digite o nome do material..."}
                   handleChange={(value) => updateFilters({ name: value })}
                 />
+
+                <div className="flex w-full items-end gap-2 lg:w-[410px]">
+                  <div className="min-w-0 grow">
+                    <DateIntervalInput
+                      label="PERÍODO DE INSERÇÃO"
+                      numberOfMonths={1}
+                      value={{
+                        after: filters.period.after ? new Date(filters.period.after) : undefined,
+                        before: filters.period.before ? new Date(filters.period.before) : undefined,
+                      }}
+                      handleChange={({ after, before }) =>
+                        updateFilters({
+                          page: 1,
+                          period: {
+                            field: after || before ? "dataInsercao" : null,
+                            after: after ? startOfDay(after).toISOString() : null,
+                            before: before ? endOfDay(before).toISOString() : null,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    disabled={!filters.period.after && !filters.period.before}
+                    onClick={() =>
+                      updateFilters({
+                        page: 1,
+                        period: { field: null, after: null, before: null },
+                      })
+                    }
+                    className="border-border text-foreground hover:bg-muted focus-visible:ring-ring h-[46.6px] rounded-md border px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    LIMPAR
+                  </button>
+                </div>
 
                 <div className="w-full lg:w-[250px]">
                   <NumberInput

@@ -243,6 +243,7 @@ function ModalOeM({ projectId, closeModal, modalIsOpen }) {
               // />
               null}
               <InfoObrasBlock
+                session={session}
                 editor={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

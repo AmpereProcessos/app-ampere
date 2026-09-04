@@ -19,6 +19,8 @@ import SelectInput from "../inputs/Select";
 import { useEmployeesSimplified } from "@/utils/methods/query/users";
 import MultipleSelectWithImages from "../inputs/MultipleSelectWithImages";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import ProjectServiceOrders from "../identificador/ordensDeServico/ProjectServiceOrders";
+import { TAuthSession } from "@/lib/authentication/types";
 
 type InfoObrasBlockProps = {
   editor: boolean;
@@ -30,6 +32,7 @@ type InfoObrasBlockProps = {
   project: TProjectDTO;
   showMaterialInfo: boolean;
   showDeliveryInfo: boolean;
+  session: TAuthSession;
 };
 function InfoObrasBlock({
   editor,
@@ -41,6 +44,7 @@ function InfoObrasBlock({
   project,
   showMaterialInfo = false,
   showDeliveryInfo = false,
+  session,
 }: InfoObrasBlockProps) {
   const {
     data: employees,
@@ -288,6 +292,11 @@ function InfoObrasBlock({
           setChanges={setChanges}
         />
       ) : null}
+      <ProjectServiceOrders
+        session={session}
+        projectId={infoHolder._id}
+        projectMainServiceOrderId={infoHolder.idOrdemServico}
+      />
     </div>
   );
 }

@@ -23,7 +23,6 @@ import ServiceOrderLocationInformationBlock from "./blocos/LocationInformationBl
 import ServiceOrderProjectInformationBlock from "./blocos/ProjectInformationBlock";
 import ServiceOrderScheduling from "./blocos/SchedulingInformationBlock";
 import ServiceOrderTechnicalAnalysisInformationBlock from "./blocos/TechnicalAnalysisBlock";
-import ServiceOrderObservationsBlock from "./blocos/utils/Observations";
 import ServiceOrderProjectVinculation from "./blocos/utils/ProjectVinculation";
 import ServiceOrderTagsBlock from "./blocos/TagsBlock";
 
@@ -210,9 +209,9 @@ function ModalNewServiceOrder({
             />
             {project ? (
               <ServiceOrderProjectInformationBlock
+                session={session}
                 project={project}
                 infoHolder={osInfo}
-                updateInfoHolder={updateInfoHolder}
               />
             ) : (
               <ServiceOrderProjectVinculation

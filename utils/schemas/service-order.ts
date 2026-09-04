@@ -580,6 +580,10 @@ export const PersonalizedFiltersSchema = z.object({
     required_error: "Filtro de equipamentos não entregues não informado.",
     invalid_type_error: "Tipo não válido para filtro de equipamentos não entregues.",
   }),
+  projectHomologationApproved: z.boolean({
+    required_error: "Filtro de homologação aprovada não informado.",
+    invalid_type_error: "Tipo não válido para filtro de homologação aprovada.",
+  }),
   pending: z.boolean({
     required_error: "Filtro de somente pendentes não informado.",
     invalid_type_error: "Tipo não válido para filtro de somente pendentes.",
@@ -677,6 +681,7 @@ export type TServiceOrderProject = Pick<
     observacoes: TProject["obra"]["observacoes"];
     pendencias: TProject["obra"]["pendencias"];
   };
+  padrao: TProject["padrao"];
 };
 export type TServiceOrderProjectDTO = TServiceOrderProject & { _id: string };
 

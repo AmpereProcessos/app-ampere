@@ -1,5 +1,6 @@
 import MaterialBlock from "@/components/identificador/almoxarifado/estoque/MaterialBlock";
 import SupplyAnalyticsView from "@/components/identificador/suprimentos/SupplyAnalyticsView";
+import DateIntervalInput from "@/components/inputs/DateIntervalInput";
 import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
 import ErrorComponent from "@/components/utils/ErrorComponent";
@@ -7,7 +8,7 @@ import LoadingPage from "@/components/utils/LoadingPage";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
 import { formatToMoney, SlideMotionVariants } from "@/utils/constants";
 import { useMaterialsDatabase, useStockAnalytics } from "@/utils/methods/query/materials";
-import type { TMaterialDTO } from "@/utils/schemas/materials";
+import { endOfDay, startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { IoMdAlert, IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
@@ -22,15 +23,25 @@ function AnalyticsPage() {
         <div className="mb-6 flex flex-col gap-3 border-b pb-3 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-2xl font-black tracking-tight text-[#15599a]">ANALÍTICO</p>
-            <p className="mt-1 text-sm text-muted-foreground">Indicadores operacionais do estoque e de suprimentos.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Indicadores operacionais do estoque e de suprimentos.
+            </p>
           </div>
           <TabsList className="w-full md:w-auto">
-            <TabsTrigger value="supply" className="flex-1 md:flex-none">Custos e compras</TabsTrigger>
-            <TabsTrigger value="stock" className="flex-1 md:flex-none">Posição do estoque</TabsTrigger>
+            <TabsTrigger value="supply" className="flex-1 md:flex-none">
+              Custos e compras
+            </TabsTrigger>
+            <TabsTrigger value="stock" className="flex-1 md:flex-none">
+              Posição do estoque
+            </TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="supply" className="mt-0"><SupplyAnalyticsView /></TabsContent>
-        <TabsContent value="stock" className="mt-0"><StockPositionAnalytics /></TabsContent>
+        <TabsContent value="supply" className="mt-0">
+          <SupplyAnalyticsView />
+        </TabsContent>
+        <TabsContent value="stock" className="mt-0">
+          <StockPositionAnalytics />
+        </TabsContent>
       </Tabs>
     </main>
   );
@@ -46,12 +57,7 @@ function StockPositionAnalytics() {
     filters,
     updateFilters,
   } = useMaterialsDatabase();
-  const {
-    data: stockAnalytics,
-    isLoading: isStockAnalyticsLoading,
-    isError: isStockAnalyticsError,
-    isSuccess: isStockAnalyticsSuccess,
-  } = useStockAnalytics();
+  const { data: stockAnalytics } = useStockAnalytics();
   const materials = materialsResult?.materials || [];
   const materialsMatched = materialsResult?.materialsMatched || 0;
   const materialsShowing = materials.length;
@@ -141,6 +147,42 @@ function StockPositionAnalytics() {
                   placeholder={"Digite o nome do material..."}
                   handleChange={(value) => updateFilters({ name: value })}
                 />
+
+                <div className="flex w-full items-end gap-2 lg:w-[410px]">
+                  <div className="min-w-0 grow">
+                    <DateIntervalInput
+                      label="PERÍODO DE INSERÇÃO"
+                      numberOfMonths={1}
+                      value={{
+                        after: filters.period.after ? new Date(filters.period.after) : undefined,
+                        before: filters.period.before ? new Date(filters.period.before) : undefined,
+                      }}
+                      handleChange={({ after, before }) =>
+                        updateFilters({
+                          page: 1,
+                          period: {
+                            field: after || before ? "dataInsercao" : null,
+                            after: after ? startOfDay(after).toISOString() : null,
+                            before: before ? endOfDay(before).toISOString() : null,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    disabled={!filters.period.after && !filters.period.before}
+                    onClick={() =>
+                      updateFilters({
+                        page: 1,
+                        period: { field: null, after: null, before: null },
+                      })
+                    }
+                    className="border-border text-foreground hover:bg-muted focus-visible:ring-ring h-[46.6px] rounded-md border px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    LIMPAR
+                  </button>
+                </div>
 
                 <div className="w-full lg:w-[250px]">
                   <NumberInput

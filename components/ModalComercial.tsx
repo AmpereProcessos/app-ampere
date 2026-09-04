@@ -390,6 +390,7 @@ function ModalComercialContent({
       ) : null}
 
       <InfoObrasBlock
+        session={session}
         editor={true}
         infoHolder={infoHolder}
         setInfo={setInfoHolder}

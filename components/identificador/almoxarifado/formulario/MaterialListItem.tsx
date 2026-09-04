@@ -1,23 +1,76 @@
 import NumberInput from "@/components/inputs/Number";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { isEmpty } from "@/utils/methods/shared";
 import type { TTransactionalWarehouseFormulary } from "@/utils/schemas/warehouse-formularies";
-import { useQueryClient } from "@tanstack/react-query";
+import { Check, Hash, Pencil, Ruler, Trash2, X } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { BsCode } from "react-icons/bs";
-import { TbRulerMeasure } from "react-icons/tb";
 
-type MaterialListItem = {
+type TMaterial = TTransactionalWarehouseFormulary["materiais"][number];
+
+/**
+ * Grade compartilhada entre o cabeçalho, as linhas e o rodapé da tabela.
+ * Mantê-la em um único lugar garante que as colunas nunca desalinhem.
+ * A coluna de devolução some quando ela não é aplicável (ex: criação do formulário).
+ */
+export function getMaterialRowGrid(showDevolutionColumn: boolean) {
+  return showDevolutionColumn
+    ? "lg:grid lg:grid-cols-[minmax(0,1fr)_7rem_7rem_2.25rem] lg:items-center lg:gap-3"
+    : "lg:grid lg:grid-cols-[minmax(0,1fr)_7rem_2.25rem] lg:items-center lg:gap-3";
+}
+
+type QuantityCellProps = {
+  label: string;
+  value: number;
+  unit: string;
+  editable: boolean;
+  inputId: string;
+  handleChange: (value: number) => void;
+};
+function QuantityCell({ label, value, unit, editable, inputId, handleChange }: QuantityCellProps) {
+  return (
+    <div className="flex items-center justify-between gap-2 lg:block">
+      <label
+        htmlFor={editable ? inputId : undefined}
+        className="text-muted-foreground text-xs font-medium lg:hidden"
+      >
+        {label}
+      </label>
+      {editable ? (
+        <input
+          id={inputId}
+          type="number"
+          min={0}
+          value={!isEmpty(value) ? value?.toString() : ""}
+          onChange={(e) => {
+            const parsed = Number(e.target.value);
+            if (Number.isNaN(parsed)) return;
+            handleChange(Math.max(0, parsed));
+          }}
+          className="border-border bg-background focus-visible:ring-ring focus-visible:ring-offset-background h-9 w-24 rounded-md border px-2 text-right text-sm font-semibold tabular-nums outline-hidden transition-colors focus-visible:ring-2 focus-visible:ring-offset-1 lg:w-full"
+        />
+      ) : (
+        <p className="text-foreground px-2 text-right text-sm font-semibold tabular-nums lg:w-full">
+          {value ?? 0}
+          <span className="text-muted-foreground ml-1 text-xs font-normal">{unit}</span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+type MaterialListItemProps = {
   formularyId?: string;
-  material: TTransactionalWarehouseFormulary["materiais"][number];
+  material: TMaterial;
   index: number;
   removeMaterial: ({ id, index }: { id?: string | null; index: number }) => void;
   formHolder: TTransactionalWarehouseFormulary;
   setFormHolder: React.Dispatch<React.SetStateAction<TTransactionalWarehouseFormulary>>;
   blockTakeAway: boolean;
   blockDevolution: boolean;
+  showDevolutionColumn: boolean;
   allowPostFinishEditing?: boolean;
 };
 function MaterialListItem({
@@ -29,110 +82,143 @@ function MaterialListItem({
   setFormHolder,
   blockTakeAway,
   blockDevolution,
+  showDevolutionColumn,
   allowPostFinishEditing = false,
-}: MaterialListItem) {
-  const queryClient = useQueryClient();
-
+}: MaterialListItemProps) {
   const [editMaterialMenuIsOpen, setEditMaterialMenuIsOpen] = useState<boolean>(false);
-  const [editMaterialHolder, setEditMaterialHolder] = useState(material);
+  const [editMaterialHolder, setEditMaterialHolder] = useState<TMaterial>(material);
 
-  async function handleUpdateMaterial(info: TTransactionalWarehouseFormulary["materiais"][number]) {
+  /**
+   * Toda escrita é feita pelo índice original do material dentro do formulário,
+   * de forma imutável, para que filtros e ordenações de exibição não interfiram.
+   */
+  function updateMaterialAtIndex(changes: Partial<TMaterial>) {
+    setFormHolder((prev) => ({
+      ...prev,
+      materiais: prev.materiais.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, ...changes } : item,
+      ),
+    }));
+  }
+
+  function handleTakeAwayChange(value: number) {
+    updateMaterialAtIndex({ qtdeRetirada: value });
+  }
+
+  function handleDevolutionChange(value: number) {
+    // Impedindo que a devolução ultrapasse o que foi efetivamente retirado
+    const exceedsTakeAway = value > material.qtdeRetirada;
+    if (exceedsTakeAway) toast.error("Quantidade de devolução não pode exceder a de retirada.");
+    updateMaterialAtIndex({
+      qtdeDevolucao: exceedsTakeAway ? material.qtdeRetirada : value,
+    });
+  }
+
+  function handleUpdateMaterial(info: TMaterial) {
     if (!formularyId) return toast.error("Formulário não encontrado");
     if (info.qtdeRetirada < 0)
       return toast.error("Por favor, insira uma quantidade válida de retirada");
     if (info.qtdeDevolucao > info.qtdeRetirada)
       return toast.error("Quantidade devolvida não deve ultrapassar a retidada.");
 
-    // Getting the difference for the material take away and devolution in the post finish formulary
-    const diffBeforeEditing = material.qtdeRetirada - material.qtdeDevolucao;
-    // Getting the difference for the information edited
-    const diffAfterEditing = info.qtdeRetirada - info.qtdeDevolucao;
-    // Getting the final difference considering the values defined after editing and the origin values
-    const diffFinal = diffAfterEditing - diffBeforeEditing;
+    updateMaterialAtIndex(info);
+    setEditMaterialMenuIsOpen(false);
+    return toast.success("Material atualizado.");
+  }
 
-    const materialsList = [...formHolder.materiais];
-    materialsList[index] = info;
-
-    setFormHolder((prev) => ({ ...prev, materiais: materialsList }));
+  function openEditMenu() {
+    // Sincronizando o rascunho de edição com o valor mais recente do material
+    setEditMaterialHolder(material);
+    setEditMaterialMenuIsOpen(true);
   }
 
   const isFormularyFinished = !!formHolder.dataEfetivacao;
+  const unit = material.grandeza || "UN";
+  const canRemove = !isFormularyFinished;
+  const canEdit = isFormularyFinished && allowPostFinishEditing;
+
   return (
     <div className="flex w-full flex-col">
-      <div className="border-border flex w-full flex-col items-center justify-between gap-1 rounded border p-2 lg:flex-row">
-        <div className="flex w-full flex-row gap-1 lg:w-[40%] lg:flex-col lg:gap-0">
-          <h1 className="text-primary text-sm font-bold">{material.nome}</h1>
-          <div className="flex items-center gap-1">
-            <TbRulerMeasure />
-            <p className="text-foreground text-xs italic">{material.grandeza}</p>
-            <BsCode />
-            <p className="text-foreground text-xs italic">#{material.id || "NÃO DEFIDO"}</p>
-            {!isFormularyFinished ? (
-              <button
-                type="button"
-                onClick={() => removeMaterial({ id: material.id, index })}
-                className="text-xxs rounded-lg border border-red-600 bg-red-100 p-1 text-center font-bold text-red-600"
-              >
-                EXCLUIR
-              </button>
-            ) : null}
-            {isFormularyFinished && allowPostFinishEditing ? (
-              <button
-                type="button"
-                onClick={() => setEditMaterialMenuIsOpen(true)}
-                className="text-xxs rounded-lg border border-orange-600 bg-orange-100 p-1 text-center font-bold text-orange-600"
-              >
-                EDITAR
-              </button>
-            ) : null}
+      <div
+        className={cn(
+          "hover:bg-muted/40 relative flex w-full flex-col gap-2 px-3 py-2.5 transition-colors",
+          getMaterialRowGrid(showDevolutionColumn),
+        )}
+      >
+        <div className="flex min-w-0 flex-col gap-0.5 pr-9 lg:pr-0">
+          <h3 className="text-foreground truncate text-sm font-semibold" title={material.nome}>
+            {material.nome}
+          </h3>
+          <div className="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs">
+            <span className="inline-flex items-center gap-1">
+              <Ruler className="h-3 min-h-3 w-3 min-w-3" />
+              {unit}
+            </span>
+            <span className="inline-flex min-w-0 items-center gap-1">
+              <Hash className="h-3 min-h-3 w-3 min-w-3" />
+              <span className="truncate">{material.id || "NÃO DEFINIDO"}</span>
+            </span>
           </div>
         </div>
-        <div className="flex w-full items-center gap-1 lg:w-[60%]">
-          <div className="w-[50%]">
-            <input
-              disabled={blockTakeAway || isFormularyFinished}
-              value={!isEmpty(material.qtdeRetirada) ? material.qtdeRetirada?.toString() : ""}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                const materialsList = [...formHolder.materiais];
-                materialsList[index].qtdeRetirada = value;
-                setFormHolder((prev) => ({ ...prev, materiais: materialsList }));
-              }}
-              min={0}
-              id={"qtdeRetirada"}
-              type="number"
-              className="border-border h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-primary/80 disabled:text-primary-foreground"
-            />
-          </div>
-          <div className="w-[50%]">
-            <input
-              disabled={blockDevolution || isFormularyFinished}
-              value={!isEmpty(material.qtdeDevolucao) ? material.qtdeDevolucao?.toString() : ""}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                const materialsList = [...formHolder.materiais];
 
-                // Checking for the case where user puts a devolution value higher than the takeway
-                if (value > materialsList[index].qtdeRetirada) {
-                  toast.error("Quantidade de devolução não pode exceder a de retirada.");
-                  // Setting the devolution to the max value, which is the taken away qty
-                  materialsList[index].qtdeDevolucao = materialsList[index].qtdeRetirada;
-                } else {
-                  materialsList[index].qtdeDevolucao = value;
-                }
+        <QuantityCell
+          label="RETIRADO"
+          value={material.qtdeRetirada}
+          unit={unit}
+          editable={!blockTakeAway && !isFormularyFinished}
+          inputId={`qtde-retirada-${index}`}
+          handleChange={handleTakeAwayChange}
+        />
 
-                setFormHolder((prev) => ({ ...prev, materiais: materialsList }));
-              }}
-              min={0}
-              id={"qtdeDevolucao"}
-              type="number"
-              className="border-border h-full w-full rounded-md border p-3 text-xs outline-hidden placeholder:italic disabled:bg-primary/80 disabled:text-primary-foreground"
-            />
-          </div>
+        {showDevolutionColumn ? (
+          <QuantityCell
+            label="DEVOLVIDO"
+            value={material.qtdeDevolucao}
+            unit={unit}
+            editable={!blockDevolution && !isFormularyFinished}
+            inputId={`qtde-devolucao-${index}`}
+            handleChange={handleDevolutionChange}
+          />
+        ) : null}
+
+        <div className="absolute top-2 right-2 flex items-center justify-end lg:static">
+          {canRemove ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => removeMaterial({ id: material.id, index })}
+              aria-label={`Remover ${material.nome} do formulário`}
+              title="Remover material"
+              className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive h-8 w-8"
+            >
+              <Trash2 className="h-4 min-h-4 w-4 min-w-4" />
+            </Button>
+          ) : null}
+          {canEdit ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                editMaterialMenuIsOpen ? setEditMaterialMenuIsOpen(false) : openEditMenu()
+              }
+              aria-label={`Editar quantidades de ${material.nome}`}
+              aria-expanded={editMaterialMenuIsOpen}
+              title="Editar quantidades"
+              className={cn(
+                "text-muted-foreground hover:text-primary h-8 w-8",
+                editMaterialMenuIsOpen && "bg-primary/10 text-primary",
+              )}
+            >
+              <Pencil className="h-4 min-h-4 w-4 min-w-4" />
+            </Button>
+          ) : null}
         </div>
       </div>
+
       {editMaterialMenuIsOpen ? (
-        <div className="mt-1 flex w-full flex-col gap-1">
+        <div className="bg-muted/40 border-border flex w-full flex-col gap-2 border-t px-3 py-3">
           <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
             <div className="w-full lg:w-1/2">
               <NumberInput
@@ -167,12 +253,24 @@ function MaterialListItem({
               />
             </div>
           </div>
-          <div className="flex w-full items-center justify-end">
+          <div className="flex w-full items-center justify-end gap-1">
             <Button
-              onClick={() => handleUpdateMaterial(editMaterialHolder)}
-              variant={"ghost"}
-              size={"sm"}
+              type="button"
+              onClick={() => setEditMaterialMenuIsOpen(false)}
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1"
             >
+              <X className="h-4 min-h-4 w-4 min-w-4" />
+              CANCELAR
+            </Button>
+            <Button
+              type="button"
+              onClick={() => handleUpdateMaterial(editMaterialHolder)}
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Check className="h-4 min-h-4 w-4 min-w-4" />
               ATUALIZAR MATERIAL
             </Button>
           </div>

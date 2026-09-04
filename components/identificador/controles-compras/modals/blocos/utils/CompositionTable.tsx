@@ -5,9 +5,8 @@ import { TbRulerMeasure } from "react-icons/tb";
 import { FaDollarSign } from "react-icons/fa";
 import SelectInput from "@/components/inputs/Select";
 import { PurchaseCompositionItemCategories, units } from "@/utils/select-options";
-import TextInput from "@/components/inputs/Text";
 import NumberInput from "@/components/inputs/Number";
-import type { TPurchaseControl } from "@/utils/schemas/purchases";
+import type { TPurchaseControl, TPurchaseControlWithProjectDTO } from "@/utils/schemas/purchases";
 import {
   renderIconWithClassNames,
   renderProductCategoryIcon,
@@ -15,13 +14,20 @@ import {
 } from "@/utils/methods/rendering";
 import { formatToMoney, GeneralVisibleHiddenExitMotionVariants } from "@/utils/constants";
 import MaterialSelector from "@/components/identificador/almoxarifado/estoque/MaterialVinculatorSelector";
-import { Button } from "@/components/ui/button";
-import { Minus, Package, Plus } from "lucide-react";
+import { LoaderCircle, Package, PackageCheck, RefreshCw, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Button } from "@/components/ui/button";
+import dayjs from "dayjs";
+import { syncPurchaseStockEntry } from "@/utils/methods/mutation/purchase-controls";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 type PurchaseControlCompositionTableProps = {
-  composition: TPurchaseControl["composicao"];
+  purchaseControlId: string;
+  showStockEntries: boolean;
+  composition: TPurchaseControlWithProjectDTO["composicao"];
   updateCompositionItem: (info: {
     index: number;
     item: Partial<TPurchaseControl["composicao"][number]>;
@@ -30,6 +36,8 @@ type PurchaseControlCompositionTableProps = {
 };
 
 function PurchaseControlCompositionTable({
+  purchaseControlId,
+  showStockEntries,
   composition,
   updateCompositionItem,
   removeCompositionItem,
@@ -48,6 +56,8 @@ function PurchaseControlCompositionTable({
           composition.map((item, index) => (
             <PurchaseControlCompositionTableItem
               key={`${item.materialId}-${index}`}
+              purchaseControlId={purchaseControlId}
+              showStockEntries={showStockEntries}
               item={{ ...item }}
               handleUpdate={(item) => updateCompositionItem({ item, index })}
               handleRemove={() => removeCompositionItem(index)}
@@ -66,17 +76,22 @@ function PurchaseControlCompositionTable({
 export default PurchaseControlCompositionTable;
 
 type PurchaseControlCompositionTableItemProps = {
-  item: TPurchaseControl["composicao"][number];
+  purchaseControlId: string;
+  showStockEntries: boolean;
+  item: TPurchaseControlWithProjectDTO["composicao"][number];
   handleUpdate: (item: TPurchaseControl["composicao"][number]) => void;
   handleRemove: () => void;
 };
 function PurchaseControlCompositionTableItem({
+  purchaseControlId,
+  showStockEntries,
   item,
   handleUpdate,
   handleRemove,
 }: PurchaseControlCompositionTableItemProps) {
   const [editMenuIsOpen, setEditMenuIsOpen] = useState<boolean>(false);
   const [itemHolder, setItemHolder] = useState<TPurchaseControl["composicao"][number]>(item);
+  const stockEntries = item.entradasEstoque || [];
   return (
     <>
       <AnimatePresence>
@@ -132,6 +147,9 @@ function PurchaseControlCompositionTableItem({
               >
                 <MdDelete size={10} />
               </button>
+              {showStockEntries && (stockEntries.length > 0 || item.dataAlocacao) ? (
+                <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} />
+              ) : null}
             </div>
             <h1 className="w-[15%] text-center text-xs tracking-tight">{item.unidade}</h1>
             <h1 className="w-[15%] text-center text-xs tracking-tight">{item.qtde}</h1>
@@ -180,6 +198,9 @@ function PurchaseControlCompositionTableItem({
                 ) : null}
               </div>
               <div className="flex items-center gap-2">
+                {showStockEntries && (stockEntries.length > 0 || item.dataAlocacao) ? (
+                  <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} />
+                ) : null}
                 <button
                   onClick={() => setEditMenuIsOpen((prev) => !prev)}
                   type="button"
@@ -415,5 +436,104 @@ function PurchaseControlCompositionTableItem({
         ) : null}
       </AnimatePresence>
     </>
+  );
+}
+
+type StockEntriesIndicatorProps = {
+  purchaseControlId: string;
+  item: TPurchaseControlWithProjectDTO["composicao"][number];
+};
+
+function StockEntriesIndicator({ purchaseControlId, item }: StockEntriesIndicatorProps) {
+  const queryClient = useQueryClient();
+  const entries = item.entradasEstoque || [];
+  const unit = item.unidade;
+  const totalQuantity = entries.reduce((total, entry) => total + entry.alteracao, 0);
+  const difference = item.qtde - totalQuantity;
+  const isSynchronized = Math.abs(difference) < 0.000001;
+  const formatSignedQuantity = (quantity: number) => `${quantity > 0 ? "+" : ""}${quantity}`;
+  const { mutate: sync, isPending } = useMutation({
+    mutationFn: syncPurchaseStockEntry,
+    onSuccess: async (message) => {
+      await queryClient.invalidateQueries({ queryKey: ["purchase-control-by-id", purchaseControlId] });
+      toast.success(message);
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Não foi possível sincronizar a entrada."),
+  });
+
+  return (
+    <HoverCard openDelay={150} closeDelay={100}>
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "focus-visible:ring-ring inline-flex size-6 shrink-0 items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+            isSynchronized
+              ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/15"
+              : "border-amber-500/50 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-300",
+          )}
+          aria-label={isSynchronized ? "Entrada de estoque sincronizada" : `Entrada de estoque com diferença de ${difference} ${unit}`}
+        >
+          {isSynchronized ? <PackageCheck className="size-3.5" aria-hidden="true" /> : <TriangleAlert className="size-3.5" aria-hidden="true" />}
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent align="start" side="top" className="w-80 p-0">
+        <div className="border-border flex items-center justify-between border-b px-3 py-2.5">
+          <div>
+            <p className="text-sm font-semibold">Entradas no estoque</p>
+            <p className="text-muted-foreground text-xs">
+              {isSynchronized ? "Quantidade conferida" : "Quantidade divergente"}
+            </p>
+          </div>
+          <span className="bg-primary/10 text-primary rounded-md px-2 py-1 text-xs font-semibold">
+            {formatSignedQuantity(totalQuantity)} {unit}
+          </span>
+        </div>
+        <div className="border-border grid grid-cols-2 gap-2 border-b px-3 py-2.5 text-xs">
+          <div>
+            <p className="text-muted-foreground">Na compra</p>
+            <p className="font-semibold">{item.qtde} {unit}</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Gerado no estoque</p>
+            <p className="font-semibold">{totalQuantity} {unit}</p>
+          </div>
+        </div>
+        <div className="max-h-64 overflow-y-auto p-1.5">
+          {entries.map((entry) => (
+            <div key={entry._id} className="hover:bg-muted rounded-md px-2 py-2 transition-colors">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-sm font-semibold">
+                  {formatSignedQuantity(entry.alteracao)} {unit}
+                </span>
+                <time className="text-muted-foreground text-xs" dateTime={entry.dataInsercao}>
+                  {dayjs(entry.dataInsercao).format("DD/MM/YYYY [às] HH:mm")}
+                </time>
+              </div>
+              <p className="text-muted-foreground mt-0.5 text-xs">
+                Saldo: {entry.qtdeAnterior ?? "—"} → {entry.qtdeNovo ?? "—"} {unit}
+              </p>
+              <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                Registrado por {entry.autor.nome}
+              </p>
+            </div>
+          ))}
+        </div>
+        {!isSynchronized && item.materialId ? (
+          <div className="border-border border-t p-2">
+            <Button
+              type="button"
+              size="sm"
+              className="w-full"
+              disabled={isPending}
+              onClick={() => sync({ id: purchaseControlId, materialId: item.materialId as string })}
+            >
+              {isPending ? <LoaderCircle className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
+              {isPending ? "Sincronizando…" : `Sincronizar ${difference > 0 ? `+${difference}` : difference} ${unit}`}
+            </Button>
+          </div>
+        ) : null}
+      </HoverCardContent>
+    </HoverCard>
   );
 }

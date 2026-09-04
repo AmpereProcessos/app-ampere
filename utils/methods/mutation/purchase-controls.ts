@@ -22,6 +22,11 @@ export async function updatePurchaseControl({ id, changes }: { id: string; chang
 	}
 }
 
+export async function syncPurchaseStockEntry({ id, materialId }: { id: string; materialId: string }) {
+	const { data } = await axios.patch(`/api/controles-compras?id=${id}`, { materialId });
+	return data.message as string;
+}
+
 export async function createPurchaseControlTag(info: TPurchaseControlTag) {
 	try {
 		const { data } = await axios.post("/api/controles-compras/tags", info);

@@ -283,7 +283,12 @@ function PurchaseControlDataBlock({
 			/>
 			<PurchaseControlUpdatesInformationBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlTagsBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
-			<PurchaseControlCompositionBlock session={session} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+			<PurchaseControlCompositionBlock
+				session={session}
+				purchaseControlId={purchaseControlId}
+				infoHolder={infoHolder}
+				setInfoHolder={setInfoHolder}
+			/>
 			<PurchaseControlPaymentInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlOrderInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
 			<PurchaseControlTransportationInformationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

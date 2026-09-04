@@ -452,6 +452,18 @@ function StockEntriesIndicator({ purchaseControlId, item }: StockEntriesIndicato
   const difference = item.qtde - totalQuantity;
   const isSynchronized = Math.abs(difference) < 0.000001;
   const formatSignedQuantity = (quantity: number) => `${quantity > 0 ? "+" : ""}${quantity}`;
+  const formatPriceImpact = (from: number | null | undefined, to: number | null | undefined) => {
+    if (typeof from !== "number" || typeof to !== "number") return null;
+    const delta = to - from;
+    return {
+      delta,
+      percentage: from !== 0 ? (delta / from) * 100 : null,
+      label: `${delta > 0 ? "+" : ""}${formatToMoney(delta)}`,
+    };
+  };
+  const oldestEntry = entries[entries.length - 1];
+  const newestEntry = entries[0];
+  const totalPriceImpact = formatPriceImpact(oldestEntry?.precoAnterior, newestEntry?.precoNovo);
   const { mutate: sync, isPending } = useMutation({
     mutationFn: syncPurchaseStockEntry,
     onSuccess: async (message) => {
@@ -477,43 +489,88 @@ function StockEntriesIndicator({ purchaseControlId, item }: StockEntriesIndicato
           {isSynchronized ? <PackageCheck className="size-3.5" aria-hidden="true" /> : <TriangleAlert className="size-3.5" aria-hidden="true" />}
         </button>
       </HoverCardTrigger>
-      <HoverCardContent align="start" side="top" className="w-80 p-0">
-        <div className="border-border flex items-center justify-between border-b px-3 py-2.5">
+      <HoverCardContent align="start" side="top" className="w-[min(20rem,calc(100vw-1.5rem))] overflow-hidden p-0">
+        <div className="border-border flex items-center justify-between gap-3 border-b px-3 py-2">
           <div>
-            <p className="text-sm font-semibold">Entradas no estoque</p>
-            <p className="text-muted-foreground text-xs">
-              {isSynchronized ? "Quantidade conferida" : "Quantidade divergente"}
+            <p className="truncate text-xs font-semibold">Entrada no estoque</p>
+            <p className="hidden text-muted-foreground text-[0.68rem]">
+              {entries.length} {entries.length === 1 ? "movimentaÃ§Ã£o" : "movimentaÃ§Ãµes"} Â· {formatSignedQuantity(totalQuantity)} {unit}
             </p>
           </div>
-          <span className="bg-primary/10 text-primary rounded-md px-2 py-1 text-xs font-semibold">
-            {formatSignedQuantity(totalQuantity)} {unit}
+          <p className="text-muted-foreground text-[0.68rem]">
+              {entries.length} {entries.length === 1 ? "entrada" : "entradas"} - {formatSignedQuantity(totalQuantity)} {unit}
+          </p>
+          <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold", isSynchronized ? "bg-primary/10 text-primary" : "bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200")}>
+            {isSynchronized ? "Conferida" : "Divergente"}
           </span>
         </div>
-        <div className="border-border grid grid-cols-2 gap-2 border-b px-3 py-2.5 text-xs">
+        <div className="bg-muted/30 border-border grid grid-cols-2 gap-x-3 gap-y-2 border-b px-3 py-2 text-[0.68rem]">
           <div>
             <p className="text-muted-foreground">Na compra</p>
             <p className="font-semibold">{item.qtde} {unit}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Gerado no estoque</p>
+            <p className="text-muted-foreground">No estoque</p>
             <p className="font-semibold">{totalQuantity} {unit}</p>
           </div>
+          <div className="hidden col-span-2 flex items-center justify-between gap-2 border-t border-border/70 pt-1.5">
+            <span className="text-muted-foreground">PreÃ§o mÃ©dio</span>
+            <span className="font-semibold">
+              {oldestEntry?.precoAnterior != null ? formatToMoney(oldestEntry.precoAnterior) : "â€”"}
+              <span className="text-muted-foreground px-1">â†’</span>
+              {newestEntry?.precoNovo != null ? formatToMoney(newestEntry.precoNovo) : "â€”"}
+            </span>
+          </div>
+          <div className="col-span-2 flex items-center justify-between gap-2 border-t border-border/70 pt-1.5">
+            <span className="text-muted-foreground">Pre&#231;o m&#233;dio</span>
+            <span className="font-semibold">
+              {oldestEntry?.precoAnterior != null ? formatToMoney(oldestEntry.precoAnterior) : "—"}
+              <span className="text-muted-foreground px-1">→</span>
+              {newestEntry?.precoNovo != null ? formatToMoney(newestEntry.precoNovo) : "—"}
+            </span>
+          </div>
+          {totalPriceImpact ? (
+            <div className="hidden col-span-2 flex items-center justify-between gap-2">
+              <span className="text-muted-foreground">Impacto no preÃ§o</span>
+              <span className={cn("font-semibold", totalPriceImpact.delta > 0 ? "text-amber-700 dark:text-amber-300" : totalPriceImpact.delta < 0 ? "text-primary" : "text-foreground")}>
+                {totalPriceImpact.label}
+                {totalPriceImpact.percentage != null ? ` (${totalPriceImpact.percentage > 0 ? "+" : ""}${totalPriceImpact.percentage.toFixed(1)}%)` : null}
+              </span>
+            </div>
+          ) : null}
         </div>
-        <div className="max-h-64 overflow-y-auto p-1.5">
+        {totalPriceImpact ? (
+          <div className="flex items-center justify-between border-b px-3 py-1.5 text-[0.68rem]">
+            <span className="text-muted-foreground">Impacto no pre&#231;o</span>
+            <span className={cn("font-semibold", totalPriceImpact.delta > 0 ? "text-amber-700 dark:text-amber-300" : totalPriceImpact.delta < 0 ? "text-primary" : "text-foreground")}>
+              {totalPriceImpact.label}
+              {totalPriceImpact.percentage != null ? ` (${totalPriceImpact.percentage > 0 ? "+" : ""}${totalPriceImpact.percentage.toFixed(1)}%)` : null}
+            </span>
+          </div>
+        ) : null}
+        <div className="max-h-52 overflow-y-auto p-1">
           {entries.map((entry) => (
-            <div key={entry._id} className="hover:bg-muted rounded-md px-2 py-2 transition-colors">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-sm font-semibold">
+            <div key={entry._id} className="hover:bg-muted rounded px-2 py-1.5 transition-colors">
+              <div className="grid grid-cols-[auto_1fr_auto] items-baseline gap-2">
+                <span className="text-xs font-semibold">
                   {formatSignedQuantity(entry.alteracao)} {unit}
                 </span>
-                <time className="text-muted-foreground text-xs" dateTime={entry.dataInsercao}>
+                <time className="hidden text-muted-foreground truncate text-right text-[0.65rem]" dateTime={entry.dataInsercao}>
                   {dayjs(entry.dataInsercao).format("DD/MM/YYYY [às] HH:mm")}
                 </time>
+                <time className="text-muted-foreground truncate text-right text-[0.65rem]" dateTime={entry.dataInsercao}>
+                  {dayjs(entry.dataInsercao).format("DD/MM/YYYY - HH:mm")}
+                </time>
+                {typeof entry.precoAnterior === "number" && typeof entry.precoNovo === "number" ? (
+                  <span className={cn("text-[0.65rem] font-semibold", entry.precoNovo > entry.precoAnterior ? "text-amber-700 dark:text-amber-300" : entry.precoNovo < entry.precoAnterior ? "text-primary" : "text-muted-foreground")}>
+                    {entry.precoNovo - entry.precoAnterior > 0 ? "+" : ""}{formatToMoney(entry.precoNovo - entry.precoAnterior)}
+                  </span>
+                ) : null}
               </div>
-              <p className="text-muted-foreground mt-0.5 text-xs">
+              <p className="text-muted-foreground mt-0.5 text-[0.65rem]">
                 Saldo: {entry.qtdeAnterior ?? "—"} → {entry.qtdeNovo ?? "—"} {unit}
               </p>
-              <p className="text-muted-foreground mt-0.5 truncate text-xs">
+              <p className="text-muted-foreground mt-0.5 truncate text-[0.65rem]">
                 Registrado por {entry.autor.nome}
               </p>
             </div>

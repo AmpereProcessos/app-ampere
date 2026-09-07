@@ -16,10 +16,11 @@ import PurchaseNewCompositionItem from "./utils/NewCompositionItem";
 
 type PurchaseControlCompositionBlockProps = {
 	session: TAuthSession;
+	purchaseControlId: string;
 	infoHolder: TPurchaseControl;
 	setInfoHolder: Dispatch<SetStateAction<TPurchaseControl>>;
 };
-function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
+function PurchaseControlCompositionBlock({ session, purchaseControlId, infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
 	const queryClient = useQueryClient();
 	const { data: purchaseControlCompositionKits, queryKey } = usePurchaseControlCompositionKits();
 	const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey: queryKey });
@@ -96,6 +97,8 @@ function PurchaseControlCompositionBlock({ session, infoHolder, setInfoHolder }:
 				</div>
 				<AnimatePresence>{newCompositionItemMenuIsOpen ? <PurchaseNewCompositionItem addCompositionItem={addCompositionItem} /> : null}</AnimatePresence>
 				<PurchaseControlCompositionBlockTable
+					purchaseControlId={purchaseControlId}
+					showStockEntries={!infoHolder.projeto.id}
 					composition={infoHolder.composicao}
 					removeCompositionItem={removeCompositionItem}
 					updateCompositionItem={updateCompositionItem}

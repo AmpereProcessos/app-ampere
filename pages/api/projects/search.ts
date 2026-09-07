@@ -30,7 +30,7 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   const session = await validateAuthenticationWithSession(req, res);
   const { page } = QuerySchema.parse(req.query);
   const filters = PersonalizedFiltersSchema.parse(req.body);
-
+  console.log("[PROJECTS BY PERSONALIZED FILTERS] Filters:", filters);
   // Validating page parameter
   if (!page || Number.isNaN(Number(page)))
     throw new createHttpError.BadRequest("Parâmetro de paginação inválido ou não informado.");
@@ -94,7 +94,9 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
   const insiderQuery: Filter<TProject> | null =
     filters.insider.length > 0 ? { insider: { $in: filters.insider } } : null;
   const technicalTeamQuery: Filter<TProject> | null =
-    filters.technicalTeam.length > 0 ? { "obra.equipeResp": { $in: filters.technicalTeam } } : null;
+    filters.technicalTeam.length > 0
+      ? { "obra.responsaveis.id": { $in: filters.technicalTeam } }
+      : null;
   const acquisitionChannelQuery: Filter<TProject> | null =
     filters.acquisitionChannel.length > 0
       ? { canalVenda: { $in: filters.acquisitionChannel } }

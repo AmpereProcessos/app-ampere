@@ -25,6 +25,7 @@ import NumberInput from "@/components/inputs/Number";
 import { useTags } from "@/utils/methods/query/tags";
 import { useUsers } from "@/utils/methods/query/crm/users";
 import MultipleSelectWithImages from "@/components/inputs/MultipleSelectWithImages";
+import { useEmployeesSimplified } from "@/utils/methods/query/users";
 const AllStates = StatesAndCities.map((s, index) => ({
   id: index + 1,
   label: s.sigla,
@@ -38,7 +39,7 @@ type FilterMenuProps = {
 function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMenuProps) {
   const { data: tags } = useTags({ initialFilters: { applicableToProjects: "true" } });
   const { data: crmUsers } = useUsers({ includeDeleted: true });
-
+  const { data: employees } = useEmployeesSimplified({});
   const [filtersHolder, setFiltersHolder] = useState<TPersonalizedProjectsFilter>({
     name: "",
     payerName: "",
@@ -352,7 +353,13 @@ function FilterMenu({ updateFilters, queryLoading, resetSelectedPage }: FilterMe
           <div className="w-full md:w-[250px]">
             <MultipleSelectInput
               label="EQUIPE TÉCNICA"
-              options={equipesTecnicas}
+              options={
+                employees?.map((employee) => ({
+                  id: employee._id,
+                  label: employee.nome,
+                  value: employee._id,
+                })) || []
+              }
               selected={filtersHolder.technicalTeam}
               handleChange={(value) =>
                 setFiltersHolder((prev) => ({ ...prev, technicalTeam: value as string[] }))

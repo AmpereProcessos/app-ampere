@@ -227,6 +227,14 @@ export const AppRoutes: TAppRouteGroup[] = [
         ),
       },
       {
+        title: "Analítico de Obras",
+        path: "/obras/analitico",
+        checkUserAccess: (session: TAuthSession) =>
+          session.user.permissoes.execucao.visualizar ||
+          session.user.permissoes.ordensDeServico.visualizar,
+        icon: <BsSpeedometer2 className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />,
+      },
+      {
         title: "Nutrição Pós-Venda",
         path: "/posvenda/nutricao",
         checkUserAccess: (session: TAuthSession) => session.user.permissoes.posVenda.visualizar,

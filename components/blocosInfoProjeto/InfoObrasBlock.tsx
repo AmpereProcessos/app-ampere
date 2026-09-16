@@ -56,7 +56,7 @@ function InfoObrasBlock({
     infoHolder.obra.responsaveis?.filter((r) => !r.dataValidacao) || [];
 
   return (
-    <div className="flex flex-col rounded-md border border-primary pb-2 shadow-lg gap-6">
+    <div className="flex w-full min-w-0 flex-col gap-6 rounded-md border border-primary pb-2 shadow-lg">
       <div className="flex items-center gap-2 bg-primary/20 px-2 py-2 rounded w-full justify-center">
         <HardHat className="h-4 w-4 min-h-4 min-w-4" />
         <h1 className="text-xs tracking-tight font-medium text-start w-fit">
@@ -266,14 +266,13 @@ function InfoObrasBlock({
           />
         </div>
       </div>
-      <div className="my-4 w-full self-center px-2 lg:w-[80%]">
-        <ObservationsBlock
-          infoHolder={infoHolder}
-          setInfo={setInfo}
-          changes={changes}
-          setChanges={setChanges}
-        />
-      </div>
+      <ObservationsBlock
+        infoHolder={infoHolder}
+        setInfo={setInfo}
+        changes={changes}
+        setChanges={setChanges}
+        editable={editor}
+      />
       {showDeliveryInfo ? (
         <DeliveryInformation
           editor={editor}

@@ -22,7 +22,7 @@ export default function SpreadsheetCellWrapper({
 				[SPREADSHEET_ROW_ATTR]: String(gridRow),
 				[SPREADSHEET_COL_ATTR]: String(gridCol),
 			}}
-			className={className}
+			className={className ?? "min-w-0 w-full"}
 		>
 			{children}
 		</div>

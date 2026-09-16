@@ -25,7 +25,13 @@ function NumberInput({
 }: NumberInputProps) {
   const inputIdentifier = label.toLowerCase().replace(" ", "_");
   return (
-    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : "350px"}]`}>
+    <div
+      className={cn(
+        "flex w-full flex-col gap-1",
+        width === "100%" ? "lg:w-full" : !width ? "lg:w-[350px]" : "lg:w-full",
+      )}
+      style={width && width !== "100%" ? { width } : undefined}
+    >
       {showLabel ? (
         <label
           htmlFor={inputIdentifier}

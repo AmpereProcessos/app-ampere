@@ -175,7 +175,10 @@ const deleteExpense: NextApiHandler<DeleteResponse> = async (req, res) => {
 	const currentExpense = await collection.findOne({ _id: new ObjectId(id) });
 	if (!currentExpense) throw new createHttpError.NotFound("Despesa não encontrada.");
 	if (currentExpense.metadados?.chave === "custo-mao-de-obra") {
-		throw new createHttpError.BadRequest("Custos de mão de obra devem ser reabertos pelo controle da ordem de serviço.");
+		throw new createHttpError.BadRequest("Custos de mão de obra devem ser excluídos pelo controle da ordem de serviço.");
+	}
+	if ((currentExpense.pagamentos?.length ?? 0) > 0) {
+		throw new createHttpError.Conflict("Não é possível excluir uma despesa com pagamentos vinculados.");
 	}
 
 	await collection.deleteOne({ _id: new ObjectId(id) });

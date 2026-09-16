@@ -2,6 +2,7 @@ import type { TAuthSession } from '@/lib/authentication/types'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import {
   confirmLaborCostExpense,
+  deleteLaborCostExpense,
   getLaborCostExpense,
   reopenLaborCostExpense,
   saveManualLaborCostExpense,
@@ -54,12 +55,28 @@ const ReopenInputSchema = z.object({
   serviceOrderId: ServiceOrderIdSchema,
 })
 
-const ActionInputSchema = z.discriminatedUnion('acao', [RecalculateInputSchema, SaveManualInputSchema, ConfirmInputSchema, ReopenInputSchema])
+const DeleteInputSchema = z.object({
+  acao: z.literal('EXCLUIR'),
+  serviceOrderId: ServiceOrderIdSchema,
+})
+
+const ActionInputSchema = z.discriminatedUnion('acao', [
+  RecalculateInputSchema,
+  SaveManualInputSchema,
+  ConfirmInputSchema,
+  ReopenInputSchema,
+  DeleteInputSchema,
+])
 
 const postHandler: NextApiHandler = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res)
   const input = ActionInputSchema.parse(req.body)
   if (!canOperate(session)) throw new createHttpError.Unauthorized('Usuário sem permissão para operar o custo da OS.')
+
+  if (input.acao === 'EXCLUIR') {
+    await deleteLaborCostExpense({ serviceOrderId: input.serviceOrderId, session })
+    return res.status(200).json({ data: null, message: 'Custo de mão de obra excluído.' })
+  }
 
   if (input.acao === 'RECALCULAR') {
     const data = await syncLaborCostExpense({ serviceOrderId: input.serviceOrderId, session })

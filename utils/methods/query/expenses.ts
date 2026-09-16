@@ -26,6 +26,7 @@ export function useProjectExpenses({ projectId, enabled, identifier }: { project
 		...useQuery({
 			queryKey: ["projectExpenses", projectId, identifier],
 			queryFn: async () => await fetchProjectExpenses({ projectId, identifier }),
+			enabled,
 		}),
 		queryKey: ["projectExpenses", projectId, identifier],
 	};

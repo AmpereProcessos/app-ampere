@@ -325,6 +325,32 @@ export async function reopenLaborCostExpense(serviceOrderId: string) {
   return mapExpense(response.value)
 }
 
+export async function deleteLaborCostExpense({
+  serviceOrderId,
+  session,
+}: {
+  serviceOrderId: string
+  session: TAuthSession
+}) {
+  if (!ObjectId.isValid(serviceOrderId)) throw new createHttpError.BadRequest('ID da OS inválido.')
+  const { expensesCollection } = await getCollections()
+  const expense = await expensesCollection.findOne({
+    'ordemServico.id': serviceOrderId,
+    'metadados.chave': LABOR_COST_METADATA_KEY,
+  })
+  if (!expense) throw new createHttpError.NotFound('Custo de mão de obra não encontrado.')
+  if (expense.efetivacao.efetivado && !session.user.permissoes.financeiro.editar) {
+    throw new createHttpError.Forbidden('Somente o financeiro pode excluir um custo confirmado.')
+  }
+  if ((expense.pagamentos?.length ?? 0) > 0) {
+    throw new createHttpError.Conflict('Não é possível excluir uma despesa com pagamentos vinculados.')
+  }
+  const deleteResponse = await expensesCollection.deleteOne({ _id: expense._id })
+  if (!deleteResponse.acknowledged || deleteResponse.deletedCount !== 1) {
+    throw new createHttpError.InternalServerError('Não foi possível excluir o custo de mão de obra.')
+  }
+}
+
 export function parseLaborCostConfiguration(value: unknown) {
   return LaborCostConfigurationSchema.parse(value)
 }

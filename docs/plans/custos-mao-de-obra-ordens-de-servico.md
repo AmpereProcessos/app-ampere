@@ -353,10 +353,11 @@ Para ordens de categoria `MONTAGEM`:
 
 Para outras categorias, o MVP não fará cálculo automático. O custo poderá ser manual com justificativa.
 
-### 7.2. Sincronização
+### 7.2. Sincronização explícita
 
-- Após criar a OS, criar a despesa estimada quando houver dados suficientes.
-- Após editar categoria, responsáveis, equipe, módulos ou inversores, recalcular a despesa ainda não efetivada.
+- Exibir `Inferir mão de obra` como ação rápida dentro do bloco único de custos.
+- Criar ou recalcular a despesa somente quando o usuário acionar essa ação.
+- Não gerar despesas silenciosamente ao criar ou editar a OS.
 - Usar upsert pela combinação `ordemServico.id + metadados.chave`.
 - Nunca criar uma segunda despesa de mão de obra para a mesma OS.
 - Nunca recalcular silenciosamente uma despesa efetivada.
@@ -424,7 +425,7 @@ Criar endpoints específicos, em vez de permitir que o frontend monte livremente
 ### Custo da OS
 
 - obter a despesa de mão de obra da OS;
-- recalcular/sincronizar estimativa;
+- inferir/recalcular a estimativa sob demanda;
 - confirmar custo;
 - ajustar custo com justificativa;
 - reabrir custo confirmado.
@@ -530,9 +531,9 @@ Substituir a detecção baseada em categoria `ART` pela consulta estruturada da 
 
 ### Etapa 5 — integração com OS
 
-- sincronizar após criação;
-- sincronizar após alterações relevantes;
-- incluir o custo na modal de controle;
+- unificar mão de obra e demais despesas em um único bloco `CUSTOS`;
+- incluir `Inferir mão de obra` nas ações rápidas;
+- incluir o resultado na mesma lista dos demais custos;
 - permitir geração manual quando o cálculo automático não for possível;
 - integrar confirmação ao encerramento da OS sem impedir o salvamento normal.
 
@@ -588,8 +589,8 @@ Substituir a detecção baseada em categoria `ART` pela consulta estruturada da 
 
 ## 17. Critérios de aceite do MVP
 
-- Uma nova OS de montagem com dados suficientes gera no máximo uma despesa estimada de mão de obra.
-- Alterações relevantes atualizam a mesma despesa enquanto ela não estiver efetivada.
+- A ação `Inferir mão de obra` gera no máximo uma despesa estimada para a OS.
+- Uma nova inferência atualiza a mesma despesa enquanto ela não estiver efetivada.
 - Duas OS do mesmo projeto nunca compartilham a mesma despesa de mão de obra.
 - A despesa preserva a regra, os parâmetros e os preços utilizados no cálculo.
 - O total sempre coincide com seus itens.

@@ -18,7 +18,6 @@ import Link from "next/link";
 import ServiceOrderFileReferences from "./blocos/AttachmentsBlock";
 import ServiceOrderCalendarIntegration from "./blocos/CalendarIntegration";
 import CostsInformation from "./blocos/CostInformationBlock";
-import LaborCostInformationBlock from "./blocos/LaborCostInformationBlock";
 import ServiceOrderDetailsInformationBlock from "./blocos/DetailsInformationBlock";
 import ServiceOrderEquipmentsInformationBlock from "./blocos/EquipmentsInformationBlock";
 import ServiceOrderExecutionInformationBlock from "./blocos/ExecutionInformationBlock";
@@ -233,17 +232,14 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                     updateInfoHolder={updateInfoHolder}
                   />
                 )}
-                <LaborCostInformationBlock serviceOrderId={serviceOrderId} session={session} />
-                {serviceOrder.projetoDados ? (
-                  <CostsInformation
-                    sessionUser={session}
-                    projectName={serviceOrder.projetoDados.nomeDoContrato}
-                    projectId={serviceOrder.projetoDados._id}
-                    projectIdentifier={serviceOrder.projetoDados.qtde.toString()}
-                    serviceOrderId={serviceOrderId}
-                    serviceOrderDescription={osInfo.descricao}
-                  />
-                ) : null}
+                <CostsInformation
+                  sessionUser={session}
+                  projectName={serviceOrder.projetoDados?.nomeDoContrato || osInfo.projeto.nome}
+                  projectId={serviceOrder.projetoDados?._id || osInfo.projeto.id}
+                  projectIdentifier={serviceOrder.projetoDados?.qtde.toString() || osInfo.projeto.identificador?.toString()}
+                  serviceOrderId={serviceOrderId}
+                  serviceOrderDescription={osInfo.descricao}
+                />
                 <ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
                 <ServiceOrderFileReferences
                   session={session}

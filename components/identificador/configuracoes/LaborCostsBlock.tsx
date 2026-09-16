@@ -80,14 +80,16 @@ export default function LaborCostsBlock({ session }: LaborCostsBlockProps) {
     [employeesQuery.data]
   )
   const teamOptions = useMemo(
-    () =>
-      equipesTecnicas
+    () => [
+      { id: 'internal-default', value: 'Equipe interna (padrão)', label: 'EQUIPE INTERNA (PADRÃO)' },
+      ...equipesTecnicas
         .filter((team) => team.value)
         .map((team, index) => ({
           id: `${index}-${team.value}`,
           value: team.value as string,
           label: team.label,
         })),
+    ],
     []
   )
 

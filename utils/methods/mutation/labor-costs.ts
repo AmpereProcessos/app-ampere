@@ -29,6 +29,7 @@ export type TLaborCostActionInput =
       motivoAjuste?: string | null
     }
   | { acao: 'REABRIR'; serviceOrderId: string }
+  | { acao: 'EXCLUIR'; serviceOrderId: string }
 
 export async function mutateLaborCostExpense(input: TLaborCostActionInput) {
   const { data } = await axios.post<{

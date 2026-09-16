@@ -10,7 +10,6 @@ import {
   type TServiceOrderWithProjectDTO,
 } from "@/utils/schemas/service-order";
 import { getConfiguredGoogleOAuth2Client } from "@/utils/services/google/oauth";
-import { syncLaborCostExpense } from "@/utils/services/labor-costs";
 import { type calendar_v3, google as googleApis } from "googleapis";
 import createHttpError from "http-errors";
 import { type Collection, type Db, type Filter, ObjectId } from "mongodb";
@@ -103,14 +102,6 @@ const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) =
   if (!dbResponse.acknowledged)
     throw new createHttpError.BadRequest("Oops, houve um erro desconhecido ao criar ordem de serviço.");
   const insertedId = dbResponse.insertedId.toString();
-  try {
-    await syncLaborCostExpense({ serviceOrderId: insertedId, session });
-  } catch (error) {
-    console.error("[SERVICE_ORDER][LABOR_COST] Não foi possível sincronizar o custo inicial.", {
-      serviceOrderId: insertedId,
-      error: error instanceof Error ? error.message : error,
-    });
-  }
   res.status(201).json({ data: { insertedId }, message: "Ordem de serviço criada com sucesso !" });
 };
 
@@ -357,21 +348,6 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
     );
   }
   if (!updatedServiceOrder) throw new createHttpError.NotFound("Ordem de serviço não encontrada.");
-
-  const laborCostRelevantFields = ["categoria", "responsavel", "responsaveis", "equipamentos", "projeto", "descricao"];
-  const shouldSyncLaborCost = Object.keys(changes).some((field) =>
-    laborCostRelevantFields.includes(field.split(".")[0])
-  );
-  if (shouldSyncLaborCost) {
-    try {
-      await syncLaborCostExpense({ serviceOrderId: id, session });
-    } catch (error) {
-      console.error("[SERVICE_ORDER][LABOR_COST] Não foi possível sincronizar o custo.", {
-        serviceOrderId: id,
-        error: error instanceof Error ? error.message : error,
-      });
-    }
-  }
 
   return res.status(201).json(updatedServiceOrder);
 };

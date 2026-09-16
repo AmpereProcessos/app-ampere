@@ -22,11 +22,15 @@ export default function CostsInformation({
   projectName,
   projectId,
   projectIdentifier,
+  serviceOrderId,
+  serviceOrderDescription,
 }: {
   sessionUser: TAuthSession;
   projectName: string;
   projectId: string;
   projectIdentifier: string;
+  serviceOrderId: string;
+  serviceOrderDescription: string;
 }) {
   const [newExpenseMenuIsOpen, setNewExpenseMenuIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -53,6 +57,7 @@ export default function CostsInformation({
           nome: projectName,
           identificador: projectIdentifier,
         },
+        ordemServico: { id: serviceOrderId, descricao: serviceOrderDescription },
         autor: {
           id: sessionUser.user.id,
           nome: sessionUser.user.nome,
@@ -121,18 +126,29 @@ export default function CostsInformation({
     },
   });
 
-  const isMissingARTCost = isSuccess && !expenses.some((expense) => expense.categoria === "ART");
+  const visibleExpenses = isSuccess
+    ? expenses.filter(
+        (expense) =>
+          expense.metadados?.chave !== "custo-mao-de-obra" &&
+          (!expense.ordemServico || expense.ordemServico.id === serviceOrderId)
+      )
+    : [];
+  const isMissingGeneratedCost =
+    isSuccess &&
+    !expenses.some(
+      (expense) =>
+        expense.ordemServico?.id === serviceOrderId &&
+        expense.identificador === "CUSTOS-ORDEM-DE-SERVICO" &&
+        !expense.metadados
+    );
 
   return (
-    <ResponsiveDialogDrawerSection
-      sectionTitleText="CUSTOS"
-      sectionTitleIcon={<DollarSign size={15} />}
-    >
-      <div className="w-full flex items-center justify-end gap-2">
-        {isMissingARTCost ? (
+    <ResponsiveDialogDrawerSection sectionTitleText="OUTROS CUSTOS" sectionTitleIcon={<DollarSign size={15} />}>
+      <div className="flex w-full items-center justify-end gap-2">
+        {isMissingGeneratedCost ? (
           <LoadingButton
             variant="ghost"
-            className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1"
             size="fit"
             loading={isPending}
             onClick={() => handleCreateServiceOrderExpense()}
@@ -143,29 +159,25 @@ export default function CostsInformation({
 
         <Button
           variant="ghost"
-          className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
+          className="flex items-center gap-1.5 rounded-lg px-2 py-1"
           size="fit"
           onClick={() => setNewExpenseMenuIsOpen(true)}
         >
-          <Plus className="w-4 h-4 min-w-4 min-h-4" />
+          <Plus className="h-4 min-h-4 w-4 min-w-4" />
           NOVO CUSTO
         </Button>
       </div>
       {isLoading ? (
-        <p className="w-full text-center text-sm font-medium text-foreground animate-pulse">
-          Carregando custos...
-        </p>
+        <p className="text-foreground w-full animate-pulse text-center text-sm font-medium">Carregando custos...</p>
       ) : null}
       {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
       {isSuccess ? (
-        expenses.length > 0 ? (
-          expenses.map((expense) => (
+        visibleExpenses.length > 0 ? (
+          visibleExpenses.map((expense) => (
             <ExpenseItemCard key={expense._id} expense={expense} session={sessionUser} />
           ))
         ) : (
-          <p className="w-full text-center text-sm font-medium text-foreground">
-            Nenhum custo encontrado.
-          </p>
+          <p className="text-foreground w-full text-center text-sm font-medium">Nenhum custo encontrado.</p>
         )
       ) : null}
       {newExpenseMenuIsOpen ? (
@@ -177,6 +189,7 @@ export default function CostsInformation({
               nome: projectName,
               identificador: projectIdentifier,
             },
+            ordemServico: { id: serviceOrderId, descricao: serviceOrderDescription },
           }}
           session={sessionUser}
           closeModal={() => setNewExpenseMenuIsOpen(false)}
@@ -189,22 +202,18 @@ export default function CostsInformation({
 function ExpenseItemCard({ expense, session }: { expense: TExpenseDTO; session: TAuthSession }) {
   const [editExpenseMenuIsOpen, setEditExpenseMenuIsOpen] = useState(false);
   return (
-    <div className="border-border flex w-full flex-col items-center gap-1 border p-3 shadow-xs rounded">
-      <div className="w-full flex items-center justify-between gap-2">
+    <div className="border-border flex w-full flex-col items-center gap-1 rounded border p-3 shadow-xs">
+      <div className="flex w-full items-center justify-between gap-2">
         <h1 className="text-sm font-bold">
           {expense.rateio} - {expense.categoria}
         </h1>
-        <h1 className="text-sm font-bold px-2 py-1 rounded-lg bg-primary/20">
-          {formatToMoney(expense.total)}{" "}
-        </h1>
+        <h1 className="bg-primary/20 rounded-lg px-2 py-1 text-sm font-bold">{formatToMoney(expense.total)} </h1>
       </div>
-      <div className="w-full flex items-center justify-between gap-2 flex-col lg:flex-row">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
-            <BsCalendar className="w-4 h-4 min-w-4 min-h-4" />
-            <p className="text-xs font-medium">
-              {formatDateAsLocale(expense.efetivacao.data, true)}
-            </p>
+            <BsCalendar className="h-4 min-h-4 w-4 min-w-4" />
+            <p className="text-xs font-medium">{formatDateAsLocale(expense.efetivacao.data, true)}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -214,17 +223,13 @@ function ExpenseItemCard({ expense, session }: { expense: TExpenseDTO; session: 
             variant={"ghost"}
             className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs"
           >
-            <Pencil className="w-4 h-4 min-w-4 min-h-4" />
+            <Pencil className="h-4 min-h-4 w-4 min-w-4" />
             EDITAR
           </Button>
         </div>
       </div>
       {editExpenseMenuIsOpen ? (
-        <EditExpense
-          expenseId={expense._id}
-          session={session}
-          closeModal={() => setEditExpenseMenuIsOpen(false)}
-        />
+        <EditExpense expenseId={expense._id} session={session} closeModal={() => setEditExpenseMenuIsOpen(false)} />
       ) : null}
     </div>
   );

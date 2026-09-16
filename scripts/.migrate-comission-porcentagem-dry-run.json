@@ -1,0 +1,637 @@
+{
+  "summary": {
+    "mode": "dry-run",
+    "heuristicNoBase": false,
+    "projectsScanned": 315,
+    "projectsToUpdate": 106,
+    "rowsMigrated": 126,
+    "rowsSkipped": 530,
+    "skipReasons": {
+      "fraction_no_base_needs_heuristic_flag": 19,
+      "zero_or_invalid": 126,
+      "already_percent_points": 277,
+      "fraction_with_valor_no_base_manual_review": 2,
+      "already_coherent_percent_points": 102,
+      "ambiguous_vs_valor_and_base": 4
+    },
+    "migrateReasons": {
+      "valor_matches_decimal_fraction": 126
+    }
+  },
+  "changes": [
+    {
+      "projectId": "688a0418c8c57097519dbd49",
+      "base": 75600,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ADRIANA FRANÇOISE",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 3780
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 3780
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "689338e7861b5c0d2ee7885b",
+      "base": 725.1536,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "MARCONI ÁTILA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 72.51536
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 72.51536
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "689505274d605aeff5760edb",
+      "base": 27000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ANDY CALAZANS",
+          "papel": "SDR",
+          "before": {
+            "porcentagem": 0.01,
+            "valor": 270
+          },
+          "after": {
+            "porcentagem": 1,
+            "valor": 270
+          },
+          "reason": "valor_matches_decimal_fraction"
+        },
+        {
+          "index": 1,
+          "nome": "RUTH FERNANDES",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.03,
+            "valor": 810
+          },
+          "after": {
+            "porcentagem": 3,
+            "valor": 810
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68965ecd458a38877572e1a3",
+      "base": 72000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "GABRIEL MARTINS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 7200
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 7200
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68a6fb32fed12f3488c41934",
+      "base": 4000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ADRIANA FRANÇOISE",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 400
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 400
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68ae03b42e4ae5c61db405d4",
+      "base": 19799,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "FELIPE NOBREGA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.04,
+            "valor": 791.96
+          },
+          "after": {
+            "porcentagem": 4,
+            "valor": 791.96
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68ae03e4d0617a1631c11471",
+      "base": 10999,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "FELIPE NOBREGA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.04,
+            "valor": 439.96000000000004
+          },
+          "after": {
+            "porcentagem": 4,
+            "valor": 439.96000000000004
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68b0bcf79ad471bd92206a82",
+      "base": 7399,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "JOSÉ ROBERTO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 369.95000000000005
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 369.95000000000005
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68b57f2fe524616ff0523e62",
+      "base": 1222,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ANA BEATRIZ",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 122.2
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 122.2
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68b84d7d0927ca712d996daa",
+      "base": 7399,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "JOSÉ ROBERTO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 369.95000000000005
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 369.95000000000005
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68b985c2eb7947227b71e678",
+      "base": 50000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ANDREW BORGES",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 5000
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 5000
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68bacd0f87581ac8d5ecaf95",
+      "base": 795.12,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "GABRIEL MARTINS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 79.512
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 79.512
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68caf80ef83ea6a92b914d47",
+      "base": 43899,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "MARCUS VINÍCIUS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.04,
+            "valor": 1755.96
+          },
+          "after": {
+            "porcentagem": 4,
+            "valor": 1755.96
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68caf90564cc57a7e2b3a665",
+      "base": 7399,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ESDRAS OLIVEIRA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.03,
+            "valor": 221.97
+          },
+          "after": {
+            "porcentagem": 3,
+            "valor": 221.97
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68cc0fcc296fc91f0af26dbd",
+      "base": 91400,
+      "rows": [
+        {
+          "index": 1,
+          "nome": "DIOGO CARVALHO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 9140
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 9140
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68cd42539317e952ec283f0c",
+      "base": 530.75,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "MARCONI ÁTILA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 53.075
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 53.075
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68d460c90f91dc596e3dea59",
+      "base": 300,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "GABRIEL MARTINS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 30
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 30
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68dbd5eca3d41537ecd98051",
+      "base": 17499,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "DENIAN RIBEIRO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 874.95
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 874.95
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68e00caccea42198b26efb81",
+      "base": 340,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "JOÃO PEDRO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 34
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 34
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68ecee5e24af7bf3ca27369d",
+      "base": 1500,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ADRIANA FRANÇOISE",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 150
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 150
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68efb432c593fec76784616c",
+      "base": 12600,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "DIEGO REIS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.01,
+            "valor": 126
+          },
+          "after": {
+            "porcentagem": 1,
+            "valor": 126
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "68f14b507ca3107fc1b4fc75",
+      "base": 12000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "FELIPE NOBREGA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.04,
+            "valor": 480
+          },
+          "after": {
+            "porcentagem": 4,
+            "valor": 480
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "6914d4090f7ea8977186d7fe",
+      "base": 96000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "DIOGO CARVALHO",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 9600
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 9600
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "691b079352e81a6be4e98753",
+      "base": 12000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "RONIVALDO MARTINS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.04,
+            "valor": 480
+          },
+          "after": {
+            "porcentagem": 4,
+            "valor": 480
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "691ce748871ab737157af756",
+      "base": 3200,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ANDREW BORGES",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 320
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 320
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "6920a2beb266d27f77d0d00f",
+      "base": 10999,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "DEVISSON LIMA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.03,
+            "valor": 329.96999999999997
+          },
+          "after": {
+            "porcentagem": 3,
+            "valor": 329.96999999999997
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "69249ee157680662256dc8c0",
+      "base": 5000,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "MARCUS VINÍCIUS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 500
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 500
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "6928ba80372c9e25cfd09837",
+      "base": 14299,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ADRIANA FRANÇOISE BARBOSA DIAS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 714.95
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 714.95
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "6928ba965fba95cf06ff9a17",
+      "base": 35099,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "ADRIANA FRANÇOISE BARBOSA DIAS",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.05,
+            "valor": 1754.95
+          },
+          "after": {
+            "porcentagem": 5,
+            "valor": 1754.95
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    },
+    {
+      "projectId": "692a041e0b502a7405b2e376",
+      "base": 190,
+      "rows": [
+        {
+          "index": 0,
+          "nome": "DEVISSON LIMA",
+          "papel": "VENDEDOR",
+          "before": {
+            "porcentagem": 0.1,
+            "valor": 19
+          },
+          "after": {
+            "porcentagem": 10,
+            "valor": 19
+          },
+          "reason": "valor_matches_decimal_fraction"
+        }
+      ]
+    }
+  ]
+}

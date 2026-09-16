@@ -143,7 +143,7 @@ const createNewProjectRoute: NextApiHandler<PostResponse> = async (req, res) => 
 		return {
 			nome: responsible.nome,
 			papel: responsible.papel as TProjectComissionedUser["papel"],
-			porcentagem: comissionValue / saleValue,
+			porcentagem: saleValue > 0 ? (comissionValue / saleValue) * 100 : 0,
 			valor: comissionValue,
 			avatar_url: responsible.avatar_url,
 			dataEfetivacao: null,

@@ -5,6 +5,7 @@ import ContractTemplatesBlock from "@/components/identificador/configuracoes/Con
 import ContractTemplatesVariablesBlock from "@/components/identificador/configuracoes/ContractTemplatesVariablesBlock";
 import EmployeesBlock from "@/components/identificador/configuracoes/EmployeesBlock";
 import IntegrationsBlock from "@/components/identificador/configuracoes/IntegrationsBlock";
+import LaborCostsBlock from "@/components/identificador/configuracoes/LaborCostsBlock";
 import ProfileBlock from "@/components/identificador/configuracoes/ProfileBlock";
 import UsersBlock from "@/components/identificador/configuracoes/UsersBlock";
 import WhatsappConnectionBlock from "@/components/identificador/configuracoes/WhatsappConnectionBlock";
@@ -36,7 +37,8 @@ type ConfigurationPageModes =
   | "contract-templates-variables"
   | "whatsapp-templates"
   | "whatsapp-connection"
-  | "integrations";
+  | "integrations"
+  | "labor-costs";
 type ConfigurationBlockProps = {
   session: TAuthSession;
 };
@@ -45,18 +47,16 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
 
   const userHasUsersViewPermission = session.user.permissoes.usuarios.visualizar;
   const userHasEmployeesViewPermission =
-    session.user.permissoes.usuarios.visualizar &&
-    session.user.permissoes.recursosHumanos.visualizar;
+    session.user.permissoes.usuarios.visualizar && session.user.permissoes.recursosHumanos.visualizar;
   const userHasCompositionKitsViewPermission = session.user.permissoes.suprimentos.visualizar;
   const userHasContractTemplatesVariablesPermission =
-    session.user.permissoes.administrativo.editar &&
-    session.user.permissoes.administrativo.visualizar;
+    session.user.permissoes.administrativo.editar && session.user.permissoes.administrativo.visualizar;
   const userPersonalizationViewPermission =
-    session.user.permissoes.administrativo.visualizar ||
-    session.user.permissoes.recursosHumanos.visualizar;
+    session.user.permissoes.administrativo.visualizar || session.user.permissoes.recursosHumanos.visualizar;
   const userHasCertificationsPermission = session.user.permissoes.certificacoes.visualizar;
   const userHasWhatsappTemplatesPermission = session.user.permissoes.chats.enviarMensagens;
   const userHasSupplimentViewPermission = session.user.permissoes.suprimentos.visualizar;
+  const userHasLaborCostsViewPermission = session.user.permissoes.financeiro.visualizar;
   return (
     <div className="flex grow flex-col gap-2 p-6">
       <div className="border-border flex w-full flex-col border-b px-6 pb-2">
@@ -142,6 +142,18 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
             </button>
           )}
 
+          {userHasLaborCostsViewPermission ? (
+            <button
+              type="button"
+              onClick={() => setMode("labor-costs")}
+              className={`${
+                mode === "labor-costs" ? "bg-secondary" : ""
+              } text-muted-foreground hover:bg-secondary w-full rounded-md px-4 py-2 text-center text-xs font-semibold duration-300 ease-in-out lg:text-start lg:text-base`}
+            >
+              Custos de mão de obra
+            </button>
+          ) : null}
+
           {userHasCompositionKitsViewPermission && (
             <button
               type="button"
@@ -194,13 +206,12 @@ function ConfigurationBlock({ session }: ConfigurationBlockProps) {
           {mode === "employees" ? <EmployeesBlock session={session} /> : null}
           {mode === "certifications" ? <CertificationsBlock session={session} /> : null}
           {mode === "contract-templates" ? <ContractTemplatesBlock session={session} /> : null}
-          {mode === "contract-templates-variables" ? (
-            <ContractTemplatesVariablesBlock session={session} />
-          ) : null}
+          {mode === "contract-templates-variables" ? <ContractTemplatesVariablesBlock session={session} /> : null}
           {mode === "composition-kits" ? <CompositionKitsBlock session={session} /> : null}
           {mode === "whatsapp-templates" ? <WhatsappTemplatesBlock session={session} /> : null}
           {mode === "whatsapp-connection" ? <WhatsappConnectionBlock session={session} /> : null}
           {mode === "integrations" ? <IntegrationsBlock session={session} /> : null}
+          {mode === "labor-costs" ? <LaborCostsBlock session={session} /> : null}
         </div>
       </div>
     </div>

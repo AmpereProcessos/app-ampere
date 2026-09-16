@@ -332,7 +332,7 @@ export function getTitleFileType(title: string) {
 	return type;
 }
 export function isFileFormatImage(format: string) {
-	return ["IMAGEM (.PNG)", "IMAGEM(.JPEG)", "IMAGEM(.TIFF)", "IMAGEM(.JPG)"].includes(format);
+	return ["IMAGEM (.PNG)", "IMAGEM(.JPEG)", "IMAGEM(.TIFF)", "IMAGEM(.JPG)", "IMAGEM(.WEBP)"].includes(format);
 }
 
 export const vendedores = [

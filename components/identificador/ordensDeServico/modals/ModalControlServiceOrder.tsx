@@ -18,6 +18,7 @@ import Link from "next/link";
 import ServiceOrderFileReferences from "./blocos/AttachmentsBlock";
 import ServiceOrderCalendarIntegration from "./blocos/CalendarIntegration";
 import CostsInformation from "./blocos/CostInformationBlock";
+import LaborCostInformationBlock from "./blocos/LaborCostInformationBlock";
 import ServiceOrderDetailsInformationBlock from "./blocos/DetailsInformationBlock";
 import ServiceOrderEquipmentsInformationBlock from "./blocos/EquipmentsInformationBlock";
 import ServiceOrderExecutionInformationBlock from "./blocos/ExecutionInformationBlock";
@@ -40,21 +41,10 @@ type ModalControlServiceOrderProps = {
     onSettled?: () => void;
   };
 };
-function ModalControlServiceOrder({
-  session,
-  serviceOrderId,
-  closeModal,
-  callbacks,
-}: ModalControlServiceOrderProps) {
+function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbacks }: ModalControlServiceOrderProps) {
   const queryClient = useQueryClient();
 
-  const {
-    data: serviceOrder,
-    isLoading,
-    isError,
-    isSuccess,
-    error,
-  } = useServiceOrderById({ id: serviceOrderId });
+  const { data: serviceOrder, isLoading, isError, isSuccess, error } = useServiceOrderById({ id: serviceOrderId });
   const initialState: TServiceOrder = {
     categoria: "MONTAGEM",
     favorecido: {
@@ -137,13 +127,7 @@ function ModalControlServiceOrder({
     setOsInfo((prev) => ({ ...prev, ...changes }));
   }
 
-  async function handleUpdateServiceOrder({
-    id,
-    changes,
-  }: {
-    id: string;
-    changes: Partial<TServiceOrder>;
-  }) {
+  async function handleUpdateServiceOrder({ id, changes }: { id: string; changes: Partial<TServiceOrder> }) {
     try {
       await updateServiceOrder({ id, changes });
       return "Ordem de serviço atualizada com sucesso !";
@@ -184,9 +168,7 @@ function ModalControlServiceOrder({
       >
         <div className="flex h-full w-full flex-col">
           <div className="border-border flex flex-col items-center justify-between border-b px-2 pb-2 text-lg lg:flex-row">
-            <h3 className="text-xl font-bold text-primary dark:text-white">
-              EDITAR ORDEM DE SERVIÇO
-            </h3>
+            <h3 className="text-primary text-xl font-bold dark:text-white">EDITAR ORDEM DE SERVIÇO</h3>
             <button
               onClick={closeModal}
               type="button"
@@ -205,13 +187,11 @@ function ModalControlServiceOrder({
                     <button
                       type="button"
                       className={cn(
-                        "hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out",
+                        "hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out"
                       )}
                     >
                       <ExternalLink width={14} height={14} />
-                      <h1 className="text-xs font-medium tracking-tight">
-                        PÁGINA DO ORDEM DE SERVIÇO
-                      </h1>
+                      <h1 className="text-xs font-medium tracking-tight">PÁGINA DO ORDEM DE SERVIÇO</h1>
                     </button>
                   </Link>
                   {serviceOrder.categoria === "MANUTENÇÃO PREVENTIVA" ? (
@@ -219,13 +199,11 @@ function ModalControlServiceOrder({
                       <button
                         type="button"
                         className={cn(
-                          "hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out",
+                          "hover:bg-primary/80 flex items-center gap-1 rounded-lg bg-black px-2 py-1 text-white duration-300 ease-in-out"
                         )}
                       >
                         <ExternalLink width={14} height={14} />
-                        <h1 className="text-xs font-medium tracking-tight">
-                          PÁGINA DO TERMO DE SERVIÇO
-                        </h1>
+                        <h1 className="text-xs font-medium tracking-tight">PÁGINA DO TERMO DE SERVIÇO</h1>
                       </button>
                     </Link>
                   ) : null}
@@ -255,17 +233,18 @@ function ModalControlServiceOrder({
                     updateInfoHolder={updateInfoHolder}
                   />
                 )}
+                <LaborCostInformationBlock serviceOrderId={serviceOrderId} session={session} />
                 {serviceOrder.projetoDados ? (
                   <CostsInformation
                     sessionUser={session}
                     projectName={serviceOrder.projetoDados.nomeDoContrato}
                     projectId={serviceOrder.projetoDados._id}
                     projectIdentifier={serviceOrder.projetoDados.qtde.toString()}
+                    serviceOrderId={serviceOrderId}
+                    serviceOrderDescription={osInfo.descricao}
                   />
                 ) : null}
-                <ServiceOrderTechnicalAnalysisInformationBlock
-                  technicalAnalysisId={osInfo.idAnaliseTecnica}
-                />
+                <ServiceOrderTechnicalAnalysisInformationBlock technicalAnalysisId={osInfo.idAnaliseTecnica} />
                 <ServiceOrderFileReferences
                   session={session}
                   attachmentPrefix={osInfo.descricao}
@@ -288,15 +267,9 @@ function ModalControlServiceOrder({
                   project={serviceOrder?.projetoDados || undefined}
                   updateInfoHolder={updateInfoHolder}
                 />
-                <ServiceOrderCalendarIntegration
-                  infoHolder={osInfo}
-                  updateInfoHolder={updateInfoHolder}
-                />
+                <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
-                <ServiceOrderDetailsInformationBlock
-                  infoHolder={osInfo}
-                  updateInfoHolder={updateInfoHolder}
-                />
+                <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderExecutionInformationBlock
                   infoHolder={osInfo}
                   updateInfoHolder={updateInfoHolder}
@@ -321,9 +294,7 @@ function ModalControlServiceOrder({
                 ) : (
                   <LoadingButton
                     loading={isPending}
-                    onClick={() =>
-                      mutate({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })
-                    }
+                    onClick={() => mutate({ id: serviceOrderId, changes: { ...osInfo, dataEfetivacao: null } })}
                     type="button"
                     className="hover:bg-primary/80 bg-primary/60"
                   >

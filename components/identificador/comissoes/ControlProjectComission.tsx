@@ -21,11 +21,9 @@ import {
 import LoadingComponent from "@/components/utils/LoadingComponent";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import { getErrorMessage } from "@/utils/methods/handlers";
-import { useClientById } from "@/utils/methods/query/clients";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
-import type { TProjectComissionedUser, TProjectDTO } from "@/utils/schemas/projects";
-import { BadgeCheck, BadgeDollarSign, Code, Plus, Trash, UserRound } from "lucide-react";
+import { BadgeDollarSign, Code, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatNameAsInitials } from "@/utils/methods/formatting";
 import { FaSolarPanel } from "react-icons/fa";
@@ -43,8 +41,7 @@ import { cn } from "@/lib/utils";
 import type { TGetComissionDataOutputByProjectId } from "@/app/api/comissoes/route";
 import { ComissionableItems, type TComissionableItemsEnum } from "@/utils/select-options";
 import CheckboxInput from "@/components/inputs/Checkbox";
-import CheckboxWithDate from "@/components/inputs/CheckboxWithDate";
-import NewProjectComissionedMenu from "./NewProjectComissionedMenu";
+import ComissionedUsersSpreadsheet from "./ComissionedUsersSpreadsheet";
 
 type ComissionInfoHolder = {
   comissionableValue: number;
@@ -225,7 +222,6 @@ function ProjectComissionDataBlock({
   infoHolder: ComissionInfoHolder;
   updateInfoHolder: (changes: Partial<ComissionInfoHolder>) => void;
 }) {
-  const [newComissionedMenuIsOpen, setNewComissionedMenuIsOpen] = useState(false);
   function updateComissionableItems(item: TComissionableItemsEnum) {
     const itemIsInComissionableItems = infoHolder.comissionableItems.includes(item);
     const newComissionableItems = itemIsInComissionableItems
@@ -243,27 +239,6 @@ function ProjectComissionDataBlock({
         insuranceValue: newComissionableItems.includes("SEGURO") ? project.valorSeguro : 0,
       }),
     });
-  }
-  function updateComissioned({
-    index,
-    changes,
-  }: {
-    index: number;
-    changes: Partial<TProjectComissionedUser>;
-  }) {
-    updateInfoHolder({
-      comissioned: infoHolder.comissioned.map((comissioned, i) =>
-        i === index ? { ...comissioned, ...changes } : comissioned,
-      ),
-    });
-  }
-  function addComissioned(
-    comissioned: TGetComissionDataOutputByProjectId["comissoes"]["comissionados"][number],
-  ) {
-    updateInfoHolder({ comissioned: [...infoHolder.comissioned, comissioned] });
-  }
-  function removeComissioned(index: number) {
-    updateInfoHolder({ comissioned: infoHolder.comissioned.filter((_, i) => i !== index) });
   }
   return (
     <div className="flex h-full w-full flex-col gap-6">
@@ -400,151 +375,37 @@ function ProjectComissionDataBlock({
         <div className="flex w-full flex-col gap-1.5">
           <div className="flex w-full items-center justify-between gap-2">
             <h1 className="text-sm leading-none font-bold tracking-tight">COMISSIONADOS</h1>
-
-            <div className="w-fit">
-              <Button
-                variant="ghost"
-                size="fit"
-                onClick={() =>
-                  updateInfoHolder({
-                    comissioned: infoHolder.comissioned.map((comissioned) => ({
-                      ...comissioned,
-                      dataEfetivacao: new Date().toISOString(),
-                    })),
-                  })
-                }
-              >
-                EFETIVAR TODAS
-              </Button>
-            </div>
-          </div>
-          {infoHolder.comissioned.map((comissioned, index) => (
-            <ComissionedCard
-              key={`${comissioned.nome}-${index}`}
-              comissionableValue={infoHolder.comissionableValue}
-              comissioned={comissioned}
-              updateComissioned={(changes) => updateComissioned({ index, changes })}
-              removeComissioned={() => removeComissioned(index)}
-            />
-          ))}
-          <div className="flex w-full items-center justify-center">
-            <button
-              type="button"
-              onClick={() => setNewComissionedMenuIsOpen(true)}
-              className="text-primary flex items-center gap-1 rounded-lg px-2 py-1 text-[0.6rem] transition-colors hover:bg-blue-600 hover:text-white"
+            <Button
+              variant="ghost"
+              size="fit"
+              onClick={() =>
+                updateInfoHolder({
+                  comissioned: infoHolder.comissioned.map((comissioned) => ({
+                    ...comissioned,
+                    dataEfetivacao: new Date().toISOString(),
+                  })),
+                })
+              }
             >
-              <Plus className="h-4 min-h-4 w-4 min-w-4" />
-              <p>ADICIONAR COMISSIONADO</p>
-            </button>
+              EFETIVAR TODAS
+            </Button>
           </div>
-        </div>
-      </div>
-      {newComissionedMenuIsOpen ? (
-        <NewProjectComissionedMenu
-          comissionableValue={infoHolder.comissionableValue}
-          addComissioned={addComissioned}
-          closeModal={() => setNewComissionedMenuIsOpen(false)}
-        />
-      ) : null}
-    </div>
-  );
-}
-
-type ComissionedCardProps = {
-  comissionableValue: number;
-  comissioned: TGetComissionDataOutputByProjectId["comissoes"]["comissionados"][number];
-  updateComissioned: (changes: Partial<TProjectComissionedUser>) => void;
-  removeComissioned: () => void;
-};
-function ComissionedCard({
-  comissionableValue,
-  comissioned,
-  updateComissioned,
-  removeComissioned,
-}: ComissionedCardProps) {
-  return (
-    <div className="border-border bg-background flex w-full flex-col gap-1 rounded-md border p-2 shadow-xs dark:bg-[#121212]">
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-center justify-center gap-2">
-          <button
-            type="button"
-            onClick={() => removeComissioned()}
-            className="text-primary flex items-center gap-1 rounded-full p-2 text-[0.6rem] transition-colors hover:bg-red-600 hover:text-white"
-          >
-            <Trash className="h-3 min-h-3 w-3 min-w-3" />
-          </button>
-          <h1 className="text-[0.6rem] font-bold tracking-tighter">COMISSÃO DO VENDEDOR:</h1>
-          <Avatar className="h-5 w-5">
-            <AvatarImage src={comissioned.avatar_url || undefined} alt={comissioned.nome} />
-            <AvatarFallback>{formatNameAsInitials(comissioned.nome || "")}</AvatarFallback>
-          </Avatar>
-          <h1 className="text-[0.6rem] font-bold tracking-tighter">{comissioned.nome}</h1>
-        </div>
-        <div
-          className={cn(
-            "bg-secondary text-xxs text-foreground flex items-center gap-1 rounded-lg px-2 py-0.5 text-center font-bold italic",
-            {
-              "bg-orange-100 text-orange-700": !comissioned.dataValidacao,
-              "bg-green-100 text-green-700": comissioned.dataValidacao,
-            },
-          )}
-        >
-          <BadgeCheck className={cn("h-3 min-h-3 w-3 min-w-3")} />
-          <p className={cn("text-[0.57rem] font-medium")}>
-            {comissioned.dataValidacao ? "VALIDADO" : "NÃO VALIDADO"}
-          </p>
-        </div>
-      </div>
-
-      <NumberInput
-        label="COMISSÃO DO VENDEDOR (%)"
-        value={comissioned.porcentagem}
-        handleChange={(v) => {
-          updateComissioned({ porcentagem: v, valor: (v / 100) * comissionableValue });
-        }}
-        placeholder="Preencha aqui a porcentagem da comissão do vendedor..."
-        width="100%"
-        labelClassName="text-[0.6rem]"
-        holderClassName="text-xs p-2 min-h-[34px]"
-      />
-      <NumberInput
-        label="COMISSÃO DO VENDEDOR (R$)"
-        value={comissioned.valor || null}
-        handleChange={(v) => {
-          updateComissioned({ valor: v, porcentagem: (v / comissionableValue) * 100 });
-        }}
-        placeholder="Preencha aqui o valor da comissão do vendedor..."
-        width="100%"
-        labelClassName="text-[0.6rem]"
-        holderClassName="text-xs p-2 min-h-[34px]"
-      />
-      <div className="flex w-full items-center justify-center">
-        <div className="bg-secondary text-foreground flex items-center gap-1 rounded-lg px-2 py-0.5 text-center text-[0.55rem] font-bold italic">
-          <p>COMISSÃO FINAL DO VENDEDOR</p>
-          <p className="text-[0.57rem] font-black text-[#15599a]">
-            {formatToMoney(comissionableValue * (comissioned.porcentagem / 100))}
-          </p>
-        </div>
-      </div>
-      <div className="flex w-full flex-wrap items-center justify-center gap-2">
-        <div className="w-fit">
-          <CheckboxWithDate
-            labelFalse="VALORES NÃO EFETIVADOS"
-            labelTrue="VALORES EFETIVADOS"
-            date={comissioned.dataEfetivacao ? new Date(comissioned.dataEfetivacao) : null}
-            handleChange={(value) => {
-              updateComissioned({ dataEfetivacao: value });
-            }}
-          />
-        </div>
-        <div className="w-fit">
-          <CheckboxWithDate
-            labelFalse="PAGAMENTO NÃO REALIZADO"
-            labelTrue="PAGAMENTO REALIZADO"
-            date={comissioned.dataPagamento ? new Date(comissioned.dataPagamento) : null}
-            handleChange={(value) => {
-              updateComissioned({ dataPagamento: value });
-            }}
+          <ComissionedUsersSpreadsheet
+            comissioned={infoHolder.comissioned}
+            comissionableValue={infoHolder.comissionableValue}
+            onAdd={(row) => updateInfoHolder({ comissioned: [...infoHolder.comissioned, row] })}
+            onUpdate={(index, changes) =>
+              updateInfoHolder({
+                comissioned: infoHolder.comissioned.map((row, i) =>
+                  i === index ? { ...row, ...changes } : row,
+                ),
+              })
+            }
+            onRemove={(index) =>
+              updateInfoHolder({
+                comissioned: infoHolder.comissioned.filter((_, i) => i !== index),
+              })
+            }
           />
         </div>
       </div>

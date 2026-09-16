@@ -16,6 +16,7 @@
     "utils": "@/lib/utils"
   },
   "registries": {
-    "@mapcn": "https://mapcn.dev/r/{name}.json"
+    "@mapcn": "https://mapcn.dev/r/{name}.json",
+    "@extend": "https://ui.extend.ai/r/{name}.json"
   }
 }

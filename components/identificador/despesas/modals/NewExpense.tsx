@@ -46,6 +46,8 @@ function NewExpense({ session, closeModal, callbacks, initialState }: NewExpense
 			identificador: initialState?.projeto?.identificador || null,
 			tipo: initialState?.projeto?.tipo || null,
 		},
+		ordemServico: initialState?.ordemServico ?? null,
+		metadados: initialState?.metadados ?? null,
 		autor: {
 			id: initialState?.autor?.id || session.user?.id,
 			nome: initialState?.autor?.nome || session.user.nome,

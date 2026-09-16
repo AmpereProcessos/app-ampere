@@ -2,10 +2,28 @@ import { ObjectId } from "mongodb";
 import { z } from "zod";
 import type { TProject, TProjectDTO } from "./projects";
 import { AuthorSchema } from "./users";
+import { ExpenseMetadataSchema } from "./labor-costs";
+
+export const ExpenseServiceOrderReferenceSchema = z.object({
+	id: z.string({
+		required_error: "ID da ordem de serviço não informado.",
+		invalid_type_error: "Tipo não válido para o ID da ordem de serviço.",
+	}),
+	descricao: z.string({
+		required_error: "Descrição da ordem de serviço não informada.",
+		invalid_type_error: "Tipo não válido para a descrição da ordem de serviço.",
+	}),
+});
 
 const PaymentItemSchema = z.object({
-	titulo: z.string({ required_error: "Titulo do pagamento não informado.", invalid_type_error: "Tipo não válido para o titulo do recebimento." }),
-	valor: z.number({ required_error: "Valor do item de pagamento não informado.", invalid_type_error: "Tipo não válido para o item de pagamento." }),
+	titulo: z.string({
+		required_error: "Titulo do pagamento não informado.",
+		invalid_type_error: "Tipo não válido para o titulo do recebimento.",
+	}),
+	valor: z.number({
+		required_error: "Valor do item de pagamento não informado.",
+		invalid_type_error: "Tipo não válido para o item de pagamento.",
+	}),
 	porcentagem: z.number({
 		required_error: "Porcentagem do item de pagamento não informado.",
 		invalid_type_error: "Tipo não válido para a porcentagem do item de pagamento.",
@@ -55,6 +73,8 @@ const GeneralExpenseSchema = z.object({
 		identificador: z.union([z.string(), z.number()]).optional().nullable(),
 		tipo: z.string().optional().nullable(),
 	}),
+	ordemServico: ExpenseServiceOrderReferenceSchema.optional().nullable(),
+	metadados: ExpenseMetadataSchema.optional().nullable(),
 	idFormularioAlmoxarifado: z.string().optional().nullable(),
 	itens: z.array(ExpenseItemSchema),
 	total: z.number(),
@@ -69,40 +89,85 @@ const GeneralExpenseSchema = z.object({
 	dataInsercao: z.string().datetime(),
 });
 
-const InsertExpenseSchema = z.object({
-	rateio: z.string({ required_error: "Rateio da despesa não informado.", invalid_type_error: "Tipo não válido para o rateio da despesa." }),
-	categoria: z.string({ required_error: "Categoria da despesa não informada.", invalid_type_error: "Tipo não válido para a categoria da despesa." }),
-	descricao: z.string({ required_error: "Descrição da despesa não fornecida.", invalid_type_error: "Tipo não válido para a descrição da despesa." }),
-	projeto: z.object({
-		id: z.string({ invalid_type_error: "Tipo não válido para o ID do projeto de referência." }).optional().nullable(),
-		nome: z.string({ invalid_type_error: "Tipo não válido para o nome do projeto de referência." }).optional().nullable(),
-		identificador: z
-			.union([z.string(), z.number()], { invalid_type_error: "Tipo não válido para o identificador do projeto de referência." })
-			.optional()
-			.nullable(),
-		tipo: z.string({ invalid_type_error: "Tipo não válido para o tipo do projeto de referência." }).optional().nullable(),
-	}),
-	idFormularioAlmoxarifado: z.string({ invalid_type_error: "Tipo não válido para o ID de formulário de almoxarifado." }).optional().nullable(),
-	itens: z.array(ExpenseItemSchema),
-	total: z.number({ required_error: "Total da despesa não fornecido.", invalid_type_error: "Tipo não válido para o total da despesa." }),
-	efetivacao: z.object({
-		efetivado: z.boolean({ invalid_type_error: "Tipo não válido para o status de efetivação da despesa." }).optional().nullable(),
-		data: z.string({ invalid_type_error: "Tipo não válido para data ou previsão de efetivação da despesa." }).datetime().optional().nullable(),
-	}),
-	criterioReferencia: z.boolean({
-		required_error: "Condição do critério de referência não informada.",
-		invalid_type_error: "Tipo não válido para condição do critério de referência.",
-	}),
-	criterioCompetencia: z.boolean({
-		required_error: "Condição do critério de competência não informada.",
-		invalid_type_error: "Tipo não válido para condição do critério de competência.",
-	}),
-	pagamentos: z.array(PaymentItemSchema),
-	autor: AuthorSchema,
-	dataInsercao: z
-		.string({ required_error: "Data de inserção não fornecida.", invalid_type_error: "Tipo não válido para a data de inserção." })
-		.datetime({ message: "Formato inválido para data de inserção." }),
-});
+export const InsertExpenseSchema = z
+	.object({
+		rateio: z.string({
+			required_error: "Rateio da despesa não informado.",
+			invalid_type_error: "Tipo não válido para o rateio da despesa.",
+		}),
+		categoria: z.string({
+			required_error: "Categoria da despesa não informada.",
+			invalid_type_error: "Tipo não válido para a categoria da despesa.",
+		}),
+		descricao: z.string({
+			required_error: "Descrição da despesa não fornecida.",
+			invalid_type_error: "Tipo não válido para a descrição da despesa.",
+		}),
+		projeto: z.object({
+			id: z.string({ invalid_type_error: "Tipo não válido para o ID do projeto de referência." }).optional().nullable(),
+			nome: z.string({ invalid_type_error: "Tipo não válido para o nome do projeto de referência." }).optional().nullable(),
+			identificador: z
+				.union([z.string(), z.number()], {
+					invalid_type_error: "Tipo não válido para o identificador do projeto de referência.",
+				})
+				.optional()
+				.nullable(),
+			tipo: z.string({ invalid_type_error: "Tipo não válido para o tipo do projeto de referência." }).optional().nullable(),
+		}),
+		ordemServico: ExpenseServiceOrderReferenceSchema.optional().nullable(),
+		metadados: ExpenseMetadataSchema.optional().nullable(),
+		idFormularioAlmoxarifado: z.string({ invalid_type_error: "Tipo não válido para o ID de formulário de almoxarifado." }).optional().nullable(),
+		itens: z.array(ExpenseItemSchema),
+		total: z.number({
+			required_error: "Total da despesa não fornecido.",
+			invalid_type_error: "Tipo não válido para o total da despesa.",
+		}),
+		efetivacao: z.object({
+			efetivado: z.boolean({ invalid_type_error: "Tipo não válido para o status de efetivação da despesa." }).optional().nullable(),
+			data: z
+				.string({
+					invalid_type_error: "Tipo não válido para data ou previsão de efetivação da despesa.",
+				})
+				.datetime()
+				.optional()
+				.nullable(),
+		}),
+		criterioReferencia: z.boolean({
+			required_error: "Condição do critério de referência não informada.",
+			invalid_type_error: "Tipo não válido para condição do critério de referência.",
+		}),
+		criterioCompetencia: z.boolean({
+			required_error: "Condição do critério de competência não informada.",
+			invalid_type_error: "Tipo não válido para condição do critério de competência.",
+		}),
+		pagamentos: z.array(PaymentItemSchema),
+		autor: AuthorSchema,
+		dataInsercao: z
+			.string({
+				required_error: "Data de inserção não fornecida.",
+				invalid_type_error: "Tipo não válido para a data de inserção.",
+			})
+			.datetime({ message: "Formato inválido para data de inserção." }),
+	})
+	.superRefine((expense, context) => {
+		if (expense.metadados?.chave !== "custo-mao-de-obra") return;
+		if (!expense.ordemServico?.id) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				path: ["ordemServico", "id"],
+				message: "A ordem de serviço é obrigatória para custos de mão de obra.",
+			});
+		}
+		const itemsTotal = Math.round(expense.itens.reduce((total, item) => total + item.qtde * item.preco, 0) * 100) / 100;
+		const expenseTotal = Math.round(expense.total * 100) / 100;
+		if (itemsTotal !== expenseTotal) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				path: ["total"],
+				message: "O total da despesa deve corresponder à soma dos itens.",
+			});
+		}
+	});
 
 const ExpenseEntitySchema = z.object({
 	_id: z.instanceof(ObjectId),
@@ -115,6 +180,8 @@ const ExpenseEntitySchema = z.object({
 		identificador: z.union([z.string(), z.number()]).optional().nullable(),
 		tipo: z.string().optional().nullable(),
 	}),
+	ordemServico: ExpenseServiceOrderReferenceSchema.optional().nullable(),
+	metadados: ExpenseMetadataSchema.optional().nullable(),
 	idFormularioAlmoxarifado: z.string().optional().nullable(),
 	itens: z.array(ExpenseItemSchema),
 	total: z.number(),
@@ -146,6 +213,8 @@ export type TPaymentUnwindSimplifiedDTO = {
 export const ExpenseSimplifiedProjection = {
 	rateio: 1,
 	categoria: 1,
+	ordemServico: 1,
+	metadados: 1,
 	total: 1,
 	pagamentos: 1,
 	efetivacao: 1,
@@ -154,7 +223,10 @@ export const ExpenseSimplifiedProjection = {
 };
 
 export const ExpenseQueryFilters = z.object({
-	search: z.string({ required_error: "Filtro de pesquisa não informado.", invalid_type_error: "Tipo não válido para o filtro de pesquisa." }),
+	search: z.string({
+		required_error: "Filtro de pesquisa não informado.",
+		invalid_type_error: "Tipo não válido para o filtro de pesquisa.",
+	}),
 	status: z.array(
 		z.enum(["PAGO", "PAGO PARCIAL", "PENDENTE"], {
 			required_error: "Status de filtro não informado.",
@@ -163,7 +235,7 @@ export const ExpenseQueryFilters = z.object({
 		{
 			required_error: "Lista de status de filtro não informada.",
 			invalid_type_error: "Tipo não válido para a lista de status de filtro.",
-		},
+		}
 	),
 	apportionments: z.array(z.string({ invalid_type_error: "Tipo não válido para o rateio da despesa." }), {
 		required_error: "Lista de rateios da despesa não informada.",

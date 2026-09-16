@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  type ButtonHTMLAttributes,
   type ReactNode,
 } from "react";
 
@@ -56,6 +57,7 @@ type SelectInputVirtualizedProps<T> = {
   maxHeight?: number;
   /** Comportamento modal do popover (Radix). @default true */
   modal?: boolean;
+  triggerProps?: ButtonHTMLAttributes<HTMLButtonElement>;
 };
 
 function getValueID<T>(value: T | null, options: SelectOption[] | null) {
@@ -310,6 +312,7 @@ function SelectInputVirtualized<T>({
   itemHeight = 40,
   maxHeight = 300,
   modal = true,
+  triggerProps,
 }: SelectInputVirtualizedProps<T>) {
   const triggerId = useId();
   const inputIdentifier = useMemo(() => label.toLowerCase().replaceAll(" ", "_"), [label]);
@@ -386,11 +389,19 @@ function SelectInputVirtualized<T>({
       aria-haspopup="listbox"
       aria-expanded={isOpen}
       aria-controls={isOpen ? `${inputIdentifier}-listbox` : undefined}
+      {...triggerProps}
+      onFocus={(event) => {
+        triggerProps?.onFocus?.(event);
+      }}
+      onKeyDown={(event) => {
+        triggerProps?.onKeyDown?.(event);
+      }}
       className={cn(
         "bg-background text-foreground flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border p-3 text-sm font-normal shadow-xs transition-[border-color,box-shadow] duration-500 ease-in-out dark:bg-[#121212]",
         isOpen ? "border-primary" : "border-border",
         "hover:bg-background",
         holderClassName,
+        triggerProps?.className,
       )}
     >
       <span className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden text-start">

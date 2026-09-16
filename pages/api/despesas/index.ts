@@ -1,5 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
-import type { TExpense, TExpenseWithProjectDTO } from "@/utils/schemas/expenses";
+import { InsertExpenseSchema, type TExpense, type TExpenseWithProjectDTO } from "@/utils/schemas/expenses";
 import createHttpError from "http-errors";
 import { type Collection, type Db, type Filter, ObjectId } from "mongodb";
 import type { NextApiHandler } from "next";
@@ -22,7 +22,12 @@ const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
 		if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
 		const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };
-		const lookup = { from: "dados", localField: "projectIdAsObjectId", foreignField: "_id", as: "projetoDados" };
+		const lookup = {
+			from: "dados",
+			localField: "projectIdAsObjectId",
+			foreignField: "_id",
+			as: "projetoDados",
+		};
 
 		const expenseArr = await collection
 			.aggregate([
@@ -35,6 +40,8 @@ const getExpenses: NextApiHandler<GetResponse> = async (req, res) => {
 						categoria: 1,
 						descricao: 1,
 						projeto: 1,
+						ordemServico: 1,
+						metadados: 1,
 						idFormularioAlmoxarifado: 1,
 						itens: 1,
 						total: 1,
@@ -101,17 +108,26 @@ type PostResponse = {
 const createExpense: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
-	const info = req.body.data;
+	const info = InsertExpenseSchema.parse(req.body.data);
 	if (!info) throw new createHttpError.BadRequest("Informações para criação da despesas não fornecidas.");
+	if (info.metadados?.chave === "custo-mao-de-obra") {
+		throw new createHttpError.BadRequest("Custos de mão de obra devem ser criados pelo controle da ordem de serviço.");
+	}
 
 	const db: Db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
 
-	const insertResponse = await collection.insertOne({ ...info, dataInsercao: new Date().toISOString() });
+	const insertResponse = await collection.insertOne({
+		...info,
+		dataInsercao: new Date().toISOString(),
+	});
 
 	if (!insertResponse.acknowledged) throw new createHttpError.InternalServerError("Oops, houve um erro na criação da receita.");
 
-	return res.status(201).json({ data: { insertedId: insertResponse.insertedId.toString() }, message: "Receita criada com sucesso !" });
+	return res.status(201).json({
+		data: { insertedId: insertResponse.insertedId.toString() },
+		message: "Receita criada com sucesso !",
+	});
 };
 type PutResponse = {
 	data: string;
@@ -128,6 +144,12 @@ const editExpense: NextApiHandler<PutResponse> = async (req, res) => {
 	delete changes._id;
 	const db: Db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
+
+	const currentExpense = await collection.findOne({ _id: new ObjectId(id) });
+	if (!currentExpense) throw new createHttpError.NotFound("Despesa não encontrada.");
+	if (currentExpense.metadados?.chave === "custo-mao-de-obra" || changes.metadados?.chave === "custo-mao-de-obra") {
+		throw new createHttpError.BadRequest("Custos de mão de obra devem ser alterados pelo controle da ordem de serviço.");
+	}
 
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });
 
@@ -150,6 +172,12 @@ const deleteExpense: NextApiHandler<DeleteResponse> = async (req, res) => {
 
 	const collection: Collection<TExpense> = db.collection("despesas");
 
+	const currentExpense = await collection.findOne({ _id: new ObjectId(id) });
+	if (!currentExpense) throw new createHttpError.NotFound("Despesa não encontrada.");
+	if (currentExpense.metadados?.chave === "custo-mao-de-obra") {
+		throw new createHttpError.BadRequest("Custos de mão de obra devem ser reabertos pelo controle da ordem de serviço.");
+	}
+
 	await collection.deleteOne({ _id: new ObjectId(id) });
 
 	return res.status(200).json({ data: "Despesa excluída com sucesso!", message: "Despesa excluída com sucesso!" });
@@ -159,7 +187,7 @@ export default apiHandler({
 	GET: getExpenses,
 	POST: createExpense,
 	PUT: editExpense,
-	DELETE: deleteExpense
+	DELETE: deleteExpense,
 });
 // export default async function handler(req, res) {
 //   if (req.method == 'GET') {

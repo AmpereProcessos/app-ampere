@@ -268,11 +268,11 @@ function ServiceOrderProjectInformationBlock({
           <div className="flex flex-col items-center gap-1 lg:items-end">
             <p className="text-foreground text-[0.65rem] font-medium">OUTROS</p>
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-end">
-              {project.padrao.aumentoCarga.aplicavel ? (
+              {project.padrao?.aumentoCarga?.aplicavel ? (
                 <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-200 text-orange-800">
                   <AlertCircle className="w-4 h-4 min-w-4 min-h-4" />
                   <p className="text-[0.6rem] leading-none font-medium tracking-tight">
-                    AUMENTO DE CARGA - TIPO: {project.padrao.tipo}
+                    AUMENTO DE CARGA - TIPO: {project.padrao?.tipo}
                   </p>
                 </div>
               ) : (

@@ -42,8 +42,14 @@ export type ExecutionOrder = {
   favorecido?: { nome?: string }
   periodo?: { inicio?: string | null; fim?: string | null }
   responsaveis?: Array<{ id?: string; nome?: string }>
+  responsavel?: { nome?: string; tipo?: string }
   localizacao?: { cidade?: string; uf?: string }
   projeto?: { id?: string | null; nome?: string | null; tipo?: string | null }
+  detalhes?: { topologia?: string | null }
+  equipamentos?: {
+    inversor?: { qtde?: number | null }
+    modulos?: { qtde?: number | null }
+  }
 }
 export type ExecutionExpense = {
   _id: { toString(): string } | string
@@ -66,6 +72,10 @@ export type ExecutionDetail = {
   projectId: string
   projectName: string
   people: Array<{ id: string; name: string }>
+  team: string
+  topology: string
+  modules: number | null
+  micros: number | null
   start: string | null
   end: string | null
   duration: number | null
@@ -86,6 +96,14 @@ export type ExecutionSummary = {
 }
 export type ExecutionGroup = ExecutionSummary & { key: string; label: string; share: number }
 export type ExecutionBucket = ExecutionSummary & { key: string; label: string; start: string; end: string }
+export type EquipmentSummary = {
+  installations: number
+  modules: number
+  micros: number
+  microInstallations: number
+  averageModules: number | null
+}
+export type EquipmentGroup = EquipmentSummary & { key: string; label: string }
 export type CostDetail = {
   id: string
   title: string
@@ -122,6 +140,11 @@ export type ExecutionAnalytics = {
   groups: { people: ExecutionGroup[]; cities: ExecutionGroup[]; categories: ExecutionGroup[] }
   aging: Array<{ key: string; label: string; count: number }>
   details: ExecutionDetail[]
+  equipment: {
+    summary: EquipmentSummary
+    groups: { teams: EquipmentGroup[]; regions: EquipmentGroup[] }
+    quality: { missingModules: number; missingMicros: number; missingTeams: number }
+  }
   options: { categories: string[]; people: Array<{ id: string; name: string }>; cities: string[]; states: string[]; projectTypes: string[] }
   quality: { invalidDurations: number; invalidDates: number; unassigned: number; withoutProject: number }
   costs: null | {
@@ -151,7 +174,13 @@ export function splitCost(value: number, count: number, index: number) {
   return (base + (index < Math.abs(remainder) ? Math.sign(remainder) : 0)) / 100
 }
 const finite = (n?: number) => (typeof n === 'number' && Number.isFinite(n) ? n : 0)
+const quantity = (n?: number | null) => (typeof n === 'number' && Number.isFinite(n) && n >= 0 ? n : null)
 const unique = (items: string[]) => [...new Set(items)].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+const isMicroTopology = (value?: string | null) => value?.trim().toLocaleUpperCase('pt-BR').includes('MICRO') || false
+const assignedTeam = (value?: string | null) => {
+  const team = value?.trim()
+  return !team || ['NÃO DEFINIDO', 'NAO DEFINIDO', 'NÃO INFORMADO', 'NAO INFORMADO'].includes(team.toLocaleUpperCase('pt-BR')) ? 'Sem equipe' : team
+}
 export function assignedPeople(order: ExecutionOrder) {
   const people = new Map<string, { id: string; name: string }>()
   for (const p of order.responsaveis || []) {
@@ -240,6 +269,10 @@ export function buildExecutionAnalytics(
         projectId: o.projeto?.id || '',
         projectName: o.projeto?.nome || 'Projeto sem nome',
         people: assignedPeople(o),
+        team: assignedTeam(o.responsavel?.nome),
+        topology: o.detalhes?.topologia?.trim() || 'NÃ£o informada',
+        modules: quantity(o.equipamentos?.modulos?.qtde),
+        micros: isMicroTopology(o.detalhes?.topologia) ? quantity(o.equipamentos?.inversor?.qtde) : 0,
         start: start === null ? null : new Date(start).toISOString(),
         end: end === null ? null : new Date(end).toISOString(),
         duration: start !== null && end !== null && end >= start ? (end - start) / DAY : null,
@@ -252,6 +285,31 @@ export function buildExecutionAnalytics(
     })
     .filter((d) => d.initiated || d.concluded || d.open)
   const summary = summarize(details)
+  // Equipment is considered installed when a MONTAGEM OS is concluded in the selected period.
+  const installations = details.filter((d) => d.concluded && d.category.trim().toLocaleUpperCase('pt-BR') === 'MONTAGEM')
+  const summarizeEquipment = (rows: ExecutionDetail[]): EquipmentSummary => {
+    const withModules = rows.filter((row) => row.modules !== null)
+    const modules = withModules.reduce((sum, row) => sum + (row.modules as number), 0)
+    return {
+      installations: rows.length,
+      modules,
+      micros: rows.reduce((sum, row) => sum + (row.micros || 0), 0),
+      microInstallations: rows.filter((row) => isMicroTopology(row.topology)).length,
+      averageModules: withModules.length ? modules / withModules.length : null,
+    }
+  }
+  const equipmentGroupBy = (key: (d: ExecutionDetail) => { key: string; label: string }): EquipmentGroup[] => {
+    const groups = new Map<string, { label: string; rows: ExecutionDetail[] }>()
+    for (const detail of installations) {
+      const item = key(detail)
+      const group = groups.get(item.key) || { label: item.label, rows: [] }
+      group.rows.push(detail)
+      groups.set(item.key, group)
+    }
+    return [...groups]
+      .map(([key, group]) => ({ key, label: group.label, ...summarizeEquipment(group.rows) }))
+      .sort((a, b) => b.modules - a.modules || b.micros - a.micros || a.label.localeCompare(b.label, 'pt-BR'))
+  }
   const groupBy = (key: (d: ExecutionDetail) => Array<{ key: string; label: string }>): ExecutionGroup[] => {
     const groups = new Map<string, { label: string; details: ExecutionDetail[] }>()
     for (const d of details)
@@ -285,6 +343,18 @@ export function buildExecutionAnalytics(
     summary,
     buckets,
     details,
+    equipment: {
+      summary: summarizeEquipment(installations),
+      groups: {
+        teams: equipmentGroupBy((d) => ({ key: d.team, label: d.team })),
+        regions: equipmentGroupBy((d) => ({ key: `${d.city}/${d.state}`, label: `${d.city}/${d.state}` })),
+      },
+      quality: {
+        missingModules: installations.filter((d) => d.modules === null).length,
+        missingMicros: installations.filter((d) => isMicroTopology(d.topology) && d.micros === null).length,
+        missingTeams: installations.filter((d) => d.team === 'Sem equipe').length,
+      },
+    },
     groups: {
       people: groupBy((d) =>
         d.people.filter((p) => !filters.people.length || filters.people.includes(p.id)).map((p) => ({ key: p.id, label: p.name }))

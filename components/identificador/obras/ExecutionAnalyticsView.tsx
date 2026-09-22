@@ -8,6 +8,7 @@ import type {
   ExecutionAnalytics,
   ExecutionBucket,
   ExecutionDetail,
+  EquipmentGroup,
   ExecutionFilters,
   ExecutionGroup,
   ExecutionMetric,
@@ -15,7 +16,7 @@ import type {
 import { formatToMoney } from '@/utils/constants'
 import { getErrorMessage } from '@/utils/methods/handlers'
 import { useExecutionAnalytics } from '@/utils/methods/query/execution-analytics'
-import { ArrowLeft, ArrowUpRight, ChevronDown, Download, Activity, UsersRound, Wallet, type LucideIcon } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, ChevronDown, Download, Activity, PanelsTopLeft, UsersRound, Wallet, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
@@ -232,6 +233,7 @@ export default function ExecutionAnalyticsView() {
               </section>
             </div>
           </section>
+          <InstalledEquipment data={data} openOrders={openOrders} />
           <Breakdowns data={data} openOrders={openOrders} />
           {data.costs ? (
             <Costs costs={data.costs} onSelect={setSelection} />
@@ -260,6 +262,172 @@ export default function ExecutionAnalyticsView() {
       ) : null}
       <DetailPanel key={selection?.title || 'closed'} selection={selection} close={() => setSelection(null)} />
     </main>
+  )
+}
+
+function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; openOrders: OpenOrders }) {
+  const [dimension, setDimension] = useState<'teams' | 'regions'>('teams')
+  const [sort, setSort] = useState<keyof Pick<EquipmentGroup, 'modules' | 'micros' | 'installations' | 'averageModules'>>('modules')
+  const [page, setPage] = useState(0)
+  const rows = data.equipment.groups[dimension]
+  const sorted = useMemo(() => [...rows].sort((a, b) => (b[sort] ?? -1) - (a[sort] ?? -1)), [rows, sort])
+  const effectivePage = Math.min(page, Math.max(0, Math.ceil(rows.length / 15) - 1))
+  const isInstallation = (detail: ExecutionDetail) => detail.category.trim().toLocaleUpperCase('pt-BR') === 'MONTAGEM'
+  const matches = (key: string) => (detail: ExecutionDetail) =>
+    isInstallation(detail) && (dimension === 'teams' ? detail.team === key : `${detail.city}/${detail.state}` === key)
+  const summary = data.equipment.summary
+
+  return (
+    <section className="bg-background overflow-hidden rounded-xl border" aria-labelledby="equipment-section-title">
+      <MajorSectionHeading
+        id="equipment-section-title"
+        icon={PanelsTopLeft}
+        title="Produção instalada"
+        description="Placas e micro-inversores das OS de montagem concluídas no período."
+      />
+      <div className="space-y-6 p-4 md:p-6">
+        <section aria-label="Indicadores de equipamentos instalados" className="grid gap-x-6 gap-y-4 border-b pb-6 sm:grid-cols-2 xl:grid-cols-4">
+          <Kpi
+            label="Placas instaladas"
+            value={number.format(summary.modules)}
+            note={`${summary.installations} instalações concluídas`}
+            onClick={() => openOrders('Instalações de placas', 'concluded', isInstallation)}
+            primary
+          />
+          <Kpi
+            label="Micro-inversores instalados"
+            value={number.format(summary.micros)}
+            note={`${summary.microInstallations} instalações com topologia micro`}
+            onClick={() =>
+              openOrders('Instalações com micro-inversores', 'concluded', (detail) => isInstallation(detail) && detail.topology.toUpperCase().includes('MICRO'))
+            }
+          />
+          <Kpi
+            label="Instalações concluídas"
+            value={number.format(summary.installations)}
+            note="OS de montagem concluídas no período"
+            onClick={() => openOrders('Instalações concluídas', 'concluded', isInstallation)}
+          />
+          <Kpi
+            label="Média de placas por instalação"
+            value={summary.averageModules === null ? '—' : number.format(summary.averageModules)}
+            note="Somente instalações com quantidade preenchida"
+          />
+        </section>
+
+        {!summary.installations ? (
+          <p className="text-muted-foreground rounded-md border p-6 text-sm">Nenhuma OS de montagem foi concluída neste recorte.</p>
+        ) : (
+          <div className="space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Dimensão da produção instalada">
+                <Button
+                  size="sm"
+                  variant={dimension === 'teams' ? 'default' : 'outline'}
+                  aria-pressed={dimension === 'teams'}
+                  onClick={() => {
+                    setDimension('teams')
+                    setPage(0)
+                  }}
+                >
+                  Por equipe
+                </Button>
+                <Button
+                  size="sm"
+                  variant={dimension === 'regions' ? 'default' : 'outline'}
+                  aria-pressed={dimension === 'regions'}
+                  onClick={() => {
+                    setDimension('regions')
+                    setPage(0)
+                  }}
+                >
+                  Por cidade / UF
+                </Button>
+              </div>
+              <p className="text-muted-foreground text-xs">Clique em uma linha ou quantidade para abrir as OS do recorte.</p>
+            </div>
+            <div className="grid min-w-0 gap-6 2xl:grid-cols-[1fr_2fr]">
+              <div>
+                <h3 className="mb-3 text-sm font-medium">Maior volume de placas</h3>
+                <Ranking
+                  key={dimension}
+                  rows={rows.map((row) => ({ key: row.key, label: row.label, value: row.modules }))}
+                  onSelect={(key) => openOrders(`Produção instalada · ${rows.find((row) => row.key === key)?.label}`, 'concluded', matches(key))}
+                />
+              </div>
+              <div className="min-w-0 overflow-x-auto">
+                <table className="w-full min-w-[620px] text-left text-xs">
+                  <caption className="sr-only">Equipamentos instalados por {dimension === 'teams' ? 'equipe' : 'cidade e estado'}</caption>
+                  <thead>
+                    <tr className="border-b">
+                      <th className="py-3 pr-3">{dimension === 'teams' ? 'Equipe responsável' : 'Cidade / UF'}</th>
+                      {(
+                        [
+                          { key: 'modules', label: 'Placas' },
+                          { key: 'micros', label: 'Micros' },
+                          { key: 'installations', label: 'Instalações' },
+                          { key: 'averageModules', label: 'Placas / instalação' },
+                        ] as const
+                      ).map((column) => (
+                        <th key={column.key} className="px-2 text-right" aria-sort={sort === column.key ? 'descending' : 'none'}>
+                          <button
+                            className="hover:text-primary focus-visible:ring-ring rounded py-2 focus-visible:ring-2"
+                            onClick={() => {
+                              setSort(column.key)
+                              setPage(0)
+                            }}
+                          >
+                            {column.label}
+                            {sort === column.key ? ' ↓' : ''}
+                          </button>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorted.slice(effectivePage * 15, effectivePage * 15 + 15).map((row) => (
+                      <tr key={row.key} className="hover:bg-muted/50 border-b">
+                        <th className="max-w-64 py-3 pr-3 font-medium">
+                          <button
+                            className="hover:text-primary focus-visible:ring-ring rounded text-left focus-visible:ring-2"
+                            onClick={() => openOrders(row.label, 'concluded', matches(row.key))}
+                          >
+                            {row.label}
+                          </button>
+                        </th>
+                        {(['modules', 'micros', 'installations'] as const).map((metric) => (
+                          <td key={metric} className="px-2 text-right tabular-nums">
+                            <button
+                              className="text-primary focus-visible:ring-ring rounded px-1 py-2 hover:underline focus-visible:ring-2"
+                              onClick={() =>
+                                openOrders(
+                                  `${row.label} · ${metric === 'modules' ? 'placas' : metric === 'micros' ? 'micros' : 'instalações'}`,
+                                  'concluded',
+                                  (detail) => matches(row.key)(detail) && (metric !== 'micros' || detail.topology.toUpperCase().includes('MICRO'))
+                                )
+                              }
+                            >
+                              {number.format(row[metric])}
+                            </button>
+                          </td>
+                        ))}
+                        <td className="px-2 text-right tabular-nums">{row.averageModules === null ? '—' : number.format(row.averageModules)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <Pager page={effectivePage} total={rows.length} size={15} onChange={setPage} />
+              </div>
+            </div>
+          </div>
+        )}
+        <p className="text-muted-foreground border-t pt-4 text-xs leading-relaxed">
+          Critério: cada OS de montagem concluída no período conta como uma instalação. Micros são somados somente quando a topologia contém “micro”.{' '}
+          {data.equipment.quality.missingModules} OS sem quantidade de placas; {data.equipment.quality.missingMicros} com topologia micro sem quantidade de micros;{' '}
+          {data.equipment.quality.missingTeams} sem equipe responsável.
+        </p>
+      </div>
+    </section>
   )
 }
 
@@ -857,9 +1025,13 @@ function exportSelection(selection: Selection) {
           'Descrição',
           'Categoria',
           'Projeto',
+          'Equipe responsável',
           'Pessoas atribuídas',
           'Cidade',
           'UF',
+          'Topologia',
+          'Placas',
+          'Micros',
           'Início',
           'Conclusão',
           'Duração (dias)',
@@ -870,9 +1042,13 @@ function exportSelection(selection: Selection) {
           d.title,
           d.category,
           d.projectName,
+          d.team,
           d.people.map((p) => p.name).join(', '),
           d.city,
           d.state,
+          d.topology,
+          d.modules,
+          d.micros,
           d.start,
           d.end,
           d.duration,
@@ -950,6 +1126,12 @@ function DetailPanel({ selection, close }: { selection: Selection | null; close:
                 </Link>
                 <p>
                   {d.category} · {d.city}/{d.state}
+                </p>
+                <p>
+                  Equipe: {d.team} · {d.modules === null ? 'Placas não informadas' : `${number.format(d.modules)} placas`}
+                  {d.topology.toUpperCase().includes('MICRO')
+                    ? ` · ${d.micros === null ? 'Micros não informados' : `${number.format(d.micros)} micros`}`
+                    : ''}
                 </p>
                 <p className="text-muted-foreground">{d.people.map((p) => p.name).join(', ')}</p>
                 <p>

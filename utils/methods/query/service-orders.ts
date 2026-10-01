@@ -13,7 +13,8 @@ import type {
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useObrasFiltersStore, type TObrasView } from '@/utils/stores/obras-filters-store'
 
 type FetchServiceOrdersParams = {
   after: string
@@ -84,9 +85,17 @@ async function fetchServiceOrdersByPersonalizedFilters({ page, filters }: { page
 
 type UseServiceOrdersByPersonalizedFiltersParams = {
   initialFilters: Partial<TPersonalizedServiceOrderFilter>
+  persistenceView?: TObrasView
 }
-export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseServiceOrdersByPersonalizedFiltersParams) {
-  const [filters, setFilters] = useState<TPersonalizedServiceOrderFilter>({
+export function useServiceOrdersByPersonalizedFilters({ initialFilters, persistenceView }: UseServiceOrdersByPersonalizedFiltersParams) {
+  const savedFilters = useObrasFiltersStore((state) => persistenceView ? state.filters[persistenceView] : undefined)
+  const hasHydrated = useObrasFiltersStore((state) => state.hasHydrated)
+  const updateSavedFilters = useObrasFiltersStore((state) => state.updateFilters)
+  useEffect(() => {
+    if (persistenceView && !useObrasFiltersStore.getState().hasHydrated) void useObrasFiltersStore.persist.rehydrate()
+  }, [persistenceView])
+  const [localFilters, setFilters] = useState<TPersonalizedServiceOrderFilter>({
+    projectStates: initialFilters.projectStates ?? [],
     page: initialFilters.page || 1,
     name: initialFilters.name || '',
     responsible: initialFilters.responsible || '',
@@ -117,12 +126,15 @@ export function useServiceOrdersByPersonalizedFilters({ initialFilters }: UseSer
     missingObservations: initialFilters.missingObservations ?? false,
   })
 
+  const filters = savedFilters ?? localFilters
   function updateFilters(info: Partial<TPersonalizedServiceOrderFilter>) {
-    setFilters((prev) => ({ ...prev, ...info }))
+    if (persistenceView) updateSavedFilters(persistenceView, info)
+    else setFilters((prev) => ({ ...prev, ...info }))
   }
 
   return {
     ...useQuery({
+      enabled: !persistenceView || hasHydrated,
       queryKey: ['service-orders-by-filters', filters],
       queryFn: async () => await fetchServiceOrdersByPersonalizedFilters({ page: filters.page, filters }),
     }),

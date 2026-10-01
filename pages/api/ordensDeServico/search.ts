@@ -1,3 +1,4 @@
+import { buildProjectStateQuery } from '@/lib/service-orders/project-state-filters'
 import { apiHandler, validateAuthenticationWithSession } from '@/utils/api'
 import { formatDateQuery } from '@/utils/methods/dates'
 import {
@@ -33,7 +34,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
   const filters = PersonalizedFiltersSchema.parse(req.body)
 
   // Validating page parameter
-  if (!page || Number.isNaN(Number(page))) throw new createHttpError.BadRequest('Parâmetro de paginação inválido ou não informado.')
+  if (!Number.isSafeInteger(Number(page)) || Number(page) < 1) throw new createHttpError.BadRequest('Parâmetro de paginação inválido ou não informado.')
 
   // Defining the queries
   const nameOrQuery: Filter<TServiceOrder>[] =
@@ -70,19 +71,11 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
     filters.topologies.length > 0 ? { 'detalhes.topologia': { $in: filters.topologies as TServiceOrder['detalhes']['topologia'][] } } : {}
   const roofTypesQuery: Filter<TServiceOrder> =
     filters.roofTypes.length > 0 ? { 'detalhes.tipoTelha': { $in: filters.roofTypes as TServiceOrder['detalhes']['tipoTelha'][] } } : {}
-  const projectEquipmentDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentDelivered
-    ? { 'projeto.compraEntregaDataEfetivacao': { $ne: null } }
-    : {}
-  const projectEquipmentNotDeliveredQuery: Filter<TServiceOrder> = filters.projectEquipmentNotDelivered
-    ? { 'projeto.compraEntregaDataEfetivacao': null }
-    : {}
-  const projectHomologationApprovedQuery: Filter<TServiceOrder> = filters.projectHomologationApproved
-    ? { 'projeto.homologacaoAcessoDataResposta': { $ne: null } }
-    : {}
   const missingObservationsQuery: Filter<TServiceOrder> = filters.missingObservations ? { 'observacoes.descricao': { $exists: false } } : {}
 
   const orderByParam = filters.orderBy.field ? { [filters.orderBy.field]: filters.orderBy.direction === 'asc' ? 1 : -1 } : { _id: -1 }
-  const query = {
+  const projectStateQuery = buildProjectStateQuery(filters)
+  const query: Filter<TServiceOrder> = {
     ...(orQueries.length > 0 ? { $or: orQueries } : {}),
     ...dateQuery,
     ...stateQuery,
@@ -97,9 +90,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
     ...notReleasedQuery,
     ...topologiesQuery,
     ...roofTypesQuery,
-    ...projectEquipmentDeliveredQuery,
-    ...projectEquipmentNotDeliveredQuery,
-    ...projectHomologationApprovedQuery,
+    ...(projectStateQuery.$and ? { $and: [...(dateQuery.$and ?? []), ...projectStateQuery.$and] } : {}),
     ...missingObservationsQuery,
   }
 
@@ -133,21 +124,13 @@ type GetServiceOrdersByFilterParams = {
   orderByParam: { [key: string]: number }
 }
 async function getServiceOrdersByFilter({ collection, query, skip, limit, orderByParam }: GetServiceOrdersByFilterParams) {
-  const serviceOrdersMatched = await collection.countDocuments({ ...query })
-  const sort = orderByParam
-  const match = { ...query }
-
-  // Add a default value for missing fields before sorting
-  const serviceOrders = (await collection
-    .aggregate([
-      { $match: match },
-      { $addFields: { sortField: { $ifNull: [`$${Object.keys(orderByParam)[0]}`, new Date(0)] } } }, // Use a default date for missing fields
-      { $sort: { sortField: sort[Object.keys(orderByParam)[0]], _id: -1 } }, // Sort by the new field and then by _id
-      { $skip: skip },
-      { $project: ServiceOrderSimplifiedProjection },
-      { $limit: limit },
-    ])
-    .toArray()) as TServiceOrderSimplifiedDTO[]
-
-  return { serviceOrders, serviceOrdersMatched } as { serviceOrders: TServiceOrderSimplifiedDTO[]; serviceOrdersMatched: number }
+  // Native sorting allows compound indexes to serve the common Obras query.
+  // Milestone dates are ISO strings; missing/null dates sort before populated dates.
+  const sort = { ...orderByParam, _id: -1 } as Record<string, 1 | -1>
+  const [serviceOrdersMatched, serviceOrders] = await Promise.all([
+    collection.countDocuments(query),
+    collection.find(query).sort(sort).skip(skip).limit(limit)
+      .project<TServiceOrderSimplifiedDTO>(ServiceOrderSimplifiedProjection).toArray(),
+  ])
+  return { serviceOrders, serviceOrdersMatched }
 }

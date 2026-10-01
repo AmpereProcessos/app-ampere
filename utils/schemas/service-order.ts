@@ -456,7 +456,14 @@ const PersonalizedFieldFilters = z.enum(
     invalid_type_error: "Tipo não válido para o campo de filtro de período.",
   },
 );
+export const ServiceOrderProjectStateSchema = z.enum([
+  "paid", "unpaid", "approved", "not-approved",
+  "delivered", "not-delivered", "inspected", "not-inspected",
+]);
+export type TServiceOrderProjectState = z.infer<typeof ServiceOrderProjectStateSchema>;
+
 export const PersonalizedFiltersSchema = z.object({
+  projectStates: z.array(ServiceOrderProjectStateSchema).default([]),
   page: z.number({
     required_error: "Página não informada.",
     invalid_type_error: "Tipo não válido para a página.",

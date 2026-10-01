@@ -4,6 +4,8 @@ import {
   InteractiveFilter,
   type InteractiveFilterOption,
 } from "@/components/ui/interactive-filter";
+import { Button } from "@/components/ui/button";
+import { PROJECT_STATE_PAIRS } from "@/lib/service-orders/project-state-filters";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { serviceOrdersCategories, serviceOrderUrgencyOptions } from "@/utils/constants";
@@ -12,7 +14,7 @@ import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import { useTags } from "@/utils/methods/query/tags";
 import { useUsers } from "@/utils/methods/query/users";
-import type { TPersonalizedServiceOrderFilter } from "@/utils/schemas/service-order";
+import type { TPersonalizedServiceOrderFilter, TServiceOrderProjectState } from "@/utils/schemas/service-order";
 import { roofTiles, ServiceOrderStatus, SystemTopologiesTypes } from "@/utils/select-options";
 import {
   ArrowDownNarrowWide,
@@ -40,6 +42,17 @@ const PERIOD_FIELD_OPTIONS = [
   { id: 12, value: "projeto.homologacaoVistoriaDataEfetivacao", label: "DATA DE EFETIVAÇÃO DA VISTORIA" },
 ] as const;
 
+const PROJECT_STATE_OPTIONS = [
+  { id: 'paid', value: 'paid', label: 'COMPRA PAGA' },
+  { id: 'unpaid', value: 'unpaid', label: 'COMPRA NÃO PAGA' },
+  { id: 'approved', value: 'approved', label: 'HOMOLOGAÇÃO APROVADA' },
+  { id: 'not-approved', value: 'not-approved', label: 'HOMOLOGAÇÃO NÃO APROVADA' },
+  { id: 'delivered', value: 'delivered', label: 'EQUIPAMENTOS ENTREGUES' },
+  { id: 'not-delivered', value: 'not-delivered', label: 'EQUIPAMENTOS NÃO ENTREGUES' },
+  { id: 'inspected', value: 'inspected', label: 'VISTORIA REALIZADA' },
+  { id: 'not-inspected', value: 'not-inspected', label: 'VISTORIA NÃO REALIZADA' },
+];
+
 const AllStates = StatesAndCities.map((s, index) => ({ id: index + 1, value: s.sigla, label: s.sigla }));
 const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((city, index) => ({
   id: index + 1,
@@ -50,6 +63,7 @@ const AllCities = StatesAndCities.flatMap((s) => s.cidades).map((city, index) =>
 type ExecutionProjectsFiltersProps = {
   filters: TPersonalizedServiceOrderFilter;
   updateFilters: (patch: Partial<TPersonalizedServiceOrderFilter>) => void;
+  resetFilters: () => void;
 };
 
 function joinLabels(values: string[], options: { value: string; label: string }[]) {
@@ -58,7 +72,7 @@ function joinLabels(values: string[], options: { value: string; label: string }[
     .join(", ");
 }
 
-export default function ExecutionProjectsFilters({ filters, updateFilters }: ExecutionProjectsFiltersProps) {
+export default function ExecutionProjectsFilters({ filters, updateFilters, resetFilters }: ExecutionProjectsFiltersProps) {
   const { data: users } = useUsers();
   const { data: tags } = useTags({ initialFilters: { applicableToServiceOrders: "true" } });
 
@@ -118,6 +132,12 @@ export default function ExecutionProjectsFilters({ filters, updateFilters }: Exe
   const hasNotReleased = filters.notReleased;
   const hasMissingObservations = filters.missingObservations;
 
+  function changeProjectStates(values: string[]) {
+    const added = values.find((value) => !filters.projectStates.includes(value as TServiceOrderProjectState));
+    const pair = PROJECT_STATE_PAIRS.find((pair) => pair.some((state) => state === added));
+    patch({ projectStates: values.filter((value) => !pair || value === added || !pair.some((state) => state === value)) as TServiceOrderProjectState[] });
+  }
+
   function clearDateFilter() {
     patch({ period: { after: null, before: null, field: null } });
   }
@@ -132,6 +152,17 @@ export default function ExecutionProjectsFilters({ filters, updateFilters }: Exe
       />
 
       <div className="flex w-full flex-wrap items-center justify-end gap-2">
+        <ExecutionMultiFilterChip
+          label="ESTADO DO PROJETO"
+          icon={<ListFilter className="h-4 w-4" />}
+          options={PROJECT_STATE_OPTIONS}
+          value={filters.projectStates}
+          onChange={changeProjectStates}
+          onClear={() => patch({ projectStates: [] })}
+          contentClassName="w-80"
+        />
+        <Button variant="ghost" size="sm" onClick={resetFilters}>Restaurar filtros</Button>
+
         <ExecutionMultiFilterChip
           label="CATEGORIA"
           icon={<Tag className="h-4 w-4 min-h-4 min-w-4" />}
@@ -553,14 +584,14 @@ function ExecutionMultiFilterChip({
   const selectedLabel = joinLabels(value, options);
 
   return (
-    <InteractiveFilter.Root className="w-fit">
-      <InteractiveFilter.Trigger>
+    <InteractiveFilter.Root className="w-fit max-w-full">
+      <InteractiveFilter.Trigger className="min-w-0 max-w-full">
         <InteractiveFilter.Icon>
           {icon}
           <InteractiveFilter.Label>{label}</InteractiveFilter.Label>
         </InteractiveFilter.Icon>
-        <InteractiveFilter.Value>
-          {selectedLabel.length > 0 ? <strong>{selectedLabel}</strong> : <span>NENHUM</span>}
+        <InteractiveFilter.Value className="min-w-0">
+          {selectedLabel.length > 0 ? <strong className="truncate" title={selectedLabel}>{selectedLabel}</strong> : <span>NENHUM</span>}
         </InteractiveFilter.Value>
         <InteractiveFilter.Clear onClear={onClear} />
       </InteractiveFilter.Trigger>

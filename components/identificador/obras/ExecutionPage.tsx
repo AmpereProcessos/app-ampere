@@ -1,3 +1,4 @@
+import { useObrasFiltersStore } from '@/utils/stores/obras-filters-store'
 import { getServiceTypeTagColor } from '@/components/TagTipoDeServico'
 import Avatar from '@/components/utils/Avatar'
 import ErrorComponent from '@/components/utils/ErrorComponent'
@@ -30,6 +31,8 @@ type ExecutionPageProps = {
 }
 export default function ExecutionPage({ session, view = 'execution' }: ExecutionPageProps) {
   const queryClient = useQueryClient()
+  const resetFilters = useObrasFiltersStore((state) => state.resetFilters)
+  const hasHydrated = useObrasFiltersStore((state) => state.hasHydrated)
   const [editServiceOrderModal, setEditServiceOrderModal] = useState<{
     id: string | null
     isOpen: boolean
@@ -43,6 +46,7 @@ export default function ExecutionPage({ session, view = 'execution' }: Execution
     filters,
     updateFilters,
   } = useServiceOrdersByPersonalizedFilters({
+    persistenceView: view,
     initialFilters:
       view === 'planning'
         ? {
@@ -52,6 +56,7 @@ export default function ExecutionPage({ session, view = 'execution' }: Execution
           }
         : { pending: true },
   })
+  if (!hasHydrated) return <LoadingComponent />
   const serviceOrders = serviceOrdersByFiltersResult?.serviceOrders
   const serviceOrdersMatched = serviceOrdersByFiltersResult?.serviceOrdersMatched || 0
   const serviceOrdersShowing = serviceOrders?.length || 0
@@ -67,7 +72,7 @@ export default function ExecutionPage({ session, view = 'execution' }: Execution
             {view === 'planning' ? 'PROJETOS EM PLANEJAMENTO' : 'PROJETOS NO ESTÁGIO DE EXECUÇÃO'}
           </p>
         </div>
-        <ExecutionProjectsFilters filters={filters} updateFilters={updateFilters} />
+        <ExecutionProjectsFilters filters={filters} updateFilters={updateFilters} resetFilters={() => resetFilters(view)} />
       </div>
       <ExecutionPageStats session={session} />
       <GeneralPaginationComponent
@@ -96,7 +101,7 @@ export default function ExecutionPage({ session, view = 'execution' }: Execution
             ))
           ) : (
             <div className="text-foreground w-full text-center text-sm font-medium tracking-tight">
-              {view === 'planning' ? 'Nenhuma ordem de serviço aguardando a entrega dos equipamentos.' : 'Nenhuma ordem de serviço encontrada.'}
+              Nenhuma ordem de serviço encontrada.
             </div>
           )
         ) : null}

@@ -27,6 +27,7 @@ export function buildProjectServiceOrder({
       tipo: project.tipoDeServico || null, // tipo do projeto
       vendedorNome: project.vendedor?.nome || null,
       contratoDataAssinatura: project.contrato?.dataAssinatura,
+      compraDataPagamento: project.compra?.dataPagamento,
       compraEntregaDataPrevisao: project.compra?.previsaoEntrega,
       compraEntregaDataEfetivacao: project.compra?.dataEntrega,
       homologacaoAcessoDataResposta: project.homologacao?.acesso.dataResposta,

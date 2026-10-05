@@ -6,6 +6,7 @@ import connectToDatabase from "@/utils/services/mongodb/projects";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import { runProjectUpdateAutomations } from "@/lib/projects/update-automations";
+import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
 
 const handleProjectUpdate = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await validateAuthenticationWithSession(req, res);
@@ -90,6 +91,15 @@ const handleProjectUpdatePut = async (req: NextApiRequest, res: NextApiResponse)
     },
     { ...operation },
   );
+  const operationKeys = Object.values(operation).flatMap((value) =>
+    value && typeof value === "object" ? Object.keys(value) : [],
+  );
+  if (operationKeys.some((key) => key === "compra" || key === "compra.dataEntrega")) {
+    const project = await collection.findOne({ _id: new ObjectId(id) });
+    if (project) await syncServiceOrdersDeliveryRelease({
+      project, serviceOrdersCollection: db.collection<TServiceOrder>("ordensDeServico"),
+    });
+  }
   return res.json(newObj);
 };
 export default apiHandler({

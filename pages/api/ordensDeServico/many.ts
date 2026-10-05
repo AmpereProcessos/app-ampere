@@ -1,5 +1,7 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { ServiceOrderSchema } from "@/utils/schemas/service-order";
+import { resolveServiceOrderReleaseDate } from "@/lib/service-orders/delivery-release";
+import type { TProject } from "@/utils/schemas/projects";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
 import { ObjectId } from "mongodb";
@@ -28,6 +30,11 @@ const handleUpdateManyServiceOrders: NextApiHandler<any> = async (req, res) => {
   const serviceOrdersCollection = db.collection("ordensDeServico");
 
   if (projectId) {
+    if ("dataLiberacao" in changes) {
+      changes.dataLiberacao = await resolveServiceOrderReleaseDate({
+        projectId, manualDate: changes.dataLiberacao, projectsCollection: db.collection<TProject>("dados"),
+      });
+    }
     const updateResponse = await serviceOrdersCollection.updateMany(
       { "projeto.id": projectId, ...filters },
       { $set: changes },

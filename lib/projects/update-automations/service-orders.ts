@@ -39,7 +39,7 @@ export async function syncProjectServiceOrder({
 }
 
 export async function createProjectServiceOrder(context: ProjectUpdateAutomationContext) {
-  const { project, updateKeys, serviceOrdersCollection, projectsCollection } = context;
+  const { project, updateKeys } = context;
   // A date correction must not replace the project's linked service order.
   if (project.idOrdemServico) return;
   if (
@@ -49,9 +49,34 @@ export async function createProjectServiceOrder(context: ProjectUpdateAutomation
   )
     return;
 
-  const result = await serviceOrdersCollection.insertOne(buildProjectServiceOrder(context));
-  await projectsCollection.updateOne(
-    { _id: project._id },
-    { $set: { idOrdemServico: result.insertedId.toString() } },
-  );
+  await ensureProjectAssemblyServiceOrder(context);
+}
+
+/** Delivery can recover a missing order, but must reuse an existing assembly order. */
+export async function ensureProjectAssemblyServiceOrder({
+  project,
+  author,
+  projectsCollection,
+  serviceOrdersCollection,
+}: Pick<ProjectUpdateAutomationContext, "project" | "author" | "projectsCollection" | "serviceOrdersCollection">) {
+  if (project.idOrdemServico && ObjectId.isValid(project.idOrdemServico)) {
+    const linkedOrder = await serviceOrdersCollection.findOne({
+      _id: new ObjectId(project.idOrdemServico),
+      "projeto.id": project._id.toString(),
+    });
+    if (linkedOrder) return linkedOrder._id.toString();
+  }
+  const existing = await serviceOrdersCollection.findOne({
+    "projeto.id": project._id.toString(),
+    categoria: "MONTAGEM",
+  });
+  if (existing) {
+    if (project.idOrdemServico !== existing._id.toString()) {
+      await projectsCollection.updateOne({ _id: project._id }, { $set: { idOrdemServico: existing._id.toString() } });
+    }
+    return existing._id.toString();
+  }
+  const result = await serviceOrdersCollection.insertOne(buildProjectServiceOrder({ project, author }));
+  await projectsCollection.updateOne({ _id: project._id }, { $set: { idOrdemServico: result.insertedId.toString() } });
+  return result.insertedId.toString();
 }

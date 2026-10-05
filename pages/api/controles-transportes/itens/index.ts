@@ -1,10 +1,6 @@
+import { ensureProjectAssemblyServiceOrder } from "@/lib/projects/update-automations/service-orders";
+import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
 import { apiHandler } from "@/utils/api";
-import {
-	getServiceObservationsFromObras,
-	getServiceOrderInverterMetadataFromProject,
-	getServiceOrderModulesMetadataFromProject,
-	getServiceOrderTagsFromProject,
-} from "@/utils/methods/util/service-order";
 import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
@@ -55,6 +51,26 @@ async function updateTransportControlItem({ input }: { input: TUpdateTransportCo
 
 	const updatedTransportControlItem = updatedTransportControl.itens[itemIndex];
 
+	// Corrections and clearing must propagate too, without repeating initial-delivery attachments.
+	if (previousTransportControlItem.dataEfetivacao &&
+			previousTransportControlItem.dataEfetivacao !== (updatedTransportControlItem.dataEfetivacao || null)) {
+		const deliveryDate = updatedTransportControlItem.dataEfetivacao || null;
+		const deliveryStatus = deliveryDate ? "ENTREGUE" : "EM ROTA";
+		const purchaseControl = await purchaseControlsCollection.findOne({ _id: new ObjectId(updatedTransportControlItem.id) });
+		if (!purchaseControl) throw new createHttpError.NotFound("Controle de compra não encontrado.");
+		await purchaseControlsCollection.updateOne({ _id: purchaseControl._id }, {
+			$set: { "entrega.dataEfetivacao": deliveryDate, "entrega.status": deliveryStatus },
+		});
+		if (purchaseControl.projeto.id) {
+			await projectsCollection.updateOne({ _id: new ObjectId(purchaseControl.projeto.id) }, {
+				$set: { "compra.dataEntrega": deliveryDate, "compra.status": deliveryStatus },
+			});
+			const project = await projectsCollection.findOne({ _id: new ObjectId(purchaseControl.projeto.id) });
+			if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+			await syncServiceOrdersDeliveryRelease({ project, serviceOrdersCollection });
+		}
+	}
+
 	if (!previousTransportControlItem.dataEfetivacao && updatedTransportControlItem.dataEfetivacao) {
 		console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Effetivation identified, starting triggers");
 		const attachments = updatedTransportControlItem.anexos || [];
@@ -77,89 +93,15 @@ async function updateTransportControlItem({ input }: { input: TUpdateTransportCo
 				{ $set: { "compra.status": "ENTREGUE", "compra.dataEntrega": updatedTransportControlItem.dataEfetivacao } },
 			);
 
-			// Generating the service order trigger
-			const serviceOrder: TServiceOrder = {
-				categoria: "MONTAGEM",
-				etiquetas: getServiceOrderTagsFromProject(project),
-				favorecido: {
-					nome: project.nomeDoContrato || "",
-					contato: project.telefone || "",
-				},
-				idAnaliseTecnica: project.idVisitaTecnica,
-				anotacoes: "",
-				projeto: {
-					id: project._id.toString() || null, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
-					nome: project.nomeDoContrato || null, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
-					identificador: project.qtde || null, // identificador QTDE do projeto no banco de projetos
-					tipo: project.tipoDeServico || null, // tipo do projeto
-					vendedorNome: project.vendedor?.nome || null,
-					contratoDataAssinatura: project.contrato?.dataAssinatura,
-					compraEntregaDataPrevisao: project.compra?.previsaoEntrega,
-					compraEntregaDataEfetivacao: project.compra?.dataEntrega,
-					homologacaoAcessoDataResposta: project.homologacao?.acesso.dataResposta,
-					homologacaoVistoriaDataEfetivacao: project.homologacao?.vistoria.dataEfetivacao,
-				},
-				descricao: `SERVIÇO DO PROJETO ${project.nomeDoContrato}`, // servico executado
-				localizacao: {
-					cep: project.cep?.toString() || "",
-					uf: project.uf,
-					cidade: project.cidade,
-					bairro: project.bairro,
-					endereco: project.logradouro,
-					numeroOuIdentificador: project.numeroResidencia?.toString() || "",
-				},
-				responsavel: {
-					nome: project.obra?.equipeResp || "",
-					tipo: project.obra?.equipeResp ? "INTERNO" : "EXTERNO",
-				},
-				responsaveis: [],
-				// configurar: false,
-				urgencia: "POUCO URGENTE",
-				periodo: {
-					inicio: null,
-					fim: null,
-				},
-				pagamento: {
-					recebedor: null,
-					valor: null,
-				},
-				cobranca: {
-					pagador: null,
-					valor: null,
-				},
-				autor: {
-					id: purchaseControl.autor.id,
-					nome: purchaseControl.autor.nome,
-					avatar_url: purchaseControl.autor.avatar_url,
-				},
-				equipamentos: {
-					modulos: getServiceOrderModulesMetadataFromProject(project),
-					inversor: getServiceOrderInverterMetadataFromProject(project),
-					disponivel: null,
-					retirada: null,
-				},
-				detalhes: {
-					pontoAgua: "",
-					senhaWifi: "",
-					configuracaoMonitoramento: false,
-					possuiTrafo: false,
-					tipoEstrutura: project.estruturaPersonalizada?.tipo || null,
-					tipoTelha: project.visitaTecnica?.tipoDaTelha || null,
-					tipoPadrao: project.padrao?.tipo || null,
-					tipoSaidaPadrao: project.visitaTecnica?.saidaDoCliente || null,
-					amperagemPadrao: project.visitaTecnica?.amperagem || null,
-					responsabilidadePadrao: project.padrao?.respInstalacao,
-					topologia: project.sistema?.topologia,
-				},
-				observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
-				dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-				dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
-				dataInsercao: new Date().toISOString(),
-			};
-			const insertServiceOrderResponse = await serviceOrdersCollection.insertOne(serviceOrder);
-			const insertedServiceOrderId = insertServiceOrderResponse.insertedId.toString();
-			// Updating the project with the service order id
-			await projectsCollection.updateOne({ _id: new ObjectId(purchaseControl.projeto.id) }, { $set: { idOrdemServico: insertedServiceOrderId } });
+			const postUpdateProject = await projectsCollection.findOne({ _id: project._id });
+			if (!postUpdateProject) throw new createHttpError.NotFound("Projeto não encontrado.");
+			await ensureProjectAssemblyServiceOrder({
+				project: postUpdateProject,
+				author: purchaseControl.autor,
+				projectsCollection,
+				serviceOrdersCollection,
+			});
+			await syncServiceOrdersDeliveryRelease({ project: postUpdateProject, serviceOrdersCollection });
 		}
 
 		const fileReferencesToInsert: TFileReference[] = attachments.map((attachment) => ({

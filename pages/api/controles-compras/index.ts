@@ -1,3 +1,5 @@
+import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
+import type { TServiceOrder } from "@/utils/schemas/service-order";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { notifyMaterialBelowMinimumIfCrossed } from "@/lib/notifications/materials";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
@@ -280,6 +282,18 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
       const isAllocating =
         !previousPurchaseControl?.entrega.dataEfetivacao &&
         updatedPurchaseControl.entrega.dataEfetivacao;
+      if ((previousPurchaseControl.entrega.dataEfetivacao || null) !== (updatedPurchaseControl.entrega.dataEfetivacao || null)
+          && updatedPurchaseControl.projeto.id) {
+        const projectId = new ObjectId(updatedPurchaseControl.projeto.id);
+        await projectsCollection.updateOne({ _id: projectId }, {
+          $set: { "compra.dataEntrega": updatedPurchaseControl.entrega.dataEfetivacao || null },
+        }, { session: dbSession });
+        const project = await projectsCollection.findOne({ _id: projectId }, { session: dbSession });
+        if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+        await syncServiceOrdersDeliveryRelease({
+          project, serviceOrdersCollection: db.collection<TServiceOrder>("ordensDeServico"), session: dbSession,
+        });
+      }
       const isDeallocating =
         previousPurchaseControl?.entrega.dataEfetivacao &&
         !updatedPurchaseControl.entrega.dataEfetivacao;

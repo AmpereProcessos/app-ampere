@@ -1,3 +1,5 @@
+import { ensureProjectAssemblyServiceOrder } from "@/lib/projects/update-automations/service-orders";
+import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
 import { handleProjectUpdateJourneyStepsTracking } from "@/lib/project-journeys/tracking";
 import { insertFunnelReference } from "@/repositories/crm-funnel-references/mutations";
 import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
@@ -5,12 +7,7 @@ import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { getProductsStr } from "@/utils/methods/formatting";
 import { getContractValue } from "@/utils/methods/util/projects";
 import { getPurchaseControlTagsFromProject } from "@/utils/methods/util/purchase-controls";
-import {
-	getServiceObservationsFromObras,
-	getServiceOrderInverterMetadataFromProject,
-	getServiceOrderModulesMetadataFromProject,
-	getServiceOrderTagsFromProject,
-} from "@/utils/methods/util/service-order";
+import { getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
 import type { TFunnelReference } from "@/utils/schemas/crm/funnel-reference.schema";
 import type { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
 import type { TUser } from "@/utils/schemas/crm/user.schema";
@@ -60,93 +57,13 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 		throw new createHttpError.NotFound("Projeto não encontrado.");
 	}
 	if (triggerType === "create-project-main-service-order") {
-		// Defining data for the service order based on the project information
-		const serviceOrder: TServiceOrder = {
-			categoria: "MONTAGEM",
-			etiquetas: getServiceOrderTagsFromProject(project),
-			favorecido: {
-				nome: project.nomeDoContrato || "",
-				contato: project.telefone || "",
-			},
-			idAnaliseTecnica: project.idVisitaTecnica,
-			anotacoes: "",
-			projeto: {
-				id: project._id.toString() || null, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
-				nome: project.nomeDoContrato || null, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
-				identificador: project.qtde || null, // identificador QTDE do projeto no banco de projetos
-				tipo: project.tipoDeServico || null, // tipo do projeto
-				vendedorNome: project.vendedor?.nome || null,
-				contratoDataAssinatura: project.contrato?.dataAssinatura,
-				compraDataPagamento: project.compra?.dataPagamento,
-				compraEntregaDataPrevisao: project.compra?.previsaoEntrega,
-				compraEntregaDataEfetivacao: project.compra?.dataEntrega,
-				homologacaoAcessoDataResposta: project.homologacao?.acesso.dataResposta,
-				homologacaoVistoriaDataEfetivacao: project.homologacao?.vistoria.dataEfetivacao,
-			},
-			descricao: `SERVIÇO DO PROJETO ${project.nomeDoContrato}`, // servico executado
-			localizacao: {
-				cep: project.cep?.toString() || "",
-				uf: project.uf,
-				cidade: project.cidade,
-				bairro: project.bairro,
-				endereco: project.logradouro,
-				numeroOuIdentificador: project.numeroResidencia?.toString() || "",
-			},
-			responsavel: {
-				nome: project.obra?.equipeResp || "",
-				tipo: project.obra?.equipeResp ? "INTERNO" : "EXTERNO",
-			},
-			responsaveis: [],
-			// configurar: false,
-			urgencia: "POUCO URGENTE",
-			periodo: {
-				inicio: null,
-				fim: null,
-			},
-			pagamento: {
-				recebedor: null,
-				valor: null,
-			},
-			cobranca: {
-				pagador: null,
-				valor: null,
-			},
-			autor: {
-				id: session?.user.id,
-				nome: session.user.nome,
-				avatar_url: session?.user.avatar_url,
-			},
-			equipamentos: {
-				modulos: getServiceOrderModulesMetadataFromProject(project),
-				inversor: getServiceOrderInverterMetadataFromProject(project),
-				disponivel: null,
-				retirada: null,
-			},
-			detalhes: {
-				pontoAgua: "",
-				senhaWifi: "",
-				configuracaoMonitoramento: false,
-				possuiTrafo: false,
-				tipoEstrutura: project.estruturaPersonalizada?.tipo || null,
-				tipoTelha: project.visitaTecnica?.tipoDaTelha || null,
-				tipoPadrao: project.padrao?.tipo || null,
-				tipoSaidaPadrao: project.visitaTecnica?.saidaDoCliente || null,
-				amperagemPadrao: project.visitaTecnica?.amperagem || null,
-				responsabilidadePadrao: project.padrao?.respInstalacao,
-				topologia: project.sistema?.topologia,
-			},
-			observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
-			dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-			dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
-			dataInsercao: new Date().toISOString(),
-		};
-
-		// Inserting the new service order
-		const insertServiceOrderResponse = await serviceOrdersCollection.insertOne(serviceOrder);
-		const insertedServiceOrderId = insertServiceOrderResponse.insertedId.toString();
-
-		// Updating the project with the service order id
-		await projectscollection.updateOne({ _id: new ObjectId(projectId) }, { $set: { idOrdemServico: insertedServiceOrderId } });
+		const insertedServiceOrderId = await ensureProjectAssemblyServiceOrder({
+			project,
+			author: { id: session.user.id, nome: session.user.nome, avatar_url: session.user.avatar_url },
+			projectsCollection: projectscollection,
+			serviceOrdersCollection,
+		});
+		await syncServiceOrdersDeliveryRelease({ project, serviceOrdersCollection });
 
 		return res.status(200).json({
 			data: { insertedId: insertedServiceOrderId },
@@ -259,12 +176,12 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 						"projeto.compraEntregaDataPrevisao": purchaseControl.entrega.dataPrevisao,
 						"projeto.compraEntregaDataEfetivacao": purchaseControl.entrega.dataEfetivacao,
 						dataPrevisaoLiberacao: purchaseControl.entrega.dataPrevisao,
-						dataLiberacao: purchaseControl.entrega.dataEfetivacao,
 						alocacoes: project.alocacoes,
 					},
 				},
 			);
 		}
+		await syncServiceOrdersDeliveryRelease({ project: updatedProjectData, serviceOrdersCollection });
 		return res.status(201).json({
 			data: { updatedId: projectId },
 			message: "Projeto atualizado com sucesso.",

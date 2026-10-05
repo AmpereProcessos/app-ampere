@@ -1,12 +1,8 @@
+import { ensureProjectAssemblyServiceOrder } from "@/lib/projects/update-automations/service-orders";
+import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { apiHandler, validateAuthentication, validateAuthenticationWithSession } from "@/utils/api";
 import { cidadesAtendidas } from "@/utils/constants";
-import {
-	getServiceObservationsFromObras,
-	getServiceOrderInverterMetadataFromProject,
-	getServiceOrderModulesMetadataFromProject,
-	getServiceOrderTagsFromProject,
-} from "@/utils/methods/util/service-order";
 import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TPurchaseControl } from "@/utils/schemas/purchases";
@@ -220,6 +216,22 @@ async function updateTransportControl({ input, user }: { input: TUpdateTransport
 	for (const [updatedTransportControlItemIndex, updatedTransportControlItem] of updatedTransportControl.itens.entries()) {
 		const previousTransportControlItem = previousTransportControl.itens.find((item) => item.id === updatedTransportControlItem.id);
 		if (!previousTransportControlItem) continue;
+		if (previousTransportControlItem.dataEfetivacao &&
+				previousTransportControlItem.dataEfetivacao !== (updatedTransportControlItem.dataEfetivacao || null)) {
+			const deliveryDate = updatedTransportControlItem.dataEfetivacao || null;
+			const deliveryStatus = deliveryDate ? "ENTREGUE" : "EM ROTA";
+			await purchaseControlsCollection.updateOne({ _id: new ObjectId(updatedTransportControlItem.id) }, {
+				$set: { "entrega.dataEfetivacao": deliveryDate, "entrega.status": deliveryStatus },
+			});
+			if (updatedTransportControlItem.projeto?.id) {
+				await projectsCollection.updateOne({ _id: new ObjectId(updatedTransportControlItem.projeto.id) }, {
+					$set: { "compra.dataEntrega": deliveryDate, "compra.status": deliveryStatus },
+				});
+				const project = await projectsCollection.findOne({ _id: new ObjectId(updatedTransportControlItem.projeto.id) });
+				if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+				await syncServiceOrdersDeliveryRelease({ project, serviceOrdersCollection });
+			}
+		}
 		if (!previousTransportControlItem.dataEfetivacao && !!updatedTransportControlItem.dataEfetivacao) {
 			console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Item effetivation detected, updating purchase control", updatedTransportControlItem.id);
 			await purchaseControlsCollection.updateOne(
@@ -242,96 +254,13 @@ async function updateTransportControl({ input, user }: { input: TUpdateTransport
 				if (!postUpdateProject) throw new createHttpError.NotFound("Projeto não encontrado.");
 				console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Project delivery status updated");
 
-				// Generating the service order trigger
-				console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Generating service order for project", updatedTransportControlItem.projeto.id);
-				const serviceOrder: TServiceOrder = {
-					categoria: "MONTAGEM",
-					etiquetas: getServiceOrderTagsFromProject(postUpdateProject),
-					favorecido: {
-						nome: postUpdateProject.nomeDoContrato || "",
-						contato: postUpdateProject.telefone || "",
-					},
-					idAnaliseTecnica: postUpdateProject.idVisitaTecnica,
-					anotacoes: "",
-					projeto: {
-						id: postUpdateProject._id.toString() || null, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
-						nome: postUpdateProject.nomeDoContrato || null, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
-						identificador: postUpdateProject.qtde || null, // identificador QTDE do projeto no banco de projetos
-						tipo: postUpdateProject.tipoDeServico || null, // tipo do projeto
-						vendedorNome: postUpdateProject.vendedor?.nome || null,
-						contratoDataAssinatura: postUpdateProject.contrato?.dataAssinatura,
-						compraEntregaDataPrevisao: postUpdateProject.compra?.previsaoEntrega,
-						compraEntregaDataEfetivacao: postUpdateProject.compra?.dataEntrega,
-						homologacaoAcessoDataResposta: postUpdateProject.homologacao?.acesso.dataResposta,
-						homologacaoVistoriaDataEfetivacao: postUpdateProject.homologacao?.vistoria.dataEfetivacao,
-					},
-					descricao: `SERVIÇO DO PROJETO ${postUpdateProject.nomeDoContrato}`, // servico executado
-					localizacao: {
-						cep: postUpdateProject.cep?.toString() || "",
-						uf: postUpdateProject.uf,
-						cidade: postUpdateProject.cidade,
-						bairro: postUpdateProject.bairro,
-						endereco: postUpdateProject.logradouro,
-						numeroOuIdentificador: postUpdateProject.numeroResidencia?.toString() || "",
-					},
-					responsavel: {
-						nome: postUpdateProject.obra?.equipeResp || "",
-						tipo: postUpdateProject.obra?.equipeResp ? "INTERNO" : "EXTERNO",
-					},
-					responsaveis: [],
-					// configurar: false,
-					urgencia: "POUCO URGENTE",
-					periodo: {
-						inicio: null,
-						fim: null,
-					},
-					pagamento: {
-						recebedor: null,
-						valor: null,
-					},
-					cobranca: {
-						pagador: null,
-						valor: null,
-					},
-					autor: {
-						id: user?.id || "AUTO",
-						nome: user?.nome || "AUTOMÁTICO",
-						avatar_url: user?.avatar_url,
-					},
-					equipamentos: {
-						modulos: getServiceOrderModulesMetadataFromProject(project),
-						inversor: getServiceOrderInverterMetadataFromProject(project),
-						disponivel: null,
-						retirada: null,
-					},
-					detalhes: {
-						pontoAgua: "",
-						senhaWifi: "",
-						configuracaoMonitoramento: false,
-						possuiTrafo: false,
-						tipoEstrutura: postUpdateProject.estruturaPersonalizada?.tipo || null,
-						tipoTelha: postUpdateProject.visitaTecnica?.tipoDaTelha || null,
-						tipoPadrao: postUpdateProject.padrao?.tipo || null,
-						tipoSaidaPadrao: postUpdateProject.visitaTecnica?.saidaDoCliente || null,
-						amperagemPadrao: postUpdateProject.visitaTecnica?.amperagem || null,
-						responsabilidadePadrao: postUpdateProject.padrao?.respInstalacao,
-						topologia: postUpdateProject.sistema?.topologia,
-					},
-
-					observacoes: getServiceObservationsFromObras(postUpdateProject.obra?.observacoes || ""),
-					dataPrevisaoLiberacao: postUpdateProject.compra.previsaoEntrega,
-					dataLiberacao: postUpdateProject.compra.dataEntrega || new Date().toISOString(),
-					dataInsercao: new Date().toISOString(),
-				};
-				const insertServiceOrderResponse = await serviceOrdersCollection.insertOne(serviceOrder);
-				const insertedServiceOrderId = insertServiceOrderResponse.insertedId.toString();
-				console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Service order created successfully", insertedServiceOrderId);
-				// Updating the project with the service order id
-				await projectsCollection.updateOne(
-					{ _id: new ObjectId(updatedTransportControlItem.projeto.id) },
-					{ $set: { idOrdemServico: insertedServiceOrderId } },
-				);
-				console.log("[INFO] [UPDATE-TRANSPORT-CONTROL-ITEM] Project updated with service order id");
+				await ensureProjectAssemblyServiceOrder({
+					project: postUpdateProject,
+					author: { id: user?.id || "AUTO", nome: user?.nome || "AUTOMÁTICO", avatar_url: user?.avatar_url },
+					projectsCollection,
+					serviceOrdersCollection,
+				});
+				await syncServiceOrdersDeliveryRelease({ project: postUpdateProject, serviceOrdersCollection });
 			}
 
 			// Handling the attachments
@@ -491,13 +420,13 @@ async function deleteTransportControl({ transportControlId, user }: { transportC
 				const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) });
 				await projectsCollection.updateOne(
 					{ _id: new ObjectId(projectId) },
-					{ $set: { "compra.status": "EM ROTA", "compra.dataEntrega": null, idOrdemServico: null } },
+					{ $set: { "compra.status": "EM ROTA", "compra.dataEntrega": null } },
 				);
-				if (project?.idOrdemServico && ObjectId.isValid(project.idOrdemServico)) {
-					const serviceOrder = await serviceOrdersCollection.findOne({ _id: new ObjectId(project.idOrdemServico) });
-					if (serviceOrder && serviceOrder.projeto?.id === projectId) {
-						await serviceOrdersCollection.deleteOne({ _id: new ObjectId(project.idOrdemServico) });
-					}
+				if (project) {
+					await syncServiceOrdersDeliveryRelease({
+						project: { ...project, compra: { ...project.compra, dataEntrega: null } },
+						serviceOrdersCollection,
+					});
 				}
 			}
 		}

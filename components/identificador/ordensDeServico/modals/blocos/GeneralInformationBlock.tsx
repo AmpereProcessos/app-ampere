@@ -259,7 +259,8 @@ function ServiceOrderGeneralInformationBlock({
             <div className="w-full lg:w-1/2">
               <DateInput
                 label="DATA DE LIBERAÇÃO"
-                value={formatDate(infoHolder.dataLiberacao)}
+                value={formatDate(infoHolder.projeto.id && project ? project.compra?.dataEntrega || null : infoHolder.dataLiberacao)}
+                editable={!infoHolder.projeto.id}
                 handleChange={(value) =>
                   updateInfoHolder({
                     dataLiberacao: formatDateInputChange(value, "string") as string,
@@ -267,6 +268,9 @@ function ServiceOrderGeneralInformationBlock({
                 }
                 width="100%"
               />
+              {infoHolder.projeto.id ? (
+                <p className="text-muted-foreground text-xs">Liberada pela entrega dos equipamentos do projeto.</p>
+              ) : null}
             </div>
           </div>
           <h1 className="text-foreground text-sm font-medium tracking-tight">

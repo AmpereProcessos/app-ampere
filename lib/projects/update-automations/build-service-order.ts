@@ -1,4 +1,5 @@
 import type { TServiceOrder } from "@/utils/schemas/service-order";
+import { getProjectDeliveryReleaseDate } from "@/lib/service-orders/delivery-release";
 import {
   getServiceObservationsFromObras,
   getServiceOrderInverterMetadataFromProject,
@@ -83,7 +84,7 @@ export function buildProjectServiceOrder({
     },
     observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
     dataPrevisaoLiberacao: project.compra.previsaoEntrega,
-    dataLiberacao: project.compra.dataEntrega || new Date().toISOString(),
+    dataLiberacao: getProjectDeliveryReleaseDate(project),
     dataInsercao: new Date().toISOString(),
   };
 }

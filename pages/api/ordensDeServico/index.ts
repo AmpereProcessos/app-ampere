@@ -1,4 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { resolveServiceOrderReleaseDate } from "@/lib/service-orders/delivery-release";
 import { formatLocation } from "@/utils/methods/formatting";
 import type { TCalendar } from "@/utils/schemas/calendars";
 import type { TProject } from "@/utils/schemas/projects";
@@ -31,6 +32,11 @@ const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) =
   const collection: Collection<TServiceOrder> = db.collection("ordensDeServico");
   const callendarsCollection: Collection<TCalendar> = auxiliariesDb.collection("calendarios");
   const serviceOrder = ServiceOrderSchema.parse(req.body);
+  serviceOrder.dataLiberacao = await resolveServiceOrderReleaseDate({
+    projectId: serviceOrder.projeto.id,
+    manualDate: serviceOrder.dataLiberacao,
+    projectsCollection: db.collection<TProject>("dados"),
+  });
 
   if (!serviceOrder) throw new createHttpError.BadRequest("Nenhuma informações provida.");
 
@@ -181,6 +187,15 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
   if (!id || typeof id !== "string") throw new createHttpError.BadRequest("ID não fornecido ou inválido.");
   if (!changes) throw new createHttpError.BadRequest("Mudanças não fornecidas.");
 
+  // Full form saves must not restore a stale manual release date on a project order.
+  const previousServiceOrder = await collection.findOne({ _id: new ObjectId(id) });
+  if ("dataLiberacao" in changes || "projeto" in changes || "projeto.id" in changes) {
+    const projectId = changes["projeto.id"] !== undefined ? changes["projeto.id"] :
+      changes.projeto !== undefined ? changes.projeto.id : previousServiceOrder?.projeto.id;
+    changes.dataLiberacao = await resolveServiceOrderReleaseDate({
+      projectId, manualDate: "dataLiberacao" in changes ? changes.dataLiberacao : previousServiceOrder?.dataLiberacao, projectsCollection,
+    });
+  }
   // Updating the service order
   const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });
   if (!updateResponse.acknowledged)

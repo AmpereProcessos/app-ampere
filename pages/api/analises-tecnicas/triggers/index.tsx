@@ -1,4 +1,5 @@
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { getProjectDeliveryReleaseDate } from "@/lib/service-orders/delivery-release";
 import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import type { TTechnicalAnalysis } from "@/utils/schemas/technical-analysis";
@@ -126,7 +127,7 @@ const handleTechnicalAnalysisTrigger: NextApiHandler<PostResponse> = async (req,
 			},
 			observacoes: [],
 			dataPrevisaoLiberacao: null,
-			dataLiberacao: null,
+			dataLiberacao: project ? getProjectDeliveryReleaseDate(project) : null,
 			dataInsercao: new Date().toISOString(),
 		};
 

@@ -42,3 +42,6 @@ firebase-service-account.json
 
 ## IDE
 .idea
+
+# Local rollback records for the one-time Obras release-date correction
+scripts/.service-order-release-backups/

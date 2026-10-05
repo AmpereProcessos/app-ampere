@@ -5,6 +5,7 @@ import {
   type InteractiveFilterOption,
 } from "@/components/ui/interactive-filter";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PROJECT_STATE_PAIRS } from "@/lib/service-orders/project-state-filters";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ import {
   CalendarDays,
   ListFilter,
   MapPin,
+  RotateCcw,
   Tag,
   UserRound,
 } from "lucide-react";
@@ -161,7 +163,6 @@ export default function ExecutionProjectsFilters({ filters, updateFilters, reset
           onClear={() => patch({ projectStates: [] })}
           contentClassName="w-80"
         />
-        <Button variant="ghost" size="sm" onClick={resetFilters}>Restaurar filtros</Button>
 
         <ExecutionMultiFilterChip
           label="CATEGORIA"
@@ -407,7 +408,15 @@ export default function ExecutionProjectsFilters({ filters, updateFilters, reset
           </InteractiveFilter.Content>
         </InteractiveFilter.Root>
 
-        <InteractiveFilter.AddFilterRoot className="w-fit">
+        <InteractiveFilter.AddFilterRoot className="w-fit shrink-0 gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" variant="ghost" size="icon" onClick={resetFilters} aria-label="Restaurar filtros">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Restaurar filtros</TooltipContent>
+          </Tooltip>
           <InteractiveFilter.AddFilterTrigger>
             <ListFilter className="h-4 w-4 min-h-4 min-w-4" />
             <InteractiveFilter.Label>MAIS FILTROS</InteractiveFilter.Label>

@@ -16,7 +16,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import ServiceOrderFileReferences from "./blocos/AttachmentsBlock";
-import ServiceOrderCalendarIntegration from "./blocos/CalendarIntegration";
 import CostsInformation from "./blocos/CostInformationBlock";
 import ServiceOrderDetailsInformationBlock from "./blocos/DetailsInformationBlock";
 import ServiceOrderEquipmentsInformationBlock from "./blocos/EquipmentsInformationBlock";
@@ -263,7 +262,6 @@ function ModalControlServiceOrder({ session, serviceOrderId, closeModal, callbac
                   project={serviceOrder?.projetoDados || undefined}
                   updateInfoHolder={updateInfoHolder}
                 />
-                <ServiceOrderCalendarIntegration infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderDetailsInformationBlock infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
                 <ServiceOrderExecutionInformationBlock

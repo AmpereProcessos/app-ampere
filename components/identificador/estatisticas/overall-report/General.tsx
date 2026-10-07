@@ -7,6 +7,7 @@ import {
   DollarSign,
   Earth,
   Heart,
+  LayoutGrid,
   Pickaxe,
   Ticket,
   Truck,
@@ -17,8 +18,12 @@ import { MdDashboard } from "react-icons/md";
 
 type OverallReportGeneralStatsProps = {
   generalData: TOverallReportOutput["data"]["geral"];
+  photovoltaicInstallations: TOverallReportOutput["data"]["ufv"]["instalacoes"];
 };
-function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsProps) {
+function OverallReportGeneralStats({
+  generalData,
+  photovoltaicInstallations,
+}: OverallReportGeneralStatsProps) {
   return (
     <div className="bg-background flex flex-col gap-6 rounded-sm border border-gray-400 p-6 shadow-xs">
       <div className="flex w-full flex-col gap-2">
@@ -140,6 +145,98 @@ function OverallReportGeneralStats({ generalData }: OverallReportGeneralStatsPro
                 {generalData.instalacoes.numeroEstadosExecutados}
               </h1>
             </div>
+          </div>
+        </div>
+        <p className="text-muted-foreground text-xs">
+          Módulos e potência instalados consideram somente sistema fotovoltaico, aumento de sistema e
+          off grid.
+        </p>
+        <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+          <div className="bg-background flex w-full flex-col gap-2 rounded-xl border border-gray-400 p-3 lg:w-1/2">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="h-4 min-h-4 w-4 min-w-4" />
+              <h2 className="text-sm font-bold tracking-tight">MÓDULOS INSTALADOS</h2>
+            </div>
+            <div className="flex w-full items-center justify-center">
+              <h1 className="text-lg font-bold tracking-tight">
+                {formatDecimalPlaces(photovoltaicInstallations.numeroPaineisInstalados, 0, 0)}
+              </h1>
+            </div>
+          </div>
+          <div className="bg-background flex w-full flex-col gap-2 rounded-xl border border-gray-400 p-3 lg:w-1/2">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 min-h-4 w-4 min-w-4" />
+              <h2 className="text-sm font-bold tracking-tight">POTÊNCIA INSTALADA</h2>
+            </div>
+            <div className="flex w-full items-center justify-center">
+              <h1 className="text-lg font-bold tracking-tight">
+                {formatDecimalPlaces(photovoltaicInstallations.potenciaInstalada)} kWp
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="bg-background flex w-full flex-col gap-2 rounded-xl border border-gray-400 p-3">
+          <div className="flex items-center gap-2">
+            <Earth className="h-4 min-h-4 w-4 min-w-4" />
+            <h2 className="text-sm font-bold tracking-tight">MÓDULOS E POTÊNCIA POR ESTADO</h2>
+          </div>
+          <div className="flex w-full flex-wrap items-center justify-start gap-2">
+            {photovoltaicInstallations.porEstado.map((state) => (
+              <div
+                key={`estado-ufv-${state.titulo}`}
+                className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1"
+              >
+                <div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
+                  <p className="text-[0.65rem] font-medium">{state.titulo}</p>
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid className="h-4 w-4" />
+                    <p className="text-xs font-medium">
+                      {formatDecimalPlaces(state.numeroPaineisInstalados, 0, 0)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    <p className="text-xs font-medium">
+                      {formatDecimalPlaces(state.potenciaInstalada)} kWp
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="bg-background flex w-full flex-col gap-2 rounded-xl border border-gray-400 p-3">
+          <div className="flex items-center gap-2">
+            <Building2 className="h-4 min-h-4 w-4 min-w-4" />
+            <h2 className="text-sm font-bold tracking-tight">MÓDULOS E POTÊNCIA POR CIDADE</h2>
+          </div>
+          <div className="flex w-full flex-wrap items-center justify-start gap-2">
+            {photovoltaicInstallations.porCidade.map((city) => (
+              <div
+                key={`cidade-ufv-${city.titulo}`}
+                className="flex items-center justify-between gap-6 rounded-xl border border-gray-400 px-2 py-1"
+              >
+                <div className="bg-primary/80 flex items-center gap-2 rounded-lg px-2 py-1 text-primary-foreground">
+                  <p className="text-[0.65rem] font-medium">{city.titulo}</p>
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid className="h-4 w-4" />
+                    <p className="text-xs font-medium">
+                      {formatDecimalPlaces(city.numeroPaineisInstalados, 0, 0)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    <p className="text-xs font-medium">
+                      {formatDecimalPlaces(city.potenciaInstalada)} kWp
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         <div className="bg-background flex w-full flex-col gap-2 rounded-xl border border-gray-400 p-3">

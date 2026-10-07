@@ -1,7 +1,29 @@
 import type { TProject } from "@/utils/schemas/projects";
 import type { Collection, Filter } from "mongodb";
 
-const UFV_SERVICES_QUERY = { tipoDeServico: { $in: ["SISTEMA FOTOVOLTAICO", "AUMENTO DE SISTEMA FOTOVOLTAICO"] } };
+const UFV_SERVICE_TYPES = [
+	"SISTEMA FOTOVOLTAICO",
+	"AUMENTO DE SISTEMA FOTOVOLTAICO",
+	"SISTEMA FOTOVOLTAICO (OFF GRID)",
+] as const;
+
+/** Keeps photovoltaic services even when the report filter also includes other service types. */
+function withUfvServicesOnly(partialQuery: Filter<TProject>): Filter<TProject> {
+	const requested = partialQuery.tipoDeServico;
+	const requestedTypes =
+		requested && typeof requested === "object" && "$in" in requested && Array.isArray(requested.$in)
+			? requested.$in.filter((type): type is string => typeof type === "string")
+			: null;
+
+	const serviceTypes = requestedTypes
+		? requestedTypes.filter((type) => (UFV_SERVICE_TYPES as readonly string[]).includes(type))
+		: [...UFV_SERVICE_TYPES];
+
+	return {
+		...partialQuery,
+		tipoDeServico: { $in: serviceTypes },
+	};
+}
 
 /**
  * UFV SALE STATS
@@ -14,10 +36,7 @@ export async function getUFVSaleStats({ collection, partialQuery }: GetUFVSaleSt
 	const stats = await collection
 		.aggregate([
 			{
-				$match: {
-					...UFV_SERVICES_QUERY,
-					...partialQuery,
-				},
+				$match: withUfvServicesOnly(partialQuery),
 			},
 			{
 				$group: {
@@ -49,6 +68,18 @@ export async function getUFVSaleStats({ collection, partialQuery }: GetUFVSaleSt
 		.toArray();
 
 	const [saleStats] = stats;
+	if (!saleStats) {
+		return {
+			qtdeVendida: 0,
+			potenciaVendida: 0,
+			valorVendido: 0,
+			valorProjetoVendido: 0,
+			valorOeMVendido: 0,
+			valorPadraoVendido: 0,
+			valorEstruturaPersonalizadaVendido: 0,
+			valorSeguroVendido: 0,
+		};
+	}
 
 	const totalSold =
 		saleStats.valorProjetoVendido +
@@ -101,10 +132,7 @@ export async function getUFVInstallationStats({ collection, partialQuery }: GetU
 	const statsByCityState = (await collection
 		.aggregate([
 			{
-				$match: {
-					...UFV_SERVICES_QUERY,
-					...partialQuery,
-				},
+				$match: withUfvServicesOnly(partialQuery),
 			},
 			{
 				$group: {
@@ -179,14 +207,20 @@ export async function getUFVInstallationStats({ collection, partialQuery }: GetU
 	}, reduced);
 
 	// Transformar porCidade e porEstado em arrays com campo "title"
-	const porCidadeArray = Object.entries(reduced.porCidade).map(([cidade, obj]) => ({
-		titulo: cidade,
-		...obj,
-	}));
-	const porEstadoArray = Object.entries(reduced.porEstado).map(([estado, obj]) => ({
-		titulo: estado,
-		...obj,
-	}));
+	const byInstalledPower = (a: { potenciaInstalada: number }, b: { potenciaInstalada: number }) =>
+		b.potenciaInstalada - a.potenciaInstalada;
+	const porCidadeArray = Object.entries(reduced.porCidade)
+		.map(([cidade, obj]) => ({
+			titulo: cidade,
+			...obj,
+		}))
+		.sort(byInstalledPower);
+	const porEstadoArray = Object.entries(reduced.porEstado)
+		.map(([estado, obj]) => ({
+			titulo: estado,
+			...obj,
+		}))
+		.sort(byInstalledPower);
 
 	return {
 		qtdeInstalada: reduced.qtdeInstalada,
@@ -232,10 +266,7 @@ export async function getUFVHomologationStats({ collection, partialQuery }: GetU
 	const statsByCityState = (await collection
 		.aggregate([
 			{
-				$match: {
-					...UFV_SERVICES_QUERY,
-					...partialQuery,
-				},
+				$match: withUfvServicesOnly(partialQuery),
 			},
 			{
 				$group: {

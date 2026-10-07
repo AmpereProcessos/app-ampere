@@ -190,7 +190,12 @@ function ReportPageContent({ session }: { session: TAuthSession }) {
         <TabsContent value="visao-geral">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
-          {isSuccess ? <OverallReportGeneralStats generalData={report?.geral} /> : null}
+          {isSuccess && report ? (
+            <OverallReportGeneralStats
+              generalData={report.geral}
+              photovoltaicInstallations={report.ufv.instalacoes}
+            />
+          ) : null}
         </TabsContent>
         <TabsContent value="perfil-clientes">
           <ClientProfileReport />

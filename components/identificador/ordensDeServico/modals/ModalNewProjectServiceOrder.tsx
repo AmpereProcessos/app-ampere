@@ -10,7 +10,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import { useMutationWithFeedback } from "@/utils/methods/mutation/general-hook";
-import ServiceOrderCalendarIntegration from "./blocos/CalendarIntegration";
 import ServiceOrderDetailsInformationBlock from "./blocos/DetailsInformationBlock";
 import ServiceOrderEquipmentsInformationBlock from "./blocos/EquipmentsInformationBlock";
 import ServiceOrderExecutionInformationBlock from "./blocos/ExecutionInformationBlock";
@@ -222,10 +221,6 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
               useProjectToTakeEquipmentsInformation={useProjectToTakeEquipmentsInformation}
             />
 
-            <ServiceOrderCalendarIntegration
-              infoHolder={osInfo}
-              updateInfoHolder={updateInfoHolder}
-            />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock
               infoHolder={osInfo}

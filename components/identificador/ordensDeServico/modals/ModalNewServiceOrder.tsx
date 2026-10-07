@@ -14,7 +14,6 @@ import {
 } from "@/utils/methods/util/service-order";
 import type { TServiceOrder, TServiceOrderDTO } from "@/utils/schemas/service-order";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ServiceOrderCalendarIntegration from "./blocos/CalendarIntegration";
 import ServiceOrderDetailsInformationBlock from "./blocos/DetailsInformationBlock";
 import ServiceOrderEquipmentsInformationBlock from "./blocos/EquipmentsInformationBlock";
 import ServiceOrderExecutionInformationBlock from "./blocos/ExecutionInformationBlock";
@@ -247,10 +246,6 @@ function ModalNewServiceOrder({
               }
             />
 
-            <ServiceOrderCalendarIntegration
-              infoHolder={osInfo}
-              updateInfoHolder={updateInfoHolder}
-            />
             <ServiceOrderScheduling infoHolder={osInfo} updateInfoHolder={updateInfoHolder} />
             <ServiceOrderDetailsInformationBlock
               infoHolder={osInfo}

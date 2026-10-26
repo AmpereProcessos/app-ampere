@@ -30,7 +30,8 @@ import type { TProjectDTO } from "@/utils/schemas/projects";
 import type { TPurchaseControl, TPurchaseProjectDTO } from "@/utils/schemas/purchases";
 import type { TServiceOrder, TServiceOrderSimplifiedDTO } from "@/utils/schemas/service-order";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MapPin, Pencil, Tag, TextIcon, UserRound } from "lucide-react";
+import { MapPin, Pencil, Tag, TextIcon } from "lucide-react";
+import ServiceOrderResponsibles from "@/components/identificador/ordensDeServico/ServiceOrderResponsibles";
 import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineSafety } from "react-icons/ai";
@@ -832,12 +833,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           ) : null}
           {getStatusTag(serviceOrder)}
         </div>
-        <div className="flex items-center gap-1">
-          <UserRound size={12} />
-          <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
-            {serviceOrder.responsavel.nome}
-          </h1>
-        </div>
+        <ServiceOrderResponsibles responsibles={serviceOrder.responsaveis} maxVisible={3} />
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">

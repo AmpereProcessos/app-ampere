@@ -390,6 +390,7 @@ export type TServiceOrderSimplified = Pick<
   | "localizacao"
   | "etiquetas"
   | "responsavel"
+  | "responsaveis"
   | "googleCalendarEventId"
   | "agendamento"
   | "autor"
@@ -421,6 +422,7 @@ export const ServiceOrderSimplifiedProjection = {
   urgencia: 1,
   localizacao: 1,
   responsavel: 1,
+  responsaveis: 1,
   googleCalendarEventId: 1,
   agendamento: 1,
   etiquetas: 1,

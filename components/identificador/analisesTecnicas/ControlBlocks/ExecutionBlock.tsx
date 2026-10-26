@@ -12,7 +12,8 @@ import type { TServiceOrderSimplifiedDTO } from "@/utils/schemas/service-order";
 import type { TTechnicalAnalysisDTO } from "@/utils/schemas/technical-analysis";
 import { BsCalendarCheck, BsCalendarPlus } from "react-icons/bs";
 import { useQueryClient } from "@tanstack/react-query";
-import { Pencil, Tag, UserRound } from "lucide-react";
+import { Pencil, Tag } from "lucide-react";
+import ServiceOrderResponsibles from "@/components/identificador/ordensDeServico/ServiceOrderResponsibles";
 import { BsCalendar, BsCheck2All } from "react-icons/bs";
 import { BsCheck2 } from "react-icons/bs";
 import React, { useState, type Dispatch, type SetStateAction } from "react";
@@ -333,12 +334,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
           ) : null}
           {getStatusTag(serviceOrder)}
         </div>
-        <div className="flex items-center gap-1">
-          <UserRound size={12} />
-          <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
-            {serviceOrder.responsavel.nome}
-          </h1>
-        </div>
+        <ServiceOrderResponsibles responsibles={serviceOrder.responsaveis} maxVisible={3} />
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">

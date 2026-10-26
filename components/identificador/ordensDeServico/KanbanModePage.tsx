@@ -23,7 +23,8 @@ import LoadingComponent from "@/components/utils/LoadingComponent";
 import { MdDashboard, MdRoofing } from "react-icons/md";
 import { BsCalendarPlus, BsCalendarCheck, BsCalendar, BsPatchCheckFill } from "react-icons/bs";
 import { formatNameAsInitials, formatDateAsLocale } from "@/utils/methods/formatting";
-import { Tag, Tags, UserRound, X } from "lucide-react";
+import { Tag, Tags, X } from "lucide-react";
+import ServiceOrderResponsibles from "./ServiceOrderResponsibles";
 import Avatar from "@/components/utils/Avatar";
 import { TagsColorPalette } from "@/utils/select-options";
 import { Pencil } from "lucide-react";
@@ -627,12 +628,7 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
                   {item.localizacao.cidade} ({item.localizacao.uf})
                 </h1>
               </div>
-              <div className="flex items-center gap-1">
-                <UserRound size={12} />
-                <h1 className="text-foreground text-[0.6rem] font-medium">
-                  {item.responsavel.nome}
-                </h1>
-              </div>
+              <ServiceOrderResponsibles responsibles={item.responsaveis} />
             </div>
             <div className="flex w-full flex-wrap items-center justify-around gap-2">
               <div className="flex items-center gap-1">

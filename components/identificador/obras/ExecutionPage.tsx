@@ -15,7 +15,7 @@ import { getErrorMessage } from '@/utils/methods/handlers'
 import { useServiceOrdersByPersonalizedFilters } from '@/utils/methods/query/service-orders'
 import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Code, Pencil, Tag, UserRound } from 'lucide-react'
+import { Code, Pencil, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { BsCalendar, BsCalendarCheck, BsCalendarPlus, BsPatchCheckFill } from 'react-icons/bs'
 import { FaRegHourglass, FaSolarPanel } from 'react-icons/fa'
@@ -23,6 +23,7 @@ import { FaLocationDot } from 'react-icons/fa6'
 import { MdDashboard, MdRoofing } from 'react-icons/md'
 import { TbUrgent } from 'react-icons/tb'
 import ModalControlServiceOrder from '../ordensDeServico/modals/ModalControlServiceOrder'
+import ServiceOrderResponsibles from '../ordensDeServico/ServiceOrderResponsibles'
 import ExecutionProjectsFilters from './ExecutionProjectsFilters'
 import ExecutionPageStats from './ExecutionPageStats'
 type ExecutionPageProps = {
@@ -255,10 +256,7 @@ function ServiceOrderExecutionCard({ serviceOrder, handleClick }: ServiceOrderEx
               {serviceOrder.localizacao.cidade} ({serviceOrder.localizacao.uf})
             </h1>
           </div>
-          <div className="flex items-center gap-1">
-            <UserRound size={12} />
-            <h1 className="text-foreground text-[0.6rem] font-medium">{serviceOrder.responsavel.nome}</h1>
-          </div>
+          <ServiceOrderResponsibles responsibles={serviceOrder.responsaveis} />
         </div>
         <div className="flex w-full flex-wrap items-center justify-around gap-2">
           <div className="flex items-center gap-1">

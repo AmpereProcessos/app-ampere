@@ -6,7 +6,8 @@ import ServiceOrdersFilterMenu from "./FilterMenu";
 import { useQueryClient } from "@tanstack/react-query";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { FaLocationDot, FaRotate } from "react-icons/fa6";
-import { ListFilter, Pencil, Tag, UserRound } from "lucide-react";
+import { ListFilter, Pencil, Tag } from "lucide-react";
+import ServiceOrderResponsibles from "./ServiceOrderResponsibles";
 import { useServiceOrdersByPersonalizedFilters } from "@/utils/methods/query/service-orders";
 import { Button } from "@/components/ui/button";
 import GeneralPaginationComponent from "@/components/utils/Pagination";
@@ -255,12 +256,7 @@ function ServiceOrderCard({ serviceOrder, handleClick }: ServiceOrderCardProps) 
 
           {getStatusTag(serviceOrder)}
         </div>
-        <div className="flex items-center gap-1">
-          <UserRound size={12} />
-          <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
-            {serviceOrder.responsavel.nome}
-          </h1>
-        </div>
+        <ServiceOrderResponsibles responsibles={serviceOrder.responsaveis} maxVisible={3} />
       </div>
       <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">

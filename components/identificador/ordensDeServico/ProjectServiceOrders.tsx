@@ -12,7 +12,7 @@ import { formatNameAsInitials } from "@/utils/methods/formatting";
 import Avatar from "@/components/utils/Avatar";
 import { BsCalendarCheck, BsCalendarPlus } from "react-icons/bs";
 import { Tag } from "lucide-react";
-import { UserRound } from "lucide-react";
+import ServiceOrderResponsibles from "./ServiceOrderResponsibles";
 import { BsCheck2All } from "react-icons/bs";
 import { BsCalendar } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
@@ -229,12 +229,7 @@ function ProjectServiceOrderCard({ serviceOrder, handleClick }: ProjectServiceOr
 
           {getStatusTag(serviceOrder)}
         </div>
-        <div className="flex items-center gap-1">
-          <UserRound size={12} />
-          <h1 className="text-foreground py-0.5 text-center text-[0.6rem] font-medium italic">
-            {serviceOrder.responsavel.nome}
-          </h1>
-        </div>
+        <ServiceOrderResponsibles responsibles={serviceOrder.responsaveis} maxVisible={3} />
       </div>
       <div className="flex w-full flex-col flex-wrap items-center justify-between gap-2 lg:flex-row">
         <div className="flex w-full flex-wrap items-center justify-center gap-2 lg:grow lg:justify-start">

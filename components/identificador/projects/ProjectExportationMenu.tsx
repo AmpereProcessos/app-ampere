@@ -87,7 +87,7 @@ function ProjectExportationMenu({ closeMenu }: ProjectExportationMenuProps) {
 			"compra.dataPagamento": false,
 			"compra.dataPagamentoEquipamentos": false,
 			"obra.statusDaObra": false,
-			"obra.equipeResp": false,
+			"obra.responsaveis": false,
 			"obra.entrada": false,
 			"obra.saida": false,
 		},
@@ -602,8 +602,8 @@ function ExportationMenuContent({
 					<CheckboxInput
 						labelFalse="EQUIPE RESPONSÁVEL PELA OBRA"
 						labelTrue="EQUIPE RESPONSÁVEL PELA OBRA"
-						checked={payloadHolder.projection["obra.equipeResp"]}
-						handleChange={(v) => updatePayloadProjection({ "obra.equipeResp": v })}
+						checked={payloadHolder.projection["obra.responsaveis"]}
+						handleChange={(v) => updatePayloadProjection({ "obra.responsaveis": v })}
 					/>
 					<CheckboxInput
 						labelFalse="DATA DE ENTRADA DA OBRA"

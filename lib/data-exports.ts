@@ -157,7 +157,7 @@ export const ProjectExportablesSchema = z.object({
 		required_error: "Necessidade de exportação do status da obra não informada.",
 		invalid_type_error: "Necessidade de exportação do status da obra não é um booleano.",
 	}),
-	"obra.equipeResp": z.boolean({
+	"obra.responsaveis": z.boolean({
 		required_error: "Necessidade de exportação da equipe responsável pela obra não informada.",
 		invalid_type_error: "Necessidade de exportação da equipe responsável pela obra não é um booleano.",
 	}),
@@ -333,9 +333,9 @@ export const ProjectExportableFieldsConfig: TProjectExportableFieldsConfig = {
 		label: "STATUS DA OBRA",
 		formattingFunction: (value: TProject["obra"]["statusDaObra"]) => value ?? "",
 	},
-	"obra.equipeResp": {
+	"obra.responsaveis": {
 		label: "EQUIPE RESPONSÁVEL PELA OBRA",
-		formattingFunction: (value: TProject["obra"]["equipeResp"]) => value ?? "",
+		formattingFunction: (value: TProject["obra"]["responsaveis"]) => value?.map((responsible) => responsible.nome).join(", ") ?? "",
 	},
 	"obra.entrada": {
 		label: "DATA DE ENTRADA DA OBRA",

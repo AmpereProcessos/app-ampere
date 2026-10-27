@@ -266,7 +266,7 @@ export default function ExecutionAnalyticsView() {
 }
 
 function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; openOrders: OpenOrders }) {
-  const [dimension, setDimension] = useState<'teams' | 'regions'>('teams')
+  const [dimension, setDimension] = useState<'people' | 'regions'>('people')
   const [sort, setSort] = useState<keyof Pick<EquipmentGroup, 'modules' | 'micros' | 'installations' | 'averageModules'>>('modules')
   const [page, setPage] = useState(0)
   const rows = data.equipment.groups[dimension]
@@ -274,7 +274,7 @@ function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; op
   const effectivePage = Math.min(page, Math.max(0, Math.ceil(rows.length / 15) - 1))
   const isInstallation = (detail: ExecutionDetail) => detail.category.trim().toLocaleUpperCase('pt-BR') === 'MONTAGEM'
   const matches = (key: string) => (detail: ExecutionDetail) =>
-    isInstallation(detail) && (dimension === 'teams' ? detail.team === key : `${detail.city}/${detail.state}` === key)
+    isInstallation(detail) && (dimension === 'people' ? detail.people.some((p) => p.id === key) : `${detail.city}/${detail.state}` === key)
   const summary = data.equipment.summary
 
   return (
@@ -323,14 +323,14 @@ function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; op
               <div className="flex flex-wrap gap-2" role="group" aria-label="Dimensão da produção instalada">
                 <Button
                   size="sm"
-                  variant={dimension === 'teams' ? 'default' : 'outline'}
-                  aria-pressed={dimension === 'teams'}
+                  variant={dimension === 'people' ? 'default' : 'outline'}
+                  aria-pressed={dimension === 'people'}
                   onClick={() => {
-                    setDimension('teams')
+                    setDimension('people')
                     setPage(0)
                   }}
                 >
-                  Por equipe
+                  Por responsável
                 </Button>
                 <Button
                   size="sm"
@@ -357,10 +357,10 @@ function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; op
               </div>
               <div className="min-w-0 overflow-x-auto">
                 <table className="w-full min-w-[620px] text-left text-xs">
-                  <caption className="sr-only">Equipamentos instalados por {dimension === 'teams' ? 'equipe' : 'cidade e estado'}</caption>
+                  <caption className="sr-only">Equipamentos instalados por {dimension === 'people' ? 'responsável' : 'cidade e estado'}</caption>
                   <thead>
                     <tr className="border-b">
-                      <th className="py-3 pr-3">{dimension === 'teams' ? 'Equipe responsável' : 'Cidade / UF'}</th>
+                      <th className="py-3 pr-3">{dimension === 'people' ? 'Responsável' : 'Cidade / UF'}</th>
                       {(
                         [
                           { key: 'modules', label: 'Placas' },
@@ -422,9 +422,10 @@ function InstalledEquipment({ data, openOrders }: { data: ExecutionAnalytics; op
           </div>
         )}
         <p className="text-muted-foreground border-t pt-4 text-xs leading-relaxed">
-          Critério: cada OS de montagem concluída no período conta como uma instalação. Micros são somados somente quando a topologia contém “micro”.{' '}
+          Critério: cada OS de montagem concluída no período conta como uma instalação. Micros são somados somente quando a topologia contém “micro”. Por
+          responsável, uma OS com várias pessoas atribuídas conta integralmente para cada uma, então a soma das linhas pode superar o total.{' '}
           {data.equipment.quality.missingModules} OS sem quantidade de placas; {data.equipment.quality.missingMicros} com topologia micro sem quantidade de micros;{' '}
-          {data.equipment.quality.missingTeams} sem equipe responsável.
+          {data.equipment.quality.unassigned} sem responsável.
         </p>
       </div>
     </section>
@@ -1025,7 +1026,6 @@ function exportSelection(selection: Selection) {
           'Descrição',
           'Categoria',
           'Projeto',
-          'Equipe responsável',
           'Pessoas atribuídas',
           'Cidade',
           'UF',
@@ -1042,7 +1042,6 @@ function exportSelection(selection: Selection) {
           d.title,
           d.category,
           d.projectName,
-          d.team,
           d.people.map((p) => p.name).join(', '),
           d.city,
           d.state,
@@ -1128,7 +1127,7 @@ function DetailPanel({ selection, close }: { selection: Selection | null; close:
                   {d.category} · {d.city}/{d.state}
                 </p>
                 <p>
-                  Equipe: {d.team} · {d.modules === null ? 'Placas não informadas' : `${number.format(d.modules)} placas`}
+                  {d.modules === null ? 'Placas não informadas' : `${number.format(d.modules)} placas`}
                   {d.topology.toUpperCase().includes('MICRO')
                     ? ` · ${d.micros === null ? 'Micros não informados' : `${number.format(d.micros)} micros`}`
                     : ''}

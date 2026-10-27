@@ -55,7 +55,7 @@ const createServiceOrderRoute: NextApiHandler<PostResponse> = async (req, res) =
     const googleOAuth2Client = getConfiguredGoogleOAuth2Client(calendar.googleRefreshToken);
     const googleCalendar = googleApis.calendar({ version: "v3", auth: googleOAuth2Client });
 
-    const googleCalendarEventResponsiblesStr = serviceOrder.responsavel.nome;
+    const googleCalendarEventResponsiblesStr = formatCalendarEventResponsibles(serviceOrder);
 
     const googleCalendarEventInstructionsStr =
       serviceOrder.observacoes.length > 0
@@ -221,8 +221,7 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
     if (eventStart && eventEnd) {
       // In case the service order has a calendar and calendar event defined, we need to update the event with the new information
 
-      const googleCalendarEventResponsiblesStr =
-        updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
+      const googleCalendarEventResponsiblesStr = formatCalendarEventResponsibles(updatedServiceOrder);
       const googleCalendarEventInstructionsStr =
         updatedServiceOrder.observacoes.length > 0
           ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n")
@@ -287,8 +286,7 @@ const editServiceOrderRoute: NextApiHandler<PutResponse> = async (req, res) => {
       const eventStart = updatedServiceOrder.agendamento?.inicio || updatedServiceOrder.periodo.inicio;
       const eventEnd = updatedServiceOrder.agendamento?.fim || updatedServiceOrder.periodo.fim;
 
-      const googleCalendarEventResponsiblesStr =
-        updatedServiceOrder.responsavel.nome.length > 0 ? updatedServiceOrder.responsavel.nome : "Sem responsáveis";
+      const googleCalendarEventResponsiblesStr = formatCalendarEventResponsibles(updatedServiceOrder);
       const googleCalendarEventInstructionsStr =
         updatedServiceOrder.observacoes.length > 0
           ? updatedServiceOrder.observacoes.map((i) => `- (${i.topico}) ${i.descricao}`).join("\n")
@@ -398,6 +396,14 @@ export default apiHandler({
   PUT: editServiceOrderRoute,
   DELETE: deleteServiceOrderRoute,
 });
+
+// Lists the assigned people first and keeps the legacy team name, so the event never omits who was assigned.
+function formatCalendarEventResponsibles(serviceOrder: Pick<TServiceOrder, "responsavel" | "responsaveis">) {
+  const people = (serviceOrder.responsaveis || []).map((p) => p.nome?.trim()).filter(Boolean);
+  const team = serviceOrder.responsavel?.nome?.trim();
+  const names = [...new Set([...people, ...(team ? [team] : [])])];
+  return names.length > 0 ? names.join(", ") : "Sem responsáveis";
+}
 
 type GetServiceOrdersByProjectParams = {
   collection: Collection<TServiceOrder>;

@@ -34,8 +34,6 @@ const handler: NextApiHandler<{ data: ExecutionAnalytics }> = async (req, res) =
           'periodo.fim': 1,
           'responsaveis.id': 1,
           'responsaveis.nome': 1,
-          'responsavel.nome': 1,
-          'responsavel.tipo': 1,
           'localizacao.cidade': 1,
           'localizacao.uf': 1,
           'projeto.id': 1,

@@ -39,22 +39,25 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
   // Defining the queries
   const nameOrQuery: Filter<TServiceOrder>[] =
     filters.name.trim().length > 0 ? [{ 'favorecido.nome': { $regex: filters.name, $options: 'i' } }, { 'favorecido.nome': filters.name }] : []
+  // Match the assigned people list as well as the legacy team field, so OS filled only in "responsaveis" are not left out.
   const responsibleOrQuery: Filter<TServiceOrder>[] =
     filters.responsible.trim().length > 0
-      ? [{ 'responsavel.nome': { $regex: filters.responsible, $options: 'i' } }, { 'responsavel.nome': filters.responsible }]
+      ? (['responsaveis.nome', 'responsavel.nome'] as const).flatMap((field) => [
+          { [field]: { $regex: filters.responsible, $options: 'i' } },
+          { [field]: filters.responsible },
+        ])
       : []
+  // Name and responsible are independent filters: each one must match, not either of them.
+  const textQueries: Filter<TServiceOrder>[] = [nameOrQuery, responsibleOrQuery].filter((q) => q.length > 0).map((q) => ({ $or: q }))
 
-  const orQueries = [...nameOrQuery, ...responsibleOrQuery]
-
-  const dateQuery: Filter<TServiceOrder> =
+  const dateAndClauses: Filter<TServiceOrder>[] =
     filters.period.after && filters.period.before && filters.period.field
-      ? {
-          $and: [
-            { [filters.period.field]: { $gte: formatDateQuery(filters.period.after, 'start') } },
-            { [filters.period.field]: { $lte: formatDateQuery(filters.period.before, 'end') } },
-          ],
-        }
-      : {}
+      ? [
+          { [filters.period.field]: { $gte: formatDateQuery(filters.period.after, 'start') } } as Filter<TServiceOrder>,
+          { [filters.period.field]: { $lte: formatDateQuery(filters.period.before, 'end') } } as Filter<TServiceOrder>,
+        ]
+      : []
+  const dateQuery: Filter<TServiceOrder> = dateAndClauses.length > 0 ? { $and: dateAndClauses } : {}
   const stateQuery: Filter<TServiceOrder> = filters.state.length > 0 ? { 'localizacao.uf': { $in: filters.state } } : {}
   const cityQuery: Filter<TServiceOrder> = filters.city.length > 0 ? { 'localizacao.cidade': { $in: filters.city } } : {}
   const categoryQuery: Filter<TServiceOrder> =
@@ -75,9 +78,10 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
 
   const orderByParam = filters.orderBy.field ? { [filters.orderBy.field]: filters.orderBy.direction === 'asc' ? 1 : -1 } : { _id: -1 }
   const projectStateQuery = buildProjectStateQuery(filters)
+  const projectStateAndClauses =
+    '$and' in projectStateQuery && Array.isArray(projectStateQuery.$and) ? (projectStateQuery.$and as Filter<TServiceOrder>[]) : []
+  const combinedAndClauses: Filter<TServiceOrder>[] = [...dateAndClauses, ...projectStateAndClauses, ...textQueries]
   const query: Filter<TServiceOrder> = {
-    ...(orQueries.length > 0 ? { $or: orQueries } : {}),
-    ...dateQuery,
     ...stateQuery,
     ...cityQuery,
     ...tagsQuery,
@@ -90,7 +94,7 @@ const getServiceOrdersByPersonalizedFilters: NextApiHandler<PostResponse> = asyn
     ...notReleasedQuery,
     ...topologiesQuery,
     ...roofTypesQuery,
-    ...(projectStateQuery.$and ? { $and: [...(dateQuery.$and ?? []), ...projectStateQuery.$and] } : {}),
+    ...(combinedAndClauses.length > 0 ? { $and: combinedAndClauses } : {}),
     ...missingObservationsQuery,
   }
 

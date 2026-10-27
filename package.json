@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsrs -p tsconfig.tsrs.json --fast",
     "db:push": "dotenv drizzle-kit push",
     "db:generate": "dotenv drizzle-kit generate:pg",
     "db:migrate": "dotenv drizzle-kit migrate:pg",
@@ -135,6 +136,7 @@
     "oxlint": "^1.53.0",
     "postcss": "^8.4.16",
     "tailwindcss": "^4.1.12",
+    "tsrs": "0.20.0-ts7.1.0-beta",
     "typescript": "^5.2.2"
   }
 }

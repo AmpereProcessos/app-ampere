@@ -1,0 +1,20 @@
+{
+	// Type-check-only config for tsrs (TypeScript 7 Rust port). Usage: npm run typecheck
+	// TS 7 removed target=es5, downlevelIteration, moduleResolution=node10 and baseUrl,
+	// so they're overridden here. tsconfig.json stays as-is for Next.js / TypeScript 5.
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"target": "es2017",
+		"downlevelIteration": null,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"baseUrl": null,
+		"paths": {
+			"@/*": ["./*"],
+			"*": ["./*"]
+		},
+		"incremental": false,
+		// TS 7 defaults this to true, which flags `import "./globals.css"`
+		"noUncheckedSideEffectImports": false
+	}
+}

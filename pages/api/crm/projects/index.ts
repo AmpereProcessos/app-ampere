@@ -8,7 +8,7 @@ type GetResponse = any;
 
 const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
 	const { id, identifier } = req.query;
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb = await connectToCRMDatabase();
 	const projectsCollection = crmDb.collection("projects");
 	if (id) {
 		if (typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
@@ -71,7 +71,7 @@ const updateProject: NextApiHandler<PostResponse> = async (req, res) => {
 	const { changes } = req.body;
 	if (!changes || Object.keys(changes).length == 0) throw new createHttpError.BadRequest("Objeto de alterações não fornecido.");
 	if (typeof projectId != "string" || !ObjectId.isValid(projectId)) throw new createHttpError.BadRequest("ID inválido.");
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb = await connectToCRMDatabase();
 	const projectsCollection = crmDb.collection("projects");
 
 	let newObj = await projectsCollection.findOneAndUpdate(
@@ -95,7 +95,7 @@ const bulkwriteUpdateProjects: NextApiHandler<PutResponse> = async (req, res) =>
 	if (!isUpdateObjectInCorrectShape) throw new createHttpError.BadRequest("Itens de atualização com formato inválido.");
 
 	// Updates passed validations
-	const crmDb: Db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb: Db = await connectToCRMDatabase();
 	const projectsCollection = crmDb.collection("projects");
 	const dbResponse = await projectsCollection.bulkWrite(changes);
 	if (dbResponse.ok) return res.status(200).json("Projetos atualizados com sucesso !");

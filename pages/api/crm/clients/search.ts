@@ -44,7 +44,9 @@ async function getClientsSearch({ input }: { input: TGetClientsSearchInput; sess
 				}
 			: {};
 
-	const onlyValidPhonesQuery: Filter<TClient> = onlyValidPhones ? { telefonePrimario: { $nin: ["", null, undefined] } } : {};
+	const onlyValidPhonesQuery: Filter<TClient> = onlyValidPhones
+		? ({ telefonePrimario: { $nin: ["", null] } } as Filter<TClient>)
+		: {};
 
 	const query: Filter<TClient> = { ...searchQuery, ...onlyValidPhonesQuery };
 

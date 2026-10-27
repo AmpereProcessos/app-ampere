@@ -75,7 +75,7 @@ const getRevenuesSearchByPersonalizedFiltersRoute: NextApiHandler<{ data: TReven
 
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
-	const db = await connectToDatabase(process.env.MONGODB_URI, "projetos");
+	const db = await connectToDatabase();
 	const collection: Collection<TRevenue> = db.collection("receitas");
 
 	const { revenues, revenuesMatched } = await getRevenuesByFilters({ collection, query, skip, limit });

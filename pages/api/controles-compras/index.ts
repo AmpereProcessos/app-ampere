@@ -101,7 +101,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
     const purchaseControl = purchaseControlArr.map((p) => ({
       ...p,
       projetoDados: p.projetoDados[0],
-    }))[0];
+    }))[0] as TPurchaseControlWithProjectDTO | undefined;
     // const purchaseControl = await collection.findOne({ _id: new ObjectId(id) })
     if (!purchaseControl) throw new createHttpError.NotFound("Controle de compra não encontrado.");
     const dbClient = await clientPromise;

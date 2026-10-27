@@ -151,7 +151,7 @@ const getComercialAnalyticalData = async (filters: TGetComercialAnalyticsDataInp
     .filter((p) => (filters.pendingVinculation ? !p.proposta.id : true));
 
   const totalInApp = analytical.reduce((acc, curr) => acc + curr.valorContrato, 0);
-  const totalInCRM = analytical.reduce((acc, curr) => acc + curr.proposta.valor, 0);
+  const totalInCRM = analytical.reduce((acc, curr) => acc + (curr.proposta.valor ?? 0), 0);
   console.log("[INFO][GET COMERCIAL ANALYTICAL DATA] Total in App:", totalInApp);
   console.log("[INFO][GET COMERCIAL ANALYTICAL DATA] Total in CRM:", totalInCRM);
   return analytical;
@@ -300,7 +300,7 @@ async function getOpportunities({ collection, filters }: GetOpportunitiesProps) 
 // export default async function handler(req, res) {
 //   if (req.method === 'GET') {
 //     const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-//     const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+//     const crmDb = await connectToCRMDatabase()
 
 //     const collection = db.collection('dados')
 //     const crmProjectsCollection = crmDb.collection('projects')

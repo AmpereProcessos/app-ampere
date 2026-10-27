@@ -162,7 +162,17 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 		if (!updatedProjectData) {
 			throw new createHttpError.NotFound("Projeto não encontrado.");
 		}
-		handleProjectUpdateJourneyStepsTracking({ previous: previousProjectData, updated: updatedProjectData });
+		// Tracking is best effort: a failing journey action must not fail the trigger.
+		try {
+			await handleProjectUpdateJourneyStepsTracking({
+				projectId,
+				previous: previousProjectData,
+				updated: updatedProjectData,
+				collection: projectscollection,
+			});
+		} catch (error) {
+			console.error("[PROJECT TRIGGER] Journey tracking failed", error);
+		}
 
 		if (project.idOrdemServico) {
 			await serviceOrdersCollection.updateOne(

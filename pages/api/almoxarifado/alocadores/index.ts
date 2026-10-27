@@ -13,7 +13,7 @@ const getAllocatorsRoute: NextApiHandler<GetResponse> = async (req, res) => {
 
 	const { id } = req.query;
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TAllocator> = db.collection("alocadores");
 
 	if (id) {
@@ -39,7 +39,7 @@ const createAllocatorRoute: NextApiHandler<PostResponse> = async (req, res) => {
 
 	const allocator = AllocatorSchema.parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TAllocator> = db.collection("alocadores");
 	const insertResponse = await collection.insertOne(allocator);
 
@@ -60,7 +60,7 @@ const updateAllocatorRoute: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const allocator = AllocatorSchema.partial().parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TAllocator> = db.collection("alocadores");
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: allocator });
 

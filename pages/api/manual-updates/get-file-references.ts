@@ -7,9 +7,9 @@ import { Collection, Db } from "mongodb";
 import { NextApiHandler } from "next";
 
 const getFileReferencesRoute: NextApiHandler<any> = async (req, res) => {
-	const crmdb = await connectToCRMDatabase(process.env.DB_KEY);
+	const crmdb = await connectToCRMDatabase();
 	const fileReferencesCollection: Collection<TFileReference> = crmdb.collection("file-references");
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 	// const fileReferencesCollection: Collection<TFileReference> = db.collection('referencias-arquivos')
 	const projects = await collection

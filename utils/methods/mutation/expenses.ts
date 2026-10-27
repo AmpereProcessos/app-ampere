@@ -2,6 +2,48 @@ import type { TExpense } from "@/utils/schemas/expenses";
 import axios from "axios";
 import { centrosDeCusto } from "../../constants";
 
+type ExpenseAuthorRef = { id: string; name: string };
+
+type MaterialExpenseLineItem = {
+	id: string;
+	nome: string;
+	grandeza: string;
+	precoUnit?: number | null;
+	qtdeSaida?: number | null;
+	qtdeDevolucao?: number | null;
+};
+
+type InsertExpensesFromMaterialsParams = {
+	warehouseFormId: string;
+	description: string;
+	user: ExpenseAuthorRef;
+	projectId: string;
+	projectQtde: string | number;
+	projectName: string;
+	projectType: string;
+	materialList: MaterialExpenseLineItem[];
+};
+
+type PurchaseRequestExpenseLineItem = {
+	id: string;
+	descricao: string;
+	grandeza: string;
+	preco?: number | string | null;
+	qtde?: number | string | null;
+};
+
+type InsertExpensesFromPurchaseRequestsParams = {
+	category: string;
+	user: ExpenseAuthorRef;
+	projectId: string;
+	projectQtde: string | number;
+	projectName: string;
+	projectType: string;
+	competenceCriteria: boolean;
+	referenceCriteria: boolean;
+	materialList: PurchaseRequestExpenseLineItem[];
+};
+
 export async function insertExpensesFromMaterials({
 	warehouseFormId,
 	description,
@@ -11,7 +53,7 @@ export async function insertExpensesFromMaterials({
 	projectName,
 	projectType,
 	materialList,
-}) {
+}: InsertExpensesFromMaterialsParams) {
 	try {
 		const formattedItems = materialList.map((material) => {
 			const qtyTaken = material.qtdeSaida ? material.qtdeSaida : 0;
@@ -80,7 +122,7 @@ export async function insertExpensesFromPurchaseRequests({
 	competenceCriteria,
 	referenceCriteria,
 	materialList,
-}) {
+}: InsertExpensesFromPurchaseRequestsParams) {
 	// Getting cost apportionment given cost category provided
 	const costApportionment = centrosDeCusto.find((x) =>
 		x.categorias.some((cat) => {

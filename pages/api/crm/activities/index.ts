@@ -31,7 +31,7 @@ const getActivities: NextApiHandler<GetResponse> = async (req, res) => {
 	// Final query
 	const query: Filter<TActivity> = { ...queryOpenOnly, ...queryDueOnly };
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TActivity> = db.collection("activities");
 
 	if (opportunityId) {
@@ -73,7 +73,7 @@ const createActivity: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 	const activity = InsertActivitySchema.parse(req.body);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TActivity> = db.collection("activities");
 
 	const insertResponse = await insertActivity({ collection: collection, info: activity });
@@ -96,7 +96,7 @@ const editActivity: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const changes = InsertActivitySchema.partial().parse(req.body);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TActivity> = db.collection("activities");
 	const notificationsCollection: Collection<TNotification> = db.collection("notifications");
 

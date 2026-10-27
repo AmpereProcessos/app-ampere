@@ -1,11 +1,15 @@
 import { apiHandler } from "@/utils/api";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { TExpenseDTO } from "@/utils/schemas/expenses";
+import { ProjectJourneyLegacySchema } from "@/utils/schemas/project-journey";
 import { TProject } from "@/utils/schemas/projects";
+import type { z } from "zod";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import createHttpError from "http-errors";
 import { Collection, Db, WithId } from "mongodb";
 import { NextApiHandler } from "next";
+
+type TProjectLegacyJornada = z.infer<typeof ProjectJourneyLegacySchema>;
 
 type GetResponse = {};
 
@@ -18,12 +22,13 @@ const exportData: NextApiHandler<GetResponse> = async (req, res) => {
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 
 	const data = await fetchData({ collection: collection, skip: skip, limit: limit });
 
 	const result = data.map((project) => {
+		const legacyJornada = project.jornada as unknown as TProjectLegacyJornada;
 		// Revenues
 		const systemRevenue = project.sistema.valorProjeto;
 		const energyPaRevenue = project.padrao.valor || 0;
@@ -85,7 +90,7 @@ const exportData: NextApiHandler<GetResponse> = async (req, res) => {
 			"STATUS DA TROCA DE MEDIDOR": project.medidor.status,
 			"STATUS DA MANUTENÇÃO PREVENTIVA": project.manutencaoPreventiva.status,
 			"DATA DA MANUTENÇÃO PREVENTIVA": project.manutencaoPreventiva.data ? formatDateAsLocale(project.manutencaoPreventiva.data) : null,
-			"DATA DE COLETA DO NPS": project.jornada.dataNps ? formatDateAsLocale(project.jornada.dataNps) : null,
+			"DATA DE COLETA DO NPS": legacyJornada.dataNps ? formatDateAsLocale(legacyJornada.dataNps) : null,
 			NPS: project.nps,
 			"TOTAL DE RECEITAS": totalEarned,
 			"TOTAL DE DESPESAS": totalSpend,

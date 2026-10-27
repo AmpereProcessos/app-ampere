@@ -63,7 +63,7 @@ const updateReceiptRoute: NextApiHandler<any> = async (req, res) => {
 		await updateSaleInstallment({
 			saleId: revenueContaAzulId,
 			saleInstallmentIndex: receiptIndex + 1,
-			saleInstallmentPaid: !!receiptChanges.dataRecebimento,
+			saleInstallmentPaymentDate: receiptChanges.dataRecebimento ?? undefined,
 			accessToken: contaAzulAccessToken,
 		});
 	}

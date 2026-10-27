@@ -47,7 +47,7 @@ const getMultipleSourcesFileReferences: NextApiHandler<GetResponse> = async (req
 
 	const db = await connectToCRMDatabase();
 	const collection: Collection<TFileReference> = db.collection("file-references");
-	// const db = await connectToDatabase(process.env.DB_KEY)
+	// const db = await connectToDatabase()
 	// const collection: Collection<TFileReference> = db.collection('referencias-arquivos')
 
 	const fileReferences = await getFileReferencesByQuery({ collection, query });

@@ -16,7 +16,7 @@ export const getPaymentsRoute: NextApiHandler<{ data: TPaymentUnwindSimplifiedDT
 	const sort = { "pagamentos.dataPrevisaoPagamento": -1 };
 	const projection = { rateio: 1, categoria: 1, total: 1, pagamentos: 1, indexPagamento: 1 };
 
-	const db = await connectToDatabase(process.env.MONGODB_URI, "projetos");
+	const db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
 
 	const result = await collection.aggregate([{ $unwind: unwind }, { $match: match }, { $sort: sort }, { $project: projection }]).toArray();

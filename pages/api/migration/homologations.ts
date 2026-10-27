@@ -112,8 +112,8 @@ function getUpdates({
 const handleHomologationsMigration: NextApiHandler<any> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
-	const crmDb: Db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
+	const crmDb: Db = await connectToCRMDatabase();
 	const requestsDb: Db = await connectoToRequestsData(process.env.DB_KEY);
 	const projectsCollection: Collection<TProject> = db.collection("dados");
 	const requestsCollection: Collection<TContractRequest> = requestsDb.collection("contrato");

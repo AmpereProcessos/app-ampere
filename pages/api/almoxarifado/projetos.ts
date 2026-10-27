@@ -11,7 +11,7 @@ type GetResponse = {
 const getWarehouseProjects: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 
 	const projects = await collection

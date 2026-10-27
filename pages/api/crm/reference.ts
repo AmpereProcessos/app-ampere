@@ -19,7 +19,7 @@ const getReference: NextApiHandler<GetResponse> = async (req, res) => {
 	if (!opportunityId || typeof opportunityId != "string" || !ObjectId.isValid(opportunityId))
 		throw new createHttpError.BadRequest("ID de projeto CRM inválido.");
 
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb = await connectToCRMDatabase();
 	const opportunitiesCollection: Collection<TOpportunity> = crmDb.collection("projects");
 	const proposesCollection: Collection<TSolarSystemPropose> = crmDb.collection("proposals");
 

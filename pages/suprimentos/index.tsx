@@ -35,10 +35,15 @@ import { MdAttachMoney } from "react-icons/md";
 import { TbTruckDelivery } from "react-icons/tb";
 import { VscDiffAdded } from "react-icons/vsc";
 import ProjectCardsTags from "../../components/utils/ProjectCardsTags";
+import type { TProjectDTO } from "@/utils/schemas/projects";
 dayjs.extend(dayjsBusinessDays);
 
+function formatSupplyFilterDate(value: Parameters<typeof formatDateInputChange>[0]): string | null {
+  return formatDateInputChange(value) as string | null;
+}
+
 function getDateDiff(date1: Date, date2: Date) {
-  const diffInMs = new Date(date1) - new Date(date2);
+  const diffInMs = new Date(date1).getTime() - new Date(date2).getTime();
   const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
   return Number(diffInDays).toFixed(0);
 }
@@ -64,7 +69,10 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
   } = useSupplyProjects({ enabled: !!session?.user });
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-  const [modalProject, setModalProject] = useState({
+  const [modalProject, setModalProject] = useState<{
+    isOpen: boolean;
+    projectId: TProjectDTO["_id"] | null;
+  }>({
     isOpen: false,
     projectId: null,
   });
@@ -72,7 +80,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
     await queryClient.invalidateQueries({ queryKey: ["supply-projects"] });
   }
 
-  function getBorderColor(liberationDate) {
+  function getBorderColor(liberationDate: string | Date | null | undefined) {
     const diff = dayjs(new Date()).businessDiff(dayjs(liberationDate));
     if (diff > 5) {
       return "border-2 border-red-600";
@@ -85,7 +93,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
     }
   }
 
-  function getStats({ info }) {
+  function getStats({ info }: { info: TProjectDTO[] | undefined }) {
     if (!info)
       return {
         projetos: 0,
@@ -98,12 +106,12 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
         emRota: 0,
       };
     const projectsQty = info.length;
-    const totalPower = info.reduce((acc, current) => {
+    const totalPower = info.reduce((acc: number, current: TProjectDTO) => {
       const currentPower = current.sistema?.potPico || 0;
 
       return acc + currentPower;
     }, 0);
-    const totalPredictedPayInKits = info.reduce((acc, current) => {
+    const totalPredictedPayInKits = info.reduce((acc: number, current: TProjectDTO) => {
       const predicted = current.compra?.previsaoValorDoKit || 0;
       const costDefined = !!current.compra?.valorDoKit;
       if (costDefined) {
@@ -111,23 +119,23 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
       }
       return acc;
     }, 0);
-    const totalPaidInKits = info.reduce((acc, current) => {
+    const totalPaidInKits = info.reduce((acc: number, current: TProjectDTO) => {
       const paid = current.compra?.valorDoKit || 0;
       return acc + paid;
     }, 0);
-    const pendingPurchases = info.reduce((acc, current) => {
+    const pendingPurchases = info.reduce((acc: number, current: TProjectDTO) => {
       const purchased = !!current.compra?.dataPedido;
       const status = current.compra.status;
       if (!purchased) return acc + 1;
       else return acc;
     }, 0);
-    const pendingReadyToBuy = info.reduce((acc, current) => {
+    const pendingReadyToBuy = info.reduce((acc: number, current: TProjectDTO) => {
       const purchased = !!current.compra?.dataPedido;
       const accessGrantingAproveed = current.homologacao.status == "APROVADO";
       if (!purchased && accessGrantingAproveed) return acc + 1;
       else return acc;
     }, 0);
-    const onDeliveryRoute = info.reduce((acc, current) => {
+    const onDeliveryRoute = info.reduce((acc: number, current: TProjectDTO) => {
       const onRoute = current.compra?.statusEntrega == "EM ROTA";
       if (onRoute) return acc + 1;
       else return acc;
@@ -144,7 +152,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
     };
   }
 
-  function handleOpenModal(id) {
+  function handleOpenModal(id: TProjectDTO["_id"]) {
     setModalProject({ projectId: id, isOpen: true });
   }
 
@@ -270,7 +278,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
                       handleChange={(value) =>
                         setFilters((prev) => ({
                           ...prev,
-                          date: { ...prev.date, after: formatDateInputChange(value) },
+                          date: { ...prev.date, after: formatSupplyFilterDate(value) },
                         }))
                       }
                     />
@@ -280,7 +288,7 @@ function SuprimentosContent({ session }: { session: TAuthSession }) {
                       handleChange={(value) =>
                         setFilters((prev) => ({
                           ...prev,
-                          date: { ...prev.date, before: formatDateInputChange(value) },
+                          date: { ...prev.date, before: formatSupplyFilterDate(value) },
                         }))
                       }
                     />

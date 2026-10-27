@@ -52,9 +52,16 @@ export function useFinancialTransactionState({
   session,
   initialState,
 }: UseFinancialTransactionStateParams) {
-  const [state, setState] = useState<TFinancialTransactionState>(
-    initialState ?? getDefaultFinancialTransactionState(session),
-  );
+  const [state, setState] = useState<TFinancialTransactionState>(() => {
+    const defaults = getDefaultFinancialTransactionState(session);
+    if (!initialState) return defaults;
+    return {
+      transaction: {
+        ...defaults.transaction,
+        ...initialState.transaction,
+      },
+    };
+  });
 
   const updateTransaction = useCallback(
     (changes: Partial<TFinancialTransactionState["transaction"]>) => {

@@ -17,7 +17,7 @@ const getUtilsRelated: NextApiHandler<GetResponse> = async (req, res) => {
 	const { equipmentCategory } = req.query;
 	const identifier = UtilsIdentifierSchema.parse(req.query.identifier);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TUtil> = db.collection("utils");
 	if (identifier == "CREDITOR") {
 		const creditors = await getCreditors({ collection: collection });
@@ -42,7 +42,7 @@ type PostResponse = {
 
 const createUtil: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TUtil> = db.collection("utils");
 	const util = GeneralUtilSchema.parse(req.body);
 

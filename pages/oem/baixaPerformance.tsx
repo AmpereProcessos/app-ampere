@@ -15,7 +15,41 @@ import SelectInput from "../../components/SelectInput";
 import { useSession } from "../../components/providers/SessionProvider";
 import LoadingPage from "../../components/utils/LoadingPage";
 
-function getProblemsNotBooked(badPerformers, monitoramentoBook) {
+type BadPerformer = {
+  nomeUsina: string;
+  performance: number;
+};
+
+const statusStyles = {
+  PENDENTE: {
+    textColor: "text-red-400",
+    borderColor: "border-red-400",
+  },
+  "EM ANDAMENTO": {
+    textColor: "text-blue-300",
+    borderColor: "border-blue-300",
+  },
+  EXECUTADO: {
+    textColor: "text-yellow-500",
+    borderColor: "border-yellow-500",
+  },
+  RESOLVIDO: {
+    textColor: "text-green-400",
+    borderColor: "border-green-400",
+  },
+} as const;
+
+type MonitoramentoBookItem = {
+  nomeUsina: string;
+  status: keyof typeof statusStyles;
+  codProjeto: string | number;
+  problema: string;
+};
+
+function getProblemsNotBooked(
+  badPerformers: BadPerformer[],
+  monitoramentoBook: Pick<MonitoramentoBookItem, "nomeUsina">[],
+) {
   const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina));
 
   const filteredArr = badPerformers.filter((item) => !nomeUsinaSet.has(item.nomeUsina));
@@ -33,34 +67,20 @@ function BaixaPerformance() {
   const [token, setToken] = useState("");
   const [authorization, setAuthorization] = useState("");
 
-  const [badPerformers, setBadPerformers] = useState([]);
-  const [monitoramentoBook, setMonitoramentoBook] = useState([]);
-  const [filteredMonitoramentoBook, setFilteredMonitoramentoBook] = useState([]);
+  const [badPerformers, setBadPerformers] = useState<BadPerformer[]>([]);
+  const [monitoramentoBook, setMonitoramentoBook] = useState<MonitoramentoBookItem[]>([]);
+  const [filteredMonitoramentoBook, setFilteredMonitoramentoBook] = useState<MonitoramentoBookItem[]>(
+    [],
+  );
 
   const [filters, setFilters] = useState({
     searchFilter: "",
     status: "TODOS",
   });
   const [inProgress, setInProgress] = useState(false);
-  const statusStyles = {
-    PENDENTE: {
-      textColor: "text-red-400",
-      borderColor: "border-red-400",
-    },
-    "EM ANDAMENTO": {
-      textColor: "text-blue-300",
-      borderColor: "border-blue-300",
-    },
-    EXECUTADO: {
-      textColor: "text-yellow-500",
-      borderColor: "border-yellow-500",
-    },
-    RESOLVIDO: {
-      textColor: "text-green-400",
-      borderColor: "border-green-400",
-    },
-  };
-  const [modalItem, setModalItem] = useState({});
+  const [modalItem, setModalItem] = useState<
+    BadPerformer | (MonitoramentoBookItem & { created?: boolean })
+  >({} as BadPerformer);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   async function getBadPerformers() {
     if (token.trim().length > 15) {
@@ -77,8 +97,8 @@ function BaixaPerformance() {
             },
           },
         );
-        const arr = [];
-        data.data.map((user) => {
+        const arr: BadPerformer[] = [];
+        data.data.map((user: { consumerUnit30dPerformance: string; consumerUnitName: string }) => {
           const parsed = JSON.parse(user.consumerUnit30dPerformance);
           if (parsed !== null && typeof parsed === "object") {
             const dados30d = JSON.parse(user.consumerUnit30dPerformance);
@@ -109,14 +129,16 @@ function BaixaPerformance() {
           `/api/o&m/deyeBadPerformers?authorization=${authorization}`,
         );
         const arr = data.data;
-        let formattedArr = arr.map((item) => {
+        let formattedArr = arr.map((item: { station: { name: string; generationCapacity?: number } }) => {
           const station = item.station;
           return {
             nomeUsina: station.name,
             performance: station.generationCapacity ? station.generationCapacity * 100 : 0,
           };
         });
-        formattedArr = formattedArr.filter((item) => item.performance && item.performance < 55);
+        formattedArr = formattedArr.filter(
+          (item: BadPerformer) => item.performance && item.performance < 55,
+        );
         console.log(formattedArr);
         setBadPerformers(formattedArr);
         setInProgress(false);
@@ -133,18 +155,19 @@ function BaixaPerformance() {
   async function getMonitoramentoBook() {
     try {
       const { data } = await axios.get("/api/o&m/monitoramento");
-      setMonitoramentoBook(data);
-      setFilteredMonitoramentoBook(data);
+      setMonitoramentoBook(data as MonitoramentoBookItem[]);
+      setFilteredMonitoramentoBook(data as MonitoramentoBookItem[]);
     } catch (error) {
-      alert(error.response.data);
+      const message = axios.isAxiosError(error) ? error.response?.data : undefined;
+      alert(message ?? "Erro ao buscar monitoramento.");
     }
   }
 
-  function handleOpenModal(item) {
+  function handleOpenModal(item: BadPerformer | (MonitoramentoBookItem & { created?: boolean })) {
     setModalItem(item);
     setModalIsOpen(true);
   }
-  function handleSearchFilter(value) {
+  function handleSearchFilter(value: string): MonitoramentoBookItem[] {
     setFilters((prev) => ({ ...prev, searchFilter: value }));
     if (value != "" || " ") {
       const filtered = monitoramentoBook.filter((item) =>
@@ -157,8 +180,8 @@ function BaixaPerformance() {
       return monitoramentoBook;
     }
   }
-  function handleFilterByStatus(value) {
-    var filtered = handleSearchFilter(filters.searchFilter);
+  function handleFilterByStatus(value: string) {
+    let filtered = handleSearchFilter(filters.searchFilter);
     if (value != "TODOS") {
       setFilters((prev) => ({ ...prev, status: value }));
       filtered = filtered.filter((x) => x.status == value);
@@ -183,7 +206,10 @@ function BaixaPerformance() {
             label={"Token Solar View"}
             placeholder="Preencha aqui o token SolarView"
             value={token}
-            handleChange={(value) => setToken(value)}
+            labelColor={undefined}
+            normalCase={undefined}
+            widthFit={undefined}
+            handleChange={(value: string) => setToken(value)}
           />
           <button
             onClick={getBadPerformers}
@@ -198,7 +224,10 @@ function BaixaPerformance() {
             label={"Authorization Deye"}
             placeholder="Preencha aqui a authorization da Deye"
             value={authorization}
-            handleChange={(value) => setAuthorization(value)}
+            labelColor={undefined}
+            normalCase={undefined}
+            widthFit={undefined}
+            handleChange={(value: string) => setAuthorization(value)}
           />
           <button
             onClick={getDeyeBadPerfomers}
@@ -263,7 +292,9 @@ function BaixaPerformance() {
               label={"STATUS"}
               value={filters.status}
               editable={true}
-              handleChange={(value) => handleFilterByStatus(value)}
+              labelColor={undefined}
+              widthFit={undefined}
+              handleChange={(value: string) => handleFilterByStatus(value)}
               options={[
                 { label: "PENDENTE", value: "PENDENTE" },
                 { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },

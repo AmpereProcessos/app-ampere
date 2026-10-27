@@ -14,7 +14,7 @@ const getSellerSales: NextApiHandler<GetResponse> = async (req, res) => {
 	if (visualization != "VENDAS") throw new createHttpError.BadRequest("Grau de visualização inválido.");
 	const seller = session.user.visualizacao.referencia || "";
 	const query = { "vendedor.nome": seller };
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 
 	const projects = await collection

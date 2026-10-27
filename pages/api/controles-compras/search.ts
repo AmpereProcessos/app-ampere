@@ -61,7 +61,7 @@ const getPurchasesControlsBySearchRoute: NextApiHandler<{ data: TPurchaseControl
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TPurchaseControl>("controles-compras");
 
 	const { purchaseControls, purchaseControlsMatched } = await getPurchaseControlsByFilter({ collection, query: queryFilters, skip, limit });

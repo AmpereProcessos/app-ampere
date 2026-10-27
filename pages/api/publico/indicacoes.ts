@@ -22,7 +22,7 @@ const getIndications: NextApiHandler<GetResponse> = async (req, res) => {
 
 	if (!projectId || typeof projectId != "string" || !ObjectId.isValid(projectId))
 		throw new createHttpError.BadRequest("ID do projeto não encontrado.");
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb = await connectToCRMDatabase();
 	const crmProjectsCollection: Collection<TCRMProject> = crmDb.collection("projects");
 
 	const findResponse = await crmProjectsCollection.find({ idIndicacao: projectId }).toArray();
@@ -56,14 +56,14 @@ type PostResponse = {
 const createProjectFromIndication: NextApiHandler<PostResponse> = async (req, res) => {
 	const indication = IndicationSchema.parse(req.body);
 	console.log(indication);
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const projectsCollection: Collection<TProject> = db.collection("dados");
 	const indicator = await projectsCollection.findOne(
 		{ _id: new ObjectId(indication.idIndicacao) },
 		{ projection: { nomeDoContrato: 1, vendedor: 1 } },
 	);
 
-	const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+	const crmDb = await connectToCRMDatabase();
 	const crmProjectsCollection: Collection<TCRMProject> = crmDb.collection("projects");
 	const usersCollection: Collection<TCRMUser> = crmDb.collection("users");
 	const clientsCollection: Collection<TCRMClient> = crmDb.collection("clients");

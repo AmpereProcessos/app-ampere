@@ -28,7 +28,8 @@ const geServiceOrderProjectRoute: NextApiHandler<GetResponse> = async (req, res)
   );
   if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
 
-  return res.status(200).json({ data: { ...project, _id: project._id.toString() } });
+  const data: TServiceOrderProject = { ...project, _id: project._id.toString() } as TServiceOrderProject;
+  return res.status(200).json({ data });
 };
 
 export default apiHandler({ GET: geServiceOrderProjectRoute });

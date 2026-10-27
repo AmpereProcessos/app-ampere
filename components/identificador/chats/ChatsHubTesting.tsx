@@ -210,8 +210,10 @@ type ChatHubListProps = {
 function ChatHubList({ selectedPhoneNumber, selectedChatId, handleSelectChat }: ChatHubListProps) {
   const chats = useQuery(api.queries.chat.getChats, { whatsappPhoneNumberId: selectedPhoneNumber });
 
+  const chatItems = chats?.items ?? [];
+
   return chats ? (
-    chats.map((chat) => (
+    chatItems.map((chat) => (
       <button
         type="button"
         key={chat._id}
@@ -381,8 +383,19 @@ function ChatHubContent({
       });
 
       await handleSendTemplate({
-        chatId: chatId,
-        userAppId: session.user.id,
+        cliente: {
+          idApp: chat.cliente?.idApp ?? "",
+          nome: chat.cliente?.nome ?? "Cliente",
+          telefone: formatPhoneAsWhatsappId(chat.cliente.telefone),
+          avatar_url: chat.cliente?.avatar_url,
+          email: chat.cliente?.email,
+          cpfCnpj: chat.cliente?.cpfCnpj,
+        },
+        autor: {
+          tipo: "usuario",
+          idApp: session.user.id,
+        },
+        whatsappPhoneNumberId: whatsappPhoneNumberId,
         templateId: template.id,
         templatePayloadData: payload.data,
         templatePayloadContent: payload.content,
@@ -685,6 +698,8 @@ type ChatHubContentMessagesProps = {
 };
 
 function ChatHubContentMessages({ chatMessages }: ChatHubContentMessagesProps) {
+  const messageItems = chatMessages?.items ?? [];
+
   const getMessageStatusIcon = (whatsappStatus?: string | null) => {
     switch (whatsappStatus) {
       case "PENDENTE":
@@ -708,11 +723,11 @@ function ChatHubContentMessages({ chatMessages }: ChatHubContentMessagesProps) {
       role="log"
     >
       <StickToBottom.Content className="p-3">
-        {chatMessages && chatMessages.length > 0 ? (
-          chatMessages.map((message, index) => {
+        {messageItems.length > 0 ? (
+          messageItems.map((message, index) => {
             const isUser = message.autorTipo === "usuario" || message.autorTipo === "ai";
-            const previousMessage = index > 0 ? chatMessages[index - 1] : null;
-            const nextMessage = index < chatMessages.length - 1 ? chatMessages[index + 1] : null;
+            const previousMessage = index > 0 ? messageItems[index - 1] : null;
+            const nextMessage = index < messageItems.length - 1 ? messageItems[index + 1] : null;
             const messageAuthor = message.autor;
             // Verifica se é do mesmo autor que a mensagem anterior
             const isSameAuthorAsPrevious = previousMessage?.autorTipo === message.autorTipo;

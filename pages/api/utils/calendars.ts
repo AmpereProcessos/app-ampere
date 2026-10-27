@@ -12,7 +12,7 @@ const getCalendarsRoute: NextApiHandler<GetResponse> = async (req, res) => {
 	// const session = await validateAuthenticationWithSession(req, res)
 
 	const { id } = req.query;
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TCalendar>("calendarios");
 
 	if (id) {

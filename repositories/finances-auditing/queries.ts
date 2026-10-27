@@ -24,6 +24,7 @@ type GetFinancesByProjectIdParams = {
 };
 const projection = {
 	_id: 1,
+	qtde: 1,
 	nomeDoContrato: 1,
 	codigoSVB: 1,
 	idProjetoCRM: 1,
@@ -160,6 +161,7 @@ export async function getFinancesByProjectId({
 
 	const projectFinances: TProjectFinances = {
 		_id,
+		index: project.qtde,
 		nome,
 		potencia,
 		identificador,

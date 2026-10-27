@@ -64,7 +64,7 @@ export async function createSaleFromRevenue({ revenue, client, accessToken }: Cr
 			"Content-Type": "application/json",
 		};
 
-		let contaAzulCustomerId = client.idContaAzulCliente;
+		let contaAzulCustomerId = (client as TClient & { idContaAzulCliente?: string | null }).idContaAzulCliente;
 		if (!contaAzulCustomerId) {
 			console.log("[INFO] [CONTA AZUL] Conta Azul client ID not vinculated yet.");
 			const cpfCnpj = client.cpfCnpj;

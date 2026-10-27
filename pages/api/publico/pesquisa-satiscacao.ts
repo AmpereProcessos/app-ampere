@@ -49,7 +49,7 @@ const answerSurver: NextApiHandler<PutResponse> = async (req, res) => {
 	const answer = UpdateSchema.parse(req.body);
 	const points = Object.values(answer.satisfaction);
 	const nps = Math.ceil(points.reduce((acc, current) => acc + current, 0) / points.length);
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 	const notificationsCollection: Collection<TNotification> = db.collection("notificacoes");
 

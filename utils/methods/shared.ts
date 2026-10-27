@@ -1,10 +1,17 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import type { NextRouter } from "next/router";
 import toast from "react-hot-toast";
 import { orientacoes } from "../constants";
 import genFactors from "../jsons/fatores-geracao.json";
 
-export async function getCEPInfo(cep) {
+type TOrientationFactorKey = (typeof orientacoes)[number];
+
+function isOrientationFactorKey(value: string): value is TOrientationFactorKey {
+  return (orientacoes as readonly string[]).includes(value);
+}
+
+export async function getCEPInfo(cep: string) {
   try {
     const { data } = await axios.get(`https://viacep.com.br/ws/${cep.replace("-", "")}/json/`);
     console.log(data.erro);
@@ -17,7 +24,7 @@ export async function getCEPInfo(cep) {
   }
 }
 
-export function isEmpty(value) {
+export function isEmpty(value: unknown) {
   return value == null || (typeof value === "string" && value.trim().length === 0);
 }
 
@@ -119,24 +126,33 @@ export function formatDateOnInputChange<T extends "string" | "date" = "string">(
   return null;
 }
 
-export function pushToAuthPage(router) {
+export function pushToAuthPage(router: NextRouter) {
   router.push("/auth/signin");
 }
-export function getGenFactorByOrientation({ city, uf, orientation }) {
+export function getGenFactorByOrientation({
+  city,
+  uf,
+  orientation,
+}: {
+  city: string;
+  uf: string;
+  orientation?: string | null;
+}) {
   if (!city || !uf) return 127;
-  var cityFactor = genFactors.find((genFactor) => genFactor.CIDADE == city && genFactor.UF == uf);
+  const cityFactor = genFactors.find((genFactor) => genFactor.CIDADE == city && genFactor.UF == uf);
   if (!cityFactor) return 127;
 
+  const factorsByOrientation = cityFactor as unknown as Record<TOrientationFactorKey | "ANUAL", number>;
   // Checking for existing orientations
-  if (orientation && orientacoes.includes(orientation)) return cityFactor[orientation];
+  if (orientation && isOrientationFactorKey(orientation)) return factorsByOrientation[orientation];
   // In case no orientation or invalid orientation is provided, returning annual generation factor
-  else return cityFactor.ANUAL;
+  return factorsByOrientation.ANUAL;
 }
 
-export function getFirstDayOfMonth(year, month) {
+export function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month, 1);
 }
-export function getLastDayOfMonth(year, month) {
+export function getLastDayOfMonth(year: number, month: number) {
   return new Date(year, month + 1, 0);
 }
 

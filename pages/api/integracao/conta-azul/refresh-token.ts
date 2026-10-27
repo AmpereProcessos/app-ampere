@@ -16,9 +16,13 @@ const handleAccessTokenRefresh: NextApiHandler<any> = async (req, res) => {
 	const integrationRecord = await integrationsCollection.findOne({ identificador: "CONTA_AZUL" });
 
 	if (!integrationRecord) return res.status(404).json({ message: "Integração Conta Azul não encontrada." });
+	if (integrationRecord.dados.tipo !== "CONTA_AZUL") {
+		return res.status(400).json({ message: "Integração Conta Azul inválida." });
+	}
+	const contaAzulDados = integrationRecord.dados;
 
 	// In case token is expired, handling token refresh
-	const url = `https://api.contaazul.com/oauth2/token?grant_type=refresh_token&refresh_token=${integrationRecord.dados.tokenRefresh}`;
+	const url = `https://api.contaazul.com/oauth2/token?grant_type=refresh_token&refresh_token=${contaAzulDados.tokenRefresh}`;
 	const headers = {
 		Authorization: `Basic ${Buffer.from(`${process.env.CONTAAZUL_CLIENT_ID}:${process.env.CONTAAZUL_CLIENT_SECRET}`).toString("base64")}`,
 	};
@@ -31,7 +35,7 @@ const handleAccessTokenRefresh: NextApiHandler<any> = async (req, res) => {
 		{
 			$set: {
 				dados: {
-					...integrationRecord.dados,
+					...contaAzulDados,
 					tokenRefresh: refresh_token,
 					dataExpiracao: newTokenExpirationDate,
 					tokenAcesso: access_token,

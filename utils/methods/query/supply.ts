@@ -54,7 +54,8 @@ export function useSupplyProjects({ enabled }: { enabled: boolean }) {
 	}
 	function matchDate(project: TProjectDTO) {
 		if (!filters.date.after || !filters.date.before || !filters.date.field) return true;
-		const fieldValue = getProjectNestedFieldValue(project, filters.date.field);
+		const fieldValue: unknown = getProjectNestedFieldValue(project, filters.date.field);
+		if (typeof fieldValue !== "string") return false;
 		return fieldValue >= filters.date.after && fieldValue <= filters.date.before;
 	}
 	function matchYetToBuy(project: TProjectDTO) {

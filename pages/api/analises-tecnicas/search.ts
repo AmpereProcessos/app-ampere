@@ -68,7 +68,7 @@ const getTechnicalAnalysisByPersonalizedFilters: NextApiHandler<PostResponse> = 
 	const skip = PAGE_SIZE * (Number(page) - 1);
 	const limit = PAGE_SIZE;
 	console.log(query);
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TTechnicalAnalysis> = db.collection("technical-analysis");
 
 	const { analysis, analysisMatched } = await getTechnicalAnalysisByFilter({ collection, query, skip, limit });

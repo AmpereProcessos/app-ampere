@@ -36,7 +36,7 @@ const getRevenueStatsRoute: NextApiHandler<{
 
 	const datesStrs = getDayStringsBetweenDates({ initialDate: periodStartDateStr, endDate: periodEndDateStr });
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TRevenue> = db.collection("receitas");
 
 	const revenues = await getRevenues({ collection, after: periodStartDateStr, before: periodEndDateStr });

@@ -13,7 +13,7 @@ type PostResponse = {
 const createSimulationRegistry: NextApiHandler<PostResponse> = async (req, res) => {
 	const simulation = GeneralTotemSimulationSchema.parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TTotemSimulation> = db.collection("totem-simulacoes");
 
 	const insertResponse = await collection.insertOne({ ...simulation });

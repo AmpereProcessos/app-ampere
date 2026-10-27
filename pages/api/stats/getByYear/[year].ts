@@ -31,7 +31,7 @@ const getYearlyStats: NextApiHandler<GetResponse> = async (req, res) => {
 
 	const partialQuery = getQueryByVisualization(session);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProject> = db.collection("dados");
 	const graphData = await getGraphData({ collection: collection, partialQuery: partialQuery, year: queryYear });
 

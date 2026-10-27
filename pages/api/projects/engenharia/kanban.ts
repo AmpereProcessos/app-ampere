@@ -214,7 +214,7 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 
 	const projects = (await projectsCollection.find(query).project(EngineeringProjectProjection).toArray()) as WithId<TEngineeringProject>[];
 
-	const byStatusInitial: Record<TEngineeringProject["homologacao"]["status"] & "NÃO DEFINIDO", TEngineeringProjectDTO[]> = {
+	const byStatusInitial: Record<string, TEngineeringProjectDTO[]> = {
 		"NÃO DEFINIDO": [],
 		PENDENTE: [],
 		CANCELADO: [],
@@ -234,7 +234,7 @@ const getEngineeringProjectsKanbanHandler: NextApiHandler<TEngineeringProjectsKa
 	const reduced = projects.reduce((acc, project) => {
 		const homologationStatus = project.homologacao.status || "NÃO DEFINIDO";
 		if (!acc[homologationStatus]) acc[homologationStatus] = [];
-		acc[homologationStatus].push(project);
+		acc[homologationStatus].push(project as unknown as TEngineeringProjectDTO);
 		return acc;
 	}, byStatusInitial);
 

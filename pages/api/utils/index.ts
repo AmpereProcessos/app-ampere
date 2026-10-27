@@ -21,7 +21,7 @@ const getUtilsRelated: NextApiHandler<GetResponse> = async (req, res) => {
 	const { equipmentCategory } = req.query;
 	const identifier = UtilsIdentifierSchema.parse(req.query.identifier);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TUtil> = db.collection("utils");
 
 	if (identifier == "EQUIPMENT") {

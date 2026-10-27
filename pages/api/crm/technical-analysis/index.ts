@@ -14,7 +14,7 @@ const getTechnicalAnalysis: NextApiHandler<GetResponse> = async (req, res) => {
 
 	const { id } = req.query;
 	console.log(id);
-	const db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TTechnicalAnalysis> = db.collection("technical-analysis");
 
 	if (id) {

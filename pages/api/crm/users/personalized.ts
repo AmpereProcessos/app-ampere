@@ -40,11 +40,11 @@ const getUsersPersonalized: NextApiHandler<GetResponse> = async (req, res) => {
 	if (type === "technical-analysts") {
 		console.log("Fetching technical analysts");
 		const analysts = await getTechnicalAnalysts({ collection: usersCollection, query: {} });
-		return res.status(200).json({ data: analysts });
+		return res.status(200).json({ data: analysts as unknown as WithId<TUserDTOSimplified>[] });
 	}
 	if (type === "lead-receivers") {
 		const receivers = await getLeadReceivers({ collection: usersCollection, query: {} });
-		return res.status(200).json({ data: receivers });
+		return res.status(200).json({ data: receivers as unknown as WithId<TUserDTOSimplified>[] });
 	}
 	return res.status(200).json({ data: [] });
 };

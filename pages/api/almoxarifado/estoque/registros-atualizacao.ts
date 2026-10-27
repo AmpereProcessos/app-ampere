@@ -12,7 +12,7 @@ type GetResponse = {
 const getRegistries: NextApiHandler<GetResponse> = async (req, res) => {
 	await validateAuthenticationWithSession(req, res);
 	const { id, materialId, type } = req.query;
-	const warehouseDb: Db = await connectToDatabase(process.env.DB_KEY);
+	const warehouseDb: Db = await connectToDatabase();
 	const logCollection: Collection<TMaterialUpdateRegistry> = warehouseDb.collection("alteracoes");
 	if (id) {
 		if (typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");

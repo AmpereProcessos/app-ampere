@@ -33,7 +33,7 @@ const getExpenseStatsRoute: NextApiHandler<{ data: TExpenseStatsResult }> = asyn
 
 	const datesStrs = getDayStringsBetweenDates({ initialDate: periodStartDateStr, endDate: periodEndDateStr });
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TExpense> = db.collection("despesas");
 
 	const expenses = await getExpenses({ collection, after: periodStartDateStr, before: periodEndDateStr });

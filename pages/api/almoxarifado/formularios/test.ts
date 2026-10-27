@@ -15,7 +15,7 @@ const getForms: NextApiHandler<GetResponse> = async (req, res) => {
   const session = validateAuthenticationWithSession(req, res);
   const { id, after, before } = req.query;
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY);
+  const db: Db = await connectToDatabase();
   const collection: Collection<TNewWarehouseFormulary> = db.collection("formularios");
 
   if (id) {
@@ -46,7 +46,7 @@ type PostResponse = {
 const createForm: NextApiHandler<PostResponse> = async (req, res) => {
   const session = validateAuthenticationWithSession(req, res);
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY);
+  const db: Db = await connectToDatabase();
   const collection: Collection<TNewWarehouseFormulary> = db.collection("formularios");
   const form = WarehouseFormularySchema.parse(req.body);
   if (!form)
@@ -73,7 +73,7 @@ const editForm: NextApiHandler<PutResponse> = async (req, res) => {
   if (!id || typeof id != "string" || !ObjectId.isValid(id))
     throw new createHttpError.BadRequest("ID inválido.");
 
-  const db: Db = await connectToDatabase(process.env.DB_KEY);
+  const db: Db = await connectToDatabase();
   const collection: Collection<TNewWarehouseFormulary> = db.collection("formularios");
 
   const changes = WarehouseFormularySchema.partial().parse(req.body);

@@ -10,7 +10,7 @@ type GetResponse = {
 const getPartners: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
-	const db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TPartner> = db.collection("partners");
 
 	const partners = await collection.find({}, { projection: PartnerSimplifiedProject }).toArray();

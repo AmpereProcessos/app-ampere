@@ -273,16 +273,31 @@ function ChatsHub({ session, userHasMessageSendingPermission, whatsappConnection
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold">Novo Chat</h3>
             <ClientsVinculationMenu
-              onSelectClient={async (client) => {
+              closeModal={() => setNewChatMenuIsOpen(false)}
+              handleSelect={async (client) => {
                 if (!selectedPhoneNumber) {
                   toast.error("Selecione um número de telefone primeiro");
                   return;
                 }
-                const chat = await getChatByClientAppId({
-                  clientAppId: client.idApp,
+                const clientId = client._id;
+                if (!clientId) {
+                  toast.error(
+                    "Oops, aparentemente esse cliente não possui um cadastro, tente vincular um projeto ao cliente para criar um chat.",
+                  );
+                  return;
+                }
+                const selectedChat = await getChatByClientAppId({
+                  cliente: {
+                    idApp: clientId,
+                    nome: client.nome,
+                    telefone: client.telefonePrimario || "",
+                    email: client.email || "",
+                    cpfCnpj: client.cpfCnpj || "",
+                    avatar_url: undefined,
+                  },
                   whatsappPhoneNumberId: selectedPhoneNumber,
                 });
-                setSelectedChatId(chat.chatId);
+                setSelectedChatId(selectedChat.chatId);
                 setNewChatMenuIsOpen(false);
               }}
             />
@@ -564,7 +579,10 @@ function ChatHubContentHeader({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-96">
-            <ProjectVinculationMenu clientAppId={chat.cliente?.idApp} />
+            <ProjectVinculationMenu
+              closeModal={() => setProjectVinculationMenuIsOpen(false)}
+              handleSelect={() => setProjectVinculationMenuIsOpen(false)}
+            />
           </PopoverContent>
         </Popover>
       </div>
@@ -774,7 +792,8 @@ function ChatScrollButton() {
 
   return (
     <button
-      onClick={scrollToBottom}
+      type="button"
+      onClick={() => scrollToBottom()}
       className="absolute bottom-20 right-4 bg-primary text-primary-foreground rounded-full p-2 shadow-lg hover:bg-primary/90 transition-all"
     >
       <ArrowDown className="w-5 h-5" />
@@ -820,8 +839,19 @@ function ChatHubContentInput({
       });
 
       await handleSendTemplate({
-        chatId: chatId,
-        userAppId: session.user.id,
+        cliente: {
+          idApp: chat.cliente?.idApp ?? "",
+          nome: chat.cliente?.nome ?? "Cliente",
+          telefone: formatPhoneAsWhatsappId(chat.cliente.telefone),
+          avatar_url: chat.cliente?.avatar_url,
+          email: chat.cliente?.email,
+          cpfCnpj: chat.cliente?.cpfCnpj,
+        },
+        autor: {
+          tipo: "usuario",
+          idApp: session.user.id,
+        },
+        whatsappPhoneNumberId: whatsappPhoneNumberId,
         templateId: template.id,
         templatePayloadData: payload.data,
         templatePayloadContent: payload.content,

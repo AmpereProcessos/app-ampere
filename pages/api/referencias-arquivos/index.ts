@@ -12,7 +12,7 @@ const getFileReferences: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 	const { projectId, userId } = req.query;
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const referencesCollection: Collection<TFileReference> = db.collection("referencias-arquivos");
 
 	if (projectId) {
@@ -40,7 +40,7 @@ const createFileReference: NextApiHandler<PostResponse> = async (req, res) => {
 
 	const reference = InsertFileReferenceSchema.parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const referencesCollection: Collection<TFileReference> = db.collection("referencias-arquivos");
 
 	const insertResponse = await referencesCollection.insertOne(reference);

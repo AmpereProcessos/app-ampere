@@ -17,7 +17,7 @@ const getExpenseProjectRoute: NextApiHandler<GetResponse> = async (req, res) => 
 
 	if (!projectId || typeof projectId != "string" || !ObjectId.isValid(projectId)) throw new createHttpError.BadRequest("ID inválido.");
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TProject>("dados");
 
 	const project = await collection.findOne(

@@ -13,7 +13,7 @@ const getPropose: NextApiHandler<GetResponse> = async (req, res) => {
 	const { id } = req.query;
 	if (!id || typeof id != "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
-	const db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToCRMDatabase();
 	const proposesCollection: Collection<TSolarSystemPropose> = db.collection("proposes");
 	const propose = await proposesCollection.findOne({ _id: new ObjectId(id) });
 	if (!propose) throw new createHttpError.NotFound("Proposta não encontrada.");

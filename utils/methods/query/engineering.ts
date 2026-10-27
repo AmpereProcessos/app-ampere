@@ -1,4 +1,4 @@
-import type { TProjectDTO } from "@/utils/schemas/projects";
+import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -106,7 +106,9 @@ export function useEngineeringProjects() {
   }
   function matchInspectionStatus(project: TGetEngineeringProjectsOutput["data"][number]) {
     if (filters.inspectionStatus.length === 0) return true;
-    return filters.inspectionStatus.includes(project.vistoria?.status || "");
+    const vistoriaStatus = (project as TGetEngineeringProjectsOutput["data"][number] & Pick<TProject, "vistoria">)
+      .vistoria?.status;
+    return filters.inspectionStatus.includes(vistoriaStatus || "");
   }
   function matchGrantingStatus(project: TGetEngineeringProjectsOutput["data"][number]) {
     if (filters.grantingStatus.length === 0) return true;

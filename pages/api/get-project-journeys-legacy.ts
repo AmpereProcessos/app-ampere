@@ -4,59 +4,66 @@ import type { TContractTemplateVariable } from "@/utils/schemas/contract-templat
 import type { TFileReference } from "@/utils/schemas/crm/file-reference.schema";
 import type { TMaterialUpdateRegistry } from "@/utils/schemas/material-updates-registry";
 import type { TMaterial } from "@/utils/schemas/materials";
-import { PROJECT_JOURNEYS_COLLECTION_NAME, type TProjectJourney } from "@/utils/schemas/project-journey";
+import { ProjectJourneyLegacySchema, PROJECT_JOURNEYS_COLLECTION_NAME, type TProjectJourney } from "@/utils/schemas/project-journey";
 import type { TProject } from "@/utils/schemas/projects";
+import type { z } from "zod";
 
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
 import axios from "axios";
 import { AlignmentType, Document, HeadingLevel, Packer, Paragraph, TextRun } from "docx";
-import { type AnyBulkWriteOperation, ObjectId } from "mongodb";
+import { type AnyBulkWriteOperation, type Filter, type WithId, ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+type TProjectLegacyJornada = z.infer<typeof ProjectJourneyLegacySchema>;
+
+function legacyJornada(project: WithId<TProject>): TProjectLegacyJornada {
+	return project.jornada as unknown as TProjectLegacyJornada;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const projectsDb = await connectToDatabase();
 	const projectsCollection = projectsDb.collection<TProject>("dados");
 
+	const legacyProjectsFilter = { "jornada.estagios": null } as Filter<TProject>;
 	const projects = await projectsCollection
-		.find(
-			{
-				"jornada.estagios": null,
+		.find(legacyProjectsFilter, {
+			sort: {
+				qtde: 1,
 			},
-			{
-				sort: {
-					qtde: 1,
-				},
-			},
-		)
+		})
 		.toArray();
 
-	function getProjectJourneyNotesForContacts(project: TProject) {
-		if (project.jornada.contatos)
+	function getProjectJourneyNotesForContacts(project: WithId<TProject>) {
+		const jornada = legacyJornada(project);
+		if (jornada.contatos)
 			return `
-			CONTATOS: ${project.jornada.contatos}\n
+			CONTATOS: ${jornada.contatos}\n
 			`;
 		return "";
 	}
-	function getProjectJourneyNotesForCuidados(project: TProject) {
-		if (project.jornada.cuidados)
+	function getProjectJourneyNotesForCuidados(project: WithId<TProject>) {
+		const jornada = legacyJornada(project);
+		if (jornada.cuidados)
 			return `
-			CUIDADOS: ${project.jornada.cuidados}\n
+			CUIDADOS: ${jornada.cuidados}\n
 			`;
 		return "";
 	}
-	function getProjectJourneyNotesForObsJornada(project: TProject) {
-		if (project.jornada.obsJornada)
+	function getProjectJourneyNotesForObsJornada(project: WithId<TProject>) {
+		const jornada = legacyJornada(project);
+		if (jornada.obsJornada)
 			return `
-			OBSERVAÇÕES: ${project.jornada.obsJornada}
+			OBSERVAÇÕES: ${jornada.obsJornada}
 			`;
 		return "";
 	}
-	function getProjectJourneyConclutionDate(project: TProject) {
-		if (project.jornada.dataConclusao) return project.jornada.dataConclusao;
+	function getProjectJourneyConclutionDate(project: WithId<TProject>) {
+		const jornada = legacyJornada(project);
+		if (jornada.dataConclusao) return jornada.dataConclusao;
 
 		if (project.tipoDeServico === "SISTEMA FOTOVOLTAICO" || project.tipoDeServico === "AUMENTO DE SISTEMA FOTOVOLTAICO") {
-			if (project.jornada.jornadaConcluida) {
+			if (jornada.jornadaConcluida) {
 				if (project.homologacao.vistoria.dataEfetivacao) return project.homologacao.vistoria.dataEfetivacao;
 				if (project.homologacao.dataEfetivacao) return project.homologacao.dataEfetivacao;
 				if (project.obra.saida) return project.obra.saida;
@@ -66,14 +73,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		}
 
 		if (project.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO") {
-			if (project.jornada.jornadaConcluida) {
+			if (jornada.jornadaConcluida) {
 				if (project.contrato.dataAssinatura) return project.contrato.dataAssinatura;
 				return "-";
 			}
 			return null;
 		}
 
-		if (project.jornada.jornadaConcluida) {
+		if (jornada.jornadaConcluida) {
 			if (project.homologacao.dataEfetivacao) return project.homologacao.dataEfetivacao;
 			if (project.obra.saida) return project.obra.saida;
 			if (project.contrato.dataAssinatura) return project.contrato.dataAssinatura;
@@ -83,6 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	}
 	const newProjectsJourneys: (TProjectJourney & { projeto: { id: string; nome: string; tipo: string; identificador: string } })[] = projects.map(
 		(project) => {
+			const jornada = legacyJornada(project);
 			return {
 				projeto: {
 					id: project._id.toString(),
@@ -96,83 +104,83 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 						ordem: 1,
 						titulo: "BOAS VINDAS !",
 						versao: "LEGADO",
-						concluido: !!project.jornada.boasVindas,
+						concluido: !!jornada.boasVindas,
 					},
 					{
 						ordem: 2,
 						titulo: "ASSINATURA DAS DOCUMENTAÇÕES",
 						versao: "LEGADO",
-						concluido: !!project.jornada.assDocumentacoes,
+						concluido: !!jornada.assDocumentacoes,
 					},
 					{
 						ordem: 3,
 						titulo: "RESPOSTA DA CONCESSIONÁRIA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.respConcessionaria,
+						concluido: !!jornada.respConcessionaria,
 					},
 					{
 						ordem: 4,
 						titulo: "COMPRA DO KIT",
 						versao: "LEGADO",
-						concluido: !!project.jornada.compraDoKit,
+						concluido: !!jornada.compraDoKit,
 					},
 					{
 						ordem: 5,
 						titulo: "NF FATURADA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.nfFaturada,
+						concluido: !!jornada.nfFaturada,
 					},
 					{
 						ordem: 6,
 						titulo: "PREVISÃO DE ENTREGA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.prevChegada,
+						concluido: !!jornada.prevChegada,
 					},
 					{
 						ordem: 7,
 						titulo: "ENTREGA DO KIT",
 						versao: "LEGADO",
-						concluido: !!project.jornada.entregaDoKit,
+						concluido: !!jornada.entregaDoKit,
 					},
 					{
 						ordem: 8,
 						titulo: "INSTALAÇÃO AGENDADA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.instalacaoAgendada,
+						concluido: !!jornada.instalacaoAgendada,
 					},
 					{
 						ordem: 9,
 						titulo: "INSTALAÇÃO REALIZADA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.instalacaoRealizada,
+						concluido: !!jornada.instalacaoRealizada,
 					},
 					{
 						ordem: 10,
 						titulo: "VISTORIA REALIZADA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.vistoriaConcessionaria,
+						concluido: !!jornada.vistoriaConcessionaria,
 					},
 					{
 						ordem: 11,
 						titulo: "SISTEMA OPERANTE",
 						versao: "LEGADO",
-						concluido: !!project.jornada.sistemaLigado,
+						concluido: !!jornada.sistemaLigado,
 					},
 					{
 						ordem: 12,
 						titulo: "ENTREGA TÉCNICA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.entregaTecnica,
+						concluido: !!jornada.entregaTecnica,
 					},
 					{
 						ordem: 13,
 						titulo: "JORNADA CONCLUÍDA",
 						versao: "LEGADO",
-						concluido: !!project.jornada.jornadaConcluida,
+						concluido: !!jornada.jornadaConcluida,
 					},
 				],
 				dataEfetivacao: getProjectJourneyConclutionDate(project),
-				dataUltimaInteracao: project.jornada.dataUltimoContato,
+				dataUltimaInteracao: jornada.dataUltimoContato,
 			};
 		},
 	);
@@ -181,7 +189,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const newCompletedProjectJourneys = newProjectsJourneys.filter((journey) => !!journey.dataEfetivacao);
 
 	const newOngoingProjectJourneysIds = newOngoingProjectJourneys.map((journey) => journey.projeto.id);
-	const oldOngoingProjectJourneyIds = projects.filter((project) => !project.jornada.jornadaConcluida).map((project) => project._id.toString());
+	const oldOngoingProjectJourneyIds = projects.filter((project) => !legacyJornada(project).jornadaConcluida).map((project) => project._id.toString());
 
 	// Calculate the percentage of ids in newOngoingProjectJourneysIds that also exist in oldOngoingProjectJourneyIds
 	const matchingIdsCount = newOngoingProjectJourneysIds.filter((id) => oldOngoingProjectJourneyIds.includes(id)).length;

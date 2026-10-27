@@ -9,6 +9,44 @@ type UpdateManyMaterialsParams = {
 	project: { id?: string | null; nome?: string | null };
 	updates: { id: string; nome: string; diferenca: number }[];
 };
+
+type WarehouseMaterialChange = {
+	id?: string | null;
+	qtdeSaida?: number;
+	qtdeDevolucao?: number;
+};
+
+type DebitMaterialsParams = {
+	formId: string;
+	projectId: string;
+	identifier: string | number;
+	changes: WarehouseMaterialChange[];
+	tag: string;
+};
+
+type ReturnMaterialsParams = {
+	formId: string;
+	identifier: string | number;
+	changes: WarehouseMaterialChange[];
+	tag: string;
+};
+
+type HandleMaterialEntranceParams = {
+	materialId: string;
+	newPrice: number;
+	diff: number;
+};
+
+type NewMaterialPayload = {
+	nome: string;
+	qtde: number | string;
+	qtdeMinima?: number | string | null;
+	grandeza?: string | null;
+	preco: number | string;
+	codigo?: string | null;
+	localizacao?: string | null;
+	anotacoes?: string | null;
+};
 export async function updateManyMaterials({ formularyId, project, updates }: UpdateManyMaterialsParams) {
 	try {
 		const { data } = await axios.put("/api/almoxarifado/estoque/operacoes-massa", { formularyId, project, updates });
@@ -32,7 +70,7 @@ export async function handleMultipleMaterialEntrance({ input }: InputMaterialPar
 	}
 }
 
-export async function debitMaterials({ formId, projectId, identifier, changes, tag }) {
+export async function debitMaterials({ formId, projectId, identifier, changes, tag }: DebitMaterialsParams) {
 	console.log("ID DO FORMULÁRIO", formId);
 	console.log("MATERIAIS DEBITADOS", changes);
 	console.log("TAG DA ALTERAÇÃO", tag);
@@ -42,7 +80,7 @@ export async function debitMaterials({ formId, projectId, identifier, changes, t
 		const updateChangesObj = filteredChangesByStockableItems.map((x) => {
 			return {
 				id: x.id,
-				diff: -x.qtdeSaida,
+				diff: -(x.qtdeSaida ?? 0),
 			};
 		});
 		console.log("UPDATE CHANGE OBJ", updateChangesObj);
@@ -58,7 +96,7 @@ export async function debitMaterials({ formId, projectId, identifier, changes, t
 		throw error;
 	}
 }
-export async function returnMaterials({ formId, identifier, changes, tag }) {
+export async function returnMaterials({ formId, identifier, changes, tag }: ReturnMaterialsParams) {
 	console.log("ID DO FORMULÁRIO", formId);
 	console.log("MATERIAIS DEBITADOS", changes);
 	console.log("TAG DA ALTERAÇÃO", tag);
@@ -83,7 +121,7 @@ export async function returnMaterials({ formId, identifier, changes, tag }) {
 		throw error;
 	}
 }
-export async function handleMaterialEntrance({ materialId, newPrice, diff }) {
+export async function handleMaterialEntrance({ materialId, newPrice, diff }: HandleMaterialEntranceParams) {
 	try {
 		if (!materialId) throw new createHttpError.BadRequest("ID do material não fornecido.");
 		if (!newPrice) throw new createHttpError.BadRequest("Novo preço não fornecido.");
@@ -98,7 +136,7 @@ export async function handleMaterialEntrance({ materialId, newPrice, diff }) {
 		throw error;
 	}
 }
-export async function addMaterial(newMaterialObj) {
+export async function addMaterial(newMaterialObj: NewMaterialPayload) {
 	const { nome, qtde: quantidade, qtdeMinima: quantidadeMinima, grandeza, preco, codigo, localizacao, anotacoes } = newMaterialObj;
 	try {
 		if (!nome) throw new createHttpError.BadRequest("Nome não fornecido.");

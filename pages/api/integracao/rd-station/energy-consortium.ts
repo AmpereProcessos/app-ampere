@@ -93,7 +93,7 @@ export type TSimulation = z.infer<typeof SimulationSchema>;
 const createLeadFromSimulation: NextApiHandler<PostResponse> = async (req, res) => {
 	const simulation = SimulationSchema.parse(req.body);
 
-	const db = await connectToDatabase(process.env.DB_KEY);
+	const db = await connectToDatabase();
 	const collection: Collection = db.collection("leads");
 
 	const lead = { nome: simulation.userName, email: simulation.userEmail, consumo: simulation.expense };

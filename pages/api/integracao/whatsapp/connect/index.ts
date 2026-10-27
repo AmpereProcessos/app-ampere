@@ -23,7 +23,7 @@ async function getWhatsappIntegration({ session }: { session: TAuthSession }) {
 				tipo: "WHATSAPP",
 				token: integration.dados.token,
 				dataExpiracao: integration.dados.dataExpiracao,
-				metaAutorId: integration.dados.metaAutorId,
+				metaAutorAppId: integration.dados.metaAutorAppId,
 				metaEscopo: integration.dados.metaEscopo,
 				telefones: integration.dados.telefones,
 			},

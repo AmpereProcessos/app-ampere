@@ -17,7 +17,7 @@ const getProjectUpdateLogs: NextApiHandler<GetResponse> = async (req, res) => {
 
 	if (!projectId) throw new createHttpError.BadRequest("ID inválido.");
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db: Db = await connectToDatabase();
 	const collection: Collection<TProjectUpdateLog> = db.collection("logAlteracoes");
 	const logs = await collection.find({ idProjetoAlterado: projectId }, { sort: { _id: -1 } }).toArray();
 

@@ -5,7 +5,7 @@ import { NextApiHandler } from "next";
 type PostResponse = any;
 
 const runSMBOTTest: NextApiHandler<PostResponse> = async (req, res) => {
-	const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+	const db = await connectToDatabase();
 	const collection = db.collection("teste");
 	const body = req.body;
 	await collection.insertOne(body);

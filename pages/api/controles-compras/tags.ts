@@ -12,7 +12,7 @@ const getPurchasesControlsTagsRoute: NextApiHandler<GetResponse> = async (req, r
 	const session = await validateAuthenticationWithSession(req, res);
 
 	const { id } = req.query;
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TPurchaseControlTag>("etiquetas-compras");
 
 	if (id) {
@@ -38,7 +38,7 @@ const createPurchaseControlTagRoute: NextApiHandler<PostResponse> = async (req, 
 
 	const purchaseControl = PurchaseTagSchema.parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TPurchaseControlTag>("etiquetas-compras");
 
 	const insertResponse = await collection.insertOne(purchaseControl);
@@ -61,7 +61,7 @@ const updatePurchaseControlTagRoute: NextApiHandler<PutResponse> = async (req, r
 
 	const changes = PurchaseTagSchema.partial().parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TPurchaseControlTag>("etiquetas-compras");
 
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });

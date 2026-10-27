@@ -69,7 +69,7 @@ type GetResponse = {
 	data: TProjectUFVInsurance | TProjectUFVInsurance[];
 };
 const getUFVInsuranceProjectsRoute: NextApiHandler<GetResponse> = async (req, res) => {
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TProject>("dados");
 
 	const { id } = req.query;

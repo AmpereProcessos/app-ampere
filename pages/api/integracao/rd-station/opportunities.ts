@@ -1,4 +1,5 @@
-import { errorHandler, ErrorResponse, validateAuthenticationWithSession } from "@/utils/api";
+import { ErrorResponse, validateAuthenticationWithSession } from "@/utils/api";
+import { errorHandler } from "@/utils/methods/handlers";
 import { formatToPhone } from "@/utils/methods/formatting";
 import { TIntegrationRDStation } from "@/utils/schemas/crm/integration.schema";
 import { TOpportunity } from "@/utils/schemas/crm/opportunity.schema";
@@ -73,7 +74,7 @@ const updateOpportunities: NextApiHandler<PutResponse | ErrorResponse> = async (
 	if (typeof email != "string") throw new createHttpError.BadRequest("Tipo de email inválido.");
 	if (operation == "SALE" && typeof value != "number") throw new createHttpError.BadRequest("Tipo de valor inválido.");
 	if (operation == "OPPORTUNITY_LOST" && typeof reason != "string") throw new createHttpError.BadRequest("Tipo de razão inválida.");
-	const db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToCRMDatabase();
 	const integrationsCollection: Collection<TIntegrationRDStation> = db.collection("integrations");
 	// Now, able to proceed
 	try {

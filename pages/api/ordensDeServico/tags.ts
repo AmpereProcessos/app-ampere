@@ -13,7 +13,7 @@ const getServiceOrderTagsRoute: NextApiHandler<GetResponse> = async (req, res) =
 	const session = await validateAuthenticationWithSession(req, res);
 
 	const { id } = req.query;
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TServiceOrderTag>("etiquetas-ordens-servico");
 
 	if (id) {
@@ -38,7 +38,7 @@ const createServiceOrderTagRoute: NextApiHandler<PostResponse> = async (req, res
 	console.log(req.body);
 	const tag = ServiceOrderTagSchema.parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TServiceOrderTag>("etiquetas-ordens-servico");
 
 	const insertResponse = await collection.insertOne(tag);
@@ -60,7 +60,7 @@ const updateServiceOrderTagRoute: NextApiHandler<PutResponse> = async (req, res)
 
 	const changes = ServiceOrderTagSchema.partial().parse(req.body);
 
-	const db: Db = await connectToDatabase(process.env.DB_KEY);
+	const db: Db = await connectToDatabase();
 	const collection = db.collection<TServiceOrderTag>("etiquetas-ordens-servico");
 
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });

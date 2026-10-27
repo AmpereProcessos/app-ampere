@@ -15,7 +15,7 @@ const getHomologations: NextApiHandler<GetResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
 
 	const { id, opportunityId } = req.query;
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<THomologation> = db.collection("homologations");
 
 	if (id) {
@@ -45,7 +45,7 @@ type PostResponse = {
 const createHomologation: NextApiHandler<PostResponse> = async (req, res) => {
 	const homologation = InsertHomologationSchema.parse(req.body);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<THomologation> = db.collection("homologations");
 
 	const insertResponse = await insertHomologation({ collection, info: homologation, partnerId: "65454ba15cf3e3ecf534b308" });
@@ -68,7 +68,7 @@ const editHomologation: NextApiHandler<PutResponse> = async (req, res) => {
 
 	const changes = InsertHomologationSchema.partial().parse(req.body);
 
-	const db = await connectToCRMDatabase(process.env.DB_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<THomologation> = db.collection("homologations");
 
 	const updateResponse = await updateHomologation({ id: id, collection: collection, changes: changes, query: {} });

@@ -71,10 +71,9 @@ async function getReconciliations({
     };
   }
 
-  const filter: Filter<TReconciliationDoc> = {};
-  if (input.contaFinanceiraId) {
-    filter["contaFinanceira.id"] = input.contaFinanceiraId;
-  }
+  const filter: Filter<TReconciliationDoc> = input.contaFinanceiraId
+    ? ({ "contaFinanceira.id": input.contaFinanceiraId } as Filter<TReconciliationDoc>)
+    : {};
 
   const skip = (input.page - 1) * PAGE_SIZE;
   const [matched, raw] = await Promise.all([

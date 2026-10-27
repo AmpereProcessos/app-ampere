@@ -7,7 +7,7 @@ import { NextApiHandler } from "next";
 
 const getCreditCardOptions: NextApiHandler<{ data: TCreditCardOption | TCreditCardOption[] }> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const db: Db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db: Db = await connectToAdministrationDatabase();
 	const collection: Collection<TCreditCardOption> = db.collection("opcoes-cartoes-credito");
 
 	const { id } = req.query;
@@ -32,7 +32,7 @@ type PostResponse = {
 
 const createCreditCardOptionRoute: NextApiHandler<PostResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const db: Db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db: Db = await connectToAdministrationDatabase();
 	const collection: Collection<TCreditCardOption> = db.collection("opcoes-cartoes-credito");
 
 	const option = InsertCreditCardOptionSchema.parse(req.body);
@@ -50,7 +50,7 @@ type PutResponse = {
 };
 const updateCreditCardOptionRoute: NextApiHandler<PutResponse> = async (req, res) => {
 	const session = await validateAuthenticationWithSession(req, res);
-	const db: Db = await connectToAdministrationDatabase(process.env.DB_KEY);
+	const db: Db = await connectToAdministrationDatabase();
 	const collection: Collection<TCreditCardOption> = db.collection("opcoes-cartoes-credito");
 
 	const { id } = req.query;

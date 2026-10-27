@@ -52,10 +52,14 @@ export async function getADMProjectsByFilter({
 	const postLookupMatch =
 		postLookupMatchStages.length > 0 ? [{ $match: { $and: postLookupMatchStages } }] : [];
 
+	type AggregationFacetProject = Record<string, unknown> & {
+		receitas?: TProjectADMSimplifiedWithRevenue["receita"][];
+	};
+
 	const aggregationResult = await collection
 		.aggregate<{
 			projectsMatched: { count: number }[];
-			projects: Record<string, unknown>[];
+			projects: AggregationFacetProject[];
 		}>([
 			{ $match: match },
 			{ $addFields: addFields },
@@ -72,10 +76,13 @@ export async function getADMProjectsByFilter({
 
 	const facetResult = aggregationResult[0];
 	const projectsMatched = facetResult?.projectsMatched[0]?.count ?? 0;
-	const projects = (facetResult?.projects ?? []).map((project) => ({
-		...project,
-		receita: project.receitas?.[0],
-	})) as TProjectADMSimplifiedWithRevenue[];
+	const projects = (facetResult?.projects ?? []).map((project) => {
+		const { receitas, ...rest } = project;
+		return {
+			...rest,
+			receita: receitas?.[0],
+		};
+	}) as TProjectADMSimplifiedWithRevenue[];
 
 	return { projects, projectsMatched };
 }

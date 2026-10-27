@@ -47,12 +47,12 @@ const getProjectsByPersonalizedFilters: NextApiHandler<PostResponse> = async (re
       : null;
   const payerNameQuery: Filter<TProject> | null =
     filters.payerName.trim().length > 0
-      ? {
+      ? ({
           $or: [
             { "pagamento.pagador": { $regex: filters.payerName, $options: "i" } },
             { "pagamento.pagador": filters.payerName },
           ],
-        }
+        } as Filter<TProject>)
       : null;
   const dateQuery: Filter<TProject> | null =
     filters.period.after && filters.period.before && filters.period.field

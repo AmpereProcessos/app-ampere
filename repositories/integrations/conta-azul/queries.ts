@@ -12,12 +12,16 @@ export async function getContaAzulAccessToken({ collection }: GetContaAzulAccess
 		const currentDayjsDate = currentDayJs.toDate();
 		const integrationRecord = await collection.findOne({ identificador: "CONTA_AZUL" });
 		if (!integrationRecord) throw new Error("Integração Conta Azul não encontrada.");
+		if (integrationRecord.dados.tipo === "WHATSAPP") {
+			throw new Error("Integração Conta Azul com dados inválidos.");
+		}
+		const contaAzulDados = integrationRecord.dados;
 
 		// Checking for possible token expiration
-		const tokenExpirationDate = new Date(integrationRecord.dados.dataExpiracao);
+		const tokenExpirationDate = new Date(contaAzulDados.dataExpiracao);
 		if (currentDayjsDate >= tokenExpirationDate) {
 			// In case token is expired, handling token refresh
-			const url = `https://api.contaazul.com/oauth2/token?grant_type=refresh_token&refresh_token=${integrationRecord.dados.tokenRefresh}`;
+			const url = `https://api.contaazul.com/oauth2/token?grant_type=refresh_token&refresh_token=${contaAzulDados.tokenRefresh}`;
 			const headers = {
 				Authorization: `Basic ${Buffer.from(`${process.env.CONTAAZUL_CLIENT_ID}:${process.env.CONTAAZUL_CLIENT_SECRET}`).toString("base64")}`,
 			};
@@ -30,7 +34,7 @@ export async function getContaAzulAccessToken({ collection }: GetContaAzulAccess
 				{
 					$set: {
 						dados: {
-							...integrationRecord.dados,
+							...contaAzulDados,
 							tokenRefresh: refresh_token,
 							dataExpiracao: newTokenExpirationDate,
 							tokenAcesso: access_token,
@@ -42,7 +46,7 @@ export async function getContaAzulAccessToken({ collection }: GetContaAzulAccess
 			return access_token; // Returning the new access token
 		}
 		// If token is not expired, returning the existing access token
-		return integrationRecord.dados.tokenAcesso;
+		return contaAzulDados.tokenAcesso;
 	} catch (error) {
 		throw error;
 	}

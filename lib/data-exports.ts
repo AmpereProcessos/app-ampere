@@ -275,7 +275,7 @@ export const ProjectExportableFieldsConfig: TProjectExportableFieldsConfig = {
 	},
 	"pagamento.pagador": {
 		label: "PAGADOR",
-		formattingFunction: (value: TProject["pagamento"]["pagador"]) => value ?? "",
+		formattingFunction: (value: TProject["pagamento"]["pagador"]) => value?.nome ?? "",
 	},
 	"pagamento.contatoPagador": {
 		label: "CONTATO DO PAGADOR",

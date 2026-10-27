@@ -20,7 +20,7 @@ const updateOpportunity: NextApiHandler<PutResponse> = async (req, res) => {
 	// const changes = InsertOpportunitySchema.partial().parse(req.body)
 	const changes = req.body;
 
-	const db = await connectToCRMDatabase(process.env.CRM_KEY);
+	const db = await connectToCRMDatabase();
 	const collection: Collection<TOpportunity> = db.collection("opportunities");
 
 	const updateResponse = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { ...changes } });

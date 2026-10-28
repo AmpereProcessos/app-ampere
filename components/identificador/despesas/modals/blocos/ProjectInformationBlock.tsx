@@ -1,5 +1,6 @@
 import { formatLocation } from "@/utils/methods/formatting";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TExpense, TExpenseProjectDTO } from "@/utils/schemas/expenses";
 import { TRevenue, TRevenueProjectDTO } from "@/utils/schemas/revenues";
 import React from "react";
@@ -186,8 +187,8 @@ function ExpenseProjectInformationBlock({ expense, project }: ExpenseProjectInfo
           PRODUTOS
         </h1>
         <div className="flex w-full flex-wrap items-center gap-2">
-          {project!.produtos && project!.produtos.length > 0 ? (
-            project!.produtos.map((product) => (
+          {getSoldProducts(project!.produtos ?? []).length > 0 ? (
+            getSoldProducts(project!.produtos ?? []).map((product) => (
               <div
                 key={product.id}
                 className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]"

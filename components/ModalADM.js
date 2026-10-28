@@ -188,7 +188,8 @@ function ModalADM({ projectId, modalIsOpen, closeModal }) {
                 updateLogs={updateLogs || []}
                 showADMOnly={true}
               />
-              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" && (
+              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" &&
+                infoHolder.tipoDeServico !== "OPERAÇÃO E MANUTENÇÃO" && (
                 <InfoCompraBlock
                   editor={true}
                   session={session}

@@ -24,6 +24,9 @@ export const InverterSchema = z.object({
 });
 export type TInverter = z.infer<typeof InverterSchema>;
 
+export const ProductOriginEnum = z.enum(["VENDA", "EXISTENTE"]);
+export type TProductOrigin = z.infer<typeof ProductOriginEnum>;
+
 export const ProductItemSchema = z.object({
 	id: z.string({ invalid_type_error: "Tipo não válido para ID do módulo." }).optional().nullable(),
 	categoria: z.union([
@@ -49,8 +52,13 @@ export const ProductItemSchema = z.object({
 		.number({ required_error: "Valor do produto não informado.", invalid_type_error: "Tipo não válido para o valor do produto." })
 		.optional()
 		.nullable(),
+	origem: ProductOriginEnum.optional().nullable(),
 });
 export type TProductItem = z.infer<typeof ProductItemSchema>;
+
+export const isExistingProduct = (p: Pick<TProductItem, "origem">) => p.origem === "EXISTENTE";
+export const getSoldProducts = <T extends Pick<TProductItem, "origem">>(ps: T[]) => ps.filter((p) => !isExistingProduct(p));
+export const getExistingProducts = <T extends Pick<TProductItem, "origem">>(ps: T[]) => ps.filter(isExistingProduct);
 
 export const ServiceItemSchema = z.object({
 	id: z.string({ invalid_type_error: "Tipo não válido para ID do módulo." }).optional().nullable(),

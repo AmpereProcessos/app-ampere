@@ -1,5 +1,6 @@
 import { useSession } from "@/components/providers/SessionProvider";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
+import { getProjectOemModuleQuantity } from "@/utils/methods/util/projects";
 import { formatDateInputChange } from "@/utils/methods/shared";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import dayjs from "dayjs";
@@ -88,17 +89,14 @@ function RelatorioSetorContent({ session }: { session: TAuthSession }) {
     dilutionDate: string | null,
   ): TotalsResults {
     if (!data) return { general: { plants: 0, modules: 0 } };
-    const modules = data.reduce(
-      (acc, current) => acc + formatAsNumber(current.sistema?.qtdeModulos || 0),
-      0,
-    );
+    const modules = data.reduce((acc, current) => acc + formatAsNumber(getProjectOemModuleQuantity(current)), 0);
     const plants = data.length;
 
     return { general: { plants: plants, modules: modules } };
   }
   function getTotalsByCity(data: TProjectDTO[], dueDate: string, dilutionDate: string | null) {
     const totals = data.reduce((acc: { [key: string]: TotalsResults }, current) => {
-      const modules = formatAsNumber(current.sistema?.qtdeModulos || 0);
+      const modules = formatAsNumber(getProjectOemModuleQuantity(current));
       const city = current.cidade;
       if (!acc[city]) acc[city] = { general: { plants: 0, modules: 0 } };
       acc[city].general.modules += modules;
@@ -139,7 +137,7 @@ function RelatorioSetorContent({ session }: { session: TAuthSession }) {
             {project.nomeDoContrato}
           </h1>
           <div className="bg-primary/80 flex min-w-fit items-center gap-1 rounded-full px-2 py-1 text-white">
-            <h1 className="text-[0.65rem] font-medium lg:text-xs">{project.sistema.qtdeModulos}</h1>
+            <h1 className="text-[0.65rem] font-medium lg:text-xs">{getProjectOemModuleQuantity(project)}</h1>
             <FaSolarPanel size={15} />
           </div>
         </div>

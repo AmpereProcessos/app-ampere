@@ -2,6 +2,7 @@ import CheckboxInput from "@/components/inputs/Checkbox";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
 import ResponsiveDialogDrawerSection from "@/components/utils/ResponsiveDialogDrawerSection";
+import { getExistingProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import { Cog } from "lucide-react";
 import type React from "react";
@@ -12,6 +13,8 @@ type OeMInformationBlockProps = {
 	userHasEditPermission: boolean;
 };
 function OeMInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission }: OeMInformationBlockProps) {
+	const existingEquipment = getExistingProducts(infoHolder.produtos ?? []);
+
 	return (
 		<ResponsiveDialogDrawerSection sectionTitleText="INFORMAÇÕES SOBRE SERVIÇOS DE O&M" sectionTitleIcon={<Cog className="h-4 w-4 min-h-4 min-w-4" />}>
 			<div className="flex items-center justify-center">
@@ -52,6 +55,28 @@ function OeMInformationBlock({ infoHolder, setInfoHolder, userHasEditPermission 
 					/>
 				</div>
 			</div>
+			{existingEquipment.length > 0 ? (
+				<div className="flex w-full flex-col gap-2">
+					<h1 className="text-primary w-full text-center text-xs font-medium tracking-tight">EQUIPAMENTOS DO CLIENTE</h1>
+					<div className="flex w-full flex-col gap-2">
+						{existingEquipment.map((item, index) => (
+							<div
+								key={`${item.categoria}-${item.modelo}-${index.toString()}`}
+								className="border-primary/40 bg-background flex w-full flex-col gap-1 rounded-md border p-2"
+							>
+								<p className="text-sm font-bold tracking-tight">
+									<strong className="text-[#FF9B50]">{item.qtde}</strong> x {item.modelo || "SEM DESCRIÇÃO"}
+								</p>
+								<p className="text-foreground text-[0.65rem] font-light">
+									{item.categoria}
+									{item.fabricante ? ` · ${item.fabricante}` : ""}
+									{item.potencia ? ` · ${item.potencia} W` : ""}
+								</p>
+							</div>
+						))}
+					</div>
+				</div>
+			) : null}
 		</ResponsiveDialogDrawerSection>
 	);
 }

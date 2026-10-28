@@ -1,4 +1,5 @@
 import { formatDateInputChange } from "@/utils/methods/shared";
+import { getExistingProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { ServiceOrderStatus } from "@/utils/select-options";
 import dayjs from "dayjs";
@@ -26,6 +27,7 @@ type InfoOeMBlockProps = {
 };
 function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: InfoOeMBlockProps) {
   const [newMaintenanceMenuIsOpen, setNewMaintenanceMenuIsOpen] = useState<boolean>(false);
+  const existingEquipment = getExistingProducts(infoHolder.produtos ?? []);
   function removeMaintenance(index: number) {
     const maintenances = [...infoHolder.manutencoes];
     maintenances.splice(index, 1);
@@ -187,6 +189,30 @@ function InfoOeMBlock({ editor, infoHolder, setInfo, changes, setChanges }: Info
           </div>
         </div>
       </div>
+      {existingEquipment.length > 0 ? (
+        <div className="flex w-full flex-col gap-2 px-2">
+          <h1 className="w-full text-center text-xs font-medium tracking-tight text-[#fead41]">
+            EQUIPAMENTOS DO CLIENTE
+          </h1>
+          <div className="flex w-full flex-col gap-2">
+            {existingEquipment.map((item, index) => (
+              <div
+                key={`${item.categoria}-${item.modelo}-${index.toString()}`}
+                className="border-primary/40 bg-background flex w-full flex-col gap-1 rounded-md border p-2"
+              >
+                <p className="text-sm font-bold tracking-tight">
+                  <strong className="text-[#FF9B50]">{item.qtde}</strong> x {item.modelo || "SEM DESCRIÇÃO"}
+                </p>
+                <p className="text-foreground text-[0.65rem] font-light">
+                  {item.categoria}
+                  {item.fabricante ? ` · ${item.fabricante}` : ""}
+                  {item.potencia ? ` · ${item.potencia} W` : ""}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
       <h1 className="mt-2 w-full text-center font-black text-[#fead41]">MANUTENÇÕES</h1>
       <div className="flex w-full items-center justify-end p-2">
         {newMaintenanceMenuIsOpen ? (

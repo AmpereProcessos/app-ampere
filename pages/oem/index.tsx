@@ -1,3 +1,4 @@
+import { getProjectOemPower } from "@/utils/methods/util/projects";
 import { useSession } from "@/components/providers/SessionProvider";
 import OemProjectsFilters from "@/components/identificador/oem/OemProjectsFilters";
 import ProjectCardsTags from "@/components/utils/ProjectCardsTags";
@@ -17,6 +18,7 @@ import { VscDiffAdded } from "react-icons/vsc";
 import ModalOeM from "../../components/ModalOeM";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import LoadingPage from "../../components/utils/LoadingPage";
+import { getProjectOemModuleQuantity } from "@/utils/methods/util/projects";
 import { formatDecimalPlaces } from "../../utils/constants";
 
 function OemPage() {
@@ -72,8 +74,8 @@ function OemContent({ session: _session }: { session: TAuthSession }) {
     }
 
     const projectsQty = info.length;
-    const totalPower = info.reduce((acc, current) => acc + (current.sistema?.potPico || 0), 0);
-    const modulesQty = info.reduce((acc, current) => acc + (current.sistema.qtdeModulos || 0), 0);
+    const totalPower = info.reduce((acc, current) => acc + getProjectOemPower(current), 0);
+    const modulesQty = info.reduce((acc, current) => acc + getProjectOemModuleQuantity(current), 0);
     const pendingMaintenance = info.reduce((acc, current) => {
       const isPending = current.manutencoes.some((m) => !m.dataEfetivacao);
       if (isPending) acc += 1;
@@ -224,7 +226,7 @@ function OemContent({ session: _session }: { session: TAuthSession }) {
                       NÚMERO DE MÓDULOS
                     </span>
                     <p className="text-xs font-medium tracking-tight">
-                      {project.sistema.qtdeModulos}
+                      {getProjectOemModuleQuantity(project)}
                     </p>
                   </div>
                 </div>

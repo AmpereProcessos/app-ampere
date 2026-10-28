@@ -318,7 +318,8 @@ function ModalProjetos({ projectId, session, modalIsOpen, closeModal }: ModalPro
                 updateLogs={updateLogs || []}
                 showPaymentInfo={true}
               />
-              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" && (
+              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" &&
+                infoHolder.tipoDeServico !== "OPERAÇÃO E MANUTENÇÃO" && (
                 <InfoCompraBlock
                   editor={true}
                   session={session}
@@ -575,7 +576,8 @@ function ModalProjetos({ projectId, session, modalIsOpen, closeModal }: ModalPro
                 updateLogs={updateLogs || []}
                 showPaymentInfo={true}
               />
-              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" && (
+              {infoHolder.tipoDeServico !== "MONTAGEM E DESMONTAGEM" &&
+                infoHolder.tipoDeServico !== "OPERAÇÃO E MANUTENÇÃO" && (
                 <InfoCompraBlock
                   editor={true}
                   session={session}

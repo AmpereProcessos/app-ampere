@@ -1,6 +1,7 @@
 import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG } from "@/lib/project-journeys";
 import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
+import { getExistingProducts } from "@/utils/schemas/crm/kits.schema";
 import type { THomologation } from "@/utils/schemas/partial/homologation";
 import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
@@ -49,23 +50,60 @@ function getObservationsForInstallationLocationChange({ willChange }: { willChan
 	return "NÃO HAVERÁ MUDANÇA DE LOCAL";
 }
 function getKitInformation(info: TContractRequestDTO) {
+	if (info.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO") return "";
+
 	const moduleSplitMarca = info.marcaModulos.split("/");
 	const moduleSplitQtde = info.qtdeModulos.toString().split("/");
 	const moduleSplitPot = info.potModulos.split("/");
 	const holder = [];
 	for (let i = 0; i < moduleSplitMarca.length; i++) {
-		const str = `${moduleSplitQtde} - ${moduleSplitMarca}(${moduleSplitPot}W)`;
+		const str = `${moduleSplitQtde[i]} - ${moduleSplitMarca[i]}(${moduleSplitPot[i]}W)`;
 		holder.push(str);
 	}
 	const inverterSplitMarca = info.marcaInversor.split("/");
 	const inverterSplitQtde = info.qtdeInversor.split("/");
 	const inverterSplitPot = info.potInversor.split("/");
 	for (let i = 0; i < inverterSplitMarca.length; i++) {
-		const str = `${inverterSplitQtde} - ${inverterSplitMarca}(${inverterSplitPot}W)`;
+		const str = `${inverterSplitQtde[i]} - ${inverterSplitMarca[i]}(${inverterSplitPot[i]}W)`;
 		holder.push(str);
 	}
 	return holder.join("\n");
 }
+function sumExistingProductQtyByCategory(request: TContractRequestDTO, categoria: "MÓDULO" | "INVERSOR") {
+	return getExistingProducts(request.produtos ?? [])
+		.filter((p) => p.categoria === categoria)
+		.reduce((acc, p) => acc + p.qtde, 0);
+}
+function getOemEquipmentQtyFromRequest(request: TContractRequestDTO, categoria: "MÓDULO" | "INVERSOR") {
+	const fromProducts = sumExistingProductQtyByCategory(request, categoria);
+	if (fromProducts > 0) return fromProducts;
+	if (categoria === "MÓDULO" && request.qtdeModulosOem) {
+		return getProductInformation({ qty: request.qtdeModulosOem, power: request.potModulosOem || "" }).totalQty;
+	}
+	if (categoria === "INVERSOR" && request.qtdeInversorOem) {
+		return getProductInformation({ qty: request.qtdeInversorOem, power: request.potInversorOem || "" }).totalQty;
+	}
+	return null;
+}
+function getSistemaFieldsFromRequest(request: TContractRequestDTO) {
+	return {
+		qtdeModulos: getProductInformation({
+			qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
+			power: request.potModulos ? request.potModulos?.toString() : "0",
+		}).totalQty,
+		potModulos: request.potModulos,
+		potPico: getProductInformation({
+			qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
+			power: request.potModulos ? request.potModulos?.toString() : "0",
+		}).totalPower,
+		inversor: getInverterInformation({
+			model: request.marcaInversor ? request.marcaInversor?.toString().toUpperCase() : "",
+			qty: request.qtdeInversor ? request.qtdeInversor.toString() : "0",
+			power: request.potInversor ? request.potInversor.toString() : "0",
+		}),
+	};
+}
+
 function getProductInformation({ qty, power }: { qty: number | string; power: number | string }) {
 	const splitQtde = qty.toString().split("/");
 	const splitPot = power.toString().split("/");
@@ -139,6 +177,7 @@ const EnergyDistributorEquivalent = {
 };
 export function getProjectInformationFromRequest({ request }: HandleGetProjectInformationFromRequestParams) {
 	const OeMInfo = getOeMInformation({ applicable: request.possuiOeM === "SIM", plan: request.planoOeM });
+	const sistemaFromProducts = getSistemaFieldsFromRequest(request);
 	const insertObj: TProject = {
 		qtde: 0,
 		nomeDoContrato: request.nomeDoContrato.toUpperCase(),
@@ -254,21 +293,11 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			qtdeDistCreditos: request.distribuicoes?.length !== 0 ? request.distribuicoes?.length : 0,
 		},
 		sistema: {
-			qtdeModulos: getProductInformation({
-				qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
-				power: request.potModulos ? request.potModulos?.toString() : "0",
-			}).totalQty,
-			potModulos: request.potModulos,
-			potPico: getProductInformation({
-				qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
-				power: request.potModulos ? request.potModulos?.toString() : "0",
-			}).totalPower,
+			qtdeModulos: sistemaFromProducts.qtdeModulos,
+			potModulos: sistemaFromProducts.potModulos,
+			potPico: sistemaFromProducts.potPico,
 			topologia: request.topologia === "INVERSOR" ? "INVERSOR" : "MICRO",
-			inversor: getInverterInformation({
-				model: request.marcaInversor ? request.marcaInversor?.toString().toUpperCase() : "",
-				qty: request.qtdeInversor ? request.qtdeInversor.toString() : "0",
-				power: request.potInversor ? request.potInversor.toString() : "0",
-			}),
+			inversor: sistemaFromProducts.inversor,
 			tipoControlador: request.tipoControlador ? request.tipoControlador : "",
 			marcaControlador: request.marcaControlador ? request.marcaControlador : "",
 			qtdeControlador: request.qtdeControlador ? Number(request.qtdeControlador) : null,
@@ -385,10 +414,8 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			dataInicio: OeMInfo.dataInicio,
 			dataFim: OeMInfo.dataFim,
 			plano: request.planoOeM,
-			qtdeModulos: request.qtdeModulosOem ? getProductInformation({ qty: request.qtdeModulosOem, power: request.potModulosOem || "" }).totalQty : null,
-			qtdeInversores: request.qtdeInversorOem
-				? getProductInformation({ qty: request.qtdeInversorOem, power: request.potInversorOem || "" }).totalQty
-				: null,
+			qtdeModulos: getOemEquipmentQtyFromRequest(request, "MÓDULO"),
+			qtdeInversores: getOemEquipmentQtyFromRequest(request, "INVERSOR"),
 			valor: Number(request.valorOeMOuSeguro) || 0,
 		},
 		obra: {

@@ -59,6 +59,7 @@ export async function ensureProjectAssemblyServiceOrder({
   projectsCollection,
   serviceOrdersCollection,
 }: Pick<ProjectUpdateAutomationContext, "project" | "author" | "projectsCollection" | "serviceOrdersCollection">) {
+  if (project.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO") return;
   if (project.idOrdemServico && ObjectId.isValid(project.idOrdemServico)) {
     const linkedOrder = await serviceOrdersCollection.findOne({
       _id: new ObjectId(project.idOrdemServico),

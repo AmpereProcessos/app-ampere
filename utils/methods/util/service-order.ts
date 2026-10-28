@@ -1,3 +1,4 @@
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import type { TServiceOrder, TServiceOrderDTO } from "@/utils/schemas/service-order";
 
@@ -101,15 +102,16 @@ export function getMissingProjectMaterials(str: string) {
 }
 
 export function getServiceOrderInverterMetadataFromProject(project: TProject) {
-  const inverterQty = project.produtos
-    ?.filter((p) => p.categoria === "INVERSOR")
+  const soldProducts = getSoldProducts(project.produtos ?? []);
+  const inverterQty = soldProducts
+    .filter((p) => p.categoria === "INVERSOR")
     .reduce((acc, curr) => acc + curr.qtde, 0);
-  const inverterModel = project.produtos
-    ?.filter((p) => p.categoria === "INVERSOR")
+  const inverterModel = soldProducts
+    .filter((p) => p.categoria === "INVERSOR")
     .map((p) => `${p.qtde}x ${p.modelo}`)
     .join(", ");
-  const inverterPower = project.produtos
-    ?.filter((p) => p.categoria === "INVERSOR")
+  const inverterPower = soldProducts
+    .filter((p) => p.categoria === "INVERSOR")
     .map((p) => `${p.qtde}x ${p.potencia}`)
     .join(", ");
   return {
@@ -119,15 +121,16 @@ export function getServiceOrderInverterMetadataFromProject(project: TProject) {
   };
 }
 export function getServiceOrderModulesMetadataFromProject(project: TProject) {
-  const modulosQty = project.produtos
-    ?.filter((p) => p.categoria === "MÓDULO")
+  const soldProducts = getSoldProducts(project.produtos ?? []);
+  const modulosQty = soldProducts
+    .filter((p) => p.categoria === "MÓDULO")
     .reduce((acc, curr) => acc + curr.qtde, 0);
-  const modulosModel = project.produtos
-    ?.filter((p) => p.categoria === "MÓDULO")
+  const modulosModel = soldProducts
+    .filter((p) => p.categoria === "MÓDULO")
     .map((p) => `${p.qtde}x ${p.modelo}`)
     .join(", ");
-  const modulosPower = project.produtos
-    ?.filter((p) => p.categoria === "MÓDULO")
+  const modulosPower = soldProducts
+    .filter((p) => p.categoria === "MÓDULO")
     .map((p) => `${p.qtde}x ${p.potencia}`)
     .join(", ");
   return {

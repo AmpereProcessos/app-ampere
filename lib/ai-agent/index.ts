@@ -1,4 +1,5 @@
 import type { Id } from "@/convex/_generated/dataModel";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import { Output, generateText } from "ai";
 import { Experimental_Agent as Agent } from "ai";
@@ -140,7 +141,7 @@ ${details.projetos
 - Nome: ${projeto.nome}
 - Tipo: ${projeto.tipo}
 - Localização: ${projeto.localizacao}
-- Produtos: ${projeto.produtos.map((produto) => `- ${produto.qtde}x ${produto.modelo} (${produto.potencia}W)`).join(", ")}
+- Produtos: ${getSoldProducts(projeto.produtos).map((produto) => `- ${produto.qtde}x ${produto.modelo} (${produto.potencia}W)`).join(", ")}
 - Serviços: ${projeto.servicos.map((servico) => `- ${servico.descricao}`).join(", ")}
 - Datas relevantes: ${Object.entries(projeto.datas)
 			.map(([chave, valor]) => `- ${chave}: ${valor}`)

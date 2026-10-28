@@ -1,6 +1,7 @@
 import { formatDecimalPlaces } from "@/utils/constants";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 import { getContractValue } from "@/utils/methods/util/projects";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TProject } from "@/utils/schemas/projects";
 import { z } from "zod";
 
@@ -389,23 +390,28 @@ export function getProjectExportFormatted({ projects, exportablesDefinition, com
 			});
 			formattedProject["VALOR TOTAL DO CONTRATO"] = totalContractValue.toString();
 		}
+		const soldProducts = getSoldProducts(project.produtos ?? []);
 		if (computed.qtdeModulos) {
-			const totalModulesQty = project.produtos?.reduce((acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde : acc), 0) || 0;
+			const totalModulesQty = soldProducts.reduce((acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde : acc), 0);
 			formattedProject["QTDE DE MÓDULOS"] = formatDecimalPlaces(totalModulesQty);
 		}
 		if (computed.potenciaTotalModulos) {
-			const totalModulesPower =
-				project.produtos?.reduce((acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde * (product.potencia || 0) : acc), 0) || 0;
+			const totalModulesPower = soldProducts.reduce(
+				(acc, product) => (product.categoria === "MÓDULO" ? acc + product.qtde * (product.potencia || 0) : acc),
+				0,
+			);
 			formattedProject["POTÊNCIA TOTAL DOS MÓDULOS"] = formatDecimalPlaces(totalModulesPower / 1000);
 		}
 		if (computed.qtdeInversores) {
-			const totalInversoresQty = project.produtos?.reduce((acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde : acc), 0) || 0;
+			const totalInversoresQty = soldProducts.reduce((acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde : acc), 0);
 			formattedProject["QTDE DE INVERSORES"] = formatDecimalPlaces(totalInversoresQty);
 		}
 
 		if (computed.potenciaTotalInversores) {
-			const totalInversoresPower =
-				project.produtos?.reduce((acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde * (product.potencia || 0) : acc), 0) || 0;
+			const totalInversoresPower = soldProducts.reduce(
+				(acc, product) => (product.categoria === "INVERSOR" ? acc + product.qtde * (product.potencia || 0) : acc),
+				0,
+			);
 			formattedProject["POTÊNCIA TOTAL DOS INVERSORES"] = formatDecimalPlaces(totalInversoresPower / 1000);
 		}
 

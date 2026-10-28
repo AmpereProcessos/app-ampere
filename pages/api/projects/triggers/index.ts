@@ -5,6 +5,7 @@ import { insertFunnelReference } from "@/repositories/crm-funnel-references/muta
 import { insertOpportunity } from "@/repositories/crm-oportunities/mutations";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import { getProductsStr } from "@/utils/methods/formatting";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import { getContractValue } from "@/utils/methods/util/projects";
 import { getPurchaseControlTagsFromProject } from "@/utils/methods/util/purchase-controls";
 import { getServiceOrderTagsFromProject } from "@/utils/methods/util/service-order";
@@ -71,10 +72,14 @@ export const handleProjectTrigger: NextApiHandler<PostResponse> = async (req, re
 		});
 	}
 	if (triggerType === "create-project-main-purchase-control") {
+		if (project.tipoDeServico === "OPERAÇÃO E MANUTENÇÃO") {
+			throw new createHttpError.BadRequest("Projetos de operação e manutenção não possuem controle de compra de kit.");
+		}
+		const soldProducts = getSoldProducts(project.produtos ?? []);
 		const purchaseControl: TPurchaseControl = {
 			status: "EM COTAÇÃO",
 			titulo: `COMPRA DO ${project.nomeDoContrato}`,
-			anotacoes: project.produtos ? `KIT COMPOSTO POR: ${getProductsStr(project.produtos)}` : "",
+			anotacoes: soldProducts.length > 0 ? `KIT COMPOSTO POR: ${getProductsStr(soldProducts)}` : "",
 			projeto: {
 				id: project._id.toString(),
 				nome: project.nomeDoProjeto,

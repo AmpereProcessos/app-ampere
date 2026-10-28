@@ -1,6 +1,7 @@
 import type { TGetContractTemplateVariablesOutputDefault } from "@/pages/api/templates-contrato/variaveis";
 import { formatDecimalPlaces, formatToMoney } from "@/utils/constants";
 import { formatAsNumber } from "@/utils/methods/formatting";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import type { TContractTemplateVariableComputedCondition } from "@/utils/schemas/contract-templates-variables";
 import dayjs from "dayjs";
@@ -22,6 +23,7 @@ export function getContractTemplateNativeVariablesValues({ contractRequest }: TG
 			formatAsNumber(contractRequest.valorPadrao) +
 			formatAsNumber(contractRequest.valorEstrutura) +
 			formatAsNumber(contractRequest.valorOeMOuSeguro);
+		const soldProducts = getSoldProducts(contractRequest.produtos ?? []);
 
 		const nativeVariables: {
 			id: string;
@@ -114,26 +116,26 @@ export function getContractTemplateNativeVariablesValues({ contractRequest }: TG
 			{
 				id: getNativeVariableByIdentifier("lista-de-modulos"),
 				value:
-					contractRequest.produtos
-						?.filter((p) => p.categoria === "MÓDULO")
+					soldProducts
+						.filter((p) => p.categoria === "MÓDULO")
 						.map((r) => `- ${r.qtde} módulos ${r.modelo} ${r.potencia}W`)
 						.join("\n") ?? "",
 			},
 			{
 				id: getNativeVariableByIdentifier("lista-de-inversores"),
 				value:
-					contractRequest.produtos
-						?.filter((p) => p.categoria === "INVERSOR")
+					soldProducts
+						.filter((p) => p.categoria === "INVERSOR")
 						.map((r) => `- ${r.qtde} ${contractRequest.topologia === "INVERSOR" ? "inversores" : "micro-inversores"} ${r.modelo} ${r.potencia}W`)
 						.join("\n") ?? "",
 			},
 			{
 				id: getNativeVariableByIdentifier("garantia-dos-modulos"),
-				value: Math.min(...(contractRequest.produtos?.filter((p) => p.categoria === "MÓDULO").map((r) => r.garantia) ?? [0])).toString() ?? "0",
+				value: Math.min(...(soldProducts.filter((p) => p.categoria === "MÓDULO").map((r) => r.garantia) ?? [0])).toString() ?? "0",
 			},
 			{
 				id: getNativeVariableByIdentifier("garantia-dos-inversores"),
-				value: Math.min(...(contractRequest.produtos?.filter((p) => p.categoria === "INVERSOR").map((r) => r.garantia) ?? [0])).toString() ?? "0",
+				value: Math.min(...(soldProducts.filter((p) => p.categoria === "INVERSOR").map((r) => r.garantia) ?? [0])).toString() ?? "0",
 			},
 			{
 				id: getNativeVariableByIdentifier("valor-total"),

@@ -26,6 +26,7 @@ import { useProjectServiceOrders } from "@/utils/methods/query/service-orders";
 import { useTechnicalAnalysisById } from "@/utils/methods/query/technical-analysis";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
 import { getServiceObservationsFromObras } from "@/utils/methods/util/service-order";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import type { TPurchaseControl, TPurchaseProjectDTO } from "@/utils/schemas/purchases";
 import type { TServiceOrder, TServiceOrderSimplifiedDTO } from "@/utils/schemas/service-order";
@@ -293,8 +294,8 @@ function PurchaseControlProjectInformationBlock({
           PRODUTOS
         </h1>
         <div className="flex w-full flex-wrap items-center gap-2">
-          {project.produtos && project.produtos.length > 0 ? (
-            project.produtos.map((product) => (
+          {getSoldProducts(project.produtos ?? []).length > 0 ? (
+            getSoldProducts(project.produtos ?? []).map((product) => (
               <div
                 key={product.id}
                 className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]"

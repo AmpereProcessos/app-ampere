@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { formatDateAsLocale, formatLocation } from "@/utils/methods/formatting";
 import { updateProject } from "@/utils/methods/mutation/clients";
 import { renderProductCategoryIcon } from "@/utils/methods/rendering";
+import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
 import type { TServiceOrder, TServiceOrderProject } from "@/utils/schemas/service-order";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -203,8 +204,8 @@ function ServiceOrderProjectInformationBlock({
               <h1 className="text-xs tracking-tight font-medium text-start w-fit">PRODUTOS</h1>
             </div>
             <div className="w-full flex flex-col gap-3 border border-border rounded p-3 bg-card">
-              {project.produtos && project.produtos.length > 0 ? (
-                project.produtos.map((product, index) => (
+              {getSoldProducts(project.produtos ?? []).length > 0 ? (
+                getSoldProducts(project.produtos ?? []).map((product, index) => (
                   <ServiceOrderProjectProductCard
                     key={`product-${product.id}-${index}`}
                     product={product}

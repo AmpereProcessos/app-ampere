@@ -62,6 +62,9 @@ function ProjectServiceOrders({
   const handleSettled = async () => {
     await queryClient.invalidateQueries({ queryKey: ["project-service-orders", projectId] });
     await queryClient.invalidateQueries({ queryKey: ["project-by-id", projectId] });
+    // Keeps the main service order's execution summary (project Obras block) in sync after edits.
+    if (projectMainServiceOrderId)
+      await queryClient.invalidateQueries({ queryKey: ["service-order", projectMainServiceOrderId] });
   };
   return (
     <div className="my-2 flex w-full flex-col gap-3">

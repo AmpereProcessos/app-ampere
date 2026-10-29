@@ -20,6 +20,7 @@ import { useEmployeesSimplified } from "@/utils/methods/query/users";
 import MultipleSelectWithImages from "../inputs/MultipleSelectWithImages";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import ProjectServiceOrders from "../identificador/ordensDeServico/ProjectServiceOrders";
+import MainServiceOrderExecutionSummary from "../identificador/ordensDeServico/execucao/MainServiceOrderExecutionSummary";
 import { TAuthSession } from "@/lib/authentication/types";
 
 type InfoObrasBlockProps = {
@@ -266,6 +267,13 @@ function InfoObrasBlock({
           />
         </div>
       </div>
+      {infoHolder.idOrdemServico ? (
+        <MainServiceOrderExecutionSummary
+          session={session}
+          projectId={infoHolder._id}
+          serviceOrderId={infoHolder.idOrdemServico}
+        />
+      ) : null}
       <ObservationsBlock
         infoHolder={infoHolder}
         setInfo={setInfo}

@@ -14,11 +14,15 @@ have been skipped. Helpers share the saved snapshot instead of rereading the pro
 | `build-service-order.ts` | Builds the initial assembly order, including project, equipment, location, and author metadata. Release date is the project's equipment delivery date, or null. No I/O. |
 | `../../service-orders/delivery-release.ts` | The shared delivery rule synchronizes release dates and delivery metadata on every associated order, including completed orders, when delivery is set, corrected, or cleared. Purchase edits, purchase synchronization, and transport updates use the same rule. |
 | `commissions.ts` | A submitted purchase-payment date sets the commission reference for assembly service types; a submitted signature date sets it for other types. Clearing the source date clears the reference. |
-| `contract-status.ts` | Entering ASSINADO notifies finance, marks the CRM opportunity won, and initializes insurance or O&M coverage for 365 days. Entering RESCISÃO DE CONTRATO notifies finance and marks the opportunity lost. Leaving ASSINADO for another status clears CRM win/loss without email. |
+| `contract-status.ts` | Entering ASSINADO notifies finance, marks the CRM opportunity won, and initializes insurance or O&M coverage for 365 days. Signature-date submissions on an already signed project synchronize only the linked opportunity's `ganho.data`, including clearing it, without notifications or coverage changes. Entering RESCISÃO DE CONTRATO notifies finance and marks the opportunity lost. Leaving ASSINADO for another status clears CRM win/loss without email. |
 | `index.ts` | Runs the above in order, then awaits best-effort journey tracking. |
 
-Date and synchronization triggers preserve exact dotted request keys. Replacing
-an entire `contrato` or `compra` object does not trigger signing or commission rules.
+Service-order and commission date triggers preserve exact dotted request keys. Replacing
+an entire `contrato` or `compra` object does not trigger their signature or commission rules.
+CRM win-date synchronization accepts both `contrato.dataAssinatura` and whole
+`contrato` submissions while the project remains signed. It updates only the win-date
+leaf, preserving opportunity metadata. Repeated submissions retry synchronization;
+unacknowledged writes and missing linked opportunities fail the request.
 Replacing `compra` does synchronize equipment delivery and release dates.
 Status transitions compare persisted values and work independently of request keys.
 Changing the service type alone does not recalculate commissions or coverage.

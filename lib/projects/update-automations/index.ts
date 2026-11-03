@@ -5,6 +5,7 @@ import {
   handleProjectSigningAutomation,
   handleProjectRescissionAutomation,
   handleProjectUnsigningAutomation,
+  syncProjectOpportunityWinDate,
 } from "./contract-status";
 import type { ProjectUpdateAutomationContext } from "./types";
 import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
@@ -17,6 +18,7 @@ export async function runProjectUpdateAutomations(context: ProjectUpdateAutomati
     await syncServiceOrdersDeliveryRelease(context);
   }
   await syncProjectCommission(context);
+  await syncProjectOpportunityWinDate(context);
   await handleProjectSigningAutomation(context);
   await handleProjectRescissionAutomation(context);
   await handleProjectUnsigningAutomation(context);

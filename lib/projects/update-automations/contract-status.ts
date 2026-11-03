@@ -5,6 +5,35 @@ import resend from "@/lib/integrations/resend";
 import { getContractValue } from "@/utils/methods/util/projects";
 import connectToCRMDatabase from "@/utils/services/mongodb/crm/main";
 import dayjs from "dayjs";
+import type { ProjectUpdateAutomationContext } from "./types";
+
+/** Date corrections are independent of signing notifications and coverage initialization. */
+export async function syncProjectOpportunityWinDate({
+  project,
+  previous,
+  updateKeys,
+}: ProjectUpdateAutomationContext) {
+  if (
+    !project.idProjetoCRM ||
+    project.contrato.status !== "ASSINADO" ||
+    previous.contrato.status !== "ASSINADO"
+  ) return;
+  const signatureWasSubmitted =
+    updateKeys.includes("contrato.dataAssinatura") || updateKeys.includes("contrato");
+  if (!signatureWasSubmitted) return;
+
+  const crmDb = await connectToCRMDatabase();
+  const opportunitiesCollection = crmDb.collection<TOpportunity>("opportunities");
+  // Update the leaf only, preserving proposal, project, request and loss metadata.
+  // Repeated saves also retry synchronization after a partial failure.
+  const response = await opportunitiesCollection.updateOne(
+    { _id: new ObjectId(project.idProjetoCRM) },
+    { $set: { "ganho.data": project.contrato.dataAssinatura || null } },
+  );
+  if (!response.acknowledged || response.matchedCount === 0) {
+    throw new Error("Não foi possível sincronizar a data de ganho da oportunidade CRM vinculada.");
+  }
+}
 
 type HandleProjectSigningAutomationParams = {
   project: WithId<TProject>;

@@ -16,6 +16,7 @@
     "build:webpack": "next build --webpack",
     "test:kanban": "node --test components/kanban/Board.test.cjs",
     "test:notifications": "node --test lib/notifications/materials.test.cjs",
+    "test:purchases": "node --test lib/projects/purchase-stock.test.cjs lib/projects/retired-purchase-migration.test.cjs",
     "test:runtime": "node --test lib/runtime/dependencies.test.cjs",
     "test:integrations": "node --test lib/whatsapp/integrations.test.cjs lib/whatsapp/sdk-upgrade.test.cjs"
   },

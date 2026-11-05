@@ -910,6 +910,8 @@ export async function handlePurchaseControlAllocationsImproved({
       .find({ _id: { $in: purchasedMaterialsObjectIds } }, { session: dbSession })
       .toArray();
     for (const item of purchaseControlComposition) {
+      // Purchase items may be entered without a warehouse catalog link.
+      if (!item.materialId) continue;
       const existingMaterial = materials.find((mat) => mat._id.toString() === item.materialId);
 
       if (!existingMaterial) {
@@ -1017,6 +1019,8 @@ export async function handlePurchaseControlAllocationsImproved({
       .find({ idCompra: purchaseControlId }, { session: dbSession })
       .toArray();
     for (const item of purchaseControlComposition) {
+      // Only linked items participate in stock reconciliation.
+      if (!item.materialId) continue;
       const existingMaterial = materials.find((mat) => mat._id.toString() === item.materialId);
 
       if (!existingMaterial) {

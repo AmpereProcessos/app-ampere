@@ -15,6 +15,8 @@
     "db:studio": "dotenv drizzle-kit studio",
     "build:webpack": "next build --webpack",
     "test:kanban": "node --test components/kanban/Board.test.cjs",
+    "test:notifications": "node --test lib/notifications/materials.test.cjs",
+    "test:runtime": "node --test lib/runtime/dependencies.test.cjs",
     "test:integrations": "node --test lib/whatsapp/integrations.test.cjs lib/whatsapp/sdk-upgrade.test.cjs"
   },
   "dependencies": {
@@ -138,7 +140,7 @@
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.12.0 <23.0.0"
   },
   "optionalDependencies": {
     "@tsrs/win32-x64": "0.21.0-ts7.1.0-beta"

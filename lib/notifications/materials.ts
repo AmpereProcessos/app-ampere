@@ -1,7 +1,7 @@
 import { NOTIFICATION_TRACK_EVENTS_CONFIG } from "@/lib/notifications/configs";
 import { getNovuSubscriberId } from "@/utils/services/novu/config";
 import { novu } from "@/utils/services/novu";
-import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/workflows";
+import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/contracts";
 
 type MaterialQuantityChange = {
 	materialId?: string | null;

@@ -3,7 +3,7 @@ import { InsertNotificationSchema, type TNotification } from "@/utils/schemas/no
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import { novu } from "@/utils/services/novu";
 import { getNovuSubscriberId } from "@/utils/services/novu/config";
-import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/workflows";
+import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/contracts";
 import dayjs from "dayjs";
 import createHttpError from "http-errors";
 import { type Collection, type Db, ObjectId } from "mongodb";

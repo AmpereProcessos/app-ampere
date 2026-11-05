@@ -5,7 +5,7 @@ The application now targets Next.js 16 and React 19. Both the Pages Router and A
 ## Framework and tooling
 
 - Next.js 16.4.5 and React/React DOM 19.3.1, with React 19 TypeScript definitions.
-- Node.js 22 or newer is required by AI SDK 7; local validation uses Node.js 24.
+- Use Node.js 22.12 or newer within the 22.x LTS line. `package.json` constrains the deployment runtime to `>=22.12.0 <23.0.0`; `.nvmrc` selects Node 22 locally. The previous open-ended range allowed Node 24 variants where Google authentication crashes during import because `buffer-equal-constant-time` accesses the removed `SlowBuffer.prototype`. Node 22.12+ also enables the synchronous `require(ESM)` support needed by Novu?s `sanitize-html` / `htmlparser2` dependency chain. Do not disable that support through `NODE_OPTIONS`.
 - `npm run dev` and `npm run build` use Turbopack. Explicit Webpack alternatives are available as `dev:webpack` and `build:webpack`.
 - SVG imports use Next.js's default static image handling in both bundlers (every usage passes them to `next/image` as `src`). The old SVGR rule sat under an unrecognised `module` key and never ran, so enabling SVGR broke server rendering wherever an SVG import reached `next/image`. Obsolete Next.js configuration options were removed.
 - `npm run lint` invokes the existing Oxlint installation with React and Next.js plugins. The unused ESLint configuration was removed.
@@ -48,6 +48,8 @@ Connections stored only in the former backend need to be reconnected from WhatsA
 - Financial PDF extraction and reconciliation use `generateText`, `Output.object`, and top-level `instructions`. Their response schemas and server-assigned line IDs are preserved.
 - Inbox appearance uses the public component prop type instead of an internal package path. Existing workflow identifiers and subscriber IDs remain unchanged.
 
+Notification senders import IDs and payload schemas from `utils/services/novu/contracts.ts`. Only the Novu bridge imports `workflows.ts` and its `@novu/framework` runtime. This prevents framework initialization failures (including `sanitize-html` requiring ESM-only `htmlparser2` on incompatible runtimes) from breaking the Purchases API before its request handler runs. Run `npm run test:notifications` for the route-loading and stock-threshold notification regressions. The bridge itself requires the Node 22 runtime described above. Run `npm run test:runtime` under Node 22 to load the real Google authentication, Google Calendar, and Novu bridge modules and verify a mocked authenticated Calendar event request without external calls. Redeploy after changing the runtime; existing deployments retain their previous runtime.
+
 See the [AI SDK 7 migration guide](https://ai-sdk.dev/docs/migration-guides/migration-guide-7-0). Run `npm run test:integrations` for the WhatsApp and SDK contract regression tests. SDK requests are mocked; these tests do not send real notifications or make paid model calls.
 
 ## Separate migrations
@@ -63,3 +65,11 @@ The development server is available on port 3000; an HTTP smoke check of `/auth/
 The original dependency-upgrade baseline had 172 type-check errors. The Convex-removal/SDK-upgrade baseline had 170; afterward it has 168, with no new diagnostic messages compared with that baseline. `typescript.ignoreBuildErrors` remains enabled, so the production build is not a substitute for `npm run typecheck`.
 
 The DOM interaction tests exercise drag-and-drop events and mutations without a running application. Authenticated browser acceptance testing of the real boards remains a separate deployment check.
+
+## Runtime compatibility follow-up
+
+Both production import failures were reproduced with the locked dependencies: Google authentication throws `Cannot read properties of undefined (reading 'prototype')` on Node 24.0.0, and Novu throws `ERR_REQUIRE_ESM` on Node 22.11.0. Node 22.23.4 passes both dependency checks, the Calendar request regression, the Novu bridge initialization, and the production Turbopack build. The five new notification/runtime tests and 17 existing kanban/integration tests pass.
+
+Production-build HTTP smoke checks on Node 22.23.4 returned 401 for unauthenticated service-order list, ID, and project queries and for the Purchases kanban query; `/api/novu` returned 200. These checks verify module loading and routing, not authenticated production acceptance. No production deployment or real Calendar/notification write was performed.
+
+The lockfile was repaired to include five previously missing optional dependency entries; existing package versions were preserved. A clean install and the final lockfile dry-run validation passed. Targeted lint has only pre-existing unused-import/variable warnings.

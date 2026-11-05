@@ -4,7 +4,7 @@ import type { TCertification, TCertificationReference } from "@/utils/schemas/ce
 import connectToAdministrationDatabase from "@/utils/services/mongodb/administration";
 import { novu } from "@/utils/services/novu";
 import { getNovuSubscriberId } from "@/utils/services/novu/config";
-import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/workflows";
+import { NOVU_WORKFLOW_IDS, type TGeneralNotificationPayload } from "@/utils/services/novu/contracts";
 import dayjs from "dayjs";
 import type { NextApiHandler } from "next";
 

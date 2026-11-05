@@ -8,7 +8,7 @@ import {
 } from "@/utils/schemas/finances";
 import connectToDatabase from "@/utils/services/mongodb/projects";
 import { openai } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import dayjs from "dayjs";
 import { type Collection, type Db, type Filter, type WithId } from "mongodb";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
@@ -235,11 +235,11 @@ async function runAiMatch({
     `linhas=${linhasPayload.length}, candidatos=${transacoesPayload.length}`,
   );
 
-  const { object } = await generateObject({
+  const { output: object } = await generateText({
     model: openai("gpt-4o-mini"),
-    schema: AiMatchSchema,
+    output: Output.object({ schema: AiMatchSchema }),
+    instructions: AI_SYSTEM_PROMPT,
     messages: [
-      { role: "system", content: AI_SYSTEM_PROMPT },
       {
         role: "user",
         content: JSON.stringify({

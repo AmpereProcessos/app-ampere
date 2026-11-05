@@ -1,13 +1,12 @@
 import type { TAuthSession } from "@/lib/authentication/types";
-import { FacebookOAuth } from "@/lib/oauth";
 import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
 import type { TIntegration } from "@/utils/schemas/integrations";
 import connectToDatabase from "@/utils/services/mongodb/projects";
-import * as arctic from "arctic";
 import createHttpError from "http-errors";
 import type { NextApiHandler } from "next";
 
 async function getWhatsappIntegration({ session }: { session: TAuthSession }) {
+	if (!session?.user) throw new createHttpError.Unauthorized("Usuário não autenticado.");
 	const db = await connectToDatabase();
 	const collection = db.collection<TIntegration>("integracoes");
 	const integration = await collection.findOne({ identificador: "WHATSAPP" });
@@ -21,7 +20,6 @@ async function getWhatsappIntegration({ session }: { session: TAuthSession }) {
 			identificador: "WHATSAPP",
 			dados: {
 				tipo: "WHATSAPP",
-				token: integration.dados.token,
 				dataExpiracao: integration.dados.dataExpiracao,
 				metaAutorAppId: integration.dados.metaAutorAppId,
 				metaEscopo: integration.dados.metaEscopo,
@@ -41,6 +39,7 @@ const getWhatsappIntegrationHandler: NextApiHandler<TGetWhatsappIntegrationOutpu
 };
 
 async function disconnectWhatsappIntegration({ session }: { session: TAuthSession }) {
+	if (!session?.user) throw new createHttpError.Unauthorized("Usuário não autenticado.");
 	const db = await connectToDatabase();
 	const collection = db.collection<TIntegration>("integracoes");
 	const integration = await collection.findOne({ identificador: "WHATSAPP" });

@@ -38,7 +38,9 @@ export async function login(formData: FormData): Promise<void> {
 		userId: user._id.toString(),
 	});
 	try {
-		setSetSessionCookie({
+		// Must be awaited: cookies() is async, and redirect() below would otherwise
+		// send the response before the cookie is written.
+		await setSetSessionCookie({
 			token: sessionToken,
 			expiresAt: session.dataExpiracao,
 		});

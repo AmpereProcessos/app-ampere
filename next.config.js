@@ -5,19 +5,6 @@ const nextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-	eslint: {
-		ignoreDuringBuilds: true,
-	},
-	swcMinify: true,
-	module: {
-		rules: [
-			{
-				test: /\.svg$/i,
-				issuer: /\.[jt]sx?$/,
-				use: ["@svgr/webpack"],
-			},
-		],
-	},
 	images: {
 		// domains: ['avatars.githubusercontent.com', 'firebasestorage.googleapis.com', 'sc-erp.s3.amazonaws.com', 'localhost'],
 		remotePatterns: [
@@ -36,10 +23,6 @@ const nextConfig = {
 			{
 				protocol: "https",
 				hostname: "gkbkgoyxtxdvxfomwijd.supabase.co",
-			},
-			{
-				protocol: "https",
-				hostname: "fortunate-dotterel-211.convex.cloud",
 			},
 			{
 				protocol: "http",

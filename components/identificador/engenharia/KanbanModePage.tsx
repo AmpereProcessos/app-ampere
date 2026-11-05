@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Pencil, Tag } from "lucide-react";
 import { useState } from "react";
-import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
+import { KanbanBoard, KanbanCard, KanbanColumn, type KanbanDropResult } from "@/components/kanban/Board";
 import { toast } from "react-hot-toast";
 import { FaRotate } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
@@ -44,7 +44,7 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
     updateFilters,
   } = useEngineeringProjectsKanban();
 
-  async function onDragEnd(dragEndResult: DropResult) {
+  async function onDragEnd(dragEndResult: KanbanDropResult) {
     const { source, destination, draggableId } = dragEndResult;
     if (!destination) return;
     if (destination.droppableId === source.droppableId) return null;
@@ -147,7 +147,7 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
         />
       </div>
 
-      <DragDropContext onDragEnd={(e) => handleUpdateProjectStatus(e)}>
+      <KanbanBoard onDragEnd={(e) => handleUpdateProjectStatus(e)}>
         <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -162,7 +162,7 @@ function EngineeringKanbanModePage({ session }: EngineeringKanbanModePageProps) 
               ))
             : null}
         </div>
-      </DragDropContext>
+      </KanbanBoard>
       {editProjectModal.isOpen && editProjectModal.id && (
         <ModalProjetos
           session={session}
@@ -188,8 +188,7 @@ function EngineeringKanbanFunnelList({
   handleItemClick,
 }: EngineeringKanbanFunnelListProps) {
   return (
-    <Droppable droppableId={listTitle.toString()}>
-      {(provided) => (
+    <KanbanColumn id={listTitle.toString()}>
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
@@ -203,24 +202,17 @@ function EngineeringKanbanFunnelList({
               </div>
             </div>
           </div>
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="my-1 flex flex-col gap-2"
+          <div            className="my-1 flex flex-col gap-2"
           >
-            {listItems.map((item, index) => (
+            {listItems.map((item) => (
               <EngineeringKanbanListItem
                 key={item._id}
                 item={item}
-                index={index}
                 handleClick={handleItemClick}
               />
-            ))}
-            {provided.placeholder}
-          </div>
+            ))}          </div>
         </div>
-      )}
-    </Droppable>
+    </KanbanColumn>
   );
 }
 
@@ -308,10 +300,9 @@ function getProjectFlags(project: TEngineeringProjectsKanbanOutput["data"][strin
 }
 type EngineeringKanbanListItemProps = {
   item: TEngineeringProjectsKanbanOutput["data"][string][number];
-  index: number;
   handleClick: (id: string) => void;
 };
-function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanbanListItemProps) {
+function EngineeringKanbanListItem({ item, handleClick }: EngineeringKanbanListItemProps) {
   const {
     homologationStatusFlag,
     homologationInspectionFlag,
@@ -324,13 +315,8 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
     isFastTrackedFlag,
   } = getProjectFlags(item);
   return (
-    <Draggable draggableId={item._id.toString()} index={index}>
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
+    <KanbanCard id={item._id.toString()}>
+        <div          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
@@ -482,7 +468,6 @@ function EngineeringKanbanListItem({ item, index, handleClick }: EngineeringKanb
           </div>
           <div className="flex w-full items-center justify-between gap-2" />
         </div>
-      )}
-    </Draggable>
+    </KanbanCard>
   );
 }

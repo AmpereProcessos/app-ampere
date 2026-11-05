@@ -1,28 +1,29 @@
+import { useWhatsappIntegration } from "@/utils/methods/query/integrations";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import WhatsAppConnectButton from "@/components/meta/WhatsappConnectButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/utils/Buttons/LoadingButton";
 import ErrorComponent from "@/components/utils/ErrorComponent";
-import { api } from "@/convex/_generated/api";
 import type { TAuthSession } from "@/lib/authentication/types";
 import type { TGetWhatsappIntegrationOutput } from "@/pages/api/integracao/whatsapp/connect";
 import { formatDateAsLocale } from "@/utils/methods/formatting";
 
-import { useMutation, useQuery } from "convex/react";
 import { BadgeCheck, Calendar, Code, Key, Phone } from "lucide-react";
 import toast from "react-hot-toast";
-import { useConvexQuery } from "../../../convex/utils";
 
 type WhatsappConnectionBlockProps = {
   session: TAuthSession;
 };
 export default function WhatsappConnectionBlock({ session }: WhatsappConnectionBlockProps) {
   const {
-    data: whatsappConnection,
+    data: integration,
     isPending,
     isError,
     isSuccess,
-  } = useConvexQuery(api.queries.connections.getWhatsappConnection);
+  } = useWhatsappIntegration();
+  const whatsappConnection = integration?.dados;
 
   return (
     <div className="flex h-full grow flex-col">
@@ -53,10 +54,7 @@ export default function WhatsappConnectionBlock({ session }: WhatsappConnectionB
 }
 
 type WhatsappConnectionBlockConnectedProps = {
-  whatsappConnection: Exclude<
-    typeof api.queries.connections.getWhatsappConnection._returnType,
-    null
-  >;
+  whatsappConnection: NonNullable<TGetWhatsappIntegrationOutput["data"]>["dados"];
 };
 function WhatsappConnectionBlockConnected({
   whatsappConnection,
@@ -68,9 +66,12 @@ function WhatsappConnectionBlockConnected({
     whatsapp_business_messaging: "Mensagens de WhatsApp Business",
   };
 
-  const disconnectWhatsappConnectionMutation = useMutation(
-    api.mutations.connections.disconnectWhatsappConnection,
-  );
+  const queryClient = useQueryClient();
+  const { mutate: disconnectWhatsappConnection, isPending } = useMutation({
+    mutationFn: () => axios.delete("/api/integracao/whatsapp/connect"),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["whatsapp-integration"] }),
+    onError: () => toast.error("Erro ao desconectar o WhatsApp Business."),
+  });
   return (
     <div className="flex w-full flex-col gap-2 py-2">
       <div className="w-full flex items-center justify-between gap-2 flex-col lg:flex-row">
@@ -82,10 +83,8 @@ function WhatsappConnectionBlockConnected({
           variant={"ghost"}
           size={"sm"}
           className="w-fit hover:bg-destructive/10 hover:text-destructive"
-          loading={false}
-          onClick={() =>
-            disconnectWhatsappConnectionMutation({ whatsappConnectionId: whatsappConnection._id })
-          }
+          loading={isPending}
+          onClick={() => disconnectWhatsappConnection()}
         >
           DESCONECTAR
         </LoadingButton>

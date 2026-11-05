@@ -19,7 +19,7 @@ export function useDebounce<T>(value: T, delay: number) {
 // Optional: Memoized version for objects
 export function useDebounceMemo<T extends object>(value: T, delay: number): T {
 	const [debouncedValue, setDebouncedValue] = useState<T>(value);
-	const timeoutRef = useRef<NodeJS.Timeout>();
+	const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 	const previousValueRef = useRef<T>(value);
 
 	useEffect(() => {

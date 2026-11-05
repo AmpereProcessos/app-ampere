@@ -1,7 +1,6 @@
-import { api } from "@/convex/_generated/api";
+import { sendTemplateWhatsappMessage } from "@/lib/whatsapp";
 import type { TProjectJourneyStageWorkflow } from "@/utils/schemas/project-journey";
 import type { TProject } from "@/utils/schemas/projects";
-import { convexClient } from "@/utils/services/convex/client";
 import { type Collection, ObjectId } from "mongodb";
 import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_CONFIG } from ".";
 
@@ -366,23 +365,9 @@ async function handleProjectJourneyWorkflowStageAction({ project, trigger, actio
 
 			if (!eventWorkflowStage) return;
 			const payload = eventWorkflowStage.payload(project);
-			return await convexClient.mutation(api.mutations.messages.createTemplateMessage, {
-				cliente: {
-					idApp: project.idClienteCRM as string,
-					nome: project.nomeDoContrato,
-					telefone: "3484063369", // FIXED FOR NOW. TODO: GET THE PHONE FROM THE PROJECT as string,
-					avatar_url: undefined,
-					email: project.email ?? undefined,
-					cpfCnpj: project.cpf_cnpj.toString(),
-				},
-				autor: {
-					idApp: "6318db05929e9f8731d8d9bb",
-					tipo: "usuario",
-				},
-				whatsappPhoneNumberId: "807009649165845",
-				templateId: action.metadados.whatsappTemplateId,
-				templatePayloadData: payload.data,
-				templatePayloadContent: payload.content,
+			return await sendTemplateWhatsappMessage({
+				fromPhoneNumberId: "807009649165845",
+				templatePayload: payload.data,
 			});
 		}
 		default: {

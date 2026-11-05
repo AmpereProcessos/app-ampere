@@ -29,7 +29,6 @@ import {
   FolderTree,
   LayoutGrid,
   List,
-  MessageCircle,
   ShoppingCart,
   Warehouse,
 } from "lucide-react";
@@ -149,14 +148,6 @@ export const AppRoutes: TAppRouteGroup[] = [
     title: "OUTROS",
     icon: <List className="h-4 min-h-4 w-4 min-w-4 text-foreground" />,
     items: [
-      {
-        title: "Chats",
-        path: "/chats",
-        checkUserAccess: (session: TAuthSession) => session.user.permissoes.chats.visualizar,
-        icon: (
-          <MessageCircle className="h-4 min-h-4 w-4 min-w-4 text-[#15599a] dark:text-[#fead42]" />
-        ),
-      },
       {
         title: "Chamados",
         path: "/chamados",
@@ -383,15 +374,6 @@ function GeralSidebar({ session }: GeralSidebarProps) {
 				</div>
 				<div className="mt-6">
 					<h2 className="text-foreground text-xs">OUTROS</h2>
-
-					{session.user.permissoes.chats.visualizar ? (
-						<Link href="/chats">
-							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">
-								<MessageCircle className="dark:text-primary h-4 min-h-4 w-4 min-w-4 text-[#15599a]" />
-								<p className="text-foreground pl-3 text-xs">Chats</p>
-							</div>
-						</Link>
-					) : null}
 					{session.user.permissoes.suporte.visualizar || session.user.permissoes.posVenda.visualizar ? (
 						<Link href={"/oem/comissionamento"}>
 							<div className="dark:hover:bg-primary/10 mt-2 flex cursor-pointer items-center py-2 pl-2 duration-300 ease-in hover:scale-105 hover:bg-blue-100">

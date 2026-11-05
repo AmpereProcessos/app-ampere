@@ -25,7 +25,7 @@ function RevenueProjectVinculation({
 }: ProjectVinculationProps) {
   const [vinculationModalIsOpen, setVinculationModalIsOpen] = useState<boolean>(false);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ["update-revenue-project", revenueId],
     mutationFn: handleVinculate,
     onMutate: async () => {

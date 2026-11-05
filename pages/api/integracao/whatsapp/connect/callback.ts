@@ -1,27 +1,10 @@
-import { api } from "@/convex/_generated/api";
 import { FacebookOAuth } from "@/lib/oauth";
-import { validateAuthentication } from "@/utils/api";
+import { validateAuthenticationWithSession } from "@/utils/api";
+import { saveWhatsappIntegration } from "@/lib/whatsapp/connection";
 import type { TWhatsappIntegrationData } from "@/utils/schemas/integrations";
 
-import { ConvexHttpClient } from "convex/browser";
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL as string;
-// Este é um pseudo-código para o banco de dados. Adapte para sua implementação (Prisma, etc.)
-async function saveCredentialsToDB(whatsappConnection: TWhatsappIntegrationData) {
-	console.log("Salvando no DB:", { whatsappConnection });
-	const convex = new ConvexHttpClient(CONVEX_URL);
-	// LÓGICA DO SEU BANCO DE DADOS AQUI
-	await convex.mutation(api.mutations.connections.syncWhatsappConnection, {
-		token: whatsappConnection.token,
-		dataExpiracao: new Date(whatsappConnection.dataExpiracao).getTime(),
-		metaAutorAppId: whatsappConnection.metaAutorAppId,
-		metaEscopo: whatsappConnection.metaEscopo,
-		telefones: whatsappConnection.telefones,
-	});
-	return true;
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	console.log("[INFO] [WHATSAPP_CONNECT_CALLBACK] Query Params:", req.query);
@@ -31,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return res.status(400).json({ error: "Authorization code is missing." });
 	}
 
-	const session = await validateAuthentication(req, res);
+	const session = await validateAuthenticationWithSession(req, res);
 	const appId = process.env.NEXT_PUBLIC_META_APP_ID;
 	const appSecret = process.env.META_APP_SECRET;
 	// O redirect_uri deve ser um dos URIs configurados no seu painel da Meta
@@ -86,6 +69,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		telefones: phones,
 	};
 
-	await saveCredentialsToDB(whatsappConnection);
+	await saveWhatsappIntegration(whatsappConnection, session);
 	return res.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/configuracoes?mode=whatsapp-connection`);
 }

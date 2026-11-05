@@ -2,13 +2,13 @@ import { getNovuSubscriberId, NOVU_APPLICATION_IDENTIFIER } from "@/utils/servic
 import { Inbox } from "@novu/nextjs";
 import { dark } from "@novu/react/themes";
 import { useTheme } from "next-themes";
-import type { ReactAppearance } from "@novu/react/dist/esm/utils/types";
+import type { ComponentProps } from "react";
 import type { TAuthSession } from "@/lib/authentication/types";
 
 function Notifications({ session }: { session: TAuthSession }) {
 	const { resolvedTheme } = useTheme();
 
-	const appearance: ReactAppearance = {
+	const appearance: NonNullable<ComponentProps<typeof Inbox>["appearance"]> = {
 		baseTheme: resolvedTheme === "dark" ? dark : undefined,
 		variables: {
 			fontSize: "14px",

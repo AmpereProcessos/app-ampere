@@ -142,7 +142,7 @@ type PropertyUsageProviderProps = React.PropsWithChildren<PropertyUsageInitProps
 
 // Provider component
 export function PropertyUsageProvider({ children, ...props }: PropertyUsageProviderProps) {
-  const storeRef = useRef<PropertyUsageStore>();
+  const storeRef = useRef<PropertyUsageStore | null>(null);
   if (!storeRef.current) {
     storeRef.current = createPropertyUsageStore(props);
   }

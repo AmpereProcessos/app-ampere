@@ -52,7 +52,7 @@ function SpecificProjectFinancialAuditing({ id, error }: SpecificProjectFinancia
         <div className="flex items-center justify-center gap-4 border border-black bg-black p-3">
           <Link href={"/admin/auditoria-financeira"}>
             <div className="flex cursor-pointer items-center justify-end">
-              <Image height={30} width={30} src={Logo} />
+              <Image height={30} width={30} src={Logo} alt="Ampère" />
             </div>
           </Link>
           <h1 className="text-center text-xl leading-none font-black tracking-tight text-white">

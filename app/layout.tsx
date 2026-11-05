@@ -21,7 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={raleway.variable}>
+    // next-themes sets the theme class on <html> before hydration
+    <html lang="pt-BR" className={raleway.variable} suppressHydrationWarning>
       <AppRouterHead />
       <body>
         <NuqsAdapter>

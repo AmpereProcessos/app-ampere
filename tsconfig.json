@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"downlevelIteration": true,
+		"target": "es2017",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -10,12 +9,13 @@
 		"noEmit": true,
 		"esModuleInterop": true,
 		"module": "esnext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"jsx": "preserve",
+		"jsx": "react-jsx",
 		"incremental": true,
-		"baseUrl": ".",
+		// TS 7 defaults this to true, which flags `import "./globals.css"`
+		"noUncheckedSideEffectImports": false,
 		"paths": {
 			"@/*": ["./*"]
 		},
@@ -25,7 +25,7 @@
 			}
 		]
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "tailwind.config.js", "pages/api/crm/utils/index ts"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "tailwind.config.js", "pages/api/crm/utils/index ts"],
 	"exclude": [
 		"node_modules",
 		".next",

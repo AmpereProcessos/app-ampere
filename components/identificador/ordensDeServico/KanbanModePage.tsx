@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { TAuthSession } from "@/lib/authentication/types";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { KanbanBoard, KanbanCard, KanbanColumn, type KanbanDropResult } from "@/components/kanban/Board";
 import ErrorComponent from "@/components/utils/ErrorComponent";
 import ModalNewServiceOrder from "./modals/ModalNewServiceOrder";
 import { cn } from "@/lib/utils";
@@ -101,7 +101,7 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
     }).map(([key, value]) => ({ title: key, items: value }));
   }
 
-  function onDragEnd(dragEndResult: DropResult) {
+  function onDragEnd(dragEndResult: KanbanDropResult) {
     function handleEffectivationUpdate(
       newValue: TServiceOrderSimplifiedDTO["status"],
       previousData: TServiceOrderSimplifiedDTO,
@@ -200,7 +200,7 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
         </div>
       </div>
 
-      <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
+      <KanbanBoard onDragEnd={(e) => onDragEnd(e)}>
         <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -218,7 +218,7 @@ function ServiceOrdersKanbanModePage({ session, handleSetMode }: ServiceOrdersKa
             </>
           ) : null}
         </div>
-      </DragDropContext>
+      </KanbanBoard>
       {newServiceOrderModalIsOpen ? (
         <ModalNewServiceOrder
           session={session}
@@ -446,8 +446,7 @@ type FunnelListProps = {
 };
 function FunnelList({ session, title, items, handleItemClick }: FunnelListProps) {
   return (
-    <Droppable droppableId={title.toString()}>
-      {(provided) => (
+    <KanbanColumn id={title.toString()}>
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
@@ -463,32 +462,26 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
             </div>
           </div>
           <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
             className="my-1 flex flex-col gap-2"
           >
-            {items.map((item, index) => (
+            {items.map((item) => (
               <FunnelListItem
                 key={item._id}
                 item={item}
-                index={index}
                 handleClick={handleItemClick}
               />
             ))}
-            {provided.placeholder}
           </div>
         </div>
-      )}
-    </Droppable>
+    </KanbanColumn>
   );
 }
 
 type FunnelListItemProps = {
   item: TServiceOrderSimplifiedDTO;
-  index: number;
   handleClick: (id: string) => void;
 };
-function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
+function FunnelListItem({ item, handleClick }: FunnelListItemProps) {
   function getHomologationAccessTag(acessResponseData: string) {
     const daysSinceResponse = dayjs().diff(dayjs(acessResponseData), "day");
 
@@ -512,12 +505,8 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
       );
   }
   return (
-    <Draggable draggableId={item._id.toString()} index={index}>
-      {(provided) => (
+    <KanbanCard id={item._id.toString()}>
         <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
           className="bg-background border-primary/60 relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
@@ -688,7 +677,6 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             </div>
           </div>
         </div>
-      )}
-    </Draggable>
+    </KanbanCard>
   );
 }

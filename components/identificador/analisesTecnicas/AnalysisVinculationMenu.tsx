@@ -6,7 +6,6 @@ import { formatDateAsLocale, formatNameAsInitials } from "@/utils/methods/format
 import { getErrorMessage } from "@/utils/methods/handlers";
 import { useOpportunityTechnicalAnalysis } from "@/utils/methods/query/technical-analysis";
 import type { TTechnicalAnalysis, TTechnicalAnalysisDTO } from "@/utils/schemas/technical-analysis";
-import type { Optional } from "@tanstack/react-query";
 
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
@@ -33,9 +32,7 @@ function AnalysisVinculationMenu({
     concludedOnly: false,
   });
   function handleVinculation(analysis: TTechnicalAnalysisDTO) {
-    const analysisId = analysis._id;
-    var info = { ...analysis } as Optional<TTechnicalAnalysisDTO, "_id">;
-    delete info._id;
+    const { _id: analysisId, ...info } = analysis;
     setInfoHolder((prev) => ({ ...info, idAnaliseReferencia: analysisId }));
   }
   return (

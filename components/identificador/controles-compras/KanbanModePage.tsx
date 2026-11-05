@@ -32,7 +32,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { CheckCheck, Factory, Pencil, ScrollText, Tag, Target, Truck, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
+import { KanbanBoard, KanbanCard, KanbanColumn, type KanbanDropResult } from "@/components/kanban/Board";
 import toast from "react-hot-toast";
 import {
   BsCalendar,
@@ -152,7 +152,7 @@ function PurchaseControlsKanbanModePage({
     }).map(([key, value]) => ({ title: key, items: value }));
   }
 
-  function onDragEnd(dragEndResult: DropResult) {
+  function onDragEnd(dragEndResult: KanbanDropResult) {
     function handleEffectivationUpdate(
       newValue: TPurchaseControlKanbanSimplifiedDTO["status"],
       previousData: TPurchaseControlKanbanSimplifiedDTO,
@@ -270,7 +270,7 @@ function PurchaseControlsKanbanModePage({
         </div>
       </div>
 
-      <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
+      <KanbanBoard onDragEnd={(e) => onDragEnd(e)}>
         <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -289,7 +289,7 @@ function PurchaseControlsKanbanModePage({
             </>
           ) : null}
         </div>
-      </DragDropContext>
+      </KanbanBoard>
       {newPurchaseControlModalIsOpen ? (
         <NewPurchaseControl
           session={session}
@@ -339,8 +339,7 @@ function FunnelList({
     title as TPurchaseControlKanbanSimplifiedDTO["status"],
   );
   return (
-    <Droppable droppableId={title.toString()}>
-      {(provided) => (
+    <KanbanColumn id={title.toString()}>
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
@@ -400,38 +399,29 @@ function FunnelList({
               </div>
             </div>
           </div>
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="my-1 flex flex-col gap-2"
+          <div            className="my-1 flex flex-col gap-2"
           >
-            {items.map((item, index) => (
+            {items.map((item) => (
               <FunnelListItem
                 key={item._id}
                 funnelListItemsExpandedModeActive={funnelListItemsExpandedModeActive}
                 item={item}
-                index={index}
                 handleClick={handleItemClick}
               />
-            ))}
-            {provided.placeholder}
-          </div>
+            ))}          </div>
         </div>
-      )}
-    </Droppable>
+    </KanbanColumn>
   );
 }
 
 type FunnelListItemProps = {
   funnelListItemsExpandedModeActive: boolean;
   item: TPurchaseControlKanbanSimplifiedDTO;
-  index: number;
   handleClick: (id: string) => void;
 };
 function FunnelListItem({
   funnelListItemsExpandedModeActive,
   item,
-  index,
   handleClick,
 }: FunnelListItemProps) {
   const [itemExpandedModeActive, setItemExpandedModeActive] = useState(
@@ -470,13 +460,8 @@ function FunnelListItem({
     setItemExpandedModeActive(funnelListItemsExpandedModeActive);
   }, [funnelListItemsExpandedModeActive]);
   return (
-    <Draggable draggableId={item._id.toString()} index={index}>
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
+    <KanbanCard id={item._id.toString()}>
+        <div          className="bg-background border-primary/60 relative flex min-h-[110px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
@@ -620,7 +605,6 @@ function FunnelListItem({
             </div>
           </div>
         </div>
-      )}
-    </Draggable>
+    </KanbanCard>
   );
 }

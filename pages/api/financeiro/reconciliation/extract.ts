@@ -5,7 +5,7 @@ import {
   TFinancialReconciliationExtractedLine,
 } from "@/utils/schemas/finances";
 import { openai } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import createHttpError from "http-errors";
 import { randomUUID } from "node:crypto";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
@@ -72,13 +72,11 @@ async function extractReconciliation({
   console.log("[INFO] [EXTRACT_RECONCILIATION] [URL]", pdfUrl);
   const pdfBytes = await fetchPdfBytes(pdfUrl);
 
-  const { object } = await generateObject({
+  const { output: object } = await generateText({
     model: openai("gpt-4o"),
-    schema: z.object({
-      linhas: z.array(ModelExtractedLineSchema),
-    }),
+    output: Output.object({ schema: z.object({ linhas: z.array(ModelExtractedLineSchema) }) }),
+    instructions: SYSTEM_PROMPT,
     messages: [
-      { role: "system", content: SYSTEM_PROMPT },
       {
         role: "user",
         content: [

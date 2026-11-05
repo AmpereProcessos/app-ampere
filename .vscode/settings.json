@@ -14,6 +14,9 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode",
   },
-  "typescript.experimental.useTsgo": true,
+  // TypeScript 7 extension (TypeScriptTeam.native-preview) running tsrs from the lockfile.
+  // Windows path; on macOS/Linux use "./node_modules/tsrs/tsdk".
+  "js/ts.experimental.useTsgo": true,
+  "js/ts.tsdk.path": "./node_modules/@tsrs/win32-x64",
   "typescript.tsserver.maxTsServerMemory": 4096,
 }

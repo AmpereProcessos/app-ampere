@@ -25,7 +25,7 @@ import type { TPosVendaCall, TPosVendaCallDTO } from "@/utils/schemas/pos-venda-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BadgeCheck, BadgeDollarSign, ChartArea, Check, Pencil, Plus, X } from "lucide-react";
 import { useState } from "react";
-import { DragDropContext, Draggable, type DropResult, Droppable } from "react-beautiful-dnd";
+import { KanbanBoard, KanbanCard, KanbanColumn, type KanbanDropResult } from "@/components/kanban/Board";
 import toast from "react-hot-toast";
 import { BsCalendarCheck, BsCalendarPlus } from "react-icons/bs";
 import { MdDashboard } from "react-icons/md";
@@ -111,7 +111,7 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
       CONCLUÍDO: calls?.filter((s) => s.status === "CONCLUÍDO"),
     }).map(([key, value]) => ({ title: key, items: value }));
   }
-  function onDragEnd(dragEndResult: DropResult) {
+  function onDragEnd(dragEndResult: KanbanDropResult) {
     function handleEffectivationUpdate(
       newValue: TPosVendaCall["status"],
       previousData: TPosVendaCall,
@@ -166,7 +166,7 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
       </div>
       <FiltersShowcase filters={filters} updateFilters={updateFilters} />
       <PosVendaCallsStatistics />
-      <DragDropContext onDragEnd={(e) => onDragEnd(e)}>
+      <KanbanBoard onDragEnd={(e) => onDragEnd(e)}>
         <div className="scrollbar-thin scrollbar-track-primary/20 scrollbar-thumb-primary/20 flex max-h-[600px] w-full gap-3 overflow-x-auto">
           {isLoading ? <LoadingComponent /> : null}
           {isError ? <ErrorComponent msg={getErrorMessage(error)} /> : null}
@@ -184,7 +184,7 @@ function PosVendaCalls({ session }: PosVendaCallsProps) {
             </>
           ) : null}
         </div>
-      </DragDropContext>
+      </KanbanBoard>
       {newCallIsOpen ? (
         <NewPosVendaCall
           session={session}
@@ -362,8 +362,7 @@ type FunnelListProps = {
 };
 function FunnelList({ session, title, items, handleItemClick }: FunnelListProps) {
   return (
-    <Droppable droppableId={title.toString()}>
-      {(provided) => (
+    <KanbanColumn id={title.toString()}>
         <div className="flex w-full min-w-[390px] flex-col p-2 px-4 lg:w-[390px]">
           <div className="flex w-full flex-col rounded bg-[#15599a] px-2 lg:h-[60px]">
             <div className="flex w-full items-center gap-2">
@@ -378,40 +377,27 @@ function FunnelList({ session, title, items, handleItemClick }: FunnelListProps)
               <div className="w-full lg:w-1/3" />
             </div>
           </div>
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="my-1 flex flex-col gap-2"
+          <div            className="my-1 flex flex-col gap-2"
           >
-            {items.map((item, index) => (
+            {items.map((item) => (
               <FunnelListItem
                 key={item._id}
                 item={item}
-                index={index}
                 handleClick={handleItemClick}
               />
-            ))}
-            {provided.placeholder}
-          </div>
+            ))}          </div>
         </div>
-      )}
-    </Droppable>
+    </KanbanColumn>
   );
 }
 type FunnelListItemProps = {
   item: TPosVendaCallDTO;
-  index: number;
   handleClick: (id: string) => void;
 };
-function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
+function FunnelListItem({ item, handleClick }: FunnelListItemProps) {
   return (
-    <Draggable draggableId={item._id.toString()} index={index}>
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className="bg-background border-primary/60 relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
+    <KanbanCard id={item._id.toString()}>
+        <div          className="bg-background border-primary/60 relative flex min-h-[70px] w-full flex-col justify-between gap-1 rounded border p-2 shadow-xs"
         >
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-1">
@@ -491,7 +477,6 @@ function FunnelListItem({ item, index, handleClick }: FunnelListItemProps) {
             </div>
           </div>
         </div>
-      )}
-    </Draggable>
+    </KanbanCard>
   );
 }

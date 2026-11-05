@@ -1,23 +1,7 @@
-import { api } from "@/convex/_generated/api";
-import { validateAuthentication } from "@/utils/api";
+import { validateAuthenticationWithSession } from "@/utils/api";
+import { saveWhatsappIntegration } from "@/lib/whatsapp/connection";
 import type { TWhatsappIntegrationData } from "@/utils/schemas/integrations";
-import { ConvexHttpClient } from "convex/browser";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL as string;
-
-async function saveCredentialsToDB(whatsappConnection: TWhatsappIntegrationData) {
-	console.log("Salvando no DB:", { whatsappConnection });
-	const convex = new ConvexHttpClient(CONVEX_URL);
-	await convex.mutation(api.mutations.connections.syncWhatsappConnection, {
-		token: whatsappConnection.token,
-		dataExpiracao: new Date(whatsappConnection.dataExpiracao).getTime(),
-		metaAutorAppId: whatsappConnection.metaAutorAppId,
-		metaEscopo: whatsappConnection.metaEscopo,
-		telefones: whatsappConnection.telefones,
-	});
-	return true;
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== "POST") {
@@ -26,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	try {
 		// Validate user session
-		const session = await validateAuthentication(req, res);
+		const session = await validateAuthenticationWithSession(req, res);
 
 		const { code } = req.body;
 
@@ -123,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			telefones: phones,
 		};
 
-		await saveCredentialsToDB(whatsappConnection);
+		await saveWhatsappIntegration(whatsappConnection, session);
 
 		console.log("[INFO] [EXCHANGE_TOKEN] WhatsApp connection saved successfully");
 

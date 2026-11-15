@@ -59,6 +59,7 @@ function PurchaseControlCompositionTable({
               purchaseControlId={purchaseControlId}
               showStockEntries={showStockEntries}
               item={{ ...item }}
+              expectedStockQuantity={item.materialId ? composition.filter(row => row.materialId === item.materialId).reduce((total, row) => total + row.qtde, 0) : item.qtde}
               handleUpdate={(item) => updateCompositionItem({ item, index })}
               handleRemove={() => removeCompositionItem(index)}
             />
@@ -76,6 +77,7 @@ function PurchaseControlCompositionTable({
 export default PurchaseControlCompositionTable;
 
 type PurchaseControlCompositionTableItemProps = {
+  expectedStockQuantity: number;
   purchaseControlId: string;
   showStockEntries: boolean;
   item: TPurchaseControlWithProjectDTO["composicao"][number];
@@ -83,6 +85,7 @@ type PurchaseControlCompositionTableItemProps = {
   handleRemove: () => void;
 };
 function PurchaseControlCompositionTableItem({
+  expectedStockQuantity,
   purchaseControlId,
   showStockEntries,
   item,
@@ -148,7 +151,7 @@ function PurchaseControlCompositionTableItem({
                 <MdDelete size={10} />
               </button>
               {showStockEntries && (stockEntries.length > 0 || item.dataAlocacao) ? (
-                <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} />
+                <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} expectedQuantity={expectedStockQuantity} />
               ) : null}
             </div>
             <h1 className="w-[15%] text-center text-xs tracking-tight">{item.unidade}</h1>
@@ -199,7 +202,7 @@ function PurchaseControlCompositionTableItem({
               </div>
               <div className="flex items-center gap-2">
                 {showStockEntries && (stockEntries.length > 0 || item.dataAlocacao) ? (
-                  <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} />
+                  <StockEntriesIndicator purchaseControlId={purchaseControlId} item={item} expectedQuantity={expectedStockQuantity} />
                 ) : null}
                 <button
                   onClick={() => setEditMenuIsOpen((prev) => !prev)}
@@ -424,6 +427,8 @@ function PurchaseControlCompositionTableItem({
               <button
                 type="button"
                 onClick={() => {
+                  if (!itemHolder.materialId) return toast.error("Selecione um material antes de salvar o item.");
+                  if (!Number.isFinite(itemHolder.qtde) || itemHolder.qtde <= 0) return toast.error("Informe uma quantidade maior que zero.");
                   handleUpdate(itemHolder);
                   setEditMenuIsOpen(false);
                 }}
@@ -440,16 +445,17 @@ function PurchaseControlCompositionTableItem({
 }
 
 type StockEntriesIndicatorProps = {
+  expectedQuantity: number;
   purchaseControlId: string;
   item: TPurchaseControlWithProjectDTO["composicao"][number];
 };
 
-function StockEntriesIndicator({ purchaseControlId, item }: StockEntriesIndicatorProps) {
+function StockEntriesIndicator({ purchaseControlId, item, expectedQuantity }: StockEntriesIndicatorProps) {
   const queryClient = useQueryClient();
   const entries = item.entradasEstoque || [];
   const unit = item.unidade;
   const totalQuantity = entries.reduce((total, entry) => total + entry.alteracao, 0);
-  const difference = item.qtde - totalQuantity;
+  const difference = expectedQuantity - totalQuantity;
   const isSynchronized = Math.abs(difference) < 0.000001;
   const formatSignedQuantity = (quantity: number) => `${quantity > 0 ? "+" : ""}${quantity}`;
   const formatPriceImpact = (from: number | null | undefined, to: number | null | undefined) => {
@@ -507,7 +513,7 @@ function StockEntriesIndicator({ purchaseControlId, item }: StockEntriesIndicato
         <div className="bg-muted/30 border-border grid grid-cols-2 gap-x-3 gap-y-2 border-b px-3 py-2 text-[0.68rem]">
           <div>
             <p className="text-muted-foreground">Na compra</p>
-            <p className="font-semibold">{item.qtde} {unit}</p>
+            <p className="font-semibold">{expectedQuantity} {unit}</p>
           </div>
           <div>
             <p className="text-muted-foreground">No estoque</p>

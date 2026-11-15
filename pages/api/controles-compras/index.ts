@@ -1,4 +1,13 @@
+import { groupPurchaseStock, stockEntryQuantity, stockEntryValue } from "@/lib/projects/purchase-stock";
 import { syncServiceOrdersDeliveryRelease } from "@/lib/service-orders/delivery-release";
+import {
+  assertPurchaseRevision,
+  isPurchaseMaterialId,
+  preservePurchaseAllocationMetadata,
+  purchaseCompositionChanged,
+  validatePurchaseComposition,
+  validatePurchaseMaterialCatalog,
+} from "@/lib/projects/purchase-materials";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import type { TAuthSession } from "@/lib/authentication/types";
 import { notifyMaterialBelowMinimumIfCrossed } from "@/lib/notifications/materials";
@@ -30,8 +39,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
   const collection = db.collection<TPurchaseControl>("controles-compras");
 
   if (id) {
-    if (typeof id !== "string" || !ObjectId.isValid(id))
-      throw new createHttpError.BadRequest("ID inválido.");
+    if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
     const addFields = { projectIdAsObjectId: { $toObjectId: "$projeto.id" } };
     const lookup = {
@@ -48,6 +56,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
         {
           $project: {
             status: 1,
+            revisao: 1,
             titulo: 1,
             anotacoes: 1,
             projeto: 1,
@@ -111,18 +120,18 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
       .find({ idCompra: id, tipo: "ENTRADA" })
       .sort({ dataInsercao: -1 })
       .toArray();
-		const compositionWithStockEntries = purchaseControl.composicao.map((item) => ({
-			...item,
-			entradasEstoque: stockEntries
-				.filter((entry) => entry.material.id === item.materialId)
-				.map((entry) => ({
-					...entry,
-					_id: entry._id.toString(),
-					alteracao:
-						typeof entry.qtdeAnterior === "number" && typeof entry.qtdeNovo === "number"
-							? entry.qtdeNovo - entry.qtdeAnterior
-							: entry.alteracao,
-				})),
+    const compositionWithStockEntries = purchaseControl.composicao.map((item) => ({
+      ...item,
+      entradasEstoque: stockEntries
+        .filter((entry) => entry.material.id === item.materialId)
+        .map((entry) => ({
+          ...entry,
+          _id: entry._id.toString(),
+          alteracao:
+            typeof entry.qtdeAnterior === "number" && typeof entry.qtdeNovo === "number"
+              ? entry.qtdeNovo - entry.qtdeAnterior
+              : entry.alteracao,
+        })),
     }));
 
     return res.status(200).json({
@@ -143,8 +152,7 @@ const getPurchasesControlsRoute: NextApiHandler<GetResponse> = async (req, res) 
     return res.status(200).json({ data: purchaseControls });
   }
 
-  const queryTagsIds =
-    typeof queryTags === "string" ? queryTags.split(",").filter((q) => !!ObjectId.isValid(q)) : [];
+  const queryTagsIds = typeof queryTags === "string" ? queryTags.split(",").filter((q) => !!ObjectId.isValid(q)) : [];
   const queryPendingConclusionValue = queryPendingConclusion === "true";
 
   const queryTagsQuery: Filter<TPurchaseControl> =
@@ -172,27 +180,48 @@ type PostResponse = {
 };
 
 const createPurchaseControlRoute: NextApiHandler<PostResponse> = async (req, res) => {
-  await validateAuthenticationWithSession(req, res);
-
+  const userSession = await validateAuthenticationWithSession(req, res);
   const purchaseControl = GeneralPurchaseControlSchema.parse(req.body);
-
-  const db: Db = await connectToDatabase();
+  validatePurchaseComposition(purchaseControl.composicao);
+  const client = await clientPromise;
+  const db = client.db("projetos");
+  const warehouse = client.db("almoxarifado");
   const collection = db.collection<TPurchaseControl>("controles-compras");
-
-  const purchaseControlWithRegistrosStatus = {
-    ...purchaseControl,
-    registrosStatus: { [purchaseControl.status]: { entrada: new Date().toISOString() } },
-  };
-  const insertResponse = await collection.insertOne(purchaseControlWithRegistrosStatus);
-  if (!insertResponse.acknowledged)
-    throw new createHttpError.InternalServerError(
-      "Oops, houve um erro desconhecido ao inserir controle de compra.",
-    );
-  const insertedId = insertResponse.insertedId.toString();
-
-  return res
-    .status(201)
-    .json({ data: { insertedId }, message: "Controle de compra criado com sucesso !" });
+  const materialsCollection = warehouse.collection<TMaterial>("material");
+  const dbSession = client.startSession();
+  let insertedId = "";
+  try {
+    await dbSession.withTransaction(async () => {
+      await validatePurchaseMaterialCatalog(purchaseControl.composicao, materialsCollection, dbSession);
+      const purchase = {
+        ...purchaseControl,
+        revisao: 0,
+        composicao: purchaseControl.composicao.map((item) => ({ ...item, dataAlocacao: null, qtdeAlocada: 0 })),
+        registrosStatus: { [purchaseControl.status]: { entrada: new Date().toISOString() } },
+      };
+      const result = await collection.insertOne(purchase, { session: dbSession });
+      if (!result.acknowledged) throw new createHttpError.InternalServerError("Não foi possível criar a compra.");
+      insertedId = result.insertedId.toString();
+      if (purchase.entrega.dataEfetivacao)
+        await handlePurchaseControlAllocationsImproved({
+          type: "ALLOCATING",
+          purchaseControlId: insertedId,
+          purchaseControlTitle: purchase.titulo,
+          purchaseControlDeliveryDate: purchase.entrega.dataEfetivacao,
+          purchaseControlComposition: purchase.composicao,
+          projectId: purchase.projeto.id,
+          purchaseControlsCollection: collection,
+          projectsCollection: db.collection<TProject>("dados"),
+          materialsCollection,
+          materialsLogsCollection: warehouse.collection<TMaterialUpdateRegistry>("alteracoes"),
+          dbSession,
+          userSession,
+        });
+    });
+  } finally {
+    await dbSession.endSession();
+  }
+  return res.status(201).json({ data: { insertedId }, message: "Controle de compra criado com sucesso !" });
 };
 
 type PutResponse = {
@@ -204,12 +233,11 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
 
   const { id } = req.query;
 
-  if (!id || typeof id !== "string" || !ObjectId.isValid(id))
-    throw new createHttpError.BadRequest("ID inválido.");
+  if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
   console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] ID recebido: ${id}`);
 
-  const changes = GeneralPurchaseControlSchema.partial().parse(req.body);
+  const { revisao: expectedRevision, ...changes } = GeneralPurchaseControlSchema.partial().parse(req.body);
   console.log("[INFO] [UPDATE-PURCHASE-CONTROL] Mudanças recebidas para update:", changes);
 
   const dbClient = await clientPromise;
@@ -224,9 +252,7 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
   const dbSession = dbClient.startSession();
 
   try {
-    console.log(
-      `[INFO] [UPDATE-PURCHASE-CONTROL] Iniciando transação para controle de compra ${id}`,
-    );
+    console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] Iniciando transação para controle de compra ${id}`);
     await dbSession.withTransaction(async () => {
       console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] Buscando controle de compra anterior: ${id}`);
       const previousPurchaseControl = await purchaseControlsCollection.findOne(
@@ -238,24 +264,42 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
         console.error(`[ERROR] [UPDATE-PURCHASE-CONTROL] Controle de compra não encontrado: ${id}`);
         throw new createHttpError.NotFound("Controle de compra não encontrado.");
       }
-      console.log(
-        "[INFO] [UPDATE-PURCHASE-CONTROL] Controle de compra anterior encontrado:",
-        previousPurchaseControl,
-      );
+      if (changes.composicao) {
+        assertPurchaseRevision(expectedRevision, previousPurchaseControl.revisao);
+        validatePurchaseComposition(changes.composicao, previousPurchaseControl.composicao);
+        await validatePurchaseMaterialCatalog(
+          changes.composicao,
+          materialsCollection,
+          dbSession,
+          previousPurchaseControl.composicao,
+        );
+        changes.composicao = preservePurchaseAllocationMetadata(changes.composicao, previousPurchaseControl.composicao);
+      }
+      if (
+        changes.projeto &&
+        (changes.projeto.id || null) !== (previousPurchaseControl.projeto.id || null) &&
+        previousPurchaseControl.entrega.dataEfetivacao
+      ) {
+        throw new createHttpError.BadRequest("Desfaça a entrega antes de mudar o projeto de destino da compra.");
+      }
+      console.log("[INFO] [UPDATE-PURCHASE-CONTROL] Controle de compra anterior encontrado:", previousPurchaseControl);
 
-      console.log(
-        `[INFO] [UPDATE-PURCHASE-CONTROL] Atualizando controle de compra: ${id} com mudanças:`,
-        changes,
-      );
+      console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] Atualizando controle de compra: ${id} com mudanças:`, changes);
       const updateResponse = await purchaseControlsCollection.updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { ...changes } },
+        {
+          _id: new ObjectId(id),
+          ...(changes.composicao ? { revisao: previousPurchaseControl.revisao ?? { $exists: false } } : {}),
+        },
+        { $set: { ...changes }, $inc: { revisao: 1 } },
         { session: dbSession },
       );
-      if (!updateResponse.acknowledged) {
-        console.error(
-          `[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao atualizar controle de compra: ${id}`,
+      if (updateResponse.matchedCount === 0) {
+        throw new createHttpError.Conflict(
+          "Esta compra foi alterada por outra operação. Reabra a compra antes de salvar.",
         );
+      }
+      if (!updateResponse.acknowledged) {
+        console.error(`[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao atualizar controle de compra: ${id}`);
         throw new createHttpError.InternalServerError(
           "Oops, houve um erro desconhecido ao atualizar controle de compra.",
         );
@@ -267,39 +311,43 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
         { session: dbSession },
       );
       if (!updatedPurchaseControl) {
-        console.error(
-          `[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao buscar controle de compra atualizado: ${id}`,
-        );
+        console.error(`[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao buscar controle de compra atualizado: ${id}`);
         throw new createHttpError.InternalServerError(
           "Oops, houve um erro desconhecido ao atualizar controle de compra.",
         );
       }
-      console.log(
-        "[INFO] [UPDATE-PURCHASE-CONTROL] Controle de compra atualizado encontrado:",
-        updatedPurchaseControl,
-      );
+      console.log("[INFO] [UPDATE-PURCHASE-CONTROL] Controle de compra atualizado encontrado:", updatedPurchaseControl);
 
       const isAllocating =
-        !previousPurchaseControl?.entrega.dataEfetivacao &&
-        updatedPurchaseControl.entrega.dataEfetivacao;
-      if ((previousPurchaseControl.entrega.dataEfetivacao || null) !== (updatedPurchaseControl.entrega.dataEfetivacao || null)
-          && updatedPurchaseControl.projeto.id) {
+        !previousPurchaseControl?.entrega.dataEfetivacao && updatedPurchaseControl.entrega.dataEfetivacao;
+      if (
+        (previousPurchaseControl.entrega.dataEfetivacao || null) !==
+          (updatedPurchaseControl.entrega.dataEfetivacao || null) &&
+        updatedPurchaseControl.projeto.id
+      ) {
         const projectId = new ObjectId(updatedPurchaseControl.projeto.id);
-        await projectsCollection.updateOne({ _id: projectId }, {
-          $set: { "compra.dataEntrega": updatedPurchaseControl.entrega.dataEfetivacao || null },
-        }, { session: dbSession });
+        await projectsCollection.updateOne(
+          { _id: projectId },
+          {
+            $set: { "compra.dataEntrega": updatedPurchaseControl.entrega.dataEfetivacao || null },
+          },
+          { session: dbSession },
+        );
         const project = await projectsCollection.findOne({ _id: projectId }, { session: dbSession });
         if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
         await syncServiceOrdersDeliveryRelease({
-          project, serviceOrdersCollection: db.collection<TServiceOrder>("ordensDeServico"), session: dbSession,
+          project,
+          serviceOrdersCollection: db.collection<TServiceOrder>("ordensDeServico"),
+          session: dbSession,
         });
       }
       const isDeallocating =
-        previousPurchaseControl?.entrega.dataEfetivacao &&
-        !updatedPurchaseControl.entrega.dataEfetivacao;
+        previousPurchaseControl?.entrega.dataEfetivacao && !updatedPurchaseControl.entrega.dataEfetivacao;
       const isUpdating =
         previousPurchaseControl?.entrega.dataEfetivacao &&
-        updatedPurchaseControl.entrega.dataEfetivacao;
+        updatedPurchaseControl.entrega.dataEfetivacao &&
+        (purchaseCompositionChanged(previousPurchaseControl.composicao, updatedPurchaseControl.composicao) ||
+          previousPurchaseControl.entrega.dataEfetivacao !== updatedPurchaseControl.entrega.dataEfetivacao);
 
       console.log(
         `[INFO] [UPDATE-PURCHASE-CONTROL] Flags - isAllocating: ${isAllocating}, isDeallocating: ${isDeallocating}, isUpdating: ${isUpdating}`,
@@ -313,7 +361,8 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
           purchaseControlTitle: updatedPurchaseControl.titulo,
           purchaseControlDeliveryDate: updatedPurchaseControl.entrega.dataEfetivacao,
           purchaseControlComposition: updatedPurchaseControl.composicao,
-          projectId: previousPurchaseControl.projeto.id,
+          previousComposition: previousPurchaseControl.composicao,
+          projectId: updatedPurchaseControl.projeto.id,
           purchaseControlsCollection,
           projectsCollection,
           materialsCollection,
@@ -330,6 +379,7 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
           purchaseControlTitle: updatedPurchaseControl.titulo,
           purchaseControlDeliveryDate: updatedPurchaseControl.entrega.dataEfetivacao,
           purchaseControlComposition: updatedPurchaseControl.composicao,
+          previousComposition: previousPurchaseControl.composicao,
           projectId: previousPurchaseControl.projeto.id,
           purchaseControlsCollection,
           projectsCollection,
@@ -340,16 +390,15 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
         });
       }
       if (isUpdating) {
-        console.log(
-          `[INFO] [UPDATE-PURCHASE-CONTROL] Iniciando atualização de alocação para controle: ${id}`,
-        );
+        console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] Iniciando atualização de alocação para controle: ${id}`);
         await handlePurchaseControlAllocationsImproved({
           type: "UPDATING",
           purchaseControlId: id,
           purchaseControlTitle: updatedPurchaseControl.titulo,
           purchaseControlDeliveryDate: updatedPurchaseControl.entrega.dataEfetivacao,
           purchaseControlComposition: updatedPurchaseControl.composicao,
-          projectId: previousPurchaseControl.projeto.id,
+          previousComposition: previousPurchaseControl.composicao,
+          projectId: updatedPurchaseControl.projeto.id,
           purchaseControlsCollection,
           projectsCollection,
           materialsCollection,
@@ -360,15 +409,10 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
       }
     });
   } catch (error) {
-    console.error(
-      `[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao atualizar controle de compra ${id}:`,
-      error,
-    );
+    console.error(`[ERROR] [UPDATE-PURCHASE-CONTROL] Erro ao atualizar controle de compra ${id}:`, error);
     throw error;
   } finally {
-    console.log(
-      `[INFO] [UPDATE-PURCHASE-CONTROL] Transação finalizada para controle de compra ${id}`,
-    );
+    console.log(`[INFO] [UPDATE-PURCHASE-CONTROL] Transação finalizada para controle de compra ${id}`);
     await dbSession.endSession();
   }
 
@@ -376,16 +420,12 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
   return res.status(201).json({ message: "Controle de compras atualizado com sucesso !" });
 };
 
-const deletePurchaseControlRoute: NextApiHandler<{ data: string; message: string }> = async (
-  req,
-  res,
-) => {
+const deletePurchaseControlRoute: NextApiHandler<{ data: string; message: string }> = async (req, res) => {
   const session = await validateAuthenticationWithSession(req, res);
 
   const { id } = req.query;
   console.log("ID PARA DELETE", id);
-  if (!id || typeof id !== "string" || !ObjectId.isValid(id))
-    throw new createHttpError.BadRequest("ID inválido.");
+  if (!id || typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID inválido.");
 
   const dbClient = await clientPromise;
   const db: Db = dbClient.db("projetos");
@@ -431,8 +471,7 @@ const deletePurchaseControlRoute: NextApiHandler<{ data: string; message: string
         throw new createHttpError.InternalServerError(
           "Oops, houve um erro desconhecido ao excluir o controle de compra.",
         );
-      if (deleteResponse.deletedCount === 0)
-        throw new createHttpError.NotFound("Controle de compra não encontrado.");
+      if (deleteResponse.deletedCount === 0) throw new createHttpError.NotFound("Controle de compra não encontrado.");
     });
   } catch (error) {
     console.log("[ERROR] [DELETE-PURCHASE-CONTROL] Error deleting purchase control.", error);
@@ -441,12 +480,10 @@ const deletePurchaseControlRoute: NextApiHandler<{ data: string; message: string
     console.log("[INFO] [DELETE-PURCHASE-CONTROL] Transaction ended.");
     await dbSession.endSession();
   }
-  return res
-    .status(201)
-    .json({
-      data: "Controle de compra excluído com sucesso !",
-      message: "Controle de compra excluído com sucesso !",
-    });
+  return res.status(201).json({
+    data: "Controle de compra excluído com sucesso !",
+    message: "Controle de compra excluído com sucesso !",
+  });
 };
 
 type SyncStockEntryResponse = {
@@ -459,9 +496,8 @@ const syncPurchaseStockEntryRoute: NextApiHandler<SyncStockEntryResponse> = asyn
   const { id } = req.query;
   const { materialId } = req.body as { materialId?: unknown };
 
-  if (typeof id !== "string" || !ObjectId.isValid(id))
-    throw new createHttpError.BadRequest("ID da compra inválido.");
-  if (typeof materialId !== "string" || !ObjectId.isValid(materialId))
+  if (typeof id !== "string" || !ObjectId.isValid(id)) throw new createHttpError.BadRequest("ID da compra inválido.");
+  if (!isPurchaseMaterialId(materialId))
     throw new createHttpError.BadRequest("ID do material inválido.");
 
   const dbClient = await clientPromise;
@@ -475,33 +511,31 @@ const syncPurchaseStockEntryRoute: NextApiHandler<SyncStockEntryResponse> = asyn
 
   try {
     await dbSession.withTransaction(async () => {
-      const purchase = await purchaseControlsCollection.findOne(
-        { _id: new ObjectId(id) },
-        { session: dbSession },
-      );
+      const purchase = await purchaseControlsCollection.findOne({ _id: new ObjectId(id) }, { session: dbSession });
       if (!purchase) throw new createHttpError.NotFound("Controle de compra não encontrado.");
-      if (!purchase.entrega.dataEfetivacao)
-        throw new createHttpError.BadRequest("A compra ainda não foi entregue.");
+      if (!purchase.entrega.dataEfetivacao) throw new createHttpError.BadRequest("A compra ainda não foi entregue.");
       if (purchase.projeto.id)
         throw new createHttpError.BadRequest("Esta compra foi alocada a um projeto, não ao estoque.");
 
       const matchingItems = purchase.composicao.filter((item) => item.materialId === materialId);
+      validatePurchaseComposition(matchingItems, matchingItems);
       if (matchingItems.length === 0)
         throw new createHttpError.NotFound("Material não encontrado na composição da compra.");
 
       const expectedQuantity = matchingItems.reduce((total, item) => total + item.qtde, 0);
-      const purchaseUnitPrice = expectedQuantity === 0
-        ? matchingItems[0].valor
-        : matchingItems.reduce((total, item) => total + item.qtde * item.valor, 0) / expectedQuantity;
+      const purchaseUnitPrice =
+        expectedQuantity === 0
+          ? matchingItems[0].valor
+          : matchingItems.reduce((total, item) => total + item.qtde * item.valor, 0) / expectedQuantity;
       const entries = await materialsLogsCollection
         .find({ idCompra: id, tipo: "ENTRADA", "material.id": materialId }, { session: dbSession })
         .toArray();
       const previousQuantity = entries.reduce(
-        (total, entry) => total + (
-          typeof entry.qtdeAnterior === "number" && typeof entry.qtdeNovo === "number"
+        (total, entry) =>
+          total +
+          (typeof entry.qtdeAnterior === "number" && typeof entry.qtdeNovo === "number"
             ? entry.qtdeNovo - entry.qtdeAnterior
-            : entry.alteracao
-        ),
+            : entry.alteracao),
         0,
       );
       const adjustment = expectedQuantity - previousQuantity;
@@ -509,10 +543,7 @@ const syncPurchaseStockEntryRoute: NextApiHandler<SyncStockEntryResponse> = asyn
 
       if (adjustment === 0) return;
 
-      const material = await materialsCollection.findOne(
-        { _id: new ObjectId(materialId) },
-        { session: dbSession },
-      );
+      const material = await materialsCollection.findOne({ _id: new ObjectId(materialId) }, { session: dbSession });
       if (!material) throw new createHttpError.NotFound("Material não encontrado no estoque.");
 
       const { newQty, newPrice } = calculateWeightedPrice(
@@ -551,6 +582,7 @@ const syncPurchaseStockEntryRoute: NextApiHandler<SyncStockEntryResponse> = asyn
       await purchaseControlsCollection.updateOne(
         { _id: purchase._id },
         {
+          $inc: { revisao: 1 },
           $set: {
             composicao: purchase.composicao.map((item) =>
               item.materialId === materialId
@@ -568,7 +600,8 @@ const syncPurchaseStockEntryRoute: NextApiHandler<SyncStockEntryResponse> = asyn
 
   return res.status(200).json({
     data: result,
-    message: result.adjustment === 0 ? "A entrada já está sincronizada." : "Entrada de estoque sincronizada com sucesso.",
+    message:
+      result.adjustment === 0 ? "A entrada já está sincronizada." : "Entrada de estoque sincronizada com sucesso.",
   });
 };
 
@@ -586,6 +619,7 @@ type HandlePurchaseControlAllocationsImprovedParams = {
   purchaseControlTitle: TPurchaseControl["titulo"];
   purchaseControlDeliveryDate: TPurchaseControl["entrega"]["dataEfetivacao"];
   purchaseControlComposition: TPurchaseControl["composicao"];
+  previousComposition?: TPurchaseControl["composicao"];
   projectId: TPurchaseControl["projeto"]["id"];
   purchaseControlsCollection: Collection<TPurchaseControl>;
   projectsCollection: Collection<TProject>;
@@ -617,10 +651,7 @@ function calculateWeightedPrice(
   const newQty = currentQty + quantityDiff;
   assertFiniteNumber(newQty, `${context}.novaQuantidade`);
 
-  if (newQty < 0)
-    throw new createHttpError.BadRequest(
-      `A operação resultaria em estoque negativo em ${context}.`,
-    );
+  if (newQty < 0) throw new createHttpError.BadRequest(`A operação resultaria em estoque negativo em ${context}.`);
   if (newQty === 0) return { newQty, newPrice: 0 };
 
   const newPrice = (currentQty * currentPrice + quantityDiff * diffUnitPrice) / newQty;
@@ -639,10 +670,7 @@ function calculateMovementsWeightedPrice(
   }, 0);
   assertFiniteNumber(quantity, `${context}.quantidade`);
 
-  if (quantity < 0)
-    throw new createHttpError.BadRequest(
-      `A operação resultaria em alocação negativa em ${context}.`,
-    );
+  if (quantity < 0) throw new createHttpError.BadRequest(`A operação resultaria em alocação negativa em ${context}.`);
   if (quantity === 0) return { quantity, price: 0 };
 
   const price =
@@ -661,6 +689,7 @@ export async function handlePurchaseControlAllocationsImproved({
   purchaseControlTitle,
   purchaseControlDeliveryDate,
   purchaseControlComposition,
+  previousComposition,
   projectId,
   purchaseControlsCollection,
   projectsCollection,
@@ -669,6 +698,7 @@ export async function handlePurchaseControlAllocationsImproved({
   dbSession,
   userSession,
 }: HandlePurchaseControlAllocationsImprovedParams) {
+  validatePurchaseComposition(purchaseControlComposition, purchaseControlComposition);
   console.log(
     `[INFO] [HANDLE-ALLOCATIONS] Iniciando operação ${type} para controle ${purchaseControlId} (projeto: ${projectId})`,
   );
@@ -677,559 +707,163 @@ export async function handlePurchaseControlAllocationsImproved({
   // 2. The purchase control is not vinculated to a project, therefore, we gotta allocate the items to stock
 
   if (projectId) {
-    const project = await projectsCollection.findOne(
-      { _id: new ObjectId(projectId) },
-      { session: dbSession },
-    );
-    if (!project) {
-      console.error(`[ERROR] [HANDLE-ALLOCATIONS] Projeto não encontrado: ${projectId}`);
-      throw new createHttpError.NotFound("Projeto não encontrado.");
-    }
-    if (type === "ALLOCATING" || type === "UPDATING") {
-      console.log(
-        `[INFO] [HANDLE-ALLOCATIONS] [PROJECT] Alocando/Atualizando materiais para projeto ${projectId} a partir do controle ${purchaseControlId}`,
-      );
-      // Here, we deal with the allocations to the project
-      // For project related allocation, the procces is the same for ALLOCATING and UPDATING, since the sync is done by the movements array
-
-      console.log(
-        "[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] Allocating items to project.",
-        { projectId },
-      );
-
-      let allocations: Exclude<TProject["alocacoes"], undefined | null> = project.alocacoes || [];
-
-      if (allocations.length === 0) {
-        // If the project has no allocations, we gotta create them from the purchase composition
-        allocations = purchaseControlComposition
-          .filter((c) => !!c.materialId)
-          .map((c) => ({
-            idMaterial: c.materialId as string,
-            quantidade: c.qtde,
-            quantidadePrevista: c.qtde,
-            unidade: c.unidade,
-            precoUnitario: c.valor,
-            movimentacoes: [
-              {
-                idCompra: purchaseControlId,
-                data: purchaseControlDeliveryDate as string,
-                quantidade: c.qtde,
-                precoUnitario: c.valor,
-                titulo: purchaseControlTitle,
-              },
-            ],
-            nome: c.descricao,
-          }));
-      } else {
-        // In case the project already has allocations, we gotta update those who came from the purchase control
-        allocations = allocations.map((a) => {
-          // Checking if the material exists in the purchase control composition
-          const equivalentPurchaseControlMovement = purchaseControlComposition.find(
-            (c) => c.materialId === a.idMaterial,
-          );
-          // If the material doesn't exist in the purchase control composition, we don't need to update anything
-          if (!equivalentPurchaseControlMovement) return a;
-
-          let updatedMovements: Exclude<
-            TProject["alocacoes"],
-            undefined | null
-          >[number]["movimentacoes"] = a.movimentacoes;
-          // Getting info about the existence of movements from the purchase control
-          const hasMovementsFromPurchaseControl = updatedMovements.some(
-            (m) => m.idCompra === purchaseControlId,
-          );
-          // If the allocation has no movements from the purchase control, we need to add a new movement from the purchase control
-          if (!hasMovementsFromPurchaseControl) {
-            const newMovement = {
-              idCompra: purchaseControlId,
-              titulo: purchaseControlTitle,
-              data: purchaseControlDeliveryDate as string,
-              quantidade: equivalentPurchaseControlMovement.qtde,
-              precoUnitario: equivalentPurchaseControlMovement.valor,
-            };
-            updatedMovements.push(newMovement);
-          } else {
-            // If the allocation has movements from the purchase control, we need to update the data of the movements
-            updatedMovements = updatedMovements.map((m) => {
-              if (m.idCompra === purchaseControlId) {
-                return {
-                  idCompra: purchaseControlId,
-                  titulo: purchaseControlTitle,
-                  data: purchaseControlDeliveryDate as string,
-                  quantidade: equivalentPurchaseControlMovement?.qtde ?? m.quantidade,
-                  precoUnitario: equivalentPurchaseControlMovement?.valor ?? m.precoUnitario,
-                };
-              }
-              return m;
-            });
-          }
-
-          const { quantity: newAllocationQty, price: newAllocationPrice } =
-            calculateMovementsWeightedPrice(
-              updatedMovements,
-              `projeto.${projectId}.alocacao.${a.idMaterial}`,
-            );
-          return {
-            ...a,
-            quantidade: newAllocationQty,
-            precoUnitario: newAllocationPrice,
-            movimentacoes: updatedMovements,
-          };
-        });
-        console.log(
-          `[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] Existing allocations to project updated ${allocations.length}`,
-        );
-        // We also gotta add allocations for the purchased materials that don't exist in the project allocations
-        const purchaseNewAllocations: Exclude<TProject["alocacoes"], undefined | null> =
-          purchaseControlComposition
-            .filter(
-              (c) => !!c.materialId && !allocations.some((a) => a.idMaterial === c.materialId),
-            )
-            .map((c) => ({
-              idMaterial: c.materialId as string,
-              nome: c.descricao,
-              unidade: c.unidade,
-              quantidade: c.qtde,
-              quantidadePrevista: c.qtde,
-              precoUnitario: c.valor,
-              movimentacoes: [
-                {
-                  idCompra: purchaseControlId,
-                  titulo: purchaseControlTitle,
-                  data: purchaseControlDeliveryDate as string,
-                  quantidade: c.qtde,
-                  precoUnitario: c.valor,
-                },
-              ],
-            }));
-        // Adding the new allocations to the project allocations
-        allocations.push(...purchaseNewAllocations);
-        console.log(
-          `[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] New allocations to project added ${purchaseNewAllocations.length}`,
-        );
-      }
-      // Updating the project with the new allocations
-      await projectsCollection.updateOne(
-        { _id: new ObjectId(projectId) },
-        { $set: { alocacoes: allocations } },
-        { session: dbSession },
-      );
-
-      // Updating the purchase control composition items with allocated date and allocated quantity
-      const updatedPurchaseControlComposition = purchaseControlComposition.map((c) => ({
-        ...c,
-        dataAlocacao: purchaseControlDeliveryDate,
-        qtdeAlocada: c.qtde,
-      }));
-      await purchaseControlsCollection.updateOne(
-        { _id: new ObjectId(purchaseControlId) },
-        { $set: { composicao: updatedPurchaseControlComposition } },
-        { session: dbSession },
-      );
-      console.log(
-        "[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [ALLOCATING] Purchase control updated with allocations.",
-        { purchaseControlId },
-      );
-    }
-    if (type === "DEALLOCATING") {
-      console.log(
-        `[INFO] [HANDLE-ALLOCATIONS] [PROJECT] Devolvendo materiais do projeto ${projectId} para o controle ${purchaseControlId}`,
-      );
-      // For the deallocation, we gotta remove the project allocation movements that came from the purchase control
-      let allocations: Exclude<TProject["alocacoes"], undefined | null> = project.alocacoes || [];
-
-      if (allocations.length > 0) {
-        allocations = allocations.map((a) => {
-          // Checking if the material exists in the purchase control composition
-          const equivalentPurchaseControlMovement = purchaseControlComposition.find(
-            (c) => c.materialId === a.idMaterial,
-          );
-          // If the material doesn't exist in the purchase control composition, we don't need to update anything
-          if (!equivalentPurchaseControlMovement) return a;
-
-          let updatedMovements: Exclude<
-            TProject["alocacoes"],
-            undefined | null
-          >[number]["movimentacoes"] = a.movimentacoes;
-
-          // Weed to update the data of the movements by filtering out the movements that came from the purchase control
-          updatedMovements = updatedMovements.filter((m) => m.idCompra !== purchaseControlId);
-
-          const { quantity: newAllocationQty, price: newAllocationPrice } =
-            calculateMovementsWeightedPrice(
-              updatedMovements,
-              `projeto.${projectId}.devolucao.${a.idMaterial}`,
-            );
-          return {
-            ...a,
-            quantidade: newAllocationQty,
-            precoUnitario: newAllocationPrice,
-            movimentacoes: updatedMovements,
-          };
-        });
-      }
-
-      // Updating the project with the new allocations
-      await projectsCollection.updateOne(
-        { _id: new ObjectId(projectId) },
-        { $set: { alocacoes: allocations } },
-        { session: dbSession },
-      );
-
-      // Updating the purchase control composition items with allocated date and allocated quantity
-      const updatedPurchaseControlComposition = purchaseControlComposition.map((c) => ({
-        ...c,
-        dataAlocacao: null,
-        qtdeAlocada: 0,
-      }));
-      await purchaseControlsCollection.updateOne(
-        { _id: new ObjectId(purchaseControlId) },
-        { $set: { composicao: updatedPurchaseControlComposition } },
-        { session: dbSession },
-      );
-      console.log(
-        "[INFO] [HANDLE-ALLOCATIONS] [PROJECT ALLOCATION] [DEALLOCATING] Purchase control updated with allocations.",
-        { purchaseControlId },
-      );
-    }
-    return {
-      message: "Controle de compra atualizado com sucesso !",
-    };
-  }
-
-  // If the purchase control is not vinculated to a project, we gotta allocate the items to stock
-  if (type === "ALLOCATING") {
-    console.log(
-      `[INFO] [HANDLE-ALLOCATIONS] [STOCK] Alocando materiais em estoque para controle ${purchaseControlId}`,
-    );
-    // Here, we deal with the allocations to stock
-    const purchasedMaterialsObjectIds = purchaseControlComposition
-      .filter((c) => !!c.materialId)
-      .map((c) => new ObjectId(c.materialId as string));
-    const materials = await materialsCollection
-      .find({ _id: { $in: purchasedMaterialsObjectIds } }, { session: dbSession })
-      .toArray();
-    for (const item of purchaseControlComposition) {
-      // Purchase items may be entered without a warehouse catalog link.
-      if (!item.materialId) continue;
-      const existingMaterial = materials.find((mat) => mat._id.toString() === item.materialId);
-
-      if (!existingMaterial) {
-        console.error(
-          `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${item.materialId} no controle ${purchaseControlId}`,
-        );
-        throw new createHttpError.NotFound("Material não encontrado.");
-      }
-      const diff = item.qtde;
-      const { newQty, newPrice } = calculateWeightedPrice(
-        existingMaterial.qtde,
-        existingMaterial.preco,
-        diff,
-        item.valor,
-        `estoque.alocacao.${existingMaterial._id.toString()}`,
-      );
-      console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando material:", {
-        materialId: existingMaterial._id.toString(),
-        qtdeAnterior: existingMaterial.qtde,
-        qtdeNova: newQty,
-        precoAnterior: existingMaterial.preco,
-        precoNovo: newPrice,
-        item,
-      });
-
-      await materialsCollection.updateOne(
-        {
-          _id: existingMaterial._id,
-        },
-        {
-          $inc: { qtde: diff },
-          $set: { preco: newPrice },
-        },
-        {
-          session: dbSession,
-        },
-      );
-      await materialsLogsCollection.insertOne(
-        {
-          alteracao: diff,
+    const project = await projectsCollection.findOne({ _id: new ObjectId(projectId) }, { session: dbSession });
+    if (!project) throw new createHttpError.NotFound("Projeto não encontrado.");
+    const expected =
+      type === "DEALLOCATING"
+        ? new Map<string, { quantity: number; value: number }>()
+        : groupPurchaseStock(purchaseControlComposition);
+    const handled = new Set<string>();
+    const allocations = (project.alocacoes || []).map((allocation) => {
+      const target = expected.get(allocation.idMaterial);
+      if (!target && !allocation.movimentacoes.some((movement) => movement.idCompra === purchaseControlId))
+        return allocation;
+      const movements = allocation.movimentacoes.filter((movement) => movement.idCompra !== purchaseControlId);
+      if (target && !handled.has(allocation.idMaterial)) {
+        movements.push({
           idCompra: purchaseControlId,
-          tipo: "ENTRADA",
-          material: {
-            id: existingMaterial._id.toString(),
-            nome: existingMaterial.nome,
-          },
-          projeto: {
-            id: null,
-            nome: null,
-          },
-          qtdeAnterior: existingMaterial.qtde,
-          qtdeNovo: newQty,
-          precoAnterior: existingMaterial.preco,
-          precoNovo: newPrice,
-          autor: {
-            id: userSession.user.id,
-            nome: userSession.user.nome,
-            avatar_url: userSession.user.avatar_url,
-          },
-          dataInsercao: new Date().toISOString(),
-        },
-        {
-          session: dbSession,
-        },
+          titulo: purchaseControlTitle,
+          data: purchaseControlDeliveryDate as string,
+          quantidade: target.quantity,
+          precoUnitario: target.value / target.quantity,
+        });
+        handled.add(allocation.idMaterial);
+      }
+      const { quantity, price } = calculateMovementsWeightedPrice(
+        movements,
+        `projeto.${projectId}.${allocation.idMaterial}`,
       );
-      await notifyMaterialBelowMinimumIfCrossed({
-        materialId: existingMaterial._id.toString(),
-        materialName: existingMaterial.nome,
-        previousQuantity: existingMaterial.qtde,
-        newQuantity: newQty,
-        minimumQuantity: existingMaterial.qtdeMinima,
+      return { ...allocation, quantidade: quantity, precoUnitario: price, movimentacoes: movements };
+    });
+    for (const [materialId, target] of expected) {
+      if (handled.has(materialId)) continue;
+      const item = purchaseControlComposition.find((row) => row.materialId === materialId)!;
+      allocations.push({
+        idMaterial: materialId,
+        nome: item.descricao,
+        unidade: item.unidade,
+        quantidade: target.quantity,
+        quantidadePrevista: target.quantity,
+        precoUnitario: target.value / target.quantity,
+        movimentacoes: [
+          {
+            idCompra: purchaseControlId,
+            titulo: purchaseControlTitle,
+            data: purchaseControlDeliveryDate as string,
+            quantidade: target.quantity,
+            precoUnitario: target.value / target.quantity,
+          },
+        ],
       });
     }
-
-    // Everything dealt with, we gotta update the purchase control composition items with allocated date and allocated quantity
-    const updatedPurchaseControlComposition = purchaseControlComposition.map((c) => ({
-      ...c,
-      dataAlocacao: purchaseControlDeliveryDate,
-      qtdeAlocada: c.qtde,
-    }));
-    console.log(
-      "[INFO] [HANDLE-ALLOCATIONS] [STOCK] Composição do controle de compra após alocação:",
-      updatedPurchaseControlComposition,
+    await projectsCollection.updateOne(
+      { _id: new ObjectId(projectId) },
+      { $set: { alocacoes: allocations } },
+      { session: dbSession },
     );
     await purchaseControlsCollection.updateOne(
       { _id: new ObjectId(purchaseControlId) },
-      { $set: { composicao: updatedPurchaseControlComposition } },
+      {
+        $set: {
+          composicao: purchaseControlComposition.map((item) =>
+            isPurchaseMaterialId(item.materialId)
+              ? {
+                  ...item,
+                  dataAlocacao: type === "DEALLOCATING" ? null : purchaseControlDeliveryDate,
+                  qtdeAlocada: type === "DEALLOCATING" ? 0 : item.qtde,
+                }
+              : item,
+          ),
+        },
+      },
       { session: dbSession },
     );
-    console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Purchase control updated with allocations", {
-      purchaseControlId,
+    return { message: "Controle de compra atualizado com sucesso !" };
+  }
+
+  // Reconcile the entire purchase by material, including removed/replaced lines.
+  // Allocation flags alone do not prove that stock was actually received.
+  const previousStock = groupPurchaseStock(previousComposition ?? purchaseControlComposition);
+  const expected =
+    type === "DEALLOCATING"
+      ? new Map<string, { quantity: number; value: number }>()
+      : groupPurchaseStock(purchaseControlComposition);
+  const entries = await materialsLogsCollection
+    .find({ idCompra: purchaseControlId, tipo: "ENTRADA" }, { session: dbSession })
+    .toArray();
+  const materialIds = new Set([...expected.keys(), ...entries.map((entry) => entry.material.id)]);
+  for (const materialId of materialIds) {
+    if (!isPurchaseMaterialId(materialId))
+      throw new createHttpError.BadRequest("Movimentação de estoque com material inválido.");
+    const target = expected.get(materialId) || { quantity: 0, value: 0 };
+    const related = entries.filter((entry) => entry.material.id === materialId);
+    const entered = related.reduce((sum, entry) => sum + stockEntryQuantity(entry), 0);
+    const reference = previousStock.get(materialId) ?? target;
+    const fallbackPrice = reference.quantity ? reference.value / reference.quantity : 0;
+    const enteredValue = related.reduce((sum, entry) => sum + stockEntryValue(entry, fallbackPrice), 0);
+    const adjustment = target.quantity - entered;
+    const valueAdjustment = target.value - enteredValue;
+    assertFiniteNumber(adjustment, "estoque.quantidade");
+    assertFiniteNumber(valueAdjustment, "estoque.valor");
+    if (Math.abs(adjustment) < 0.000001 && Math.abs(valueAdjustment) < 0.000001) continue;
+    const material = await materialsCollection.findOne({ _id: new ObjectId(materialId) }, { session: dbSession });
+    if (!material) throw new createHttpError.NotFound("Material não encontrado.");
+    assertFiniteNumber(material.qtde, "estoque.quantidadeAtual");
+    assertFiniteNumber(material.preco, "estoque.precoAtual");
+    const newQty = material.qtde + adjustment;
+    if (newQty < -0.000001) throw new createHttpError.BadRequest("A operação resultaria em estoque negativo.");
+    const newPrice = newQty <= 0 ? 0 : (material.qtde * material.preco + valueAdjustment) / newQty;
+    assertFiniteNumber(newPrice, "estoque.novoPreco");
+    if (newPrice < -0.000001)
+      throw new createHttpError.BadRequest(
+        "A operação resultaria em valor de estoque negativo. Confira as movimentações do material.",
+      );
+    await materialsCollection.updateOne(
+      { _id: material._id },
+      {
+        $set: { qtde: Math.max(0, newQty), preco: Math.max(0, newPrice) },
+      },
+      { session: dbSession },
+    );
+    await materialsLogsCollection.insertOne(
+      {
+        idCompra: purchaseControlId,
+        tipo: "ENTRADA",
+        alteracao: adjustment,
+        material: { id: materialId, nome: material.nome },
+        projeto: { id: null, nome: null },
+        qtdeAnterior: material.qtde,
+        qtdeNovo: Math.max(0, newQty),
+        precoAnterior: material.preco,
+        precoNovo: Math.max(0, newPrice),
+        autor: { id: userSession.user.id, nome: userSession.user.nome, avatar_url: userSession.user.avatar_url },
+        dataInsercao: new Date().toISOString(),
+      },
+      { session: dbSession },
+    );
+    await notifyMaterialBelowMinimumIfCrossed({
+      materialId,
+      materialName: material.nome,
+      previousQuantity: material.qtde,
+      newQuantity: Math.max(0, newQty),
+      minimumQuantity: material.qtdeMinima,
     });
   }
-  if (type === "UPDATING") {
-    console.log(
-      `[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando materiais em estoque para controle ${purchaseControlId}`,
-    );
-    const purchasedMaterialsObjectIds = purchaseControlComposition
-      .filter((c) => !!c.materialId)
-      .map((c) => new ObjectId(c.materialId as string));
-    const materials = await materialsCollection
-      .find({ _id: { $in: purchasedMaterialsObjectIds } }, { session: dbSession })
-      .toArray();
-    const purchaseRelatedLogs = await materialsLogsCollection
-      .find({ idCompra: purchaseControlId }, { session: dbSession })
-      .toArray();
-    for (const item of purchaseControlComposition) {
-      // Only linked items participate in stock reconciliation.
-      if (!item.materialId) continue;
-      const existingMaterial = materials.find((mat) => mat._id.toString() === item.materialId);
-
-      if (!existingMaterial) {
-        console.error(
-          `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${item.materialId} no controle ${purchaseControlId}`,
-        );
-        throw new createHttpError.NotFound("Material não encontrado.");
-      }
-      const existingAllocationLog = purchaseRelatedLogs.find(
-        (log) => log.material.id === existingMaterial._id.toString(),
-      );
-
-      const isItemAllocated = !!item.dataAlocacao;
-      const allocatedQty = item.qtdeAlocada ?? 0;
-      assertFiniteNumber(
-        item.qtde,
-        `estoque.atualizacao.${existingMaterial._id.toString()}.quantidadeCompra`,
-      );
-      assertFiniteNumber(
-        allocatedQty,
-        `estoque.atualizacao.${existingMaterial._id.toString()}.quantidadeAlocada`,
-      );
-      assertFiniteNumber(
-        item.valor,
-        `estoque.atualizacao.${existingMaterial._id.toString()}.valorCompra`,
-      );
-
-      const updateQtyDiff = item.qtde - allocatedQty;
-      if (isItemAllocated && existingAllocationLog && updateQtyDiff === 0) continue;
-
-      const { newQty, newPrice } = calculateWeightedPrice(
-        existingMaterial.qtde,
-        existingMaterial.preco,
-        updateQtyDiff,
-        item.valor,
-        `estoque.atualizacao.${existingMaterial._id.toString()}`,
-      );
-      console.log("[INFO] [HANDLE-ALLOCATIONS] [STOCK] Atualizando material:", {
-        materialId: existingMaterial._id.toString(),
-        diferenca: updateQtyDiff,
-        qtdeAnterior: existingMaterial.qtde,
-        qtdeNova: newQty,
-        precoAnterior: existingMaterial.preco,
-        precoNovo: newPrice,
-        item,
-      });
-
-      await materialsCollection.updateOne(
-        {
-          _id: existingMaterial._id,
-        },
-        {
-          $inc: { qtde: updateQtyDiff },
-          $set: { preco: newPrice },
-        },
-        {
-          session: dbSession,
-        },
-      );
-      if (isItemAllocated) {
-        // Updating the material log
-        await materialsLogsCollection.updateOne(
-          {
-            idCompra: purchaseControlId,
-            "material.id": existingMaterial._id.toString(),
-          },
-          {
-            $inc: {
-              qtdeNovo: updateQtyDiff,
-              alteracao: updateQtyDiff,
-            },
-            $set: {
-              precoNovo: newPrice,
-            },
-          },
-          {
-            session: dbSession,
-          },
-        );
-      } else {
-        // Inserting the material log
-        await materialsLogsCollection.insertOne(
-          {
-            alteracao: updateQtyDiff,
-            idCompra: purchaseControlId,
-            tipo: "ENTRADA",
-            material: {
-              id: existingMaterial._id.toString(),
-              nome: existingMaterial.nome,
-            },
-            projeto: {
-              id: null,
-              nome: null,
-            },
-            qtdeAnterior: existingMaterial.qtde,
-            qtdeNovo: newQty,
-            precoAnterior: existingMaterial.preco,
-            precoNovo: newPrice,
-            autor: {
-              id: userSession.user.id,
-              nome: userSession.user.nome,
-              avatar_url: userSession.user.avatar_url,
-            },
-            dataInsercao: new Date().toISOString(),
-          },
-          {
-            session: dbSession,
-          },
-        );
-      }
-      await notifyMaterialBelowMinimumIfCrossed({
-        materialId: existingMaterial._id.toString(),
-        materialName: existingMaterial.nome,
-        previousQuantity: existingMaterial.qtde,
-        newQuantity: newQty,
-        minimumQuantity: existingMaterial.qtdeMinima,
-      });
-    }
-
-    // Updating the purchase control composition items with allocated date and allocated quantity
-    const updatedPurchaseControlComposition = purchaseControlComposition.map((c) => ({
-      ...c,
-      dataAlocacao: purchaseControlDeliveryDate,
-      qtdeAlocada: c.qtde,
-    }));
-    console.log(
-      "[INFO] [HANDLE-ALLOCATIONS] [STOCK] Composição do controle de compra após atualização:",
-      updatedPurchaseControlComposition,
-    );
-    await purchaseControlsCollection.updateOne(
-      { _id: new ObjectId(purchaseControlId) },
-      { $set: { composicao: updatedPurchaseControlComposition } },
-      { session: dbSession },
-    );
-  }
-  if (type === "DEALLOCATING") {
-    console.log(
-      `[INFO] [HANDLE-ALLOCATIONS] [STOCK] Devolvendo materiais do estoque para controle ${purchaseControlId}`,
-    );
-    const purchaseControlCompositionMaterials = purchaseControlComposition.filter(
-      (c) => !!c.materialId,
-    );
-    for (const compositionItem of purchaseControlCompositionMaterials) {
-      const currentMaterialInfo = await materialsCollection.findOne(
-        { _id: new ObjectId(compositionItem.materialId as string) },
-        { session: dbSession },
-      );
-      if (!currentMaterialInfo) {
-        console.error(
-          `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${compositionItem.materialId}`,
-        );
-        throw new createHttpError.NotFound("Material não encontrado.");
-      }
-
-      const currentQuantity = currentMaterialInfo.qtde;
-      const currentPrice = currentMaterialInfo.preco;
-      const { newQty: restoredQty, newPrice: restoredPrice } = calculateWeightedPrice(
-        currentQuantity,
-        currentPrice,
-        -compositionItem.qtde,
-        compositionItem.valor,
-        `estoque.devolucao.${currentMaterialInfo._id.toString()}`,
-      );
-
-      await materialsCollection.updateOne(
-        { _id: new ObjectId(compositionItem.materialId as string) },
-        { $set: { qtde: restoredQty, preco: restoredPrice } },
-        { session: dbSession },
-      );
-      await notifyMaterialBelowMinimumIfCrossed({
-        materialId: currentMaterialInfo._id.toString(),
-        materialName: currentMaterialInfo.nome,
-        previousQuantity: currentQuantity,
-        newQuantity: restoredQty,
-        minimumQuantity: currentMaterialInfo.qtdeMinima,
-      });
-    }
-
-    // Deleting all logs from the purchase control
-    await materialsLogsCollection.deleteMany(
-      { idCompra: purchaseControlId },
-      { session: dbSession },
-    );
-
-    // Updating the purchase control composition items with allocated date and allocated quantity
-    const updatedPurchaseControlComposition = purchaseControlComposition.map((c) => ({
-      ...c,
-      dataAlocacao: null,
-      qtdeAlocada: 0,
-    }));
-    console.log(
-      "[INFO] [HANDLE-ALLOCATIONS] [STOCK] Composição do controle de compra após devolução:",
-      updatedPurchaseControlComposition,
-    );
-    await purchaseControlsCollection.updateOne(
-      { _id: new ObjectId(purchaseControlId) },
-      { $set: { composicao: updatedPurchaseControlComposition } },
-      { session: dbSession },
-    );
-    console.log(
-      "[INFO] [HANDLE-ALLOCATIONS] [DEALLOCATING] Purchase control updated with allocations.",
-      { purchaseControlId },
-    );
-  }
-
-  console.log(
-    `[INFO] [HANDLE-ALLOCATIONS] Operação ${type} finalizada para controle ${purchaseControlId}`,
+  const composition = purchaseControlComposition.map((item) =>
+    isPurchaseMaterialId(item.materialId)
+      ? {
+          ...item,
+          dataAlocacao: type === "DEALLOCATING" ? null : purchaseControlDeliveryDate,
+          qtdeAlocada: type === "DEALLOCATING" ? 0 : item.qtde,
+        }
+      : item,
   );
-  return {
-    message: "Controle de compra atualizado com sucesso !",
-  };
+  await purchaseControlsCollection.updateOne(
+    { _id: new ObjectId(purchaseControlId) },
+    {
+      $set: { composicao: composition },
+    },
+    { session: dbSession },
+  );
+  return { message: "Controle de compra atualizado com sucesso !" };
 }

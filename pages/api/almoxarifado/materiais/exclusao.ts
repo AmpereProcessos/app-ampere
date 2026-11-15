@@ -288,7 +288,7 @@ async function deleteMaterial(payload: TDeleteMaterialInput) {
 				console.log("[INFO] [DELETE-MATERIAL] [MERGE] Updating purchases...");
 				const updatePurchasesResponse = await purchasesCollection.updateMany(
 					{ "composicao.materialId": payload.id },
-					{ $set: { "composicao.$[elem].materialId": payload.mergeIntoId } },
+					{ $set: { "composicao.$[elem].materialId": payload.mergeIntoId }, $inc: { revisao: 1 } },
 					{
 						session: dbSession,
 						arrayFilters: [{ "elem.materialId": payload.id }],

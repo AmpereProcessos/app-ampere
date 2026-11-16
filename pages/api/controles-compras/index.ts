@@ -238,6 +238,21 @@ const updatePurchaseControlRoute: NextApiHandler<PutResponse> = async (req, res)
         console.error(`[ERROR] [UPDATE-PURCHASE-CONTROL] Controle de compra não encontrado: ${id}`);
         throw new createHttpError.NotFound("Controle de compra não encontrado.");
       }
+      // Validate submitted links even before delivery, including project purchases.
+      if (changes.composicao) {
+        for (const item of changes.composicao) {
+          if (!item.materialId) continue;
+          const material = ObjectId.isValid(item.materialId)
+            ? await materialsCollection.findOne(
+                { _id: new ObjectId(item.materialId) },
+                { session: dbSession },
+              )
+            : null;
+          if (!material || material.dataExclusao) {
+            throw new createHttpError.NotFound(purchaseMaterialError(item));
+          }
+        }
+      }
       console.log(
         "[INFO] [UPDATE-PURCHASE-CONTROL] Controle de compra anterior encontrado:",
         previousPurchaseControl,
@@ -655,6 +670,10 @@ function calculateMovementsWeightedPrice(
   return { quantity, price };
 }
 
+function purchaseMaterialError(item: TPurchaseControl["composicao"][number]) {
+  return `O material "${item.descricao || "Sem descrição"}" (ID: ${item.materialId}) não existe ou foi excluído. Selecione outro material.`;
+}
+
 export async function handlePurchaseControlAllocationsImproved({
   type,
   purchaseControlId,
@@ -918,7 +937,7 @@ export async function handlePurchaseControlAllocationsImproved({
         console.error(
           `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${item.materialId} no controle ${purchaseControlId}`,
         );
-        throw new createHttpError.NotFound("Material não encontrado.");
+        throw new createHttpError.NotFound(purchaseMaterialError(item));
       }
       const diff = item.qtde;
       const { newQty, newPrice } = calculateWeightedPrice(
@@ -1027,7 +1046,7 @@ export async function handlePurchaseControlAllocationsImproved({
         console.error(
           `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${item.materialId} no controle ${purchaseControlId}`,
         );
-        throw new createHttpError.NotFound("Material não encontrado.");
+        throw new createHttpError.NotFound(purchaseMaterialError(item));
       }
       const existingAllocationLog = purchaseRelatedLogs.find(
         (log) => log.material.id === existingMaterial._id.toString(),
@@ -1172,7 +1191,7 @@ export async function handlePurchaseControlAllocationsImproved({
         console.error(
           `[ERROR] [HANDLE-ALLOCATIONS] [STOCK] Material não encontrado: ${compositionItem.materialId}`,
         );
-        throw new createHttpError.NotFound("Material não encontrado.");
+        throw new createHttpError.NotFound(purchaseMaterialError(compositionItem));
       }
 
       const currentQuantity = currentMaterialInfo.qtde;

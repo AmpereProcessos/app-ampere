@@ -1,4 +1,6 @@
 import TechnicalAnalysisFiles from "@/components/identificador/analisesTecnicas/TechnicalAnalysisFiles";
+import MaterialSelector from "@/components/identificador/almoxarifado/estoque/MaterialVinculatorSelector";
+import type { TMaterialSimplifiedWithAlocatorDTO } from "@/utils/schemas/materials";
 import ModalControlServiceOrder from "@/components/identificador/ordensDeServico/modals/ModalControlServiceOrder";
 import CheckboxInput from "@/components/inputs/Checkbox";
 import TextInput from "@/components/inputs/Text";
@@ -83,6 +85,7 @@ function PurchaseControlProjectInformationBlock({
   const [newExecutionObservationsMenuIsOpen, setNewExecutionObservationsMenuIsOpen] =
     useState<boolean>(false);
   const [technicalAnalysisBlockIsOpen, setTechnicalAnalysisBlockIsOpen] = useState<boolean>(false);
+  const [productMaterials, setProductMaterials] = useState<Record<string, TMaterialSimplifiedWithAlocatorDTO | undefined>>({});
 
   const memoizedProjectLocation = useMemo(() => {
     return formatLocation({
@@ -295,9 +298,9 @@ function PurchaseControlProjectInformationBlock({
         </h1>
         <div className="flex w-full flex-wrap items-center gap-2">
           {getSoldProducts(project.produtos ?? []).length > 0 ? (
-            getSoldProducts(project.produtos ?? []).map((product) => (
+            getSoldProducts(project.produtos ?? []).map((product, productIndex) => (
               <div
-                key={product.id}
+                key={product.id ?? productIndex}
                 className="border-primary bg-background flex w-full flex-col gap-1 rounded-md border p-2 dark:bg-[#121212]"
               >
                 <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
@@ -332,22 +335,31 @@ function PurchaseControlProjectInformationBlock({
                     </div>
                   </div>
                 </div>
-                <div className="flex w-full items-center justify-end">
-                  <button
-                    type="button"
-                    onClick={() =>
+                <div className="flex w-full flex-wrap items-center justify-end gap-2">
+                  <MaterialSelector
+                    initialMaterialState={{ materialId: null, materialName: `${product.fabricante} - ${product.modelo}` }}
+                    vinculateMaterial={(material) => setProductMaterials(prev => ({ ...prev, [product.id ?? productIndex]: material }))}
+                    unvinculateMaterial={() => setProductMaterials(prev => ({ ...prev, [product.id ?? productIndex]: undefined }))}
+                    renderUnselectedMaterial={({ setOpen }) => (
+                      <button type="button" onClick={() => setOpen(true)}
+                        className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2 py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black">
+                        SELECIONAR MATERIAL
+                      </button>
+                    )}
+                  />
+                  <button type="button" disabled={!productMaterials[product.id ?? productIndex]}
+                    onClick={() => {
+                      const material = productMaterials[product.id ?? productIndex];
+                      if (!material) return;
                       addProductToComposition({
-                        categoria: product.categoria,
-                        descricao: `${product.fabricante} - ${product.modelo}`,
-                        qtde: product.qtde,
-                        unidade: "UN",
-                        valor: 0,
-                      })
-                    }
-                    className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2 py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black"
-                  >
+                        materialId: material._id, categoria: product.categoria, descricao: material.nome,
+                        materialImagemUrl: material.imagemUrl, qtde: product.qtde,
+                        unidade: material.grandeza || "UN", valor: 0,
+                      });
+                    }}
+                    className="flex items-center gap-1 rounded-lg border border-[#fead41] px-2 py-1 text-[0.6rem] font-medium text-[#fead41] hover:bg-[#fead41] hover:text-black disabled:cursor-not-allowed disabled:opacity-50">
                     <IoMdAdd width={10} height={10} />
-                    <p>ADICIONAR À COMPOSIÇÃO</p>
+                    ADICIONAR À COMPOSIÇÃO
                   </button>
                 </div>
               </div>

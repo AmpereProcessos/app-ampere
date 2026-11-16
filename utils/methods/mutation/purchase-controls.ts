@@ -14,7 +14,10 @@ export async function createPurchaseControl(info: TPurchaseControl) {
 
 export async function updatePurchaseControl({ id, changes }: { id: string; changes: Partial<TPurchaseControl> }) {
 	try {
-		const { data } = await axios.put(`/api/controles-compras?id=${id}`, changes);
+		const { data } = await axios.put(`/api/controles-compras?id=${id}`, {
+			...changes,
+			...(changes.composicao ? { revisao: changes.revisao ?? 0 } : {}),
+		});
 		if (typeof data.message !== "string") return "Controle de compra criado com sucesso !";
 		return data.message as string;
 	} catch (error) {

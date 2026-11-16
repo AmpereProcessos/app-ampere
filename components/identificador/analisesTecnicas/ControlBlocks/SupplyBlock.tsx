@@ -34,6 +34,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }: SupplyB
   const [newSupplyItemMenuIsOpen, setNewSupplyItemMenuIsOpen] = useState(false);
 
   function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
+    if (itens.some(item => !item.materialId)) return toast.error("Este kit contém itens sem material vinculado. Corrija o kit antes de importá-lo.");
     const newItems: Exclude<TTechnicalAnalysisDTO["suprimentos"], undefined | null>["itens"] =
       itens.map((item) => ({
         idMaterial: item.materialId,
@@ -408,6 +409,8 @@ function SupplyItemCard({ item, handleUpdate, handleRemove }: SupplyItemCardProp
               <button
                 type="button"
                 onClick={() => {
+                  if (!itemHolder.idMaterial) return toast.error("Selecione um material antes de salvar o item.");
+                  if (!Number.isFinite(itemHolder.qtde) || itemHolder.qtde <= 0) return toast.error("Informe uma quantidade maior que zero.");
                   handleUpdate(itemHolder);
                   setEditMenuIsOpen(false);
                 }}

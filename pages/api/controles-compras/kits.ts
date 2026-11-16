@@ -1,4 +1,7 @@
-import { apiHandler } from "@/utils/api";
+import { apiHandler, validateAuthenticationWithSession } from "@/utils/api";
+import { validatePurchaseMaterialCatalog } from "@/lib/projects/purchase-materials";
+import connectToWarehouseDatabase from "@/utils/services/mongodb/warehouse";
+import type { TMaterial } from "@/utils/schemas/materials";
 import {
 	PurchaseControlCompositionKitSchema,
 	type TPurchaseControlCompositionKit,
@@ -43,7 +46,12 @@ export type TCreatePurchaseControlCompositionKitOutput = {
 
 export type TCreatePurchaseControlCompositionKitInput = z.infer<typeof PurchaseControlCompositionKitSchema>;
 const createPurchaseControlCompositionKit: NextApiHandler<TCreatePurchaseControlCompositionKitOutput> = async (req, res) => {
+	await validateAuthenticationWithSession(req, res);
 	const payload = PurchaseControlCompositionKitSchema.parse(req.body);
+	const warehouse = await connectToWarehouseDatabase();
+	await validatePurchaseMaterialCatalog(payload.itens, warehouse.collection<TMaterial>("material"));
+	if (payload.itens.some(item => !Number.isFinite(item.qtde) || item.qtde <= 0))
+		throw new createHttpError.BadRequest("Informe uma quantidade maior que zero para os itens do kit.");
 
 	const db = await connectToDatabase();
 	const purchaseControlsCompositionKitsCollection = db.collection<TPurchaseControlCompositionKit>("controles-compras-kits-composicao");

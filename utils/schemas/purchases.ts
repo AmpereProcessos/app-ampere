@@ -159,6 +159,7 @@ export type TPurchaseControlCompositionKit = z.infer<typeof PurchaseControlCompo
 export type TPurchaseControlCompositionKitDTO = TPurchaseControlCompositionKit & { _id: string };
 
 export const GeneralPurchaseControlSchema = z.object({
+  revisao: z.number().int().nonnegative().optional(),
   status: PurchaseStatus,
   registrosStatus: z
     .record(

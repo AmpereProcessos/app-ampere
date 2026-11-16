@@ -160,6 +160,7 @@ function PurchaseControlDataBlock({ queryClient, infoHolder, setInfoHolder, sess
 	const { data: project } = usePurchaseProject({ projectId: infoHolder.projeto.id || null });
 
 	function addProductToComposition(product: TPurchaseControl["composicao"][number]) {
+		if (!product.materialId) return toast.error("Vincule o item a um material antes de adicioná-lo à compra.");
 		setInfoHolder((prev) => ({ ...prev, composicao: [...prev.composicao, product] }));
 		toast.success("Produto adicionado à composição");
 	}

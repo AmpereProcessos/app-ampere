@@ -314,6 +314,8 @@ function ItemCard({ item, handleUpdate, handleRemove }: ItemCardProps) {
               <button
                 type="button"
                 onClick={() => {
+                  if (!itemHolder.materialId) return toast.error("Selecione um material antes de salvar o item.");
+                  if (!Number.isFinite(itemHolder.qtde) || itemHolder.qtde <= 0) return toast.error("Informe uma quantidade maior que zero.");
                   handleUpdate(itemHolder);
                   setEditMenuIsOpen(false);
                 }}

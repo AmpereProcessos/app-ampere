@@ -16,11 +16,11 @@ import PurchaseNewCompositionItem from "./utils/NewCompositionItem";
 
 type PurchaseControlCompositionBlockProps = {
 	session: TAuthSession;
-	purchaseControlId: string;
+	purchaseControlId?: string;
 	infoHolder: TPurchaseControl;
 	setInfoHolder: Dispatch<SetStateAction<TPurchaseControl>>;
 };
-function PurchaseControlCompositionBlock({ session, purchaseControlId, infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
+function PurchaseControlCompositionBlock({ session, purchaseControlId = "", infoHolder, setInfoHolder }: PurchaseControlCompositionBlockProps) {
 	const queryClient = useQueryClient();
 	const { data: purchaseControlCompositionKits, queryKey } = usePurchaseControlCompositionKits();
 	const handleOnMutate = async () => await queryClient.cancelQueries({ queryKey: queryKey });
@@ -43,6 +43,7 @@ function PurchaseControlCompositionBlock({ session, purchaseControlId, infoHolde
 	}
 
 	function handleAddItemsFromKit(itens: TPurchaseControlCompositionKitDTO["itens"]) {
+    if (itens.some(item => !item.materialId)) return toast.error("Este kit contém itens sem material vinculado. Corrija o kit antes de importá-lo.");
 		const newItems: TPurchaseControl["composicao"] = itens.map((item) => ({
 			materialId: item.materialId,
 			categoria: item.categoria,
@@ -98,7 +99,7 @@ function PurchaseControlCompositionBlock({ session, purchaseControlId, infoHolde
 				<AnimatePresence>{newCompositionItemMenuIsOpen ? <PurchaseNewCompositionItem addCompositionItem={addCompositionItem} /> : null}</AnimatePresence>
 				<PurchaseControlCompositionBlockTable
 					purchaseControlId={purchaseControlId}
-					showStockEntries={!infoHolder.projeto.id}
+					showStockEntries={!!purchaseControlId && !infoHolder.projeto.id}
 					composition={infoHolder.composicao}
 					removeCompositionItem={removeCompositionItem}
 					updateCompositionItem={updateCompositionItem}

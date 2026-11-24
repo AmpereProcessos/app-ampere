@@ -1,3 +1,4 @@
+import { normalizeSystemTopology } from "@/lib/projects/equipment";
 import { TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
 import { useState } from "react";
@@ -44,7 +45,7 @@ export function useWarehouseProjects() {
 	}
 	function matchTopology(project: TProjectDTO) {
 		if (filters.topology.length == 0) return true;
-		return filters.topology.includes(project.sistema.topologia || "");
+		return filters.topology.map((value) => normalizeSystemTopology(value)).includes(normalizeSystemTopology(project.sistema.topologia));
 	}
 	function matchModulesQtyGte(project: TProjectDTO) {
 		if (!filters.modulesQtyGte) return true;

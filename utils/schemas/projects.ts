@@ -812,7 +812,7 @@ const GeneralProjectSchema = z.object({
     qtdeModulos: z.number().optional().nullable(),
     potPico: z.number(),
     topologia: z
-      .union([z.literal("MICRO"), z.literal("INVERSOR"), z.literal("OTIMIZADOR")])
+      .union([z.literal("MICRO"), z.literal("MICRO-INVERSOR"), z.literal("INVERSOR"), z.literal("OTIMIZADOR")])
       .optional()
       .nullable(),
     valorProjeto: z.number(),

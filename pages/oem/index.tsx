@@ -1,3 +1,4 @@
+import { normalizeSystemTopology } from "@/lib/projects/equipment";
 import { getProjectOemPower } from "@/utils/methods/util/projects";
 import { useSession } from "@/components/providers/SessionProvider";
 import OemProjectsFilters from "@/components/identificador/oem/OemProjectsFilters";
@@ -200,7 +201,7 @@ function OemContent({ session: _session }: { session: TAuthSession }) {
                       TOPOLOGIA
                     </span>
                     <p className="text-xs font-medium tracking-tight">
-                      {project.sistema.topologia}
+                      {normalizeSystemTopology(project.sistema?.topologia) || "-"}
                     </p>
                   </div>
                 </div>

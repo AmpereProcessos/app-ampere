@@ -1,3 +1,4 @@
+import { normalizeSystemTopology } from "@/lib/projects/equipment";
 import NumberInput from "@/components/inputs/Number";
 import SelectInput from "@/components/inputs/Select";
 import TextInput from "@/components/inputs/Text";
@@ -34,15 +35,15 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 				<div className="w-full lg:w-1/4">
 					<SelectInput
 						label={"TOPOLOGIA"}
-						value={infoHolder.topologia}
+						value={normalizeSystemTopology(infoHolder.topologia)}
 						editable={userHasEditPermission}
 						selectedItemLabel="NÃO DEFINIDO"
 						options={[
-							{ id: 1, label: "MICRO-INVERSOR", value: "MICRO" },
+							{ id: 1, label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
 							{ id: 2, label: "INVERSOR", value: "INVERSOR" },
 							{ id: 3, label: "OTIMIZADOR", value: "OTIMIZADOR" },
 						]}
-						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, topologia: value }))}
+						handleChange={(value) => setInfoHolder((prev) => ({ ...prev, topologia: normalizeSystemTopology(value) }))}
 						onReset={() => setInfoHolder((prev) => ({ ...prev, topologia: "INVERSOR" }))}
 						width="100%"
 					/>
@@ -239,15 +240,15 @@ function SystemInformationBlock({ infoHolder, setInfoHolder, userHasEditPermissi
 						<div className="w-full lg:w-1/4">
 							<SelectInput
 								label={"TOPOLOGIA"}
-								value={infoHolder.topologiaAnterior}
+								value={normalizeSystemTopology(infoHolder.topologiaAnterior)}
 								editable={userHasEditPermission}
 								selectedItemLabel="NÃO DEFINIDO"
 								options={[
-									{ id: 1, label: "MICRO-INVERSOR", value: "MICRO" },
+									{ id: 1, label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
 									{ id: 2, label: "INVERSOR", value: "INVERSOR" },
 									{ id: 3, label: "OTIMIZADOR", value: "OTIMIZADOR" },
 								]}
-								handleChange={(value) => setInfoHolder((prev) => ({ ...prev, topologiaAnterior: value }))}
+									handleChange={(value) => setInfoHolder((prev) => ({ ...prev, topologiaAnterior: normalizeSystemTopology(value) }))}
 								onReset={() => setInfoHolder((prev) => ({ ...prev, topologiaAnterior: "INVERSOR" }))}
 								width="100%"
 							/>

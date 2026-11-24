@@ -1,3 +1,4 @@
+import { ProjectEquipmentProjection } from "@/lib/projects/equipment";
 import connectToDatabase from "../../../utils/services/mongodb/projects";
 export default async function handler(req, res) {
 	if (req.method === "GET") {
@@ -54,7 +55,7 @@ export default async function handler(req, res) {
 						"conferencias.usinaLigada": 1,
 						"oem.plano": 1,
 						tipoDeServico: 1,
-						sistema: 1,
+						...ProjectEquipmentProjection,
 						app: 1,
 						manutencaoPreventiva: 1,
 						manutencoes: 1,
@@ -107,7 +108,7 @@ export default async function handler(req, res) {
 						"obra.statusDaObra": 1,
 						"obra.saida": 1,
 						"conferencias.usinaLigada": 1,
-						sistema: 1,
+						...ProjectEquipmentProjection,
 						app: 1,
 						manutencaoPreventiva: 1,
 						"medidor.data": 1,

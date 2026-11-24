@@ -1,3 +1,4 @@
+import { normalizeSystemTopology } from "@/lib/projects/equipment";
 import type { TEnergyPAExecution, TEnergyPAExecutionWithFiltersInput, TEnergyPAExecutionWithFiltersOutput } from "@/pages/api/gestao-obras/padroes";
 import type { TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
@@ -73,7 +74,7 @@ export function useExecutionProjects() {
 	}
 	function matchTopology(project: TProjectDTO) {
 		if (filters.topology.length === 0) return true;
-		return filters.topology.includes(project.sistema.topologia || "");
+		return filters.topology.map((value) => normalizeSystemTopology(value)).includes(normalizeSystemTopology(project.sistema.topologia));
 	}
 	function matchTechnicalTeam(project: TProjectDTO) {
 		if (filters.technicalTeam.length === 0) return true;

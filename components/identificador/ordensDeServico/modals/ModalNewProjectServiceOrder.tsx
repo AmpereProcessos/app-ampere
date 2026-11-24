@@ -1,3 +1,4 @@
+import { getProjectEquipment } from "@/lib/projects/equipment";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
@@ -39,30 +40,6 @@ function getEquipmentList({ str, category }: { str: string; category: string }) 
   });
   return formattedSpllited.filter((x) => !!x);
 }
-function getInverterInfoByStr(str: string) {
-  const regexInverterQty = /^(\d{1,3})x/i;
-  const regexInverterModel = /x([^()]+)/;
-  const regexInverterPower = /\((\d+)W\)/;
-  const x = regexInverterQty.exec(str);
-  const inverterQty = regexInverterQty.exec(str)
-    ? (regexInverterQty.exec(str) as RegExpExecArray)[0]?.slice(0, -1)
-    : null;
-  const inverterModel = regexInverterModel.exec(str)
-    ? (regexInverterModel.exec(str) as RegExpExecArray)[0].substring(1)
-    : null;
-  const inverterPower = regexInverterPower.exec(str)
-    ? (regexInverterPower.exec(str) as RegExpExecArray)[0]
-        .replace("(", "")
-        .replace(")", "")
-        .replace("W", "")
-    : null;
-  return {
-    modelo: inverterModel,
-    qtde: Number(inverterQty) || 0,
-    potencia: inverterPower,
-  };
-}
-
 type ModalNewServiceOrderProps = {
   session: TAuthSession;
   project: TProjectDTO;
@@ -70,6 +47,7 @@ type ModalNewServiceOrderProps = {
 };
 function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewServiceOrderProps) {
   const queryClient = useQueryClient();
+  const equipment = getProjectEquipment(project);
   const [osInfo, setOsInfo] = useState<TServiceOrder>({
     categoria: "MONTAGEM",
     favorecido: {
@@ -116,12 +94,8 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
       avatar_url: session?.user.avatar_url,
     },
     equipamentos: {
-      modulos: {
-        modelo: "",
-        qtde: project.sistema?.qtdeModulos,
-        potencia: project.sistema?.potModulos?.toString(),
-      },
-      inversor: getInverterInfoByStr(project.sistema?.inversor || ""),
+      modulos: equipment.modulos,
+      inversor: equipment.inversor,
       disponivel: null,
       retirada: null,
     },
@@ -137,7 +111,7 @@ function ModalNewProjectServiceOrder({ session, project, closeModal }: ModalNewS
       tipoSaidaPadrao: project.visitaTecnica?.saidaDoCliente || null,
       amperagemPadrao: project.visitaTecnica?.amperagem || null,
       responsabilidadePadrao: project.padrao?.respInstalacao,
-      topologia: project.sistema?.topologia,
+      topologia: equipment.topologia,
     },
     observacoes: [],
     dataInsercao: new Date().toISOString(),

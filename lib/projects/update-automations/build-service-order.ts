@@ -1,3 +1,4 @@
+import { normalizeSystemTopology } from "@/lib/projects/equipment";
 import type { TServiceOrder } from "@/utils/schemas/service-order";
 import { getProjectDeliveryReleaseDate } from "@/lib/service-orders/delivery-release";
 import {
@@ -80,7 +81,7 @@ export function buildProjectServiceOrder({
       tipoSaidaPadrao: project.visitaTecnica?.saidaDoCliente || null,
       amperagemPadrao: project.visitaTecnica?.amperagem || null,
       responsabilidadePadrao: project.padrao?.respInstalacao,
-      topologia: project.sistema?.topologia,
+      topologia: normalizeSystemTopology(project.sistema?.topologia),
     },
     observacoes: getServiceObservationsFromObras(project.obra?.observacoes || ""),
     dataPrevisaoLiberacao: project.compra.previsaoEntrega,

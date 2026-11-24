@@ -2,6 +2,7 @@ import { UFV_SYSTEM_PROJECT_JOURNEY_WORKFLOW_STAGES_LEGACY_CONFIG } from "@/lib/
 import type { TCreateNotificationInput } from "@/pages/api/notificacoes";
 import type { TContractRequestDTO } from "@/utils/schemas/contract-requests";
 import { getExistingProducts } from "@/utils/schemas/crm/kits.schema";
+import { getProjectEquipment, isMaintenanceService, normalizeSystemTopology } from "@/lib/projects/equipment";
 import type { THomologation } from "@/utils/schemas/partial/homologation";
 import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
@@ -86,21 +87,31 @@ function getOemEquipmentQtyFromRequest(request: TContractRequestDTO, categoria: 
 	return null;
 }
 function getSistemaFieldsFromRequest(request: TContractRequestDTO) {
-	return {
+	const maintenance = isMaintenanceService(request.tipoDeServico);
+	const moduleQty = request.qtdeModulos || (maintenance ? request.qtdeModulosOem : "") || "0";
+	const modulePower = request.potModulos || (maintenance ? request.potModulosOem : "") || "";
+	const legacy = {
 		qtdeModulos: getProductInformation({
-			qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
-			power: request.potModulos ? request.potModulos?.toString() : "0",
+			qty: moduleQty,
+			power: modulePower,
 		}).totalQty,
-		potModulos: request.potModulos,
+		potModulos: modulePower,
 		potPico: getProductInformation({
-			qty: request.qtdeModulos ? request.qtdeModulos?.toString() : "0",
-			power: request.potModulos ? request.potModulos?.toString() : "0",
+			qty: moduleQty,
+			power: modulePower,
 		}).totalPower,
 		inversor: getInverterInformation({
-			model: request.marcaInversor ? request.marcaInversor?.toString().toUpperCase() : "",
-			qty: request.qtdeInversor ? request.qtdeInversor.toString() : "0",
-			power: request.potInversor ? request.potInversor.toString() : "0",
+			model: request.marcaInversor || (maintenance ? request.marcaInversorOem : "") || "",
+			qty: request.qtdeInversor || (maintenance ? request.qtdeInversorOem : "") || "0",
+			power: request.potInversor || (maintenance ? request.potInversorOem : "") || "0",
 		}),
+	};
+	const equipment = getProjectEquipment({ tipoDeServico: request.tipoDeServico, produtos: request.produtos, sistema: legacy });
+	return {
+		qtdeModulos: equipment.modulos.qtde,
+		potModulos: equipment.modulos.potencia,
+		potPico: equipment.potPico,
+		inversor: equipment.inversorDescricao,
 	};
 }
 
@@ -296,7 +307,7 @@ export function getProjectInformationFromRequest({ request }: HandleGetProjectIn
 			qtdeModulos: sistemaFromProducts.qtdeModulos,
 			potModulos: sistemaFromProducts.potModulos,
 			potPico: sistemaFromProducts.potPico,
-			topologia: request.topologia === "INVERSOR" ? "INVERSOR" : "MICRO",
+			topologia: normalizeSystemTopology(request.topologia),
 			inversor: sistemaFromProducts.inversor,
 			tipoControlador: request.tipoControlador ? request.tipoControlador : "",
 			marcaControlador: request.marcaControlador ? request.marcaControlador : "",

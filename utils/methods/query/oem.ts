@@ -1,3 +1,4 @@
+import { getProjectOemModuleQuantity } from "../util/projects";
 import { TMonitoringProjectDTOSimplified, TProjectDTO } from "@/utils/schemas/projects";
 import axios from "axios";
 import { useState } from "react";
@@ -138,12 +139,12 @@ export function useOeMProjects() {
 		return project.conferencias.usinaLigada.status != "REALIZADO";
 	}
 	function matchModulesQtyGte(project: TProjectDTO) {
-		if (!filters.modulesQtyGte) return true;
-		return (project.sistema.qtdeModulos || 0) > filters.modulesQtyGte;
+		if (filters.modulesQtyGte == null) return true;
+		return getProjectOemModuleQuantity(project) >= filters.modulesQtyGte;
 	}
 	function matchModulesQtyLte(project: TProjectDTO) {
-		if (!filters.modulesQtyLte) return true;
-		return (project.sistema.qtdeModulos || 0) < filters.modulesQtyLte;
+		if (filters.modulesQtyLte == null) return true;
+		return getProjectOemModuleQuantity(project) <= filters.modulesQtyLte;
 	}
 	function matchDate(project: TProjectDTO) {
 		if (!filters.date.after || !filters.date.before || !filters.date.field) return true;

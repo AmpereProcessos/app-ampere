@@ -625,6 +625,9 @@ export const ServiceOrderProjectProjection = {
   logradouro: 1,
   numeroResidencia: 1,
   produtos: 1,
+  sistema: 1,
+  "oem.qtdeModulos": 1,
+  "oem.qtdeInversores": 1,
   servicos: 1,
   vendedor: 1,
   "compra.kitInfo": 1,
@@ -658,11 +661,13 @@ export type TServiceOrderProject = Pick<
   | "logradouro"
   | "numeroResidencia"
   | "produtos"
+  | "sistema"
   | "servicos"
   | "idVisitaTecnica"
   | "idOrdemServico"
   | "alocacoes"
 > & {
+  oem?: Pick<TProject["oem"], "qtdeModulos" | "qtdeInversores">;
   vendedor: TProject["vendedor"];
   compra: {
     kitInfo: TProject["compra"]["kitInfo"];

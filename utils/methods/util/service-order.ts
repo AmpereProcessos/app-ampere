@@ -1,5 +1,5 @@
-import { getSoldProducts } from "@/utils/schemas/crm/kits.schema";
-import type { TProject, TProjectDTO } from "@/utils/schemas/projects";
+import { getProjectEquipment } from "@/lib/projects/equipment";
+import type { TProject } from "@/utils/schemas/projects";
 import type { TServiceOrder, TServiceOrderDTO } from "@/utils/schemas/service-order";
 
 export function getObjectDifference(obj1: any, obj2: any, parentKey = "") {
@@ -102,42 +102,10 @@ export function getMissingProjectMaterials(str: string) {
 }
 
 export function getServiceOrderInverterMetadataFromProject(project: TProject) {
-  const soldProducts = getSoldProducts(project.produtos ?? []);
-  const inverterQty = soldProducts
-    .filter((p) => p.categoria === "INVERSOR")
-    .reduce((acc, curr) => acc + curr.qtde, 0);
-  const inverterModel = soldProducts
-    .filter((p) => p.categoria === "INVERSOR")
-    .map((p) => `${p.qtde}x ${p.modelo}`)
-    .join(", ");
-  const inverterPower = soldProducts
-    .filter((p) => p.categoria === "INVERSOR")
-    .map((p) => `${p.qtde}x ${p.potencia}`)
-    .join(", ");
-  return {
-    qtde: inverterQty,
-    modelo: inverterModel,
-    potencia: inverterPower,
-  };
+  return getProjectEquipment(project).inversor;
 }
 export function getServiceOrderModulesMetadataFromProject(project: TProject) {
-  const soldProducts = getSoldProducts(project.produtos ?? []);
-  const modulosQty = soldProducts
-    .filter((p) => p.categoria === "MÓDULO")
-    .reduce((acc, curr) => acc + curr.qtde, 0);
-  const modulosModel = soldProducts
-    .filter((p) => p.categoria === "MÓDULO")
-    .map((p) => `${p.qtde}x ${p.modelo}`)
-    .join(", ");
-  const modulosPower = soldProducts
-    .filter((p) => p.categoria === "MÓDULO")
-    .map((p) => `${p.qtde}x ${p.potencia}`)
-    .join(", ");
-  return {
-    qtde: modulosQty,
-    modelo: modulosModel,
-    potencia: modulosPower,
-  };
+  return getProjectEquipment(project).modulos;
 }
 export function getServiceOrderTagsFromProject(project: TProject) {
   const serviceOrdertags: Exclude<TServiceOrder["etiquetas"], undefined | null> = [];

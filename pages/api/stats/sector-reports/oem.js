@@ -1,3 +1,4 @@
+import { ProjectEquipmentProjection } from "@/lib/projects/equipment";
 import createHttpError from "http-errors";
 import connectToDatabase from "../../../../utils/services/mongodb/projects";
 import { errorHandler } from "../../../../utils/methods/handlers";
@@ -22,9 +23,8 @@ export default async function handler(req, res) {
 						$project: {
 							nomeDoContrato: 1,
 							"medidor.data": 1,
-							"sistema.qtdeModulos": 1,
+							...ProjectEquipmentProjection,
 							cidade: 1,
-							"sistema.topologia": 1,
 						},
 					},
 					{

@@ -1,3 +1,4 @@
+import { getProjectEquipment, isMaintenanceService } from "@/lib/projects/equipment";
 import NumberInput from "@/components/inputs/Number";
 import TextInput from "@/components/inputs/Text";
 import { isValidNumber } from "@/utils/methods/validating";
@@ -63,82 +64,27 @@ function ServiceOrderEquipmentsInformationBlock({
         },
       });
   }
+  const projectEquipment = project
+    ? getProjectEquipment(project, isMaintenanceService(infoHolder.categoria) || isMaintenanceService(project.tipoDeServico) ? "oem" : "sale")
+    : null;
   function handleUseProjectInformation(project: TServiceOrderProject | undefined) {
-    if (!project) return toast.error("Dados do projeto não encontrados.");
+    if (!project || !projectEquipment) return;
     updateInfoHolder({
       equipamentos: {
         ...infoHolder.equipamentos,
-        inversor: {
-          modelo: project.produtos
-            ?.filter((p) => p.categoria === "INVERSOR")
-            .map((p) => p.modelo)
-            .join(" / "),
-          potencia: project.produtos
-            ?.filter((p) => p.categoria === "INVERSOR")
-            .map((p) => `${p.potencia || 0}W`)
-            .join(" / "),
-          qtde: project.produtos
-            ?.filter((p) => p.categoria === "INVERSOR")
-            .reduce((acc, current) => acc + current.qtde, 0),
-        },
-        modulos: {
-          modelo: project.produtos
-            ?.filter((p) => p.categoria === "MÓDULO")
-            .map((p) => p.modelo)
-            .join(" / "),
-          potencia: project.produtos
-            ?.filter((p) => p.categoria === "MÓDULO")
-            .map((p) => `${p.potencia || 0}W`)
-            .join(" / "),
-          qtde: project.produtos
-            ?.filter((p) => p.categoria === "MÓDULO")
-            .reduce((acc, current) => acc + current.qtde, 0),
-        },
+        inversor: projectEquipment.inversor,
+        modulos: projectEquipment.modulos,
       },
+      detalhes: { ...infoHolder.detalhes, topologia: projectEquipment.topologia ?? infoHolder.detalhes.topologia },
     });
   }
-  const isServiceOrderInformationEqualToProject = Object.values({
-    invertersModel: project
-      ? infoHolder.equipamentos.inversor.modelo ===
-        project.produtos
-          ?.filter((p) => p.categoria === "INVERSOR")
-          .map((p) => p.modelo)
-          .join(" / ")
-      : false,
-    invertersPower: project
-      ? infoHolder.equipamentos.inversor.potencia ===
-        project.produtos
-          ?.filter((p) => p.categoria === "INVERSOR")
-          .map((p) => `${p.potencia || 0}W`)
-          .join(" / ")
-      : false,
-    invertersQty: project
-      ? infoHolder.equipamentos.inversor.qtde ===
-        project.produtos
-          ?.filter((p) => p.categoria === "INVERSOR")
-          .reduce((acc, current) => acc + current.qtde, 0)
-      : false,
-    modulesModel: project
-      ? infoHolder.equipamentos.modulos.modelo ===
-        project.produtos
-          ?.filter((p) => p.categoria === "MÓDULO")
-          .map((p) => p.modelo)
-          .join(" / ")
-      : false,
-    modulesPower: project
-      ? infoHolder.equipamentos.modulos.potencia ===
-        project.produtos
-          ?.filter((p) => p.categoria === "MÓDULO")
-          .map((p) => `${p.potencia || 0}W`)
-          .join(" / ")
-      : false,
-    modulesQty: project
-      ? infoHolder.equipamentos.modulos.qtde ===
-        project.produtos
-          ?.filter((p) => p.categoria === "MÓDULO")
-          .reduce((acc, current) => acc + current.qtde, 0)
-      : false,
-  }).every((r) => r);
+  const isServiceOrderInformationEqualToProject = projectEquipment
+    ? (["inversor", "modulos"] as const).every((category) =>
+        (["qtde", "modelo", "potencia"] as const).every((field) =>
+          (infoHolder.equipamentos[category][field] ?? "") === (projectEquipment[category][field] ?? ""),
+        ),
+      ) && (projectEquipment.topologia == null || infoHolder.detalhes.topologia === projectEquipment.topologia)
+    : false;
   return (
     <ResponsiveDialogDrawerSection
       sectionTitleText="EQUIPAMENTOS"

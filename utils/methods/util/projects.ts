@@ -1,17 +1,11 @@
-import { getExistingProducts } from "@/utils/schemas/crm/kits.schema";
-import type { TProjectDTO } from "@/utils/schemas/projects";
+import { getProjectEquipment, type ProjectEquipmentInput } from "@/lib/projects/equipment";
 
-export function getProjectOemModuleQuantity(project: Pick<TProjectDTO, "oem" | "sistema">) {
-	const fromOem = project.oem?.qtdeModulos;
-	if (fromOem != null && fromOem > 0) return fromOem;
-	return project.sistema?.qtdeModulos ?? 0;
+export function getProjectOemModuleQuantity(project: ProjectEquipmentInput) {
+	return getProjectEquipment(project, "oem").modulos.qtde;
 }
 
-export function getProjectOemPower(project: Pick<TProjectDTO, "produtos" | "sistema">) {
-	const power = getExistingProducts(project.produtos ?? [])
-		.filter((product) => product.categoria === "MÓDULO")
-		.reduce((acc, product) => acc + (product.qtde * (product.potencia || 0)) / 1000, 0);
-	return power || project.sistema?.potPico || 0;
+export function getProjectOemPower(project: ProjectEquipmentInput) {
+	return getProjectEquipment(project, "oem").potPico;
 }
 
 type GetContractValueParams = {

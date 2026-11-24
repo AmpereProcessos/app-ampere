@@ -8,6 +8,7 @@ import SpreadsheetCellWrapper from "@/components/Spreadsheet/SpreadsheetCellWrap
 import SelectInput from "@/components/inputs/Select";
 import SelectVirtualizedInput from "@/components/inputs/SelectVirtualized";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
 	consumeProgrammaticSpreadsheetFocus,
 	handleSpreadsheetNavigationKeyDown,
@@ -18,7 +19,8 @@ import { useEquipments } from "@/utils/methods/query/crm/equipments";
 import type { TEquipmentDTO } from "@/utils/schemas/crm/equipments";
 import type { TProductItem } from "@/utils/schemas/crm/kits.schema";
 import { ProductItemCategories } from "@/utils/select-options";
-import { Plus } from "lucide-react";
+import { renderProductCategoryIcon } from "@/utils/methods/rendering";
+import { ArrowRightLeft, ChevronDown, Link2, Link2Off, Plus } from "lucide-react";
 import { useMemo, useState, type KeyboardEvent } from "react";
 import toast from "react-hot-toast";
 
@@ -35,7 +37,7 @@ const PRODUCT_GRID_COL = {
 const PRODUCT_GRID_COL_COUNT = 7;
 
 const TABLE_GRID_COLS =
-	"grid-cols-[minmax(6.5rem,10fr)_minmax(9rem,16fr)_minmax(5.5rem,10fr)_minmax(7rem,14fr)_minmax(3.5rem,6fr)_minmax(4.5rem,7fr)_minmax(4rem,6fr)_minmax(2.5rem,4fr)]";
+	"grid-cols-[minmax(6.5rem,10fr)_minmax(9rem,16fr)_minmax(5.5rem,10fr)_minmax(7rem,14fr)_minmax(3.5rem,6fr)_minmax(4.5rem,7fr)_minmax(4rem,6fr)_minmax(5rem,4fr)]";
 
 const DESKTOP_ROW = cn("hidden w-full min-w-[56rem] lg:grid", TABLE_GRID_COLS, "items-center gap-x-1 px-2");
 
@@ -48,6 +50,8 @@ type ProjectProductsSpreadsheetProps = {
 	onAdd: (product: TProductItem) => void;
 	onUpdate: (index: number, changes: Partial<TProductItem>) => void;
 	onRemove: (index: number) => void;
+	onChangeOrigin?: (index: number) => void;
+	explicitAdd?: boolean;
 };
 
 export function sortProjectProducts(products: TProductItem[]) {
@@ -60,6 +64,8 @@ export default function ProjectProductsSpreadsheet({
 	onAdd,
 	onUpdate,
 	onRemove,
+	onChangeOrigin,
+	explicitAdd = false,
 }: ProjectProductsSpreadsheetProps) {
 	const { data: equipments } = useEquipments({ category: null });
 	const gridBounds: SpreadsheetGridBounds = useMemo(
@@ -70,21 +76,11 @@ export default function ProjectProductsSpreadsheet({
 		[products.length, editable],
 	);
 
-	const totalQty = products.reduce((sum, row) => sum + (row.qtde || 0), 0);
-
 	return (
 		<div className="flex w-full flex-col gap-2 px-2">
 			<div className="w-full overflow-x-auto">
-				<div
-					{...{ [SPREADSHEET_TABLE_ATTR]: "true" }}
-					className="flex min-w-full flex-col overflow-hidden rounded-md border border-border bg-background"
-				>
-					<div
-						className={cn(
-							DESKTOP_ROW,
-							"min-h-9 border-b border-border bg-muted/60 py-1.5 text-[0.68rem] font-medium uppercase text-muted-foreground",
-						)}
-					>
+				<div {...{ [SPREADSHEET_TABLE_ATTR]: "true" }} className="border-border bg-background flex min-w-full flex-col overflow-hidden rounded-md border">
+					<div className={cn(DESKTOP_ROW, "border-border bg-muted/60 text-muted-foreground min-h-9 border-b py-1.5 text-[0.68rem] font-medium uppercase")}>
 						<p className="min-w-0 px-1 text-start">Categoria</p>
 						<p className="min-w-0 px-1 text-center">Catálogo</p>
 						<p className="min-w-0 px-1 text-center">Fabricante</p>
@@ -95,7 +91,7 @@ export default function ProjectProductsSpreadsheet({
 						<p className="min-w-0 px-1 text-center">Ações</p>
 					</div>
 
-					<div className="flex w-full flex-col bg-background">
+					<div className="bg-background flex w-full flex-col">
 						{products.map((row, index) => (
 							<ProductTableRow
 								key={`${row.categoria}-${row.modelo}-${index}`}
@@ -106,6 +102,7 @@ export default function ProjectProductsSpreadsheet({
 								editable={editable}
 								onUpdate={(changes) => onUpdate(index, changes)}
 								onRemove={() => onRemove(index)}
+								onChangeOrigin={onChangeOrigin ? () => onChangeOrigin(index) : undefined}
 							/>
 						))}
 
@@ -115,15 +112,14 @@ export default function ProjectProductsSpreadsheet({
 								gridBounds={gridBounds}
 								equipments={equipments ?? []}
 								onAdd={onAdd}
+								explicitAdd={explicitAdd}
 							/>
 						) : null}
 
 						{products.length === 0 ? (
-							<div className="flex w-full items-center justify-center border-t border-border px-3 py-3">
-								<p className="text-center text-xs font-medium tracking-tight text-muted-foreground">
-									{editable
-										? "Preencha a linha tracejada para incluir um produto."
-										: "Sem produtos adicionados."}
+							<div className="border-border flex w-full items-center justify-center border-t px-3 py-3">
+								<p className="text-muted-foreground text-center text-xs font-medium tracking-tight">
+									{editable ? "Preencha a linha tracejada para incluir um produto." : "Sem produtos adicionados."}
 								</p>
 							</div>
 						) : null}
@@ -131,7 +127,9 @@ export default function ProjectProductsSpreadsheet({
 				</div>
 			</div>
 			{products.length > 0 ? (
-				<p className="px-1 text-xs text-muted-foreground">Total {totalQty} unidade(s) em {products.length} item(ns)</p>
+				<p className="text-muted-foreground px-1 text-xs">
+					{products.length} {products.length === 1 ? "item cadastrado" : "itens cadastrados"}
+				</p>
 			) : null}
 		</div>
 	);
@@ -145,85 +143,143 @@ type RowProps = {
 	editable?: boolean;
 	onUpdate: (changes: Partial<TProductItem>) => void;
 	onRemove?: () => void;
+	onChangeOrigin?: () => void;
 };
 
-function ProductTableRow({ row, gridRow, gridBounds, equipments, editable = true, onUpdate, onRemove }: RowProps) {
+function CategoryLabel({ categoria }: { categoria: TProductItem["categoria"] }) {
 	return (
-		<div className="border-t border-border first:border-t-0">
-			<div className={cn(DESKTOP_ROW, "min-h-11 py-1 text-xs transition-colors hover:bg-muted/40")}>
-				<ProductRowCells
-					row={row}
-					gridRow={gridRow}
-					gridBounds={gridBounds}
-					equipments={equipments}
-					editable={editable}
-					onUpdate={onUpdate}
-				/>
+		<span className="flex min-h-8 min-w-0 items-center gap-2 px-2 text-xs font-medium">
+			<span className="text-muted-foreground flex h-4 w-4 shrink-0 items-center justify-center [&_svg]:h-3.5 [&_svg]:w-3.5" aria-hidden="true">
+				{renderProductCategoryIcon(categoria)}
+			</span>
+			<span className="min-w-0 break-words">{categoria}</span>
+		</span>
+	);
+}
+
+function CatalogLinkLabel({ linked }: { linked: boolean }) {
+	const Icon = linked ? Link2 : Link2Off;
+	return (
+		<span
+			className={cn("flex min-h-8 items-center justify-center gap-1.5 px-2 text-xs", linked ? "text-primary font-medium" : "text-muted-foreground")}
+		>
+			<Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+			{linked ? "Vínculo cadastrado" : "Sem vínculo"}
+		</span>
+	);
+}
+
+function ReadOnlyValue({ value, missing = "Não informado" }: { value: string | number | null | undefined; missing?: string }) {
+	const isMissing = value === null || value === undefined || value === "" || value === 0;
+	return (
+		<span className={cn("px-2 py-2 text-center text-xs break-words tabular-nums", isMissing ? "text-muted-foreground" : "text-foreground")}>
+			{isMissing ? missing : value}
+		</span>
+	);
+}
+
+function ProductTableRow({ row, gridRow, gridBounds, equipments, editable = true, onUpdate, onRemove, onChangeOrigin }: RowProps) {
+	return (
+		<div className="border-border border-t first:border-t-0">
+			<div className={cn(DESKTOP_ROW, "hover:bg-muted/40 min-h-11 py-1 text-xs transition-colors")}>
+				<ProductRowCells row={row} gridRow={gridRow} gridBounds={gridBounds} equipments={equipments} editable={editable} onUpdate={onUpdate} />
 				<div className="flex min-w-0 justify-center px-1">
-					{onRemove ? (
-						<DeleteRowButton onRemove={onRemove} ariaLabel={`Remover ${row.modelo || "produto"}`} disabled={!editable} />
+					{editable && onChangeOrigin ? (
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon"
+							className="h-8 w-8"
+							aria-label={`Alterar classificação de ${row.modelo || "equipamento"}`}
+							title="Alterar classificação"
+							onClick={onChangeOrigin}
+						>
+							<ArrowRightLeft className="h-4 w-4" />
+						</Button>
 					) : null}
+					{onRemove && editable ? <DeleteRowButton onRemove={onRemove} ariaLabel={`Remover ${row.modelo || "produto"}`} disabled={!editable} /> : null}
 				</div>
 			</div>
 
-			<div className="flex w-full flex-col gap-2 p-2 lg:hidden">
-				<div className="flex items-start justify-between gap-2">
-					<div className="grid min-w-0 flex-1 grid-cols-2 gap-2">
-						<MobileEditableField label="Categoria">
-							<CategoryCell row={row} editable={editable} onUpdate={onUpdate} />
-						</MobileEditableField>
-						<MobileEditableField label="Catálogo">
-							<CatalogCell row={row} equipments={equipments} editable={editable} onUpdate={onUpdate} />
-						</MobileEditableField>
-						<MobileEditableField label="Fabricante">
-							<EditableTextCell
-								value={row.fabricante}
-								ariaLabel="Editar fabricante"
-								editable={editable}
-								onCommit={(fabricante) => onUpdate({ fabricante })}
-							/>
-						</MobileEditableField>
-						<MobileEditableField label="Modelo">
-							<EditableTextCell
-								value={row.modelo}
-								ariaLabel="Editar modelo"
-								editable={editable}
-								onCommit={(modelo) => onUpdate({ modelo })}
-							/>
-						</MobileEditableField>
-						<MobileEditableField label="Qtde">
-							<EditableNumberCell
-								value={row.qtde}
-								ariaLabel="Editar quantidade"
-								min={1}
-								editable={editable}
-								format={(v) => String(Math.round(v))}
-								onCommit={(qtde) => onUpdate({ qtde: Math.max(1, Math.round(qtde)) })}
-							/>
-						</MobileEditableField>
-						<MobileEditableField label="Potência (W)">
-							<EditableNumberCell
-								value={row.potencia ?? 0}
-								ariaLabel="Editar potência"
-								min={0}
-								editable={editable}
-								onCommit={(potencia) => onUpdate({ potencia })}
-							/>
-						</MobileEditableField>
-						<MobileEditableField label="Garantia (anos)">
-							<EditableNumberCell
-								value={row.garantia}
-								ariaLabel="Editar garantia"
-								min={0}
-								editable={editable}
-								format={(v) => `${Math.round(v)}`}
-								onCommit={(garantia) => onUpdate({ garantia: Math.round(garantia) })}
-							/>
-						</MobileEditableField>
+			<details className="group w-full lg:hidden">
+				<summary className="focus-visible:ring-ring flex min-h-14 list-none items-center justify-between gap-3 p-3 focus-visible:ring-2 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+					<span
+						className="bg-muted text-muted-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-md [&_svg]:h-4 [&_svg]:w-4"
+						aria-hidden="true"
+					>
+						{renderProductCategoryIcon(row.categoria)}
+					</span>
+					<span className="min-w-0 flex-1">
+						<span className="block text-sm font-medium break-words">
+							{row.qtde} × {row.modelo || row.fabricante || "Equipamento sem descrição"}
+						</span>
+						<span className="text-muted-foreground mt-1 block text-xs">
+							{row.categoria}
+							{row.potencia ? ` · ${row.potencia} W` : " · Potência não informada"}
+						</span>
+					</span>
+					<ChevronDown className="text-muted-foreground h-4 w-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+				</summary>
+				<div className="border-border flex w-full flex-col gap-2 border-t p-3">
+					<div className="flex items-start justify-between gap-2">
+						<div className="grid min-w-0 flex-1 grid-cols-2 gap-2">
+							<MobileEditableField label="Categoria">
+								<CategoryCell row={row} editable={editable} onUpdate={onUpdate} />
+							</MobileEditableField>
+							<MobileEditableField label="Catálogo">
+								<CatalogCell row={row} equipments={equipments} editable={editable} onUpdate={onUpdate} />
+							</MobileEditableField>
+							<MobileEditableField label="Fabricante">
+								<EditableTextCell
+									value={row.fabricante}
+									ariaLabel="Editar fabricante"
+									editable={editable}
+									onCommit={(fabricante) => onUpdate({ fabricante })}
+								/>
+							</MobileEditableField>
+							<MobileEditableField label="Modelo">
+								<EditableTextCell value={row.modelo} ariaLabel="Editar modelo" editable={editable} onCommit={(modelo) => onUpdate({ modelo })} />
+							</MobileEditableField>
+							<MobileEditableField label="Qtde">
+								<EditableNumberCell
+									value={row.qtde}
+									ariaLabel="Editar quantidade"
+									min={1}
+									editable={editable}
+									format={(v) => String(Math.round(v))}
+									onCommit={(qtde) => onUpdate({ qtde: Math.max(1, Math.round(qtde)) })}
+								/>
+							</MobileEditableField>
+							<MobileEditableField label="Potência (W)">
+								<EditableNumberCell
+									value={row.potencia ?? 0}
+									ariaLabel="Editar potência"
+									min={0}
+									editable={editable}
+									onCommit={(potencia) => onUpdate({ potencia })}
+								/>
+							</MobileEditableField>
+							<MobileEditableField label="Garantia (anos)">
+								<EditableNumberCell
+									value={row.garantia}
+									ariaLabel="Editar garantia"
+									min={0}
+									editable={editable}
+									format={(v) => `${Math.round(v)}`}
+									onCommit={(garantia) => onUpdate({ garantia: Math.round(garantia) })}
+								/>
+							</MobileEditableField>
+						</div>
+						{onRemove && editable ? <DeleteRowButton onRemove={onRemove} disabled={!editable} /> : null}
 					</div>
-					{onRemove ? <DeleteRowButton onRemove={onRemove} disabled={!editable} /> : null}
+					{editable && onChangeOrigin ? (
+						<Button type="button" variant="outline" size="sm" className="self-start" onClick={onChangeOrigin}>
+							<ArrowRightLeft className="mr-2 h-4 w-4" />
+							Alterar classificação
+						</Button>
+					) : null}
 				</div>
-			</div>
+			</details>
 		</div>
 	);
 }
@@ -243,20 +299,25 @@ function ProductRowCells({
 	editable?: boolean;
 	onUpdate: (changes: Partial<TProductItem>) => void;
 }) {
+	if (!editable)
+		return (
+			<>
+				<CategoryLabel categoria={row.categoria} />
+				<CatalogLinkLabel linked={Boolean(row.id)} />
+				<ReadOnlyValue value={row.fabricante} />
+				<ReadOnlyValue value={row.modelo} />
+				<ReadOnlyValue value={row.qtde} />
+				<ReadOnlyValue value={row.potencia} />
+				<ReadOnlyValue value={row.garantia} missing="0" />
+			</>
+		);
 	return (
 		<>
 			<div className="min-w-0 px-1">
 				<CategoryCell row={row} gridRow={gridRow} gridBounds={gridBounds} editable={editable} onUpdate={onUpdate} />
 			</div>
 			<div className="min-w-0 px-1">
-				<CatalogCell
-					row={row}
-					gridRow={gridRow}
-					gridBounds={gridBounds}
-					equipments={equipments}
-					editable={editable}
-					onUpdate={onUpdate}
-				/>
+				<CatalogCell row={row} gridRow={gridRow} gridBounds={gridBounds} equipments={equipments} editable={editable} onUpdate={onUpdate} />
 			</div>
 			<div className="min-w-0 px-1">
 				<EditableTextCell
@@ -330,45 +391,53 @@ function DraftProductTableRow({
 	gridBounds,
 	equipments,
 	onAdd,
+	explicitAdd = false,
 }: {
 	gridRow: number;
 	gridBounds: SpreadsheetGridBounds;
 	equipments: TEquipmentDTO[];
 	onAdd: (product: TProductItem) => void;
+	explicitAdd?: boolean;
 }) {
-	const [draft, setDraft] = useState<TProductItem>(createEmptyProduct);
+	const createDraft = () => ({ ...createEmptyProduct(), ...(explicitAdd ? { garantia: 0 } : {}) });
+	const [draft, setDraft] = useState<TProductItem>(createDraft);
 
 	function updateDraft(changes: Partial<TProductItem>) {
 		const next = { ...draft, ...changes };
+		if (explicitAdd) {
+			setDraft(next);
+			return;
+		}
 		if (isProductDraftReady(next)) {
 			if (!validateProductDraft(next)) {
 				setDraft(next);
 				return;
 			}
 			onAdd(next);
-			setDraft(createEmptyProduct());
+			setDraft(createDraft());
 			return;
 		}
 		setDraft(next);
 	}
 
+	function addDraft() {
+		if (!draft.modelo.trim() && !draft.fabricante.trim()) return toast.error("Informe o modelo ou o fabricante do equipamento.");
+		if (draft.qtde <= 0) return toast.error("Informe uma quantidade v\u00e1lida.");
+		onAdd(draft);
+		setDraft(createDraft());
+	}
+
 	return (
-		<div className="border-t border-dashed border-border bg-muted/20">
-			<div className={cn(DESKTOP_ROW, "min-h-11 py-1 text-xs transition-colors hover:bg-muted/40")}>
+		<div className="border-border bg-muted/20 border-t border-dashed">
+			<div className={cn(DESKTOP_ROW, "hover:bg-muted/40 min-h-11 py-1 text-xs transition-colors")}>
 				<div className="flex min-w-0 items-center gap-1 px-1">
-					<Plus className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+					<Plus className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
 					<div className="min-w-0 flex-1">
 						<CategoryCell row={draft} gridRow={gridRow} gridBounds={gridBounds} onUpdate={updateDraft} />
 					</div>
 				</div>
 				<div className="min-w-0 px-1">
-					<CatalogCell
-						row={draft}
-						gridRow={gridRow}
-						gridBounds={gridBounds}
-						equipments={equipments}
-						onUpdate={updateDraft}
-					/>
+					<CatalogCell row={draft} gridRow={gridRow} gridBounds={gridBounds} equipments={equipments} onUpdate={updateDraft} />
 				</div>
 				<div className="min-w-0 px-1">
 					<EditableTextCell
@@ -428,11 +497,17 @@ function DraftProductTableRow({
 						onCommit={(garantia) => updateDraft({ garantia: Math.round(garantia) })}
 					/>
 				</div>
-				<div aria-hidden className="min-w-0 px-1" />
+				<div className="flex min-w-0 justify-center px-1">
+					{explicitAdd ? (
+						<Button type="button" size="xs" onClick={addDraft} aria-label="Incluir equipamento">
+							<Plus className="h-4 w-4" />
+						</Button>
+					) : null}
+				</div>
 			</div>
 			<div className="flex w-full flex-col gap-2 p-2 lg:hidden">
 				<div className="flex items-start gap-2">
-					<Plus className="mt-2 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+					<Plus className="text-muted-foreground mt-2 h-3.5 w-3.5 shrink-0" />
 					<div className="grid min-w-0 flex-1 grid-cols-2 gap-2">
 						<MobileEditableField label="Categoria">
 							<CategoryCell row={draft} onUpdate={updateDraft} />
@@ -441,21 +516,47 @@ function DraftProductTableRow({
 							<CatalogCell row={draft} equipments={equipments} onUpdate={updateDraft} />
 						</MobileEditableField>
 						<MobileEditableField label="Fabricante">
-							<EditableTextCell
-								value={draft.fabricante}
-								ariaLabel="Fabricante do novo produto"
-								onCommit={(fabricante) => updateDraft({ fabricante })}
-							/>
+							<EditableTextCell value={draft.fabricante} ariaLabel="Fabricante do novo produto" onCommit={(fabricante) => updateDraft({ fabricante })} />
 						</MobileEditableField>
 						<MobileEditableField label="Modelo">
-							<EditableTextCell
-								value={draft.modelo}
-								ariaLabel="Modelo do novo produto"
-								onCommit={(modelo) => updateDraft({ modelo })}
-							/>
+							<EditableTextCell value={draft.modelo} ariaLabel="Modelo do novo produto" onCommit={(modelo) => updateDraft({ modelo })} />
 						</MobileEditableField>
+						{explicitAdd ? (
+							<>
+								<MobileEditableField label="Quantidade">
+									<EditableNumberCell
+										value={draft.qtde}
+										ariaLabel="Quantidade do novo equipamento"
+										min={1}
+										onCommit={(qtde) => updateDraft({ qtde: Math.max(1, Math.round(qtde)) })}
+									/>
+								</MobileEditableField>
+								<MobileEditableField label={"Pot\u00eancia (W)"}>
+									<EditableNumberCell
+										value={draft.potencia ?? 0}
+										ariaLabel={"Pot\u00eancia do novo equipamento"}
+										min={0}
+										onCommit={(potencia) => updateDraft({ potencia })}
+									/>
+								</MobileEditableField>
+								<MobileEditableField label="Garantia (anos)">
+									<EditableNumberCell
+										value={draft.garantia}
+										ariaLabel="Garantia do novo equipamento"
+										min={0}
+										onCommit={(garantia) => updateDraft({ garantia: Math.round(garantia) })}
+									/>
+								</MobileEditableField>
+							</>
+						) : null}
 					</div>
 				</div>
+				{explicitAdd ? (
+					<Button type="button" size="sm" onClick={addDraft} className="self-start">
+						<Plus className="mr-2 h-4 w-4" />
+						Incluir equipamento
+					</Button>
+				) : null}
 			</div>
 		</div>
 	);
@@ -479,6 +580,7 @@ function CategoryCell({
 		gridCol: PRODUCT_GRID_COL.CATEGORY,
 		gridBounds,
 	});
+	if (!editable) return <CategoryLabel categoria={row.categoria} />;
 
 	const select = (
 		<SelectInput
@@ -539,13 +641,11 @@ function CatalogCell({
 		[equipments, catalogCategory],
 	);
 
-	const selectedEquipment =
-		equipments.find((e) => e._id === row.id && e.categoria === row.categoria) ?? null;
+	const selectedEquipment = equipments.find((e) => e._id === row.id && e.categoria === row.categoria) ?? null;
+	if (!editable) return <CatalogLinkLabel linked={Boolean(row.id)} />;
 
 	if (!catalogCategory) {
-		return (
-			<div className="flex h-8 items-center justify-center rounded-md px-2 text-xs text-muted-foreground">—</div>
-		);
+		return <div className="text-muted-foreground flex h-8 items-center justify-center rounded-md px-2 text-xs">—</div>;
 	}
 
 	const select = (
@@ -581,15 +681,7 @@ function CatalogCell({
 	);
 }
 
-function getGridTriggerProps({
-	gridRow,
-	gridCol,
-	gridBounds,
-}: {
-	gridRow?: number;
-	gridCol: number;
-	gridBounds?: SpreadsheetGridBounds;
-}) {
+function getGridTriggerProps({ gridRow, gridCol, gridBounds }: { gridRow?: number; gridCol: number; gridBounds?: SpreadsheetGridBounds }) {
 	const hasGridNavigation = gridRow !== undefined && gridBounds !== undefined;
 	if (!hasGridNavigation) return { hasGridNavigation, triggerProps: undefined };
 
